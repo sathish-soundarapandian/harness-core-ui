@@ -28,6 +28,7 @@ import LogFilters from './components/LogFilters/LogFilters'
 import { RadarChartAngleLimits } from '../ExecutionVerification/components/LogAnalysisContainer/LogAnalysisView.container.constants'
 import css from './LogAnalysis.module.scss'
 
+// 👉 Service health screen logs
 export const LogAnalysisContent: React.FC<LogAnalysisContentProps> = ({
   monitoredServiceIdentifier,
   startTime,

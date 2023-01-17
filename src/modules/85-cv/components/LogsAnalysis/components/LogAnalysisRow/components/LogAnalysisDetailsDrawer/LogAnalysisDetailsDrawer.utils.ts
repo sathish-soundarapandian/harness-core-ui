@@ -5,7 +5,7 @@ import type { UseStringsReturn } from 'framework/strings'
 const getChartCategories = (series?: Highcharts.SeriesOptionsType[]): string[] => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  return Array.from({ length: series[0]?.data.length as number }).map((_, i) => String(i + 1))
+  return Array.from({ length: series[0]?.data?.length as number }).map((_, i) => String(i + 1))
 }
 
 export function getChartsConfigForDrawer(
@@ -39,6 +39,7 @@ export function getChartsConfigForDrawer(
     },
     tooltip: {
       outside: true,
+      shared: true,
       useHTML: true,
       formatter: function () {
         return `${this.y}`
@@ -55,10 +56,17 @@ export function getChartsConfigForDrawer(
       enabled: false
     },
     plotOptions: {
+      bar: {
+        borderRadius: 10
+      },
       series: {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        pointWidth: 20
+        pointWidth: 10
+        // series: {
+        //   borderRadiusTopLeft: '50%',
+        //   borderRadiusTopRight: '50%'
+        // }
       }
     },
     series

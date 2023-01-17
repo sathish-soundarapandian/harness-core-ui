@@ -20,18 +20,6 @@ export interface AdditionalInfo {
   type?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'ROLLING' | 'AUTO'
 }
 
-export interface AffectedEntity {
-  [key: string]: any
-}
-
-export type AnalysedDeploymentNode = AbstractAnalysedNode & {
-  failedErrorClusters?: number
-  failedLogClusters?: number
-  failedMetrics?: number
-  nodeIdentifier?: string
-  verificationResult?: 'PASSED' | 'FAILED' | 'NO_ANALYSIS'
-}
-
 export interface AnalysedDeploymentTestDataNode {
   analysisReason?:
     | 'CUSTOM_FAIL_FAST_THRESHOLD'
@@ -43,16 +31,12 @@ export interface AnalysedDeploymentTestDataNode {
     | 'NO_TEST_DATA'
   analysisResult?: 'HEALTHY' | 'NO_ANALYSIS' | 'UNHEALTHY' | 'WARNING'
   appliedThresholds?: string[]
-  controlData?: MetricValueV2[]
+  controlData?: MetricValue[]
   controlDataType?: 'AVERAGE' | 'MINIMUM_DEVIATION'
   controlNodeIdentifier?: string
+  metricValues?: MetricValue[]
   nodeIdentifier?: string
-  testData?: MetricValueV2[]
-}
-
-export type AnalysedLoadTestNode = AbstractAnalysedNode & {
-  deploymentTag?: string
-  testStartTimestamp?: number
+  testData?: MetricValue[]
 }
 
 export interface AnalysedNodeOverview {
@@ -639,7 +623,7 @@ export interface ChangeEventDTO {
   projectIdentifier: string
   serviceIdentifier?: string
   serviceName?: string
-  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF'
+  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF'
 }
 
 export interface ChangeEventMetadata {
@@ -662,7 +646,7 @@ export interface ChangeSourceDTO {
   identifier?: string
   name?: string
   spec: ChangeSourceSpec
-  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF'
+  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF'
 }
 
 export interface ChangeSourceSpec {
@@ -1051,7 +1035,7 @@ export interface DeepLink {
 
 export interface DemoChangeEventDTO {
   changeSourceIdentifier?: string
-  changeSourceType?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF'
+  changeSourceType?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF'
   monitoredServiceIdentifier?: string
 }
 
@@ -1133,72 +1117,6 @@ export type DockerUserNamePasswordDTO = DockerAuthCredentialsDTO & {
   usernameRef?: string
 }
 
-export interface DowntimeDTO {
-  category: 'ScheduledMaintenance' | 'Deployment' | 'Other'
-  description?: string
-  enabled?: boolean
-  entityRefs: EntityDetails[]
-  identifier: string
-  name: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  scope: 'Project' | 'Entity'
-  spec: DowntimeSpecDTO
-  tags?: {
-    [key: string]: string
-  }
-}
-
-export interface DowntimeDuration {
-  durationType: 'Minutes' | 'Hours' | 'Days' | 'Weeks'
-  durationValue: number
-}
-
-export interface DowntimeHistoryView {
-  affectedEntities?: AffectedEntity[]
-  category?: 'ScheduledMaintenance' | 'Deployment' | 'Other'
-  description?: string
-  duration?: DowntimeDuration
-  endTime?: string
-  identifier?: string
-  name?: string
-  startTime?: string
-  status?: 'Active' | 'Scheduled'
-}
-
-export interface DowntimeListView {
-  affectedEntities?: AffectedEntity[]
-  category?: 'ScheduledMaintenance' | 'Deployment' | 'Other'
-  description?: string
-  duration?: DowntimeDuration
-  enabled?: boolean
-  identifier?: string
-  lastModified?: LastModified
-  name?: string
-  status?: 'Active' | 'Scheduled'
-}
-
-export interface DowntimeRecurrence {
-  recurrenceType: 'Day' | 'Week' | 'Month' | 'Year'
-  recurrenceValue: number
-}
-
-export interface DowntimeResponse {
-  createdAt?: number
-  downtime: DowntimeDTO
-  lastModifiedAt?: number
-}
-
-export interface DowntimeSpec {
-  startTime?: number
-  timezone: string
-}
-
-export interface DowntimeSpecDTO {
-  spec: DowntimeSpec
-  type?: 'Onetime' | 'Recurring'
-}
-
 export interface Duration {
   nano?: number
   negative?: boolean
@@ -1273,11 +1191,6 @@ export type ELKHealthSourceSpec = HealthSourceSpec & {
 export interface Edge {
   from?: string
   to?: string
-}
-
-export interface EntityDetails {
-  enabled?: boolean
-  entityRef: string
 }
 
 export interface EnvironmentResponse {
@@ -1581,7 +1494,6 @@ export interface Error {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
-    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -1653,8 +1565,6 @@ export interface Error {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
-    | 'TERRAGRUNT_EXECUTION_ERROR'
-    | 'ADFS_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2008,7 +1918,6 @@ export interface Failure {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
-    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -2080,8 +1989,6 @@ export interface Failure {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
-    | 'TERRAGRUNT_EXECUTION_ERROR'
-    | 'ADFS_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2360,29 +2267,29 @@ export interface HealthScoreDTO {
 }
 
 export interface HealthSource {
-  identifier?: string
-  name?: string
-  spec: NextGenHealthSourceSpec
-  type?:
-    | 'AppDynamics'
-    | 'NewRelic'
-    | 'StackdriverLog'
-    | 'Stackdriver'
-    | 'Prometheus'
-    | 'Splunk'
-    | 'DatadogMetrics'
-    | 'DatadogLog'
-    | 'Dynatrace'
-    | 'ErrorTracking'
-    | 'CustomHealthMetric'
-    | 'CustomHealthLog'
-    | 'SplunkMetric'
-    | 'ElasticSearch'
-    | 'CloudWatchMetrics'
-    | 'AwsPrometheus'
-    | 'SumologicMetrics'
-    | 'SumologicLogs'
-  version?: 'v2'
+  healthSourceIdentifier?: string
+  healthSourceName?: string
+  providerName?:
+    | 'APP_DYNAMICS'
+    | 'SPLUNK'
+    | 'SPLUNK_METRIC'
+    | 'STACKDRIVER'
+    | 'STACKDRIVER_LOG'
+    | 'KUBERNETES'
+    | 'NEW_RELIC'
+    | 'PROMETHEUS'
+    | 'DATADOG_METRICS'
+    | 'DATADOG_LOG'
+    | 'ERROR_TRACKING'
+    | 'DYNATRACE'
+    | 'CUSTOM_HEALTH_METRIC'
+    | 'CUSTOM_HEALTH_LOG'
+    | 'ELASTICSEARCH'
+    | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
+  providerType?: 'ERRORS' | 'LOGS' | 'METRICS'
 }
 
 export interface HealthSourceDTO {
@@ -2468,9 +2375,6 @@ export interface HealthSourceRecordsResponse {
   rawRecords?: { [key: string]: any }[]
 }
 
-/**
- * This is the Health Source entity defined in Harness
- */
 export interface HealthSourceSpec {
   connectorRef?: string
 }
@@ -2478,32 +2382,6 @@ export interface HealthSourceSpec {
 export interface HealthSourceSummary {
   identifier?: string
   name?: string
-}
-
-export interface HealthSourceV2 {
-  healthSourceIdentifier?: string
-  healthSourceName?: string
-  providerName?:
-    | 'APP_DYNAMICS'
-    | 'SPLUNK'
-    | 'SPLUNK_METRIC'
-    | 'STACKDRIVER'
-    | 'STACKDRIVER_LOG'
-    | 'KUBERNETES'
-    | 'NEW_RELIC'
-    | 'PROMETHEUS'
-    | 'DATADOG_METRICS'
-    | 'DATADOG_LOG'
-    | 'ERROR_TRACKING'
-    | 'DYNATRACE'
-    | 'CUSTOM_HEALTH_METRIC'
-    | 'CUSTOM_HEALTH_LOG'
-    | 'ELASTICSEARCH'
-    | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
-    | 'SUMOLOGIC_METRICS'
-    | 'SUMOLOGIC_LOG'
-  providerType?: 'ERRORS' | 'LOGS' | 'METRICS'
 }
 
 export interface HistoricalTrend {
@@ -2519,7 +2397,6 @@ export interface HostDTO {
 
 export interface HostData {
   anomalous?: boolean
-  appliedThresholdIds?: string[]
   controlData?: number[]
   hostName?: string
   nearestControlHost?: string
@@ -2718,10 +2595,6 @@ export type KubernetesUserNamePasswordDTO = KubernetesAuthCredentialDTO & {
   passwordRef: string
   username?: string
   usernameRef?: string
-}
-
-export interface LastModified {
-  [key: string]: any
 }
 
 export interface LearningEngineTask {
@@ -3152,23 +3025,8 @@ export interface MetricThresholdCriteriaSpec {
   lessThan?: number
 }
 
-export interface MetricThresholdCriteriaV2 {
-  actionableCount?: number
-  greaterThanThreshold?: number
-  lessThanThreshold?: number
-  measurementType?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
-}
-
 export interface MetricThresholdSpec {
   action: 'Ignore' | 'FailImmediately' | 'FailAfterOccurrence' | 'FailAfterConsecutiveOccurrence'
-}
-
-export interface MetricThresholdV2 {
-  action?: 'Ignore' | 'FailImmediately' | 'FailAfterOccurrence' | 'FailAfterConsecutiveOccurrence'
-  criteria?: MetricThresholdCriteriaV2
-  id?: string
-  isUserDefined?: boolean
-  thresholdType?: 'IgnoreThreshold' | 'FailImmediately'
 }
 
 export interface MetricValidationResponse {
@@ -3177,7 +3035,7 @@ export interface MetricValidationResponse {
   value?: number
 }
 
-export interface MetricValueV2 {
+export interface MetricValue {
   timestamp?: number
   value?: number
 }
@@ -3189,7 +3047,7 @@ export interface MetricsAnalysis {
   metricName?: string
   metricType?: 'ERROR' | 'INFRASTRUCTURE' | 'PERFORMANCE_THROUGHPUT' | 'PERFORMANCE_OTHER' | 'PERFORMANCE_RESPONSE_TIME'
   testDataNodes?: AnalysedDeploymentTestDataNode[]
-  thresholds?: MetricThresholdV2[]
+  thresholds?: MetricThreshold[]
   transactionGroup?: string
 }
 
@@ -3251,7 +3109,7 @@ export interface MonitoredServiceListItemDTO {
   historicalTrend?: HistoricalTrend
   identifier?: string
   name?: string
-  serviceMonitoringEnabled?: boolean
+  serviceLicenseEnabled?: boolean
   serviceName?: string
   serviceRef?: string
   sloHealthIndicators?: SloHealthIndicatorDTO[]
@@ -3315,11 +3173,27 @@ export interface NewRelicMetricDefinition {
   sli?: Slidto
 }
 
-/**
- * This is the Health Source entity defined in Harness
- */
-export interface NextGenHealthSourceSpec {
-  connectorRef?: string
+export type NextGenHealthSourceSpec = HealthSourceSpec & {
+  dataSourceType?:
+    | 'APP_DYNAMICS'
+    | 'SPLUNK'
+    | 'SPLUNK_METRIC'
+    | 'STACKDRIVER'
+    | 'STACKDRIVER_LOG'
+    | 'KUBERNETES'
+    | 'NEW_RELIC'
+    | 'PROMETHEUS'
+    | 'DATADOG_METRICS'
+    | 'DATADOG_LOG'
+    | 'ERROR_TRACKING'
+    | 'DYNATRACE'
+    | 'CUSTOM_HEALTH_METRIC'
+    | 'CUSTOM_HEALTH_LOG'
+    | 'ELASTICSEARCH'
+    | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
   healthSourceParams?: HealthSourceParamsDTO
   metricPacks?: TimeSeriesMetricPackDTO[]
   queryDefinitions?: QueryDefinition[]
@@ -3436,23 +3310,6 @@ export interface OnboardingResponseDTO {
   tracingId?: string
 }
 
-export type OnetimeDowntimeSpec = DowntimeSpec & {
-  spec: OnetimeSpec
-  type?: 'Duration' | 'EndTime'
-}
-
-export type OnetimeDurationBasedSpec = OnetimeSpec & {
-  downtimeDuration: DowntimeDuration
-}
-
-export type OnetimeEndTimeBasedSpec = OnetimeSpec & {
-  endTime: number
-}
-
-export interface OnetimeSpec {
-  [key: string]: any
-}
-
 export interface Page {
   content?: { [key: string]: any }[]
   empty?: boolean
@@ -3525,26 +3382,6 @@ export interface PageChangeEventDTO {
 
 export interface PageDatadogDashboardDTO {
   content?: DatadogDashboardDTO[]
-  empty?: boolean
-  pageIndex?: number
-  pageItemCount?: number
-  pageSize?: number
-  totalItems?: number
-  totalPages?: number
-}
-
-export interface PageDowntimeHistoryView {
-  content?: DowntimeHistoryView[]
-  empty?: boolean
-  pageIndex?: number
-  pageItemCount?: number
-  pageSize?: number
-  totalItems?: number
-  totalPages?: number
-}
-
-export interface PageDowntimeListView {
-  content?: DowntimeListView[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -3936,12 +3773,6 @@ export type RatioSLIMetricSpec = SLIMetricSpec & {
   metric2: string
   thresholdType: '>' | '<' | '>=' | '<='
   thresholdValue: number
-}
-
-export type RecurringDowntimeSpec = DowntimeSpec & {
-  downtimeDuration?: DowntimeDuration
-  downtimeRecurrence?: DowntimeRecurrence
-  recurrenceEndTime?: number
 }
 
 export interface ReferenceDTO {
@@ -4406,7 +4237,6 @@ export interface ResponseMessage {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
-    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -4478,8 +4308,6 @@ export interface ResponseMessage {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
-    | 'TERRAGRUNT_EXECUTION_ERROR'
-    | 'ADFS_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4550,20 +4378,6 @@ export interface ResponsePageCVNGLogDTO {
 export interface ResponsePageDatadogDashboardDTO {
   correlationId?: string
   data?: PageDatadogDashboardDTO
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponsePageDowntimeHistoryView {
-  correlationId?: string
-  data?: PageDowntimeHistoryView
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponsePageDowntimeListView {
-  correlationId?: string
-  data?: PageDowntimeListView
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4773,14 +4587,6 @@ export interface RestResponseDeploymentLogAnalysisDTO {
   responseMessages?: ResponseMessage[]
 }
 
-export interface RestResponseDowntimeResponse {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: DowntimeResponse
-  responseMessages?: ResponseMessage[]
-}
-
 export interface RestResponseHealthMonitoringFlagResponse {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -4794,14 +4600,6 @@ export interface RestResponseHealthSourceRecordsResponse {
     [key: string]: { [key: string]: any }
   }
   resource?: HealthSourceRecordsResponse
-  responseMessages?: ResponseMessage[]
-}
-
-export interface RestResponseHealthSourceSpec {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: HealthSourceSpec
   responseMessages?: ResponseMessage[]
 }
 
@@ -5505,7 +5303,7 @@ export interface ServiceDependencyGraphDTO {
 }
 
 export interface ServiceDependencyMetadata {
-  supportedChangeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  supportedChangeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
   type?: 'KUBERNETES'
 }
 
@@ -5607,21 +5405,13 @@ export interface ServiceLevelObjectiveV2Response {
   serviceLevelObjectiveV2: ServiceLevelObjectiveV2DTO
 }
 
-export type ServiceNowADFSDTO = ServiceNowAuthCredentialsDTO & {
-  adfsUrl: string
-  certificateRef: string
-  clientIdRef: string
-  privateKeyRef: string
-  resourceIdRef: string
-}
-
 export interface ServiceNowAuthCredentialsDTO {
   [key: string]: any
 }
 
 export interface ServiceNowAuthenticationDTO {
   spec: ServiceNowAuthCredentialsDTO
-  type: 'UsernamePassword' | 'AdfsClientCredentialsWithCertificate'
+  type: 'UsernamePassword'
 }
 
 export type ServiceNowConnector = ConnectorConfigDTO & {
@@ -5972,7 +5762,6 @@ export interface TimeSeriesMetricDefinition {
   actionType?: 'IGNORE' | 'FAIL'
   comparisonType?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
-  id?: string
   metricGroupName?: string
   metricIdentifier?: string
   metricName?: string
@@ -6359,8 +6148,6 @@ export type ChangeEventDTORequestBody = ChangeEventDTO
 
 export type CompositeServiceLevelObjectiveSpecRequestBody = CompositeServiceLevelObjectiveSpec
 
-export type DowntimeDTORequestBody = DowntimeDTO
-
 export type LogSampleRequestDTORequestBody = LogSampleRequestDTO
 
 export type MetricPackDTOArrayRequestBody = MetricPackDTO[]
@@ -6391,7 +6178,7 @@ export interface ChangeEventListForAccountQueryParams {
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
   searchText?: string
   startTime: number
   endTime: number
@@ -6485,7 +6272,7 @@ export interface ChangeEventTimelineForAccountQueryParams {
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
   searchText?: string
   startTime: number
   endTime: number
@@ -6580,7 +6367,7 @@ export interface ChangeEventListQueryParams {
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
   searchText?: string
   startTime: number
   endTime: number
@@ -6668,7 +6455,7 @@ export interface ChangeEventTimelineQueryParams {
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
   searchText?: string
   startTime: number
   endTime: number
@@ -7253,8 +7040,8 @@ export const getAppdynamicsBaseFoldersPromise = (
 
 export interface GetCompleteServiceInstanceMetricPathQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   appName: string
   completeMetricPath: string
@@ -7574,8 +7361,8 @@ export const getAppdynamicsMetricStructurePromise = (
 
 export interface GetServiceInstanceMetricPathQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   appName: string
   baseFolder: string
@@ -7774,7 +7561,7 @@ export interface GetMonitoredServiceChangeEventSummaryQueryParams {
   monitoredServiceIdentifiers?: string[]
   isMonitoredServiceIdentifierScoped?: boolean
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
   startTime: number
   endTime: number
 }
@@ -7833,7 +7620,7 @@ export interface GetMonitoredServiceChangeTimelineQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   monitoredServiceIdentifier?: string
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
   searchText?: string
   duration: 'FOUR_HOURS' | 'TWENTY_FOUR_HOURS' | 'THREE_DAYS' | 'SEVEN_DAYS' | 'THIRTY_DAYS'
   endTime: number
@@ -8141,8 +7928,8 @@ export const saveCVNGLogRecordsPromise = (
 
 export interface GetDatadogLogIndexesQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   tracingId: string
 }
@@ -8193,8 +7980,8 @@ export const getDatadogLogIndexesPromise = (
 
 export interface GetDatadogLogSampleDataQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   tracingId: string
 }
@@ -8274,8 +8061,8 @@ export const getDatadogLogSampleDataPromise = (
 
 export interface GetDatadogActiveMetricsQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   filter?: string
   tracingId: string
@@ -8327,8 +8114,8 @@ export const getDatadogActiveMetricsPromise = (
 
 export interface GetDatadogDashboardDetailsQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   dashboardId: string
   tracingId: string
@@ -8385,8 +8172,8 @@ export const getDatadogDashboardDetailsPromise = (
 
 export interface GetDatadogDashboardsQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   pageSize: number
   offset: number
@@ -8440,8 +8227,8 @@ export const getDatadogDashboardsPromise = (
 
 export interface GetDatadogMetricTagsListQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   metric: string
   tracingId: string
@@ -8493,8 +8280,8 @@ export const getDatadogMetricTagsListPromise = (
 
 export interface GetDatadogMetricTagsQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   metric: string
   filter?: string
@@ -8547,8 +8334,8 @@ export const getDatadogMetricTagsPromise = (
 
 export interface GetDatadogSampleDataQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   tracingId: string
   query: string
@@ -9064,8 +8851,8 @@ export const getELKIndicesPromise = (
 
 export interface GetELKLogSampleDataQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   connectorIdentifier: string
   tracingId: string
   index: string
@@ -11461,8 +11248,8 @@ export const getMonitoredServiceDetailsWithServiceIdPromise = (
 
 export interface GetSliGraphQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
 }
 
 export interface GetSliGraphPathParams {
@@ -12524,8 +12311,8 @@ export const getRiskCategoryForCustomHealthMetricPromise = (
 
 export interface GetServiceDependencyGraphQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   environmentIdentifier?: string
   serviceIdentifier?: string
   monitoredServiceIdentifier?: string
@@ -14636,8 +14423,8 @@ export const getSumoLogicEndPointsPromise = (
 
 export interface GetTimeSeriesMetricDataQueryParams {
   accountId: string
-  orgIdentifier: string
-  projectIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
   monitoredServiceIdentifier?: string
   startTime: number
   endTime: number

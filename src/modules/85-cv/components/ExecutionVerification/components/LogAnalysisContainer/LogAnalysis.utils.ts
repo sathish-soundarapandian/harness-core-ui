@@ -6,7 +6,7 @@
  */
 
 import type { MultiSelectOption } from '@harness/uicore'
-import { getEventTypeChartColor } from '@cv/utils/CommonUtils'
+import { EVENT_TYPE, getEventTypeChartColor } from '@cv/utils/CommonUtils'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import type { UseStringsReturn } from 'framework/strings'
 import type {
@@ -15,7 +15,8 @@ import type {
   LogAnalysisRadarChartListDTO,
   LogData,
   RestResponseAnalyzedRadarChartLogDataWithCountDTO,
-  RestResponseLogAnalysisRadarChartListWithCountDTO
+  RestResponseLogAnalysisRadarChartListWithCountDTO,
+  TimestampFrequencyCount
 } from 'services/cv'
 import type { LogAnalysisRowData } from './LogAnalysis.types'
 import { EventTypeFullName } from './LogAnalysis.constants'
@@ -42,7 +43,16 @@ export const getClusterTypes = (getString: UseStringsReturn['getString']): Selec
 }
 
 function getFrequencyDataValues(frequencyData?: number[] | FrequencyDTO[], isServicePage?: boolean): number[] {
+  // TODO: Behaviour changes baased on isServicePage
   if (!isServicePage || typeof frequencyData === 'undefined') return frequencyData as number[]
+
+  return (frequencyData as FrequencyDTO[]).map((datum: FrequencyDTO) => datum.count) as number[]
+}
+
+function getFrequencyDataValuesV2(frequencyData?: TimestampFrequencyCount[], isServicePage?: boolean): number[] {
+  // TODO: Behaviour changes baased on isServicePage
+  if (!isServicePage || typeof frequencyData === 'undefined')
+    return frequencyData?.map(datum => datum.count) as number[]
 
   return (frequencyData as FrequencyDTO[]).map((datum: FrequencyDTO) => datum.count) as number[]
 }
@@ -51,6 +61,8 @@ export const getSingleLogData = (
   logData: LogAnalysisRadarChartListDTO | AnalyzedRadarChartLogDataDTO,
   isServicePage?: boolean
 ): LogAnalysisRowData => {
+  console.log('logData', logData)
+
   return {
     clusterType: mapClusterType(logData?.clusterType as string),
     count: logData?.count as number,

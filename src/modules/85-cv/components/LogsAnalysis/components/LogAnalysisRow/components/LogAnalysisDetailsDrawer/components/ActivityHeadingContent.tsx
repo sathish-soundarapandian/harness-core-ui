@@ -17,6 +17,9 @@ export function ActivityHeadingContent(props: ActivityHeadingContentProps): JSX.
 
   const chartsConfig = useMemo(() => getChartsConfigForDrawer(getString, trendData?.series), [trendData, getString])
 
+  console.log('trendData', trendData)
+  console.log('chartsConfig', chartsConfig)
+
   return (
     <>
       <Container className={css.activityContainer}>

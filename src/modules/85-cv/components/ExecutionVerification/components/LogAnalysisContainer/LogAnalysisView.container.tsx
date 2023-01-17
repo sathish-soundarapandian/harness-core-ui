@@ -31,6 +31,298 @@ import ClusterTypeFiltersForLogs from './components/ClusterTypeFiltersForLogs'
 import css from './LogAnalysisView.container.module.scss'
 import logAnalysisStyles from './LogAnalysis.module.scss'
 
+const mockData = {
+  metaData: {},
+  resource: {
+    totalClusters: 1,
+    eventCounts: [
+      {
+        clusterType: 'KNOWN_EVENT',
+        count: 1,
+        displayName: 'Known'
+      },
+      {
+        clusterType: 'UNEXPECTED_FREQUENCY',
+        count: 0,
+        displayName: 'Unexpected Frequency'
+      },
+      {
+        clusterType: 'UNKNOWN_EVENT',
+        count: 0,
+        displayName: 'Unknown'
+      },
+      {
+        clusterType: 'BASELINE',
+        count: 1,
+        displayName: 'Baseline'
+      }
+    ],
+    logAnalysisRadarCharts: {
+      totalPages: 1,
+      totalItems: 1,
+      pageItemCount: 1,
+      pageSize: 10,
+      content: [
+        {
+          message: 'test data - host1 - log1',
+          clusterId: '29659f5a-f6ad-308c-97dc-d54d0ac07c1c',
+          label: 0,
+          risk: 'HEALTHY',
+          clusterType: 'KNOWN_EVENT',
+          count: 8,
+          frequencyData: [1.5, 3.0, 3.0],
+          hostFrequencyData: [
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 1.0
+                }
+              ],
+              host: 'host1'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 2.0
+                }
+              ],
+              host: 'host2'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845600,
+                  count: 2.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 2.0
+                }
+              ],
+              host: 'host3'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845600,
+                  count: 4.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 4.0
+                }
+              ],
+              host: 'host4'
+            }
+          ],
+          testHostFrequencyData: [
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 1.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 0.0
+                }
+              ],
+              host: 'host1'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 2.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 0.0
+                }
+              ],
+              host: 'host2'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 2.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 2.0
+                }
+              ],
+              host: 'host3'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 4.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 4.0
+                }
+              ],
+              host: 'host4'
+            }
+          ],
+          baseline: {
+            message: 'test data - host1 - log1',
+            label: 0,
+            risk: 'NO_ANALYSIS',
+            clusterType: 'BASELINE',
+            count: 0,
+            frequencyData: [1.5],
+            hostFrequencyData: [
+              {
+                frequencies: [
+                  {
+                    timeStamp: 1672845300,
+                    count: 1.0
+                  }
+                ],
+                host: 'host1'
+              },
+              {
+                frequencies: [
+                  {
+                    timeStamp: 1672845300,
+                    count: 2.0
+                  }
+                ],
+                host: 'host2'
+              }
+            ],
+            averageFrequencyData: [
+              {
+                timeStamp: 1672845300,
+                count: 1.5
+              }
+            ],
+            hasControlData: false
+          },
+          averageFrequencyData: [
+            {
+              timeStamp: 1672845660,
+              count: 3.0
+            },
+            {
+              timeStamp: 1672845600,
+              count: 3.0
+            },
+            {
+              timeStamp: 1672845420,
+              count: 1.5
+            }
+          ],
+          totalTestFrequencyData: [
+            {
+              timeStamp: 1672845420,
+              count: 3.0
+            },
+            {
+              timeStamp: 1672845480,
+              count: 0.0
+            },
+            {
+              timeStamp: 1672845540,
+              count: 0.0
+            },
+            {
+              timeStamp: 1672845600,
+              count: 6.0
+            },
+            {
+              timeStamp: 1672845660,
+              count: 6.0
+            }
+          ],
+          averageControlFrequencyData: [
+            {
+              timeStamp: 1672845060,
+              count: 0.0
+            },
+            {
+              timeStamp: 1672845120,
+              count: 0.0
+            },
+            {
+              timeStamp: 1672845180,
+              count: 0.0
+            },
+            {
+              timeStamp: 1672845240,
+              count: 0.0
+            },
+            {
+              timeStamp: 1672845300,
+              count: 1.5
+            }
+          ],
+          hasControlData: true
+        }
+      ],
+      pageIndex: 0,
+      empty: false
+    }
+  },
+  responseMessages: []
+}
+
+// 👉 Verify step screen logs
 export default function LogAnalysisContainer({
   step,
   hostName,
@@ -264,7 +556,7 @@ export default function LogAnalysisContainer({
 
     return (
       <LogAnalysis
-        data={logsData}
+        data={mockData}
         clusterChartData={clusterChartData}
         filteredAngle={minMaxAngle}
         logsLoading={logsLoading}
