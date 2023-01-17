@@ -7,8 +7,10 @@
 
 import {
   EARLY_ACCESS_LINK,
+  getReleaseNodeLink,
   HARNESS_SUPPORT_LINK,
   openEarlyAccess,
+  openFileATicket,
   openWhatsNew,
   openZendeskSupport,
   WHATS_NEW_LINK
@@ -40,5 +42,26 @@ describe('utility test', () => {
     openEarlyAccess({ stopPropagation: jest.fn, preventDefault: jest.fn })
     expect(window.open).toHaveBeenCalledTimes(1)
     expect(window.open).toHaveBeenCalledWith(EARLY_ACCESS_LINK)
+  })
+
+  test('getReleaseNodeLink test community', () => {
+    window.deploymentType = 'COMMUNITY'
+    const link = getReleaseNodeLink()
+    expect(link).toEqual('https://ngdocs.harness.io/article/556wy85kbo-harness-on-prem-release-notes')
+  })
+
+  test('getReleaseNodeLink test saas', () => {
+    window.deploymentType = 'SAAS'
+    const link = getReleaseNodeLink()
+    expect(link).toEqual('https://ngdocs.harness.io/article/7zkchy5lhj-harness-saa-s-release-notes-2022')
+  })
+
+  test('openFileATicket test', () => {
+    const saberMock = jest.fn()
+    window.Saber = { do: saberMock }
+    // eslint-disable-next-line
+    // @ts-ignore
+    openFileATicket({ stopPropagation: jest.fn, preventDefault: jest.fn }, { email: 'test@test.com' }, jest.fn())
+    expect(saberMock).toBeCalledTimes(2)
   })
 })
