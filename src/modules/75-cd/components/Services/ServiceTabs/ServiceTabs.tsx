@@ -164,62 +164,53 @@ export const ServiceTab = (props: ServiceTabProps) => {
 
   return (
     <>
-      <Page.Header
-        className={css.pageHeader}
-        title={
-          <Layout.Horizontal>
-            <RbacButton
-              intent="primary"
-              data-testid="add-service"
-              icon="plus"
-              iconProps={{ size: 10 }}
-              text={getString('newService')}
-              permission={{
-                permission: PermissionIdentifier.EDIT_SERVICE,
-                resource: {
-                  resourceType: ResourceType.SERVICE
-                }
-              }}
-              onClick={() => {
-                showModal()
-                setMode(SelectedView.VISUAL)
-              }}
+      <Page.SubHeader className={css.pageHeader}>
+        <RbacButton
+          intent="primary"
+          data-testid="add-service"
+          icon="plus"
+          iconProps={{ size: 10 }}
+          text={getString('newService')}
+          permission={{
+            permission: PermissionIdentifier.EDIT_SERVICE,
+            resource: {
+              resourceType: ResourceType.SERVICE
+            }
+          }}
+          onClick={() => {
+            showModal()
+            setMode(SelectedView.VISUAL)
+          }}
+        />
+        <Layout.Horizontal height="inherit" flex={{ alignItems: 'flex-end' }} spacing="small">
+          <Button
+            text={getString('dashboardLabel')}
+            minimal
+            className={cx({ [css.selectedTabs]: view !== Tabs.MANAGESERVICE })}
+            intent={view !== Tabs.MANAGESERVICE ? 'primary' : 'none'}
+            onClick={() => setView(Tabs.DASHBOARD)}
+          />
+          <Button
+            text={getString('cd.serviceDashboard.manageServiceLabel')}
+            minimal
+            className={cx({ [css.selectedTabs]: view === Tabs.MANAGESERVICE })}
+            intent={view === Tabs.MANAGESERVICE ? 'primary' : 'none'}
+            onClick={() => setView(Tabs.MANAGESERVICE)}
+          />
+        </Layout.Horizontal>
+        <Layout.Horizontal margin={{ right: 'small' }} height="xxxlarge" className={css.toolbar} width={250}>
+          {view !== Tabs.MANAGESERVICE ? (
+            <TimeRangeSelector timeRange={resultTimeFilterRange?.range} setTimeRange={setTimeRange} minimal />
+          ) : (
+            <ExpandingSearchInput
+              alwaysExpanded
+              width={200}
+              placeholder={getString('search')}
+              onChange={(query: string) => setSearchTerm(query)}
             />
-          </Layout.Horizontal>
-        }
-        content={
-          <Layout.Horizontal height="inherit" flex={{ alignItems: 'flex-end' }} spacing="small">
-            <Button
-              text={getString('dashboardLabel')}
-              minimal
-              className={cx({ [css.selectedTabs]: view !== Tabs.MANAGESERVICE })}
-              intent={view !== Tabs.MANAGESERVICE ? 'primary' : 'none'}
-              onClick={() => setView(Tabs.DASHBOARD)}
-            />
-            <Button
-              text={getString('cd.serviceDashboard.manageServiceLabel')}
-              minimal
-              className={cx({ [css.selectedTabs]: view === Tabs.MANAGESERVICE })}
-              intent={view === Tabs.MANAGESERVICE ? 'primary' : 'none'}
-              onClick={() => setView(Tabs.MANAGESERVICE)}
-            />
-          </Layout.Horizontal>
-        }
-        toolbar={
-          <Layout.Horizontal margin={{ right: 'small' }} height="xxxlarge" className={css.toolbar} width={250}>
-            {view !== Tabs.MANAGESERVICE ? (
-              <TimeRangeSelector timeRange={resultTimeFilterRange?.range} setTimeRange={setTimeRange} minimal />
-            ) : (
-              <ExpandingSearchInput
-                alwaysExpanded
-                width={200}
-                placeholder={getString('search')}
-                onChange={(query: string) => setSearchTerm(query)}
-              />
-            )}
-          </Layout.Horizontal>
-        }
-      />
+          )}
+        </Layout.Horizontal>
+      </Page.SubHeader>
       {view !== Tabs.MANAGESERVICE ? (
         <ServicesDashboardPage />
       ) : (
