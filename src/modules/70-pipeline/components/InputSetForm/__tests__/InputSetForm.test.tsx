@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { render, waitFor, fireEvent, act } from '@testing-library/react'
-import { cloneDeep, noop } from 'lodash-es'
+import { cloneDeep, defaultTo, noop } from 'lodash-es'
 import { VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -24,11 +24,12 @@ import * as pipelineng from 'services/pipeline-ng'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
-import type { InputSetDTO } from '@pipeline/utils/types'
+import type { InputSetDTO, Pipeline } from '@pipeline/utils/types'
 import type { ResponseInputSetTemplateWithReplacedExpressionsResponse } from 'services/pipeline-ng'
 import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { GetInputSetYamlDiffInline } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
+import { yamlParse } from '@common/utils/YamlHelperMethods'
 import { EnhancedInputSetForm } from '../InputSetForm'
 import {
   TemplateResponse,
@@ -294,22 +295,25 @@ describe('Render Forms - Snapshot Testing', () => {
   })
   test('showPipelineInputSetForm function', async () => {
     const templateData = cloneDeep(TemplateResponse.data)
+    const parsedPipeline = yamlParse<Pipeline>(
+      defaultTo(PipelineResponse?.data?.data?.resolvedTemplatesPipelineYaml, '')
+    )?.pipeline
     let returnVal = showPipelineInputSetForm(
-      PipelineResponse?.data?.data?.resolvedTemplatesPipelineYaml,
+      parsedPipeline,
       templateData as ResponseInputSetTemplateWithReplacedExpressionsResponse
     )
     expect(returnVal).toBeTruthy()
     delete templateData?.data
     returnVal = showPipelineInputSetForm(
-      PipelineResponse?.data?.data?.resolvedTemplatesPipelineYaml,
+      parsedPipeline,
       templateData as ResponseInputSetTemplateWithReplacedExpressionsResponse
     )
     expect(returnVal).toBeFalsy()
-    returnVal = showPipelineInputSetForm(PipelineResponse?.data?.data?.resolvedTemplatesPipelineYaml, null)
+    returnVal = showPipelineInputSetForm(parsedPipeline, null)
     expect(returnVal).toBeFalsy()
     delete MergedPipelineResponse.data?.data
     returnVal = showPipelineInputSetForm(
-      PipelineResponse?.data?.data?.resolvedTemplatesPipelineYaml,
+      parsedPipeline,
       templateData as ResponseInputSetTemplateWithReplacedExpressionsResponse
     )
     expect(returnVal).toBeFalsy()

@@ -46,7 +46,7 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { useConfirmAction, useDeepCompareEffect, useMutateAsGet, useQueryParams } from '@common/hooks'
-import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { memoizedParse, yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
 
@@ -75,6 +75,7 @@ import {
   scheduleTabsId
 } from '@triggers/components/steps/SchedulePanel/components/utils'
 import { scheduledTypes } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
+import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import TitleWithSwitch from '../components/TitleWithSwitch/TitleWithSwitch'
 import { flattenKeys, getModifiedTemplateValues } from '../WebhookTrigger/utils'
 import type { TriggerProps } from '../Trigger'
@@ -105,6 +106,7 @@ export default function ScheduledTriggerWizard(
 
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
+  const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
 
   const history = useHistory()
   const { getString } = useStrings()
@@ -279,9 +281,17 @@ export default function ScheduledTriggerWizard(
     defaultTo(pipelineResponse?.data?.yamlPipeline, '')
   )?.pipeline
 
-  const resolvedPipeline: PipelineInfoConfig | undefined = memoizedParse<Pipeline>(
-    defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, '')
-  )?.pipeline
+  useEffect(() => {
+    setResolvedPipeline(
+      yamlParse<Pipeline>(defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, ''))?.pipeline
+    )
+  }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
+
+  const { resolvedMergedPipeline } = useGetResolvedChildPipeline(
+    { accountId: accountIdentifier, repoIdentifier, branch, connectorRef: pipelineConnectorRef },
+    originalPipeline,
+    resolvedPipeline
+  )
 
   const [onEditInitialValues, setOnEditInitialValues] = useState<FlatOnEditValuesInterface>({
     triggerType: baseType as NGTriggerSourceV2['type']
@@ -293,8 +303,8 @@ export default function ScheduledTriggerWizard(
     if (
       newPipeline?.template?.templateInputs &&
       isCodebaseFieldsRuntimeInputs(newPipeline.template.templateInputs as PipelineInfoConfig) &&
-      resolvedPipeline &&
-      !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline as PipelineInfoConfig)
+      resolvedMergedPipeline &&
+      !isCloneCodebaseEnabledAtLeastOneStage(resolvedMergedPipeline as PipelineInfoConfig)
     ) {
       newPipeline = getPipelineWithoutCodebaseInputs(newPipeline) as Pipeline['pipeline']
     }
@@ -306,7 +316,7 @@ export default function ScheduledTriggerWizard(
       selectedScheduleTab: scheduleTabsId.MINUTES,
       pipeline: newPipeline,
       originalPipeline,
-      resolvedPipeline,
+      resolvedPipeline: resolvedMergedPipeline,
       pipelineBranchName: isNewGitSyncRemotePipeline ? branch : '',
       ...getDefaultExpressionBreakdownValues(scheduleTabsId.MINUTES)
     }
@@ -330,11 +340,10 @@ export default function ScheduledTriggerWizard(
 
   useEffect(() => {
     const yamlPipeline = pipelineResponse?.data?.yamlPipeline
-    const resolvedYamlPipeline = pipelineResponse?.data?.resolvedTemplatesPipelineYaml
 
     if (
       yamlPipeline &&
-      resolvedYamlPipeline &&
+      resolvedMergedPipeline &&
       ((initialValues && !initialValues.originalPipeline && !initialValues.resolvedPipeline) ||
         (onEditInitialValues?.identifier &&
           !onEditInitialValues.originalPipeline &&
@@ -342,13 +351,13 @@ export default function ScheduledTriggerWizard(
     ) {
       try {
         let newOriginalPipeline = parse(yamlPipeline)?.pipeline
-        let newResolvedPipeline = parse(resolvedYamlPipeline)?.pipeline
+        let newResolvedPipeline: any = resolvedMergedPipeline
         // only applied for CI, Not cloned codebase
         if (
           newOriginalPipeline?.template?.templateInputs &&
           isCodebaseFieldsRuntimeInputs(newOriginalPipeline.template.templateInputs as PipelineInfoConfig) &&
-          resolvedPipeline &&
-          !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline)
+          resolvedMergedPipeline &&
+          !isCloneCodebaseEnabledAtLeastOneStage(resolvedMergedPipeline)
         ) {
           const newOriginalPipelineWithoutCodebaseInputs = getPipelineWithoutCodebaseInputs(newOriginalPipeline)
           const newResolvedPipelineWithoutCodebaseInputs = getPipelineWithoutCodebaseInputs(newResolvedPipeline)
@@ -386,7 +395,7 @@ export default function ScheduledTriggerWizard(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     pipelineResponse?.data?.yamlPipeline,
-    pipelineResponse?.data?.resolvedTemplatesPipelineYaml,
+    resolvedMergedPipeline,
     onEditInitialValues?.identifier,
     initialValues,
     currentPipeline
@@ -425,13 +434,13 @@ export default function ScheduledTriggerWizard(
         const newPipeline = mergeTemplateWithInputSetData({
           inputSetPortion: { pipeline: inpuSet },
           templatePipeline: { pipeline: inpuSet },
-          allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
+          allValues: { pipeline: defaultTo(resolvedMergedPipeline, {} as PipelineInfoConfig) },
           shouldUseDefaultValues: true
         })
         setCurrentPipeline(newPipeline)
       }
     }
-  }, [template?.data?.inputSetTemplateYaml, onEditInitialValues?.pipeline, resolvedPipeline, fetchingTemplate])
+  }, [template?.data?.inputSetTemplateYaml, onEditInitialValues?.pipeline, resolvedMergedPipeline, fetchingTemplate])
 
   const [enabledStatus, setEnabledStatus] = useState<boolean>(true)
 
@@ -476,7 +485,7 @@ export default function ScheduledTriggerWizard(
           // Ensure ordering of variables and their values respectively for UI
           if (pipelineJson?.variables) {
             pipelineJson.variables = getOrderedPipelineVariableValues({
-              originalPipelineVariables: resolvedPipeline?.variables,
+              originalPipelineVariables: resolvedMergedPipeline?.variables,
               currentPipelineVariables: pipelineJson.variables
             })
           }
@@ -485,7 +494,7 @@ export default function ScheduledTriggerWizard(
           showError(getString('triggers.cannotParseInputValues'))
         }
       } else if (isNewGitSyncRemotePipeline) {
-        pipelineJson = resolvedPipeline
+        pipelineJson = resolvedMergedPipeline
       }
       const expressionBreakdownValues = getBreakdownValues(expression)
       const newExpressionBreakdown = {
@@ -679,7 +688,7 @@ export default function ScheduledTriggerWizard(
                 pipeline: { ...clearRuntimeInput(latestPipeline.pipeline) },
                 template: latestYamlTemplate,
                 originalPipeline: orgPipeline,
-                resolvedPipeline,
+                resolvedPipeline: resolvedMergedPipeline,
                 getString,
                 viewType: StepViewType.TriggerForm,
                 viewTypeMetadata: { isTrigger: true }

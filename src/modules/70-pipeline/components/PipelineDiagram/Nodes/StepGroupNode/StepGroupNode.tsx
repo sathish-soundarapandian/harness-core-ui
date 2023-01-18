@@ -244,6 +244,7 @@ export function StepGroupNode(props: any): JSX.Element {
                   onMouseOut={e => {
                     e.stopPropagation()
                   }}
+                  width={showExecutionMetaDataForChainedPipeline ? '50%' : '100%'}
                 >
                   <Icon
                     className={css.collapseIcon}

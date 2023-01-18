@@ -947,7 +947,6 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
                                       >
                                         <div
                                           class="bp3-form-group connectorMargin"
-                                          data-id="undefined-2"
                                           style="margin-bottom: 0px;"
                                         >
                                           <div
@@ -1083,7 +1082,6 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
                                   >
                                     <div
                                       class="bp3-form-group"
-                                      data-id="pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition.spec.namespace-3"
                                     >
                                       <label
                                         class="bp3-label"
@@ -1156,7 +1154,6 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
                                   >
                                     <div
                                       class="bp3-form-group"
-                                      data-id="pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition.spec.releaseName-4"
                                     >
                                       <label
                                         class="bp3-label"
@@ -1745,7 +1742,6 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
                                       >
                                         <div
                                           class="bp3-form-group connectorMargin"
-                                          data-id="undefined-2"
                                           style="margin-bottom: 0px;"
                                         >
                                           <div
@@ -1881,7 +1877,6 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
                                   >
                                     <div
                                       class="bp3-form-group"
-                                      data-id="pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition.spec.namespace-3"
                                     >
                                       <label
                                         class="bp3-label"
@@ -1954,7 +1949,6 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
                                   >
                                     <div
                                       class="bp3-form-group"
-                                      data-id="pipeline.stages[0].stage.spec.infrastructure.infrastructureDefinition.spec.releaseName-4"
                                     >
                                       <label
                                         class="bp3-label"

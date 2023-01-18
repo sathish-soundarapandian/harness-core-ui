@@ -55,7 +55,7 @@ import type {
 import { Scope } from '@common/interfaces/SecretsInterface'
 import routes from '@common/RouteDefinitions'
 import { useConfirmAction, useDeepCompareEffect, useMutateAsGet, useQueryParams } from '@common/hooks'
-import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { memoizedParse, yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import {
   getIdentifierFromValue,
   getScopeFromDTO,
@@ -86,6 +86,7 @@ import TabWizard from '@triggers/components/TabWizard/TabWizard'
 import type { AddConditionInterface } from '@triggers/components/AddConditionsSection/AddConditionsSection'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import TitleWithSwitch from '../components/TitleWithSwitch/TitleWithSwitch'
 import {
   ConnectorRefInterface,
@@ -130,6 +131,7 @@ export default function WebhookTriggerWizard(
 
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
+  const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
 
   const history = useHistory()
   const { getString } = useStrings()
@@ -305,9 +307,17 @@ export default function WebhookTriggerWizard(
     defaultTo(pipelineResponse?.data?.yamlPipeline, '')
   )?.pipeline
 
-  const resolvedPipeline: PipelineInfoConfig | undefined = memoizedParse<Pipeline>(
-    defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, '')
-  )?.pipeline
+  useEffect(() => {
+    setResolvedPipeline(
+      yamlParse<Pipeline>(defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, ''))?.pipeline
+    )
+  }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
+
+  const { resolvedMergedPipeline } = useGetResolvedChildPipeline(
+    { accountId: accountIdentifier, repoIdentifier, branch, connectorRef: pipelineConnectorRef },
+    originalPipeline,
+    resolvedPipeline
+  )
 
   const [onEditInitialValues, setOnEditInitialValues] = useState<FlatOnEditValuesInterface>({
     triggerType: baseType as NGTriggerSourceV2['type']
@@ -319,8 +329,8 @@ export default function WebhookTriggerWizard(
     if (
       newPipeline?.template?.templateInputs &&
       isCodebaseFieldsRuntimeInputs(newPipeline.template.templateInputs as PipelineInfoConfig) &&
-      resolvedPipeline &&
-      !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline as PipelineInfoConfig)
+      resolvedMergedPipeline &&
+      !isCloneCodebaseEnabledAtLeastOneStage(resolvedMergedPipeline as PipelineInfoConfig)
     ) {
       newPipeline = getPipelineWithoutCodebaseInputs(newPipeline) as Pipeline['pipeline']
     }
@@ -336,7 +346,7 @@ export default function WebhookTriggerWizard(
       }),
       pipeline: newPipeline as PipelineInfoConfig,
       originalPipeline,
-      resolvedPipeline,
+      resolvedPipeline: resolvedMergedPipeline,
       anyAction: false,
       autoAbortPreviousExecutions: false,
       pipelineBranchName: getDefaultPipelineReferenceBranch(baseType) || branch,
@@ -369,11 +379,10 @@ export default function WebhookTriggerWizard(
 
   useEffect(() => {
     const yamlPipeline = pipelineResponse?.data?.yamlPipeline
-    const resolvedYamlPipeline = pipelineResponse?.data?.resolvedTemplatesPipelineYaml
 
     if (
       yamlPipeline &&
-      resolvedYamlPipeline &&
+      resolvedMergedPipeline &&
       ((initialValues && !initialValues.originalPipeline && !initialValues.resolvedPipeline) ||
         (onEditInitialValues?.identifier &&
           !onEditInitialValues.originalPipeline &&
@@ -381,13 +390,13 @@ export default function WebhookTriggerWizard(
     ) {
       try {
         let newOriginalPipeline = parse(yamlPipeline)?.pipeline
-        let newResolvedPipeline = parse(resolvedYamlPipeline)?.pipeline
+        let newResolvedPipeline: any = resolvedMergedPipeline
         // only applied for CI, Not cloned codebase
         if (
           newOriginalPipeline?.template?.templateInputs &&
           isCodebaseFieldsRuntimeInputs(newOriginalPipeline.template.templateInputs as PipelineInfoConfig) &&
-          resolvedPipeline &&
-          !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline)
+          resolvedMergedPipeline &&
+          !isCloneCodebaseEnabledAtLeastOneStage(resolvedMergedPipeline)
         ) {
           const newOriginalPipelineWithoutCodebaseInputs = getPipelineWithoutCodebaseInputs(newOriginalPipeline)
           const newResolvedPipelineWithoutCodebaseInputs = getPipelineWithoutCodebaseInputs(newResolvedPipeline)
@@ -425,7 +434,7 @@ export default function WebhookTriggerWizard(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     pipelineResponse?.data?.yamlPipeline,
-    pipelineResponse?.data?.resolvedTemplatesPipelineYaml,
+    resolvedMergedPipeline,
     onEditInitialValues?.identifier,
     initialValues,
     currentPipeline
@@ -521,13 +530,13 @@ export default function WebhookTriggerWizard(
         const newPipeline = mergeTemplateWithInputSetData({
           inputSetPortion: { pipeline: inpuSet },
           templatePipeline: { pipeline: inpuSet },
-          allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
+          allValues: { pipeline: defaultTo(resolvedMergedPipeline, {} as PipelineInfoConfig) },
           shouldUseDefaultValues: true
         })
         setCurrentPipeline(newPipeline)
       }
     }
-  }, [template?.data?.inputSetTemplateYaml, onEditInitialValues?.pipeline, resolvedPipeline, fetchingTemplate])
+  }, [template?.data?.inputSetTemplateYaml, onEditInitialValues?.pipeline, resolvedMergedPipeline, fetchingTemplate])
 
   const [enabledStatus, setEnabledStatus] = useState<boolean>(true)
 
@@ -614,7 +623,7 @@ export default function WebhookTriggerWizard(
             // Ensure ordering of variables and their values respectively for UI
             if (pipelineJson?.variables) {
               pipelineJson.variables = getOrderedPipelineVariableValues({
-                originalPipelineVariables: resolvedPipeline?.variables,
+                originalPipelineVariables: resolvedMergedPipeline?.variables,
                 currentPipelineVariables: pipelineJson.variables
               })
             }
@@ -623,7 +632,7 @@ export default function WebhookTriggerWizard(
             showError(getString('triggers.cannotParseInputValues'))
           }
         } else if (isNewGitSyncRemotePipeline) {
-          pipelineJson = resolvedPipeline
+          pipelineJson = resolvedMergedPipeline
         }
 
         triggerValues = {
@@ -729,7 +738,7 @@ export default function WebhookTriggerWizard(
             // Ensure ordering of variables and their values respectively for UI
             if (pipelineJson?.variables) {
               pipelineJson.variables = getOrderedPipelineVariableValues({
-                originalPipelineVariables: resolvedPipeline?.variables,
+                originalPipelineVariables: resolvedMergedPipeline?.variables,
                 currentPipelineVariables: pipelineJson.variables
               })
             }
@@ -738,7 +747,7 @@ export default function WebhookTriggerWizard(
             showError(getString('triggers.cannotParseInputValues'))
           }
         } else if (isNewGitSyncRemotePipeline) {
-          pipelineJson = resolvedPipeline
+          pipelineJson = resolvedMergedPipeline
         }
 
         triggerValues = {
@@ -1105,7 +1114,7 @@ export default function WebhookTriggerWizard(
                 pipeline: { ...clearRuntimeInput(latestPipeline.pipeline) },
                 template: latestYamlTemplate,
                 originalPipeline: orgPipeline,
-                resolvedPipeline,
+                resolvedPipeline: resolvedMergedPipeline,
                 getString,
                 viewType: StepViewType.TriggerForm,
                 viewTypeMetadata: { isTrigger: true }

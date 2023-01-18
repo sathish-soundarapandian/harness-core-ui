@@ -68,7 +68,7 @@ import type {
   InvocationMapFunction,
   CompletionItemInterface
 } from '@common/interfaces/YAMLBuilderProps'
-import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { memoizedParse, yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useConfirmAction, useMutateAsGet, useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
@@ -76,6 +76,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import useIsGithubWebhookAuthenticationEnabled from '@triggers/components/Triggers/WebhookTrigger/useIsGithubWebhookAuthenticationEnabled'
+import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import {
   scheduleTabsId,
   getDefaultExpressionBreakdownValues,
@@ -201,6 +202,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
 
   const [connectorScopeParams, setConnectorScopeParams] = useState<GetConnectorQueryParams | undefined>(undefined)
   const [ignoreError, setIgnoreError] = useState<boolean>(false)
+  const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
   const createUpdateTriggerQueryParams = useMemo(
     () => ({
       accountIdentifier: accountId,
@@ -378,13 +380,21 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     (pipelineResponse?.data?.yamlPipeline as any) || ''
   )?.pipeline
 
-  const resolvedPipeline: PipelineInfoConfig | undefined = memoizedParse<Pipeline>(
-    (pipelineResponse?.data?.resolvedTemplatesPipelineYaml as any) || ''
-  )?.pipeline
+  useEffect(() => {
+    setResolvedPipeline(
+      yamlParse<Pipeline>(defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, ''))?.pipeline
+    )
+  }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
+
+  const { loadingResolvedChildPipeline, resolvedMergedPipeline } = useGetResolvedChildPipeline(
+    { accountId, repoIdentifier, branch, connectorRef: pipelineConnectorRef },
+    originalPipeline,
+    resolvedPipeline
+  )
 
   const shouldRenderWizard = useMemo(() => {
-    return !loadingGetTrigger && !fetchingTemplate
-  }, [loadingGetTrigger, fetchingTemplate])
+    return !loadingGetTrigger && !fetchingTemplate && !loadingResolvedChildPipeline
+  }, [loadingGetTrigger, fetchingTemplate, loadingResolvedChildPipeline])
 
   useDeepCompareEffect(() => {
     if (shouldRenderWizard && template?.data?.inputSetTemplateYaml !== undefined) {
@@ -417,7 +427,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         const newPipeline = mergeTemplateWithInputSetData({
           inputSetPortion: { pipeline: inpuSet },
           templatePipeline: { pipeline: inpuSet },
-          allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
+          allValues: { pipeline: defaultTo(resolvedMergedPipeline, {} as PipelineInfoConfig) },
           shouldUseDefaultValues: true
         })
         setCurrentPipeline(newPipeline)
@@ -426,7 +436,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
   }, [
     template?.data?.inputSetTemplateYaml,
     onEditInitialValues?.pipeline,
-    resolvedPipeline,
+    resolvedMergedPipeline,
     fetchingTemplate,
     loadingGetTrigger
   ])
@@ -761,7 +771,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             // Ensure ordering of variables and their values respectively for UI
             if (pipelineJson?.variables) {
               pipelineJson.variables = getOrderedPipelineVariableValues({
-                originalPipelineVariables: resolvedPipeline?.variables,
+                originalPipelineVariables: resolvedMergedPipeline?.variables,
                 currentPipelineVariables: pipelineJson.variables
               })
             }
@@ -770,7 +780,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
           }
         } else if (isNewGitSyncRemotePipeline) {
-          pipelineJson = resolvedPipeline
+          pipelineJson = resolvedMergedPipeline
         }
 
         triggerValues = {
@@ -875,7 +885,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             // Ensure ordering of variables and their values respectively for UI
             if (pipelineJson?.variables) {
               pipelineJson.variables = getOrderedPipelineVariableValues({
-                originalPipelineVariables: resolvedPipeline?.variables,
+                originalPipelineVariables: resolvedMergedPipeline?.variables,
                 currentPipelineVariables: pipelineJson.variables
               })
             }
@@ -884,7 +894,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
           }
         } else if (isNewGitSyncRemotePipeline) {
-          pipelineJson = resolvedPipeline
+          pipelineJson = resolvedMergedPipeline
         }
 
         triggerValues = {
@@ -947,7 +957,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           // Ensure ordering of variables and their values respectively for UI
           if (pipelineJson?.variables) {
             pipelineJson.variables = getOrderedPipelineVariableValues({
-              originalPipelineVariables: resolvedPipeline?.variables,
+              originalPipelineVariables: resolvedMergedPipeline?.variables,
               currentPipelineVariables: pipelineJson.variables
             })
           }
@@ -956,7 +966,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
         }
       } else if (isNewGitSyncRemotePipeline) {
-        pipelineJson = resolvedPipeline
+        pipelineJson = resolvedMergedPipeline
       }
       const expressionBreakdownValues = getBreakdownValues(expression)
       const newExpressionBreakdown = {
@@ -1042,7 +1052,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           // Ensure ordering of variables and their values respectively for UI
           if (pipelineJson?.variables) {
             pipelineJson.variables = getOrderedPipelineVariableValues({
-              originalPipelineVariables: resolvedPipeline?.variables,
+              originalPipelineVariables: resolvedMergedPipeline?.variables,
               currentPipelineVariables: pipelineJson.variables
             })
           }
@@ -1051,7 +1061,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
         }
       } else if (isNewGitSyncRemotePipeline) {
-        pipelineJson = resolvedPipeline
+        pipelineJson = resolvedMergedPipeline
       }
       const eventConditions = source?.spec?.spec?.eventConditions || []
       const { value: versionValue, operator: versionOperator } =
@@ -1188,7 +1198,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
                 pipeline: { ...clearRuntimeInput(latestPipeline.pipeline) },
                 template: latestYamlTemplate,
                 originalPipeline: orgPipeline,
-                resolvedPipeline,
+                resolvedPipeline: resolvedMergedPipeline,
                 getString,
                 viewType: StepViewType.TriggerForm,
                 viewTypeMetadata: { isTrigger: true }
@@ -1354,8 +1364,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     if (
       newPipeline?.template?.templateInputs &&
       isCodebaseFieldsRuntimeInputs(newPipeline.template.templateInputs as PipelineInfoConfig) &&
-      resolvedPipeline &&
-      !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline as PipelineInfoConfig)
+      resolvedMergedPipeline &&
+      !isCloneCodebaseEnabledAtLeastOneStage(resolvedMergedPipeline as PipelineInfoConfig)
     ) {
       newPipeline = getPipelineWithoutCodebaseInputs(newPipeline)
     }
@@ -1372,7 +1382,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         }),
         pipeline: newPipeline,
         originalPipeline,
-        resolvedPipeline,
+        resolvedPipeline: resolvedMergedPipeline,
         anyAction: false,
         autoAbortPreviousExecutions: false,
         pipelineBranchName: getDefaultPipelineReferenceBranch(triggerType),
@@ -1387,7 +1397,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         selectedScheduleTab: scheduleTabsId.MINUTES,
         pipeline: newPipeline,
         originalPipeline,
-        resolvedPipeline,
+        resolvedPipeline: resolvedMergedPipeline,
         pipelineBranchName: getDefaultPipelineReferenceBranch(triggerType) || branch,
         ...getDefaultExpressionBreakdownValues(scheduleTabsId.MINUTES)
       }
@@ -1402,7 +1412,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         manifestType,
         pipeline: newPipeline,
         originalPipeline,
-        resolvedPipeline,
+        resolvedPipeline: resolvedMergedPipeline,
         inputSetTemplateYamlObj,
         pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew) || branch,
         selectedArtifact: {}
@@ -1434,11 +1444,10 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
 
   useEffect(() => {
     const yamlPipeline = pipelineResponse?.data?.yamlPipeline
-    const resolvedYamlPipeline = pipelineResponse?.data?.resolvedTemplatesPipelineYaml
 
     if (
       yamlPipeline &&
-      resolvedYamlPipeline &&
+      resolvedMergedPipeline &&
       ((initialValues && !initialValues.originalPipeline && !initialValues.resolvedPipeline) ||
         (onEditInitialValues?.identifier &&
           !onEditInitialValues.originalPipeline &&
@@ -1446,13 +1455,13 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     ) {
       try {
         let newOriginalPipeline = parse(yamlPipeline)?.pipeline
-        let newResolvedPipeline = parse(resolvedYamlPipeline)?.pipeline
+        let newResolvedPipeline: any = resolvedMergedPipeline
         // only applied for CI, Not cloned codebase
         if (
           newOriginalPipeline?.template?.templateInputs &&
           isCodebaseFieldsRuntimeInputs(newOriginalPipeline.template.templateInputs as PipelineInfoConfig) &&
-          resolvedPipeline &&
-          !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline)
+          resolvedMergedPipeline &&
+          !isCloneCodebaseEnabledAtLeastOneStage(resolvedMergedPipeline)
         ) {
           const newOriginalPipelineWithoutCodebaseInputs = getPipelineWithoutCodebaseInputs(newOriginalPipeline)
           const newResolvedPipelineWithoutCodebaseInputs = getPipelineWithoutCodebaseInputs(newResolvedPipeline)
@@ -1494,7 +1503,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     }
   }, [
     pipelineResponse?.data?.yamlPipeline,
-    pipelineResponse?.data?.resolvedTemplatesPipelineYaml,
+    resolvedMergedPipeline,
     onEditInitialValues?.identifier,
     initialValues,
     currentPipeline
