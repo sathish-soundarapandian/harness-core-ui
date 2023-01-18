@@ -21,7 +21,7 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { merge, defaultTo, memoize,isEmpty } from 'lodash-es'
+import { merge, defaultTo, memoize, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Menu } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -137,37 +137,42 @@ export function Nexus3Artifact({
       }),
 
       repositoryUrl: Yup.mixed().when('repositoryFormat', {
-        is:   RepositoryFormatTypes.Docker,
+        is: RepositoryFormatTypes.Docker,
         then: Yup.mixed().test({
           test(value: string | undefined): boolean | Yup.ValidationError {
             if (this.parent.repositoryPortorRepositoryURL === RepositoryPortOrServer.RepositoryUrl) {
-                return isEmpty(value) ? this.createError({ message: getString('pipeline.artifactsSelection.validation.repositoryUrl') }) : true
-            } 
+              return isEmpty(value)
+                ? this.createError({ message: getString('pipeline.artifactsSelection.validation.repositoryUrl') })
+                : true
+            }
             return false
           }
         })
       }),
 
-      repositoryPort:Yup.mixed().when('repositoryFormat', {
-        is:   RepositoryFormatTypes.Docker,
+      repositoryPort: Yup.mixed().when('repositoryFormat', {
+        is: RepositoryFormatTypes.Docker,
         then: Yup.mixed().test({
           test(value: string | undefined): boolean | Yup.ValidationError {
             if (this.parent.repositoryPortorRepositoryURL === RepositoryPortOrServer.RepositoryPort) {
-                return isEmpty(value) ? this.createError({ message: getString('pipeline.artifactsSelection.validation.repositoryPort') }) : true
-            } 
+              return isEmpty(value)
+                ? this.createError({ message: getString('pipeline.artifactsSelection.validation.repositoryPort') })
+                : true
+            }
             return false
           }
         })
       }),
       artifactPath: Yup.mixed().when('repositoryFormat', {
-        is:   RepositoryFormatTypes.Docker,
+        is: RepositoryFormatTypes.Docker,
         then: Yup.mixed().test({
           test(value: string | undefined): boolean | Yup.ValidationError {
-            return isEmpty(value) ? this.createError({ message: getString('pipeline.artifactsSelection.validation.artifactPath') }) : true
+            return isEmpty(value)
+              ? this.createError({ message: getString('pipeline.artifactsSelection.validation.artifactPath') })
+              : true
           }
         })
       })
-    
     })
   }
 
