@@ -105,11 +105,6 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
 
   const { name: pluginName, repo: pluginDocumentationLink, inputs: formFields, kind, uses } = plugin || {}
 
-  const generateFormikInitialValues = useCallback((inputs: Input[]): Record<string, any> => {
-    const result = new Map(inputs.map(i => [i.name, i.default]))
-    return Object.fromEntries(result)
-  }, [])
-
   const generateValidationSchema = useCallback((inputs: Input[]) => {
     let validationSchema = {}
     inputs.map((item: Input) => {
@@ -211,7 +206,8 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                   name={name}
                   label={generateLabelForPluginField(input)}
                   style={{ width: '100%' }}
-                ></FormInput.Text>
+                  placeholder={formFields?.find((item: Input) => item.name === name)?.default}
+                />
               )}
             </Layout.Horizontal>
           ) : null
@@ -298,8 +294,6 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                       initialValues={
                         isPluginUpdateAction
                           ? get(selectedPluginFromYAMLView, kind === PluginKind.HARNESS ? 'spec' : 'spec.with')
-                          : formFields
-                          ? generateFormikInitialValues(formFields)
                           : {}
                       }
                       validationSchema={formFields ? generateValidationSchema(formFields) : {}}
@@ -335,7 +329,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                                 <Button
                                   type="submit"
                                   variation={ButtonVariation.PRIMARY}
-                                  disabled={isPluginUpdateAction && !formikProps.dirty}
+                                  disabled={formFields?.length === 0 || !formikProps.dirty}
                                 >
                                   {isPluginUpdateAction ? getString('update') : getString('add')}
                                 </Button>
