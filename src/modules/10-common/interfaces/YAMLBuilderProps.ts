@@ -32,7 +32,7 @@ export interface YamlBuilderProps {
   fileName: string
   existingJSON?: Record<string, any>
   existingYaml?: string
-  entityType: GetYamlSchemaQueryParams['entityType']
+  entityType?: GetYamlSchemaQueryParams['entityType']
   bind?: (dynamicPopoverHandler?: YamlBuilderHandlerBinding) => void
   invocationMap?: Map<RegExp, InvocationMapFunction>
   isReadOnlyMode?: boolean

@@ -40,23 +40,22 @@ export function FetchInstanceScriptInputStep(props: FetchInstanceScriptInputStep
   return (
     <FormikForm>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-            fieldPath={'timeout'}
-            template={template}
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${prefix}.timeout`}
-            disabled={readonly}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          fieldPath={'timeout'}
+          template={template}
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${prefix}.timeout`}
+          disabled={readonly}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
     </FormikForm>
   )

@@ -46,23 +46,22 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
   return (
     <FormikForm>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${prefix}timeout`}
-            disabled={readonly}
-            fieldPath={'timeout'}
-            template={template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${prefix}timeout`}
+          disabled={readonly}
+          fieldPath={'timeout'}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
 
       {getMultiTypeFromValue(template?.spec?.source?.spec?.script) === MultiTypeInputType.RUNTIME ? (
@@ -104,43 +103,41 @@ export default function CustomApprovalInputSetStep(props: CustomApprovalInputSet
       ) : null}
 
       {getMultiTypeFromValue(template?.spec?.retryInterval) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-            label={getString('pipeline.customApprovalStep.retryInterval')}
-            name={`${prefix}spec.retryInterval`}
-            disabled={readonly}
-            fieldPath={'spec.retryInterval'}
-            template={template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          label={getString('pipeline.customApprovalStep.retryInterval')}
+          name={`${prefix}spec.retryInterval`}
+          disabled={readonly}
+          fieldPath={'spec.retryInterval'}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
 
       {getMultiTypeFromValue(template?.spec?.scriptTimeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-            label={getString('pipeline.customApprovalStep.scriptTimeout')}
-            name={`${prefix}spec.scriptTimeout`}
-            disabled={readonly}
-            fieldPath={'spec.scriptTimeout'}
-            template={template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          label={getString('pipeline.customApprovalStep.scriptTimeout')}
+          name={`${prefix}spec.scriptTimeout`}
+          disabled={readonly}
+          fieldPath={'spec.scriptTimeout'}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
 
       {isArray(template?.spec?.outputVariables) && template?.spec?.outputVariables ? (

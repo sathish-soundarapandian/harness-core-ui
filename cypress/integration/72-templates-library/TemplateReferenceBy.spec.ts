@@ -8,9 +8,9 @@
 import {
   templatesListRoute,
   gitSyncEnabledCall,
-  templatesListCall,
-  templatesListCallWithListType,
-  templateReferencesCall
+  templateListMetaDataWithListType,
+  templateReferencesCall,
+  templateMetadataCall
 } from '../../support/70-pipeline/constants'
 
 describe('Template Reference By', () => {
@@ -25,9 +25,9 @@ describe('Template Reference By', () => {
       gitSyncEnabled: false,
       gitSimplificationEnabled: false
     })
-    cy.intercept('POST', templatesListCall, { fixture: 'template/api/templatesList' }).as('templatesListCall')
-    cy.intercept('POST', templatesListCallWithListType, { fixture: 'template/api/templatesList' }).as(
-      'templatesListCallForDrawer'
+    cy.intercept('POST', templateMetadataCall, { fixture: 'template/api/templatesList' }).as('templateMetadataCall')
+    cy.intercept('POST', templateListMetaDataWithListType, { fixture: 'template/api/templatesList' }).as(
+      'templatesListMetadataCallForDrawer'
     )
     cy.initializeRoute()
     cy.visit(templatesListRoute, {
@@ -35,11 +35,11 @@ describe('Template Reference By', () => {
     })
     cy.wait(2000)
     cy.visitPageAssertion('[class*=TemplatesPage-module_templatesPageBody]')
-    cy.wait('@templatesListCall', { timeout: 10000 })
+    cy.wait('@templateMetadataCall', { timeout: 10000 })
 
     cy.contains('p', 'Cypress Template Example 1').click()
 
-    cy.wait('@templatesListCallForDrawer', { timeout: 10000 })
+    cy.wait('@templatesListMetadataCallForDrawer', { timeout: 10000 })
     cy.get('div[data-tab-id="INPUTS"]').should('be.visible')
     cy.get('div[data-tab-id="YAML"]').should('be.visible')
     cy.get('div[data-tab-id="REFERENCEDBY"]').should('be.visible').click()

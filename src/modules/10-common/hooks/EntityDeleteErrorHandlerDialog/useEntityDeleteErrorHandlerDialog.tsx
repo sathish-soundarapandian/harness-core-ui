@@ -36,12 +36,14 @@ interface ContentTextProps {
 interface CustomButtonContainerProps extends Omit<ContentTextProps, 'setForcedDeleteEnabled' | 'entity'> {
   closeDialog: () => void
   redirectToReferencedBy: () => void
+  hideReferencedByButton?: boolean
 }
 
 export interface UseEntityDeleteErrorHandlerDialogProps
   extends Omit<ContentTextProps, 'forcedDeleteEnabled' | 'setForcedDeleteEnabled'> {
   titleText?: React.ReactNode
   redirectToReferencedBy: () => void
+  hideReferencedByButton?: boolean
 }
 
 export const ContentText = (props: ContentTextProps): JSX.Element => {
@@ -79,18 +81,22 @@ export const ContentText = (props: ContentTextProps): JSX.Element => {
 }
 
 export const CustomButtonContainer = (props: CustomButtonContainerProps): JSX.Element => {
-  const { closeDialog, forceDeleteCallback, redirectToReferencedBy, forcedDeleteEnabled } = props
+  const { closeDialog, forceDeleteCallback, redirectToReferencedBy, forcedDeleteEnabled, hideReferencedByButton } =
+    props
   const { getString } = useStrings()
 
   return (
     <Layout.Horizontal spacing={'small'} flex={{ justifyContent: 'space-between' }} width={'100%'}>
       <Container>
-        <Button
-          margin={{ right: 'small' }}
-          text={getString('common.viewReferences')}
-          variation={ButtonVariation.PRIMARY}
-          onClick={() => redirectToReferencedBy()}
-        />
+        {hideReferencedByButton ? null : (
+          <Button
+            margin={{ right: 'small' }}
+            text={getString('common.viewReferences')}
+            variation={ButtonVariation.PRIMARY}
+            onClick={() => redirectToReferencedBy()}
+          />
+        )}
+
         <Button text={getString('cancel')} variation={ButtonVariation.TERTIARY} onClick={closeDialog} />
       </Container>
       {forceDeleteCallback ? (
@@ -119,7 +125,8 @@ export const useEntityDeleteErrorHandlerDialog = (
       entity: entity.type.toLowerCase()
     }),
     redirectToReferencedBy,
-    forceDeleteCallback
+    forceDeleteCallback,
+    hideReferencedByButton
   } = props
   const [forcedDeleteEnabled, setForcedDeleteEnabled] = useState<boolean>(false)
   const onClose = (): void => {
@@ -143,6 +150,7 @@ export const useEntityDeleteErrorHandlerDialog = (
         redirectToReferencedBy={redirectToReferencedBy}
         forceDeleteCallback={forceDeleteCallback}
         forcedDeleteEnabled={forcedDeleteEnabled}
+        hideReferencedByButton={hideReferencedByButton}
       />
     ),
     intent: Intent.DANGER,

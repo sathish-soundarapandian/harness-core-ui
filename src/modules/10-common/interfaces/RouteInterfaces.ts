@@ -127,6 +127,10 @@ export interface ExecutionPathProps extends PipelinePathProps {
   step?: string
   stageExecId?: string
 }
+export interface ExecutionQueryParams {
+  stage?: string
+  childStage?: string
+}
 
 export interface BuildPathProps extends ProjectPathProps {
   buildIdentifier: string
@@ -204,6 +208,7 @@ export type ModuleNameMatch =
   | ':module(ce)'
   | ':module(sto)'
   | ':module(chaos)'
+  | ':module(iacm)'
 
 export type Module = ModuleName | ModuleNameMatch
 

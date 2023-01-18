@@ -18,7 +18,7 @@ import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { setFormikRef, StepViewType, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
-import type { Error, StepElementConfig } from 'services/cd-ng'
+import type { Error, ExecutionWrapperConfig, StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
 import type { ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { getsMergedTemplateInputYamlPromise, useGetTemplate, useGetTemplateInputSetYaml } from 'services/template-ng'
 import { PageSpinner } from '@common/components'
@@ -28,13 +28,14 @@ import {
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
 import type { TemplateStepNode } from 'services/pipeline-ng'
-import { validateStep } from '@pipeline/components/PipelineStudio/StepUtil'
-import { StepForm } from '@pipeline/components/PipelineInputSetForm/StageInputSetForm'
+import { validateStep, validateSteps } from '@pipeline/components/PipelineStudio/StepUtil'
 import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { useQueryParams } from '@common/hooks'
 import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { StepForm } from '@pipeline/components/PipelineInputSetForm/StepInputSetForm'
+import { ExecutionWrapperInputSetForm } from '@pipeline/components/PipelineInputSetForm/ExecutionWrapperInputSetForm'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './TemplateStepWidget.module.scss'
 
@@ -158,17 +159,32 @@ function TemplateStepWidget(
   }, [stepTemplateInputSetLoading])
 
   const validateForm = (values: TemplateStepNode) => {
-    const errorsResponse = validateStep({
-      step: values.template?.templateInputs as StepElementConfig,
-      template: templateInputs,
-      originalStep: { step: initialValues?.template?.templateInputs as StepElementConfig },
-      getString,
-      viewType: StepViewType.DeploymentForm
-    })
-    if (!isEmpty(errorsResponse)) {
-      return set({}, TEMPLATE_INPUT_PATH, get(errorsResponse, 'step'))
+    if (!isEmpty((templateInputs as StepGroupElementConfig)?.steps)) {
+      const errorsResponse = validateSteps({
+        steps: values.template?.templateInputs?.steps as ExecutionWrapperConfig[],
+        template: (templateInputs as StepGroupElementConfig)?.steps as ExecutionWrapperConfig[],
+        originalSteps: initialValues?.template?.templateInputs?.steps as ExecutionWrapperConfig[],
+        getString,
+        viewType: StepViewType.DeploymentForm
+      })
+      if (!isEmpty(errorsResponse)) {
+        return set({}, `${TEMPLATE_INPUT_PATH}.steps`, get(errorsResponse, 'steps'))
+      } else {
+        return errorsResponse
+      }
     } else {
-      return errorsResponse
+      const errorsResponse = validateStep({
+        step: values.template?.templateInputs as StepElementConfig,
+        template: templateInputs,
+        originalStep: { step: initialValues?.template?.templateInputs as StepElementConfig },
+        getString,
+        viewType: StepViewType.DeploymentForm
+      })
+      if (!isEmpty(errorsResponse)) {
+        return set({}, TEMPLATE_INPUT_PATH, get(errorsResponse, 'step'))
+      } else {
+        return errorsResponse
+      }
     }
   }
 
@@ -200,8 +216,8 @@ function TemplateStepWidget(
         initialValues={formValues}
         formName="templateStepWidget"
         validationSchema={Yup.object().shape({
-          name: NameSchema({ requiredErrorMsg: getString('pipelineSteps.stepNameRequired') }),
-          identifier: IdentifierSchema()
+          name: NameSchema(getString, { requiredErrorMsg: getString('pipelineSteps.stepNameRequired') }),
+          identifier: IdentifierSchema(getString)
         })}
         validate={validateForm}
         enableReinitialize={true}
@@ -229,25 +245,39 @@ function TemplateStepWidget(
                     <Heading level={5} color={Color.BLACK}>
                       {getString('pipeline.templateInputs')}
                     </Heading>
-                    <StepForm
-                      template={{ step: templateInputs }}
-                      values={{ step: formik.values.template?.templateInputs as StepElementConfig }}
-                      allValues={{ step: allValues }}
-                      readonly={readonly}
-                      viewType={StepViewType.TemplateUsage}
-                      path={TEMPLATE_INPUT_PATH}
-                      allowableTypes={allowableTypes}
-                      onUpdate={noop}
-                      hideTitle={true}
-                      customStepProps={{
-                        // This is done because when StepForm used in normal steps, data structure is different
-                        // While here data structure is diff
-                        // This data is required in ECSBlueGreenCreateServiceStepInputSet component
-                        // where we need to find out Cluster/Region or envRef/infraRef
-                        selectedStage: selectedStage?.stage?.spec,
-                        stageIdentifier: selectedStage?.identifier
-                      }}
-                    />
+                    {!isEmpty((templateInputs as StepGroupElementConfig)?.steps) ? (
+                      <>
+                        <ExecutionWrapperInputSetForm
+                          stepsTemplate={(templateInputs as StepGroupElementConfig)?.steps as ExecutionWrapperConfig[]}
+                          formik={formik}
+                          path={`${TEMPLATE_INPUT_PATH}.steps`}
+                          allowableTypes={allowableTypes}
+                          values={formik.values.template?.templateInputs?.steps}
+                          allValues={formik.values.template?.templateInputs?.steps}
+                          viewType={StepViewType.TemplateUsage}
+                        />
+                      </>
+                    ) : (
+                      <StepForm
+                        template={{ step: templateInputs as StepElementConfig }}
+                        values={{ step: formik.values.template?.templateInputs as StepElementConfig }}
+                        allValues={{ step: allValues as StepElementConfig }}
+                        readonly={readonly}
+                        viewType={StepViewType.TemplateUsage}
+                        path={TEMPLATE_INPUT_PATH}
+                        allowableTypes={allowableTypes}
+                        onUpdate={noop}
+                        hideTitle={true}
+                        customStepProps={{
+                          // This is done because when StepForm used in normal steps, data structure is different
+                          // While here data structure is diff
+                          // This data is required in ECSBlueGreenCreateServiceStepInputSet component
+                          // where we need to find out Cluster/Region or envRef/infraRef
+                          selectedStage: selectedStage?.stage?.spec,
+                          stageIdentifier: selectedStage?.identifier
+                        }}
+                      />
+                    )}
                   </Layout.Vertical>
                 )}
               </Container>

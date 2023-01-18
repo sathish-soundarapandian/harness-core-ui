@@ -73,17 +73,24 @@ const FeatureText = ({ feature, module }: { feature: CheckFeatureReturn; module:
 }
 
 const ModuleButtons = ({ module, hasLimit }: { module: Module; hasLimit: boolean }): React.ReactElement => {
-  const { licenseInformation, CD_LICENSE_STATE, CI_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE } =
-    useLicenseStore()
+  const {
+    licenseInformation,
+    CD_LICENSE_STATE,
+    CI_LICENSE_STATE,
+    FF_LICENSE_STATE,
+    CCM_LICENSE_STATE,
+    CHAOS_LICENSE_STATE
+  } = useLicenseStore()
   const moduleName = module.toUpperCase() as ModuleName
-  const isModuleFeature = ['CI', 'CD', 'CE', 'CF', 'CV'].includes(moduleName)
+  const isModuleFeature = ['CI', 'CD', 'CE', 'CF', 'CV', 'CHAOS'].includes(moduleName)
   const isModuleFreeEdition = isModuleFeature && isFreePlan(licenseInformation, moduleName)
 
   const licenseStatus = {
     CD_LICENSE_STATE,
     CI_LICENSE_STATE,
     FF_LICENSE_STATE,
-    CCM_LICENSE_STATE
+    CCM_LICENSE_STATE,
+    CHAOS_LICENSE_STATE
   }
 
   const { getHighestEdition } = useFeaturesContext()
@@ -137,7 +144,7 @@ const FeatureTooltip = ({ features, warningMessage }: FeatureTooltipProps): Reac
       const module = feature.featureDetail?.moduleType
       const featureDisabled = !feature.enabled
       if (featureDisabled) {
-        if (module && ['CD', 'CI', 'CE', 'CF'].includes(module)) {
+        if (module && ['CD', 'CI', 'CE', 'CF', 'CHAOS'].includes(module)) {
           group.set(module, [...(group.get(module) || []), feature])
         } else {
           group.set('CORE', [...(group.get('CORE') || []), feature])
@@ -169,6 +176,10 @@ const FeatureTooltip = ({ features, warningMessage }: FeatureTooltipProps): Reac
         case 'CE':
           icon = 'ce-main'
           id = 'common.purpose.ce.continuous'
+          break
+        case 'CHAOS':
+          icon = 'chaos-main'
+          id = 'common.purpose.chaos.continuous'
           break
       }
       return (

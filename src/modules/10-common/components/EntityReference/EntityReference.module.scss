@@ -63,3 +63,8 @@
 .noDataCardImg {
   height: 100% !important;
 }
+
+.selectedCount {
+  border-radius: var(--spacing-10);
+  border: 0 !important;
+}

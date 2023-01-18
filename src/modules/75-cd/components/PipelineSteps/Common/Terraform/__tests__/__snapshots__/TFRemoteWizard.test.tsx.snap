@@ -5,11 +5,13 @@ exports[`Terraform Remote Form tests initial rendering 1`] = `
   <div
     class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore StyledProps--padding-small"
   >
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--font-large StyledProps--color StyledProps--color-grey800"
+    <h2
+      class="StyledProps--font StyledProps--font-h2 StyledProps--main"
+      level="2"
+      style="color: black; font-size: 24px; font-weight: bold;"
     >
       cd.varFileDetails
-    </p>
+    </h2>
     <div
       class="OverlaySpinner--overlaySpinner"
     >
@@ -434,11 +436,13 @@ exports[`Terraform Remote Form tests render with more data 1`] = `
   <div
     class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore StyledProps--padding-small"
   >
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--font-large StyledProps--color StyledProps--color-grey800"
+    <h2
+      class="StyledProps--font StyledProps--font-h2 StyledProps--main"
+      level="2"
+      style="color: black; font-size: 24px; font-weight: bold;"
     >
       cd.varFileDetails
-    </p>
+    </h2>
     <div
       class="OverlaySpinner--overlaySpinner"
     >
@@ -1035,11 +1039,13 @@ exports[`Terraform Remote Form tests should be able to load edit mode correctly 
   <div
     class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore StyledProps--padding-small"
   >
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--font-large StyledProps--color StyledProps--color-grey800"
+    <h2
+      class="StyledProps--font StyledProps--font-h2 StyledProps--main"
+      level="2"
+      style="color: black; font-size: 24px; font-weight: bold;"
     >
       cd.varFileDetails
-    </p>
+    </h2>
     <div
       class="OverlaySpinner--overlaySpinner"
     >
@@ -1336,7 +1342,7 @@ exports[`Terraform Remote Form tests should be able to load edit mode correctly 
                   class="bp3-form-content"
                 >
                   <div
-                    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+                    class="Layout--horizontal StyledProps--main"
                   >
                     <div
                       class="bp3-form-group bp3-disabled runtimeDisabled"
@@ -1477,11 +1483,13 @@ exports[`Terraform Remote Form tests should be able to load edit mode correctly 
   <div
     class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore StyledProps--padding-small"
   >
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--font-large StyledProps--color StyledProps--color-grey800"
+    <h2
+      class="StyledProps--font StyledProps--font-h2 StyledProps--main"
+      level="2"
+      style="color: black; font-size: 24px; font-weight: bold;"
     >
       cd.varFileDetails
-    </p>
+    </h2>
     <div
       class="OverlaySpinner--overlaySpinner"
     >
@@ -2205,11 +2213,13 @@ exports[`Terraform Remote Form tests should be able to load with commitId edit m
   <div
     class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore StyledProps--padding-small"
   >
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--font-large StyledProps--color StyledProps--color-grey800"
+    <h2
+      class="StyledProps--font StyledProps--font-h2 StyledProps--main"
+      level="2"
+      style="color: black; font-size: 24px; font-weight: bold;"
     >
       cd.varFileDetails
-    </p>
+    </h2>
     <div
       class="OverlaySpinner--overlaySpinner"
     >
@@ -2833,11 +2843,13 @@ exports[`Terraform Remote Form tests should be able to remove and add paths 1`] 
   <div
     class="Layout--vertical Layout--layout-spacing-xxlarge StyledProps--main tfVarStore StyledProps--padding-small"
   >
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--font-large StyledProps--color StyledProps--color-grey800"
+    <h2
+      class="StyledProps--font StyledProps--font-h2 StyledProps--main"
+      level="2"
+      style="color: black; font-size: 24px; font-weight: bold;"
     >
       cd.varFileDetails
-    </p>
+    </h2>
     <div
       class="OverlaySpinner--overlaySpinner"
     >

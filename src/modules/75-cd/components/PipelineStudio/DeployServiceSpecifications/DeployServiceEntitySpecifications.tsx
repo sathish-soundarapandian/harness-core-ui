@@ -33,6 +33,8 @@ import type {
   DeployServiceEntityData
 } from '@cd/components/PipelineSteps/DeployServiceEntityStep/DeployServiceEntityUtils'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isContextTypeTemplateType } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import PropagateFromServiceV2 from './PropagateWidget/PropagateFromServiceV2'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
@@ -55,7 +57,9 @@ export default function DeployServiceEntitySpecifications({
     allowableTypes,
     isReadonly,
     scope,
+    contextType,
     getStageFromPipeline,
+    setSelection,
     updateStage
   } = usePipelineContext()
   const scrollRef = React.useRef<HTMLDivElement | null>(null)
@@ -144,7 +148,7 @@ export default function DeployServiceEntitySpecifications({
   )
 
   useEffect(() => {
-    if (typeof stage !== 'undefined' && scope !== Scope.PROJECT) {
+    if (typeof stage !== 'undefined') {
       setDefaultServiceSchema()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -176,11 +180,25 @@ export default function DeployServiceEntitySpecifications({
     [stage]
   )
 
+  useEffect(() => {
+    if (setupModeType === setupMode.PROPAGATE) {
+      if (!previousStageList?.find(item => item === selectedPropagatedState)) {
+        onStageServiceChange(setupMode.DIFFERENT)
+        setSelection({
+          sectionId: null,
+          stageId: null
+        })
+      }
+    }
+  }, [stageIndex])
+
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+
   const getDeployServiceWidgetInitValues = useCallback((): DeployServiceEntityData => {
     if (setupModeType === setupMode.DIFFERENT) {
       return {
         ...pick(stage?.stage?.spec, ['service', 'services']),
-        ...(scope !== Scope.PROJECT &&
+        ...(!(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType)) &&
           isEmpty(get(stage, 'stage.spec.service.serviceRef')) &&
           isEmpty(get(stage, 'stage.spec.services.values')) && {
             service: { serviceRef: RUNTIME_INPUT_VALUE }
@@ -193,7 +211,7 @@ export default function DeployServiceEntitySpecifications({
       )
       return {
         ...pick(propogatedFromStage?.stage?.spec, ['service', 'services']),
-        ...(scope !== Scope.PROJECT &&
+        ...(!(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType)) &&
           isEmpty(get(stage, 'stage.spec.service.useFromStage')) && {
             service: { serviceRef: RUNTIME_INPUT_VALUE }
           })
@@ -255,7 +273,7 @@ export default function DeployServiceEntitySpecifications({
           readonly={isReadonly || setupModeType === setupMode.PROPAGATE}
           initialValues={getDeployServiceWidgetInitValues()}
           allowableTypes={
-            scope === Scope.PROJECT
+            scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
               ? allowableTypes
               : ((allowableTypes as MultiTypeInputType[]).filter(
                   item => item !== MultiTypeInputType.FIXED

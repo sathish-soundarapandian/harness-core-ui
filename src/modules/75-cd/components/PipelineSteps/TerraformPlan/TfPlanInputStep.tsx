@@ -49,42 +49,40 @@ export default function TfPlanInputStep(
   return (
     <FormikForm>
       {getMultiTypeFromValue(inputSetData?.template?.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.provisionerIdentifier`}
-            placeholder={getString('pipeline.terraformStep.provisionerIdentifier')}
-            label={getString('pipelineSteps.provisionerIdentifier')}
-            disabled={readonly}
-            fieldPath={'spec.provisionerIdentifier'}
-            template={inputSetData?.template}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-          />
-        </div>
+        <TextFieldInputSetView
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.provisionerIdentifier`}
+          placeholder={getString('pipeline.terraformStep.provisionerIdentifier')}
+          label={getString('pipelineSteps.provisionerIdentifier')}
+          disabled={readonly}
+          fieldPath={'spec.provisionerIdentifier'}
+          template={inputSetData?.template}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TimeoutFieldInputSetView
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-            disabled={readonly}
-            fieldPath={'timeout'}
-            template={inputSetData?.template}
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+          disabled={readonly}
+          fieldPath={'timeout'}
+          template={inputSetData?.template}
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
 
       {getMultiTypeFromValue(inputSetData?.template?.spec?.configuration?.secretManagerRef) ===

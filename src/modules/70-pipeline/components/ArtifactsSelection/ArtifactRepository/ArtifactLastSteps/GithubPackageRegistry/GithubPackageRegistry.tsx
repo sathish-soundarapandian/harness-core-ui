@@ -180,7 +180,7 @@ function FormComponent({
 
   return (
     <FormikForm>
-      <div className={css.connectorForm}>
+      <div className={css.artifactForm}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.imagePathContainer}>
@@ -498,6 +498,7 @@ export function GithubPackageRegistry(
   const sidecarSchema = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
+      getString,
       artifactIdentifiers,
       initialValues?.identifier,
       getString('pipeline.uniqueIdentifier')

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -12,8 +12,52 @@ import { Get, GetProps, useGet, UseGetProps, Mutate, MutateProps, useMutate, Use
 
 import { getConfig, getUsingFetch, mutateUsingFetch, GetUsingFetchProps, MutateUsingFetchProps } from '../config'
 export const SPEC_VERSION = '1.0'
+export interface AbstractAnalysedNode {
+  [key: string]: any
+}
+
 export interface AdditionalInfo {
   type?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'ROLLING' | 'AUTO'
+}
+
+export interface AffectedEntity {
+  [key: string]: any
+}
+
+export type AnalysedDeploymentNode = AbstractAnalysedNode & {
+  failedErrorClusters?: number
+  failedLogClusters?: number
+  failedMetrics?: number
+  nodeIdentifier?: string
+  verificationResult?: 'PASSED' | 'FAILED' | 'NO_ANALYSIS'
+}
+
+export interface AnalysedDeploymentTestDataNode {
+  analysisReason?:
+    | 'CUSTOM_FAIL_FAST_THRESHOLD'
+    | 'CUSTOM_IGNORE_THRESHOLD'
+    | 'DEFAULT_FAIL_FAST_THRESHOLD'
+    | 'DEFAULT_IGNORE_THRESHOLD'
+    | 'ML_ANALYSIS'
+    | 'NO_CONTROL_DATA'
+    | 'NO_TEST_DATA'
+  analysisResult?: 'HEALTHY' | 'NO_ANALYSIS' | 'UNHEALTHY' | 'WARNING'
+  appliedThresholds?: string[]
+  controlData?: MetricValueV2[]
+  controlDataType?: 'AVERAGE' | 'MINIMUM_DEVIATION'
+  controlNodeIdentifier?: string
+  nodeIdentifier?: string
+  testData?: MetricValueV2[]
+}
+
+export type AnalysedLoadTestNode = AbstractAnalysedNode & {
+  deploymentTag?: string
+  testStartTimestamp?: number
+}
+
+export interface AnalysedNodeOverview {
+  nodeType?: 'BASELINE_TEST' | 'CANARY' | 'CURRENT_TEST' | 'POST_DEPLOYMENT' | 'PRE_DEPLOYMENT' | 'PRIMARY'
+  nodes?: AbstractAnalysedNode[]
 }
 
 export interface AnalysisDTO {
@@ -519,13 +563,6 @@ export type CEKubernetesClusterConfig = ConnectorConfigDTO & {
   featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
 }
 
-export interface CVLicenseUsageDTO {
-  accountIdentifier?: string
-  activeServices?: UsageDataDTO
-  module?: string
-  timestamp?: number
-}
-
 export type CVNGEmailChannelSpec = CVNGNotificationChannelSpec & {
   recipients?: string[]
   userGroups?: string[]
@@ -602,7 +639,7 @@ export interface ChangeEventDTO {
   projectIdentifier: string
   serviceIdentifier?: string
   serviceName?: string
-  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF'
+  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF'
 }
 
 export interface ChangeEventMetadata {
@@ -625,7 +662,7 @@ export interface ChangeSourceDTO {
   identifier?: string
   name?: string
   spec: ChangeSourceSpec
-  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF'
+  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF'
 }
 
 export interface ChangeSourceSpec {
@@ -666,6 +703,12 @@ export type CloudWatchMetricsHealthSourceSpec = HealthSourceSpec & {
 export interface Cluster {
   label?: number
   text?: string
+}
+
+export interface ClusterAnalysisOverview {
+  knownClustersCount?: number
+  unexpectedFrequencyClustersCount?: number
+  unknownClustersCount?: number
 }
 
 export interface ClusterCoordinates {
@@ -1008,7 +1051,7 @@ export interface DeepLink {
 
 export interface DemoChangeEventDTO {
   changeSourceIdentifier?: string
-  changeSourceType?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF'
+  changeSourceType?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF'
   monitoredServiceIdentifier?: string
 }
 
@@ -1090,6 +1133,72 @@ export type DockerUserNamePasswordDTO = DockerAuthCredentialsDTO & {
   usernameRef?: string
 }
 
+export interface DowntimeDTO {
+  category: 'ScheduledMaintenance' | 'Deployment' | 'Other'
+  description?: string
+  enabled?: boolean
+  entityRefs: EntityDetails[]
+  identifier: string
+  name: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  scope: 'Project' | 'Entity'
+  spec: DowntimeSpecDTO
+  tags?: {
+    [key: string]: string
+  }
+}
+
+export interface DowntimeDuration {
+  durationType: 'Minutes' | 'Hours' | 'Days' | 'Weeks'
+  durationValue: number
+}
+
+export interface DowntimeHistoryView {
+  affectedEntities?: AffectedEntity[]
+  category?: 'ScheduledMaintenance' | 'Deployment' | 'Other'
+  description?: string
+  duration?: DowntimeDuration
+  endTime?: string
+  identifier?: string
+  name?: string
+  startTime?: string
+  status?: 'Active' | 'Scheduled'
+}
+
+export interface DowntimeListView {
+  affectedEntities?: AffectedEntity[]
+  category?: 'ScheduledMaintenance' | 'Deployment' | 'Other'
+  description?: string
+  duration?: DowntimeDuration
+  enabled?: boolean
+  identifier?: string
+  lastModified?: LastModified
+  name?: string
+  status?: 'Active' | 'Scheduled'
+}
+
+export interface DowntimeRecurrence {
+  recurrenceType: 'Day' | 'Week' | 'Month' | 'Year'
+  recurrenceValue: number
+}
+
+export interface DowntimeResponse {
+  createdAt?: number
+  downtime: DowntimeDTO
+  lastModifiedAt?: number
+}
+
+export interface DowntimeSpec {
+  startTime?: number
+  timezone: string
+}
+
+export interface DowntimeSpecDTO {
+  spec: DowntimeSpec
+  type?: 'Onetime' | 'Recurring'
+}
+
 export interface Duration {
   nano?: number
   negative?: boolean
@@ -1164,6 +1273,11 @@ export type ELKHealthSourceSpec = HealthSourceSpec & {
 export interface Edge {
   from?: string
   to?: string
+}
+
+export interface EntityDetails {
+  enabled?: boolean
+  entityRef: string
 }
 
 export interface EnvironmentResponse {
@@ -1467,6 +1581,7 @@ export interface Error {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -1538,6 +1653,8 @@ export interface Error {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1587,12 +1704,6 @@ export interface EventCount {
   clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
   displayName?: string
-}
-
-export interface EventDetails {
-  changeEventDetailsLink?: DeepLink
-  eventDescriptions?: string[]
-  internalLinkToEntity?: DeepLink
 }
 
 export interface ExceptionInfo {
@@ -1897,6 +2008,7 @@ export interface Failure {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -1968,6 +2080,8 @@ export interface Failure {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2248,7 +2362,7 @@ export interface HealthScoreDTO {
 export interface HealthSource {
   identifier?: string
   name?: string
-  spec: HealthSourceSpec
+  spec: NextGenHealthSourceSpec
   type?:
     | 'AppDynamics'
     | 'NewRelic'
@@ -2266,6 +2380,9 @@ export interface HealthSource {
     | 'ElasticSearch'
     | 'CloudWatchMetrics'
     | 'AwsPrometheus'
+    | 'SumologicMetrics'
+    | 'SumologicLogs'
+  version?: 'v2'
 }
 
 export interface HealthSourceDTO {
@@ -2294,19 +2411,15 @@ export interface HealthSourceDTO {
   verificationType?: 'TIME_SERIES' | 'LOG'
 }
 
-export interface HealthSourceParams {
-  [key: string]: any
-}
-
-export interface HealthSourceQueryParams {
-  serviceInstanceField?: string
+export interface HealthSourceParamsDTO {
+  region?: string
 }
 
 export interface HealthSourceRecordsRequest {
   connectorIdentifier: string
   endTime: number
-  healthSourceParams?: HealthSourceParams
-  healthSourceQueryParams?: HealthSourceQueryParams
+  healthSourceParams?: HealthSourceParamsDTO
+  healthSourceQueryParams?: QueryParamsDTO
   providerType:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -2355,6 +2468,9 @@ export interface HealthSourceRecordsResponse {
   rawRecords?: { [key: string]: any }[]
 }
 
+/**
+ * This is the Health Source entity defined in Harness
+ */
 export interface HealthSourceSpec {
   connectorRef?: string
 }
@@ -2362,6 +2478,32 @@ export interface HealthSourceSpec {
 export interface HealthSourceSummary {
   identifier?: string
   name?: string
+}
+
+export interface HealthSourceV2 {
+  healthSourceIdentifier?: string
+  healthSourceName?: string
+  providerName?:
+    | 'APP_DYNAMICS'
+    | 'SPLUNK'
+    | 'SPLUNK_METRIC'
+    | 'STACKDRIVER'
+    | 'STACKDRIVER_LOG'
+    | 'KUBERNETES'
+    | 'NEW_RELIC'
+    | 'PROMETHEUS'
+    | 'DATADOG_METRICS'
+    | 'DATADOG_LOG'
+    | 'ERROR_TRACKING'
+    | 'DYNATRACE'
+    | 'CUSTOM_HEALTH_METRIC'
+    | 'CUSTOM_HEALTH_LOG'
+    | 'ELASTICSEARCH'
+    | 'CLOUDWATCH_METRICS'
+    | 'AWS_PROMETHEUS'
+    | 'SUMOLOGIC_METRICS'
+    | 'SUMOLOGIC_LOG'
+  providerType?: 'ERRORS' | 'LOGS' | 'METRICS'
 }
 
 export interface HistoricalTrend {
@@ -2377,6 +2519,7 @@ export interface HostDTO {
 
 export interface HostData {
   anomalous?: boolean
+  appliedThresholdIds?: string[]
   controlData?: number[]
   hostName?: string
   nearestControlHost?: string
@@ -2443,6 +2586,12 @@ export interface InputSetTemplateResponse {
   inputSetTemplateYaml?: string
 }
 
+export interface InternalChangeEvent {
+  changeEventDetailsLink?: DeepLink
+  eventDescriptions?: string[]
+  internalLinkToEntity?: DeepLink
+}
+
 export type InternalChangeEventMetaData = ChangeEventMetadata & {
   activityType?:
     | 'DEPLOYMENT'
@@ -2452,9 +2601,9 @@ export type InternalChangeEventMetaData = ChangeEventMetadata & {
     | 'PAGER_DUTY'
     | 'HARNESS_CD_CURRENT_GEN'
     | 'FEATURE_FLAG'
-  eventDetails?: EventDetails
   eventEndTime?: number
   eventStartTime?: number
+  internalChangeEvent?: InternalChangeEvent
   updatedBy?: string
 }
 
@@ -2569,6 +2718,10 @@ export type KubernetesUserNamePasswordDTO = KubernetesAuthCredentialDTO & {
   passwordRef: string
   username?: string
   usernameRef?: string
+}
+
+export interface LastModified {
+  [key: string]: any
 }
 
 export interface LearningEngineTask {
@@ -3001,14 +3154,52 @@ export interface MetricThresholdCriteriaSpec {
   lessThan?: number
 }
 
+export interface MetricThresholdCriteriaV2 {
+  actionableCount?: number
+  greaterThanThreshold?: number
+  lessThanThreshold?: number
+  measurementType?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
+}
+
 export interface MetricThresholdSpec {
   action: 'Ignore' | 'FailImmediately' | 'FailAfterOccurrence' | 'FailAfterConsecutiveOccurrence'
+}
+
+export interface MetricThresholdV2 {
+  action?: 'Ignore' | 'FailImmediately' | 'FailAfterOccurrence' | 'FailAfterConsecutiveOccurrence'
+  criteria?: MetricThresholdCriteriaV2
+  id?: string
+  isUserDefined?: boolean
+  thresholdType?: 'IgnoreThreshold' | 'FailImmediately'
 }
 
 export interface MetricValidationResponse {
   metricName?: string
   status?: 'SUCCESS' | 'NO_DATA' | 'FAILED'
   value?: number
+}
+
+export interface MetricValueV2 {
+  timestamp?: number
+  value?: number
+}
+
+export interface MetricsAnalysis {
+  analysisResult?: 'HEALTHY' | 'NO_ANALYSIS' | 'UNHEALTHY' | 'WARNING'
+  healthSourceIdentifier?: string
+  metricIdentifier?: string
+  metricName?: string
+  metricType?: 'ERROR' | 'INFRASTRUCTURE' | 'PERFORMANCE_THROUGHPUT' | 'PERFORMANCE_OTHER' | 'PERFORMANCE_RESPONSE_TIME'
+  testDataNodes?: AnalysedDeploymentTestDataNode[]
+  thresholds?: MetricThresholdV2[]
+  transactionGroup?: string
+}
+
+export interface MetricsAnalysisOverview {
+  healthy?: number
+  noAnalysis?: number
+  unhealthy?: number
+  warning?: number
 }
 
 export interface MonitoredServiceChangeDetailSLO {
@@ -3062,7 +3253,7 @@ export interface MonitoredServiceListItemDTO {
   historicalTrend?: HistoricalTrend
   identifier?: string
   name?: string
-  serviceLicenseEnabled?: boolean
+  serviceMonitoringEnabled?: boolean
   serviceName?: string
   serviceRef?: string
   sloHealthIndicators?: SloHealthIndicatorDTO[]
@@ -3124,6 +3315,16 @@ export interface NewRelicMetricDefinition {
   responseMapping?: MetricResponseMapping
   riskProfile?: RiskProfile
   sli?: Slidto
+}
+
+/**
+ * This is the Health Source entity defined in Harness
+ */
+export interface NextGenHealthSourceSpec {
+  connectorRef?: string
+  healthSourceParams?: HealthSourceParamsDTO
+  metricPacks?: TimeSeriesMetricPackDTO[]
+  queryDefinitions?: QueryDefinition[]
 }
 
 export interface NexusAuthCredentials {
@@ -3237,6 +3438,23 @@ export interface OnboardingResponseDTO {
   tracingId?: string
 }
 
+export type OnetimeDowntimeSpec = DowntimeSpec & {
+  spec: OnetimeSpec
+  type?: 'Duration' | 'EndTime'
+}
+
+export type OnetimeDurationBasedSpec = OnetimeSpec & {
+  downtimeDuration: DowntimeDuration
+}
+
+export type OnetimeEndTimeBasedSpec = OnetimeSpec & {
+  endTime: number
+}
+
+export interface OnetimeSpec {
+  [key: string]: any
+}
+
 export interface Page {
   content?: { [key: string]: any }[]
   empty?: boolean
@@ -3317,6 +3535,26 @@ export interface PageDatadogDashboardDTO {
   totalPages?: number
 }
 
+export interface PageDowntimeHistoryView {
+  content?: DowntimeHistoryView[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageDowntimeListView {
+  content?: DowntimeListView[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
 export interface PageLogAnalysisClusterDTO {
   content?: LogAnalysisClusterDTO[]
   empty?: boolean
@@ -3339,6 +3577,16 @@ export interface PageLogAnalysisRadarChartListDTO {
 
 export interface PageMSDropdownResponse {
   content?: MSDropdownResponse[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageMetricsAnalysis {
+  content?: MetricsAnalysis[]
   empty?: boolean
   pageIndex?: number
   pageItemCount?: number
@@ -3534,6 +3782,7 @@ export interface PartialSchemaDTO {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -3630,40 +3879,17 @@ export interface QueryDTO {
   timeStampIdentifier: string
 }
 
-export interface QueryJsonPath {
-  queryValueJsonPath?: string
-  timestampFormat?: string
-  timestampJsonPath?: string
-}
-
-export interface QueryRecordsRequest {
-  connectorIdentifier: string
-  endTime: number
-  healthSourceParams?: HealthSourceParams
-  healthSourceQueryParams?: HealthSourceQueryParams
-  providerType:
-    | 'APP_DYNAMICS'
-    | 'SPLUNK'
-    | 'SPLUNK_METRIC'
-    | 'STACKDRIVER'
-    | 'STACKDRIVER_LOG'
-    | 'KUBERNETES'
-    | 'NEW_RELIC'
-    | 'PROMETHEUS'
-    | 'DATADOG_METRICS'
-    | 'DATADOG_LOG'
-    | 'ERROR_TRACKING'
-    | 'DYNATRACE'
-    | 'CUSTOM_HEALTH_METRIC'
-    | 'CUSTOM_HEALTH_LOG'
-    | 'ELASTICSEARCH'
-    | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
-    | 'SUMOLOGIC_METRICS'
-    | 'SUMOLOGIC_LOG'
-  query: string
-  queryJSONPath?: QueryJsonPath
-  startTime: number
+export interface QueryDefinition {
+  continuousVerificationEnabled?: boolean
+  groupName?: string
+  identifier: string
+  liveMonitoringEnabled?: boolean
+  metricThresholds?: MetricThreshold[]
+  name?: string
+  query?: string
+  queryParams?: QueryParamsDTO
+  riskProfile?: RiskProfile
+  sliEnabled?: boolean
 }
 
 export interface QueryJsonPath {
@@ -3672,11 +3898,15 @@ export interface QueryJsonPath {
   timestampJsonPath?: string
 }
 
+export interface QueryParamsDTO {
+  serviceInstanceField?: string
+}
+
 export interface QueryRecordsRequest {
   connectorIdentifier: string
   endTime: number
-  healthSourceParams?: HealthSourceParams
-  healthSourceQueryParams?: HealthSourceQueryParams
+  healthSourceParams?: HealthSourceParamsDTO
+  healthSourceQueryParams?: QueryParamsDTO
   providerType:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
@@ -3710,6 +3940,12 @@ export type RatioSLIMetricSpec = SLIMetricSpec & {
   thresholdValue: number
 }
 
+export type RecurringDowntimeSpec = DowntimeSpec & {
+  downtimeDuration?: DowntimeDuration
+  downtimeRecurrence?: DowntimeRecurrence
+  recurrenceEndTime?: number
+}
+
 export interface ReferenceDTO {
   accountIdentifier?: string
   count?: number
@@ -3736,13 +3972,6 @@ export interface ResponseAppdynamicsMetricDataResponse {
 export interface ResponseBoolean {
   correlationId?: string
   data?: boolean
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseCVLicenseUsageDTO {
-  correlationId?: string
-  data?: CVLicenseUsageDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4179,6 +4408,7 @@ export interface ResponseMessage {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -4250,6 +4480,8 @@ export interface ResponseMessage {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4320,6 +4552,20 @@ export interface ResponsePageCVNGLogDTO {
 export interface ResponsePageDatadogDashboardDTO {
   correlationId?: string
   data?: PageDatadogDashboardDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageDowntimeHistoryView {
+  correlationId?: string
+  data?: PageDowntimeHistoryView
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageDowntimeListView {
+  correlationId?: string
+  data?: PageDowntimeListView
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4411,6 +4657,13 @@ export interface ResponseSLODashboardDetail {
 export interface ResponseSLORiskCountResponse {
   correlationId?: string
   data?: SLORiskCountResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseSRMLicenseUsageDTO {
+  correlationId?: string
+  data?: SRMLicenseUsageDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4522,6 +4775,14 @@ export interface RestResponseDeploymentLogAnalysisDTO {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseDowntimeResponse {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: DowntimeResponse
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseHealthMonitoringFlagResponse {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -4535,6 +4796,14 @@ export interface RestResponseHealthSourceRecordsResponse {
     [key: string]: { [key: string]: any }
   }
   resource?: HealthSourceRecordsResponse
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseHealthSourceSpec {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: HealthSourceSpec
   responseMessages?: ResponseMessage[]
 }
 
@@ -5212,6 +5481,13 @@ export interface SLOTargetSpec {
   [key: string]: any
 }
 
+export interface SRMLicenseUsageDTO {
+  accountIdentifier?: string
+  activeServices?: UsageDataDTO
+  module?: string
+  timestamp?: number
+}
+
 export interface SampleDataDTO {
   groupName: string
   jsonResponse: string
@@ -5231,7 +5507,7 @@ export interface ServiceDependencyGraphDTO {
 }
 
 export interface ServiceDependencyMetadata {
-  supportedChangeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
+  supportedChangeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
   type?: 'KUBERNETES'
 }
 
@@ -5333,13 +5609,21 @@ export interface ServiceLevelObjectiveV2Response {
   serviceLevelObjectiveV2: ServiceLevelObjectiveV2DTO
 }
 
+export type ServiceNowADFSDTO = ServiceNowAuthCredentialsDTO & {
+  adfsUrl: string
+  certificateRef: string
+  clientIdRef: string
+  privateKeyRef: string
+  resourceIdRef: string
+}
+
 export interface ServiceNowAuthCredentialsDTO {
   [key: string]: any
 }
 
 export interface ServiceNowAuthenticationDTO {
   spec: ServiceNowAuthCredentialsDTO
-  type: 'UsernamePassword'
+  type: 'UsernamePassword' | 'AdfsClientCredentialsWithCertificate'
 }
 
 export type ServiceNowConnector = ConnectorConfigDTO & {
@@ -5619,6 +5903,8 @@ export interface TimeSeriesAnomalousPatterns {
 export interface TimeSeriesCumulativeSums {
   analysisEndTime?: number
   analysisStartTime?: number
+  createdAt?: number
+  lastUpdatedAt?: number
   transactionMetricSums?: TransactionMetricSums[]
   uuid?: string
   validUntil?: string
@@ -5688,6 +5974,7 @@ export interface TimeSeriesMetricDefinition {
   actionType?: 'IGNORE' | 'FAIL'
   comparisonType?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
+  id?: string
   metricGroupName?: string
   metricIdentifier?: string
   metricName?: string
@@ -5716,6 +6003,8 @@ export interface TimeSeriesRecordDTO {
 export interface TimeSeriesRiskSummary {
   analysisEndTime?: number
   analysisStartTime?: number
+  createdAt?: number
+  lastUpdatedAt?: number
   overallRisk?: number
   transactionMetricRiskList?: TransactionMetricRisk[]
   uuid?: string
@@ -5965,6 +6254,34 @@ export type VaultConnectorDTO = ConnectorConfigDTO & {
   xvaultAwsIamServerId?: string
 }
 
+export interface VerificationOverview {
+  appliedDeploymentAnalysisType?: 'CANARY' | 'NO_ANALYSIS' | 'ROLLING' | 'TEST'
+  controlNodes?: AnalysedNodeOverview
+  errorClusters?: ClusterAnalysisOverview
+  logClusters?: ClusterAnalysisOverview
+  metricsAnalysis?: MetricsAnalysisOverview
+  spec?: VerificationSpec
+  testNodes?: AnalysedNodeOverview
+  verificationEndTimestamp?: number
+  verificationProgressPercentage?: number
+  verificationStartTimestamp?: number
+  verificationStatus?:
+    | 'IGNORED'
+    | 'NOT_STARTED'
+    | 'VERIFICATION_PASSED'
+    | 'VERIFICATION_FAILED'
+    | 'ERROR'
+    | 'ABORTED'
+    | 'IN_PROGRESS'
+}
+
+export interface VerificationSpec {
+  analysisType?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'ROLLING' | 'AUTO'
+  durationInMinutes?: number
+  isFailOnNoAnalysis?: boolean
+  sensitivity?: 'LOW' | 'MEDIUM' | 'HIGH'
+}
+
 export interface VerifyStepSummary {
   name?: string
   verificationStatus?:
@@ -6004,6 +6321,7 @@ export interface YamlSchemaMetadata {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -6027,6 +6345,7 @@ export interface YamlSchemaWithDetails {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -6040,6 +6359,10 @@ export interface YamlSchemaWithDetails {
 
 export type ChangeEventDTORequestBody = ChangeEventDTO
 
+export type CompositeServiceLevelObjectiveSpecRequestBody = CompositeServiceLevelObjectiveSpec
+
+export type DowntimeDTORequestBody = DowntimeDTO
+
 export type LogSampleRequestDTORequestBody = LogSampleRequestDTO
 
 export type MetricPackDTOArrayRequestBody = MetricPackDTO[]
@@ -6049,6 +6372,8 @@ export type MonitoredServiceDTORequestBody = MonitoredServiceDTO
 export type NotificationRuleDTORequestBody = NotificationRuleDTO
 
 export type QueryRecordsRequestRequestBody = QueryRecordsRequest
+
+export type SLODashboardApiFilterRequestBody = SLODashboardApiFilter
 
 export type ServiceGuardTimeSeriesAnalysisDTORequestBody = ServiceGuardTimeSeriesAnalysisDTO
 
@@ -6060,14 +6385,204 @@ export type ServiceLevelObjectiveV2DTORequestBody = ServiceLevelObjectiveV2DTO
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 
-export type SaveMonitoredServiceFromYamlBodyRequestBody = string
+export type UpdateMonitoredServiceFromYamlBodyRequestBody = string
+
+export interface ChangeEventListForAccountQueryParams {
+  serviceIdentifiers?: string[]
+  envIdentifiers?: string[]
+  monitoredServiceIdentifiers?: string[]
+  scopedMonitoredServiceIdentifiers?: string[]
+  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  searchText?: string
+  startTime: number
+  endTime: number
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+}
+
+export interface ChangeEventListForAccountPathParams {
+  accountIdentifier: string
+}
+
+export type ChangeEventListForAccountProps = Omit<
+  GetProps<
+    RestResponsePageChangeEventDTO,
+    unknown,
+    ChangeEventListForAccountQueryParams,
+    ChangeEventListForAccountPathParams
+  >,
+  'path'
+> &
+  ChangeEventListForAccountPathParams
+
+/**
+ * get ChangeEvent List For Account
+ */
+export const ChangeEventListForAccount = ({ accountIdentifier, ...props }: ChangeEventListForAccountProps) => (
+  <Get<
+    RestResponsePageChangeEventDTO,
+    unknown,
+    ChangeEventListForAccountQueryParams,
+    ChangeEventListForAccountPathParams
+  >
+    path={`/account/${accountIdentifier}/change-event`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseChangeEventListForAccountProps = Omit<
+  UseGetProps<
+    RestResponsePageChangeEventDTO,
+    unknown,
+    ChangeEventListForAccountQueryParams,
+    ChangeEventListForAccountPathParams
+  >,
+  'path'
+> &
+  ChangeEventListForAccountPathParams
+
+/**
+ * get ChangeEvent List For Account
+ */
+export const useChangeEventListForAccount = ({ accountIdentifier, ...props }: UseChangeEventListForAccountProps) =>
+  useGet<
+    RestResponsePageChangeEventDTO,
+    unknown,
+    ChangeEventListForAccountQueryParams,
+    ChangeEventListForAccountPathParams
+  >((paramsInPath: ChangeEventListForAccountPathParams) => `/account/${paramsInPath.accountIdentifier}/change-event`, {
+    base: getConfig('cv/api'),
+    pathParams: { accountIdentifier },
+    ...props
+  })
+
+/**
+ * get ChangeEvent List For Account
+ */
+export const changeEventListForAccountPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponsePageChangeEventDTO,
+    unknown,
+    ChangeEventListForAccountQueryParams,
+    ChangeEventListForAccountPathParams
+  > & { accountIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponsePageChangeEventDTO,
+    unknown,
+    ChangeEventListForAccountQueryParams,
+    ChangeEventListForAccountPathParams
+  >(getConfig('cv/api'), `/account/${accountIdentifier}/change-event`, props, signal)
+
+export interface ChangeEventTimelineForAccountQueryParams {
+  serviceIdentifiers?: string[]
+  envIdentifiers?: string[]
+  monitoredServiceIdentifiers?: string[]
+  scopedMonitoredServiceIdentifiers?: string[]
+  changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  searchText?: string
+  startTime: number
+  endTime: number
+  pointCount?: number
+}
+
+export interface ChangeEventTimelineForAccountPathParams {
+  accountIdentifier: string
+}
+
+export type ChangeEventTimelineForAccountProps = Omit<
+  GetProps<
+    RestResponseChangeTimeline,
+    unknown,
+    ChangeEventTimelineForAccountQueryParams,
+    ChangeEventTimelineForAccountPathParams
+  >,
+  'path'
+> &
+  ChangeEventTimelineForAccountPathParams
+
+/**
+ * get ChangeEvent timeline For Account
+ */
+export const ChangeEventTimelineForAccount = ({ accountIdentifier, ...props }: ChangeEventTimelineForAccountProps) => (
+  <Get<
+    RestResponseChangeTimeline,
+    unknown,
+    ChangeEventTimelineForAccountQueryParams,
+    ChangeEventTimelineForAccountPathParams
+  >
+    path={`/account/${accountIdentifier}/change-event/timeline`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseChangeEventTimelineForAccountProps = Omit<
+  UseGetProps<
+    RestResponseChangeTimeline,
+    unknown,
+    ChangeEventTimelineForAccountQueryParams,
+    ChangeEventTimelineForAccountPathParams
+  >,
+  'path'
+> &
+  ChangeEventTimelineForAccountPathParams
+
+/**
+ * get ChangeEvent timeline For Account
+ */
+export const useChangeEventTimelineForAccount = ({
+  accountIdentifier,
+  ...props
+}: UseChangeEventTimelineForAccountProps) =>
+  useGet<
+    RestResponseChangeTimeline,
+    unknown,
+    ChangeEventTimelineForAccountQueryParams,
+    ChangeEventTimelineForAccountPathParams
+  >(
+    (paramsInPath: ChangeEventTimelineForAccountPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/change-event/timeline`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier }, ...props }
+  )
+
+/**
+ * get ChangeEvent timeline For Account
+ */
+export const changeEventTimelineForAccountPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    RestResponseChangeTimeline,
+    unknown,
+    ChangeEventTimelineForAccountQueryParams,
+    ChangeEventTimelineForAccountPathParams
+  > & { accountIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    RestResponseChangeTimeline,
+    unknown,
+    ChangeEventTimelineForAccountQueryParams,
+    ChangeEventTimelineForAccountPathParams
+  >(getConfig('cv/api'), `/account/${accountIdentifier}/change-event/timeline`, props, signal)
 
 export interface ChangeEventListQueryParams {
   serviceIdentifiers?: string[]
   envIdentifiers?: string[]
   monitoredServiceIdentifiers?: string[]
+  scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
   searchText?: string
   startTime: number
   endTime: number
@@ -6089,7 +6604,7 @@ export type ChangeEventListProps = Omit<
   ChangeEventListPathParams
 
 /**
- * get ChangeEvent List
+ * get ChangeEvent List For Project
  */
 export const ChangeEventList = ({
   accountIdentifier,
@@ -6111,7 +6626,7 @@ export type UseChangeEventListProps = Omit<
   ChangeEventListPathParams
 
 /**
- * get ChangeEvent List
+ * get ChangeEvent List For Project
  */
 export const useChangeEventList = ({
   accountIdentifier,
@@ -6126,7 +6641,7 @@ export const useChangeEventList = ({
   )
 
 /**
- * get ChangeEvent List
+ * get ChangeEvent List For Project
  */
 export const changeEventListPromise = (
   {
@@ -6153,8 +6668,9 @@ export interface ChangeEventTimelineQueryParams {
   serviceIdentifiers?: string[]
   envIdentifiers?: string[]
   monitoredServiceIdentifiers?: string[]
+  scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
   searchText?: string
   startTime: number
   endTime: number
@@ -6174,7 +6690,7 @@ export type ChangeEventTimelineProps = Omit<
   ChangeEventTimelinePathParams
 
 /**
- * get ChangeEvent timeline
+ * get ChangeEvent timeline For Project
  */
 export const ChangeEventTimeline = ({
   accountIdentifier,
@@ -6196,7 +6712,7 @@ export type UseChangeEventTimelineProps = Omit<
   ChangeEventTimelinePathParams
 
 /**
- * get ChangeEvent timeline
+ * get ChangeEvent timeline For Project
  */
 export const useChangeEventTimeline = ({
   accountIdentifier,
@@ -6211,7 +6727,7 @@ export const useChangeEventTimeline = ({
   )
 
 /**
- * get ChangeEvent timeline
+ * get ChangeEvent timeline For Project
  */
 export const changeEventTimelinePromise = (
   {
@@ -6739,8 +7255,8 @@ export const getAppdynamicsBaseFoldersPromise = (
 
 export interface GetCompleteServiceInstanceMetricPathQueryParams {
   accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
   connectorIdentifier: string
   appName: string
   completeMetricPath: string
@@ -7060,8 +7576,8 @@ export const getAppdynamicsMetricStructurePromise = (
 
 export interface GetServiceInstanceMetricPathQueryParams {
   accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
   connectorIdentifier: string
   appName: string
   baseFolder: string
@@ -7258,8 +7774,9 @@ export interface GetMonitoredServiceChangeEventSummaryQueryParams {
   projectIdentifier: string
   monitoredServiceIdentifier?: string
   monitoredServiceIdentifiers?: string[]
+  isMonitoredServiceIdentifierScoped?: boolean
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
   startTime: number
   endTime: number
 }
@@ -7318,7 +7835,7 @@ export interface GetMonitoredServiceChangeTimelineQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   monitoredServiceIdentifier?: string
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HARNESS_FF')[]
+  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
   searchText?: string
   duration: 'FOUR_HOURS' | 'TWENTY_FOUR_HOURS' | 'THREE_DAYS' | 'SEVEN_DAYS' | 'THIRTY_DAYS'
   endTime: number
@@ -7626,8 +8143,8 @@ export const saveCVNGLogRecordsPromise = (
 
 export interface GetDatadogLogIndexesQueryParams {
   accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
   connectorIdentifier: string
   tracingId: string
 }
@@ -7678,8 +8195,8 @@ export const getDatadogLogIndexesPromise = (
 
 export interface GetDatadogLogSampleDataQueryParams {
   accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
   connectorIdentifier: string
   tracingId: string
 }
@@ -7759,8 +8276,8 @@ export const getDatadogLogSampleDataPromise = (
 
 export interface GetDatadogActiveMetricsQueryParams {
   accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
   connectorIdentifier: string
   filter?: string
   tracingId: string
@@ -7812,8 +8329,8 @@ export const getDatadogActiveMetricsPromise = (
 
 export interface GetDatadogDashboardDetailsQueryParams {
   accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
   connectorIdentifier: string
   dashboardId: string
   tracingId: string
@@ -7870,8 +8387,8 @@ export const getDatadogDashboardDetailsPromise = (
 
 export interface GetDatadogDashboardsQueryParams {
   accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
   connectorIdentifier: string
   pageSize: number
   offset: number
@@ -7925,8 +8442,8 @@ export const getDatadogDashboardsPromise = (
 
 export interface GetDatadogMetricTagsListQueryParams {
   accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
   connectorIdentifier: string
   metric: string
   tracingId: string
@@ -7978,8 +8495,8 @@ export const getDatadogMetricTagsListPromise = (
 
 export interface GetDatadogMetricTagsQueryParams {
   accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
   connectorIdentifier: string
   metric: string
   filter?: string
@@ -8032,8 +8549,8 @@ export const getDatadogMetricTagsPromise = (
 
 export interface GetDatadogSampleDataQueryParams {
   accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
   connectorIdentifier: string
   tracingId: string
   query: string
@@ -8549,8 +9066,8 @@ export const getELKIndicesPromise = (
 
 export interface GetELKLogSampleDataQueryParams {
   accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
   connectorIdentifier: string
   tracingId: string
   index: string
@@ -9781,7 +10298,7 @@ export type SaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9795,7 +10312,7 @@ export const SaveMonitoredServiceFromYaml = (props: SaveMonitoredServiceFromYaml
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >
     verb="POST"
@@ -9810,7 +10327,7 @@ export type UseSaveMonitoredServiceFromYamlProps = Omit<
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -9824,7 +10341,7 @@ export const useSaveMonitoredServiceFromYaml = (props: UseSaveMonitoredServiceFr
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', `/monitored-service/yaml`, { base: getConfig('cv/api'), ...props })
 
@@ -9836,7 +10353,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -9845,7 +10362,7 @@ export const saveMonitoredServiceFromYamlPromise = (
     RestResponseMonitoredServiceResponse,
     unknown,
     SaveMonitoredServiceFromYamlQueryParams,
-    SaveMonitoredServiceFromYamlBodyRequestBody,
+    UpdateMonitoredServiceFromYamlBodyRequestBody,
     void
   >('POST', getConfig('cv/api'), `/monitored-service/yaml`, props, signal)
 
@@ -10946,8 +11463,8 @@ export const getMonitoredServiceDetailsWithServiceIdPromise = (
 
 export interface GetSliGraphQueryParams {
   accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
 }
 
 export interface GetSliGraphPathParams {
@@ -12009,8 +12526,8 @@ export const getRiskCategoryForCustomHealthMetricPromise = (
 
 export interface GetServiceDependencyGraphQueryParams {
   accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
   environmentIdentifier?: string
   serviceIdentifier?: string
   monitoredServiceIdentifier?: string
@@ -12378,8 +12895,8 @@ export const getSLODetailsPromise = (
   )
 
 export interface GetSloConsumptionBreakdownViewQueryParams {
-  startTime?: number
-  endTime?: number
+  startTime: number
+  endTime: number
   accountId: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -12531,7 +13048,13 @@ export interface GetSLOHealthListViewV2QueryParams {
 }
 
 export type GetSLOHealthListViewV2Props = Omit<
-  MutateProps<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewV2QueryParams, SLODashboardApiFilter, void>,
+  MutateProps<
+    ResponsePageSLOHealthListView,
+    unknown,
+    GetSLOHealthListViewV2QueryParams,
+    SLODashboardApiFilterRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -12539,7 +13062,13 @@ export type GetSLOHealthListViewV2Props = Omit<
  * get slo list view
  */
 export const GetSLOHealthListViewV2 = (props: GetSLOHealthListViewV2Props) => (
-  <Mutate<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewV2QueryParams, SLODashboardApiFilter, void>
+  <Mutate<
+    ResponsePageSLOHealthListView,
+    unknown,
+    GetSLOHealthListViewV2QueryParams,
+    SLODashboardApiFilterRequestBody,
+    void
+  >
     verb="POST"
     path={`/slo-dashboard/widgets/list`}
     base={getConfig('cv/api')}
@@ -12552,7 +13081,7 @@ export type UseGetSLOHealthListViewV2Props = Omit<
     ResponsePageSLOHealthListView,
     unknown,
     GetSLOHealthListViewV2QueryParams,
-    SLODashboardApiFilter,
+    SLODashboardApiFilterRequestBody,
     void
   >,
   'path' | 'verb'
@@ -12562,11 +13091,13 @@ export type UseGetSLOHealthListViewV2Props = Omit<
  * get slo list view
  */
 export const useGetSLOHealthListViewV2 = (props: UseGetSLOHealthListViewV2Props) =>
-  useMutate<ResponsePageSLOHealthListView, unknown, GetSLOHealthListViewV2QueryParams, SLODashboardApiFilter, void>(
-    'POST',
-    `/slo-dashboard/widgets/list`,
-    { base: getConfig('cv/api'), ...props }
-  )
+  useMutate<
+    ResponsePageSLOHealthListView,
+    unknown,
+    GetSLOHealthListViewV2QueryParams,
+    SLODashboardApiFilterRequestBody,
+    void
+  >('POST', `/slo-dashboard/widgets/list`, { base: getConfig('cv/api'), ...props })
 
 /**
  * get slo list view
@@ -12576,7 +13107,7 @@ export const getSLOHealthListViewV2Promise = (
     ResponsePageSLOHealthListView,
     unknown,
     GetSLOHealthListViewV2QueryParams,
-    SLODashboardApiFilter,
+    SLODashboardApiFilterRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -12585,7 +13116,7 @@ export const getSLOHealthListViewV2Promise = (
     ResponsePageSLOHealthListView,
     unknown,
     GetSLOHealthListViewV2QueryParams,
-    SLODashboardApiFilter,
+    SLODashboardApiFilterRequestBody,
     void
   >('POST', getConfig('cv/api'), `/slo-dashboard/widgets/list`, props, signal)
 
@@ -12739,7 +13270,7 @@ export type GetOnboardingGraphProps = Omit<
     RestResponseTimeGraphResponse,
     unknown,
     GetOnboardingGraphQueryParams,
-    CompositeServiceLevelObjectiveSpec,
+    CompositeServiceLevelObjectiveSpecRequestBody,
     void
   >,
   'path' | 'verb'
@@ -12753,7 +13284,7 @@ export const GetOnboardingGraph = (props: GetOnboardingGraphProps) => (
     RestResponseTimeGraphResponse,
     unknown,
     GetOnboardingGraphQueryParams,
-    CompositeServiceLevelObjectiveSpec,
+    CompositeServiceLevelObjectiveSpecRequestBody,
     void
   >
     verb="POST"
@@ -12768,7 +13299,7 @@ export type UseGetOnboardingGraphProps = Omit<
     RestResponseTimeGraphResponse,
     unknown,
     GetOnboardingGraphQueryParams,
-    CompositeServiceLevelObjectiveSpec,
+    CompositeServiceLevelObjectiveSpecRequestBody,
     void
   >,
   'path' | 'verb'
@@ -12782,7 +13313,7 @@ export const useGetOnboardingGraph = (props: UseGetOnboardingGraphProps) =>
     RestResponseTimeGraphResponse,
     unknown,
     GetOnboardingGraphQueryParams,
-    CompositeServiceLevelObjectiveSpec,
+    CompositeServiceLevelObjectiveSpecRequestBody,
     void
   >('POST', `/slo/v2/composite-slo/onboarding-graph`, { base: getConfig('cv/api'), ...props })
 
@@ -12794,7 +13325,7 @@ export const getOnboardingGraphPromise = (
     RestResponseTimeGraphResponse,
     unknown,
     GetOnboardingGraphQueryParams,
-    CompositeServiceLevelObjectiveSpec,
+    CompositeServiceLevelObjectiveSpecRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -12803,7 +13334,7 @@ export const getOnboardingGraphPromise = (
     RestResponseTimeGraphResponse,
     unknown,
     GetOnboardingGraphQueryParams,
-    CompositeServiceLevelObjectiveSpec,
+    CompositeServiceLevelObjectiveSpecRequestBody,
     void
   >('POST', getConfig('cv/api'), `/slo/v2/composite-slo/onboarding-graph`, props, signal)
 
@@ -14107,8 +14638,8 @@ export const getSumoLogicEndPointsPromise = (
 
 export interface GetTimeSeriesMetricDataQueryParams {
   accountId: string
-  orgIdentifier?: string
-  projectIdentifier?: string
+  orgIdentifier: string
+  projectIdentifier: string
   monitoredServiceIdentifier?: string
   startTime: number
   endTime: number
@@ -14265,51 +14796,51 @@ export const getMetricDefinitionsPromise = (
     signal
   )
 
-export interface GetLicenseUsageQueryParams {
+export interface GetSRMLicenseUsageQueryParams {
   accountIdentifier: string
   timestamp?: number
 }
 
-export type GetLicenseUsageProps = Omit<
-  GetProps<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
+export type GetSRMLicenseUsageProps = Omit<
+  GetProps<ResponseSRMLicenseUsageDTO, unknown, GetSRMLicenseUsageQueryParams, void>,
   'path'
 >
 
 /**
- * Gets License Usage for CV
+ * Gets License Usage for SRM
  */
-export const GetLicenseUsage = (props: GetLicenseUsageProps) => (
-  <Get<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>
-    path={`/usage/CV`}
+export const GetSRMLicenseUsage = (props: GetSRMLicenseUsageProps) => (
+  <Get<ResponseSRMLicenseUsageDTO, unknown, GetSRMLicenseUsageQueryParams, void>
+    path={`/usage/SRM`}
     base={getConfig('cv/api')}
     {...props}
   />
 )
 
-export type UseGetLicenseUsageProps = Omit<
-  UseGetProps<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
+export type UseGetSRMLicenseUsageProps = Omit<
+  UseGetProps<ResponseSRMLicenseUsageDTO, unknown, GetSRMLicenseUsageQueryParams, void>,
   'path'
 >
 
 /**
- * Gets License Usage for CV
+ * Gets License Usage for SRM
  */
-export const useGetLicenseUsage = (props: UseGetLicenseUsageProps) =>
-  useGet<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>(`/usage/CV`, {
+export const useGetSRMLicenseUsage = (props: UseGetSRMLicenseUsageProps) =>
+  useGet<ResponseSRMLicenseUsageDTO, unknown, GetSRMLicenseUsageQueryParams, void>(`/usage/SRM`, {
     base: getConfig('cv/api'),
     ...props
   })
 
 /**
- * Gets License Usage for CV
+ * Gets License Usage for SRM
  */
-export const getLicenseUsagePromise = (
-  props: GetUsingFetchProps<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>,
+export const getSRMLicenseUsagePromise = (
+  props: GetUsingFetchProps<ResponseSRMLicenseUsageDTO, unknown, GetSRMLicenseUsageQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseCVLicenseUsageDTO, unknown, GetLicenseUsageQueryParams, void>(
+  getUsingFetch<ResponseSRMLicenseUsageDTO, unknown, GetSRMLicenseUsageQueryParams, void>(
     getConfig('cv/api'),
-    `/usage/CV`,
+    `/usage/SRM`,
     props,
     signal
   )

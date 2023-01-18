@@ -8,3 +8,11 @@
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
 export const isContextTypeNotStageTemplate = (contextType?: string) => contextType !== PipelineContextType.StageTemplate
+export const isContextTypeNotStepGroupTemplate = (contextType?: string) =>
+  contextType !== PipelineContextType.StepGroupTemplate
+
+export const isContextTypeStageOrStepGroupTemplate = (contextType?: string) =>
+  contextType === PipelineContextType.StageTemplate || contextType === PipelineContextType.StepGroupTemplate
+
+export const isContextTypeTemplateType = (contextType?: string) =>
+  contextType === PipelineContextType.PipelineTemplate || contextType === PipelineContextType.StageTemplate

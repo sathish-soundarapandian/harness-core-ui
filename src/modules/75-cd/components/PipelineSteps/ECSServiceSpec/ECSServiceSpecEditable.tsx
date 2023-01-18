@@ -20,7 +20,7 @@ import type {
   ManifestConfig
 } from 'services/cd-ng'
 
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
@@ -38,6 +38,7 @@ import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection
 import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
 import { useServiceContext } from '@cd/context/ServiceContext'
+import { FeatureFlag } from '@common/featureFlags'
 import { isMultiArtifactSourceEnabled, setupMode } from '../PipelineStepsUtil'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
@@ -71,18 +72,18 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
     getStageFromPipeline
   } = usePipelineContext()
   const { isServiceEntityPage } = useServiceContext()
-  const { NG_SVC_ENV_REDESIGN, NG_ARTIFACT_SOURCES } = useFeatureFlags()
+  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
 
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(selectedStageId, ''))
   const selectedDeploymentType =
     deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
 
   const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
-    !!NG_ARTIFACT_SOURCES,
+    !!isSvcEnvEnabled,
     stage?.stage as DeploymentStageElementConfig,
     isServiceEntityPage
   )
-  const isNewService = isNewServiceEnvEntity(!!NG_SVC_ENV_REDESIGN, stage?.stage as DeploymentStageElementConfig)
+  const isNewService = isNewServiceEnvEntity(!!isSvcEnvEnabled, stage?.stage as DeploymentStageElementConfig)
 
   const listOfManifests: ManifestConfigWrapper[] = useMemo(() => {
     /* istanbul ignore next */

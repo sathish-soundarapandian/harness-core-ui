@@ -112,11 +112,15 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
         break
       case ModuleName.CHAOS:
         url = paths.toChaos(params)
-        label = getString('common.chaosText')
+        label = getString('common.purpose.chaos.chaos')
         break
       case ModuleName.STO:
         url = paths.toSTO(params)
         label = getString('common.purpose.sto.continuous')
+        break
+      case ModuleName.IACM:
+        url = paths.toIACM(params)
+        label = getString('common.iacm')
         break
     }
 

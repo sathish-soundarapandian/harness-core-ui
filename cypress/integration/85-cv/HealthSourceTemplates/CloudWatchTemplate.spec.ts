@@ -21,12 +21,6 @@ describe('CloudWatch templates', () => {
           ...featureFlagsData.resource,
           {
             uuid: null,
-            name: 'SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS',
-            enabled: true,
-            lastUpdatedAt: 0
-          },
-          {
-            uuid: null,
             name: 'CVNG_TEMPLATE_MONITORED_SERVICE',
             enabled: true,
             lastUpdatedAt: 0

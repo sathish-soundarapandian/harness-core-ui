@@ -2,8 +2,10 @@ import React from 'react'
 import type { GetDataError } from 'restful-react'
 import type { Column } from 'react-table'
 import moment from 'moment'
-import { Container, NoDataCard, PageError, TableV2, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Container, Layout, NoDataCard, PageError, TableV2, Text } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
+import Card from '@cv/components/Card/Card'
+import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import { useStrings } from 'framework/strings'
 import noData from '@cv/assets/noData.svg'
 import type { LogRecord } from 'services/cv'
@@ -21,6 +23,47 @@ export default function LogsTableComponent(props: LogsTableComponentProps): JSX.
   const { loading, error, sampleData, fetchSampleRecords } = props
 
   const { getString } = useStrings()
+
+  const { showDrawer: showLogMessageDrawer } = useDrawer({
+    createHeader: () => {
+      return (
+        <Text font={{ variation: FontVariation.FORM_TITLE }}>
+          {getString('cv.monitoringSources.commonHealthSource.logsTable.sampleLogMessageDrawerTitle')}
+        </Text>
+      )
+    },
+    createDrawerContent: ({ rowData }: { rowData: LogRecord }) => {
+      if (!rowData) {
+        return <></>
+      }
+
+      return (
+        <Layout.Vertical padding="medium" height="100%">
+          <Layout.Horizontal margin={{ bottom: 'medium' }}>
+            <Layout.Vertical spacing="xsmall" margin={{ right: 'medium' }}>
+              <Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('cv.dateAndTimeLabel')}</Text>
+              <Text font={{ variation: FontVariation.BODY }}>
+                {moment(rowData.timestamp).format('MMM D, YYYY hh:mm:ss A')}
+              </Text>
+            </Layout.Vertical>
+            <Layout.Vertical spacing="xsmall">
+              <Text font={{ variation: FontVariation.FORM_LABEL }}>
+                {getString('cv.monitoringSources.commonHealthSource.logsTable.ServiceInstance')}
+              </Text>
+              <Text font={{ variation: FontVariation.BODY }}>{rowData.serviceInstance}</Text>
+            </Layout.Vertical>
+          </Layout.Horizontal>
+          <Card className={css.drawerLogMessage}>
+            <Text font={{ variation: FontVariation.YAML }} color={Color.GREY_800}>
+              {rowData.message}
+            </Text>
+          </Card>
+        </Layout.Vertical>
+      )
+    },
+    drawerOptions: { size: '40%', canOutsideClickClose: true },
+    showConfirmationDuringClose: false
+  })
 
   if (error) {
     return (
@@ -72,14 +115,20 @@ export default function LogsTableComponent(props: LogsTableComponentProps): JSX.
     {
       Header: getString('message'),
       id: 'message',
-      accessor: row => (
-        <Text color={Color.GREY_800} tooltip={row.message}>
-          {row.message}
-        </Text>
-      ),
+      accessor: row => <Text color={Color.GREY_800}>{row.message}</Text>,
       width: '60%'
     }
   ]
 
-  return <TableV2 className={css.logsTable} columns={tableColumns} data={sampleData?.slice(0, 20)} sortable />
+  return (
+    <TableV2
+      onRowClick={rowData => {
+        showLogMessageDrawer({ rowData })
+      }}
+      className={css.logsTable}
+      columns={tableColumns}
+      data={sampleData?.slice(0, 20)}
+      sortable
+    />
+  )
 }

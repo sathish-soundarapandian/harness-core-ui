@@ -486,21 +486,6 @@ describe('Prometheus metric thresholds', () => {
 
 describe('AWS Prometheus', () => {
   beforeEach(() => {
-    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
-      cy.intercept('GET', featureFlagsCall, {
-        ...featureFlagsData,
-        resource: [
-          ...featureFlagsData.resource,
-          {
-            uuid: null,
-            name: 'SRM_ENABLE_HEALTHSOURCE_AWS_PROMETHEUS',
-            enabled: true,
-            lastUpdatedAt: 0
-          }
-        ]
-      })
-    })
-
     cy.on('uncaught:exception', () => {
       return false
     })

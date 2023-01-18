@@ -102,12 +102,6 @@ exports[`Sidenav render 1`] = `
         </p>
       </div>
     </div>
-    <button
-      class="launchButtonPosition"
-      type="button"
-    >
-      cd.cdLaunchText
-    </button>
   </div>
 </div>
 `;

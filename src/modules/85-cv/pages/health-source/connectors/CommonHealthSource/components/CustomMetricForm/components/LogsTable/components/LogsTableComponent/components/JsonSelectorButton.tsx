@@ -6,14 +6,14 @@ export type JsonSelectorButtonProps = ButtonProps & {
   displayText: string
   onClick: () => void
   className?: string
-  disabled?: boolean
+  isDisabled?: boolean
   icon?: IconName
 }
 
 export default function JsonSelectorButton({
   displayText,
   onClick,
-  disabled,
+  isDisabled,
   icon,
   className,
   ...otherProps
@@ -25,9 +25,13 @@ export default function JsonSelectorButton({
       width="100%"
       withoutCurrentColor={true}
       rightIcon={icon}
-      iconProps={{ size: 14, color: disabled ? Color.GREEN_300 : Color.PRIMARY_5 }}
-      disabled={disabled}
-      onClick={onClick}
+      iconProps={{ size: 14, color: isDisabled ? Color.GREEN_300 : Color.PRIMARY_5 }}
+      disabled={isDisabled}
+      onClick={() => {
+        if (!isDisabled) {
+          onClick()
+        }
+      }}
       {...otherProps}
     >
       {displayText}

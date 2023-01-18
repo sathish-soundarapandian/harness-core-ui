@@ -45,7 +45,7 @@ exports[`PipelineExecutions render no data 1`] = `
             class="bp3-input  ExpandingSearchInput--filter"
             dir="auto"
             placeholder="search"
-            style="padding-right: 0px;"
+            style="padding-right: 38px;"
             type="search"
             value=""
           />
@@ -130,7 +130,7 @@ exports[`PipelineExecutions should render PipelineExecutions 1`] = `
             class="bp3-input  ExpandingSearchInput--filter"
             dir="auto"
             placeholder="search"
-            style="padding-right: 0px;"
+            style="padding-right: 38px;"
             type="search"
             value=""
           />
@@ -207,7 +207,7 @@ exports[`PipelineExecutions should render PipelineExecutions with error true 1`]
             class="bp3-input  ExpandingSearchInput--filter"
             dir="auto"
             placeholder="search"
-            style="padding-right: 0px;"
+            style="padding-right: 38px;"
             type="search"
             value=""
           />
@@ -341,7 +341,7 @@ exports[`PipelineExecutions should render PipelineExecutions with loading true 1
             class="bp3-input  ExpandingSearchInput--filter"
             dir="auto"
             placeholder="search"
-            style="padding-right: 0px;"
+            style="padding-right: 38px;"
             type="search"
             value=""
           />

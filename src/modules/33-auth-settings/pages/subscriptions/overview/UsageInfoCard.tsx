@@ -13,7 +13,7 @@ import { useStrings } from 'framework/strings'
 import PercentageBar from './PercentageBar'
 import css from './SubscriptionUsageCard.module.scss'
 
-function getInfoIcon(tooltip: string): React.ReactElement {
+export function getInfoIcon(tooltip: string): React.ReactElement {
   return (
     <Popover
       popoverClassName={Classes.DARK}

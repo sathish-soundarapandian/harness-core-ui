@@ -32,7 +32,7 @@ import {
   RoleAssignmentMetadataDTO
 } from 'services/cd-ng'
 import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/EntityReference'
-import { useStrings, String } from 'framework/strings'
+import { useStrings, String, StringKeys } from 'framework/strings'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import {
   getUserGroupActionTooltipText,
@@ -40,14 +40,16 @@ import {
   isUserGroupInherited,
   mapfromScopetoPrincipalScope,
   getScopeFromUserGroupDTO,
-  getUserGroupMenuOptionText
+  getUserGroupMenuOptionText,
+  AuthenticationMechanisms
 } from '@rbac/utils/utils'
-import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { PipelineType, ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import OpenInNewTab from '@rbac/components/MenuItem/OpenInNewTab'
 import RbacAvatarGroup from '@rbac/components/RbacAvatarGroup/RbacAvatarGroup'
 import { getUserName, useGetCommunity } from '@common/utils/utils'
 import css from './UserGroupsListView.module.scss'
@@ -62,6 +64,14 @@ interface UserGroupsListViewProps {
     roleBindings?: RoleAssignmentMetadataDTO[]
   ) => void
   openUserGroupModal: (userGroup?: UserGroupDTO, _isAddMember?: boolean) => void
+}
+
+const getSsoTypeLabel = (data: UserGroupDTO): StringKeys => {
+  if (AuthenticationMechanisms.SAML === data?.linkedSsoType) {
+    return 'rbac.userDetails.linkToSSOProviderModal.saml'
+  } else {
+    return 'rbac.userDetails.linkToSSOProviderModal.ldap'
+  }
 }
 
 export const UserGroupColumn = (data: UserGroupDTO): React.ReactElement => {
@@ -82,7 +92,7 @@ export const UserGroupColumn = (data: UserGroupDTO): React.ReactElement => {
               <Layout.Vertical spacing="xsmall" padding="medium">
                 <Layout.Horizontal spacing="xsmall">
                   <Text color={Color.BLACK}>
-                    <String stringID="rbac.userDetails.linkToSSOProviderModal.saml" />
+                    <String stringID={getSsoTypeLabel(data)} />
                   </Text>
                   <Text lineClamp={1}>{data.linkedSsoDisplayName}</Text>
                 </Layout.Horizontal>
@@ -232,8 +242,9 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
   const {
     accountId: accountIdentifier,
     orgIdentifier: childOrgIdentifier,
-    projectIdentifier: childProjectIdentifier
-  } = useParams<ProjectPathProps>()
+    projectIdentifier: childProjectIdentifier,
+    module
+  } = useParams<ProjectPathProps & ModulePathParams>()
   const [menuOpen, setMenuOpen] = useState(false)
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
@@ -326,6 +337,14 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
     }
     return <RbacMenuItem icon={icon} text={text} onClick={clickHandler} permission={permissionRequest} />
   }
+  const userGroupDetailsUrl = routes.toUserGroupDetails({
+    accountId: accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    module,
+    userGroupIdentifier: identifier
+  })
+  const urlWithParentScope = `${userGroupDetailsUrl}?parentScope=${getPrincipalScopeFromDTO(data)}`
 
   return row.original.userGroupDTO.harnessManaged ? (
     <></>
@@ -349,6 +368,9 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
           }}
         />
         <Menu>
+          <li>
+            <OpenInNewTab url={urlWithParentScope} />
+          </li>
           <RbacMenuItem
             icon="res-roles"
             text={getString('rbac.manageRoleBindings')}

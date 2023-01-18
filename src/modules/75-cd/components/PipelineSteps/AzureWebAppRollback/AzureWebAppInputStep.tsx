@@ -31,23 +31,22 @@ export function AzureWebAppRollbackInputStepRef<T extends AzureWebAppRollbackDat
       {
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.timeout as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <TimeoutFieldInputSetView
-              label={getString('pipelineSteps.timeoutLabel')}
-              name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-              disabled={readonly}
-              multiTypeDurationProps={{
-                configureOptionsProps: {
-                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-                },
-                allowableTypes,
-                expressions,
-                disabled: readonly
-              }}
-              fieldPath={'timeout'}
-              template={inputSetData?.template}
-            />
-          </div>
+          <TimeoutFieldInputSetView
+            label={getString('pipelineSteps.timeoutLabel')}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+            disabled={readonly}
+            multiTypeDurationProps={{
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
+              allowableTypes,
+              expressions,
+              disabled: readonly
+            }}
+            fieldPath={'timeout'}
+            template={inputSetData?.template}
+            className={cx(stepCss.formGroup, stepCss.md)}
+          />
         )
       }
     </FormikForm>

@@ -84,7 +84,10 @@ describe('process initial values', () => {
         environmentGroup: {
           envGroupRef: 'Env_Group_1',
           deployToAll: true,
-          environments: RUNTIME_INPUT_VALUE as any
+          environments: RUNTIME_INPUT_VALUE as any,
+          metadata: {
+            parallel: false
+          }
         }
       },
       { gitOpsEnabled: false }
@@ -95,6 +98,7 @@ describe('process initial values', () => {
       environmentGroup: 'Env_Group_1',
       environmentInputs: {},
       infrastructures: {},
+      parallel: false,
       infrastructureInputs: {}
     } as DeployEnvironmentEntityFormState)
   })
@@ -177,7 +181,8 @@ describe('process form values', () => {
         environmentGroup: 'Env_Group_1',
         environmentInputs: {},
         infrastructures: {},
-        infrastructureInputs: {}
+        infrastructureInputs: {},
+        parallel: true
       },
       { gitOpsEnabled: false }
     )
@@ -186,7 +191,10 @@ describe('process form values', () => {
       environmentGroup: {
         envGroupRef: 'Env_Group_1',
         deployToAll: true,
-        environments: RUNTIME_INPUT_VALUE as any
+        environments: RUNTIME_INPUT_VALUE as any,
+        metadata: {
+          parallel: true
+        }
       }
     } as DeployEnvironmentEntityConfig)
   })

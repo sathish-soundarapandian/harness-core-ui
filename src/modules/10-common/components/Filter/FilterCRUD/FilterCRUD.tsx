@@ -424,7 +424,7 @@ const FilterCRUDRef = <T extends FilterInterface>(props: FilterCRUDProps<T>, fil
             }}
             formName="filterCrudForm"
             validationSchema={Yup.object().shape({
-              name: NameSchema(),
+              name: NameSchema(getString),
               filterVisibility: Yup.mixed()
                 .oneOf(['OnlyCreator', 'EveryOne'])
                 .required(getString('filters.visibilityRequired'))

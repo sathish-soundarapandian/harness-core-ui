@@ -24,6 +24,7 @@ export interface ChangeTimelineProps {
   selectedTimeRange?: { startTime: number; endTime: number }
   hideTimeline?: boolean
   duration?: SelectOption
+  monitoredServiceIdentifiers?: string[]
 }
 
 export interface ChangesInfoCardData {

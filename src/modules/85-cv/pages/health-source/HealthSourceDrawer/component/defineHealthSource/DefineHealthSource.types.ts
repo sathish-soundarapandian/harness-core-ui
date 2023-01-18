@@ -21,19 +21,16 @@ export interface ConnectorDisableFunctionProps {
   isEdit?: boolean
   connectorRef?: string
   sourceType?: string
-  isDataSourceTypeSelectorEnabled?: boolean
   dataSourceType?: string
 }
 
 export interface FormValidationFunctionProps {
   values: DefineHealthSourceFormInterface
   isEdit?: boolean
-  isDataSourceTypeSelectorEnabled?: boolean
   getString: UseStringsReturn['getString']
 }
 
 export interface DataSourceTypeValidateFunctionProps {
-  isDataSourceTypeSelectorEnabled?: boolean
   sourceType?: string
   dataSourceType?: string
 }
@@ -41,5 +38,4 @@ export interface DataSourceTypeValidateFunctionProps {
 export interface GetDataSourceTypeParams {
   type?: string
   dataSourceType?: string
-  isDataSourceTypeSelectorEnabled?: boolean
 }

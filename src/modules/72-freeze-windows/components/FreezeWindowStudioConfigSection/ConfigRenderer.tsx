@@ -66,10 +66,10 @@ export const ConfigRenderer = ({
     setEditView(index, false)
   }
 
-  const setVisualViewMode = React.useCallback(() => {
+  const setVisualViewMode = () => {
     resetValuesForEntity(index)
     setEditView(index, false)
-  }, [entityConfigs])
+  }
   const setEditViewMode = React.useCallback(() => {
     setEditView(index, true)
   }, [])

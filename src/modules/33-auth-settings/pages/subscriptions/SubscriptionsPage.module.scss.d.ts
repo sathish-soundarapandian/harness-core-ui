@@ -21,11 +21,13 @@ declare const styles: {
   readonly expired: string
   readonly expiryCountdown: string
   readonly failed24HrsExecutionsBadge: string
+  readonly fetchButton: string
   readonly moduleIcons: string
   readonly moduleSelectCard: string
   readonly moduleSelectCards: string
   readonly noDataCard: string
   readonly noDataCardContainer: string
+  readonly orgDropdown: string
   readonly outterCard: string
   readonly runningExecutions: string
   readonly selected: string

@@ -39,6 +39,7 @@ export function StrategyStepsList(props: StrategyStepsListProps): React.ReactEle
     <ThumbnailSelect
       name={name}
       items={items}
+      className={css.thumbnailSelect}
       thumbnailClassName={css.thumbnail}
       isReadonly={disabled}
       onChange={onChange}

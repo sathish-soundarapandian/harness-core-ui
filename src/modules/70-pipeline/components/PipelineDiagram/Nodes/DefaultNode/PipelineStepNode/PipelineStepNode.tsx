@@ -37,7 +37,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
   const { getString } = useStrings()
   const allowAdd = defaultTo(props.allowAdd, false)
   const [showAddNode, setVisibilityOfAdd] = React.useState(false)
-  const stepType = props.type || props?.data?.step?.stepType || ''
+  const stepType = props.type || props?.data?.step?.stepType || props?.data?.step?.template?.templateInputs?.type || ''
   const stepData = stepsfactory.getStepData(stepType)
   const stepIconSize = stepsfactory.getStepIconSize(stepType)
   const isStepNonDeletable = stepsfactory.getIsStepNonDeletable(stepType)
@@ -84,7 +84,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
     setVisibilityOfAdd(false)
   }, 300)
   // const isPrevNodeParallel = !!defaultTo(props.prevNode?.children?.length, 1)
-  const isTemplateNode = props?.data?.isTemplateNode
+  const isTemplateNode = props?.data?.isTemplateNode || props?.data?.step?.template || props?.data?.stepGroup?.template
   return (
     <div
       className={cx(defaultCss.defaultNode, 'default-node', {

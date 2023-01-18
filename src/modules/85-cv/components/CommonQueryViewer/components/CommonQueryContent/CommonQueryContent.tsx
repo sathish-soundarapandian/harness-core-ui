@@ -2,7 +2,7 @@ import React from 'react'
 import cx from 'classnames'
 import { Button, ButtonVariation, Container, FormInput, Layout, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo, isEmpty } from 'lodash-es'
-import { CommonHealthSourceFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import CVMultiTypeQuery from '@cv/components/CVMultiTypeQuery/CVMultiTypeQuery'
 import { useStrings } from 'framework/strings'
 import type { QueryContentProps } from '../../types'
@@ -27,7 +27,7 @@ export function CommonQueryContent(props: QueryContentProps): JSX.Element {
       {isTemplate ? (
         <>
           <CVMultiTypeQuery
-            name={textAreaName || CommonHealthSourceFieldNames.QUERY}
+            name={textAreaName || CustomMetricFormFieldNames.QUERY}
             expressions={defaultTo(expressions, [])}
             fetchRecords={handleFetchRecords}
             disableFetchButton={isEmpty(query) || isConnectorRuntimeOrExpression || loading}
@@ -51,7 +51,7 @@ export function CommonQueryContent(props: QueryContentProps): JSX.Element {
             )}
           </Layout.Horizontal>
           <FormInput.TextArea
-            name={textAreaName || CommonHealthSourceFieldNames.QUERY}
+            name={textAreaName || CustomMetricFormFieldNames.QUERY}
             className={cx(css.formQueryBox)}
             placeholder={getString('cv.monitoringSources.commonHealthSource.submitQueryToSeeRecords')}
           />

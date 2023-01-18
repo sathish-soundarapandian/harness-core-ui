@@ -43,6 +43,7 @@ const getPipelineContext = (): PipelineContextInterface => ({
     pipelineIdentifier: '',
     isBEPipelineUpdated: false,
     isDBInitialized: true,
+    isDBInitializationFailed: false,
     isInitialized: true,
     isLoading: false,
     isIntermittentLoading: false,

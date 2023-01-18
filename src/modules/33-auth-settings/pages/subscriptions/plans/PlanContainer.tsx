@@ -33,6 +33,9 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useSubscribeModal } from '@auth-settings/modals/Subscription/useSubscriptionModal'
 import { getSavedRefererURL, getGaClientID, isOnPrem } from '@common/utils/utils'
 import type { TimeType } from '@common/constants/SubscriptionTypes'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { getModuleToDefaultURLMap } from 'framework/LicenseStore/licenseStoreUtil'
 import { getBtnProps } from './planUtils'
 import type { PlanData, PlanProp } from './planUtils'
 import Plan from './Plan'
@@ -71,6 +74,7 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
   const moduleType = moduleName as StartTrialDTO['moduleType']
   const module = moduleName.toLowerCase() as Module
 
+  const isDefaultProjectCreated = useFeatureFlag(FeatureFlag.CREATE_DEFAULT_PROJECT)
   const { accountId } = useParams<{
     accountId: string
   }>()
@@ -157,11 +161,17 @@ const PlanContainer: React.FC<PlanProps> = ({ plans, timeType, moduleName }) => 
         })
         return
       }
-
-      history.push({
-        pathname: routes.toModuleHome({ accountId, module }),
-        search
-      })
+      if (isDefaultProjectCreated) {
+        const moduleUrlWithDefaultProject = getModuleToDefaultURLMap(accountId, module as ModuleType)[module]
+        history.push(
+          moduleUrlWithDefaultProject ? (moduleUrlWithDefaultProject as string) : routes.toHome({ accountId })
+        )
+      } else {
+        history.push({
+          pathname: routes.toModuleHome({ accountId, module }),
+          search
+        })
+      }
     } catch (ex) {
       showError(ex.data?.message)
     }

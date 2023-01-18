@@ -44,7 +44,9 @@ export enum StageType {
   SECURITY = 'SecurityTests',
   MATRIX = 'MATRIX',
   LOOP = 'LOOP',
-  PARALLELISM = 'PARALLELISM'
+  PARALLELISM = 'PARALLELISM',
+  ROLLBACK = 'Rollback',
+  IACM = 'IACM'
 }
 
 export enum ServiceDeploymentType {
@@ -362,7 +364,12 @@ export const isElastigroupDeploymentType = (deploymentType: string): boolean => 
 export const isCustomDeploymentType = (deploymentType: string): boolean => {
   return deploymentType === ServiceDeploymentType.CustomDeployment
 }
-
+export const isNativeHelmDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.NativeHelm
+}
+export const isEcsDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.ECS
+}
 export const isAzureWebAppGenericDeploymentType = (deploymentType: string, repo: string | undefined): boolean => {
   if (isAzureWebAppDeploymentType(deploymentType)) {
     // default repository format should be Generic if none is previously selected
@@ -414,7 +421,8 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.Elastigroup]: 'Elastigroup Details',
   [ServiceDeploymentType.SshWinRmAws]: 'Amazon Web Services Details',
   [ServiceDeploymentType.SshWinRmAzure]: 'Azure Infrastructure details',
-  [ServiceDeploymentType.TAS]: 'Tanzu Application Service Infrastructure Details'
+  [ServiceDeploymentType.TAS]: 'Tanzu Application Service Infrastructure Details',
+  [ServiceDeploymentType.Asg]: 'AWS Details'
 }
 
 export const getSelectedDeploymentType = (
@@ -706,13 +714,15 @@ export const getVariablesHeaderTooltipId = (selectedDeploymentType: ServiceDefin
   return `${selectedDeploymentType}DeploymentTypeVariables`
 }
 
-export const getAzureNexusRepoOptions = (
+export const getAllowedRepoOptions = (
   deploymentType: string,
   azureFlag?: boolean,
   isTemplateContext?: boolean
 ): SelectOption[] => {
   return !!isTemplateContext ||
     isSSHWinRMDeploymentType(deploymentType) ||
+    isTASDeploymentType(deploymentType) ||
+    isCustomDeploymentType(deploymentType) ||
     (isAzureWebAppDeploymentType(deploymentType) && azureFlag)
     ? [...k8sRepositoryFormatTypes, ...nexus2RepositoryFormatTypes]
     : k8sRepositoryFormatTypes

@@ -9,6 +9,7 @@ import type { SelectOption } from '@harness/uicore'
 import { ErrorType, Strategy } from '@pipeline/utils/FailureStrategyUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { ManualInterventionFailureActionConfig } from 'services/pipeline-ng'
+import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import type { ContinousVerificationData } from './types'
 import { MONITORED_SERVICE_TYPE } from './components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 
@@ -121,3 +122,5 @@ export const defaultMonitoredServiceSpec = {
 }
 
 export const monitoredServiceRefPath = 'spec.monitoredService.spec.monitoredServiceRef'
+
+export const V2_HEALTHSOURCES = [HealthSourceTypes.SumologicLogs, HealthSourceTypes.SumologicMetrics]

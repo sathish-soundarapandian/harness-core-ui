@@ -18,4 +18,5 @@ export interface UseDrawerPropsInterface {
   createHeader?: (data?: any) => JSX.Element
   createDrawerContent: (props: any) => JSX.Element
   className?: string
+  showConfirmationDuringClose?: boolean
 }

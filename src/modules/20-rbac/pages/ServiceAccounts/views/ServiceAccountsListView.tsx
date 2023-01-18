@@ -33,8 +33,9 @@ import { useStrings } from 'framework/strings'
 import { TagsPopover, useToaster } from '@common/components'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import routes from '@common/RouteDefinitions'
-import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { PipelineType, ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import OpenInNewTab from '@rbac/components/MenuItem/OpenInNewTab'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
@@ -129,6 +130,7 @@ const RenderColumnEmail: Renderer<CellProps<ServiceAccountAggregateDTO>> = ({ ro
 const RenderColumnMenu: Renderer<CellProps<ServiceAccountAggregateDTO>> = ({ row, column }) => {
   const { serviceAccount: serviceAccountData, roleAssignmentsMetadataDTO } = row.original
   const { accountIdentifier, orgIdentifier, projectIdentifier, identifier } = serviceAccountData
+  const { module } = useParams<ModulePathParams>()
   const [menuOpen, setMenuOpen] = useState(false)
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
@@ -183,6 +185,14 @@ const RenderColumnMenu: Renderer<CellProps<ServiceAccountAggregateDTO>> = ({ row
     }
   }
 
+  const serviceAccountDetailsUrl = routes.toServiceAccountDetails({
+    accountId: accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    module,
+    serviceAccountIdentifier: identifier
+  })
+
   return (
     <Layout.Horizontal flex={{ justifyContent: 'flex-end' }}>
       <Popover
@@ -203,6 +213,9 @@ const RenderColumnMenu: Renderer<CellProps<ServiceAccountAggregateDTO>> = ({ row
           }}
         />
         <Menu>
+          <li>
+            <OpenInNewTab url={serviceAccountDetailsUrl} />
+          </li>
           <RbacMenuItem
             icon="res-roles"
             text={getString('rbac.manageRoleBindings')}

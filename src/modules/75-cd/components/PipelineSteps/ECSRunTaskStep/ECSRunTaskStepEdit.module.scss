@@ -6,7 +6,21 @@
  */
 
 .ecsRunTaskDefinitionTitle {
-  margin-top: 100px;
+  margin-top: var(--spacing-medium);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  display: flex;
+  align-items: flex-end;
+  text-align: center;
+  letter-spacing: 0.2px;
+  color: var(--grey-600);
+}
+
+.ecsRunTaskDefinitionSourceARNRadioGroup {
+  margin-top: var(--spacing-medium);
+  margin-bottom: var(--spacing-large);
   font-style: normal;
   font-weight: 500;
   font-size: 12px;

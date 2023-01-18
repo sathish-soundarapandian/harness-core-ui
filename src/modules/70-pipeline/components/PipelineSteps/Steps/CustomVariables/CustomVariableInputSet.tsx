@@ -100,7 +100,9 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
     })
 
     if (isYamlDirty) {
-      formik.setFieldValue(basePath, clearRuntimeInput(mergeTemplateBaseValues))
+      // !path signifies pipeline variables path and the second term is used to check the presence of stage in pipeline YAML
+      const isEntityPresent = !path || get(formik.values, defaultTo(path, ''))
+      isEntityPresent && formik.setFieldValue(basePath, clearRuntimeInput(mergeTemplateBaseValues))
     }
   }, [])
 

@@ -7,9 +7,10 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
+import { Icon } from '@blueprintjs/core'
+import { Container, Text } from '@harness/uicore'
 import { DiagramDrag, DiagramType, Event } from '../../Constants'
-import CreateNode from './CreateNode'
 import type { FireEventMethod } from '../../types'
 import cssDefault from '../DefaultNode/DefaultNode.module.scss'
 import css from './CreateNode.module.scss'
@@ -82,18 +83,35 @@ function CreateNodeStage(props: CreateNodeStageProps): React.ReactElement | null
         })
       }}
     >
-      <CreateNode
-        identifier={props.identifier}
-        name={props.name}
-        className={cx(
-          props?.className,
-          cssDefault.defaultCard,
-          css.createNode,
-          css.stageAddIcon,
-          { [css.disabled]: defaultTo(props.disabled, false) },
-          { [css.selected]: (props?.node as any)?.isSelected }
-        )}
-      />
+      <Container
+        id={props.identifier}
+        data-linkid={props.identifier}
+        data-nodeid={props.identifier}
+        style={{
+          height: 64
+        }}
+        flex={{ justifyContent: 'center', alignItems: 'center' }}
+      >
+        <div
+          className={cx(
+            props?.className,
+            cssDefault.defaultCard,
+            css.createNode,
+            css.stageAddIcon,
+            { [css.disabled]: defaultTo(props.disabled, false) },
+            { [css.selected]: (props?.node as any)?.isSelected }
+          )}
+        >
+          <div>
+            <Icon icon="plus" iconSize={22} color={'var(--diagram-add-node-color)'} />
+          </div>
+        </div>
+      </Container>
+      {!isEmpty(props.name) && (
+        <Text data-name="node-name" font={{ align: 'center' }} padding={{ top: 'small' }} lineClamp={2}>
+          {props.name}
+        </Text>
+      )}
     </div>
   )
 }

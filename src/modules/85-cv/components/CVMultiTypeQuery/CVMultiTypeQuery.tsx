@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { AllowedTypes, Button, MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypes, Button, ButtonProps, MultiTypeInputType } from '@harness/uicore'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { useStrings } from 'framework/strings'
 import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
@@ -17,7 +17,8 @@ export default function CVMultiTypeQuery({
   expressions,
   fetchRecords,
   allowedTypes,
-  onTypeChange
+  onTypeChange,
+  fetchButtonProps = {}
 }: {
   name: string
   disableFetchButton?: boolean
@@ -25,6 +26,7 @@ export default function CVMultiTypeQuery({
   allowedTypes?: AllowedTypes
   fetchRecords?: () => void
   onTypeChange?: (type: MultiTypeInputType) => void
+  fetchButtonProps?: Partial<ButtonProps>
 }): JSX.Element {
   const { getString } = useStrings()
 
@@ -60,6 +62,7 @@ export default function CVMultiTypeQuery({
         }}
         margin={{ top: 'medium' }}
         disabled={disableFetchButton}
+        {...fetchButtonProps}
       />
     </MultiTypeFieldSelector>
   )

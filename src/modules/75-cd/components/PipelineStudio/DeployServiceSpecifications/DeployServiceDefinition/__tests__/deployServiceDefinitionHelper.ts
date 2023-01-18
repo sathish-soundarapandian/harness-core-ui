@@ -124,5 +124,6 @@ export const serviceContextData = {
   isServiceEntityModalView: false,
   isServiceCreateModalView: false,
   selectedDeploymentType: '',
-  gitOpsEnabled: false
+  gitOpsEnabled: false,
+  isDeploymentTypeDisabled: false
 }

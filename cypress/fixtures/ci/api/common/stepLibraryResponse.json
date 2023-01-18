@@ -130,6 +130,18 @@
                 "type": "Plugin",
                 "disabled": false,
                 "featureRestrictionName": null
+              },
+              {
+                "name": "Bitrise Plugin",
+                "type": "Bitrise",
+                "disabled": false,
+                "featureRestrictionName": null
+              },
+              {
+                "name": "Github Action Plugin",
+                "type": "Action",
+                "disabled": false,
+                "featureRestrictionName": null
               }
             ],
             "stepCategories": []

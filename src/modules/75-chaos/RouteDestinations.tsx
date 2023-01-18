@@ -70,7 +70,6 @@ import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTr
 import type { ResourceDTO } from 'services/audit'
 import ExecFactory from '@pipeline/factories/ExecutionFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import SettingsList from '@default-settings/pages/SettingsList'
 import ChaosEnvironments from '@chaos/pages/environments/EnvironmentsPage'
 import { MinimalLayout } from '@common/layouts'
@@ -204,7 +203,7 @@ export default function ChaosRoutes(): React.ReactElement {
     // RBAC registrations
     RbacFactory.registerResourceCategory(ResourceCategory.CHAOS, {
       icon: 'chaos-main',
-      label: 'common.chaosText'
+      label: 'common.purpose.chaos.chaos'
     })
 
     RbacFactory.registerResourceTypeHandler(ResourceType.CHAOS_HUB, {
@@ -293,7 +292,7 @@ export default function ChaosRoutes(): React.ReactElement {
       <RouteWithLayout
         licenseRedirectData={licenseRedirectData}
         sidebarProps={ChaosSideNavProps}
-        path={routes.toModuleHome({ ...projectPathProps, ...chaosModuleParams })}
+        path={routes.toModuleHome({ ...accountPathProps, ...chaosModuleParams })}
         exact
         pageName={PAGE_NAME.ChaosHomePage}
       >
@@ -675,7 +674,6 @@ export default function ChaosRoutes(): React.ReactElement {
             NavigationCheck
           }}
           customFunctions={{ validateYAMLWithSchema }}
-          customHooks={{ useCreateConnectorModal }}
         />
       </RouteWithLayout>
     </>

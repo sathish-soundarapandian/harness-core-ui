@@ -240,7 +240,11 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
     Object.keys(allLicenses).forEach((key: string) => {
       const moduleLicenses = allLicenses[key]
       if (moduleLicenses?.length > 0) {
-        licenses[key] = moduleLicenses[moduleLicenses.length - 1]
+        /**
+         * SRM Module's license will be stored under `CV` property name
+         */
+        const licenseKey = key === ModuleName.SRM ? ModuleName.CV : key
+        licenses[licenseKey] = moduleLicenses[moduleLicenses.length - 1]
       }
     })
 
@@ -325,7 +329,7 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
           : prevState.STO_LICENSE_STATE,
         CV_LICENSE_STATE: CVModuleLicenseData?.expiryTime
           ? getLicenseState(CVModuleLicenseData.expiryTime)
-          : prevState.CHAOS_LICENSE_STATE
+          : prevState.CV_LICENSE_STATE
       }))
     },
     [getLicenseState]
@@ -412,6 +416,9 @@ export function handleUpdateLicenseStore(
     }
   } else if (module.toUpperCase() === ModuleName.CHAOS) {
     newLicenseInformation[ModuleName.CHAOS] = data
+    licenseStoreData = {
+      licenseInformation: newLicenseInformation
+    }
   } else if (module.toUpperCase() === ModuleName.STO) {
     newLicenseInformation[ModuleName.STO] = data
     licenseStoreData = {

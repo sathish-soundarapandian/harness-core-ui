@@ -12,6 +12,7 @@ declare const styles: {
   readonly icon: string
   readonly latestExecutionText: string
   readonly link: string
+  readonly minimal: string
   readonly neverRan: string
   readonly recentExecutionHeader: string
   readonly recentExecutions: string

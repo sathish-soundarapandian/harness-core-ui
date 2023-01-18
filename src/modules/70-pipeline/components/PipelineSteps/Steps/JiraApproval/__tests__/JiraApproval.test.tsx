@@ -235,7 +235,7 @@ describe('Jira Approval tests', () => {
       timeout: '10m',
       type: 'JiraApproval',
       spec: {
-        connectorRef: 'cid1',
+        connectorRef: 'c1d1',
         projectKey: 'pid1',
         issueKey: 'tdc-2345',
         issueType: 'itd1',

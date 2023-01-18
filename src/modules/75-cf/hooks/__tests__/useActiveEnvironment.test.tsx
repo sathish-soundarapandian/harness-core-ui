@@ -5,16 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { renderHook } from '@testing-library/react-hooks'
-import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
+import React from 'react'
+import { renderHook, RenderHookResult } from '@testing-library/react-hooks'
+import { TestWrapper } from '@common/utils/testUtils'
+import useActiveEnvironment, { UseActiveEnvironmentPayload } from '../useActiveEnvironment'
 
-jest.mock('@common/hooks')
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const renderActiveEnvironmentHook = (activeEnvironment = 'TEST_ENV') => {
-  window.location.hash = `path?activeEnvironment=${activeEnvironment}`
-  return renderHook(() => useActiveEnvironment())
-}
+const renderActiveEnvironmentHook = (
+  activeEnvironment = 'TEST_ENV'
+): RenderHookResult<void, UseActiveEnvironmentPayload> =>
+  renderHook(() => useActiveEnvironment(), {
+    wrapper: ({ children }) => <TestWrapper queryParams={{ activeEnvironment }}>{children}</TestWrapper>
+  })
 
 describe('useActiveEnvironment', () => {
   beforeEach(() => {

@@ -113,7 +113,12 @@ function InheritFromManifest({
         initialValues={getInitialValues()}
         formName="manifestDetails"
         validationSchema={Yup.object().shape({
-          ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
+          ...ManifestIdentifierValidation(
+            getString,
+            manifestIdsList,
+            initialValues?.identifier,
+            getString('pipeline.uniqueName')
+          ),
           paths: Yup.lazy((value): Yup.Schema<unknown> => {
             if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
               return Yup.array().of(

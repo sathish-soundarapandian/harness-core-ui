@@ -49,3 +49,9 @@
     }
   }
 }
+
+.parentPipelineDetails {
+  display: flex;
+  justify-content: center;
+  padding-left: var(--spacing-4);
+}

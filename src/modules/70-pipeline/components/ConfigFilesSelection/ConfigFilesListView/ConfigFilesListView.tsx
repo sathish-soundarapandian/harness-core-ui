@@ -31,10 +31,12 @@ import type { ConfigFileWrapper, StageElementConfig } from 'services/cd-ng'
 
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { getScope } from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
 
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
 import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
 import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
@@ -80,6 +82,7 @@ function ConfigFilesListView({
     enforceFocus: false,
     style: { width: 1175, minHeight: 640, borderLeft: 0, paddingBottom: 0, position: 'relative', overflow: 'hidden' }
   }
+  const openFileStore = useFileStoreModal({ isReadonly: true })
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -425,19 +428,51 @@ function ConfigFilesListView({
                           color={Color.BLACK}
                           lineClamp={1}
                           inline
+                          alwaysShowTooltip
                           tooltip={
                             isArray(filesLocation)
                               ? filesLocation.map((field: string, i: number) => {
+                                  const { scope, path } = getScope(field)
                                   return (
-                                    <Text padding="small" key={i}>
-                                      {field}
-                                    </Text>
+                                    <div
+                                      className={css.locationLink}
+                                      key={i}
+                                      onClick={() => {
+                                        if (configFile?.spec?.store?.spec?.files?.length) {
+                                          openFileStore.openFileStoreModal(path, scope)
+                                        }
+                                      }}
+                                    >
+                                      <Text padding="small" key={i} color={Color.BLACK}>
+                                        {field}
+                                      </Text>
+                                    </div>
                                   )
                                 })
                               : filesLocation
                           }
                         >
-                          {filesLocation}
+                          {configFile?.spec?.store?.spec?.files?.length === 1 ? (
+                            <span
+                              className={css.locationLink}
+                              onClick={() => {
+                                if (configFile?.spec?.store?.spec?.files?.length) {
+                                  openFileStore.openFileStoreModal(
+                                    getScope(filesLocation[0]).path,
+                                    getScope(filesLocation[0]).scope
+                                  )
+                                }
+                              }}
+                            >
+                              <Text padding="small" color={Color.BLACK} inline>
+                                {filesLocation}
+                              </Text>
+                            </span>
+                          ) : (
+                            <Text padding="small" color={Color.BLACK} inline>
+                              {filesLocation}
+                            </Text>
+                          )}
                         </Text>
                       </div>
                       {!isReadonly && (

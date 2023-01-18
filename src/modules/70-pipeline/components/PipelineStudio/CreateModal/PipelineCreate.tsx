@@ -65,6 +65,7 @@ export interface PipelineCreateProps {
   closeModal?: () => void
   gitDetails?: IGitContextFormProps
   primaryButtonText: string
+  isReadonly: boolean
 }
 
 export default function CreatePipelines({
@@ -82,7 +83,8 @@ export default function CreatePipelines({
   },
   closeModal,
   gitDetails,
-  primaryButtonText
+  primaryButtonText,
+  isReadonly
 }: PipelineCreateProps): JSX.Element {
   const { getString } = useStrings()
   const { pipelineIdentifier } = useParams<{ pipelineIdentifier: string }>()
@@ -116,20 +118,18 @@ export default function CreatePipelines({
   const validationSchema = React.useMemo(
     () =>
       Yup.object().shape({
-        name: NameSchema({ requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
-        identifier: IdentifierSchema(),
+        name: NameSchema(getString, { requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
+        identifier: IdentifierSchema(getString),
         ...getGitValidationSchema()
       }),
     [getString, supportingGitSimplification, oldGitSyncEnabled, storeTypeParam]
   )
 
-  const isEdit = React.useMemo(
-    () =>
-      supportingGitSimplification
-        ? pipelineIdentifier !== DefaultNewPipelineId
-        : initialValues.identifier !== DefaultNewPipelineId,
-    [initialValues.identifier, supportingGitSimplification, pipelineIdentifier]
-  )
+  const isEdit = React.useMemo(() => {
+    return !isReadonly || supportingGitSimplification
+      ? pipelineIdentifier !== DefaultNewPipelineId
+      : initialValues.identifier !== DefaultNewPipelineId
+  }, [initialValues.identifier, supportingGitSimplification, pipelineIdentifier, isReadonly])
 
   useEffect(() => {
     !isEdit &&
@@ -179,7 +179,14 @@ export default function CreatePipelines({
               inputGroupProps={{
                 ...(!(errorCheck('name', formikProps) || get(formikProps, `errors.identifier`)) && {
                   className: css.zeroMargin
-                })
+                }),
+                disabled: isReadonly
+              }}
+              descriptionProps={{
+                disabled: isReadonly
+              }}
+              tagsProps={{
+                disabled: isReadonly
               }}
             />
             {oldGitSyncEnabled && (

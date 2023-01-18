@@ -13,10 +13,14 @@ import {
   useGetAccountNG,
   useGetModuleLicensesByAccountAndModuleType,
   useExtendTrialLicense,
-  useSaveFeedback
+  useSaveFeedback,
+  useGetOrganizationList,
+  useGetProjectList
 } from 'services/cd-ng'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import SubscriptionsPage from '../SubscriptionsPage'
+import orgMockData from './mocks/orgMockData.json'
+import projMockData from './mocks/projMockData.json'
 jest.mock('services/cd-ng')
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
@@ -25,6 +29,14 @@ useExtendTrialLicenseMock.mockImplementation(() => {
   return {
     mutate: jest.fn()
   }
+})
+const useGetOrganizationListMock = useGetOrganizationList as jest.MockedFunction<any>
+useGetOrganizationListMock.mockImplementation(() => {
+  return { ...orgMockData, refetch: jest.fn(), error: null }
+})
+const useGetProjectListMock = useGetProjectList as jest.MockedFunction<any>
+useGetProjectListMock.mockImplementation(() => {
+  return { ...projMockData, refetch: jest.fn(), error: null }
 })
 const useSaveFeedbackMock = useSaveFeedback as jest.MockedFunction<any>
 useSaveFeedbackMock.mockImplementation(() => {
@@ -45,7 +57,8 @@ const featureFlags = {
   CVNG_ENABLED: true,
   CING_ENABLED: true,
   CENG_ENABLED: true,
-  CFNG_ENABLED: true
+  CFNG_ENABLED: true,
+  CHAOS_ENABLED: true
 }
 
 describe('Subscriptions Page', () => {
@@ -55,7 +68,8 @@ describe('Subscriptions Page', () => {
         data: {
           data: [
             {
-              edition: Editions.ENTERPRISE
+              edition: Editions.ENTERPRISE,
+              cdLicenseType: 'SERVICES'
             }
           ],
           status: 'SUCCESS'

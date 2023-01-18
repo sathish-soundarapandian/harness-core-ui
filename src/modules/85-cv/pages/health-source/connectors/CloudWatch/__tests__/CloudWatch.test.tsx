@@ -40,19 +40,6 @@ describe('CloudWatch', () => {
     jest.clearAllMocks()
   })
 
-  test('should not render the component, if the feature flag is disabled', () => {
-    jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(false)
-
-    const onSubmit = jest.fn()
-    const { container } = render(
-      <TestWrapper>
-        <CloudWatch data={mockData} onSubmit={onSubmit} />
-      </TestWrapper>
-    )
-
-    expect(container.firstChild).toBeNull()
-  })
-
   test('should render the component, if the feature flag is enabled', () => {
     jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(true)
 

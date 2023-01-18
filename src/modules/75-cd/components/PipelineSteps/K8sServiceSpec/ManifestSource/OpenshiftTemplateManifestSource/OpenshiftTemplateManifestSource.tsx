@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
+import { getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
 import { get } from 'lodash-es'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
@@ -17,10 +17,13 @@ import { FormMultiTypeCheckboxField } from '@common/components'
 import List from '@common/components/List/List'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { FileSelectList } from '@filestore/components/FileStoreList/FileStoreList'
+import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
 import ManifestCommonRuntimeFields from '../ManifestSourceRuntimeFields/ManifestCommonRuntimeFields'
+import CustomRemoteManifestRuntimeFields from '../ManifestSourceRuntimeFields/CustomRemoteManifestRuntimeFields'
 import { isExecutionTimeFieldDisabled } from '../../ArtifactSource/artifactSourceUtils'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
@@ -52,18 +55,18 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     >
       <ManifestGitStoreRuntimeFields {...props} />
       <ManifestCommonRuntimeFields {...props} />
+      <CustomRemoteManifestRuntimeFields {...props} />
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.store.spec.paths`, template) && (
           <div className={css.verticalSpacingInput}>
-            <FormInput.MultiTextInput
-              disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.paths`)}
-              name={`${path}.${manifestPath}.spec.store.spec.paths`}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
+            <List
               label={getString('pipeline.manifestType.osTemplatePath')}
+              name={`${path}.${manifestPath}.spec.store.spec.paths`}
               placeholder={getString('pipeline.manifestType.osTemplatePathPlaceHolder')}
+              disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.paths`)}
+              expressions={expressions}
+              allowOnlyOne
+              isNameOfArrayType
             />
           </div>
         )}
@@ -88,15 +91,17 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.paramsPaths`, template) && (
           <div className={css.verticalSpacingInput}>
-            <List
+            <FileSelectList
               labelClassName={css.listLabel}
               label={getString('pipeline.manifestType.paramsYamlPath')}
               name={`${path}.${manifestPath}.spec.paramsPaths`}
-              placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+              placeholder={getString('select')}
               disabled={isFieldDisabled(`${manifestPath}.spec.paramsPaths`)}
               style={{ marginBottom: 'var(--spacing-small)' }}
               expressions={expressions}
               isNameOfArrayType
+              type={SELECT_FILES_TYPE.FILE_STORE}
+              formik={formik}
             />
           </div>
         )}

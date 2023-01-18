@@ -16,7 +16,8 @@ import {
   useToaster,
   TagsPopover,
   TableV2,
-  useConfirmationDialog
+  useConfirmationDialog,
+  ButtonVariation
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import type { CellProps, Renderer, Column } from 'react-table'
@@ -347,8 +348,9 @@ const RenderColumnMenu: Renderer<CellProps<ConnectorResponse>> = ({ row, column 
           position={Position.RIGHT_TOP}
         >
           <Button
-            minimal
+            variation={ButtonVariation.ICON}
             icon="Options"
+            aria-label="connector menu actions"
             onClick={e => {
               e.stopPropagation()
               setMenuOpen(true)

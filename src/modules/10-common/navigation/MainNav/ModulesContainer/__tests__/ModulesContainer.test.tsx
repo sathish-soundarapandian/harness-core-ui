@@ -177,7 +177,7 @@ describe('Modules containter test', () => {
     )
     const scrollableContainer = container.querySelector('[class*="modules"]')
 
-    queryByText('common.chaosText')?.scrollIntoView()
+    queryByText('common.purpose.chaos.chaos')?.scrollIntoView()
 
     await act(async () => {
       fireEvent.scroll(scrollableContainer!, { target: { scrollY: 10 } })

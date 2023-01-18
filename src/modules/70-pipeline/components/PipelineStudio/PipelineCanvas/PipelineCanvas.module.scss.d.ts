@@ -13,25 +13,23 @@ declare const styles: {
   readonly branchSelector: string
   readonly breadcrumbsMenu: string
   readonly builderContainer: string
+  readonly callout: string
   readonly content: string
   readonly crossIcon: string
-  readonly customButtons: string
   readonly dialog: string
+  readonly dialogStyle: string
   readonly discardBtn: string
   readonly folderName: string
   readonly gitDetails: string
   readonly gitRemoteDetailsWrapper: string
   readonly modalCard: string
   readonly modalContent: string
-  readonly paddingTop8: string
   readonly pipelineIcon: string
   readonly pipelineMetadataContainer: string
   readonly pipelineName: string
   readonly pipelineNameContainer: string
   readonly pipelineStudioTitle: string
   readonly pipelineStudioTitleContainer: string
-  readonly readonlyAccessTag: string
-  readonly readonlyAccessText: string
   readonly rectangle: string
   readonly remotePipelineName: string
   readonly repoDetails: string

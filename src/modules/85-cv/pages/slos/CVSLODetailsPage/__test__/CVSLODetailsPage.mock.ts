@@ -33,7 +33,13 @@ const { accountId, orgIdentifier, projectIdentifier } = pathParams
 
 export const SLODetailsResetParams = { accountId, orgIdentifier, projectIdentifier }
 
-export const changeEventSummaryRestParams = { accountId, orgIdentifier, projectIdentifier, monitoredServiceIdentifier }
+export const changeEventSummaryRestParams = {
+  accountId,
+  orgIdentifier,
+  projectIdentifier,
+  monitoredServiceIdentifier,
+  isMonitoredServiceIdentifierScoped: false
+}
 
 export const ChangeEventListResetParams = {
   pageIndex: 0,

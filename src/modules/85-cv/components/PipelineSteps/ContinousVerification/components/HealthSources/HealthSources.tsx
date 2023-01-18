@@ -107,6 +107,12 @@ export default function HealthSources(props: HealthSourcesProps): React.ReactEle
         <TableV2<HealthSource>
           columns={[
             {
+              Header: '',
+              accessor: 'spec',
+              width: '0%',
+              Cell: <></>
+            },
+            {
               Header: 'Source',
               accessor: 'name',
               width: '60%',

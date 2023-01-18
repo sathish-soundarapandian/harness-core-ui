@@ -85,7 +85,12 @@ function TasManifest({
       : null
 
   const validationSchema = Yup.object().shape({
-    ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
+    ...ManifestIdentifierValidation(
+      getString,
+      manifestIdsList,
+      initialValues?.identifier,
+      getString('pipeline.uniqueName')
+    ),
     branch: Yup.string().when('gitFetchType', {
       is: 'Branch',
       then: Yup.string().trim().required(getString('validation.branchName'))

@@ -43,7 +43,7 @@ export function CommandEdit(props: CommandEditProps): React.ReactElement {
   const { getString } = useStrings()
 
   const validationSchema = Yup.object().shape({
-    name: NameSchema({ requiredErrorMsg: getString('validation.nameRequired') }),
+    name: NameSchema(getString, { requiredErrorMsg: getString('validation.nameRequired') }),
     type: Yup.string().trim().required(getString('common.validation.typeIsRequired')),
     spec: Yup.object().when('type', (type: CommandType, schema: any) => {
       if (type === CommandType.Copy) {

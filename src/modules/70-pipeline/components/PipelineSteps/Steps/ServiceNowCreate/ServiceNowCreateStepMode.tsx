@@ -47,7 +47,7 @@ import type {
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 
 import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ConnectorRefSchema } from '@common/utils/Validation'
 import { FormMultiTypeTextAreaField } from '@common/components'
 import { ServiceNowTemplateFieldsRenderer } from '@pipeline/components/PipelineSteps/Steps/ServiceNowCreate/ServiceNowTemplateFieldRenderer'
@@ -325,22 +325,9 @@ function FormContent({
           multiTypeDurationProps={{
             expressions,
             allowableTypes,
-            enableConfigureOptions: false
+            enableConfigureOptions: true
           }}
         />
-        {getMultiTypeFromValue(formik.values.timeout) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={defaultTo(formik.values.timeout, '')}
-            type="String"
-            variableName="timeout"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={value => formik.setFieldValue('timeout', value)}
-            isReadonly={readonly}
-            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-          />
-        )}
       </div>
 
       <div className={stepCss.divider} />
@@ -711,7 +698,7 @@ function ServiceNowCreateStepMode(
         ...getNameAndIdentifierSchema(getString, stepViewType),
         timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
         spec: Yup.object().shape({
-          connectorRef: ConnectorRefSchema({
+          connectorRef: ConnectorRefSchema(getString, {
             requiredErrorMsg: getString('pipeline.serviceNowApprovalStep.validations.connectorRef')
           }),
           ticketType: Yup.string().required(getString('pipeline.serviceNowApprovalStep.validations.ticketType')),

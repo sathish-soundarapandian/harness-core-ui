@@ -1,4 +1,5 @@
 import { Container, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import React, { useMemo } from 'react'
 import type { GetDataError } from 'restful-react'
 import MetricLineChart from '@cv/pages/health-source/common/MetricLineChart/MetricLineChart'
@@ -25,8 +26,8 @@ export default function CommonChart(props: CommonChartProps): JSX.Element {
   return (
     <>
       <Text
-        className={css.labelText}
-        font={{ weight: 'semi-bold', size: 'medium' }}
+        font={{ variation: FontVariation.H6 }}
+        margin={{ bottom: 'small' }}
         padding={{ top: 'large' }}
         tooltipProps={{ dataTooltipId: 'healthSource_Chart' }}
       >

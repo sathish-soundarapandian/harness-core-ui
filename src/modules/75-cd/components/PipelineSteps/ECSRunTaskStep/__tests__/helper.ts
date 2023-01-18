@@ -10,6 +10,46 @@ import { ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifes
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { ECSRunTaskStepInitialValues } from '../ECSRunTaskStep'
 
+export const emptyInitialValuesTaskDefinitionArn: ECSRunTaskStepInitialValues = {
+  identifier: '',
+  name: '',
+  timeout: '',
+  type: StepType.EcsRunTask,
+  spec: {
+    taskDefinitionArn: '',
+    runTaskRequestDefinition: {
+      type: ManifestStoreMap.Git,
+      spec: {
+        branch: '',
+        connectorRef: '',
+        gitFetchType: 'Branch',
+        paths: []
+      }
+    },
+    skipSteadyStateCheck: false
+  }
+}
+
+export const templateTaskDefinitionArn: ECSRunTaskStepInitialValues = {
+  identifier: 'Test_Name',
+  name: 'Test Name',
+  type: StepType.EcsRunTask,
+  timeout: RUNTIME_INPUT_VALUE,
+  spec: {
+    taskDefinitionArn: RUNTIME_INPUT_VALUE,
+    runTaskRequestDefinition: {
+      type: ManifestStoreMap.Git,
+      spec: {
+        branch: RUNTIME_INPUT_VALUE,
+        connectorRef: RUNTIME_INPUT_VALUE,
+        gitFetchType: 'Branch',
+        paths: RUNTIME_INPUT_VALUE
+      }
+    },
+    skipSteadyStateCheck: false
+  }
+}
+
 export const emptyInitialValuesGitStore: ECSRunTaskStepInitialValues = {
   identifier: '',
   name: '',

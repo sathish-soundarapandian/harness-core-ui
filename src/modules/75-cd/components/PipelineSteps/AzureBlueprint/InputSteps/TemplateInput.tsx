@@ -77,85 +77,81 @@ export const TemplateInputStep = (props: AzureBlueprintProps & { formik?: Formik
       {
         /* istanbul ignore next */
         (isAccount || isValueRuntimeInput(inputSet?.store?.spec?.repoName as string)) && (
-          <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <TextFieldInputSetView
-              name={`${path}.spec.configuration.template.store.spec.repoName`}
-              label={getString('pipelineSteps.repoName')}
-              disabled={readonly}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              configureOptionsProps={{
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              }}
-              fieldPath={'spec.configuration.template.store.spec.repoName'}
-              template={inputSetData?.template}
-            />
-          </div>
+          <TextFieldInputSetView
+            name={`${path}.spec.configuration.template.store.spec.repoName`}
+            label={getString('pipelineSteps.repoName')}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            fieldPath={'spec.configuration.template.store.spec.repoName'}
+            template={inputSetData?.template}
+            className={cx(stepCss.formGroup, stepCss.sm)}
+          />
         )
       }
       {
         /* istanbul ignore next */
         isValueRuntimeInput(inputSet?.store?.spec?.branch as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <TextFieldInputSetView
-              name={`${path}.spec.configuration.template.store.spec.branch`}
-              label={getString('pipelineSteps.deploy.inputSet.branch')}
-              disabled={readonly}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              configureOptionsProps={{
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              }}
-              fieldPath={'spec.configuration.template.store.spec.branch'}
-              template={inputSetData?.template}
-            />
-          </div>
+          <TextFieldInputSetView
+            name={`${path}.spec.configuration.template.store.spec.branch`}
+            label={getString('pipelineSteps.deploy.inputSet.branch')}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            fieldPath={'spec.configuration.template.store.spec.branch'}
+            template={inputSetData?.template}
+            className={cx(stepCss.formGroup, stepCss.sm)}
+          />
         )
       }
       {
         /* istanbul ignore next */
         isValueRuntimeInput(inputSet?.store?.spec?.commitId as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <TextFieldInputSetView
-              name={`${path}.spec.configuration.template.store.spec.commitId`}
-              label={getString('pipeline.manifestType.commitId')}
-              disabled={readonly}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              configureOptionsProps={{
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              }}
-              fieldPath={'spec.configuration.template.store.spec.commitId'}
-              template={inputSetData?.template}
-            />
-          </div>
+          <TextFieldInputSetView
+            name={`${path}.spec.configuration.template.store.spec.commitId`}
+            label={getString('pipeline.manifestType.commitId')}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            fieldPath={'spec.configuration.template.store.spec.commitId'}
+            template={inputSetData?.template}
+            className={cx(stepCss.formGroup, stepCss.sm)}
+          />
         )
       }
       {
         /* istanbul ignore next */
         isValueRuntimeInput(inputSet?.store?.spec?.folderPath as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <TextFieldInputSetView
-              name={`${path}.spec.configuration.template.store.spec.folderPath`}
-              label={getString('cd.azureBlueprint.templateFolderPath')}
-              disabled={readonly}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              configureOptionsProps={{
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              }}
-              fieldPath={'spec.configuration.template.store.spec.folderPath'}
-              template={inputSetData?.template}
-            />
-          </div>
+          <TextFieldInputSetView
+            name={`${path}.spec.configuration.template.store.spec.folderPath`}
+            label={getString('cd.azureBlueprint.templateFolderPath')}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            fieldPath={'spec.configuration.template.store.spec.folderPath'}
+            template={inputSetData?.template}
+            className={cx(stepCss.formGroup, stepCss.sm)}
+          />
         )
       }
       {

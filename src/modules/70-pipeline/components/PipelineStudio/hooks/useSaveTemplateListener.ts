@@ -87,6 +87,7 @@ export function useSaveTemplateListener(): void {
         await updateStageTemplate()
         break
       case 'Step':
+      case 'StepGroup':
         await updateStepTemplate()
         break
       default:

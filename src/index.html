@@ -33,11 +33,24 @@
       }
     </style>
     <!-- apiurl -->
+
+    <% if (!__DEV__) { %>
     <script type="text/javascript">
       window.browserRouterEnabled =
         'HARNESS_BROWSER_ROUTER_ENABLED' === 'true' ||
         window.location.href.toString().includes('browserRouterEnabled=true')
+    </script>
+    <% } %> <% if (__DEV__) { %>
+    <script type="text/javascript">
+      window.browserRouterEnabled = true
+    </script>
+    <% } %>
+    <script type="text/javascript">
       window.noAuthHeader = window.location.href.toString().includes('noAuthHeader=true')
+      const addRoutingIdParam = () => {
+        const matches = window.location.href.match(/\/account\/(.+?)\//)
+        return matches && matches.length > 1 ? `&routingId=${matches[1]}` : ''
+      }
       window.getApiBaseUrl = str => {
         let url = window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
 
@@ -45,7 +58,7 @@
           url = `${window.apiUrl || ''}/${str}`
         }
 
-        return url.includes('remoteEntry.js') ? `${url}?timestamp=${Date.now()}` : url
+        return url.includes('remoteEntry.js') ? `${url}?timestamp=${Date.now()}${addRoutingIdParam()}` : url
       }
     </script>
     <!-- segmentToken -->
@@ -143,6 +156,7 @@
           var e = document.createElement('script')
           e.setAttribute('type', 'text/javascript')
           e.setAttribute('src', 'https://widget.saberfeedback.com/v2/widget.js')
+          e.setAttribute('defer', 'defer')
           e.onload = function () {
             Saber.do('set_option', 'hide_button', true)
             Saber.do('set_option', 'show_thanks', false)
@@ -160,6 +174,7 @@
       window.featureFlagsConfig = {
         useLegacyFeatureFlags: '<%= USE_LEGACY_FEATURE_FLAGS_DEV %>' !== 'false',
         baseUrl: '<%= HARNESS_FF_SDK_BASE_URL_DEV %>' || 'https://config.feature-flags.uat.harness.io/api/1.0',
+        eventUrl: '<%= HARNESS_FF_SDK_EVENT_URL_DEV %>' || 'https://event.feature-flags.uat.harness.io/api/1.0',
         enableStream: '<%= HARNESS_FF_SDK_ENABLE_STREAM_DEV %>' === 'true',
         sdkKey: '<%= HARNESS_FF_SDK_KEY_DEV %>',
         async: '<%= HARNESS_FF_SDK_ASYNC_DEV %>' !== 'false'
@@ -170,6 +185,7 @@
       window.featureFlagsConfig = {
         useLegacyFeatureFlags: 'USE_LEGACY_FEATURE_FLAGS_PLACEHOLDER' !== 'false',
         baseUrl: 'HARNESS_FF_SDK_BASE_URL_PLACEHOLDER' || 'https://config.feature-flags.uat.harness.io/api/1.0',
+        eventUrl: 'HARNESS_FF_SDK_EVENT_URL_PLACEHOLDER' || 'https://event.feature-flags.uat.harness.io/api/1.0',
         enableStream: 'HARNESS_FF_SDK_ENABLE_STREAM_PLACEHOLDER' === 'true',
         sdkKey: 'HARNESS_FF_SDK_KEY_PLACEHOLDER',
         async: 'HARNESS_FF_SDK_ASYNC_PLACEHOLDER' !== 'false'

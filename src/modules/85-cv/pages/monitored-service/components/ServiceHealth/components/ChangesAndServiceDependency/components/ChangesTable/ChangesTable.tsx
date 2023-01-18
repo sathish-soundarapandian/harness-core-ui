@@ -13,9 +13,14 @@ import type { Column } from 'react-table'
 import { Icon, Container, NoDataCard, PageError, TableV2, Pagination, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { useChangeEventList } from 'services/cv'
+import { useChangeEventList, useChangeEventListForAccount } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getCVMonitoringServicesSearchParam, getErrorMessage } from '@cv/utils/CommonUtils'
+import {
+  getCVMonitoringServicesSearchParam,
+  getErrorMessage,
+  getMonitoredServiceIdentifierProp,
+  getMonitoredServiceIdentifiers
+} from '@cv/utils/CommonUtils'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
 import routes from '@common/RouteDefinitions'
 import noDataImage from '@cv/assets/noChangesData.svg'
@@ -47,6 +52,7 @@ export default function ChangesTable({
   const { orgIdentifier, projectIdentifier, accountId, identifier } = useParams<
     ProjectPathProps & { identifier: string }
   >()
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
 
   const drawerOptions = {
     size: '800px',
@@ -62,13 +68,19 @@ export default function ChangesTable({
     setPage(0)
   }, [startTime, endTime])
 
-  const monitoredServiceIdentifiers = monitoredServiceDetails?.map(item => item.monitoredServiceIdentifier || '')
+  const monitoredServiceIdentifiers = useMemo(
+    () => getMonitoredServiceIdentifiers(isAccountLevel, monitoredServiceDetails),
+    [isAccountLevel, monitoredServiceDetails]
+  )
 
   const changeEventListQueryParams = useMemo(() => {
+    const monitoredServiceIdentifierProp = getMonitoredServiceIdentifierProp(
+      isAccountLevel,
+      monitoredServiceIdentifiers,
+      monitoredServiceIdentifier
+    )
     return {
-      ...(monitoredServiceIdentifier
-        ? { monitoredServiceIdentifiers: [monitoredServiceIdentifier] }
-        : { monitoredServiceIdentifiers }),
+      ...monitoredServiceIdentifierProp,
       ...(!monitoredServiceIdentifier && serviceIdentifier
         ? { serviceIdentifiers: Array.isArray(serviceIdentifier) ? serviceIdentifier : [serviceIdentifier] }
         : {}),
@@ -94,18 +106,42 @@ export default function ChangesTable({
     page
   ])
 
-  const changeEventListPathParams = useMemo(() => {
-    return { accountIdentifier: accountId, projectIdentifier, orgIdentifier }
-  }, [accountId, projectIdentifier, orgIdentifier])
-
-  const { data, refetch, loading, error } = useChangeEventList({
+  const {
+    data: accountLevelChangeEventListData,
+    refetch: accountLevelChangeEventListRefetch,
+    loading: accountLevelChangeEventListLoading,
+    error: accountLevelChangeEventListError
+  } = useChangeEventListForAccount({
     lazy: true,
-    ...changeEventListPathParams,
+    accountIdentifier: accountId,
     queryParams: changeEventListQueryParams,
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
     }
   })
+
+  const {
+    data: projectLevelChangeEventListData,
+    refetch: projectLevelChangeEventListRefetch,
+    loading: projectLevelChangeEventListLoading,
+    error: projectLevelChangeEventListError
+  } = useChangeEventList({
+    lazy: true,
+    accountIdentifier: accountId,
+    projectIdentifier,
+    orgIdentifier,
+    queryParams: changeEventListQueryParams,
+    queryParamStringifyOptions: {
+      arrayFormat: 'repeat'
+    }
+  })
+
+  const { data, refetch, loading, error } = {
+    data: isAccountLevel ? accountLevelChangeEventListData : projectLevelChangeEventListData,
+    refetch: isAccountLevel ? accountLevelChangeEventListRefetch : projectLevelChangeEventListRefetch,
+    loading: isAccountLevel ? accountLevelChangeEventListLoading : projectLevelChangeEventListLoading,
+    error: isAccountLevel ? accountLevelChangeEventListError : projectLevelChangeEventListError
+  }
 
   const { content = [], pageSize = 0, pageIndex = 0, totalPages = 0, totalItems = 0 } = data?.resource ?? {}
 

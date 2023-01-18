@@ -63,7 +63,7 @@ exports[`Harness File Store with Kustomize Manifest tests initial rendering 1`] 
               </div>
             </div>
             <div
-              class="halfWidth"
+              class="halfWidth addmarginBottom"
             >
               <div
                 class="group"
@@ -151,30 +151,6 @@ exports[`Harness File Store with Kustomize Manifest tests initial rendering 1`] 
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                         >
-                          <span
-                            class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main"
-                            icon="drag-handle-vertical"
-                          >
-                            <svg
-                              data-icon="drag-handle-vertical"
-                              height="16"
-                              viewBox="0 0 16 16"
-                              width="16"
-                            >
-                              <desc>
-                                drag-handle-vertical
-                              </desc>
-                              <path
-                                d="M6 9c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4-6c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zM6 13c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"
-                                fill-rule="evenodd"
-                              />
-                            </svg>
-                          </span>
-                          <p
-                            class="StyledProps--font StyledProps--main text"
-                          >
-                            1.
-                          </p>
                           <div
                             class="multiSelectField"
                           >
@@ -340,19 +316,6 @@ exports[`Harness File Store with Kustomize Manifest tests initial rendering 1`] 
                         </div>
                       </div>
                     </div>
-                    <button
-                      aria-label="plusAdd"
-                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-xlarge StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
-                      data-testid="add-files"
-                      style="padding: 0px;"
-                      type="button"
-                    >
-                      <span
-                        class="bp3-button-text"
-                      >
-                        plusAdd
-                      </span>
-                    </button>
                   </div>
                 </div>
               </div>
@@ -709,7 +672,7 @@ exports[`Harness File Store with Kustomize Manifest tests initial rendering 1`] 
                     </div>
                     <button
                       aria-label="plusAdd"
-                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-xlarge StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
+                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-small StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
                       data-testid="add-patchesPaths"
                       style="padding: 0px;"
                       type="button"
@@ -964,7 +927,7 @@ exports[`Harness File Store with Kustomize Manifest tests when fields are runtim
               </div>
             </div>
             <div
-              class="halfWidth"
+              class="halfWidth addmarginBottom"
             >
               <div
                 class="group"
@@ -1052,30 +1015,6 @@ exports[`Harness File Store with Kustomize Manifest tests when fields are runtim
                         <div
                           class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
                         >
-                          <span
-                            class="bp3-icon bp3-icon-drag-handle-vertical StyledProps--main"
-                            icon="drag-handle-vertical"
-                          >
-                            <svg
-                              data-icon="drag-handle-vertical"
-                              height="16"
-                              viewBox="0 0 16 16"
-                              width="16"
-                            >
-                              <desc>
-                                drag-handle-vertical
-                              </desc>
-                              <path
-                                d="M6 9c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4-6c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zM6 13c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm4 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0-4c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1zm0 8c-.55 0-1 .45-1 1s.45 1 1 1 1-.45 1-1-.45-1-1-1z"
-                                fill-rule="evenodd"
-                              />
-                            </svg>
-                          </span>
-                          <p
-                            class="StyledProps--font StyledProps--main text"
-                          >
-                            1.
-                          </p>
                           <div
                             class="multiSelectField"
                           >
@@ -1241,19 +1180,6 @@ exports[`Harness File Store with Kustomize Manifest tests when fields are runtim
                         </div>
                       </div>
                     </div>
-                    <button
-                      aria-label="plusAdd"
-                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-xlarge StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
-                      data-testid="add-files"
-                      style="padding: 0px;"
-                      type="button"
-                    >
-                      <span
-                        class="bp3-button-text"
-                      >
-                        plusAdd
-                      </span>
-                    </button>
                   </div>
                 </div>
               </div>
@@ -1610,7 +1536,7 @@ exports[`Harness File Store with Kustomize Manifest tests when fields are runtim
                     </div>
                     <button
                       aria-label="plusAdd"
-                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-xlarge StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
+                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-small StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
                       data-testid="add-patchesPaths"
                       style="padding: 0px;"
                       type="button"

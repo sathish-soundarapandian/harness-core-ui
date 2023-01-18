@@ -36,8 +36,6 @@ import {
   persistCustomMetric
 } from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/DatadogMetricsHealthSource.utils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import {
   DatadogDashboardDetail,
   TimeSeriesSampleDTO,
@@ -73,7 +71,7 @@ export default function DatadogMetricsHealthSource(props: DatadogMetricsHealthSo
   const { getRBACErrorMessage } = useRBACError()
   const { showError } = useToaster()
 
-  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
+  const isMetricThresholdEnabled = !isTemplate
 
   const transformedData = useMemo(
     () => mapDatadogMetricHealthSourceToDatadogMetricSetupSource(data, isMetricThresholdEnabled),

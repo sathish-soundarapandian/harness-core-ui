@@ -18,7 +18,15 @@ import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import CardRailView from '@pipeline/components/Dashboards/CardRailView/CardRailView'
-import { useGetWorkloads, useGetDeployments, ExecutionStatusInfo, ServiceDeploymentInfo } from 'services/cd-ng'
+import {
+  useGetWorkloads,
+  useGetDeployments,
+  ExecutionStatusInfo,
+  ServiceDeploymentInfo,
+  useGetWorkloadsV2,
+  WorkloadDeploymentInfoV2,
+  WorkloadDeploymentInfo
+} from 'services/cd-ng'
 import type { CIBuildCommit, CIWebhookInfoDTO } from 'services/ci'
 import { PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
 import {
@@ -37,16 +45,13 @@ import {
   TimeRangeSelectorProps
 } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { DeploymentsTimeRangeContext } from '@cd/components/Services/common'
-import { useLocalStorage, useMutateAsGet, useQueryParams } from '@common/hooks'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useLocalStorage, useMutateAsGet } from '@common/hooks'
 import PipelineModalListView from '@pipeline/components/PipelineModalListView/PipelineModalListView'
 import { TitleWithToolTipId } from '@common/components/Title/TitleWithToolTipId'
 import { DashboardSelected } from '@pipeline/components/ServiceExecutionsCard/ServiceExecutionsCard'
-import {
-  ExecutionListFilterContextProvider,
-  ProcessedExecutionListPageQueryParams,
-  queryParamOptions
-} from '@pipeline/pages/execution-list/ExecutionListFilterContext/ExecutionListFilterContext'
 import { OverviewExecutionListEmpty } from '@pipeline/pages/execution-list/ExecutionListEmpty/OverviewExecutionListEmpty'
+import { useExecutionListQueryParams } from '@pipeline/pages/execution-list/utils/executionListUtil'
 import DeploymentsHealthCards from './DeploymentsHealthCards'
 import DeploymentExecutionsChart from './DeploymentExecutionsChart'
 import WorkloadCard from './DeploymentCards/WorkloadCard'
@@ -88,9 +93,7 @@ const NoDataOverviewPage: React.FC<{ onHide: () => void }> = ({ onHide }) => {
         margin: 16
       }}
     >
-      <ExecutionListFilterContextProvider>
-        <OverviewExecutionListEmpty onRunPipeline={openModal} onHide={onHide} />
-      </ExecutionListFilterContextProvider>
+      <OverviewExecutionListEmpty onRunPipeline={openModal} onHide={onHide} />
     </div>
   )
 }
@@ -145,8 +148,9 @@ export function executionStatusInfoToExecutionSummary(
 
 export const CDDashboardPage: React.FC = () => {
   const { getString } = useStrings()
-  const queryParams = useQueryParams<ProcessedExecutionListPageQueryParams>(queryParamOptions)
+  const queryParams = useExecutionListQueryParams()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
+  const { CDC_DASHBOARD_ENHANCEMENT_NG } = useFeatureFlags()
 
   const [timeRange, setTimeRange] = useLocalStorage<TimeRangeSelectorProps>(
     'timeRangeCDDashboard',
@@ -201,11 +205,32 @@ export const CDDashboardPage: React.FC = () => {
       orgIdentifier,
       startTime,
       endTime
-    }
+    },
+    lazy: CDC_DASHBOARD_ENHANCEMENT_NG
   })
 
+  const {
+    data: workloadsDataV2,
+    loading: loadingWorkloadsV2,
+    error: workloadsErrorV2
+  } = useGetWorkloadsV2({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      startTime,
+      endTime
+    },
+    lazy: !CDC_DASHBOARD_ENHANCEMENT_NG
+  })
+
+  //workloads data based on FF
+  const [workloadCardLoading, workloadCardData, workloadCardError] = CDC_DASHBOARD_ENHANCEMENT_NG
+    ? [loadingWorkloadsV2, workloadsDataV2, workloadsErrorV2]
+    : [loadingWorkloads, workloadsData, workloadsError]
+
   useErrorHandler(error)
-  useErrorHandler(workloadsError)
+  useErrorHandler(workloadCardError)
 
   const refetchingDeployments = useRefetchCall(refetch, loading)
   const activeDeployments = [...(data?.data?.active ?? []), ...(data?.data?.pending ?? [])]
@@ -218,7 +243,7 @@ export const CDDashboardPage: React.FC = () => {
     setShowOverviewDialog(!pipelineExecutionSummary?.content?.length)
   }, [pipelineExecutionSummary])
 
-  if (loadingWorkloads || pipelineLoading) {
+  if (workloadCardLoading || pipelineLoading) {
     return (
       <div style={{ position: 'relative', height: 'calc(100vh - 128px)' }}>
         <PageSpinner />
@@ -237,7 +262,7 @@ export const CDDashboardPage: React.FC = () => {
           </>
         }
       ></PageHeader>
-      <Page.Body className={styles.content} loading={(loading && !refetchingDeployments) || loadingWorkloads}>
+      <Page.Body className={styles.content} loading={(loading && !refetchingDeployments) || workloadCardLoading}>
         {showOverviewDialog ? (
           <NoDataOverviewPage onHide={() => setShowOverviewDialog(false)} />
         ) : (
@@ -251,19 +276,21 @@ export const CDDashboardPage: React.FC = () => {
                   title={getString('executionsText')}
                 />
               </Container>
-              <CardRailView contentType="WORKLOAD" isLoading={loadingWorkloads}>
-                {workloadsData?.data?.workloadDeploymentInfoList?.map(workload => (
-                  <WorkloadCard
-                    key={workload.serviceId}
-                    serviceName={workload.serviceName!}
-                    lastExecuted={workload?.lastExecuted}
-                    totalDeployments={workload.totalDeployments!}
-                    percentSuccess={workload.percentSuccess!}
-                    rateSuccess={workload.rateSuccess!}
-                    workload={workload.workload}
-                    serviceId={workload.serviceId}
-                  />
-                ))}
+              <CardRailView contentType="WORKLOAD" isLoading={workloadCardLoading}>
+                {workloadCardData?.data?.workloadDeploymentInfoList?.map(
+                  (workload: WorkloadDeploymentInfoV2 | WorkloadDeploymentInfo) => (
+                    <WorkloadCard
+                      key={workload.serviceId}
+                      serviceName={workload.serviceName!}
+                      lastExecuted={workload?.lastExecuted}
+                      totalDeployments={workload.totalDeployments!}
+                      percentSuccess={workload.percentSuccess!}
+                      rateSuccess={workload.rateSuccess!}
+                      workload={workload.workload}
+                      serviceId={workload.serviceId}
+                    />
+                  )
+                )}
               </CardRailView>
               <CardRailView
                 contentType="FAILED_DEPLOYMENT"

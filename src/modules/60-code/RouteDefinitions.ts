@@ -19,6 +19,7 @@ export interface CODEProps {
   diffRefs?: string // comparing diff refs, i.e: main...v1.0.1
   pullRequestId?: string
   pullRequestSection?: string // commits | diffs | checks ...
+  webhookId?: string
 }
 
 export type CODEPathProps = RequiredField<
@@ -89,8 +90,16 @@ export default {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
     return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/settings`
   },
-  toCODECreateWebhook: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
+  toCODEWebhooks: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
     const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
-    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/settings/webhook/new`
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/webhooks`
+  },
+  toCODEWebhookNew: ({ repoPath }: Required<Pick<CODEProps, 'repoPath'>>) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/webhooks/new`
+  },
+  toCODEWebhookDetails: ({ repoPath, webhookId }: Required<Pick<CODEProps, 'repoPath' | 'webhookId'>>) => {
+    const [accountId, orgIdentifier, projectIdentifier, repoName] = repoPath.split('/')
+    return `/account/${accountId}/code/${orgIdentifier}/${projectIdentifier}/${repoName}/webhooks/${webhookId}`
   }
 }

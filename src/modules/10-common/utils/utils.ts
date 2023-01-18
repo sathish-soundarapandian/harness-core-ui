@@ -126,6 +126,14 @@ export function isMultiTypeFixed(type: MultiTypeInputType): boolean {
   return type === MultiTypeInputType.FIXED
 }
 
+export function isValueFixed(
+  value?: boolean | string | number | SelectOption | string[] | MultiSelectOption[]
+): boolean {
+  const type = getMultiTypeFromValue(value)
+
+  return isMultiTypeFixed(type)
+}
+
 export function isMultiTypeRuntime(type: MultiTypeInputType): boolean {
   return [MultiTypeInputType.EXECUTION_TIME, MultiTypeInputType.RUNTIME].includes(type)
 }
@@ -140,6 +148,14 @@ export function isValueRuntimeInput(
 
 export function isMultiTypeExpression(type: MultiTypeInputType): boolean {
   return type === MultiTypeInputType.EXPRESSION
+}
+
+export function isValueExpression(
+  value?: boolean | string | number | SelectOption | string[] | MultiSelectOption[]
+): boolean {
+  const type = getMultiTypeFromValue(value)
+
+  return isMultiTypeExpression(type)
 }
 
 export const getUserName = (user: UserMetadataDTO): string => {

@@ -52,6 +52,7 @@ function ServiceEntityEditModal({
       serviceCacheKey={defaultTo(serviceCacheKey, '')}
       selectedDeploymentType={selectedDeploymentType as ServiceDeploymentType}
       gitOpsEnabled={defaultTo(gitOpsEnabled, false)}
+      isDeploymentTypeDisabled
     >
       <ServiceConfigurationWrapper />
     </ServiceContextProvider>

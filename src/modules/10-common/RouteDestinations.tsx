@@ -52,7 +52,9 @@ const RedirectToHome = (): React.ReactElement => {
 export const HomeSideNavProps: SidebarContext = {
   navComponent: HomeSideNav,
   icon: 'harness',
-  title: 'Home'
+  title: 'Home',
+  launchButtonText: 'common.cgLaunchText',
+  launchButtonRedirectUrl: '#/account/{replaceAccountId}/dashboard'
 }
 
 export const MainDashboardSideNavProps: SidebarContext = {
@@ -64,7 +66,9 @@ export const MainDashboardSideNavProps: SidebarContext = {
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,
   icon: 'nav-settings',
-  title: 'Account Settings'
+  title: 'Account Settings',
+  launchButtonText: 'common.cgLaunchText',
+  launchButtonRedirectUrl: '#/account/{replaceAccountId}/dashboard'
 }
 
 const justAccountPath = withAccountId(() => '/')

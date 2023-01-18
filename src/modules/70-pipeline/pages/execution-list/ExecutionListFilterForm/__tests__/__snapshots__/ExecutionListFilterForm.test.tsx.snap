@@ -48,7 +48,45 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
         </div>
         <div
           class="bp3-form-group"
-          data-id="status-1"
+          data-id="pipelineTags-1"
+        >
+          <label
+            class="bp3-label"
+            for="pipelineTags"
+          >
+            <span
+              class="Tooltip--acenter"
+              data-tooltip-id="pipelineFilterFormTest_pipelineTags"
+            >
+              tagsLabel
+            </span>
+             
+            <span
+              class="bp3-text-muted"
+            />
+          </label>
+          <div
+            class="bp3-form-content"
+          >
+            <div
+              class="bp3-input bp3-tag-input"
+            >
+              <div
+                class="bp3-tag-input-values"
+              >
+                <input
+                  class="bp3-input-ghost"
+                  data-mentions="kv-tag-input-pipelineTags"
+                  placeholder="Type and press enter to create a tag"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bp3-form-group"
+          data-id="status-2"
         >
           <label
             class="bp3-label"
@@ -103,7 +141,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
         >
           <div
             class="bp3-form-group"
-            data-id="null-2"
+            data-id="null-3"
           >
             <label
               class="bp3-label"
@@ -170,7 +208,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
         </span>
         <div
           class="bp3-form-group"
-          data-id="deploymentType-3"
+          data-id="deploymentType-4"
         >
           <label
             class="bp3-label"
@@ -238,7 +276,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
         </div>
         <div
           class="bp3-form-group"
-          data-id="services-4"
+          data-id="services-5"
         >
           <label
             class="bp3-label"
@@ -289,7 +327,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
         </div>
         <div
           class="bp3-form-group"
-          data-id="environments-5"
+          data-id="environments-6"
         >
           <label
             class="bp3-label"
@@ -349,7 +387,7 @@ exports[`<ExecutionListFilterForm /> test snapshot testing 1`] = `
         </span>
         <div
           class="bp3-form-group"
-          data-id="buildType-6"
+          data-id="buildType-7"
         >
           <label
             class="bp3-label"

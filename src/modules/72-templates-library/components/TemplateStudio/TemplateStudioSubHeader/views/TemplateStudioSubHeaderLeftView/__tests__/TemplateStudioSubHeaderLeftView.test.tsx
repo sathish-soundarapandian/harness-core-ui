@@ -18,7 +18,7 @@ import { useUpdateStableTemplate } from 'services/template-ng'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import { getTemplateContextMock } from '@templates-library/components/TemplateStudio/__tests__/stateMock'
 import {
-  TemplateStudioSubHeaderLeftView,
+  TemplateStudioSubHeaderLeftViewWithRef,
   TemplateStudioSubHeaderLeftViewProps
 } from '../TemplateStudioSubHeaderLeftView'
 
@@ -42,7 +42,7 @@ function ComponentWrapper(props: TemplateStudioSubHeaderLeftViewProps): React.Re
   const location = useLocation()
   return (
     <React.Fragment>
-      <TemplateStudioSubHeaderLeftView {...props} />
+      <TemplateStudioSubHeaderLeftViewWithRef {...props} />
       <div data-testid="location">{`${location.pathname}${
         location.search ? `?${location.search.replace(/^\?/g, '')}` : ''
       }`}</div>
@@ -68,7 +68,7 @@ describe('<TemplateStudioSubHeaderLeftView /> tests', () => {
     const { container } = render(
       <TemplateContext.Provider value={stepTemplateContextMock}>
         <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-          <TemplateStudioSubHeaderLeftView />
+          <TemplateStudioSubHeaderLeftViewWithRef />
         </TestWrapper>
       </TemplateContext.Provider>
     )
@@ -82,7 +82,7 @@ describe('<TemplateStudioSubHeaderLeftView /> tests', () => {
     const { getByText } = render(
       <TemplateContext.Provider value={templateContextMock}>
         <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
-          <TemplateStudioSubHeaderLeftView />
+          <TemplateStudioSubHeaderLeftViewWithRef />
         </TestWrapper>
       </TemplateContext.Provider>
     )
@@ -153,7 +153,7 @@ describe('<TemplateStudioSubHeaderLeftView /> tests', () => {
     const { container, getByTestId } = render(
       <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
         <TemplateContext.Provider value={stepTemplateContextMock}>
-          <TemplateStudioSubHeaderLeftView />
+          <TemplateStudioSubHeaderLeftViewWithRef />
         </TemplateContext.Provider>
       </TestWrapper>
     )

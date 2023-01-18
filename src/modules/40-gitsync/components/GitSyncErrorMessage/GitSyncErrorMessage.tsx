@@ -138,7 +138,7 @@ export const GitSyncErrorMessage: React.FC<GitSyncErrorMessageProps> = props => 
       <Layout.Horizontal margin={{ top: 'small' }}>
         {!isLoading ? (
           <Text color={Color.PRIMARY_7} onClick={onClick} className={styles.seeMore} data-testid="seeMore">
-            {expandMode ? getString('gitsync.seeMore') : getString('gitsync.seeLess')}
+            {expandMode ? getString('common.seeMore') : getString('common.seeLess')}
           </Text>
         ) : (
           <Icon name="spinner" />

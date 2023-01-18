@@ -15,7 +15,7 @@
 }
 
 .alignContainerRight {
-  padding: var(--spacing-medium) var(--spacing-large) !important;
+  padding: var(--spacing-small) !important;
   margin: 0 !important;
   margin-left: 18px !important;
 }
@@ -26,4 +26,8 @@
 
 .bottomMargin {
   margin-bottom: var(--spacing-huge) !important;
+}
+
+.stepMargin {
+  padding: var(--spacing-small) var(--spacing-xlarge) var(--spacing-xlarge) var(--spacing-large) !important;
 }

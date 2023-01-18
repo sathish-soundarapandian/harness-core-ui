@@ -37,6 +37,8 @@ successVerification:
   installHelmChartLabel: 'To install the helm chart use the below command'
   installHelmChartCmd: '$ helm install  --namespace <namespace> --create-namespace harness-ng/harness-delegate-ng -f harness-delegate-values.yaml'
   checkingForHeartbeat: Checking for heartbeat
+  updateHelmRepoLabel: 'Update Harness helm repo'
+  helmRepoUpdate: helm repo update harness-ng
 delegateNotInstalled:
   verifyStatus1: 'docker container ls -a'
   verifyStatus2: 'docker container ps -a'

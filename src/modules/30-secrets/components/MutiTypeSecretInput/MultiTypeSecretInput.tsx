@@ -180,7 +180,7 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
       helperText={helperText}
       style={{ flexGrow: 1 }}
     >
-      <Layout.Horizontal spacing={'medium'} flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
+      <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
         {isMultiType ? (
           <ExpressionAndRuntimeType
             name={name}

@@ -251,6 +251,9 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                 class="Accordion--details accordionDetails"
                 data-testid="google_1-details"
               >
+                <div
+                  class="bp3-divider"
+                />
                 <ul
                   class="root"
                 >
@@ -612,7 +615,7 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
                 class="bp3-input  ExpandingSearchInput--find"
                 dir="auto"
                 placeholder="Search"
-                style="padding-right: 0px;"
+                style="padding-right: 130px;"
                 type="search"
                 value=""
               />

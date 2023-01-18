@@ -86,7 +86,7 @@ const EntitiesTypeContainer: React.FC<EntitiesTypeContainerProps> = props => {
               setSelectedEntity(entityList?.entityType || '')
             }}
           >
-            {getString('gitsync.seeMore')}
+            {getString('common.seeMore')}
           </Text>
         ) : null}
       </Card>

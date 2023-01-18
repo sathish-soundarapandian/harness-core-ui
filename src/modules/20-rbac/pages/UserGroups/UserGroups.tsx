@@ -17,6 +17,7 @@ import UserGroupsListView from '@rbac/pages/UserGroups/views/UserGroupsListView'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { useStateWithQueryParams } from '@common/hooks/useStateWithQueryParams'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PrincipalType } from '@rbac/utils/utils'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
@@ -40,7 +41,7 @@ const UserGroupsPage: React.FC = () => {
   const { getString } = useStrings()
   useDocumentTitle(getString('common.userGroups'))
   const [page, setPage] = useState(0)
-  const [searchTerm, setsearchTerm] = useState<string>('')
+  const [searchTerm, setsearchTerm] = useStateWithQueryParams({ key: 'search' })
   const { data, loading, error, refetch } = useGetUserGroupAggregateList({
     queryParams: {
       accountIdentifier: accountId,
@@ -110,6 +111,7 @@ const UserGroupsPage: React.FC = () => {
           toolbar={
             <Layout.Horizontal margin={{ right: 'small' }} height="xxxlarge">
               <ExpandingSearchInput
+                defaultValue={searchTerm}
                 alwaysExpanded
                 placeholder={getString('rbac.userGroupPage.search')}
                 onChange={text => {

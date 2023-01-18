@@ -38,6 +38,7 @@
   }
   .runningExecutions {
     background-color: var(--primary-1);
+    margin-top: 5px;
   }
 }
 .moduleSelectCards {
@@ -142,4 +143,15 @@
 }
 .noDataCardContainer {
   max-height: 100px !important;
+}
+
+.orgDropdown {
+  margin-bottom: var(--spacing-medium) !important;
+  width: 250px;
+  margin-left: 300px;
+}
+
+.fetchButton {
+  cursor: pointer;
+  margin-bottom: 15px !important;
 }

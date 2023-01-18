@@ -322,7 +322,14 @@ export function FeaturesProvider(props: React.PropsWithChildren<unknown>): React
   function getHighestEdition({ licenseInformation, licenseState }: GetHighestEditionProps): Editions {
     let edition = Editions.FREE
 
-    const { CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE, CV_LICENSE_STATE } = licenseState
+    const {
+      CI_LICENSE_STATE,
+      CD_LICENSE_STATE,
+      FF_LICENSE_STATE,
+      CCM_LICENSE_STATE,
+      CV_LICENSE_STATE,
+      CHAOS_LICENSE_STATE
+    } = licenseState
 
     if (CI_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
       edition = compareEditions(licenseInformation?.['CI']?.edition as Editions, edition)
@@ -344,6 +351,10 @@ export function FeaturesProvider(props: React.PropsWithChildren<unknown>): React
       edition = compareEditions(licenseInformation?.['CV']?.edition as Editions, edition)
     }
 
+    if (CHAOS_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
+      edition = compareEditions(licenseInformation?.['CHAOS']?.edition as Editions, edition)
+    }
+
     return edition
   }
 
@@ -362,7 +373,14 @@ export function FeaturesProvider(props: React.PropsWithChildren<unknown>): React
       return Editions.COMMUNITY
     }
 
-    const { CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE, CV_LICENSE_STATE } = licenseState
+    const {
+      CI_LICENSE_STATE,
+      CD_LICENSE_STATE,
+      FF_LICENSE_STATE,
+      CCM_LICENSE_STATE,
+      CV_LICENSE_STATE,
+      CHAOS_LICENSE_STATE
+    } = licenseState
 
     switch (moduleType) {
       case 'CORE': {
@@ -392,8 +410,14 @@ export function FeaturesProvider(props: React.PropsWithChildren<unknown>): React
         }
         break
       }
-
-      case 'CV': {
+      case 'CHAOS': {
+        if (CHAOS_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
+          return (licenseInformation['CHAOS']?.edition as Editions) || Editions.FREE
+        }
+        break
+      }
+      case 'CV':
+      case 'SRM': {
         if (CV_LICENSE_STATE === LICENSE_STATE_VALUES.ACTIVE) {
           return (licenseInformation['CV']?.edition as Editions) || Editions.FREE
         }

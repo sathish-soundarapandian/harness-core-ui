@@ -12,12 +12,13 @@ export const ON_PREM_RELEASE_NODE_LINK = 'https://ngdocs.harness.io/article/556w
 export const SAAS_RELEASE_NODE_LINK = 'https://ngdocs.harness.io/article/7zkchy5lhj-harness-saa-s-release-notes-2022'
 
 export const HARNESS_SEARCH_LINK = 'https://harness.io/search/'
-export const HARNESS_UNIVERISITY_LINK = 'https://university.harness.io/'
+export const HARNESS_UNIVERISITY_LINK = 'https://university.harness.io/page/job-role-certifications'
 export const HARNESS_COMMUNITY_LINK = 'https://community.harness.io/'
 export const HARNESS_COMMUNITY_SLACK_LINK =
   'https://join.slack.com/t/harnesscommunity/shared_invite/zt-y4hdqh7p-RVuEQyIl5Hcx4Ck8VCvzBw'
-export const HARNESS_DOCS_LINK = 'https://ngdocs.harness.io/'
-export const HARNESS_API_DOCS_LINK = 'https://harness.io/docs/api/'
+export const HARNESS_DOCS_LINK = 'https://docs.harness.io/'
+export const HARNESS_API_DOCS_LINK = 'https://apidocs.harness.io/'
+export const HARNESS_TUTORIALS = 'https://developer.harness.io/tutorials/get-started'
 export const SITE_STATUS_LINK = 'https://status.harness.io/'
 
 export const timestamp = moment.now()

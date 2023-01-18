@@ -199,7 +199,7 @@ exports[`Failure Strategy: ManualIntervention strategy works with simple fallbac
       class="bp3-form-content"
     >
       <div
-        class="bp3-form-group ThumbnailSelect--mainContainer"
+        class="bp3-form-group ThumbnailSelect--mainContainer thumbnailSelect"
       >
         <div
           class="bp3-form-content"
@@ -390,7 +390,7 @@ exports[`Failure Strategy: ManualIntervention strategy works with simple fallbac
             class="bp3-form-content"
           >
             <div
-              class="bp3-form-group ThumbnailSelect--mainContainer"
+              class="bp3-form-group ThumbnailSelect--mainContainer thumbnailSelect"
             >
               <div
                 class="bp3-form-content"

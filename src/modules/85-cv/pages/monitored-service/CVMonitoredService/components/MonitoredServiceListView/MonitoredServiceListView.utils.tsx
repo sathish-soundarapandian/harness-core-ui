@@ -20,3 +20,39 @@ export const getListTitle = (
 
   return getString('cv.monitoredServices.showingAllServices', { serviceCount })
 }
+
+/**
+ * The switch will be enabled when
+ *
+ * 1. SRM Active license is present (AND)
+ * 2. CVNG_LICENSE_ENFORCEMENT FF is disabled (OR)
+ * 3.a. If the service is not enabled else where (AND) enforcement "allowed" is true (OR)
+ * 3.b. If the service is enabled else where
+ *
+ *  (OR)
+ *
+ * 1. CVNG_ENABLED FF is present
+ *
+ */
+export function getIsSwitchEnabled({
+  isSRMLicensePresentAndActive,
+  isSRMEnforcementLicenseEnabled,
+  serviceMonitoringEnabled,
+  srmServicesFeatureEnabled,
+  isSRMEnabled
+}: {
+  isSRMLicensePresentAndActive?: boolean
+  isSRMEnforcementLicenseEnabled?: boolean
+  serviceMonitoringEnabled?: boolean
+  srmServicesFeatureEnabled?: boolean
+  isSRMEnabled?: boolean
+}): boolean {
+  if (isSRMLicensePresentAndActive) {
+    return Boolean(!isSRMEnforcementLicenseEnabled || serviceMonitoringEnabled || srmServicesFeatureEnabled)
+  } else if (isSRMEnabled) {
+    // This condition will be removed when CVNG_ENABLED FF is removed
+    return true
+  }
+
+  return false
+}

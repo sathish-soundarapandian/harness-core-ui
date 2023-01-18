@@ -265,9 +265,9 @@ export const NewEditEnvironmentModal: React.FC<NewEditEnvironmentModalProps> = (
               })
           }}
           validationSchema={Yup.object().shape({
-            name: NameSchema({ requiredErrorMsg: getString?.('fieldRequired', { field: 'Environment' }) }),
+            name: NameSchema(getString, { requiredErrorMsg: getString?.('fieldRequired', { field: 'Environment' }) }),
             type: Yup.string().required(getString?.('fieldRequired', { field: 'Type' })),
-            identifier: IdentifierSchema()
+            identifier: IdentifierSchema(getString)
           })}
         >
           {formikProps => {

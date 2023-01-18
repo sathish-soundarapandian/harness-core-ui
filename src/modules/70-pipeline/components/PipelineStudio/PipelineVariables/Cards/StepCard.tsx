@@ -9,7 +9,8 @@ import React from 'react'
 import { AllowedTypes, NestedAccordionPanel, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
-import type { StepElementConfig } from 'services/cd-ng'
+
+import type { StepElementConfig, StepGroupElementConfig, ExecutionWrapperConfig } from 'services/cd-ng'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -17,6 +18,7 @@ import { VariablesListTable } from '@pipeline/components/VariablesListTable/Vari
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { useStrings } from 'framework/strings'
+import type { StepGroupRenderData, StepRenderData, AddStepsParams } from './ExecutionCard'
 import type { PipelineVariablesData } from '../types'
 import VariableAccordionSummary from '../VariableAccordionSummary'
 import css from '../PipelineVariables.module.scss'
@@ -51,7 +53,6 @@ export function StepCard(props: StepCardProps): React.ReactElement {
   if ((originalStep as TemplateStepNode)?.template) {
     return <></>
   }
-
   return (
     <React.Fragment>
       <VariablesListTable
@@ -105,8 +106,8 @@ export function StepCardPanel(props: StepCardProps): React.ReactElement {
 
 export interface StepGroupCardProps {
   steps: Array<{
-    step: StepElementConfig | TemplateStepNode
-    originalStep: StepElementConfig | TemplateStepNode
+    step: StepElementConfig | TemplateStepNode | StepGroupElementConfig
+    originalStep: StepElementConfig | TemplateStepNode | StepGroupElementConfig
     path: string
   }>
   stageIdentifier: string
@@ -133,7 +134,6 @@ export function StepGroupCard(props: StepGroupCardProps): React.ReactElement {
     allowableTypes,
     stepsFactory
   } = props
-
   return (
     <React.Fragment>
       <VariablesListTable
@@ -202,5 +202,118 @@ export function StepGroupCardPanel(props: StepGroupCardProps): React.ReactElemen
       summaryClassName={css.accordianSummaryL1}
       details={<StepGroupCard {...props} />}
     />
+  )
+}
+
+interface StepGroupTemplateVariables extends Omit<StepGroupCardProps, 'steps'> {
+  templateSteps: any
+  originalSteps: ExecutionWrapperConfig[]
+  path: string
+}
+
+export function StepGroupTemplateCard(props: StepGroupTemplateVariables): React.ReactElement {
+  const { metadataMap, stageIdentifier, onUpdateStep, readonly, path, allowableTypes, stepsFactory } = props
+
+  const allSteps = React.useMemo(() => {
+    function addToCards({
+      steps,
+      originalSteps,
+      parentPath = /* istanbul ignore next */ ''
+    }: AddStepsParams): Array<StepRenderData | StepGroupRenderData> {
+      if (!steps || !Array.isArray(steps)) return []
+      return steps.reduce<Array<StepRenderData | StepGroupRenderData>>((cards, { step, stepGroup, parallel }, i) => {
+        if (step) {
+          cards.push({
+            type: 'StepRenderData',
+            step,
+            originalStep: originalSteps?.[i]?.step || /* istanbul ignore next */ {
+              timeout: '10m',
+              name: '',
+              type: '',
+              identifier: ''
+            },
+            path: parentPath
+          })
+        } else if (stepGroup) {
+          cards.push({
+            type: 'StepGroupRenderData',
+            steps: [
+              ...(addToCards({
+                steps: stepGroup.steps,
+                originalSteps: originalSteps?.[i]?.stepGroup?.steps,
+                parentPath: `${parentPath}.steps`
+              }) as StepRenderData[])
+            ],
+            name: stepGroup.name || '',
+            originalName: originalSteps?.[i]?.stepGroup?.name || /* istanbul ignore next */ '',
+            identifier: originalSteps?.[i]?.stepGroup?.identifier || /* istanbul ignore next */ '',
+            path: `${parentPath}.stepGroup`
+          })
+        } /* istanbul ignore else */ else if (parallel) {
+          cards.push(
+            ...addToCards({
+              steps: parallel,
+              originalSteps: originalSteps?.[i]?.parallel,
+              parentPath: `${parentPath}.parallel`
+            })
+          )
+        }
+
+        return cards
+      }, [])
+    }
+
+    return [
+      ...addToCards({
+        steps: props?.templateSteps?.steps,
+        originalSteps: props?.originalSteps,
+        parentPath: path
+      })
+    ]
+  }, [props?.templateSteps, props?.originalSteps, path])
+
+  return (
+    <React.Fragment>
+      {allSteps.map((row, index) => {
+        if (row.type === 'StepRenderData' && row.step && row.originalStep) {
+          const { step, originalStep, path: pathStep } = row
+          return (
+            <StepCardPanel
+              key={index}
+              step={step}
+              originalStep={originalStep}
+              metadataMap={metadataMap}
+              stageIdentifier={stageIdentifier}
+              stepPath={pathStep}
+              readonly={readonly}
+              allowableTypes={allowableTypes}
+              onUpdateStep={onUpdateStep}
+              stepsFactory={stepsFactory}
+            />
+          )
+        }
+
+        /* istanbul ignore else */
+        if (row.type === 'StepGroupRenderData') {
+          return (
+            <StepGroupCardPanel
+              key={row.path}
+              steps={row.steps}
+              stepGroupIdentifier={row.identifier}
+              stepGroupName={row.name}
+              allowableTypes={allowableTypes}
+              stepGroupOriginalName={row.originalName}
+              metadataMap={metadataMap}
+              readonly={readonly}
+              stageIdentifier={stageIdentifier}
+              onUpdateStep={onUpdateStep}
+              stepsFactory={stepsFactory}
+            />
+          )
+        }
+
+        return null
+      })}
+    </React.Fragment>
   )
 }

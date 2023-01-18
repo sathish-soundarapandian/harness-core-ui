@@ -122,6 +122,8 @@ allowpaths:
   - /service-dependency-graph
   - /change-event/monitored-service-summary
   - /activity/{activityId}/healthSources
+  - /account/{accountIdentifier}/change-event
+  - /account/{accountIdentifier}/change-event/timeline
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/change-event
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/change-event/timeline
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/change-event/{activityId}
@@ -178,7 +180,7 @@ allowpaths:
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/log-records
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/metric-records
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/records
-  - /usage/CV
+  - /usage/SRM
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/logRecords
 
 operationIdOverrides:

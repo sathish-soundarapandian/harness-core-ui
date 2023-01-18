@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import { defaultTo, get, isNull, isUndefined, omit, omitBy, remove, set } from 'lodash-es'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
-import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
+import { Callout, Classes, Dialog, IDialogProps } from '@blueprintjs/core'
 import * as Yup from 'yup'
 import {
   Button,
@@ -71,7 +71,7 @@ import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { getOverlayErrors } from '@pipeline/utils/runPipelineUtils'
 import { getYamlFileName } from '@pipeline/utils/yamlUtils'
 import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
-import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
+import { hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import { InputSetSelector, InputSetSelectorProps } from '../InputSetSelector/InputSetSelector'
@@ -276,10 +276,11 @@ export function OverlayInputSetForm({
         repoIdentifier,
         branch,
         parentEntityConnectorRef: connectorRef,
-        parentEntityRepoName: repoIdentifier
+        parentEntityRepoName: repoName
       }
     })
 
+  const inputSetStoreType = overlayInputSetResponse?.data?.storeType
   const inputSet = React.useMemo(() => {
     if (!overlayInputSetResponse?.data) {
       return getDefaultInputSet(orgIdentifier, projectIdentifier, pipelineIdentifier)
@@ -324,20 +325,42 @@ export function OverlayInputSetForm({
   const [disableVisualView, setDisableVisualView] = React.useState(inputSet.entityValidityDetails?.valid === false)
 
   React.useEffect(() => {
-    if (!isInputSetInvalid(inputSet)) {
+    if (
+      loadingOverlayInputSet ||
+      (!isInputSetInvalid(inputSet) && !hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit))
+    ) {
       setSelectedView(SelectedView.VISUAL)
     } else {
       setSelectedView(SelectedView.YAML)
     }
-  }, [inputSet, inputSet.entityValidityDetails?.valid, inputSet.outdated])
+  }, [
+    inputSet,
+    isEdit,
+    inputSet.entityValidityDetails?.valid,
+    inputSet.outdated,
+    loadingOverlayInputSet,
+    storeType,
+    inputSetStoreType
+  ])
 
   React.useEffect(() => {
-    if (inputSet.entityValidityDetails?.valid === false || inputSet.outdated) {
+    if (
+      inputSet.entityValidityDetails?.valid === false ||
+      inputSet.outdated ||
+      (!loadingOverlayInputSet && hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit))
+    ) {
       setDisableVisualView(true)
     } else {
       setDisableVisualView(false)
     }
-  }, [inputSet.entityValidityDetails?.valid, inputSet.outdated])
+  }, [
+    inputSet.entityValidityDetails?.valid,
+    inputSet.outdated,
+    loadingOverlayInputSet,
+    inputSetStoreType,
+    storeType,
+    isEdit
+  ])
 
   const inputSetListYaml: CompletionItemInterface[] = React.useMemo(() => {
     if (!inputSetList?.data?.content) return []
@@ -528,7 +551,7 @@ export function OverlayInputSetForm({
       set(
         inputSetObj,
         'pipeline',
-        omitBy(inputSetObjWithGitInfo.pipeline, (_val, key) => key.startsWith('_'))
+        omitBy(inputSetObjWithGitInfo?.pipeline, (_val, key) => key.startsWith('_'))
       )
 
       setSavedInputSetObj(inputSetObj)
@@ -641,7 +664,7 @@ export function OverlayInputSetForm({
               }}
               disableToggle={disableVisualView}
               disableToggleReasonIcon={'danger-icon'}
-              showDisableToggleReason={true}
+              showDisableToggleReason={!hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
             />
           </div>
 
@@ -658,7 +681,7 @@ export function OverlayInputSetForm({
             formName="overlayInputSet"
             enableReinitialize={true}
             validationSchema={Yup.object().shape({
-              name: NameSchema({ requiredErrorMsg: getString('common.validation.nameIsRequired') }),
+              name: NameSchema(getString, { requiredErrorMsg: getString('common.validation.nameIsRequired') }),
               inputSetReferences: Yup.array().of(Yup.string().required(getString('inputSets.inputSetIsRequired')))
             })}
             onSubmit={values => {
@@ -796,6 +819,9 @@ export function OverlayInputSetForm({
                               hideInputSetButton={true}
                             />
                           )}
+                          {hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit) ? (
+                            <Callout intent="danger">{getString('pipeline.inputSetInvalidStoreTypeCallout')}</Callout>
+                          ) : null}
                           <YAMLBuilder
                             {...yamlBuilderReadOnlyModeProps}
                             existingJSON={{
@@ -816,8 +842,11 @@ export function OverlayInputSetForm({
                             invocationMap={invocationMap}
                             bind={setYamlHandler}
                             schema={pipelineSchema?.data}
-                            isReadOnlyMode={isReadOnly}
-                            isEditModeSupported={!isReadOnly}
+                            isReadOnlyMode={isReadOnly || hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
+                            isEditModeSupported={
+                              !isReadOnly && !hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)
+                            }
+                            hideErrorMesageOnReadOnlyMode={hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
                             fileName={getYamlFileName({
                               isPipelineRemote,
                               filePath: inputSet?.gitDetails?.filePath,
@@ -850,7 +879,7 @@ export function OverlayInputSetForm({
                               }
                             )
                           }}
-                          disabled={isReadOnly}
+                          disabled={isReadOnly || hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
                         />
                         &nbsp; &nbsp;
                         <Button variation={ButtonVariation.TERTIARY} onClick={closeForm} text={getString('cancel')} />

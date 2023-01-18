@@ -27,7 +27,12 @@ import {
   SecretManagerTemplateInputSet,
   ScriptVariablesRuntimeInput
 } from '@secrets/components/ScriptVariableRuntimeInput/ScriptVariablesRuntimeInput'
-import type { StageElementConfig, StepElementConfig, PipelineInfoConfig } from 'services/pipeline-ng'
+import type {
+  StageElementConfig,
+  StepElementConfig,
+  PipelineInfoConfig,
+  StepGroupElementConfig
+} from 'services/pipeline-ng'
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
@@ -41,9 +46,10 @@ import type { DeploymentConfig } from '@pipeline/components/PipelineStudio/Pipel
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
-import { StepForm } from '@pipeline/components/PipelineInputSetForm/StageInputSetForm'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { StepForm } from '@pipeline/components/PipelineInputSetForm/StepInputSetForm'
+import { StepGroupForm } from '@pipeline/components/PipelineInputSetForm/StepGroupInputSetForm'
 import css from './TemplateInputs.module.scss'
 
 export interface TemplateInputsProps {
@@ -58,13 +64,14 @@ type TemplateInputsFormData =
   | SecretManagerTemplateInputSet
   | DeploymentConfig
   | ArtifactSourceConfigDetails
+  | StepGroupElementConfig
 
 export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeMetadata = {} }) => {
   const templateSpec =
     parse((template as TemplateSummaryResponse).yaml || '')?.template?.spec ||
     (template as NGTemplateInfoConfigWithGitDetails).spec
   const [inputSetTemplate, setInputSetTemplate] = React.useState<
-    StepElementConfig | StageElementConfig | PipelineInfoConfig | DeploymentConfig
+    StepElementConfig | StageElementConfig | PipelineInfoConfig | DeploymentConfig | StepGroupElementConfig
   >()
   const params = useParams<ProjectPathProps>()
   const { showError } = useToaster()
@@ -231,6 +238,25 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
                             allowableTypes={allowableTypes}
                             readonly
                             path={'data'}
+                          />
+                        </Container>
+                      )}
+                      {templateEntityType === TemplateType.StepGroup && (
+                        <Container
+                          className={css.inputsCard}
+                          background={Color.WHITE}
+                          padding={'large'}
+                          margin={{ bottom: 'xxlarge' }}
+                        >
+                          <StepGroupForm
+                            template={inputSetTemplate as StepGroupElementConfig}
+                            allValues={formikProps.values?.data}
+                            path={'data'}
+                            viewType={StepViewType.TemplateUsage}
+                            readonly={true}
+                            allowableTypes={allowableTypes}
+                            values={formikProps.values?.data}
+                            formik={formikProps}
                           />
                         </Container>
                       )}

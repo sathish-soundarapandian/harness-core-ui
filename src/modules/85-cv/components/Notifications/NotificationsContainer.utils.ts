@@ -13,7 +13,7 @@ import type {
   NotificationRuleResponse,
   RestResponseNotificationRuleResponse
 } from 'services/cv'
-import type { NotificationToToggle } from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.types'
+import type { NotificationToToggle } from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.types'
 import type { StringKeys } from 'framework/strings'
 import type {
   NotificationConditions,

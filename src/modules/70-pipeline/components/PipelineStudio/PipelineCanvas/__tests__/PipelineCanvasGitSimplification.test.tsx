@@ -6,17 +6,14 @@
  */
 
 import React from 'react'
-import { useParams } from 'react-router-dom'
 import { render, fireEvent, act } from '@testing-library/react'
 import * as useModal from '@harness/use-modal'
 import { TestWrapper } from '@common/utils/testUtils'
-import { useMutateAsGet } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { PipelineCanvas, PipelineCanvasProps } from '../PipelineCanvas'
 import { PipelineContext } from '../../PipelineContext/PipelineContext'
-import { DefaultNewPipelineId } from '../../PipelineContext/PipelineActions'
-import { getGitContext, mockPipelineTemplateYaml } from './PipelineCanvasTestHelper'
+import { getGitContext } from './PipelineCanvasTestHelper'
 
 const getProps = (): PipelineCanvasProps => ({
   toPipelineStudio: jest.fn(),
@@ -62,47 +59,21 @@ jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@common/utils/YamlUtils', () => ({
   validateJSONWithSchema: jest.fn().mockReturnValue({ error: { size: 2 } })
 }))
-jest.mock('resize-observer-polyfill', () => {
-  class ResizeObserver {
-    static default = ResizeObserver
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    observe() {
-      // do nothing
-    }
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    unobserve() {
-      // do nothing
-    }
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    disconnect() {
-      // do nothing
-    }
-  }
-  return ResizeObserver
-})
 jest.mock('framework/GitRepoStore/GitSyncStoreContext', () => ({
   useGitSyncStore: jest.fn().mockReturnValue({ gitSyncRepos: [{ identifier: 'repoIdentifier', name: 'repoName' }] })
-}))
-// eslint-disable-next-line jest-no-mock
-jest.mock('react-router-dom', () => ({
-  ...(jest.requireActual('react-router-dom') as any),
-  useParams: jest.fn()
 }))
 
 jest.mock('services/pipeline-ng', () => ({
   putPipelinePromise: jest.fn(),
   createPipelinePromise: jest.fn(),
   useGetInputsetYaml: () => jest.fn(),
-  useGetTemplateFromPipeline: jest.fn()
+  useGetTemplateFromPipeline: jest.fn(),
+  useCreateVariablesV2: jest.fn(() => ({ refetch: jest.fn().mockResolvedValue({ data: null }) })),
+  useGetYamlWithTemplateRefsResolved: jest.fn(() => ({ refetch: jest.fn().mockResolvedValue({ data: null }) }))
 }))
 
 jest.mock('services/pipeline-rq', () => ({
   useValidateTemplateInputsQuery: jest.fn(() => ({ data: null }))
-}))
-
-jest.mock('@common/hooks', () => ({
-  ...(jest.requireActual('@common/hooks') as any),
-  useMutateAsGet: jest.fn()
 }))
 
 const showError = jest.fn()
@@ -123,34 +94,22 @@ mockIntersectionObserver.mockReturnValue({
 window.IntersectionObserver = mockIntersectionObserver
 
 describe('Git simplication', () => {
-  beforeEach(() => {
-    // eslint-disable-next-line
-    // @ts-ignore
-    useParams.mockImplementation(() => {
-      return { pipelineIdentifier: DefaultNewPipelineId }
-    })
-
-    // eslint-disable-next-line
-    // @ts-ignore
-    useMutateAsGet.mockImplementation(() => {
-      return mockPipelineTemplateYaml
-    })
-  })
-
-  test('Git repo and branch are shown for remote pipelines', () => {
+  test('Git repo and branch are shown for remote pipelines', async () => {
     const props = getProps()
     const contextValue = getGitContext()
-    const { getByText, container } = render(
+    const { container, findByText } = render(
       <TestWrapper {...gitSimplificationTestProps}>
         <PipelineContext.Provider value={contextValue}>
           <PipelineCanvas {...props} />
         </PipelineContext.Provider>
       </TestWrapper>
     )
+
+    await findByText(gitQueryParams.repoName)
+    // await findByText(gitQueryParams.branch)
+
     expect(container.querySelector('.gitRemoteDetailsWrapper')).toBeInTheDocument()
-    expect(getByText(gitQueryParams.repoName)).toBeInTheDocument()
     expect(container.querySelector('[data-icon="repository"]')).toBeInTheDocument()
-    expect(getByText(gitQueryParams.branch)).toBeInTheDocument()
     expect(container.querySelector('[data-icon="git-new-branch"]')).toBeInTheDocument()
   })
 

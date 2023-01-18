@@ -35,8 +35,6 @@ import {
 import { useStrings } from 'framework/strings'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
 import { PrometheusQueryBuilder } from './components/PrometheusQueryBuilder/PrometheusQueryBuilder'
 import {
@@ -81,7 +79,7 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
     sourceData: { existingMetricDetails }
   } = useContext(SetupSourceTabsContext)
 
-  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
+  const isMetricThresholdEnabled = !isTemplate
 
   const metricDefinitions = existingMetricDetails?.spec?.metricDefinitions
 

@@ -53,7 +53,25 @@ jest.mock('services/cv', () => {
       .mockImplementation(() => ({ data: null, loading: false, error: null, refetch: jest.fn() })),
     useGetMonitoredServiceChangeEventSummary: jest
       .fn()
-      .mockImplementation(() => ({ data: null, loading: false, error: null, refetch: jest.fn() }))
+      .mockImplementation(() => ({ data: null, loading: false, error: null, refetch: jest.fn() })),
+    useChangeEventTimelineForAccount: jest.fn().mockImplementation(() => {
+      return {
+        data: {},
+        refetch: jest.fn(),
+        error: null,
+        loading: false,
+        cancel: jest.fn()
+      }
+    }),
+    useChangeEventListForAccount: jest.fn().mockImplementation(() => {
+      return {
+        data: {},
+        refetch: jest.fn(),
+        error: null,
+        loading: false,
+        cancel: jest.fn()
+      }
+    })
   }
 })
 

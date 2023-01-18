@@ -32,43 +32,41 @@ export function AzureWebAppSwapSlotInputStepRef<T extends AzureWebAppSwapSlotDat
       {
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.timeout as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <TimeoutFieldInputSetView
-              label={getString('pipelineSteps.timeoutLabel')}
-              name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-              disabled={readonly}
-              multiTypeDurationProps={{
-                configureOptionsProps: {
-                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-                },
-                allowableTypes,
-                expressions,
-                disabled: readonly
-              }}
-              template={inputSetData?.template}
-              fieldPath={'timeout'}
-            />
-          </div>
+          <TimeoutFieldInputSetView
+            label={getString('pipelineSteps.timeoutLabel')}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+            disabled={readonly}
+            multiTypeDurationProps={{
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
+              allowableTypes,
+              expressions,
+              disabled: readonly
+            }}
+            template={inputSetData?.template}
+            fieldPath={'timeout'}
+            className={cx(stepCss.formGroup, stepCss.sm)}
+          />
         )
       }
       {isRuntime(inputSetData?.template?.spec?.targetSlot as string) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            label={'Target Slot'}
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.targetSlot`}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              disabled: readonly,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            fieldPath={'spec.targetSlot'}
-            template={inputSetData?.template}
-          />
-        </div>
+        <TextFieldInputSetView
+          label={'Target Slot'}
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.targetSlot`}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          fieldPath={'spec.targetSlot'}
+          template={inputSetData?.template}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
     </FormikForm>
   )

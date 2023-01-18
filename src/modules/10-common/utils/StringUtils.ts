@@ -77,6 +77,10 @@ export const yamlPathRegex = /.*\.ya?ml$/
 
 export const carriageReturnRegex = /(?:\\[rn])+/g
 
+export const cpuLimitRegex = /^\d+(\.\d+)?$|^\d+m$|^$/
+
+export const memorLimityRegex = /^(([0-9]*[.])?[0-9]+)([GM]i?)|^$/
+
 export const UNIQUE_ID_MAX_LENGTH = 64
 export function toVariableStr(str: string): string {
   return `<+${str}>`

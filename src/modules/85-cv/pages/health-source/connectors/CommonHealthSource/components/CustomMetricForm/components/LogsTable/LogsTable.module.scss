@@ -42,3 +42,13 @@
     margin-top: 0 !important;
   }
 }
+
+.drawerLogMessage {
+  flex: 1;
+  background-color: var(--white) !important;
+  padding-bottom: var(--spacing-xxlarge) !important;
+  p {
+    word-break: break-word !important;
+    white-space: pre-line !important;
+  }
+}

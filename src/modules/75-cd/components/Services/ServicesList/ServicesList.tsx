@@ -44,17 +44,20 @@ import { SortOption } from '@common/components/SortOption/SortOption'
 import { PieChart, PieChartProps } from '@cd/components/PieChart/PieChart'
 import { getFixed, INVALID_CHANGE_RATE } from '@cd/components/Services/common'
 import { numberFormatter } from '@common/utils/utils'
-import { ServiceDetailsDTO, useDeleteServiceV2 } from 'services/cd-ng'
+import { ChangeRate, ServiceDetailsDTO, ServiceDetailsDTOV2, useDeleteServiceV2 } from 'services/cd-ng'
 import { DeploymentTypeIcons } from '@cd/components/DeploymentTypeIcons/DeploymentTypeIcons'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { NewEditServiceModal } from '@cd/components/PipelineSteps/DeployServiceStep/NewEditServiceModal'
 import { isExecutionIgnoreFailed, isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { mapToExecutionStatus } from '@pipeline/components/Dashboards/shared'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+import { calcTrend, RateTrend, TrendPopover } from '@cd/pages/dashboard/dashboardUtils'
+import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import { ServiceTabs } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServicesList/ServiceList.module.scss'
 
@@ -92,15 +95,18 @@ export interface ServiceListItem {
 export interface ServicesListProps {
   loading: boolean
   error: boolean
-  data: ServiceDetailsDTO[]
+  data: ServiceDetailsDTO[] | ServiceDetailsDTOV2[]
   refetch: () => void
   setSavedSortOption: (value: string[] | undefined) => void
   setSort: React.Dispatch<React.SetStateAction<string[]>>
   sort: string[]
 }
 
-const transformServiceDetailsData = (data: ServiceDetailsDTO[]): ServiceListItem[] => {
-  return data.map(item => ({
+const transformServiceDetailsData = (
+  data: ServiceDetailsDTO[] | ServiceDetailsDTOV2[],
+  flag: boolean | undefined
+): ServiceListItem[] => {
+  return data.map((item: ServiceDetailsDTOV2 | ServiceDetailsDTO) => ({
     name: defaultTo(item.serviceName, ''),
     identifier: defaultTo(item.serviceIdentifier, ''),
     description: defaultTo(item.description, ''),
@@ -113,15 +119,42 @@ const transformServiceDetailsData = (data: ServiceDetailsDTO[]): ServiceListItem
     },
     deployments: {
       value: numberFormatter(item.totalDeployments),
-      change: defaultTo(item.totalDeploymentChangeRate, 0)
+      change: defaultTo(
+        flag && item.totalDeploymentChangeRate
+          ? (item.totalDeploymentChangeRate as ChangeRate).percentChange
+          : (item.totalDeploymentChangeRate as number),
+        0
+      ),
+      trend:
+        flag && item.totalDeploymentChangeRate
+          ? ((item.totalDeploymentChangeRate as ChangeRate).trend as RateTrend)
+          : calcTrend(item.totalDeploymentChangeRate as number)
     },
     failureRate: {
       value: numberFormatter(item.failureRate),
-      change: defaultTo(item.failureRateChangeRate, 0)
+      change: defaultTo(
+        flag && item.failureRateChangeRate
+          ? (item.failureRateChangeRate as ChangeRate).percentChange
+          : (item.failureRateChangeRate as number),
+        0
+      ),
+      trend:
+        flag && item.failureRateChangeRate
+          ? ((item.failureRateChangeRate as ChangeRate).trend as RateTrend)
+          : calcTrend(item.failureRateChangeRate as number)
     },
     frequency: {
       value: numberFormatter(item.frequency),
-      change: defaultTo(item.frequencyChangeRate, 0)
+      change: defaultTo(
+        flag && item.frequencyChangeRate
+          ? (item.frequencyChangeRate as ChangeRate).percentChange
+          : (item.frequencyChangeRate as number),
+        0
+      ),
+      trend:
+        flag && item.frequencyChangeRate
+          ? ((item.frequencyChangeRate as ChangeRate).trend as RateTrend)
+          : calcTrend(item.frequencyChangeRate as number)
     },
     lastDeployment: {
       name: defaultTo(item.lastPipelineExecuted?.name, ''),
@@ -163,12 +196,12 @@ const RenderType: Renderer<CellProps<ServiceListItem>> = ({ row }) => {
 const TickerCard: React.FC<{ item: ChangeValue & { name: string } }> = props => {
   const { item } = props
   const value = Number(item.value)
-  const isBoostMode = item.change === INVALID_CHANGE_RATE
+  const isBoostMode = item.change === INVALID_CHANGE_RATE || item.trend === RateTrend.INVALID
   const color = (() => {
     if (item.name !== 'failureRate') {
-      return !isBoostMode && item.change < 0 ? Color.RED_500 : Color.GREEN_500
+      return !isBoostMode && item.trend === RateTrend.DOWN ? Color.RED_500 : Color.GREEN_500
     } else {
-      return isBoostMode || item.change < 0 ? Color.GREEN_500 : Color.RED_500
+      return isBoostMode || item.trend === RateTrend.DOWN ? Color.GREEN_500 : Color.RED_500
     }
   })()
   return (
@@ -181,7 +214,7 @@ const TickerCard: React.FC<{ item: ChangeValue & { name: string } }> = props => 
             <Text color={color} font={{ size: 'small' }}>{`${Math.abs(getFixed(item.change))}%`}</Text>
           )
         }
-        decreaseMode={!isBoostMode && item.change < 0}
+        decreaseMode={!isBoostMode && item.trend === RateTrend.DOWN}
         boost={isBoostMode}
         color={color}
         tickerContainerStyles={css.tickerContainerStyles}
@@ -199,7 +232,11 @@ const getRenderTickerCard: (tickerCardKey: keyof ServiceListItem) => Renderer<Ce
   tickerCardKey =>
   ({ row }) => {
     const value = row.original[tickerCardKey] as ChangeValue
-    return <TickerCard item={{ ...value, name: tickerCardKey }} />
+    return (
+      <TrendPopover trend={value.trend}>
+        <TickerCard item={{ ...value, name: tickerCardKey }} />
+      </TrendPopover>
+    )
   }
 
 const RenderServiceInstances: Renderer<CellProps<ServiceListItem>> = ({ row }) => {
@@ -270,7 +307,7 @@ const RenderLastDeployment: Renderer<CellProps<ServiceListItem>> = ({ row }) => 
         source
       })
 
-      const baseUrl = window.location.href.split('#')[0]
+      const baseUrl = windowLocationUrlPartBeforeHash()
       window.open(`${baseUrl}#${route}`)
     } else {
       showError(getString('cd.serviceDashboard.noLastDeployment'))
@@ -333,21 +370,15 @@ const RenderLastDeployment: Renderer<CellProps<ServiceListItem>> = ({ row }) => 
 const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
   const data = row.original
   const [menuOpen, setMenuOpen] = useState(false)
-  const [deleteError, setDeleteError] = useState('')
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const history = useHistory()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  const { CDS_FORCE_DELETE_ENTITIES } = useFeatureFlags()
 
-  const { mutate: deleteService } = useDeleteServiceV2({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier: orgIdentifier,
-      projectIdentifier: projectIdentifier
-    }
-  })
+  const { mutate: deleteService } = useDeleteServiceV2({})
 
   const [showModal, hideModal] = useModalHook(
     () => (
@@ -376,28 +407,29 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
     [data, orgIdentifier, projectIdentifier]
   )
 
-  const { openDialog: openDeleteErrorDialog } = useConfirmationDialog({
-    titleText: getString('common.deleteServiceFailure'),
-    contentText: deleteError,
-    cancelButtonText: getString('close'),
-    confirmButtonText: getString('common.viewReferences'),
-    intent: Intent.DANGER,
-    onCloseDialog: async isConfirmed => {
-      setDeleteError('')
-      if (isConfirmed) {
-        history.push({
-          pathname: routes.toServiceStudio({
-            accountId,
-            orgIdentifier,
-            projectIdentifier,
-            serviceId: data.identifier,
-            module
-          }),
-          search: `tab=${ServiceTabs.REFERENCED_BY}`
-        })
+  const deleteHandler = async (forceDelete?: boolean): Promise<void> => {
+    try {
+      const response = await deleteService(data.identifier, {
+        headers: { 'content-type': 'application/json' },
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier: orgIdentifier,
+          projectIdentifier: projectIdentifier,
+          forceDelete
+        }
+      })
+      if (response.status === 'SUCCESS') {
+        showSuccess(getString('common.deleteServiceMessage'))
+        ;(column as any).reload?.()
+      }
+    } catch (err: any) {
+      if (err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+        openReferenceErrorDialog()
+      } else {
+        showError(getRBACErrorMessage(err as RBACError))
       }
     }
-  })
+  }
 
   const { openDialog } = useConfirmationDialog({
     titleText: getString('common.deleteService'),
@@ -406,26 +438,32 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
     confirmButtonText: getString('confirm'),
     intent: Intent.DANGER,
     onCloseDialog: async isConfirmed => {
-      if (isConfirmed) {
-        try {
-          const response = await deleteService(data.identifier, {
-            headers: { 'content-type': 'application/json' }
-          })
-          if (response.status === 'SUCCESS') {
-            showSuccess(getString('common.deleteServiceMessage'))
-            ;(column as any).reload?.()
-          }
-        } catch (err) {
-          if (err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
-            // showing reference by error in modal
-            setDeleteError(err?.data?.message || err?.message)
-            openDeleteErrorDialog()
-          } else {
-            showError(getRBACErrorMessage(err as RBACError))
-          }
-        }
+      if (isConfirmed && data.identifier) {
+        deleteHandler(false)
       }
     }
+  })
+
+  const redirectToReferencedBy = (): void => {
+    history.push({
+      pathname: routes.toServiceStudio({
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
+        serviceId: data.identifier,
+        module
+      }),
+      search: `tab=${ServiceTabs.REFERENCED_BY}`
+    })
+  }
+
+  const { openDialog: openReferenceErrorDialog } = useEntityDeleteErrorHandlerDialog({
+    entity: {
+      type: ResourceType.SERVICE,
+      name: defaultTo(data?.name, '')
+    },
+    redirectToReferencedBy,
+    forceDeleteCallback: CDS_FORCE_DELETE_ENTITIES ? () => deleteHandler(true) : undefined
   })
 
   const handleEdit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {
@@ -487,7 +525,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
             onClick={e => e.stopPropagation()}
           >
             <Icon name="launch" style={{ marginRight: '5px' }} />
-            {getString('pipeline.openInNewTab')}
+            {getString('common.openInNewTab')}
           </Link>
           <RbacMenuItem
             icon="edit"
@@ -524,6 +562,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const history = useHistory()
+  const { CDC_DASHBOARD_ENHANCEMENT_NG } = useFeatureFlags()
 
   const ServiceListHeaderCustomPrimary = useMemo(
     () => (headerProps: { total?: number }) =>
@@ -580,7 +619,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
         {
           Header: getString('cd.serviceDashboard.lastPipelineExecution').toLocaleUpperCase(),
           id: 'lastDeployment',
-          width: '15%',
+          width: '25%',
           Cell: RenderLastDeployment
         },
         {
@@ -609,7 +648,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
     columns,
     loading,
     error,
-    data: transformServiceDetailsData(data),
+    data: transformServiceDetailsData(data, CDC_DASHBOARD_ENHANCEMENT_NG),
     refetch,
     HeaderCustomPrimary: ServiceListHeaderCustomPrimary,
     onRowClick: goToServiceDetails,

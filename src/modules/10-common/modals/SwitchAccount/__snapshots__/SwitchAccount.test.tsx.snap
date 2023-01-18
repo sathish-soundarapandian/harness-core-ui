@@ -23,7 +23,7 @@ exports[`Switch Account render 1`] = `
         <div
           class="bp3-input-group ui-search-box ExpandingSearchInput--main    ExpandingSearchInput--light"
           data-name=""
-          style="max-width: 350px;"
+          style="max-width: 350px; width: 350px;"
         >
           <span
             class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
@@ -48,7 +48,7 @@ exports[`Switch Account render 1`] = `
             class="bp3-input  ExpandingSearchInput--filter"
             dir="auto"
             placeholder="common.switchAccountSearch"
-            style="padding-right: 0px;"
+            style="padding-right: 38px;"
             type="search"
             value=""
           />

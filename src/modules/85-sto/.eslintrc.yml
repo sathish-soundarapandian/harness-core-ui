@@ -13,8 +13,10 @@ rules:
             - '!microfrontends/ChildAppMounter'
         - group:
             - modules/85-cv/*
+            - modules/85-iacm/*
             - modules/90-gitops/*
             - '@cv/*'
+            - '@iacm/*'
             - '@gitops/*'
           message: Import from higher layer modules is not allowed
       paths:

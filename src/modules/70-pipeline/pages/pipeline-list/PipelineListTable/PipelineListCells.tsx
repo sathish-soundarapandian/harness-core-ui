@@ -8,9 +8,19 @@
 
 import { Classes, Menu, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
-import { Button, Icon, Layout, Popover, Text, Container, TagsPopover, ButtonVariation } from '@harness/uicore'
+import {
+  Button,
+  Icon,
+  Layout,
+  Popover,
+  Text,
+  Container,
+  TagsPopover,
+  ButtonVariation,
+  ButtonSize
+} from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useHistory } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import ReactTimeago from 'react-timeago'
 import React, { ReactNode } from 'react'
@@ -29,6 +39,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import { getReadableDateTime } from '@common/utils/dateUtils'
+import { ResourceType as GitResourceType } from '@common/interfaces/GitSyncInterface'
 import type { PMSPipelineSummaryResponse, RecentExecutionInfoDTO } from 'services/pipeline-ng'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
@@ -36,12 +47,15 @@ import type { PipelineType } from '@common/interfaces/RouteInterfaces'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { AUTO_TRIGGERS } from '@pipeline/utils/constants'
 import { killEvent } from '@common/utils/eventUtils'
+import RbacButton from '@rbac/components/Button/Button'
+import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
+import { MigrationType } from '@pipeline/components/MigrateResource/MigrateUtils'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 import type { PipelineListColumnActions } from './PipelineListTable'
 import css from './PipelineListTable.module.scss'
 
-export const LabeValue = ({ label, value }: { label: string; value: ReactNode }) => {
+export const LabeValue = ({ label, value }: { label: string; value: ReactNode }): JSX.Element => {
   return (
     <Layout.Horizontal spacing="xsmall">
       <Text color={Color.GREY_200} font={{ variation: FontVariation.SMALL_SEMI }} lineClamp={1}>
@@ -232,6 +246,34 @@ export const LastModifiedCell: CellType = ({ row }) => {
   )
 }
 
+export const RunPipelineCell: CellType = ({ row }) => {
+  const data = row.original
+  const isPipelineInvalid = data?.entityValidityDetails?.valid === false
+  const { getString } = useStrings()
+  const pathParams = useParams<PipelineListPagePathParams>()
+  const history = useHistory()
+  return (
+    <Layout.Horizontal flex={{ justifyContent: 'end' }} onClick={killEvent}>
+      <RbacButton
+        icon="run-pipeline"
+        disabled={isPipelineInvalid}
+        tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : getString('runPipeline')}
+        intent="success"
+        minimal
+        size={ButtonSize.SMALL}
+        onClick={() => history.push(routes.toPipelineStudio({ ...getRouteProps(pathParams, data), runPipeline: true }))}
+        permission={{
+          resource: {
+            resourceType: ResourceType.PIPELINE,
+            resourceIdentifier: data.identifier
+          },
+          permission: PermissionIdentifier.EXECUTE_PIPELINE
+        }}
+      />
+    </Layout.Horizontal>
+  )
+}
+
 export const MenuCell: CellType = ({ row, column }) => {
   const data = row.original
   const pathParams = useParams<PipelineListPagePathParams>()
@@ -243,7 +285,7 @@ export const MenuCell: CellType = ({ row, column }) => {
   }>()
 
   const { confirmDelete } = useDeleteConfirmationDialog(data, 'pipeline', commitMsg =>
-    column.onDeletePipeline(commitMsg, data)
+    column.onDeletePipeline!(commitMsg, data)
   )
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
@@ -275,6 +317,14 @@ export const MenuCell: CellType = ({ row, column }) => {
     storeType: data.storeType as StoreType
   })
 
+  const { showMigrateResourceModal: showMoveResourceModal } = useMigrateResource({
+    resourceType: GitResourceType.PIPELINES,
+    modalTitle: getString('common.moveEntitytoGit', { resourceType: getString('common.pipeline') }),
+    migrationType: MigrationType.INLINE_TO_REMOTE,
+    extraQueryParams: { pipelineIdentifier: data.identifier, name: data?.name },
+    onSuccess: () => column.refetchList?.()
+  })
+
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }} onClick={killEvent}>
       <Popover className={Classes.DARK} position={Position.LEFT}>
@@ -287,33 +337,31 @@ export const MenuCell: CellType = ({ row, column }) => {
             onClick={runPipeline}
             featuresProps={getFeaturePropsForRunPipelineButton({ modules: data.modules, getString })}
           />
-          <Menu.Item
-            className={css.link}
-            icon="cog"
-            text={
-              <Link to={routes.toPipelineStudio(getRouteProps(pathParams, data))}>
-                {getString('pipeline.viewPipeline')}
-              </Link>
-            }
-          />
-          <Menu.Item
-            className={css.link}
-            icon="list-detail-view"
-            text={
-              <Link to={routes.toPipelineDeploymentList(getRouteProps(pathParams, data))}>
-                {getString('viewExecutions')}
-              </Link>
-            }
-          />
+          <Link className={css.link} to={routes.toPipelineStudio(getRouteProps(pathParams, data))}>
+            <Menu.Item tagName="div" icon="cog" text={getString('pipeline.viewPipeline')} />
+          </Link>
+          <Link className={css.link} to={routes.toPipelineDeploymentList(getRouteProps(pathParams, data))}>
+            <Menu.Item tagName="div" icon="list-detail-view" text={getString('viewExecutions')} />
+          </Link>
           <Menu.Divider />
           <Menu.Item
             icon="duplicate"
             text={getString('projectCard.clone')}
             disabled={isGitSyncEnabled}
             onClick={() => {
-              column.onClonePipeline(data)
+              column.onClonePipeline!(data)
             }}
           />
+          {data?.storeType === StoreType.INLINE ? (
+            <Menu.Item
+              icon="git-merge"
+              text={getString('common.moveToGit')}
+              onClick={() => {
+                showMoveResourceModal()
+              }}
+            />
+          ) : null}
+
           <Menu.Item
             icon="trash"
             text={getString('delete')}

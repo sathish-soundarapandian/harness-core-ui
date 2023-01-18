@@ -10,13 +10,14 @@ import { Button, ButtonVariation, Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import moment from 'moment'
 import { Collapse } from '@blueprintjs/core'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useRouteMatch } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
 import type { FreezeBannerDetails, FreezeDetailedResponse } from 'services/cd-ng'
 import { String } from 'framework/strings'
-import { getFreezeRouteLink } from '@common/utils/freezeWindowUtils'
+import { getFreezeRouteLink, isFreezeOnSameScope } from '@common/utils/freezeWindowUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
+import routes from '@common/RouteDefinitions'
 import css from './GlobalFreezeBanner.module.scss'
 
 export const DATE_PARSE_FORMAT = 'YYYY-MM-DD hh:mm A'
@@ -34,6 +35,9 @@ export const GlobalFreezeBanner: FC<{ globalFreezes: FreezeBannerDetails[] | und
   const [open, setOpen] = useState(false)
   const { module } = useModuleInfo()
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
+  const isFreezeWindowsPage = useRouteMatch(
+    routes.toFreezeWindows({ accountId, projectIdentifier, orgIdentifier, module })
+  )
 
   if (!globalFreezes || globalFreezes?.length === 0) {
     return null
@@ -61,18 +65,26 @@ export const GlobalFreezeBanner: FC<{ globalFreezes: FreezeBannerDetails[] | und
             <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
               <String stringID="common.freezeActiveBannerTextPrefix" />
             </Text>
-            <Link
-              to={getFreezeRouteLink(globalFreezes[0], {
-                projectIdentifier,
-                orgIdentifier,
-                accountId,
-                module
-              })}
-            >
-              <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.PRIMARY_7}>
+
+            {isFreezeWindowsPage &&
+            isFreezeOnSameScope(globalFreezes[0].freezeScope, { projectIdentifier, orgIdentifier, accountId }) ? (
+              <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_800}>
                 {scopeText[globalFreezes[0].freezeScope as Scope]}
               </Text>
-            </Link>
+            ) : (
+              <Link
+                to={getFreezeRouteLink(globalFreezes[0], {
+                  projectIdentifier,
+                  orgIdentifier,
+                  accountId,
+                  module
+                })}
+              >
+                <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.PRIMARY_7}>
+                  {scopeText[globalFreezes[0].freezeScope as Scope]}
+                </Text>
+              </Link>
+            )}
             <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
               <String
                 stringID="common.freezeActiveBannerTimeframe"
@@ -106,18 +118,27 @@ export const GlobalFreezeBanner: FC<{ globalFreezes: FreezeBannerDetails[] | und
                   <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
                     <String stringID="common.freezeListActiveBannerExpandedTextPrefix" />
                   </Text>
-                  <Link
-                    to={getFreezeRouteLink(freeze, {
-                      projectIdentifier,
-                      orgIdentifier,
-                      accountId,
-                      module: defaultTo(module, 'cd')
-                    })}
-                  >
-                    <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.PRIMARY_7}>
+
+                  {isFreezeWindowsPage &&
+                  isFreezeOnSameScope(freeze.freezeScope, { projectIdentifier, orgIdentifier, accountId }) ? (
+                    <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_800}>
                       {scopeText[freeze.freezeScope as Scope]}
                     </Text>
-                  </Link>
+                  ) : (
+                    <Link
+                      to={getFreezeRouteLink(freeze, {
+                        projectIdentifier,
+                        orgIdentifier,
+                        accountId,
+                        module: defaultTo(module, 'cd')
+                      })}
+                    >
+                      <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.PRIMARY_7}>
+                        {scopeText[freeze.freezeScope as Scope]}
+                      </Text>
+                    </Link>
+                  )}
+
                   <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
                     <String
                       stringID="common.freezeActiveBannerTimeframe"

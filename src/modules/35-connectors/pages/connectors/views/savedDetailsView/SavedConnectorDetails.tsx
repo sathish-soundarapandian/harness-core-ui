@@ -371,11 +371,11 @@ const getTasSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInte
     },
     {
       label: 'username',
-      value: connector?.spec?.authentication?.spec?.username || connector?.spec?.authentication?.spec?.usernameRef
+      value: connector?.spec?.credential?.spec?.username || connector?.spec?.credential?.spec?.usernameRef
     },
     {
       label: 'password',
-      value: connector?.spec?.authentication?.spec?.spec?.passwordRef
+      value: connector?.spec?.credential?.spec?.passwordRef
     }
   ]
 }

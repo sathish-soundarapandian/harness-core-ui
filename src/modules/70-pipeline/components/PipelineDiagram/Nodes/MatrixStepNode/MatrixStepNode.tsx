@@ -7,12 +7,13 @@
 
 import * as React from 'react'
 import cx from 'classnames'
-import { Icon, Layout, Text, Button, ButtonVariation } from '@harness/uicore'
+import { Icon, Layout, Text, Button, ButtonVariation, ButtonProps, ButtonSize } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { debounce, defaultTo, get, lowerCase } from 'lodash-es'
 import { STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import { useDeepCompareEffect } from '@common/hooks'
+import { useCollapsedNodeStore } from '@pipeline/components/ExecutionNodeList/CollapsedNodeStore'
 import { BaseReactComponentProps, NodeType, PipelineGraphState } from '../../types'
 import {
   COLLAPSED_MATRIX_NODE_LENGTH,
@@ -82,18 +83,30 @@ export function MatrixStepNode(props: any): JSX.Element {
   const [showAdd, setVisibilityOfAdd] = React.useState(false)
   const [showAddLink, setShowAddLink] = React.useState(false)
   const [isNodeCollapsed, setNodeCollapsed] = React.useState(false)
-  const [showAllNodes, setShowAllNodes] = React.useState(false)
   const [layoutStyles, setLayoutStyles] = React.useState<LayoutStyles>({ height: 100, width: 70 })
+  const [concurrentNodes, setConcurrentNodes] = React.useState<number>(MAX_ALLOWED_MATRIX_COLLAPSED_NODES)
+  const [{ visibilityMap }] = useCollapsedNodeStore()
+
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const DefaultNode: React.FC<any> | undefined = props?.getDefaultNode()?.component
-  const stepGroupData = defaultTo(props?.data?.stepGroup?.steps, props?.data?.step?.data?.stepGroup?.steps)
+  const nestedStepsData = defaultTo(props?.data?.stepGroup?.steps, props?.data?.step?.data?.stepGroup?.steps)
   const maxParallelism = defaultTo(props?.data?.maxParallelism, props?.data?.step?.data?.maxParallelism)
   const nodeType = defaultTo(props?.data?.nodeType, props?.data?.step?.data?.nodeType)
 
   const isNestedStepGroup = Boolean(get(props, 'data.step.data.isNestedGroup'))
-  const hasChildrenToBeCollapsed = stepGroupData?.length > COLLAPSED_MATRIX_NODE_LENGTH
+  const hasChildrenToBeCollapsed = nestedStepsData?.length > COLLAPSED_MATRIX_NODE_LENGTH
+
+  const { selectedNestedSteps, hasSelectedNestedSteps } = React.useMemo(() => {
+    const selected = nestedStepsData?.filter((item: any) => visibilityMap.get(item?.step?.uuid)) ?? []
+
+    return {
+      selectedNestedSteps: selected,
+      hasSelectedNestedSteps: selected.length > 0
+    }
+  }, [nestedStepsData, visibilityMap])
 
   const { updateDimensions, childrenDimensions } = useNodeDimensionContext()
+
   React.useEffect(() => {
     props?.updateGraphLinks?.()
   }, [isNodeCollapsed])
@@ -111,26 +124,54 @@ export function MatrixStepNode(props: any): JSX.Element {
   }, [layoutStyles])
 
   React.useLayoutEffect(() => {
-    if (stepGroupData?.length) {
-      setLayoutStyles(getCalculatedStepNodeStyles(stepGroupData, maxParallelism, showAllNodes, childrenDimensions))
+    if (nestedStepsData?.length) {
+      setLayoutStyles(
+        getCalculatedStepNodeStyles(
+          hasSelectedNestedSteps ? selectedNestedSteps : nestedStepsData,
+          maxParallelism,
+          hasSelectedNestedSteps,
+          childrenDimensions
+        )
+      )
     } else {
       setNodeCollapsed(true)
     }
-  }, [stepGroupData, isNodeCollapsed, props?.isNodeCollapsed, showAllNodes])
+  }, [nestedStepsData, selectedNestedSteps, isNodeCollapsed, props?.isNodeCollapsed, hasSelectedNestedSteps])
 
   const debounceHideVisibility = debounce(() => {
     setVisibilityOfAdd(false)
   }, 300)
 
+  React.useEffect(() => {
+    const visibleStepsData = hasSelectedNestedSteps ? selectedNestedSteps : nestedStepsData
+    if (hasSelectedNestedSteps) {
+      setConcurrentNodes(maxParallelism === 0 ? 1 : Math.min(maxParallelism, (visibleStepsData || []).length))
+    } else {
+      const updatedParallelism = Math.min(maxParallelism, MAX_ALLOWED_MATRIX_COLLAPSED_NODES) || 1
+      setConcurrentNodes(maxParallelism === 0 ? 1 : Math.min(updatedParallelism, (visibleStepsData || []).length))
+    }
+  }, [maxParallelism, hasSelectedNestedSteps, selectedNestedSteps, nestedStepsData])
+
   useDeepCompareEffect(() => {
-    if (stepGroupData?.length) {
-      setLayoutStyles(getCalculatedStepNodeStyles(stepGroupData, maxParallelism, showAllNodes, childrenDimensions))
+    if (nestedStepsData?.length) {
+      setLayoutStyles(
+        getCalculatedStepNodeStyles(
+          hasSelectedNestedSteps ? selectedNestedSteps : nestedStepsData,
+          maxParallelism,
+          hasSelectedNestedSteps,
+          childrenDimensions
+        )
+      )
     }
   }, [childrenDimensions])
 
-  useDeepCompareEffect(() => {
-    !maxParallelism && !hasChildrenToBeCollapsed && setShowAllNodes(true)
-  }, [maxParallelism])
+  const onCollapsedNodeClick: ButtonProps['onClick'] = e => {
+    e.stopPropagation()
+    props?.fireEvent?.({
+      type: Event.CollapsedNodeClick,
+      data: { ...props }
+    })
+  }
 
   return (
     <>
@@ -150,7 +191,7 @@ export function MatrixStepNode(props: any): JSX.Element {
             allowAdd && debounceHideVisibility()
           }}
           onDragLeave={() => allowAdd && debounceHideVisibility()}
-          style={stepGroupData?.containerCss ? stepGroupData?.containerCss : undefined}
+          style={nestedStepsData?.containerCss ? nestedStepsData?.containerCss : undefined}
           className={cx(
             css.matrixStepGroup,
             { [css.firstnode]: !props?.isParallelNode },
@@ -234,19 +275,21 @@ export function MatrixStepNode(props: any): JSX.Element {
                       target: event.target,
                       data: { ...props }
                     })
+                    onCollapsedNodeClick(event)
                   }}
+                  tooltipProps={{ position: 'bottom' }}
                 >
                   {props.name}
                 </Text>
               </Layout.Horizontal>
               {/* Execution summary on collapse */}
-              <NodeStatusIndicator nodeState={stepGroupData} className={css.headerStatus} />
+              <NodeStatusIndicator nodeState={nestedStepsData} className={css.headerStatus} />
             </Layout.Horizontal>
           </div>
           <div
             className={cx(css.collapsedMatrixWrapper, {
               [css.isNodeCollapsed]: isNodeCollapsed,
-              [css.nestedStepGroup]: lowerCase(stepGroupData?.[0]?.step?.type) === lowerCase(NodeType.StepGroupNode)
+              [css.nestedStepGroup]: lowerCase(nestedStepsData?.[0]?.step?.type) === lowerCase(NodeType.StepGroupNode)
             })}
           >
             {isNodeCollapsed && DefaultNode ? (
@@ -257,60 +300,65 @@ export function MatrixStepNode(props: any): JSX.Element {
                 {...props}
                 icon="looping"
                 showMarkers={false}
-                name={`[+] ${stepGroupData?.length} Steps`} //matrix collapsed node
+                name={`[+] ${nestedStepsData?.length} Steps`} //matrix collapsed node
                 isNodeCollapsed={true}
               />
             ) : (
               <>
                 <div
-                  className={cx(css.stepGroupBody, { [css.hasMoreChild]: hasChildrenToBeCollapsed })}
-                  style={layoutStyles}
+                  className={cx(css.stepGroupBody, { [css.hasMoreChild]: maxParallelism || hasChildrenToBeCollapsed })}
                 >
-                  <div style={{ display: 'flex', flexWrap: 'wrap', columnGap: '80px', rowGap: '20px' }}>
-                    {stepGroupData?.map(({ step: node }: any, index: number) => {
-                      const defaultNode = props?.getDefaultNode()?.component
-                      const NodeComponent: React.FC<BaseReactComponentProps> = defaultTo(
-                        props.getNode?.(node?.type)?.component,
-                        defaultNode
-                      ) as React.FC<BaseReactComponentProps>
-                      const matrixNodeName = defaultTo(node?.matrixNodeName, node?.data?.matrixNodeName)
-                      return (
-                        <React.Fragment key={node.data?.identifier}>
-                          {index < (showAllNodes ? stepGroupData?.length : COLLAPSED_MATRIX_NODE_LENGTH) ? (
-                            <NodeComponent
-                              {...node}
-                              id={node?.uuid}
-                              nodeType={node?.type}
-                              parentIdentifier={node.parentIdentifier}
-                              key={node.data?.identifier}
-                              getNode={props.getNode}
-                              fireEvent={props.fireEvent}
-                              getDefaultNode={props.getDefaultNode}
-                              className={cx(css.graphNode, node.className)}
-                              isSelected={
-                                node?.selectedNode && node.selectedNode === (node.data?.id || node.data?.uuid)
-                              }
-                              isParallelNode={node.isParallelNode}
-                              allowAdd={
-                                (!node.data?.children?.length && !node.isParallelNode) ||
-                                (node.isParallelNode && node.isLastChild)
-                              }
-                              isFirstParallelNode={true}
-                              prevNodeIdentifier={node.prevNodeIdentifier}
-                              prevNode={node.prevNode}
-                              nextNode={node.nextNode}
-                              updateGraphLinks={node.updateGraphLinks}
-                              readonly={props.readonly}
-                              selectedNodeId={props?.selectedNodeId}
-                              showMarkers={false}
-                              name={node.name}
-                              matrixNodeName={matrixNodeName}
-                              isParentMatrix={true}
-                            />
-                          ) : null}
-                        </React.Fragment>
-                      )
-                    })}
+                  <div
+                    className={css.matrixNodesGridWrapper}
+                    style={{ '--columns': concurrentNodes } as React.CSSProperties}
+                  >
+                    {(hasSelectedNestedSteps ? selectedNestedSteps : nestedStepsData)?.map(
+                      ({ step: node }: any, index: number) => {
+                        const defaultNode = props?.getDefaultNode()?.component
+                        const NodeComponent: React.FC<BaseReactComponentProps> = defaultTo(
+                          props.getNode?.(node?.type)?.component,
+                          defaultNode
+                        ) as React.FC<BaseReactComponentProps>
+                        const matrixNodeName = defaultTo(node?.matrixNodeName, node?.data?.matrixNodeName)
+                        return (
+                          <React.Fragment key={node.data?.identifier}>
+                            {index <
+                            (hasSelectedNestedSteps ? selectedNestedSteps.length : COLLAPSED_MATRIX_NODE_LENGTH) ? (
+                              <NodeComponent
+                                {...node}
+                                id={node?.uuid}
+                                nodeType={node?.type}
+                                parentIdentifier={node.parentIdentifier}
+                                key={node.data?.identifier}
+                                getNode={props.getNode}
+                                fireEvent={props.fireEvent}
+                                getDefaultNode={props.getDefaultNode}
+                                className={cx(css.graphNode, node.className)}
+                                isSelected={
+                                  node?.selectedNode && node.selectedNode === (node.data?.id || node.data?.uuid)
+                                }
+                                isParallelNode={node.isParallelNode}
+                                allowAdd={
+                                  (!node.data?.children?.length && !node.isParallelNode) ||
+                                  (node.isParallelNode && node.isLastChild)
+                                }
+                                isFirstParallelNode={true}
+                                prevNodeIdentifier={node.prevNodeIdentifier}
+                                prevNode={node.prevNode}
+                                nextNode={node.nextNode}
+                                updateGraphLinks={node.updateGraphLinks}
+                                readonly={props.readonly}
+                                selectedNodeId={props?.selectedNodeId}
+                                showMarkers={false}
+                                name={node.name}
+                                matrixNodeName={matrixNodeName}
+                                isParentMatrix={true}
+                              />
+                            ) : null}
+                          </React.Fragment>
+                        )
+                      }
+                    )}
                   </div>
                 </div>
                 {!props.readonly && props?.identifier !== STATIC_SERVICE_GROUP_NAME && (
@@ -340,17 +388,18 @@ export function MatrixStepNode(props: any): JSX.Element {
                         {hasChildrenToBeCollapsed && (
                           <>
                             <Text padding={0}>{`${
-                              !showAllNodes
-                                ? Math.min(stepGroupData?.length, COLLAPSED_MATRIX_NODE_LENGTH)
-                                : stepGroupData?.length
-                            }/ ${stepGroupData?.length}`}</Text>
-                            <Text
-                              className={css.showNodeText}
-                              padding={0}
-                              onClick={() => setShowAllNodes(!showAllNodes)}
-                            >
-                              {`${!showAllNodes ? getString('showAll') : getString('common.hideAll')}`}
-                            </Text>
+                              hasSelectedNestedSteps
+                                ? selectedNestedSteps.length
+                                : Math.min(nestedStepsData?.length, COLLAPSED_MATRIX_NODE_LENGTH)
+                            }/${nestedStepsData?.length}`}</Text>
+                            <Button
+                              intent="primary"
+                              minimal
+                              withoutBoxShadow
+                              size={ButtonSize.SMALL}
+                              text={getString('showAll')}
+                              onClick={onCollapsedNodeClick}
+                            />
                           </>
                         )}
                       </Layout.Horizontal>

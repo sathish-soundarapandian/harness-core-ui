@@ -6,12 +6,16 @@
  */
 
 import React from 'react'
-import { cloneDeep } from 'lodash-es'
+import { cloneDeep, defaultTo } from 'lodash-es'
 import { Text } from '@harness/uicore'
 import type { Renderer, CellProps } from 'react-table'
-import { PeriodTypes, PeriodLengthTypes } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
 import type { SLODashboardApiFilter, SLOTargetFilterDTO } from 'services/cv'
-import type { SLOObjective, SLOV2Form } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
+import {
+  SLOObjective,
+  SLOV2Form,
+  PeriodTypes,
+  PeriodLengthTypes
+} from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { getSLORefIdWithOrgAndProject } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import { SLOType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import type {
@@ -38,9 +42,6 @@ const updateWeightPercentageForNonManualSLO = ({
   sloList[index].weightagePercentage = Number(weight)
 }
 
-const removeAlreadyCoveredManuallyUpdatedSLO = (manuallyUpdatedSlos: number[], currentIndex: number): number[] =>
-  manuallyUpdatedSlos.filter(item => item !== currentIndex)
-
 export const getDistribution = ({
   weight,
   currentIndex,
@@ -48,17 +49,14 @@ export const getDistribution = ({
   manuallyUpdatedSlos,
   isReset
 }: GetDistributionUpdatedProps): SLOObjective[] => {
-  const clonedArr = [...sloList]
-  let cloneManuallyUpdatedSlos = cloneDeep(manuallyUpdatedSlos)
+  const updatedSLOList = [...sloList]
   const length = sloList.length
-  let remaining =
-    100 -
-    weight -
-    manuallyUpdatedSlos
-      .filter(item => item !== currentIndex)
-      .reduce((total, num) => {
-        return clonedArr[num]?.weightagePercentage + total
-      }, 0)
+  const totalWeightOfManuallyUpdatedSlos = manuallyUpdatedSlos
+    .filter(item => item !== currentIndex)
+    .reduce((total, num) => {
+      return updatedSLOList[num]?.weightagePercentage + total
+    }, 0)
+  let remaining = 100 - weight - totalWeightOfManuallyUpdatedSlos
 
   if (remaining <= 0) {
     remaining = 0
@@ -66,27 +64,21 @@ export const getDistribution = ({
 
   const derivedWeight = remaining / (length - (manuallyUpdatedSlos.length || 1))
 
-  for (let idx = 0; idx < sloList.length; idx++) {
-    const isSloWeightManuallyUpdated = manuallyUpdatedSlos.includes(idx)
-    if (currentIndex === idx) {
+  // update currentSLO and already covered slos
+  for (let sloIndex = 0; sloIndex < sloList.length; sloIndex++) {
+    if (currentIndex === sloIndex) {
       updateWeightPercentageForCurrentSLO({
         weight,
-        index: idx,
-        sloList,
+        index: sloIndex,
+        sloList: updatedSLOList,
         isReset
-      })
-    } else if (currentIndex !== idx && isSloWeightManuallyUpdated) {
-      cloneManuallyUpdatedSlos = removeAlreadyCoveredManuallyUpdatedSLO(cloneManuallyUpdatedSlos, currentIndex)
-    } else if (currentIndex !== idx && !isSloWeightManuallyUpdated) {
-      updateWeightPercentageForNonManualSLO({
-        weight: Number(derivedWeight.toFixed(2)),
-        index: idx,
-        sloList
       })
     }
   }
 
-  return clonedArr
+  updateNonManuallyUpdatedSlos(updatedSLOList, sloList, derivedWeight)
+
+  return updatedSLOList
 }
 
 export const RenderName: Renderer<CellProps<SLOObjective>> = ({ row }) => {
@@ -186,17 +178,21 @@ export const resetSLOWeightage = (
   accountId: string,
   orgIdentifier: string,
   projectIdentifier: string,
+  isAccountLevel?: boolean,
   max = 100
 ): SLOObjective[] => {
   const selectedSlosLength = selectedSlos.length
   const weight = Number(max / selectedSlosLength).toFixed(1)
   const lastWeight = Number(max - Number(weight) * (selectedSlosLength - 1)).toFixed(1)
   const updatedSLOObjective = selectedSlos.map((item, index) => {
+    const orgAndProjectIdentifiers = {
+      orgIdentifier: isAccountLevel ? defaultTo(item?.projectParams?.orgIdentifier, '') : orgIdentifier,
+      projectIdentifier: isAccountLevel ? defaultTo(item?.projectParams?.projectIdentifier, '') : projectIdentifier
+    }
     return {
       ...item,
       accountId,
-      orgIdentifier,
-      projectIdentifier,
+      ...orgAndProjectIdentifiers,
       isManuallyUpdated: false,
       weightagePercentage: index === selectedSlosLength - 1 ? Number(lastWeight) : Number(weight)
     }
@@ -226,7 +222,42 @@ export const resetOnDelete = ({
     accountId,
     orgIdentifier,
     projectIdentifier,
+    isAccountLevel,
     remainingWeight
   )
   return [...manuallyUpdatdWeightsSlo, ...updatedWeightDistributionForNonManuallyUpdated]
+}
+const updateNonManuallyUpdatedSlos = (
+  updatedSLOList: SLOObjective[],
+  sloList: SLOObjective[],
+  derivedWeight: number
+): void => {
+  const manuallyUpdatedSlos = (updatedSLOList || [])
+    .map((item, index) => {
+      if (!item?.isManuallyUpdated) {
+        return { index, id: getSLORefIdWithOrgAndProject(item) }
+      }
+    })
+    .filter(item => item !== undefined)
+
+  const sloIdentifierList = sloList.map(item => getSLORefIdWithOrgAndProject(item))
+
+  for (let sloIndex = 0; sloIndex < manuallyUpdatedSlos.length; sloIndex++) {
+    const isLast = sloIndex === manuallyUpdatedSlos.length - 1
+
+    let updatedWeight = Number(derivedWeight.toFixed(2))
+    if (isLast) {
+      const totalWeightExcludingLastSLO = sloList.reduce((acc, sloDetail, index, array) => {
+        const sloWeight = index === array.length - 1 ? 0 : sloDetail.weightagePercentage
+        return (acc = acc + sloWeight)
+      }, 0)
+      updatedWeight = Number((100 - totalWeightExcludingLastSLO).toFixed(2))
+    }
+
+    updateWeightPercentageForNonManualSLO({
+      weight: updatedWeight,
+      index: sloIdentifierList.indexOf(manuallyUpdatedSlos[sloIndex]?.id || '') || 0,
+      sloList: updatedSLOList
+    })
+  }
 }

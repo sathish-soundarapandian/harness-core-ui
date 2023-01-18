@@ -28,7 +28,7 @@ import {
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { IdentifierSchemaWithOutName, ConnectorRefSchema } from '@common/utils/Validation'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ConfigureOptions, ALLOWED_VALUES_TYPE, VALIDATORS } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useListAwsRegions } from 'services/portal'
@@ -167,7 +167,7 @@ export const CloudFormationDeleteStack = (
               .when('type', {
                 is: value => value === DeleteStackTypes.Inline,
                 then: Yup.object().shape({
-                  connectorRef: ConnectorRefSchema(),
+                  connectorRef: ConnectorRefSchema(getString),
                   region: Yup.string().required(getString('cd.cloudFormation.errors.region')),
                   stackName: Yup.string().required(getString('cd.cloudFormation.errors.stackName'))
                 })
@@ -202,23 +202,9 @@ export const CloudFormationDeleteStack = (
               <FormMultiTypeDurationField
                 name="timeout"
                 label={getString('pipelineSteps.timeoutLabel')}
-                multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
+                multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
                 disabled={readonly}
               />
-              {getMultiTypeFromValue(formik.values.timeout) === MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  value={defaultTo(formik.values.timeout, '')}
-                  type="String"
-                  variableName="timeout"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  showAdvanced={true}
-                  onChange={value => formik.setFieldValue('timeout', value)}
-                  isReadonly={readonly}
-                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  allowedValuesValidator={VALIDATORS[ALLOWED_VALUES_TYPE.TIME]({ minimum: '10s' })}
-                />
-              )}
             </div>
             <div className={css.divider} />
             <div className={cx(stepCss.formGroup, stepCss.md)}>

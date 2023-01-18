@@ -66,7 +66,7 @@ export const getColorForChangeEventType = (type: ChangeEventDTO['type']): string
       return getChangeSoureIconColor(ChangeSourceTypes.Alert, true)
     case 'K8sCluster':
       return getChangeSoureIconColor(ChangeSourceTypes.Infrastructure, true)
-    case 'HARNESS_FF':
+    case 'HarnessFF':
       return getChangeSoureIconColor(ChangeSourceTypes.FeatureFlag, true)
     default:
       return ''

@@ -13,6 +13,7 @@ declare const styles: {
   readonly formFullheight: string
   readonly healthSourceListContainer: string
   readonly healthSourceName: string
+  readonly productChangeConfirmation: string
   readonly squareCard: string
   readonly squareCardContainer: string
 }

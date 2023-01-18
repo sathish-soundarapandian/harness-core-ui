@@ -114,6 +114,28 @@ const StepSuccessVerification: React.FC<StepProps<K8sDelegateWizardData> & StepS
         </Layout.Horizontal>
         <Layout.Horizontal>
           <Text font="normal" width={408}>
+            {getString('delegates.successVerification.updateHelmRepoLabel')}
+          </Text>
+        </Layout.Horizontal>
+        <Layout.Horizontal width={530} spacing="small" className={css.verificationFieldWrapper}>
+          <Container
+            intent="primary"
+            padding="small"
+            font={{
+              align: 'left'
+            }}
+            flex
+            width={530}
+            className={css.verificationField}
+          >
+            <Text style={{ marginRight: 'var(--spacing-xlarge)' }} font="small">
+              {getString('delegates.successVerification.helmRepoUpdate')}
+            </Text>
+            <CopyToClipboard content={getString('delegates.successVerification.helmRepoUpdate')} />
+          </Container>
+        </Layout.Horizontal>
+        <Layout.Horizontal>
+          <Text font="normal" width={408}>
             {getString('delegates.successVerification.installHelmChartLabel')}
           </Text>
         </Layout.Horizontal>

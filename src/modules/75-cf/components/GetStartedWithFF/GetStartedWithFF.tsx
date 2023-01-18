@@ -13,6 +13,7 @@ import { useStrings } from 'framework/strings'
 import orImg from '@cf/images/orImg.svg'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 
 export interface GetStartedWithFFProps {
   hidden?: boolean
@@ -25,6 +26,11 @@ export const GetStartedWithFF: React.FC<GetStartedWithFFProps> = ({ hidden }) =>
   const history = useHistory()
   const { trackEvent } = useTelemetry()
 
+  const { setPreference: setOnboardingBackLocation } = usePreferenceStore<string>(
+    PreferenceScope.USER,
+    'FF_ONBOARDING_LOCATION'
+  )
+
   return (
     <Container hidden={hidden}>
       <Layout.Vertical flex={{ align: 'center-center' }} spacing={'xlarge'}>
@@ -34,6 +40,7 @@ export const GetStartedWithFF: React.FC<GetStartedWithFFProps> = ({ hidden }) =>
           size={ButtonSize.LARGE}
           text={getString('cf.featureFlags.getStartedWithFF')}
           onClick={() => {
+            setOnboardingBackLocation(JSON.stringify(history.location))
             trackEvent(FeatureActions.GetStartedClick, {
               category: Category.FEATUREFLAG
             })

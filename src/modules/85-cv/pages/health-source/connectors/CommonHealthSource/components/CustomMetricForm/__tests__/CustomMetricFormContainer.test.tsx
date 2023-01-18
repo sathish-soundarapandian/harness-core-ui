@@ -11,8 +11,11 @@ import { FormikForm } from '@harness/uicore'
 import { Formik } from 'formik'
 import userEvent from '@testing-library/user-event'
 import * as cvServices from 'services/cv'
+import * as useDrawerHook from '@cv/hooks/useDrawerHook/useDrawerHook'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
+import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
 import { TestWrapper } from '@common/utils/testUtils'
+import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import type { CustomMetricFormContainerProps } from '../CustomMetricForm.types'
 import CustomMetricFormContainer from '../CustomMetricFormContainer'
 import {
@@ -20,29 +23,37 @@ import {
   mockedCustomMetricFormContainerData,
   mockedCustomMetricsFormForLogsTable,
   mockedCustomMetricsFormForLogsTable2,
+  mockedCustomMetricsFormForLogsTableConnectorTemplates,
+  riskCategoryMock,
   sampleDataResponse,
   sampleRawRecordsMock
 } from './CustomMetricFormContainer.mock'
 import { validateAddMetricForm } from '../CustomMetricFormContainer.utils'
+import CommonHealthSourceProvider from '../components/CommonHealthSourceContext/CommonHealthSourceContext'
+import type { GroupedCreatedMetrics } from '../../../CommonHealthSource.types'
 
 function WrapperComponent(props: CustomMetricFormContainerProps): JSX.Element {
   return (
-    <Formik initialValues={props} onSubmit={jest.fn()}>
-      <FormikForm>
-        <TestWrapper
-          path="/account/:accountId/cv/orgs/:orgIdentifier/projects/:projectIdentifier"
-          pathParams={{ accountId: 'account', orgIdentifier: 'org', projectIdentifier: 'project' }}
-        >
-          <CustomMetricFormContainer {...props} />
-        </TestWrapper>
-      </FormikForm>
-    </Formik>
+    <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
+      <Formik initialValues={props} onSubmit={jest.fn()}>
+        <FormikForm>
+          <TestWrapper
+            path="/account/:accountId/cv/orgs/:orgIdentifier/projects/:projectIdentifier"
+            pathParams={{ accountId: 'account', orgIdentifier: 'org', projectIdentifier: 'project' }}
+          >
+            <CustomMetricFormContainer {...props} />
+          </TestWrapper>
+        </FormikForm>
+      </Formik>
+    </CommonHealthSourceProvider>
   )
 }
 
 const getString = (key: any): any => {
   return key
 }
+
+const refetchMock = jest.fn()
 
 describe('Unit tests for CustomMetricFormContainer', () => {
   const props = {
@@ -52,6 +63,12 @@ describe('Unit tests for CustomMetricFormContainer', () => {
     setGroupedCreatedMetrics: jest.fn(),
     setNonCustomFeilds: jest.fn()
   } as any
+
+  beforeAll(() => {
+    jest
+      .spyOn(cvServices, 'useGetRiskCategoryForCustomHealthMetric')
+      .mockImplementation(() => ({ loading: false, error: null, data: riskCategoryMock, refetch: refetchMock } as any))
+  })
 
   test('Ensure CustomMetricFormContainer component loads with the button to add metric', async () => {
     const { getByText } = render(<WrapperComponent {...props} />)
@@ -73,7 +90,9 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       groupName: 'group-1'
     }
     const createdMetrics: string[] = []
-    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics)
+    const groupedCreatedMetrics: GroupedCreatedMetrics = {}
+    const fieldLabel = 'Metric'
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics, fieldLabel)
     expect(actualErrors).toEqual({ metricName: 'fieldRequired' })
   })
 
@@ -84,7 +103,9 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       groupName: ''
     }
     const createdMetrics: string[] = []
-    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics)
+    const groupedCreatedMetrics: GroupedCreatedMetrics = {}
+    const fieldLabel = 'Metric'
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics, fieldLabel)
     expect(actualErrors).toEqual({ groupName: 'fieldRequired' })
   })
 
@@ -95,7 +116,9 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       groupName: 'group-1'
     }
     const createdMetrics: string[] = []
-    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics)
+    const groupedCreatedMetrics: GroupedCreatedMetrics = {}
+    const fieldLabel = 'Metric'
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics, fieldLabel)
     expect(actualErrors).toEqual({ identifier: 'fieldRequired' })
   })
 
@@ -103,16 +126,28 @@ describe('Unit tests for CustomMetricFormContainer', () => {
     const formData = {
       metricName: 'metric1',
       identifier: 'metric1',
-      groupName: 'group-1'
+      groupName: 'group1'
     }
     const createdMetrics: string[] = ['metric1']
-    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics)
+    const groupedCreatedMetrics: GroupedCreatedMetrics = {
+      group1: [
+        {
+          groupName: {
+            label: 'group1',
+            value: 'group1'
+          },
+          metricName: 'metric1'
+        }
+      ]
+    }
+    const fieldLabel = 'Metric'
+    const actualErrors = validateAddMetricForm(formData, getString, createdMetrics, groupedCreatedMetrics, fieldLabel)
     expect(actualErrors).toEqual({
       metricName: 'cv.monitoringSources.prometheus.validation.uniqueName'
     })
   })
 
-  describe('Custom metric logs table', () => {
+  describe('Common health source logs table', () => {
     const mockProps = {
       ...mockedCustomMetricsFormForLogsTable,
       setMappedMetrics: jest.fn(),
@@ -155,6 +190,8 @@ describe('Unit tests for CustomMetricFormContainer', () => {
 
       await waitFor(() => expect(screen.getAllByText('cv.monitoringSources.gcoLogs.records')).not.toBeNull())
 
+      expect(container.querySelector('.jsonSelectorButton')).toHaveTextContent('_sourcehost')
+
       expect(container.querySelector('.jsonSelectorButton')).not.toBeDisabled()
 
       act(() => {
@@ -196,7 +233,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         <SetupSourceTabsContext.Provider
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: 'LOGS' } } }}
+          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: HealthSourceTypes.SumologicLogs } } }}
         >
           <WrapperComponent {...mockProps2} query="select *" />
         </SetupSourceTabsContext.Provider>
@@ -220,6 +257,19 @@ describe('Unit tests for CustomMetricFormContainer', () => {
     })
 
     test('should test whether the loading UI is shown when the call is in progress', async () => {
+      jest.spyOn(cvServices, 'useGetSampleRawRecord').mockReturnValue({
+        mutate: jest.fn().mockImplementation(() => {
+          return {
+            status: 'SUCCESS',
+            resource: {
+              rawRecords: sampleRawRecordsMock
+            }
+          }
+        }),
+        loading: false,
+        error: null,
+        cancel: () => null
+      })
       const mutateFn = jest.fn()
       jest
         .spyOn(cvServices, 'useGetSampleLogData')
@@ -237,11 +287,17 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         <SetupSourceTabsContext.Provider
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: 'LOGS' } } }}
+          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: HealthSourceTypes.SumologicLogs } } }}
         >
           <WrapperComponent {...mockProps2} query="select *" />
         </SetupSourceTabsContext.Provider>
       )
+
+      await act(async () => {
+        userEvent.click(screen.getByText('cv.monitoringSources.commonHealthSource.runQuery'))
+      })
+
+      await waitFor(() => expect(screen.getAllByText('cv.monitoringSources.gcoLogs.records')).not.toBeNull())
 
       const processingUI = screen.getByText(/cv.processing/)
 
@@ -249,6 +305,19 @@ describe('Unit tests for CustomMetricFormContainer', () => {
     })
 
     test('should test whether error UI is shown if the sample data call fails', async () => {
+      jest.spyOn(cvServices, 'useGetSampleRawRecord').mockReturnValue({
+        mutate: jest.fn().mockImplementation(() => {
+          return {
+            status: 'SUCCESS',
+            resource: {
+              rawRecords: sampleRawRecordsMock
+            }
+          }
+        }),
+        loading: false,
+        error: null,
+        cancel: () => null
+      })
       const mutateFn = jest.fn()
       jest
         .spyOn(cvServices, 'useGetSampleLogData')
@@ -266,11 +335,17 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         <SetupSourceTabsContext.Provider
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: 'LOGS' } } }}
+          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: HealthSourceTypes.SumologicLogs } } }}
         >
           <WrapperComponent {...mockProps2} query="select *" />
         </SetupSourceTabsContext.Provider>
       )
+
+      await act(async () => {
+        userEvent.click(screen.getByText('cv.monitoringSources.commonHealthSource.runQuery'))
+      })
+
+      await waitFor(() => expect(screen.getAllByText('cv.monitoringSources.gcoLogs.records')).not.toBeNull())
 
       const errorUI = screen.getByText(/Error in sample data call/)
 
@@ -278,6 +353,13 @@ describe('Unit tests for CustomMetricFormContainer', () => {
     })
 
     test('should test whether logs table is shown if the sample data responds with correct data', async () => {
+      const showDrawerMock = jest.fn()
+
+      jest.spyOn(useDrawerHook, 'useDrawer').mockReturnValue({
+        showDrawer: showDrawerMock,
+        hideDrawer: jest.fn()
+      })
+
       jest.spyOn(cvServices, 'useGetSampleRawRecord').mockReturnValue({
         mutate: jest.fn().mockImplementation(() => {
           return {
@@ -309,7 +391,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         <SetupSourceTabsContext.Provider
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: 'LOGS' } } }}
+          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: HealthSourceTypes.SumologicLogs } } }}
         >
           <WrapperComponent {...mockProps2} query="select *" />
         </SetupSourceTabsContext.Provider>
@@ -332,6 +414,14 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       await waitFor(() => expect(container.querySelector('.TableV2--table')).toBeInTheDocument())
 
       expect(container.querySelectorAll('.TableV2--row')).toHaveLength(4)
+
+      const firstRow = container.querySelector('.TableV2--clickable:first-child') as Element
+
+      act(() => {
+        userEvent.click(firstRow)
+      })
+
+      expect(showDrawerMock).toHaveBeenCalledWith({ rowData: sampleDataResponse[0] })
     })
 
     test('should test whether empty state UI is shown is sample data API responds with empty array', async () => {
@@ -366,7 +456,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         <SetupSourceTabsContext.Provider
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
-          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: 'LOGS' } } }}
+          value={{ sourceData: { sourceType: 'SumoLogic', product: { value: HealthSourceTypes.SumologicLogs } } }}
         >
           <WrapperComponent {...mockProps2} query="select *" />
         </SetupSourceTabsContext.Provider>
@@ -400,6 +490,106 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         providerType: 'SUMOLOGIC_LOG',
         query: 'select *',
         startTime: expect.any(Number)
+      })
+    })
+
+    describe('Logs table templates', () => {
+      function TemplatesWrapperComponent(newProps: CustomMetricFormContainerProps): JSX.Element {
+        return (
+          <SetupSourceTabsContext.Provider
+            value={{
+              isTemplate: true,
+              expressions: [],
+              onNext: jest.fn(),
+              onPrevious: jest.fn(),
+              sourceData: { sourceType: 'SumoLogic', product: { value: HealthSourceTypes.SumologicLogs } }
+            }}
+          >
+            <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
+              <Formik initialValues={newProps} onSubmit={jest.fn()}>
+                <FormikForm>
+                  <TestWrapper
+                    path="/account/:accountId/cv/orgs/:orgIdentifier/projects/:projectIdentifier"
+                    pathParams={{ accountId: 'account', orgIdentifier: 'org', projectIdentifier: 'project' }}
+                  >
+                    <CustomMetricFormContainer {...newProps} />
+                  </TestWrapper>
+                </FormikForm>
+              </Formik>
+            </CommonHealthSourceProvider>
+          </SetupSourceTabsContext.Provider>
+        )
+      }
+      test('should test multitype template inputs are visible if it is a tempalte and query is fixed', () => {
+        const { container } = render(<TemplatesWrapperComponent {...mockProps} query="select *" />)
+
+        const templateFixedInput = container.querySelector('.MultiTypeInput--FIXED')
+
+        expect(templateFixedInput).toBeInTheDocument()
+      })
+
+      test('should test template inputs are Runtime and fetch logs button is hidden if connector is runtime', () => {
+        const mockPropsConnectorTemplateProps = {
+          ...mockedCustomMetricsFormForLogsTableConnectorTemplates,
+          setMappedMetrics: jest.fn(),
+          setCreatedMetrics: jest.fn(),
+          setGroupedCreatedMetrics: jest.fn(),
+          setNonCustomFeilds: jest.fn()
+        } as any
+        const { container } = render(
+          <SetupSourceTabsContext.Provider
+            value={{
+              isTemplate: true,
+              expressions: [],
+              onNext: jest.fn(),
+              onPrevious: jest.fn(),
+              sourceData: {
+                sourceType: 'SumoLogic',
+                product: { value: HealthSourceTypes.SumologicLogs },
+                connectorRef: '<+input>'
+              }
+            }}
+          >
+            <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
+              <Formik initialValues={mockPropsConnectorTemplateProps} onSubmit={jest.fn()}>
+                <FormikForm>
+                  <TestWrapper
+                    path="/account/:accountId/cv/orgs/:orgIdentifier/projects/:projectIdentifier"
+                    pathParams={{ accountId: 'account', orgIdentifier: 'org', projectIdentifier: 'project' }}
+                  >
+                    <CustomMetricFormContainer {...mockPropsConnectorTemplateProps} />
+                  </TestWrapper>
+                </FormikForm>
+              </Formik>
+            </CommonHealthSourceProvider>
+          </SetupSourceTabsContext.Provider>
+        )
+
+        const fetchSampleDataButton = screen.queryByText(
+          /cv.monitoringSources.commonHealthSource.logsTable.sampleLogButtonText/
+        )
+
+        const templateFixedInput = container.querySelector('.MultiTypeInput--FIXED')
+        const templateRuntimeInput = container.querySelector('.MultiTypeInput--RUNTIME')
+
+        expect(fetchSampleDataButton).not.toBeInTheDocument()
+        expect(templateFixedInput).not.toBeInTheDocument()
+        expect(templateRuntimeInput).toBeInTheDocument()
+      })
+
+      test('should test runtime inputs are rendered and fetch logs button is hidden, if query is a runtime', () => {
+        const { container } = render(<TemplatesWrapperComponent {...mockProps} query="<+input>" />)
+
+        const templateFixedInput = container.querySelector('.MultiTypeInput--FIXED')
+        const templateRuntimeInput = container.querySelector('.MultiTypeInput--RUNTIME')
+
+        const fetchSampleDataButton = screen.queryByText(
+          /cv.monitoringSources.commonHealthSource.logsTable.sampleLogButtonText/
+        )
+
+        expect(fetchSampleDataButton).not.toBeInTheDocument()
+        expect(templateFixedInput).not.toBeInTheDocument()
+        expect(templateRuntimeInput).toBeInTheDocument()
       })
     })
   })

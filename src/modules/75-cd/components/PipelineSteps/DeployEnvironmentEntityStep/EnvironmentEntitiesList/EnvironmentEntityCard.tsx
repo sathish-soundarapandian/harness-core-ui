@@ -22,6 +22,7 @@ import {
   ButtonSize,
   SelectOption
 } from '@harness/uicore'
+import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { NGEnvironmentInfoConfig, ServiceSpec } from 'services/cd-ng'
 
@@ -36,6 +37,7 @@ import { getStepTypeByDeploymentType } from '@pipeline/utils/stageHelpers'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
 import { getIdentifierFromName } from '@common/utils/StringUtils'
+import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import type {
   DeployEnvironmentEntityCustomStepProps,
   DeployEnvironmentEntityFormState,
@@ -91,6 +93,7 @@ export function EnvironmentEntityCard({
   const { name, identifier, tags } = environment
   const scopedEnvRef = getScopedRefUsingIdentifier(values, environment)
   const filterPrefix = useMemo(() => `environmentFilters.${identifier}`, [identifier])
+  const { accountId } = useParams<PipelinePathProps>()
 
   const handleFilterRadio = (selectedRadioValue: InlineEntityFiltersRadioType): void => {
     if (selectedRadioValue === InlineEntityFiltersRadioType.MANUAL) {
@@ -136,22 +139,20 @@ export function EnvironmentEntityCard({
                 resourceType: ResourceType.ENVIRONMENT,
                 resourceIdentifier: identifier
               },
+              resourceScope: {
+                accountIdentifier: accountId,
+                orgIdentifier: environment.orgIdentifier,
+                projectIdentifier: environment.projectIdentifier
+              },
               permission: PermissionIdentifier.EDIT_ENVIRONMENT
             }}
           />
-          <RbacButton
+          <Button
             variation={ButtonVariation.ICON}
             icon="remove-minus"
             data-testid={`delete-environment-${identifier}`}
             disabled={readonly}
             onClick={() => onDeleteClick({ environment, environmentInputs })}
-            permission={{
-              resource: {
-                resourceType: ResourceType.ENVIRONMENT,
-                resourceIdentifier: identifier
-              },
-              permission: PermissionIdentifier.DELETE_ENVIRONMENT
-            }}
           />
         </Container>
       </Layout.Horizontal>
@@ -218,7 +219,7 @@ export function EnvironmentEntityCard({
         </>
       ) : null}
 
-      {!values.environment && Array.isArray(values.environments) && (
+      {!values.environment && Array.isArray(values.environments) && scopedEnvRef && (
         <>
           <Container margin={{ top: 'medium', bottom: 'medium' }}>
             <Divider />

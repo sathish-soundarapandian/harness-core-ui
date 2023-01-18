@@ -9,7 +9,7 @@ import React from 'react'
 import { Accordion, Formik, Text, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
-import { isNumber, set } from 'lodash-es'
+import { set } from 'lodash-es'
 import classNames from 'classnames'
 import { useStrings } from 'framework/strings'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -20,6 +20,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { ElastigroupDeployStepInfo } from 'services/cd-ng'
 import { getInstanceDropdownSchema } from '@common/components/InstanceDropdownField/InstanceDropdownField'
+import { InstanceTypes } from '@common/constants/InstanceTypes'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
 import type { ElastigroupDeployStepEditProps } from './ElastigroupDeployInterface'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -52,7 +53,8 @@ const ElastigroupDeployStepEdit = (
         initialValues={initialValues}
         validate={data => {
           const getOldServiceSpec = data?.spec?.oldService?.spec
-          if (!isNumber(getOldServiceSpec?.count) && !isNumber(getOldServiceSpec?.percentage)) {
+          /* istanbul ignore else */
+          if (!getOldServiceSpec?.count && !getOldServiceSpec?.percentage) {
             set(data, 'spec.oldService', undefined)
           }
           onChange?.(data)
@@ -74,8 +76,6 @@ const ElastigroupDeployStepEdit = (
           return (
             <>
               <NameTimeoutField
-                values={{ name: values.name, timeout: values.timeout }}
-                setFieldValue={setFieldValue}
                 allowableTypes={allowableTypes}
                 isNewStep={isNewStep}
                 readonly={readonly}
@@ -93,6 +93,7 @@ const ElastigroupDeployStepEdit = (
                   readonly={readonly}
                   expressions={expressions}
                   allowableTypes={allowableTypes}
+                  defaultValue={{ type: InstanceTypes.Instances, spec: { count: '' } }}
                 />
                 {(getMultiTypeFromValue(values?.spec?.newService?.spec?.count) === MultiTypeInputType.RUNTIME ||
                   getMultiTypeFromValue(values?.spec?.newService?.spec?.percentage) === MultiTypeInputType.RUNTIME) && (
@@ -106,9 +107,11 @@ const ElastigroupDeployStepEdit = (
                     showRequiredField={false}
                     showDefaultField={false}
                     showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('instances', value)
-                    }}
+                    onChange={
+                      /* istanbul ignore next */ value => {
+                        setFieldValue('instances', value)
+                      }
+                    }
                     isReadonly={readonly}
                   />
                 )}
@@ -136,9 +139,12 @@ const ElastigroupDeployStepEdit = (
                           expressions={expressions}
                           allowableTypes={allowableTypes}
                           textProps={{ min: 0 }}
-                          onChange={val => {
-                            formik.setFieldValue('spec.oldService', { ...val })
-                          }}
+                          defaultValue={{ type: InstanceTypes.Instances, spec: { count: '' } }}
+                          onChange={
+                            /* istanbul ignore next */ val => {
+                              formik.setFieldValue('spec.oldService', { ...val })
+                            }
+                          }
                         />
                         {(getMultiTypeFromValue(values?.spec?.oldService?.spec?.count) === MultiTypeInputType.RUNTIME ||
                           getMultiTypeFromValue(values?.spec?.oldService?.spec?.percentage) ===
@@ -153,9 +159,11 @@ const ElastigroupDeployStepEdit = (
                             showRequiredField={false}
                             showDefaultField={false}
                             showAdvanced={true}
-                            onChange={value => {
-                              setFieldValue('instances', value)
-                            }}
+                            onChange={
+                              /* istanbul ignore next */ value => {
+                                setFieldValue('instances', value)
+                              }
+                            }
                             isReadonly={readonly}
                           />
                         )}

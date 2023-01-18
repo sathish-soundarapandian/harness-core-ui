@@ -65,7 +65,7 @@ describe('GIT SYNC DISABLED', () => {
     cy.wait(2000)
     cy.contains('p', 'Pipelines').should('be.visible', { timeout: 10000 }).click()
     cy.contains('p', 'Close without saving?').should('be.visible')
-    cy.contains('span', 'Confirm').click({ force: true })
+    cy.contains('span', 'Leave this Page').click({ force: true })
     cy.wait(2000)
     cy.contains('span', 'Create a Pipeline').should('be.visible')
   })
@@ -311,7 +311,7 @@ describe('Execution Stages', () => {
     // Toggle to YAML view
     cy.get('[data-name="toggle-option-two"]').click({ force: true })
     cy.wait(1000)
-    cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '25%', { ensureScrollable: false })
+    cy.get('.monaco-editor .overflow-guard').scrollTo('0%', '40%', { ensureScrollable: false })
     cy.contains('span', stepName).should('be.visible')
     cy.contains('span', getIdentifierFromName(stepName)).should('be.visible')
     resourceName.forEach(resource => {
@@ -347,7 +347,7 @@ describe('Execution Stages', () => {
       cy.get(`div[data-testid="pipeline-studio"]`, {
         timeout: 5000
       }).should('be.visible')
-      cy.contains('p', 'testStage_Cypress').click()
+      cy.contains('p', 'testStage_Cypress').click({ force: true })
       cy.contains('span', 'Execution').click()
       stepLibrarySelection(key, value?.resourceName)
     })
@@ -390,7 +390,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
     }).should('be.visible')
-    cy.contains('p', 'testStage_Cypress').click()
+    cy.contains('p', 'testStage_Cypress').click({ force: true })
     cy.contains('p', 'Serverless Lambda').click()
     cy.wait(1000)
     cy.contains('span', 'Confirm').click()
@@ -414,7 +414,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.get(`div[data-testid="pipeline-studio"]`, {
       timeout: 5000
     }).should('be.visible')
-    cy.contains('p', 'testStage_Cypress').click()
+    cy.contains('p', 'testStage_Cypress').click({ force: true })
     cy.contains('p', 'Serverless Lambda').click()
     cy.wait(1000)
     cy.contains('span', 'Confirm').click()
@@ -452,7 +452,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.wait('@pipelineDetails')
 
     // Select Stage
-    cy.contains('p', 'Stage 1').click()
+    cy.contains('p', 'Stage 1').click({ force: true })
     cy.wait('@servicesCall')
     cy.wait('@stepLibrary')
 
@@ -517,7 +517,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     }).should('be.visible')
 
     // Select Stage
-    cy.contains('p', 'Stage 1').click()
+    cy.contains('p', 'Stage 1').click({ force: true })
     cy.wait(1000)
     cy.wait('@servicesCall')
     cy.wait('@stepLibrary')

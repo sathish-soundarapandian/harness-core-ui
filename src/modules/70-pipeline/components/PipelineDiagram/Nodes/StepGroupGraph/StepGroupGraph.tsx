@@ -11,6 +11,7 @@ import { defaultTo } from 'lodash-es'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useDeepCompareEffect } from '@common/hooks'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { SVGComponent } from '../../PipelineGraph/PipelineGraph'
 import { PipelineGraphRecursive } from '../../PipelineGraph/PipelineGraphNode'
 import {
@@ -46,9 +47,14 @@ interface StepGroupGraphProps {
   hideAdd?: boolean
   setVisibilityOfAdd: React.Dispatch<React.SetStateAction<boolean>>
   isParentMatrix?: boolean
+  type?: string
 }
 
-const getCalculatedStyles = (data: PipelineGraphState[], childrenDimensions: Dimensions): LayoutStyles => {
+const getCalculatedStyles = (
+  data: PipelineGraphState[],
+  childrenDimensions: Dimensions,
+  type?: string
+): LayoutStyles => {
   let width = 0
   let height = 0
   let maxChildLength = 0
@@ -106,7 +112,7 @@ const getCalculatedStyles = (data: PipelineGraphState[], childrenDimensions: Dim
     }
   })
 
-  return { height: finalHeight, width: width - 80 } // 80 is link gap that we dont need for last stepgroup node
+  return { height: finalHeight, width: width - (type === StageType.PIPELINE ? 40 : 80) } // 80 is link gap that we dont need for last stepgroup node
 }
 
 function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
@@ -132,7 +138,8 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
 
   const stagePath = getStagePathFromPipeline(props?.identifier || '', 'pipeline.stages')
   useLayoutEffect(() => {
-    if (props?.data?.length) {
+    if (props?.type === StageType.PIPELINE) setState(props.data as PipelineGraphState[])
+    else if (props?.data?.length) {
       setState(
         getPipelineGraphData({
           data: props.data,
@@ -150,14 +157,14 @@ function StepGroupGraph(props: StepGroupGraphProps): React.ReactElement {
   useLayoutEffect(() => {
     if (state?.length) {
       setSVGLinks()
-      setLayoutStyles(getCalculatedStyles(state, childrenDimensions))
+      setLayoutStyles(getCalculatedStyles(state, childrenDimensions, props?.type))
     }
   }, [state, props?.isNodeCollapsed])
 
   useDeepCompareEffect(() => {
     if (state?.length) {
       updateGraphLinks()
-      setLayoutStyles(getCalculatedStyles(state, childrenDimensions))
+      setLayoutStyles(getCalculatedStyles(state, childrenDimensions, props?.type))
     }
   }, [childrenDimensions])
 

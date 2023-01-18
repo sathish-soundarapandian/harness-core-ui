@@ -95,6 +95,9 @@ interface FileStoreProps {
   queryParams?: any
   fileUsage?: FileUsage
   handleSetIsUnsaved?: (status: boolean) => void
+  pathValue?: string
+  scopeValue?: string
+  isReadonly?: boolean
 }
 
 export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreProps) => {
@@ -122,7 +125,10 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
     unsavedNodes,
     fileUsage: FILE_USAGE_CONTEXT,
     handleSetIsUnsaved,
-    globalSort
+    globalSort,
+    pathValue,
+    scopeValue,
+    getNodeByPath
   } = useContext(FileStoreContext)
   const { accountIdentifier: accountId, orgIdentifier, projectIdentifier } = queryParams
   const history = useHistory()
@@ -336,27 +342,31 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
   )
 
   useEffect(() => {
-    getRootNodes({ identifier: FILE_STORE_ROOT, name: FILE_STORE_ROOT, type: FileStoreNodeTypes.FOLDER }).then(
-      response => {
-        if (response?.data?.children) {
-          setFileStore(
-            sortNodesByType(
-              response.data.children.map(node => {
-                return {
-                  ...node,
-                  parentName: FILE_STORE_ROOT
-                }
-              }),
-              globalSort
+    if (pathValue && scopeValue === scope && pathValue !== '/') {
+      getNodeByPath()
+    } else {
+      getRootNodes({ identifier: FILE_STORE_ROOT, name: FILE_STORE_ROOT, type: FileStoreNodeTypes.FOLDER }).then(
+        response => {
+          if (response?.data?.children) {
+            setFileStore(
+              sortNodesByType(
+                response.data.children.map(node => {
+                  return {
+                    ...node,
+                    parentName: FILE_STORE_ROOT
+                  }
+                }),
+                globalSort
+              )
             )
-          )
-          setCurrentNode({
-            ...response.data,
-            parentName: FILE_STORE_ROOT
-          })
+            setCurrentNode({
+              ...response.data,
+              parentName: FILE_STORE_ROOT
+            })
+          }
         }
-      }
-    )
+      )
+    }
   }, [])
 
   const handleSaveOrUpdate = async (

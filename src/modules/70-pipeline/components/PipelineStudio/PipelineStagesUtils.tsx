@@ -22,6 +22,7 @@ interface GetPipelineStagesArgs {
   isSTOEnabled?: boolean
   isApprovalStageEnabled?: boolean
   isPipelineChainingEnabled?: boolean
+  isIACMEnabled?: boolean
 }
 
 export const getPipelineStages: (args: GetPipelineStagesArgs) => React.ReactElement<PipelineStagesProps> = ({
@@ -33,7 +34,8 @@ export const getPipelineStages: (args: GetPipelineStagesArgs) => React.ReactElem
   isCFEnabled = false,
   isSTOEnabled = false,
   isApprovalStageEnabled = false,
-  isPipelineChainingEnabled = false
+  isPipelineChainingEnabled = false,
+  isIACMEnabled = false
 }) => {
   if (module === 'ci') {
     return (
@@ -72,6 +74,7 @@ export const getPipelineStages: (args: GetPipelineStagesArgs) => React.ReactElem
         {stagesCollection.getStage(StageType.PIPELINE, isPipelineChainingEnabled, getString)}
         {stagesCollection.getStage(StageType.CUSTOM, true, getString)}
         {stagesCollection.getStage(StageType.Template, false, getString)}
+        {stagesCollection.getStage(StageType.IACM, isIACMEnabled, getString)}
       </PipelineStages>
     )
   }

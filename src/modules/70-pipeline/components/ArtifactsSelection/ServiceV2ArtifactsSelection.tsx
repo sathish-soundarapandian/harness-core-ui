@@ -76,8 +76,10 @@ import {
   ArtifactIconByType,
   ArtifactTitleIdByType,
   ENABLED_ARTIFACT_TYPES,
+  isAllowedAMIDeploymentTypes,
+  isAllowedAzureArtifactDeploymentTypes,
   isAllowedCustomArtifactDeploymentTypes,
-  isAllowedGoogleArtifactDeploymentTypes,
+  isAllowedGithubPackageRegistryDeploymentTypes,
   isSidecarAllowed,
   ModalViewFor
 } from './ArtifactHelper'
@@ -157,7 +159,6 @@ export default function ServiceV2ArtifactsSelection({
 
   const {
     CUSTOM_ARTIFACT_NG,
-    NG_GOOGLE_ARTIFACT_REGISTRY,
     GITHUB_PACKAGES,
     AZURE_ARTIFACTS_NG,
     CD_AMI_ARTIFACTS_NG,
@@ -174,32 +175,25 @@ export default function ServiceV2ArtifactsSelection({
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.CustomArtifact)
     }
     if (
-      [ServiceDeploymentType.Kubernetes, ServiceDeploymentType.TAS].includes(deploymentType as ServiceDeploymentType) &&
+      isAllowedGithubPackageRegistryDeploymentTypes(deploymentType) &&
       GITHUB_PACKAGES &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GithubPackageRegistry)
     }
     if (
-      [ServiceDeploymentType.Kubernetes, ServiceDeploymentType.TAS].includes(deploymentType as ServiceDeploymentType) &&
+      isAllowedAzureArtifactDeploymentTypes(deploymentType) &&
       AZURE_ARTIFACTS_NG &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AzureArtifacts)
     }
     if (
-      [ServiceDeploymentType.Kubernetes, ServiceDeploymentType.TAS].includes(deploymentType as ServiceDeploymentType) &&
+      isAllowedAMIDeploymentTypes(deploymentType) &&
       CD_AMI_ARTIFACTS_NG &&
       !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.AmazonMachineImage)
     ) {
       allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.AmazonMachineImage)
-    }
-    if (
-      isAllowedGoogleArtifactDeploymentTypes(deploymentType) &&
-      NG_GOOGLE_ARTIFACT_REGISTRY &&
-      !allowedArtifactTypes[deploymentType]?.includes(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
-    ) {
-      allowedArtifactTypes[deploymentType].push(ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry)
     }
     if (
       [ServiceDeploymentType.AzureWebApp, ServiceDeploymentType.TAS].includes(

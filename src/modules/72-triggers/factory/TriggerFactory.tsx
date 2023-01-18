@@ -29,6 +29,8 @@ import { Cron } from '@triggers/components/Triggers/ScheduledTrigger/Cron/Cron'
 import { HelmChart } from '@triggers/components/Triggers/ManifestTrigger/HelmChart/HelmChart'
 import { GithubPackageRegistry } from '@triggers/components/Triggers/ArtifactTrigger/GithubPackageRegistry/GithubPackageRegistry'
 import { GoogleArtifactRegistry } from '@triggers/components/Triggers/ArtifactTrigger/GoogleArtifactRegistry/GoogleArtifactRegistry'
+import { AzureArtifacts } from '@triggers/components/Triggers/ArtifactTrigger/AzureArtifacts/AzureArtifacts'
+import { AmazonMachineImage } from '@triggers/components/Triggers/ArtifactTrigger/AmazonMachineImage/AmazonMachineImage'
 import { AbstractTriggerFactory } from './AbstractTriggerFactory'
 
 class Factory extends AbstractTriggerFactory {
@@ -51,6 +53,7 @@ TriggerFactory.registerTrigger(new Cron())
 // Artifact Triggers
 TriggerFactory.registerTrigger(new Acr())
 TriggerFactory.registerTrigger(new AmazonS3())
+TriggerFactory.registerTrigger(new AzureArtifacts())
 TriggerFactory.registerTrigger(new ArtifactoryRegistry())
 TriggerFactory.registerTrigger(new DockerRegistry())
 TriggerFactory.registerTrigger(new Ecr())
@@ -59,6 +62,7 @@ TriggerFactory.registerTrigger(new Jenkins())
 TriggerFactory.registerTrigger(new Nexus3Registry())
 TriggerFactory.registerTrigger(new GithubPackageRegistry())
 TriggerFactory.registerTrigger(new GoogleArtifactRegistry())
+TriggerFactory.registerTrigger(new AmazonMachineImage())
 TriggerFactory.registerTrigger(new Custom())
 // Manifest Triggers
 TriggerFactory.registerTrigger(new HelmChart())

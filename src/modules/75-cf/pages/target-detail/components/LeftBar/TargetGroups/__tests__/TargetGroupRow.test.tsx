@@ -12,20 +12,6 @@ import { TestWrapper } from '@common/utils/testUtils'
 import type { TargetDetailSegment } from 'services/cf'
 import TargetGroupRow, { TargetGroupRowProps } from '../TargetGroupRow'
 
-// eslint-disable-next-line jest-no-mock
-jest.mock('react-router-dom', () => {
-  const fullModule = jest.requireActual('react-router-dom')
-
-  return {
-    ...fullModule,
-    useHistory: jest.fn(() => ({
-      push: useHistoryPushMock
-    }))
-  }
-})
-
-const useHistoryPushMock = jest.fn()
-
 const mockTargetDetailSegment: TargetDetailSegment = { identifier: 'tg1', name: 'Target Group 1' }
 
 const renderComponent = (props: Partial<TargetGroupRowProps> = {}): RenderResult =>
@@ -77,12 +63,8 @@ describe('TargetGroupRow', () => {
   test('it should navigate to the Target Group detail page when clicked', async () => {
     renderComponent()
 
-    expect(useHistoryPushMock).not.toHaveBeenCalledWith(expect.stringContaining('target-management/target-groups'))
-
     userEvent.click(screen.getByTestId('target-group-row'))
 
-    await waitFor(() => {
-      expect(useHistoryPushMock).toHaveBeenCalledWith(expect.stringContaining('target-management/target-groups'))
-    })
+    expect(await screen.findByTestId('location')).toHaveTextContent('target-management/target-groups')
   })
 })

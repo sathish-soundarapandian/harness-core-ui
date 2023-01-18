@@ -20,8 +20,8 @@
   }
 }
 
-.deploymentViewMedium {
-  width: 50% !important;
+.deploymentViewFieldWidth {
+  width: 442px; // 400px (field width) + 42px (configure options button width)
 }
 
 .connectorLabel {

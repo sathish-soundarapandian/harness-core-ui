@@ -27,13 +27,17 @@ export interface TestYourFlagViewProps {
   environmentIdentifier?: string
   testDone: boolean
   setTestDone: (done: boolean) => void
+  verified: boolean
+  setVerified: (success: boolean) => void
 }
 
 export const ValidateYourFlagView: React.FC<TestYourFlagViewProps> = ({
   flagInfo,
   environmentIdentifier,
   testDone,
-  setTestDone
+  setTestDone,
+  verified,
+  setVerified
 }) => {
   const { projectIdentifier, orgIdentifier, accountId: accountIdentifier } = useParams<Record<string, string>>()
   const { getString } = useStrings()
@@ -60,7 +64,6 @@ export const ValidateYourFlagView: React.FC<TestYourFlagViewProps> = ({
 
   const [toggledOn, setToggledOn] = useState(false)
   const [fetching, setFetching] = useState(false)
-  const [verified, setVerified] = useState(false)
 
   const [tries, setTries] = useState(0)
 
@@ -90,7 +93,7 @@ export const ValidateYourFlagView: React.FC<TestYourFlagViewProps> = ({
         setTestDone(true)
       }
     }
-  }, [refetch, fetching, setTestDone, verified, tries])
+  }, [refetch, fetching, setTestDone, verified, tries, setVerified])
 
   useEffect(() => {
     // flag must be validated within the getting started flow
@@ -103,7 +106,7 @@ export const ValidateYourFlagView: React.FC<TestYourFlagViewProps> = ({
       setVerified(true)
       setTestDone(true)
     }
-  }, [featuresData, startTime, setTestDone])
+  }, [featuresData, startTime, setTestDone, setVerified])
 
   return (
     <Container className={css.listenToEventContainer}>

@@ -19,7 +19,7 @@ import { useQueryParams } from '@common/hooks'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import type { AzureSlotDeploymentProps } from './AzureSlotDeploymentInterface.types'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -91,26 +91,9 @@ export const AzureSlotDeploymentRef = (
               <FormMultiTypeDurationField
                 name="timeout"
                 label={getString('pipelineSteps.timeoutLabel')}
-                multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
+                multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
                 disabled={readonly}
               />
-              {getMultiTypeFromValue(get(formik, 'values.timeout')) === MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  value={get(formik, 'values.timeout') as string}
-                  type="String"
-                  variableName="timeout"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  showAdvanced={true}
-                  onChange={
-                    /* istanbul ignore next */ value => {
-                      formik?.setFieldValue('timeout', value)
-                    }
-                  }
-                  isReadonly={readonly}
-                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                />
-              )}
             </div>
             <div className={stepCss.divider} />
             <div className={cx(stepCss.formGroup, stepCss.lg)}>

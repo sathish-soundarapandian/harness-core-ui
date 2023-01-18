@@ -23,5 +23,6 @@ declare const styles: {
   readonly metricThresholdContentInputWrapper: string
   readonly metricThresholdContentSelect: string
   readonly metricThresholdContentTabs: string
+  readonly noThresholdsMessageCard: string
 }
 export default styles

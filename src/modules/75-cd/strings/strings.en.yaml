@@ -99,6 +99,8 @@ steps:
       vpcs: VPCs
   ecsRunTaskStep:
     ecsRunTaskDefinition: ECS Run Task Definition
+    ecsRunTaskDefinitionArn: ECS Run Task Definition ARN
+    ecsRunTaskDefinitionArnPlaceholder: Enter ECS Run Task Definition ARN
     runTaskDefinition: Run Task Definition
     ecsRunTaskRequestDefinition: ECS Run Task Request Definition
     runTaskRequestDefinition: Run Task Request Definition
@@ -129,6 +131,7 @@ steps:
   tas:
     enableDownSizeOldApplication: Downsize Old Applications
     enableUpsizeInActiveApp: Upsize Applications in Active App
+    upsizeInactiveService: Upsize inactive Service
     totalInstances: Total Instances
     oldAppInstances: Desired Instances - Old Version
     newAppInstance: New App Instance
@@ -192,6 +195,7 @@ enterWorkDirectory: Enter Working Directory
 enterTragets: Enter Targets
 exportTerraformPlanJson: Export JSON representation of Terraform Plan
 exportTerraformHumanReadablePlan: Export Human Readable representation of Terraform Plan
+exportTerragruntPlanJson: Export JSON representation of Terragrunt Plan
 specifyTargetHost: Specify Target Host
 configurationFile: 'Configuration File Repository'
 backendConfigurationFile: 'Backend Configuration File Repository (optional)'
@@ -233,7 +237,7 @@ pipelineSteps:
     hideEnvironmentInputs: Hide environment inputs
     viewInfrastructureInputs: View infrastructure inputs
     hideInfrastructureInputs: Hide infrastructure inputs
-    multiEnvironmentsParallelDeployLabel: Deploy environments in parallel?
+    multiEnvironmentsParallelDeployLabel: Deploy to Environments or Infrastructures in parallel?
     environmentGroupDialogTitleText: Deploy to environment group?
     environmentGroupConfirmationText: Are you sure you want to switch to deploying to a single environment group? If you choose to proceed, your existing environments will be lost.
     multiEnvironmentsDialogTitleText: Deploy to multiple environments or infrastructures?
@@ -268,9 +272,9 @@ pipelineSteps:
       scalingPolicy: Scaling Policy
       scalableTarget: Scalable Target
     newServiceOverride: New configuration overrides
-    multiServicesText: Deploy to multiple Services
-    multiServicesTitleText: Deploy to multiple services?
-    multiServicesParallelDeployLabel: Deploy services in parallel?
+    multiServicesText: Deploy multiple Services
+    multiServicesTitleText: Deploy multiple Services?
+    multiServicesParallelDeployLabel: Deploy Services in parallel?
     multiServicesConfirmationText: Are you sure you want to switch to deploying multiple services?. If you choose to proceed, your existing service will be migrated automatically.
     singleServicesTitleText: Deploy to single service?
     singleServicesConfirmationText: Are you sure you want to switch to deploying to a single services?. If you choose to proceed, your existing services will be lost.
@@ -411,8 +415,10 @@ featureRestriction:
     initialDeploymentsWarningActive: You have used {{ warningLimit }}% of deployments included in the free plan. After 1,000 deployments, the free plan will be restricted to 100 deployments per month.
     serviceOveruseTeamEnterprise: You have exceeded your service subscription limit. Consider increasing your limits to keep shipping.
 configFileDetails: 'Config File Details'
-configFileStore: 'Specify Terraform Config File Store'
-configFileStepOne: 'Terraform Config Store'
+terraformConfigFileStore: 'Specify Terraform Config File Store'
+terragruntConfigFileStore: 'Specify Terragrunt Config File Store'
+terraformConfigFileStepOne: 'Terraform Config Store'
+terragruntConfigFileStepOne: 'Terragrunt Config Store'
 configFileStoreTitle: 'Config File'
 backendConfigFileDetails: 'Backend Config File Details'
 backendConfigFileStore: 'Specify Terraform Backend Config File Store'
@@ -525,6 +531,18 @@ manifestId: Manifest Id
 azureWebAppRollbackDescription: Rollback to the last successfully deployed app.
 azureWebAppSwapSlotDescription: Azure Swap environment slot with new instance.
 asgCanaryDeleteStepDescription: Asg Canary Delete
+asgRollingRollbackStepDescription: Asg Rolling Rollback
+minimumHealthyPercentageMaxLimit: Minimum Healthy Percentage should be less than 100%
+minimumHealthyPercentageMinLimit: Minimum Healthy Percentage should be positive percentage
+instanceWarmupError: Instance Warmup must be a positive number
+useAlreadyRunningInstance: Same as already running Instances
+instanceRefresh: Instance Refresh Configuration
+minimumHealthyPercentageLabel: Minimum Healthy Percentage (Optional)
+minimumHealthyPercentagePlaceholder: Minimum Healthy Percentage
+instanceWarmupLabel: Instance Warmup (Optional)
+instanceWarmupPlaceholder: Instance Warmup
+skipMatchingLabel: Skip Matching
+k8sDryRunStepDescription: Dry Run Apply the service manifests and leverage the dry run yaml as output for subsequent steps
 getStartedWithCD:
   onboardingTitle: Start your deployments journey with Harness CD
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
@@ -532,8 +550,6 @@ getStartedWithCD:
   delegateInstalled: Delegate installed successfully
   selectDeploymentType: Select deployment type
   deployToGitops: Do you want to deploy using GitOps?
-  configureEnvironment: Connect to Environment
-  configureService: Configure Service
   helm: Helm
   manifestTypeSelection: Manifest type
   manifestStoreLabel: Manifest location
@@ -724,6 +740,7 @@ ElastigroupBGStageSetup:
   configureStageListener: Configure your Stage Listener
   listenerColon: 'Listener :'
   ruleColon: 'Rule :'
+moduleConfiguration: Module Configuration
 inlineEntityFilters:
   filterIdentifier: Filter identifier
   enterFilterIdentifier: Enter filter identifier
@@ -733,3 +750,11 @@ inlineEntityFilters:
     selectAtleastOneEntity: Atlteast 1 entity is required
     tagsAreRequired: Tags are required
     chooseAllOrAny: Please choose one of All or Any
+  valueCannotBe: '{{value}} cannot be empty, string etc., should only be a positive number'
+trendMessage:
+  upTrend: 'Percent increase in rate compared to the previous time interval'
+  downTrend: 'Percent decrease in rate compared to the previous time interval'
+  noChangeTrend: 'No change in rate compared to the previous time interval'
+  invalidTrend: 'No trend data in the previous time interval'
+envChanges: 'Environment Changes'
+valuesYamlValidation: 'Values.yaml file path cannot be empty'

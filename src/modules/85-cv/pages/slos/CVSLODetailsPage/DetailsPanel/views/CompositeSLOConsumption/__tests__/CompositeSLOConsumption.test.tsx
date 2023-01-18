@@ -27,12 +27,12 @@ describe('validate CompositeSLOConsumption', () => {
       .spyOn(cvServices, 'useGetSloConsumptionBreakdownView')
       .mockReturnValue({ data: {}, loading: false, refetch: jest.fn } as any)
     const { getByText, rerender } = render(<Wrapper />)
-    expect(getByText('cv.slos.noData')).toBeInTheDocument()
+    expect(getByText('common.sloNoData')).toBeInTheDocument()
     jest
       .spyOn(cvServices, 'useGetSloConsumptionBreakdownView')
       .mockReturnValue({ data: { data: {} }, loading: false, refetch: jest.fn } as any)
     rerender(<Wrapper />)
-    expect(getByText('cv.slos.noData')).toBeInTheDocument()
+    expect(getByText('common.sloNoData')).toBeInTheDocument()
 
     jest
       .spyOn(cvServices, 'useGetSloConsumptionBreakdownView')

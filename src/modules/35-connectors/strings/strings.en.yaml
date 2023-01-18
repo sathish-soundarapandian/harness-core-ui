@@ -76,7 +76,7 @@ addParameter: Add Parameter
 baseURL: Base URL
 requestMethod: Request Method
 optionalAuthentication: Authentication (optional)
-bearerToken: Bearer Token (HTTP Header)
+bearerToken: Bearer Token(HTTP Header)
 apiToken: API Token
 apiTokenValidation: API Token is required.
 connectivityMode:
@@ -201,6 +201,11 @@ validation:
   personalAccessToken: Personal Access Token is required
   connectorIsRequired: Connector is required.
   endpointUrl: Endpoint URL is required
+  adfsUrl: ADFS URL is required
+  certificate: Certificate is required
+  clientID: Client ID is required
+  resourceID: Resource ID is required
+  privateKey: Private Key is required
 httpHelm:
   httpHelmRepoUrl: 'Helm Repo URL'
 ociHelm:
@@ -209,6 +214,13 @@ jira:
   jiraUrl: 'Jira URL'
 serviceNow:
   serviceNowUrl: 'ServiceNow URL'
+  adfs: AdfsClientCredentialsWithCertificate
+  adfsUrl: ADFS URL
+  resourceID: Resource ID
+  clientID: Client ID
+  privateKey: Private Key
+  serviceNowViewPermissions: View ServiceNow permissions required
+
 k8:
   delegateOutClusterInfo: 'Specify master URL and credentials'
   delegateInClusterInfo: '{{ $.connectors.delegateInClusterInfo }}'
@@ -511,10 +523,11 @@ delegate:
   couldNotFetch: Failed to update the Delegate list, Will try again in {{pollingInterval}}
   delegateSelectors: Delegate Selectors
 ceK8:
-  infoText: 'If you have previously created a connector to the preferred cluster for any of the other modules, you may reference the same connector here and create a connector for Cloud cost management. If this is the first time creating a connector to this cluster, you may proceed without referencing.'
-  selectConnectorLabel: 'Reference an existing CD Kubernetes connector'
+  infoText: 'If you have previously created a connector to the preferred cluster for any other modules (Deployments, Builds etc.), you may reference the same here to upgrade to support Cloud Cost Management, If this is your first time creating a connector to the cluster, click on “+ Create new Connector”'
+  selectConnectorLabel: 'Select the existing Kubernetes connector'
   overview:
     createNewConnectorCta: 'Create a new connector'
+    ccmConnectorNameLabel: Name of the Cloud Cost Connector
   chooseRequirements:
     heading: '{{ $.connectors.ceAws.steps.req }}'
     subheading: '{{ $.connectors.ceAws.crossAccountRoleStep1.description }}'

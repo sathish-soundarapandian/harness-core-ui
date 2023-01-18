@@ -51,7 +51,10 @@ import {
 } from '@pipeline/utils/stageHelpers'
 import { getCDStageValidationSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import {
+  isContextTypeNotStageTemplate,
+  isContextTypeTemplateType
+} from '@pipeline/components/PipelineStudio/PipelineUtils'
 import DeployInfraSpecifications from '../DeployInfraSpecifications/DeployInfraSpecifications'
 import DeployServiceSpecifications from '../DeployServiceSpecifications/DeployServiceSpecifications'
 import DeployStageSpecifications from '../DeployStageSpecifications/DeployStageSpecifications'
@@ -136,12 +139,13 @@ export default function DeployStageSetupShell(): JSX.Element {
             isEmpty(get(draft, 'stage.spec.services.values')) &&
             isEmpty(get(draft, 'stage.spec.service.useFromStage')) &&
             set(draft, 'stage.spec.service', {
-              serviceRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
-              serviceInputs: scope === Scope.PROJECT ? undefined : RUNTIME_INPUT_VALUE
+              serviceRef: scope === Scope.PROJECT && !isContextTypeTemplateType(contextType) ? '' : RUNTIME_INPUT_VALUE,
+              serviceInputs:
+                scope === Scope.PROJECT && !isContextTypeTemplateType(contextType) ? undefined : RUNTIME_INPUT_VALUE
             })
         } else {
           set(draft, 'stage.spec.serviceConfig', {
-            serviceRef: scope === Scope.PROJECT ? '' : RUNTIME_INPUT_VALUE,
+            serviceRef: scope === Scope.PROJECT && !isContextTypeTemplateType(contextType) ? '' : RUNTIME_INPUT_VALUE,
             serviceDefinition: {
               spec: {
                 variables: []
@@ -153,7 +157,7 @@ export default function DeployStageSetupShell(): JSX.Element {
     })
 
     return debounceUpdateStage(stageData?.stage)
-  }, [debounceUpdateStage, scope, selectedStage, isNewService])
+  }, [selectedStage, debounceUpdateStage, isNewService, scope, contextType])
 
   //this will default the tab to execution for previously configured stages -- for new stages it will still takes user to service tab only
   const defaultExecTab = (): boolean => {

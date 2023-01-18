@@ -15,5 +15,6 @@ declare const styles: {
   readonly sm: string
   readonly step: string
   readonly thumbnail: string
+  readonly thumbnailSelect: string
 }
 export default styles

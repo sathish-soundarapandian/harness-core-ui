@@ -22,7 +22,9 @@ import {
   PullRequests,
   PullRequest,
   Compare,
-  CreateWebhook
+  Webhooks,
+  WebhookNew,
+  WebhookDetails
 } from './CodeApp'
 import routes, { CODEPathProps } from './RouteDefinitions'
 import CODEHomePage from './pages/home/CODEHomePage'
@@ -42,7 +44,8 @@ const codePathProps: Required<CODEPathProps> = {
   branch: ':branch*',
   diffRefs: ':diffRefs*',
   pullRequestId: ':pullRequestId',
-  pullRequestSection: ':pullRequestSection'
+  pullRequestSection: ':pullRequestSection',
+  webhookId: ':webhookId'
 }
 
 const RedirectToDefaultSCMRoute: React.FC = () => {
@@ -57,6 +60,13 @@ const RedirectToDefaultSCMRoute: React.FC = () => {
 }
 
 export default function CODERouteDestinations(): React.ReactElement {
+  const repoPath = [
+    codePathProps.accountId,
+    codePathProps.orgIdentifier,
+    codePathProps.projectIdentifier,
+    codePathProps.repoName
+  ].join('/')
+
   return (
     <Route path={routes.toCODE(codePathProps)}>
       <Route path={routes.toCODE(codePathProps)} exact>
@@ -72,12 +82,7 @@ export default function CODERouteDestinations(): React.ReactElement {
 
       <RouteWithLayout
         path={routes.toCODECompare({
-          repoPath: [
-            codePathProps.accountId,
-            codePathProps.orgIdentifier,
-            codePathProps.projectIdentifier,
-            codePathProps.repoName
-          ].join('/'),
+          repoPath,
           diffRefs: codePathProps.diffRefs
         })}
         sidebarProps={sidebarProps}
@@ -89,22 +94,12 @@ export default function CODERouteDestinations(): React.ReactElement {
       <RouteWithLayout
         path={[
           routes.toCODEPullRequest({
-            repoPath: [
-              codePathProps.accountId,
-              codePathProps.orgIdentifier,
-              codePathProps.projectIdentifier,
-              codePathProps.repoName
-            ].join('/'),
+            repoPath,
             pullRequestId: codePathProps.pullRequestId,
             pullRequestSection: codePathProps.pullRequestSection
           }),
           routes.toCODEPullRequest({
-            repoPath: [
-              codePathProps.accountId,
-              codePathProps.orgIdentifier,
-              codePathProps.projectIdentifier,
-              codePathProps.repoName
-            ].join('/'),
+            repoPath,
             pullRequestId: codePathProps.pullRequestId
           })
         ]}
@@ -116,14 +111,7 @@ export default function CODERouteDestinations(): React.ReactElement {
       </RouteWithLayout>
 
       <RouteWithLayout
-        path={routes.toCODEPullRequests({
-          repoPath: [
-            codePathProps.accountId,
-            codePathProps.orgIdentifier,
-            codePathProps.projectIdentifier,
-            codePathProps.repoName
-          ].join('/')
-        })}
+        path={routes.toCODEPullRequests({ repoPath })}
         sidebarProps={sidebarProps}
         pageName={PAGE_NAME.CODEPullRequests}
         exact
@@ -132,30 +120,36 @@ export default function CODERouteDestinations(): React.ReactElement {
       </RouteWithLayout>
 
       <RouteWithLayout
-        path={routes.toCODECreateWebhook({
-          repoPath: [
-            codePathProps.accountId,
-            codePathProps.orgIdentifier,
-            codePathProps.projectIdentifier,
-            codePathProps.repoName
-          ].join('/')
-        })}
+        path={routes.toCODEWebhookNew({ repoPath })}
         sidebarProps={sidebarProps}
-        pageName={PAGE_NAME.CODECreateWebhook}
+        pageName={PAGE_NAME.CODEWebhookNew}
         exact
       >
-        <CreateWebhook />
+        <WebhookNew />
       </RouteWithLayout>
 
       <RouteWithLayout
-        path={routes.toCODESettings({
-          repoPath: [
-            codePathProps.accountId,
-            codePathProps.orgIdentifier,
-            codePathProps.projectIdentifier,
-            codePathProps.repoName
-          ].join('/')
+        path={routes.toCODEWebhookDetails({
+          repoPath,
+          webhookId: codePathProps.webhookId
         })}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.CODEWebhookDetails}
+      >
+        <WebhookDetails />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        path={routes.toCODEWebhooks({ repoPath })}
+        sidebarProps={sidebarProps}
+        pageName={PAGE_NAME.CODEWebhooks}
+        exact
+      >
+        <Webhooks />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        path={routes.toCODESettings({ repoPath })}
         sidebarProps={sidebarProps}
         pageName={PAGE_NAME.CODESettings}
         exact
@@ -175,12 +169,7 @@ export default function CODERouteDestinations(): React.ReactElement {
       </RouteWithLayout>
       <RouteWithLayout
         path={routes.toCODECommits({
-          repoPath: [
-            codePathProps.accountId,
-            codePathProps.orgIdentifier,
-            codePathProps.projectIdentifier,
-            codePathProps.repoName
-          ].join('/'),
+          repoPath,
           commitRef: codePathProps.commitRef
         })}
         sidebarProps={sidebarProps}
@@ -189,14 +178,7 @@ export default function CODERouteDestinations(): React.ReactElement {
         <Commits />
       </RouteWithLayout>
       <RouteWithLayout
-        path={routes.toCODEBranches({
-          repoPath: [
-            codePathProps.accountId,
-            codePathProps.orgIdentifier,
-            codePathProps.projectIdentifier,
-            codePathProps.repoName
-          ].join('/')
-        })}
+        path={routes.toCODEBranches({ repoPath })}
         sidebarProps={sidebarProps}
         pageName={PAGE_NAME.CODEBranches}
         exact
@@ -205,12 +187,7 @@ export default function CODERouteDestinations(): React.ReactElement {
       </RouteWithLayout>
       <RouteWithLayout
         path={routes.toCODEFileEdit({
-          repoPath: [
-            codePathProps.accountId,
-            codePathProps.orgIdentifier,
-            codePathProps.projectIdentifier,
-            codePathProps.repoName
-          ].join('/'),
+          repoPath,
           gitRef: codePathProps.gitRef,
           resourcePath: codePathProps.resourcePath
         })}
@@ -222,32 +199,15 @@ export default function CODERouteDestinations(): React.ReactElement {
       <RouteWithLayout
         path={[
           routes.toCODERepository({
-            repoPath: [
-              codePathProps.accountId,
-              codePathProps.orgIdentifier,
-              codePathProps.projectIdentifier,
-              codePathProps.repoName
-            ].join('/'),
+            repoPath,
             gitRef: codePathProps.gitRef,
             resourcePath: codePathProps.resourcePath
           }),
           routes.toCODERepository({
-            repoPath: [
-              codePathProps.accountId,
-              codePathProps.orgIdentifier,
-              codePathProps.projectIdentifier,
-              codePathProps.repoName
-            ].join('/'),
+            repoPath,
             gitRef: codePathProps.gitRef
           }),
-          routes.toCODERepository({
-            repoPath: [
-              codePathProps.accountId,
-              codePathProps.orgIdentifier,
-              codePathProps.projectIdentifier,
-              codePathProps.repoName
-            ].join('/')
-          })
+          routes.toCODERepository({ repoPath })
         ]}
         sidebarProps={sidebarProps}
         pageName={PAGE_NAME.CODERepository}

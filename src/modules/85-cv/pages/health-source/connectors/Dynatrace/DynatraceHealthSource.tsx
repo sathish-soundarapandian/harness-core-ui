@@ -17,8 +17,6 @@ import type {
 } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.types'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import {
@@ -54,7 +52,7 @@ export default function DynatraceHealthSource(props: DynatraceHealthSourceProps)
   const [showCustomMetric, setShowCustomMetric] = useState<boolean>(!!dynatraceMetricData.customMetrics.size)
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
 
-  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
+  const isMetricThresholdEnabled = !isTemplate
 
   const {
     createdMetrics,

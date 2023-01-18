@@ -209,7 +209,9 @@ function WebhookPipelineInputPanelForm({
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
-      branch: gitAwareForTriggerEnabled ? inputSetSelectedBranch : branch
+      branch: gitAwareForTriggerEnabled ? inputSetSelectedBranch : branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
     }
   })
 
@@ -599,6 +601,7 @@ function WebhookPipelineInputPanelForm({
                 viewTypeMetadata={{ isTrigger: true }}
                 readonly={gitAwareForTriggerEnabled}
                 gitAwareForTriggerEnabled={gitAwareForTriggerEnabled}
+                disableRuntimeInputConfigureOptions
               />
             ) : null}
           </div>

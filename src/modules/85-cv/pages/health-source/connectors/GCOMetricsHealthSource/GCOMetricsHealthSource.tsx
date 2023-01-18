@@ -43,8 +43,6 @@ import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupS
 import { QueryContent } from '@cv/components/QueryViewer/QueryViewer'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import MetricDashboardWidgetNav from '@cv/components/MetricDashboardWidgetNav/MetricDashboardWidgetNav'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import {
   getManuallyCreatedQueries,
   formatJSON,
@@ -165,7 +163,7 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
 
   const metricDefinitions = existingMetricDetails?.spec?.metricDefinitions
 
-  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
+  const isMetricThresholdEnabled = !isTemplate
 
   const { getString } = useStrings()
 

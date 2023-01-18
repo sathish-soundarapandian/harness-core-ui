@@ -7,9 +7,12 @@
 
 import React from 'react'
 import { render, fireEvent, act, waitFor } from '@testing-library/react'
-import { TestWrapper } from '@common/utils/testUtils'
-import { gitConfigs, sourceCodeManagers, branchStatusMock } from '@connectors/mocks/mock'
+
 import * as GitSyncStoreContext from 'framework/GitRepoStore/GitSyncStoreContext'
+import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
+import { StoreType } from '@common/constants/GitSyncTypes'
+import { gitConfigs, sourceCodeManagers, branchStatusMock } from '@connectors/mocks/mock'
+import { gitHubMock } from '@gitsync/components/gitSyncRepoForm/__tests__/mockData'
 import PipelineCreate from '../CreateModal/PipelineCreate'
 import type { PipelineCreateProps } from '../CreateModal/PipelineCreate'
 import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
@@ -20,12 +23,32 @@ const closeModal = jest.fn()
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
 const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))
 
+const mockRepos = {
+  status: 'SUCCESS',
+  data: [{ name: 'repo1' }, { name: 'repo2' }, { name: 'repo3' }, { name: 'repotest1' }, { name: 'repotest2' }],
+  metaData: null,
+  correlationId: 'correlationId'
+}
+const branches = { data: ['master', 'devBranch'], status: 'SUCCESS' }
+const fetchBranches = jest.fn(() => Promise.resolve(branches))
+const getGitConnector = jest.fn(() => Promise.resolve({}))
+const fetchRepos = jest.fn(() => Promise.resolve(mockRepos))
+
 jest.mock('services/cd-ng', () => ({
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
   }),
   useListGitSync: jest.fn().mockImplementation(() => {
     return { data: gitConfigs, refetch: getListGitSync }
+  }),
+  useGetConnector: jest.fn().mockImplementation(() => ({ data: gitHubMock, refetch: getGitConnector })),
+  getConnectorListPromise: jest.fn().mockImplementation(() => Promise.resolve(gitHubMock)),
+  useGetListOfBranchesByConnector: jest.fn().mockImplementation(() => ({ data: branches, refetch: fetchBranches })),
+  useGetListOfReposByRefConnector: jest.fn().mockImplementation(() => {
+    return { data: mockRepos, refetch: fetchRepos }
+  }),
+  useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
+    return { data: branches, refetch: fetchBranches, error: null, loading: false }
   })
 }))
 
@@ -56,7 +79,8 @@ const getEditProps = (
   afterSave,
   initialValues: { identifier, description, name, repo, branch, stages: [] },
   closeModal,
-  primaryButtonText: 'continue'
+  primaryButtonText: 'continue',
+  isReadonly: false
 })
 
 describe('PipelineCreate test', () => {
@@ -69,7 +93,7 @@ describe('PipelineCreate test', () => {
           pipelineIdentifier: -1
         }}
       >
-        <PipelineCreate primaryButtonText="start" />
+        <PipelineCreate primaryButtonText="start" isReadonly={false} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -100,7 +124,7 @@ describe('PipelineCreate test', () => {
           pipelineIdentifier: -1
         }}
       >
-        <PipelineCreate primaryButtonText="start" />
+        <PipelineCreate primaryButtonText="start" isReadonly={false} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -194,7 +218,12 @@ describe('PipelineCreate test', () => {
         }}
         defaultAppStoreValues={{ isGitSyncEnabled: true }}
       >
-        <PipelineCreate initialValues={initialPipelineCreateData} afterSave={afterSave} primaryButtonText="continue" />
+        <PipelineCreate
+          initialValues={initialPipelineCreateData}
+          afterSave={afterSave}
+          primaryButtonText="continue"
+          isReadonly={false}
+        />
       </TestWrapper>
     )
 
@@ -223,6 +252,98 @@ describe('PipelineCreate test', () => {
       {
         repoIdentifier: 'identifier',
         branch: 'branch'
+      },
+      undefined
+    )
+  })
+
+  test('when git exp is enabled - pipeline edit modal should display repo and branch to save pipeline to', async () => {
+    afterSave.mockReset()
+    const initialPipelineCreateData = {
+      identifier: 'pipeline1',
+      name: 'Pipeline 1',
+      description: 'abc',
+      connectorRef: 'testConn',
+      repo: 'testRepo',
+      branch: 'testBranch',
+      storeType: StoreType.REMOTE,
+      filePath: '.harness/pipeline1.yaml'
+    }
+    const { getByText, container, getByTestId, findByPlaceholderText } = render(
+      <TestWrapper
+        path="/account/:accountId/:module/orgs/:ordIdentifier/projects/:projectIdentifier/pipelines/:pipelineIdentifier/pipeline-studio"
+        pathParams={{
+          accountId: 'dummy',
+          ordIdentifier: 'testOrg',
+          projectIdentifier: 'testProject',
+          pipelineIdentifier: 'testPipeline',
+          module: 'cd'
+        }}
+        queryParams={{
+          connectorRef: 'testConn',
+          repoName: 'testRepo',
+          branch: 'testBranch',
+          storeType: StoreType.REMOTE
+        }}
+        defaultAppStoreValues={{ isGitSyncEnabled: false, supportingGitSimplification: true }}
+      >
+        <PipelineCreate
+          initialValues={initialPipelineCreateData}
+          afterSave={afterSave}
+          primaryButtonText="continue"
+          isReadonly={true}
+        />
+      </TestWrapper>
+    )
+
+    await waitFor(() => getByText('continue'))
+    // Pipeline metadata fields - name, dec, tags
+    const nameInput = queryByNameAttribute('name', container)
+    expect(nameInput).toBeInTheDocument()
+    expect(nameInput).toBeDisabled()
+    const descInput = queryByNameAttribute('description', container)
+    expect(descInput).toBeInTheDocument()
+    expect(descInput).toBeDisabled()
+    const tagsEditBtn = getByTestId('tags-edit')
+    expect(tagsEditBtn).toBeInTheDocument()
+    fireEvent.click(tagsEditBtn)
+    const tagsInput = await findByPlaceholderText('Type and press enter to create a tag')
+    expect(tagsInput).toBeInTheDocument()
+    expect(tagsInput).toBeDisabled()
+    // Git related field - connectorRef, repo, branch, filePath
+    const connectorRefInput = getByTestId('cr-field-connectorRef')
+    expect(connectorRefInput).toBeInTheDocument()
+    expect(connectorRefInput).toBeDisabled()
+    const repoInput = queryByNameAttribute('repo', container)
+    expect(repoInput).toBeInTheDocument()
+    expect(repoInput).toBeDisabled()
+    const branchInput = queryByNameAttribute('branch', container)
+    expect(branchInput).toBeInTheDocument()
+    expect(branchInput).toBeDisabled()
+    const filePathInput = queryByNameAttribute('filePath', container)
+    expect(filePathInput).toBeInTheDocument()
+    expect(filePathInput).toBeDisabled()
+
+    const continueBtn = getByText('continue').parentElement
+    act(() => {
+      fireEvent.click(continueBtn!)
+    })
+
+    await waitFor(() => expect(afterSave).toHaveBeenCalledTimes(1))
+    expect(afterSave).toBeCalledWith(
+      {
+        identifier: 'pipeline1',
+        name: 'Pipeline 1',
+        description: 'abc'
+      },
+      {
+        connectorRef: 'testConn',
+        storeType: StoreType.REMOTE
+      },
+      {
+        repoName: 'testRepo',
+        branch: 'testBranch',
+        filePath: '.harness/pipeline1.yaml'
       },
       undefined
     )

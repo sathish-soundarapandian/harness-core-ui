@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { cloneDeep, defaultTo, get, isEmpty, set, trim, uniqBy } from 'lodash-es'
+import { cloneDeep, defaultTo, first, get, isEmpty, set, trim, uniqBy } from 'lodash-es'
 import type { AllowedTypes, MultiTypeInputType, IconName, SelectOption } from '@harness/uicore'
 import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import type { AllNGVariables, Pipeline } from '@pipeline/utils/types'
@@ -32,29 +32,43 @@ export interface MergeStageProps {
  * Loops over the pipeline and clears all the runtime inputs i.e. <+input>
  */
 export function clearRuntimeInput<T = PipelineInfoConfig>(template: T, shouldAlsoClearRuntimeInputs?: boolean): T {
-  const INPUT_EXPRESSION_REGEX = new RegExp(`"${INPUT_EXPRESSION_REGEX_STRING}"`, 'g')
+  const runtimeCollectionFieldsWhiteList = ['files', 'encryptedFiles']
+
+  const RUNTIME_INPUT_REGEX = new RegExp(`"${INPUT_EXPRESSION_REGEX_STRING}"`, 'g')
+  const INPUT_EXPRESSION_REGEX = `${RUNTIME_INPUT_REGEX.source.slice(1).slice(0, -1)}`
+
+  const canonicalClearRegExp = new RegExp(
+    `("(${runtimeCollectionFieldsWhiteList.join('|')})":")`
+      .concat(INPUT_EXPRESSION_REGEX)
+      .concat(`"|"${INPUT_EXPRESSION_REGEX}"`),
+    'g'
+  )
+
+  const emptyString = '""'
+  const emptyArray = '[""]'
+
   return JSON.parse(
-    JSON.stringify(template || {}).replace(
-      new RegExp(`"${INPUT_EXPRESSION_REGEX.source.slice(1).slice(0, -1)}"`, 'g'),
-      value => {
-        const parsed = parseInput(trim(value, '"'))
+    JSON.stringify(template || {}).replace(canonicalClearRegExp, value => {
+      const isCollectionField = runtimeCollectionFieldsWhiteList.some(element => value.indexOf(element) !== -1)
+      const valueToParse = isCollectionField ? first(value.match(INPUT_EXPRESSION_REGEX)) : value
 
-        if (!parsed) {
-          return value
-        }
+      const parsed = parseInput(trim(valueToParse, '"'))
 
-        if (parsed.executionInput && !shouldAlsoClearRuntimeInputs) {
-          return value
-        }
-
-        if (parsed.default !== null) {
-          // retain a number value as number instead of converting it to a string
-          return typeof parsed.default === 'number' ? `${parsed.default}` : `"${parsed.default}"`
-        }
-
-        return '""'
+      if (!parsed) {
+        return value
       }
-    )
+
+      if (parsed.executionInput && !shouldAlsoClearRuntimeInputs) {
+        return value
+      }
+
+      if (parsed.default !== null) {
+        // retain a number value as number instead of converting it to a string
+        return typeof parsed.default === 'number' ? `${parsed.default}` : `"${parsed.default}"`
+      }
+
+      return isCollectionField ? value.replace(new RegExp(`"${INPUT_EXPRESSION_REGEX}"`), emptyArray) : emptyString
+    })
   )
 }
 

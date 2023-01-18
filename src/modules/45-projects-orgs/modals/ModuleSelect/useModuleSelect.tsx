@@ -116,6 +116,17 @@ const getModulesWithSubscriptionsRoutesMap = ({
           accountId
         })
       }
+    ],
+    [
+      ModuleName.CHAOS,
+      {
+        pathname: routes.toProjectOverview({
+          orgIdentifier: projectData?.orgIdentifier || '',
+          projectIdentifier: projectData.identifier,
+          accountId,
+          module: 'chaos'
+        })
+      }
     ]
   ])
 }
@@ -185,7 +196,8 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
       getModulesWithSubscriptionsRoutesMap({ selectedModuleName, projectData, accountId }).has(selectedModuleName) &&
       !isOnPrem()
     ) {
-      if (FREE_PLAN_ENABLED) {
+      // TODO: remove when chaos has support for free plan
+      if (FREE_PLAN_ENABLED && selectedModuleName.toLocaleLowerCase() !== 'chaos') {
         return getString('common.startFreePlan')
       }
       return getString('common.startTrial')
@@ -215,7 +227,8 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
             })
           )
         } else {
-          if (FREE_PLAN_ENABLED) {
+          // TODO: remove when chaos has support for free plan
+          if (FREE_PLAN_ENABLED && selectedModuleName.toLocaleLowerCase() !== 'chaos') {
             startFreeLicense()
           } else {
             startTrialLicense()
@@ -236,7 +249,7 @@ export const useModuleSelectModal = ({
   const [selectedModuleName, setSelectedModuleName] = React.useState<ModuleName>()
   const [projectData, setProjectData] = React.useState<Project>()
 
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
   const modalProps: IDialogProps = {
     isOpen: true,
@@ -278,6 +291,11 @@ export const useModuleSelectModal = ({
   if (licenseInformation['STO']?.status === 'ACTIVE') {
     infoCards.push({
       name: ModuleName.STO
+    })
+  }
+  if (CHAOS_ENABLED) {
+    infoCards.push({
+      name: ModuleName.CHAOS
     })
   }
 

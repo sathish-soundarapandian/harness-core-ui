@@ -8,8 +8,11 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly chartContainer: string
+  readonly closeButton: string
+  readonly dialogRecords: string
   readonly formQueryBox: string
   readonly queryContainer: string
+  readonly queryPanel: string
   readonly queryViewDialog: string
   readonly runQueryButton: string
 }

@@ -10,7 +10,6 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetCounts } from 'services/dashboard-service'
-import { OverviewGalanceCard } from '@projects-orgs/components/OverviewGlanceCards/OverviewGlanceCards'
 import type { CountChangeAndCountChangeRateInfo } from 'services/dashboard-service'
 import routes from '@common/RouteDefinitions'
 import type { StringKeys } from 'framework/strings'
@@ -19,8 +18,16 @@ import { getGMTEndDateTime, getGMTStartDateTime } from '@common/utils/momentUtil
 import OverviewGlanceCardV2 from './OverviewGlanceCardV2/OverviewGlanceCardV2'
 import css from './OverviewGlanceCardsContainer.module.scss'
 
+export enum OverviewGalanceCardV2 {
+  PROJECT = 'PROJECT',
+  SERVICES = 'SERVICES',
+  ENV = 'ENV',
+  PIPELINES = 'PIPELINES',
+  USERS = 'USERS'
+}
+
 interface GlanceCard {
-  type: OverviewGalanceCard
+  type: OverviewGalanceCardV2
   label: StringKeys
   count?: number
   countChangeInfo?: CountChangeAndCountChangeRateInfo
@@ -47,27 +54,33 @@ const OverviewGlanceCardsV2: React.FC<OverviewGlanceCardsV2Props> = ({ timeRange
 
   const GLANCE_CARDS: GlanceCard[] = [
     {
-      type: OverviewGalanceCard.PROJECT,
+      type: OverviewGalanceCardV2.PROJECT,
       label: 'projectsText',
       count: projectsCountDetail?.count,
       countChangeInfo: projectsCountDetail?.countChangeAndCountChangeRateInfo,
       url: routes.toProjects({ accountId })
     },
     {
-      type: OverviewGalanceCard.SERVICES,
+      type: OverviewGalanceCardV2.SERVICES,
       label: 'services',
       count: servicesCountDetail?.count,
       countChangeInfo: servicesCountDetail?.countChangeAndCountChangeRateInfo
     },
     {
-      type: OverviewGalanceCard.ENV,
+      type: OverviewGalanceCardV2.ENV,
       label: 'environments',
       count: envCountDetail?.count,
       countChangeInfo: envCountDetail?.countChangeAndCountChangeRateInfo
     },
     {
-      type: OverviewGalanceCard.PIPELINES,
+      type: OverviewGalanceCardV2.PIPELINES,
       label: 'pipelines',
+      count: pipelinesCountDetail?.count,
+      countChangeInfo: pipelinesCountDetail?.countChangeAndCountChangeRateInfo
+    },
+    {
+      type: OverviewGalanceCardV2.USERS,
+      label: 'users',
       count: pipelinesCountDetail?.count,
       countChangeInfo: pipelinesCountDetail?.countChangeAndCountChangeRateInfo
     }

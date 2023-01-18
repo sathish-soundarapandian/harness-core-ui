@@ -73,7 +73,9 @@ const MapComponentFieldNames = {
   ENV_VARIABLES: 'spec.envVariables',
   PORT_BINDINGS: 'spec.portBindings',
   LABELS: 'spec.labels',
-  BUILD_ARGS: 'spec.buildArgs'
+  BUILD_ARGS: 'spec.buildArgs',
+  WITH: 'spec.with',
+  ENV: 'spec.env'
 }
 
 const FORCE_RENDERS_ALLOWED = 3
@@ -311,7 +313,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
       allowableTypes,
       keyLabel,
       valueLabel,
-      restrictToSingleEntry
+      restrictToSingleEntry,
+      keyValuePlaceholders
     }: {
       fieldName: string
       stringKey: keyof StringsMap
@@ -320,6 +323,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
       keyLabel?: keyof StringsMap
       valueLabel?: keyof StringsMap
       restrictToSingleEntry?: boolean
+      keyValuePlaceholders?: Array<string>
     }): React.ReactElement => (
       <Container className={cx(css.formGroup, css.bottomMargin5, css.lg)}>
         <MultiTypeMap
@@ -345,6 +349,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           keyLabel={keyLabel ? getString(keyLabel) : ''}
           valueLabel={valueLabel ? getString(valueLabel) : ''}
           restrictToSingleEntry={restrictToSingleEntry}
+          keyValuePlaceholders={keyValuePlaceholders}
         />
       </Container>
     ),
@@ -359,7 +364,8 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
       valueLabel,
       restrictToSingleEntry,
       appliedInputSetValue,
-      templateFieldName
+      templateFieldName,
+      keyValuePlaceholders
     }: {
       fieldName: string
       stringKey: keyof StringsMap
@@ -369,6 +375,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
       restrictToSingleEntry?: boolean
       appliedInputSetValue?: { [key: string]: string }
       templateFieldName?: string
+      keyValuePlaceholders?: Array<string>
     }): React.ReactElement => (
       <Container className={cx(css.formGroup, css.bottomMargin5)}>
         <MultiTypeMapInputSet
@@ -397,6 +404,7 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
           isApplyingTemplate={isApplyingTemplate}
           appliedInputSetValue={appliedInputSetValue}
           hasValuesAsRuntimeInput={getHasValuesAsRuntimeInputFromTemplate({ template, templateFieldName })}
+          keyValuePlaceholders={keyValuePlaceholders}
         />
       </Container>
     ),
@@ -713,6 +721,38 @@ export const CIStepOptionalConfig: React.FC<CIStepOptionalConfigProps> = props =
               fieldName: `${prefix}spec.envVariables`,
               stringKey: 'environmentVariables',
               allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep
+            })
+        : null}
+      {get(enableFields, MapComponentFieldNames.WITH)
+        ? isInputSetView
+          ? renderMultiTypeMapInputSet({
+              fieldName: `${prefix}spec.with`,
+              templateFieldName: 'spec.with',
+              stringKey: 'settingsLabel',
+              appliedInputSetValue: hasAppliedInputSet && get(formik?.values, `${prefix}spec.with`),
+              keyValuePlaceholders: enableFields['spec.with'].placeholder
+            })
+          : renderMultiTypeMap({
+              fieldName: `${prefix}spec.with`,
+              stringKey: 'settingsLabel',
+              allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
+              keyValuePlaceholders: enableFields['spec.with'].placeholder
+            })
+        : null}
+      {get(enableFields, MapComponentFieldNames.ENV)
+        ? isInputSetView
+          ? renderMultiTypeMapInputSet({
+              fieldName: `${prefix}spec.env`,
+              templateFieldName: 'spec.env',
+              stringKey: 'environmentVariables',
+              appliedInputSetValue: hasAppliedInputSet && get(formik?.values, `${prefix}spec.env`),
+              keyValuePlaceholders: enableFields['spec.env'].placeholder
+            })
+          : renderMultiTypeMap({
+              fieldName: `${prefix}spec.env`,
+              stringKey: 'environmentVariables',
+              allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
+              keyValuePlaceholders: enableFields['spec.env'].placeholder
             })
         : null}
       {get(enableFields, 'spec.entrypoint') && (

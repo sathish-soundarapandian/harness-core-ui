@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<PolicyStepVariablesView /> tests snapshot test for PolicyStepVariablesView - complete data 1`] = `
+exports[`<WaitStepVariablesView /> tests renders variables in wait step spec 1`] = `
 <div>
   <div
-    class="variablesListTable"
+    class="variablesListTable variablePaddingL3"
   >
     <div
       class="variableListRow variable-list-row"
@@ -11,7 +11,7 @@ exports[`<PolicyStepVariablesView /> tests snapshot test for PolicyStepVariables
       <span
         class="nameSection"
       >
-        name
+        duration
       </span>
       <p
         class="StyledProps--font Text--lineclamp StyledProps--main valueSection StyledProps--font-variation-body StyledProps--font-weight-semi-bold StyledProps--padding-left-medium StyledProps--color StyledProps--color-black100"
@@ -20,18 +20,10 @@ exports[`<PolicyStepVariablesView /> tests snapshot test for PolicyStepVariables
         <span
           class=""
         >
-          wait step
+          10s
         </span>
       </p>
     </div>
   </div>
-</div>
-`;
-
-exports[`<PolicyStepVariablesView /> tests snapshot test for PolicyStepVariablesView - no data 1`] = `
-<div>
-  <div
-    class="variablesListTable"
-  />
 </div>
 `;

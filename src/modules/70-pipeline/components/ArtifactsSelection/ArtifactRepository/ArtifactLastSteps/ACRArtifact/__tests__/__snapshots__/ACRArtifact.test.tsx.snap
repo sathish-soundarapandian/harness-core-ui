@@ -19,7 +19,7 @@ exports[`Acr Artifact tests Should render correctly in edit case 1`] = `
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="dockerSideCard"
@@ -681,7 +681,7 @@ exports[`Acr Artifact tests Should render correctly in edit case for runtime fie
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="dockerSideCard"

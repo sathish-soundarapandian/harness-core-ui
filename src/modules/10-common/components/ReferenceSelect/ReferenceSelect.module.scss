@@ -78,6 +78,10 @@
   &:global(.bp3-disabled) {
     background-color: var(--grey-100) !important;
   }
+
+  .groupedReferences {
+    flex: 1;
+  }
 }
 
 .layoutHeight {

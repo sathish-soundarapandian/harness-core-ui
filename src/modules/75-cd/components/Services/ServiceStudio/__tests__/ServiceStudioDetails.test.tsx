@@ -174,6 +174,7 @@ describe('ServiceStudioDetails', () => {
     pipelineMockData.state.isUpdated = true
     serviceMockData.isServiceEntityModalView = true
     serviceMockData.serviceCacheKey = 'testingKey'
+    serviceMockData.isDeploymentTypeDisabled = true
     const { container, getByText } = render(
       <TestWrapper
         path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services/:serviceIdentifier"

@@ -8,12 +8,10 @@
 import * as Yup from 'yup'
 import { isEmpty, isNil } from 'lodash-es'
 
-import { getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import type { SelectOption } from '@harness/uicore'
 
 import type { UseStringsReturn } from 'framework/strings'
-import type { FilterSpec } from 'services/cd-ng'
-
-import { isValueRuntimeInput } from '@common/utils/utils'
+import type { FilterSpec, FilterYaml } from 'services/cd-ng'
 
 import { MAX_LENGTH } from '@pipeline/components/CommonPipelineStages/PipelineStage/PipelineStageOutputSection/utils'
 
@@ -24,7 +22,6 @@ import type {
   EntityType,
   entityTypeStringsMap
 } from './AddEditEntityFilterModal.types'
-import type { FilterYaml } from '../../../types'
 
 export const defaultEntityFilter = {
   identifier: '',
@@ -88,22 +85,18 @@ export function getValidationSchema(
           then: (schema: FilterSpec) =>
             schema.test({
               test(value: FilterSpec): boolean | Yup.ValidationError {
-                const tagsType = getMultiTypeFromValue(value.tags)
+                if (isNil(value.matchType) || isEmpty(value.matchType)) {
+                  return this.createError({
+                    path: 'spec.matchType',
+                    message: getString('cd.inlineEntityFilters.validation.chooseAllOrAny')
+                  })
+                }
 
-                if (tagsType === MultiTypeInputType.FIXED) {
-                  if (isNil(value.tags) || isEmpty(value.tags)) {
-                    return this.createError({
-                      path: 'spec.tags',
-                      message: getString('cd.inlineEntityFilters.validation.tagsAreRequired')
-                    })
-                  }
-
-                  if (isValueRuntimeInput(value.matchType)) {
-                    return this.createError({
-                      path: 'spec.tags',
-                      message: getString('cd.inlineEntityFilters.validation.chooseAllOrAny')
-                    })
-                  }
+                if (isNil(value.tags) || isEmpty(value.tags)) {
+                  return this.createError({
+                    path: 'spec.tags',
+                    message: getString('cd.inlineEntityFilters.validation.tagsAreRequired')
+                  })
                 }
 
                 return true

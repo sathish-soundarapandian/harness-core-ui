@@ -36,8 +36,6 @@ export interface CDOnboardingContextInterface {
   saveEnvironmentData: (data: EnvironmentRequestDTO) => void
   saveInfrastructureData: (data: InfrastructureDataType) => void
   saveDelegateData: (data: DelegateDataType) => void
-  setSelectedSectionId: (selectionState: string) => void
-  updateSelectionState: (selectionState: string) => void
 }
 const initialDrawerData = { fileContent: undefined, mode: DrawerMode.Preview }
 
@@ -48,9 +46,7 @@ export const CDOnboardingContext = React.createContext<CDOnboardingContextInterf
   saveServiceData: () => new Promise<void>(() => undefined),
   saveEnvironmentData: () => new Promise<void>(() => undefined),
   saveInfrastructureData: () => new Promise<void>(() => undefined),
-  saveDelegateData: () => new Promise<void>(() => undefined),
-  updateSelectionState: (_selectionState: string) => undefined,
-  setSelectedSectionId: (_selectionState: string) => undefined
+  saveDelegateData: () => new Promise<void>(() => undefined)
 })
 
 export interface CDOnboardingProviderProps {
@@ -103,16 +99,6 @@ export function CDOnboardingProvider({
     dispatch(CDOnboardingContextActions.updateDelegate({ delegate: data }))
   }, [])
 
-  const queryParamStateSelection = useWizardStepQueryParams()
-  const setSelectedSectionId = (selectedSectionId: string): void => {
-    queryParamStateSelection.setWizardStepQueryParamState({ sectionId: selectedSectionId })
-    updateSelectionState(selectedSectionId)
-  }
-
-  const updateSelectionState = (selectedSectionId: string): void => {
-    dispatch(CDOnboardingContextActions.updateSectionId({ selectedSectionId }))
-  }
-
   return (
     <CDOnboardingContext.Provider
       value={{
@@ -121,8 +107,6 @@ export function CDOnboardingProvider({
         saveEnvironmentData,
         saveInfrastructureData,
         saveDelegateData,
-        setSelectedSectionId,
-        updateSelectionState,
         drawerData,
         setDrawerData
       }}

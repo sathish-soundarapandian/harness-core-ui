@@ -55,7 +55,6 @@ import {
   WizardStep,
   InfraProvisiongWizardStepId,
   StepStatus,
-  ACCOUNT_SCOPE_PREFIX,
   OAUTH2_USER_NAME,
   Hosting,
   GitAuthenticationMethod,
@@ -75,7 +74,8 @@ import {
   getPRTriggerActions,
   getFullRepoName,
   getPayloadForPipelineCreation,
-  addDetailsToPipeline
+  addDetailsToPipeline,
+  getScmConnectorPrefix
 } from '../../../utils/HostedBuildsUtils'
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -229,7 +229,9 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             spec: {
               type: eventType,
               spec: {
-                connectorRef: `${ACCOUNT_SCOPE_PREFIX}${configuredGitConnector?.identifier}`,
+                connectorRef: configuredGitConnector?.identifier
+                  ? `${getScmConnectorPrefix(configuredGitConnector)}${configuredGitConnector.identifier}`
+                  : null,
                 repoName: selectRepositoryRef.current?.repository
                   ? getFullRepoName(selectRepositoryRef.current?.repository)
                   : '',

@@ -9,9 +9,10 @@ import type { SelectOption } from '@harness/uicore'
 import type { PipelineInfrastructure } from 'services/cd-ng'
 
 export enum StepType {
-  StageRuntimeInput = 'StageRuntimeInput', // UI level step, only used in execution view
+  StageRuntimeInput = 'StageRuntimeInput',
   HTTP = 'Http',
   SHELLSCRIPT = 'ShellScript',
+  Container = 'Container',
   GitOpsUpdateReleaseRepo = 'GitOpsUpdateReleaseRepo',
   GitOpsFetchLinkedApps = 'GitOpsFetchLinkedApps',
   Command = 'Command',
@@ -27,6 +28,7 @@ export enum StepType {
   K8sApply = 'K8sApply',
   K8sCanaryDelete = 'K8sCanaryDelete',
   K8sDelete = 'K8sDelete',
+  K8sDryRun = 'K8sDryRun',
   StepGroup = 'StepGroup',
   DeployServiceEntity = 'DeployServiceEntity',
   DeployService = 'DeployService',
@@ -46,6 +48,8 @@ export enum StepType {
   ServerlessAzure = 'ServerlessAzure',
   Dependency = 'Service',
   Plugin = 'Plugin',
+  GHAPlugin = 'Action',
+  BitrisePlugin = 'Bitrise',
   GitClone = 'GitClone',
   Run = 'Run',
   GCR = 'BuildAndPushGCR',
@@ -79,6 +83,10 @@ export enum StepType {
   TerraformDestroy = 'TerraformDestroy',
   TerraformPlan = 'TerraformPlan',
   TerraformApply = 'TerraformApply',
+  TerragruntRollback = 'TerragruntRollback',
+  TerragruntDestroy = 'TerragruntDestroy',
+  TerragruntPlan = 'TerragruntPlan',
+  TerragruntApply = 'TerragruntApply',
   InfraProvisioning = 'InfraProvisioning',
   KubernetesGcp = 'KubernetesGcp',
   ResourceConstraint = 'ResourceConstraint',
@@ -139,13 +147,23 @@ export enum StepType {
   BGAppSetup = 'BGAppSetup',
   CanaryAppSetup = 'CanaryAppSetup',
   AppResize = 'AppResize',
+  TasRollingDeploy = 'TasRollingDeploy',
+  TasRollingRollback = 'TasRollingRollback',
   Asg = 'ASGServiceSpec',
   AsgInfraSpec = 'AsgInfraSpec',
+  Aquatrivy = 'AquaTrivy',
+  Bandit = 'Bandit',
+  Burp = 'Burp',
+  Snyk = 'Snyk',
+  Sonarqube = 'Sonarqube',
+  Zap = 'Zap',
   AsgCanaryDelete = 'AsgCanaryDelete',
   ElastigroupDeploy = 'ElastigroupDeploy',
   ElastigroupSwapRoute = 'ElastigroupSwapRoute',
   ElastigroupBGStageSetup = 'ElastigroupBGStageSetup',
-  AsgCanaryDeploy = 'AsgCanaryDeploy'
+  AsgCanaryDeploy = 'AsgCanaryDeploy',
+  AsgRollingRollback = 'AsgRollingRollback',
+  AsgRollingDeploy = 'AsgRollingDeploy'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

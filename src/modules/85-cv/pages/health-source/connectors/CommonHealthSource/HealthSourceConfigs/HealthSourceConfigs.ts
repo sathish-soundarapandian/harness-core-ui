@@ -5,11 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import { CHART_VISIBILITY_ENUM, FIELD_ENUM } from '../CommonHealthSource.constants'
 import type { HealthSourcesConfig } from '../CommonHealthSource.types'
 
 export const healthSourcesConfig: HealthSourcesConfig = {
-  SumoLogic_METRICS: {
+  [HealthSourceTypes.SumologicMetrics]: {
     addQuery: {
       label: 'Metric',
       enableDefaultGroupName: false
@@ -23,19 +24,26 @@ export const healthSourcesConfig: HealthSourcesConfig = {
       metricsChart: {
         enabled: true,
         chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO
+      },
+      assign: {
+        enabled: true,
+        hideCV: false,
+        hideServiceIdentifier: false,
+        hideSLIAndHealthScore: false,
+        defaultServiceInstance: '_sourceHost'
       }
     },
     metricPacks: {
       enabled: false
     },
     sideNav: {
-      shouldBeAbleToDeleteLastMetric: true
+      shouldBeAbleToDeleteLastMetric: false
     },
     metricThresholds: {
       enabled: true
     }
   },
-  SumoLogic_LOGS: {
+  [HealthSourceTypes.SumologicLogs]: {
     addQuery: {
       label: 'Log',
       enableDefaultGroupName: true
@@ -45,7 +53,7 @@ export const healthSourcesConfig: HealthSourcesConfig = {
       fieldMappings: [
         {
           type: 'JsonSelector' as FIELD_ENUM.JSON_SELECTOR,
-          label: 'Identifier service path',
+          label: 'Service Instance Identifier',
           identifier: 'serviceInstance',
           defaultValue: '_sourcehost'
         }
@@ -56,9 +64,12 @@ export const healthSourcesConfig: HealthSourcesConfig = {
       queryAndRecords: {
         enabled: true,
         titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQuerySubDescription'
+      },
+      assign: {
+        enabled: false,
+        defaultServiceInstance: ''
       }
     },
-
     sideNav: {
       shouldBeAbleToDeleteLastMetric: false
     },

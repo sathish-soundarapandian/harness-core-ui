@@ -32,9 +32,7 @@ jest.mock('@pipeline/context/ExecutionContext', () => ({
     logsToken: '',
     setLogsToken: () => void 0,
     refetch: undefined,
-    addNewNodeToMap: () => void 0,
-    setStepsGraphCanvasState: () => undefined,
-    stepsGraphCanvasState: { offsetX: 0, offsetY: 0, zoom: 100 }
+    addNewNodeToMap: () => void 0
   })
 }))
 

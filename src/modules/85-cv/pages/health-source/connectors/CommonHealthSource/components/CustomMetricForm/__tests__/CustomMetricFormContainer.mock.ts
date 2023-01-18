@@ -1,3 +1,13 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { DEFAULT_LOGS_GROUP_NAME } from '../CustomMetricForm.constants'
+
 export const mockedCustomMetricFormContainerData = {
   mappedMetrics: new Map(),
   selectedMetric: 'HealthSource Metric',
@@ -34,7 +44,7 @@ export const mockedCustomMetricFormContainerData = {
       type: 'AppDynamics',
       applicationName: '',
       tierName: '',
-      customMetricsMap: {}
+      queryMetricsMap: {}
     },
     groupedCreatedMetrics: {
       'Please Select Group Name': [
@@ -55,10 +65,7 @@ const mappedMetrics = new Map()
 mappedMetrics.set('dasdaa', {
   identifier: 'dasdaa',
   metricName: 'dasdaa',
-  groupName: {
-    label: 'Logs Group',
-    value: 'logsGroup'
-  }
+  groupName: DEFAULT_LOGS_GROUP_NAME
 })
 
 export const mockedCustomMetricsFormForLogsTable = {
@@ -70,6 +77,10 @@ export const mockedCustomMetricsFormForLogsTable = {
   isTemplate: false,
   expressions: [],
   healthSourceConfig: {
+    addQuery: {
+      label: 'Log',
+      enableDefaultGroupName: true
+    },
     customMetrics: {
       enabled: true,
       fieldMappings: [
@@ -102,20 +113,22 @@ export const mockedCustomMetricsFormForLogsTable = {
       label: 'SumoLogic Cloud Logs'
     },
     type: 'SumoLogic',
-    customMetricsMap: mappedMetrics
+    queryMetricsMap: mappedMetrics
   },
   groupedCreatedMetrics: {
     'Logs Group': [
       {
         index: 0,
-        groupName: {
-          label: 'Logs Group',
-          value: 'logsGroup'
-        },
+        groupName: DEFAULT_LOGS_GROUP_NAME,
         metricName: 'dasdaa'
       }
     ]
   }
+}
+
+export const mockedCustomMetricsFormForLogsTableConnectorTemplates = {
+  ...mockedCustomMetricsFormForLogsTable,
+  connectorIdentifier: RUNTIME_INPUT_VALUE
 }
 
 const mappedMetrics2 = new Map()
@@ -124,10 +137,7 @@ mappedMetrics2.set('dasdaa', {
   identifier: 'dasdaa',
   metricName: 'dasdaa',
   query: 'Select *',
-  groupName: {
-    label: 'Logs Group',
-    value: 'logsGroup'
-  }
+  groupName: DEFAULT_LOGS_GROUP_NAME
 })
 
 export const mockedCustomMetricsFormForLogsTable2 = {
@@ -135,7 +145,7 @@ export const mockedCustomMetricsFormForLogsTable2 = {
   mappedMetrics: mappedMetrics2,
   healthSourceData: {
     ...mockedCustomMetricsFormForLogsTable.healthSourceData,
-    customMetricsMap: mappedMetrics2
+    queryMetricsMap: mappedMetrics2
   }
 }
 
@@ -217,3 +227,35 @@ export const sampleRawRecordsMock = [
     spanId: '4f71be0a0da5e27d'
   }
 ]
+
+export const riskCategoryMock = {
+  metaData: {},
+  resource: [
+    { identifier: 'Errors', displayName: 'Errors', timeSeriesMetricType: 'ERROR', cvMonitoringCategory: 'Errors' },
+    {
+      identifier: 'Infrastructure',
+      displayName: 'Infrastructure',
+      timeSeriesMetricType: 'INFRA',
+      cvMonitoringCategory: 'Infrastructure'
+    },
+    {
+      identifier: 'Performance_Throughput',
+      displayName: 'Performance/Throughput',
+      timeSeriesMetricType: 'THROUGHPUT',
+      cvMonitoringCategory: 'Performance'
+    },
+    {
+      identifier: 'Performance_Other',
+      displayName: 'Performance/Other',
+      timeSeriesMetricType: 'OTHER',
+      cvMonitoringCategory: 'Performance'
+    },
+    {
+      identifier: 'Performance_ResponseTime',
+      displayName: 'Performance/Response Time',
+      timeSeriesMetricType: 'RESP_TIME',
+      cvMonitoringCategory: 'Performance'
+    }
+  ],
+  responseMessages: []
+}

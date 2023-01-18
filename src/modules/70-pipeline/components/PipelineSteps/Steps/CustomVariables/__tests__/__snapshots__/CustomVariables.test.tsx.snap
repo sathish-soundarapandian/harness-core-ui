@@ -1214,7 +1214,7 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
             class="bp3-form-content"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
+              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
@@ -1999,7 +1999,7 @@ exports[`Custom Variables should render variables 1`] = `
             class="bp3-form-content"
           >
             <div
-              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
+              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"

@@ -62,7 +62,7 @@ describe('Connectors list', () => {
   })
   it('jenkins step addition, with all fixed values', () => {
     cy.contains('p', 'Jenkins').should('be.visible')
-    cy.contains('p', 'Jenkins').click()
+    cy.contains('p', 'Jenkins').click({ force: true })
     cy.get('span[data-icon="service-jenkins"]').click({ force: true })
     cy.get('button[data-testid="cr-field-spec.connectorRef"]').click()
     cy.contains('p', 'testConnector2').click()
@@ -79,7 +79,7 @@ describe('Connectors list', () => {
 
   it('jenkins step addition, with all fixed values and jobName as subFolder value', () => {
     cy.contains('p', 'Jenkins').should('be.visible')
-    cy.contains('p', 'Jenkins').click()
+    cy.contains('p', 'Jenkins').click({ force: true })
     cy.get('span[data-icon="service-jenkins"]').click({ force: true })
     cy.get('button[data-testid="cr-field-spec.connectorRef"]').click()
     cy.contains('p', 'testConnector2').click()
@@ -97,7 +97,7 @@ describe('Connectors list', () => {
 
   it('jenkins step addition, with jobName as runtime values', () => {
     cy.contains('p', 'Jenkins').should('be.visible')
-    cy.contains('p', 'Jenkins').click()
+    cy.contains('p', 'Jenkins').click({ force: true })
     cy.get('span[data-icon="service-jenkins"]').click({ force: true })
     cy.get('.MultiTypeInput--btn').eq(2).click({ force: true })
     cy.contains('span', 'Runtime input').click()
@@ -126,7 +126,7 @@ describe('Connectors list', () => {
 
   it('jenkins step addition, with jobName and connector as runtime values', () => {
     cy.contains('p', 'Jenkins').should('be.visible')
-    cy.contains('p', 'Jenkins').click()
+    cy.contains('p', 'Jenkins').click({ force: true })
     cy.get('span[data-icon="service-jenkins"]').click({ force: true })
     cy.wait(1000)
     cy.get('.MultiTypeInput--btn').eq(1).click()

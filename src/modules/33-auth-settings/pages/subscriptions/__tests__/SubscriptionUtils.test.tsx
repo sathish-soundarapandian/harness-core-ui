@@ -188,6 +188,27 @@ describe('SubscriptionUtils', () => {
       expect(container).toMatchSnapshot()
     })
 
+    test('CHAOS enterprise expired plan', () => {
+      const props = {
+        accountName: 'account name',
+        isFreeOrCommunity: false,
+        isExpired: true,
+        edition: Editions.ENTERPRISE,
+        licenseData: {
+          licenseType: 'PAID' as ModuleLicenseDTO['licenseType'],
+          moduleType: 'CHAOS' as ModuleLicenseDTO['moduleType']
+        },
+        expiryDate: '23 Dec 2020'
+      }
+      const { container, getByText } = render(
+        <TestWrapper>
+          <SubscriptionDetailsCardInfo {...props} />
+        </TestWrapper>
+      )
+      expect(getByText('common.subscriptions.expired')).toBeInTheDocument()
+      expect(container).toMatchSnapshot()
+    })
+
     test('ExpiryCountdownMessage', () => {
       const props = {
         accountName: 'account name',

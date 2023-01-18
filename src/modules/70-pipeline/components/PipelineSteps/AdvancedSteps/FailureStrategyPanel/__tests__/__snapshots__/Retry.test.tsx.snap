@@ -199,7 +199,7 @@ exports[`Failure Strategy: Retry strategy works with simple fallback 1`] = `
       class="bp3-form-content"
     >
       <div
-        class="bp3-form-group ThumbnailSelect--mainContainer"
+        class="bp3-form-group ThumbnailSelect--mainContainer thumbnailSelect"
       >
         <div
           class="bp3-form-content"
@@ -534,7 +534,7 @@ exports[`Failure Strategy: Retry strategy works with simple fallback 1`] = `
             class="bp3-form-content"
           >
             <div
-              class="bp3-form-group ThumbnailSelect--mainContainer"
+              class="bp3-form-group ThumbnailSelect--mainContainer thumbnailSelect"
             >
               <div
                 class="bp3-form-content"

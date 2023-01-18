@@ -35,7 +35,7 @@ import type {
   YamlBuilderProps
 } from '@common/interfaces/YAMLBuilderProps'
 import routes from '@common/RouteDefinitions'
-import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { memoizedParse, yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { ErrorsStrip } from '@pipeline/components/ErrorsStrip/ErrorsStrip'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
@@ -78,6 +78,7 @@ import type {
   TriggerConfigDTO,
   TriggerGitQueryParams
 } from '@triggers/pages/triggers/interface/TriggersWizardInterface'
+import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import {
   clearNullUndefined,
   displayPipelineIntegrityResponse,
@@ -153,7 +154,7 @@ export default function ManifestTriggerWizard(
     } as GetTriggerQueryParams
     // lazy: true
   })
-  const { data: pipelineResponse } = useGetPipeline({
+  const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
     pipelineIdentifier,
     queryParams: {
       accountIdentifier: accountId,
@@ -169,6 +170,7 @@ export default function ManifestTriggerWizard(
   const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
 
   const [connectorScopeParams] = useState<GetConnectorQueryParams | undefined>(undefined)
+  const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
   const [ignoreError, setIgnoreError] = useState<boolean>(false)
   const createUpdateTriggerQueryParams = useMemo(
     () => ({
@@ -315,13 +317,22 @@ export default function ManifestTriggerWizard(
     (pipelineResponse?.data?.yamlPipeline as any) || ''
   )?.pipeline
 
-  const resolvedPipeline: PipelineInfoConfig | undefined = memoizedParse<Pipeline>(
-    (pipelineResponse?.data?.resolvedTemplatesPipelineYaml as any) || ''
-  )?.pipeline
+  useEffect(() => {
+    setResolvedPipeline(
+      yamlParse<Pipeline>(defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, ''))?.pipeline ??
+        ({} as PipelineInfoConfig)
+    )
+  }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
+
+  const { loadingResolvedChildPipeline, resolvedMergedPipeline } = useGetResolvedChildPipeline(
+    { accountId, repoIdentifier, branch, connectorRef: pipelineConnectorRef },
+    originalPipeline,
+    resolvedPipeline
+  )
 
   const shouldRenderWizard = useMemo(() => {
-    return !loadingGetTrigger && !fetchingTemplate
-  }, [loadingGetTrigger, fetchingTemplate])
+    return !loadingGetTrigger && !fetchingTemplate && !loadingPipeline && !loadingResolvedChildPipeline
+  }, [loadingGetTrigger, fetchingTemplate, loadingPipeline, loadingResolvedChildPipeline])
 
   useDeepCompareEffect(() => {
     if (shouldRenderWizard && template?.data?.inputSetTemplateYaml !== undefined) {
@@ -354,7 +365,7 @@ export default function ManifestTriggerWizard(
         const newPipeline = mergeTemplateWithInputSetData({
           inputSetPortion: { pipeline: inpuSet },
           templatePipeline: { pipeline: inpuSet },
-          allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
+          allValues: { pipeline: defaultTo(resolvedMergedPipeline, {} as PipelineInfoConfig) },
           shouldUseDefaultValues: true
         })
         setCurrentPipeline(newPipeline)
@@ -363,7 +374,7 @@ export default function ManifestTriggerWizard(
   }, [
     template?.data?.inputSetTemplateYaml,
     onEditInitialValues?.pipeline,
-    resolvedPipeline,
+    resolvedMergedPipeline,
     fetchingTemplate,
     loadingGetTrigger
   ])
@@ -435,7 +446,7 @@ export default function ManifestTriggerWizard(
           // Ensure ordering of variables and their values respectively for UI
           if (pipelineJson?.variables) {
             pipelineJson.variables = getOrderedPipelineVariableValues({
-              originalPipelineVariables: resolvedPipeline?.variables,
+              originalPipelineVariables: resolvedMergedPipeline?.variables,
               currentPipelineVariables: pipelineJson.variables
             })
           }
@@ -444,7 +455,7 @@ export default function ManifestTriggerWizard(
           setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
         }
       } else if (isNewGitSyncRemotePipeline) {
-        pipelineJson = resolvedPipeline
+        pipelineJson = resolvedMergedPipeline
       }
       const eventConditions = source?.spec?.spec?.eventConditions || []
       const { value: versionValue, operator: versionOperator } =
@@ -534,7 +545,7 @@ export default function ManifestTriggerWizard(
                 pipeline: { ...clearRuntimeInput(latestPipeline.pipeline) },
                 template: latestYamlTemplate,
                 originalPipeline: orgPipeline,
-                resolvedPipeline,
+                resolvedPipeline: resolvedMergedPipeline,
                 getString,
                 viewType: StepViewType.TriggerForm,
                 viewTypeMetadata: { isTrigger: true }
@@ -665,8 +676,8 @@ export default function ManifestTriggerWizard(
     if (
       newPipeline?.template?.templateInputs &&
       isCodebaseFieldsRuntimeInputs(newPipeline.template.templateInputs as PipelineInfoConfig) &&
-      resolvedPipeline &&
-      !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline as PipelineInfoConfig)
+      resolvedMergedPipeline &&
+      !isCloneCodebaseEnabledAtLeastOneStage(resolvedMergedPipeline as PipelineInfoConfig)
     ) {
       newPipeline = getPipelineWithoutCodebaseInputs(newPipeline)
     }
@@ -681,9 +692,9 @@ export default function ManifestTriggerWizard(
       source,
       pipeline: newPipeline,
       originalPipeline,
-      resolvedPipeline,
+      resolvedPipeline: resolvedMergedPipeline,
       inputSetTemplateYamlObj,
-      pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew)
+      pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew) || branch
     }
   }
 
@@ -704,11 +715,10 @@ export default function ManifestTriggerWizard(
 
   useEffect(() => {
     const yamlPipeline = pipelineResponse?.data?.yamlPipeline
-    const resolvedYamlPipeline = pipelineResponse?.data?.resolvedTemplatesPipelineYaml
 
     if (
       yamlPipeline &&
-      resolvedYamlPipeline &&
+      resolvedMergedPipeline &&
       ((initialValues && !initialValues.originalPipeline && !initialValues.resolvedPipeline) ||
         (onEditInitialValues?.identifier &&
           !onEditInitialValues.originalPipeline &&
@@ -716,13 +726,13 @@ export default function ManifestTriggerWizard(
     ) {
       try {
         let newOriginalPipeline = parse(yamlPipeline)?.pipeline
-        let newResolvedPipeline = parse(resolvedYamlPipeline)?.pipeline
+        let newResolvedPipeline: any = resolvedMergedPipeline
         // only applied for CI, Not cloned codebase
         if (
           newOriginalPipeline?.template?.templateInputs &&
           isCodebaseFieldsRuntimeInputs(newOriginalPipeline.template.templateInputs as PipelineInfoConfig) &&
-          resolvedPipeline &&
-          !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline)
+          resolvedMergedPipeline &&
+          !isCloneCodebaseEnabledAtLeastOneStage(resolvedMergedPipeline)
         ) {
           const newOriginalPipelineWithoutCodebaseInputs = getPipelineWithoutCodebaseInputs(newOriginalPipeline)
           const newResolvedPipelineWithoutCodebaseInputs = getPipelineWithoutCodebaseInputs(newResolvedPipeline)
@@ -762,7 +772,7 @@ export default function ManifestTriggerWizard(
     }
   }, [
     pipelineResponse?.data?.yamlPipeline,
-    pipelineResponse?.data?.resolvedTemplatesPipelineYaml,
+    resolvedMergedPipeline,
     onEditInitialValues?.identifier,
     initialValues,
     currentPipeline
@@ -979,11 +989,18 @@ export default function ManifestTriggerWizard(
     latestYaml: triggerYaml
   }: {
     formikProps: FormikProps<any>
-    latestYaml?: any // validate from YAML view
+    latestYaml?: string
   }): Promise<FormikErrors<FlatValidWebhookFormikValuesInterface>> => {
     if (!formikProps) return {}
     let _pipelineBranchNameError = ''
     let _inputSetRefsError = ''
+    let parsedTriggerYaml
+
+    try {
+      parsedTriggerYaml = parse(triggerYaml || '')
+    } catch (e) {
+      setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
+    }
 
     if (isNewGitSyncRemotePipeline) {
       // Custom validation when pipeline Reference Branch Name is an expression for non-webhook triggers
@@ -996,8 +1013,14 @@ export default function ManifestTriggerWizard(
       }
 
       // inputSetRefs is required if Input Set is required to run pipeline
-      if (template?.data?.inputSetTemplateYaml && !formikProps?.values?.inputSetSelected?.length) {
-        _inputSetRefsError = getString('triggers.inputSetIsRequired')
+      if (template?.data?.inputSetTemplateYaml) {
+        if (!formikProps?.values?.inputSetSelected?.length) {
+          _inputSetRefsError = getString('triggers.inputSetIsRequired')
+        }
+
+        if (parsedTriggerYaml?.trigger?.inputSetRefs?.length || formikProps?.values?.inputSetRefs?.length) {
+          _inputSetRefsError = ''
+        }
       }
     }
 
@@ -1012,12 +1035,14 @@ export default function ManifestTriggerWizard(
       latestPipelineFromYamlView = getTriggerPipelineValues(triggerYaml, formikProps)
     }
 
-    const runPipelineFormErrors = await getFormErrors({
-      latestPipeline: latestPipelineFromYamlView || latestPipeline,
-      latestYamlTemplate: yamlTemplate,
-      orgPipeline: values.pipeline,
-      setSubmitting
-    })
+    const runPipelineFormErrors = isNewGitSyncRemotePipeline
+      ? null
+      : await getFormErrors({
+          latestPipeline: latestPipelineFromYamlView || latestPipeline,
+          latestYamlTemplate: yamlTemplate,
+          orgPipeline: values.pipeline,
+          setSubmitting
+        })
     const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ pipelineBranchName: _pipelineBranchNameError, inputSetRefs: _inputSetRefsError }, value => !value)
       : undefined

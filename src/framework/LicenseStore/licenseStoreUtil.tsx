@@ -37,8 +37,9 @@ export const defaultLicensesByModule: {
   CE: {
     edition: Editions.FREE
   },
+  // TODO: change to free when free plan is supported
   CHAOS: {
-    edition: Editions.FREE
+    edition: Editions.ENTERPRISE
   },
   CV: {
     edition: Editions.FREE
@@ -73,5 +74,9 @@ export const getModuleToDefaultURLMap = (accountId: string, module: Module): { [
   }),
   cv: routes.toCVHome({
     accountId
+  }),
+  chaos: routes.toModuleHome({
+    accountId,
+    module
   })
 })

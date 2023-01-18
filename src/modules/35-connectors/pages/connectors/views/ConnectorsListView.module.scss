@@ -40,7 +40,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--grey-400);
+  color: var(--grey-600);
+  font-size: var(--font-size-small);
 }
 .wrapper {
   width: 80%;
@@ -49,6 +50,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    color: var(--black);
+    font-size: 13px;
+    font-weight: 500 !important;
   }
   .flex {
     display: flex;

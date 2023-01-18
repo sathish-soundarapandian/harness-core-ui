@@ -139,9 +139,14 @@
     padding: var(--spacing-small) var(--spacing-small) 0 var(--spacing-small);
 
     .collapseIcon {
-      color: var(--primary-7) !important;
+      color: var(--primary-7);
       cursor: pointer;
     }
+  }
+  .pipelineStageHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .stepGroupBody {
@@ -194,6 +199,26 @@
       }
     }
   }
+  &.templateStepGroup {
+    background-color: rgba(var(--grey-200), 0.25);
+  }
+  &.rollbackGroup {
+    border-color: var(--orange-700);
+
+    & .stepGroupHeader {
+      display: inline-block;
+      transform: translate(10px, -18px);
+      background: var(--orange-700);
+      padding: var(--spacing-xsmall) var(--spacing-small);
+      --intent-color: var(--white);
+      border-radius: 4px;
+
+      & .collapseIcon {
+        color: var(--white);
+        margin-right: var(--spacing-xsmall);
+      }
+    }
+  }
 }
 
 .createnodeci {
@@ -227,4 +252,9 @@
   p {
     word-break: break-word !important;
   }
+}
+
+.childPipelineDetails {
+  display: flex;
+  align-items: center;
 }

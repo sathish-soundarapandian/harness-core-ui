@@ -36,6 +36,7 @@ rules:
             - modules/75-chaos/*
             - modules/75-ci/*
             - modules/85-cv/*
+            - modules/85-iacm/*
             - modules/85-sto/*
             - modules/90-gitops/*
             - '@default-settings/*'
@@ -62,6 +63,7 @@ rules:
             - '@chaos/*'
             - '@ci/*'
             - '@cv/*'
+            - '@iacm/*'
             - '@sto/*'
             - '@gitops/*'
           message: Import from higher layer modules is not allowed

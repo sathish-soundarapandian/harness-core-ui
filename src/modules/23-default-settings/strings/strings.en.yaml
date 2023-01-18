@@ -7,3 +7,7 @@ mandateWebhookSecretsGithubTriggers: Mandate Webhook Secrets for Github Triggers
 mandateAuthorizationForCustomWebhookTriggers: Mandate Authorization for Custom Webhook Triggers
 enableForceDelete: Enable Force Delete of Harness Resources
 enableGitCommands: Use Git client for commits
+pipelineTimeout: Pipeline Timeout
+stageTimeout: Stage Timeout
+stepTimeout: Step Timeout
+concurrentActivePipelineExecutions: Concurrent Active Pipeline Executions

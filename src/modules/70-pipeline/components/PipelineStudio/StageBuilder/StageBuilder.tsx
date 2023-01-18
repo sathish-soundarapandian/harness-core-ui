@@ -16,7 +16,12 @@ import { useParams } from 'react-router-dom'
 import { DynamicPopover, DynamicPopoverHandlerBinding } from '@common/components/DynamicPopover/DynamicPopover'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { StageActions } from '@common/constants/TrackingConstants'
-import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
+import type {
+  EntityGitDetails,
+  PipelineInfoConfig,
+  StageElementConfig,
+  StageElementWrapperConfig
+} from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import HoverCard from '@pipeline/components/HoverCard/HoverCard'
@@ -36,6 +41,7 @@ import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import type { DeploymentStageConfig } from 'services/cd-ng'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { Event } from '@pipeline/components/PipelineDiagram/Constants'
 import { EmptyStageName, MinimumSplitPaneSize, DefaultSplitPaneSize, MaximumSplitPaneSize } from '../PipelineConstants'
 import {
@@ -65,6 +71,7 @@ const diagram = new DiagramFactory('graph')
 diagram.registerNode('Deployment', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>, true)
 diagram.registerNode('CI', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>)
 diagram.registerNode('SecurityTests', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>)
+diagram.registerNode('IACM', PipelineStageNode as unknown as React.FC<BaseReactComponentProps>)
 diagram.registerNode('Approval', DiamondNodeWidget)
 diagram.registerNode('Barrier', IconNode)
 diagram.registerNode(NodeType.CreateNode, CreateNodeStage as unknown as React.FC<BaseReactComponentProps>)
@@ -99,25 +106,27 @@ export const initializeStageStateMap = (stages: StageElementWrapperConfig[], map
   })
 }
 
-export const renderPopover = ({
-  data,
-  addStageNew,
-  isParallel,
-  isGroupStage,
-  groupStages,
-  groupSelectedStageId,
-  onClickGroupStage,
-  stagesMap,
-  event,
-  isStageView,
-  onSubmitPrimaryData,
-  renderPipelineStage,
-  isHoverView,
-  contextType,
-  templateTypes,
-  gitDetails,
-  storeMetadata
-}: PopoverData): JSX.Element => {
+export const renderPopover = (
+  gitDetails: EntityGitDetails,
+  storeMetadata: StoreMetadata | undefined,
+  {
+    data,
+    addStageNew,
+    isParallel,
+    isGroupStage,
+    groupStages,
+    groupSelectedStageId,
+    onClickGroupStage,
+    stagesMap,
+    event,
+    isStageView,
+    onSubmitPrimaryData,
+    renderPipelineStage,
+    isHoverView,
+    contextType,
+    templateTypes
+  }: PopoverData
+): JSX.Element => {
   if (isStageView && data) {
     const stageData = {
       stage: {
@@ -589,7 +598,7 @@ function StageBuilder(): JSX.Element {
             <DynamicPopover
               darkMode={false}
               className={css.renderPopover}
-              render={renderPopover}
+              render={renderPopover.bind(null, gitDetails, storeMetadata)} // To use latest gitDetails and storeMetadata from pipeline context
               bind={setDynamicPopoverHandler}
             />
           </div>

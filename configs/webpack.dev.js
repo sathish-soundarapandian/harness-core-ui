@@ -38,25 +38,32 @@ const DEV_FF = Object.keys(process.env)
   .filter(f => f.startsWith('FF_'))
   .reduce((obj, key) => ({ ...obj, [key.replace(/^FF_/, '')]: process.env[key] === 'true' }), {})
 
+console.log('\nDev server env vars')
+console.table({
+  HARNESS_ENABLE_NG_AUTH_UI,
+  DISABLE_TYPECHECK,
+  HELP_PANEL_ACCESS_TOKEN,
+  HELP_PANEL_SPACE,
+  HELP_PANEL_ENVIRONMENT,
+  ...DEV_FF
+})
+
 const USE_LEGACY_FEATURE_FLAGS = process.env.USE_LEGACY_FEATURE_FLAGS
 const HARNESS_FF_SDK_BASE_URL = process.env.HARNESS_FF_SDK_BASE_URL
+const HARNESS_FF_SDK_EVENT_URL = process.env.HARNESS_FF_SDK_EVENT_URL
 const HARNESS_FF_SDK_ENABLE_STREAM = process.env.HARNESS_FF_SDK_ENABLE_STREAM
 const HARNESS_FF_SDK_KEY = process.env.HARNESS_FF_SDK_KEY
 const HARNESS_FF_SDK_ASYNC = process.env.HARNESS_FF_SDK_ASYNC
 
-console.log('\nDev server env vars')
-console.table(
-  Object.assign(
-    {
-      HARNESS_ENABLE_NG_AUTH_UI,
-      DISABLE_TYPECHECK,
-      HELP_PANEL_ACCESS_TOKEN,
-      HELP_PANEL_SPACE,
-      HELP_PANEL_ENVIRONMENT
-    },
-    DEV_FF
-  )
-)
+console.log('\nFeature flags SDK env vars')
+console.table({
+  USE_LEGACY_FEATURE_FLAGS,
+  HARNESS_FF_SDK_BASE_URL,
+  HARNESS_FF_SDK_EVENT_URL,
+  HARNESS_FF_SDK_ENABLE_STREAM,
+  HARNESS_FF_SDK_KEY,
+  HARNESS_FF_SDK_ASYNC
+})
 
 // certificates are required in non CI environments only
 if (!isCI && !certificateExists) {
@@ -136,6 +143,7 @@ const config = {
         NEW_NAV_CONTENTFUL_ENVIRONMENT_DEV: NEW_NAV_CONTENTFUL_ENVIRONMENT,
         USE_LEGACY_FEATURE_FLAGS_DEV: USE_LEGACY_FEATURE_FLAGS,
         HARNESS_FF_SDK_BASE_URL_DEV: HARNESS_FF_SDK_BASE_URL,
+        HARNESS_FF_SDK_EVENT_URL_DEV: HARNESS_FF_SDK_EVENT_URL,
         HARNESS_FF_SDK_ENABLE_STREAM_DEV: HARNESS_FF_SDK_ENABLE_STREAM,
         HARNESS_FF_SDK_KEY_DEV: HARNESS_FF_SDK_KEY,
         HARNESS_FF_SDK_ASYNC_DEV: HARNESS_FF_SDK_ASYNC

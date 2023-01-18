@@ -300,14 +300,12 @@ describe('Unit tests for createAppd monitoring source', () => {
       expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).toBeInTheDocument()
     })
 
-    test('should not render metric thresholds when feature flag is disabled', () => {
-      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(false)
-
+    test('should not render metric thresholds if it is a template', () => {
       const submitData = jest.fn()
       render(
         <TestWrapper {...createModeProps}>
           <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
-            <AppDMonitoredSource data={appDynamicsDataFull} onSubmit={submitData} onPrevious={jest.fn()} />
+            <AppDMonitoredSource isTemplate data={appDynamicsDataFull} onSubmit={submitData} onPrevious={jest.fn()} />
           </SetupSourceTabs>
         </TestWrapper>
       )

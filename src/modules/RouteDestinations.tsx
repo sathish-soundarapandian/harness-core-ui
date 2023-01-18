@@ -30,6 +30,7 @@ import CFRoutes from '@cf/RouteDestinations'
 import CERoutes from '@ce/RouteDestinations'
 import STORoutes from '@sto/RouteDestinations'
 import GovernanceRoutes from '@governance/RouteDestinations'
+import IACMRoutes from '@iacm/RouteDestinations'
 import ChaosRoutes from '@chaos/RouteDestinations'
 import DASHBOARDRoutes from '@dashboards/RouteDestinations'
 import AccountSideNav from '@common/components/AccountSideNav/AccountSideNav'
@@ -38,6 +39,7 @@ import NotFoundPage from '@common/pages/404/NotFoundPage'
 import DefaultSettingsRoutes from '@default-settings/RouteDestinations'
 import CODERouteDestinations from '@code/RouteDestinations'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { ModuleName } from 'framework/types/ModuleName'
 
 export const AccountSideNavProps: SidebarContext = {
   navComponent: AccountSideNav,
@@ -54,9 +56,15 @@ export default function RouteDestinations(): React.ReactElement {
     CFNG_ENABLED,
     CHAOS_ENABLED,
     NG_SETTINGS,
-    CODE_ENABLED
+    CODE_ENABLED,
+    IACM_ENABLED
   } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
+
+  const isCVModuleEnabled =
+    licenseInformation[ModuleName.CV]?.status === 'ACTIVE' ||
+    licenseInformation[ModuleName.CD]?.status === 'ACTIVE' ||
+    CVNG_ENABLED
 
   return (
     <Switch>
@@ -79,7 +87,7 @@ export default function RouteDestinations(): React.ReactElement {
       {CHAOS_ENABLED ? ChaosRoutes().props.children : null}
       {CING_ENABLED ? CIRoutes.props.children : null}
       {CDNG_ENABLED ? CDRoutes.props.children : null}
-      {CVNG_ENABLED ? CVRoutes.props.children : null}
+      {isCVModuleEnabled ? CVRoutes.props.children : null}
       {GitOpsRoutes.props.children}
       {licenseInformation['STO']?.status === 'ACTIVE' ? (
         <Route path="/account/:accountId/:module(sto)">
@@ -95,6 +103,7 @@ export default function RouteDestinations(): React.ReactElement {
         </Route>
       ) : null}
       {CFNG_ENABLED ? CFRoutes({})?.props.children : null}
+      {IACM_ENABLED ? IACMRoutes().props.children : null}
       <Route path="*">
         <NotFoundPage />
       </Route>

@@ -1,8 +1,10 @@
+import type { DATE_RANGE_SHORTCUTS_NAME } from '@common/utils/momentUtils'
 import type { QlceViewTimeGroupType, QlceViewFilterInput, QlceViewFieldInputInput } from 'services/ce/services'
 
 export interface TimeRangeFilterType {
   to: string
   from: string
+  type?: DATE_RANGE_SHORTCUTS_NAME
 }
 
 export enum TimeRangeType {
@@ -19,4 +21,4 @@ export enum NodepoolTimeRangeType {
 export type setFiltersFn = (newFilters: QlceViewFilterInput[]) => void
 export type setAggregationFn = (newAgg: QlceViewTimeGroupType) => void
 export type setGroupByFn = (groupBy: QlceViewFieldInputInput) => void
-export type setTimeRangeFn = (timeRange: TimeRangeFilterType) => void
+export type setTimeRangeFn = (timeRange: TimeRangeFilterType, type?: DATE_RANGE_SHORTCUTS_NAME) => void

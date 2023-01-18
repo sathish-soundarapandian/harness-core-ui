@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React, { useCallback, useEffect, useState } from 'react'
 import type { GetDataError } from 'restful-react'
 import {
@@ -5,7 +12,7 @@ import {
   getUpdatedNotificationsRuleRefs,
   toggleNotification
 } from '@cv/components/Notifications/NotificationsContainer.utils'
-import type { NotificationToToggle } from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.types'
+import type { NotificationToToggle } from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.types'
 import { SLOFormFields } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
 import type { NotificationRuleResponse, RestResponseNotificationRuleResponse } from 'services/cv'
 import NotificationsContainer from '@cv/components/Notifications/NotificationsContainer'

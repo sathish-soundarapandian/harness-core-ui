@@ -1,22 +1,35 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useFormikContext } from 'formik'
-import { AllowedTypes, Container, Layout, NoDataCard, Text } from '@harness/uicore'
+import {
+  AllowedTypes,
+  Container,
+  FormError,
+  Layout,
+  MultiTypeInputType,
+  NoDataCard,
+  RUNTIME_INPUT_VALUE,
+  Text
+} from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useDrawer } from '@cv/hooks/useDrawerHook/useDrawerHook'
 import JsonSelector from '@cv/components/JsonSelector/JsonSelector'
 import type { JsonRawSelectedPathType } from '@cv/components/JsonSelector/JsonSelectorType'
+import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import type {
   CommonCustomMetricFormikInterface,
   FieldMapping
 } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
+import { getIsConnectorRuntimeOrExpression } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
 import {
   logsTableDefaultConfigs,
   FIELD_ENUM
 } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import JsonSelectorButton from './LogsTableComponent/components/JsonSelectorButton'
 import JsonDrawerMultiType from './LogsTableComponent/components/JsonDrawerMultiType'
+import type { LogFieldsMultiTypeState } from '../../../CustomMetricForm.types'
+import { useCommonHealthSource } from '../../CommonHealthSourceContext/useCommonHealthSource'
 import css from './JsonSelectorWithDrawer.module.scss'
 
 interface JsonSelectorWithDrawerProps {
@@ -24,21 +37,71 @@ interface JsonSelectorWithDrawerProps {
   jsonData?: Record<string, any>
   disableFields?: boolean
   allowedTypes?: AllowedTypes
+  multiTypeRecord: LogFieldsMultiTypeState | null
+  setMultiTypeRecord: React.Dispatch<React.SetStateAction<LogFieldsMultiTypeState | null>>
 }
 
 export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProps): JSX.Element | null {
   const { getString } = useStrings()
 
-  // TODO: Update this during templates story
-  // const { isTemplate } = useContext(SetupSourceTabsContext)
-  const isTemplate = false
-  const { values, setFieldValue } = useFormikContext<CommonCustomMetricFormikInterface>()
+  const { isTemplate, sourceData } = useContext(SetupSourceTabsContext)
 
-  const { fieldMappings, disableFields, jsonData } = props
+  const { values, setFieldValue, setValues, errors } = useFormikContext<CommonCustomMetricFormikInterface>()
+
+  const { isQueryRuntimeOrExpression } = useCommonHealthSource()
+
+  const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(sourceData.connectorRef)
+
+  const { fieldMappings, disableFields, jsonData, multiTypeRecord, setMultiTypeRecord } = props
+
+  const filteredFieldsMapping = fieldMappings?.filter(field => field.type === FIELD_ENUM.JSON_SELECTOR)
 
   const isDisabled = disableFields
 
-  const filteredFieldsMapping = fieldMappings?.filter(field => field.type === FIELD_ENUM.JSON_SELECTOR)
+  useEffect(() => {
+    if (
+      (isConnectorRuntimeOrExpression || isQueryRuntimeOrExpression) &&
+      isTemplate &&
+      multiTypeRecord &&
+      filteredFieldsMapping
+    ) {
+      const updatedMultiTypeRecord: LogFieldsMultiTypeState = {} as LogFieldsMultiTypeState
+      const updatedFormikValues: Record<keyof CommonCustomMetricFormikInterface, any> = {} as Record<
+        keyof CommonCustomMetricFormikInterface,
+        any
+      >
+
+      filteredFieldsMapping.forEach(field => {
+        if (multiTypeRecord[field.identifier] === MultiTypeInputType.FIXED) {
+          updatedMultiTypeRecord[field.identifier] = MultiTypeInputType.RUNTIME
+          updatedFormikValues[field.identifier] = RUNTIME_INPUT_VALUE
+        }
+      })
+
+      if (!isEmpty(updatedMultiTypeRecord)) {
+        setMultiTypeRecord(c => ({ ...c, ...updatedMultiTypeRecord }))
+
+        setValues(currentValues => {
+          return { ...currentValues, ...updatedFormikValues }
+        })
+      }
+    }
+  }, [filteredFieldsMapping, isConnectorRuntimeOrExpression, isQueryRuntimeOrExpression, isTemplate, values])
+
+  const handleTemplateTypeUpdate = (
+    fieldName: keyof CommonCustomMetricFormikInterface,
+    updatedType: MultiTypeInputType
+  ): void => {
+    if (isTemplate && multiTypeRecord) {
+      const updatedMultiTypeRecord = {
+        [fieldName]: updatedType
+      } as LogFieldsMultiTypeState
+
+      setMultiTypeRecord(c => {
+        return { ...c, ...updatedMultiTypeRecord }
+      })
+    }
+  }
 
   const {
     showDrawer: showHealthSourceDrawer,
@@ -76,7 +139,8 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
       )
     },
     drawerOptions: logsTableDefaultConfigs,
-    className: css.logsTableJsonDrawer
+    className: css.logsTableJsonDrawer,
+    showConfirmationDuringClose: false
   })
 
   const openDrawer = (fieldName: string, label: string): void => {
@@ -106,9 +170,11 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
                 displayText={(values[field.identifier] as string) || field.label}
                 onClick={() => openDrawer(field.identifier, field.label)}
                 value={values[field.identifier] as string}
-                key={values[field.identifier] as string}
+                key={multiTypeRecord?.[field.identifier] as string}
                 disabled={isDisabled}
                 className={css.jsonSelectorButton}
+                multiType={multiTypeRecord?.[field.identifier] as MultiTypeInputType}
+                setMultiType={handleTemplateTypeUpdate}
               />
             ) : (
               <JsonSelectorButton
@@ -118,6 +184,9 @@ export default function JsonSelectorWithDrawer(props: JsonSelectorWithDrawerProp
                 disabled={isDisabled}
                 icon="plus"
               />
+            )}
+            {errors[field.identifier] && (
+              <FormError name={field.identifier} errorMessage={getString('fieldRequired', { field: field.label })} />
             )}
           </Layout.Vertical>
         )

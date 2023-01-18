@@ -243,44 +243,51 @@ function GroupNode(props: GroupNodeProps): React.ReactElement {
           })
         }}
       >
-        <div
-          className={css.defaultCard}
-          style={{
-            position: 'absolute',
-            width: defaultTo(props.width, 90),
-            height: defaultTo(props.height, 40),
-            marginTop: -8,
-            marginLeft: 8
-          }}
-        ></div>
-        <div
-          className={css.defaultCard}
-          style={{
-            position: 'absolute',
-            width: defaultTo(props.width, 90),
-            height: defaultTo(props.height, 40),
-            marginTop: -4,
-            marginLeft: 4
-          }}
-        ></div>
-
-        <div
+        <Container
           ref={nodeRef}
           id={props.id}
           data-nodeid={props.id}
-          className={cx(css.defaultCard, { [css.selected]: selected })}
           style={{
-            width: defaultTo(props.width, 90),
-            height: defaultTo(props.height, 40),
-            marginTop: 32 - defaultTo(props.height, 64) / 2,
-            ...props.customNodeStyle
+            height: 64
           }}
+          flex={{ justifyContent: 'center', alignItems: 'center' }}
         >
-          <div className={css.iconGroup}>
-            {nodesInfo?.[0]?.icon && nodesInfo[0].icon && <Icon size={28} name={nodesInfo[0].icon} />}
-            {nodesInfo?.[1]?.icon && nodesInfo[1].icon && <Icon size={28} name={nodesInfo[1].icon} />}
+          <div
+            className={css.defaultCard}
+            style={{
+              position: 'absolute',
+              width: defaultTo(props.width, 90),
+              height: defaultTo(props.height, 40),
+              marginTop: -8,
+              marginLeft: 8
+            }}
+          ></div>
+          <div
+            className={css.defaultCard}
+            style={{
+              position: 'absolute',
+              width: defaultTo(props.width, 90),
+              height: defaultTo(props.height, 40),
+              marginTop: -4,
+              marginLeft: 4
+            }}
+          ></div>
+
+          <div
+            className={cx(css.defaultCard, { [css.selected]: selected })}
+            style={{
+              width: defaultTo(props.width, 90),
+              height: defaultTo(props.height, 40),
+              marginTop: 32 - defaultTo(props.height, 64) / 2,
+              ...props.customNodeStyle
+            }}
+          >
+            <div className={css.iconGroup}>
+              {nodesInfo?.[0]?.icon && nodesInfo[0].icon && <Icon size={28} name={nodesInfo[0].icon} />}
+              {nodesInfo?.[1]?.icon && nodesInfo[1].icon && <Icon size={28} name={nodesInfo[1].icon} />}
+            </div>
           </div>
-        </div>
+        </Container>
         {secondaryIcon && hasFailedNode && !hasRunningNode && (
           <Icon
             name={secondaryIcon}

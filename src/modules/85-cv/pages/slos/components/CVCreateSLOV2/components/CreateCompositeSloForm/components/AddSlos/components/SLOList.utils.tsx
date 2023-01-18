@@ -178,3 +178,15 @@ export const RenderCheckBoxes = ({ row, selectedSlos, setSelectedSlos, isAccount
     />
   )
 }
+
+export const getIsSelectAllChecked = (slosList: SLOHealthListView[], selectedSlos: SLOHealthListView[]): boolean => {
+  const listOfSloIdsOnPage = slosList?.map(item => item.sloIdentifier)
+  const selectedSlosOnPage = selectedSlos.filter(item => listOfSloIdsOnPage?.includes(item.sloIdentifier))
+  return listOfSloIdsOnPage?.length === selectedSlosOnPage.length
+}
+
+export const getIsIntermediate = (slosList: SLOHealthListView[], selectedSlos: SLOHealthListView[]): boolean => {
+  const listOfSloIdsOnPage = slosList?.map(item => item.sloIdentifier)
+  const selectedSlosOnPage = selectedSlos.filter(item => listOfSloIdsOnPage?.includes(item.sloIdentifier))
+  return Boolean(selectedSlosOnPage.length) && selectedSlosOnPage?.length < (listOfSloIdsOnPage?.length ?? 0)
+}

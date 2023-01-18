@@ -37,11 +37,9 @@
 }
 
 .moduleList {
-  max-width: 1150px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: var(--spacing-small);
 }
 
 .moduleInfo {
@@ -99,7 +97,7 @@
   display: block;
   margin-top: -20px !important;
   > svg > g {
-    fill: white;
+    fill: var(--white);
   }
 }
 
@@ -112,7 +110,7 @@
 
 .iconDescription {
   padding-top: 50px !important;
-  color: white !important;
+  color: var(--white) !important;
 }
 
 .iconContainer {

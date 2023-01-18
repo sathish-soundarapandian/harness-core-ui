@@ -35,7 +35,7 @@ const getContextValue = (mockData: any): PipelineContextInterface => {
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-const renderFunction = (pipelineContextValue: PipelineContextInterface) => {
+const renderFunction = (pipelineContextValue: PipelineContextInterface, isDeploymentTypeDisabled?: boolean) => {
   return render(
     <TestWrapper
       path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services/:serviceIdentifier?tab=configuration"
@@ -46,7 +46,7 @@ const renderFunction = (pipelineContextValue: PipelineContextInterface) => {
         serviceIdentifier: 'dummy'
       }}
     >
-      <ServiceContext.Provider value={serviceContextData as ServiceContextValues}>
+      <ServiceContext.Provider value={{ ...serviceContextData, isDeploymentTypeDisabled } as ServiceContextValues}>
         <PipelineContext.Provider value={pipelineContextValue}>
           <DeployServiceDefinition />
         </PipelineContext.Provider>
@@ -58,6 +58,17 @@ const renderFunction = (pipelineContextValue: PipelineContextInterface) => {
 const pipelineMockData = getContextValue(mockStageReturnWithoutManifestData)
 
 describe('DeployServiceDefinition', () => {
+  test('should render DeployServiceDefinition and not allow switch between deployment type', async () => {
+    const { container } = renderFunction(pipelineMockData, true)
+    expect(container.querySelector('[data-icon="service-helm"]')).toBeNull()
+
+    const checkboxes = screen.getAllByRole('checkbox')
+    // Kubernetes thumbnail
+    expect(checkboxes[0]).toBeDisabled()
+    // gitOps checkbox
+    expect(checkboxes[1]).toBeDisabled()
+  })
+
   test('should render DeployServiceDefinition and switch between deployment type without opening dialog (no manifest/artifact data)', async () => {
     const { container } = renderFunction(pipelineMockData)
     expect(container).toMatchSnapshot()

@@ -12,8 +12,11 @@ declare const styles: {
   readonly item: string
   readonly label: string
   readonly leftInfo: string
+  readonly noDataCardContainerConnector: string
+  readonly noDataCardContainerContent: string
   readonly placeholderClass: string
   readonly selectWrapper: string
+  readonly serviceLabel: string
   readonly serviceNameId: string
   readonly tag: string
 }

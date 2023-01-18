@@ -179,20 +179,37 @@ describe('Manifest Details tests', () => {
       },
       store: 'Git'
     }
-    const { container } = render(
+    const { container, getByText, findByText } = render(
       <TestWrapper>
         <ServerlessAwsLambdaManifest {...props} prevStepData={prevStepData} initialValues={initialValues} />
       </TestWrapper>
     )
 
     const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+
+    const submitBtn = getByText('submit')
+    userEvent.click(submitBtn)
+    // Check for all validation errors
+    const nameValidationError = await findByText('common.validation.nameIsRequired')
+    expect(nameValidationError).toBeInTheDocument()
+    const repoValidationError = getByText('common.validation.repositoryName')
+    expect(repoValidationError).toBeInTheDocument()
+    const branchValidationError = getByText('validation.branchName')
+    expect(branchValidationError).toBeInTheDocument()
+    const folderPathValidationError = getByText('common.validation.fieldIsRequired')
+    expect(folderPathValidationError).toBeInTheDocument()
+    // Change Folder Path to value that starts with "." and check for validation error message
+    fireEvent.change(queryByNameAttribute('paths[0].path')!, { target: { value: './folder1/sub-folder-1' } })
+    userEvent.click(submitBtn)
+    const periodPrefixValidationError = await findByText('pipeline.manifestType.periodPrefixValidation')
+    expect(periodPrefixValidationError).toBeInTheDocument()
     await act(async () => {
       fireEvent.change(queryByNameAttribute('identifier')!, { target: { value: 'testidentifier' } })
       fireEvent.change(queryByNameAttribute('branch')!, { target: { value: 'testBranch' } })
       fireEvent.change(queryByNameAttribute('paths[0].path')!, { target: { value: 'test-path' } })
       fireEvent.change(queryByNameAttribute('repoName')!, { target: { value: 'repo-name' } })
     })
-    fireEvent.click(container.querySelector('button[type="submit"]')!)
+    userEvent.click(submitBtn)
     await waitFor(() => {
       expect(props.handleSubmit).toHaveBeenCalledTimes(1)
       expect(props.handleSubmit).toHaveBeenCalledWith({

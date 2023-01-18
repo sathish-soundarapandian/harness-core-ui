@@ -6,6 +6,7 @@
  */
 import React, { useCallback, useMemo, useState } from 'react'
 import { Container } from '@harness/uicore'
+import { getMonitoredServiceIdentifiers } from '@cv/utils/CommonUtils'
 import ChangeTimeline from '@cv/components/ChangeTimeline/ChangeTimeline'
 import type { ChangesInfoCardData } from '@cv/components/ChangeTimeline/ChangeTimeline.types'
 import TimelineSlider from '@cv/components/ChangeTimeline/components/TimelineSlider/TimelineSlider'
@@ -36,6 +37,7 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
     errorBudgetBurndown,
     currentPeriodStartTime,
     monitoredServiceIdentifier,
+    monitoredServiceDetails,
     serviceIdentifier,
     environmentIdentifier
   } = filteredServiceLevelObjective ?? serviceLevelObjective
@@ -44,6 +46,8 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
   const errorBudgetEndTime = errorBudgetBurndown[errorBudgetBurndown.length - 1]?.timestamp
   const _endTime = (type === SLOCardToggleViews.SLO ? SLOEndTime : errorBudgetEndTime) ?? currentPeriodStartTime
   const [changeTimelineSummary, setChangeTimelineSummary] = useState<ChangesInfoCardData[] | null>(null)
+
+  const monitoredServiceIdentifiers = getMonitoredServiceIdentifiers(true, monitoredServiceDetails)
 
   const { startTime = currentPeriodStartTime, endTime = _endTime } = chartTimeRange ?? {}
 
@@ -131,6 +135,7 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
         hideTimeline={!isCardView}
         monitoredServiceIdentifier={monitoredServiceIdentifier}
         onSliderMoved={setChangeTimelineSummary}
+        monitoredServiceIdentifiers={monitoredServiceIdentifiers}
       />
     </Container>
   )

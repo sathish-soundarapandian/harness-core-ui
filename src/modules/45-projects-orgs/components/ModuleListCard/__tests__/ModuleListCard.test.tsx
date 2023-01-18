@@ -11,7 +11,14 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { ModuleName } from 'framework/types/ModuleName'
 import ModuleListCard from '../ModuleListCard'
 
-const moduleList: ModuleName[] = [ModuleName.CD, ModuleName.CV, ModuleName.CE, ModuleName.CF, ModuleName.CI]
+const moduleList: ModuleName[] = [
+  ModuleName.CD,
+  ModuleName.CV,
+  ModuleName.CE,
+  ModuleName.CF,
+  ModuleName.CI,
+  ModuleName.CHAOS
+]
 
 describe('Project Details', () => {
   test('render', async () => {

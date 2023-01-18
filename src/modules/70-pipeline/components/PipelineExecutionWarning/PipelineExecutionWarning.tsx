@@ -17,12 +17,7 @@ interface PipelineExecutionWarningProps {
 export function PipelineExecutionWarning({ warning }: PipelineExecutionWarningProps): React.ReactElement {
   const [hideWarning, setHideWarning] = useState<boolean>(false)
   return !hideWarning ? (
-    <Layout.Horizontal
-      className={css.warningBanner}
-      flex={{ justifyContent: 'flex-start' }}
-      spacing="medium"
-      padding={{ left: 'xlarge' }}
-    >
+    <Layout.Horizontal className={css.warningBanner} spacing="medium" flex={{ justifyContent: 'space-between' }}>
       {warning}
       <Button icon="cross" minimal onClick={() => setHideWarning(true)} />
     </Layout.Horizontal>

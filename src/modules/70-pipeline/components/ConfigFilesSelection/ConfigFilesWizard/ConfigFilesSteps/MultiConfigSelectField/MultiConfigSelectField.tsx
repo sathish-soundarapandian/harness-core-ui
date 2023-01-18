@@ -24,7 +24,7 @@ import {
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd'
 import { FormGroup, Intent } from '@blueprintjs/core'
 import { connect, FieldArray, FormikContextType } from 'formik'
-import { defaultTo, get, isEmpty, isUndefined } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions, ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { MultiTypeFieldSelectorProps } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -97,23 +97,39 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
 
   const { getString } = useStrings()
   const [changed, setChanged] = React.useState(false)
-  const getDefaultResetValue = () => ['']
+  const getDefaultResetValue = () => (name === 'paramsPaths' ? [] : [''])
   const isDeploymentForm = stepViewType === StepViewType.DeploymentForm
-  const shouldResetDefaultFormValue = stepViewType === StepViewType.InputSet || isDeploymentForm
   const value = get(formik?.values, name, getDefaultResetValue())
-
-  React.useEffect(() => {
-    setTimeout(() => {
-      const currentValue = formik?.getFieldProps(name).value
-      if (shouldResetDefaultFormValue && !isUndefined(currentValue) && isEmpty(currentValue)) {
-        formik?.setFieldValue(name, getDefaultResetValue())
-      }
-    }, 0)
-  }, [name])
 
   const allowableFileSelectTypes = (allowableTypes as MultiTypeInputType[])?.filter(
     item => !isMultiTypeRuntime(item)
   ) as AllowedTypes
+
+  const expressionInputRenderer = (fieldName: string): JSX.Element => {
+    return (
+      <FormGroup
+        helperText={
+          errorCheck(fieldName, formik) ? (
+            <FormError name={fieldName} errorMessage={get(formik?.errors, fieldName)} />
+          ) : null
+        }
+        intent={errorCheck(fieldName, formik) ? Intent.DANGER : Intent.NONE}
+        style={{ width: '100%' }}
+      >
+        <ExpressionInput
+          name={fieldName}
+          value={get(formik?.values, fieldName)}
+          disabled={false}
+          inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
+          items={expressions}
+          onChange={val =>
+            /* istanbul ignore next */
+            formik?.setFieldValue(fieldName, val)
+          }
+        />
+      </FormGroup>
+    )
+  }
 
   return (
     <DragDropContext
@@ -141,7 +157,11 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
               name={name}
               defaultValueToReset={getDefaultResetValue()}
               style={{ flexGrow: 1, marginBottom: 0 }}
-              allowedTypes={allowableTypes}
+              allowedTypes={
+                (allowableTypes as MultiTypeInputType[])?.filter(
+                  allowedType => allowedType !== MultiTypeInputType.EXPRESSION
+                ) as AllowedTypes
+              }
               {...multiTypeFieldSelectorProps}
               disableTypeSelection={multiTypeFieldSelectorProps.disableTypeSelection || disabled}
               hasParentValidation={true}
@@ -151,6 +171,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                   formik?.setFieldValue(name, getDefaultResetValue())
                 }
               }}
+              expressionRender={() => expressionInputRenderer(name)}
             >
               <FieldArray
                 name={name}
@@ -212,34 +233,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                                             expressionRender={() => {
                                               return (
                                                 <Container className={css.fieldExpressionHelperWrapper}>
-                                                  <FormGroup
-                                                    helperText={
-                                                      errorCheck(`${name}[${index}]`, formik) ? (
-                                                        <FormError
-                                                          name={`${name}[${index}]`}
-                                                          errorMessage={get(formik?.errors, `${name}[${index}]`)}
-                                                        />
-                                                      ) : null
-                                                    }
-                                                    intent={
-                                                      errorCheck(`${name}[${index}]`, formik)
-                                                        ? Intent.DANGER
-                                                        : Intent.NONE
-                                                    }
-                                                    style={{ width: '100%' }}
-                                                  >
-                                                    <ExpressionInput
-                                                      name={`${name}[${index}]`}
-                                                      value={get(formik?.values, `${name}[${index}]`)}
-                                                      disabled={false}
-                                                      inputProps={{ placeholder: EXPRESSION_INPUT_PLACEHOLDER }}
-                                                      items={expressions}
-                                                      onChange={val =>
-                                                        /* istanbul ignore next */
-                                                        formik?.setFieldValue(`${name}[${index}]`, val)
-                                                      }
-                                                    />
-                                                  </FormGroup>
+                                                  {expressionInputRenderer(`${name}[${index}]`)}
                                                 </Container>
                                               )
                                             }}
@@ -301,7 +295,7 @@ export function MultiConfigSelectField(props: MultiTypeMapProps): React.ReactEle
                           }}
                           disabled={disabled || isValueRuntimeInput(value)}
                           style={{ padding: 0 }}
-                          margin={{ top: 'xlarge', bottom: isAttachment ? 'xxxlarge' : 'medium' }}
+                          margin={{ top: 'small', bottom: isAttachment ? 'xxxlarge' : 'medium' }}
                         />
                       )}
                     </>

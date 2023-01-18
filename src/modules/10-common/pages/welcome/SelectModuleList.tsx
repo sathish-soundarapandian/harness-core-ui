@@ -16,6 +16,7 @@ import {
   ResponseModuleLicenseDTO,
   StartFreeLicenseQueryParams,
   useStartFreeLicense,
+  useStartTrialLicense,
   useUpdateAccountDefaultExperienceNG
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -32,6 +33,7 @@ import {
 import { getGaClientID, getSavedRefererURL } from '@common/utils/utils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Module, moduleToModuleNameMapping } from 'framework/types/ModuleName'
+import { Editions } from '@common/constants/SubscriptionTypes'
 import ModuleCard from './ModuleCard'
 import css from './WelcomePage.module.scss'
 
@@ -58,6 +60,12 @@ const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, modu
   const { showError } = useToaster()
   const { mutate: updateDefaultExperience, loading: updatingDefaultExperience } = useUpdateAccountDefaultExperienceNG({
     accountIdentifier: accountId
+  })
+  // Chaos module does not have free license for now
+  const { mutate: startChaosTrial } = useStartTrialLicense({
+    queryParams: {
+      accountIdentifier: accountId
+    }
   })
   const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: innerHeight })
   const ref = useRef<HTMLDivElement>(null)
@@ -126,6 +134,38 @@ const SelectModuleList: React.FC<SelectModuleListProps> = ({ onModuleClick, modu
                   history.push(routes.toModuleHome({ accountId, module: buttonType, source: 'purpose' }))
                 })
               }
+            } catch (error) {
+              showError(error.data?.message || getString('somethingWentWrong'))
+            }
+          },
+          disabled: updatingDefaultExperience
+        }
+      case 'chaos':
+        return {
+          clickHandle: async () => {
+            trackEvent(PurposeActions.ModuleContinue, { category: Category.SIGNUP, module: buttonType })
+            try {
+              const moduleType = 'CHAOS'
+              await updateDefaultExperience({
+                defaultExperience: Experiences.NG
+              })
+              const licenseStateName = getLicenseStateNameByModuleType(selected as Module)
+              const hasEnterpriseLicense = licenseInformation[upperCase(selected)]?.edition === Editions.ENTERPRISE
+              if (!hasEnterpriseLicense) {
+                const licenseResponse = await startChaosTrial({ moduleType, edition: Editions.ENTERPRISE })
+
+                updateLicenseStore({
+                  licenseInformation: {
+                    ...licenseInformation,
+                    [moduleToModuleNameMapping[selected as Module]]: licenseResponse.data as ModuleLicenseDTO
+                  } as { [key: string]: ModuleLicenseDTO },
+                  [licenseStateName]: LICENSE_STATE_VALUES.ACTIVE
+                })
+              }
+              const defaultURL = getModuleToDefaultURLMap(accountId, selected as Module)[selected as Module]
+              CREATE_DEFAULT_PROJECT
+                ? history.push(defaultURL)
+                : history.push(routes.toModuleHome({ accountId, module: buttonType, source: 'purpose' }))
             } catch (error) {
               showError(error.data?.message || getString('somethingWentWrong'))
             }

@@ -235,7 +235,12 @@ function CustomRemoteManifest({
         initialValues={getInitialValues()}
         formName="customRemoteManifest"
         validationSchema={Yup.object().shape({
-          ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
+          ...ManifestIdentifierValidation(
+            getString,
+            manifestIdsList,
+            initialValues?.identifier,
+            getString('pipeline.uniqueName')
+          ),
           extractionScript: Yup.string()
             .trim()
             .required(

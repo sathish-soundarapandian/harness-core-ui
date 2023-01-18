@@ -47,12 +47,10 @@ const ECSBlueGreenSwapTargetGroupsStepEdit = (
       >
         {(formik: FormikProps<ECSBlueGreenSwapTargetGroupsStepValues>) => {
           setFormikRef(formikRef, formik)
-          const { values, setFieldValue } = formik
+
           return (
             <FormikForm>
               <NameTimeoutField
-                values={{ name: values.name, timeout: values.timeout }}
-                setFieldValue={setFieldValue}
                 allowableTypes={allowableTypes}
                 isNewStep={isNewStep}
                 readonly={readonly}

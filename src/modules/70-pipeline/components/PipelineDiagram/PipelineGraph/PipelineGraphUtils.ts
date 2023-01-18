@@ -417,7 +417,8 @@ const NodeTypeToNodeMap: Record<string, string> = {
   SecurityTests: NodeType.Default,
   Pipeline: NodeType.Default,
   Custom: NodeType.Default,
-  Approval: NodeType.Default
+  Approval: NodeType.Default,
+  IACM: NodeType.Default
 }
 interface GetPipelineGraphDataParams {
   data: StageElementWrapperConfig[] | ExecutionWrapperConfig[]
@@ -770,7 +771,8 @@ const transformStepsData = ({
             loopingStrategyEnabled: !!(step.stepGroup as any)?.strategy,
             conditionalExecutionEnabled: getConditionalExecutionEnabled(step, isExecutionView, true),
             graphType,
-            isInComplete: isCustomGeneratedString(step.stepGroup?.identifier as string) || hasErrors
+            isInComplete: isCustomGeneratedString(step.stepGroup?.identifier as string) || hasErrors,
+            isTemplateNode: !!step?.stepGroup?.template?.templateRef
           }
         })
       } else {
@@ -810,7 +812,7 @@ const transformStepsData = ({
 const getNodeInfo = (type: string, graphType: PipelineGraphType): { iconName: IconName; nodeType: string } => {
   return graphType === PipelineGraphType.STEP_GRAPH
     ? {
-        iconName: StepTypeToPipelineIconMap[type],
+        iconName: StepTypeToPipelineIconMap[type] || stageTypeToIconMap[type],
         nodeType: NodeTypeToNodeMap[type]
       }
     : {

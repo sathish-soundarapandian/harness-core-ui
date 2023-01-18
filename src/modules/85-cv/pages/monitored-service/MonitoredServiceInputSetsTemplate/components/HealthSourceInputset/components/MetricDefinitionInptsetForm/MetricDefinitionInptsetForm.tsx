@@ -33,34 +33,37 @@ export default function MetricDefinitionInptsetForm({
 
   return runtimeMetricDefinitions?.map((item: any, idx: number) => {
     const runtimeItems = getNestedRuntimeInputs(item, [], `${path}.${idx}`)
+    const runTimeInputsPresent = Array.isArray(runtimeItems) && runtimeItems?.length
     return (
       <div key={item?.metricName}>
         <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: spacingMedium }}>
           {getString('cv.monitoringSources.metricLabel')}: {item?.metricName || item?.name}
         </Text>
-        {runtimeItems.map(input => {
-          if (input.name === 'indexes') {
-            return (
-              <FormInput.MultiTextInput
-                key={input.name}
-                name={input.path}
-                label={getLabelByName(input.name, getString)}
-                onChange={value => {
-                  onChange?.(input.path, value?.toString()?.split(','))
-                }}
-                multiTextInputProps={{ allowableTypes: [MultiTypeInputType.FIXED] }}
-              />
-            )
-          }
-          return (
-            <FormInput.MultiTextInput
-              key={input.name}
-              name={input.path}
-              label={getLabelByName(input.name, getString)}
-              multiTextInputProps={{ allowableTypes: [MultiTypeInputType.FIXED] }}
-            />
-          )
-        })}
+        {runTimeInputsPresent
+          ? runtimeItems.map(input => {
+              if (input.name === 'indexes') {
+                return (
+                  <FormInput.MultiTextInput
+                    key={input.name}
+                    name={input.path}
+                    label={getLabelByName(input.name, getString)}
+                    onChange={value => {
+                      onChange?.(input.path, value?.toString()?.split(','))
+                    }}
+                    multiTextInputProps={{ allowableTypes: [MultiTypeInputType.FIXED] }}
+                  />
+                )
+              }
+              return (
+                <FormInput.MultiTextInput
+                  key={input.name}
+                  name={input.path}
+                  label={getLabelByName(input.name, getString)}
+                  multiTextInputProps={{ allowableTypes: [MultiTypeInputType.FIXED] }}
+                />
+              )
+            })
+          : null}
       </div>
     )
   })

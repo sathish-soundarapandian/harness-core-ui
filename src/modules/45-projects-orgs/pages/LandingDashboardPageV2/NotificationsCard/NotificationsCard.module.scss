@@ -1,0 +1,81 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.container {
+  display: flex;
+  padding: var(--margin-form-field) var(--spacing-large) !important;
+  background-color: var(--white) !important;
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
+  border-radius: 8px;
+  width: 475px;
+  min-height: 100px;
+  margin-bottom: var(--spacing-large) !important;
+  transition: height 300ms linear;
+
+  .header {
+    border-bottom: 1.5px solid var(--grey-100);
+    height: fit-content;
+    width: 100%;
+    padding-bottom: var(--spacing-small);
+  }
+  padding-top: var(--spacing-small);
+  .badgesContainer {
+    display: flex;
+    padding-top: var(--spacing-medium);
+    margin-bottom: 15px;
+    flex-flow: column;
+
+    .badge {
+      display: flex;
+      height: 32px;
+      border-radius: 8px;
+      padding: 8px 10px;
+      background-color: var(--yellow-50);
+      align-items: center;
+      margin-bottom: var(--spacing-small);
+
+      .badgeText {
+        margin-left: var(--spacing-small);
+        font-weight: 500;
+        font-size: 12px;
+        line-height: 16px;
+        letter-spacing: 0.2px;
+        color: var(--primary-7);
+      }
+    }
+    .failed24HrsExecutionsBadge {
+      background-color: var(--red-50);
+    }
+    .runningExecutions {
+      background-color: var(--primary-1);
+    }
+  }
+  .popoverTable {
+    font-size: var(--font-size-small) !important;
+  }
+  .loadingContainer {
+    flex: 1;
+  }
+}
+
+.orgStyle {
+  display: flex;
+  padding-top: var(--spacing-2) !important;
+}
+
+.executionCount {
+  cursor: pointer !important;
+}
+
+.popoverStyle {
+  :global {
+    .bp3-popover-content {
+      max-height: 500px;
+      overflow: scroll;
+    }
+  }
+}

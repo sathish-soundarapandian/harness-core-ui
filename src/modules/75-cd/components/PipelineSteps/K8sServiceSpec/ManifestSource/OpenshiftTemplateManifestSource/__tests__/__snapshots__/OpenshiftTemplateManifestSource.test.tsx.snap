@@ -46,12 +46,12 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 391px;"
+                    style="width: 400px;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[0].manifest.spec.store.spec.connectorRef"
-                      style="width: 391px;"
+                      style="width: 400px;"
                       type="button"
                     >
                       <span
@@ -200,6 +200,9 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot 1`] = `
         />
         <div
           class="inputFieldLayout"
+        />
+        <div
+          class="inputFieldLayout"
         >
           <div
             class="verticalSpacingInput"
@@ -301,12 +304,12 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot 1`] = `
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 391px;"
+                    style="width: 400px;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[1].manifest.spec.store.spec.connectorRef"
-                      style="width: 391px;"
+                      style="width: 400px;"
                       type="button"
                     >
                       <span
@@ -455,6 +458,9 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot 1`] = `
         />
         <div
           class="inputFieldLayout"
+        />
+        <div
+          class="inputFieldLayout"
         >
           <div
             class="verticalSpacingInput"
@@ -531,9 +537,6 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot 1`] = `
         class="Layout--vertical StyledProps--main inputWidth layoutVerticalSpacing"
         data-name="manifest"
       >
-        <div
-          class="inputFieldLayout"
-        />
         <div
           class="inputFieldLayout"
         />
@@ -661,12 +664,12 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot with fromTr
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 391px;"
+                    style="width: 400px;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[0].manifest.spec.store.spec.connectorRef"
-                      style="width: 391px;"
+                      style="width: 400px;"
                       type="button"
                     >
                       <span
@@ -815,6 +818,9 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot with fromTr
         />
         <div
           class="inputFieldLayout"
+        />
+        <div
+          class="inputFieldLayout"
         >
           <div
             class="verticalSpacingInput"
@@ -914,12 +920,12 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot with fromTr
                 >
                   <div
                     class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                    style="width: 391px;"
+                    style="width: 400px;"
                   >
                     <button
                       class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                       data-testid="cr-field-stages[0].stage.spec.serviceConfig.serviceDefinition.spec.manifests[1].manifest.spec.store.spec.connectorRef"
-                      style="width: 391px;"
+                      style="width: 400px;"
                       type="button"
                     >
                       <span
@@ -1068,6 +1074,9 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot with fromTr
         />
         <div
           class="inputFieldLayout"
+        />
+        <div
+          class="inputFieldLayout"
         >
           <div
             class="verticalSpacingInput"
@@ -1142,9 +1151,6 @@ exports[`OpenshiftTemplateManifestSource tests Should match snapshot with fromTr
         class="Layout--vertical StyledProps--main inputWidth layoutVerticalSpacing"
         data-name="manifest"
       >
-        <div
-          class="inputFieldLayout"
-        />
         <div
           class="inputFieldLayout"
         />

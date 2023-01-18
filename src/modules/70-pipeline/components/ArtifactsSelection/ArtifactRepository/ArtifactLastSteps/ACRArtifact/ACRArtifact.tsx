@@ -81,14 +81,19 @@ export function ACRArtifact({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
+  const isTemplateContext = context === ModalViewFor.Template
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
+  const connectorRef = defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
+  const isConnectorUndefinedOrRunTime = !connectorRef || connectorRef === RUNTIME_INPUT_VALUE
 
-  const loadingItems = [{ label: 'Loading...', value: 'Loading Loading...' }]
+  const loadingItems = [{ label: getString('loading'), value: '' }]
 
   const [tagList, setTagList] = React.useState([])
-  const [subscriptions, setSubscriptions] = React.useState<SelectOption[]>(loadingItems)
-  const [registries, setRegistries] = React.useState<SelectOption[]>(loadingItems)
-  const [repositories, setRepositories] = React.useState<SelectOption[]>(loadingItems)
+  const [subscriptions, setSubscriptions] = React.useState<SelectOption[]>(
+    isConnectorUndefinedOrRunTime ? [] : loadingItems
+  )
+  const [registries, setRegistries] = React.useState<SelectOption[]>([])
+  const [repositories, setRepositories] = React.useState<SelectOption[]>([])
   const [lastQueryData, setLastQueryData] = React.useState<{
     subscriptionId: string
     registry: string
@@ -100,8 +105,6 @@ export function ACRArtifact({
   })
 
   const formikRef = React.useRef<FormikContextType<ACRArtifactType>>()
-
-  const connectorRef = defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
 
   const schemaObject = {
     subscriptionId: Yup.lazy((value): Yup.Schema<unknown> => {
@@ -167,6 +170,7 @@ export function ACRArtifact({
   const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
+      getString,
       artifactIdentifiers,
       initialValues?.identifier,
       getString('pipeline.uniqueIdentifier')
@@ -519,13 +523,13 @@ export function ACRArtifact({
             repository: getValue(formData.repository)
           })
         }}
-        enableReinitialize={true}
+        enableReinitialize={!isTemplateContext}
       >
         {formik => {
           formikRef.current = formik
           return (
             <FormikForm>
-              <div className={cx(css.connectorForm, formClassName)}>
+              <div className={cx(css.artifactForm, formClassName)}>
                 {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
                 {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
                 <div className={css.imagePathContainer}>
@@ -541,7 +545,7 @@ export function ACRArtifact({
                         ) {
                           return
                         }
-                        if (connectorRef === RUNTIME_INPUT_VALUE) {
+                        if (isConnectorUndefinedOrRunTime) {
                           return
                         }
 
@@ -617,6 +621,7 @@ export function ACRArtifact({
                         const subscriptionId = getValue(formik?.values?.subscriptionId)
 
                         if (
+                          !connectorRef ||
                           connectorRef === RUNTIME_INPUT_VALUE ||
                           !subscriptionId ||
                           subscriptionId === RUNTIME_INPUT_VALUE
@@ -631,6 +636,7 @@ export function ACRArtifact({
                           return
                         }
 
+                        setRegistries(loadingItems)
                         refetchRegistries({
                           queryParams: {
                             connectorRef,
@@ -703,6 +709,7 @@ export function ACRArtifact({
                         const registry = getValue(formik?.values?.registry)
 
                         if (
+                          !connectorRef ||
                           connectorRef === RUNTIME_INPUT_VALUE ||
                           !subscriptionId ||
                           subscriptionId === RUNTIME_INPUT_VALUE ||
@@ -719,6 +726,7 @@ export function ACRArtifact({
                           return
                         }
 
+                        setRepositories(loadingItems)
                         refetchRepositories({
                           queryParams: {
                             connectorRef,

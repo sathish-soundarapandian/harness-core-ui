@@ -15,7 +15,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
-import { useExecutionListFilterContext } from '../ExecutionListFilterContext/ExecutionListFilterContext'
+import { useExecutionListQueryParams } from '../utils/executionListUtil'
 
 export function useExecutionListEmptyAction(isPipelineInvalid: boolean, onRunPipeline: () => void) {
   const { orgIdentifier, projectIdentifier, accountId, pipelineIdentifier } =
@@ -23,7 +23,7 @@ export function useExecutionListEmptyAction(isPipelineInvalid: boolean, onRunPip
   const { module } = useModuleInfo()
   const { getString } = useStrings()
   const history = useHistory()
-  const { queryParams } = useExecutionListFilterContext()
+  const queryParams = useExecutionListQueryParams()
 
   const { data, loading } = useGetPipelines({
     accountIdentifier: accountId,

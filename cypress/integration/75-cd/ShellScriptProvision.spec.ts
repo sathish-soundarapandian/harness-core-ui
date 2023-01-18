@@ -42,7 +42,7 @@ describe('Shell Script Provision', () => {
   const openExecutionScreen = (): void => {
     // select pipeline
     cy.get(`div[data-testid="pipeline-studio"]`, { timeout: 5000 }).should('be.visible')
-    cy.contains('p', 'testStage_Cypress').click()
+    cy.contains('p', 'testStage_Cypress').click({ force: true })
     cy.contains('span', 'Execution').click()
     cy.get('p[data-name="node-name"]').contains('Add Step').click({ force: true })
     cy.wait(1000)

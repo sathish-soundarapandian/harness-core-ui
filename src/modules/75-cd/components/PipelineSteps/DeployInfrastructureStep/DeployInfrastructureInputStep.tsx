@@ -24,12 +24,17 @@ import { useStrings } from 'framework/strings'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { ExecutionWrapperInputSetForm } from '@pipeline/components/PipelineInputSetForm/ExecutionWrapperInputSetForm'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import DeployEnvironment from './DeployEnvironment/DeployEnvironment'
 import DeployInfrastructures from './DeployInfrastructures/DeployInfrastructures'
 import DeployClusters from './DeployClusters/DeployClusters'
 import DeployEnvironmentGroup from './DeployEnvironmentGroup/DeployEnvironmentGroup'
 import type { CustomStepProps, DeployInfrastructureProps } from './utils'
 import { GenericServiceSpecInputSetMode } from '../Common/GenericServiceSpec/GenericServiceSpecInputSetMode'
+import css from './DeployInfrastructureStep.module.scss'
 
 function DeployInfrastructureInputStepInternal({
   inputSetData,
@@ -53,9 +58,13 @@ function DeployInfrastructureInputStepInternal({
     infrastructureRef,
     clusterRef,
     deploymentType,
-    customDeploymentData
+    customDeploymentData,
+    stageIdentifier
   } = customStepProps
   const { serviceOverrideInputs } = inputSetData?.template?.environment || {}
+
+  // render Infra when Env is Fixed
+  const isEnvRuntime = isValueRuntimeInput(initialValues?.environment?.environmentRef)
 
   const shouldRenderInfrastructure =
     getMultiTypeFromValue(inputSetData?.template?.environment?.environmentRef) !== MultiTypeInputType.RUNTIME
@@ -63,6 +72,8 @@ function DeployInfrastructureInputStepInternal({
   const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(initialValues.environment?.environmentRef)
   )
+
+  const { CD_NG_DYNAMIC_PROVISIONING_ENV_V2 } = useFeatureFlags()
 
   return (
     <>
@@ -210,6 +221,51 @@ function DeployInfrastructureInputStepInternal({
               </>
             )}
 
+            {(inputSetData?.template as DeployStageConfig)?.environment?.provisioner &&
+              CD_NG_DYNAMIC_PROVISIONING_ENV_V2 && (
+                <div>
+                  <div className={css.inputheader} style={{ paddingBottom: '4px' }}>
+                    {getString('pipeline.provisionerSteps')}
+                  </div>
+                  <div className={css.nestedAccordions}>
+                    {inputSetData?.template?.environment?.provisioner?.steps && (
+                      <>
+                        <ExecutionWrapperInputSetForm
+                          stepsTemplate={inputSetData?.template.environment?.provisioner?.steps}
+                          path={`environment.provisioner.steps`}
+                          allValues={inputSetData?.allValues?.environment?.provisioner?.steps}
+                          values={initialValues?.environment?.provisioner?.steps}
+                          formik={formik}
+                          readonly={readonly}
+                          viewType={stepViewType as StepViewType}
+                          allowableTypes={allowableTypes}
+                          customStepProps={{
+                            stageIdentifier: stageIdentifier as string,
+                            selectedStage: inputSetData?.allValues as any
+                          }}
+                        />
+                      </>
+                    )}
+                    {inputSetData?.template?.environment?.provisioner?.rollbackSteps && (
+                      <ExecutionWrapperInputSetForm
+                        stepsTemplate={inputSetData?.template.environment?.provisioner?.rollbackSteps}
+                        path={`environment.provisioner.rollbackSteps`}
+                        allValues={inputSetData?.allValues?.environment?.provisioner?.rollbackSteps}
+                        values={initialValues?.environment?.provisioner?.rollbackSteps}
+                        formik={formik}
+                        readonly={readonly}
+                        viewType={stepViewType as StepViewType}
+                        allowableTypes={allowableTypes}
+                        customStepProps={{
+                          stageIdentifier: stageIdentifier as string,
+                          selectedStage: inputSetData?.allValues as any
+                        }}
+                      />
+                    )}
+                  </div>
+                </div>
+              )}
+
             {/* This loads the infrastructure input */}
             {!gitOpsEnabled &&
               !infrastructureRef &&
@@ -217,6 +273,7 @@ function DeployInfrastructureInputStepInternal({
                 inputSetData?.allValues ||
                 (inputSetData?.template?.environment?.infrastructureDefinitions as unknown as string) ===
                   RUNTIME_INPUT_VALUE) &&
+              !isEnvRuntime &&
               (formik.values.isEnvInputLoaded || shouldRenderInfrastructure) && (
                 <Container margin={{ bottom: 'medium' }}>
                   <Text font={{ size: 'normal', weight: 'bold' }} color={Color.BLACK} padding={{ bottom: 'medium' }}>

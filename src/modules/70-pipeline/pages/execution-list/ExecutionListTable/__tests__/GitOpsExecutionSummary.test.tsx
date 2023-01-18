@@ -18,7 +18,7 @@ describe('GitOpsExecutionSummary', () => {
   test('empty applications', () => {
     const { container } = render(
       <TestWrapper>
-        <GitOpsExecutionSummary stageInfo={{}} limit={1} />
+        <GitOpsExecutionSummary stageInfo={{}} />
       </TestWrapper>
     )
 
@@ -35,7 +35,6 @@ describe('GitOpsExecutionSummary', () => {
           stageInfo={{
             gitOpsAppSummary: { applications: [{ agentIdentifier: 'AGENT_1', identifier: 'ID_1', name: 'NAME_1' }] }
           }}
-          limit={1}
         />
       </TestWrapper>
     )
@@ -67,7 +66,6 @@ describe('GitOpsExecutionSummary', () => {
               ]
             }
           }}
-          limit={1}
         />
       </TestWrapper>
     )

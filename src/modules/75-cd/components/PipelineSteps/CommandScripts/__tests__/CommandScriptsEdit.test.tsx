@@ -278,7 +278,7 @@ describe('test <CommandScriptsEdit />', () => {
 
     expect(queryByNameAttribute('timeout', container)).toHaveDisplayValue(RUNTIME_INPUT_VALUE)
 
-    const configureOptionsButton = queryByAttribute('id', container, 'configureOptions_step.timeout')
+    const configureOptionsButton = queryByAttribute('data-icon', container, 'cog')
     expect(configureOptionsButton).toBeInTheDocument()
     userEvent.click(configureOptionsButton!)
 

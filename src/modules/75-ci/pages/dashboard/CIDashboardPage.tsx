@@ -16,12 +16,7 @@ import qs from 'qs'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useMutateAsGet, useQueryParams } from '@common/hooks'
-import {
-  ExecutionListFilterContextProvider,
-  ProcessedExecutionListPageQueryParams,
-  queryParamOptions
-} from '@pipeline/pages/execution-list/ExecutionListFilterContext/ExecutionListFilterContext'
+import { useMutateAsGet } from '@common/hooks'
 import type { Failure } from 'services/cd-ng'
 import { BuildActiveInfo, BuildFailureInfo, CIWebhookInfoDTO, useGetBuilds, useGetRepositoryBuild } from 'services/ci'
 import { useStrings } from 'framework/strings'
@@ -47,6 +42,7 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import ExecutionCard from '@pipeline/components/ExecutionCard/ExecutionCard'
 import { ExecutionTriggerInfo, PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
 import { TitleWithToolTipId } from '@common/components/Title/TitleWithToolTipId'
+import { useExecutionListQueryParams } from '@pipeline/pages/execution-list/utils/executionListUtil'
 import bgImage from './images/CI-OverviewImageBG.png'
 import styles from './CIDashboardPage.module.scss'
 
@@ -79,9 +75,7 @@ const NoDataOverviewPage: React.FC<{ onHide: () => void }> = ({ onHide }): JSX.E
         margin: 16
       }}
     >
-      <ExecutionListFilterContextProvider>
-        <OverviewExecutionListEmpty onRunPipeline={openModal} onHide={onHide} />
-      </ExecutionListFilterContextProvider>
+      <OverviewExecutionListEmpty onRunPipeline={openModal} onHide={onHide} />
     </div>
   )
 }
@@ -115,7 +109,7 @@ export const CIDashboardPage: React.FC = () => {
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const history = useHistory()
   const { getString } = useStrings()
-  const queryParams = useQueryParams<ProcessedExecutionListPageQueryParams>(queryParamOptions)
+  const queryParams = useExecutionListQueryParams()
 
   const [timeRange, setTimeRange] = useState<TimeRangeSelectorProps>({
     range: [startOfDay(moment().subtract(1, 'month').add(1, 'day')), startOfDay(moment())],

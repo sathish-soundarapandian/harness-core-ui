@@ -13,6 +13,37 @@ VERSION=$(cat package.json | grep version | cut -d: -f2 | cut -d\" -f2)
 echo $VERSION
 #KEYS=`git log --pretty=oneline --abbrev-commit | awk "1;/Branching to release\//{exit}" | grep -o -iE '('${PROJECTS}')-[0-9]+' | sort | uniq`
 KEYS=$(git log --pretty=oneline --format="%s" --abbrev-commit ${PREVIOUS_RELEASE_BRANCH}..${CURRENT_RELEASE_BRANCH} | grep -o -iE '('${PROJECTS}')-[0-9]+' | sort | uniq)
+
+
+EXCLUSION_KEYS=$(git log --pretty=oneline --format="%s" --abbrev-commit ${PREVIOUS_RELEASE_BRANCH}..${CURRENT_RELEASE_BRANCH} | grep -o -iE 'hotfixpreqa: [('$PROJECTS')-[0-9]+]' | grep -o -iE '('$PROJECTS')-[0-9]+' | sort | uniq)
+
+EXCLUDED_KEYS_LIST=""
+
+#checking if Pre QA hotfix already contains RELEASE_NG_UI_SAAS or not
+for KEY in ${EXCLUSION_KEYS}
+do
+    EXCLUDE_PROJECTS=",PIE,"
+    echo "Excluded Key - $KEY"
+    IFS="-" read -ra PROJNUM <<< "$KEY"
+    PROJ="${PROJNUM[0]}"
+    # If it is in the exclude projects list, then do not attempt to set the version
+    if [[ $EXCLUDE_PROJECTS == *",$PROJ,"* ]]; then
+      echo "Skipping $KEY - project is archived or not relevant to versions."
+    else
+      Release_NG_UI_SAAS=`curl -X GET -H "Content-Type: application/json" https://harness.atlassian.net/rest/api/2/issue/${KEY} --user $JIRA_USERNAME:$JIRA_PASSWORD | jq ".fields.customfield_10787" | tr -d '"'`
+       if [[ -z ${Release_NG_UI_SAAS} ]]; then
+         echo "Release_NG_UI_SAAS is null"
+       else
+        EXCLUDED_KEYS_LIST="${EXCLUDED_KEYS_LIST} ${KEY}"
+       fi
+    fi
+done
+
+
+#Removing EXCLUDED_KEYS_LIST from the original KEYS List in order to avoid tagging them.
+for EXCLUDE_KEY in ${EXCLUDED_KEYS_LIST}; do
+KEYS=( "${KEYS[@]/$EXCLUDE_KEY}" )
+done
 echo --- List of JIRA ---
 echo $KEYS
 echo --- End

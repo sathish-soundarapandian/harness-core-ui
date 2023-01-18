@@ -38,7 +38,7 @@ describe('module links test', () => {
         <ChaosNavItem />
       </TestWrapper>
     )
-    expect(getByText('common.chaosText')).toBeDefined()
+    expect(getByText('common.purpose.chaos.chaos')).toBeDefined()
     expect(container.querySelector('[data-icon="chaos-main"]')).toBeDefined()
   })
 

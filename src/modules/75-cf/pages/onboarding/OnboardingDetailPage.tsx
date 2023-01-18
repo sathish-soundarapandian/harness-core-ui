@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import {
   Button,
@@ -13,6 +13,7 @@ import {
   Container,
   FlexExpander,
   Heading,
+  Text,
   Layout,
   MultiStepProgressIndicator
 } from '@harness/uicore'
@@ -26,6 +27,7 @@ import { useStrings } from 'framework/strings'
 import type { PlatformEntry } from '@cf/components/LanguageSelection/LanguageSelection'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { CreateAFlagView } from './views/CreateAFlagView'
 import { OnboardingSelectedFlag } from './OnboardingSelectedFlag'
 import { SetUpYourApplicationView } from './views/SetUpYourApplicationView'
@@ -47,16 +49,21 @@ export const OnboardingDetailPage: React.FC = () => {
   const [language, setLanguage] = useState<PlatformEntry>()
   const [apiKey, setApiKey] = useState<ApiKey>()
   const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO | undefined>()
+  const [verified, setVerified] = useState(false)
   const [testDone, setTestDone] = useState(false)
   const [selectedFlag, setSelectedFlag] = useState<Feature | undefined>()
 
   const totalSteps = Object.keys(STEP).length / 2
+
+  const { preference: onboardingBackLocation, clearPreference: clearOnboardingBackLocation } =
+    usePreferenceStore<string>(PreferenceScope.USER, 'FF_ONBOARDING_LOCATION')
 
   const onNext = (): void => {
     if (currentStep !== totalSteps) {
       const nextStep = currentStep + 1
       setCurrentStep(nextStep)
     } else {
+      clearOnboardingBackLocation()
       history.push(routes.toCFFeatureFlags({ accountId: accountIdentifier, orgIdentifier, projectIdentifier }))
     }
   }
@@ -106,121 +113,190 @@ export const OnboardingDetailPage: React.FC = () => {
     }
   }, [currentStep])
 
-  const disableNext = !selectedFlag?.identifier || (selectedStep === STEP.SELECT_ENV_SDK && !apiKey)
+  const disableNext =
+    !selectedFlag?.identifier ||
+    (selectedStep === STEP.SELECT_ENV_SDK && !apiKey) ||
+    (selectedStep === STEP.VALIDATE_FLAG && !verified)
 
   const { trackEvent } = useTelemetry()
 
+  const handleClose = useCallback(() => {
+    if (onboardingBackLocation) {
+      clearOnboardingBackLocation()
+
+      history.push(JSON.parse(onboardingBackLocation))
+    } else {
+      history.push({
+        pathname: routes.toCFConfigurePath({
+          orgIdentifier,
+          projectIdentifier,
+          accountId: accountIdentifier
+        })
+      })
+    }
+  }, [
+    accountIdentifier,
+    clearOnboardingBackLocation,
+    history,
+    onboardingBackLocation,
+    orgIdentifier,
+    projectIdentifier
+  ])
+
   return (
-    <Layout.Vertical
-      padding={{ top: 'huge', left: 'huge', right: 'huge', bottom: 'none' }}
-      background={Color.WHITE}
-      className={css.mainContent}
-    >
+    <>
       <Layout.Horizontal
-        spacing="xsmall"
-        flex
-        data-testid="getStartedProgressStepper"
-        height="10px"
-        padding={{ bottom: 'xlarge' }}
-        className={css.keepOnTop}
+        flex={{ justifyContent: 'space-between' }}
+        height="0"
+        width="100%"
+        padding={{ top: 'huge', left: 'xxlarge', right: 'xxxlarge' }}
       >
-        <MultiStepProgressIndicator
-          progressMap={
-            new Map([
-              [0, { StepStatus: firstStepStatus }],
-              [1, { StepStatus: secondStepStatus }],
-              [2, { StepStatus: thirdStepStatus }]
-            ])
-          }
+        <Layout.Horizontal
+          spacing="small"
+          flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+          padding={{ top: 'xxlarge' }}
+        >
+          <Text
+            font={{ variation: FontVariation.SMALL_BOLD }}
+            color={Color.GREY_800}
+            icon="cf-main"
+            iconProps={{ size: 30 }}
+          >
+            {getString('common.purpose.cf.continuous')}
+          </Text>
+        </Layout.Horizontal>
+        <Button
+          icon="code-close"
+          aria-label={getString('common.createFlag')}
+          variation={ButtonVariation.ICON}
+          data-testid="close"
+          withoutBoxShadow
+          onClick={handleClose}
         />
       </Layout.Horizontal>
-      <Container className={css.onboardingContainer} height="100%" padding={{ top: 'xxlarge', bottom: 'xlarge' }}>
-        {selectedStep !== STEP.VALIDATE_FLAG ? (
-          <>
-            <Heading level={3} font={{ variation: FontVariation.H3 }} margin={{ bottom: 'large' }}>
-              {getString('cf.onboarding.letsGetStarted')}
-            </Heading>
-            <Heading level={4} font={{ variation: FontVariation.H4 }} margin={{ bottom: 'medium' }}>
-              {getString('cf.onboarding.createFlag')}
-            </Heading>
+      <Layout.Horizontal className={css.fullScreenContainer} padding={{ left: 'huge' }}>
+        <Layout.Vertical
+          padding={{ top: 'large', right: 'huge', left: 'huge' }}
+          background={Color.WHITE}
+          className={css.mainContent}
+        >
+          <Layout.Horizontal
+            spacing="xsmall"
+            data-testid="getStartedProgressStepper"
+            height="10px"
+            width="100%"
+            color={Color.GREY_0}
+            padding={{ bottom: 'xlarge' }}
+          >
+            <MultiStepProgressIndicator
+              barWidth={200}
+              textClassName={css.multiStepWizardText}
+              progressMap={
+                new Map([
+                  [0, { StepStatus: firstStepStatus, StepName: getString('common.createFlag') }],
+                  [1, { StepStatus: secondStepStatus, StepName: getString('cf.onboarding.multiStep.createEnv') }],
+                  [2, { StepStatus: thirdStepStatus, StepName: getString('cf.onboarding.multiStep.validate') }]
+                ])
+              }
+            />
+          </Layout.Horizontal>
+          <Container className={css.onboardingContainer} height="100%" padding={{ top: 'xxlarge', bottom: 'xlarge' }}>
+            {selectedStep !== STEP.VALIDATE_FLAG ? (
+              <>
+                <Heading level={3} font={{ variation: FontVariation.H3 }} margin={{ bottom: 'large' }}>
+                  {getString('cf.onboarding.letsGetStarted')}
+                </Heading>
+                <Heading level={4} font={{ variation: FontVariation.H4 }} margin={{ bottom: 'medium' }}>
+                  {getString('cf.onboarding.createFlag')}
+                </Heading>
 
-            {selectedFlag && selectedStep === STEP.SELECT_ENV_SDK && (
-              <Layout.Vertical spacing="medium">
-                <OnboardingSelectedFlag selectedFlag={selectedFlag} />
-                <Divider />
-              </Layout.Vertical>
+                {selectedFlag && selectedStep === STEP.SELECT_ENV_SDK && (
+                  <Layout.Vertical spacing="medium">
+                    <OnboardingSelectedFlag selectedFlag={selectedFlag} />
+                    <Divider />
+                  </Layout.Vertical>
+                )}
+              </>
+            ) : (
+              <Heading level={3} font={{ variation: FontVariation.H3 }} margin={{ bottom: 'large' }}>
+                {getString('cf.onboarding.validatingYourFlag')}
+              </Heading>
             )}
-          </>
-        ) : (
-          <Heading level={3} font={{ variation: FontVariation.H3 }} margin={{ bottom: 'large' }}>
-            {getString('cf.onboarding.validatingYourFlag')}
-          </Heading>
-        )}
-
-        {selectedStep === STEP.CREATE_A_FLAG && (
-          <CreateAFlagView selectedFlag={selectedFlag} setSelectedFlag={setSelectedFlag} />
-        )}
-
-        {selectedStep === STEP.SELECT_ENV_SDK && selectedFlag && (
-          <SetUpYourApplicationView
-            flagInfo={selectedFlag}
-            language={language}
-            setLanguage={setLanguage}
-            apiKey={apiKey}
-            setApiKey={setApiKey}
-            selectedEnvironment={selectedEnvironment}
-            setSelectedEnvironment={setSelectedEnvironment}
-          />
-        )}
-
-        {selectedStep === STEP.VALIDATE_FLAG && selectedFlag && selectedEnvironment && (
-          <ValidateYourFlagView
-            flagInfo={selectedFlag as Feature}
-            language={language as PlatformEntry}
-            apiKey={apiKey as ApiKey}
-            testDone={testDone}
-            setTestDone={setTestDone}
-            environmentIdentifier={selectedEnvironment.identifier}
-          />
-        )}
-      </Container>
-      <Divider />
-      <Layout.Horizontal spacing="small" padding="small">
-        <Button
-          text={getString('back')}
-          icon="chevron-left"
-          onClick={() => {
-            trackEvent(FeatureActions.GetStartedPrevious, {
-              category: Category.FEATUREFLAG
-            })
-            onPrevious()
-          }}
-        />
-        <Button
-          text={getString(selectedStep !== STEP.VALIDATE_FLAG ? 'next' : 'cf.onboarding.complete')}
-          rightIcon={selectedStep !== STEP.VALIDATE_FLAG ? 'chevron-right' : undefined}
-          intent={Intent.PRIMARY}
-          variation={ButtonVariation.PRIMARY}
-          disabled={disableNext}
-          onClick={() => {
-            if (selectedStep === STEP.SELECT_ENV_SDK) {
-              trackEvent(FeatureActions.SetUpYourApplicationVerify, {
-                category: Category.FEATUREFLAG
-              })
-            } else if (selectedStep === STEP.VALIDATE_FLAG) {
-              trackEvent(FeatureActions.TestYourFlagBack, {
-                category: Category.FEATUREFLAG
-              })
-            } else {
-              trackEvent(FeatureActions.GetStartedNext, {
-                category: Category.FEATUREFLAG
-              })
-            }
-            onNext()
-          }}
-        />
-        <FlexExpander />
+            {selectedStep === STEP.CREATE_A_FLAG && (
+              <CreateAFlagView selectedFlag={selectedFlag} setSelectedFlag={setSelectedFlag} />
+            )}
+            {selectedStep === STEP.SELECT_ENV_SDK && selectedFlag && (
+              <SetUpYourApplicationView
+                flagInfo={selectedFlag}
+                language={language}
+                setLanguage={setLanguage}
+                apiKey={apiKey}
+                setApiKey={setApiKey}
+                selectedEnvironment={selectedEnvironment}
+                setSelectedEnvironment={setSelectedEnvironment}
+              />
+            )}
+            {selectedStep === STEP.VALIDATE_FLAG && selectedFlag && selectedEnvironment && (
+              <ValidateYourFlagView
+                flagInfo={selectedFlag as Feature}
+                language={language as PlatformEntry}
+                apiKey={apiKey as ApiKey}
+                testDone={testDone}
+                setTestDone={setTestDone}
+                environmentIdentifier={selectedEnvironment.identifier}
+                verified={verified}
+                setVerified={setVerified}
+              />
+            )}
+          </Container>
+          <Divider className={css.divider} />
+          <Layout.Horizontal
+            width="100%"
+            spacing="small"
+            padding={{ top: 'medium', bottom: 'xlarge' }}
+            flex={{ alignItems: 'flex-start' }}
+          >
+            <Button
+              text={getString(selectedStep !== STEP.CREATE_A_FLAG ? 'back' : 'cancel')}
+              icon={selectedStep !== STEP.CREATE_A_FLAG ? 'chevron-left' : undefined}
+              onClick={() => {
+                if (selectedStep !== STEP.CREATE_A_FLAG) {
+                  trackEvent(FeatureActions.GetStartedPrevious, {
+                    category: Category.FEATUREFLAG
+                  })
+                  onPrevious()
+                } else {
+                  handleClose()
+                }
+              }}
+            />
+            <Button
+              text={getString(selectedStep !== STEP.VALIDATE_FLAG ? 'next' : 'cf.onboarding.complete')}
+              rightIcon={selectedStep !== STEP.VALIDATE_FLAG ? 'chevron-right' : undefined}
+              intent={Intent.PRIMARY}
+              variation={ButtonVariation.PRIMARY}
+              disabled={disableNext}
+              onClick={() => {
+                if (selectedStep === STEP.SELECT_ENV_SDK) {
+                  trackEvent(FeatureActions.SetUpYourApplicationVerify, {
+                    category: Category.FEATUREFLAG
+                  })
+                } else if (selectedStep === STEP.VALIDATE_FLAG) {
+                  trackEvent(FeatureActions.TestYourFlagBack, {
+                    category: Category.FEATUREFLAG
+                  })
+                } else {
+                  trackEvent(FeatureActions.GetStartedNext, {
+                    category: Category.FEATUREFLAG
+                  })
+                }
+                onNext()
+              }}
+            />
+            <FlexExpander />
+          </Layout.Horizontal>
+        </Layout.Vertical>
       </Layout.Horizontal>
-    </Layout.Vertical>
+    </>
   )
 }

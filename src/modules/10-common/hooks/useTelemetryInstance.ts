@@ -21,7 +21,7 @@ interface TelemetryStub {
   initialized: boolean
 }
 
-const telemetry = new Telemetry(window.segmentToken || 'exa6lo7CnJXqKnR83itMpHYLY5fiajft')
+const telemetry = new Telemetry(window.segmentToken)
 
 export function useTelemetryInstance(): TelemetryStub | Telemetry {
   const isStub = window.deploymentType === 'ON_PREM' || __DEV__

@@ -6,7 +6,8 @@
  */
 
 import React from 'react'
-import { MultiTypeInputType, Container, getMultiTypeFromValue, Layout } from '@harness/uicore'
+import cx from 'classnames'
+import { MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
 import { defaultTo, get } from 'lodash-es'
 import {
   FormMultiTypeDurationField,
@@ -15,6 +16,7 @@ import {
 import { shouldRenderRunTimeInputViewWithAllowedValues } from '@pipeline/utils/CIUtils'
 import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useRenderMultiTypeInputWithAllowedValues } from '../utils/utils'
+import css from '../InputSetView.module.scss'
 
 interface TimeoutFieldInputSetViewProps extends Omit<FormMultiTypeDurationProps, 'label'> {
   label: string
@@ -23,8 +25,8 @@ interface TimeoutFieldInputSetViewProps extends Omit<FormMultiTypeDurationProps,
 }
 
 export function TimeoutFieldInputSetView(props: TimeoutFieldInputSetViewProps): JSX.Element {
-  const { template, fieldPath, ...rest } = props
-  const { formik, name, label, placeholder, tooltipProps, multiTypeDurationProps, className, disabled } = rest
+  const { template, fieldPath, className, ...rest } = props
+  const { formik, name, label, placeholder, tooltipProps, multiTypeDurationProps, disabled } = rest
   const { enableConfigureOptions = true, configureOptionsProps } = multiTypeDurationProps || {}
   const value = get(formik?.values, name, '')
 
@@ -36,14 +38,13 @@ export function TimeoutFieldInputSetView(props: TimeoutFieldInputSetViewProps): 
     allowedTypes: defaultTo(multiTypeDurationProps?.allowableTypes, [MultiTypeInputType.FIXED]),
     template: template,
     readonly: disabled,
-    tooltipProps: tooltipProps,
-    className
+    tooltipProps: tooltipProps
   })
 
-  if (shouldRenderRunTimeInputViewWithAllowedValues(fieldPath, template)) {
-    return (
-      <Container className={className}>
-        <Layout.Horizontal spacing={'medium'}>
+  return (
+    <div className={cx(css.fieldAndOptions, className)}>
+      {shouldRenderRunTimeInputViewWithAllowedValues(fieldPath, template) ? (
+        <>
           {getMultiTypeInputWithAllowedValues()}
           {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
             <ConfigureOptions
@@ -57,13 +58,14 @@ export function TimeoutFieldInputSetView(props: TimeoutFieldInputSetViewProps): 
               allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
               style={label ? { marginTop: 'var(--spacing-6)' } : undefined}
               {...configureOptionsProps}
+              isExecutionTimeFieldDisabled
               isReadonly={disabled}
             />
           )}
-        </Layout.Horizontal>
-      </Container>
-    )
-  }
-
-  return <FormMultiTypeDurationField {...rest} />
+        </>
+      ) : (
+        <FormMultiTypeDurationField {...rest} />
+      )}
+    </div>
+  )
 }

@@ -125,7 +125,7 @@ const StepTasAuthentication: React.FC<StepProps<StepConfigureProps> & TasAuthent
         }}
         formName="stepTasAuthForm"
         validationSchema={Yup.object().shape({
-          endpointUrl: URLValidationSchema({ requiredMessage: getString('validation.masterUrl') }),
+          endpointUrl: URLValidationSchema(getString, { requiredMessage: getString('validation.masterUrl') }),
           username: Yup.string().trim().required(getString('validation.username')),
           passwordRef: Yup.string().trim().required(getString('validation.password'))
         })}

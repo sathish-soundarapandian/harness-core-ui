@@ -17,8 +17,11 @@
     color: var(--primary-7) !important;
   }
 
-  svg path {
-    fill: var(--primary-7) !important;
+  [data-icon='git-popover'],
+  [data-icon='main-chevron-down'] {
+    path {
+      fill: var(--primary-7) !important;
+    }
   }
 }
 

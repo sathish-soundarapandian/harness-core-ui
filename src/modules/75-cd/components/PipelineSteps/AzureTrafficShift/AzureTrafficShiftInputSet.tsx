@@ -32,45 +32,43 @@ export function AzureTrafficShiftInputSetRef<T extends AzureTrafficShiftData = A
       {
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.timeout as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <TimeoutFieldInputSetView
-              label={getString('pipelineSteps.timeoutLabel')}
-              name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-              disabled={readonly}
-              multiTypeDurationProps={{
-                configureOptionsProps: {
-                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-                },
-                allowableTypes,
-                expressions,
-                disabled: readonly
-              }}
-              template={inputSetData?.template}
-              fieldPath={'timeout'}
-            />
-          </div>
+          <TimeoutFieldInputSetView
+            label={getString('pipelineSteps.timeoutLabel')}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+            disabled={readonly}
+            multiTypeDurationProps={{
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
+              allowableTypes,
+              expressions,
+              disabled: readonly
+            }}
+            template={inputSetData?.template}
+            fieldPath={'timeout'}
+            className={cx(stepCss.formGroup, stepCss.md)}
+          />
         )
       }
       {
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.spec?.traffic as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <TextFieldInputSetView
-              label={getString('pipeline.trafficPercentage')}
-              name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.traffic`}
-              disabled={readonly}
-              multiTextInputProps={{
-                expressions,
-                disabled: readonly,
-                allowableTypes
-              }}
-              configureOptionsProps={{
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              }}
-              fieldPath={'spec.traffic'}
-              template={inputSetData?.template}
-            />
-          </div>
+          <TextFieldInputSetView
+            label={getString('pipeline.trafficPercentage')}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}spec.traffic`}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              disabled: readonly,
+              allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            fieldPath={'spec.traffic'}
+            template={inputSetData?.template}
+            className={cx(stepCss.formGroup, stepCss.md)}
+          />
         )
       }
     </FormikForm>

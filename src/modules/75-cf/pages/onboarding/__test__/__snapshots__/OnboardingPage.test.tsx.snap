@@ -116,7 +116,7 @@ exports[`OnboardingPage OnboardingPage should be rendered properly 1`] = `
               <p
                 class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey700"
               >
-                cf.onboarding.createAFlag
+                common.createFlag
               </p>
               <span
                 class="bp3-icon bp3-icon-arrow-right StyledProps--main StyledProps--color StyledProps--color-grey600 StyledProps--padding-small"

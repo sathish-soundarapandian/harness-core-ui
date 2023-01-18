@@ -16,23 +16,30 @@ import { useStrings } from 'framework/strings'
 import { Ticker, TickerVerticalAlignment } from '@common/components/Ticker/Ticker'
 import { getBucketSizeForTimeRange } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { PageSpinner, TimeSeriesAreaChart } from '@common/components'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { TimeSeriesAreaChartProps } from '@common/components/TimeSeriesAreaChart/TimeSeriesAreaChart'
 import { DeploymentsTimeRangeContext, INVALID_CHANGE_RATE } from '@cd/components/Services/common'
 import { numberFormatter } from '@common/utils/utils'
 import DeploymentsEmptyState from '@cd/icons/DeploymentsEmptyState.svg'
 import {
-  GetServiceDeploymentsInfoQueryParams,
+  ChangeRate,
+  GetServiceDeploymentsInfoV2QueryParams,
+  ServiceDeployment,
   ServiceDeploymentListInfo,
-  useGetServiceDeploymentsInfo
+  ServiceDeploymentListInfoV2,
+  ServiceDeploymentV2,
+  useGetServiceDeploymentsInfo,
+  useGetServiceDeploymentsInfoV2
 } from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getTooltip } from '@pipeline/utils/DashboardUtils'
-import { getFormattedTimeRange } from '@cd/pages/dashboard/dashboardUtils'
+import { calcTrend, getFormattedTimeRange, RateTrend } from '@cd/pages/dashboard/dashboardUtils'
 import css from '@cd/components/Services/DeploymentsWidget/DeploymentsWidget.module.scss'
 
 export interface ChangeValue {
   value: string
   change: number
+  trend: RateTrend
 }
 
 interface DeploymentWidgetData {
@@ -55,13 +62,14 @@ const TickerValue: React.FC<{ value: number; color: Color }> = props => (
 export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { CDC_DASHBOARD_ENHANCEMENT_NG: flag } = useFeatureFlags()
 
   const { serviceIdentifier } = props
   const { timeRange } = useContext(DeploymentsTimeRangeContext)
 
   const [startTime, endTime] = getFormattedTimeRange(timeRange)
 
-  const queryParams: GetServiceDeploymentsInfoQueryParams = useMemo(() => {
+  const queryParams: GetServiceDeploymentsInfoV2QueryParams = useMemo(() => {
     return {
       accountIdentifier: accountId,
       orgIdentifier,
@@ -75,19 +83,35 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
 
   const {
     loading,
-    data: serviceDeploymentsInfo,
+    data: serviceData,
     error,
     refetch
   } = useGetServiceDeploymentsInfo({
-    queryParams
+    queryParams,
+    lazy: flag
   })
 
+  const {
+    loading: loadingV2,
+    data: serviceDataV2,
+    error: errorV2,
+    refetch: refetchV2
+  } = useGetServiceDeploymentsInfoV2({
+    queryParams,
+    lazy: !flag
+  })
+
+  const [serviceDeploymentsLoading, serviceDeploymentsInfo, serviceDeploymentsError, serviceDeploymentsRefetch] = flag
+    ? [loadingV2, serviceDataV2, errorV2, refetchV2]
+    : [loading, serviceData, error, refetch]
+
   const parseData = useCallback(
-    (serviceDeploymentListInfo: ServiceDeploymentListInfo): DeploymentWidgetData => {
-      const deployments = (serviceDeploymentListInfo.serviceDeploymentList || []).filter(
-        deployment => deployment.time !== undefined
-      )
-      deployments.sort((deploymentA, deploymentB) => ((deploymentA.time || 0) < (deploymentB.time || 0) ? -1 : 1))
+    (serviceDeploymentListInfo: ServiceDeploymentListInfo | ServiceDeploymentListInfoV2): DeploymentWidgetData => {
+      const deploymentsInfo = (
+        (serviceDeploymentListInfo.serviceDeploymentList || []) as (ServiceDeploymentV2 | ServiceDeployment)[]
+      ).filter(deployment => deployment.time !== undefined)
+
+      deploymentsInfo.sort((deploymentA, deploymentB) => ((deploymentA.time || 0) < (deploymentB.time || 0) ? -1 : 1))
 
       const success: SeriesAreaOptions['data'] = []
       const failed: SeriesAreaOptions['data'] = []
@@ -95,7 +119,7 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
       const failureData: number[] = []
       const custom: any = []
 
-      deployments.forEach(deployment => {
+      deploymentsInfo.forEach(deployment => {
         const { failureRate, failureRateChangeRate, frequency, frequencyChangeRate } = deployment.rate || {}
         const rates = {
           failureRate,
@@ -119,15 +143,42 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
       return {
         deployments: {
           value: numberFormatter(serviceDeploymentListInfo.totalDeployments),
-          change: serviceDeploymentListInfo.totalDeploymentsChangeRate || 0
+          change: defaultTo(
+            flag && serviceDeploymentListInfo.totalDeploymentsChangeRate
+              ? (serviceDeploymentListInfo.totalDeploymentsChangeRate as ChangeRate).percentChange
+              : (serviceDeploymentListInfo.totalDeploymentsChangeRate as number),
+            0
+          ),
+          trend:
+            flag && serviceDeploymentListInfo.totalDeploymentsChangeRate
+              ? ((serviceDeploymentListInfo.totalDeploymentsChangeRate as ChangeRate).trend as RateTrend)
+              : calcTrend(serviceDeploymentListInfo.totalDeploymentsChangeRate as number)
         },
         failureRate: {
           value: numberFormatter(serviceDeploymentListInfo.failureRate),
-          change: serviceDeploymentListInfo.failureRateChangeRate || 0
+          change: defaultTo(
+            flag && serviceDeploymentListInfo.failureRateChangeRate
+              ? (serviceDeploymentListInfo.failureRateChangeRate as ChangeRate).percentChange
+              : (serviceDeploymentListInfo.failureRateChangeRate as number),
+            0
+          ),
+          trend:
+            flag && serviceDeploymentListInfo.failureRateChangeRate
+              ? ((serviceDeploymentListInfo.failureRateChangeRate as ChangeRate).trend as RateTrend)
+              : calcTrend(serviceDeploymentListInfo.failureRateChangeRate as number)
         },
         frequency: {
           value: numberFormatter(serviceDeploymentListInfo.frequency),
-          change: serviceDeploymentListInfo.frequencyChangeRate || 0
+          change: defaultTo(
+            flag && serviceDeploymentListInfo.frequencyChangeRate
+              ? (serviceDeploymentListInfo.frequencyChangeRate as ChangeRate).percentChange
+              : (serviceDeploymentListInfo.frequencyChangeRate as number),
+            0
+          ),
+          trend:
+            flag && serviceDeploymentListInfo.frequencyChangeRate
+              ? ((serviceDeploymentListInfo.frequencyChangeRate as ChangeRate).trend as RateTrend)
+              : calcTrend(serviceDeploymentListInfo.frequencyChangeRate as number)
         },
         data: [
           {
@@ -158,23 +209,23 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
   }
 
   if (
-    loading ||
-    error ||
+    serviceDeploymentsLoading ||
+    serviceDeploymentsError ||
     !serviceDeploymentsInfo?.data ||
     (serviceDeploymentsInfo.data.totalDeployments === 0 && serviceDeploymentsInfo.data.totalDeploymentsChangeRate === 0)
   ) {
     const component = (() => {
-      if (loading) {
+      if (serviceDeploymentsLoading) {
         return (
           <Container data-test="deploymentsWidgetLoader">
             <PageSpinner />
           </Container>
         )
       }
-      if (error) {
+      if (serviceDeploymentsError) {
         return (
           <Container data-test="deploymentsWidgetError" height={'100%'}>
-            <PageError onClick={() => refetch()} />
+            <PageError onClick={() => serviceDeploymentsRefetch()} />
           </Container>
         )
       }
@@ -217,7 +268,8 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
       },
       max: Math.max(
         ...(serviceDeploymentsInfo?.data?.serviceDeploymentList || []).map(
-          deployment => (deployment.deployments?.failure || 0) + (deployment.deployments?.success || 0)
+          (deployment: ServiceDeploymentV2 | ServiceDeployment) =>
+            (deployment.deployments?.failure || 0) + (deployment.deployments?.success || 0)
         )
       )
     },
@@ -231,7 +283,7 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
       }
     }
   }
-  const isDeploymentBoost = deployments.change === INVALID_CHANGE_RATE
+  const isDeploymentBoost = deployments.change === INVALID_CHANGE_RATE || deployments.trend === RateTrend.INVALID
   return (
     <DeploymentWidgetContainer>
       <Container data-test="deploymentsWidgetContent">
@@ -247,13 +299,13 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
                 ) : (
                   <TickerValue
                     value={deployments.change}
-                    color={isDeploymentBoost || deployments.change > 0 ? Color.GREEN_600 : Color.RED_500}
+                    color={isDeploymentBoost || deployments.trend === RateTrend.UP ? Color.GREEN_600 : Color.RED_500}
                   />
                 )
               }
-              decreaseMode={!isDeploymentBoost && deployments.change < 0}
+              decreaseMode={!isDeploymentBoost && deployments.trend === RateTrend.DOWN}
               boost={isDeploymentBoost}
-              color={isDeploymentBoost || deployments.change > 0 ? Color.GREEN_600 : Color.RED_500}
+              color={isDeploymentBoost || deployments.trend === RateTrend.UP ? Color.GREEN_600 : Color.RED_500}
               verticalAlign={TickerVerticalAlignment.CENTER}
               size={isDeploymentBoost ? 10 : 6}
             >
@@ -274,7 +326,7 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
             { ...frequency, name: getString('cd.serviceDashboard.frequency') }
           ].map((item, index) => {
             const colors = index ? [Color.GREEN_600, Color.RED_500] : [Color.RED_500, Color.GREEN_600]
-            const isBoost = item.change === INVALID_CHANGE_RATE
+            const isBoost = item.change === INVALID_CHANGE_RATE || item.trend === RateTrend.INVALID
             return (
               <Layout.Vertical
                 padding={'small'}
@@ -294,13 +346,16 @@ export const DeploymentsWidget: React.FC<DeploymentWidgetProps> = props => {
                     isBoost ? (
                       <></>
                     ) : (
-                      <TickerValue value={item.change} color={isBoost || item.change > 0 ? colors[0] : colors[1]} />
+                      <TickerValue
+                        value={item.change}
+                        color={isBoost || item.trend === RateTrend.UP ? colors[0] : colors[1]}
+                      />
                     )
                   }
-                  decreaseMode={!isBoost && item.change < 0}
+                  decreaseMode={!isBoost && item.trend === RateTrend.DOWN}
                   boost={isBoost}
                   size={isBoost ? 10 : 6}
-                  color={isBoost || item.change > 0 ? colors[0] : colors[1]}
+                  color={isBoost || item.trend === RateTrend.UP ? colors[0] : colors[1]}
                   tickerContainerStyles={css.tickerContainerStyles}
                   verticalAlign={TickerVerticalAlignment.CENTER}
                 >

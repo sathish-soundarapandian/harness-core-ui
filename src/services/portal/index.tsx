@@ -3298,11 +3298,6 @@ export interface ChangesetInformation {
   [key: string]: any
 }
 
-export type ChaosModuleLicenseDTO = ModuleLicenseDTO & {
-  totalChaosExperimentRuns?: number
-  totalChaosInfrastructures?: number
-}
-
 export interface CloneMetadata {
   environment?: Environment
   serviceMapping?: {

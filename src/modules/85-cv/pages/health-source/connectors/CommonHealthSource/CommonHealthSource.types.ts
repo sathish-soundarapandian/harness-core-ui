@@ -11,9 +11,11 @@ import type {
   FailMetricThresholdSpec,
   MetricThreshold,
   MetricThresholdSpec,
+  NextGenHealthSourceSpec,
+  RiskCategoryDTO,
   TimeSeriesMetricPackDTO
 } from 'services/cv'
-import type { CriteriaPercentageType } from '../../common/MetricThresholds/MetricThresholds.types'
+import type { CriteriaPercentageType, MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
 import type { HealthSourceTypes } from '../../types'
 import type { CHART_VISIBILITY_ENUM, FIELD_ENUM } from './CommonHealthSource.constants'
 
@@ -47,8 +49,15 @@ export interface HealthSourceConfig {
     logsTable?: {
       enabled: boolean
     }
+    assign?: {
+      enabled: boolean
+      defaultServiceInstance: string
+      hideCV?: boolean
+      hideServiceIdentifier?: boolean
+      hideSLIAndHealthScore?: boolean
+    }
   }
-  metricPacks: {
+  metricPacks?: {
     enabled: boolean
   }
   sideNav?: {
@@ -69,7 +78,7 @@ export interface HealthSourceSetupSource {
   workspaceId?: string
 
   // Custom metrics section
-  customMetricsMap: Map<string, CommonCustomMetricFormikInterface>
+  queryMetricsMap: Map<string, CommonCustomMetricFormikInterface>
   selectedMetric: string
 
   // metrics threshold section
@@ -77,42 +86,31 @@ export interface HealthSourceSetupSource {
   failFastThresholds: HealthSourceMetricThresholdType[]
 }
 
-export interface HealthSourceInitialData {
-  // Fields coming from define health source screen
+export interface HealthSourceProductsType {
+  [key: string]: SelectOption
+}
+
+export interface HealthSourcePayload {
   name: string
-  identifier: string
-  connectorRef: { connector: { identifier: string }; value: string }
-  product: string
   type: HealthSourceTypes
-
-  // Configurations Page
-  // non custom metric section
-
-  // Custom Metric section
-  customMetricsMap: Map<string, CommonCustomMetricFormikInterface>
-  selectedMetric?: string
-
-  // metric thresholds
-  ignoreThresholds?: HealthSourceMetricThresholdType[]
-  failFastThresholds?: HealthSourceMetricThresholdType[]
+  identifier: string
+  spec: NextGenHealthSourceSpec
 }
 
 export interface CommonHealthSourceConfigurations {
-  // non custom metric section
-
   // Custom Metric section
-  customMetricsMap: Map<string, CommonCustomMetricFormikInterface>
+  queryMetricsMap: Map<string, CommonCustomMetricFormikInterface>
   selectedMetric: string
 
   // metric thresholds
-  ignoreThresholds: HealthSourceMetricThresholdType[]
-  failFastThresholds: HealthSourceMetricThresholdType[]
+  ignoreThresholds: MetricThresholdType[]
+  failFastThresholds: MetricThresholdType[]
 }
 
 export interface CommonCustomMetricFormikInterface {
   identifier: string
   metricName: string
-  groupName: SelectOption | string
+  groupName: string | SelectOption
 
   // Define Query
   query: string
@@ -128,8 +126,7 @@ export interface CommonCustomMetricFormikInterface {
   healthScore?: boolean
 
   // Risk
-  // TODO - define RiskCategoryEnum
-  riskCategory?: string
+  riskCategory?: RiskCategoryDTO['identifier']
 
   // Deviation compare to baseline
   lowerBaselineDeviation?: boolean

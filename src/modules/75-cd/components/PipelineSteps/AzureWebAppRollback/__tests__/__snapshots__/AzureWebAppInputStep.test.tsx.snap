@@ -38,7 +38,7 @@ exports[`Test Azure Web App Rollback input set timeout should be updated 1`] = `
         >
           <div>
             <div
-              class="formGroup md"
+              class="fieldAndOptions formGroup md"
             >
               <div
                 class="bp3-form-group"

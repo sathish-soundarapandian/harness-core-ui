@@ -19,7 +19,7 @@ exports[`GithubPackageRegistry tests renders fine for the NEW artifact 1`] = `
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="imagePathContainer"
@@ -538,7 +538,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as regex 1
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="imagePathContainer"
@@ -1025,7 +1025,7 @@ exports[`GithubPackageRegistry tests renders fine for the versionType as value 1
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="imagePathContainer"

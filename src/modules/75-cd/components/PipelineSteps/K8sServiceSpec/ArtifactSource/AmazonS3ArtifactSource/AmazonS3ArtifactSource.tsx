@@ -6,7 +6,6 @@
  */
 
 import React, { useMemo } from 'react'
-import type { FormikValues } from 'formik'
 import { defaultTo, get, isEmpty, isNil, memoize } from 'lodash-es'
 import { Menu } from '@blueprintjs/core'
 
@@ -35,6 +34,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
@@ -47,13 +47,6 @@ import {
   shouldFetchTagsSource
 } from '../artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
-
-export const resetFieldValue = (formik: FormikValues, fieldPath: string): void => {
-  const fieldValue = get(formik?.values, fieldPath, '')
-  if (getMultiTypeFromValue(fieldValue) === MultiTypeInputType.FIXED && fieldValue?.length) {
-    formik.setFieldValue(fieldPath, '')
-  }
-}
 
 const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
   const {
@@ -140,7 +133,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     accountIdentifier: accountId,
     orgIdentifier,
     projectIdentifier,
-    connectorRef: fixedConnectorValue,
+    connectorRef: getFinalQueryParamValue(fixedConnectorValue),
     region: getFinalQueryParamValue(fixedRegionValue),
     pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
     serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,

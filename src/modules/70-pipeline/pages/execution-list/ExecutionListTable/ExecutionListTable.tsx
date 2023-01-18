@@ -15,11 +15,11 @@ import type {
   PagePipelineExecutionSummary,
   PipelineExecutionSummary
 } from 'services/pipeline-ng'
-import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { useUpdateQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
-import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import {
   DurationCell,
   ExecutionCell,
@@ -33,31 +33,32 @@ import {
 } from './ExecutionListCells'
 import { ExecutionStageList } from './ExecutionStageList'
 import type { SortBy } from '../types'
-import { useExecutionListFilterContext } from '../ExecutionListFilterContext/ExecutionListFilterContext'
+import { useExecutionListQueryParams } from '../utils/executionListUtil'
 import css from './ExecutionListTable.module.scss'
 
 export interface ExecutionListColumnActions {
   onViewCompiledYaml: (pipelineExecutionSummary: PipelineExecutionSummary) => void
   isPipelineInvalid?: boolean
+  setLoadingForDebugMode?: (loading: boolean) => void
 }
 
 export interface ExecutionListTableProps extends ExecutionListColumnActions {
   executionList: PagePipelineExecutionSummary
 }
 
-export function ExecutionListTable({
+function ExecutionListTable({
   executionList,
   isPipelineInvalid,
-  onViewCompiledYaml
+  onViewCompiledYaml,
+  setLoadingForDebugMode
 }: ExecutionListTableProps): React.ReactElement {
   const history = useHistory()
   const { updateQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
-  const {
-    queryParams: { sort }
-  } = useExecutionListFilterContext()
+  const pathParams = useParams<PipelineType<PipelinePathProps>>()
+  const queryParams = useExecutionListQueryParams()
   const { getString } = useStrings()
   const { isCompareMode } = useExecutionCompareContext()
-  const [currentSort, currentOrder] = sort
+  const [currentSort, currentOrder] = queryParams.sort
 
   const {
     content = [],
@@ -88,7 +89,7 @@ export function ExecutionListTable({
       },
       {
         Header: getString('filters.executions.pipelineName'),
-        accessor: 'pipelineIdentifier',
+        accessor: 'name',
         Cell: PipelineNameCell,
         serverSortProps: getServerSortProps('name')
       },
@@ -122,15 +123,13 @@ export function ExecutionListTable({
         Cell: MenuCell,
         isPipelineInvalid,
         onViewCompiledYaml,
+        setLoadingForDebugMode,
         disableSortBy: true
       }
     ]
-  }, [isCompareMode, isPipelineInvalid, onViewCompiledYaml, currentOrder, currentSort])
+  }, [isCompareMode, isPipelineInvalid, onViewCompiledYaml, currentOrder, currentSort, setLoadingForDebugMode])
 
   const renderRowSubComponent = React.useCallback(({ row }) => <ExecutionStageList row={row} />, [])
-
-  const pathParams = useParams<PipelineType<PipelinePathProps>>()
-  const queryParams = useQueryParams<GitQueryParams>()
 
   return (
     <TableV2<PipelineExecutionSummary>
@@ -147,6 +146,7 @@ export function ExecutionListTable({
       sortable
       renderRowSubComponent={renderRowSubComponent}
       onRowClick={rowDetails => history.push(getExecutionPipelineViewLink(rowDetails, pathParams, queryParams))}
+      autoResetExpanded={false}
     />
   )
 }

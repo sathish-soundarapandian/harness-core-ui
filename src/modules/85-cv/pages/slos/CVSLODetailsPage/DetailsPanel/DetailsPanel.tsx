@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { Card, Container, Heading, Page, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
@@ -13,6 +13,7 @@ import { useStrings } from 'framework/strings'
 import { useGetSLODetails } from 'services/cv'
 import { useQueryParams } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { getMonitoredServiceIdentifiers } from '@cv/utils/CommonUtils'
 import ChangesSourceCard from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesSourceCard/ChangesSourceCard'
 import ChangesTable from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/ChangesTable'
 import ServiceDetails from './views/ServiceDetails'
@@ -33,9 +34,11 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
   const { accountId, orgIdentifier, projectIdentifier, identifier } = useParams<
     ProjectPathProps & { identifier: string }
   >()
+
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
   const { sloType } = useQueryParams<{ sloType?: string }>()
   const isCompositeSLO = sloType === SLOType.COMPOSITE
-  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
+
   const { currentPeriodStartTime = 0, currentPeriodEndTime = 0, monitoredServiceDetails } = sloDashboardWidget ?? {}
   const [chartTimeRange, setChartTimeRange] = useState<{ startTime: number; endTime: number }>()
   const [sliderTimeRange, setSliderTimeRange] = useState<{ startTime: number; endTime: number }>()
@@ -55,6 +58,11 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
       endTime: chartTimeRange?.endTime
     }
   })
+
+  const monitoredServiceIdentifiers = useMemo(
+    () => getMonitoredServiceIdentifiers(isAccountLevel, sloDashboardWidget?.monitoredServiceDetails),
+    [isAccountLevel, sloDashboardWidget?.monitoredServiceDetails]
+  )
 
   return (
     <Page.Body
@@ -86,45 +94,40 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
               <Container padding={{ bottom: 'xlarge' }} />
             </>
           )}
-          {!isAccountLevel && (
-            <Card className={css.changesCard}>
-              <Heading
-                level={2}
-                color={Color.GREY_800}
-                padding={{ bottom: 'medium' }}
-                font={{ variation: FontVariation.CARD_TITLE }}
-              >
-                {getString('changes')}
-              </Heading>
-              <ChangesSourceCard
-                startTime={startTime}
-                endTime={endTime}
-                monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
-                monitoredServiceIdentifiers={
-                  sloDashboardWidget?.monitoredServiceDetails?.map(
-                    serviceDetails => serviceDetails.monitoredServiceIdentifier || ''
-                  ) || []
-                }
-              />
-              <Text
-                icon="info"
-                color={Color.GREY_600}
-                iconProps={{ size: 12, color: Color.PRIMARY_7 }}
-                font={{ variation: FontVariation.SMALL }}
-                padding={{ top: 'small', bottom: 'small' }}
-              >
-                {getString('cv.theTrendIsDeterminedForTheSelectedPeriodOverPeriod')}
-              </Text>
-              <ChangesTable
-                isCardView={false}
-                hasChangeSource
-                startTime={startTime}
-                endTime={endTime}
-                monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
-                monitoredServiceDetails={monitoredServiceDetails || []}
-              />
-            </Card>
-          )}
+
+          <Card className={css.changesCard}>
+            <Heading
+              level={2}
+              color={Color.GREY_800}
+              padding={{ bottom: 'medium' }}
+              font={{ variation: FontVariation.CARD_TITLE }}
+            >
+              {getString('changes')}
+            </Heading>
+            <ChangesSourceCard
+              startTime={startTime}
+              endTime={endTime}
+              monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
+              monitoredServiceIdentifiers={monitoredServiceIdentifiers}
+            />
+            <Text
+              icon="info"
+              color={Color.GREY_600}
+              iconProps={{ size: 12, color: Color.PRIMARY_7 }}
+              font={{ variation: FontVariation.SMALL }}
+              padding={{ top: 'small', bottom: 'small' }}
+            >
+              {getString('cv.theTrendIsDeterminedForTheSelectedPeriodOverPeriod')}
+            </Text>
+            <ChangesTable
+              isCardView={false}
+              hasChangeSource
+              startTime={startTime}
+              endTime={endTime}
+              monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
+              monitoredServiceDetails={monitoredServiceDetails || []}
+            />
+          </Card>
         </Container>
       )}
     </Page.Body>

@@ -27,39 +27,37 @@ function QueueInputStep({ inputSetData, readonly, allowableTypes, stepViewType }
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${prefix}timeout`}
-            disabled={readonly}
-            fieldPath={'timeout'}
-            template={inputSetData?.template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${prefix}timeout`}
+          disabled={readonly}
+          fieldPath={'timeout'}
+          template={inputSetData?.template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
       {getMultiTypeFromValue(inputSetData?.template?.spec?.key) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TextFieldInputSetView
-            label={getString('pipeline.queueStep.resourceKey')}
-            name={`${prefix}spec.key`}
-            multiTextInputProps={{ expressions, allowableTypes }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            placeholder={getString('pipeline.queueStep.keyPlaceholder')}
-            disabled={!!readonly}
-            fieldPath={'spec.key'}
-            template={inputSetData?.template}
-          />
-        </div>
+        <TextFieldInputSetView
+          label={getString('pipeline.queueStep.resourceKey')}
+          name={`${prefix}spec.key`}
+          multiTextInputProps={{ expressions, allowableTypes }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          placeholder={getString('pipeline.queueStep.keyPlaceholder')}
+          disabled={!!readonly}
+          fieldPath={'spec.key'}
+          template={inputSetData?.template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
       {getMultiTypeFromValue(inputSetData?.template?.spec?.scope) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>

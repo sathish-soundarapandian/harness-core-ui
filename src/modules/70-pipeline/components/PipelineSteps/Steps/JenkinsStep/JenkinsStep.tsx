@@ -58,6 +58,7 @@ export class JenkinsStep extends PipelineStep<JenkinsStepData> {
   constructor() {
     super()
     this._hasStepVariables = true
+    this._hasDelegateSelectionVisible = true
     this.invocationMap = new Map()
   }
 

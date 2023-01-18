@@ -79,23 +79,10 @@ function FormContent({
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeDurationProps={{
             expressions,
-            enableConfigureOptions: false,
+            enableConfigureOptions: true,
             allowableTypes
           }}
         />
-        {getMultiTypeFromValue(formik.values.timeout) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={formik.values.timeout || ''}
-            type="String"
-            variableName="timeout"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={value => formik.setFieldValue('timeout', value)}
-            isReadonly={readonly}
-            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-          />
-        )}
       </div>
 
       <div className={stepCss.stepSubSectionHeading}>Approval Message</div>
@@ -324,10 +311,16 @@ function HarnessApprovalStepMode(
               .test({
                 test(value: string) {
                   if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED && !value.match(regexPositiveNumbers)) {
-                    return this.createError({
-                      message: getString('pipeline.approvalStep.validation.minimumCountOne')
-                    })
+                    if (value !== '0' && value.includes('.'))
+                      return this.createError({
+                        message: getString('pipeline.approvalStep.validation.minimumCountDecimal')
+                      })
+                    else
+                      return this.createError({
+                        message: getString('pipeline.approvalStep.validation.minimumCountOne')
+                      })
                   }
+
                   return true
                 }
               })

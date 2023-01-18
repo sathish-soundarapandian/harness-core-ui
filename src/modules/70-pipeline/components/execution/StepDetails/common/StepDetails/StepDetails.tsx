@@ -107,7 +107,7 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
             </td>
           </tr>
         ))}
-        {showDelegateRow(step.delegateInfoList, taskList) && (
+        {(showDelegateRow(step.delegateInfoList, taskList) || step.stepDetails?.initStepV2DelegateTaskInfo) && (
           <tr className={css.delegateRow}>
             <th>
               {isExecutionCompletedWithBadState(step.status) && (
@@ -146,6 +146,32 @@ export function StepDetails(props: StepDetailsProps): React.ReactElement {
                       )
                     </div>
                   ))}
+                {step.stepDetails?.initStepV2DelegateTaskInfo && (
+                  <div key={`${step.stepDetails?.initStepV2DelegateTaskInfo.taskID}`}>
+                    <Text font={{ size: 'small', weight: 'bold' }}>
+                      <String
+                        stringID="common.delegateForTask"
+                        vars={{ taskName: step.stepDetails?.initStepV2DelegateTaskInfo.taskName }}
+                        useRichText
+                      />
+                    </Text>{' '}
+                    (
+                    <Text
+                      font={{ size: 'small' }}
+                      onClick={() =>
+                        openDelegateSelectionLogsModal({
+                          taskId: step.stepDetails?.initStepV2DelegateTaskInfo.taskID as unknown as string,
+                          taskName: step.stepDetails?.initStepV2DelegateTaskInfo.taskName as unknown as string
+                        })
+                      }
+                      style={{ cursor: 'pointer' }}
+                      color={Color.PRIMARY_7}
+                    >
+                      {getString('common.logs.delegateSelectionLogs')}
+                    </Text>
+                    )
+                  </div>
+                )}
                 {taskList &&
                   taskList.length > 0 &&
                   taskList.map((item, index) =>

@@ -6,7 +6,7 @@
  */
 
 import React, { MutableRefObject, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef } from 'react'
-import { debounce, defaultTo, get, isEmpty, set } from 'lodash-es'
+import { debounce, defaultTo, get } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
 
@@ -16,7 +16,7 @@ import { useStrings } from 'framework/strings'
 import type { StageElementConfig } from 'services/cd-ng'
 
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
@@ -27,8 +27,6 @@ import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/Depl
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-
-import { StageType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { getAllowableTypesWithoutFixedValue } from '@pipeline/utils/runPipelineUtils'
@@ -36,6 +34,7 @@ import { getAllowableTypesWithoutFixedValue } from '@pipeline/utils/runPipelineU
 import ErrorsStripBinded from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
 import type { DeployEnvironmentEntityConfig } from '@cd/components/PipelineSteps/DeployEnvironmentEntityStep/types'
 
+import { isContextTypeTemplateType } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
 export default function DeployEnvSpecifications(props: PropsWithChildren<unknown>): JSX.Element {
@@ -43,6 +42,8 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
   const { getString } = useStrings()
   const { submitFormsForTab } = useContext(StageErrorContext)
   const { errorMap } = useValidationErrors()
+
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   const isMultiInfra = useFeatureFlag(FeatureFlag.MULTI_SERVICE_INFRA)
 
@@ -60,6 +61,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     scope,
     isReadonly,
     allowableTypes,
+    contextType,
     getStageFromPipeline,
     updateStage
   } = usePipelineContext()
@@ -75,27 +77,6 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     ),
     [updateStage]
   )
-
-  useEffect(() => {
-    // istanbul ignore else
-    if (
-      isEmpty(stage?.stage?.spec?.environment) &&
-      isEmpty(stage?.stage?.spec?.environments) &&
-      isEmpty(stage?.stage?.spec?.environmentGroup) &&
-      stage?.stage?.type === StageType.DEPLOY
-    ) {
-      const stageData = produce(stage, draft => {
-        if (draft) {
-          set(draft, 'stage.spec', {
-            ...stage.stage?.spec,
-            environment: {}
-          })
-        }
-      })
-      debounceUpdateStage(stageData?.stage)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   const updateEnvStep = useCallback(
     /* istanbul ignore next */ (value: DeployStageConfig) => {
@@ -148,14 +129,19 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
     }
 
     return {
-      environment: { environmentRef: scope !== Scope.PROJECT ? RUNTIME_INPUT_VALUE : '' }
+      environment: {
+        environmentRef: !(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType)) ? RUNTIME_INPUT_VALUE : ''
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage?.stage?.spec])
 
   const filteredAllowableTypes = useMemo(
-    () => (scope === Scope.PROJECT ? allowableTypes : getAllowableTypesWithoutFixedValue(allowableTypes)),
-    [scope, allowableTypes]
+    () =>
+      scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
+        ? allowableTypes
+        : getAllowableTypesWithoutFixedValue(allowableTypes),
+    [scope, CDS_OrgAccountLevelServiceEnvEnvGroup, allowableTypes]
   )
 
   return (
@@ -192,7 +178,7 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
                   ...(get(stage, 'stage.spec.environment', false) && {
                     environment: get(stage, 'stage.spec.environment')
                   }),
-                  ...(scope !== Scope.PROJECT && {
+                  ...(!(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType)) && {
                     environment: { environmentRef: RUNTIME_INPUT_VALUE }
                   }),
                   ...(get(stage, 'stage.spec.environmentGroup', false) && {

@@ -36,8 +36,6 @@ import ValidationStatus from '@cv/pages/components/ValidationStatus/ValidationSt
 import MetricsVerificationModal from '@cv/components/MetricsVerificationModal/MetricsVerificationModal'
 import { StatusOfValidation } from '@cv/pages/components/ValidationStatus/ValidationStatus.constants'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import {
@@ -89,7 +87,7 @@ export default function AppDMonitoredSource({
   const { getString } = useStrings()
   const { showError, clear } = useToaster()
 
-  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
+  const isMetricThresholdEnabled = !isTemplate
 
   const [selectedMetricPacks, setSelectedMetricPacks] = useState<TimeSeriesMetricPackDTO[]>([])
   const [validationResultData, setValidationResultData] = useState<AppdynamicsValidationResponse[]>()

@@ -23,7 +23,8 @@ import type {
   CustomHealthSourceLogSpec,
   ELKHealthSourceSpec,
   CloudWatchMetricsHealthSourceSpec,
-  AwsPrometheusHealthSourceSpec
+  AwsPrometheusHealthSourceSpec,
+  NextGenHealthSourceSpec
 } from 'services/cv'
 import type { DatadogLogsHealthSpec } from '@cv/pages/health-source/connectors/DatadogLogsHealthSource/DatadogLogsHealthSource.type'
 import type { GCOLogsHealthSourceSpec } from '../connectors/GCOLogsMonitoringSource/components/MapQueriesToHarnessService/types'
@@ -45,6 +46,7 @@ export interface UpdatedHealthSource extends Omit<HealthSource, 'spec'> {
     | ELKHealthSourceSpec
     | CloudWatchMetricsHealthSourceSpec
     | AwsPrometheusHealthSourceSpec
+    | NextGenHealthSourceSpec
 }
 
 export interface RowData extends HealthSource {

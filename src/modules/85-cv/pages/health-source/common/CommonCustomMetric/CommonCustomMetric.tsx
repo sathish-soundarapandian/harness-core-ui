@@ -5,17 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useContext } from 'react'
+import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { SetupSourceLayout } from '@cv/components/CVSetupSourcesView/SetupSourceLayout/SetupSourceLayout'
-import { useStrings } from 'framework/strings'
+import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { CommonMultiItemsSideNav } from '@cv/components/CommonMultiItemsSideNav/CommonMultiItemsSideNav'
-import {
-  onSelectMetric,
-  getGroupedCreatedMetrics,
-  updateSelectedMetricsMap,
-  onRemoveMetric
-} from './CommonCustomMetric.utils'
+import { updateSelectedMetricsMap } from './CommonCustomMetric.utils'
 import type { CommonCustomMetricInterface } from './CommonCustomMetric.types'
+import { updateParentFormikWithLatestData } from '../../connectors/CommonHealthSource/components/CustomMetricForm/CustomMetricFormContainer.utils'
+import { useCommonHealthSource } from '../../connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/useCommonHealthSource'
 
 export default function CommonCustomMetric(props: CommonCustomMetricInterface): JSX.Element {
   const {
@@ -25,88 +23,112 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
     tooptipMessage,
     addFieldLabel,
     createdMetrics,
-    isValidInput,
     mappedMetrics,
     selectedMetric,
     groupedCreatedMetrics,
-    setMappedMetrics,
-    setCreatedMetrics,
-    setGroupedCreatedMetrics,
     initCustomForm,
     isPrimaryMetric,
     shouldBeAbleToDeleteLastMetric,
     isMetricThresholdEnabled,
     filterRemovedMetricNameThresholds,
-    openEditMetricModal
+    openEditMetricModal,
+    defaultServiceInstance
   } = props
-  const { getString } = useStrings()
+
+  const { isQueryRuntimeOrExpression, updateParentFormik } = useCommonHealthSource()
+  const { isTemplate } = useContext(SetupSourceTabsContext)
 
   useEffect(() => {
-    setMappedMetrics(oldState => {
-      const emptyName = formikValues?.metricName?.length
-      // add default metric data when we delete last metric and add again
-      if (!emptyName && !oldState?.selectedMetric && mappedMetrics?.size === 0) {
-        const initMap = new Map()
-        initMap.set(defaultMetricName, initCustomForm)
-        return { selectedMetric: defaultMetricName, mappedMetrics: initMap }
-      }
-      if (!emptyName) {
-        return { selectedMetric: oldState.selectedMetric, mappedMetrics: mappedMetrics }
-      }
-      const metricName = formikValues.metricName || ''
-      const duplicateName =
-        Array.from(mappedMetrics.keys()).indexOf(metricName) > -1 &&
-        oldState.selectedMetric !== formikValues?.metricName
-      if (duplicateName) {
-        return { selectedMetric: oldState.selectedMetric, mappedMetrics: mappedMetrics }
-      }
+    let data = { selectedMetric, mappedMetrics }
+    const emptyName = formikValues?.metricName?.length
+    // add default metric data when we delete last metric and add again
+    if (!emptyName && !selectedMetric && mappedMetrics?.size === 0) {
+      const initMap = new Map()
+      initMap.set(defaultMetricName, initCustomForm)
+      data = { selectedMetric: defaultMetricName, mappedMetrics: initMap }
+    }
+    if (!emptyName) {
+      data = { selectedMetric: selectedMetric, mappedMetrics: mappedMetrics }
+    }
+    const metricName = formikValues.metricName || ''
+    const duplicateName =
+      Array.from(mappedMetrics?.keys()).indexOf(metricName) > -1 && selectedMetric !== formikValues?.metricName
+    if (duplicateName) {
+      data = { selectedMetric: selectedMetric, mappedMetrics: mappedMetrics }
+    }
 
-      return updateSelectedMetricsMap({
-        updatedMetric: metricName,
-        oldMetric: oldState.selectedMetric,
-        mappedMetrics: oldState.mappedMetrics,
+    if (formikValues?.continuousVerification && !formikValues.serviceInstance) {
+      formikValues.serviceInstance = defaultServiceInstance
+    }
+
+    data = updateSelectedMetricsMap({
+      updatedMetric: formikValues.metricName,
+      oldMetric: selectedMetric,
+      mappedMetrics,
+      formikValues,
+      initCustomForm,
+      isPrimaryMetric
+    })
+
+    updateParentFormikWithLatestData(updateParentFormik, data?.mappedMetrics, data?.selectedMetric)
+  }, [formikValues?.groupName, formikValues?.metricName, formikValues?.continuousVerification])
+
+  useEffect(() => {
+    let isUpdated = false
+    const isServiceInstanceFixed = getMultiTypeFromValue(formikValues.serviceInstance) === MultiTypeInputType.FIXED
+
+    if (isQueryRuntimeOrExpression) {
+      const canMakeRuntime = !formikValues.serviceInstance || isServiceInstanceFixed
+      if (canMakeRuntime) {
+        formikValues.serviceInstance = RUNTIME_INPUT_VALUE
+        isUpdated = true
+      }
+    }
+
+    if (isUpdated) {
+      const data = updateSelectedMetricsMap({
+        updatedMetric: formikValues.metricName,
+        oldMetric: selectedMetric,
+        mappedMetrics,
         formikValues,
         initCustomForm,
         isPrimaryMetric
       })
-    })
-  }, [formikValues?.groupName, formikValues?.metricName, formikValues?.continuousVerification])
 
-  useEffect(() => {
-    const updatedGroupedCreatedMetrics = getGroupedCreatedMetrics(mappedMetrics, getString)
-    setGroupedCreatedMetrics(updatedGroupedCreatedMetrics)
-  }, [formikValues?.groupName, mappedMetrics, selectedMetric, formikValues?.continuousVerification])
+      updateParentFormikWithLatestData(updateParentFormik, data?.mappedMetrics, data?.selectedMetric)
+    }
+  }, [isTemplate, formikValues.query, isQueryRuntimeOrExpression])
 
   const removeMetric = useCallback(
-    (removedMetric, updatedMetric, updatedList, smIndex) => {
-      onRemoveMetric({
-        removedMetric,
-        updatedMetric,
-        updatedList,
-        smIndex,
-        formikValues,
-        setCreatedMetrics,
-        setMappedMetrics
-      })
+    (removedMetric, updatedMetric) => {
+      const commonUpdatedMap = new Map(mappedMetrics)
+
+      if (commonUpdatedMap.has(removedMetric)) {
+        commonUpdatedMap.delete(removedMetric)
+      }
+
+      updateParentFormikWithLatestData(updateParentFormik, commonUpdatedMap, updatedMetric)
+
       if (isMetricThresholdEnabled && filterRemovedMetricNameThresholds && removedMetric) {
         filterRemovedMetricNameThresholds(removedMetric)
       }
     },
-    [formikValues]
+    [formikValues, isMetricThresholdEnabled, mappedMetrics, selectedMetric, filterRemovedMetricNameThresholds]
   )
 
   const selectMetric = useCallback(
-    (newMetric, updatedList, smIndex) =>
-      onSelectMetric({
-        newMetric,
-        updatedList,
-        smIndex,
-        setCreatedMetrics,
-        setMappedMetrics,
+    newMetric => {
+      const data = updateSelectedMetricsMap({
+        updatedMetric: newMetric,
+        oldMetric: selectedMetric,
+        mappedMetrics,
         formikValues,
         initCustomForm,
         isPrimaryMetric
-      }),
+      })
+
+      updateParentFormikWithLatestData(updateParentFormik, data?.mappedMetrics, data?.selectedMetric)
+    },
     [formikValues]
   )
 
@@ -120,12 +142,11 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
           createdMetrics={createdMetrics}
           defaultSelectedMetric={selectedMetric}
           renamedMetric={formikValues?.metricName}
-          isValidInput={isValidInput}
           groupedCreatedMetrics={groupedCreatedMetrics}
-          onRemoveMetric={(removedMetric, updatedMetric, updatedList, smIndex) =>
-            removeMetric(removedMetric, updatedMetric, updatedList, smIndex)
-          }
-          onSelectMetric={(newMetric, updatedList, smIndex) => selectMetric(newMetric, updatedList, smIndex)}
+          onRemoveMetric={(removedMetric, updatedMetric) => {
+            removeMetric(removedMetric, updatedMetric)
+          }}
+          onSelectMetric={newMetric => selectMetric(newMetric)}
           shouldBeAbleToDeleteLastMetric={shouldBeAbleToDeleteLastMetric}
           isMetricThresholdEnabled={isMetricThresholdEnabled}
           openEditMetricModal={openEditMetricModal}

@@ -7,14 +7,8 @@
 
 import React from 'react'
 import { defaultTo, get } from 'lodash-es'
-import {
-  MultiTypeInputType,
-  Container,
-  DataTooltipInterface,
-  FormInput,
-  getMultiTypeFromValue,
-  Layout
-} from '@harness/uicore'
+import cx from 'classnames'
+import { MultiTypeInputType, DataTooltipInterface, FormInput, getMultiTypeFromValue } from '@harness/uicore'
 import type { FormMultiTextTypeInputProps } from '@harness/uicore/dist/components/FormikForm/FormikForm'
 import type { FormikContextType } from 'formik'
 import { connect } from 'formik'
@@ -25,6 +19,7 @@ import {
   ConfigureOptionsProps
 } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useRenderMultiTypeInputWithAllowedValues } from '../utils/utils'
+import css from '../InputSetView.module.scss'
 
 interface TextFieldInputSetView extends FormMultiTextTypeInputProps {
   formik?: FormikContextType<any>
@@ -58,37 +53,34 @@ function TextFieldInputSet(props: TextFieldInputSetView): JSX.Element {
     allowedTypes: defaultTo(multiTextInputProps?.allowableTypes, [MultiTypeInputType.FIXED]),
     template,
     readonly: disabled,
-    tooltipProps,
-    className
+    tooltipProps
   })
 
   const inputField = shouldRenderRunTimeInputViewWithAllowedValues(fieldPath, template) ? (
     getMultiTypeInputWithAllowedValues()
   ) : (
-    <FormInput.MultiTextInput style={{ flexGrow: 1 }} {...rest} />
+    <FormInput.MultiTextInput {...rest} />
   )
 
   return (
-    <Container className={className}>
-      <Layout.Horizontal spacing={'medium'}>
-        {inputField}
-        {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={value}
-            type={'String'}
-            variableName={variableName}
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={val => formik?.setFieldValue(name, val)}
-            style={label ? { marginTop: 'var(--spacing-6)' } : undefined}
-            allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
-            {...configureOptionsProps}
-            isReadonly={disabled}
-          />
-        )}
-      </Layout.Horizontal>
-    </Container>
+    <div className={cx(css.fieldAndOptions, className)}>
+      {inputField}
+      {enableConfigureOptions && getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
+        <ConfigureOptions
+          value={value}
+          type={'String'}
+          variableName={variableName}
+          showRequiredField={false}
+          showDefaultField={false}
+          showAdvanced={true}
+          onChange={val => formik?.setFieldValue(name, val)}
+          style={label ? { marginTop: 'var(--spacing-6)' } : undefined}
+          allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+          {...configureOptionsProps}
+          isReadonly={disabled}
+        />
+      )}
+    </div>
   )
 }
 

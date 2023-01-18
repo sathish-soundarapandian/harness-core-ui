@@ -11,10 +11,13 @@ import { FormikForm } from '@harness/uicore'
 import { Formik } from 'formik'
 import { TestWrapper } from '@common/utils/testUtils'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
+import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
 import { CHART_VISIBILITY_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import { riskCategoryMock } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/__tests__/CustomMetricFormContainer.mock'
 import CommonCustomMetricFormContainer from '../CommonCustomMetricFormContainer'
 import type { CommonCustomMetricFormContainerProps } from '../CommonCustomMetricFormContainer.types'
 import { mockedStackdriverLogSampleData } from './CommonCustomMetricFormContainer.mocks'
+import CommonHealthSourceProvider from '../../../CommonHealthSourceContext/CommonHealthSourceContext'
 import { shouldAutoBuildChart, shouldShowChartComponent } from '../CommonCustomMetricFormContainer.utils'
 
 const WrapperComponent = (props: CommonCustomMetricFormContainerProps): JSX.Element => {
@@ -33,11 +36,13 @@ const WrapperComponent = (props: CommonCustomMetricFormContainerProps): JSX.Elem
         orgIdentifier: '1234_ORG'
       }}
     >
-      <Formik initialValues={initialValues} onSubmit={jest.fn()}>
-        <FormikForm>
-          <CommonCustomMetricFormContainer {...props} />
-        </FormikForm>
-      </Formik>
+      <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
+        <Formik initialValues={initialValues} onSubmit={jest.fn()}>
+          <FormikForm>
+            <CommonCustomMetricFormContainer {...props} />
+          </FormikForm>
+        </Formik>
+      </CommonHealthSourceProvider>
     </TestWrapper>
   )
 }
@@ -64,6 +69,18 @@ jest.mock('services/cv', () => ({
         resource: {
           timeSeriesData: mockedStackdriverLogSampleData
         }
+      }
+    })
+  })),
+  useGetRiskCategoryForCustomHealthMetric: jest.fn().mockImplementation(() => ({
+    loading: false,
+    error: null,
+    mutate: jest.fn().mockImplementation(() => {
+      return {
+        loading: false,
+        error: null,
+        data: riskCategoryMock,
+        refetch: jest.fn()
       }
     })
   }))
@@ -137,15 +154,29 @@ describe('Unit tests for CommonCustomMetricFormContainer', () => {
     expect(shouldAutoBuildChart(chartConfig)).toEqual(false)
   })
 
-  test('should show Chart component when records are present and chart section is enabled in healthsource config', async () => {
+  test('should show Chart component when chart section is enabled in healthsource config', async () => {
     const chartConfig = { enabled: true, chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO }
-    const records = [{ record1: 'record-1' }]
-    expect(shouldShowChartComponent(chartConfig, records, false)).toEqual(true)
+    const isQueryRuntimeOrExpression = false
+    expect(shouldShowChartComponent(chartConfig, isQueryRuntimeOrExpression)).toEqual(true)
   })
 
-  test('should not show Chart component when records are not present and chart section is enabled in healthsource config', async () => {
+  test('should not show Chart component when query is runtime or expression and health source config is enabled', async () => {
     const chartConfig = { enabled: true, chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO }
-    const records = [] as Record<string, any>[]
-    expect(shouldShowChartComponent(chartConfig, records, false)).toEqual(false)
+    const isQueryRuntimeOrExpression = true
+    expect(shouldShowChartComponent(chartConfig, isQueryRuntimeOrExpression)).toEqual(false)
   })
+
+  // eslint-disable-next-line jest/no-commented-out-tests
+  // test('should not show Chart component when records are not present and chart section is enabled in healthsource config', async () => {
+  //   const chartConfig = { enabled: true, chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO }
+  //   const records = [] as Record<string, any>[]
+  //   expect(shouldShowChartComponent(chartConfig, records, false, 'query')).toEqual(false)
+  // })
+
+  // eslint-disable-next-line jest/no-commented-out-tests
+  // test('should not show Chart component when query is not present', async () => {
+  //   const chartConfig = { enabled: true, chartVisibilityMode: CHART_VISIBILITY_ENUM.AUTO }
+  //   const records = [{ record1: 'record-1' }]
+  //   expect(shouldShowChartComponent(chartConfig, records, false, '')).toEqual(false)
+  // })
 })

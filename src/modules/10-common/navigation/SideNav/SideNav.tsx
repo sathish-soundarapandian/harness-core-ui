@@ -7,21 +7,39 @@
 
 import React, { ReactElement } from 'react'
 import cx from 'classnames'
-import { NavLink as Link, NavLinkProps } from 'react-router-dom'
+import { NavLink as Link, NavLinkProps, useParams } from 'react-router-dom'
 import { Text, Layout, IconName, Icon, Container, TextProps } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { LaunchButton } from '@common/components/LaunchButton/LaunchButton'
+import { returnLaunchUrl } from '@common/utils/routeUtils'
+import { useStrings } from 'framework/strings'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './SideNav.module.scss'
 
 export interface SideNavProps {
   subtitle?: string
   title?: string
   icon?: IconName
+  launchButtonText?: any
+  launchButtonRedirectUrl?: string
 }
 
 export default function SideNav(props: React.PropsWithChildren<SideNavProps>): ReactElement {
+  const { getString } = useStrings()
+  const params = useParams<ProjectPathProps>()
+  const launchButtonRedirectUrl = props.launchButtonRedirectUrl
+    ? props.launchButtonRedirectUrl?.replace('{replaceAccountId}', params.accountId)
+    : ''
+
   return (
     <div className={css.main}>
       <div>{props.children}</div>
+      {props.launchButtonText && props.launchButtonRedirectUrl ? (
+        <LaunchButton
+          launchButtonText={getString(props.launchButtonText)}
+          redirectUrl={returnLaunchUrl(launchButtonRedirectUrl)}
+        />
+      ) : null}
       <Container className={css.bottomContainer}>
         {props.icon ? (
           <div className={css.iconContainer}>

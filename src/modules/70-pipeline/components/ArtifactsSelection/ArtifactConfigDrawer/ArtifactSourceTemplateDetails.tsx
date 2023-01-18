@@ -290,7 +290,7 @@ function ArtifactSourceTemplateDetails(
             initialValues={formValues}
             formName="artifactSourceTemplateDetails"
             validationSchema={Yup.object().shape({
-              name: NameSchema({ requiredErrorMsg: getString('validation.nameRequired') })
+              name: NameSchema(getString, { requiredErrorMsg: getString('validation.nameRequired') })
             })}
             enableReinitialize={true}
           >

@@ -6,6 +6,7 @@
  */
 import React, { useState } from 'react'
 import { Classes, FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
+import cx from 'classnames'
 import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
 import {
@@ -36,6 +37,9 @@ import {
 } from '@common/components/ReferenceSelect/ReferenceSelect'
 import { useStrings } from 'framework/strings'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { getIdentifierFromScopedRef } from '@common/utils/utils'
 import { getReferenceFieldProps } from './Utils'
 import css from './FormMultiTypeEnvironmentGroupField.module.scss'
 
@@ -59,6 +63,7 @@ export interface EnvironmentGroupReferenceFieldProps extends Omit<IFormGroupProp
   error?: string
   isMultiSelect?: boolean
   onMultiSelectChange?: any
+  labelClass?: string
   isNewConnectorLabelVisible?: boolean
 }
 
@@ -66,7 +71,7 @@ export function getSelectedRenderer(selected: any): JSX.Element {
   return (
     <Layout.Horizontal spacing="small" flex={{ distribution: 'space-between' }} className={css.selectWrapper}>
       <Text tooltip={defaultTo(selected?.name, selected)} color={Color.GREY_800} className={css.label}>
-        {defaultTo(selected?.label, selected)}
+        {getIdentifierFromScopedRef(defaultTo(defaultTo(selected?.label, selected), ''))}
       </Text>
       <Tag minimal id={css.tag}>
         {getScopeFromValue(selected?.value || selected)}
@@ -103,6 +108,7 @@ export function MultiTypeEnvironmentGroupField(props: EnvironmentGroupReferenceF
     openAddNewModal,
     isNewConnectorLabelVisible,
     placeholder,
+    labelClass: labelClassFromProps = '',
     disabled,
     width,
     ...restProps
@@ -148,8 +154,8 @@ export function MultiTypeEnvironmentGroupField(props: EnvironmentGroupReferenceF
     onMultiSelectChange(environments)
   }
   return (
-    <div style={style}>
-      <Container data-testid="environmentTooltip">
+    <div style={style} className={cx(css.environmentGroupLabel, labelClassFromProps)}>
+      <Container data-testid="environmentGroupTooltip">
         <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} className={Classes.LABEL} />
       </Container>
       <FormGroup {...rest} labelFor={name} helperText={helperText} intent={intent}>
@@ -182,9 +188,14 @@ export function MultiTypeEnvironmentGroupField(props: EnvironmentGroupReferenceF
                     openAddNewModal?.()
                     setHideModal(true)
                   }}
-                  text={`+ ${createNewLabel || 'Environment'}`}
+                  text={`+ ${createNewLabel || 'Environment Group'}`}
                   margin={{ right: 'small' }}
-                  // TODO add permissions here depending on the tab from which it is clicked
+                  permission={{
+                    permission: PermissionIdentifier.EDIT_ENVIRONMENT_GROUP,
+                    resource: {
+                      resourceType: ResourceType.ENVIRONMENT_GROUP
+                    }
+                  }}
                 ></RbacButton>
               ) : null
             } as ReferenceSelectProps<EnvironmentGroupResponseDTO>

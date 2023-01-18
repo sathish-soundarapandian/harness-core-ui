@@ -12,17 +12,23 @@ import { useStrings } from 'framework/strings'
 
 import css from './AddStageView.module.scss'
 
-function EmptyStageView(): React.ReactElement {
+interface EmptyStageViewProps {
+  showCloseBtn?: boolean
+}
+
+function EmptyStageView({ showCloseBtn = true }: EmptyStageViewProps): React.ReactElement {
   const { getString } = useStrings()
 
   return (
     <div className={css.emptyStageView}>
-      <Icon
-        name="main-close"
-        size={12}
-        className={css.closeIcon}
-        onClick={() => window.dispatchEvent(new CustomEvent('CLOSE_CREATE_STAGE_POPOVER'))}
-      />
+      {showCloseBtn && (
+        <Icon
+          name="main-close"
+          size={12}
+          className={css.closeIcon}
+          onClick={() => window.dispatchEvent(new CustomEvent('CLOSE_CREATE_STAGE_POPOVER'))}
+        />
+      )}
       <Layout.Vertical margin={{ top: 'xxlarge', bottom: 'xxlarge', right: 'medium', left: 'medium' }}>
         <Layout.Horizontal margin={{ bottom: 'medium', top: 'large' }} flex={{ justifyContent: 'center' }}>
           <Icon name="add-stage" size={74} />

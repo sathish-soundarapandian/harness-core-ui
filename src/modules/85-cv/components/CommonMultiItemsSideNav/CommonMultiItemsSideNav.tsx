@@ -4,15 +4,19 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
+import { defaultTo } from 'lodash-es'
 import { Button, ButtonVariation, Container } from '@harness/uicore'
 import { PopoverInteractionKind } from '@blueprintjs/core'
+import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
+import { CommonConfigurationsFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
+import { useCommonHealthSource } from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/useCommonHealthSource'
 import { CommonSelectedAppsSideNav } from './components/CommonSelectedAppsSideNav/CommonSelectedAppsSideNav'
 import {
   getCreatedMetricLength,
   getFilteredGroupedCreatedMetric,
-  getSelectedMetricIndex,
   getUpdatedMetric
 } from './CommonMultiItemsSideNav.utils'
 import type { GroupedCreatedMetrics } from './components/CommonSelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
@@ -26,7 +30,6 @@ export interface CommonMultiItemsSideNavProps {
     updatedList: string[],
     selectedMetricIndex: number
   ) => void
-  isValidInput: boolean
   renamedMetric?: string
   createdMetrics?: string[]
   defaultSelectedMetric?: string
@@ -40,12 +43,12 @@ export interface CommonMultiItemsSideNavProps {
 }
 
 export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JSX.Element {
+  const { isValid } = useFormikContext<CommonCustomMetricFormikInterface>()
+
   const {
     onSelectMetric,
     createdMetrics: propsCreatedMetrics,
-    renamedMetric,
     onRemoveMetric,
-    isValidInput,
     defaultSelectedMetric,
     defaultMetricName,
     tooptipMessage,
@@ -57,28 +60,12 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
   } = props
   const { getString } = useStrings()
   const [filter, setFilter] = useState<string | undefined>()
-  const [createdMetrics, setCreatedMetrics] = useState<string[]>(
-    propsCreatedMetrics?.length ? propsCreatedMetrics : [defaultMetricName]
+  const createdMetrics = useMemo(
+    () => (propsCreatedMetrics?.length ? propsCreatedMetrics : [defaultMetricName]),
+    [propsCreatedMetrics]
   )
-  const [selectedMetric, setSelectedMetric] = useState<string | undefined>(defaultSelectedMetric || createdMetrics[0])
-
-  useEffect(() => {
-    const selectedMetricIndex = getSelectedMetricIndex(createdMetrics, selectedMetric, renamedMetric)
-    if (selectedMetricIndex > -1) {
-      setCreatedMetrics(oldMetrics => {
-        if (selectedMetricIndex !== -1) oldMetrics[selectedMetricIndex] = renamedMetric as string
-        return Array.from(oldMetrics)
-      })
-      setSelectedMetric(renamedMetric)
-    }
-  }, [renamedMetric])
-
-  const metricsToRender = useMemo(() => {
-    return filter
-      ? createdMetrics.filter(metric => metric.toLocaleLowerCase().includes(filter?.toLocaleLowerCase()))
-      : createdMetrics
-  }, [filter, createdMetrics])
-
+  const selectedMetric = defaultSelectedMetric || createdMetrics[0]
+  const { updateParentFormik } = useCommonHealthSource()
   const filteredGroupMetric = useMemo(() => {
     return getFilteredGroupedCreatedMetric(groupedCreatedMetrics, filter)
   }, [filter, groupedCreatedMetrics])
@@ -87,60 +74,46 @@ export function CommonMultiItemsSideNav(props: CommonMultiItemsSideNavProps): JS
     () => getCreatedMetricLength(createdMetrics, groupedCreatedMetrics),
     [groupedCreatedMetrics, createdMetrics]
   )
-
   const hasOnRemove = shouldBeAbleToDeleteLastMetric || createdMetricsLength > 1
+  const hideDeleteIcon = Boolean(!shouldBeAbleToDeleteLastMetric && createdMetricsLength === 1)
+
+  const onRemoveItem = (removedItem: string): void => {
+    if (!hasOnRemove) return
+    const { updatedMetric, filteredOldMetrics, updateIndex } = getUpdatedMetric(createdMetrics, removedItem)
+    updateParentFormik(CommonConfigurationsFormFieldNames.SELECTED_METRIC, updatedMetric)
+    onRemoveMetric(removedItem, updatedMetric, [...filteredOldMetrics], defaultTo(updateIndex, 0))
+  }
 
   return (
     <Container className={css.main}>
       <Button
         icon="plus"
         variation={ButtonVariation.SECONDARY}
-        disabled={!isValidInput}
-        tooltip={!isValidInput ? tooptipMessage : undefined}
+        disabled={!isValid}
+        tooltip={!isValid ? tooptipMessage : undefined}
         tooltipProps={{ interactionKind: PopoverInteractionKind.HOVER_TARGET_ONLY }}
         margin={{ bottom: 'small', left: 'medium', top: 'medium' }}
         onClick={() => {
-          // TODO - This will be implemented once the entire form is implemented
-          // if (isValidInput) {
-          setCreatedMetrics(oldMetrics => {
-            const newMetricName = ''
-            onSelectMetric(newMetricName, [newMetricName, ...oldMetrics], 0)
-            setSelectedMetric(newMetricName)
-            return [newMetricName, ...oldMetrics]
-          })
-          // }
+          updateParentFormik(CommonConfigurationsFormFieldNames.SELECTED_METRIC, '')
           openEditMetricModal()
         }}
       >
         {addFieldLabel}
       </Button>
       <CommonSelectedAppsSideNav
-        isValidInput={isValidInput}
         onSelect={(newlySelectedMetric, index) => {
-          onSelectMetric(newlySelectedMetric, createdMetrics, index)
-          setSelectedMetric(newlySelectedMetric)
+          // Allow change of panel only if current panel is valid
+          if (isValid) {
+            onSelectMetric(newlySelectedMetric, createdMetrics, index)
+            updateParentFormik(CommonConfigurationsFormFieldNames.SELECTED_METRIC, newlySelectedMetric)
+          }
         }}
         selectedItem={selectedMetric}
-        selectedMetrics={metricsToRender}
         groupedSelectedApps={filteredGroupMetric}
         isMetricThresholdEnabled={isMetricThresholdEnabled}
         openEditMetricModal={openEditMetricModal}
-        onRemoveItem={
-          hasOnRemove
-            ? (removedItem, index) => {
-                setCreatedMetrics(oldMetrics => {
-                  const { updatedMetric, filteredOldMetrics, updateIndex } = getUpdatedMetric(
-                    oldMetrics,
-                    removedItem,
-                    index
-                  )
-                  setSelectedMetric(updatedMetric)
-                  onRemoveMetric(removedItem, updatedMetric, [...filteredOldMetrics], updateIndex)
-                  return [...filteredOldMetrics]
-                })
-              }
-            : undefined
-        }
+        onRemoveItem={onRemoveItem}
+        hideDeleteIcon={hideDeleteIcon}
         filterProps={{
           onFilter: setFilter,
           className: css.metricsFilter,

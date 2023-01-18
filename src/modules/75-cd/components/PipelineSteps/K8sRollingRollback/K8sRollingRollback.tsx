@@ -26,7 +26,6 @@ import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Ste
 import type { StepElementConfig, K8sRollingRollbackStepInfo } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import { useStrings } from 'framework/strings'
@@ -96,7 +95,6 @@ function K8sRollingRollbackWidget(
         })}
       >
         {(formik: FormikProps<K8sRollingRollbackData>) => {
-          const { values, setFieldValue } = formik
           setFormikRef(formikRef, formik)
 
           return (
@@ -120,27 +118,12 @@ function K8sRollingRollbackWidget(
                   disabled={readonly}
                   label={getString('pipelineSteps.timeoutLabel')}
                   multiTypeDurationProps={{
-                    enableConfigureOptions: false,
+                    enableConfigureOptions: true,
                     expressions,
                     disabled: readonly,
                     allowableTypes
                   }}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('timeout', value)
-                    }}
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
 
               <Accordion className={stepCss.accordion}>
@@ -177,23 +160,22 @@ const K8sRollingRollbackInputStep: React.FC<K8sRollingRollbackProps> = ({
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-            label={getString('pipelineSteps.timeoutLabel')}
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes: allowableTypes,
-              expressions,
-              disabled: inputSetData?.readonly
-            }}
-            disabled={inputSetData?.readonly}
-            fieldPath={'timeout'}
-            template={inputSetData?.template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+          label={getString('pipelineSteps.timeoutLabel')}
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes: allowableTypes,
+            expressions,
+            disabled: inputSetData?.readonly
+          }}
+          disabled={inputSetData?.readonly}
+          fieldPath={'timeout'}
+          template={inputSetData?.template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
       {getMultiTypeFromValue(inputSetData?.template?.spec?.pruningEnabled) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -234,6 +216,7 @@ export class K8sRollingRollbackStep extends PipelineStep<K8sRollingRollbackData>
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
+    this._hasCommandFlagSelectionVisible = true
   }
 
   renderStep(props: StepProps<K8sRollingRollbackData>): JSX.Element {

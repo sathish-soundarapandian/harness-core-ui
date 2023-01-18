@@ -16,29 +16,6 @@ import {
   sampleDataMockResponse
 } from '../../../support/85-cv/monitoredService/health-sources/CloudWatch/constants'
 
-describe('Cloud watch health source without feature flag enabled tests', () => {
-  beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      return false
-    })
-    cy.login('test', 'test')
-    cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
-    cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
-    cy.visitChangeIntelligence()
-    cy.visitSRMMonitoredServicePage()
-  })
-
-  it('should not render Cloud watch health source type, if the feature flag is disabled', () => {
-    cy.intercept('GET', riskCategoryCall, riskCategoryMock).as('riskCategoryCall')
-
-    cy.addNewMonitoredServiceWithServiceAndEnv()
-
-    cy.contains('span', 'Add New Health Source').click()
-
-    cy.findByText(/CloudWatch/).should('not.exist')
-  })
-})
-
 describe('Cloud watch health source', () => {
   beforeEach(() => {
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
@@ -46,12 +23,6 @@ describe('Cloud watch health source', () => {
         ...featureFlagsData,
         resource: [
           ...featureFlagsData.resource,
-          {
-            uuid: null,
-            name: 'SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS',
-            enabled: true,
-            lastUpdatedAt: 0
-          },
           {
             uuid: null,
             name: 'CVNG_METRIC_THRESHOLD',
@@ -168,7 +139,7 @@ describe('Cloud watch health source', () => {
 
     cy.wait(100)
 
-    cy.contains('p', 'AWS Region').should('exist')
+    cy.contains('p', 'AWS Region', { timeout: 4000 }).should('exist')
 
     cy.get('input[name="customMetrics.0.groupName"]').should('have.value', 'group 1')
     cy.get('input[name="customMetrics.0.metricName"]').should('have.value', 'customMetric 1')

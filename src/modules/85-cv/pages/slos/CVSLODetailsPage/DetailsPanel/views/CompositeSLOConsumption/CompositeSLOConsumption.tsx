@@ -61,7 +61,7 @@ const CompositeSLOConsumption = ({ startTime, endTime }: CompositeSLOConsumption
   } else if (isEmpty(tabelData)) {
     content = (
       <Container height={200} style={{ overflow: 'auto' }}>
-        <NoDataCard icon={'join-table'} message={getString('cv.slos.noData')} />
+        <NoDataCard icon={'join-table'} message={getString('common.sloNoData')} />
       </Container>
     )
   } else {

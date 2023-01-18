@@ -266,14 +266,12 @@ describe('Unit tests for NewRelic health source', () => {
       })
     })
 
-    test('should not render metric thresholds when feature flag is disabled', () => {
-      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(false)
-
+    test('should not render metric thresholds if it is a template', () => {
       const submitData = jest.fn()
       render(
         <TestWrapper {...createModeProps}>
           <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
-            <NewRelicHealthSourceContainer data={sourceData} onSubmit={submitData} />
+            <NewRelicHealthSourceContainer isTemplate data={sourceData} onSubmit={submitData} />
           </SetupSourceTabs>
         </TestWrapper>
       )

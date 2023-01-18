@@ -14,21 +14,29 @@ import cx from 'classnames'
 
 import { useParams } from 'react-router-dom'
 import { Classes } from '@blueprintjs/core'
-import { merge, defaultTo, isEmpty } from 'lodash-es'
+import { merge, defaultTo, isEmpty, capitalize } from 'lodash-es'
 import moment from 'moment'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { roundNumber, useErrorHandler } from '@pipeline/components/Dashboards/shared'
-import { useGetDeploymentHealth, DeploymentDateAndCount } from 'services/cd-ng'
+import { useGetDeploymentHealth, DeploymentDateAndCount, useGetDeploymentHealthV2, ChangeRate } from 'services/cd-ng'
 import { PieChart, PieChartProps } from '@cd/components/PieChart/PieChart'
 import { numberFormatter } from '@common/utils/utils'
-import { getFormattedTimeRange } from './dashboardUtils'
+import {
+  calcTrend,
+  calcTrendCaret,
+  calcTrendColor,
+  getFormattedTimeRange,
+  RateTrend,
+  TrendPopover
+} from './dashboardUtils'
 import styles from './CDDashboardPage.module.scss'
 
 export interface HealthCardProps {
   title: string
   value?: number
-  rate?: number
+  rate?: number | ChangeRate
   primaryChartOptions?: any
   secondaryChartOptions?: any
   layout: 'vertical' | 'horizontal'
@@ -49,18 +57,43 @@ const grey = 'var(--grey-500)'
 export default function DeploymentsHealthCards(props: any) {
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const { range, title } = props
+  const { CDC_DASHBOARD_ENHANCEMENT_NG } = useFeatureFlags()
 
   const [startTime, endTime] = getFormattedTimeRange(range)
 
-  const { data, loading, error } = useGetDeploymentHealth({
+  const {
+    data: healthData,
+    loading: healthDataLoading,
+    error: healthDataError
+  } = useGetDeploymentHealth({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
       startTime,
       endTime
-    }
+    },
+    lazy: CDC_DASHBOARD_ENHANCEMENT_NG
   })
+
+  const {
+    data: healthDataV2,
+    loading: healthDataLoadingV2,
+    error: healthDataErrorV2
+  } = useGetDeploymentHealthV2({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      startTime,
+      endTime
+    },
+    lazy: !CDC_DASHBOARD_ENHANCEMENT_NG
+  })
+
+  const [data, loading, error] = CDC_DASHBOARD_ENHANCEMENT_NG
+    ? [healthDataV2, healthDataLoadingV2, healthDataErrorV2]
+    : [healthData, healthDataLoading, healthDataError]
 
   useErrorHandler(error)
   const { getString } = useStrings()
@@ -217,38 +250,38 @@ export default function DeploymentsHealthCards(props: any) {
       <Text className={styles.healthCardTitle}>{title}</Text>
       <Container className={styles.healthCards}>
         <HealthCard
-          title="Total Executions"
+          title={getString('pipeline.dashboards.totalExecutions')}
           value={defaultTo(dataInfo?.total?.count, 0)}
           isLoading={loading}
           layout="vertical"
-          rate={defaultTo(dataInfo?.total?.rate, 0)}
+          rate={dataInfo?.total?.rate}
           primaryChartOptions={chartsData?.totalChartOptions}
           isParent={true}
           emptyState={emptyState}
           showLineChart={dataInfo?.total?.count ? true : false}
         >
           <HealthCard
-            title="Successful"
+            title={capitalize(getString('cd.getStartedWithCD.successFull'))}
             value={defaultTo(dataInfo?.success?.count, 0)}
-            rate={defaultTo(dataInfo?.success?.rate, 0)}
+            rate={dataInfo?.success?.rate}
             isLoading={loading}
             layout="vertical"
             primaryChartOptions={chartsData?.successChartOptions}
             emptyState={emptyState}
           />
           <HealthCard
-            title="Failed"
+            title={getString('failed')}
             value={defaultTo(dataInfo?.failure?.count, 0)}
-            rate={defaultTo(dataInfo?.failure?.rate, 0)}
+            rate={dataInfo?.failure?.rate}
             isLoading={loading}
             layout="vertical"
             primaryChartOptions={chartsData?.failureChartOptions}
             emptyState={emptyState}
           />
           <HealthCard
-            title="Active"
+            title={getString('active')}
             value={defaultTo(dataInfo?.active?.count, 0)}
-            rate={defaultTo(dataInfo?.active?.rate, 0)}
+            rate={dataInfo?.active?.rate}
             isLoading={loading}
             layout="vertical"
             primaryChartOptions={chartsData?.activeChartOptions}
@@ -257,7 +290,7 @@ export default function DeploymentsHealthCards(props: any) {
         </HealthCard>
 
         <TotalDepHealthCard
-          title={'Environment Changes'}
+          title={getString('cd.envChanges')}
           layout={'horizontal'}
           pieChartProps={pieChartProps}
           showPieChart={true}
@@ -286,28 +319,33 @@ export function TotalDepHealthCard({ title, layout, pieChartProps = {}, showPieC
   )
 }
 
-const rateStyle = (rate: number, isParent: boolean, isFailed: boolean): JSX.Element => {
-  const rateColor = rate > 0 ? (isFailed ? red : green) : isFailed ? green : red
-  return rate ? (
-    <>
+const rateStyle = (
+  rateChange: number | undefined,
+  isParent: boolean,
+  isFailed: boolean,
+  rateTrend: RateTrend
+): JSX.Element => {
+  const rateColor = rateTrend === RateTrend.UP ? (isFailed ? red : green) : isFailed ? green : red
+  const rateStyleChild = rateChange ? (
+    <Layout.Horizontal flex={{ alignItems: 'center' }}>
       <Text
         margin={{ left: isParent ? 'small' : 'xsmall' }}
         style={{
           color: rateColor
         }}
       >
-        {numberFormatter(Math.abs(defaultTo(roundNumber(rate), 0)))}%
+        {numberFormatter(Math.abs(defaultTo(roundNumber(rateChange), 0)))}%
       </Text>
       <Icon
         size={14}
-        name={rate > 0 ? 'caret-up' : 'caret-down'}
+        name={calcTrendCaret(rateTrend)}
         style={{
           color: rateColor
         }}
       />
-    </>
+    </Layout.Horizontal>
   ) : (
-    <>
+    <Layout.Horizontal flex={{ alignItems: 'center' }}>
       <Icon
         size={14}
         name="caret-right"
@@ -316,9 +354,10 @@ const rateStyle = (rate: number, isParent: boolean, isFailed: boolean): JSX.Elem
         }}
         margin={{ left: isParent ? 'small' : 0 }}
       />
-      <Text style={{ color: grey }}>0%</Text>
-    </>
+      {rateChange === 0 ? <Text style={{ color: grey }}>0%</Text> : null}
+    </Layout.Horizontal>
   )
+  return <TrendPopover trend={rateTrend}>{rateStyleChild}</TrendPopover>
 }
 
 export function HealthCard({
@@ -332,20 +371,25 @@ export function HealthCard({
   isLoading,
   emptyState,
   isParent = false
-}: HealthCardProps) {
+}: HealthCardProps): JSX.Element {
   const isFailed = title === 'Failed'
+  const { CDC_DASHBOARD_ENHANCEMENT_NG } = useFeatureFlags()
+
+  const rateChange = CDC_DASHBOARD_ENHANCEMENT_NG && rate ? (rate as ChangeRate).percentChange : (rate as number)
+  const rateTrend =
+    CDC_DASHBOARD_ENHANCEMENT_NG && rate ? ((rate as ChangeRate).trend as RateTrend) : calcTrend(rate as number)
 
   //sonar recommendation
   const RateStyleChild =
-    typeof rate === 'number' && !isLoading && !isParent && !emptyState ? (
+    !isLoading && !isParent && !emptyState ? (
       <Container flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-        {rateStyle(rate, isParent, isFailed)}
+        {rateStyle(rateChange, isParent, isFailed, rateTrend)}
       </Container>
     ) : null
 
   const RateStyleParent =
-    typeof rate === 'number' && !isLoading && isParent && !emptyState ? (
-      <Container flex>{rateStyle(rate, isParent, false)}</Container>
+    !isLoading && isParent && !emptyState ? (
+      <Container flex>{rateStyle(rateChange, isParent, false, rateTrend)}</Container>
     ) : null
 
   return (
@@ -377,24 +421,24 @@ export function HealthCard({
               {RateStyleChild}
             </Container>
           ) : null}
-          {secondaryChartOptions && !isLoading && rate ? (
+          {secondaryChartOptions && !isLoading && rateChange ? (
             <Container className={styles.chartWrap} margin={{ top: 'large' }}>
               <HighchartsReact highcharts={Highcharts} options={secondaryChartOptions} />
-              {typeof rate === 'number' && rate && !isLoading ? (
+              {typeof rateChange === 'number' && rateChange && !isLoading ? (
                 <Container flex>
                   <Text
                     margin={{ left: 'xsmall' }}
                     style={{
-                      color: rate >= 0 ? green : red
+                      color: calcTrendColor(rateTrend)
                     }}
                   >
-                    {numberFormatter(Math.abs(defaultTo(roundNumber(rate), 0)))}%
+                    {numberFormatter(Math.abs(defaultTo(roundNumber(rateChange), 0)))}%
                   </Text>
                   <Icon
                     size={14}
-                    name={rate >= 0 ? 'caret-up' : 'caret-down'}
+                    name={calcTrendCaret(rateTrend)}
                     style={{
-                      color: rate >= 0 ? green : red
+                      color: calcTrendColor(rateTrend)
                     }}
                   />
                 </Container>

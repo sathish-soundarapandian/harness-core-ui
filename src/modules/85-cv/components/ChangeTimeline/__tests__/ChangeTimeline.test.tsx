@@ -31,6 +31,23 @@ jest.mock('services/cv', () => ({
       cancel: jest.fn()
     }
   }),
+  useChangeEventTimelineForAccount: jest.fn().mockImplementation(() => {
+    return {
+      data: {
+        resource: {
+          categoryTimeline: {
+            Deployment: [],
+            Infrastructure: [],
+            Alert: []
+          }
+        }
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false,
+      cancel: jest.fn()
+    }
+  }),
   useGetMonitoredServiceChangeTimeline: jest.fn().mockReturnValue({
     data: {
       resource: {
@@ -122,7 +139,6 @@ describe('Render ChangeTimeline', () => {
         } as any)
     )
     const { container } = render(<WrapperComponent {...defaultProps} />)
-    expect(container).toMatchSnapshot()
     await waitFor(() => expect(container.querySelector('[data-testid="timelineLoading"]')).toBeTruthy())
   })
 

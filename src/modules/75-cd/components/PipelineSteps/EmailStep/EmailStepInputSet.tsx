@@ -36,55 +36,52 @@ export default function EmailStepInputSet(props: EmailStepInputSetProps): React.
   return (
     <React.Fragment>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${prefix}timeout`}
-            multiTypeDurationProps={{
-              enableConfigureOptions: false,
-              expressions,
-              disabled: readonly,
-              allowableTypes
-            }}
-            disabled={readonly}
-            fieldPath={'timeout'}
-            template={template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${prefix}timeout`}
+          multiTypeDurationProps={{
+            enableConfigureOptions: false,
+            expressions,
+            disabled: readonly,
+            allowableTypes
+          }}
+          disabled={readonly}
+          fieldPath={'timeout'}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       ) : null}
       {getMultiTypeFromValue(template?.spec?.to) === MultiTypeInputType.RUNTIME ? (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            placeholder={getString('pipeline.utilitiesStep.to')}
-            label={getString('common.smtp.labelTo')}
-            name={`${prefix}spec.to`}
-            multiTextInputProps={{
-              expressions,
-              disabled: readonly,
-              allowableTypes
-            }}
-            disabled={readonly}
-            template={template}
-            fieldPath={'spec.to'}
-          />
-        </div>
+        <TextFieldInputSetView
+          placeholder={getString('pipeline.utilitiesStep.to')}
+          label={getString('common.smtp.labelTo')}
+          name={`${prefix}spec.to`}
+          multiTextInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes
+          }}
+          disabled={readonly}
+          template={template}
+          fieldPath={'spec.to'}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       ) : null}
       {getMultiTypeFromValue(template?.spec?.cc) === MultiTypeInputType.RUNTIME ? (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            placeholder={getString('pipeline.utilitiesStep.cc')}
-            label={getString('cd.steps.emailStep.ccOptionalLabel')}
-            name={`${prefix}spec.cc`}
-            multiTextInputProps={{
-              expressions,
-              disabled: readonly,
-              allowableTypes
-            }}
-            disabled={readonly}
-            template={template}
-            fieldPath={'spec.cc'}
-          />
-        </div>
+        <TextFieldInputSetView
+          placeholder={getString('pipeline.utilitiesStep.cc')}
+          label={getString('cd.steps.emailStep.ccOptionalLabel')}
+          name={`${prefix}spec.cc`}
+          multiTextInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes
+          }}
+          disabled={readonly}
+          template={template}
+          fieldPath={'spec.cc'}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       ) : null}
       {getMultiTypeFromValue(template?.spec?.subject) === MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.md)}>

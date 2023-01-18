@@ -6,60 +6,29 @@
  */
 
 import React from 'react'
-import { useParams } from 'react-router-dom'
-import { ErrorNodeSummary, useValidateTemplateInputsQuery } from 'services/pipeline-rq'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ErrorNodeSummary, ResponseValidateTemplateInputsResponseDto } from 'services/pipeline-rq'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
-import { useGetCommunity } from '@common/utils/utils'
-import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 
 export interface PipelineOutOfSyncErrorStripProps {
   updateRootEntity: (entityYaml: string) => Promise<void>
-  loadFromcache: boolean
+  onRefreshEntity(): void
+  errorData?: ResponseValidateTemplateInputsResponseDto
 }
-
-export function PipelineOutOfSyncErrorStrip({
-  updateRootEntity,
-  loadFromcache
-}: PipelineOutOfSyncErrorStripProps): React.ReactElement {
+export function PipelineOutOfSyncErrorStrip(props: PipelineOutOfSyncErrorStripProps): React.ReactElement {
+  const { updateRootEntity, errorData, onRefreshEntity } = props
   const {
-    state: { originalPipeline, gitDetails, storeMetadata, pipelineIdentifier },
-    isReadonly,
-    fetchPipeline
+    state: { originalPipeline, gitDetails, storeMetadata },
+    isReadonly
   } = usePipelineContext()
-  const isCommunity = useGetCommunity()
-  const params = useParams<ProjectPathProps>()
-  const { accountId, orgIdentifier, projectIdentifier } = params
-
-  const { data: errorData } = useValidateTemplateInputsQuery(
-    {
-      queryParams: {
-        accountIdentifier: accountId,
-        orgIdentifier,
-        projectIdentifier,
-        identifier: pipelineIdentifier,
-        ...getGitQueryParamsWithParentScope({ storeMetadata, params })
-      },
-      headers: { ...(loadFromcache ? { 'Load-From-Cache': 'true' } : {}) }
-    },
-    {
-      enabled: (!!originalPipeline?.identifier || originalPipeline?.identifier !== '-1') && !isCommunity,
-      staleTime: 5_000
-    }
-  )
 
   const errorNodeSummary = React.useMemo((): ErrorNodeSummary | undefined => {
     if (errorData?.data?.validYaml === false && errorData?.data.errorNodeSummary) {
       return errorData?.data.errorNodeSummary
     }
   }, [errorData?.data])
-
-  const onRefreshEntity = React.useCallback(() => {
-    fetchPipeline({ forceFetch: true, forceUpdate: true })
-  }, [fetchPipeline])
 
   return errorNodeSummary ? (
     <OutOfSyncErrorStrip

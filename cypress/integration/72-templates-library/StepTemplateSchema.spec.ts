@@ -9,7 +9,9 @@ import {
   templatesListRoute,
   gitSyncEnabledCall,
   templatesListCall,
+  templateMetadataCall,
   templatesListCallWithListType,
+  templateListMetaDataWithListType,
   stepLibrary,
   featureFlagsCall,
   stepTemplateSchemaEndpoint
@@ -27,8 +29,8 @@ describe('Template Schema Validation', () => {
       gitSyncEnabled: false,
       gitSimplificationEnabled: false
     })
-    cy.intercept('POST', templatesListCall, { fixture: 'template/api/templatesList' }).as('templatesListCall')
-    cy.intercept('POST', templatesListCallWithListType, { fixture: 'template/api/templatesList' }).as(
+    cy.intercept('POST', templateMetadataCall, { fixture: 'template/api/templatesList' }).as('templatesListCall')
+    cy.intercept('POST', templateListMetaDataWithListType, { fixture: 'template/api/templatesList' }).as(
       'templatesListCallForDrawer'
     )
 

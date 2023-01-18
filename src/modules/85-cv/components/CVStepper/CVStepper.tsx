@@ -17,7 +17,7 @@ export const CVStepper = (props: React.PropsWithChildren<CVStepperProps>): React
   const [selectedStepId, setSelectedStepId] = useState(() => stepList[0]?.id)
   return (
     <StepperContext.Provider value={{ ...props }}>
-      <Layout.Vertical margin="large" data-testid="CVStepper_main">
+      <Layout.Vertical margin="xlarge" data-testid="CVStepper_main">
         {stepList?.map((step, index) => {
           return (
             <Step

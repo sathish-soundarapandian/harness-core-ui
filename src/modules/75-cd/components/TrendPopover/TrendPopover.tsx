@@ -43,6 +43,9 @@ const Trend: React.FC<TrendPopoverProps> = props => {
                 color: 'var(--grey-600)',
                 formatter: /* istanbul ignore next */ function () {
                   return numberFormatter(this.y ? this.y : 0)
+                },
+                style: {
+                  fontSize: '4'
                 }
               }
             }

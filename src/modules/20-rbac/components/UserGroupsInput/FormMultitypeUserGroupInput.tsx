@@ -17,7 +17,7 @@ import {
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ExpressionsListInput } from '@common/components/ExpressionsListInput/ExpressionsListInput'
 import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { InpuSetFunction, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
+import { InputSetFunction, parseInput } from '@common/components/ConfigureOptions/ConfigureOptionsUtils'
 import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import UserGroupsInput, { FormikUserGroupsInput } from './UserGroupsInput'
 
@@ -60,7 +60,7 @@ export const FormMultiTypeUserGroupInput: React.FC<Extended> = props => {
   const identifierFilter = useMemo(() => {
     if (!templateProps?.isTemplatizedView || !templateProps.templateValue) return []
     return (
-      parseInput(templateProps.templateValue)?.[InpuSetFunction.ALLOWED_VALUES]?.values?.map(getIdentifierFromValue) ??
+      parseInput(templateProps.templateValue)?.[InputSetFunction.ALLOWED_VALUES]?.values?.map(getIdentifierFromValue) ??
       []
     )
   }, [templateProps?.isTemplatizedView, templateProps?.templateValue])

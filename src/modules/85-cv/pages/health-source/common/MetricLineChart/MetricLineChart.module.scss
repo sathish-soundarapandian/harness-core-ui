@@ -12,3 +12,10 @@
 .noDataContainer > div:first-child > div:first-child {
   margin-top: 0 !important;
 }
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px !important;
+}

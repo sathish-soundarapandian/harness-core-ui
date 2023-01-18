@@ -38,11 +38,19 @@ jest.mock('services/cd-ng', () => ({
     loading: false,
     data: deploymentHealthMock
   }),
+  useGetDeploymentHealthV2: () => ({
+    loading: false,
+    data: deploymentHealthMock
+  }),
   useGetDeploymentExecution: () => ({
     loading: false,
     data: deploymentExecutionMock
   }),
   useGetWorkloads: () => ({
+    loading: false,
+    data: workloadsMock
+  }),
+  useGetWorkloadsV2: () => ({
     loading: false,
     data: workloadsMock
   })

@@ -124,6 +124,52 @@ export const props = {
                               region: ''
                             }
                           }
+                        },
+                        {
+                          sidecar: {
+                            identifier: 'Sidecar ECR-2',
+                            type: 'Ecr',
+                            spec: {
+                              imagePath: '',
+                              tag: '',
+                              region: ''
+                            }
+                          }
+                        },
+                        {
+                          sidecar: {
+                            identifier: 'Sidecar ECR-3',
+                            type: 'Ecr',
+                            spec: {
+                              imagePath: '',
+                              tag: '',
+                              region: '',
+                              digest: '<+input>'
+                            }
+                          }
+                        },
+                        {
+                          sidecar: {
+                            identifier: 'Sidecar ECR-4',
+                            type: 'Ecr',
+                            spec: {
+                              imagePath: '',
+                              tag: '',
+                              region: ''
+                            }
+                          }
+                        },
+                        {
+                          sidecar: {
+                            identifier: 'Sidecar ECR-5',
+                            type: 'Ecr',
+                            spec: {
+                              imagePath: '',
+                              tag: '',
+                              region: '',
+                              digest: '<+input>'
+                            }
+                          }
                         }
                       ],
                       primary: {
@@ -193,7 +239,8 @@ export const props = {
                               connectorRef: '',
                               imagePath: '',
                               tag: '',
-                              region: ''
+                              region: '',
+                              digest: '<+input>'
                             }
                           }
                         }

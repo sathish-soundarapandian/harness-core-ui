@@ -18,6 +18,7 @@ import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/Rout
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import OpenInNewTab from '@rbac/components/MenuItem/OpenInNewTab'
 import css from './RoleCard.module.scss'
 
 interface RoleCardProps {
@@ -85,20 +86,29 @@ const RoleCard: React.FC<RoleCardProps> = ({ data, reloadRoles, editRoleModal })
     openDeleteDialog()
   }
 
+  const roleDetailsUrl = routes.toRoleDetails({
+    roleIdentifier: role.identifier,
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    module
+  })
+
   return (
     <Card
       className={css.card}
       data-testid={`role-card-${role.identifier}`}
       onClick={() => {
-        history.push(
-          routes.toRoleDetails({ roleIdentifier: role.identifier, accountId, orgIdentifier, projectIdentifier, module })
-        )
+        history.push(roleDetailsUrl)
       }}
       interactive
     >
       <CardBody.Menu
         menuContent={
           <Menu>
+            <li>
+              <OpenInNewTab url={roleDetailsUrl} />
+            </li>
             <RbacMenuItem
               icon="edit"
               text={getString('edit')}

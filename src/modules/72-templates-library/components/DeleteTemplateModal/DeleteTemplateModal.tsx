@@ -36,6 +36,10 @@ import {
 import { TemplatePreview } from '@templates-library/components/TemplatePreview/TemplatePreview'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import useDeleteConfirmationDialog from '@pipeline/pages/utils/DeleteConfirmDialog'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
+import { FeatureFlag } from '@common/featureFlags'
 import css from './DeleteTemplateModal.module.scss'
 
 export interface DeleteTemplateProps {
@@ -71,6 +75,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { mutate: deleteTemplates, loading: deleteLoading } = useDeleteTemplateVersionsOfIdentifier({})
   const [templateVersionsToDelete, setTemplateVersionsToDelete] = React.useState<string[]>([])
+  const isForceDeletedAllowed = useFeatureFlag(FeatureFlag.CDS_FORCE_DELETE_ENTITIES)
 
   const {
     data: templateData,
@@ -96,7 +101,9 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
     }
   }, [templatesError])
 
-  const performDelete = async (commitMsg: string, versions?: string[]): Promise<void> => {
+  const commitMessage = `${getString('delete')} ${template.name}`
+
+  const performDelete = async (commitMsg: string, versions?: string[], forceDelete?: boolean): Promise<void> => {
     const areMultipleVersionsSelected = !!(versions && versions.length > 1)
     try {
       const resp = await deleteTemplates(defaultTo(template.identifier, ''), {
@@ -105,6 +112,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
           orgIdentifier,
           projectIdentifier,
           comments: commitMsg,
+          forceDelete: Boolean(forceDelete),
           ...(isGitSyncEnabled &&
             template.gitDetails?.objectId && {
               ...pick(template.gitDetails, ['branch', 'repoIdentifier', 'filePath', 'rootFolder']),
@@ -127,6 +135,10 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
         throw getString('somethingWentWrong')
       }
     } catch (err) {
+      if (isForceDeletedAllowed && err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+        openReferenceErrorDialog()
+        return
+      }
       showError(
         getRBACErrorMessage(err as RBACError),
         undefined,
@@ -136,6 +148,22 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
       )
     }
   }
+
+  const redirectToReferencedBy = (): void => {
+    closeDialog()
+  }
+
+  const { openDialog: openReferenceErrorDialog, closeDialog } = useEntityDeleteErrorHandlerDialog({
+    entity: {
+      type: ResourceType.TEMPLATE,
+      name: defaultTo(template?.name, '')
+    },
+    hideReferencedByButton: true,
+    redirectToReferencedBy: redirectToReferencedBy,
+    forceDeleteCallback: isForceDeletedAllowed
+      ? () => performDelete(commitMessage, templateVersionsToDelete, true)
+      : undefined
+  })
 
   const { confirmDelete } = useDeleteConfirmationDialog(
     { ...template, name: getTemplateNameWithVersions(template.name as string, templateVersionsToDelete) },

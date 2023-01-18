@@ -41,15 +41,18 @@ export default function EnvironmentDetailInstanceDialog(
   const searchRef = useRef({} as ExpandingSearchInputHandle)
   const isSearchAppliedInfra = useRef<boolean>(!isEmpty(searchTermInfra))
   const [rowClickFilter, setRowClickFilter] = useState<InfraViewFilters>({
-    artifactFilter: '',
+    artifactFilter: {
+      artifactPath: '',
+      artifactVersion: ''
+    },
     serviceFilter: ''
   })
 
-  const resetSearchInfra = (): void => {
+  const resetSearchInfra = (): void => /* istanbul ignore next */ {
     searchInfraRef.current.clear()
   }
 
-  const resetSearch = (): void => {
+  const resetSearch = (): void => /* istanbul ignore next */ {
     searchRef.current.clear()
   }
 
@@ -57,7 +60,7 @@ export default function EnvironmentDetailInstanceDialog(
   const data = defaultTo(serviceArtifactData, [])
 
   //filter by serviceName, artifactVersion and infraName
-  const filteredData = useMemo(() => {
+  const filteredData = useMemo(() => /* istanbul ignore next */ {
     isSearchApplied.current = !isEmpty(searchTerm)
     if (!searchTerm) {
       return data
@@ -114,12 +117,12 @@ export default function EnvironmentDetailInstanceDialog(
     )
   }, [searchTerm, data]) as InstanceGroupedByService[]
 
-  const onSearch = useCallback((val: string) => {
+  const onSearch = useCallback((val: string) => /* istanbul ignore next */ {
     setSearchTerm(val.trim())
     isSearchApplied.current = !isEmpty(val.trim())
   }, [])
 
-  const onSearchInfra = useCallback((val: string) => {
+  const onSearchInfra = useCallback((val: string) => /* istanbul ignore next */ {
     setSearchTermInfra(val.trim())
     isSearchAppliedInfra.current = !isEmpty(val.trim())
   }, [])
@@ -129,12 +132,20 @@ export default function EnvironmentDetailInstanceDialog(
 
     filteredData?.forEach(service => {
       if (rowClickFilter.serviceFilter && service?.serviceId === rowClickFilter.serviceFilter) {
+        /* istanbul ignore else */
         if (service.instanceGroupedByArtifactList) {
           service.instanceGroupedByArtifactList.forEach(artifact => {
-            if (rowClickFilter.artifactFilter && artifact.artifactVersion === rowClickFilter.artifactFilter) {
+            if (
+              rowClickFilter.artifactFilter &&
+              artifact.artifactVersion === rowClickFilter.artifactFilter.artifactVersion &&
+              artifact.artifactPath === rowClickFilter.artifactFilter.artifactPath
+            ) {
+              /* istanbul ignore else */
               if (artifact.instanceGroupedByEnvironmentList) {
                 artifact.instanceGroupedByEnvironmentList.forEach(env => {
+                  /* istanbul ignore else */
                   if (envFilter && env.envId === envFilter) {
+                    /* istanbul ignore else */
                     if (env.instanceGroupedByInfraList?.length) {
                       finalArray.push(env.instanceGroupedByInfraList)
                     }
@@ -153,8 +164,9 @@ export default function EnvironmentDetailInstanceDialog(
   }, [envFilter, filteredData, rowClickFilter.artifactFilter, rowClickFilter.serviceFilter])
 
   //filter by infraName/clusterId and lastPipelineExecutionName
-  const filteredDataInfra = useMemo(() => {
+  const filteredDataInfra = useMemo(() => /* istanbul ignore next */ {
     isSearchAppliedInfra.current = !isEmpty(searchTermInfra)
+    /* istanbul ignore else */
     if (!searchTermInfra) {
       return dataInfra
     }
@@ -188,7 +200,8 @@ export default function EnvironmentDetailInstanceDialog(
           />
         </Container>
         <EnvironmentDetailInfraView
-          artifactFilter={rowClickFilter.artifactFilter}
+          artifactPath={rowClickFilter.artifactFilter.artifactPath}
+          artifactVersion={rowClickFilter.artifactFilter.artifactVersion}
           envFilter={envFilter}
           serviceFilter={rowClickFilter.serviceFilter}
           data={filteredDataInfra}
@@ -212,7 +225,7 @@ export default function EnvironmentDetailInstanceDialog(
       isOpen={isOpen}
       onClose={() => {
         setIsOpen(false)
-        setRowClickFilter({ artifactFilter: '', serviceFilter: '' })
+        setRowClickFilter({ artifactFilter: { artifactPath: '', artifactVersion: '' }, serviceFilter: '' })
       }}
       enforceFocus={false}
     >

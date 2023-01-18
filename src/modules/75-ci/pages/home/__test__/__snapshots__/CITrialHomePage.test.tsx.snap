@@ -86,7 +86,7 @@ exports[`CITrialHomePage snapshot test should call button event when click 2`] =
     <div
       data-testid="location"
     >
-      /account/undefined/ci/home?modal=TRIAL&&experience=TRIAL
+      /account/undefined/ci/home?modal=TRIAL&experience=TRIAL
     </div>
   </div>
 </div>

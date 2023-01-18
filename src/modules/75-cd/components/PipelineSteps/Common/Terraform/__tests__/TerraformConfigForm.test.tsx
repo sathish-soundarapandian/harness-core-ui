@@ -9,9 +9,8 @@ import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-
-import { TerraformConfigStepOne } from '../Editview/TerraformConfigFormStepOne'
-import { TerraformConfigStepTwo } from '../Editview/TerraformConfigFormStepTwo'
+import { ConfigFileStoreStepOne } from '../../ConfigFileStore/ConfigFileStoreStepOne'
+import { ConfigFileStoreStepTwo } from '../../ConfigFileStore/ConfigFileStoreStepTwo'
 
 const allowableTypes: AllowedTypesWithRunTime[] = [
   MultiTypeInputType.FIXED,
@@ -22,7 +21,7 @@ let isTerraformPlan = false
 const renderStepOneComponent = (data: any): void => {
   render(
     <TestWrapper>
-      <TerraformConfigStepOne
+      <ConfigFileStoreStepOne
         data={data}
         isReadonly={false}
         isEditMode={false}
@@ -199,12 +198,13 @@ describe('TerraformConfigForm StepOne tests', () => {
 const renderStepTwoComponent = (data?: any): void => {
   render(
     <TestWrapper>
-      <TerraformConfigStepTwo
+      <ConfigFileStoreStepTwo
         isTerraformPlan={isTerraformPlan}
         prevStepData={data}
         isReadonly={false}
         allowableTypes={allowableTypes}
         onSubmitCallBack={jest.fn()}
+        isTerragrunt={false}
       />
     </TestWrapper>
   )

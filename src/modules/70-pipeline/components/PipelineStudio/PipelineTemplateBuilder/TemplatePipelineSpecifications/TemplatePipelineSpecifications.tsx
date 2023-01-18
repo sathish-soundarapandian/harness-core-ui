@@ -117,9 +117,13 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     lazy: true
   })
 
+  // All values need to be updated when pipelineResponse changes, even if mergedPipelineYaml is the same - this can happen when
+  // version of linked pipeline template is changed. This ensures all values is updated after reset due to version change.
   React.useEffect(() => {
-    setAllValues(parse<Pipeline>(defaultTo(pipelineResponse?.data?.mergedPipelineYaml, ''))?.pipeline)
-  }, [pipelineResponse?.data?.mergedPipelineYaml])
+    if (!pipelineLoading) {
+      setAllValues(parse<Pipeline>(defaultTo(pipelineResponse?.data?.mergedPipelineYaml, ''))?.pipeline)
+    }
+  }, [pipelineResponse?.data?.mergedPipelineYaml, pipelineLoading])
 
   const updateFormValues = (newTemplateInputs?: PipelineInfoConfig) => {
     const updatedPipeline = produce(pipeline, draft => {

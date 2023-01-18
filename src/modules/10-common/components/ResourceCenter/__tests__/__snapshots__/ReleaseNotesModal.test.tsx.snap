@@ -1,0 +1,132 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`open and close release notes  Modal Rendering should open and close the release notes modal 1`] = `
+<div
+  class="bp3-dialog dialog"
+>
+  <div
+    class="bp3-dialog-header"
+  >
+    <h4
+      class="bp3-heading"
+    >
+      <div
+        class="Layout--vertical Layout--layout-spacing-small StyledProps--main alignCenter"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-medium"
+        >
+          <span>
+            common.resourceCenter.bottomlayout.releaseNote
+          </span>
+        </p>
+        <div
+          class="bp3-divider"
+        />
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-medium"
+        >
+          <span
+            style="font-style: italic;"
+          >
+            common.resourceCenter.productUpdates.releaseText
+          </span>
+        </p>
+      </div>
+    </h4>
+    <button
+      aria-label="Close"
+      class="bp3-button bp3-minimal bp3-dialog-close-button"
+      type="button"
+    >
+      <span
+        class="bp3-icon bp3-icon-small-cross"
+        icon="small-cross"
+      >
+        <svg
+          data-icon="small-cross"
+          height="20"
+          viewBox="0 0 20 20"
+          width="20"
+        >
+          <desc>
+            small-cross
+          </desc>
+          <path
+            d="M11.41 10l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L10 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L8.59 10 5.3 13.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l3.29-3.3 3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L11.41 10z"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </span>
+    </button>
+  </div>
+  <table
+    class="bp3-html-table table"
+    data-testid="release-note-table"
+  >
+    <thead>
+      <tr
+        data-testid="release-note-table-head"
+        style="background-color: rgb(226, 245, 255);"
+      >
+        <th
+          class="th"
+        >
+          Component
+        </th>
+        <th
+          class="th"
+        >
+          Version
+        </th>
+        <th
+          class="th"
+        >
+          Last Updated
+        </th>
+        <th
+          class="th"
+        >
+          Release Notes
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="tr"
+      >
+        <td
+          class="td"
+          data-testid="name"
+        >
+          testDisplayName
+        </td>
+        <td
+          class="td"
+          data-testid="version"
+        >
+          7800
+        </td>
+        <td
+          class="td"
+          data-testid="updated"
+        >
+          testUpdate
+        </td>
+        <td
+          class="td"
+          data-testid="link"
+        >
+          <a
+            href="link"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            Link
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

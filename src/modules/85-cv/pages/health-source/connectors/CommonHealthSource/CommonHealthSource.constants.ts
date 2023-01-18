@@ -1,18 +1,22 @@
 import type { QueryRecordsRequest } from 'services/cv'
+import { HealthSourceTypes } from '../../types'
+import type { HealthSourceProductsType } from './CommonHealthSource.types'
 
-export const BasePathKeyPrefix = 'basePathDropdown_'
-export const BasePathInitValue = { basePathDropdown_0: { value: '', path: '' } }
-
-export const MetricPathKeyPrefix = 'metricPathDropdown_'
-export const MetricPathInitValue = { metricPathDropdown_0: { value: '', path: '', isMetric: false } }
-
-export const SumoLogicProducts = {
-  METRICS: 'SumoLogic Cloud Metrics',
-  LOGS: 'SumoLogic Cloud Logs'
+export const DEFAULT_HEALTH_SOURCE_QUERY = 'Health Source Query'
+export const METRICS = 'METRICS'
+export const HealthSourceProducts: HealthSourceProductsType = {
+  SUMOLOGIC_METRICS: {
+    label: 'SumoLogic Cloud Metrics',
+    value: HealthSourceTypes.SumologicMetrics
+  },
+  SUMOLOGIC_LOG: {
+    label: 'SumoLogic Cloud Logs',
+    value: HealthSourceTypes.SumologicLogs
+  }
 }
 
 export const initConfigurationsForm = {
-  customMetricsMap: new Map(),
+  queryMetricsMap: new Map(),
   selectedMetric: '',
   ignoreThresholds: [],
   failFastThresholds: []
@@ -30,12 +34,13 @@ export const ThresholdTypes: Record<string, 'IgnoreThreshold' | 'FailImmediately
   FailImmediately: 'FailImmediately'
 }
 
-export const CommonHealthSourceFieldNames = {
+export const CustomMetricFormFieldNames = {
   METRIC_NAME: 'metricName',
   METRIC_IDENTIFIER: 'identifier',
   GROUP_NAME: 'groupName',
 
   QUERY: 'query',
+  IS_QUERY_EXECUTED: 'isQueryExecuted',
 
   METRIC_VALUE: 'metricValue',
   TIMESTAMP_LOCATOR: 'timestamp',
@@ -51,6 +56,13 @@ export const CommonHealthSourceFieldNames = {
   LOWER_BASELINE_DEVIATION: 'lowerBaselineDeviation'
 }
 
+export const CommonConfigurationsFormFieldNames = {
+  CUSTOM_METRICS_MAP: 'queryMetricsMap',
+  SELECTED_METRIC: 'selectedMetric',
+  IGNORE_THRESHOLDS: 'ignoreThresholds',
+  FAILFAST_THRESHOLDS: 'failFastThresholds'
+}
+
 export enum FIELD_ENUM {
   JSON_SELECTOR = 'JsonSelector',
   TEXT_INPUT = 'TextInput',
@@ -61,16 +73,14 @@ export enum CHART_VISIBILITY_ENUM {
   AUTO = 'auto',
   DEFAULT = 'default'
 }
-// Logs table constants
 
+// Logs table constants
 export enum FieldMappingInputTypes {
   JsonSelector = 'JsonSelector'
 }
-
 export const logsTableDefaultConfigs = {
   size: '40%'
 }
-
 export const ProviderTypes: Record<string, QueryRecordsRequest['providerType']> = {
-  SumoLogic_LOGS: 'SUMOLOGIC_LOG'
+  SUMOLOGIC_LOG: 'SUMOLOGIC_LOG'
 }

@@ -12,13 +12,15 @@ import type { StringsMap } from 'stringTypes'
 import type { UseStringsReturn } from 'framework/strings'
 import type { ChangeSourceDTO, MonitoredServiceDTO } from 'services/cv'
 import { Connectors } from '@connectors/constants'
+import { MonitoredServiceType } from '@cv/pages/monitored-service/components/Configurations/components/Service/components/MonitoredServiceOverview/MonitoredServiceOverview.constants'
 import { getIconBySource } from '../ChangeSource.utils'
 import {
   ChangeSourceConnectorOptions,
   ChangeSourceFieldNames,
   ChangeSourceCategoryOptions,
   ChangeSourceCategoryName,
-  ChangeSourceTypes
+  ChangeSourceTypes,
+  internalChangeSources
 } from './ChangeSourceDrawer.constants'
 import type { UpdatedChangeSourceDTO } from './ChangeSourceDrawer.types'
 
@@ -144,8 +146,9 @@ export const getChangeSourceOptions = (
   const options: SelectOption[] = []
   for (const category of ChangeSourceCategoryOptions) {
     if (
-      (type === 'Application' && category.value === ChangeSourceCategoryName.INFRASTRUCTURE) ||
-      (type === 'Infrastructure' && category.value === ChangeSourceCategoryName.DEPLOYMENT)
+      (type && internalChangeSources.includes(category.value)) ||
+      (type === MonitoredServiceType.APPLICATION && category.value === ChangeSourceCategoryName.INFRASTRUCTURE) ||
+      (type === MonitoredServiceType.INFRASTRUCTURE && category.value === ChangeSourceCategoryName.DEPLOYMENT)
     ) {
       continue
     }

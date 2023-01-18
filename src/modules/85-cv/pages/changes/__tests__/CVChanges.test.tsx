@@ -145,6 +145,24 @@ jest.mock('services/cv', () => ({
       cancel: jest.fn()
     }
   }),
+  useChangeEventTimelineForAccount: jest.fn().mockImplementation(() => {
+    return {
+      data: {},
+      refetch: jest.fn(),
+      error: null,
+      loading: false,
+      cancel: jest.fn()
+    }
+  }),
+  useChangeEventListForAccount: jest.fn().mockImplementation(() => {
+    return {
+      data: {},
+      refetch: jest.fn(),
+      error: null,
+      loading: false,
+      cancel: jest.fn()
+    }
+  }),
   useGetMonitoredServiceChangeTimeline: jest.fn().mockImplementation(() => {
     return {
       data: {
@@ -361,8 +379,8 @@ describe('Unit tests for CVChanges', () => {
     await waitFor(() => {
       expect(refetch).toHaveBeenLastCalledWith({
         queryParams: expect.objectContaining({
-          changeCategories: ['Deployment', 'Infrastructure', 'Alert'],
-          changeSourceTypes: ['HarnessCDNextGen', 'HarnessCD', 'K8sCluster', 'PagerDuty']
+          changeCategories: ['Deployment', 'Infrastructure', 'Alert', 'FeatureFlag'],
+          changeSourceTypes: ['HarnessCDNextGen', 'HarnessCD', 'K8sCluster', 'PagerDuty', 'HarnessFF']
         }),
         queryParamStringifyOptions: {
           arrayFormat: 'repeat'

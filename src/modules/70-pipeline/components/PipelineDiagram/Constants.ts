@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export const Event: { [key: string]: string } = {
+export const Event = {
   AddLinkClicked: 'addLinkClicked',
   SelectionChanged: 'selectionChanged',
   ClickNode: 'clickNode',
@@ -32,8 +32,11 @@ export const Event: { [key: string]: string } = {
   MouseOverNode: 'mouseOverNode',
   MouseLeaveNode: 'mouseLeaveNode',
   MouseEnterStepGroupTitle: 'mouseEnterStepGroupTitle',
-  MouseLeaveStepGroupTitle: 'mouseLeaveStepGroupTitle'
-}
+  MouseLeaveStepGroupTitle: 'mouseLeaveStepGroupTitle',
+  CollapsedNodeClick: 'collapsedNodeClick'
+} as const
+
+export type EventType = ValueOf<typeof Event>
 
 export const DiagramType: { [key: string]: string } = {
   Default: 'default',

@@ -118,44 +118,42 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
       {
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.timeout as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <TimeoutFieldInputSetView
-              label={getString('pipelineSteps.timeoutLabel')}
-              name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-              disabled={readonly}
-              multiTypeDurationProps={{
-                configureOptionsProps: {
-                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-                },
-                allowableTypes,
-                expressions,
-                disabled: readonly
-              }}
-              template={inputSetData?.template}
-              fieldPath={'timeout'}
-            />
-          </div>
+          <TimeoutFieldInputSetView
+            label={getString('pipelineSteps.timeoutLabel')}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+            disabled={readonly}
+            multiTypeDurationProps={{
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
+              allowableTypes,
+              expressions,
+              disabled: readonly
+            }}
+            template={inputSetData?.template}
+            fieldPath={'timeout'}
+            className={cx(stepCss.formGroup, stepCss.md)}
+          />
         )
       }
       {
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.spec?.configuration?.spec?.provisionerIdentifier as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <TextFieldInputSetView
-              name={`${path}.spec.configuration.spec.provisionerIdentifier`}
-              label={getString('pipelineSteps.provisionerIdentifier')}
-              disabled={readonly}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              configureOptionsProps={{
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              }}
-              template={inputSetData?.template}
-              fieldPath={'spec.configuration.spec.provisionerIdentifier'}
-            />
-          </div>
+          <TextFieldInputSetView
+            name={`${path}.spec.configuration.spec.provisionerIdentifier`}
+            label={getString('pipelineSteps.provisionerIdentifier')}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            template={inputSetData?.template}
+            fieldPath={'spec.configuration.spec.provisionerIdentifier'}
+            className={cx(stepCss.formGroup, stepCss.md)}
+          />
         )
       }
       {
@@ -205,86 +203,83 @@ export function DeleteStackInputStepRef<T extends DeleteStackData = DeleteStackD
       {
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.spec?.configuration?.spec?.region as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <SelectInputSetView
-              label={getString('regionLabel')}
-              name={`${path}.spec.configuration.spec.region`}
-              placeholder={getString(regionsLoading ? 'common.loading' : 'pipeline.regionPlaceholder')}
-              disabled={readonly}
-              useValue
-              template={inputSetData?.template}
-              fieldPath={'spec.configuration.spec.region'}
-              multiTypeInputProps={{
-                onChange: value => {
-                  setRegionsRef((value as any).value as string)
-                  get(formik?.values, `${path}.spec.configuration.spec.roleArn`) &&
-                    getMultiTypeFromValue(get(formik?.values, `${path}.spec.configuration.spec.roleArn`)) ===
-                      MultiTypeInputType.FIXED &&
-                    formik?.setFieldValue(`${path}.spec.configuration.spec.roleArn`, '')
-                  setAwsRoles([])
-                },
-                selectProps: {
-                  allowCreatingNewItems: true,
-                  items: regions ? regions : []
-                },
-                expressions,
-                allowableTypes
-              }}
-              configureOptionsProps={{
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              }}
-              selectItems={regions ? regions : []}
-            />
-          </div>
+          <SelectInputSetView
+            className={cx(stepCss.formGroup, stepCss.md)}
+            label={getString('regionLabel')}
+            name={`${path}.spec.configuration.spec.region`}
+            placeholder={getString(regionsLoading ? 'common.loading' : 'pipeline.regionPlaceholder')}
+            disabled={readonly}
+            useValue
+            template={inputSetData?.template}
+            fieldPath={'spec.configuration.spec.region'}
+            multiTypeInputProps={{
+              onChange: value => {
+                setRegionsRef((value as any).value as string)
+                get(formik?.values, `${path}.spec.configuration.spec.roleArn`) &&
+                  getMultiTypeFromValue(get(formik?.values, `${path}.spec.configuration.spec.roleArn`)) ===
+                    MultiTypeInputType.FIXED &&
+                  formik?.setFieldValue(`${path}.spec.configuration.spec.roleArn`, '')
+                setAwsRoles([])
+              },
+              selectProps: {
+                allowCreatingNewItems: true,
+                items: regions ? regions : []
+              },
+              expressions,
+              allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            selectItems={regions ? regions : []}
+          />
         )
       }
       {
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.spec?.configuration?.spec?.roleArn as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <SelectInputSetView
-              label={getString('connectors.awsKms.roleArnLabel')}
-              name={`${path}.spec.configuration.spec.roleArn`}
-              disabled={readonly || loading}
-              placeholder={getString(loading ? 'common.loading' : 'select')}
-              useValue
-              template={inputSetData?.template}
-              fieldPath={'spec.configuration.spec.roleArn'}
-              multiTypeInputProps={{
-                selectProps: {
-                  allowCreatingNewItems: false,
-                  items: awsRoles ? awsRoles : []
-                },
-                expressions,
-                allowableTypes
-              }}
-              configureOptionsProps={{
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              }}
-              selectItems={awsRoles ? awsRoles : []}
-            />
-          </div>
+          <SelectInputSetView
+            className={cx(stepCss.formGroup, stepCss.md)}
+            label={getString('connectors.awsKms.roleArnLabel')}
+            name={`${path}.spec.configuration.spec.roleArn`}
+            disabled={readonly || loading}
+            placeholder={getString(loading ? 'common.loading' : 'select')}
+            useValue
+            template={inputSetData?.template}
+            fieldPath={'spec.configuration.spec.roleArn'}
+            multiTypeInputProps={{
+              selectProps: {
+                allowCreatingNewItems: false,
+                items: awsRoles ? awsRoles : []
+              },
+              expressions,
+              allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            selectItems={awsRoles ? awsRoles : []}
+          />
         )
       }
       {
         /* istanbul ignore next */
         isRuntime(inputSetData?.template?.spec?.configuration?.spec?.stackName as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <TextFieldInputSetView
-              name={`${path}.spec.configuration.spec.stackName`}
-              label={getString('cd.cloudFormation.stackName')}
-              disabled={readonly}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              configureOptionsProps={{
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              }}
-              template={inputSetData?.template}
-              fieldPath={'spec.configuration.spec.stackName'}
-            />
-          </div>
+          <TextFieldInputSetView
+            name={`${path}.spec.configuration.spec.stackName`}
+            label={getString('cd.cloudFormation.stackName')}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            template={inputSetData?.template}
+            fieldPath={'spec.configuration.spec.stackName'}
+            className={cx(stepCss.formGroup, stepCss.md)}
+          />
         )
       }
     </FormikForm>

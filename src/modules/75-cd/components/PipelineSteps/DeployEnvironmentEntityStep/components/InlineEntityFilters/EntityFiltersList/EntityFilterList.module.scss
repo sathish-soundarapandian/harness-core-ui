@@ -8,10 +8,6 @@
 .filter-grid {
   display: grid;
   grid-template-columns: 200px 200px 50px auto min-content;
-  gap: var(--spacing-medium) var(--spacing-large);
+  gap: var(--spacing-medium) var(--spacing-xlarge);
   align-items: center;
-}
-
-.readonly-tags {
-  max-width: 100px;
 }

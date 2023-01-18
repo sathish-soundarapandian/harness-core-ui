@@ -25,6 +25,7 @@ import {
 
 import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { getIdentifierFromScopedRef } from '@common/utils/utils'
 import type { EnvironmentData } from '../types'
 
 export interface UseGetEnvironmentsDataProps {
@@ -142,7 +143,9 @@ export function useGetEnvironmentsData({
 
           /* istanbul ignore else */
           if (environment) {
-            const existsInList = _environmentsList.find(svc => svc.identifier === row.environmentIdentifier)
+            const existsInList = _environmentsList.find(
+              svc => svc.identifier === getIdentifierFromScopedRef(row.environmentIdentifier as string)
+            )
 
             if (!existsInList) {
               _environmentsList.unshift(environment)

@@ -33,7 +33,8 @@ const TAB_ID_MAP = {
   TESTS: 'tests_view',
   POLICY_EVALUATIONS: 'policy_evaluations',
   STO_SECURITY: 'sto_security',
-  ERROR_TRACKING: 'error_tracking'
+  ERROR_TRACKING: 'error_tracking',
+  RESILIENCE: 'resilience'
 }
 
 interface ExecutionTabsProps {
@@ -56,14 +57,17 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const { licenseInformation } = useLicenseStore()
   const isSecurityEnabled = licenseInformation['STO']?.status === 'ACTIVE'
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
+  const isChaosEnabled = useFeatureFlag(FeatureFlag.CHAOS_ENABLED)
   const canUsePolicyEngine = useAnyEnterpriseLicense()
 
   const routeParams = { ...accountPathProps, ...executionPathProps, ...pipelineModuleParams }
   const isLogView =
     view === SavedExecutionViewTypes.LOG || (!view && initialSelectedView === SavedExecutionViewTypes.LOG)
   const isCI = params.module === 'ci'
+  const isCD = params.module === 'cd'
   const isCIInPipeline = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.ci
   const isSTOInPipeline = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.sto
+  const isCDInPipeline = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.cd
 
   const ciData = pipelineExecutionDetail?.pipelineExecutionSummary?.moduleInfo?.ci
     ?.ciExecutionInfoDTO as CIWebhookInfoDTO
@@ -130,6 +134,12 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
     if (isErrorTrackingView) {
       return setSelectedTabId(TAB_ID_MAP.ERROR_TRACKING)
+    }
+    const isResilienceView = !!matchPath(location.pathname, {
+      path: routes.toResilienceView(routeParams)
+    })
+    if (isResilienceView) {
+      return setSelectedTabId(TAB_ID_MAP.RESILIENCE)
     }
     // Defaults to Pipelines Tab
     return setSelectedTabId(TAB_ID_MAP.PIPELINE)
@@ -257,6 +267,22 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
         >
           <Icon name="error-tracking" size={16} />
           <span>{getString('common.purpose.errorTracking.title')}</span>
+        </NavLink>
+      )
+    })
+  }
+
+  if ((isCD || isCDInPipeline) && isChaosEnabled) {
+    tabList.push({
+      id: TAB_ID_MAP.RESILIENCE,
+      title: (
+        <NavLink
+          to={routes.toResilienceView(params) + location.search}
+          className={css.tabLink}
+          activeClassName={css.activeLink}
+        >
+          <Icon name="chaos-main" size={16} />
+          <span>{getString('pipeline.resilienceTab.title')}</span>
         </NavLink>
       )
     })

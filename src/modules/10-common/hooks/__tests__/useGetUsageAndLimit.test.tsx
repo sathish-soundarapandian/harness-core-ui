@@ -190,4 +190,25 @@ describe('useGetUsageAndLimit', () => {
     expect(result.current.usageData.usage?.cd?.activeServiceInstances?.count).toBe(200)
     expect(result.current.usageData.usage?.cd?.activeServices?.count).toBe(23)
   })
+
+  test('should fetch CHAOS usage and limit when module is CHAOS', async () => {
+    useGetLicensesAndSummaryMock.mockImplementation(() => {
+      return {
+        data: {
+          data: {
+            totalChaosExperimentRuns: 10000,
+            totalChaosInfrastructures: 1000
+          },
+          status: 'SUCCESS'
+        }
+      }
+    })
+    const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
+      <TestWrapper>{children}</TestWrapper>
+    )
+    const { result } = renderHook(() => useGetUsageAndLimit(ModuleName.CHAOS), { wrapper })
+    expect(result.current.limitData.limit?.ci).toBeUndefined()
+    expect(result.current.limitData.limit?.chaos?.totalChaosExperimentRuns).toBe(10000)
+    expect(result.current.limitData.limit?.chaos?.totalChaosInfrastructures).toBe(1000)
+  })
 })

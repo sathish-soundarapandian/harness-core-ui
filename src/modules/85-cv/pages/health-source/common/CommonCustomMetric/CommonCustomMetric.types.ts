@@ -41,46 +41,22 @@ export interface CommonCustomMetricInterface {
   tooptipMessage: string
   addFieldLabel: string
   createdMetrics: string[]
-  isValidInput: boolean
   formikValues: CommonCustomMetricFormikInterface
   mappedMetrics: Map<string, CommonCustomMetricFormikInterface>
   initCustomForm: InitCustomFormData
   groupedCreatedMetrics?: GroupedCreatedMetrics
   shouldBeAbleToDeleteLastMetric?: boolean
   isPrimaryMetric?: boolean
-  setMappedMetrics: React.Dispatch<React.SetStateAction<CustomSelectedAndMappedMetrics>>
-  setCreatedMetrics: React.Dispatch<React.SetStateAction<CreatedMetricsWithSelectedIndex>>
-  setGroupedCreatedMetrics: React.Dispatch<React.SetStateAction<GroupedCreatedMetrics>>
   isMetricThresholdEnabled?: boolean
   filterRemovedMetricNameThresholds?: (metricName: string) => void
   openEditMetricModal: () => void
+  defaultServiceInstance?: string
 }
 
 export interface CommonUpdateSelectedMetricsMapInterface {
   updatedMetric: string
   oldMetric: string
   mappedMetrics: Map<string, CommonCustomMetricFormikInterface>
-  formikValues: any
-  initCustomForm: InitCustomFormData
-  isPrimaryMetric?: boolean
-}
-
-export interface CommonRemoveMetricInterface {
-  removedMetric: string
-  updatedMetric: string
-  updatedList: string[]
-  smIndex: number
-  setCreatedMetrics: (value: React.SetStateAction<CreatedMetricsWithSelectedIndex>) => void
-  setMappedMetrics: React.Dispatch<React.SetStateAction<CustomSelectedAndMappedMetrics>>
-  formikValues: CommonCustomMetricFormikInterface
-}
-
-export interface CommonSelectMetricInterface {
-  newMetric: string
-  updatedList: string[]
-  smIndex: number
-  setCreatedMetrics: (value: React.SetStateAction<CreatedMetricsWithSelectedIndex>) => void
-  setMappedMetrics: React.Dispatch<React.SetStateAction<CustomSelectedAndMappedMetrics>>
   formikValues: any
   initCustomForm: InitCustomFormData
   isPrimaryMetric?: boolean

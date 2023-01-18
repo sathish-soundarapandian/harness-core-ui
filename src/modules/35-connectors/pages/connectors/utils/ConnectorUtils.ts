@@ -37,6 +37,7 @@ import { setSecretField } from '@secrets/utils/SecretField'
 import { ConnectivityModeType } from '@common/components/ConnectivityMode/ConnectivityMode'
 import { transformStepHeadersAndParamsForPayloadForPrometheus } from '@connectors/components/CreateConnector/PrometheusConnector/utils'
 import { transformStepHeadersAndParamsForPayload } from '@connectors/components/CreateConnector/CustomHealthConnector/components/CustomHealthHeadersAndParams/CustomHealthHeadersAndParams.utils'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { AuthTypes, GitAuthTypes, GitAPIAuthTypes } from './ConnectorHelper'
 import { useConnectorWizard } from '../../../components/CreateConnectorWizard/ConnectorWizardContext'
 export interface DelegateCardInterface {
@@ -323,7 +324,7 @@ export const buildTasPayload = (formData: FormData): ConnectorRequestBody => {
       credential: {
         type: CredTypeValues.ManualConfig,
         spec: {
-          endpointUrl: formData.endpointUrl,
+          endpointUrl: formData.endpointUrl.trim(),
           [formData.username.type === ValueType.TEXT ? 'username' : 'usernameRef']: formData.username.value,
           passwordRef: formData.passwordRef.referenceString
         }
@@ -1987,7 +1988,7 @@ export const buildErrorTrackingPayload = (formData: FormData): Connector => {
       description,
       tags,
       spec: {
-        url: window.location.href.split('#')[0],
+        url: windowLocationUrlPartBeforeHash(),
         apiKeyRef: apiReferenceKey,
         delegateSelectors: delegateSelectors || {}
       } as ErrorTrackingConnectorDTO
@@ -2077,14 +2078,31 @@ export const buildServiceNowPayload = (formData: FormData) => {
       ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
       serviceNowUrl: formData.serviceNowUrl,
       auth: {
-        type: AuthTypes.USER_PASSWORD,
+        type: formData.authType,
         spec: {
-          username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
-          usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
-          passwordRef: formData.passwordRef.referenceString
+          username: formData?.username?.type === ValueType.TEXT ? formData.username.value : undefined,
+          usernameRef: formData?.username?.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
+          passwordRef: formData?.passwordRef?.referenceString,
+          resourceIdRef: formData?.resourceIdRef?.referenceString,
+          clientIdRef: formData?.clientIdRef?.referenceString,
+          certificateRef: formData?.certificateRef?.referenceString,
+          privateKeyRef: formData?.privateKeyRef?.referenceString,
+          adfsUrl: formData?.adfsUrl
         }
       }
     }
+  }
+
+  if (formData.authType === AuthTypes.USER_PASSWORD) {
+    delete savedData.spec.auth.spec.resourceIdRef
+    delete savedData.spec.auth.spec.clientIdRef
+    delete savedData.spec.auth.spec.certificateRef
+    delete savedData.spec.auth.spec.privateKeyRef
+    delete savedData.spec.auth.spec.adfsUrl
+  } else {
+    delete savedData.spec.auth.spec.username
+    delete savedData.spec.auth.spec.usernameRef
+    delete savedData.spec.auth.spec.passwordRef
   }
 
   return { connector: savedData }
@@ -2104,16 +2122,33 @@ export const setupServiceNowFormData = async (
     authType: connectorInfo.spec.auth.type,
     username:
       connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD &&
-      (connectorInfo.spec.auth.spec.username || connectorInfo.spec.auth.spec.usernameRef)
+      (connectorInfo.spec.auth.spec?.username || connectorInfo.spec.auth.spec?.usernameRef)
         ? {
-            value: connectorInfo.spec.auth.spec.username || connectorInfo.spec.auth.spec.usernameRef,
-            type: connectorInfo.spec.auth.spec.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
+            value: connectorInfo.spec.auth.spec?.username || connectorInfo.spec.auth.spec?.usernameRef,
+            type: connectorInfo.spec.auth.spec?.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
           }
         : undefined,
     passwordRef:
       connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD
-        ? await setSecretField(connectorInfo.spec.auth.spec.passwordRef, scopeQueryParams)
-        : undefined
+        ? await setSecretField(connectorInfo.spec.auth.spec?.passwordRef, scopeQueryParams)
+        : undefined,
+    resourceIdRef:
+      connectorInfo.spec.auth.type === AuthTypes.ADFS
+        ? await setSecretField(connectorInfo.spec.auth.spec?.resourceIdRef, scopeQueryParams)
+        : undefined,
+    clientIdRef:
+      connectorInfo.spec.auth.type === AuthTypes.ADFS
+        ? await setSecretField(connectorInfo.spec.auth.spec?.clientIdRef, scopeQueryParams)
+        : undefined,
+    certificateRef:
+      connectorInfo.spec.auth.type === AuthTypes.ADFS
+        ? await setSecretField(connectorInfo.spec.auth.spec?.certificateRef, scopeQueryParams)
+        : undefined,
+    privateKeyRef:
+      connectorInfo.spec.auth.type === AuthTypes.ADFS
+        ? await setSecretField(connectorInfo.spec.auth.spec?.privateKeyRef, scopeQueryParams)
+        : undefined,
+    adfsUrl: connectorInfo.spec.auth.type === AuthTypes.ADFS ? connectorInfo.spec.auth.spec?.adfsUrl : undefined
   }
   return formData
 }

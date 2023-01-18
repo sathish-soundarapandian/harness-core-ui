@@ -7,15 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly btnGroup: string
   readonly gitFilter: string
-  readonly main: string
-  readonly noResultSection: string
-  readonly pipelineDesc: string
-  readonly pipelineGitDetails: string
-  readonly rbacButton: string
-  readonly runText: string
-  readonly searchContainer: string
-  readonly table: string
+  readonly pageBody: string
 }
 export default styles

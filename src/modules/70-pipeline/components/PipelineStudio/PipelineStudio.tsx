@@ -80,7 +80,9 @@ export default function PipelineStudio(): React.ReactElement {
     )
   }
   const { licenseInformation } = useLicenseStore()
-  const { CDNG_ENABLED, CING_ENABLED, CFNG_ENABLED, PIE_NG_GITX_CACHING, PIPELINE_CHAINING } = useFeatureFlags()
+  const { CDNG_ENABLED, CING_ENABLED, CFNG_ENABLED, PIE_NG_GITX_CACHING, PIPELINE_CHAINING, IACM_ENABLED } =
+    useFeatureFlags()
+
   const { getString } = useStrings()
   return (
     <PipelineProvider
@@ -105,6 +107,7 @@ export default function PipelineStudio(): React.ReactElement {
           isCDEnabled: licenseInformation['CD'] && CDNG_ENABLED,
           isCFEnabled: licenseInformation['CF'] && CFNG_ENABLED,
           isSTOEnabled: licenseInformation['STO']?.status === 'ACTIVE',
+          isIACMEnabled: IACM_ENABLED,
           isApprovalStageEnabled: true,
           isPipelineChainingEnabled: PIPELINE_CHAINING
         })

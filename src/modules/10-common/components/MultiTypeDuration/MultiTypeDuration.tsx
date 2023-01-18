@@ -21,9 +21,10 @@ import {
   DataTooltipInterface,
   HarnessDocTooltip,
   FormError,
-  FormikTooltipContext
+  FormikTooltipContext,
+  AllowedTypesWithExecutionTime
 } from '@harness/uicore'
-import { get } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import {
   ALLOWED_VALUES_TYPE,
@@ -72,10 +73,9 @@ export function MultiTypeDuration(props: MultiTypeDurationProps): React.ReactEle
     enableConfigureOptions = true,
     configureOptionsProps,
     inputGroupProps,
+    allowableTypes,
     ...rest
   } = props
-
-  const { getString } = useStrings()
 
   const expressionAndRuntimeTypeComponent = (
     <ExpressionAndRuntimeType
@@ -84,6 +84,10 @@ export function MultiTypeDuration(props: MultiTypeDurationProps): React.ReactEle
       onChange={onChange}
       style={{ flexGrow: 1 }}
       {...rest}
+      allowableTypes={(defaultTo(allowableTypes, []) as AllowedTypesWithExecutionTime[]).filter(
+        // timeouts cannot be EXECUTION_TIME inputs
+        type => type !== MultiTypeInputType.EXECUTION_TIME
+      )}
       fixedTypeComponentProps={inputGroupProps}
       fixedTypeComponent={MultiTypeDurationFixedTypeComponent}
     />
@@ -97,7 +101,7 @@ export function MultiTypeDuration(props: MultiTypeDurationProps): React.ReactEle
           {getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME && (
             <ConfigureOptions
               value={value as string}
-              type={getString('string')}
+              type="String"
               variableName={name}
               showRequiredField={false}
               showDefaultField={false}
@@ -106,6 +110,7 @@ export function MultiTypeDuration(props: MultiTypeDurationProps): React.ReactEle
               style={{ marginLeft: 'var(--spacing-medium)' }}
               allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
               {...configureOptionsProps}
+              isExecutionTimeFieldDisabled
               isReadonly={props.disabled}
             />
           )}

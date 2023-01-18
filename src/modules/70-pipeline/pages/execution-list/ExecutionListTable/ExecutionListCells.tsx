@@ -10,8 +10,8 @@ import { Checkbox, Classes } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
 import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text } from '@harness/uicore'
 import { get, isEmpty, defaultTo } from 'lodash-es'
-import React, { useRef } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import React, { useRef, useCallback } from 'react'
+import { Link, useParams, useHistory } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, UseExpandedRowProps } from 'react-table'
 import { Duration, TimeAgoPopover } from '@common/components'
 import type { StoreType } from '@common/constants/GitSyncTypes'
@@ -36,10 +36,15 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
-import type { PipelineExecutionSummary } from 'services/pipeline-ng'
+import type { PipelineExecutionSummary, PipelineStageInfo } from 'services/pipeline-ng'
+import { useDebugPipelineExecuteWithInputSetYaml } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
-import type { ExecutionListColumnActions } from './ExecutionListTable'
+import { useToaster } from '@common/exports'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { PipelineActions } from '@common/constants/TrackingConstants'
 import { CITriggerInfo, CITriggerInfoProps } from './CITriggerInfoCell'
+import type { ExecutionListColumnActions } from './ExecutionListTable'
 import css from './ExecutionListTable.module.scss'
 
 export const getExecutionPipelineViewLink = (
@@ -67,6 +72,38 @@ export const getExecutionPipelineViewLink = (
     ),
     branch: pipelineExecutionSummary.gitDetails?.branch ?? branch,
     storeType: pipelineExecutionSummary.storeType ?? storeType
+  })
+}
+
+export const getChildExecutionPipelineViewLink = (
+  data: PipelineExecutionSummary,
+  pathParams: PipelineType<PipelinePathProps>,
+  queryParams: GitQueryParams
+): string => {
+  const {
+    executionid,
+    identifier: pipelineIdentifier,
+    orgid,
+    projectid,
+    stagenodeid
+  } = get(data, 'parentStageInfo', {} as PipelineStageInfo)
+  const { accountId, module } = pathParams
+  const { branch, repoIdentifier, repoName, connectorRef, storeType } = queryParams
+  const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
+
+  return routes.toExecutionPipelineView({
+    accountId: accountId,
+    orgIdentifier: orgid,
+    projectIdentifier: projectid,
+    pipelineIdentifier: pipelineIdentifier || '-1',
+    executionIdentifier: executionid || '-1',
+    module,
+    source,
+    stage: stagenodeid,
+    connectorRef: data.connectorRef ?? connectorRef,
+    repoName: defaultTo(data.gitDetails?.repoName ?? repoName, data.gitDetails?.repoIdentifier ?? repoIdentifier),
+    branch: data.gitDetails?.branch ?? branch,
+    storeType: data.storeType ?? storeType
   })
 }
 
@@ -163,6 +200,7 @@ export const StatusCell: CellType = ({ row }) => {
 export const ExecutionCell: CellType = ({ row }) => {
   const data = row.original
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
+  const queryParams = useQueryParams<GitQueryParams>()
 
   const { module } = useModuleInfo()
   const { getString } = useStrings()
@@ -177,6 +215,13 @@ export const ExecutionCell: CellType = ({ row }) => {
     get(data, 'executionTriggerInfo.triggeredBy.extraInfo.email')
   const profilePictureUrl =
     get(data, 'moduleInfo.ci.ciExecutionInfoDTO.author.avatar') || get(data, 'executionTriggerInfo.triggeredBy.avatar')
+  const { hasparentpipeline = false, identifier: pipelineIdentifier } = get(
+    data,
+    'parentStageInfo',
+    {} as PipelineStageInfo
+  )
+
+  const toChildExecutionPipelineView = getChildExecutionPipelineViewLink(data, pathParams, queryParams)
 
   const triggerType = data.executionTriggerInfo?.triggerType
 
@@ -184,7 +229,11 @@ export const ExecutionCell: CellType = ({ row }) => {
 
   return (
     <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center' }} className={css.execution}>
-      {!isAutoTrigger ? (
+      {hasparentpipeline ? (
+        <Link to={toChildExecutionPipelineView} target="_blank" className={css.iconWrapper} onClick={killEvent}>
+          <Icon size={10} name={'chained-pipeline'} className={css.icon} />
+        </Link>
+      ) : !isAutoTrigger ? (
         <Avatar
           size={'small'}
           src={profilePictureUrl}
@@ -217,10 +266,29 @@ export const ExecutionCell: CellType = ({ row }) => {
         </div>
       )}
       <div>
-        <Layout.Horizontal>
-          <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
-            {name || email} | {getString(mapTriggerTypeToStringID(get(data, 'executionTriggerInfo.triggerType')))}
-          </Text>
+        <Layout.Horizontal className={css.childPipelineExecutionInfo}>
+          {hasparentpipeline ? (
+            <>
+              <Link to={toChildExecutionPipelineView} target="_blank" onClick={killEvent}>
+                <Text
+                  font={{ variation: FontVariation.SMALL_SEMI }}
+                  color={Color.PRIMARY_7}
+                  lineClamp={1}
+                  style={{ maxWidth: '150px' }}
+                  margin={{ right: 'xsmall' }}
+                >
+                  {`${pipelineIdentifier}`}
+                </Text>
+              </Link>
+              <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
+                | {getString('common.pipeline')}
+              </Text>
+            </>
+          ) : (
+            <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
+              {name || email} | {getString(mapTriggerTypeToStringID(get(data, 'executionTriggerInfo.triggerType')))}
+            </Text>
+          )}
         </Layout.Horizontal>
         <TimeAgo
           time={defaultTo(data.startTs, 0)}
@@ -247,12 +315,58 @@ export const DurationCell: CellType = ({ row }) => {
 }
 
 export const MenuCell: CellType = ({ row, column }) => {
-  const { onViewCompiledYaml, isPipelineInvalid } = column
+  const { onViewCompiledYaml, isPipelineInvalid, setLoadingForDebugMode } = column
   const data = row.original
   const { projectIdentifier, orgIdentifier, accountId, module, pipelineIdentifier } =
     useParams<PipelineType<PipelinePathProps>>()
   const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
   const { addToCompare } = useExecutionCompareContext()
+  const hasCI = hasCIStage(data)
+  const history = useHistory()
+  const { getRBACErrorMessage } = useRBACError()
+  const { showSuccess, showWarning } = useToaster()
+  const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
+  const { mutate: runPipelineInDebugMode } = useDebugPipelineExecuteWithInputSetYaml({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      moduleType: module || ''
+    },
+    identifier: defaultTo(pipelineIdentifier || data.pipelineIdentifier, ''),
+    originalExecutionId: defaultTo(data.planExecutionId, ''),
+    requestOptions: {
+      headers: {
+        'content-type': 'application/yaml'
+      }
+    }
+  })
+
+  const handleRunPipelineInDebugMode = useCallback(async () => {
+    try {
+      const response = await runPipelineInDebugMode()
+      setLoadingForDebugMode?.(true)
+      if (response.status === 'SUCCESS') {
+        showSuccess(getString('runPipelineForm.pipelineRunSuccessFully'))
+        setLoadingForDebugMode?.(false)
+        history.push({
+          pathname: routes.toExecutionPipelineView({
+            orgIdentifier,
+            pipelineIdentifier: pipelineIdentifier ?? data.pipelineIdentifier ?? '',
+            projectIdentifier,
+            executionIdentifier: response?.data?.planExecution?.uuid ?? '',
+            accountId,
+            module,
+            source
+          })
+        })
+        trackEvent(PipelineActions.StartedExecution, { module })
+      }
+    } catch (error: any) {
+      showWarning(defaultTo(getRBACErrorMessage(error), getString('runPipelineForm.runPipelineFailed')))
+    }
+  }, [runPipelineInDebugMode, orgIdentifier, pipelineIdentifier, projectIdentifier, history, showWarning])
 
   const [canEdit, canExecute] = usePermission(
     {
@@ -292,6 +406,7 @@ export const MenuCell: CellType = ({ row, column }) => {
         canEdit={canEdit}
         onViewCompiledYaml={() => onViewCompiledYaml(data)}
         onCompareExecutions={() => addToCompare(data)}
+        onReRunInDebugMode={hasCI ? () => handleRunPipelineInDebugMode() : undefined}
         source={source}
         canExecute={canExecute}
         canRetry={data.canRetry}
@@ -306,9 +421,17 @@ export const MenuCell: CellType = ({ row, column }) => {
 export const TriggerInfoCell: CellType = ({ row }) => {
   const { getString } = useStrings()
   const data = row.original
+  const pathParams = useParams<PipelineType<PipelinePathProps>>()
+  const queryParams = useQueryParams<GitQueryParams>()
   const triggerType = get(data, 'executionTriggerInfo.triggerType', 'MANUAL')
   const { iconName, getText } = mapTriggerTypeToIconAndExecutionText(triggerType, getString) ?? {}
+  const { hasparentpipeline = false, identifier: pipelineIdentifier } = get(
+    data,
+    'parentStageInfo',
+    {} as PipelineStageInfo
+  )
 
+  const toChildExecutionPipelineView = getChildExecutionPipelineViewLink(data, pathParams, queryParams)
   const showCI = hasCIStage(data)
   const ciData = defaultTo(data?.moduleInfo?.ci, {})
   const prOrCommitTitle =
@@ -323,11 +446,32 @@ export const TriggerInfoCell: CellType = ({ row }) => {
     </Layout.Vertical>
   ) : (
     <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-      {iconName && <Icon name={iconName} size={12} />}
-      {typeof getText === 'function' && (
-        <Text font={{ size: 'small' }} color={Color.GREY_800} lineClamp={1}>
-          {getText(data?.startTs, data?.executionTriggerInfo?.triggeredBy?.identifier)}
-        </Text>
+      {hasparentpipeline ? (
+        <>
+          <Icon name={'chained-pipeline'} size={12} />
+          <Text font={{ size: 'small' }} color={Color.GREY_800} lineClamp={1}>
+            {getString('pipeline.executionTriggeredBy')}
+          </Text>
+          <Link to={toChildExecutionPipelineView} target="_blank" onClick={killEvent}>
+            <Text
+              font={{ variation: FontVariation.SMALL_SEMI }}
+              color={Color.PRIMARY_7}
+              lineClamp={1}
+              className={css.parentPipelineLink}
+            >
+              {`${pipelineIdentifier}`}
+            </Text>
+          </Link>
+        </>
+      ) : (
+        <>
+          {iconName && <Icon name={iconName} size={12} />}
+          {typeof getText === 'function' && (
+            <Text font={{ size: 'small' }} color={Color.GREY_800} lineClamp={1}>
+              {getText(data?.startTs, data?.executionTriggerInfo?.triggeredBy?.identifier)}
+            </Text>
+          )}
+        </>
       )}
     </Layout.Horizontal>
   )

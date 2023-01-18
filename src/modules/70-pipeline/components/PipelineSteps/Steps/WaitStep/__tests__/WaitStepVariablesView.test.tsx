@@ -15,22 +15,11 @@ import type { WaitStepData } from '../WaitStepTypes'
 
 import WaitStepVariablesViewProps from './WaitStepVariablesViewProps.json'
 
-describe('<PolicyStepVariablesView /> tests', () => {
-  test('snapshot test for PolicyStepVariablesView - no data', () => {
+describe('<WaitStepVariablesView /> tests', () => {
+  test('renders variables in wait step spec', () => {
     const { container } = render(
       <WaitStepVariablesView
-        stageIdentifier="wait"
-        metadataMap={{} as unknown as Record<string, VariableResponseMapValue>}
-        variablesData={{} as WaitStepData}
-        initialValues={{} as WaitStepData}
-      />
-    )
-    expect(container).toMatchSnapshot()
-  })
-  test('snapshot test for PolicyStepVariablesView - complete data', () => {
-    const { container } = render(
-      <WaitStepVariablesView
-        stageIdentifier="wait"
+        stageIdentifier={WaitStepVariablesViewProps.stageIdentifier}
         metadataMap={WaitStepVariablesViewProps.metadataMap as unknown as Record<string, VariableResponseMapValue>}
         variablesData={WaitStepVariablesViewProps.variablesData as WaitStepData}
         initialValues={WaitStepVariablesViewProps.initialValues as WaitStepData}

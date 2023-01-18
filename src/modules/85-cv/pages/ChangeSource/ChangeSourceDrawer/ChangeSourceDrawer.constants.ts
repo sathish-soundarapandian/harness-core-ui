@@ -13,7 +13,7 @@ export enum ChangeSourceTypes {
   HarnessCDNextGen = 'HarnessCDNextGen',
   PagerDuty = 'PagerDuty',
   K8sCluster = 'K8sCluster',
-  HARNESS_FF = 'HARNESS_FF'
+  HarnessFF = 'HarnessFF'
 }
 
 export const ChangeSourceCategoryName = {
@@ -27,7 +27,8 @@ export const ChangeSourceCategoryName = {
 export const ChangeSourceCategoryOptions = [
   { label: 'deploymentsText', value: ChangeSourceCategoryName.DEPLOYMENT },
   { label: 'infrastructureText', value: ChangeSourceCategoryName.INFRASTRUCTURE },
-  { label: 'cv.changeSource.incident', value: ChangeSourceCategoryName.ALERT }
+  { label: 'cv.changeSource.incident', value: ChangeSourceCategoryName.ALERT },
+  { label: 'common.purpose.cf.continuous', value: ChangeSourceCategoryName.FEATURE_FLAG }
 ]
 
 export const ChangeSourceConnectorOptions: CardSelectOption[] = [
@@ -42,10 +43,17 @@ export const ChangeSourceConnectorOptions: CardSelectOption[] = [
     category: ChangeSourceCategoryName.DEPLOYMENT
   },
   { label: 'kubernetesText', value: Connectors.KUBERNETES_CLUSTER, category: ChangeSourceCategoryName.INFRASTRUCTURE },
-  { label: 'common.pagerDuty', value: Connectors.PAGER_DUTY, category: ChangeSourceCategoryName.ALERT }
+  { label: 'common.pagerDuty', value: Connectors.PAGER_DUTY, category: ChangeSourceCategoryName.ALERT },
+  {
+    label: 'cv.changeSource.FeatureFlag.label',
+    value: ChangeSourceTypes.HarnessFF,
+    category: ChangeSourceCategoryName.FEATURE_FLAG
+  }
 ]
 
 export const ChangeSourceFieldNames = {
   CATEGORY: 'category',
   TYPE: 'type'
 }
+
+export const internalChangeSources = [ChangeSourceCategoryName.FEATURE_FLAG]

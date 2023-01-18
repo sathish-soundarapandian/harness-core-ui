@@ -10,10 +10,8 @@ import { render, fireEvent, act, waitFor, screen } from '@testing-library/react'
 import { useFormikContext } from 'formik'
 import userEvent from '@testing-library/user-event'
 import routes from '@common/RouteDefinitions'
-import * as featureFlags from '@common/hooks/useFeatureFlag'
 import * as ConnectorComponent from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
-import { FeatureFlag } from '@common/featureFlags'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import DefineHealthSource from '../DefineHealthSource'
@@ -114,12 +112,6 @@ describe('DefineHealthSource', () => {
   })
 
   test('Click on cloud watch card', async () => {
-    jest.spyOn(featureFlags, 'useFeatureFlag').mockImplementation(flag => {
-      if (flag === FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS) {
-        return true
-      }
-      return false
-    })
     const { getByText, container } = render(
       <TestWrapper {...createModeProps}>
         <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
@@ -136,24 +128,6 @@ describe('DefineHealthSource', () => {
 
     await waitFor(() => expect(container.querySelector('[class*="Card--badge"]')).not.toBeNull())
     expect(container.querySelector('input[placeholder="- cv.healthSource.featurePlaceholder -"]')).not.toBeNull()
-  })
-
-  test('should not render Cloud watch option, if feature flag is disabled', async () => {
-    jest.spyOn(featureFlags, 'useFeatureFlag').mockImplementation(flag => {
-      if (flag === FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS) {
-        return false
-      }
-      return true
-    })
-    render(
-      <TestWrapper {...createModeProps}>
-        <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
-          <DefineHealthSource />
-        </SetupSourceTabs>
-      </TestWrapper>
-    )
-
-    await waitFor(() => expect(screen.queryByText('CloudWatch Metrics')).toBeNull())
   })
 
   test('Verify connector has only Account tab when template is account level', async () => {
@@ -219,13 +193,6 @@ describe('DefineHealthSource', () => {
       }, [formik.values])
 
       return (<h1 data-testid="formConnectorReferenceField">connector</h1>) as never
-    })
-
-    jest.spyOn(featureFlags, 'useFeatureFlag').mockImplementation(flag => {
-      if (flag === FeatureFlag.SRM_ENABLE_HEALTHSOURCE_AWS_PROMETHEUS) {
-        return true
-      }
-      return false
     })
 
     const onSubmitMock = jest.fn()
@@ -326,35 +293,5 @@ describe('DefineHealthSource', () => {
         workspaceId: 'sjksm43455n-34x53c45vdssd-fgdfd232sdfad'
       })
     })
-  })
-
-  test('should not render data source type thumbnail select, if feature flag is turned off', async () => {
-    jest.spyOn(featureFlags, 'useFeatureFlag').mockImplementation(flag => {
-      if (flag === FeatureFlag.SRM_ENABLE_HEALTHSOURCE_AWS_PROMETHEUS) {
-        return false
-      }
-      return true
-    })
-    const accountLevelProps: TestWrapperProps = {
-      path: routes.toTemplateStudio({ ...accountPathProps, ...orgPathProps }),
-      pathParams: { accountId: '1234_accountId', orgIdentifier: '1234_org' }
-    }
-    const { container } = render(
-      <TestWrapper {...accountLevelProps}>
-        <SetupSourceTabs data={{}} tabTitles={['Tab1']} determineMaxTab={() => 1}>
-          <DefineHealthSource />
-        </SetupSourceTabs>
-      </TestWrapper>
-    )
-
-    expect(screen.queryByTestId('dataSourceTypeSelector')).not.toBeInTheDocument()
-
-    await act(() => {
-      userEvent.click(container.querySelector('span[data-icon="service-prometheus"]')!)
-    })
-
-    expect(screen.queryByText(/dataSourceTypeSelector/)).not.toBeInTheDocument()
-    expect(screen.queryByText(/cv.healthSource.awsRegionLabel/)).not.toBeInTheDocument()
-    expect(screen.queryByText(/cv.healthSource.awsWorkspaceLabel/)).not.toBeInTheDocument()
   })
 })

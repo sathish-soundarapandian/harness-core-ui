@@ -1313,7 +1313,7 @@ exports[`UsersPage Test render data 1`] = `
                       class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
                       style="--text-line-clamp: 1;"
                     >
-                      Testing User Group With SSO no Users
+                      Testing User Group With linked LDAP SSO no Users
                     </p>
                     <span
                       class="bp3-popover-wrapper"

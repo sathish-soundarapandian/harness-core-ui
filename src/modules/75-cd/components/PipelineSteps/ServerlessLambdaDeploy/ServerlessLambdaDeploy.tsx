@@ -29,7 +29,6 @@ import {
   InputSetData
 } from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig } from 'services/cd-ng'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
 import {
@@ -90,7 +89,7 @@ function ServerlessLambdaDeployWidget(
       >
         {(formik: FormikProps<StepElementConfig>) => {
           setFormikRef(formikRef, formik)
-          const { values, setFieldValue } = formik
+
           return (
             <FormikForm>
               {stepViewType !== StepViewType.Template && (
@@ -111,28 +110,13 @@ function ServerlessLambdaDeployWidget(
                   name="timeout"
                   label={getString('pipelineSteps.timeoutLabel')}
                   multiTypeDurationProps={{
-                    enableConfigureOptions: false,
+                    enableConfigureOptions: true,
                     expressions,
                     disabled: readonly,
                     allowableTypes
                   }}
                   disabled={readonly}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('timeout', value)
-                    }}
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
 
               <ServerlessDeployCommandOptions isReadonly={readonly} stepViewType={props.stepViewType} />
@@ -154,23 +138,22 @@ const ServerlessLambdaDeployInputStep: React.FC<ServerlessLambdaDeployProps> = (
   return (
     <>
       {getMultiTypeFromValue(inputSetData.template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}timeout`}
-            label={getString('pipelineSteps.timeoutLabel')}
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: inputSetData.readonly
-            }}
-            disabled={inputSetData.readonly}
-            fieldPath="timeout"
-            template={inputSetData.template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}timeout`}
+          label={getString('pipelineSteps.timeoutLabel')}
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: inputSetData.readonly
+          }}
+          disabled={inputSetData.readonly}
+          fieldPath="timeout"
+          template={inputSetData.template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
       {getMultiTypeFromValue(inputSetData.template?.spec?.commandOptions) === MultiTypeInputType.RUNTIME && (
         <ServerlessDeployCommandOptions

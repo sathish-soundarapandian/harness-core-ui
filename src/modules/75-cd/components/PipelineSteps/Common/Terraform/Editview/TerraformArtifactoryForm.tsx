@@ -19,7 +19,8 @@ import {
   getMultiTypeFromValue,
   Icon,
   HarnessDocTooltip,
-  AllowedTypes
+  AllowedTypes,
+  Heading
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import React, { useEffect, useState } from 'react'
@@ -86,6 +87,7 @@ interface TFArtifactoryProps {
   onSubmitCallBack: (data: any, prevStepData?: any) => void
   isConfig: boolean
   isTerraformPlan: boolean
+  isTerragruntPlan?: boolean
   allowableTypes: AllowedTypes
   isBackendConfig?: boolean
 }
@@ -96,6 +98,7 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
   onSubmitCallBack,
   isConfig,
   isTerraformPlan,
+  isTerragruntPlan = false,
   allowableTypes,
   isBackendConfig = false
 }) => {
@@ -108,8 +111,8 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
-  const initialValues = formatInitialValues(isConfig, isBackendConfig, prevStepData, isTerraformPlan)
-  const connectorRef = getConnectorRef(isConfig, isBackendConfig, isTerraformPlan, prevStepData)
+  const initialValues = formatInitialValues(isConfig, isBackendConfig, prevStepData, isTerraformPlan, isTerragruntPlan)
+  const connectorRef = getConnectorRef(isConfig, isBackendConfig, isTerraformPlan, prevStepData, isTerragruntPlan)
   const { expressions } = useVariablesExpression()
   const {
     data: ArtifactRepoData,
@@ -146,13 +149,13 @@ export const TFArtifactoryForm: React.FC<StepProps<any> & TFArtifactoryProps> = 
 
   return (
     <Layout.Vertical spacing="xxlarge" className={css.tfVarStore}>
-      <Text font="large" color={Color.GREY_800}>
+      <Heading level={2} style={{ color: Color.BLACK, fontSize: 24, fontWeight: 'bold' }}>
         {isConfig
           ? getString('cd.configFileDetails')
           : isBackendConfig
           ? getString('cd.backendConfigFileDetails')
           : getString('cd.varFileDetails')}
-      </Text>
+      </Heading>
       <Formik
         formName={'tfRemoteWizardForm'}
         initialValues={initialValues}

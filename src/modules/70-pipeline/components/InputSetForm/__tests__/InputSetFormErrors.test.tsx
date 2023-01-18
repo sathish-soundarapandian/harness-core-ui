@@ -15,13 +15,15 @@ import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interf
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import { useUpdateInputSetForPipeline } from 'services/pipeline-ng'
+import { StoreType } from '@common/constants/GitSyncTypes'
+import { mockBranches } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
 import { EnhancedInputSetForm } from '../InputSetForm'
 import {
   TemplateResponse,
   PipelineResponse,
   ConnectorResponse,
   GetInputSetsResponse,
-  GetInputSetEdit,
+  GetInputSetEditInline,
   MergeInputSetResponse,
   GetOverlayInputSetEdit,
   MergedPipelineResponse,
@@ -37,7 +39,7 @@ jest.mock(
       const handler = React.useMemo(
         () =>
           ({
-            getLatestYaml: () => GetInputSetEdit.data?.data?.inputSetYaml || '',
+            getLatestYaml: () => GetInputSetEditInline.data?.data?.inputSetYaml || '',
             getYAMLValidationErrorMap: () => new Map()
           } as YamlBuilderHandlerBinding),
         []
@@ -57,6 +59,7 @@ jest.mock(
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
 const getListGitSync = jest.fn(() => Promise.resolve(gitConfigs))
+const fetchBranches = jest.fn(() => Promise.resolve(mockBranches))
 
 jest.mock('services/cd-ng', () => ({
   useGetConnector: jest.fn(() => ConnectorResponse),
@@ -66,6 +69,9 @@ jest.mock('services/cd-ng', () => ({
   useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
+  }),
+  useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
+    return { data: mockBranches, refetch: fetchBranches }
   }),
   useListGitSync: jest.fn().mockImplementation(() => {
     return { data: gitConfigs, refetch: getListGitSync }
@@ -93,7 +99,7 @@ jest.mock('@common/hooks', () => ({
 const useUpdateInputSetForPipelineMock = useUpdateInputSetForPipeline as jest.MockedFunction<any>
 
 jest.mock('services/pipeline-ng', () => ({
-  useGetInputSetForPipeline: jest.fn(() => GetInputSetEdit),
+  useGetInputSetForPipeline: jest.fn(() => GetInputSetEditInline),
   useCreateVariablesV2: jest.fn().mockImplementation(() => {
     return {
       cancel: jest.fn(),
@@ -135,7 +141,7 @@ const TEST_INPUT_SET_FORM_PATH = routes.toInputSetForm({
 
 describe('Input Set - error scenarios', () => {
   test('if API errors are displayed in yellow accordion', async () => {
-    const { getAllByText, getByText, queryByText } = render(
+    const { getAllByText, getByText, queryByText, container } = render(
       <TestWrapper
         path={TEST_INPUT_SET_FORM_PATH}
         pathParams={{
@@ -145,6 +151,9 @@ describe('Input Set - error scenarios', () => {
           pipelineIdentifier: 'pipeline',
           inputSetIdentifier: 'asd',
           module: 'cd'
+        }}
+        queryParams={{
+          storeType: StoreType.INLINE
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >
@@ -160,6 +169,7 @@ describe('Input Set - error scenarios', () => {
         </PipelineContext.Provider>
       </TestWrapper>
     )
+    expect(container).toMatchSnapshot()
     await waitFor(() => getAllByText('tesa1'))
     fireEvent.click(getByText('save'))
     await waitFor(() => {
@@ -190,6 +200,9 @@ describe('Input Set - error scenarios', () => {
           pipelineIdentifier: 'pipeline',
           inputSetIdentifier: 'asd',
           module: 'cd'
+        }}
+        queryParams={{
+          storeType: StoreType.INLINE
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >

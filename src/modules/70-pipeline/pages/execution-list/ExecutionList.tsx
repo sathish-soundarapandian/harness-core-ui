@@ -27,12 +27,10 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import { useStrings } from 'framework/strings'
 import { GetListOfExecutionsQueryParams, PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
 import { ExecutionListEmpty } from './ExecutionListEmpty/ExecutionListEmpty'
-import {
-  ExecutionListFilterContextProvider,
-  useExecutionListFilterContext
-} from './ExecutionListFilterContext/ExecutionListFilterContext'
 import { ExecutionListSubHeader } from './ExecutionListSubHeader/ExecutionListSubHeader'
 import { MemoisedExecutionListTable } from './ExecutionListTable/ExecutionListTable'
+import { getIsAnyFilterApplied, getIsSavedFilterApplied, useExecutionListQueryParams } from './utils/executionListUtil'
+import { prepareFiltersPayload } from '../utils/Filters/filters'
 import css from './ExecutionList.module.scss'
 
 export interface ExecutionListProps {
@@ -52,7 +50,9 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const [selectedBranch, setSelectedBranch] = useState<string | undefined>(defaultBranchSelect)
   const { orgIdentifier, projectIdentifier, pipelineIdentifier, accountId } =
     useParams<PipelineType<PipelinePathProps>>()
-  const { isSavedFilterApplied, queryParams, isAnyFilterApplied } = useExecutionListFilterContext()
+  const queryParams = useExecutionListQueryParams()
+  const isAnyFilterApplied = getIsAnyFilterApplied(queryParams)
+  const isSavedFilterApplied = getIsSavedFilterApplied(queryParams.filterIdentifier)
 
   const {
     page,
@@ -75,7 +75,9 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
 
   const { module } = useModuleInfo()
   const [viewCompiledYaml, setViewCompiledYaml] = React.useState<PipelineExecutionSummary | undefined>(undefined)
+  const [loadingForDebugMode, setLoadingForDebugMode] = useState(false)
   const location = useLocation()
+
   const isExecutionHistoryView = !!matchPath(location.pathname, {
     path: routes.toPipelineDeploymentList({
       orgIdentifier,
@@ -88,9 +90,14 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     })
   })
 
+  const handleSetLoadingForDebugMode = (value: boolean) => {
+    setLoadingForDebugMode(value)
+  }
+
   const isDeploymentsPage = !!matchPath(location.pathname, {
     path: routes.toDeployments({ ...params, module })
   })
+
   const {
     data,
     loading,
@@ -118,12 +125,10 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
     },
-    body: isSavedFilterApplied
-      ? null
-      : {
-          ...queryParams.filters,
-          filterType: 'PipelineExecution'
-        }
+    body:
+      !isSavedFilterApplied && queryParams.filters
+        ? { ...prepareFiltersPayload(queryParams.filters), filterType: 'PipelineExecution' }
+        : null
   })
 
   // Only do polling on first page and not initial default loading
@@ -138,7 +143,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const hasExecutions = executionList?.totalElements && executionList?.totalElements > 0
   const showSubHeader = hasExecutions || isAnyFilterApplied || selectedBranch !== defaultBranchSelect
 
-  const showSpinner = initLoading || (loading && !isPolling)
+  const showSpinner = initLoading || (loading && !isPolling) || loadingForDebugMode
 
   const onChangeRepo = (_repoName: string): void => {
     setSelectedBranch(undefined)
@@ -146,6 +151,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   }
 
   const { globalFreezes } = useGlobalFreezeBanner()
+
   return (
     <>
       <Page.Body error={(error?.data as Error)?.message || error?.message} retryOnError={fetchExecutions}>
@@ -185,6 +191,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
             <MemoisedExecutionListTable
               executionList={executionList}
               onViewCompiledYaml={setViewCompiledYaml}
+              setLoadingForDebugMode={handleSetLoadingForDebugMode}
               {...rest}
             />
           </>
@@ -199,11 +206,9 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
 export function ExecutionList(props: ExecutionListProps): React.ReactElement {
   return (
     <GitSyncStoreProvider>
-      <ExecutionListFilterContextProvider>
-        <ExecutionCompareProvider>
-          <ExecutionListInternal {...props} />
-        </ExecutionCompareProvider>
-      </ExecutionListFilterContextProvider>
+      <ExecutionCompareProvider>
+        <ExecutionListInternal {...props} />
+      </ExecutionCompareProvider>
     </GitSyncStoreProvider>
   )
 }

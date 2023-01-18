@@ -180,7 +180,7 @@ exports[`ServiceNowImportSet View Test  snapshot for displaying import set detai
                   class="bp3-input  ExpandingSearchInput--find"
                   dir="auto"
                   placeholder="Search"
-                  style="padding-right: 0px;"
+                  style="padding-right: 130px;"
                   type="search"
                   value=""
                 />

@@ -46,62 +46,59 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
   return (
     <React.Fragment>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${prefix}timeout`}
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              expressions,
-              disabled: readonly,
-              allowableTypes
-            }}
-            disabled={readonly}
-            fieldPath={'timeout'}
-            template={template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${prefix}timeout`}
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            expressions,
+            disabled: readonly,
+            allowableTypes
+          }}
+          disabled={readonly}
+          fieldPath={'timeout'}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       ) : null}
       {getMultiTypeFromValue(template?.spec?.url) === MultiTypeInputType.RUNTIME ? (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            label={getString('UrlLabel')}
-            placeholder={getString('pipeline.utilitiesStep.url')}
-            name={`${prefix}spec.url`}
-            multiTextInputProps={{
-              expressions,
-              disabled: readonly,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType),
-              allowedValuesType: ALLOWED_VALUES_TYPE.URL
-            }}
-            fieldPath={'spec.url'}
-            template={template}
-          />
-        </div>
+        <TextFieldInputSetView
+          label={getString('UrlLabel')}
+          placeholder={getString('pipeline.utilitiesStep.url')}
+          name={`${prefix}spec.url`}
+          multiTextInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType),
+            allowedValuesType: ALLOWED_VALUES_TYPE.URL
+          }}
+          fieldPath={'spec.url'}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       ) : null}
       {getMultiTypeFromValue(template?.spec?.method) === MultiTypeInputType.RUNTIME ? (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <SelectInputSetView
-            label={getString('methodLabel')}
-            name={`${prefix}spec.method`}
-            useValue={true}
-            fieldPath={'spec.method'}
-            template={template}
-            selectItems={httpStepType}
-            multiTypeInputProps={{
-              expressions,
-              disabled: readonly,
-              allowableTypes
-            }}
-            configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType) }}
-            disabled={readonly}
-          />
-        </div>
+        <SelectInputSetView
+          label={getString('methodLabel')}
+          name={`${prefix}spec.method`}
+          useValue={true}
+          fieldPath={'spec.method'}
+          template={template}
+          selectItems={httpStepType}
+          multiTypeInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes
+          }}
+          configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType) }}
+          disabled={readonly}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       ) : null}
       {getMultiTypeFromValue(template?.spec?.requestBody) === MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -122,21 +119,20 @@ export default function HttpInputSetStep(props: HttpInputSetStepProps): React.Re
         </div>
       ) : null}
       {getMultiTypeFromValue(template?.spec?.assertion) === MultiTypeInputType.RUNTIME ? (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            label={getString('assertionLabel')}
-            name={`${prefix}spec.assertion`}
-            multiTextInputProps={{
-              placeholder: getString('pipeline.utilitiesStep.url'),
-              expressions,
-              disabled: readonly,
-              allowableTypes
-            }}
-            configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType) }}
-            fieldPath={'spec.assertion'}
-            template={template}
-          />
-        </div>
+        <TextFieldInputSetView
+          label={getString('assertionLabel')}
+          name={`${prefix}spec.assertion`}
+          multiTextInputProps={{
+            placeholder: getString('pipeline.utilitiesStep.url'),
+            expressions,
+            disabled: readonly,
+            allowableTypes
+          }}
+          configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType) }}
+          fieldPath={'spec.assertion'}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       ) : null}
       {isArray(template?.spec?.headers) && template?.spec?.headers ? (
         <div className={stepCss.formGroup}>

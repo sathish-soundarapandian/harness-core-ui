@@ -42,6 +42,7 @@ export function getUpdatedSpecs(
   let newSpecs = { ...formValues.spec }
   const inputSet = templateInputYaml?.data ? parse(templateInputYaml?.data as string) : {}
   const { versionLabel = '', identifier = '' } = templateData || {}
+
   const updatedMonitoredService = {
     ...formValues.spec.monitoredService,
     spec: {

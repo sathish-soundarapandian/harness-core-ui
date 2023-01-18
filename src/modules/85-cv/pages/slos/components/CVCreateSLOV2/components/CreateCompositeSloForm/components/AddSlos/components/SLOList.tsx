@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { isNumber } from 'highcharts'
 import type QueryString from 'qs'
 import { useParams } from 'react-router-dom'
@@ -45,6 +45,8 @@ import {
 } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import {
+  getIsIntermediate,
+  getIsSelectAllChecked,
   getUpdatedSLOObjectives,
   RenderCheckBoxes,
   RenderMonitoredService,
@@ -151,11 +153,15 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
     hideDrawer()
   }
 
-  const isSelectAllChecked = () => {
-    const listOfSloIdsOnPage = dashboardWidgetsResponse?.data?.content?.map(item => item.sloIdentifier)
-    const selectedSlosOnPage = selectedSlos.filter(item => listOfSloIdsOnPage?.includes(item.sloIdentifier))
-    return listOfSloIdsOnPage?.length === selectedSlosOnPage.length
-  }
+  const isSelectAllChecked = useMemo(
+    () => getIsSelectAllChecked(dashboardWidgetsResponse?.data?.content ?? [], selectedSlos),
+    [dashboardWidgetsResponse?.data?.content, selectedSlos]
+  )
+
+  const isIntermediate = useMemo(
+    () => getIsIntermediate(dashboardWidgetsResponse?.data?.content ?? [], selectedSlos),
+    [dashboardWidgetsResponse?.data?.content, selectedSlos]
+  )
 
   const onSelectAll = (checked: boolean) => {
     setSelectedSlos(prvSelected => {
@@ -173,7 +179,8 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
     {
       Header: (
         <Checkbox
-          checked={isSelectAllChecked()}
+          checked={isSelectAllChecked}
+          indeterminate={isIntermediate}
           onChange={(event: React.FormEvent<HTMLInputElement>) => {
             onSelectAll(event.currentTarget.checked)
           }}

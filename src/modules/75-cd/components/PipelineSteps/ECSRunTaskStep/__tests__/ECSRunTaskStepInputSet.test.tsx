@@ -24,7 +24,14 @@ import connectorsData from '@pipeline/components/ManifestSelection/__tests__/con
 import { awsRegionsData } from '@pipeline/components/ManifestSelection/ManifestWizardSteps/ECSWithS3/__tests__/mocks'
 import { bucketNameList } from '../../ECSServiceSpec/ManifestSource/__tests__/helpers/mock'
 import { ECSRunTaskStepInputSetMode } from '../ECSRunTaskStepInputSet'
-import { emptyInitialValuesGitStore, emptyInitialValuesS3Store, templateGitStore, templateS3Store } from './helper'
+import {
+  emptyInitialValuesGitStore,
+  emptyInitialValuesS3Store,
+  emptyInitialValuesTaskDefinitionArn,
+  templateGitStore,
+  templateS3Store,
+  templateTaskDefinitionArn
+} from './helper'
 
 const fetchConnectors = (): Promise<unknown> => Promise.resolve(connectorsData)
 const fetchBuckets = jest.fn().mockReturnValue(bucketNameList)
@@ -47,6 +54,88 @@ jest.mock('services/portal', () => ({
 const handleSubmit = jest.fn()
 
 describe('ECSRunTaskInputSet tests', () => {
+  test(`renders Runtime input fields in InputSet view when taskDefinitionArn is runtime input`, async () => {
+    const { container, getAllByTestId } = render(
+      <TestWrapper>
+        <Formik initialValues={emptyInitialValuesTaskDefinitionArn} onSubmit={handleSubmit()}>
+          <ECSRunTaskStepInputSetMode
+            initialValues={emptyInitialValuesGitStore}
+            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
+            inputSetData={{
+              path: 'pipeline.stages[0].stage.spec.execution.steps[0].step',
+              template: templateTaskDefinitionArn,
+              readonly: false
+            }}
+          />
+        </Formik>
+      </TestWrapper>
+    )
+
+    const queryByNameAttribute = (name: string) => queryByAttribute('name', container, name)
+
+    const timeoutInput = queryByNameAttribute(
+      'pipeline.stages[0].stage.spec.execution.steps[0].step.timeout'
+    ) as HTMLInputElement
+    expect(timeoutInput).toBeInTheDocument()
+    expect(timeoutInput.value).toBe('')
+    expect(timeoutInput).not.toBeDisabled()
+    act(() => {
+      fireEvent.change(timeoutInput, { target: { value: '20m' } })
+    })
+    expect(timeoutInput.value).toBe('20m')
+
+    // ECS Run Task Definition ARN
+    const taskDefinitionArnInput = queryByNameAttribute(
+      'pipeline.stages[0].stage.spec.execution.steps[0].step.spec.taskDefinitionArn'
+    ) as HTMLInputElement
+    expect(taskDefinitionArnInput).toBeInTheDocument()
+    expect(taskDefinitionArnInput.value).toBe('')
+    expect(taskDefinitionArnInput).not.toBeDisabled()
+    fireEvent.change(taskDefinitionArnInput!, {
+      target: { value: 'arn:runtime:8081' }
+    })
+    expect(taskDefinitionArnInput.value).toBe('arn:runtime:8081')
+
+    // Starting Run Task REquest Definition from here
+    // Connector Ref
+    const runTaskRequestConnectorRefInput = getAllByTestId(/connectorRef/)[0]
+    expect(runTaskRequestConnectorRefInput).toBeInTheDocument()
+    userEvent.click(runTaskRequestConnectorRefInput!)
+    const runTaskRequestConnectorSelectorDialog = document.getElementsByClassName('bp3-dialog')[0] as HTMLElement
+    const runTaskRequestGithubConnector1 = await findByText(runTaskRequestConnectorSelectorDialog, 'Git CTR')
+    expect(runTaskRequestGithubConnector1).toBeTruthy()
+    const runTaskRequestGithubConnector2 = await findByText(runTaskRequestConnectorSelectorDialog, 'Sample')
+    expect(runTaskRequestGithubConnector2).toBeTruthy()
+    userEvent.click(runTaskRequestGithubConnector2)
+    const applyBtn = getElementByText(runTaskRequestConnectorSelectorDialog, 'entityReference.apply')
+    userEvent.click(applyBtn)
+    await waitFor(() => expect(document.getElementsByClassName('bp3-dialog')).toHaveLength(0))
+    expect(getElementByText(runTaskRequestConnectorRefInput, 'Sample')).toBeInTheDocument()
+
+    // Branch
+    const runTaskRequestBranchInput = queryByNameAttribute(
+      'pipeline.stages[0].stage.spec.execution.steps[0].step.spec.runTaskRequestDefinition.spec.branch'
+    ) as HTMLInputElement
+    expect(runTaskRequestBranchInput).toBeInTheDocument()
+    expect(runTaskRequestBranchInput.value).toBe('')
+    expect(runTaskRequestBranchInput).not.toBeDisabled()
+    fireEvent.change(runTaskRequestBranchInput!, {
+      target: { value: 'testBranch' }
+    })
+    expect(runTaskRequestBranchInput.value).toBe('testBranch')
+    // Path
+    const runTaskRequestPathInput = queryByNameAttribute(
+      'pipeline.stages[0].stage.spec.execution.steps[0].step.spec.runTaskRequestDefinition.spec.paths[0]'
+    ) as HTMLInputElement
+    expect(runTaskRequestPathInput).toBeInTheDocument()
+    expect(runTaskRequestPathInput.value).toBe('')
+    expect(runTaskRequestPathInput).not.toBeDisabled()
+    fireEvent.change(runTaskRequestPathInput!, {
+      target: { value: 'run-task-requesttest-path' }
+    })
+    expect(runTaskRequestPathInput.value).toBe('run-task-requesttest-path')
+  })
+
   test(`renders Runtime input fields in InputSet view when store type is of Git type`, async () => {
     const { container, getAllByTestId } = render(
       <TestWrapper>

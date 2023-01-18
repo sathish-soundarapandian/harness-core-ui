@@ -710,7 +710,11 @@ const SelectGitProviderRef = (
         }
         break
     }
-    return { ...initialValues, url: defaultTo(gitValues?.url, '') }
+    return {
+      ...initialValues,
+      url: defaultTo(gitValues?.url, ''),
+      validationRepo: defaultTo(gitValues?.validationRepo, '')
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedGitProvider])
 

@@ -71,6 +71,10 @@ const MODULE_SELECT_CARDS: ModuleSelectCard[] = [
   {
     icon: 'sto-with-dark-text',
     module: ModuleName.STO
+  },
+  {
+    icon: 'chaos-with-dark-text',
+    module: ModuleName.CHAOS
   }
 ]
 const SubscriptionsPage: React.FC = () => {
@@ -78,7 +82,7 @@ const SubscriptionsPage: React.FC = () => {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
   const { moduleCard } = useQueryParams<{ moduleCard?: ModuleName }>()
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, SRM_LICENSE_ENABLED } =
+  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, SRM_LICENSE_ENABLED, CHAOS_ENABLED } =
     useFeatureFlags()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const history = useHistory()
@@ -92,25 +96,27 @@ const SubscriptionsPage: React.FC = () => {
       switch (module) {
         case ModuleName.CD:
           CDNG_ENABLED && accumulator.push(card)
-          return accumulator
+          break
         case ModuleName.CV:
           CVNG_ENABLED && SRM_LICENSE_ENABLED && accumulator.push(card)
-          return accumulator
+          break
         case ModuleName.CI:
           CING_ENABLED && accumulator.push(card)
-          return accumulator
+          break
         case ModuleName.CE:
           CENG_ENABLED && accumulator.push(card)
-          return accumulator
+          break
         case ModuleName.CF:
           CFNG_ENABLED && accumulator.push(card)
-          return accumulator
+          break
         case ModuleName.STO:
           licenseInformation['STO']?.status === 'ACTIVE' && accumulator.push(card)
-          return accumulator
-        default:
-          return accumulator
+          break
+        case ModuleName.CHAOS:
+          CHAOS_ENABLED && accumulator.push(card)
+          break
       }
+      return accumulator
     },
     []
   )

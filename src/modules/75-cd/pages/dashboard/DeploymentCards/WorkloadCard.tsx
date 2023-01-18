@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import type { WorkloadDateCountInfo, LastWorkloadInfo } from 'services/cd-ng'
+import type { WorkloadDateCountInfo, LastWorkloadInfo, ChangeRate } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ExecutorInfoDTO } from 'services/pipeline-ng'
@@ -19,7 +19,7 @@ export interface WorkloadCardProps {
   lastMessage?: string
   totalDeployments: number
   percentSuccess: number
-  rateSuccess: number
+  rateSuccess: number | ChangeRate
   username?: string
   workload?: WorkloadDateCountInfo[]
   serviceId?: string

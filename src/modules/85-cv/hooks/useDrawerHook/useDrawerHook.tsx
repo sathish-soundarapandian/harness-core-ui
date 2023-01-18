@@ -19,7 +19,8 @@ export const useDrawer = ({
   createHeader,
   createDrawerContent,
   drawerOptions,
-  className
+  className,
+  showConfirmationDuringClose = true
 }: UseDrawerPropsInterface): UseDrawerInterface => {
   const { getString } = useStrings()
   const [drawerContentProps, setDrawerContentProps] = useState({})
@@ -35,7 +36,7 @@ export const useDrawer = ({
   })
 
   const header = createHeader ? createHeader(drawerHeaderProps) : undefined
-  const defaultOptions = useMemo(() => getDefaultDrawerProps({ showWarning, header }), [drawerHeaderProps])
+  const defaultOptions = useMemo(() => getDefaultDrawerProps({ header }), [drawerHeaderProps])
   const parsedOptions = useMemo(
     () => getParsedDrawerOptions(defaultOptions, drawerOptions),
     [defaultOptions, drawerOptions]
@@ -44,7 +45,7 @@ export const useDrawer = ({
   const [showModal, hideModal] = useModalHook(
     () => (
       <>
-        <Drawer {...parsedOptions}>
+        <Drawer {...parsedOptions} onClose={showConfirmationDuringClose ? showWarning : hideModal}>
           <div className={cx(css.formFullheight, className)}>{createDrawerContent(drawerContentProps)}</div>
         </Drawer>
         <Button

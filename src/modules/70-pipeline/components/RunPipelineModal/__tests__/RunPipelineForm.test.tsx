@@ -641,6 +641,32 @@ describe('RERUN MODE', () => {
     // Check if rerun API is called
     await waitFor(() => expect(mockRePostPipelineExecuteYaml).toHaveBeenCalled())
   })
+
+  test('input set selection should not be visible', async () => {
+    const inputSetYaml = `pipeline:
+  identifier: "First"
+  variables:
+  - name: "checkVariable1"
+    type: "String"
+    value: "variablevalue"`
+    const { queryByText, queryAllByText } = render(
+      <TestWrapper>
+        <RunPipelineForm
+          {...commonProps}
+          inputSetYAML={inputSetYaml}
+          executionIdentifier={'execId'}
+          source="executions"
+        />
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
+
+    expect(queryByText('pipeline.pipelineInputPanel.selectedExisitingOrProvide')).toBeNull()
+
+    // Expect header and the submit button to show rerun pipeline
+    expect(queryAllByText('pipeline.execution.actions.rerunPipeline')).toHaveLength(2)
+  })
 })
 
 describe('EXECUTION VIEW', () => {

@@ -20,33 +20,28 @@ import {
 } from '@harness/uicore'
 import { connect, FormikProps } from 'formik'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo, get, identity, isEmpty, isNil, pick, pickBy, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, pick, set } from 'lodash-es'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import type {
   DeploymentStageConfig,
-  ExecutionWrapperConfig,
   Infrastructure,
   PipelineInfrastructure,
   ServiceConfig,
   ServiceSpec,
   ServiceYamlV2,
-  StageOverridesConfig,
-  StepElementConfig
+  StageOverridesConfig
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeCheckboxField, Separator } from '@common/components'
 import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
 import MultiTypeListInputSet from '@common/components/MultiTypeListInputSet/MultiTypeListInputSet'
-import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import { MultiTypeMapInputSet } from '@common/components/MultiTypeMapInputSet/MultiTypeMapInputSet'
 import { MultiTypeCustomMap } from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import Volumes from '@pipeline/components/Volumes/Volumes'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { TemplateStepNode } from 'services/pipeline-ng'
-import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import {
   getAllowedValuesFromTemplate,
   getConnectorRefWidth,
@@ -68,14 +63,13 @@ import { Connectors } from '@connectors/constants'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../PipelineSteps/PipelineStepInterface'
-import { CollapseForm } from './CollapseForm'
-import { getStepFromStage } from '../PipelineStudio/StepUtil'
 import { StepWidget } from '../AbstractSteps/StepWidget'
-import { ConditionalExecutionForm, StrategyForm } from './StageAdvancedInputSetForm'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepViewType } from '../AbstractSteps/Step'
+
 import { OsTypes, ArchTypes, CIBuildInfrastructureType } from '../../utils/constants'
 import EnvironmentsInputSetForm from './EnvironmentsInputSetForm/EnvironmentsInputSetForm'
+import { ExecutionWrapperInputSetForm } from './ExecutionWrapperInputSetForm'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PipelineInputSetForm.module.scss'
 
@@ -132,163 +126,6 @@ function ServiceDependencyForm({
   )
 }
 
-function StepFormInternal({
-  template,
-  allValues,
-  values,
-  onUpdate,
-  readonly,
-  viewType,
-  path,
-  allowableTypes,
-  customStepProps
-}: {
-  template?: ExecutionWrapperConfig
-  allValues?: ExecutionWrapperConfig
-  values?: ExecutionWrapperConfig
-  onUpdate: (data: any) => void
-  readonly?: boolean
-  viewType?: StepViewType
-  path: string
-  allowableTypes: AllowedTypes
-  customStepProps?: {
-    stageIdentifier: string
-    selectedStage?: DeploymentStageConfig
-  }
-}): JSX.Element {
-  const { getString } = useStrings()
-  const { projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-  const { expressions } = useVariablesExpression()
-  return (
-    <div>
-      <StepWidget<Partial<StepElementConfig>>
-        factory={factory}
-        readonly={readonly}
-        path={path}
-        allowableTypes={allowableTypes}
-        template={template?.step}
-        initialValues={values?.step || {}}
-        allValues={allValues?.step || {}}
-        type={(allValues?.step as StepElementConfig)?.type as StepType}
-        onUpdate={onUpdate}
-        stepViewType={viewType}
-        customStepProps={
-          customStepProps
-            ? {
-                ...customStepProps,
-                selectedStage: {
-                  stage: {
-                    spec: customStepProps?.selectedStage
-                  }
-                }
-              }
-            : null
-        }
-      />
-      {getMultiTypeFromValue((template?.step as StepElementConfig)?.spec?.delegateSelectors) ===
-        MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <MultiTypeDelegateSelector
-            expressions={expressions}
-            inputProps={{ projectIdentifier, orgIdentifier }}
-            allowableTypes={allowableTypes}
-            label={getString('delegate.DelegateSelector')}
-            name={`${path}.spec.delegateSelectors`}
-            disabled={readonly}
-          />
-        </div>
-      )}
-      {getMultiTypeFromValue((template?.step as StepElementConfig)?.when?.condition) === MultiTypeInputType.RUNTIME && (
-        <Container className={cx(stepCss.formGroup, stepCss.md)}>
-          <ConditionalExecutionForm
-            readonly={readonly}
-            path={`${path}.when.condition`}
-            allowableTypes={allowableTypes}
-          />
-        </Container>
-      )}
-      {(template?.step as any)?.strategy && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <StrategyForm path={`${path}.strategy`} readonly={readonly} />
-        </div>
-      )}
-    </div>
-  )
-}
-
-export function StepForm({
-  template,
-  allValues,
-  values,
-  onUpdate,
-  readonly,
-  viewType,
-  path,
-  allowableTypes,
-  hideTitle = false,
-  customStepProps
-}: {
-  template?: ExecutionWrapperConfig
-  allValues?: ExecutionWrapperConfig
-  values?: ExecutionWrapperConfig
-  onUpdate: (data: any) => void
-  readonly?: boolean
-  viewType?: StepViewType
-  path: string
-  allowableTypes: AllowedTypes
-  hideTitle?: boolean
-  customStepProps?: {
-    stageIdentifier: string
-    selectedStage?: DeploymentStageConfig
-  }
-}): JSX.Element {
-  const { getString } = useStrings()
-  const isTemplateStep = (template?.step as unknown as TemplateStepNode)?.template
-  const type = isTemplateStep
-    ? ((template?.step as unknown as TemplateStepNode)?.template.templateInputs as StepElementConfig)?.type
-    : ((template?.step as StepElementConfig)?.type as StepType)
-  const iconColor = factory.getStepIconColor(type)
-
-  return (
-    <Layout.Vertical spacing="medium" padding={{ top: 'medium' }}>
-      {!hideTitle && (
-        <Label>
-          <Icon
-            padding={{ right: 'small' }}
-            {...(iconColor ? { color: iconColor } : {})}
-            style={{ color: iconColor }}
-            name={factory.getStepIcon(type)}
-          />
-          {getString('pipeline.execution.stepTitlePrefix')}
-          {getString('pipeline.stepLabel', allValues?.step)}
-        </Label>
-      )}
-      <StepFormInternal
-        template={
-          isTemplateStep
-            ? { step: (template?.step as unknown as TemplateStepNode)?.template?.templateInputs as StepElementConfig }
-            : template
-        }
-        allValues={
-          (allValues?.step as unknown as TemplateStepNode)?.template
-            ? { step: (allValues?.step as unknown as TemplateStepNode)?.template?.templateInputs as StepElementConfig }
-            : allValues
-        }
-        values={
-          isTemplateStep
-            ? { step: (values?.step as unknown as TemplateStepNode)?.template?.templateInputs as StepElementConfig }
-            : values
-        }
-        path={isTemplateStep ? `${path}.${TEMPLATE_INPUT_PATH}` : path}
-        readonly={readonly}
-        viewType={viewType}
-        allowableTypes={allowableTypes}
-        onUpdate={onUpdate}
-        customStepProps={customStepProps}
-      />
-    </Layout.Vertical>
-  )
-}
 export interface StageInputSetFormProps {
   deploymentStage?: DeploymentStageConfig
   deploymentStageTemplate: DeploymentStageConfig
@@ -300,182 +137,6 @@ export interface StageInputSetFormProps {
   stageIdentifier?: string
   executionIdentifier?: string
   allowableTypes: AllowedTypes
-}
-
-function ExecutionWrapperInputSetForm(props: {
-  stepsTemplate: ExecutionWrapperConfig[]
-  formik: StageInputSetFormProps['formik']
-  path: string
-  allValues?: ExecutionWrapperConfig[]
-  values?: ExecutionWrapperConfig[]
-  readonly?: boolean
-  viewType: StepViewType
-  allowableTypes: AllowedTypes
-  executionIdentifier?: string
-  customStepProps?: {
-    stageIdentifier: string
-    selectedStage?: DeploymentStageConfig
-  }
-}): JSX.Element {
-  const {
-    stepsTemplate,
-    allValues,
-    values,
-    path,
-    formik,
-    readonly,
-    viewType,
-    allowableTypes,
-    executionIdentifier,
-    customStepProps
-  } = props
-  return (
-    <>
-      {stepsTemplate?.map((item, index) => {
-        /* istanbul ignore else */ if (item.step) {
-          const originalStep = getStepFromStage(item.step?.identifier || /* istanbul ignore next */ '', allValues)
-          const initialValues = getStepFromStage(item.step?.identifier || /* istanbul ignore next */ '', values)
-          return originalStep && /* istanbul ignore next */ originalStep.step ? (
-            /* istanbul ignore next */ <StepForm
-              key={item.step.identifier || index}
-              template={item}
-              allValues={originalStep}
-              values={initialValues}
-              path={`${path}[${index}].step`}
-              readonly={readonly}
-              viewType={viewType}
-              allowableTypes={allowableTypes}
-              customStepProps={customStepProps}
-              onUpdate={data => {
-                /* istanbul ignore next */
-                if (initialValues) {
-                  if (!initialValues.step) {
-                    initialValues.step = {
-                      identifier: originalStep.step?.identifier || '',
-                      name: originalStep.step?.name || '',
-                      type: (originalStep.step as StepElementConfig)?.type || ''
-                    }
-                  }
-
-                  const execObj = {
-                    ...data,
-                    spec: {
-                      ...pickBy(data.spec, identity)
-                    }
-                  }
-
-                  initialValues.step = {
-                    ...execObj,
-                    identifier: originalStep.step?.identifier || '',
-                    name: originalStep.step?.name || '',
-                    type: (originalStep.step as StepElementConfig)?.type || ''
-                  }
-
-                  formik?.setValues(set(formik?.values, `${path}[${index}].step`, initialValues.step))
-                }
-              }}
-            />
-          ) : null
-        } else if (item.parallel) {
-          return item.parallel.map((nodep, indexp) => {
-            if (nodep.step) {
-              const originalStep = getStepFromStage(nodep.step?.identifier || '', allValues)
-              const initialValues = getStepFromStage(nodep.step?.identifier || '', values)
-              return originalStep && originalStep.step ? (
-                <StepForm
-                  key={nodep.step.identifier || index}
-                  template={nodep}
-                  allValues={originalStep}
-                  values={initialValues}
-                  readonly={readonly}
-                  viewType={viewType}
-                  path={`${path}[${index}].parallel[${indexp}].step`}
-                  allowableTypes={allowableTypes}
-                  customStepProps={customStepProps}
-                  onUpdate={data => {
-                    if (initialValues) {
-                      if (!initialValues.step) {
-                        initialValues.step = {
-                          identifier: originalStep.step?.identifier || '',
-                          name: originalStep.step?.name || '',
-                          type: (originalStep.step as StepElementConfig)?.type || '',
-                          timeout: '10m'
-                        }
-                      }
-                      initialValues.step = {
-                        ...data,
-                        identifier: originalStep.step?.identifier || '',
-                        name: originalStep.step?.name || '',
-                        type: (originalStep.step as StepElementConfig)?.type || '',
-                        timeout: '10m'
-                      }
-                      formik?.setValues(
-                        set(formik?.values, `${path}[${index}].parallel[${indexp}].step`, initialValues.step)
-                      )
-                    }
-                  }}
-                />
-              ) : null
-            } else if (nodep.stepGroup) {
-              const stepGroup = getStepFromStage(nodep.stepGroup.identifier, allValues)
-              const initialValues = getStepFromStage(nodep.stepGroup?.identifier || '', values)
-              return (
-                <>
-                  <CollapseForm
-                    header={stepGroup?.stepGroup?.name || ''}
-                    headerProps={{ font: { size: 'normal' } }}
-                    headerColor="var(--black)"
-                  >
-                    <ExecutionWrapperInputSetForm
-                      executionIdentifier={executionIdentifier}
-                      stepsTemplate={nodep.stepGroup.steps}
-                      formik={formik}
-                      readonly={readonly}
-                      path={`${path}[${index}].parallel[${indexp}].stepGroup.steps`}
-                      allValues={stepGroup?.stepGroup?.steps}
-                      values={initialValues?.stepGroup?.steps}
-                      viewType={viewType}
-                      allowableTypes={allowableTypes}
-                      customStepProps={customStepProps}
-                    />
-                  </CollapseForm>
-                </>
-              )
-            } else {
-              return null
-            }
-          })
-        } else if (item.stepGroup) {
-          const stepGroup = getStepFromStage(item.stepGroup.identifier, allValues)
-          const initialValues = getStepFromStage(item.stepGroup?.identifier || '', values)
-          return (
-            <>
-              <CollapseForm
-                header={stepGroup?.stepGroup?.name || ''}
-                headerProps={{ font: { size: 'normal' } }}
-                headerColor="var(--black)"
-              >
-                <ExecutionWrapperInputSetForm
-                  executionIdentifier={executionIdentifier}
-                  stepsTemplate={item.stepGroup.steps}
-                  formik={formik}
-                  readonly={readonly}
-                  path={`${path}[${index}].stepGroup.steps`}
-                  allValues={stepGroup?.stepGroup?.steps}
-                  values={initialValues?.stepGroup?.steps}
-                  viewType={viewType}
-                  allowableTypes={allowableTypes}
-                  customStepProps={customStepProps}
-                />
-              </CollapseForm>
-            </>
-          )
-        } else {
-          return null
-        }
-      })}
-    </>
-  )
 }
 
 export function StageInputSetFormInternal({
@@ -503,7 +164,7 @@ export function StageInputSetFormInternal({
     deploymentStageTemplateInfraKeys.includes(field)
   )
   const namePath = isEmpty(path) ? '' : `${path}.`
-  const { NG_SVC_ENV_REDESIGN, CIE_HOSTED_VMS_MAC } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, CIE_HOSTED_VMS_MAC, CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   const renderMultiTypeInputWithAllowedValues = React.useCallback(
     ({
@@ -911,7 +572,7 @@ export function StageInputSetFormInternal({
                 stepViewType={viewType}
                 path={`${path}.service`}
                 allowableTypes={
-                  scope === Scope.PROJECT
+                  scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
                     ? allowableTypes
                     : ((allowableTypes as MultiTypeInputType[]).filter(
                         item => item !== MultiTypeInputType.FIXED
@@ -977,7 +638,7 @@ export function StageInputSetFormInternal({
                 stepViewType={viewType}
                 path={`${path}.services`}
                 allowableTypes={
-                  scope === Scope.PROJECT
+                  scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
                     ? allowableTypes
                     : ((allowableTypes as MultiTypeInputType[]).filter(
                         item => item !== MultiTypeInputType.FIXED
@@ -1041,7 +702,7 @@ export function StageInputSetFormInternal({
         deploymentStage={deploymentStage}
         deploymentStageTemplate={deploymentStageTemplate}
         allowableTypes={
-          scope === Scope.PROJECT
+          scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
             ? allowableTypes
             : ((allowableTypes as MultiTypeInputType[])?.filter(
                 item => item !== MultiTypeInputType.FIXED
@@ -1238,7 +899,12 @@ export function StageInputSetFormInternal({
                 stringKey: 'ci.annotations',
                 hasValuesAsRuntimeInput: true
               })}
-
+            {(deploymentStageTemplate.infrastructure as any)?.spec?.hostNames &&
+              renderMultiTypeListInputSet({
+                name: `${namePath}infrastructure.spec.hostNames`,
+                labelKey: 'ci.buildInfra.hostNames',
+                tooltipId: 'hostNames'
+              })}
             {hasContainerSecurityContextFields && (
               <>
                 <Separator topSeparation={16} bottomSeparation={8} />

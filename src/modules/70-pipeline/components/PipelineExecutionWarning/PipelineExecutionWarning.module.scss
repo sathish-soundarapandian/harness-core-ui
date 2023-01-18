@@ -7,5 +7,7 @@
 
 .warningBanner {
   background-color: var(--orange-50) !important;
-  height: 56px;
+  max-height: 100px;
+  height: fit-content;
+  overflow: scroll;
 }

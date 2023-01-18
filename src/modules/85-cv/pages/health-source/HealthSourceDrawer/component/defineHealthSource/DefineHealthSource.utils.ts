@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import * as Yup from 'yup'
+import { isEmpty } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { AwsPrometheusWorkspaceDTO, HealthSource, ResponseListString } from 'services/cv'
 import { Connectors } from '@connectors/constants'
@@ -16,7 +17,7 @@ import { DatadogProduct } from '@cv/pages/health-source/connectors/DatadogMetric
 import { ErrorTrackingProductNames } from '@cv/pages/health-source/connectors/ErrorTrackingHealthSource/ErrorTrackingHealthSource.utils'
 import { CustomHealthProduct } from '@cv/pages/health-source/connectors/CustomHealthSource/CustomHealthSource.constants'
 import { CloudWatchProductNames } from '@cv/pages/health-source/connectors/CloudWatch/CloudWatchConstants'
-import { SumoLogicProducts } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import { HealthSourceProducts } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import {
   NewRelicProductNames,
   ConnectorRefFieldName,
@@ -68,20 +69,11 @@ export const validateDuplicateIdentifier = (
   return {}
 }
 
-const isDataSourceTypeNotValid = ({
-  isDataSourceTypeSelectorEnabled,
-  sourceType,
-  dataSourceType
-}: DataSourceTypeValidateFunctionProps): boolean => {
-  return Boolean(isDataSourceTypeSelectorEnabled && sourceType === HealthSourceTypes.Prometheus && !dataSourceType)
+const isDataSourceTypeNotValid = ({ sourceType, dataSourceType }: DataSourceTypeValidateFunctionProps): boolean => {
+  return Boolean(sourceType === HealthSourceTypes.Prometheus && !dataSourceType)
 }
 
-export const formValidation = ({
-  values,
-  isEdit,
-  isDataSourceTypeSelectorEnabled,
-  getString
-}: FormValidationFunctionProps): Record<string, string> => {
+export const formValidation = ({ values, isEdit, getString }: FormValidationFunctionProps): Record<string, string> => {
   let errors = {}
 
   const { dataSourceType, sourceType } = values || {}
@@ -93,8 +85,7 @@ export const formValidation = ({
   if (
     isDataSourceTypeNotValid({
       dataSourceType,
-      sourceType,
-      isDataSourceTypeSelectorEnabled
+      sourceType
     })
   ) {
     errors = {
@@ -110,14 +101,13 @@ export const getIsConnectorDisabled = ({
   isEdit,
   connectorRef,
   sourceType,
-  isDataSourceTypeSelectorEnabled,
   dataSourceType
 }: ConnectorDisableFunctionProps): boolean => {
   if (isEdit && connectorRef) {
     return true
   } else if (!isEdit && !sourceType) {
     return true
-  } else if (isDataSourceTypeNotValid({ isDataSourceTypeSelectorEnabled, sourceType, dataSourceType })) {
+  } else if (isDataSourceTypeNotValid({ sourceType, dataSourceType })) {
     return true
   }
 
@@ -133,6 +123,10 @@ export const getConnectorTypeName = (name: HealthSourceTypes): string => {
       break
     case HealthSourceTypes.CloudWatch:
       connectorTypeName = Connectors.AWS
+      break
+    case HealthSourceTypes.SumologicLogs:
+    case HealthSourceTypes.SumologicMetrics:
+      connectorTypeName = Connectors.SUMOLOGIC
       break
     default:
       connectorTypeName = name
@@ -270,12 +264,12 @@ export const getFeatureOption = (
     case Connectors.SUMOLOGIC:
       return [
         {
-          value: 'METRICS',
-          label: SumoLogicProducts.METRICS
+          value: HealthSourceProducts.SUMOLOGIC_METRICS.value,
+          label: HealthSourceProducts.SUMOLOGIC_METRICS.label
         },
         {
-          value: 'LOGS',
-          label: SumoLogicProducts.LOGS
+          value: HealthSourceProducts.SUMOLOGIC_LOG.value,
+          label: HealthSourceProducts.SUMOLOGIC_LOG.label
         }
       ]
     default:
@@ -293,6 +287,10 @@ export function getProductBasedOnType(
       return getFeatureOption(Connectors.CUSTOM_HEALTH, getString)[1]
     case 'CustomHealthMetric':
       return getFeatureOption(Connectors.CUSTOM_HEALTH, getString)[0]
+    case HealthSourceTypes.SumologicMetrics:
+      return getFeatureOption(Connectors.SUMOLOGIC, getString)[0]
+    case HealthSourceTypes.SumologicLogs:
+      return getFeatureOption(Connectors.SUMOLOGIC, getString)[1]
     case Connectors.PROMETHEUS:
     case HealthSourceTypes.AwsPrometheus:
       return getFeatureOption(Connectors.PROMETHEUS, getString)[0]
@@ -309,27 +307,18 @@ const getHealthSourceType = (type?: string, sourceType?: string): string | undef
   return sourceType
 }
 
-export const getDataSourceType = ({
-  type,
-  dataSourceType,
-  isDataSourceTypeSelectorEnabled
-}: GetDataSourceTypeParams): string | null => {
+export const getDataSourceType = ({ type, dataSourceType }: GetDataSourceTypeParams): string | null => {
   if (type === HealthSourceTypes.AwsPrometheus || dataSourceType === AWSDataSourceType) {
     return AWSDataSourceType
-  } else if (isDataSourceTypeSelectorEnabled) {
+  } else if (type === HealthSourceTypes.Prometheus || dataSourceType === HealthSourceTypes.Prometheus) {
     return HealthSourceTypes.Prometheus
   }
-
   return null
 }
 
 const PrometheusTypes = [Connectors.PROMETHEUS, HealthSourceTypes.AwsPrometheus]
 
-export const getInitialValues = (
-  sourceData: any,
-  getString: UseStringsReturn['getString'],
-  isDataSourceTypeSelectorEnabled?: boolean
-): any => {
+export const getInitialValues = (sourceData: any, getString: UseStringsReturn['getString']): any => {
   const currentHealthSource = sourceData?.healthSourceList?.find(
     (el: any) => el?.identifier === sourceData?.healthSourceIdentifier
   )
@@ -347,14 +336,11 @@ export const getInitialValues = (
     sourceType: getHealthSourceType(currentHealthSource?.type, sourceType),
     dataSourceType: getDataSourceType({
       type: currentHealthSource?.type,
-      dataSourceType,
-      isDataSourceTypeSelectorEnabled
+      dataSourceType
     }),
     region: sourceDataRegion || region,
     workspaceId: sourceDataWorkspaceId || workspaceId,
-    product: selectedFeature
-      ? { label: selectedFeature, value: selectedFeature }
-      : getProductBasedOnType(getString, currentHealthSource?.type, sourceData?.product)
+    product: getProduct({ selectedFeature, getString, currentHealthSource, sourceData })
   }
 
   return initialValues
@@ -365,8 +351,23 @@ export const getSelectedFeature = (sourceData: any): any => {
     (el: any) => el?.identifier === sourceData?.healthSourceIdentifier
   )
   const selectedFeature = currentHealthSource?.spec?.feature
-
   return selectedFeature ? { label: selectedFeature, value: selectedFeature } : { ...sourceData?.product }
+}
+
+export function getProduct({
+  selectedFeature,
+  getString,
+  currentHealthSource,
+  sourceData
+}: {
+  selectedFeature: string
+  getString: UseStringsReturn['getString']
+  currentHealthSource: any
+  sourceData: any
+}): SelectOption | { label: string; value: string } | undefined {
+  return selectedFeature
+    ? { label: selectedFeature, value: selectedFeature }
+    : getProductBasedOnType(getString, currentHealthSource?.type, sourceData?.product)
 }
 
 export function getRegionsDropdownOptions(regions: ResponseListString['data']): SelectOption[] {
@@ -404,14 +405,24 @@ export function getWorkspaceDropdownOptions(workspaces?: AwsPrometheusWorkspaceD
   return workspaceOptions
 }
 
-export function canShowDataSelector(sourceType?: string, isDataSourceTypeSelectorEnabled?: boolean): boolean {
-  return Boolean(sourceType === HealthSourceTypes.Prometheus && isDataSourceTypeSelectorEnabled)
+export function canShowDataSelector(sourceType?: string): boolean {
+  return Boolean(sourceType === HealthSourceTypes.Prometheus)
 }
 
-export function canShowDataInfoSelector(
-  sourceType?: string,
-  dataSourceType?: string,
-  isDataSourceTypeSelectorEnabled?: boolean
+export function canShowDataInfoSelector(sourceType?: string, dataSourceType?: string): boolean {
+  return canShowDataSelector(sourceType) && dataSourceType === AWSDataSourceType
+}
+
+export function shouldShowProductChangeConfirmation(
+  isSumoLogicEnabled: boolean,
+  currentProduct: SelectOption,
+  updatedProduct: SelectOption,
+  isHealthSourceConfigured: boolean
 ): boolean {
-  return canShowDataSelector(sourceType, isDataSourceTypeSelectorEnabled) && dataSourceType === AWSDataSourceType
+  return (
+    isSumoLogicEnabled &&
+    !isEmpty(currentProduct) &&
+    currentProduct?.value !== updatedProduct?.value &&
+    isHealthSourceConfigured
+  )
 }

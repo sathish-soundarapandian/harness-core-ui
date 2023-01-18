@@ -128,7 +128,7 @@ exports[`Git Sync - repo tab Filling gitSync repo form: connectorSelectorDialog 
                   projectLabel
                 </p>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main tabValue StyledProps--font-variation-form-label StyledProps--font-weight-light StyledProps--padding-left-xsmall"
+                  class="StyledProps--font Text--lineclamp StyledProps--main tabValue StyledProps--font-variation-form-label StyledProps--font-weight-light StyledProps--margin-right-small StyledProps--padding-left-xsmall"
                   style="--text-line-clamp: 1;"
                 >
                   [dummy]
@@ -2182,7 +2182,7 @@ exports[`Git Sync - repo tab Updating the status of connector: connectorSelector
                   projectLabel
                 </p>
                 <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main tabValue StyledProps--font-variation-form-label StyledProps--font-weight-light StyledProps--padding-left-xsmall"
+                  class="StyledProps--font Text--lineclamp StyledProps--main tabValue StyledProps--font-variation-form-label StyledProps--font-weight-light StyledProps--margin-right-small StyledProps--padding-left-xsmall"
                   style="--text-line-clamp: 1;"
                 >
                   [dummy]

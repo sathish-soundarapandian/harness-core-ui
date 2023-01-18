@@ -14,7 +14,7 @@ import { queryByNameAttribute } from '@common/utils/testUtils'
 import { TestStepWidget, factory } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { ConfigFilesMap } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import { InstanceScriptTypes } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/DeploymentInfraWrapper/DeploymentInfraUtils'
 import { TanzuCommandStep } from '../TanzuCommand'
 
 factory.registerStep(new TanzuCommandStep())
@@ -27,7 +27,7 @@ const existingInitialValues = {
   spec: {
     script: {
       store: {
-        type: ConfigFilesMap.Harness,
+        type: InstanceScriptTypes.FileStore,
         spec: {
           files: ['filePath']
         }
@@ -84,12 +84,101 @@ describe('TanzuCommandStep tests', () => {
               spec: {
                 files: ['filePath']
               },
-              type: 'Harness'
+              type: InstanceScriptTypes.FileStore
             }
           }
         }
       })
     )
+  })
+
+  test('should show error on submit with invalid data with fileStorea', async () => {
+    const ref = React.createRef<StepFormikRef<unknown>>()
+    const initialValuesFS = () => ({
+      type: StepType.TanzuCommand,
+      name: '',
+      identifier: '',
+      timeout: '',
+      spec: {
+        script: {
+          store: {
+            type: InstanceScriptTypes.FileStore,
+            spec: {}
+          }
+        }
+      }
+    })
+
+    const { container, getByText, getByTestId } = render(
+      <TestStepWidget
+        initialValues={initialValuesFS}
+        type={StepType.TanzuCommand}
+        onUpdate={onUpdate}
+        onChange={onChange}
+        ref={ref}
+        stepViewType={StepViewType.Edit}
+        isNewStep={true}
+      />
+    )
+    await act(() => ref.current?.submitForm()!)
+    // expect(container).toMatchSnapshot()
+    const timeoutError = getByText('validation.timeout10SecMinimum')
+    expect(timeoutError).toBeInTheDocument()
+
+    const nameError = getByText('pipelineSteps.stepNameRequired')
+    expect(nameError).toBeInTheDocument()
+
+    const fileSelectError = getByText('common.validation.fieldIsRequired')
+    expect(fileSelectError).toBeInTheDocument()
+
+    const scriptTypeDropdown = getByTestId('templateOptions')
+    expect((getByText('resourcePage.fileStore') as HTMLOptionElement).selected).toBeTruthy()
+    fireEvent.click(scriptTypeDropdown!)
+
+    act(() => {
+      userEvent.selectOptions(scriptTypeDropdown, 'inline')
+    })
+    expect(container).toMatchSnapshot()
+  })
+  test('should show error on submit with invalid data with inline script', async () => {
+    const ref = React.createRef<StepFormikRef<unknown>>()
+
+    const initialValuesInline = () => ({
+      type: StepType.TanzuCommand,
+      name: '',
+      identifier: '',
+      timeout: '',
+      spec: {
+        script: {
+          store: {
+            type: InstanceScriptTypes.Inline,
+            spec: {}
+          }
+        }
+      }
+    })
+
+    const { container, getByText } = render(
+      <TestStepWidget
+        initialValues={initialValuesInline}
+        type={StepType.TanzuCommand}
+        onUpdate={onUpdate}
+        onChange={onChange}
+        ref={ref}
+        stepViewType={StepViewType.Edit}
+        isNewStep={true}
+      />
+    )
+    await act(() => ref.current?.submitForm()!)
+    expect(container).toMatchSnapshot()
+    const timeoutError = getByText('validation.timeout10SecMinimum')
+    expect(timeoutError).toBeInTheDocument()
+
+    const nameError = getByText('pipelineSteps.stepNameRequired')
+    expect(nameError).toBeInTheDocument()
+
+    const fileSelectError = getByText('common.validation.fieldIsRequired')
+    expect(fileSelectError).toBeInTheDocument()
   })
 
   test('should render edit view as edit step with all runtime inputs', () => {
@@ -103,9 +192,9 @@ describe('TanzuCommandStep tests', () => {
           spec: {
             script: {
               store: {
-                type: ConfigFilesMap.Harness,
+                type: InstanceScriptTypes.FileStore,
                 spec: {
-                  files: [RUNTIME_INPUT_VALUE]
+                  files: RUNTIME_INPUT_VALUE
                 }
               }
             }
@@ -117,9 +206,34 @@ describe('TanzuCommandStep tests', () => {
       />
     )
     expect(container).toMatchSnapshot()
+
+    const { container: containerInlineScript } = render(
+      <TestStepWidget
+        initialValues={{
+          type: StepType.TanzuCommand,
+          name: 'Tanzu Command Step Default',
+          identifier: 'Tanzu_Command_Step_Default',
+          timeout: RUNTIME_INPUT_VALUE,
+          spec: {
+            script: {
+              store: {
+                type: InstanceScriptTypes.Inline,
+                spec: {
+                  content: RUNTIME_INPUT_VALUE
+                }
+              }
+            }
+          }
+        }}
+        type={StepType.TanzuCommand}
+        stepViewType={StepViewType.Edit}
+        readonly
+      />
+    )
+    expect(containerInlineScript).toMatchSnapshot()
   })
 
-  test('InputSet view renders fine', async () => {
+  test('InputSet view renders errors', async () => {
     const { container, getByText } = render(
       <TestStepWidget
         initialValues={{
@@ -130,9 +244,9 @@ describe('TanzuCommandStep tests', () => {
           spec: {
             script: {
               store: {
-                type: ConfigFilesMap.Harness,
+                type: InstanceScriptTypes.FileStore,
                 spec: {
-                  files: [RUNTIME_INPUT_VALUE]
+                  files: ''
                 }
               }
             }
@@ -146,9 +260,105 @@ describe('TanzuCommandStep tests', () => {
           spec: {
             script: {
               store: {
-                type: ConfigFilesMap.Harness,
+                type: InstanceScriptTypes.FileStore,
                 spec: {
-                  files: [RUNTIME_INPUT_VALUE]
+                  files: RUNTIME_INPUT_VALUE
+                }
+              }
+            }
+          }
+        }}
+        type={StepType.TanzuCommand}
+        stepViewType={StepViewType.InputSet}
+        onUpdate={onUpdate}
+        inputSetData={{ path: '', readonly: true }}
+      />
+    )
+
+    const submitBtn = getByText('Submit')
+    userEvent.click(submitBtn)
+    await waitFor(() => expect(getByText('validation.timeout10SecMinimum')).toBeInTheDocument())
+    expect(container).toMatchSnapshot()
+    await waitFor(() => expect(getByText('fieldRequired')).toBeInTheDocument())
+    expect(onUpdate).not.toHaveBeenCalled()
+  })
+
+  test('InputSet view inline script validation', async () => {
+    const { getByText } = render(
+      <TestStepWidget
+        initialValues={{
+          identifier: 'Tanzu_Command_Step',
+          name: 'Tanzu Command Step',
+          timeout: '',
+          type: StepType.TanzuCommand,
+          spec: {
+            script: {
+              store: {
+                type: InstanceScriptTypes.Inline,
+                spec: {
+                  content: ''
+                }
+              }
+            }
+          }
+        }}
+        template={{
+          identifier: 'Tanzu_Command_Step',
+          name: 'Tanzu Command Step',
+          timeout: RUNTIME_INPUT_VALUE,
+          type: StepType.TanzuCommand,
+          spec: {
+            script: {
+              store: {
+                type: InstanceScriptTypes.Inline,
+                spec: {
+                  content: RUNTIME_INPUT_VALUE
+                }
+              }
+            }
+          }
+        }}
+        type={StepType.TanzuCommand}
+        stepViewType={StepViewType.InputSet}
+        onUpdate={onUpdate}
+        inputSetData={{ path: '', readonly: true }}
+      />
+    )
+    const submitBtn = getByText('Submit')
+    userEvent.click(submitBtn)
+    await waitFor(() => expect(getByText('fieldRequired')).toBeInTheDocument())
+  })
+
+  test('InputSet view renders fine', async () => {
+    const { container, getByText } = render(
+      <TestStepWidget
+        initialValues={{
+          identifier: 'Tanzu_Command_Step',
+          name: 'Tanzu Command Step',
+          timeout: '',
+          type: StepType.TanzuCommand,
+          spec: {
+            script: {
+              store: {
+                type: InstanceScriptTypes.FileStore,
+                spec: {
+                  files: RUNTIME_INPUT_VALUE
+                }
+              }
+            }
+          }
+        }}
+        template={{
+          identifier: 'Tanzu_Command_Step',
+          name: 'Tanzu Command Step',
+          timeout: RUNTIME_INPUT_VALUE,
+          type: StepType.TanzuCommand,
+          spec: {
+            script: {
+              store: {
+                type: InstanceScriptTypes.FileStore,
+                spec: {
+                  files: RUNTIME_INPUT_VALUE
                 }
               }
             }
@@ -178,9 +388,9 @@ describe('TanzuCommandStep tests', () => {
       spec: {
         script: {
           store: {
-            type: ConfigFilesMap.Harness,
+            type: InstanceScriptTypes.FileStore,
             spec: {
-              files: [RUNTIME_INPUT_VALUE]
+              files: RUNTIME_INPUT_VALUE
             }
           }
         }
@@ -189,7 +399,7 @@ describe('TanzuCommandStep tests', () => {
   })
 
   test('Variables view renders fine', async () => {
-    const { getByText } = render(
+    const { container } = render(
       <TestStepWidget
         initialValues={existingInitialValues}
         type={StepType.TanzuCommand}
@@ -201,16 +411,22 @@ describe('TanzuCommandStep tests', () => {
           stageIdentifier: 'testStage',
           variablesData: existingInitialValues,
           metadataMap: {
-            TanzuCommand: {
+            'Tanzu Command Step': {
               yamlProperties: {
-                fqn: 'pipeline.stages.testStage.execution.steps.TanzuCommandStep.name',
-                localName: 'step.TanzuCommandStep.name'
+                fqn: 'pipeline.stages.testStage.spec.execution.steps.TanzuCommand_1.name',
+                localName: 'execution.steps.TanzuCommand_1.name',
+                variableName: 'name',
+                aliasFQN: '',
+                visible: true
               }
             },
             '10m': {
               yamlProperties: {
-                fqn: 'pipeline.stages.testStage.execution.steps.TanzuCommandStep.timeout',
-                localName: 'step.TanzuCommand.timeout'
+                fqn: 'pipeline.stages.testStage.spec.execution.steps.TanzuCommand_1.timeout',
+                localName: 'execution.steps.TanzuCommand_1.timeout',
+                variableName: 'timeout',
+                aliasFQN: '',
+                visible: true
               }
             }
           }
@@ -218,9 +434,6 @@ describe('TanzuCommandStep tests', () => {
       />
     )
 
-    expect(getByText('name')).toBeVisible()
-    expect(getByText('TanzuCommand')).toBeVisible()
-    expect(getByText('timeout')).toBeVisible()
-    expect(getByText('10m')).toBeVisible()
+    expect(container).toMatchSnapshot()
   })
 })

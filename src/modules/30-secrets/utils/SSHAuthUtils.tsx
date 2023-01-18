@@ -24,6 +24,8 @@ import {
   getSecretV2Promise
 } from 'services/cd-ng'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
+import { getScopeBasedProjectPathParams, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 type SSHCredentialType = SSHKeyPathCredentialDTO | SSHKeyReferenceCredentialDTO | SSHPasswordCredentialDTO
 
@@ -181,13 +183,9 @@ export function buildAuthConfig(data: SSHConfigFormData): SSHConfigDTO | Kerbero
   }
 }
 
-export const getSecretReferencesforSSH = async (
+export const getSecretReferencesForSSH = async (
   secret: SecretDTOV2,
-  pathParams: {
-    accountIdentifier: string
-    orgIdentifier?: string
-    projectIdentifier?: string
-  }
+  projectPathParams: ProjectPathProps
 ): Promise<{
   keySecret?: SecretReference
   passwordSecret?: SecretReference
@@ -212,7 +210,7 @@ export const getSecretReferencesforSSH = async (
       if (keyRefSpec.key) {
         const data = await getSecretV2Promise({
           identifier: keyRefSpec.key.indexOf('.') < 0 ? keyRefSpec.key : keyRefSpec.key.split('.')[1],
-          queryParams: pathParams
+          queryParams: getScopeBasedProjectPathParams(projectPathParams, getScopeFromValue(keyRefSpec.key))
         })
         const keySecretData = data.data?.secret
         if (keySecretData) {
@@ -234,7 +232,7 @@ export const getSecretReferencesforSSH = async (
     const secretId = password.indexOf('.') < 0 ? password : password.split('.')[1]
     const data = await getSecretV2Promise({
       identifier: secretId,
-      queryParams: pathParams
+      queryParams: getScopeBasedProjectPathParams(projectPathParams, getScopeFromValue(password))
     })
     passwordSecret = {
       ...data.data?.secret,
@@ -246,7 +244,7 @@ export const getSecretReferencesforSSH = async (
     const secretId = encryptedPassphrase.indexOf('.') < 0 ? encryptedPassphrase : encryptedPassphrase.split('.')[1]
     const data = await getSecretV2Promise({
       identifier: secretId,
-      queryParams: pathParams
+      queryParams: getScopeBasedProjectPathParams(projectPathParams, getScopeFromValue(encryptedPassphrase))
     })
     encryptedPassphraseSecret = {
       ...data.data?.secret,

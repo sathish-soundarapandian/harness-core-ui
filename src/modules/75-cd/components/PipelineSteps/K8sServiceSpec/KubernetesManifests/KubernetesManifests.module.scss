@@ -44,10 +44,18 @@
 }
 .inputFieldLayout {
   display: grid;
-  grid-template-columns: 400px 20px;
+  grid-template-columns: 400px 42px;
   margin-top: var(--spacing-large);
   .configureOptions {
     position: relative;
     top: 22px;
   }
+}
+
+.fieldAndOptionsWidth {
+  width: 442px;
+}
+
+.tooltip {
+  max-width: 420px;
 }

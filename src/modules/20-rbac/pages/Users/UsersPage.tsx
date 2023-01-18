@@ -16,6 +16,7 @@ import { useQueryParams } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { useStateWithQueryParams } from '@common/hooks/useStateWithQueryParams'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -31,7 +32,7 @@ const UsersPage: React.FC = () => {
   const { getString } = useStrings()
   useDocumentTitle(getString('users'))
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
-  const [searchParam, setSearchParam] = useState<string>()
+  const [searchParam, setSearchParam] = useStateWithQueryParams({ key: 'search' })
   const { view } = useQueryParams<{ view: string }>()
   const [reload, setReload] = useState<boolean>()
   const history = useHistory()
@@ -95,6 +96,7 @@ const UsersPage: React.FC = () => {
         toolbar={
           <Layout.Horizontal margin={{ right: 'small' }} height="xxxlarge" className={css.toolbar} width={350}>
             <ExpandingSearchInput
+              defaultValue={searchParam}
               alwaysExpanded
               placeholder={getString('rbac.usersPage.search')}
               onChange={text => {

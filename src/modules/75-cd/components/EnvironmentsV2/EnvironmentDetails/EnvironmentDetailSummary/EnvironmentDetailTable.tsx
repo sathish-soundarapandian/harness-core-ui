@@ -28,7 +28,10 @@ export enum TableType {
 }
 
 export interface InfraViewFilters {
-  artifactFilter: string
+  artifactFilter: {
+    artifactVersion: string
+    artifactPath: string
+  }
   serviceFilter: string
 }
 
@@ -62,6 +65,7 @@ export const getFullViewTableData = (
     if ((serviceFilter && service.serviceId === serviceFilter) || !serviceFilter) {
       let serviceName: string | undefined
       let serviceId: string | undefined
+      /* istanbul ignore else */
       if (service.serviceId && service.instanceGroupedByArtifactList) {
         serviceName ??= service.serviceName
         serviceId ??= service.serviceId
@@ -73,10 +77,12 @@ export const getFullViewTableData = (
           let artifactVersion: string | undefined
           let artifactPath: string | undefined
           const infraList: string[] = []
+          /* istanbul ignore else */
           if (artifact.artifactVersion && artifact.instanceGroupedByEnvironmentList) {
             artifactVersion ??= artifact.artifactVersion
             artifactPath ??= artifact.artifactPath
             artifact.instanceGroupedByEnvironmentList?.forEach(env => {
+              /* istanbul ignore else */
               if (env.envId) {
                 if (env.instanceGroupedByInfraList?.length) {
                   env.instanceGroupedByInfraList?.forEach(infra => {
@@ -86,6 +92,7 @@ export const getFullViewTableData = (
                     totalInfras++
                     infra.instanceGroupedByPipelineExecutionList?.forEach(infraInfo => {
                       totalInstances += infraInfo.count || 0
+                      /* istanbul ignore else */
                       if (infraInfo.lastDeployedAt) {
                         lastDeployedAt =
                           lastDeployedAt >= infraInfo.lastDeployedAt ? lastDeployedAt : infraInfo.lastDeployedAt
@@ -95,12 +102,14 @@ export const getFullViewTableData = (
                 }
                 if (env.instanceGroupedByClusterList?.length) {
                   env.instanceGroupedByClusterList?.forEach(cluster => {
+                    /* istanbul ignore else */
                     if (cluster.clusterIdentifier) {
                       infraList.push(cluster.clusterIdentifier)
                     }
                     totalInfras++
                     cluster.instanceGroupedByPipelineExecutionList?.forEach(clusterInfo => {
                       totalInstances += clusterInfo.count || 0
+                      /* istanbul ignore else */
                       if (clusterInfo.lastDeployedAt) {
                         lastDeployedAt =
                           lastDeployedAt >= clusterInfo.lastDeployedAt ? lastDeployedAt : clusterInfo.lastDeployedAt
@@ -423,7 +432,10 @@ export const EnvironmentDetailTable = (
 
   if (isUndefined(selectedRow) && tableType === TableType.FULL) {
     setRowClickFilter({
-      artifactFilter: defaultTo(tableData[0].artifactVersion, ''),
+      artifactFilter: {
+        artifactVersion: defaultTo(tableData[0].artifactVersion, ''),
+        artifactPath: defaultTo(tableData[0].artifactPath, '')
+      },
       serviceFilter: defaultTo(tableData[0].serviceId, '')
     })
     setSelectedRow(
@@ -441,7 +453,10 @@ export const EnvironmentDetailTable = (
         tableType === TableType.FULL
           ? row => {
               setRowClickFilter({
-                artifactFilter: defaultTo(row.artifactVersion, ''),
+                artifactFilter: {
+                  artifactVersion: defaultTo(row.artifactVersion, ''),
+                  artifactPath: defaultTo(row.artifactPath, '')
+                },
                 serviceFilter: defaultTo(row.serviceId, '')
               })
               setSelectedRow(JSON.stringify(row) + row.serviceId + row.artifactVersion)

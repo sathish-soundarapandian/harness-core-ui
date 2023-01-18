@@ -312,42 +312,40 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
         </div>
       )}
       {getMultiTypeFromValue(template?.namespace) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${path}.namespace`}
-            label={getString('common.namespace')}
-            disabled={readonly}
-            multiTextInputProps={{
-              allowableTypes,
-              expressions
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
-            template={template}
-            fieldPath={'namespace'}
-          />
-        </div>
+        <TextFieldInputSetView
+          name={`${path}.namespace`}
+          label={getString('common.namespace')}
+          disabled={readonly}
+          multiTextInputProps={{
+            allowableTypes,
+            expressions
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
+          template={template}
+          fieldPath={'namespace'}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
       {getMultiTypeFromValue(template?.releaseName) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${path}.releaseName`}
-            label={getString('common.releaseName')}
-            disabled={readonly}
-            multiTextInputProps={{
-              allowableTypes,
-              expressions
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            placeholder={getString('cd.steps.common.releaseNamePlaceholder')}
-            template={template}
-            fieldPath={'releaseName'}
-          />
-        </div>
+        <TextFieldInputSetView
+          name={`${path}.releaseName`}
+          label={getString('common.releaseName')}
+          disabled={readonly}
+          multiTextInputProps={{
+            allowableTypes,
+            expressions
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          placeholder={getString('cd.steps.common.releaseNamePlaceholder')}
+          template={template}
+          fieldPath={'releaseName'}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
     </Layout.Vertical>
   )

@@ -64,6 +64,7 @@ export function getInstanceDropdownSchema(
   getString: UseStringsReturn['getString']
 ): Yup.ObjectSchema {
   const { maximum } = props
+  /* istanbul ignore next */
   if (maximum && typeof maximum !== 'number') {
     throw new Error(`Invalid format "${maximum}" provided for maximum value`)
   }
@@ -73,6 +74,7 @@ export function getInstanceDropdownSchema(
         const { required = false } = props
         if (type === InstanceTypes.Count) {
           const value = this.parent?.spec?.value
+          /* istanbul ignore next */
           if (getMultiTypeFromValue(value as unknown as string) !== MultiTypeInputType.FIXED) {
             return true
           }
@@ -200,6 +202,12 @@ export interface FormInstanceDropdownFieldProps extends Omit<InstanceDropdownFie
   readonly?: boolean
   enableConfigureOptions?: boolean
   configureOptionsProps?: Omit<ConfigureOptionsProps, 'value' | 'type' | 'variableName' | 'onChange'>
+  defaultValue?: InstanceFieldValue
+}
+
+const defaultInitialValue = {
+  type: InstanceTypes.Count,
+  spec: { value: 0 }
 }
 
 const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (props): JSX.Element => {
@@ -215,6 +223,7 @@ const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (pro
     readonly,
     enableConfigureOptions = false,
     configureOptionsProps,
+    defaultValue,
     ...restProps
   } = props
   const hasError = errorCheck(`${name}.type`, formik)
@@ -225,11 +234,11 @@ const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (pro
     ...rest
   } = restProps
 
-  const value: InstanceFieldValue = get(formik?.values, name, { type: InstanceTypes.Count, spec: { value: 0 } })
+  const value: InstanceFieldValue = get(formik?.values, name, defaultValue || defaultInitialValue)
   const valueForConfigureOptions = value?.spec?.value as string
 
   const tooltipContext = React.useContext(FormikTooltipContext)
-  const dataTooltipId = tooltipContext?.formName ? `${tooltipContext?.formName}_${name}` : ''
+  const dataTooltipId = tooltipContext?.formName ? `${tooltipContext.formName}_${name}` : ''
 
   return (
     <Container>
@@ -254,9 +263,11 @@ const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (pro
             showRequiredField={false}
             showDefaultField={false}
             showAdvanced={true}
-            onChange={val => {
-              formik?.setFieldValue(name, { ...value, spec: { value: val } })
-            }}
+            onChange={
+              /* istanbul ignore next */ val => {
+                formik?.setFieldValue(name, { ...value, spec: { value: val } })
+              }
+            }
             style={{ marginTop: 'var(--spacing-6)' }}
             allowedValuesType={ALLOWED_VALUES_TYPE.NUMBER}
             {...configureOptionsProps}

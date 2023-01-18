@@ -60,6 +60,7 @@ export function TasCanaryAppSetupWidget(
       })
     }
     if (value < 1) {
+      /* istanbul ignore next */
       return this.createError({
         message: getString('cd.ElastigroupStep.valueCannotBeLessThan', {
           value: valueString,
@@ -77,6 +78,7 @@ export function TasCanaryAppSetupWidget(
       tasInstanceCountType: Yup.string().trim().required(getString('common.validation.typeIsRequired')),
       existingVersionToKeep: Yup.mixed().test({
         test(value): boolean | Yup.ValidationError {
+          /* istanbul ignore else */
           if (getMultiTypeFromValue(value) === MultiTypeInputType.FIXED) {
             if (value < 1) {
               return this.createError({
@@ -125,7 +127,7 @@ export function TasCanaryAppSetupWidget(
                 name="timeout"
                 label={getString('pipelineSteps.timeoutLabel')}
                 multiTypeDurationProps={{
-                  enableConfigureOptions: false,
+                  enableConfigureOptions: true,
                   expressions,
                   disabled: readonly,
                   allowableTypes
@@ -133,23 +135,6 @@ export function TasCanaryAppSetupWidget(
                 className={stepCss.duration}
                 disabled={readonly}
               />
-              {getMultiTypeFromValue(formValues?.timeout) === MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  value={formValues?.timeout as string}
-                  type="String"
-                  variableName="step.timeout"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  showAdvanced={true}
-                  onChange={
-                    /* istanbul ignore next */ value => {
-                      setFieldValue('timeout', value)
-                    }
-                  }
-                  isReadonly={readonly}
-                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                />
-              )}
             </div>
 
             <div className={stepCss.divider} />
@@ -224,6 +209,7 @@ export function TasCanaryAppSetupWidget(
                 multiTypeProps={{
                   allowableTypes
                 }}
+                type={getString('tagLabel')}
                 label={getString('cd.steps.tas.additionalRoutes')}
                 enableConfigureOptions
                 isArray={true}

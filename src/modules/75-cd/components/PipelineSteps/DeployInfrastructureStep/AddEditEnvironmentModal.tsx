@@ -120,8 +120,8 @@ export default function AddEditEnvironmentModal({
           description: defaultTo(description, ''),
           tags: defaultTo(tags, {}),
           type: defaultTo(type, ''),
-          orgIdentifier: defaultTo(orgIdentifier, ''),
-          projectIdentifier: defaultTo(projectIdentifier, ''),
+          orgIdentifier: defaultTo(data.environment?.orgIdentifier, defaultTo(orgIdentifier, '')),
+          projectIdentifier: defaultTo(data.environment?.projectIdentifier, defaultTo(projectIdentifier, '')),
           variables,
           overrides
         } as NGEnvironmentInfoConfig
@@ -133,8 +133,8 @@ export default function AddEditEnvironmentModal({
         }
       }
       validationSchema={Yup.object().shape({
-        name: NameSchema({ requiredErrorMsg: getString('fieldRequired', { field: 'Name' }) }),
-        identifier: IdentifierSchema(),
+        name: NameSchema(getString, { requiredErrorMsg: getString('fieldRequired', { field: 'Name' }) }),
+        identifier: IdentifierSchema(getString),
         type: Yup.string().required().oneOf(['Production', 'PreProduction'])
       })}
       validateOnChange

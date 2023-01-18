@@ -36,6 +36,7 @@ import { getStageFromPipeline } from '@pipeline/components/PipelineStudio/Pipeli
 import type { DeploymentStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
+import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import { isCronValid } from '../views/subviews/ScheduleUtils'
 import type { AddConditionInterface } from '../views/AddConditionsSection'
 import type {
@@ -354,8 +355,8 @@ export const getValidationSchema = (
 ): ObjectSchema<Record<string, any> | undefined> => {
   if (triggerType === TriggerTypes.WEBHOOK) {
     return object().shape({
-      name: NameSchema({ requiredErrorMsg: getString('triggers.validation.triggerName') }),
-      identifier: IdentifierSchema(),
+      name: NameSchema(getString, { requiredErrorMsg: getString('triggers.validation.triggerName') }),
+      identifier: IdentifierSchema(getString),
       event: string().test(
         getString('triggers.validation.event'),
         getString('triggers.validation.event'),
@@ -381,7 +382,8 @@ export const getValidationSchema = (
           getString('common.validation.fieldIsRequired', {
             name: getString('triggers.triggerConfigurationPanel.pollingFrequency')
           })
-        )
+        ),
+        webhookId: string()
       }),
       connectorRef: object().test(
         getString('triggers.validation.connector'),
@@ -2244,10 +2246,13 @@ export const getArtifactManifestTriggerYaml = ({
     stageId,
     manifestType: onEditManifestType,
     artifactType,
-    pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event),
-    inputSetRefs
+    pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event)
   } = val
-
+  const inputSetRefs = get(
+    val,
+    'inputSetRefs',
+    get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
+  )
   replaceRunTimeVariables({ manifestType, artifactType, selectedArtifact })
   let newPipeline = cloneDeep(pipelineRuntimeInput)
   const newPipelineObj = newPipeline.template ? newPipeline.template.templateInputs : newPipeline

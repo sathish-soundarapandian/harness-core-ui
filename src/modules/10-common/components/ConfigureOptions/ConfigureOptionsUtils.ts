@@ -108,43 +108,43 @@ export const ValidationSchema = (
   }
 }
 
-export enum InpuSetFunction {
+export enum InputSetFunction {
   ALLOWED_VALUES = 'allowedValues',
   EXECUTION_INPUT = 'executionInput',
   REGEX = 'regex',
   DEFAULT = 'default'
 }
 
-export interface InpuSetFunctionMatcher {
-  name: InpuSetFunction
+export interface InputSetFunctionMatcher {
+  name: InputSetFunction
   hasParameters: boolean
 }
 
-export const INPUT_EXPRESSION_REGEX_STRING = `<\\+input>(?:(\\.(${Object.values(InpuSetFunction).join(
+export const INPUT_EXPRESSION_REGEX_STRING = `<\\+input>(?:(\\.(${Object.values(InputSetFunction).join(
   '|'
 )})\\((.*?)\\))*)`
 
-export const INPUT_EXPRESSION_SPLIT_REGEX = new RegExp(`\\.(?=${Object.values(InpuSetFunction).join('|')})`)
+export const INPUT_EXPRESSION_SPLIT_REGEX = new RegExp(`\\.(?=${Object.values(InputSetFunction).join('|')})`)
 
 export const JEXL_REGEXP = /jexl\((.*?)\)/
 export const JEXL = 'jexl'
 
 export interface ParsedInput {
-  [InpuSetFunction.ALLOWED_VALUES]: {
+  [InputSetFunction.ALLOWED_VALUES]: {
     values: string[] | null
     jexlExpression: string | null
   } | null
-  [InpuSetFunction.EXECUTION_INPUT]: boolean
-  [InpuSetFunction.REGEX]: string | null
+  [InputSetFunction.EXECUTION_INPUT]: boolean
+  [InputSetFunction.REGEX]: string | null
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [InpuSetFunction.DEFAULT]: any | null
+  [InputSetFunction.DEFAULT]: any | null
 }
 
 export function isExecutionInput(input: string): boolean {
   // split the string based on functions
   const splitData = input.split(INPUT_EXPRESSION_SPLIT_REGEX).slice(1)
 
-  return splitData.some(val => val.startsWith(InpuSetFunction.EXECUTION_INPUT))
+  return splitData.some(val => val.startsWith(InputSetFunction.EXECUTION_INPUT))
 }
 
 export function parseInput(input: string): ParsedInput | null {
@@ -164,39 +164,39 @@ export function parseInput(input: string): ParsedInput | null {
   const splitData = input.split(INPUT_EXPRESSION_SPLIT_REGEX).slice(1)
 
   const parsedInput: ParsedInput = {
-    [InpuSetFunction.ALLOWED_VALUES]: null,
-    [InpuSetFunction.EXECUTION_INPUT]: false,
-    [InpuSetFunction.REGEX]: null,
-    [InpuSetFunction.DEFAULT]: null
+    [InputSetFunction.ALLOWED_VALUES]: null,
+    [InputSetFunction.EXECUTION_INPUT]: false,
+    [InputSetFunction.REGEX]: null,
+    [InputSetFunction.DEFAULT]: null
   }
 
   splitData.forEach(fn => {
     /* istanbul ignore else */
-    if (fn.startsWith(InpuSetFunction.EXECUTION_INPUT)) {
-      parsedInput[InpuSetFunction.EXECUTION_INPUT] = true
-    } else if (fn.startsWith(InpuSetFunction.ALLOWED_VALUES)) {
+    if (fn.startsWith(InputSetFunction.EXECUTION_INPUT)) {
+      parsedInput[InputSetFunction.EXECUTION_INPUT] = true
+    } else if (fn.startsWith(InputSetFunction.ALLOWED_VALUES)) {
       // slice the function name along with surrounding parenthesis
-      const fnArgs = fn.slice(InpuSetFunction.ALLOWED_VALUES.length + 1).slice(0, -1)
+      const fnArgs = fn.slice(InputSetFunction.ALLOWED_VALUES.length + 1).slice(0, -1)
       // check for JEXL expression
       const jexlMatch = fnArgs.match(JEXL_REGEXP)
 
-      parsedInput[InpuSetFunction.ALLOWED_VALUES] = {
+      parsedInput[InputSetFunction.ALLOWED_VALUES] = {
         values: jexlMatch ? null : fnArgs.split(','),
         jexlExpression: jexlMatch ? jexlMatch[1] : null
       }
-    } else if (fn.startsWith(InpuSetFunction.REGEX)) {
+    } else if (fn.startsWith(InputSetFunction.REGEX)) {
       // slice the function name along with surrounding parenthesis
-      const fnArgs = fn.slice(InpuSetFunction.REGEX.length + 1).slice(0, -1)
+      const fnArgs = fn.slice(InputSetFunction.REGEX.length + 1).slice(0, -1)
 
-      parsedInput[InpuSetFunction.REGEX] = fnArgs
-    } else if (fn.startsWith(InpuSetFunction.DEFAULT)) {
+      parsedInput[InputSetFunction.REGEX] = fnArgs
+    } else if (fn.startsWith(InputSetFunction.DEFAULT)) {
       // slice the function name along with surrounding parenthesis
-      const fnArgs = fn.slice(InpuSetFunction.DEFAULT.length + 1).slice(0, -1)
+      const fnArgs = fn.slice(InputSetFunction.DEFAULT.length + 1).slice(0, -1)
 
       try {
-        parsedInput[InpuSetFunction.DEFAULT] = yamlParse(fnArgs)
+        parsedInput[InputSetFunction.DEFAULT] = yamlParse(fnArgs)
       } catch (_) {
-        parsedInput[InpuSetFunction.DEFAULT] = fnArgs
+        parsedInput[InputSetFunction.DEFAULT] = fnArgs
       }
     }
   })
@@ -212,7 +212,7 @@ export const getInputStr = (data: FormValues, shouldUseNewDefaultFormat: boolean
   }
 
   if (shouldUseNewDefaultFormat && data.defaultValue) {
-    inputStr += `.${InpuSetFunction.DEFAULT}(${data.defaultValue})`
+    inputStr += `.${InputSetFunction.DEFAULT}(${data.defaultValue})`
   }
 
   if (
@@ -220,12 +220,12 @@ export const getInputStr = (data: FormValues, shouldUseNewDefaultFormat: boolean
     (data.allowedValues?.length > 0 || data.advancedValue.length > 0)
   ) {
     if (data.isAdvanced) {
-      inputStr += `.${InpuSetFunction.ALLOWED_VALUES}(${JEXL}(${data.advancedValue}))`
+      inputStr += `.${InputSetFunction.ALLOWED_VALUES}(${JEXL}(${data.advancedValue}))`
     } else {
-      inputStr += `.${InpuSetFunction.ALLOWED_VALUES}(${data.allowedValues.join(',')})`
+      inputStr += `.${InputSetFunction.ALLOWED_VALUES}(${data.allowedValues.join(',')})`
     }
   } /* istanbul ignore else */ else if (data.validation === Validation.Regex && data.regExValues?.length > 0) {
-    inputStr += `.${InpuSetFunction.REGEX}(${data.regExValues})`
+    inputStr += `.${InputSetFunction.REGEX}(${data.regExValues})`
   }
   return inputStr
 }

@@ -5,19 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
+import React from 'react'
 import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { CollapseList, CollapseListPanel, Container, Icon, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { isGivenMetricNameContainsThresholds } from '@cv/pages/health-source/common/MetricThresholds/MetricThresholds.utils'
-import type {
-  MetricThresholdType,
-  ThresholdsPropertyNames
-} from '@cv/pages/health-source/common/MetricThresholds/MetricThresholds.types'
 import MetricMenu from './components/MetricMenu'
 import type { GroupedMetric } from './GroupedSideNav.types'
+import { showWarningIcon } from './GroupedSideNav.utils'
 import css from '../../CommonSelectedAppsSideNav.module.scss'
 
 interface GroupedSideNavInterface {
@@ -27,39 +23,18 @@ interface GroupedSideNavInterface {
   groupedSelectedAppsList: [string, GroupedMetric[]][]
   isMetricThresholdEnabled?: boolean
   openEditMetricModal: () => void
-  isValidInput?: boolean
+  hideDeleteIcon?: boolean
 }
 export default function GroupedSideNav({
   groupedSelectedAppsList,
   selectedItem,
   onRemoveItem,
   onSelect,
-  isMetricThresholdEnabled,
   openEditMetricModal,
-  isValidInput
+  hideDeleteIcon
 }: GroupedSideNavInterface): JSX.Element {
   const { getString } = useStrings()
-  const { values: formValues } = useFormikContext()
-
-  const getShowPromptOnDelete = (metricName?: string): boolean => {
-    return Boolean(
-      metricName &&
-        isMetricThresholdEnabled &&
-        isGivenMetricNameContainsThresholds(
-          formValues as Record<ThresholdsPropertyNames, MetricThresholdType[]>,
-          metricName
-        )
-    )
-  }
-
-  const handleOnDelete = useCallback(
-    (selectedMetric, index) => {
-      if (selectedMetric && onRemoveItem) {
-        onRemoveItem(selectedMetric, index as number)
-      }
-    },
-    [onRemoveItem]
-  )
+  const { touched, isValid } = useFormikContext()
 
   return (
     <>
@@ -101,10 +76,12 @@ export default function GroupedSideNav({
                       {selectedApp.metricName}
                     </Text>
                     <Container>
-                      {!isValidInput ? <Icon name="warning-icon" size={18} color={Color.ORANGE_700} /> : null}
+                      {showWarningIcon({ touched, isValid, selectedApp, selectedItem }) ? (
+                        <Icon name="warning-icon" size={18} color={Color.ORANGE_700} />
+                      ) : null}
                       <MetricMenu
                         onEdit={openEditMetricModal}
-                        onDelete={handleOnDelete}
+                        onDelete={onRemoveItem}
                         titleText={getString('common.delete', { name: selectedApp?.metricName })}
                         contentText={getString('cv.monitoringSources.commonHealthSource.confirmDeleteMetric', {
                           name: selectedApp?.metricName
@@ -118,7 +95,7 @@ export default function GroupedSideNav({
                         metricThresholdWarningContentText={getString(
                           'cv.metricThresholds.customMetricsDeletePromptContent'
                         )}
-                        showPromptOnDelete={getShowPromptOnDelete(selectedApp.metricName)}
+                        hideDeleteIcon={hideDeleteIcon}
                       />
                     </Container>
                   </Container>

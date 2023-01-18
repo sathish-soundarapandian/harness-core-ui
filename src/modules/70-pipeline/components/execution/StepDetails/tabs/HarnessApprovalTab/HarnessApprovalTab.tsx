@@ -112,18 +112,18 @@ export function HarnessApprovalTab(props: HarnessApprovalTabProps): React.ReactE
     <React.Fragment>
       {showBannerInfo ? (
         <React.Fragment>
-          <div className={css.info} data-type="harness">
-            <div className={css.infoHeader}>
-              <String
-                tagName="div"
-                className={css.statusMsg}
-                stringID="pipeline.approvalStep.execution.statusMsg"
-                vars={{
-                  count: approvalData?.details?.approvalActivities?.length || 0,
-                  total: approvalData?.details?.approvers?.minimumCount || 1
-                }}
-              />
-              {isWaiting ? (
+          {isWaiting && (
+            <div className={css.info} data-type="harness">
+              <div className={css.infoHeader}>
+                <String
+                  tagName="div"
+                  className={css.statusMsg}
+                  stringID="pipeline.approvalStep.execution.statusMsg"
+                  vars={{
+                    count: approvalData?.details?.approvalActivities?.length || 0,
+                    total: approvalData?.details?.approvers?.minimumCount || 1
+                  }}
+                />
                 <div className={css.timer}>
                   <Duration
                     className={css.duration}
@@ -134,12 +134,16 @@ export function HarnessApprovalTab(props: HarnessApprovalTabProps): React.ReactE
                   />
                   <String stringID="pipeline.timeRemainingSuffix" />
                 </div>
-              ) : null}
+              </div>
+              <Text
+                intent="warning"
+                font={{ align: 'left' }}
+                style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
+              >
+                {approvalData?.details?.approvalMessage}
+              </Text>
             </div>
-            <Text intent="warning" font={{ align: 'left' }} style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
-              {approvalData?.details?.approvalMessage}
-            </Text>
-          </div>
+          )}
           <StepDetails
             step={{
               startTs: startTs,

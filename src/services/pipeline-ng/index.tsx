@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -315,6 +315,7 @@ export interface AccessControlCheckError {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -386,6 +387,8 @@ export interface AccessControlCheckError {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -585,6 +588,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -768,11 +772,6 @@ export interface CacheResponseMetadata {
   ttlLeft: number
 }
 
-export interface Capabilities {
-  add?: string[]
-  drop?: string[]
-}
-
 export interface CcmConnectorFilter {
   awsAccountId?: string
   awsAccountIds?: string[]
@@ -921,27 +920,10 @@ export interface ConnectorWrapperResponse {
 }
 
 export interface ContainerInfraYamlSpec {
-  annotations?: {
-    [key: string]: string
-  }
-  automountServiceAccountToken?: boolean
   connectorRef: string
-  containerSecurityContext?: SecurityContext
-  harnessImageConnectorRef?: string
-  initTimeout?: string
-  labels?: {
-    [key: string]: string
-  }
   namespace: string
-  nodeSelector?: {
-    [key: string]: string
-  }
   os?: 'Linux' | 'MacOS' | 'Windows'
-  priorityClassName?: string
-  runAsUser?: number
-  serviceAccountName?: string
-  tolerations?: Toleration[]
-  volumes?: ContainerVolume[]
+  resources: ContainerResource
 }
 
 export type ContainerK8sInfra = ContainerStepInfra & {
@@ -956,28 +938,22 @@ export interface ContainerResource {
 export type ContainerStepInfo = StepSpecType & {
   command: string
   connectorRef?: string
-  delegateSelectors?: string[]
   entrypoint?: string[]
+  envVariables?: {
+    [key: string]: string
+  }
   image?: string
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
   infrastructure: ContainerStepInfra
   metadata?: string
   outputVariables?: OutputNGVariable[]
   privileged?: boolean
-  resources: ContainerResource
-  retry?: number
-  runAsUser?: number
   settings?: ParameterFieldMapStringJsonNode
   shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh'
-  uses?: string
 }
 
 export interface ContainerStepInfra {
   type?: 'KubernetesDirect'
-}
-
-export interface ContainerVolume {
-  type?: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
 }
 
 export interface CriteriaSpec {
@@ -1110,17 +1086,6 @@ export interface EmbeddedUser {
   externalUserId?: string
   name?: string
   uuid?: string
-}
-
-export type EmptyDirYaml = ContainerVolume & {
-  mountPath: string
-  spec: EmptyDirYamlSpec
-  type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
-}
-
-export interface EmptyDirYamlSpec {
-  medium?: string
-  size?: string
 }
 
 export interface EntityGitDetails {
@@ -1424,6 +1389,7 @@ export interface Error {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -1495,6 +1461,8 @@ export interface Error {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1782,6 +1750,7 @@ export interface ErrorMetadata {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -1853,6 +1822,8 @@ export interface ErrorMetadata {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   errorMessage?: string
 }
 
@@ -2343,6 +2314,7 @@ export interface Failure {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -2414,6 +2386,8 @@ export interface Failure {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2736,17 +2710,6 @@ export type HelmManifestSpec = ManifestTypeSpec & {
   store?: BuildStore
 }
 
-export type HostPathYaml = ContainerVolume & {
-  mountPath: string
-  spec: HostPathYamlSpec
-  type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
-}
-
-export interface HostPathYamlSpec {
-  path: string
-  type?: string
-}
-
 export type HttpBuildStoreTypeSpec = BuildStoreTypeSpec & {
   connectorRef?: string
 }
@@ -2803,6 +2766,10 @@ export interface InputSetImportRequestDTO {
 }
 
 export interface InputSetImportResponseDTO {
+  identifier?: string
+}
+
+export interface InputSetMoveConfigResponseDTO {
   identifier?: string
 }
 
@@ -2865,7 +2832,6 @@ export interface InputSetTemplateResponse {
   }
   inputSetTemplateYaml?: string
   inputSetYaml?: string
-  latestTemplateYaml?: string
 }
 
 export interface InputSetTemplateWithReplacedExpressionsResponse {
@@ -3077,6 +3043,10 @@ export interface MergeInputSetTemplateRequest {
   runtimeInputYaml?: string
 }
 
+export interface MoveConfigResponse {
+  pipelineIdentifier?: string
+}
+
 export interface NGProcessWebhookResponse {
   apiUrl?: string
   eventCorrelationId?: string
@@ -3201,6 +3171,7 @@ export interface NGTriggerSourceV2 {
   pollInterval?: string
   spec?: NGTriggerSpecV2
   type?: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled'
+  webhookId?: string
 }
 
 export interface NGTriggerSpecV2 {
@@ -3524,6 +3495,18 @@ export interface ParameterFieldMapStringJsonNode {
   }
 }
 
+export interface ParameterFieldMatrixConfigInterface {
+  defaultValue?: MatrixConfigInterface
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: MatrixConfigInterface
+}
+
 export interface ParameterFieldString {
   defaultValue?: string
   executionInput?: boolean
@@ -3558,17 +3541,6 @@ export interface PermissionCheck {
   resourceIdentifier?: string
   resourceScope?: ResourceScope
   resourceType?: string
-}
-
-export type PersistentVolumeClaimYaml = ContainerVolume & {
-  mountPath: string
-  spec: PersistentVolumeClaimYamlSpec
-  type: 'EmptyDir' | 'PersistentVolumeClaim' | 'HostPath'
-}
-
-export interface PersistentVolumeClaimYamlSpec {
-  claimName: string
-  readOnly?: boolean
 }
 
 export interface PipelineConfig {
@@ -3673,9 +3645,11 @@ export interface PipelineExecutionSummary {
   }
   modules?: string[]
   name?: string
+  orgIdentifier?: string
   parentStageInfo?: PipelineStageInfo
   pipelineIdentifier?: string
   planExecutionId?: string
+  projectIdentifier?: string
   runSequence?: number
   runningStagesCount?: number
   showRetryHistory?: boolean
@@ -3876,6 +3850,7 @@ export interface PlanExecutionResponseDto {
 
 export interface PmsAbstractStepNode {
   description?: string
+  enforce?: PolicyConfig
   failureStrategies?: FailureStrategyConfig[]
   identifier: string
   name: string
@@ -3906,6 +3881,10 @@ export type PmsPagerDutyChannel = PmsNotificationChannel & {
 export type PmsSlackChannel = PmsNotificationChannel & {
   userGroups?: string[]
   webhookUrl?: string
+}
+
+export interface PolicyConfig {
+  policySets: string[]
 }
 
 export interface PolicySpec {
@@ -4100,9 +4079,12 @@ export interface ResourceDTO {
     | 'AUTOSTOPPING_STARTSTOP'
     | 'SETTING'
     | 'NG_LOGIN_SETTINGS'
+    | 'DEPLOYMENT_FREEZE'
     | 'CLOUD_ASSET_GOVERNANCE_RULE'
     | 'CLOUD_ASSET_GOVERNANCE_RULE_SET'
     | 'CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT'
+    | 'TARGET_GROUP'
+    | 'FEATURE_FLAG'
 }
 
 export interface ResourceScope {
@@ -4221,6 +4203,13 @@ export interface ResponseHarnessApprovalInstanceAuthorization {
 export interface ResponseInputSetImportResponseDTO {
   correlationId?: string
   data?: InputSetImportResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseInputSetMoveConfigResponseDTO {
+  correlationId?: string
+  data?: InputSetMoveConfigResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -4695,6 +4684,7 @@ export interface ResponseMessage {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -4766,6 +4756,8 @@ export interface ResponseMessage {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4782,6 +4774,13 @@ export interface ResponseMessage {
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
+}
+
+export interface ResponseMoveConfigResponse {
+  correlationId?: string
+  data?: MoveConfigResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
 export interface ResponseNGProcessWebhookResponse {
@@ -5220,17 +5219,6 @@ export type SecretNGVariable = NGVariable & {
   value: string
 }
 
-export interface SecurityContext {
-  allowPrivilegeEscalation?: boolean
-  capabilities?: Capabilities
-  privileged?: boolean
-  procMount?: string
-  readOnlyRootFilesystem?: boolean
-  runAsGroup?: number
-  runAsNonRoot?: boolean
-  runAsUser?: number
-}
-
 export interface Serve {
   distribution?: Distribution
   variation?: string
@@ -5511,10 +5499,17 @@ export interface StepData {
     | 'AZURE_CREATE_BP_RESOURCE'
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
+    | 'K8S_DRY_RUN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
     | 'STRATEGY_MAX_CONCURRENT'
+    | 'MAX_PARALLEL_STEP_IN_A_PIPELINE'
+    | 'PIPELINE_EXECUTION_DATA_RETENTION_DAYS'
+    | 'MAX_PIPELINE_TIMEOUT_SECONDS'
+    | 'MAX_STAGE_TIMEOUT_SECONDS'
+    | 'MAX_STEP_TIMEOUT_SECONDS'
+    | 'MAX_CONCURRENT_ACTIVE_PIPELINE_EXECUTIONS'
     | 'MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH'
     | 'MAX_CHAOS_INFRASTRUCTURES'
     | 'TERRAGRUNT_PLAN'
@@ -5542,8 +5537,9 @@ export interface StepGroupElementConfig {
   failureStrategies?: FailureStrategyConfig[]
   identifier: string
   name: string
-  steps: ExecutionWrapperConfig[]
+  steps?: ExecutionWrapperConfig[]
   strategy?: StrategyConfig
+  template?: TemplateLinkConfig
   when?: StepWhenCondition
 }
 
@@ -5572,7 +5568,7 @@ export interface StepWhenCondition {
 }
 
 export interface StrategyConfig {
-  matrix?: MatrixConfigInterface
+  matrix?: ParameterFieldMatrixConfigInterface
   parallelism?: number
   repeat?: HarnessForConfig
 }
@@ -5735,14 +5731,6 @@ export interface TimeoutIssuer {
   timeoutInstanceId: string
 }
 
-export interface Toleration {
-  effect?: string
-  key?: string
-  operator?: string
-  tolerationSeconds?: number
-  value?: string
-}
-
 export interface TotalHealthInfo {
   count?: number
   rate?: number
@@ -5754,26 +5742,31 @@ export interface TransitionTo {
 }
 
 export interface TriggerCatalogItem {
-  category?: 'WEBHOOK' | 'ARTIFACT' | 'MANIFEST' | 'SCHEDULED'
-  triggerCatalogType?: (
+  category: 'Webhook' | 'Artifact' | 'Manifest' | 'Scheduled'
+  triggerCatalogType: (
     | 'Github'
     | 'Gitlab'
     | 'Bitbucket'
-    | 'Codecommit'
-    | 'GCR'
-    | 'ECR'
+    | 'AwsCodeCommit'
+    | 'Custom'
+    | 'Gcr'
+    | 'Ecr'
     | 'DockerRegistry'
-    | 'Artifactory'
-    | 'ACR'
+    | 'ArtifactoryRegistry'
+    | 'Acr'
     | 'AmazonS3'
-    | 'Nexus'
+    | 'GoogleArtifactRegistry'
+    | 'CustomArtifact'
+    | 'GithubPackageRegistry'
+    | 'Nexus2Registry'
+    | 'Nexus3Registry'
     | 'HelmChart'
     | 'Cron'
   )[]
 }
 
 export interface TriggerCatalogResponse {
-  catalog?: TriggerCatalogItem[]
+  catalog: TriggerCatalogItem[]
 }
 
 export interface TriggerEventDataCondition {
@@ -7361,6 +7354,108 @@ export const getMergeInputSetFromPipelineTemplatePromise = (
     void
   >('POST', getConfig('pipeline/api'), `/inputSets/mergeWithTemplateYaml`, props, signal)
 
+export interface InputSetMoveConfigQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  connectorRef?: string
+  repoName?: string
+  branch?: string
+  filePath?: string
+  commitMsg?: string
+  isNewBranch?: boolean
+  baseBranch?: string
+  moveConfigType?: 'INLINE_TO_REMOTE' | 'REMOTE_TO_INLINE'
+  pipelineIdentifier?: string
+  inputSetIdentifier?: string
+}
+
+export interface InputSetMoveConfigPathParams {
+  inputSetIdentifier: string
+}
+
+export type InputSetMoveConfigProps = Omit<
+  MutateProps<
+    ResponseInputSetMoveConfigResponseDTO,
+    Failure | Error,
+    InputSetMoveConfigQueryParams,
+    void,
+    InputSetMoveConfigPathParams
+  >,
+  'path' | 'verb'
+> &
+  InputSetMoveConfigPathParams
+
+/**
+ * Move Input Set YAML from inline to remote or remote to inline
+ */
+export const InputSetMoveConfig = ({ inputSetIdentifier, ...props }: InputSetMoveConfigProps) => (
+  <Mutate<
+    ResponseInputSetMoveConfigResponseDTO,
+    Failure | Error,
+    InputSetMoveConfigQueryParams,
+    void,
+    InputSetMoveConfigPathParams
+  >
+    verb="POST"
+    path={`/inputSets/move-config/${inputSetIdentifier}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseInputSetMoveConfigProps = Omit<
+  UseMutateProps<
+    ResponseInputSetMoveConfigResponseDTO,
+    Failure | Error,
+    InputSetMoveConfigQueryParams,
+    void,
+    InputSetMoveConfigPathParams
+  >,
+  'path' | 'verb'
+> &
+  InputSetMoveConfigPathParams
+
+/**
+ * Move Input Set YAML from inline to remote or remote to inline
+ */
+export const useInputSetMoveConfig = ({ inputSetIdentifier, ...props }: UseInputSetMoveConfigProps) =>
+  useMutate<
+    ResponseInputSetMoveConfigResponseDTO,
+    Failure | Error,
+    InputSetMoveConfigQueryParams,
+    void,
+    InputSetMoveConfigPathParams
+  >(
+    'POST',
+    (paramsInPath: InputSetMoveConfigPathParams) => `/inputSets/move-config/${paramsInPath.inputSetIdentifier}`,
+    { base: getConfig('pipeline/api'), pathParams: { inputSetIdentifier }, ...props }
+  )
+
+/**
+ * Move Input Set YAML from inline to remote or remote to inline
+ */
+export const inputSetMoveConfigPromise = (
+  {
+    inputSetIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseInputSetMoveConfigResponseDTO,
+    Failure | Error,
+    InputSetMoveConfigQueryParams,
+    void,
+    InputSetMoveConfigPathParams
+  > & { inputSetIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseInputSetMoveConfigResponseDTO,
+    Failure | Error,
+    InputSetMoveConfigQueryParams,
+    void,
+    InputSetMoveConfigPathParams
+  >('POST', getConfig('pipeline/api'), `/inputSets/move-config/${inputSetIdentifier}`, props, signal)
+
 export interface CreateOverlayInputSetForPipelineQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -8502,6 +8597,354 @@ export const getPipelineOpaContextFromEvaluationPromise = (
     GetPipelineOpaContextFromEvaluationQueryParams,
     GetPipelineOpaContextFromEvaluationPathParams
   >(getConfig('pipeline/api'), `/opa/getPipelineOpaContextFromEvaluation/${planExecutionId}`, props, signal)
+
+export interface DebugPipelineExecuteWithInputSetYamlV2QueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  moduleType?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  useFQNIfError?: boolean
+}
+
+export interface DebugPipelineExecuteWithInputSetYamlV2PathParams {
+  originalExecutionId: string
+  identifier: string
+}
+
+export type DebugPipelineExecuteWithInputSetYamlV2Props = Omit<
+  MutateProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlV2QueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlV2PathParams
+  >,
+  'path' | 'verb'
+> &
+  DebugPipelineExecuteWithInputSetYamlV2PathParams
+
+/**
+ * Re Execute a pipeline with inputSet pipeline yaml Version 2
+ */
+export const DebugPipelineExecuteWithInputSetYamlV2 = ({
+  originalExecutionId,
+  identifier,
+  ...props
+}: DebugPipelineExecuteWithInputSetYamlV2Props) => (
+  <Mutate<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlV2QueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlV2PathParams
+  >
+    verb="POST"
+    path={`/pipeline/execute/debug/v2/${originalExecutionId}/${identifier}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseDebugPipelineExecuteWithInputSetYamlV2Props = Omit<
+  UseMutateProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlV2QueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlV2PathParams
+  >,
+  'path' | 'verb'
+> &
+  DebugPipelineExecuteWithInputSetYamlV2PathParams
+
+/**
+ * Re Execute a pipeline with inputSet pipeline yaml Version 2
+ */
+export const useDebugPipelineExecuteWithInputSetYamlV2 = ({
+  originalExecutionId,
+  identifier,
+  ...props
+}: UseDebugPipelineExecuteWithInputSetYamlV2Props) =>
+  useMutate<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlV2QueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlV2PathParams
+  >(
+    'POST',
+    (paramsInPath: DebugPipelineExecuteWithInputSetYamlV2PathParams) =>
+      `/pipeline/execute/debug/v2/${paramsInPath.originalExecutionId}/${paramsInPath.identifier}`,
+    { base: getConfig('pipeline/api'), pathParams: { originalExecutionId, identifier }, ...props }
+  )
+
+/**
+ * Re Execute a pipeline with inputSet pipeline yaml Version 2
+ */
+export const debugPipelineExecuteWithInputSetYamlV2Promise = (
+  {
+    originalExecutionId,
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlV2QueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlV2PathParams
+  > & { originalExecutionId: string; identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlV2QueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlV2PathParams
+  >('POST', getConfig('pipeline/api'), `/pipeline/execute/debug/v2/${originalExecutionId}/${identifier}`, props, signal)
+
+export interface DebugPipelineExecuteWithInputSetYamlQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  moduleType?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  useFQNIfError?: boolean
+}
+
+export interface DebugPipelineExecuteWithInputSetYamlPathParams {
+  originalExecutionId: string
+  identifier: string
+}
+
+export type DebugPipelineExecuteWithInputSetYamlProps = Omit<
+  MutateProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlQueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlPathParams
+  >,
+  'path' | 'verb'
+> &
+  DebugPipelineExecuteWithInputSetYamlPathParams
+
+/**
+ * debug a pipeline with inputSet pipeline yaml
+ */
+export const DebugPipelineExecuteWithInputSetYaml = ({
+  originalExecutionId,
+  identifier,
+  ...props
+}: DebugPipelineExecuteWithInputSetYamlProps) => (
+  <Mutate<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlQueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlPathParams
+  >
+    verb="POST"
+    path={`/pipeline/execute/debug/${originalExecutionId}/${identifier}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseDebugPipelineExecuteWithInputSetYamlProps = Omit<
+  UseMutateProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlQueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlPathParams
+  >,
+  'path' | 'verb'
+> &
+  DebugPipelineExecuteWithInputSetYamlPathParams
+
+/**
+ * debug a pipeline with inputSet pipeline yaml
+ */
+export const useDebugPipelineExecuteWithInputSetYaml = ({
+  originalExecutionId,
+  identifier,
+  ...props
+}: UseDebugPipelineExecuteWithInputSetYamlProps) =>
+  useMutate<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlQueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlPathParams
+  >(
+    'POST',
+    (paramsInPath: DebugPipelineExecuteWithInputSetYamlPathParams) =>
+      `/pipeline/execute/debug/${paramsInPath.originalExecutionId}/${paramsInPath.identifier}`,
+    { base: getConfig('pipeline/api'), pathParams: { originalExecutionId, identifier }, ...props }
+  )
+
+/**
+ * debug a pipeline with inputSet pipeline yaml
+ */
+export const debugPipelineExecuteWithInputSetYamlPromise = (
+  {
+    originalExecutionId,
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlQueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlPathParams
+  > & { originalExecutionId: string; identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugPipelineExecuteWithInputSetYamlQueryParams,
+    void,
+    DebugPipelineExecuteWithInputSetYamlPathParams
+  >('POST', getConfig('pipeline/api'), `/pipeline/execute/debug/${originalExecutionId}/${identifier}`, props, signal)
+
+export interface DebugStagesWithRuntimeInputYamlQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  moduleType?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  useFQNIfError?: boolean
+}
+
+export interface DebugStagesWithRuntimeInputYamlPathParams {
+  originalExecutionId: string
+  identifier: string
+}
+
+export type DebugStagesWithRuntimeInputYamlProps = Omit<
+  MutateProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugStagesWithRuntimeInputYamlQueryParams,
+    RunStageRequestDTORequestBody,
+    DebugStagesWithRuntimeInputYamlPathParams
+  >,
+  'path' | 'verb'
+> &
+  DebugStagesWithRuntimeInputYamlPathParams
+
+/**
+ * debug a pipeline with inputSet pipeline yaml
+ */
+export const DebugStagesWithRuntimeInputYaml = ({
+  originalExecutionId,
+  identifier,
+  ...props
+}: DebugStagesWithRuntimeInputYamlProps) => (
+  <Mutate<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugStagesWithRuntimeInputYamlQueryParams,
+    RunStageRequestDTORequestBody,
+    DebugStagesWithRuntimeInputYamlPathParams
+  >
+    verb="POST"
+    path={`/pipeline/execute/debug/${originalExecutionId}/${identifier}/stages`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseDebugStagesWithRuntimeInputYamlProps = Omit<
+  UseMutateProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugStagesWithRuntimeInputYamlQueryParams,
+    RunStageRequestDTORequestBody,
+    DebugStagesWithRuntimeInputYamlPathParams
+  >,
+  'path' | 'verb'
+> &
+  DebugStagesWithRuntimeInputYamlPathParams
+
+/**
+ * debug a pipeline with inputSet pipeline yaml
+ */
+export const useDebugStagesWithRuntimeInputYaml = ({
+  originalExecutionId,
+  identifier,
+  ...props
+}: UseDebugStagesWithRuntimeInputYamlProps) =>
+  useMutate<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugStagesWithRuntimeInputYamlQueryParams,
+    RunStageRequestDTORequestBody,
+    DebugStagesWithRuntimeInputYamlPathParams
+  >(
+    'POST',
+    (paramsInPath: DebugStagesWithRuntimeInputYamlPathParams) =>
+      `/pipeline/execute/debug/${paramsInPath.originalExecutionId}/${paramsInPath.identifier}/stages`,
+    { base: getConfig('pipeline/api'), pathParams: { originalExecutionId, identifier }, ...props }
+  )
+
+/**
+ * debug a pipeline with inputSet pipeline yaml
+ */
+export const debugStagesWithRuntimeInputYamlPromise = (
+  {
+    originalExecutionId,
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugStagesWithRuntimeInputYamlQueryParams,
+    RunStageRequestDTORequestBody,
+    DebugStagesWithRuntimeInputYamlPathParams
+  > & { originalExecutionId: string; identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePlanExecutionResponseDto,
+    Failure | AccessControlCheckError | Error,
+    DebugStagesWithRuntimeInputYamlQueryParams,
+    RunStageRequestDTORequestBody,
+    DebugStagesWithRuntimeInputYamlPathParams
+  >(
+    'POST',
+    getConfig('pipeline/api'),
+    `/pipeline/execute/debug/${originalExecutionId}/${identifier}/stages`,
+    props,
+    signal
+  )
 
 export interface GetPreflightCheckResponseQueryParams {
   accountIdentifier: string
@@ -11980,6 +12423,83 @@ export const getRepositoryListPromise = (
     signal
   )
 
+export interface MoveConfigsQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  connectorRef?: string
+  repoName?: string
+  branch?: string
+  filePath?: string
+  commitMsg?: string
+  isNewBranch?: boolean
+  baseBranch?: string
+  moveConfigType?: 'INLINE_TO_REMOTE' | 'REMOTE_TO_INLINE'
+  pipelineIdentifier?: string
+}
+
+export interface MoveConfigsPathParams {
+  pipelineIdentifier: string
+}
+
+export type MoveConfigsProps = Omit<
+  MutateProps<ResponseMoveConfigResponse, Failure | Error, MoveConfigsQueryParams, void, MoveConfigsPathParams>,
+  'path' | 'verb'
+> &
+  MoveConfigsPathParams
+
+/**
+ * Move Pipeline YAML from inline to remote or remote to inline
+ */
+export const MoveConfigs = ({ pipelineIdentifier, ...props }: MoveConfigsProps) => (
+  <Mutate<ResponseMoveConfigResponse, Failure | Error, MoveConfigsQueryParams, void, MoveConfigsPathParams>
+    verb="POST"
+    path={`/pipelines/move-config/${pipelineIdentifier}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseMoveConfigsProps = Omit<
+  UseMutateProps<ResponseMoveConfigResponse, Failure | Error, MoveConfigsQueryParams, void, MoveConfigsPathParams>,
+  'path' | 'verb'
+> &
+  MoveConfigsPathParams
+
+/**
+ * Move Pipeline YAML from inline to remote or remote to inline
+ */
+export const useMoveConfigs = ({ pipelineIdentifier, ...props }: UseMoveConfigsProps) =>
+  useMutate<ResponseMoveConfigResponse, Failure | Error, MoveConfigsQueryParams, void, MoveConfigsPathParams>(
+    'POST',
+    (paramsInPath: MoveConfigsPathParams) => `/pipelines/move-config/${paramsInPath.pipelineIdentifier}`,
+    { base: getConfig('pipeline/api'), pathParams: { pipelineIdentifier }, ...props }
+  )
+
+/**
+ * Move Pipeline YAML from inline to remote or remote to inline
+ */
+export const moveConfigsPromise = (
+  {
+    pipelineIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseMoveConfigResponse,
+    Failure | Error,
+    MoveConfigsQueryParams,
+    void,
+    MoveConfigsPathParams
+  > & { pipelineIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseMoveConfigResponse, Failure | Error, MoveConfigsQueryParams, void, MoveConfigsPathParams>(
+    'POST',
+    getConfig('pipeline/api'),
+    `/pipelines/move-config/${pipelineIdentifier}`,
+    props,
+    signal
+  )
+
 export type GetNotificationSchemaProps = Omit<GetProps<ResponseNotificationRules, Failure | Error, void, void>, 'path'>
 
 /**
@@ -13533,7 +14053,7 @@ export const createTriggerPromise = (
   >('POST', getConfig('pipeline/api'), `/triggers`, props, signal)
 
 export interface GetTriggerCatalogQueryParams {
-  accountIdentifier?: string
+  accountIdentifier: string
 }
 
 export type GetTriggerCatalogProps = Omit<
@@ -15235,6 +15755,7 @@ export interface GetSchemaYamlQueryParams {
     | 'IACM'
     | 'Container'
     | 'IACM'
+    | 'IACM'
     | 'ElastigroupBGStageSetup'
     | 'ElastigroupSwapRoute'
     | 'AsgCanaryDeploy'
@@ -15247,6 +15768,12 @@ export interface GetSchemaYamlQueryParams {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -15512,6 +16039,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'IACM'
     | 'Container'
     | 'IACM'
+    | 'IACM'
     | 'ElastigroupBGStageSetup'
     | 'ElastigroupSwapRoute'
     | 'AsgCanaryDeploy'
@@ -15524,6 +16052,12 @@ export interface GetStepYamlSchemaQueryParams {
     | 'BGAppSetup'
     | 'BasicAppSetup'
     | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

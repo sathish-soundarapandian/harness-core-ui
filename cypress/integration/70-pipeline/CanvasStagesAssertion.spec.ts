@@ -33,7 +33,7 @@ describe('Canvas Stages Assertion', () => {
           clientY: pageY + pageYDragAmount,
           force: true
         })
-        .trigger('mousemove', { force: true }) 
+        .trigger('mousemove', { force: true })
         .trigger('mouseup', {
           which: 1,
           force: true
@@ -87,22 +87,24 @@ describe('Canvas Stages Assertion', () => {
     //dragging up the node 15
     cy.get('div[id="ref_test15"]').then(el => dragElementVerticallyBy(el, -350))
     cy.contains('p', 'test20').should('be.visible')
-    cy.contains('p', '4 more stages').should('be.visible')
+    cy.contains('p', '5 more stages').should('be.visible')
     cy.contains('p', 'test13').should('be.visible')
     cy.contains('p', 'test14').should('be.visible')
     cy.contains('p', 'test15').should('be.visible')
 
     //testing zoom out
-    cy.get('span[data-icon="zoom-out"]').eq(0).should('be.visible').click().click()
-
+    cy.get('span[data-icon="zoom-out"]').eq(0).should('be.visible').click().click().click()
     cy.contains('p', 'test13').scrollIntoView()
     cy.contains('p', 'test16').should('be.visible')
-    cy.get('span[data-icon="zoom-out"]').eq(0).should('be.visible').click().click().click()
+    cy.get('span[data-icon="zoom-out"]').eq(0).should('be.visible').click()
     cy.contains('p', 'test14').scrollIntoView()
-
     cy.contains('p', 'test15').should('be.visible')
     cy.contains('p', 'test16').should('be.visible')
+    cy.get('span[data-icon="zoom-out"]').eq(0).should('be.visible').click()
+    cy.contains('p', 'test16').scrollIntoView()
     cy.contains('p', 'test17').should('be.visible')
+    cy.get('span[data-icon="zoom-out"]').eq(0).should('be.visible').click()
+    cy.contains('p', 'test17').scrollIntoView()
     cy.contains('p', 'test18').should('be.visible')
     cy.contains('p', 'test19').should('be.visible')
     cy.contains('p', 'test20').should('be.visible')

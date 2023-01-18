@@ -3,6 +3,7 @@ estimatedTimeRemaining: 'Estimated time remaining:'
 progressPercentage: 'Progress percentage:'
 piplineDiffTitle: pipeline.yaml (saved) ↔ pipeline.yaml (updated)
 clone: Clone Pipeline
+moveInlieToRemote: Move {{resource}} Inline to Remote
 discard: '{{ $.common.discard }}'
 serviceDependencyText: Service Dependency
 serviceDependenciesText: Service Dependencies
@@ -33,6 +34,7 @@ previewTemplateLabel: Preview Template YAML
 templateInputs: Template Inputs
 onlyPositiveInteger: Only positive integer values
 depth: Depth
+feedsText: Feeds
 advancedOptions: Advanced Options
 additionalConfiguration: Additional Configuration
 pipelineTimeoutSettings: Pipeline Timeout Settings
@@ -56,6 +58,8 @@ neverRan: This pipeline never ran
 startedOn: Started On
 nodes: nodes
 nodesLabel: Nodes
+amiTags: AMI Tags
+amiFilters: AMi Filters
 poweredByHarness: powered by Harness
 linuxOnly: Supported on Linux only
 outOf: Out Of
@@ -116,6 +120,7 @@ approvalStep:
     approvalMessage: Approval message is required.
     userGroups: 'Atleast one user group is required'
     minimumCountOne: 'Minimum count cannot be less than one.'
+    minimumCountDecimal: 'Minimum count cannot be decimal value.'
     minimumCountRequired: 'Minimum count is required.'
   status:
     APPROVE: Approved
@@ -339,6 +344,7 @@ manifestType:
   kustomizePathRequired: Kustomize Path is required
   kustomizeFolderPathRequired: Kustomize Folder Path is required
   pathRequired: File Path is required
+  periodPrefixValidation: '{{ name }} can not start with "."'
   varsPathRequired: Vars Path is required
   autoScalerPathRequired: Autoscaler Path is required
   bucketNameRequired: Bucket Name is required
@@ -383,6 +389,8 @@ manifestType:
     chartNamePlaceHolder: 'Enter Chart Name'
     chartVersionPlaceHolder: 'Enter Chart Version'
     chartVersionRequired: 'Chart Version is required'
+    loadingChartVersion: 'Fetching Chart Versions...'
+    noResultsChartVersion: 'No manifest chart versions found'
   oci:
     basePathRequired: 'Base Path is required'
     chartVersionValidation: '"latest" tag is not supported as chart version'
@@ -522,6 +530,9 @@ execution:
   compareExecutionsTitle: Select executions to compare the compiled YAML
   emptyStepGroup: Step Group is empty
   ignoreFailedWarningText: A failed step was ignored because the step’s Failure Strategy is Ignore Failure. The step’s failure did not impact the Pipeline’s success.
+  instanceList: Instance list
+  instances: INSTANCES
+  listDetails: List details
   iotab:
     noInputText: No input found for current step
     noOutputText: No output found for current step
@@ -545,6 +556,7 @@ execution:
     downloadLogs: Download logs
     viewCompiledYaml: View Compiled YAML
     compareExecutions: Compare Pipeline Executions
+    reRunInDebugMode: Re-run in debug mode
   layouts:
     bottom: Align to bottom
     right: Align to right
@@ -560,6 +572,11 @@ resourceConstraints:
   yourPipeline: ' ( your execution )'
   k8sNamespaceText: K8s namespace
   serverlessInfraEntity: serverless infrastructure entity
+  elastigroupInfraEntity: Elastigroup Infrastructure
+  tanzuInfraEntity: Tanzu Infrastructure
+  ecsInfraEntity: ECS Infrastructure
+  traditionalInfraEntity: SSH/WinRm Infrastructure
+
 targets:
   title: Targets
 barriers:
@@ -824,12 +841,12 @@ pipelineChaining:
   selectPipeline: Select Pipeline
   noProjectSelected: Project is not selected
   noPipelineSelected: Pipeline is not selected
-  childPipelineID: Child Pipeline ID
   pipelineOutputs: Pipeline Outputs
   outputTabSummaryDetail: Define outputs from child pipeline that you can use in other stages in parent pipeline.
   newOutput: New Output
   removeOutput: Remove this output
   outputAlreadyExists: Output with same name already exists
+  enterOutputName: Enter Output Name
 aboutYourStage:
   stageNamePlaceholder: Enter Stage Name
 infraSpecifications:
@@ -851,6 +868,7 @@ infraSpecifications:
     amd64: AMD64
     arm64: ARM64
 imagePathLabel: Image Path
+digest: Digest
 artifactPathLabel: Artifact Path
 artifactImagePathLabel: Artifact/Image Path
 selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
@@ -868,6 +886,7 @@ artifactsSelection:
   extensionPlaceholder: Enter Extension
   classifier: Classifier
   classifierPlaceholder: Enter Classifier
+  digestPlaceholder: Enter Digest
   packageName: Package Name
   packageNamePlaceholder: Select Package
   addPrimaryArtifact: Add Primary Artifact
@@ -894,6 +913,7 @@ artifactsSelection:
   versionRegexPlaceholder: Enter Version Regex
   artifactTyperequired: Artifact Type is required
   loadingTags: Loading Tags...
+  loadingDigest: Loading Digest...
   loadingArtifactPaths: Loading Artifact Paths...
   artifactPathPlaceholder: Enter Artifact Path
   artifactDirectory: Artifact Directory
@@ -940,6 +960,7 @@ artifactsSelection:
     filePathRegex: File Path Regex is required
   errors:
     noRepositories: No repositories found with given connector
+    nodigest: No Digests found with given tag
 overrideSets:
   createOverrideSet: Create Override Set
   overrideSetPlaceholder: Enter Override Set Name
@@ -1017,7 +1038,6 @@ verification:
     totalClusters: Total Clusters
 stepCommonFields:
   runAsUser: Run as User
-  ifNotPresent: 'If Not Present'
   validation:
     mustBeANumber: '{{label}} must be a number'
     invalidLimitMemory: Invalid Limit Memory. To learn more, hover over the Set Container Resources tooltip.
@@ -1045,6 +1065,7 @@ artifactOrImagePathDependencyRequired: required to fetch the artifact/image path
 artifactRepositoryDependencyRequired: 'Artifactory Connector is required to fetch repositories. You can make this field Runtime input otherwise.'
 bucketNameHelperText: 'Connector is required to fetch buckets'
 filePathHelperText: 'Connector and Bucket Name are required to fetch file paths'
+imagePathHelperText: 'Connector and Region are required to fetch image paths'
 myDeploymentsText: My Deployments
 myBuildsText: My Builds
 mySecurityTestsText: My Security Tests
@@ -1054,6 +1075,7 @@ noBuckets: No buckets found with given region
 noBucketsFound: No buckets found
 noFilePathsFound: No file paths found
 noClustersFound: No clusters found
+noImagesFound: No images found
 gitRepo: Git Repo
 buildRepo: Build Repo
 failureTypetext: Select Failure Type
@@ -1073,6 +1095,7 @@ stepDescription:
   K8sApply: Deploy individual Kubernetes workloads from your stage's Service.
   K8sCanaryDelete: Clean up the workload deployed by the Canary Deployment step.
   K8sDelete: Delete Kubernetes resources by name, manifest path, and release name.
+  AdvancedCommandFlags: Command Flags
   K8sRollingDeploy: Use a rolling update to schedule new pods on nodes with available resources. This step uses the number of replicas you specified in the Deployment manifest.
   Plugin: Use Docker containers to perform predefined tasks like deploy code, publish artifacts, send notifications, and more.
   Run: Execute one or more commands on a container image in a CI stage.
@@ -1098,6 +1121,8 @@ stepDescription:
   TerraformDestroy: Remove any infrastructure you've provisioned using Harness.
   TerraformPlan: Run a Terraform script as a Terraform plan.
   TerraformApply: Apply a Terraform plan or script.
+  TerragruntPlan: Run a Terraform script as a Terragrunt plan.
+  TerragruntApply: Apply a Terragrunt plan or script.
   ResourceConstraint: Queue the number of resources Harness requests during a deployment by placing capacity limits on the requests.
   FlagConfiguration: Add or update Feature Flag configuration.
   HelmDeploy: Performs native Helm deployments. Requires Helm and Tiller and supports basic deployments. Helm charts are also supported in Harness Kubernetes deployments without requiring Helm or Tiller and using all deployment strategies.
@@ -1129,17 +1154,22 @@ stepDescription:
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
   ElastigroupRollback: Rollback for the Elastigroup steps
   ElastigroupSetup: Elastigroup setup step
-  SwapRoute: Swap Route for Tanzu Application Service
-  SwapRollback: Swap Rolback for Tanzu Application Service
-  TasRollback: Rollback for the TAS steps
-  AppResize: Update the number of instances for this app
-  TanzuCommandScript: Command Scripts to run any CF CLI command or script at any point in your Harness TAS Pipelines
-  TASBasicAppSetup: TAS basic setup step
-  TASBGAppSetup: TAS blue green setup step
-  TASCanaryAppSetup: TAS canary setup step
+  SwapRoute: Swap between Active and InActive TAS Applications
+  SwapRollback: Rollback the Swap to Active in Blue Green Deployments
+  TasRollback: Rollback to previous deployment during failure
+  AppResize: Scale the TAS Application as per the scaling requirements
+  TanzuCommandScript: Execute custom Tanzu Commands in this Step
+  GHAPlugin: Run GitHub Actions as a step in the pipeline
+  BitrisePlugin: Run Bitrise plugin as a step in the pipeline
+  TASBasicAppSetup: Initialize the TAS Application for Basic Deployment
+  TASBGAppSetup: Initialize the TAS Application for BlueGreen Deployment
+  TASCanaryAppSetup: Initialize the TAS Application for Canary Deployment
+  RollingRollback: Rollback to previous deployment during failure of Rolling Deployment
+  RollingDeployment: Performs Rolling Deployment of TAS
   ElastigroupDeploy: Elastigroup Deploy step
   ElastigroupSwapRoute: Elastigroup Swap Route
   ElastigroupBGStageSetup: Elastigroup Blue/Green Step
+  Container: Execute one or more commands on a container image in a CD stage.
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
@@ -1199,7 +1229,6 @@ expressionsEvaluation: Expressions Evaluation
 deploymentFrequency: 'Deployment Frequency'
 executionFrequency: 'Execution Frequency'
 retryPipeline: Retry Failed Pipeline
-openInNewTab: Open in new tab
 openPipelineInNewTab: Open Pipeline in new tab
 stagetoRetryFrom: Select the stage that you would like to resume from
 runAllParallelstages: Run all parallel stages
@@ -1247,7 +1276,9 @@ noApprovalInstanceCreated: Approval instance not created, no details to display
 approvalTypeRequired: Approval type is required
 numOfServices: '{{numOfServices}} Services'
 numOfEnvs: '{{numOfEnvironments}} Environments'
+numOfApps: '{{numOfApps}} Applications'
 numOfServicesAndEnv: '{{numOfServices}} Service(s), {{numOfEnvironments}} Environment(s)'
+requiredToFetch: '{{requiredField}} is required to fetch {{dependentField}}'
 executionList:
   servicesDeployedText: 'Services deployed ({{size}})'
   servicesDeployed: 'Services deployed'
@@ -1307,7 +1338,7 @@ ci:
     invalidSize: Invalid Size. To learn more, hover over the Size tooltip.
     pathRequiredForHostPath: 'Path is required for Type Host Path'
 imageVersionDeprecated: Image version outdated
-unsupportedImagesWarning: 'You are using unsupported Harness CI images. Harness allows builds to use these images, but we cannot ensure that builds will not fail. Please update the versions of the following image(s) {{summary}}'
+unsupportedImagesWarning: 'You are using unsupported Harness CI images. Harness allows builds to use these images, but we cannot ensure that builds will not fail. Please update the versions of the following image(s):'
 invalidRequest: Invalid Request
 serviceDeploymentTypes:
   elastigroup: Elastigroup
@@ -1330,7 +1361,8 @@ serviceDeploymentTypes:
   serverlessAwsType: Serverless Aws Lambda
   customDeploy: Custom Deployment
   spotElastigroup: Spot Elastigroup
-  asg: AWS ASG
+  asg: AWS Auto Scaling Group
+  googleCloudFunctions: Google Cloud Functions
 noArtifactPaths: No artifact paths found with given Artifact Directory
 stageDataDeleteWarningTitle: Discard Stage Data
 serviceDataDeleteWarningTitle: Discard Service Data
@@ -1356,12 +1388,17 @@ errorFramework:
 delegate:
   DelegateSelectorOptional: 'Delegate Selector (optional)'
 cannotRunInvalidPipeline: Cannot run the pipeline because it's invalid, please review the configuration.
+inputSetWithInvalidStoreType: Cannot use this input set to run the pipeline as pipeline is “Remote” (stored in git) and Input Set is “Inline” (stored in Harness DB). Please make sure that both entities are either Remote or Inline.
+inputSetInvalidStoreTypeCallout: Pipeline is Remote (stored in git) and Input Set is Inline (stored in Harness DB). Please make sure that both entities are either Remote or Inline to edit the Input Set.
+cannotRunUnsavedPipeline: Please click Save and then run the pipeline.
 cannotAddTriggerInvalidPipeline: Cannot add a trigger because pipeline is invalid, please review the configuration.
 cannotAddInputSetInvalidPipeline: Cannot add an input set because pipeline is invalid, please review the configuration.
 cannotEditTriggerInvalidPipeline: Cannot edit the trigger because pipeline is invalid, please review the configuration.
 parentStageDeleteWarning: "Warning: this Stage's settings are propagated to another Stage(s) in this Pipeline ({{propagatingStages}}). If you delete this Stage, you must update the other Stages' settings or the Pipeline will fail."
 outOfSyncErrorStrip:
   reconcile: Reconcile
+  reconcileStarted: Reconciliation has started.
+  noErrorText: All of the entities referenced in this {{entity}} are in sync.
   unsyncedTemplateInfo: Some of the entities referenced in this {{entity}} have gone out of sync.
   updatedTemplateInfo: Some of the entities referenced in this {{entity}} have been updated.
 reconcileDialog:
@@ -1415,6 +1452,8 @@ OverviewEmptyStates:
   runPipelineHeaderMsg: You haven’t tried running your pipelines yet.
   runPipelineInfo: Click the button below to select a pipeline and get your {{executionsLabel}} started.
 importSuccessMessage: '{{resourceType}} has been imported successfully'
+defaultMoveCommitMsg: Moving {{resourceType}} [{{name}}] to Git
+moveSuccessMessage: '{{resourceType}} has been moved successfully'
 duplicateImport: This file is already in use. Do you still want to proceed?
 duplicateImportPipeline: This file is already in use by another pipeline. Do you still want to proceed?
 duplicateImportInputset: This file is already in use by another pipeline or input set. Do you still want to proceed?
@@ -1528,13 +1567,14 @@ step:
     namePatternIsNotValid: 'Name can only contain alphanumerics, _ and -'
 runDisabledOnFreeze: An active freeze is applicable on this pipeline. Any deployment stage on this pipeline will be aborted.
 viewFreeze: View freeze details
+executionTriggeredBy: This execution was triggered by
 triggeredBy: Triggered by {{triggerType}}
 manuallyTriggered: This execution was triggered manually
 triggeredByThirdParty: Triggered by a third party system
 triggeredByCron: Triggered on {{start}} by cron {{triggeredBy}}
 configureArtifactSource: Configure Artifact Source
 pipelineCachedCopy:
-  cachedCopyText: Cached Copy
+  cachedCopyText: Last cached at
   reloadPipeline: Reload {{pageType}}?
   reloadPipelineContent: Are you sure you want to load the {{pageType}} from Git? You will lose all your unsaved changes.
   cacheInProgress: Cache update in progress
@@ -1542,3 +1582,16 @@ pipelineCachedCopy:
   updateAvailable: Update Available
   cacheUpdateAvailable: Cache {{$.pipeline.pipelineCachedCopy.updateAvailable}}
   newCacheVersion: New Cache version is available, click reload to view details.
+resilienceTab:
+  title: Resilience
+noServicesFound: No Services Available
+noEnvironmentGroupsFound: No Environment Groups Available
+envGroupLabel: Select an existing Environment Group
+envLabel: Select an existing Environment
+serviceLabel: Select an existing service
+moreCommitsLabel: 'More commits'
+commitsTab:
+  youHaveNoCommits: You have no commits
+  youWillSeeYourCommitsHere: You will see your commits here
+commitsOn: 'Commits on'
+vmLabel: VM

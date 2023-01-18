@@ -55,6 +55,7 @@ describe('process environment group initial values', () => {
     expect(output).toEqual({
       category: 'group',
       environmentGroup: 'Env_Group_1',
+      parallel: true,
       environments: [
         {
           label: 'Env_1',
@@ -118,6 +119,7 @@ describe('process environment group initial values', () => {
       environmentGroup: 'Env_Group_1',
       environmentInputs: {},
       infrastructures: {},
+      parallel: true,
       infrastructureInputs: {}
     } as DeployEnvironmentEntityFormState)
   })
@@ -136,7 +138,8 @@ describe('process environment group initial values', () => {
 
     expect(output).toEqual({
       category: 'group',
-      environmentGroup: RUNTIME_INPUT_VALUE
+      environmentGroup: RUNTIME_INPUT_VALUE,
+      parallel: true
     } as DeployEnvironmentEntityFormState)
   })
 
@@ -151,7 +154,8 @@ describe('process environment group initial values', () => {
     )
 
     expect(output).toEqual({
-      category: 'group'
+      category: 'group',
+      parallel: true
     })
   })
 })
@@ -159,7 +163,7 @@ describe('process environment group initial values', () => {
 describe('process environment group form values', () => {
   test('env group is selected and environments are marked as runtime', () => {
     const output = processEnvironmentGroupFormValues(
-      { category: 'group', environmentGroup: 'Env_Group_1', environments: RUNTIME_INPUT_VALUE as any },
+      { category: 'group', parallel: false, environmentGroup: 'Env_Group_1', environments: RUNTIME_INPUT_VALUE as any },
       false
     )
 
@@ -167,26 +171,35 @@ describe('process environment group form values', () => {
       environmentGroup: {
         envGroupRef: 'Env_Group_1',
         deployToAll: RUNTIME_INPUT_VALUE as any,
-        environments: RUNTIME_INPUT_VALUE as any
+        environments: RUNTIME_INPUT_VALUE as any,
+        metadata: {
+          parallel: false
+        }
       }
     } as DeployEnvironmentEntityConfig)
   })
 
   test('env group is selected and all environments are selected', () => {
-    const output = processEnvironmentGroupFormValues({ category: 'group', environmentGroup: 'Env_Group_1' }, false)
+    const output = processEnvironmentGroupFormValues(
+      { category: 'group', parallel: false, environmentGroup: 'Env_Group_1' },
+      false
+    )
 
     expect(output).toEqual({
       environmentGroup: {
         envGroupRef: 'Env_Group_1',
         deployToAll: true,
-        environments: RUNTIME_INPUT_VALUE as any
+        environments: RUNTIME_INPUT_VALUE as any,
+        metadata: {
+          parallel: false
+        }
       }
     } as DeployEnvironmentEntityConfig)
   })
 
   test('env group is marked as runtime', () => {
     const output = processEnvironmentGroupFormValues(
-      { category: 'group', environmentGroup: RUNTIME_INPUT_VALUE },
+      { category: 'group', parallel: true, environmentGroup: RUNTIME_INPUT_VALUE },
       false
     )
 
@@ -194,7 +207,10 @@ describe('process environment group form values', () => {
       environmentGroup: {
         envGroupRef: RUNTIME_INPUT_VALUE,
         deployToAll: RUNTIME_INPUT_VALUE as any,
-        environments: RUNTIME_INPUT_VALUE as any
+        environments: RUNTIME_INPUT_VALUE as any,
+        metadata: {
+          parallel: true
+        }
       }
     } as DeployEnvironmentEntityConfig)
   })

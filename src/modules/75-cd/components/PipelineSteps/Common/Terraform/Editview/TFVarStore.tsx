@@ -31,8 +31,14 @@ import type { ConnectorSelectedValue } from '@connectors/components/ConnectorRef
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ConnectorRefSchema } from '@common/utils/Validation'
-import { ConnectorTypes, AllowedTypes, tfVarIcons, ConnectorMap, ConnectorLabelMap } from './TerraformConfigFormHelper'
-
+import {
+  AllowedTypes,
+  ConnectorLabelMap,
+  ConnectorMap,
+  ConnectorTypes,
+  TerragruntAllowedTypes,
+  tfVarIcons
+} from '../../ConfigFileStore/ConfigFileStoreHelper'
 import css from './TerraformVarfile.module.scss'
 
 interface TFVarStoreProps {
@@ -43,6 +49,7 @@ interface TFVarStoreProps {
   isReadonly?: boolean
   setConnectorView?: (val: boolean) => void
   setSelectedConnector: (val: string) => void
+  isTerragrunt: boolean
 }
 
 export const TFVarStore: React.FC<StepProps<any> & TFVarStoreProps> = ({
@@ -54,7 +61,8 @@ export const TFVarStore: React.FC<StepProps<any> & TFVarStoreProps> = ({
   handleConnectorViewChange,
   isReadonly,
   setConnectorView,
-  setSelectedConnector
+  setSelectedConnector,
+  isTerragrunt
 }) => {
   const [selectedType, setSelectedType] = React.useState('')
   const { getString } = useStrings()
@@ -86,6 +94,8 @@ export const TFVarStore: React.FC<StepProps<any> & TFVarStoreProps> = ({
     !!selectedType && getString(ConnectorLabelMap[selectedType as ConnectorTypes])
   } ${getString('connector')}`
 
+  const remoteStoreAllowedTypes = isTerragrunt ? TerragruntAllowedTypes : AllowedTypes
+
   return (
     <Layout.Vertical padding="small" className={css.tfVarStore}>
       <Heading level={2} style={{ color: Color.BLACK, fontSize: 24, fontWeight: 'bold' }} margin={{ bottom: 'large' }}>
@@ -104,7 +114,7 @@ export const TFVarStore: React.FC<StepProps<any> & TFVarStoreProps> = ({
           varFile: Yup.object().shape({
             store: Yup.object().shape({
               spec: Yup.object().shape({
-                connectorRef: ConnectorRefSchema()
+                connectorRef: ConnectorRefSchema(getString)
               })
             })
           })
@@ -117,7 +127,7 @@ export const TFVarStore: React.FC<StepProps<any> & TFVarStoreProps> = ({
           return (
             <>
               <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
-                {AllowedTypes.map(item => (
+                {remoteStoreAllowedTypes.map(item => (
                   <div key={item} className={css.squareCardContainer}>
                     <Card
                       className={css.manifestIcon}

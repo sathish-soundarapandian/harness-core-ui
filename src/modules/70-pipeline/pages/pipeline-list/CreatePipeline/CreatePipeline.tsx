@@ -10,17 +10,17 @@ import { useHistory, useParams } from 'react-router-dom'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import routes from '@common/RouteDefinitions'
 import CreatePipelineButton from '@pipeline/components/CreatePipelineButton/CreatePipelineButton'
-import useImportResource from '@pipeline/components/ImportResource/useImportResource'
+import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
 import { useStrings } from 'framework/strings'
 import type { PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 
 interface CreatePipelineProps {
-  refetchPipelineList: () => void
+  onSuccess: () => void
 }
 
-export function CreatePipeline({ refetchPipelineList }: CreatePipelineProps): ReactElement {
+export function CreatePipeline({ onSuccess }: CreatePipelineProps): ReactElement {
   const { getString } = useStrings()
   const pathParams = useParams<PipelineListPagePathParams>()
   const history = useHistory()
@@ -28,10 +28,10 @@ export function CreatePipeline({ refetchPipelineList }: CreatePipelineProps): Re
   const goToPipelineStudio = (pipeline?: PMSPipelineSummaryResponse): void =>
     history.push(routes.toPipelineStudio(getRouteProps(pathParams, pipeline)))
 
-  const { showImportResourceModal } = useImportResource({
+  const { showMigrateResourceModal: showImportResourceModal } = useMigrateResource({
     resourceType: ResourceType.PIPELINES,
     modalTitle: getString('common.importEntityFromGit', { resourceType: getString('common.pipeline') }),
-    onSuccess: refetchPipelineList
+    onSuccess
   })
 
   return (

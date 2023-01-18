@@ -299,36 +299,34 @@ export const ServerlessInputForm: React.FC<ServerlessSpecEditableProps & { path:
         </div>
       )}
       {getMultiTypeFromValue(template?.region) === MultiTypeInputType.RUNTIME && hasRegion && (
-        <div className={cx(stepCss.formGroup, stepCss.md, css.regionInputWrapper)}>
-          <TextFieldInputSetView
-            name={`${path}.region`}
-            disabled={readonly}
-            placeholder={getString('cd.steps.serverless.regionPlaceholder')}
-            label={getString('regionLabel')}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            template={template}
-            fieldPath={'region'}
-          />
-        </div>
+        <TextFieldInputSetView
+          name={`${path}.region`}
+          disabled={readonly}
+          placeholder={getString('cd.steps.serverless.regionPlaceholder')}
+          label={getString('regionLabel')}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          template={template}
+          fieldPath={'region'}
+          className={cx(stepCss.formGroup, stepCss.md, css.regionInputWrapper)}
+        />
       )}
       {getMultiTypeFromValue(template?.stage) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${path}.stage`}
-            label={getString('common.stage')}
-            disabled={readonly}
-            multiTextInputProps={{
-              allowableTypes,
-              expressions
-            }}
-            placeholder={getString('cd.steps.serverless.stagePlaceholder')}
-            template={template}
-            fieldPath={'stage'}
-          />
-        </div>
+        <TextFieldInputSetView
+          name={`${path}.stage`}
+          label={getString('common.stage')}
+          disabled={readonly}
+          multiTextInputProps={{
+            allowableTypes,
+            expressions
+          }}
+          placeholder={getString('cd.steps.serverless.stagePlaceholder')}
+          template={template}
+          fieldPath={'stage'}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
     </Layout.Vertical>
   )

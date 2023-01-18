@@ -29,6 +29,7 @@ import type {
   ManifestTriggerFormikValues,
   ManifestTriggerSource
 } from '@triggers/components/steps/ManifestTriggerConfigPanel/ManifestSelection/ManifestInterface'
+import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 
 export const eventTypes = {
   PUSH: 'Push',
@@ -628,9 +629,14 @@ export const getArtifactManifestTriggerYaml = ({
     // manifestType: onEditManifestType,
     artifactType,
     pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event),
-    inputSetRefs,
     source
   } = val
+
+  const inputSetRefs = get(
+    val,
+    'inputSetRefs',
+    get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
+  )
 
   replaceRunTimeVariables({ manifestType, artifactType, selectedArtifact })
   let newPipeline = cloneDeep(pipelineRuntimeInput)

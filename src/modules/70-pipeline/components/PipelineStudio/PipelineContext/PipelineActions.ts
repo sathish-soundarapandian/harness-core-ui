@@ -28,9 +28,11 @@ import type { AdvancedPanels, StepOrStepGroupOrTemplateStepData } from '../StepC
 
 export enum PipelineActions {
   DBInitialize = 'DBInitialize',
+  DBInitializationFail = 'DBInitializationFail',
   UpdateSelection = 'UpdateSelection',
   Initialize = 'Initialize',
   Fetching = 'Fetching',
+  Loading = 'Loading',
   IntermittentLoading = 'IntermittentLoading',
   UpdatePipelineView = 'UpdatePipelineView',
   UpdateTemplateView = 'UpdateTemplateView',
@@ -143,6 +145,7 @@ export interface PipelineReducerState {
   gitDetails: EntityGitDetails
   entityValidityDetails: EntityValidityDetails
   isDBInitialized: boolean
+  isDBInitializationFailed: boolean
   isLoading: boolean
   isIntermittentLoading: boolean
   isInitialized: boolean
@@ -166,6 +169,8 @@ export interface ActionResponse {
   error?: string
   schemaErrors?: boolean
   isUpdated?: boolean
+  isLoading?: boolean
+  isDBInitializationFailed?: boolean
   modules?: string[]
   storeMetadata?: StoreMetadata
   gitDetails?: EntityGitDetails
@@ -195,6 +200,12 @@ export interface ActionReturnType {
 }
 
 const dbInitialized = (): ActionReturnType => ({ type: PipelineActions.DBInitialize })
+const setDBInitializationFailed = (
+  isDBInitializationFailed: PipelineReducerState['isDBInitializationFailed']
+): ActionReturnType => ({
+  type: PipelineActions.DBInitializationFail,
+  response: { isDBInitializationFailed }
+})
 const initialized = (): ActionReturnType => ({ type: PipelineActions.Initialize })
 const updatePipelineView = (response: ActionResponse): ActionReturnType => ({
   type: PipelineActions.UpdatePipelineView,
@@ -224,7 +235,10 @@ const setResolvedCustomDeploymentDetailsByRef = (response: ActionResponse): Acti
   type: PipelineActions.SetResolvedCustomDeploymentDetailsByRef,
   response
 })
-const updating = (): ActionReturnType => ({ type: PipelineActions.UpdatePipeline })
+const setLoading = (isLoading: PipelineReducerState['isLoading']): ActionReturnType => ({
+  type: PipelineActions.Loading,
+  response: { isLoading }
+})
 const fetching = (): ActionReturnType => ({ type: PipelineActions.Fetching })
 const setIntermittentLoading = (response: ActionResponse): ActionReturnType => ({
   type: PipelineActions.IntermittentLoading,
@@ -247,8 +261,9 @@ const updateSelectionState = (response: ActionResponse): ActionReturnType => ({
 
 export const PipelineContextActions = {
   dbInitialized,
+  setDBInitializationFailed,
   initialized,
-  updating,
+  setLoading,
   fetching,
   pipelineSavedAction,
   updatePipelineView,
@@ -291,6 +306,7 @@ export const initialState: PipelineReducerState = {
   isIntermittentLoading: false,
   isBEPipelineUpdated: false,
   isDBInitialized: false,
+  isDBInitializationFailed: false,
   isUpdated: false,
   modules: [],
   isInitialized: false,
@@ -313,6 +329,11 @@ export const PipelineReducer = (state = initialState, data: ActionReturnType): P
       return {
         ...state,
         isDBInitialized: true
+      }
+    case PipelineActions.DBInitializationFail:
+      return {
+        ...state,
+        isDBInitializationFailed: response?.isDBInitializationFailed ?? true
       }
     case PipelineActions.UpdateSchemaErrorsFlag:
       return {
@@ -370,6 +391,11 @@ export const PipelineReducer = (state = initialState, data: ActionReturnType): P
         isLoading: true,
         isBEPipelineUpdated: false,
         isUpdated: false
+      }
+    case PipelineActions.Loading:
+      return {
+        ...state,
+        isLoading: response?.isLoading ?? true
       }
     case PipelineActions.Success:
     case PipelineActions.Error:

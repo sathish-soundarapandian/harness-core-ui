@@ -5,10 +5,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Layout, PageSpinner } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
-import { noop } from 'lodash-es'
+import { defaultTo, noop } from 'lodash-es'
+import { parse } from 'yaml'
 import { ServiceDetailHeaderRef } from '@cd/components/ServiceDetails/ServiceDetailsHeader/ServiceDetailsHeader'
 import { ServiceResponseDTO, useGetServiceV2 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
@@ -26,6 +27,7 @@ export interface ServiceHeaderRefetchRef {
 function ServiceStudio(): React.ReactElement | null {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const refetch = useRef<ServiceHeaderRefetchRef>(null)
+  const [isDeploymentTypeDisabled, setIsDeploymentTypeDisabled] = useState(false)
 
   const { data: serviceResponse, loading: serviceDataLoading } = useGetServiceV2({
     serviceIdentifier: serviceId,
@@ -35,6 +37,15 @@ function ServiceStudio(): React.ReactElement | null {
       projectIdentifier
     }
   })
+
+  useEffect(() => {
+    if (!serviceDataLoading && serviceResponse?.data?.service) {
+      setIsDeploymentTypeDisabled(
+        !!parse(defaultTo(serviceResponse?.data?.service?.yaml, '{}'))?.service?.serviceDefinition?.type
+      )
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [serviceDataLoading, serviceResponse?.data?.service])
 
   const invokeRefetch = (): void => {
     refetch.current?.refetchData?.()
@@ -57,6 +68,8 @@ function ServiceStudio(): React.ReactElement | null {
         serviceCacheKey={''}
         selectedDeploymentType={'' as ServiceDeploymentType}
         gitOpsEnabled={false}
+        isDeploymentTypeDisabled={isDeploymentTypeDisabled}
+        setIsDeploymentTypeDisabled={setIsDeploymentTypeDisabled}
       >
         <ServiceConfigurationWrapper
           summaryPanel={<ServiceDetailsSummary />}

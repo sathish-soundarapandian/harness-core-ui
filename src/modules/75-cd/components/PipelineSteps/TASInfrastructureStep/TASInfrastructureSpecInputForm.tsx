@@ -219,135 +219,133 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
         </div>
       )}
       {getMultiTypeFromValue(template?.organization) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-          <SelectInputSetView
-            name={`${path}.organization`}
-            tooltipProps={{
-              dataTooltipId: 'tasInfraOrganization'
-            }}
-            disabled={readonly}
-            placeholder={
-              loadingOrganizations
-                ? /* istanbul ignore next */ getString('loading')
-                : getString('cd.steps.tasInfra.organizationPlaceholder')
-            }
-            useValue
-            selectItems={organizations}
-            label={getString(organizationLabel)}
-            multiTypeInputProps={{
-              onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
-                if (value && type === MultiTypeInputType.FIXED) {
-                  if (!isEqual(getValue(value), organization)) {
-                    setOrganization(getValue(value))
-                  }
-                } else if (type === MultiTypeInputType.EXPRESSION) {
-                  setOrganization(value?.toString())
+        <SelectInputSetView
+          className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}
+          name={`${path}.organization`}
+          tooltipProps={{
+            dataTooltipId: 'tasInfraOrganization'
+          }}
+          disabled={readonly}
+          placeholder={
+            loadingOrganizations
+              ? /* istanbul ignore next */ getString('loading')
+              : getString('cd.steps.tasInfra.organizationPlaceholder')
+          }
+          useValue
+          selectItems={organizations}
+          label={getString(organizationLabel)}
+          multiTypeInputProps={{
+            onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
+              if (value && type === MultiTypeInputType.FIXED) {
+                if (!isEqual(getValue(value), organization)) {
+                  setOrganization(getValue(value))
                 }
-              },
-              onFocus: () => {
-                if (getMultiTypeFromValue(connector) !== MultiTypeInputType.RUNTIME) {
-                  refetchOrganizations({
-                    queryParams
-                  })
-                }
-              },
-              selectProps: {
-                items: organizations,
-                allowCreatingNewItems: true,
-                addClearBtn: !(loadingOrganizations || readonly),
-                noResults: (
-                  <Text padding={'small'}>
-                    {loadingOrganizations
-                      ? getString('loading')
-                      : defaultTo(
-                          get(organizationsError, errorMessage, organizationsError?.message),
-                          getString('cd.steps.tasInfra.organizationError')
-                        )}
-                  </Text>
-                )
-              },
-              expressions,
-              allowableTypes
-            }}
-            fieldPath="organization"
-            template={template}
-          />
-        </div>
+              } else if (type === MultiTypeInputType.EXPRESSION) {
+                setOrganization(value?.toString())
+              }
+            },
+            onFocus: () => {
+              if (getMultiTypeFromValue(connector) !== MultiTypeInputType.RUNTIME) {
+                refetchOrganizations({
+                  queryParams
+                })
+              }
+            },
+            selectProps: {
+              items: organizations,
+              allowCreatingNewItems: true,
+              addClearBtn: !(loadingOrganizations || readonly),
+              noResults: (
+                <Text padding={'small'}>
+                  {loadingOrganizations
+                    ? getString('loading')
+                    : defaultTo(
+                        get(organizationsError, errorMessage, organizationsError?.message),
+                        getString('cd.steps.tasInfra.organizationError')
+                      )}
+                </Text>
+              )
+            },
+            expressions,
+            allowableTypes
+          }}
+          fieldPath="organization"
+          template={template}
+        />
       )}
       {getMultiTypeFromValue(template?.space) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-          <SelectInputSetView
-            name={`${path}.space`}
-            tooltipProps={{
-              dataTooltipId: 'tasInfraSpace'
-            }}
-            disabled={readonly}
-            placeholder={
-              loadingSpaces || loadingSpacesV2
-                ? /* istanbul ignore next */ getString('loading')
-                : getString('cd.steps.tasInfra.spacePlaceholder')
-            }
-            useValue
-            selectItems={spaces}
-            label={getString(spaceGroupLabel)}
-            multiTypeInputProps={{
-              onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
-                if (value && type === MultiTypeInputType.FIXED) {
-                  setSpaceValue(getValue(value))
-                } else if (type === MultiTypeInputType.EXPRESSION) {
-                  setSpaceValue(value?.toString())
-                }
-              },
-              onFocus: () => {
-                if (connector && organization) {
-                  refetchSpaces({
-                    queryParams: {
-                      accountIdentifier: accountId,
-                      projectIdentifier,
-                      orgIdentifier,
-                      connectorRef: connector as string,
-                      organization: organization
-                    }
-                  })
-                } else if (fetchSpaceUsingEnvId()) {
-                  refetchSpacesV2({
-                    queryParams: {
-                      accountIdentifier: accountId,
-                      orgIdentifier,
-                      projectIdentifier,
-                      envId: environmentRef,
-                      infraDefinitionId: infrastructureRef,
-                      organization: organization
-                    }
-                  })
-                }
-              },
+        <SelectInputSetView
+          className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}
+          name={`${path}.space`}
+          tooltipProps={{
+            dataTooltipId: 'tasInfraSpace'
+          }}
+          disabled={readonly}
+          placeholder={
+            loadingSpaces || loadingSpacesV2
+              ? /* istanbul ignore next */ getString('loading')
+              : getString('cd.steps.tasInfra.spacePlaceholder')
+          }
+          useValue
+          selectItems={spaces}
+          label={getString(spaceGroupLabel)}
+          multiTypeInputProps={{
+            onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
+              if (value && type === MultiTypeInputType.FIXED) {
+                setSpaceValue(getValue(value))
+              } else if (type === MultiTypeInputType.EXPRESSION) {
+                setSpaceValue(value?.toString())
+              }
+            },
+            onFocus: () => {
+              if (connector && organization) {
+                refetchSpaces({
+                  queryParams: {
+                    accountIdentifier: accountId,
+                    projectIdentifier,
+                    orgIdentifier,
+                    connectorRef: connector as string,
+                    organization: organization
+                  }
+                })
+              } else if (fetchSpaceUsingEnvId()) {
+                refetchSpacesV2({
+                  queryParams: {
+                    accountIdentifier: accountId,
+                    orgIdentifier,
+                    projectIdentifier,
+                    envId: environmentRef,
+                    infraDefinitionId: infrastructureRef,
+                    organization: organization
+                  }
+                })
+              }
+            },
 
-              selectProps: {
-                items: spaces,
-                allowCreatingNewItems: true,
-                addClearBtn: !(loadingSpaces || readonly),
-                noResults: (
-                  <Text padding={'small'}>
-                    {loadingSpaces || loadingSpacesV2
-                      ? getString('loading')
-                      : defaultTo(
-                          defaultTo(
-                            get(spacesError, errorMessage, spacesError?.message),
-                            get(spacesErrorV2, errorMessage, spacesErrorV2?.message)
-                          ),
-                          getString('cd.steps.tasInfra.spacesError')
-                        )}
-                  </Text>
-                )
-              },
-              expressions,
-              allowableTypes
-            }}
-            fieldPath="space"
-            template={template}
-          />
-        </div>
+            selectProps: {
+              items: spaces,
+              allowCreatingNewItems: true,
+              addClearBtn: !(loadingSpaces || readonly),
+              noResults: (
+                <Text padding={'small'}>
+                  {loadingSpaces || loadingSpacesV2
+                    ? getString('loading')
+                    : defaultTo(
+                        defaultTo(
+                          get(spacesError, errorMessage, spacesError?.message),
+                          get(spacesErrorV2, errorMessage, spacesErrorV2?.message)
+                        ),
+                        getString('cd.steps.tasInfra.spacesError')
+                      )}
+                </Text>
+              )
+            },
+            expressions,
+            allowableTypes
+          }}
+          fieldPath="space"
+          template={template}
+        />
       )}
     </Layout.Vertical>
   )

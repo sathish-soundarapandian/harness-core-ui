@@ -7,10 +7,11 @@
 
 import React from 'react'
 
-import { fireEvent, getByText, render } from '@testing-library/react'
+import { fireEvent, getByText, queryByText, render } from '@testing-library/react'
 import { act } from 'react-dom/test-utils'
 import type { Project } from 'services/cd-ng'
 import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
+import routes from '@common/RouteDefinitions'
 import Collaborators from '../Collaborators'
 import { userMockData } from './UserMockData'
 import { invitesMockData, roleMockData } from './InvitesMockData'
@@ -50,13 +51,17 @@ jest.mock('services/rbac', () => ({
   useGetRoleList: jest.fn().mockImplementation(() => ({ data: roleMockData, loading: false, refetch: jest.fn() }))
 }))
 
+const testPath = routes.toAccessControl({ accountId: ':accountId' })
+const testPathParams = { accountId: 'testAcc' }
+
 describe('Collaborators test', () => {
   test('Render Collaborators ', async () => {
     const { container } = render(
-      <TestWrapper path="/account/:accountId" pathParams={{ accountId: 'testAcc' }}>
+      <TestWrapper path={testPath} pathParams={testPathParams}>
         <Collaborators projectIdentifier={project.identifier} orgIdentifier={project.orgIdentifier} />
       </TestWrapper>
     )
+    expect(queryByText(container, 'Project Viewer')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
     const role = getByText(container, 'Project Viewer')
     fireEvent.click(role!)
@@ -77,5 +82,22 @@ describe('Collaborators test', () => {
       const deleteInvite = container.querySelectorAll('[icon="trash"]')[0]
       fireEvent.click(deleteInvite)
     })
+  })
+
+  test('Collaborators test with FF ACCOUNT_BASIC_ROLE', async () => {
+    const { container } = render(
+      <TestWrapper
+        path={testPath}
+        pathParams={testPathParams}
+        defaultFeatureFlagValues={{
+          ACCOUNT_BASIC_ROLE: true
+        }}
+      >
+        <Collaborators projectIdentifier={project.identifier} orgIdentifier={project.orgIdentifier} />
+      </TestWrapper>
+    )
+
+    expect(queryByText(container, 'Project Viewer')).not.toBeInTheDocument()
+    expect(getByText(container, 'rbac.usersPage.selectRole')).toBeInTheDocument()
   })
 })

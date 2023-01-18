@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly authContainer: string
+  readonly detailsFormWidth: string
   readonly secondStep: string
 }
 export default styles

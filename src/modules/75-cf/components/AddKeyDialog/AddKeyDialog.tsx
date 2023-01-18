@@ -177,7 +177,7 @@ const AddKeyDialog: React.FC<AddKeyDialogProps> = ({
           initialValues={initialValues}
           formName="addKeyDialog"
           validationSchema={yup.object().shape({
-            name: NameSchema({ requiredErrorMsg: getString('cf.environments.apiKeys.emptyName') })
+            name: NameSchema(getString, { requiredErrorMsg: getString('cf.environments.apiKeys.emptyName') })
           })}
           onSubmit={handleSubmit}
           onReset={() => {

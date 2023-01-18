@@ -16,7 +16,7 @@ import { StageType } from '@pipeline/utils/stageHelpers'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { Category, StageActions } from '@common/constants/TrackingConstants'
-import { isContextTypeNotStageTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import { isContextTypeStageOrStepGroupTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { PipelineStageProps } from '../PipelineStage'
@@ -30,6 +30,7 @@ export interface AddStageViewProps {
   isParallel?: boolean
   contextType?: string
   onUseTemplate?: () => void
+  showCloseBtn?: boolean
 }
 
 export interface SelectedAddStageTypeData {
@@ -46,7 +47,8 @@ export function AddStageView({
   isParallel = false,
   stages,
   contextType,
-  onUseTemplate
+  onUseTemplate,
+  showCloseBtn = true
 }: AddStageViewProps): JSX.Element {
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
@@ -66,7 +68,7 @@ export function AddStageView({
           <Heading level={6} color={Color.GREY_800}>
             {getString('pipeline.addStage.title')}
           </Heading>
-          {isContextTypeNotStageTemplate(contextType) && (
+          {!isContextTypeStageOrStepGroupTemplate(contextType) && (
             <RbacButton
               text={getString('common.useTemplate')}
               variation={ButtonVariation.SECONDARY}
@@ -122,7 +124,11 @@ export function AddStageView({
             ))}
         </div>
       </div>
-      {selectedType ? <StageHoverView selectedStageType={selectedType} /> : <EmptyStageView />}
+      {selectedType ? (
+        <StageHoverView selectedStageType={selectedType} showCloseBtn={showCloseBtn} />
+      ) : (
+        <EmptyStageView showCloseBtn={showCloseBtn} />
+      )}
     </div>
   )
 }

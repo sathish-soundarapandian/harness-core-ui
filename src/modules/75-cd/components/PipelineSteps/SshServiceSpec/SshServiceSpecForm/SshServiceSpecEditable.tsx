@@ -45,9 +45,9 @@ const SshServiceSpecEditable: React.FC<SshWinRmServiceInputFormProps> = ({
   const selectedDeploymentType = deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating)
   const { isServiceEntityPage } = useServiceContext()
 
-  const isMultiArtifactSourceFeatureFlag = useFeatureFlag(FeatureFlag.NG_ARTIFACT_SOURCES)
+  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
-    !!isMultiArtifactSourceFeatureFlag,
+    !!isSvcEnvEnabled,
     stage?.stage as DeploymentStageElementConfig,
     isServiceEntityPage
   )

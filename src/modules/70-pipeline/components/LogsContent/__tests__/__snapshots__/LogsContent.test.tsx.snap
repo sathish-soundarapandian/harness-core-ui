@@ -45,7 +45,7 @@ exports[`<LogsContent /> tests DefaultConsoleViewStepDetails snapshot test 1`] =
               class="bp3-input  ExpandingSearchInput--find"
               dir="auto"
               placeholder="Search"
-              style="padding-right: 0px;"
+              style="padding-right: 130px;"
               type="search"
               value=""
             />
@@ -131,7 +131,7 @@ exports[`<LogsContent /> tests Logs test GroupedLogs 1`] = `
             class="bp3-input  ExpandingSearchInput--find"
             dir="auto"
             placeholder="Search"
-            style="padding-right: 0px;"
+            style="padding-right: 130px;"
             type="search"
             value=""
           />
@@ -364,7 +364,7 @@ exports[`<LogsContent /> tests console-view error message test 1`] = `
             class="bp3-input  ExpandingSearchInput--find"
             dir="auto"
             placeholder="Search"
-            style="padding-right: 0px;"
+            style="padding-right: 130px;"
             type="search"
             value=""
           />
@@ -563,7 +563,7 @@ exports[`<LogsContent /> tests console-view snapshot test 1`] = `
             class="bp3-input  ExpandingSearchInput--find"
             dir="auto"
             placeholder="Search"
-            style="padding-right: 0px;"
+            style="padding-right: 130px;"
             type="search"
             value=""
           />
@@ -648,7 +648,7 @@ exports[`<LogsContent /> tests console-view warning message test 1`] = `
             class="bp3-input  ExpandingSearchInput--find"
             dir="auto"
             placeholder="Search"
-            style="padding-right: 0px;"
+            style="padding-right: 130px;"
             type="search"
             value=""
           />
@@ -849,7 +849,7 @@ exports[`<LogsContent /> tests step-details snapshot test 1`] = `
             class="bp3-input  ExpandingSearchInput--find"
             dir="auto"
             placeholder="Search"
-            style="padding-right: 0px;"
+            style="padding-right: 130px;"
             type="search"
             value=""
           />

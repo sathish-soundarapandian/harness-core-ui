@@ -6,6 +6,7 @@
  */
 import React, { useState } from 'react'
 import { Classes, FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
+import cx from 'classnames'
 import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
 import {
@@ -37,6 +38,9 @@ import {
 import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { useStrings } from 'framework/strings'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { getIdentifierFromScopedRef } from '@common/utils/utils'
 import { getReferenceFieldProps } from './Utils'
 import css from './FormMultiTypeServiceField.module.scss'
 
@@ -63,13 +67,15 @@ export interface ServiceReferenceFieldProps extends Omit<IFormGroupProps, 'label
   isMultiSelect?: boolean
   onMultiSelectChange?: any
   isNewConnectorLabelVisible?: boolean
+  isOnlyFixedType?: boolean
+  labelClass?: string
 }
 
 export function getSelectedRenderer(selected: any): JSX.Element {
   return (
     <Layout.Horizontal spacing="small" flex={{ distribution: 'space-between' }} className={css.selectWrapper}>
       <Text tooltip={defaultTo(selected?.name, selected)} color={Color.GREY_800} className={css.label}>
-        {defaultTo(selected?.label, selected)}
+        {getIdentifierFromScopedRef(defaultTo(defaultTo(selected?.label, selected), ''))}
       </Text>
       <Tag minimal id={css.tag}>
         {getScopeFromValue(selected?.value || selected)}
@@ -105,8 +111,10 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
     onMultiSelectChange,
     openAddNewModal,
     isNewConnectorLabelVisible,
+    isOnlyFixedType = false,
     placeholder,
     disabled,
+    labelClass: labelClassFromProps = '',
     width,
     ...restProps
   } = props
@@ -153,7 +161,7 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
     onMultiSelectChange(services)
   }
   return (
-    <div style={style}>
+    <div style={style} className={cx(css.serviceLabel, labelClassFromProps)}>
       <Container data-testid="serviceTooltip">
         <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} className={Classes.LABEL} />
       </Container>
@@ -169,6 +177,7 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
               createNewLabel: createNewLabel || 'Service',
               disabled: disabled,
               disableCollapse: true,
+              isOnlyFixedtype: isOnlyFixedType,
               selectedRenderer: getSelectedRenderer(selected),
               hideModal: hideModal,
               onMultiSelectChange: handleMultiSelectChange,
@@ -189,7 +198,12 @@ export function MultiTypeServiceField(props: ServiceReferenceFieldProps): React.
                   }}
                   text={`+ ${createNewLabel || 'Service'}`}
                   margin={{ right: 'small' }}
-                  // TODO add permissions here depending on the tab from which it is clicked
+                  permission={{
+                    permission: PermissionIdentifier.EDIT_SERVICE,
+                    resource: {
+                      resourceType: ResourceType.SERVICE
+                    }
+                  }}
                 ></RbacButton>
               ) : null
             } as ReferenceSelectProps<ServiceResponseDTO>

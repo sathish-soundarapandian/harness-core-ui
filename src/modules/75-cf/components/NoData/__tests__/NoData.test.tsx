@@ -69,4 +69,26 @@ describe('NoData', () => {
 
     expect(screen.getByTestId(childTestId)).toBeInTheDocument()
   })
+
+  test('it should display an icon when passed and imageURL not passed', async () => {
+    const icon: NoDataProps['icon'] = 'cf-main'
+    renderComponent({ icon, imageURL: undefined })
+
+    expect(document.querySelector('[data-icon]')).toHaveAttribute('data-icon', icon)
+  })
+
+  test('it should not display an icon when passed and imageURL passed', async () => {
+    renderComponent({ icon: 'cf-main', imageURL: 'some-url' })
+
+    expect(document.querySelector('[data-icon]')).not.toBeInTheDocument()
+  })
+
+  test('it should apply icon props', async () => {
+    const size = 200
+    renderComponent({ icon: 'cf-main', imageURL: undefined, iconProps: { size } })
+
+    const svg = document.querySelector(`[data-icon] > svg`)
+    expect(svg).toHaveAttribute('height', `${size}`)
+    expect(svg).toHaveAttribute('width', `${size}`)
+  })
 })

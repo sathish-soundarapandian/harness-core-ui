@@ -75,10 +75,10 @@ const RenderDelegateName: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) 
   return (
     <Layout.Horizontal>
       <Layout.Vertical width={'55%'} margin={{ right: 'large' }}>
-        <Text color={Color.BLACK} lineClamp={1}>
+        <Text color={Color.BLACK} font={{ variation: FontVariation.BODY2 }} lineClamp={1}>
           {row.original?.groupName}
         </Text>
-        <Text font={{ size: 'small' }} color={Color.GREY_500} lineClamp={1}>
+        <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
           {row.original.delegateGroupIdentifier}
         </Text>
       </Layout.Vertical>
@@ -203,7 +203,7 @@ const RenderColumnMenu: Renderer<CellProps<DelegateGroupDetails>> = ({ row }) =>
         position={Position.RIGHT_TOP}
       >
         <Button
-          minimal
+          variation={ButtonVariation.ICON}
           icon="Options"
           onClick={e => {
             e.stopPropagation()
@@ -446,6 +446,7 @@ export const DelegateListingItem: React.FC<DelegateProps> = props => {
           onDelegateClick(defaultTo(row.delegateGroupIdentifier, ''))
         }}
         renderRowSubComponent={renderRowSubComponent}
+        autoResetExpanded={false}
       />
     </Layout.Horizontal>
   )

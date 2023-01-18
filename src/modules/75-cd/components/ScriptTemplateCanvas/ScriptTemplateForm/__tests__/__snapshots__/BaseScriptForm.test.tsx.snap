@@ -504,7 +504,7 @@ exports[`Test BaseScriptWithRef should match snapshot for BaseScriptWithRef with
           class="bp3-form-content"
         >
           <div
-            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+            class="Layout--horizontal StyledProps--main"
           >
             <div
               class="bp3-form-group bp3-disabled runtimeDisabled"

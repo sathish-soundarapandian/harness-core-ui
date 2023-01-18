@@ -7,7 +7,7 @@
 
 import React, { useCallback } from 'react'
 import cx from 'classnames'
-import type { FormikProps, FormikValues } from 'formik'
+import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, memoize, merge, omit } from 'lodash-es'
 import * as Yup from 'yup'
@@ -53,19 +53,13 @@ import {
   checkIfQueryParamsisNotEmpty,
   defaultArtifactInitialValues,
   getConnectorIdValue,
+  resetFieldValue,
   shouldFetchFieldOptions,
   shouldHideHeaderAndNavBtns
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
-
-export const resetFieldValue = (formik: FormikValues, fieldPath: string): void => {
-  const fieldValue = get(formik.values, fieldPath, '')
-  if (fieldValue?.length && getMultiTypeFromValue(fieldValue) === MultiTypeInputType.FIXED) {
-    formik.setFieldValue(fieldPath, '')
-  }
-}
 
 export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3ArtifactProps): React.ReactElement {
   const {
@@ -272,6 +266,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
   const sidecarSchema = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
+      getString,
       artifactIdentifiers,
       initialValues?.identifier,
       getString('pipeline.uniqueIdentifier')
@@ -569,7 +564,7 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
       >
         {formik => (
           <FormikForm>
-            <div className={cx(css.connectorForm, formClassName)}>
+            <div className={cx(css.artifactForm, formClassName)}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>

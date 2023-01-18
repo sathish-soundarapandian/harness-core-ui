@@ -7,11 +7,14 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly environmentGroupLabel: string
   readonly iconCheck: string
   readonly iconChecked: string
   readonly item: string
   readonly label: string
   readonly leftInfo: string
+  readonly noDataCardContainerConnector: string
+  readonly noDataCardContainerContent: string
   readonly placeholderClass: string
   readonly selectWrapper: string
   readonly serviceNameId: string

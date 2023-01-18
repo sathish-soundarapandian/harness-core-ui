@@ -4,7 +4,7 @@ exports[`Primary Artifact ref tests should render correctly 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main"
-    style="width: 391px;"
+    style="width: 400px;"
   >
     <div
       class="bp3-form-group"

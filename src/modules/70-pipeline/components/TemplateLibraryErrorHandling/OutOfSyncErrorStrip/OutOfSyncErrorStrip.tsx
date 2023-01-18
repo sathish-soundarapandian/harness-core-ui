@@ -38,13 +38,13 @@ export function OutOfSyncErrorStrip({
   updateRootEntity,
   gitDetails,
   storeMetadata
-}: OutOfSyncErrorStripProps) {
+}: OutOfSyncErrorStripProps): React.ReactElement {
   const { getString } = useStrings()
   const [resolvedTemplateResponses, setResolvedTemplateResponses] = React.useState<TemplateResponse[]>([])
   const hasChildren = !isEmpty(errorNodeSummary.childrenErrorNodes)
 
   const [showReconcileDialog, hideReconcileDialog] = useModalHook(() => {
-    const onClose = () => {
+    const onClose = (): void => {
       hideReconcileDialog()
       if (!isEmpty(resolvedTemplateResponses)) {
         onRefreshEntity()

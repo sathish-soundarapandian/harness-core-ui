@@ -127,6 +127,8 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
   }
 
   const noRuntimeInputs = checkIfRuntimeInputsNotPresent()
+  // Do not show input set selector on rerun
+  const canSelectInputSets = hasInputSets && !reRunInputSetYaml
 
   return (
     <div
@@ -155,7 +157,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
           </Layout.Horizontal>
         ) : (
           <>
-            {hasInputSets ? (
+            {canSelectInputSets ? (
               <>
                 {executionView ? null : (
                   <Layout.Vertical
@@ -197,6 +199,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
                 template={template}
                 resolvedPipeline={resolvedPipeline}
                 selectedStageData={selectedStageData}
+                maybeContainerClassOverride={canSelectInputSets ? '' : css.noInputSetSelectionRunPipeline}
               />
             ) : null}
             {showVoidPipelineInputSetForm() ? <div className={css.noPipelineInputSetForm} /> : null}
@@ -218,6 +221,7 @@ export interface PipelineInputSetFormWrapperProps {
   template: PipelineInfoConfig
   resolvedPipeline?: PipelineInfoConfig
   selectedStageData: StageSelectionData
+  maybeContainerClassOverride?: string
 }
 
 function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): React.ReactElement | null {
@@ -229,7 +233,8 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
     template,
     executionIdentifier,
     resolvedPipeline,
-    selectedStageData
+    selectedStageData,
+    maybeContainerClassOverride
   } = props
 
   if (currentPipeline?.pipeline && resolvedPipeline && (hasRuntimeInputs || executionView)) {
@@ -244,8 +249,11 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
           viewType={StepViewType.DeploymentForm}
           isRunPipelineForm
           executionIdentifier={executionIdentifier}
-          maybeContainerClass={existingProvide === 'provide' ? css.inputSetFormRunPipeline : ''}
+          maybeContainerClass={
+            existingProvide === 'provide' ? cx(css.inputSetFormRunPipeline, maybeContainerClassOverride) : ''
+          }
           selectedStageData={selectedStageData}
+          disableRuntimeInputConfigureOptions
         />
       </>
     )

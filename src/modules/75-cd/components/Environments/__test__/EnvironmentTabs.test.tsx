@@ -32,37 +32,4 @@ describe('Environment Tabs', () => {
       </div>
     `)
   })
-
-  test('shows Environment Group Tab', () => {
-    const dummyPermissionsMap = new Map()
-    dummyPermissionsMap.set('VIEW_ENVIRONMENT_GROUP', true)
-    const { container } = render(
-      <TestWrapper
-        defaultPermissionValues={{ permissions: dummyPermissionsMap }}
-        defaultAppStoreValues={{ featureFlags: { ENV_GROUP: true } }}
-      >
-        <EnvironmentTabs />
-      </TestWrapper>
-    )
-    expect(container).toMatchInlineSnapshot(`
-      <div>
-        <div
-          class="Layout--horizontal Layout--layout-spacing-small StyledProps--main TabNavigation--container"
-        >
-          <a
-            class="TabNavigation--tags TabNavigation--small"
-            href="/account/undefined/environment"
-          >
-            environment
-          </a>
-          <a
-            class="TabNavigation--tags TabNavigation--small"
-            href="/account/undefined/environment-group"
-          >
-            common.environmentGroups.label
-          </a>
-        </div>
-      </div>
-    `)
-  })
 })

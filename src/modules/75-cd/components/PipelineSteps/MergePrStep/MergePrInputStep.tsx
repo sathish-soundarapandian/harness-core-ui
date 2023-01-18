@@ -51,23 +51,22 @@ export default function MergePRInputStep(props: MergePrInputStepProps): React.Re
   return (
     <>
       {getMultiTypeFromValue(get(template, 'timeout', '')) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-            fieldPath={'timeout'}
-            template={template}
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${prefix}.timeout`}
-            disabled={readonly}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          fieldPath={'timeout'}
+          template={template}
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${prefix}.timeout`}
+          disabled={readonly}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
       {isArray(variables) && variables.length ? (
         <div className={stepCss.formGroup}>

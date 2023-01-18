@@ -17,6 +17,7 @@ import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
 import ManifestCommonRuntimeFields from '../ManifestSourceRuntimeFields/ManifestCommonRuntimeFields'
+import CustomRemoteManifestRuntimeFields from '../ManifestSourceRuntimeFields/CustomRemoteManifestRuntimeFields'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
@@ -46,6 +47,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     >
       <ManifestGitStoreRuntimeFields {...props} />
       <ManifestCommonRuntimeFields {...props} />
+      <CustomRemoteManifestRuntimeFields {...props} />
       {isFieldRuntime(`${manifestPath}.spec.store.spec.paths`, template) && (
         <div className={css.verticalSpacingInput}>
           <List

@@ -55,7 +55,7 @@ import type {
 import { Scope } from '@common/interfaces/SecretsInterface'
 import routes from '@common/RouteDefinitions'
 import { useConfirmAction, useDeepCompareEffect, useMutateAsGet, useQueryParams } from '@common/hooks'
-import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { memoizedParse, yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import {
   getIdentifierFromValue,
   getScopeFromDTO,
@@ -84,6 +84,9 @@ import { clearRuntimeInput, mergeTemplateWithInputSetData } from '@pipeline/util
 import TabWizard from '@triggers/components/TabWizard/TabWizard'
 
 import type { AddConditionInterface } from '@triggers/components/AddConditionsSection/AddConditionsSection'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import TitleWithSwitch from '../components/TitleWithSwitch/TitleWithSwitch'
 import {
   ConnectorRefInterface,
@@ -124,9 +127,11 @@ export default function WebhookTriggerWizard(
   props: TriggerProps<any> & { children: JSX.Element[] }
 ): React.ReactElement {
   const { isNewTrigger, baseType, triggerData, type: sourceRepo } = props
+  const isGitWebhookPollingEnabled = useFeatureFlag(FeatureFlag.CD_GIT_WEBHOOK_POLLING)
 
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
+  const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
 
   const history = useHistory()
   const { getString } = useStrings()
@@ -302,9 +307,17 @@ export default function WebhookTriggerWizard(
     defaultTo(pipelineResponse?.data?.yamlPipeline, '')
   )?.pipeline
 
-  const resolvedPipeline: PipelineInfoConfig | undefined = memoizedParse<Pipeline>(
-    defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, '')
-  )?.pipeline
+  useEffect(() => {
+    setResolvedPipeline(
+      yamlParse<Pipeline>(defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, ''))?.pipeline
+    )
+  }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
+
+  const { resolvedMergedPipeline } = useGetResolvedChildPipeline(
+    { accountId: accountIdentifier, repoIdentifier, branch, connectorRef: pipelineConnectorRef },
+    originalPipeline,
+    resolvedPipeline
+  )
 
   const [onEditInitialValues, setOnEditInitialValues] = useState<FlatOnEditValuesInterface>({
     triggerType: baseType as NGTriggerSourceV2['type']
@@ -316,8 +329,8 @@ export default function WebhookTriggerWizard(
     if (
       newPipeline?.template?.templateInputs &&
       isCodebaseFieldsRuntimeInputs(newPipeline.template.templateInputs as PipelineInfoConfig) &&
-      resolvedPipeline &&
-      !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline as PipelineInfoConfig)
+      resolvedMergedPipeline &&
+      !isCloneCodebaseEnabledAtLeastOneStage(resolvedMergedPipeline as PipelineInfoConfig)
     ) {
       newPipeline = getPipelineWithoutCodebaseInputs(newPipeline) as Pipeline['pipeline']
     }
@@ -333,10 +346,13 @@ export default function WebhookTriggerWizard(
       }),
       pipeline: newPipeline as PipelineInfoConfig,
       originalPipeline,
-      resolvedPipeline,
+      resolvedPipeline: resolvedMergedPipeline,
       anyAction: false,
       autoAbortPreviousExecutions: false,
-      pipelineBranchName: getDefaultPipelineReferenceBranch(baseType)
+      pipelineBranchName: getDefaultPipelineReferenceBranch(baseType) || branch,
+      // setDefaultValue only when polling is enabled and for Github Webhook Trigger
+      ...(isGitWebhookPollingEnabled &&
+        sourceRepo === GitSourceProviders.GITHUB.value && { pollInterval: '0', webhookId: '' })
     }
   }
 
@@ -364,11 +380,10 @@ export default function WebhookTriggerWizard(
 
   useEffect(() => {
     const yamlPipeline = pipelineResponse?.data?.yamlPipeline
-    const resolvedYamlPipeline = pipelineResponse?.data?.resolvedTemplatesPipelineYaml
 
     if (
       yamlPipeline &&
-      resolvedYamlPipeline &&
+      resolvedMergedPipeline &&
       ((initialValues && !initialValues.originalPipeline && !initialValues.resolvedPipeline) ||
         (onEditInitialValues?.identifier &&
           !onEditInitialValues.originalPipeline &&
@@ -376,13 +391,13 @@ export default function WebhookTriggerWizard(
     ) {
       try {
         let newOriginalPipeline = parse(yamlPipeline)?.pipeline
-        let newResolvedPipeline = parse(resolvedYamlPipeline)?.pipeline
+        let newResolvedPipeline: any = resolvedMergedPipeline
         // only applied for CI, Not cloned codebase
         if (
           newOriginalPipeline?.template?.templateInputs &&
           isCodebaseFieldsRuntimeInputs(newOriginalPipeline.template.templateInputs as PipelineInfoConfig) &&
-          resolvedPipeline &&
-          !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline)
+          resolvedMergedPipeline &&
+          !isCloneCodebaseEnabledAtLeastOneStage(resolvedMergedPipeline)
         ) {
           const newOriginalPipelineWithoutCodebaseInputs = getPipelineWithoutCodebaseInputs(newOriginalPipeline)
           const newResolvedPipelineWithoutCodebaseInputs = getPipelineWithoutCodebaseInputs(newResolvedPipeline)
@@ -420,7 +435,7 @@ export default function WebhookTriggerWizard(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     pipelineResponse?.data?.yamlPipeline,
-    pipelineResponse?.data?.resolvedTemplatesPipelineYaml,
+    resolvedMergedPipeline,
     onEditInitialValues?.identifier,
     initialValues,
     currentPipeline
@@ -516,13 +531,13 @@ export default function WebhookTriggerWizard(
         const newPipeline = mergeTemplateWithInputSetData({
           inputSetPortion: { pipeline: inpuSet },
           templatePipeline: { pipeline: inpuSet },
-          allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
+          allValues: { pipeline: defaultTo(resolvedMergedPipeline, {} as PipelineInfoConfig) },
           shouldUseDefaultValues: true
         })
         setCurrentPipeline(newPipeline)
       }
     }
-  }, [template?.data?.inputSetTemplateYaml, onEditInitialValues?.pipeline, resolvedPipeline, fetchingTemplate])
+  }, [template?.data?.inputSetTemplateYaml, onEditInitialValues?.pipeline, resolvedMergedPipeline, fetchingTemplate])
 
   const [enabledStatus, setEnabledStatus] = useState<boolean>(true)
 
@@ -561,6 +576,8 @@ export default function WebhookTriggerWizard(
             inputYaml,
             inputSetRefs = [],
             source: {
+              pollInterval,
+              webhookId,
               spec: {
                 type: sourceRepoForYaml,
                 spec: {
@@ -608,7 +625,7 @@ export default function WebhookTriggerWizard(
             // Ensure ordering of variables and their values respectively for UI
             if (pipelineJson?.variables) {
               pipelineJson.variables = getOrderedPipelineVariableValues({
-                originalPipelineVariables: resolvedPipeline?.variables,
+                originalPipelineVariables: resolvedMergedPipeline?.variables,
                 currentPipelineVariables: pipelineJson.variables
               })
             }
@@ -617,7 +634,7 @@ export default function WebhookTriggerWizard(
             showError(getString('triggers.cannotParseInputValues'))
           }
         } else if (isNewGitSyncRemotePipeline) {
-          pipelineJson = resolvedPipeline
+          pipelineJson = resolvedMergedPipeline
         }
 
         triggerValues = {
@@ -657,7 +674,9 @@ export default function WebhookTriggerWizard(
           ),
           jexlCondition,
           pipelineBranchName,
-          inputSetRefs
+          inputSetRefs,
+          pollInterval,
+          webhookId
         }
 
         // connectorRef in Visual UI is an object (with the label), but in YAML is a string
@@ -722,7 +741,7 @@ export default function WebhookTriggerWizard(
             // Ensure ordering of variables and their values respectively for UI
             if (pipelineJson?.variables) {
               pipelineJson.variables = getOrderedPipelineVariableValues({
-                originalPipelineVariables: resolvedPipeline?.variables,
+                originalPipelineVariables: resolvedMergedPipeline?.variables,
                 currentPipelineVariables: pipelineJson.variables
               })
             }
@@ -731,7 +750,7 @@ export default function WebhookTriggerWizard(
             showError(getString('triggers.cannotParseInputValues'))
           }
         } else if (isNewGitSyncRemotePipeline) {
-          pipelineJson = resolvedPipeline
+          pipelineJson = resolvedMergedPipeline
         }
 
         triggerValues = {
@@ -806,9 +825,15 @@ export default function WebhookTriggerWizard(
       secureToken,
       autoAbortPreviousExecutions = false,
       pipelineBranchName = getDefaultPipelineReferenceBranch(event),
-      encryptedWebhookSecretIdentifier
+      encryptedWebhookSecretIdentifier,
+      pollInterval,
+      webhookId
     } = val
-    const inputSetRefs = get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
+    const inputSetRefs = get(
+      val,
+      'inputSetRefs',
+      get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
+    )
     const referenceString =
       typeof encryptedWebhookSecretIdentifier === 'string'
         ? encryptedWebhookSecretIdentifier
@@ -885,6 +910,8 @@ export default function WebhookTriggerWizard(
         pipelineIdentifier,
         source: {
           type: formikValueTriggerType as unknown as NGTriggerSourceV2['type'],
+          ...(isGitWebhookPollingEnabled &&
+            formikValueSourceRepo === GitSourceProviders.GITHUB.value && { pollInterval, webhookId }),
           spec: {
             type: formikValueSourceRepo, // Github
             spec: {
@@ -1095,7 +1122,7 @@ export default function WebhookTriggerWizard(
                 pipeline: { ...clearRuntimeInput(latestPipeline.pipeline) },
                 template: latestYamlTemplate,
                 originalPipeline: orgPipeline,
-                resolvedPipeline,
+                resolvedPipeline: resolvedMergedPipeline,
                 getString,
                 viewType: StepViewType.TriggerForm,
                 viewTypeMetadata: { isTrigger: true }
@@ -1121,15 +1148,28 @@ export default function WebhookTriggerWizard(
     latestYaml: triggerYaml
   }: {
     formikProps: FormikProps<any>
-    latestYaml?: any // validate from YAML view
+    latestYaml?: string
   }): Promise<FormikErrors<FlatValidWebhookFormikValuesInterface>> => {
     if (!formikProps) return {}
     let _inputSetRefsError = ''
+    let parsedTriggerYaml
+
+    try {
+      parsedTriggerYaml = parse(triggerYaml || '')
+    } catch (e) {
+      showError(getString('triggers.cannotParseInputValues'))
+    }
 
     if (isNewGitSyncRemotePipeline) {
       // inputSetRefs is required if Input Set is required to run pipeline
-      if (template?.data?.inputSetTemplateYaml && !formikProps?.values?.inputSetSelected?.length) {
-        _inputSetRefsError = getString('triggers.inputSetIsRequired')
+      if (template?.data?.inputSetTemplateYaml) {
+        if (!formikProps?.values?.inputSetSelected?.length) {
+          _inputSetRefsError = getString('triggers.inputSetIsRequired')
+        }
+
+        if (parsedTriggerYaml?.trigger?.inputSetRefs?.length || formikProps?.values?.inputSetRefs?.length) {
+          _inputSetRefsError = ''
+        }
       }
     }
 
@@ -1144,12 +1184,14 @@ export default function WebhookTriggerWizard(
       latestPipelineFromYamlView = getTriggerPipelineValues(triggerYaml, formikProps)
     }
 
-    const runPipelineFormErrors = await getFormErrors({
-      latestPipeline: latestPipelineFromYamlView || latestPipeline,
-      latestYamlTemplate: yamlTemplate,
-      orgPipeline: values.pipeline,
-      setSubmitting
-    })
+    const runPipelineFormErrors = isNewGitSyncRemotePipeline
+      ? null
+      : await getFormErrors({
+          latestPipeline: latestPipelineFromYamlView || latestPipeline,
+          latestYamlTemplate: yamlTemplate,
+          orgPipeline: values.pipeline,
+          setSubmitting
+        })
     const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ inputSetRefs: _inputSetRefsError }, value => !value)
       : undefined
@@ -1368,7 +1410,11 @@ export default function WebhookTriggerWizard(
       formikInitialProps={{
         initialValues,
         onSubmit: onSubmit,
-        validationSchema: getValidationSchema(getString, isGithubWebhookAuthenticationEnabled),
+        validationSchema: getValidationSchema(
+          getString,
+          isGitWebhookPollingEnabled,
+          isGithubWebhookAuthenticationEnabled
+        ),
         validate: validateTriggerPipeline,
         enableReinitialize: true
       }}

@@ -372,7 +372,12 @@ export function ECSWithS3({
         formName="ecsWithS3"
         validationSchema={Yup.object().shape({
           ...(showIdentifierField
-            ? ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName'))
+            ? ManifestIdentifierValidation(
+                getString,
+                manifestIdsList,
+                initialValues?.identifier,
+                getString('pipeline.uniqueName')
+              )
             : {}),
           region: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.region')),
           bucketName: Yup.string().trim().required(getString('pipeline.manifestType.bucketNameRequired')),

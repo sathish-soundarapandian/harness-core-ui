@@ -11,7 +11,7 @@ import { defaultTo } from 'lodash-es'
 import { Container, Layout, Text, PageError } from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
 import { PageSpinner, Table } from '@common/components'
-import type { InstanceGroupedByArtifact } from 'services/cd-ng'
+import type { InstanceGroupedByArtifactV2 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState.svg'
 import {
@@ -64,7 +64,7 @@ export const DeploymentsV2 = (
   props: React.PropsWithChildren<{
     tableType: TableType
     loading?: boolean
-    data?: InstanceGroupedByArtifact[]
+    data?: InstanceGroupedByArtifactV2[]
     error?: GetDataError<unknown> | null
     refetch?: () => Promise<void>
   }>

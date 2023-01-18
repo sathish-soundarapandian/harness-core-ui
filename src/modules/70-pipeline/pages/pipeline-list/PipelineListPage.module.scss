@@ -20,14 +20,18 @@
   z-index: 3;
   border: none;
   box-shadow: var(--elevation-2);
-}
 
-.repoFilterContainer {
-  padding: var(--spacing-5);
-}
+  .subHeaderItems {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-medium);
+    width: 100%;
+  }
 
-.expandSearch {
-  margin-right: var(--spacing-medium);
+  .flexExpand {
+    flex-grow: 1;
+  }
 }
 
 .tableTitle {

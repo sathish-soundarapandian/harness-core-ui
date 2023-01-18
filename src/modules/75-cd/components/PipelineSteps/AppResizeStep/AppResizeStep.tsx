@@ -10,7 +10,7 @@ import { IconName, Formik, FormInput, getMultiTypeFromValue, MultiTypeInputType,
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty, set } from 'lodash-es'
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig, TasAppResizeStepInfo } from 'services/cd-ng'
@@ -22,7 +22,7 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
@@ -71,6 +71,11 @@ function AppResizeWidget(props: AppResizeProps, formikRef: StepFormikFowardRef<A
           onUpdate?.(values)
         }}
         validate={(values: AppResizeData) => {
+          const getOldAppInstance = values.spec.oldAppInstances?.spec
+          /* istanbul ignore next */
+          if (!getOldAppInstance?.value) {
+            set(values, 'spec.oldAppInstances', undefined)
+          }
           /* istanbul ignore next */
           onChange?.(values)
         }}
@@ -118,29 +123,11 @@ function AppResizeWidget(props: AppResizeProps, formikRef: StepFormikFowardRef<A
                   className={stepCss.duration}
                   multiTypeDurationProps={{
                     expressions,
-                    enableConfigureOptions: false,
+                    enableConfigureOptions: true,
                     disabled: readonly,
                     allowableTypes
                   }}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  /* istanbul ignore next */
-                  <ConfigureOptions
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={
-                      /* istanbul ignore next */ value => {
-                        setFieldValue('timeout', value)
-                      }
-                    }
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
               <div className={stepCss.divider} />
               <div className={cx(stepCss.formGroup)}>
@@ -176,6 +163,7 @@ function AppResizeWidget(props: AppResizeProps, formikRef: StepFormikFowardRef<A
                   readonly={readonly}
                   expressions={expressions}
                   allowableTypes={allowableTypes}
+                  defaultValue={{ type: InstanceTypes.Percentage, spec: { value: '' } }}
                 />
                 {getMultiTypeFromValue(values.spec.oldAppInstances?.spec?.value) === MultiTypeInputType.RUNTIME && (
                   <ConfigureOptions
@@ -288,8 +276,8 @@ export class AppResizeStep extends PipelineStep<AppResizeData> {
     type: StepType.AppResize,
     spec: {
       newAppInstances: {
-        type: InstanceTypes.Count,
-        spec: { value: '1' }
+        type: InstanceTypes.Percentage,
+        spec: { value: '100' }
       }
     }
   }
@@ -367,7 +355,7 @@ export class AppResizeStep extends PipelineStep<AppResizeData> {
       })
 
       try {
-        timeout.validateSync(data.spec)
+        timeout.validateSync(data)
       } catch (e) {
         /* istanbul ignore else */
         if (e instanceof Yup.ValidationError) {

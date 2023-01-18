@@ -32,8 +32,7 @@ import { useStrings } from 'framework/strings'
 import { Connectors } from '@connectors/constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
-import { getFullRepoName } from '../../../utils/HostedBuildsUtils'
-import { ACCOUNT_SCOPE_PREFIX } from './Constants'
+import { getFullRepoName, getScmConnectorPrefix } from '../../../utils/HostedBuildsUtils'
 
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -73,7 +72,6 @@ const SelectRepositoryRef = (
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [repository, setRepository] = useState<UserRepoResponse | undefined>()
-  const [query, setQuery] = useState<string>('')
   const [repositories, setRepositories] = useState<UserRepoResponse[]>()
   const [selectedConnectorOption, setSelectedConnectorOption] = useState<SelectOption>()
   const {
@@ -132,19 +130,19 @@ const SelectRepositoryRef = (
     }
   }, [ConnectorSelectionItems, validatedConnector])
 
-  const fetchReposWithConnectorRef = useCallback((connectorRef: string): void => {
-    if (connectorRef) {
-      cancelRepositoriesFetch()
+  useEffect(() => {
+    cancelRepositoriesFetch()
+    if (validatedConnector) {
       fetchRepositories({
         queryParams: {
           accountIdentifier: accountId,
           projectIdentifier,
           orgIdentifier,
-          connectorRef: `${ACCOUNT_SCOPE_PREFIX}${connectorRef}`
+          connectorRef: `${getScmConnectorPrefix(validatedConnector)}${validatedConnector.identifier}`
         }
       })
     }
-  }, [])
+  }, [validatedConnector])
 
   useEffect(() => {
     if (selectedConnectorOption) {
@@ -155,7 +153,6 @@ const SelectRepositoryRef = (
         onConnectorSelect?.(matchingConnector)
       }
       setRepository(undefined)
-      fetchReposWithConnectorRef(selectedConnectorOption?.value as string)
     }
   }, [selectedConnectorOption, connectorsEligibleForPreSelection])
 
@@ -165,13 +162,6 @@ const SelectRepositoryRef = (
     }
   }, [fetchingRepositories, errorWhileFetchingRepositories, repoData?.data])
 
-  const debouncedRepositorySearch = useCallback(
-    debounce((queryText: string): void => {
-      setQuery(queryText)
-    }, 500),
-    []
-  )
-
   useEffect(() => {
     if (fetchingRepositories && enableCloneCodebase) {
       disableNextBtn()
@@ -179,16 +169,6 @@ const SelectRepositoryRef = (
       enableNextBtn()
     }
   }, [fetchingRepositories, enableCloneCodebase])
-
-  useEffect(() => {
-    if (query) {
-      setRepositories(
-        (repoData?.data || []).filter(item => getFullRepoName(item).toLowerCase().includes(query.toLowerCase()))
-      )
-    } else {
-      setRepositories(repoData?.data)
-    }
-  }, [query])
 
   useEffect(() => {
     if (!forwardRef) {
@@ -212,6 +192,16 @@ const SelectRepositoryRef = (
       updateFooterLabel?.(getString('ci.getStartedWithCI.createPipeline'))
     }
   }, [enableCloneCodebase])
+
+  const debouncedRepositorySearch = debounce((queryText: string): void => {
+    if (queryText) {
+      setRepositories(
+        (repoData?.data || []).filter(item => getFullRepoName(item).toLowerCase().includes(queryText.toLowerCase()))
+      )
+    } else {
+      setRepositories(repoData?.data)
+    }
+  }, 500)
 
   const renderRepositories = useCallback((): JSX.Element => {
     if (fetchingRepositories) {
@@ -326,46 +316,36 @@ interface RepositorySelectionTableProps {
 }
 
 function RepositorySelectionTable({ repositories, onRowClick }: RepositorySelectionTableProps): React.ReactElement {
-  const { getString } = useStrings()
   const [selectedRow, setSelectedRow] = useState<UserRepoResponse | undefined>(undefined)
 
-  useEffect(() => {
-    if (selectedRow) {
-      onRowClick(selectedRow)
-    }
-  }, [selectedRow])
-
-  const columns: Column<UserRepoResponse>[] = React.useMemo(
-    () => [
-      {
-        accessor: 'name',
-        width: '100%',
-        Cell: ({ row }: CellProps<UserRepoResponse>) => {
-          const { name: repositoryName } = row.original
-          const isRowSelected = selectedRow && getFullRepoName(row.original) === getFullRepoName(selectedRow)
-          return (
-            <Layout.Horizontal
-              data-testid={repositoryName}
-              className={css.repositoryRow}
-              flex={{ justifyContent: 'flex-start' }}
-              spacing="small"
+  const columns: Column<UserRepoResponse>[] = [
+    {
+      accessor: 'name',
+      width: '100%',
+      Cell: ({ row }: CellProps<UserRepoResponse>) => {
+        const { name: repositoryName } = row.original
+        const isRowSelected = selectedRow && getFullRepoName(row.original) === getFullRepoName(selectedRow)
+        return (
+          <Layout.Horizontal
+            data-testid={repositoryName}
+            className={css.repositoryRow}
+            flex={{ justifyContent: 'flex-start' }}
+            spacing="small"
+          >
+            <RadioButton checked={isRowSelected} />
+            <Text
+              lineClamp={1}
+              font={{ variation: FontVariation.BODY2 }}
+              color={isRowSelected ? Color.PRIMARY_7 : Color.GREY_900}
             >
-              <RadioButton checked={isRowSelected} />
-              <Text
-                lineClamp={1}
-                font={{ variation: FontVariation.BODY2 }}
-                color={isRowSelected ? Color.PRIMARY_7 : Color.GREY_900}
-              >
-                {getFullRepoName(row.original)}
-              </Text>
-            </Layout.Horizontal>
-          )
-        },
-        disableSortBy: true
-      }
-    ],
-    [getString]
-  )
+              {getFullRepoName(row.original)}
+            </Text>
+          </Layout.Horizontal>
+        )
+      },
+      disableSortBy: true
+    }
+  ]
 
   return (
     <TableV2<UserRepoResponse>
@@ -376,7 +356,10 @@ function RepositorySelectionTable({ repositories, onRowClick }: RepositorySelect
       resizable={false}
       sortable={false}
       className={css.repositoryTable}
-      onRowClick={data => setSelectedRow(data)}
+      onRowClick={data => {
+        setSelectedRow(data)
+        onRowClick(data)
+      }}
     />
   )
 }

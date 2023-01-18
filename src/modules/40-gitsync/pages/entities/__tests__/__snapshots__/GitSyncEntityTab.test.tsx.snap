@@ -682,7 +682,7 @@ exports[`Git Sync - entity tab rendering summary view of a gitSyncRepo  1`] = `
           class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--padding-left-huge StyledProps--padding-bottom-large"
           style="cursor: pointer;"
         >
-          gitsync.seeMore
+          common.seeMore
         </p>
       </div>
       <div
@@ -1148,7 +1148,7 @@ exports[`Git Sync - entity tab rendering summary view of a gitSyncRepo  2`] = `
           <p
             class="StyledProps--font StyledProps--main StyledProps--padding-large StyledProps--color StyledProps--color-primary7"
           >
-            gitsync.seeLess
+            common.seeLess
           </p>
         </div>
       </div>

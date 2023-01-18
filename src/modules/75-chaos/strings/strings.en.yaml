@@ -1,5 +1,6 @@
+continuous: '{{$.common.purpose.chaos.continuous}}'
 homepage:
-  chaosHomePageTitle: Chaos Engineering
+  chaosHomePageTitle: '{{$.common.purpose.chaos.continuous}}'
   slogan: Run controlled 'chaos' experiments to understand how real-world stress and failures impact your systems. Create more reliable applications and infrastructure.
   learnMore: Learn more about Chaos Engineering
 trial:

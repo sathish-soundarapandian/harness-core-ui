@@ -19,7 +19,7 @@ exports[`AmazonS3 tests bucket name field is Runtime input when connectorId from
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="imagePathContainer"
@@ -457,7 +457,7 @@ exports[`AmazonS3 tests renders fine for the NEW artifact 1`] = `
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="imagePathContainer"
@@ -916,7 +916,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when all values a
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="imagePathContainer"
@@ -1397,7 +1397,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePath is 
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="imagePathContainer"
@@ -1888,7 +1888,7 @@ exports[`AmazonS3 tests renders fine for the existing artifact when filePathRege
       >
         <div>
           <div
-            class="connectorForm"
+            class="artifactForm"
           >
             <div
               class="imagePathContainer"

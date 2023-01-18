@@ -59,6 +59,13 @@ export const getModuleLink = ({ accountId, orgIdentifier, projectIdentifier, mod
         orgIdentifier,
         accountId
       })
+    case ModuleName.CHAOS:
+      return routes.toProjectOverview({
+        projectIdentifier,
+        orgIdentifier,
+        accountId,
+        module: 'chaos'
+      })
   }
   return ''
 }

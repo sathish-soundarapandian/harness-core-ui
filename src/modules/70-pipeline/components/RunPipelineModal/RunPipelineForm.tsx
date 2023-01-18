@@ -37,7 +37,6 @@ import {
   useRunStagesWithRuntimeInputYaml,
   useRerunStagesWithRuntimeInputYaml,
   useGetStagesExecutionList,
-  useValidateTemplateInputs,
   Failure
 } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
@@ -78,11 +77,11 @@ import {
 import { useDeepCompareEffect } from '@common/hooks/useDeepCompareEffect'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
-import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/PipelineErrorView'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useShouldDisableDeployment } from 'services/cd-ng'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { PreFlightCheckModal } from '../PreFlightCheckModal/PreFlightCheckModal'
 
@@ -178,6 +177,7 @@ function RunPipelineFormBasic({
   const [existingProvide, setExistingProvide] = useState<'existing' | 'provide'>('existing')
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
   const [isInputSetApplied, setIsInputSetApplied] = useState(true)
+  const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
 
   const [canSaveInputSet, canEditYaml] = usePermission(
     {
@@ -235,27 +235,21 @@ function RunPipelineFormBasic({
     }
   })
 
-  const { data: validateTemplateInputsResponse, loading: loadingValidateTemplateInputs } = useValidateTemplateInputs({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      identifier: pipelineIdentifier,
-      repoIdentifier,
-      branch,
-      getDefaultFromOtherRepo: true
-    },
-    lazy: executionView
-  })
-
   const pipeline: PipelineInfoConfig | undefined = React.useMemo(
     () => yamlParse<PipelineConfig>(defaultTo(pipelineResponse?.data?.yamlPipeline, ''))?.pipeline,
     [pipelineResponse?.data?.yamlPipeline]
   )
 
-  const resolvedPipeline: PipelineInfoConfig | undefined = React.useMemo(
-    () => yamlParse<PipelineConfig>(defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, ''))?.pipeline,
-    [pipelineResponse?.data?.resolvedTemplatesPipelineYaml]
+  useEffect(() => {
+    setResolvedPipeline(
+      yamlParse<PipelineConfig>(defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, ''))?.pipeline
+    )
+  }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
+
+  const { loadingResolvedChildPipeline, resolvedMergedPipeline } = useGetResolvedChildPipeline(
+    { accountId, repoIdentifier, branch, connectorRef },
+    pipeline,
+    resolvedPipeline
   )
 
   const {
@@ -282,7 +276,7 @@ function RunPipelineFormBasic({
     connectorRef,
     executionIdentifier,
     inputSetSelected: selectedInputSets,
-    resolvedPipeline,
+    resolvedPipeline: resolvedMergedPipeline,
     executionInputSetTemplateYaml,
     executionView,
     setSelectedInputSets
@@ -322,7 +316,13 @@ function RunPipelineFormBasic({
     identifier: pipelineIdentifier
   })
   const { executionId } = useQueryParams<{ executionId?: string }>()
+
   const pipelineExecutionId = executionIdentifier ?? executionId
+  const isRerunPipeline = !isEmpty(pipelineExecutionId)
+  const formTitleText = isRerunPipeline
+    ? getString('pipeline.execution.actions.rerunPipeline')
+    : getString('runPipeline')
+
   const { mutate: reRunPipeline, loading: reRunPipelineLoading } = useRePostPipelineExecuteWithInputSetYaml({
     queryParams: {
       accountIdentifier: accountId,
@@ -437,23 +437,23 @@ function RunPipelineFormBasic({
   const valuesPipelineRef = useRef<PipelineInfoConfig>()
 
   useDeepCompareEffect(() => {
-    if (resolvedPipeline) {
-      updatePipelineInVaribalesContext(resolvedPipeline)
+    if (resolvedMergedPipeline) {
+      updatePipelineInVaribalesContext(resolvedMergedPipeline)
     }
-  }, [resolvedPipeline])
+  }, [resolvedMergedPipeline])
 
   useEffect(() => {
     // only applied for CI, Not cloned codebase
     if (
       formikRef?.current?.values?.template?.templateInputs &&
       isCodebaseFieldsRuntimeInputs(formikRef.current.values.template.templateInputs as PipelineInfoConfig) &&
-      resolvedPipeline &&
-      !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline)
+      resolvedMergedPipeline &&
+      !isCloneCodebaseEnabledAtLeastOneStage(resolvedMergedPipeline)
     ) {
       const newPipeline = getPipelineWithoutCodebaseInputs(formikRef.current.values)
       formikRef.current.setValues({ ...formikRef.current.values, ...newPipeline })
     }
-  }, [formikRef?.current?.values?.template?.templateInputs, resolvedPipeline])
+  }, [formikRef?.current?.values?.template?.templateInputs, resolvedMergedPipeline])
 
   useEffect(() => {
     setSkipPreFlightCheck(defaultTo(supportingGitSimplification && storeType === StoreType.REMOTE, false))
@@ -512,7 +512,7 @@ function RunPipelineFormBasic({
           ? ''
           : yamlStringify({ pipeline: omitBy(valuesPipelineRef.current, (_val, key) => key.startsWith('_')) })
 
-        if (isEmpty(pipelineExecutionId)) {
+        if (!isRerunPipeline) {
           response = selectedStageData.allStagesSelected
             ? await runPipeline(finalYaml as any)
             : await runStage({
@@ -587,14 +587,20 @@ function RunPipelineFormBasic({
     ]
   )
 
-  function handleModeSwitch(view: SelectedView): void {
-    if (view === SelectedView.VISUAL && yamlHandler && formikRef.current) {
+  function formikUpdateWithLatestYaml(): void {
+    if (yamlHandler && formikRef.current) {
       const parsedYaml = yamlParse<PipelineConfig>(defaultTo(yamlHandler.getLatestYaml(), ''))
 
       if (parsedYaml.pipeline) {
         formikRef.current.setValues(parsedYaml.pipeline)
         formikRef.current.validateForm(parsedYaml.pipeline)
       }
+    }
+  }
+
+  function handleModeSwitch(view: SelectedView): void {
+    if (view === SelectedView.VISUAL) {
+      formikUpdateWithLatestYaml()
     }
     setSelectedView(view)
   }
@@ -675,7 +681,7 @@ function RunPipelineFormBasic({
             pipeline: { ...clearRuntimeInput(latestPipeline.pipeline) },
             template: latestYamlTemplate,
             originalPipeline: orgPipeline,
-            resolvedPipeline,
+            resolvedPipeline: resolvedMergedPipeline,
             getString,
             viewType: StepViewType.DeploymentForm,
             selectedStageData: selectedStages
@@ -700,7 +706,7 @@ function RunPipelineFormBasic({
   }
 
   const shouldShowPageSpinner = (): boolean => {
-    return loadingPipeline || loadingValidateTemplateInputs
+    return loadingPipeline || loadingResolvedChildPipeline
   }
 
   const formRefDom = React.useRef<HTMLElement | undefined>()
@@ -736,22 +742,7 @@ function RunPipelineFormBasic({
 
   let runPipelineFormContent: React.ReactElement | null = null
 
-  if (validateTemplateInputsResponse?.data?.validYaml === false) {
-    // repoName={repoIdentifier} because values is calculated at top and one of them (repoIdentifier, repoName)
-    // will be undefined based on the enabled flag (isGitSyncEnabled)
-    runPipelineFormContent = (
-      <PipelineErrorView
-        errorNodeSummary={validateTemplateInputsResponse.data.errorNodeSummary}
-        pipelineIdentifier={pipelineIdentifier}
-        repoIdentifier={repoIdentifier}
-        repoName={repoIdentifier}
-        branch={branch}
-        connectorRef={connectorRef}
-        storeType={storeType}
-        onClose={onClose}
-      />
-    )
-  } else if (inputSetsError?.message) {
+  if (inputSetsError?.message) {
     runPipelineFormContent = <PipelineInvalidRequestContent onClose={onClose} getTemplateError={inputSetsError} />
   } else {
     runPipelineFormContent = (
@@ -799,6 +790,7 @@ function RunPipelineFormBasic({
                     formErrors={formErrors}
                     stageExecutionData={stageExecutionData}
                     executionStageList={executionStageList}
+                    runModalHeaderTitle={formTitleText}
                   />
                   <RequiredStagesInfo
                     selectedStageData={selectedStageData}
@@ -825,7 +817,7 @@ function RunPipelineFormBasic({
                       pipeline={pipeline}
                       currentPipeline={{ pipeline: values }}
                       getTemplateError={inputSetsError}
-                      resolvedPipeline={resolvedPipeline}
+                      resolvedPipeline={resolvedMergedPipeline}
                       submitForm={submitForm}
                       setRunClicked={setRunClicked}
                       hasInputSets={hasInputSets}
@@ -851,6 +843,7 @@ function RunPipelineFormBasic({
                           width="100%"
                           isEditModeSupported={canEditYaml}
                           comparableYaml={inputSetYamlResponse?.data?.inputSetTemplateYaml}
+                          onChange={formikUpdateWithLatestYaml}
                         />
                       </Layout.Vertical>
                     </div>
@@ -875,7 +868,7 @@ function RunPipelineFormBasic({
                           variation={ButtonVariation.PRIMARY}
                           intent="success"
                           type="submit"
-                          text={getString('runPipeline')}
+                          text={formTitleText}
                           onClick={event => {
                             event.stopPropagation()
                             setRunClicked(true)
@@ -935,25 +928,27 @@ function RunPipelineFormBasic({
                           />
                         </div>
                       </Layout.Horizontal>
-                      <SaveAsInputSet
-                        key="saveasinput"
-                        pipeline={pipeline}
-                        currentPipeline={{ pipeline: values }}
-                        values={values}
-                        template={inputSetYamlResponse?.data?.inputSetTemplateYaml}
-                        canEdit={canSaveInputSet}
-                        accountId={accountId}
-                        projectIdentifier={projectIdentifier}
-                        orgIdentifier={orgIdentifier}
-                        connectorRef={connectorRef}
-                        repoIdentifier={repoIdentifier || pipelineResponse?.data?.gitDetails?.repoName}
-                        branch={branch || pipelineResponse?.data?.gitDetails?.branch}
-                        storeType={storeType}
-                        isGitSyncEnabled={isGitSyncEnabled}
-                        supportingGitSimplification={supportingGitSimplification}
-                        setFormErrors={setFormErrors}
-                        refetchParentData={handleInputSetSave}
-                      />
+                      {!isRerunPipeline && (
+                        <SaveAsInputSet
+                          key="saveasinput"
+                          pipeline={pipeline}
+                          currentPipeline={{ pipeline: values }}
+                          values={values}
+                          template={inputSetYamlResponse?.data?.inputSetTemplateYaml}
+                          canEdit={canSaveInputSet}
+                          accountId={accountId}
+                          projectIdentifier={projectIdentifier}
+                          orgIdentifier={orgIdentifier}
+                          connectorRef={connectorRef}
+                          repoIdentifier={repoIdentifier || pipelineResponse?.data?.gitDetails?.repoName}
+                          branch={branch || pipelineResponse?.data?.gitDetails?.branch}
+                          storeType={storeType}
+                          isGitSyncEnabled={isGitSyncEnabled}
+                          supportingGitSimplification={supportingGitSimplification}
+                          setFormErrors={setFormErrors}
+                          refetchParentData={handleInputSetSave}
+                        />
+                      )}
                     </Layout.Horizontal>
                   )}
                 </Layout.Vertical>

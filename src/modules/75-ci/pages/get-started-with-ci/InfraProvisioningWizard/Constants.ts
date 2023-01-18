@@ -202,6 +202,8 @@ export const DEFAULT_HARNESS_KMS = 'harnessSecretManager'
 
 export const ACCOUNT_SCOPE_PREFIX = 'account.'
 
+export const ORG_SCOPE_PREFIX = 'org.'
+
 const DEFAULT_STAGE_ID = 'Build'
 
 const DOCKER_REGISTRY_CONNECTOR_REF = 'harnessImage'

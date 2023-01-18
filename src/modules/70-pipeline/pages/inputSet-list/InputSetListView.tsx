@@ -25,11 +25,15 @@ import { useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType as GitResourceType } from '@common/interfaces/GitSyncInterface'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
 import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
+import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
+import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { MigrationType } from '@pipeline/components/MigrateResource/MigrateUtils'
 import useDeleteConfirmationDialog from '../utils/DeleteConfirmDialog'
 import { Badge } from '../utils/Badge/Badge'
 import css from './InputSetList.module.scss'
@@ -43,6 +47,7 @@ interface InputSetListViewProps {
   canUpdate?: boolean
   pipelineHasRuntimeInputs?: boolean
   isPipelineInvalid?: boolean
+  pipelineStoreType?: StoreType
   onDeleteInputSet: (commitMsg: string) => Promise<void>
   onDelete: (inputSet: InputSetSummaryResponse) => void
   template?: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
@@ -62,10 +67,18 @@ type CustomColumn<T extends Record<string, any>> = Column<T> & {
   onDeleteInputSet?: (commitMsg: string) => Promise<void>
   onDelete?: (inputSet: InputSetSummaryResponse) => void
   template?: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
+  pipelineStoreType?: StoreType
 }
 
 const getIconByType = (type: InputSetSummaryResponse['inputSetType']): IconName => {
   return type === 'OVERLAY_INPUT_SET' ? 'step-group' : 'yaml-builder-input-sets'
+}
+
+const showMoveToGitOption = (
+  pipelineStoreType: StoreMetadata['storeType'],
+  inputSetStoreType: StoreMetadata['storeType']
+): boolean => {
+  return pipelineStoreType === StoreType.REMOTE && inputSetStoreType === StoreType.INLINE
 }
 
 // eslint-disable-next-line react/function-component-definition
@@ -130,6 +143,19 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
   const isPipelineInvalid = (column as any)?.isPipelineInvalid
+  const pipelineStoreType = (column as CustomColumn<InputSetLocal>)?.pipelineStoreType
+
+  const { showMigrateResourceModal: showMoveResourceModal } = useMigrateResource({
+    resourceType: GitResourceType.INPUT_SETS,
+    modalTitle: getString('common.moveEntitytoGit', { resourceType: getString('inputSets.inputSetLabel') }),
+    migrationType: MigrationType.INLINE_TO_REMOTE,
+    extraQueryParams: {
+      pipelineIdentifier: data.pipelineIdentifier,
+      name: data?.name,
+      inputSetIdentifier: data.identifier
+    },
+    onSuccess: () => (column as CustomColumn<InputSetLocal>).refetchInputSet?.()
+  })
 
   const { confirmDelete } = useDeleteConfirmationDialog(
     data,
@@ -186,6 +212,16 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
             }
           />
           <Menu.Divider />
+          {showMoveToGitOption(pipelineStoreType, data.storeType) ? (
+            <Menu.Item
+              icon="git-merge"
+              text={getString('common.moveToGit')}
+              onClick={() => {
+                showMoveResourceModal()
+                setMenuOpen(false)
+              }}
+            />
+          ) : null}
           <Menu.Item
             icon="trash"
             text={getString('delete')}
@@ -208,6 +244,7 @@ const RenderColumnActions: Renderer<CellProps<InputSetLocal>> = ({ row, column }
   const rowData = row.original
   const isPipelineInvalid = (column as any)?.isPipelineInvalid
   const isGitSyncEnabled = (column as any)?.isGitSyncEnabled
+  const pipelineStoreType = (column as CustomColumn<InputSetLocal>)?.pipelineStoreType
 
   const { pipelineIdentifier } = useParams<{
     pipelineIdentifier: string
@@ -218,6 +255,16 @@ const RenderColumnActions: Renderer<CellProps<InputSetLocal>> = ({ row, column }
   const { getString } = useStrings()
   const runPipeline = (): void => {
     openRunPipelineModal()
+  }
+
+  const getRunPipelineTooltip = (): string => {
+    let tooltipText = ''
+    if (isPipelineInvalid) {
+      tooltipText = getString('pipeline.cannotRunInvalidPipeline')
+    } else if (showMoveToGitOption(pipelineStoreType, rowData.storeType)) {
+      tooltipText = getString('pipeline.inputSetWithInvalidStoreType')
+    }
+    return tooltipText
   }
 
   const { openRunPipelineModal } = useRunPipelineModal({
@@ -250,8 +297,12 @@ const RenderColumnActions: Renderer<CellProps<InputSetLocal>> = ({ row, column }
     />
   ) : (
     <RbacButton
-      disabled={!(column as any)?.pipelineHasRuntimeInputs || isPipelineInvalid}
-      tooltip={isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : ''}
+      disabled={
+        !(column as any)?.pipelineHasRuntimeInputs ||
+        isPipelineInvalid ||
+        showMoveToGitOption(pipelineStoreType, rowData.storeType)
+      }
+      tooltip={getRunPipelineTooltip()}
       icon="run-pipeline"
       variation={ButtonVariation.PRIMARY}
       intent="success"
@@ -284,6 +335,7 @@ export function InputSetListView({
   canUpdate = true,
   pipelineHasRuntimeInputs,
   isPipelineInvalid,
+  pipelineStoreType,
   onDeleteInputSet,
   onDelete,
   template
@@ -326,6 +378,7 @@ export function InputSetListView({
         goToInputSetDetail,
         pipelineHasRuntimeInputs,
         isPipelineInvalid,
+        pipelineStoreType,
         template,
         isGitSyncEnabled,
         refetchInputSet
@@ -337,6 +390,7 @@ export function InputSetListView({
         Cell: RenderColumnMenu,
         disableSortBy: true,
         isPipelineInvalid,
+        pipelineStoreType,
         goToInputSetDetail,
         refetchInputSet,
         cloneInputSet,
@@ -345,7 +399,8 @@ export function InputSetListView({
         onDelete
       }
     ],
-    [goToInputSetDetail, refetchInputSet, cloneInputSet, pipelineHasRuntimeInputs]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [goToInputSetDetail, refetchInputSet, cloneInputSet, pipelineStoreType, pipelineHasRuntimeInputs, data]
   )
 
   if (!isGitSyncEnabled) {

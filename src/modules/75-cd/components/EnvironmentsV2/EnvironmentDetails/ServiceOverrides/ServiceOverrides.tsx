@@ -55,7 +55,6 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import ApplicationConfigSelection from '@pipeline/components/ApplicationConfig/ApplicationConfigSelection'
 import { ApplicationConfigSelectionTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { getRefFromIdentifier } from '@common/utils/utils'
 import { ServiceOverrideTab } from './ServiceOverridesUtils'
 import AddEditServiceOverride from './AddEditServiceOverride'
 import ServiceManifestOverridesList from './ServiceManifestOverride/ServiceManifestOverridesList'
@@ -95,8 +94,6 @@ export function ServiceOverrides(): React.ReactElement {
     MultiTypeInputType.EXPRESSION
   ]
 
-  const environmentRef = getRefFromIdentifier(environmentIdentifier, orgIdentifier, projectIdentifier)
-
   const memoizedQueryParam = useMemo(
     () => ({
       accountIdentifier: accountId,
@@ -115,7 +112,7 @@ export function ServiceOverrides(): React.ReactElement {
   } = useGetServiceOverridesList({
     queryParams: {
       ...memoizedQueryParam,
-      environmentIdentifier: environmentRef
+      environmentIdentifier
     },
     lazy: servicesLoading || !!get(services, 'data.empty', null)
   })
@@ -138,7 +135,7 @@ export function ServiceOverrides(): React.ReactElement {
         const response = await deleteServiceOverridePromise({
           queryParams: {
             ...memoizedQueryParam,
-            environmentIdentifier: environmentRef,
+            environmentIdentifier,
             serviceIdentifier: serviceRef
           },
           body: null as any
@@ -174,7 +171,7 @@ export function ServiceOverrides(): React.ReactElement {
           body: {
             orgIdentifier,
             projectIdentifier,
-            environmentIdentifier: environmentRef,
+            environmentIdentifier,
             serviceIdentifier: serviceRef,
             yaml: yamlStringify({
               ...parsedYaml,

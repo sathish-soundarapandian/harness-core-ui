@@ -119,7 +119,9 @@ function ManifestTriggerInputPanelForm({
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
-      branch: isNewGitSyncRemotePipeline ? inputSetSelectedBranch : branch
+      branch: isNewGitSyncRemotePipeline ? inputSetSelectedBranch : branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
     }
   })
 
@@ -507,6 +509,7 @@ function ManifestTriggerInputPanelForm({
                   viewTypeMetadata={{ isTrigger: true }}
                   readonly={isNewGitSyncRemotePipeline}
                   gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
+                  disableRuntimeInputConfigureOptions
                 />
               )}
           </div>

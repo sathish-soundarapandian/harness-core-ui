@@ -77,7 +77,7 @@ describe('useModuleInfo tests', () => {
     })
 
     expect(result.current.icon).toBe('chaos-main')
-    expect(result.current.label).toBe('chaos.homepage.chaosHomePageTitle')
+    expect(result.current.label).toBe('common.purpose.chaos.continuous')
     expect(result.current.shouldVisible).toBe(false)
   })
 

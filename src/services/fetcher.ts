@@ -25,7 +25,8 @@ export async function fetcher<TResponse = unknown, TQueryParams = never, TBody =
   const { stringifyQueryParamsOptions, headers, body, url, queryParams, ...rest } = options
 
   const token = SecureStorage.get('token')
-  const accountId = SecureStorage.get<string>('acctId')
+  const matches = window.location.href.match(/\/account\/(.+?)\//)
+  const accountId = matches && matches.length > 1 ? matches[1] : SecureStorage.get<string>('acctId')
   let finalUrl = window.getApiBaseUrl(url)
   const finalQueryParams: Record<string, string> = {}
 

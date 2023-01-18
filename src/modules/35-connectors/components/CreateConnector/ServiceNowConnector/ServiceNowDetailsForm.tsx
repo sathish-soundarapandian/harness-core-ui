@@ -22,6 +22,7 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
+import cx from 'classnames'
 import type { ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import SecretInput from '@secrets/components/SecretInput/SecretInput'
@@ -34,14 +35,20 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 
 import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './ServiceNowConnector.module.scss'
-
 interface ServiceNowFormData {
   serviceNowUrl: string
   authType: string
   username: TextReferenceInterface | void
-  password: SecretReferenceInterface | void
+  passwordRef: SecretReferenceInterface | void
+  resourceIdRef: SecretReferenceInterface | void
+  clientIdRef: SecretReferenceInterface | void
+  certificateRef: SecretReferenceInterface | void
+  privateKeyRef: SecretReferenceInterface | void
+  adfsUrl: string
 }
 
 interface AuthenticationProps {
@@ -63,7 +70,12 @@ const defaultInitialFormData: ServiceNowFormData = {
   serviceNowUrl: '',
   authType: AuthTypes.USER_PASSWORD,
   username: undefined,
-  password: undefined
+  passwordRef: undefined,
+  resourceIdRef: undefined,
+  clientIdRef: undefined,
+  certificateRef: undefined,
+  privateKeyRef: undefined,
+  adfsUrl: ''
 }
 
 const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & AuthenticationProps> = props => {
@@ -71,6 +83,7 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
   const [, setModalErrorHandler] = React.useState<ModalErrorHandlerBinding | undefined>()
   const [initialValues, setInitialValues] = React.useState(defaultInitialFormData)
   const [loadConnector] = React.useState(false)
+  const isServiceNowAdfsAuthEnabled = useFeatureFlag(FeatureFlag.CDS_SERVICENOW_ADFS_AUTH)
 
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = React.useState(true && props.isEditMode)
   const { getString } = useStrings()
@@ -80,8 +93,11 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
       {
         label: getString('usernamePassword'),
         value: AuthTypes.USER_PASSWORD
+      },
+      {
+        label: getString('connectors.serviceNow.adfs'),
+        value: AuthTypes.ADFS
       }
-      // ADFS will be added as a second option for authentication support.
     ],
     []
   )
@@ -101,7 +117,7 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
       }
     }
   }, [loadingConnectorSecrets])
-  useGetHelpPanel('ServiceNowConnectorDetails', 900)
+  useGetHelpPanel('ServiceNowConnectorDetails', 1100)
 
   const { trackEvent } = useTelemetry()
 
@@ -138,6 +154,34 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
             is: val => val === AuthTypes.USER_PASSWORD,
             then: Yup.object().required(getString('validation.password')),
             otherwise: Yup.object().nullable()
+          }),
+          resourceIdRef: Yup.object().when('authType', {
+            is: val => val === AuthTypes.ADFS,
+            then: Yup.object().required(getString('connectors.validation.resourceID')),
+            otherwise: Yup.object().nullable()
+          }),
+          clientIdRef: Yup.object().when('authType', {
+            is: val => val === AuthTypes.ADFS,
+            then: Yup.object().required(getString('connectors.validation.clientID')),
+            otherwise: Yup.object().nullable()
+          }),
+          certificateRef: Yup.object().when('authType', {
+            is: val => val === AuthTypes.ADFS,
+            then: Yup.object().required(getString('connectors.validation.certificate')),
+            otherwise: Yup.object().nullable()
+          }),
+          privateKeyRef: Yup.object().when('authType', {
+            is: val => val === AuthTypes.ADFS,
+            then: Yup.object().required(getString('connectors.validation.privateKey')),
+            otherwise: Yup.object().nullable()
+          }),
+          adfsUrl: Yup.string().when('authType', {
+            is: val => val === AuthTypes.ADFS,
+            then: Yup.string()
+              .trim()
+              .required(getString('connectors.validation.adfsUrl'))
+              .url(getString('validation.urlIsNotValid')),
+            otherwise: Yup.string().nullable()
           })
         })}
         onSubmit={stepData => {
@@ -152,31 +196,72 @@ const ServiceNowDetailsForm: React.FC<StepProps<ServiceNowFormProps> & Authentic
           return (
             <>
               <ModalErrorHandler bind={setModalErrorHandler} />
-              <Layout.Vertical padding={{ top: 'large', bottom: 'large' }} width={'56%'}>
+              <Layout.Vertical padding={{ top: 'large', bottom: 'large' }}>
                 <FormInput.Text
                   name="serviceNowUrl"
                   placeholder={getString('UrlLabel')}
                   label={getString('connectors.serviceNow.serviceNowUrl')}
+                  className={css.detailsFormWidth}
                 />
-                <Container className={css.authContainer}>
+                <Container className={cx(css.authContainer, css.detailsFormWidth)}>
                   <Text font={{ variation: FontVariation.H6 }} inline margin={{ bottom: 'small', right: 'small' }}>
                     {getString('authentication')}
                   </Text>
                   <FormInput.Select
                     name="authType"
-                    items={authOptions}
+                    items={
+                      isServiceNowAdfsAuthEnabled
+                        ? authOptions
+                        : authOptions.filter(authOption => authOption.value !== AuthTypes.ADFS)
+                    }
                     disabled={false}
                     className={commonStyles.authTypeSelectLarge}
                   />
                 </Container>
                 {formik.values.authType === AuthTypes.USER_PASSWORD ? (
-                  <>
+                  <Container className={css.detailsFormWidth}>
                     <TextReference
                       name="username"
                       stringId="username"
                       type={formik.values.username ? formik.values.username?.type : ValueType.TEXT}
                     />
                     <SecretInput name={'passwordRef'} label={getString('connectors.apiKeyOrPassword')} />
+                  </Container>
+                ) : null}
+                {formik.values.authType === AuthTypes.ADFS && isServiceNowAdfsAuthEnabled ? (
+                  <>
+                    <Layout.Horizontal>
+                      <Layout.Vertical className={css.detailsFormWidth} margin={{ right: 'xxlarge' }}>
+                        <SecretInput
+                          name={'resourceIdRef'}
+                          label={getString('connectors.serviceNow.resourceID')}
+                          isMultiTypeSelect
+                        />
+                        <SecretInput
+                          name={'certificateRef'}
+                          label={getString('common.certificate')}
+                          isMultiTypeSelect
+                        />
+                      </Layout.Vertical>
+                      <Layout.Vertical className={css.detailsFormWidth}>
+                        <SecretInput
+                          name={'clientIdRef'}
+                          label={getString('connectors.serviceNow.clientID')}
+                          isMultiTypeSelect
+                        />
+                        <SecretInput
+                          name={'privateKeyRef'}
+                          label={getString('connectors.serviceNow.privateKey')}
+                          isMultiTypeSelect
+                        />
+                      </Layout.Vertical>
+                    </Layout.Horizontal>
+                    <FormInput.Text
+                      name="adfsUrl"
+                      placeholder={getString('UrlLabel')}
+                      label={getString('connectors.serviceNow.adfsUrl')}
+                      className={css.detailsFormWidth}
+                    />
                   </>
                 ) : null}
               </Layout.Vertical>

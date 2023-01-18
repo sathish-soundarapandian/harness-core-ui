@@ -42,23 +42,22 @@ export default function CreatePRInputStep(props: CreatePrInputStepProps): React.
   return (
     <FormikForm>
       {getMultiTypeFromValue(get(template, 'timeout', '')) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${prefix}.timeout`}
-            disabled={readonly}
-            fieldPath={'timeout'}
-            template={template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${prefix}.timeout`}
+          disabled={readonly}
+          fieldPath={'timeout'}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
 
       {getMultiTypeFromValue(get(template, 'spec.source.spec.updateConfigScript', '')) ===

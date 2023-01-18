@@ -167,8 +167,8 @@ const ConnectorDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDe
           }}
           formName={`connectorDetailsStepForm${props.type}`}
           validationSchema={Yup.object().shape({
-            name: NameSchema(),
-            identifier: IdentifierSchema()
+            name: NameSchema(getString),
+            identifier: IdentifierSchema(getString)
           })}
           initialValues={{
             ...(getInitialValues() as DetailsForm),
@@ -186,7 +186,7 @@ const ConnectorDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDe
                   <NameIdDescriptionTags
                     className={css.formElm}
                     formikProps={formikProps}
-                    identifierProps={{ inputName: 'name', isIdentifierEditable: !isEdit }}
+                    identifierProps={{ inputName: 'name', isIdentifierEditable: !isEdit, maxInput: 127 }}
                   />
 
                   {showGitContextForm ? (

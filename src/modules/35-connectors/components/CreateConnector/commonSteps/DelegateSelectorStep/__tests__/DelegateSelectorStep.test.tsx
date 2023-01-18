@@ -89,7 +89,6 @@ describe('DelegateSelectorStep', () => {
     expect(container).toMatchSnapshot()
     expect(container.querySelector('[value="DelegateOptions.DelegateOptionsAny"]')?.getAttribute('disabled')).toBe(null)
     expect(container.querySelectorAll('[data-name="DelegateSelectors"] [data-tag-index]').length).toBe(0)
-    expect(container.querySelector('[data-name="installNewDelegateButton"]')).toBeTruthy()
   })
 
   test('should confirm that install new delegate button is visible if feature flags are present', async () => {
@@ -101,6 +100,9 @@ describe('DelegateSelectorStep', () => {
         <DelegateSelectorStep {...defaultProps} buildPayload={jest.fn()} />
       </TestWrapper>
     )
+    await act(async () => {
+      fireEvent.click(container.querySelector('input[value="DelegateOptions.DelegateOptionsSelective"]')!)
+    })
     expect(container.querySelector('[data-name="installNewDelegateButton"]')).toBeTruthy()
   })
 
@@ -110,6 +112,9 @@ describe('DelegateSelectorStep', () => {
         <DelegateSelectorStep {...defaultProps} buildPayload={jest.fn()} />
       </TestWrapper>
     )
+    await act(async () => {
+      fireEvent.click(container.querySelector('input[value="DelegateOptions.DelegateOptionsSelective"]')!)
+    })
     expect(container.querySelector('[data-name="delegateTableEmptyState"]')).toBeTruthy()
     expect(container.querySelector('[data-name="delegateTableLoadingState"]')).toBeFalsy()
     expect(container.querySelector('[data-name="delegateContentContainer"] span[icon="error"]')).toBeFalsy()
@@ -131,6 +136,10 @@ describe('DelegateSelectorStep', () => {
         <DelegateSelectorStep {...defaultProps} buildPayload={jest.fn()} />
       </TestWrapper>
     )
+
+    await act(async () => {
+      fireEvent.click(container.querySelector('input[value="DelegateOptions.DelegateOptionsSelective"]')!)
+    })
 
     expect(container.querySelector('[data-name="delegateContentContainer"] span[icon="error"]')).toBeTruthy()
     expect(container.querySelector('[data-name="delegateTableEmptyState"]')).toBeFalsy()
@@ -156,6 +165,10 @@ describe('DelegateSelectorStep', () => {
         <DelegateSelectorStep {...defaultProps} buildPayload={jest.fn()} />
       </TestWrapper>
     )
+
+    await act(async () => {
+      fireEvent.click(container.querySelector('input[value="DelegateOptions.DelegateOptionsSelective"]')!)
+    })
     expect(container.querySelector('[data-name="delegateTableLoadingState"]')).toBeTruthy()
     expect(container.querySelector('[data-name="delegateTableEmptyState"]')).toBeFalsy()
     expect(container.querySelector('[data-name="delegateContentContainer"] span[icon="error"]')).toBeFalsy()
@@ -224,7 +237,28 @@ describe('DelegateSelectorStep', () => {
       </TestWrapper>
     )
     const headerRow = container.querySelector('[data-name="delegateContentContainer"] div[role="row"]')
-    expect(headerRow?.childElementCount).toBe(3)
+    expect(headerRow?.childElementCount).toBeFalsy()
+  })
+
+  test('should show delegates list if user choose “Use delegates with following tags” option is selected', async () => {
+    jest.spyOn(portalServices, 'useGetDelegatesUpTheHierarchy').mockImplementation(
+      () =>
+        ({
+          loading: false,
+          error: undefined,
+          data: mockedDelegates
+        } as any)
+    )
+    const { container } = render(
+      <TestWrapper>
+        <DelegateSelectorStep {...defaultProps} buildPayload={jest.fn()} />
+      </TestWrapper>
+    )
+    await act(async () => {
+      fireEvent.click(container.querySelector('input[value="DelegateOptions.DelegateOptionsSelective"]')!)
+    })
+    const headerRow = container.querySelector('[data-name="delegateContentContainer"] div[role="row"]')
+    expect(headerRow?.childElementCount).toBe(4)
   })
 
   test('should show checked for only one row', async () => {

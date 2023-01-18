@@ -7,8 +7,10 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly keepOnTop: string
+  readonly divider: string
+  readonly fullScreenContainer: string
   readonly mainContent: string
+  readonly multiStepWizardText: string
   readonly onboardingContainer: string
 }
 export default styles

@@ -181,7 +181,7 @@ const ProjectsListPage: React.FC = () => {
                 search: item.value !== OrgFilter.ALL ? `?orgIdentifier=${item.value.toString()}` : undefined
               })
             }}
-            getCustomLabel={item => getString('projectsOrgs.tabOrgs', { name: item.label })}
+            getCustomLabel={item => getString('common.tabOrgs', { name: item.label })}
           />
           <div style={{ flex: 1 }}></div>
           <ExpandingSearchInput

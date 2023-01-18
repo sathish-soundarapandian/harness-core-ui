@@ -296,6 +296,56 @@ export const cloneDashboardPromise = (
     signal
   )
 
+export interface GeneratePublicDashboardSignedUrlQueryParams {
+  accountId: string
+  dashboard: string
+  timezone?: string
+}
+
+export type GeneratePublicDashboardSignedUrlProps = Omit<
+  GetProps<SignedUrlResponse, ErrorResponse, GeneratePublicDashboardSignedUrlQueryParams, void>,
+  'path'
+>
+
+/**
+ * Create a Signed URL for a dashboard.
+ */
+export const GeneratePublicDashboardSignedUrl = (props: GeneratePublicDashboardSignedUrlProps) => (
+  <Get<SignedUrlResponse, ErrorResponse, GeneratePublicDashboardSignedUrlQueryParams, void>
+    path={`/embed/public/dashboard/signed_url`}
+    base={getConfig('dashboard/')}
+    {...props}
+  />
+)
+
+export type UseGeneratePublicDashboardSignedUrlProps = Omit<
+  UseGetProps<SignedUrlResponse, ErrorResponse, GeneratePublicDashboardSignedUrlQueryParams, void>,
+  'path'
+>
+
+/**
+ * Create a Signed URL for a dashboard.
+ */
+export const useGeneratePublicDashboardSignedUrl = (props: UseGeneratePublicDashboardSignedUrlProps) =>
+  useGet<SignedUrlResponse, ErrorResponse, GeneratePublicDashboardSignedUrlQueryParams, void>(
+    `/embed/public/dashboard/signed_url`,
+    { base: getConfig('dashboard/'), ...props }
+  )
+
+/**
+ * Create a Signed URL for a dashboard.
+ */
+export const generatePublicDashboardSignedUrlPromise = (
+  props: GetUsingFetchProps<SignedUrlResponse, ErrorResponse, GeneratePublicDashboardSignedUrlQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<SignedUrlResponse, ErrorResponse, GeneratePublicDashboardSignedUrlQueryParams, void>(
+    getConfig('dashboard/'),
+    `/embed/public/dashboard/signed_url`,
+    props,
+    signal
+  )
+
 export interface GetFolderQueryParams {
   page?: number
   accountId: string

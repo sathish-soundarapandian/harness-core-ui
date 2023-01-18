@@ -9,10 +9,10 @@ import React from 'react'
 import { render, waitFor, screen, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import routes from '@common/RouteDefinitions'
-import * as useFeatureFlag from '@common/hooks/useFeatureFlag'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import * as useFeatures from '@common/hooks/useFeatures'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
+import * as useLicenseStore from 'framework/LicenseStore/LicenseStoreContext'
 import * as cvServices from 'services/cv'
 import { RiskValues, getRiskLabelStringId, getCVMonitoringServicesSearchParam } from '@cv/utils/CommonUtils'
 import { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
@@ -24,9 +24,10 @@ import {
   updatedMSListData,
   riskMSListData,
   graphData,
-  MSListDataEnforcementMock,
   MSListDataMock,
-  checkFeatureReturnMock
+  checkFeatureReturnMock,
+  licenseWithSRMActive,
+  licenseWithSRMExpired
 } from './CVMonitoredService.mock'
 
 export const testWrapperProps: TestWrapperProps = {
@@ -62,9 +63,10 @@ jest
   .mockImplementation(() => ({ data: serviceCountData, refetch: refetchServiceCountData } as any))
 
 describe('Monitored Service list', () => {
+  const useLicenseStoreMock = jest.spyOn(useLicenseStore, 'useLicenseStore')
+
   beforeAll(() => {
-    const useFeatureFlags = jest.spyOn(useFeatureFlag, 'useFeatureFlag')
-    useFeatureFlags.mockReturnValue(true)
+    useLicenseStoreMock.mockReturnValue(licenseWithSRMActive as unknown as useLicenseStore.LicenseStoreContextProps)
   })
 
   test('Service listing component renders', async () => {
@@ -323,15 +325,93 @@ describe('Monitored Service list', () => {
   })
 
   describe('SRM Enforcement framework tests', () => {
-    test('Should render the row switch as disabled, if the feature is disabled', async () => {
+    // useFeatureFlags.mockReturnValue({ CVNG_ENABLED: true, CVNG_LICENSE_ENFORCEMENT: true })
+
+    beforeEach(() => {
+      useLicenseStoreMock.mockClear()
+    })
+
+    test('Should render the row switch as enabled, when SRM license is present and SRM_SERVICES feature is enabled, ', async () => {
+      useLicenseStoreMock.mockReturnValue(licenseWithSRMActive as unknown as useLicenseStore.LicenseStoreContextProps)
       const checkFeatureReturnMock2 = {
-        enabled: false
+        enabled: true
       }
-      jest.spyOn(cvServices, 'useListMonitoredService').mockImplementation(() => ({ data: MSListDataMock } as any))
-      jest.spyOn(useFeatures, 'useFeature').mockImplementation(() => ({ ...checkFeatureReturnMock2 } as any))
+      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListData } as any)
+      jest.spyOn(useFeatures, 'useFeature').mockReturnValue({ ...checkFeatureReturnMock2 } as any)
 
       render(
-        <TestWrapper {...testWrapperProps}>
+        <TestWrapper
+          {...testWrapperProps}
+          defaultFeatureFlagValues={{ CVNG_ENABLED: true, CVNG_LICENSE_ENFORCEMENT: true }}
+        >
+          <CVMonitoredService />
+        </TestWrapper>
+      )
+
+      const toggleButton = document.querySelector('button.toggleFlagButton .optionBtn.notAllowed')
+
+      expect(toggleButton).not.toBeInTheDocument()
+    })
+
+    test('Should render the row switch as enabled, when SRM active license is not present and CVNG_ENABLED feature flag is present', async () => {
+      useLicenseStoreMock.mockReturnValue(licenseWithSRMExpired as unknown as useLicenseStore.LicenseStoreContextProps)
+
+      const checkFeatureReturnMock2 = {
+        enabled: true
+      }
+      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListData } as any)
+      jest.spyOn(useFeatures, 'useFeature').mockReturnValue({ ...checkFeatureReturnMock2 } as any)
+
+      render(
+        <TestWrapper
+          {...testWrapperProps}
+          defaultFeatureFlagValues={{ CVNG_ENABLED: true, CVNG_LICENSE_ENFORCEMENT: true }}
+        >
+          <CVMonitoredService />
+        </TestWrapper>
+      )
+
+      const toggleButton = document.querySelector('button.toggleFlagButton .optionBtn.notAllowed')
+
+      expect(toggleButton).not.toBeInTheDocument()
+    })
+
+    test('Should render the row switch as enabled, when SRM active license is present and CVNG_LICENSE_ENFORCEMENT feature flag is not present', async () => {
+      useLicenseStoreMock.mockReturnValue(licenseWithSRMActive as unknown as useLicenseStore.LicenseStoreContextProps)
+
+      const checkFeatureReturnMock2 = {
+        enabled: true
+      }
+      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListData } as any)
+      jest.spyOn(useFeatures, 'useFeature').mockReturnValue({ ...checkFeatureReturnMock2 } as any)
+
+      render(
+        <TestWrapper
+          {...testWrapperProps}
+          defaultFeatureFlagValues={{ CVNG_ENABLED: true, CVNG_LICENSE_ENFORCEMENT: false }}
+        >
+          <CVMonitoredService />
+        </TestWrapper>
+      )
+
+      const toggleButton = document.querySelector('button.toggleFlagButton .optionBtn.notAllowed')
+
+      expect(toggleButton).not.toBeInTheDocument()
+    })
+
+    test('Should render the row switch as disabled, when SRM active license is not present and CVNG_ENABLED feature flag is not present', async () => {
+      useLicenseStoreMock.mockReturnValue(licenseWithSRMExpired as unknown as useLicenseStore.LicenseStoreContextProps)
+      const checkFeatureReturnMock2 = {
+        enabled: true
+      }
+      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListData } as any)
+      jest.spyOn(useFeatures, 'useFeature').mockReturnValue({ ...checkFeatureReturnMock2 } as any)
+
+      render(
+        <TestWrapper
+          {...testWrapperProps}
+          defaultFeatureFlagValues={{ CVNG_ENABLED: false, CVNG_LICENSE_ENFORCEMENT: true }}
+        >
           <CVMonitoredService />
         </TestWrapper>
       )
@@ -341,15 +421,43 @@ describe('Monitored Service list', () => {
       expect(toggleButton).toBeInTheDocument()
     })
 
-    test('Should render the row switch as enabled, if the feature is enabled', async () => {
+    test('Should render the row switch as disabled, if SRM_SERVICES feature is disabled', async () => {
+      useLicenseStoreMock.mockReturnValue(licenseWithSRMActive as unknown as useLicenseStore.LicenseStoreContextProps)
+
+      const checkFeatureReturnMock2 = {
+        enabled: false
+      }
+      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListDataMock } as any)
+      jest.spyOn(useFeatures, 'useFeature').mockReturnValue({ ...checkFeatureReturnMock2 } as any)
+
+      render(
+        <TestWrapper
+          {...testWrapperProps}
+          defaultFeatureFlagValues={{ CVNG_ENABLED: true, CVNG_LICENSE_ENFORCEMENT: true }}
+        >
+          <CVMonitoredService />
+        </TestWrapper>
+      )
+
+      const toggleButton = document.querySelector('button.toggleFlagButton .optionBtn.notAllowed')
+
+      expect(toggleButton).toBeInTheDocument()
+    })
+
+    test('Should render the row switch as enabled, if its service is not already enabled somewhere and it did not reach the limit', async () => {
+      useLicenseStoreMock.mockReturnValue(licenseWithSRMActive as unknown as useLicenseStore.LicenseStoreContextProps)
+
       const checkFeatureReturnMock2 = {
         enabled: true
       }
-      jest.spyOn(cvServices, 'useListMonitoredService').mockImplementation(() => ({ data: MSListData } as any))
-      jest.spyOn(useFeatures, 'useFeature').mockImplementation(() => ({ ...checkFeatureReturnMock2 } as any))
+      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListDataMock } as any)
+      jest.spyOn(useFeatures, 'useFeature').mockReturnValue({ ...checkFeatureReturnMock2 } as any)
 
       render(
-        <TestWrapper {...testWrapperProps}>
+        <TestWrapper
+          {...testWrapperProps}
+          defaultFeatureFlagValues={{ CVNG_ENABLED: true, CVNG_LICENSE_ENFORCEMENT: true }}
+        >
           <CVMonitoredService />
         </TestWrapper>
       )
@@ -359,15 +467,20 @@ describe('Monitored Service list', () => {
       expect(toggleButton).not.toBeInTheDocument()
     })
 
-    test('Should render the row switch as enabled, if serviceLicenseEnabled is true and the feature count is equal to limit', async () => {
+    test('Should render the row switch as enabled, if its service is already enabled and it reached the limit', async () => {
+      useLicenseStoreMock.mockReturnValue(licenseWithSRMActive as unknown as useLicenseStore.LicenseStoreContextProps)
+
       const checkFeatureReturnMock2 = {
         enabled: false
       }
-      jest.spyOn(cvServices, 'useListMonitoredService').mockImplementation(() => ({ data: MSListData } as any))
-      jest.spyOn(useFeatures, 'useFeature').mockImplementation(() => ({ ...checkFeatureReturnMock2 } as any))
+      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListData } as any)
+      jest.spyOn(useFeatures, 'useFeature').mockReturnValue({ ...checkFeatureReturnMock2 } as any)
 
       render(
-        <TestWrapper {...testWrapperProps}>
+        <TestWrapper
+          {...testWrapperProps}
+          defaultFeatureFlagValues={{ CVNG_ENABLED: true, CVNG_LICENSE_ENFORCEMENT: true }}
+        >
           <CVMonitoredService />
         </TestWrapper>
       )
@@ -377,17 +490,20 @@ describe('Monitored Service list', () => {
       expect(toggleButton).not.toBeInTheDocument()
     })
 
-    test('Should render the row switch as disabled, if serviceLicenseEnabled is false and feature enabled is false', async () => {
+    test('Should render the row switch as disabled, if its service is not already enabled somewhere and it reached the limit', async () => {
+      useLicenseStoreMock.mockReturnValue(licenseWithSRMActive as unknown as useLicenseStore.LicenseStoreContextProps)
+
       const checkFeatureReturnMock2 = {
         enabled: false
       }
-      jest
-        .spyOn(cvServices, 'useListMonitoredService')
-        .mockImplementation(() => ({ data: MSListDataEnforcementMock } as any))
-      jest.spyOn(useFeatures, 'useFeature').mockImplementation(() => ({ ...checkFeatureReturnMock2 } as any))
+      jest.spyOn(cvServices, 'useListMonitoredService').mockReturnValue({ data: MSListDataMock } as any)
+      jest.spyOn(useFeatures, 'useFeature').mockReturnValue({ ...checkFeatureReturnMock2 } as any)
 
       render(
-        <TestWrapper {...testWrapperProps}>
+        <TestWrapper
+          {...testWrapperProps}
+          defaultFeatureFlagValues={{ CVNG_ENABLED: true, CVNG_LICENSE_ENFORCEMENT: true }}
+        >
           <CVMonitoredService />
         </TestWrapper>
       )

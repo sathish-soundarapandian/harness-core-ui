@@ -5,19 +5,21 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useEffect } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useCallback, useState } from 'react'
 import { Intent } from '@blueprintjs/core'
 import type { GetDataError } from 'restful-react'
 import { useParams, useLocation, useHistory } from 'react-router-dom'
 import { get, isEmpty, pickBy } from 'lodash-es'
-import { Text, Icon, PageError, PageSpinner, Layout } from '@harness/uicore'
+import { Text, Icon, PageError, PageSpinner, Layout, Container } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { DeprecatedImageInfo, useGetExecutionConfig } from 'services/ci'
+import { CIExecutionImages, getCustomerConfigPromise, ResponseCIExecutionImages } from 'services/ci'
 import {
   Failure,
   GovernanceMetadata,
+  GraphLayoutNode,
   ResponsePipelineExecutionDetail,
-  useGetExecutionDetailV2
+  useGetExecutionDetailV2,
+  useDebugPipelineExecuteWithInputSetYaml
 } from 'services/pipeline-ng'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import { ExecutionStatus, isExecutionComplete } from '@pipeline/utils/statusHelpers'
@@ -31,13 +33,13 @@ import {
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
 import { joinAsASentence } from '@common/utils/StringUtils'
-import { String, useStrings } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { PipelineExecutionWarning } from '@pipeline/components/PipelineExecutionWarning/PipelineExecutionWarning'
 import { logsCache } from '@pipeline/components/LogsContent/LogsState/utils'
 import { EvaluationModal } from '@governance/EvaluationModal'
-import ExecutionContext, { GraphCanvasState } from '@pipeline/context/ExecutionContext'
+import ExecutionContext from '@pipeline/context/ExecutionContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { usePolling } from '@common/hooks/usePolling'
@@ -46,10 +48,14 @@ import { hasCIStage, hasOverviewDetail, hasServiceDetail } from '@pipeline/utils
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
-import { ExecutionPipelineVariables } from './ExecutionPipelineVariables'
+import { useToaster } from '@common/exports'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { PipelineActions } from '@common/constants/TrackingConstants'
 import ExecutionTabs from './ExecutionTabs/ExecutionTabs'
 import ExecutionMetadata from './ExecutionMetadata/ExecutionMetadata'
+import { ExecutionPipelineVariables } from './ExecutionPipelineVariables'
 import { ExecutionHeader } from './ExecutionHeader/ExecutionHeader'
+import { CIBuildInfrastructureType } from '../../../utils/constants'
 
 import css from './ExecutionLandingPage.module.scss'
 
@@ -59,20 +65,24 @@ const PageTabs = { PIPELINE: 'pipeline' }
 const setStageIds = ({
   queryParams,
   setAutoSelectedStageId,
+  setAutoSelectedChildStageId,
   setAutoSelectedStepId,
   setAutoStageNodeExecutionId,
   setSelectedStepId,
   setSelectedStageId,
+  setSelectedChildStageId,
   setSelectedStageExecutionId,
   data,
   error
 }: {
   queryParams: ExecutionPageQueryParams
   setAutoSelectedStageId: Dispatch<SetStateAction<string>>
+  setAutoSelectedChildStageId: Dispatch<SetStateAction<string>>
   setAutoSelectedStepId: Dispatch<SetStateAction<string>>
   setAutoStageNodeExecutionId: Dispatch<SetStateAction<string>>
   setSelectedStepId: Dispatch<SetStateAction<string>>
   setSelectedStageId: Dispatch<SetStateAction<string>>
+  setSelectedChildStageId: Dispatch<SetStateAction<string>>
   setSelectedStageExecutionId: Dispatch<SetStateAction<string>>
   data?: ResponsePipelineExecutionDetail | null
   error?: GetDataError<Failure | Error> | null
@@ -81,9 +91,10 @@ const setStageIds = ({
     return
   }
 
-  // if user has selected a stage/step do not auto-update
-  if (queryParams.stage || queryParams.step) {
+  // if user has selected a stage/step/collapsedNode do not auto-update
+  if (queryParams.stage || queryParams.step || queryParams.collapsedNode) {
     setAutoSelectedStageId('')
+    setAutoSelectedChildStageId('')
     setAutoSelectedStepId('')
     return
   }
@@ -91,6 +102,7 @@ const setStageIds = ({
   // if no data is found, reset the stage and step
   if (!data || !data?.data) {
     setAutoSelectedStageId('')
+    setAutoSelectedChildStageId('')
     setAutoSelectedStepId('')
     return
   }
@@ -100,7 +112,16 @@ const setStageIds = ({
     data.data?.pipelineExecutionSummary?.status as ExecutionStatus
   )
 
-  const runningStep = getActiveStep(data.data.executionGraph, data.data.pipelineExecutionSummary)
+  const runningChildStage = getActiveStageForPipeline(
+    data.data?.childGraph?.pipelineExecutionSummary,
+    data.data?.childGraph?.pipelineExecutionSummary?.status as ExecutionStatus
+  )
+
+  let runningStep = null
+  if (data.data?.executionGraph)
+    runningStep = getActiveStep(data.data?.executionGraph, data.data.pipelineExecutionSummary)
+  else if (data.data?.childGraph?.executionGraph)
+    runningStep = getActiveStep(data.data?.childGraph?.executionGraph, data.data?.childGraph?.pipelineExecutionSummary)
 
   if (runningStage) {
     if (isNodeTypeMatrixOrFor(data.data?.pipelineExecutionSummary?.layoutNodeMap?.[runningStage]?.nodeType)) {
@@ -121,8 +142,47 @@ const setStageIds = ({
     } else {
       setAutoSelectedStageId(runningStage)
       setSelectedStageId(runningStage)
-      setAutoStageNodeExecutionId('')
-      setSelectedStageExecutionId('')
+      if (runningChildStage) {
+        if (
+          isNodeTypeMatrixOrFor(
+            data.data?.childGraph?.pipelineExecutionSummary?.layoutNodeMap?.[runningChildStage]?.nodeType
+          )
+        ) {
+          const childNodeExecid = get(
+            data,
+            [
+              'data',
+              'childGraph',
+              'pipelineExecutionSummary',
+              'layoutNodeMap',
+              runningChildStage,
+              'edgeLayoutList',
+              'currentNodeChildren',
+              0
+            ],
+            runningChildStage
+          ) as string // UNIQUE ID--> stageNodeExecutionID
+          const childNodeId = get(
+            data,
+            ['data', 'childGraph', 'pipelineExecutionSummary', 'layoutNodeMap', childNodeExecid, 'nodeUuid'],
+            ''
+          ) as string // COMMMON--> stageNodeID
+          setAutoSelectedChildStageId(childNodeId)
+          setSelectedChildStageId(childNodeId)
+          setAutoStageNodeExecutionId(childNodeExecid)
+          setSelectedStageExecutionId(childNodeExecid)
+        } else {
+          setAutoSelectedChildStageId(runningChildStage)
+          setSelectedChildStageId(runningChildStage)
+          setAutoStageNodeExecutionId('')
+          setSelectedStageExecutionId('')
+        }
+      } else {
+        setAutoSelectedChildStageId('')
+        setSelectedChildStageId('')
+        setAutoStageNodeExecutionId('')
+        setSelectedStageExecutionId('')
+      }
     }
   }
 
@@ -144,6 +204,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
 
   /* These are used when auto updating selected stage/step when a pipeline is running */
   const [autoSelectedStageId, setAutoSelectedStageId] = React.useState<string>('')
+  const [autoSelectedChildStageId, setAutoSelectedChildStageId] = React.useState<string>('')
   const [autoSelectedStepId, setAutoSelectedStepId] = React.useState<string>('')
   const [autoStageNodeExecutionId, setAutoStageNodeExecutionId] = React.useState<string>('')
   const [isPipelineInvalid, setIsPipelineInvalid] = React.useState(false)
@@ -151,7 +212,9 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   /* These are updated only when new data is fetched successfully */
   const [selectedStageId, setSelectedStageId] = React.useState<string>('')
   const [selectedStageExecutionId, setSelectedStageExecutionId] = React.useState<string>('')
+  const [selectedChildStageId, setSelectedChildStageId] = React.useState<string>('')
   const [selectedStepId, setSelectedStepId] = React.useState<string>('')
+  const [selectedCollapsedNodeId, setSelectedCollapsedNodeId] = React.useState<string>('')
   const { preference: savedExecutionView, setPreference: setSavedExecutionView } = usePreferenceStore<
     string | undefined
   >(PreferenceScope.USER, 'executionViewType')
@@ -162,11 +225,8 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   const location = useLocation<{ shouldShowGovernanceEvaluations: boolean; governanceMetadata: GovernanceMetadata }>()
   const locationPathNameArr = location?.pathname?.split('/') || []
   const selectedPageTab = locationPathNameArr[locationPathNameArr.length - 1]
-  const [stepsGraphCanvasState, setStepsGraphCanvasState] = React.useState<GraphCanvasState>({
-    offsetX: 5,
-    offsetY: 0,
-    zoom: 100
-  })
+  const [deprecatedImageUsageMap, setDeprecatedImageUsageMap] =
+    useState<Map<CIBuildInfrastructureType, CIExecutionImages>>()
 
   const { data, refetch, loading, error } = useGetExecutionDetailV2({
     planExecutionId: executionIdentifier,
@@ -180,21 +240,12 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
       ...(selectedStageId !== selectedStageExecutionId &&
         !isEmpty(selectedStageExecutionId) && {
           stageNodeExecutionId: selectedStageExecutionId
-        })
+        }),
+      ...(!isEmpty(queryParams.childStage || autoSelectedChildStageId) && {
+        childStageNodeId: queryParams.childStage || autoSelectedChildStageId
+      })
     },
     debounce: 500
-  })
-
-  const {
-    data: executionConfig,
-    refetch: fetchExecutionConfig,
-    loading: isFetchingExecutionConfig,
-    error: errorWhileFetchingExecutionConfig
-  } = useGetExecutionConfig({
-    queryParams: {
-      accountIdentifier: accountId
-    },
-    lazy: true
   })
 
   const HAS_CI = hasCIStage(data?.data?.pipelineExecutionSummary)
@@ -225,40 +276,165 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     }
   })
 
+  const { showSuccess, showWarning } = useToaster()
+  const { trackEvent } = useTelemetry()
+  const { mutate: runPipelineInDebugMode, loading: pipelineDebugExecutionLoading } =
+    useDebugPipelineExecuteWithInputSetYaml({
+      queryParams: {
+        accountIdentifier: accountId,
+        projectIdentifier,
+        orgIdentifier,
+        moduleType: module || ''
+      },
+      identifier: pipelineIdentifier ?? '',
+      originalExecutionId: executionIdentifier ?? '',
+      requestOptions: {
+        headers: {
+          'content-type': 'application/yaml'
+        }
+      }
+    })
+
+  const handleRunPipelineInDebugMode = useCallback(async () => {
+    try {
+      const response = await runPipelineInDebugMode()
+      if (response.status === 'SUCCESS') {
+        showSuccess(getString('runPipelineForm.pipelineRunSuccessFully'))
+        history.push({
+          pathname: routes.toExecutionPipelineView({
+            orgIdentifier,
+            pipelineIdentifier,
+            projectIdentifier,
+            executionIdentifier: response?.data?.planExecution?.uuid ?? '',
+            accountId,
+            module,
+            source
+          })
+        })
+        trackEvent(PipelineActions.StartedExecution, { module })
+      }
+    } catch (err: any) {
+      showWarning(getRBACErrorMessage(err) ?? getString('runPipelineForm.runPipelineFailed'))
+    }
+  }, [runPipelineInDebugMode, orgIdentifier, pipelineIdentifier, projectIdentifier, history, showWarning])
+
   useEffect(() => {
     if (data?.data?.pipelineExecutionSummary?.modules?.includes(ModuleName.CI.toLowerCase())) {
-      fetchExecutionConfig()
+      Promise.all([
+        getCustomerConfigPromise({
+          queryParams: { accountIdentifier: accountId, infra: CIBuildInfrastructureType.K8, overridesOnly: true }
+        }),
+        getCustomerConfigPromise({
+          queryParams: { accountIdentifier: accountId, infra: CIBuildInfrastructureType.VM, overridesOnly: true }
+        })
+      ]).then((executionConfigs: [ResponseCIExecutionImages, ResponseCIExecutionImages]) => {
+        const deprecatedImageMap = new Map<CIBuildInfrastructureType, CIExecutionImages>()
+        const deprecatedImagesForK8sInfra = executionConfigs[0].data
+        const deprecatedImagesForVMInfra = executionConfigs[1].data
+        if (deprecatedImagesForK8sInfra && !isEmpty(deprecatedImagesForK8sInfra)) {
+          deprecatedImageMap.set(CIBuildInfrastructureType.K8, deprecatedImagesForK8sInfra)
+        }
+        if (deprecatedImagesForVMInfra && !isEmpty(deprecatedImagesForVMInfra)) {
+          deprecatedImageMap.set(CIBuildInfrastructureType.VM, deprecatedImagesForVMInfra)
+        }
+        setDeprecatedImageUsageMap(deprecatedImageMap)
+      })
     }
   }, [data?.data?.pipelineExecutionSummary?.modules?.length])
 
-  const deprecatedImages = React.useMemo(() => {
-    if (!isFetchingExecutionConfig && !errorWhileFetchingExecutionConfig) {
-      return executionConfig?.data as DeprecatedImageInfo[]
-    }
-  }, [executionConfig?.data])
+  const getDeprecatedImageUsageSummaryForInfraType = useCallback(
+    (buildInfraType: CIBuildInfrastructureType): React.ReactElement => {
+      if (!deprecatedImageUsageMap) {
+        return <></>
+      }
+      if (isEmpty(deprecatedImageUsageMap.get(buildInfraType))) {
+        return <></>
+      }
+      let buildInraTypeLabel = ''
+      switch (buildInfraType) {
+        case CIBuildInfrastructureType.K8:
+          buildInraTypeLabel = getString('kubernetesText')
+          break
+        case CIBuildInfrastructureType.VM:
+          buildInraTypeLabel = getString('pipeline.vmLabel')
+          break
+      }
+      const el = (
+        <>
+          {`${getString('infrastructureTypeText')} ${buildInraTypeLabel}`}:&nbsp;
+          {joinAsASentence(
+            Object.entries(deprecatedImageUsageMap.get(buildInfraType) || {})
+              .filter(item => !!item[0] && !!item[1])
+              .map((item: [string, string]) => `${item[0]}(${item[1]})`)
+          )}
+        </>
+      )
+      return (
+        <Text
+          font={{ variation: FontVariation.SMALL_SEMI }}
+          lineClamp={1}
+          tooltip={
+            <Text
+              font={{ variation: FontVariation.SMALL_SEMI }}
+              padding={{ left: 'medium', right: 'medium', top: 'small', bottom: 'small' }}
+            >
+              {el}
+            </Text>
+          }
+        >
+          {el}
+        </Text>
+      )
+    },
+    [deprecatedImageUsageMap]
+  )
 
-  const getDeprecatedImageSummary = (images: DeprecatedImageInfo[]): string => {
-    const tagWithVersions = images
-      .filter((image: DeprecatedImageInfo) => !!image.tag && !!image.version)
-      .map((image: DeprecatedImageInfo) => `${image.tag}(${image.version})`)
-    return joinAsASentence(tagWithVersions)
-  }
+  const getDeprecatedImageUsageSummary = useCallback((): React.ReactElement => {
+    return (
+      <Layout.Vertical padding={{ top: 'xsmall', bottom: 'xsmall', right: 'large' }}>
+        {getDeprecatedImageUsageSummaryForInfraType(CIBuildInfrastructureType.K8)}
+        {getDeprecatedImageUsageSummaryForInfraType(CIBuildInfrastructureType.VM)}
+      </Layout.Vertical>
+    )
+  }, [deprecatedImageUsageMap])
 
   const graphNodeMap = data?.data?.executionGraph?.nodeMap || {}
-  const isDataLoadedForSelectedStage = Object.keys(graphNodeMap).some(
+  const childGraphNodeMap = data?.data?.childGraph?.executionGraph?.nodeMap || {}
+
+  let isDataLoadedForSelectedStage = Object.keys(graphNodeMap).some(
     key => graphNodeMap?.[key]?.setupId === selectedStageId
   )
 
-  const pipelineStagesMap = React.useMemo(() => {
+  const isDataLoadedForChildSelectedStage = Object.keys(childGraphNodeMap).some(
+    key => childGraphNodeMap?.[key]?.setupId === selectedChildStageId
+  )
+  isDataLoadedForSelectedStage ||= isDataLoadedForChildSelectedStage
+
+  const allStagesMap = React.useMemo(() => {
     return getPipelineStagesMap(
       data?.data?.pipelineExecutionSummary?.layoutNodeMap,
       data?.data?.pipelineExecutionSummary?.startingNodeId
     )
   }, [data?.data?.pipelineExecutionSummary?.layoutNodeMap, data?.data?.pipelineExecutionSummary?.startingNodeId])
 
+  const childPipelineStagesMap = React.useMemo(() => {
+    return getPipelineStagesMap(
+      data?.data?.childGraph?.pipelineExecutionSummary?.layoutNodeMap,
+      data?.data?.childGraph?.pipelineExecutionSummary?.startingNodeId
+    )
+  }, [
+    data?.data?.childGraph?.pipelineExecutionSummary?.layoutNodeMap,
+    data?.data?.childGraph?.pipelineExecutionSummary?.startingNodeId
+  ])
+
+  let pipelineStagesMap = allStagesMap
+  if (childPipelineStagesMap.size)
+    pipelineStagesMap = new Map<string, GraphLayoutNode>([...pipelineStagesMap, ...childPipelineStagesMap])
+
   // combine steps and dependencies(ci stage)
   useDeepCompareEffect(() => {
     let nodeMap = { ...data?.data?.executionGraph?.nodeMap }
+    if (data?.data?.childGraph?.executionGraph) nodeMap = { ...data?.data?.childGraph?.executionGraph?.nodeMap }
 
     nodeMap = processForCIData({ nodeMap, data })
 
@@ -267,7 +443,12 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
 
       return { ...interruptHistories, ...nodeMap }
     })
-  }, [data?.data?.executionGraph?.nodeMap, data?.data?.executionGraph?.nodeAdjacencyListMap])
+  }, [
+    data?.data?.executionGraph?.nodeMap,
+    data?.data?.executionGraph?.nodeAdjacencyListMap,
+    data?.data?.childGraph?.executionGraph?.nodeMap,
+    data?.data?.childGraph?.executionGraph?.nodeAdjacencyListMap
+  ])
 
   // Do polling after initial default loading and has some data, stop if execution is in complete status
   usePolling(refetch, {
@@ -281,10 +462,12 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     setStageIds({
       queryParams,
       setAutoSelectedStageId,
+      setAutoSelectedChildStageId,
       setAutoSelectedStepId,
       setAutoStageNodeExecutionId,
       setSelectedStepId,
       setSelectedStageId,
+      setSelectedChildStageId,
       setSelectedStageExecutionId,
       data,
       error
@@ -301,11 +484,20 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   React.useEffect(() => {
     if (loading) {
       setSelectedStageId((queryParams.stage as string) || autoSelectedStageId)
+      setSelectedChildStageId((queryParams.childStage as string) || autoSelectedChildStageId)
     }
     setSelectedStageExecutionId((queryParams?.stageExecId as string) || autoStageNodeExecutionId)
     setSelectedStepId((queryParams.step as string) || autoSelectedStepId)
+    setSelectedCollapsedNodeId(queryParams?.collapsedNode ?? '')
     queryParams?.stage && !queryParams?.stageExecId && setAutoStageNodeExecutionId(queryParams?.stageExecId || '')
-  }, [loading, queryParams, autoSelectedStageId, autoSelectedStepId, autoStageNodeExecutionId])
+  }, [
+    loading,
+    queryParams,
+    autoSelectedStageId,
+    autoSelectedChildStageId,
+    autoSelectedStepId,
+    autoStageNodeExecutionId
+  ])
 
   useEffect(() => {
     if (HAS_CI && CI_TESTTAB_NAVIGATION && reportSummary?.failed_tests) {
@@ -333,22 +525,25 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         pipelineExecutionDetail: data?.data || null,
         allNodeMap,
         pipelineStagesMap,
+        childPipelineStagesMap,
+        allStagesMap,
         isPipelineInvalid,
         selectedStageId,
+        selectedChildStageId,
         selectedStepId,
         selectedStageExecutionId,
+        selectedCollapsedNodeId,
         loading,
         isDataLoadedForSelectedStage,
         queryParams,
         logsToken,
         setLogsToken,
         refetch,
-        stepsGraphCanvasState,
-        setStepsGraphCanvasState,
         setSelectedStageId,
         setSelectedStepId,
         setIsPipelineInvalid,
         setSelectedStageExecutionId,
+        setSelectedCollapsedNodeId,
         addNewNodeToMap(id, node) {
           setAllNodeMap(nodeMap => ({ ...nodeMap, [id]: node }))
         }
@@ -361,40 +556,37 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         projectIdentifier={projectIdentifier}
         planExecutionId={executionIdentifier}
       >
-        {(!data && loading) || reportSummaryLoading ? <PageSpinner /> : null}
+        {(!data && loading) || reportSummaryLoading || pipelineDebugExecutionLoading ? <PageSpinner /> : null}
         {error ? (
           <PageError message={getRBACErrorMessage(error) as string} />
         ) : (
           <main className={css.main}>
             <div className={css.lhs}>
               <header className={css.header}>
-                <ExecutionHeader />
+                <ExecutionHeader onRunPipelineInDebugMode={handleRunPipelineInDebugMode} />
                 <ExecutionMetadata />
               </header>
               <ExecutionTabs savedExecutionView={savedExecutionView} setSavedExecutionView={setSavedExecutionView} />
               {module === 'ci' && (
                 <>
-                  {deprecatedImages?.length ? (
+                  {deprecatedImageUsageMap && deprecatedImageUsageMap.size > 0 ? (
                     <PipelineExecutionWarning
                       warning={
-                        <>
+                        <Layout.Horizontal padding={{ left: 'xxlarge', right: 'xxlarge' }} flex>
                           <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
                             <Icon name="warning-sign" intent={Intent.DANGER} />
                             <Text color={Color.ORANGE_900} font={{ variation: FontVariation.SMALL_BOLD }}>
                               {getString('pipeline.imageVersionDeprecated')}
                             </Text>
                           </Layout.Horizontal>
-                          <Text font={{ weight: 'semi-bold', size: 'small' }} color={Color.PRIMARY_10} lineClamp={2}>
-                            <String
-                              stringID="pipeline.unsupportedImagesWarning"
-                              vars={{
-                                summary: `${getDeprecatedImageSummary(deprecatedImages)}.`
-                              }}
-                              useRichText
-                            />
-                          </Text>
+                          <Layout.Vertical padding={{ left: 'large', right: 'large', top: 'xsmall', bottom: 'xsmall' }}>
+                            <Text font={{ weight: 'semi-bold', size: 'small' }} color={Color.PRIMARY_10} lineClamp={2}>
+                              {getString('pipeline.unsupportedImagesWarning')}
+                            </Text>
+                            <Container width="90%">{getDeprecatedImageUsageSummary()}</Container>
+                          </Layout.Vertical>
                           {/* <Link to={'/'}>{getString('learnMore')}</Link> */}
-                        </>
+                        </Layout.Horizontal>
                       }
                     />
                   ) : null}

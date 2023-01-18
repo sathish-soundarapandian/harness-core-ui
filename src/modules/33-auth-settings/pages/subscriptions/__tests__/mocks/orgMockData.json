@@ -1,0 +1,36 @@
+{
+  "data": {
+    "status": "SUCCESS",
+    "data": {
+      "pageCount": 1,
+      "itemCount": 3,
+      "pageSize": 50,
+      "content": [
+        {
+          "organization": {
+            "accountIdentifier": "testAcc",
+            "identifier": "testOrg",
+            "name": "Org Name",
+            "description": "Description",
+            "tags": { "tag1": "", "tag2": "tag3" }
+          }
+        },
+        {
+          "organization": {
+            "accountIdentifier": "testAcc",
+            "identifier": "default",
+            "name": "default",
+            "description": "default",
+            "tags": { "tag1": "", "tag2": "tag3" }
+          },
+          "harnessManaged": true
+        }
+      ],
+      "pageIndex": 0,
+      "empty": false
+    },
+    "metaData": "",
+    "correlationId": "370210dc-a345-42fa-b3cf-69bd64eb5073"
+  },
+  "loading": false
+}

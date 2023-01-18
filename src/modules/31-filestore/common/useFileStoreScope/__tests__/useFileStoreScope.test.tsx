@@ -23,7 +23,10 @@ describe('Define useFileStoreScope hook', () => {
     jest.clearAllMocks()
   })
   test('should get account identifier', async () => {
-    const { result } = renderHook(() => useFileStoreScope({ scope: Scope.ACCOUNT, isModalView: true }), { wrapper })
+    const { result } = renderHook(
+      () => useFileStoreScope({ scope: Scope.ACCOUNT, isModalView: true, scopeValue: '', pathValue: '' }),
+      { wrapper }
+    )
 
     expect(Object.keys(result.current).indexOf('accountIdentifier')).not.toBe(-1)
     expect(Object.keys(result.current).indexOf('orgIdentifier')).toBe(-1)
@@ -31,7 +34,10 @@ describe('Define useFileStoreScope hook', () => {
   })
 
   test('should get org identifier', async () => {
-    const { result } = renderHook(() => useFileStoreScope({ scope: Scope.ORG, isModalView: true }), { wrapper })
+    const { result } = renderHook(
+      () => useFileStoreScope({ scope: Scope.ORG, isModalView: true, scopeValue: '', pathValue: '' }),
+      { wrapper }
+    )
 
     expect(Object.keys(result.current).indexOf('accountIdentifier')).not.toBe(-1)
     expect(Object.keys(result.current).indexOf('orgIdentifier')).not.toBe(-1)
@@ -39,7 +45,10 @@ describe('Define useFileStoreScope hook', () => {
   })
 
   test('should get project identifier', async () => {
-    const { result } = renderHook(() => useFileStoreScope({ scope: Scope.PROJECT, isModalView: true }), { wrapper })
+    const { result } = renderHook(
+      () => useFileStoreScope({ scope: Scope.PROJECT, isModalView: true, scopeValue: '', pathValue: '' }),
+      { wrapper }
+    )
 
     expect(Object.keys(result.current).indexOf('accountIdentifier')).not.toBe(-1)
     expect(Object.keys(result.current).indexOf('orgIdentifier')).not.toBe(-1)

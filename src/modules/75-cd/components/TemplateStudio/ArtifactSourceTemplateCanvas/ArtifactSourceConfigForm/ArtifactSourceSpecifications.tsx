@@ -74,7 +74,6 @@ interface ArtifactSourceConnectorProps {
 
 type Params = {
   CUSTOM_ARTIFACT_NG?: boolean
-  NG_GOOGLE_ARTIFACT_REGISTRY?: boolean
   GITHUB_PACKAGES?: boolean
   AZURE_ARTIFACTS_NG?: boolean
   CD_AMI_ARTIFACTS_NG?: boolean
@@ -83,7 +82,6 @@ type Params = {
 
 const getEnabledArtifactTypesList = ({
   CUSTOM_ARTIFACT_NG,
-  NG_GOOGLE_ARTIFACT_REGISTRY,
   GITHUB_PACKAGES,
   AZURE_ARTIFACTS_NG,
   CD_AMI_ARTIFACTS_NG,
@@ -92,10 +90,6 @@ const getEnabledArtifactTypesList = ({
   return Object.values(ENABLED_ARTIFACT_TYPES).filter((artifactType: ArtifactType) => {
     if (artifactType === ENABLED_ARTIFACT_TYPES.CustomArtifact) {
       return !!CUSTOM_ARTIFACT_NG
-    }
-
-    if (artifactType === ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry) {
-      return !!NG_GOOGLE_ARTIFACT_REGISTRY
     }
 
     if (artifactType === ENABLED_ARTIFACT_TYPES.GithubPackageRegistry) {
@@ -218,7 +212,6 @@ export function ArtifactSourceSpecifications(props: {
   const [selectedArtifactType, setSelectedArtifactType] = React.useState<ArtifactType>(formValues?.artifactType)
   const {
     CUSTOM_ARTIFACT_NG,
-    NG_GOOGLE_ARTIFACT_REGISTRY,
     GITHUB_PACKAGES,
     AZURE_ARTIFACTS_NG,
     CD_AMI_ARTIFACTS_NG,
@@ -229,20 +222,12 @@ export function ArtifactSourceSpecifications(props: {
     () =>
       getEnabledArtifactTypesList({
         CUSTOM_ARTIFACT_NG,
-        NG_GOOGLE_ARTIFACT_REGISTRY,
         GITHUB_PACKAGES,
         AZURE_ARTIFACTS_NG,
         CD_AMI_ARTIFACTS_NG,
         AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
       }),
-    [
-      CUSTOM_ARTIFACT_NG,
-      NG_GOOGLE_ARTIFACT_REGISTRY,
-      GITHUB_PACKAGES,
-      AZURE_ARTIFACTS_NG,
-      CD_AMI_ARTIFACTS_NG,
-      AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
-    ]
+    [CUSTOM_ARTIFACT_NG, GITHUB_PACKAGES, AZURE_ARTIFACTS_NG, CD_AMI_ARTIFACTS_NG, AZURE_WEBAPP_NG_JENKINS_ARTIFACTS]
   )
 
   const handleArtifactTypeSelection = (artifactType: ArtifactType) => {

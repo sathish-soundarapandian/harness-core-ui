@@ -6,6 +6,7 @@
  */
 
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { PartiallyRequired } from '@pipeline/utils/types'
 import type { GetPipelineListQueryParams, PipelineFilterProperties } from 'services/pipeline-ng'
 
 export type PipelineListPagePathParams = PipelineType<{
@@ -24,3 +25,8 @@ export interface SortBy {
   sort: 'lastUpdatedAt' | 'name' | 'executionSummaryInfo.lastExecutionTs'
   order: 'ASC' | 'DESC'
 }
+
+export type ProcessedPipelineListPageQueryParams = PartiallyRequired<
+  PipelineListPageQueryParams,
+  'page' | 'size' | 'sort'
+>

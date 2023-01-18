@@ -28,7 +28,12 @@ import {
 import { PageSpinner } from '@common/components'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import { TemplateStudioHeader } from '@templates-library/components/TemplateStudio/TemplateStudioHeader/TemplateStudioHeader'
-import type { GitQueryParams, ModulePathParams, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
+import type {
+  GitQueryParams,
+  ModulePathParams,
+  TemplateStudioPathProps,
+  TemplateStudioQueryParams
+} from '@common/interfaces/RouteInterfaces'
 import { TemplateType } from '@templates-library/utils/templatesUtils'
 
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
@@ -46,6 +51,7 @@ import { RightBar } from '@templates-library/components/TemplateStudio/RightBar/
 import { OutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { ErrorNodeSummary, useValidateTemplateInputs } from 'services/template-ng'
 import { TemplateContext } from './TemplateContext/TemplateContext'
 import { getContentAndTitleStringKeys, isValidYaml } from './TemplateStudioUtils'
 import css from './TemplateStudio.module.scss'
@@ -66,7 +72,7 @@ export function TemplateStudioInternal(): React.ReactElement {
     React.useContext(TemplateContext)
   const params = useParams<TemplateStudioPathProps & ModulePathParams>()
   const { accountId, projectIdentifier, orgIdentifier, templateIdentifier, module, templateType } = params
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, branch, versionLabel = '' } = useQueryParams<TemplateStudioQueryParams & GitQueryParams>()
   const {
     template,
     originalTemplate,
@@ -79,26 +85,29 @@ export function TemplateStudioInternal(): React.ReactElement {
     gitDetails,
     storeMetadata,
     entityValidityDetails,
-    templateInputsErrorNodeSummary,
     templateYamlError
   } = state
-
   const { isYamlEditable } = templateView
   const { getString } = useStrings()
   const [blockNavigation, setBlockNavigation] = React.useState(false)
   const [selectedBranch, setSelectedBranch] = React.useState(defaultTo(branch, ''))
   const [isYamlError, setYamlError] = React.useState(false)
   const [discardBEUpdateDialog, setDiscardBEUpdate] = React.useState(false)
-  const { showError } = useToaster()
+  const { showError, showSuccess, clear } = useToaster()
   const history = useHistory()
   const templateFormikRef = React.useRef<TemplateFormikRef | null>(null)
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const templateStudioSubHeaderHandleRef = React.useRef<TemplateStudioSubHeaderHandle | null>(null)
+  const [shouldShowOutOfSyncError, setShouldShowOutOfSyncError] = React.useState(false)
 
   useDocumentTitle([parse(defaultTo(template?.name, getString('common.templates')))])
 
   const { navigationContentText, navigationTitleText } = getContentAndTitleStringKeys(isYamlError)
+
+  const { data: errorData, refetch: validateTemplateInputs } = useValidateTemplateInputs({
+    lazy: true
+  })
 
   const { openDialog: openConfirmBEUpdateError } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
@@ -107,12 +116,18 @@ export function TemplateStudioInternal(): React.ReactElement {
     confirmButtonText: getString('update'),
     onCloseDialog: isConfirmed => {
       if (isConfirmed) {
-        fetchTemplate({ forceFetch: true, forceUpdate: true })
+        fetchTemplate({ forceFetch: true, forceUpdate: true, loadFromCache: false })
       } else {
         setDiscardBEUpdate(true)
       }
     }
   })
+
+  const templateInputsErrorNodeSummary = React.useMemo((): ErrorNodeSummary | undefined => {
+    if (errorData?.data?.validYaml === false && errorData?.data.errorNodeSummary) {
+      return errorData?.data.errorNodeSummary
+    }
+  }, [errorData?.data])
 
   const { openDialog: openUnsavedChangesDialog } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
@@ -233,6 +248,38 @@ export function TemplateStudioInternal(): React.ReactElement {
   )
 
   React.useEffect(() => {
+    if (!shouldShowOutOfSyncError) return
+
+    if (errorData?.data?.validYaml === false && errorData?.data.errorNodeSummary) {
+      // This is handled by <OutOfSyncErrorStrip/>
+      clear()
+    } else {
+      clear()
+      showSuccess(getString('pipeline.outOfSyncErrorStrip.noErrorText', { entity: TemplateErrorEntity.TEMPLATE }))
+      setShouldShowOutOfSyncError(false)
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [errorData])
+
+  function handleReconcile(): void {
+    validateTemplateInputs({
+      queryParams: {
+        accountIdentifier: accountId,
+        projectIdentifier,
+        orgIdentifier,
+        templateIdentifier,
+        repoIdentifier,
+        branch,
+        versionLabel: defaultTo(template.versionLabel, versionLabel),
+        getDefaultFromOtherRepo: true
+      }
+    })
+    showSuccess(getString('pipeline.outOfSyncErrorStrip.reconcileStarted'))
+    setShouldShowOutOfSyncError(true)
+  }
+
+  React.useEffect(() => {
     if (templateIdentifier === DefaultNewTemplateId) {
       setView(SelectedView.VISUAL)
     } else if (entityValidityDetails.valid === false || view === SelectedView.YAML) {
@@ -254,12 +301,10 @@ export function TemplateStudioInternal(): React.ReactElement {
       : merge(pathParams, { ...accountPathProps })
   }, [projectIdentifier, orgIdentifier])
 
-  const updateEntity = React.useCallback(
-    async (entityYaml: string) => {
-      await templateStudioSubHeaderHandleRef.current?.updateTemplate(entityYaml)
-    },
-    [templateStudioSubHeaderHandleRef.current]
-  )
+  const updateEntity = React.useCallback(async (entityYaml: string) => {
+    await templateStudioSubHeaderHandleRef.current?.updateTemplate(entityYaml)
+    setShouldShowOutOfSyncError(false)
+  }, [])
 
   const ErrorPanel = (): JSX.Element => (
     <Container style={{ maxWidth: '570px', alignSelf: 'center' }} padding={'huge'}>
@@ -289,14 +334,15 @@ export function TemplateStudioInternal(): React.ReactElement {
     <ErrorPanel />
   ) : (
     <>
-      {templateInputsErrorNodeSummary && (
+      {templateInputsErrorNodeSummary && shouldShowOutOfSyncError && (
         <OutOfSyncErrorStrip
           errorNodeSummary={templateInputsErrorNodeSummary}
           entity={TemplateErrorEntity.TEMPLATE}
           originalYaml={yamlStringify({ template: originalTemplate })}
           isReadOnly={isReadonly}
           onRefreshEntity={() => {
-            fetchTemplate({ forceFetch: true, forceUpdate: true })
+            fetchTemplate({ forceFetch: true, forceUpdate: true, loadFromCache: false })
+            setShouldShowOutOfSyncError(false)
           }}
           updateRootEntity={updateEntity}
           gitDetails={gitDetails}
@@ -357,6 +403,7 @@ export function TemplateStudioInternal(): React.ReactElement {
                   onViewChange={onViewChange}
                   getErrors={getErrors}
                   onGitBranchChange={onGitBranchChange}
+                  onReconcile={handleReconcile}
                 />
                 {studioCanvasUI}
               </>

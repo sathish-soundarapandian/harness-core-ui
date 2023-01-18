@@ -68,14 +68,26 @@
   }
 }
 
-.cdExecutionSummary {
+.cdExecutionSummary,
+.gitOpsExecutionSummary {
   .service {
     margin-right: var(--spacing-4);
+  }
+
+  .environment {
+    margin-left: var(--spacing-5) !important;
   }
 
   a {
     color: var(--primary-6);
   }
+  .marginLeftZero {
+    margin-left: 0 !important;
+  }
+}
+
+.primary6 {
+  color: var(--primary-6);
 }
 
 .checkbox label {
@@ -212,4 +224,15 @@
 
 .stageLink {
   font-size: var(--font-size-small);
+}
+
+.childPipelineExecutionInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.parentPipelineLink {
+  max-width: 180px;
+  margin-left: calc(-1 * (var(--spacing-xsmall))) !important;
 }

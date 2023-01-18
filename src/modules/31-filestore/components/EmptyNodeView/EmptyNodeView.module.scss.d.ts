@@ -11,5 +11,6 @@ declare const styles: {
   readonly noFilesTitle: string
   readonly noViewContainer: string
   readonly noViewContainerModal: string
+  readonly spinnerWrapper: string
 }
 export default styles

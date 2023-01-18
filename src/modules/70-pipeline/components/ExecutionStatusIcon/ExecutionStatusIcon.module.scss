@@ -8,7 +8,6 @@
 .statusIcon {
   --execution-status-color: var(--grey-700);
   color: var(--execution-status-color) !important;
-  height: 18px;
 
   &.failed,
   &.errored,

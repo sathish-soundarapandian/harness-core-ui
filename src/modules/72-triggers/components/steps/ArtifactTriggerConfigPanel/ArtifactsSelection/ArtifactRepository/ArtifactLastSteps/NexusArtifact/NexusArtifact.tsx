@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import {
   Formik,
   FormInput,
@@ -14,18 +14,39 @@ import {
   Button,
   StepProps,
   Text,
-  ButtonVariation
+  ButtonVariation,
+  SelectOption
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
 import * as Yup from 'yup'
+import { useParams } from 'react-router-dom'
+import { defaultTo, memoize } from 'lodash-es'
+import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import type { NexusRegistrySpec } from 'services/pipeline-ng'
-import type { ConnectorConfigDTO } from 'services/cd-ng'
+import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { ConnectorConfigDTO, useGetRepositories } from 'services/cd-ng'
+import {
+  k8sRepositoryFormatTypes,
+  nexus2RepositoryFormatTypes,
+  RepositoryFormatTypes
+} from '@pipeline/utils/stageHelpers'
+import type { specInterface } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
+import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
+import { useMutateAsGet, useQueryParams } from '@common/hooks'
+import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { ImagePathProps, RepositoryPortOrServer } from '../../../ArtifactInterface'
 import { repositoryPortOrServer } from '../../../ArtifactHelper'
-import ArtifactImagePath from '../ArtifactImagePath/ArtifactImagePath'
 import css from '../../ArtifactConnector.module.scss'
+
+export interface queryInterface extends specInterface {
+  repository: string
+  repositoryFormat: string
+  connectorRef?: string
+}
 
 export function NexusArtifact({
   handleSubmit,
@@ -34,19 +55,57 @@ export function NexusArtifact({
   previousStep
 }: StepProps<ConnectorConfigDTO> & ImagePathProps<NexusRegistrySpec>): React.ReactElement {
   const { getString } = useStrings()
-
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const commonParams = {
+    accountIdentifier: accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch
+  }
   const validationSchema = Yup.object().shape({
-    imagePath: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactPath')),
-    repositoryName: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
-    repositoryUrl: Yup.string().when('repositoryFormat', {
-      is: 'repositoryUrl',
-      then: Yup.string().required(getString('pipeline.artifactsSelection.validation.repositoryUrl'))
-    }),
-    repositoryPort: Yup.string().when('repositoryFormat', {
-      is: 'repositoryPort',
-      then: Yup.string().required(getString('pipeline.artifactsSelection.validation.repositoryPort'))
-    })
+    repository: Yup.string().trim().required(getString('common.git.validation.repoRequired'))
   })
+
+  const connectorRefValue = getConnectorIdValue(prevStepData)
+
+  const {
+    data: repositoryDetails,
+    refetch: refetchRepositoryDetails,
+    loading: fetchingRepository,
+    error: errorFetchingRepository
+  } = useMutateAsGet(useGetRepositories, {
+    lazy: true,
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
+    queryParams: {
+      ...commonParams,
+      connectorRef: connectorRefValue,
+      repositoryFormat: ''
+    }
+  })
+
+  const selectRepositoryItems = useMemo(() => {
+    return repositoryDetails?.data?.map(repository => ({
+      value: defaultTo(repository.repositoryName, ''),
+      label: defaultTo(repository.repositoryName, '')
+    }))
+  }, [repositoryDetails?.data])
+
+  const getRepository = (): { label: string; value: string }[] => {
+    if (fetchingRepository) {
+      return [{ label: getString('loading'), value: getString('loading') }]
+    }
+    return defaultTo(selectRepositoryItems, [])
+  }
+
+  const itemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingRepository} />
+  ))
 
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
@@ -66,60 +125,174 @@ export function NexusArtifact({
             ...(formData.repositoryFormat === RepositoryPortOrServer.RepositoryPort && {
               repositoryPort: formData.repositoryPort
             }),
-            connectorRef: prevStepData?.connectorId?.value
+            connectorRef: getConnectorIdValue(prevStepData)
           })
         }}
       >
         {({ values }) => (
           <Form>
             <div className={css.connectorForm}>
-              <div className={css.tagGroup}>
-                <FormInput.RadioGroup
+              <div className={css.imagePathContainer}>
+                <FormInput.Select
                   name="repositoryFormat"
-                  radioGroup={{ inline: true }}
-                  items={repositoryPortOrServer}
-                  className={css.radioGroup}
+                  label={getString('common.repositoryFormat')}
+                  items={[...k8sRepositoryFormatTypes, ...nexus2RepositoryFormatTypes]}
                 />
               </div>
 
-              {values.repositoryFormat === RepositoryPortOrServer.RepositoryUrl && (
-                <div className={css.imagePathContainer}>
-                  <FormInput.MultiTextInput
-                    label={getString('repositoryUrlLabel')}
-                    name="repositoryUrl"
-                    placeholder={getString('pipeline.repositoryUrlPlaceholder')}
-                    multiTextInputProps={{
-                      allowableTypes: [MultiTypeInputType.FIXED]
-                    }}
-                  />
-                </div>
-              )}
-
-              {values.repositoryFormat === RepositoryPortOrServer.RepositoryPort && (
-                <div className={css.imagePathContainer}>
-                  <FormInput.MultiTextInput
-                    label={getString('pipeline.artifactsSelection.repositoryPort')}
-                    name="repositoryPort"
-                    placeholder={getString('pipeline.artifactsSelection.repositoryPortPlaceholder')}
-                    multiTextInputProps={{
-                      allowableTypes: [MultiTypeInputType.FIXED]
-                    }}
-                  />
-                </div>
-              )}
-
               <div className={css.imagePathContainer}>
-                <FormInput.MultiTextInput
+                <FormInput.MultiTypeInput
+                  selectItems={getRepository()}
                   label={getString('repository')}
-                  name="repositoryName"
+                  name="repository"
                   placeholder={getString('pipeline.artifactsSelection.repositoryPlaceholder')}
-                  multiTextInputProps={{
-                    allowableTypes: [MultiTypeInputType.FIXED]
+                  useValue
+                  multiTypeInputProps={{
+                    allowableTypes: [MultiTypeInputType.FIXED],
+                    selectProps: {
+                      noResults: (
+                        <NoTagResults
+                          tagError={errorFetchingRepository}
+                          isServerlessDeploymentTypeSelected={false}
+                          defaultErrorText={getString('pipeline.artifactsSelection.errors.noRepositories')}
+                        />
+                      ),
+                      itemRenderer: itemRenderer,
+                      items: getRepository(),
+                      allowCreatingNewItems: true
+                    },
+                    onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                      if (
+                        e?.target?.type !== 'text' ||
+                        (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                      ) {
+                        return
+                      }
+                      refetchRepositoryDetails({
+                        queryParams: {
+                          ...commonParams,
+                          connectorRef: connectorRefValue,
+                          repositoryFormat: values?.repositoryFormat
+                        }
+                      })
+                    }
                   }}
                 />
               </div>
 
-              <ArtifactImagePath />
+              {values?.repositoryFormat === RepositoryFormatTypes.Maven ? (
+                <>
+                  <div className={css.imagePathContainer}>
+                    <FormInput.MultiTextInput
+                      label={getString('pipeline.artifactsSelection.groupId')}
+                      name="groupId"
+                      placeholder={getString('pipeline.artifactsSelection.groupIdPlaceholder')}
+                      multiTextInputProps={{
+                        allowableTypes: [MultiTypeInputType.FIXED]
+                      }}
+                    />
+                  </div>
+                  <div className={css.imagePathContainer}>
+                    <FormInput.MultiTextInput
+                      label={getString('pipeline.artifactsSelection.artifactId')}
+                      name="artifactId"
+                      placeholder={getString('pipeline.artifactsSelection.artifactIdPlaceholder')}
+                      multiTextInputProps={{
+                        allowableTypes: [MultiTypeInputType.FIXED]
+                      }}
+                    />
+                  </div>
+                  <div className={css.imagePathContainer}>
+                    <FormInput.MultiTextInput
+                      label={getString('pipeline.artifactsSelection.extension')}
+                      name="extension"
+                      placeholder={getString('pipeline.artifactsSelection.extensionPlaceholder')}
+                      multiTextInputProps={{
+                        allowableTypes: [MultiTypeInputType.FIXED]
+                      }}
+                    />
+                  </div>
+                  <div className={css.imagePathContainer}>
+                    <FormInput.MultiTextInput
+                      label={getString('pipeline.artifactsSelection.classifier')}
+                      name="classifier"
+                      placeholder={getString('pipeline.artifactsSelection.classifierPlaceholder')}
+                      multiTextInputProps={{
+                        allowableTypes: [MultiTypeInputType.FIXED]
+                      }}
+                    />
+                  </div>
+                </>
+              ) : values?.repositoryFormat === RepositoryFormatTypes.Docker ? (
+                <>
+                  <div className={css.imagePathContainer}>
+                    <FormInput.MultiTextInput
+                      label={getString('pipeline.artifactPathLabel')}
+                      name="artifactPath"
+                      placeholder={getString('pipeline.artifactsSelection.artifactPathPlaceholder')}
+                      multiTextInputProps={{
+                        allowableTypes: [MultiTypeInputType.FIXED]
+                      }}
+                    />
+                  </div>
+                  <div className={css.tagGroup}>
+                    <FormInput.RadioGroup
+                      name="repositoryPortorRepositoryURL"
+                      radioGroup={{ inline: true }}
+                      items={repositoryPortOrServer}
+                      className={css.radioGroup}
+                    />
+                  </div>
+
+                  {values?.repositoryPortorRepositoryURL === RepositoryPortOrServer.RepositoryUrl && (
+                    <div className={css.imagePathContainer}>
+                      <FormInput.MultiTextInput
+                        label={getString('repositoryUrlLabel')}
+                        name="repositoryUrl"
+                        placeholder={getString('pipeline.repositoryUrlPlaceholder')}
+                        multiTextInputProps={{
+                          allowableTypes: [MultiTypeInputType.FIXED]
+                        }}
+                      />
+                    </div>
+                  )}
+
+                  {values?.repositoryPortorRepositoryURL === RepositoryPortOrServer.RepositoryPort && (
+                    <div className={css.imagePathContainer}>
+                      <FormInput.MultiTextInput
+                        label={getString('pipeline.artifactsSelection.repositoryPort')}
+                        name="repositoryPort"
+                        placeholder={getString('pipeline.artifactsSelection.repositoryPortPlaceholder')}
+                        multiTextInputProps={{
+                          allowableTypes: [MultiTypeInputType.FIXED]
+                        }}
+                      />
+                    </div>
+                  )}
+                </>
+              ) : values?.repositoryFormat === RepositoryFormatTypes.Raw ? (
+                <div className={css.imagePathContainer}>
+                  <FormInput.MultiTextInput
+                    label={getString('rbac.group')}
+                    name="group"
+                    placeholder={getString('pipeline.artifactsSelection.groupPlaceholder')}
+                    multiTextInputProps={{
+                      allowableTypes: [MultiTypeInputType.FIXED]
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className={css.imagePathContainer}>
+                  <FormInput.MultiTextInput
+                    label={getString('pipeline.artifactsSelection.packageName')}
+                    name="packageName"
+                    placeholder={getString('pipeline.manifestType.packagePlaceholder')}
+                    multiTextInputProps={{
+                      allowableTypes: [MultiTypeInputType.FIXED]
+                    }}
+                  />
+                </div>
+              )}
             </div>
             <Layout.Horizontal spacing="medium">
               <Button

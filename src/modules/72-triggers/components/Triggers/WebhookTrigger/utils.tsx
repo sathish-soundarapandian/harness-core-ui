@@ -15,6 +15,7 @@ import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { connectorUrlType } from '@connectors/constants'
 import type { AddConditionInterface } from '@triggers/components/AddConditionsSection/AddConditionsSection'
+import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
 import type { SourceRepo, TriggerBaseType } from '../TriggerInterface'
 import { ciCodebaseBuild, ciCodebaseBuildPullRequest, CUSTOM, TriggerGitEvent } from '../utils'
 
@@ -217,6 +218,8 @@ export interface FlatOnEditValuesInterface {
   buildOperator?: string
   pipelineBranchName?: string
   inputSetRefs?: string[]
+  pollInterval?: string
+  webhookId?: string
 }
 
 export const getModifiedTemplateValues = (
@@ -236,11 +239,12 @@ export const getModifiedTemplateValues = (
 // requiredFields and checkValidPanel in getPanels() above to render warning icons related to this schema
 export const getValidationSchema = (
   getString: UseStringsReturn['getString'],
+  isGitWebhookPollingEnabled = false,
   isGithubWebhookAuthenticationEnabled = false
 ): ObjectSchema<Record<string, any> | undefined> => {
   return object().shape({
-    name: NameSchema({ requiredErrorMsg: getString('triggers.validation.triggerName') }),
-    identifier: IdentifierSchema(),
+    name: NameSchema(getString, { requiredErrorMsg: getString('triggers.validation.triggerName') }),
+    identifier: IdentifierSchema(getString),
     ...(isGithubWebhookAuthenticationEnabled && {
       encryptedWebhookSecretIdentifier: string().test(
         getString('triggers.validation.configureSecret'),
@@ -257,6 +261,18 @@ export const getValidationSchema = (
         return this.parent.sourceRepo === CUSTOM || event
       }
     ),
+    ...(isGitWebhookPollingEnabled && {
+      pollInterval: getDurationValidationSchema({
+        minimum: '2m',
+        maximum: '60m',
+        explicitAllowedValues: ['0']
+      }).required(
+        getString('common.validation.fieldIsRequired', {
+          name: getString('triggers.triggerConfigurationPanel.pollingFrequency')
+        })
+      ),
+      webhookId: string()
+    }),
     connectorRef: object().test(
       getString('triggers.validation.connector'),
       getString('triggers.validation.connector'),

@@ -28,14 +28,14 @@ const ChildAppError = path.resolve(CONTEXT, './src/microfrontends/ChildAppError.
 
 const enableGovernance = process.env.ENABLE_GOVERNANCE !== 'false'
 const enableGitOpsUI = process.env.ENABLE_GITOPSUI !== 'false'
-// TODO: change condition to !== 'false' upon GA
-const enableChaosUI = process.env.ENABLE_CHAOS === 'true'
+const enableChaosUI = process.env.ENABLE_CHAOS !== 'false'
 const enableCCMUI = process.env.ENABLE_CCM_UI === 'true'
 const enableCIUI = process.env.ENABLE_CI_UI === 'true'
 const enableTIUI = process.env.ENABLE_TI_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
 const enableCODE = process.env.ENABLE_CODE === 'true'
 const enableFFUI = process.env.ENABLE_FF_UI !== 'false'
+const enableIACM = process.env.ENABLE_IACM === 'true'
 
 console.log('Common build flags')
 console.table({
@@ -47,7 +47,8 @@ console.table({
   enableTIUI,
   enableSTO,
   enableCODE,
-  enableFFUI
+  enableFFUI,
+  enableIACM
 })
 
 const config = {
@@ -204,7 +205,8 @@ const config = {
         enableCIUI,
         enableTIUI,
         enableCODE,
-        enableFFUI
+        enableFFUI,
+        enableIACM
       })
     ),
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
@@ -248,6 +250,7 @@ if (!enableChaosUI) {
   config.resolve.alias['chaos/PipelineExperimentSelect'] = ChildAppError
   config.resolve.alias['chaos/ExperimentPreview'] = ChildAppError
   config.resolve.alias['chaos/ChaosStepExecution'] = ChildAppError
+  config.resolve.alias['chaos/ResilienceViewContent'] = ChildAppError
 }
 
 if (!enableSTO) {
@@ -265,6 +268,11 @@ if (!enableCODE) {
 
 if (!enableFFUI) {
   config.resolve.alias['ffui/MicroFrontendApp'] = ChildAppError
+}
+
+if (!enableIACM) {
+  config.resolve.alias['iacm/MicroFrontendApp'] = ChildAppError
+  config.resolve.alias['iacm/IACMStage'] = ChildAppError
 }
 
 module.exports = config

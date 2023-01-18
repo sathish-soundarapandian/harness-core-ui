@@ -46,7 +46,8 @@ export const allowedConfigFilesTypes: Record<ServiceDefinition['type'], Array<Co
   CustomDeployment: [ConfigFilesMap.Harness],
   Elastigroup: [ConfigFilesMap.Harness],
   TAS: [ConfigFilesMap.Harness],
-  Asg: [ConfigFilesMap.Harness]
+  Asg: [ConfigFilesMap.Harness],
+  GoogleCloudFunctions: [ConfigFilesMap.Harness]
 }
 
 export const ConfigFilesToConnectorLabelMap: Record<ConfigFileType, StringKeys> = {

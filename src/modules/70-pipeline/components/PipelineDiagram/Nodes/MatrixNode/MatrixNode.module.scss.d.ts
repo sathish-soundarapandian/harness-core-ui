@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly approvalStage: string
+  readonly childPipelineFirstnode: string
   readonly closeNode: string
   readonly collapseIcon: string
   readonly collapsedMatrixWrapper: string
@@ -30,6 +31,7 @@ declare const styles: {
   readonly matrixBorderWrapper: string
   readonly matrixFooter: string
   readonly matrixNode: string
+  readonly matrixNodesGridWrapper: string
   readonly multiSvcEnv: string
   readonly nestedGroup: string
   readonly nodeNameText: string

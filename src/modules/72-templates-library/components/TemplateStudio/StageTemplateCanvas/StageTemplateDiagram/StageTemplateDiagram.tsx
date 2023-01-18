@@ -179,7 +179,7 @@ export const StageTemplateDiagram = (): JSX.Element => {
       <DynamicPopover
         darkMode={false}
         className={stageBuilderCss.renderPopover}
-        render={renderPopover}
+        render={renderPopover.bind(null, gitDetails, storeMetadata)}
         bind={setDynamicPopoverHandler}
       />
     </Container>

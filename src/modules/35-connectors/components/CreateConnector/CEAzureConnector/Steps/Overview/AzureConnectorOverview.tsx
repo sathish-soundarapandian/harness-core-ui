@@ -232,8 +232,8 @@ const Overview: React.FC<StepProps<CEAzureDTO> & OverviewProps> = props => {
         }}
         formName="connectorOverviewForm"
         validationSchema={Yup.object().shape({
-          name: NameSchema(),
-          identifier: IdentifierSchema(),
+          name: NameSchema(getString),
+          identifier: IdentifierSchema(getString),
           tenantId: Yup.string()
             .required(getString('connectors.ceAzure.validation.tenantId'))
             .test('tenantId', getString('connectors.ceAzure.guidRegexError'), guidRegex),

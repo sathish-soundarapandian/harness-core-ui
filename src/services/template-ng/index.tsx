@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -44,6 +44,7 @@ export type AuditFilterProperties = FilterProperties & {
     | 'CE'
     | 'STO'
     | 'CHAOS'
+    | 'SRM'
     | 'CODE'
     | 'CORE'
     | 'PMS'
@@ -445,6 +446,7 @@ export interface Error {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -516,6 +518,8 @@ export interface Error {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -803,6 +807,7 @@ export interface ErrorMetadata {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -874,6 +879,8 @@ export interface ErrorMetadata {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   errorMessage?: string
 }
 
@@ -1167,6 +1174,7 @@ export interface Failure {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -1238,6 +1246,8 @@ export interface Failure {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1508,9 +1518,12 @@ export interface ResourceDTO {
     | 'AUTOSTOPPING_STARTSTOP'
     | 'SETTING'
     | 'NG_LOGIN_SETTINGS'
+    | 'DEPLOYMENT_FREEZE'
     | 'CLOUD_ASSET_GOVERNANCE_RULE'
     | 'CLOUD_ASSET_GOVERNANCE_RULE_SET'
     | 'CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT'
+    | 'TARGET_GROUP'
+    | 'FEATURE_FLAG'
 }
 
 export interface ResourceScopeDTO {
@@ -1836,6 +1849,7 @@ export interface ResponseMessage {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -1907,6 +1921,8 @@ export interface ResponseMessage {
     | 'DELEGATE_NOT_REGISTERED'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -2384,7 +2400,7 @@ export type TemplateApplyRequestRequestBody = TemplateApplyRequest
 
 export type TemplateFilterPropertiesRequestBody = TemplateFilterProperties
 
-export type UpdateExistingTemplateVersionBodyRequestBody = string
+export type RefreshAndUpdateTemplateInputsBodyRequestBody = string
 
 export interface GetFilterListQueryParams {
   pageIndex?: number
@@ -2742,7 +2758,13 @@ export interface RefreshAndUpdateTemplateInputsQueryParams {
 }
 
 export type RefreshAndUpdateTemplateInputsProps = Omit<
-  MutateProps<ResponseBoolean, Failure | Error, RefreshAndUpdateTemplateInputsQueryParams, void, void>,
+  MutateProps<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -2750,7 +2772,13 @@ export type RefreshAndUpdateTemplateInputsProps = Omit<
  * This refreshes and update template inputs in template
  */
 export const RefreshAndUpdateTemplateInputs = (props: RefreshAndUpdateTemplateInputsProps) => (
-  <Mutate<ResponseBoolean, Failure | Error, RefreshAndUpdateTemplateInputsQueryParams, void, void>
+  <Mutate<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
+    void
+  >
     verb="POST"
     path={`/refresh-template`}
     base={getConfig('template/api')}
@@ -2759,7 +2787,13 @@ export const RefreshAndUpdateTemplateInputs = (props: RefreshAndUpdateTemplateIn
 )
 
 export type UseRefreshAndUpdateTemplateInputsProps = Omit<
-  UseMutateProps<ResponseBoolean, Failure | Error, RefreshAndUpdateTemplateInputsQueryParams, void, void>,
+  UseMutateProps<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
+    void
+  >,
   'path' | 'verb'
 >
 
@@ -2767,26 +2801,34 @@ export type UseRefreshAndUpdateTemplateInputsProps = Omit<
  * This refreshes and update template inputs in template
  */
 export const useRefreshAndUpdateTemplateInputs = (props: UseRefreshAndUpdateTemplateInputsProps) =>
-  useMutate<ResponseBoolean, Failure | Error, RefreshAndUpdateTemplateInputsQueryParams, void, void>(
-    'POST',
-    `/refresh-template`,
-    { base: getConfig('template/api'), ...props }
-  )
+  useMutate<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
+    void
+  >('POST', `/refresh-template`, { base: getConfig('template/api'), ...props })
 
 /**
  * This refreshes and update template inputs in template
  */
 export const refreshAndUpdateTemplateInputsPromise = (
-  props: MutateUsingFetchProps<ResponseBoolean, Failure | Error, RefreshAndUpdateTemplateInputsQueryParams, void, void>,
+  props: MutateUsingFetchProps<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<ResponseBoolean, Failure | Error, RefreshAndUpdateTemplateInputsQueryParams, void, void>(
-    'POST',
-    getConfig('template/api'),
-    `/refresh-template`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponseBoolean,
+    Failure | Error,
+    RefreshAndUpdateTemplateInputsQueryParams,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
+    void
+  >('POST', getConfig('template/api'), `/refresh-template`, props, signal)
 
 export interface RefreshAllQueryParams {
   accountIdentifier: string
@@ -3072,7 +3114,7 @@ export type CreateTemplateProps = Omit<
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    UpdateExistingTemplateVersionBodyRequestBody,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -3086,7 +3128,7 @@ export const CreateTemplate = (props: CreateTemplateProps) => (
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    UpdateExistingTemplateVersionBodyRequestBody,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
     void
   >
     verb="POST"
@@ -3101,7 +3143,7 @@ export type UseCreateTemplateProps = Omit<
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    UpdateExistingTemplateVersionBodyRequestBody,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
     void
   >,
   'path' | 'verb'
@@ -3115,7 +3157,7 @@ export const useCreateTemplate = (props: UseCreateTemplateProps) =>
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    UpdateExistingTemplateVersionBodyRequestBody,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
     void
   >('POST', `/templates`, { base: getConfig('template/api'), ...props })
 
@@ -3127,7 +3169,7 @@ export const createTemplatePromise = (
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    UpdateExistingTemplateVersionBodyRequestBody,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -3136,7 +3178,7 @@ export const createTemplatePromise = (
     ResponseTemplateWrapperResponse,
     Failure | Error,
     CreateTemplateQueryParams,
-    UpdateExistingTemplateVersionBodyRequestBody,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
     void
   >('POST', getConfig('template/api'), `/templates`, props, signal)
 
@@ -4033,7 +4075,7 @@ export type UpdateExistingTemplateVersionProps = Omit<
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateVersionQueryParams,
-    UpdateExistingTemplateVersionBodyRequestBody,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
     UpdateExistingTemplateVersionPathParams
   >,
   'path' | 'verb'
@@ -4052,7 +4094,7 @@ export const UpdateExistingTemplateVersion = ({
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateVersionQueryParams,
-    UpdateExistingTemplateVersionBodyRequestBody,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
     UpdateExistingTemplateVersionPathParams
   >
     verb="PUT"
@@ -4067,7 +4109,7 @@ export type UseUpdateExistingTemplateVersionProps = Omit<
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateVersionQueryParams,
-    UpdateExistingTemplateVersionBodyRequestBody,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
     UpdateExistingTemplateVersionPathParams
   >,
   'path' | 'verb'
@@ -4086,7 +4128,7 @@ export const useUpdateExistingTemplateVersion = ({
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateVersionQueryParams,
-    UpdateExistingTemplateVersionBodyRequestBody,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
     UpdateExistingTemplateVersionPathParams
   >(
     'PUT',
@@ -4107,7 +4149,7 @@ export const updateExistingTemplateVersionPromise = (
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateVersionQueryParams,
-    UpdateExistingTemplateVersionBodyRequestBody,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
     UpdateExistingTemplateVersionPathParams
   > & { templateIdentifier: string; versionLabel: string },
   signal?: RequestInit['signal']
@@ -4116,7 +4158,7 @@ export const updateExistingTemplateVersionPromise = (
     ResponseTemplateWrapperResponse,
     Failure | Error,
     UpdateExistingTemplateVersionQueryParams,
-    UpdateExistingTemplateVersionBodyRequestBody,
+    RefreshAndUpdateTemplateInputsBodyRequestBody,
     UpdateExistingTemplateVersionPathParams
   >('PUT', getConfig('template/api'), `/templates/update/${templateIdentifier}/${versionLabel}`, props, signal)
 
@@ -4582,6 +4624,7 @@ export interface DeleteTemplateVersionsOfIdentifierQueryParams {
   commitMsg?: string
   lastObjectId?: string
   comments?: string
+  forceDelete?: boolean
 }
 
 export type DeleteTemplateVersionsOfIdentifierProps = Omit<
@@ -4721,6 +4764,7 @@ export interface DeleteTemplateVersionQueryParams {
   commitMsg?: string
   lastObjectId?: string
   comments?: string
+  forceDelete?: boolean
 }
 
 export interface DeleteTemplateVersionPathParams {

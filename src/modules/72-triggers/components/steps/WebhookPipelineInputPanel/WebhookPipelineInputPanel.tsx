@@ -123,7 +123,9 @@ function WebhookPipelineInputPanelForm({
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
-      branch: isNewGitSyncRemotePipeline ? inputSetSelectedBranch : branch
+      branch: isNewGitSyncRemotePipeline ? inputSetSelectedBranch : branch,
+      parentEntityConnectorRef: connectorRef,
+      parentEntityRepoName: repoName
     }
   })
 
@@ -492,6 +494,7 @@ function WebhookPipelineInputPanelForm({
                 viewTypeMetadata={{ isTrigger: true }}
                 readonly={isNewGitSyncRemotePipeline}
                 gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline}
+                disableRuntimeInputConfigureOptions
               />
             ) : null}
           </div>

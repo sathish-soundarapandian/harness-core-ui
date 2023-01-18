@@ -1,0 +1,68 @@
+.container {
+  background-color: var(--white) !important;
+  width: 437px;
+  padding: var(--spacing-large) var(--spacing-xlarge) !important;
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
+  .header {
+    border-bottom: 1.5px solid var(--grey-100);
+    height: fit-content;
+    width: 100%;
+    padding-bottom: var(--spacing-small);
+  }
+
+  .body {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: var(--spacing-large);
+    padding-top: var(--spacing-medium);
+    .card {
+      height: 203px;
+      width: 175px;
+      position: relative;
+      box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.08), 0px 0.5px 2px rgba(96, 97, 112, 0.16);
+      padding: var(--spacing-medium) var(--spacing-large);
+      overflow: hidden;
+      cursor: pointer;
+      .backgroundImage {
+        position: absolute;
+        opacity: 0.1;
+        bottom: -12%;
+        right: -12%;
+      }
+      .seeMoreContainer {
+        position: absolute;
+        bottom: var(--spacing-xlarge);
+        right: var(--spacing-large);
+      }
+    }
+  }
+
+  .slack {
+    background-color: #fffaf2;
+  }
+
+  .harnessUniversity {
+    background-color: #f6f1ff;
+  }
+
+  .harnessSupport {
+    background-color: #fafbfc;
+    .teamImage {
+      height: 84px;
+      width: 84px;
+      position: relative;
+      left: calc(-1 * var(--spacing-small));
+      top: calc(-1 * var(--spacing-large));
+    }
+  }
+
+  .jfrog {
+    background-color: #effbff;
+
+    .jfrogImage {
+      position: relative;
+      top: var(--spacing-medium);
+      left: calc(-1 * var(--spacing-large));
+    }
+  }
+}

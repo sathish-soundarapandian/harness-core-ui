@@ -26,6 +26,8 @@ import { Dependency } from './Dependency/Dependency'
 import { RunTestsStep } from './RunTestsStep/RunTestsStep'
 import { SaveCacheHarnessStep } from './SaveCacheHarnessStep/SaveCacheHarnessStep'
 import { RestoreCacheHarnessStep } from './RestoreCacheHarnessStep/RestoreCacheHarnessStep'
+import { GHAPluginStep } from './GHAPluginStep/GHAPluginStep'
+import { BitrisePluginStep } from './BitrisePluginStep/BitrisePluginStep'
 
 factory.registerStep(new RunStep())
 factory.registerStep(new BackgroundStep())
@@ -46,3 +48,5 @@ factory.registerStep(new RunTestsStep())
 factory.registerStep(new GitCloneStep())
 factory.registerStep(new SaveCacheHarnessStep())
 factory.registerStep(new RestoreCacheHarnessStep())
+factory.registerStep(new GHAPluginStep())
+factory.registerStep(new BitrisePluginStep())

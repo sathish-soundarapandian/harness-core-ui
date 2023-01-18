@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -19,6 +19,7 @@ export interface Failure {
     | 'APM_CONFIGURATION_ERROR'
     | 'APPDYNAMICS_CONFIGURATION_ERROR'
     | 'APPDYNAMICS_ERROR'
+    | 'APPROVAL_REJECTION'
     | 'APPROVAL_STEP_NG_ERROR'
     | 'ARTIFACT_SERVER_ERROR'
     | 'AUTHENTICATION_ERROR'
@@ -72,6 +73,7 @@ export interface Failure {
     | 'DATA_PROCESSING_ERROR'
     | 'DEFAULT_ERROR_CODE'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'DELEGATE_NOT_AVAILABLE'
     | 'DELEGATE_NOT_REGISTERED'
     | 'DELEGATE_TASK_EXPIRED'
@@ -313,6 +315,7 @@ export interface Failure {
     | 'TEMPLATE_NOT_FOUND'
     | 'TERRAFORM_EXECUTION_ERROR'
     | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'TIMEOUT_ENGINE_EXCEPTION'
     | 'TIMESCALE_NOT_AVAILABLE'
     | 'TOKEN_ALREADY_REFRESHED_ONCE'

@@ -121,7 +121,12 @@ function TASWithHarnessStore({
         initialValues={getInitialValues()}
         formName="tasHarnessFileStore"
         validationSchema={Yup.object().shape({
-          ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
+          ...ManifestIdentifierValidation(
+            getString,
+            manifestIdsList,
+            initialValues?.identifier,
+            getString('pipeline.uniqueName')
+          ),
           files: Yup.lazy((value): Yup.Schema<unknown> => {
             if (getMultiTypeFromValue(value as string[]) === MultiTypeInputType.FIXED) {
               return Yup.array().of(Yup.string().required(getString('pipeline.manifestType.pathRequired')))

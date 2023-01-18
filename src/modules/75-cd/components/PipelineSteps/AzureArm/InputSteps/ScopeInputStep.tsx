@@ -207,27 +207,26 @@ export const ScopeInputStep = (
   }, [subscriptionsError, resourceGroupsError, locationsError, managementGroupsError])
 
   const dropDown = (name: string, label: keyof StringsMap, items: SelectOption[], loading: boolean): JSX.Element => (
-    <div className={cx(stepCss.formGroup, stepCss.md)}>
-      <SelectInputSetView
-        label={getString(label)}
-        name={`${path}.${name}`}
-        disabled={readonly}
-        useValue
-        multiTypeInputProps={{
-          selectProps: {
-            allowCreatingNewItems: true,
-            items: items
-          },
-          expressions,
-          allowableTypes,
-          width: 300
-        }}
-        selectItems={items}
-        placeholder={loading ? getString('loading') : getString('select')}
-        fieldPath={name}
-        template={inputSetData?.template}
-      />
-    </div>
+    <SelectInputSetView
+      label={getString(label)}
+      name={`${path}.${name}`}
+      disabled={readonly}
+      useValue
+      multiTypeInputProps={{
+        selectProps: {
+          allowCreatingNewItems: true,
+          items: items
+        },
+        expressions,
+        allowableTypes,
+        width: 300
+      }}
+      selectItems={items}
+      placeholder={loading ? getString('loading') : getString('select')}
+      fieldPath={name}
+      template={inputSetData?.template}
+      className={cx(stepCss.formGroup, stepCss.md)}
+    />
   )
 
   return (

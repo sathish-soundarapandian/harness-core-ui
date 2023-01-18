@@ -4501,7 +4501,7 @@ exports[`Create Github connector Wizard should render form for edit http and aut
                         class="bp3-form-content"
                       >
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
+                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
                         >
                           <div
                             class="Layout--horizontal StyledProps--main MultiTypeInput--main"
@@ -5318,7 +5318,7 @@ exports[`Create Github connector Wizard should render form for edit http and aut
                         class="bp3-form-content"
                       >
                         <div
-                          class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
+                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
                         >
                           <div
                             class="Layout--horizontal StyledProps--main MultiTypeInput--main"

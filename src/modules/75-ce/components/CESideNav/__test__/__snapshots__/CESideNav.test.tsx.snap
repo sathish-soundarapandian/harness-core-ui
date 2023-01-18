@@ -185,12 +185,6 @@ exports[`side nav tests feedback tooltip appears on hover of project 1`] = `
               </p>
             </div>
           </div>
-          <button
-            class="launchButtonPosition"
-            type="button"
-          >
-            common.ce.visibilityLaunchButton
-          </button>
         </div>
       </div>
     </div>
@@ -383,12 +377,6 @@ exports[`side nav tests side nav renders without error when no project is select
               </p>
             </div>
           </div>
-          <button
-            class="launchButtonPosition"
-            type="button"
-          >
-            common.ce.visibilityLaunchButton
-          </button>
         </div>
       </div>
     </div>
@@ -581,12 +569,6 @@ exports[`side nav tests side nav renders without error when on Access Point tab 
               </p>
             </div>
           </div>
-          <button
-            class="launchButtonPosition"
-            type="button"
-          >
-            common.ce.visibilityLaunchButton
-          </button>
         </div>
       </div>
     </div>
@@ -779,12 +761,6 @@ exports[`side nav tests side nav renders without error when on AutoStopping Rule
               </p>
             </div>
           </div>
-          <button
-            class="launchButtonPosition"
-            type="button"
-          >
-            common.ce.visibilityLaunchButton
-          </button>
         </div>
       </div>
     </div>

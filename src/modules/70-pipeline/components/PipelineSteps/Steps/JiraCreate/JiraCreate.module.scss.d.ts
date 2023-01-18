@@ -12,7 +12,7 @@ declare const styles: {
   readonly btnPosition: string
   readonly connector: string
   readonly connectorLabel: string
-  readonly deploymentViewMedium: string
+  readonly deploymentViewFieldWidth: string
   readonly descriptionField: string
   readonly fetching: string
   readonly fieldsPopover: string

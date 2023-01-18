@@ -48,8 +48,8 @@ export function CreatePipelineForm(props: CreatePipelineFormProps): React.ReactE
       }}
       formName="createPipeline"
       validationSchema={Yup.object().shape({
-        name: NameSchema({ requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
-        identifier: IdentifierSchema(),
+        name: NameSchema(getString, { requiredErrorMsg: getString('createPipeline.pipelineNameRequired') }),
+        identifier: IdentifierSchema(getString),
         ...(isGitSyncEnabled
           ? {
               repo: Yup.string().trim().required(getString('common.git.validation.repoRequired')),

@@ -178,6 +178,59 @@ export const GetInputSetEdit: UseGetReturnData<ResponseInputSetResponse> = {
   }
 }
 
+export const GetInputSetEdit_oldGitSync: UseGetReturnData<ResponseInputSetResponse> = {
+  loading: false,
+  refetch: jest.fn(),
+  error: null,
+  data: {
+    status: 'SUCCESS',
+    data: {
+      accountId: 'kmpySmUISimoRrJL6NL73w',
+      orgIdentifier: 'Harness11',
+      projectIdentifier: 'Uhat_Project',
+      pipelineIdentifier: 'testqqq',
+      identifier: 'asd',
+      inputSetYaml:
+        'inputSet:\n  name: asd\n  identifier: asd\n  description: asd\n  pipeline:\n    identifier: testqqq\n    stages:\n      - stage:\n          identifier: asd\n          type: Deployment\n          spec:\n            infrastructure:\n              infrastructureDefinition:\n                type: KubernetesDirect\n                spec:\n                  connectorRef: org.tesa1\n                  namespace: asd\n                  releaseName: asd\n',
+      name: 'asd',
+      description: 'asd',
+      errorResponse: false,
+      gitDetails: {
+        branch: 'feature',
+        filePath: 'asd.yaml',
+        objectId: '4471ec3aa40c26377353974c29a6670d998db06g',
+        repoIdentifier: 'gitSyncRepo',
+        rootFolder: '/rootFolderTest/.harness/'
+      }
+    },
+    correlationId: 'fdb1358f-c3b8-459b-aa89-4e570b7ac6d0'
+  }
+}
+
+export const GetInputSetEditInline: UseGetReturnData<ResponseInputSetResponse> = {
+  loading: false,
+  refetch: jest.fn(),
+  error: null,
+  data: {
+    status: 'SUCCESS',
+    data: {
+      accountId: 'kmpySmUISimoRrJL6NL73w',
+      orgIdentifier: 'Harness11',
+      projectIdentifier: 'Uhat_Project',
+      pipelineIdentifier: 'testqqq',
+      identifier: 'asd',
+      inputSetYaml:
+        'inputSet:\n  name: asd\n  identifier: asd\n  description: asd\n  pipeline:\n    identifier: testqqq\n    stages:\n      - stage:\n          identifier: asd\n          type: Deployment\n          spec:\n            infrastructure:\n              infrastructureDefinition:\n                type: KubernetesDirect\n                spec:\n                  connectorRef: org.tesa1\n                  namespace: asd\n                  releaseName: asd\n',
+      name: 'asd',
+      description: 'asd',
+      errorResponse: false,
+      gitDetails: {},
+      storeType: 'INLINE'
+    },
+    correlationId: 'fdb1358f-c3b8-459b-aa89-4e570b7ac6d0'
+  }
+}
+
 export const GetInputSetEditGitSimplification: UseGetReturnData<ResponseInputSetResponse> = {
   loading: false,
   refetch: jest.fn(),
@@ -236,6 +289,37 @@ export const GetOverlayInputSetEdit: UseGetReturnData<ResponseOverlayInputSetRes
       },
       connectorRef: 'ValidGithubRepo',
       storeType: 'REMOTE'
+    },
+    correlationId: '4cccf1ad-e86d-4629-9c85-95a23225f2e4'
+  }
+}
+
+export const GetOverlayInputSetEdit_oldGitSync: UseGetReturnData<ResponseOverlayInputSetResponse> = {
+  loading: false,
+  refetch: jest.fn(),
+  error: null,
+  data: {
+    status: 'SUCCESS',
+    data: {
+      accountId: 'kmpySmUISimoRrJL6NL73w',
+      orgIdentifier: 'Harness11',
+      projectIdentifier: 'Uhat_Project',
+      pipelineIdentifier: 'testqqq',
+      identifier: 'OverLayInput',
+      name: 'OverLayInput',
+      description: 'OverLayInput',
+      inputSetReferences: ['asd', 'test'],
+      overlayInputSetYaml:
+        'overlayInputSet:\n  name: OverLayInput\n  identifier: OverLayInput\n  description: OverLayInput\n  inputSetReferences:\n    - asd\n    - test\n',
+      errorResponse: false,
+      gitDetails: {
+        branch: 'feature',
+        filePath: 'asd.yaml',
+        objectId: '4471ec3aa40c26377353974c29a6670d998db06g',
+        repoIdentifier: 'gitSyncRepo',
+        rootFolder: '/rootFolderTest/.harness/'
+      },
+      connectorRef: 'ValidGithubRepo'
     },
     correlationId: '4cccf1ad-e86d-4629-9c85-95a23225f2e4'
   }

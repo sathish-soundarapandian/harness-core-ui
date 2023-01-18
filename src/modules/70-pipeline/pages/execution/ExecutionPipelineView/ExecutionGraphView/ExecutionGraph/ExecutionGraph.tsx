@@ -30,7 +30,8 @@ import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/ty
 import {
   DiagramFactory,
   NodeType as DiagramNodeType,
-  BaseReactComponentProps
+  BaseReactComponentProps,
+  DiagramNodes
 } from '@pipeline/components/PipelineDiagram/DiagramFactory'
 import { DiamondNodeWidget } from '@pipeline/components/PipelineDiagram/Nodes/DiamondNode/DiamondNode'
 import PipelineStageNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStageNode/PipelineStageNode'
@@ -40,6 +41,8 @@ import StartNodeStage from '@pipeline/components/PipelineDiagram/Nodes/StartNode
 import { getExecutionStageDiagramListeners } from '@pipeline/utils/execUtils'
 import DiagramLoader from '@pipeline/components/DiagramLoader/DiagramLoader'
 import { MatrixNode } from '@pipeline/components/PipelineDiagram/Nodes/MatrixNode/MatrixNode'
+import type { ExecutionGraph as IExecutionGraph } from 'services/pipeline-ng'
+import { NodeDimensionProvider } from '@pipeline/components/PipelineDiagram/Nodes/NodeDimensionStore'
 import CDInfo from './components/CD/CDInfo/CDInfo'
 import css from './ExecutionGraph.module.scss'
 
@@ -48,6 +51,7 @@ diagram.registerNode(['Deployment', 'CI'], PipelineStageNode as unknown as React
 diagram.registerNode(DiagramNodeType.CreateNode, CreateNodeStage as unknown as React.FC<BaseReactComponentProps>)
 diagram.registerNode(DiagramNodeType.EndNode, EndNodeStage)
 diagram.registerNode(DiagramNodeType.StartNode, StartNodeStage)
+diagram.registerNode(['Pipeline', 'Rollback'], DiagramNodes[DiagramNodeType.StepGroupNode])
 diagram.registerNode([DiagramNodeType.MatrixNode, DiagramNodeType.LoopNode, DiagramNodeType.PARALLELISM], MatrixNode)
 diagram.registerNode(['Approval', 'JiraApproval', 'HarnessApproval', 'default-diamond'], DiamondNodeWidget)
 
@@ -55,22 +59,27 @@ export const CDPipelineStudioNew = diagram.render()
 const barrierSupportedStageTypes = [StageType.DEPLOY, StageType.APPROVAL]
 
 export interface ExecutionGraphProps {
-  onSelectedStage(stage: string, stageExecId?: string): void
+  onSelectedStage(stage: string, parentStage?: string, stageExecId?: string): void
 }
 
 export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactElement {
-  const { executionIdentifier } = useParams<ExecutionPathProps>()
+  const { executionIdentifier, accountId } = useParams<ExecutionPathProps>()
   const { getString } = useStrings()
   const [dynamicPopoverHandler, setDynamicPopoverHandler] = React.useState<
     DynamicPopoverHandlerBinding<unknown> | undefined
   >()
   const [stageSetupId, setStageSetupIdId] = React.useState('')
-  const { pipelineExecutionDetail, selectedStageId } = useExecutionContext()
+  const { pipelineExecutionDetail, selectedStageId, selectedChildStageId } = useExecutionContext()
 
   const nodeData = useMemo(
     () => processLayoutNodeMapV1(pipelineExecutionDetail?.pipelineExecutionSummary),
     [pipelineExecutionDetail?.pipelineExecutionSummary]
   )
+  const childNodeData = useMemo(
+    () => processLayoutNodeMapV1(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary),
+    [pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary]
+  )
+
   const data: any = useMemo(() => {
     //ExecutionPipeline<GraphLayoutNode> | ExecutionPipeline<PipelineGraphState>
     return {
@@ -81,6 +90,44 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
       allNodes: Object.keys(pipelineExecutionDetail?.pipelineExecutionSummary?.layoutNodeMap || {})
     }
   }, [nodeData])
+
+  const _childPipelineData: PipelineGraphState[] = useMemo(() => {
+    return processExecutionDataForGraph(childNodeData as PipelineGraphState[], selectedStageId)
+  }, [childNodeData])
+
+  React.useEffect(() => {
+    if (data?.items && !isEmpty(_childPipelineData)) {
+      const _executionMetaData = {
+        accountId,
+        orgIdentifier: get(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary, 'orgIdentifier'),
+        projectIdentifier: get(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary, 'projectIdentifier'),
+        pipelineIdentifier: get(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary, 'pipelineIdentifier'),
+        planExecutionId: get(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary, 'planExecutionId'),
+        runSequence: get(pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary, 'runSequence', 0).toString()
+      } as IExecutionGraph['executionMetadata']
+
+      // TODO -> Remove data mutation
+      for (const obj of data.items) {
+        let flag = false
+        if (obj.id === selectedStageId) {
+          obj.childPipelineData = _childPipelineData
+          obj.executionMetaData = _executionMetaData
+          flag = true
+        }
+        if (!flag && obj?.children && obj.children?.length > 0) {
+          for (const childObj of obj.children) {
+            if (childObj.id === selectedStageId) {
+              childObj.childPipelineData = _childPipelineData
+              childObj.executionMetaData = _executionMetaData
+              flag = true
+            }
+            if (flag) break
+          }
+        }
+        if (flag) break
+      }
+    }
+  }, [_childPipelineData])
 
   const {
     data: barrierInfoData,
@@ -94,15 +141,21 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
     diagram.registerListeners(
       getExecutionStageDiagramListeners({
         allNodeMap: pipelineExecutionDetail?.pipelineExecutionSummary?.layoutNodeMap,
+        allChildNodeMap: pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary?.layoutNodeMap,
         onMouseLeave: () => {
           dynamicPopoverHandler?.hide()
           setStageSetupIdId('')
         },
         onMouseEnter: onMouseEnterV1,
-        onStepSelect: (id: string, stageExecId?: string) => props.onSelectedStage(id, stageExecId)
+        onStepSelect: (id: string, parentStageId?: string, stageExecId?: string) =>
+          props.onSelectedStage(id, parentStageId, stageExecId)
       })
     )
-  }, [pipelineExecutionDetail?.pipelineExecutionSummary?.layoutNodeMap, dynamicPopoverHandler])
+  }, [
+    pipelineExecutionDetail?.pipelineExecutionSummary?.layoutNodeMap,
+    dynamicPopoverHandler,
+    pipelineExecutionDetail?.childGraph?.pipelineExecutionSummary?.layoutNodeMap
+  ])
 
   React.useEffect(() => {
     if (stageSetupId) {
@@ -155,21 +208,23 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
     )
   }
 
-  const isMatrixNode = React.useCallback((): boolean => {
-    let isMatrixNodePresent = false
+  const isMatrixNodeOrChainedPipeline = React.useCallback((): boolean => {
+    let isMatrixNodeOrChainedPipelinePresent = false
     data?.items?.forEach((obj: PipelineGraphState) => {
-      if (isNodeTypeMatrixOrFor(get(obj, 'type'))) {
-        isMatrixNodePresent = true
+      const objType = get(obj, 'type')
+      if (isNodeTypeMatrixOrFor(objType) || objType === StageType.PIPELINE) {
+        isMatrixNodeOrChainedPipelinePresent = true
         return
       }
       obj?.children?.forEach((parallelNode: PipelineGraphState) => {
-        if (isNodeTypeMatrixOrFor(get(parallelNode, 'type'))) {
-          isMatrixNodePresent = true
+        const parallelNodeType = get(parallelNode, 'type')
+        if (isNodeTypeMatrixOrFor(parallelNodeType) || parallelNodeType === StageType.PIPELINE) {
+          isMatrixNodeOrChainedPipelinePresent = true
           return
         }
       })
     })
-    return isMatrixNodePresent
+    return isMatrixNodeOrChainedPipelinePresent
   }, [data?.items])
 
   return (
@@ -189,15 +244,19 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
         </Layout.Horizontal>
       ) : null}
       {!isEmpty(pipelineExecutionDetail?.pipelineExecutionSummary?.pipelineIdentifier) && data.items?.length > 0 && (
-        <>
+        <NodeDimensionProvider>
           <CDPipelineStudioNew
             readonly
             loaderComponent={DiagramLoader}
             data={data.items as PipelineGraphState[]}
-            selectedNodeId={selectedStageId}
+            selectedNodeId={
+              isEmpty(childNodeData) || isEmpty(selectedChildStageId) ? selectedStageId : selectedChildStageId
+            }
             panZoom={false}
             parentSelector=".Pane1"
-            {...(!isMatrixNode() && { collapsibleProps: { percentageNodeVisible: 0.8, bottomMarginInPixels: 120 } })}
+            {...(!isMatrixNodeOrChainedPipeline() && {
+              collapsibleProps: { percentageNodeVisible: 0.8, bottomMarginInPixels: 120 }
+            })}
             graphLinkClassname={css.graphLink}
             key={executionIdentifier}
           />
@@ -208,7 +267,7 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
             bind={setDynamicPopoverHandler as any}
             closeOnMouseOut
           />
-        </>
+        </NodeDimensionProvider>
       )}
     </div>
   )

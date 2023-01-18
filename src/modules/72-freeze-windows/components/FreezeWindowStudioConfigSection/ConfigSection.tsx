@@ -11,8 +11,9 @@ import type { FormikProps } from 'formik'
 import { isEmpty, noop } from 'lodash-es'
 import { Button, Formik } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
-import type { EntityConfig, FreezeObj, ResourcesInterface, ValidationErrorType } from '@freeze-windows/types'
+import type { EntityConfig, ResourcesInterface, ValidationErrorType } from '@freeze-windows/types'
 import {
+  convertValuesToYamlObj,
   FieldVisibility,
   getEmptyEntityConfig,
   getInitialValuesForConfigSection,
@@ -42,7 +43,11 @@ const ConfigsSection = (
   }: ConfigsSectionProps,
   _formikRef: unknown
 ) => {
-  const formikRef = React.useRef<FormikProps<{ entity?: Array<Record<string, any>> }>>()
+  const formikRef = React.useRef<
+    FormikProps<{ entity?: Array<Record<string, any>> }> & {
+      onTabChange: (formikValues: { entity?: Array<Record<string, any>> }) => void
+    }
+  >()
   const [editViews, setEditViews] = React.useState<boolean[]>(
     Array(/* istanbul ignore next */ entityConfigs?.length).fill(false)
   )
@@ -122,6 +127,17 @@ const ConfigsSection = (
     })
   }
 
+  const handleSaveEntityOnTabChange = (formikValues: { entity?: Array<Record<string, any>> }) => {
+    // When there is one Rule in Freeze config , on click of Continue , it should be persisted
+    if (editViews.length === 1 && editViews[0]) {
+      const values = formikValues.entity || []
+      const updatedEntityConfigs = [...entityConfigs]
+      updatedEntityConfigs[0] = convertValuesToYamlObj(updatedEntityConfigs[0], values[0], fieldsVisibility)
+      updateFreeze({ entityConfigs: updatedEntityConfigs })
+      setEditView(0, false)
+    }
+  }
+
   return (
     <>
       <Formik
@@ -140,7 +156,9 @@ const ConfigsSection = (
       >
         {formikProps => {
           formikRef.current = formikProps as any
-          ;(_formikRef as React.MutableRefObject<FormikProps<FreezeObj>>).current = formikProps as any
+          ;(_formikRef as React.MutableRefObject<FormikProps<{ entity?: Array<Record<string, any>> }>>).current =
+            formikProps as any
+          ;(formikRef.current as any).onTabChange = handleSaveEntityOnTabChange
 
           return entityConfigs.map((config: EntityConfig, index: number) => (
             <ConfigRenderer

@@ -33,7 +33,6 @@ import routes from '@common/RouteDefinitions'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { StringUtils } from '@common/exports'
 import type { ServiceDefinition, UserRepoResponse } from 'services/cd-ng'
-import { useQueryParams } from '@common/hooks'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { useGetServicesData } from '@cd/components/PipelineSteps/DeployServiceEntityStep/useGetServicesData'
@@ -53,6 +52,7 @@ import {
 } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import RunPipelineSummary from '../RunPipelineSummary/RunPipelineSummary'
+import commonCss from '../GetStartedWithCD.module.scss'
 import css from './DeployProvisioningWizard.module.scss'
 const WizardStepOrder = [
   DeployProvisiongWizardStepId.SelectDeploymentType,
@@ -64,16 +64,18 @@ const WizardStepOrder = [
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {
   const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.RunPipeline } = props
   const {
-    state: { service: serviceData, selectedSectionId, infrastructure, environment },
-    setSelectedSectionId
+    state: { service: serviceData, infrastructure, environment }
   } = useCDOnboardingContext()
 
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
-  const query = useQueryParams()
   const history = useHistory()
   const { showError } = useToaster()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+
+  const [selectedSectionId, setSelectedSectionId] = React.useState<DeployProvisiongWizardStepId>(
+    DeployProvisiongWizardStepId.SelectDeploymentType
+  )
 
   const [disableBtn, setDisableBtn] = React.useState<boolean>(false)
   const [currentWizardStepId, setCurrentWizardStepId] =
@@ -127,9 +129,8 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   }
 
   React.useEffect(() => {
-    const sectionId = (query as any).sectionId || EMPTY_STRING
-    if (sectionId?.length && WizardStepOrder.includes(sectionId)) {
-      updateStepStatusFromContextTab(sectionId)
+    if (selectedSectionId?.length && WizardStepOrder.includes(selectedSectionId)) {
+      updateStepStatusFromContextTab(selectedSectionId)
     } else {
       setSelectedSectionId(DeployProvisiongWizardStepId.SelectDeploymentType)
       updateStepStatus([DeployProvisiongWizardStepId.SelectDeploymentType], StepStatus.InProgress)
@@ -364,7 +365,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
             // catch any errors and do nothing
           }
         },
-        stepFooterLabel: 'cd.getStartedWithCD.configureEnvironment'
+        stepFooterLabel: 'common.connectEnvironment'
       }
     ],
     [
@@ -390,7 +391,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           isDelegateInstalled ? moveToConfigureService() : showDelegateRequiredWarning()
         },
 
-        stepFooterLabel: 'cd.getStartedWithCD.configureService'
+        stepFooterLabel: 'common.configureService'
       }
     ],
     [
@@ -462,6 +463,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
                 StepStatus.Success
               )
             }}
+            setSelectedSectionId={setSelectedSectionId}
           />
         ),
         onClickBack: () => {
@@ -499,7 +501,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           1,
           {
             StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.DelegateSelector), StepStatus.ToDo),
-            StepName: getString('cd.getStartedWithCD.configureEnvironment'),
+            StepName: getString('common.connectEnvironment'),
             onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.DelegateSelector)
           }
         ],
@@ -507,7 +509,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           2,
           {
             StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.ConfigureService), StepStatus.ToDo),
-            StepName: getString('cd.getStartedWithCD.configureService'),
+            StepName: getString('common.configureService'),
             onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.ConfigureService)
           }
         ],
@@ -543,7 +545,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
             icon="cross"
             iconProps={{ size: 18 }}
             onClick={showOnboaringExitWarning}
-            style={{ position: 'absolute', right: 'var(--spacing-large)', top: 'var(--spacing-large)' }}
+            className={commonCss.closeWizard}
             data-testid={'close-cd-onboarding-wizard'}
           />
         </Container>

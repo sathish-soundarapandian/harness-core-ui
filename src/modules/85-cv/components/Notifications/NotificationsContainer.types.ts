@@ -7,7 +7,7 @@
 
 import type { StepProps, SelectOption, MultiSelectOption } from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
-import type { NotificationToToggle } from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.types'
+import type { NotificationToToggle } from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.types'
 import type {
   CVNGNotificationChannel,
   NotificationRuleDTO,

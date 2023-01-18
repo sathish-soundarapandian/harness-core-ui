@@ -3,10 +3,10 @@
 exports[`GitOpsExecutionSummary render with multiple applications 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main"
+    class="Layout--horizontal StyledProps--main gitOpsExecutionSummary StyledProps--margin-left-small"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--margin-left-small StyledProps--padding-left-xsmall"
+      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
       style="align-items: center;"
     >
       <span
@@ -28,39 +28,30 @@ exports[`GitOpsExecutionSummary render with multiple applications 1`] = `
           />
         </svg>
       </span>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
+      <a
+        href="/account/accountId/cd/orgs/default/projects/project1/gitops/applications/ID_1?agentId=AGENT_1"
       >
-        applications
-        :
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
-      >
-        <a
-          href="/account/accountId/cd/orgs/default/projects/project1/gitops/applications/ID_1?agentId=AGENT_1"
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary6"
+          style="max-width: 200px; --text-line-clamp: 1;"
         >
-          <p
-            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
-            style="max-width: 200px; --text-line-clamp: 1;"
-          >
-            NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1
-          </p>
-        </a>
-      </p>
+          NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1 NAME_1
+        </p>
+      </a>
       <span
         class="bp3-popover-wrapper bp3-dark"
       >
         <span
           class="bp3-popover-target"
         >
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
+          <span
+            class="primary6"
+            style="text-decoration: underline dotted;"
             tabindex="0"
           >
-            , +
+            +
             2
-          </p>
+          </span>
         </span>
       </span>
     </div>
@@ -71,10 +62,10 @@ exports[`GitOpsExecutionSummary render with multiple applications 1`] = `
 exports[`GitOpsExecutionSummary render with one application 1`] = `
 <div>
   <div
-    class="Layout--horizontal StyledProps--main"
+    class="Layout--horizontal StyledProps--main gitOpsExecutionSummary StyledProps--margin-left-small"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main StyledProps--margin-left-small StyledProps--padding-left-xsmall"
+      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main"
       style="align-items: center;"
     >
       <span
@@ -96,26 +87,16 @@ exports[`GitOpsExecutionSummary render with one application 1`] = `
           />
         </svg>
       </span>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-small StyledProps--color StyledProps--color-grey600"
+      <a
+        href="/account/accountId/cd/orgs/default/projects/project1/gitops/applications/ID_1?agentId=AGENT_1"
       >
-        applications
-        :
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
-      >
-        <a
-          href="/account/accountId/cd/orgs/default/projects/project1/gitops/applications/ID_1?agentId=AGENT_1"
+        <p
+          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-primary6"
+          style="max-width: 200px; --text-line-clamp: 1;"
         >
-          <p
-            class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-grey800"
-            style="max-width: 200px; --text-line-clamp: 1;"
-          >
-            NAME_1
-          </p>
-        </a>
-      </p>
+          NAME_1
+        </p>
+      </a>
     </div>
   </div>
 </div>

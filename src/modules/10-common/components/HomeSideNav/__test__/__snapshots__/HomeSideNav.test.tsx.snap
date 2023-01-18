@@ -55,12 +55,6 @@ exports[`HomeSidenav render 1`] = `
         projectsText
       </p>
     </a>
-    <button
-      class="launchButtonPosition"
-      type="button"
-    >
-      common.cgLaunchText
-    </button>
   </div>
 </div>
 `;

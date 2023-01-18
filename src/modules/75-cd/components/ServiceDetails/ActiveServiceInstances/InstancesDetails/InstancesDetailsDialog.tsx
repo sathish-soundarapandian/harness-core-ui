@@ -9,9 +9,9 @@ import React, { Dispatch, SetStateAction, useCallback, useMemo, useState } from 
 import cx from 'classnames'
 import { Collapse, Container, Dialog, ExpandingSearchInput, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import type { InstanceGroupedByArtifact } from 'services/cd-ng'
+import type { InstanceGroupedByArtifactV2 } from 'services/cd-ng'
 import { DeploymentsV2 } from '../../DeploymentView/DeploymentViewV2'
 import { ActiveServiceInstancesContentV2, isClusterData, TableType } from '../ActiveServiceInstancesContentV2'
 import css from './InstancesDetailsDialog.module.scss'
@@ -19,7 +19,7 @@ import css from './InstancesDetailsDialog.module.scss'
 export interface InstancesDetailsDialogProps {
   isOpen: boolean
   setIsOpen: Dispatch<SetStateAction<boolean>>
-  data?: InstanceGroupedByArtifact[]
+  data?: InstanceGroupedByArtifactV2[]
   isActiveInstance?: boolean
 }
 
@@ -36,27 +36,30 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
     if (!searchTerm) {
       return deployments
     }
+    const searchValue = searchTerm.toLocaleLowerCase()
     return deployments.filter(
       deployment =>
-        (deployment.artifactVersion || '').toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1 ||
-        deployment.instanceGroupedByEnvironmentList?.filter(
+        (deployment.artifactVersion || '').toLocaleLowerCase().includes(searchValue) ||
+        deployment.instanceGroupedByEnvironmentList?.some(
           i =>
-            (i.envName !== null && i.envName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1) ||
-            i.instanceGroupedByInfraList?.filter(
+            i.envName?.toLocaleLowerCase().includes(searchValue) ||
+            i.instanceGroupedByInfraList?.some(
               infra =>
-                (infra.infraName !== null &&
-                  infra.infraName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1) ||
-                (infra.lastPipelineExecutionName !== null &&
-                  infra.lastPipelineExecutionName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1)
-            ).length ||
-            i.instanceGroupedByClusterList?.filter(
+                infra.infraName?.toLocaleLowerCase().includes(searchValue) ||
+                (infra.instanceGroupedByPipelineExecutionList?.length &&
+                  infra.instanceGroupedByPipelineExecutionList.some(item =>
+                    item.lastPipelineExecutionName?.toLocaleLowerCase().includes(searchValue)
+                  ))
+            ) ||
+            i.instanceGroupedByClusterList?.some(
               cluster =>
-                (cluster.clusterIdentifier !== null &&
-                  cluster.clusterIdentifier?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1) ||
-                (cluster.lastPipelineExecutionName !== null &&
-                  cluster.lastPipelineExecutionName?.toLocaleLowerCase().indexOf(searchTerm.toLocaleLowerCase()) !== -1)
-            ).length
-        ).length
+                cluster.clusterIdentifier?.toLocaleLowerCase().includes(searchValue) ||
+                (cluster.instanceGroupedByPipelineExecutionList?.length &&
+                  cluster.instanceGroupedByPipelineExecutionList.some(item =>
+                    item.lastPipelineExecutionName?.toLocaleLowerCase().includes(searchValue)
+                  ))
+            )
+        )
     )
   }, [searchTerm, deployments])
 
@@ -115,6 +118,32 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
     return (
       <Container style={{ overflowY: 'auto' }}>
         {filteredDeployments?.map((dataItem, index) => {
+          if (
+            dataItem.artifactVersion &&
+            dataItem.instanceGroupedByEnvironmentList?.length === 1 &&
+            defaultTo(dataItem.instanceGroupedByEnvironmentList[0].instanceGroupedByClusterList?.length, 0) <= 1 &&
+            defaultTo(dataItem.instanceGroupedByEnvironmentList[0].instanceGroupedByInfraList?.length, 0) <= 1 &&
+            defaultTo(
+              dataItem.instanceGroupedByEnvironmentList[0].instanceGroupedByInfraList?.[0]
+                ?.instanceGroupedByPipelineExecutionList?.length,
+              0
+            ) <= 5 &&
+            defaultTo(
+              dataItem.instanceGroupedByEnvironmentList[0].instanceGroupedByClusterList?.[0]
+                ?.instanceGroupedByPipelineExecutionList?.length,
+              0
+            ) <= 5
+          ) {
+            return (
+              <Container className={css.nonCollapseRow} key={index}>
+                {isActiveInstance ? (
+                  <ActiveServiceInstancesContentV2 tableType={TableType.FULL} data={[dataItem]} />
+                ) : (
+                  <DeploymentsV2 tableType={TableType.FULL} data={[dataItem]} />
+                )}
+              </Container>
+            )
+          }
           return (
             dataItem.artifactVersion &&
             dataItem.instanceGroupedByEnvironmentList && (
@@ -132,6 +161,9 @@ export default function InstancesDetailsDialog(props: InstancesDetailsDialogProp
                 expandedHeading={<>{/* empty element on purpose */}</>}
                 collapsedIcon={'main-chevron-right'}
                 expandedIcon={'main-chevron-down'}
+                transitionDuration={0}
+                //this is for the case when search is applied, then we will show atleast one row opened
+                isOpen={!isEmpty(searchTerm) && !index}
               >
                 {isActiveInstance ? (
                   <ActiveServiceInstancesContentV2 tableType={TableType.FULL} data={[dataItem]} />

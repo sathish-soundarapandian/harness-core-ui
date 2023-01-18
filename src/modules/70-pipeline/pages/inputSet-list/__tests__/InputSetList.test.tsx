@@ -26,6 +26,7 @@ import routes from '@common/RouteDefinitions'
 import * as pipelineng from 'services/pipeline-ng'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
+import { useMutateAsGet } from '@common/hooks'
 import { branchStatusMock, gitConfigs, sourceCodeManagers } from '@connectors/mocks/mock'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { GetYamlDiffDelResponse } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
@@ -39,7 +40,8 @@ import {
   MergeInputSetResponse,
   GetOverlayInputSetEdit,
   GetOverlayISYamlDiff,
-  GetInputSetYamlDiff
+  GetInputSetYamlDiff,
+  ValidInputSetsListResponse
 } from './InputSetListMocks'
 
 const successResponse = (): Promise<{ status: string }> => Promise.resolve({ status: 'SUCCESS', data: {} })
@@ -316,9 +318,34 @@ describe('Input Set List - Actions tests', () => {
       }
     })
   })
+
+  test('New Input Set and Run Pipeline buttons should be disabled when template call fails', async () => {
+    ;(useMutateAsGet as any).mockImplementation(() => {
+      return { data: null, refetch: jest.fn(), error: { data: { status: 'ERROR' } }, loading: false }
+    })
+    jest.spyOn(pipelineng, 'useGetInputSetsListForPipeline').mockImplementation((): any => ValidInputSetsListResponse)
+    jest.spyOn(pipelineng, 'getInputSetForPipelinePromise').mockImplementation((): any => ValidInputSetsListResponse)
+
+    const { findAllByText, container: component } = renderComponent()
+    await waitFor(() => expect(getByText(component, 'OverLay Input Set 1')).toBeInTheDocument())
+    expect(getByText(component, 'Input Set 1')).toBeInTheDocument()
+
+    const newInputSetBtns = await findAllByText('inputSets.newInputSet')
+    expect(newInputSetBtns[1].parentElement).toBeInTheDocument()
+    await waitFor(() => expect(newInputSetBtns[1].parentElement).toHaveAttribute('disabled'))
+    const runPipelineButtons = getAllByText?.('runPipeline')
+    runPipelineButtons?.forEach(runPipelineBtn => expect(runPipelineBtn.parentElement).toHaveAttribute('disabled'))
+  })
 })
 
 describe('Input Set List - Reconcile Button', () => {
+  beforeAll(() => {
+    ;(useMutateAsGet as any).mockImplementation(() => {
+      return TemplateResponse
+    })
+    jest.spyOn(pipelineng, 'useGetInputSetsListForPipeline').mockImplementation((): any => GetInputSetsResponse)
+    jest.spyOn(pipelineng, 'getInputSetForPipelinePromise').mockImplementation((): any => GetInputSetsResponse)
+  })
   test('should not open reconcile dialog on clicking reconcile button, when loading state is true', async () => {
     jest.spyOn(pipelineng, 'getInputSetForPipelinePromise').mockImplementation((): any => GetInputSetsResponse)
     jest.spyOn(pipelineng, 'useYamlDiffForInputSet').mockImplementation((): any => {

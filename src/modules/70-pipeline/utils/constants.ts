@@ -52,7 +52,8 @@ export const stageTypeToIconMap: Record<string, IconName> = {
   Pipeline: 'chained-pipeline',
   Custom: 'custom-stage-icon',
   Approval: 'approval-stage-icon',
-  FeatureFlag: 'cf-main'
+  FeatureFlag: 'cf-main',
+  IACM: 'iacm'
 }
 
 export const getPrCloneStrategyOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
@@ -88,7 +89,8 @@ export enum CIBuildInfrastructureType {
   KubernetesHosted = 'KubernetesHosted',
   Cloud = 'Cloud',
   UseFromStage = 'UseFromStage',
-  Docker = 'Docker'
+  Docker = 'Docker',
+  K8 = 'K8'
 }
 
 export const DEFAULT_PAGE_INDEX = 0

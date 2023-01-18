@@ -68,7 +68,7 @@ export default function ConfigForm(props: ConfigFormProps): React.ReactElement {
                 configFiles: Yup.object().shape({
                   store: Yup.object().shape({
                     spec: Yup.object().shape({
-                      connectorRef: ConnectorRefSchema(),
+                      connectorRef: ConnectorRefSchema(getString),
                       gitFetchType: Yup.string().required(getString('cd.gitFetchTypeRequired')),
                       branch: Yup.string().when('gitFetchType', {
                         is: 'Branch',

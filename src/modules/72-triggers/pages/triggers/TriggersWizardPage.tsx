@@ -68,7 +68,7 @@ import type {
   InvocationMapFunction,
   CompletionItemInterface
 } from '@common/interfaces/YAMLBuilderProps'
-import { memoizedParse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { memoizedParse, yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useConfirmAction, useMutateAsGet, useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
@@ -76,6 +76,7 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import useIsGithubWebhookAuthenticationEnabled from '@triggers/components/Triggers/WebhookTrigger/useIsGithubWebhookAuthenticationEnabled'
+import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import {
   scheduleTabsId,
   getDefaultExpressionBreakdownValues,
@@ -182,7 +183,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     } as GetTriggerQueryParams
     // lazy: true
   })
-  const { data: pipelineResponse } = useGetPipeline({
+  const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
     pipelineIdentifier,
     queryParams: {
       accountIdentifier: accountId,
@@ -201,6 +202,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
 
   const [connectorScopeParams, setConnectorScopeParams] = useState<GetConnectorQueryParams | undefined>(undefined)
   const [ignoreError, setIgnoreError] = useState<boolean>(false)
+  const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
   const createUpdateTriggerQueryParams = useMemo(
     () => ({
       accountIdentifier: accountId,
@@ -374,17 +376,24 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     )
   })
 
-  const originalPipeline: PipelineInfoConfig | undefined = memoizedParse<Pipeline>(
-    (pipelineResponse?.data?.yamlPipeline as any) || ''
-  )?.pipeline
+  const originalPipeline: PipelineInfoConfig | undefined =
+    memoizedParse<Pipeline>((pipelineResponse?.data?.yamlPipeline as any) || '')?.pipeline ?? {}
 
-  const resolvedPipeline: PipelineInfoConfig | undefined = memoizedParse<Pipeline>(
-    (pipelineResponse?.data?.resolvedTemplatesPipelineYaml as any) || ''
-  )?.pipeline
+  useEffect(() => {
+    setResolvedPipeline(
+      yamlParse<Pipeline>(defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, ''))?.pipeline
+    )
+  }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
+
+  const { loadingResolvedChildPipeline, resolvedMergedPipeline } = useGetResolvedChildPipeline(
+    { accountId, repoIdentifier, branch, connectorRef: pipelineConnectorRef },
+    originalPipeline,
+    resolvedPipeline
+  )
 
   const shouldRenderWizard = useMemo(() => {
-    return !loadingGetTrigger && !fetchingTemplate
-  }, [loadingGetTrigger, fetchingTemplate])
+    return !loadingGetTrigger && !fetchingTemplate && !loadingPipeline && !loadingResolvedChildPipeline
+  }, [loadingGetTrigger, fetchingTemplate, loadingPipeline, loadingResolvedChildPipeline])
 
   useDeepCompareEffect(() => {
     if (shouldRenderWizard && template?.data?.inputSetTemplateYaml !== undefined) {
@@ -417,7 +426,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         const newPipeline = mergeTemplateWithInputSetData({
           inputSetPortion: { pipeline: inpuSet },
           templatePipeline: { pipeline: inpuSet },
-          allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
+          allValues: { pipeline: defaultTo(resolvedMergedPipeline, {} as PipelineInfoConfig) },
           shouldUseDefaultValues: true
         })
         setCurrentPipeline(newPipeline)
@@ -426,7 +435,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
   }, [
     template?.data?.inputSetTemplateYaml,
     onEditInitialValues?.pipeline,
-    resolvedPipeline,
+    resolvedMergedPipeline,
     fetchingTemplate,
     loadingGetTrigger
   ])
@@ -519,9 +528,14 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       autoAbortPreviousExecutions = false,
       pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event),
       pollInterval,
+      webhookId,
       encryptedWebhookSecretIdentifier
     } = val
-    const inputSetRefs = get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
+    const inputSetRefs = get(
+      val,
+      'inputSetRefs',
+      get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
+    )
     const referenceString =
       typeof encryptedWebhookSecretIdentifier === 'string'
         ? encryptedWebhookSecretIdentifier
@@ -599,6 +613,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         source: {
           type: formikValueTriggerType as unknown as NGTriggerSourceV2['type'],
           pollInterval,
+          webhookId,
           spec: {
             type: formikValueSourceRepo, // Github
             spec: {
@@ -715,6 +730,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             inputSetRefs = [],
             source: {
               pollInterval,
+              webhookId,
               spec: {
                 type: sourceRepo,
                 spec: {
@@ -761,7 +777,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             // Ensure ordering of variables and their values respectively for UI
             if (pipelineJson?.variables) {
               pipelineJson.variables = getOrderedPipelineVariableValues({
-                originalPipelineVariables: resolvedPipeline?.variables,
+                originalPipelineVariables: resolvedMergedPipeline?.variables,
                 currentPipelineVariables: pipelineJson.variables
               })
             }
@@ -770,7 +786,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
           }
         } else if (isNewGitSyncRemotePipeline) {
-          pipelineJson = resolvedPipeline
+          pipelineJson = resolvedMergedPipeline
         }
 
         triggerValues = {
@@ -784,6 +800,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           triggerType: TriggerTypes.WEBHOOK as unknown as NGTriggerSourceV2['type'],
           event,
           pollInterval,
+          webhookId,
           autoAbortPreviousExecutions,
           connectorRef,
           repoName,
@@ -875,7 +892,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             // Ensure ordering of variables and their values respectively for UI
             if (pipelineJson?.variables) {
               pipelineJson.variables = getOrderedPipelineVariableValues({
-                originalPipelineVariables: resolvedPipeline?.variables,
+                originalPipelineVariables: resolvedMergedPipeline?.variables,
                 currentPipelineVariables: pipelineJson.variables
               })
             }
@@ -884,7 +901,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
             setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
           }
         } else if (isNewGitSyncRemotePipeline) {
-          pipelineJson = resolvedPipeline
+          pipelineJson = resolvedMergedPipeline
         }
 
         triggerValues = {
@@ -947,7 +964,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           // Ensure ordering of variables and their values respectively for UI
           if (pipelineJson?.variables) {
             pipelineJson.variables = getOrderedPipelineVariableValues({
-              originalPipelineVariables: resolvedPipeline?.variables,
+              originalPipelineVariables: resolvedMergedPipeline?.variables,
               currentPipelineVariables: pipelineJson.variables
             })
           }
@@ -956,7 +973,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
         }
       } else if (isNewGitSyncRemotePipeline) {
-        pipelineJson = resolvedPipeline
+        pipelineJson = resolvedMergedPipeline
       }
       const expressionBreakdownValues = getBreakdownValues(expression)
       const newExpressionBreakdown = {
@@ -1042,7 +1059,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           // Ensure ordering of variables and their values respectively for UI
           if (pipelineJson?.variables) {
             pipelineJson.variables = getOrderedPipelineVariableValues({
-              originalPipelineVariables: resolvedPipeline?.variables,
+              originalPipelineVariables: resolvedMergedPipeline?.variables,
               currentPipelineVariables: pipelineJson.variables
             })
           }
@@ -1051,7 +1068,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
           setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
         }
       } else if (isNewGitSyncRemotePipeline) {
-        pipelineJson = resolvedPipeline
+        pipelineJson = resolvedMergedPipeline
       }
       const eventConditions = source?.spec?.spec?.eventConditions || []
       const { value: versionValue, operator: versionOperator } =
@@ -1108,9 +1125,13 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       pipeline: pipelineRuntimeInput,
       triggerType: formikValueTriggerType,
       expression,
-      pipelineBranchName = getDefaultPipelineReferenceBranch(),
-      inputSetRefs
+      pipelineBranchName = getDefaultPipelineReferenceBranch()
     } = val
+    const inputSetRefs = get(
+      val,
+      'inputSetRefs',
+      get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
+    )
 
     // actions will be required thru validation
     const stringifyPipelineRuntimeInput = yamlStringify({
@@ -1188,7 +1209,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
                 pipeline: { ...clearRuntimeInput(latestPipeline.pipeline) },
                 template: latestYamlTemplate,
                 originalPipeline: orgPipeline,
-                resolvedPipeline,
+                resolvedPipeline: resolvedMergedPipeline,
                 getString,
                 viewType: StepViewType.TriggerForm,
                 viewTypeMetadata: { isTrigger: true }
@@ -1354,8 +1375,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     if (
       newPipeline?.template?.templateInputs &&
       isCodebaseFieldsRuntimeInputs(newPipeline.template.templateInputs as PipelineInfoConfig) &&
-      resolvedPipeline &&
-      !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline as PipelineInfoConfig)
+      resolvedMergedPipeline &&
+      !isCloneCodebaseEnabledAtLeastOneStage(resolvedMergedPipeline as PipelineInfoConfig)
     ) {
       newPipeline = getPipelineWithoutCodebaseInputs(newPipeline)
     }
@@ -1372,12 +1393,13 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         }),
         pipeline: newPipeline,
         originalPipeline,
-        resolvedPipeline,
+        resolvedPipeline: resolvedMergedPipeline,
         anyAction: false,
         autoAbortPreviousExecutions: false,
         pipelineBranchName: getDefaultPipelineReferenceBranch(triggerType),
         // setDefaultValue only when polling is enabled and for Github Webhook Trigger
-        ...(isGitWebhookPollingEnabled && sourceRepoOnNew === GitSourceProviders.GITHUB.value && { pollInterval: '0' })
+        ...(isGitWebhookPollingEnabled &&
+          sourceRepoOnNew === GitSourceProviders.GITHUB.value && { pollInterval: '0', webhookId: '' })
       }
     } else if (triggerType === TriggerTypes.SCHEDULE) {
       return {
@@ -1387,8 +1409,8 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         selectedScheduleTab: scheduleTabsId.MINUTES,
         pipeline: newPipeline,
         originalPipeline,
-        resolvedPipeline,
-        pipelineBranchName: getDefaultPipelineReferenceBranch(triggerType),
+        resolvedPipeline: resolvedMergedPipeline,
+        pipelineBranchName: getDefaultPipelineReferenceBranch(triggerType) || branch,
         ...getDefaultExpressionBreakdownValues(scheduleTabsId.MINUTES)
       }
     } else if (isArtifactOrManifestTrigger(triggerType)) {
@@ -1402,9 +1424,9 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         manifestType,
         pipeline: newPipeline,
         originalPipeline,
-        resolvedPipeline,
+        resolvedPipeline: resolvedMergedPipeline,
         inputSetTemplateYamlObj,
-        pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew),
+        pipelineBranchName: getDefaultPipelineReferenceBranch(triggerTypeOnNew) || branch,
         selectedArtifact: {}
       }
     }
@@ -1434,11 +1456,10 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
 
   useEffect(() => {
     const yamlPipeline = pipelineResponse?.data?.yamlPipeline
-    const resolvedYamlPipeline = pipelineResponse?.data?.resolvedTemplatesPipelineYaml
 
     if (
       yamlPipeline &&
-      resolvedYamlPipeline &&
+      resolvedMergedPipeline &&
       ((initialValues && !initialValues.originalPipeline && !initialValues.resolvedPipeline) ||
         (onEditInitialValues?.identifier &&
           !onEditInitialValues.originalPipeline &&
@@ -1446,13 +1467,13 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     ) {
       try {
         let newOriginalPipeline = parse(yamlPipeline)?.pipeline
-        let newResolvedPipeline = parse(resolvedYamlPipeline)?.pipeline
+        let newResolvedPipeline: any = resolvedMergedPipeline
         // only applied for CI, Not cloned codebase
         if (
           newOriginalPipeline?.template?.templateInputs &&
           isCodebaseFieldsRuntimeInputs(newOriginalPipeline.template.templateInputs as PipelineInfoConfig) &&
-          resolvedPipeline &&
-          !isCloneCodebaseEnabledAtLeastOneStage(resolvedPipeline)
+          resolvedMergedPipeline &&
+          !isCloneCodebaseEnabledAtLeastOneStage(resolvedMergedPipeline)
         ) {
           const newOriginalPipelineWithoutCodebaseInputs = getPipelineWithoutCodebaseInputs(newOriginalPipeline)
           const newResolvedPipelineWithoutCodebaseInputs = getPipelineWithoutCodebaseInputs(newResolvedPipeline)
@@ -1494,7 +1515,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     }
   }, [
     pipelineResponse?.data?.yamlPipeline,
-    pipelineResponse?.data?.resolvedTemplatesPipelineYaml,
+    resolvedMergedPipeline,
     onEditInitialValues?.identifier,
     initialValues,
     currentPipeline
@@ -1750,11 +1771,18 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
     latestYaml: triggerYaml
   }: {
     formikProps: FormikProps<any>
-    latestYaml?: any // validate from YAML view
+    latestYaml?: string
   }): Promise<FormikErrors<FlatValidWebhookFormikValuesInterface>> => {
     if (!formikProps) return {}
     let _pipelineBranchNameError = ''
     let _inputSetRefsError = ''
+    let parsedTriggerYaml
+
+    try {
+      parsedTriggerYaml = parse(triggerYaml || '')
+    } catch (e) {
+      setErrorToasterMessage(getString('triggers.cannotParseInputValues'))
+    }
 
     if (isNewGitSyncRemotePipeline) {
       // Custom validation when pipeline Reference Branch Name is an expression for non-webhook triggers
@@ -1767,8 +1795,14 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       }
 
       // inputSetRefs is required if Input Set is required to run pipeline
-      if (template?.data?.inputSetTemplateYaml && !formikProps?.values?.inputSetSelected?.length) {
-        _inputSetRefsError = getString('triggers.inputSetIsRequired')
+      if (template?.data?.inputSetTemplateYaml) {
+        if (!formikProps?.values?.inputSetSelected?.length) {
+          _inputSetRefsError = getString('triggers.inputSetIsRequired')
+        }
+
+        if (parsedTriggerYaml?.trigger?.inputSetRefs?.length || formikProps?.values?.inputSetRefs?.length) {
+          _inputSetRefsError = ''
+        }
       }
     }
 
@@ -1783,12 +1817,14 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
       latestPipelineFromYamlView = getTriggerPipelineValues(triggerYaml, formikProps)
     }
 
-    const runPipelineFormErrors = await getFormErrors({
-      latestPipeline: latestPipelineFromYamlView || latestPipeline,
-      latestYamlTemplate: yamlTemplate,
-      orgPipeline: values.pipeline,
-      setSubmitting
-    })
+    const runPipelineFormErrors = isNewGitSyncRemotePipeline
+      ? null
+      : await getFormErrors({
+          latestPipeline: latestPipelineFromYamlView || latestPipeline,
+          latestYamlTemplate: yamlTemplate,
+          orgPipeline: values.pipeline,
+          setSubmitting
+        })
     const gitXErrors = isNewGitSyncRemotePipeline
       ? omitBy({ pipelineBranchName: _pipelineBranchNameError, inputSetRefs: _inputSetRefsError }, value => !value)
       : undefined

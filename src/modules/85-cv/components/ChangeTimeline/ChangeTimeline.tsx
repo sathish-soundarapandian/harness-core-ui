@@ -8,10 +8,14 @@
 import React, { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
-import { getErrorMessage } from '@cv/utils/CommonUtils'
+import { getErrorMessage, getMonitoredServiceIdentifierProp } from '@cv/utils/CommonUtils'
 import type { TimePeriodEnum } from '@cv/pages/monitored-service/components/ServiceHealth/ServiceHealth.constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useChangeEventTimeline, useGetMonitoredServiceChangeTimeline } from 'services/cv'
+import {
+  useChangeEventTimeline,
+  useChangeEventTimelineForAccount,
+  useGetMonitoredServiceChangeTimeline
+} from 'services/cv'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import type { ChangeTimelineProps } from './ChangeTimeline.types'
@@ -28,6 +32,7 @@ import ChangeTimelineError from './components/ChangeTimelineError/ChangeTimeline
 export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
   const {
     useMonitoredServiceChangeTimeline,
     monitoredServiceIdentifier,
@@ -41,7 +46,8 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
     changeCategories,
     changeSourceTypes,
     hideTimeline,
-    duration
+    duration,
+    monitoredServiceIdentifiers
   } = props
   const ffIntegration = useFeatureFlag(FeatureFlag.SRM_INTERNAL_CHANGE_SOURCE_FF)
 
@@ -56,17 +62,42 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
   })
 
   const {
-    data: changeEventTimelineData,
-    refetch: changeEventTimelineRefetch,
-    loading: changeEventTimelineLoading,
-    error: changeEventTimelineError,
-    cancel: changeEventTimelineCancel
+    data: projectLevelChangeEventTimelineData,
+    refetch: projectLevelChangeEventTimelineRefetch,
+    loading: projectLevelChangeEventTimelineLoading,
+    error: projectLevelChangeEventTimelineError,
+    cancel: projectLevelChangeEventTimelineCancel
   } = useChangeEventTimeline({
     lazy: true,
     accountIdentifier: accountId,
     projectIdentifier,
     orgIdentifier
   })
+
+  const {
+    data: accountLevelChangeEventTimelineData,
+    refetch: accountLevelChangeEventTimelineRefetch,
+    loading: accountLevelChangeEventTimelineLoading,
+    error: accountLevelChangeEventTimelineError,
+    cancel: accountLevelChangeEventTimelineCancel
+  } = useChangeEventTimelineForAccount({
+    lazy: true,
+    accountIdentifier: accountId
+  })
+
+  const {
+    data: changeEventTimelineData,
+    refetch: changeEventTimelineRefetch,
+    loading: changeEventTimelineLoading,
+    error: changeEventTimelineError,
+    cancel: changeEventTimelineCancel
+  } = {
+    data: isAccountLevel ? accountLevelChangeEventTimelineData : projectLevelChangeEventTimelineData,
+    refetch: isAccountLevel ? accountLevelChangeEventTimelineRefetch : projectLevelChangeEventTimelineRefetch,
+    loading: isAccountLevel ? accountLevelChangeEventTimelineLoading : projectLevelChangeEventTimelineLoading,
+    error: isAccountLevel ? accountLevelChangeEventTimelineError : projectLevelChangeEventTimelineError,
+    cancel: isAccountLevel ? accountLevelChangeEventTimelineCancel : projectLevelChangeEventTimelineCancel
+  }
 
   const { startTimeRoundedOffToNearest30min, endTimeRoundedOffToNearest30min } = useMemo(() => {
     if (selectedTimeRange) {
@@ -82,9 +113,14 @@ export default function ChangeTimeline(props: ChangeTimelineProps): JSX.Element 
   useEffect(() => {
     changeEventTimelineCancel()
     /* istanbul ignore else */ if (!useMonitoredServiceChangeTimeline) {
+      const monitoredServiceIdentifierProp = getMonitoredServiceIdentifierProp(
+        isAccountLevel,
+        monitoredServiceIdentifiers,
+        monitoredServiceIdentifier
+      )
       changeEventTimelineRefetch({
         queryParams: {
-          ...(monitoredServiceIdentifier ? { monitoredServiceIdentifiers: [monitoredServiceIdentifier] } : {}),
+          ...monitoredServiceIdentifierProp,
           ...(serviceIdentifier
             ? { serviceIdentifiers: Array.isArray(serviceIdentifier) ? serviceIdentifier : [serviceIdentifier] }
             : {}),

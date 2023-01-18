@@ -56,6 +56,7 @@ export interface RunModalHeaderProps {
   formErrors: FormikErrors<InputSetDTO>
   stageExecutionData: ResponseListStageExecutionResponse | null
   executionStageList: SelectOption[]
+  runModalHeaderTitle: string
 }
 
 export default function RunModalHeader(props: RunModalHeaderProps): React.ReactElement | null {
@@ -73,7 +74,8 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
     formRefDom,
     formErrors,
     stageExecutionData,
-    executionStageList
+    executionStageList,
+    runModalHeaderTitle
   } = props
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
@@ -144,7 +146,7 @@ export default function RunModalHeader(props: RunModalHeaderProps): React.ReactE
           className={css.runModalHeaderTitle}
           data-tooltip-id="runPipelineFormTitle"
         >
-          {getString('runPipeline')}
+          {runModalHeaderTitle}
           <HarnessDocTooltip tooltipId="runPipelineFormTitle" useStandAlone={true} />
         </Heading>
         {isGitSyncEnabled && (

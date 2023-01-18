@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import type { GetDataError } from 'restful-react'
 import { Container, NoDataCard, Icon, Text } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import Highcharts, { SeriesLineOptions } from 'highcharts'
 import HighchartsReact from 'highcharts-react-official'
 import { useStrings } from 'framework/strings'
@@ -39,8 +39,11 @@ export default function MetricLineChart({
 
   if (loading) {
     return (
-      <Container data-testid="loading" height={300}>
-        <Icon name="spinner" margin={{ bottom: 'medium' }} size={24} />
+      <Container data-testid="loading" className={css.loadingContainer}>
+        <Icon name="spinner" size={32} color={Color.GREY_600} />
+        <Text padding={{ top: 'small', left: 'medium' }}>
+          {getString('cv.monitoringSources.commonHealthSource.metricsChart.fetchingCharts')}
+        </Text>
       </Container>
     )
   }

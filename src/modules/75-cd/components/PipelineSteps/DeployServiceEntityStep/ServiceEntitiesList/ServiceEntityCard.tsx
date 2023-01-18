@@ -24,6 +24,7 @@ import { defaultTo, get, set } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
 
+import { useParams } from 'react-router-dom'
 import { getStepTypeByDeploymentType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { deploymentIconMap } from '@cd/utils/deploymentUtils'
 import { useStrings } from 'framework/strings'
@@ -35,8 +36,11 @@ import type { NGServiceV2InfoConfig, ServiceSpec } from 'services/cd-ng'
 import { StageFormContextProvider } from '@pipeline/context/StageFormContext'
 
 import { useDeepCompareEffect } from '@common/hooks'
-import { getScopedValueFromDTO, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
-import { Scope } from '@common/interfaces/SecretsInterface'
+import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import RbacButton from '@rbac/components/Button/Button'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import type { FormState, ServiceData } from '../DeployServiceEntityUtils'
 import css from './ServiceEntitiesList.module.scss'
 
@@ -90,6 +94,8 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
 
   const type = service.serviceDefinition?.type as ServiceDeploymentType
 
+  const { accountId } = useParams<PipelinePathProps>()
+
   useDeepCompareEffect(() => {
     setTemplate(serviceInputs?.serviceDefinition?.spec)
   }, [serviceInputs?.serviceDefinition?.spec])
@@ -126,13 +132,25 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
         </div>
         {!isPropogateFromStage && (
           <Layout.Horizontal>
-            <Button
+            <RbacButton
               icon="Edit"
               data-testid={`edit-service-${service.identifier}`}
-              disabled={readonly || getScopeFromValue(scopedServiceRef as string) !== Scope.PROJECT}
+              disabled={readonly}
               onClick={() => onEditClick({ service, serviceInputs })}
               minimal
               aria-label={getString('editService')}
+              permission={{
+                permission: PermissionIdentifier.EDIT_SERVICE,
+                resource: {
+                  resourceType: ResourceType.SERVICE,
+                  resourceIdentifier: service.identifier
+                },
+                resourceScope: {
+                  accountIdentifier: accountId,
+                  orgIdentifier: (service as any).orgIdentifier,
+                  projectIdentifier: (service as any).projectIdentifier
+                }
+              }}
             />
             <Button
               icon="main-trash"

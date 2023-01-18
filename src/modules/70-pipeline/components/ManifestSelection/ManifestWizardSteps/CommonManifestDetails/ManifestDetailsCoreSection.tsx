@@ -15,7 +15,7 @@ import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { CommonManifestDataType, ManifestTypes } from '../../ManifestInterface'
-import { gitFetchTypeList, GitFetchTypes, GitRepoName, ManifestStoreMap } from '../../Manifesthelper'
+import { gitFetchTypeList, GitFetchTypes, GitRepoName, ManifestDataType, ManifestStoreMap } from '../../Manifesthelper'
 import GitRepositoryName from '../GitRepositoryName/GitRepositoryName'
 import DragnDropPaths from '../../DragnDropPaths'
 import { filePathWidth } from '../ManifestUtils'
@@ -56,6 +56,10 @@ export function ManifestDetailsCoreSection({
       : GitRepoName.Account
 
   const accountUrl = connectionType === GitRepoName.Account ? getAccountUrl(prevStepData) : null
+
+  const isOnlyFileTypeManifest =
+    selectedManifest &&
+    [ManifestDataType.AsgConfiguration, ManifestDataType.AsgLaunchTemplate].includes(selectedManifest)
 
   return (
     <>
@@ -154,8 +158,12 @@ export function ManifestDetailsCoreSection({
           expressions={expressions}
           allowableTypes={allowableTypes}
           fieldPath="paths"
-          pathLabel={getString('fileFolderPathText')}
-          placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+          pathLabel={isOnlyFileTypeManifest ? getString('common.git.filePath') : getString('fileFolderPathText')}
+          placeholder={
+            isOnlyFileTypeManifest
+              ? getString('pipeline.manifestType.pathPlaceholder')
+              : getString('pipeline.manifestType.manifestPathPlaceholder')
+          }
           defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
           dragDropFieldWidth={filePathFieldWidth}
           allowOnlyOneFilePath={selectedManifest ? shouldAllowOnlyOneFilePath(selectedManifest) : false}

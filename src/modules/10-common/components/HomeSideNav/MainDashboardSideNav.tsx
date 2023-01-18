@@ -13,23 +13,14 @@ import routes from '@common/RouteDefinitions'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { useStrings } from 'framework/strings'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 
 export default function DashboardHomeSideNav(): React.ReactElement {
   const params = useParams<AccountPathProps>()
   const { getString } = useStrings()
-  const CDS_OrgAccountLevelServiceEnvEnvGroup = useFeatureFlag(FeatureFlag.CDS_OrgAccountLevelServiceEnvEnvGroup)
 
   return (
     <Layout.Vertical spacing="small" margin={{ top: 'xxxlarge' }}>
       <SidebarLink label={getString('common.welcome')} to={routes.toMainDashboard(params)} />
-      {CDS_OrgAccountLevelServiceEnvEnvGroup && (
-        <>
-          <SidebarLink label={getString('services')} to={routes.toServices({ ...params })} />
-          <SidebarLink label={getString('environments')} to={routes.toEnvironment({ ...params })} />
-        </>
-      )}
     </Layout.Vertical>
   )
 }

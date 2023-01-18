@@ -258,7 +258,7 @@ function FormComponent({
 
   return (
     <FormikForm>
-      <div className={cx(css.connectorForm, formClassName)}>
+      <div className={cx(css.artifactForm, formClassName)}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.imagePathContainer}>
@@ -505,8 +505,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
           ? Yup.object().required(getString('pipeline.jenkinsStep.validations.jobName')) // typeError is necessary here, otherwise we get a bad-looking yup error
           : Yup.string().required(getString('pipeline.jenkinsStep.validations.jobName'))
       ),
-      artifactPath: Yup.string(),
-      build: Yup.string().required('Build is a required Field')
+      artifactPath: Yup.string()
     })
   }
 
@@ -514,6 +513,7 @@ export function JenkinsArtifact(props: StepProps<ConnectorConfigDTO> & JenkinsAr
   const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
+      getString,
       artifactIdentifiers,
       initialValues?.identifier,
       getString('pipeline.uniqueIdentifier')

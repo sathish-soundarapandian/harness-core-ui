@@ -52,7 +52,7 @@ describe('ModuleList', () => {
     expect(queryByText('common.purpose.cv.serviceReliability')).toBeDefined()
     expect(queryByText('common.purpose.ce.cloudCost')).toBeNull()
     expect(queryByText('common.purpose.sto.continuous')).toBeNull()
-    expect(queryByText('common.chaosText')).toBeNull()
+    expect(queryByText('common.purpose.chaos.chaos')).toBeNull()
   })
 
   test('render module config screen by clicking on settings icon', () => {

@@ -6,7 +6,7 @@
  */
 
 import { useState, useEffect, useCallback } from 'react'
-import { defaultTo, isEmpty, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useToaster, shouldShowError } from '@harness/uicore'
 import produce from 'immer'
@@ -100,9 +100,16 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
 
         const updatedData = produce(servicesData, draft => {
           const serviceIndex = draft.findIndex(svc => svc.service.identifier === serviceId)
+          const orgIdentifierFromService = get(draft[serviceIndex], 'service.orgIdentifier')
+          const projectIdentifierFromService = get(draft[serviceIndex], 'service.projectIdentifier')
           set(draft[serviceIndex], 'serviceInputs', serviceInputs)
-          set(draft[serviceIndex], 'service', service)
+          set(draft[serviceIndex], 'service', {
+            ...service,
+            orgIdentifier: orgIdentifierFromService,
+            projectIdentifier: projectIdentifierFromService
+          })
         })
+
         setServicesData(updatedData)
       }
     },

@@ -30,6 +30,7 @@ export default function ChangeSourceCard(props: ChangeSourceCardInterface): JSX.
   const { getString } = useStrings()
   const { showError, clear } = useToaster()
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
+  const isAccountLevel = !orgIdentifier && !projectIdentifier && !!accountId
   const ffIntegration = useFeatureFlag(FeatureFlag.SRM_INTERNAL_CHANGE_SOURCE_FF)
 
   const monitoredServiceParams = monitoredServiceIdentifier
@@ -43,7 +44,8 @@ export default function ChangeSourceCard(props: ChangeSourceCardInterface): JSX.
       projectIdentifier,
       ...monitoredServiceParams,
       startTime,
-      endTime
+      endTime,
+      isMonitoredServiceIdentifierScoped: isAccountLevel
     },
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'

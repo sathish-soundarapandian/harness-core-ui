@@ -23,7 +23,7 @@ export type TemplateData = StepOrStepGroupOrTemplateStepData | StageElementConfi
 
 export interface SaveTemplateButtonProps {
   data: TemplateData | (() => Promise<TemplateData>)
-  type: 'Step' | 'Stage' | 'Pipeline'
+  type: 'Step' | 'Stage' | 'Pipeline' | 'StepGroup'
   gitDetails?: EntityGitDetails
   storeMetadata?: StoreMetadata
   buttonProps?: ButtonProps

@@ -30,10 +30,12 @@ import {
 import type { ServerlessAwsLambdaRollbackStepInfo, StepElementConfig } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
-import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import {
+  FormMultiTypeDurationField,
+  getDurationValidationSchema
+} from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { FormMultiTypeCheckboxField } from '@common/components/MultiTypeCheckbox/MultiTypeCheckbox'
@@ -95,7 +97,6 @@ function ServerlessLambdaRollbackWidget(
         })}
       >
         {(formik: FormikProps<ServerlessLambdaRollbackData>) => {
-          const { values, setFieldValue } = formik
           setFormikRef(formikRef, formik)
 
           return (
@@ -114,34 +115,17 @@ function ServerlessLambdaRollbackWidget(
               )}
 
               <div className={cx(stepCss.formGroup, stepCss.sm)}>
-                <TimeoutFieldInputSetView
+                <FormMultiTypeDurationField
                   name="timeout"
-                  disabled={readonly}
                   label={getString('pipelineSteps.timeoutLabel')}
                   multiTypeDurationProps={{
-                    enableConfigureOptions: false,
+                    enableConfigureOptions: true,
                     expressions,
                     disabled: readonly,
                     allowableTypes
                   }}
-                  fieldPath="timeout"
-                  template={props.inputSetData.template}
+                  disabled={readonly}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('timeout', value)
-                    }}
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
             </Layout.Vertical>
           )
@@ -161,23 +145,22 @@ const ServerlessLambdaRollbackInputStep: React.FC<ServerlessLambdaRollbackProps>
   return (
     <>
       {getMultiTypeFromValue(inputSetData.template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}timeout`}
-            label={getString('pipelineSteps.timeoutLabel')}
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes: allowableTypes,
-              expressions,
-              disabled: inputSetData.readonly
-            }}
-            disabled={inputSetData.readonly}
-            fieldPath="timeout"
-            template={inputSetData.template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          name={`${isEmpty(inputSetData.path) ? '' : `${inputSetData.path}.`}timeout`}
+          label={getString('pipelineSteps.timeoutLabel')}
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes: allowableTypes,
+            expressions,
+            disabled: inputSetData.readonly
+          }}
+          disabled={inputSetData.readonly}
+          fieldPath="timeout"
+          template={inputSetData.template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
       {getMultiTypeFromValue(inputSetData.template?.spec?.skipDryRun) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.sm)}>

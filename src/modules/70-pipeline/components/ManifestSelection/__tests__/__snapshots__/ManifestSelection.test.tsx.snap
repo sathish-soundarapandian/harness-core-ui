@@ -134,12 +134,21 @@ exports[`ManifestSelection tests delete manifest list works correctly 1`] = `
                 </span>
               </div>
               <span>
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main"
-                  style="--text-line-clamp: 1; width: 200px;"
+                <span
+                  class="bp3-popover-wrapper"
                 >
-                  path
-                </p>
+                  <span
+                    class="bp3-popover-target Text--targetClass"
+                  >
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="--text-line-clamp: 1; width: 200px;"
+                      tabindex="0"
+                    >
+                      path
+                    </p>
+                  </span>
+                </span>
               </span>
               <span>
                 <div
@@ -490,12 +499,21 @@ exports[`ManifestSelection tests edit manifest list works correctly 1`] = `
                 </span>
               </div>
               <span>
-                <p
-                  class="StyledProps--font Text--lineclamp StyledProps--main"
-                  style="--text-line-clamp: 1; width: 200px;"
+                <span
+                  class="bp3-popover-wrapper"
                 >
-                  test
-                </p>
+                  <span
+                    class="bp3-popover-target Text--targetClass"
+                  >
+                    <p
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="--text-line-clamp: 1; width: 200px;"
+                      tabindex="0"
+                    >
+                      test
+                    </p>
+                  </span>
+                </span>
               </span>
               <span>
                 <div
@@ -907,12 +925,21 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                   </span>
                 </div>
                 <span>
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main"
-                    style="--text-line-clamp: 1; width: 200px;"
+                  <span
+                    class="bp3-popover-wrapper"
                   >
-                    1, 2
-                  </p>
+                    <span
+                      class="bp3-popover-target Text--targetClass"
+                    >
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1; width: 200px;"
+                        tabindex="0"
+                      >
+                        1, 2
+                      </p>
+                    </span>
+                  </span>
                 </span>
                 <span>
                   <div
@@ -1075,12 +1102,21 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                   </span>
                 </div>
                 <span>
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main"
-                    style="--text-line-clamp: 1; width: 200px;"
+                  <span
+                    class="bp3-popover-wrapper"
                   >
-                    a1, b
-                  </p>
+                    <span
+                      class="bp3-popover-target Text--targetClass"
+                    >
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1; width: 200px;"
+                        tabindex="0"
+                      >
+                        a1, b
+                      </p>
+                    </span>
+                  </span>
                 </span>
                 <span>
                   <div
@@ -1243,12 +1279,21 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                   </span>
                 </div>
                 <span>
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main"
-                    style="--text-line-clamp: 1; width: 200px;"
+                  <span
+                    class="bp3-popover-wrapper"
                   >
-                    &lt;+input&gt;
-                  </p>
+                    <span
+                      class="bp3-popover-target Text--targetClass"
+                    >
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1; width: 200px;"
+                        tabindex="0"
+                      >
+                        &lt;+input&gt;
+                      </p>
+                    </span>
+                  </span>
                 </span>
                 <span>
                   <div
@@ -1411,12 +1456,21 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                   </span>
                 </div>
                 <span>
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main"
-                    style="--text-line-clamp: 1; width: 200px;"
+                  <span
+                    class="bp3-popover-wrapper"
                   >
-                    p1
-                  </p>
+                    <span
+                      class="bp3-popover-target Text--targetClass"
+                    >
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1; width: 200px;"
+                        tabindex="0"
+                      >
+                        p1
+                      </p>
+                    </span>
+                  </span>
                 </span>
                 <span>
                   <div
@@ -1664,12 +1718,21 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                   </span>
                 </div>
                 <span>
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main"
-                    style="--text-line-clamp: 1; width: 200px;"
+                  <span
+                    class="bp3-popover-wrapper"
                   >
-                    1, 2
-                  </p>
+                    <span
+                      class="bp3-popover-target Text--targetClass"
+                    >
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1; width: 200px;"
+                        tabindex="0"
+                      >
+                        1, 2
+                      </p>
+                    </span>
+                  </span>
                 </span>
                 <span>
                   <div
@@ -1832,12 +1895,21 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                   </span>
                 </div>
                 <span>
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main"
-                    style="--text-line-clamp: 1; width: 200px;"
+                  <span
+                    class="bp3-popover-wrapper"
                   >
-                    a1, b
-                  </p>
+                    <span
+                      class="bp3-popover-target Text--targetClass"
+                    >
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1; width: 200px;"
+                        tabindex="0"
+                      >
+                        a1, b
+                      </p>
+                    </span>
+                  </span>
                 </span>
                 <span>
                   <div
@@ -2000,12 +2072,21 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                   </span>
                 </div>
                 <span>
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main"
-                    style="--text-line-clamp: 1; width: 200px;"
+                  <span
+                    class="bp3-popover-wrapper"
                   >
-                    &lt;+input&gt;
-                  </p>
+                    <span
+                      class="bp3-popover-target Text--targetClass"
+                    >
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1; width: 200px;"
+                        tabindex="0"
+                      >
+                        &lt;+input&gt;
+                      </p>
+                    </span>
+                  </span>
                 </span>
                 <span>
                   <div
@@ -2168,12 +2249,21 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                   </span>
                 </div>
                 <span>
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main"
-                    style="--text-line-clamp: 1; width: 200px;"
+                  <span
+                    class="bp3-popover-wrapper"
                   >
-                    p1
-                  </p>
+                    <span
+                      class="bp3-popover-target Text--targetClass"
+                    >
+                      <p
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1; width: 200px;"
+                        tabindex="0"
+                      >
+                        p1
+                      </p>
+                    </span>
+                  </span>
                 </span>
                 <span>
                   <div

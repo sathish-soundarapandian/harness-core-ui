@@ -64,6 +64,11 @@ body {
   --chaos-border: #ff006a;
   --chaos-background: #fff1f7;
 
+  // Infrastructure as Code
+  --iacm-foreground: var(--magenta-800);
+  --iacm-border: var(--magenta-400);
+  --iacm-background: var(--grey-100);
+
   // Default Colors
   --default-module-border: white;
 }

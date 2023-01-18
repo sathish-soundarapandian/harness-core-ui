@@ -29,9 +29,6 @@ exports[`KustomizeManifestSource tests Should match snapshot 1`] = `
         />
         <div
           class="inputFieldLayout"
-        />
-        <div
-          class="inputFieldLayout"
         >
           <div
             class="verticalSpacingInput"
@@ -261,9 +258,6 @@ exports[`KustomizeManifestSource tests Should match snapshot 1`] = `
         class="Layout--vertical StyledProps--main inputWidth layoutVerticalSpacing"
         data-name="manifest"
       >
-        <div
-          class="inputFieldLayout"
-        />
         <div
           class="inputFieldLayout"
         />
@@ -669,9 +663,6 @@ exports[`KustomizeManifestSource tests Should match snapshot with fromTrigger 1`
         />
         <div
           class="inputFieldLayout"
-        />
-        <div
-          class="inputFieldLayout"
         >
           <div
             class="verticalSpacingInput"
@@ -899,9 +890,6 @@ exports[`KustomizeManifestSource tests Should match snapshot with fromTrigger 1`
         class="Layout--vertical StyledProps--main inputWidth layoutVerticalSpacing"
         data-name="manifest"
       >
-        <div
-          class="inputFieldLayout"
-        />
         <div
           class="inputFieldLayout"
         />

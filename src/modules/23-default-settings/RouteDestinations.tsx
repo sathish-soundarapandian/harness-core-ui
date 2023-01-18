@@ -22,13 +22,15 @@ import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
-import { String } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { String, useStrings } from 'framework/strings'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
 import DefaultSettingsFactory from './factories/DefaultSettingsFactory'
 import { SettingType } from './interfaces/SettingType.types'
 import {
   DefaultSettingCheckBoxWithTrueAndFalse,
+  DefaultSettingDurationField,
+  DefaultSettingNumberTextbox,
   DefaultSettingRadioBtnWithTrueAndFalse
 } from './components/ReusableHandlers'
 
@@ -38,23 +40,35 @@ DefaultSettingsFactory.registerCategory('CORE', {
   modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto']
 })
 
+DefaultSettingsFactory.registerCategory('CONNECTORS', {
+  icon: 'cog',
+  label: 'connectorsLabel',
+  modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto']
+})
+
 DefaultSettingsFactory.registerCategory('GIT_EXPERIENCE', {
   icon: 'cog',
   label: 'authSettings.cdCommunityPlan.communityPlanStrings.item5',
   modulesWhereCategoryWillBeDisplayed: ['cd', 'ce', 'cf', 'chaos', 'ci', 'cv', 'code', 'sto']
 })
 
+DefaultSettingsFactory.registerCategory('PMS', {
+  icon: 'cog',
+  label: 'common.pipeline',
+  modulesWhereCategoryWillBeDisplayed: ['cd', 'ci']
+})
+
 DefaultSettingsFactory.registerSettingHandler(SettingType.DISABLE_HARNESS_BUILT_IN_SECRET_MANAGER, {
   label: 'common.accountSetting.connector.disableBISMHeading',
   settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
   yupValidation: Yup.boolean(),
-  settingCategory: 'CORE'
+  settingCategory: 'CONNECTORS'
 })
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.MANDATE_CUSTOM_WEBHOOK_AUTHORIZATION, {
   label: 'defaultSettings.mandateAuthorizationForCustomWebhookTriggers',
   settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
-  settingCategory: 'CORE'
+  settingCategory: 'PMS'
 })
 
 DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_GIT_COMMANDS, {
@@ -94,18 +108,48 @@ RbacFactory.registerResourceTypeHandler(ResourceType.SETTING, {
 DefaultSettingsFactory.registerSettingHandler(SettingType.WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION, {
   label: 'defaultSettings.mandateWebhookSecretsGithubTriggers',
   settingRenderer: props => <DefaultSettingRadioBtnWithTrueAndFalse {...props} />,
-  settingCategory: 'CORE'
+  settingCategory: 'PMS'
 })
 
 export default function DefaultSettingsRoutes(): React.ReactElement {
-  const isForceDeleteSupported = useFeatureFlag(FeatureFlag.PL_FORCE_DELETE_CONNECTOR_SECRET)
+  const { PL_FORCE_DELETE_CONNECTOR_SECRET, PIE_PIPELINE_SETTINGS_ENFORCEMENT_LIMIT } = useFeatureFlags()
+  const { getString } = useStrings()
   // Register  Category Factory only when Feature Flag is enabled
-  if (isForceDeleteSupported) {
+  if (PL_FORCE_DELETE_CONNECTOR_SECRET) {
     DefaultSettingsFactory.registerSettingHandler(SettingType.ENABLE_FORCE_DELETE, {
       label: 'defaultSettings.enableForceDelete',
       settingRenderer: props => <DefaultSettingCheckBoxWithTrueAndFalse {...props} />,
       yupValidation: Yup.boolean(),
       settingCategory: 'CORE'
+    })
+  }
+
+  if (PIE_PIPELINE_SETTINGS_ENFORCEMENT_LIMIT) {
+    DefaultSettingsFactory.registerSettingHandler(SettingType.PIPELINE_TIMEOUT, {
+      label: 'defaultSettings.pipelineTimeout',
+      settingRenderer: props => <DefaultSettingDurationField {...props} />,
+      yupValidation: getDurationValidationSchema().required(getString('validation.timeout10SecMinimum')),
+      settingCategory: 'PMS'
+    })
+
+    DefaultSettingsFactory.registerSettingHandler(SettingType.STAGE_TIMEOUT, {
+      label: 'defaultSettings.stageTimeout',
+      settingRenderer: props => <DefaultSettingDurationField {...props} />,
+      yupValidation: getDurationValidationSchema().required(getString('validation.timeout10SecMinimum')),
+      settingCategory: 'PMS'
+    })
+
+    DefaultSettingsFactory.registerSettingHandler(SettingType.STEP_TIMEOUT, {
+      label: 'defaultSettings.stepTimeout',
+      settingRenderer: props => <DefaultSettingDurationField {...props} />,
+      yupValidation: getDurationValidationSchema().required(getString('validation.timeout10SecMinimum')),
+      settingCategory: 'PMS'
+    })
+
+    DefaultSettingsFactory.registerSettingHandler(SettingType.CONCURRENT_ACTIVE_PIPELINE_EXECUTIONS, {
+      label: 'defaultSettings.concurrentActivePipelineExecutions',
+      settingRenderer: props => <DefaultSettingNumberTextbox {...props} />,
+      settingCategory: 'PMS'
     })
   }
 

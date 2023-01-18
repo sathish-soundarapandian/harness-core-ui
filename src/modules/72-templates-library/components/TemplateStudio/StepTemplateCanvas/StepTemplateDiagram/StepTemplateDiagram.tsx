@@ -50,6 +50,7 @@ export const StepTemplateDiagram = (): JSX.Element => {
           const factoryStep = factory?.getStep<unknown>(data.type)
           const defaultValues = factoryStep?.getDefaultValues({}, StepViewType.Edit) as StepElementConfig
           set(draft, 'spec', omit(defaultValues, 'name', 'identifier'))
+          !draft?.spec?.spec && set(draft, 'spec.spec', {})
         })
       )
     },

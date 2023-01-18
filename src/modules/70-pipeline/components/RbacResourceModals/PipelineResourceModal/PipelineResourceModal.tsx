@@ -17,7 +17,13 @@ import ResourceHandlerTable, {
 import { PageSpinner, TagsPopover } from '@common/components'
 import type { RbacResourceModalProps } from '@rbac/factories/RbacFactory'
 import { useStrings } from 'framework/strings'
-import { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse, useGetPipelineList } from 'services/pipeline-ng'
+import { PMSPipelineSummaryResponse, useGetPipelineList } from 'services/pipeline-ng'
+import { useMutateAsGet } from '@common/hooks'
+import {
+  CodeSourceCell,
+  LastExecutionCell,
+  PipelineNameCell
+} from '@pipeline/pages/pipeline-list/PipelineListTable/PipelineListCells'
 
 interface PipelineDTO extends PMSPipelineSummaryResponse {
   admin?: string
@@ -78,14 +84,12 @@ function PipelineResourceModal({
 }: RbacResourceModalProps): React.ReactElement {
   const { accountIdentifier, orgIdentifier = '', projectIdentifier = '' } = resourceScope
   const [page, setPage] = useState(0)
-  const [pipelineData, setData] = React.useState<PagePMSPipelineSummaryResponse | undefined>()
   const { getString } = useStrings()
 
-  const {
-    loading,
-    mutate: reloadPipelines,
-    cancel
-  } = useGetPipelineList({
+  const pipelinesQuery = useMutateAsGet(useGetPipelineList, {
+    body: {
+      filterType: 'PipelineSetup'
+    },
     queryParams: {
       accountIdentifier,
       projectIdentifier,
@@ -93,51 +97,47 @@ function PipelineResourceModal({
       searchTerm,
       page,
       size: 10
-    }
+    },
+    queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
-  const fetchPipelines = React.useCallback(async () => {
-    cancel()
-    setData(await (await reloadPipelines({ filterType: 'PipelineSetup' })).data)
-  }, [cancel])
+  if (pipelinesQuery.loading) return <PageSpinner />
 
-  React.useEffect(() => {
-    cancel()
-    fetchPipelines()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, accountIdentifier, projectIdentifier, orgIdentifier, module])
+  const data = pipelinesQuery.data?.data
 
-  const pipelineContentData: PMSPipelineSummaryResponse[] = pipelineData?.content || []
-
-  if (loading) return <PageSpinner />
-  return pipelineContentData?.length ? (
+  return data?.content?.length ? (
     <Container>
       <ResourceHandlerTable
-        data={pipelineContentData as ResourceHandlerTableData[]}
+        data={data?.content as ResourceHandlerTableData[]}
         selectedData={selectedData}
         columns={[
           {
-            Header: getString('common.pipeline'),
-            id: 'name',
+            Header: getString('filters.executions.pipelineName'),
             accessor: 'name' as any,
-            Cell: RenderColumnPipeline,
+            Cell: PipelineNameCell,
             width: '40%',
             disableSortBy: true
           },
           {
-            Header: getString('lastExecutionTs'),
-            id: 'details',
-            accessor: 'executionSummaryInfo',
-            Cell: RenderLastRunDate,
-            width: '55%',
+            Header: getString('pipeline.codeSource'),
+            accessor: 'storeType' as any,
+            Cell: CodeSourceCell,
+            width: '20%',
+            disableSortBy: true
+          },
+          {
+            Header: getString('pipeline.lastExecution'),
+            accessor: 'executionSummaryInfo.lastExecutionTs' as any,
+            Cell: LastExecutionCell,
+            width: '35%',
             disableSortBy: true
           }
         ]}
         pagination={{
-          itemCount: pipelineData?.totalElements || 0,
-          pageSize: pipelineData?.size || 10,
-          pageCount: pipelineData?.totalPages ?? 1,
-          pageIndex: pipelineData?.number ?? 0,
+          itemCount: data?.totalElements || 0,
+          pageSize: data?.size || 10,
+          pageCount: data?.totalPages ?? 1,
+          pageIndex: data?.number ?? 0,
           gotoPage: pageNumber => setPage(pageNumber)
         }}
         onSelectChange={onSelectChange}

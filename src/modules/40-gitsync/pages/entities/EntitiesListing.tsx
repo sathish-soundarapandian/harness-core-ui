@@ -87,7 +87,7 @@ const EntitiesListing: React.FC<EntitiesListingProps> = props => {
         gotoPage={pageNumber => setPage(pageNumber)}
       ></EntityListView>
       <Text padding="large" color={Color.PRIMARY_7} onClick={() => props.backToSummary()}>
-        {getString('gitsync.seeLess')}
+        {getString('common.seeLess')}
       </Text>
     </Container>
   )

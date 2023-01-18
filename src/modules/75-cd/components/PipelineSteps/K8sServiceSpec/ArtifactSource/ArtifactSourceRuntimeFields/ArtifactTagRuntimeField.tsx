@@ -6,18 +6,17 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { defaultTo, get, memoize } from 'lodash-es'
+import { defaultTo, memoize } from 'lodash-es'
 import { Menu } from '@blueprintjs/core'
 
-import { getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text, useToaster } from '@harness/uicore'
+import { Layout, SelectOption, Text, useToaster } from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import type { DockerBuildDetailsDTO, Failure, Error, ArtifactoryBuildDetailsDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
 import { BuildDetailsDTO, getTagError, isExecutionTimeFieldDisabled } from '../artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
@@ -48,7 +47,8 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
     fetchTagsError,
     stageIdentifier,
     isServerlessDeploymentTypeSelected = false,
-    stepViewType
+    stepViewType,
+    template
   } = props
 
   const { getString } = useStrings()
@@ -102,7 +102,9 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
 
   return (
     <div className={css.inputFieldLayout}>
-      <ExperimentalInput
+      <SelectInputSetView
+        fieldPath={`artifacts.${artifactPath}.spec.tag`}
+        template={template}
         formik={formik}
         disabled={isFieldDisabled()}
         selectItems={
@@ -117,7 +119,7 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
         }
         useValue
         multiTypeInputProps={{
-          onFocus: (e: React.ChangeEvent<HTMLInputElement>) => {
+          onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
             if (
               e?.target?.type !== 'text' ||
               (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
@@ -159,41 +161,10 @@ const ArtifactTagRuntimeField = (props: TagsRenderContent): JSX.Element => {
             ? `${path}.artifacts.${artifactPath}.spec.artifactPath`
             : `${path}.artifacts.${artifactPath}.spec.tag`
         }
+        configureOptionsProps={{
+          isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType as StepViewType)
+        }}
       />
-      {getMultiTypeFromValue(
-        get(
-          formik?.values,
-          isServerlessDeploymentTypeSelected
-            ? `${path}.artifacts.${artifactPath}.spec.artifactPath`
-            : `${path}.artifacts.${artifactPath}.spec.tag`
-        )
-      ) === MultiTypeInputType.RUNTIME && (
-        <ConfigureOptions
-          className={css.configureOptions}
-          style={{ alignSelf: 'center' }}
-          value={get(
-            formik?.values,
-            isServerlessDeploymentTypeSelected
-              ? `${path}.artifacts.${artifactPath}.spec.artifactPath`
-              : `${path}.artifacts.${artifactPath}.spec.tag`
-          )}
-          type="String"
-          variableName="tag"
-          showRequiredField={false}
-          showDefaultField={true}
-          isReadonly={readonly}
-          showAdvanced={true}
-          isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-          onChange={value => {
-            formik.setFieldValue(
-              isServerlessDeploymentTypeSelected
-                ? `${path}.artifacts.${artifactPath}.spec.artifactPath`
-                : `${path}.artifacts.${artifactPath}.spec.tag`,
-              value
-            )
-          }}
-        />
-      )}
     </div>
   )
 }

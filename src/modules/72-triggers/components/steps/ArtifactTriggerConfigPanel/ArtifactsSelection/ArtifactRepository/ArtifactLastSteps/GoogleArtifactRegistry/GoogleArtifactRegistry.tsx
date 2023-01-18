@@ -25,6 +25,7 @@ import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { ConnectorConfigDTO, RegionGar, useGetRegionsForGoogleArtifactRegistry } from 'services/cd-ng'
 import type { GarSpec } from 'services/pipeline-ng'
+import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { ImagePathProps } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -151,7 +152,7 @@ export function GoogleArtifactRegistry(
         onSubmit={formData => {
           handleSubmit({
             ...formData,
-            connectorRef: prevStepData?.connectorId?.value
+            connectorRef: getConnectorIdValue(prevStepData)
           })
         }}
       >

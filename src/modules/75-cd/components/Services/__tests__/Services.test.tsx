@@ -15,9 +15,12 @@ jest.mock('highcharts-react-official', () => () => <></>)
 jest.mock('services/cd-ng', () => {
   return {
     useGetServiceDeploymentsInfo: jest.fn,
+    useGetServiceDeploymentsInfoV2: jest.fn,
     useGetWorkloads: jest.fn,
+    useGetWorkloadsV2: jest.fn,
     useGetServicesGrowthTrend: jest.fn,
-    useGetServiceDetails: jest.fn
+    useGetServiceDetails: jest.fn,
+    useGetServiceDetailsV2: jest.fn
   }
 })
 

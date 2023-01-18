@@ -32,11 +32,13 @@ import { usePipelineVariables } from '@pipeline/components/PipelineVariablesCont
 import { PipelineGovernanceView } from '@governance/PipelineGovernanceView'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import { createTemplate } from '@pipeline/utils/templateUtils'
-import type { TemplateStepNode } from 'services/pipeline-ng'
+import type { ExecutionWrapperConfig, TemplateStepNode } from 'services/pipeline-ng'
 import type { StringsMap } from 'stringTypes'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { ECSRollingDeployStepInitialValues } from '@pipeline/utils/types'
+import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
@@ -59,6 +61,7 @@ import { AdvancedOptions } from '../AdvancedOptions/AdvancedOptions'
 import { RightDrawerTitle } from './RightDrawerTitle'
 import { getFlattenedStages } from '../StageBuilder/StageBuilderUtil'
 import { getFlattenedSteps } from '../CommonUtils/CommonUtils'
+import { isNewServiceEnvEntity } from '../CommonUtils/DeployStageSetupShellUtils'
 import css from './RightDrawer.module.scss'
 
 export const FullscreenDrawers: DrawerTypes[] = [
@@ -96,13 +99,14 @@ const checkDuplicateStep = (
 }
 
 export const updateStepWithinStage = (
-  execution: ExecutionElementConfig,
+  execution: ExecutionElementConfig | StepGroupElementConfig,
   processingNodeIdentifier: string,
   processedNode: StepElementConfig | TemplateStepNode,
   isRollback: boolean
 ): void => {
   // Finds the step in the stage, and updates with the processed node
-  execution?.[isRollback ? 'rollbackSteps' : 'steps']?.forEach(stepWithinStage => {
+  const executionSteps = get(execution, isRollback ? 'rollbackSteps' : 'steps') as ExecutionWrapperConfig[]
+  executionSteps?.forEach((stepWithinStage: ExecutionWrapperConfig) => {
     if (stepWithinStage.stepGroup) {
       // If stage has a step group, loop over the step group steps and update the matching identifier with node
       if (stepWithinStage.stepGroup?.identifier === processingNodeIdentifier) {
@@ -208,6 +212,19 @@ const processNodeImpl = (
       set(node, 'strategy', item.strategy)
     }
 
+    if (item.commandFlags && item.tab === TabTypes.Advanced) {
+      const commandFlags = item.commandFlags.map((commandFlag: CommandFlags) =>
+        commandFlag.commandType && commandFlag.flag
+          ? {
+              commandType: commandFlag.commandType,
+              flag: commandFlag.flag
+            }
+          : {}
+      )
+      const filteredCommandFlags = commandFlags.filter((currFlag: CommandFlags) => !isEmpty(currFlag))
+      set(node, 'spec.commandFlags', filteredCommandFlags)
+    }
+
     // Delete values if they were already added and now removed
     if (node.timeout && !(item as StepElementConfig).timeout && item.tab !== TabTypes.Advanced) delete node.timeout
     if (node.description && !(item as StepElementConfig).description && item.tab !== TabTypes.Advanced)
@@ -237,6 +254,13 @@ const processNodeImpl = (
       delete node.spec.delegateSelectors
     }
     if (
+      node.spec?.commandFlags &&
+      (!item.commandFlags || item.commandFlags?.length === 0) &&
+      item.tab === TabTypes.Advanced
+    ) {
+      delete node.spec.commandFlags
+    }
+    if (
       data.stepConfig?.isStepGroup &&
       node.delegateSelectors &&
       (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
@@ -244,6 +268,7 @@ const processNodeImpl = (
     ) {
       delete node.delegateSelectors
     }
+
     if (
       node.spec?.commandOptions &&
       (!(item as StepElementConfig)?.spec?.commandOptions ||
@@ -271,10 +296,10 @@ const updateWithNodeIdentifier = async (
   updateStage: (stage: StageElementConfig) => Promise<void>,
   data: any,
   pipelineView: PipelineViewData,
-  isRollback: boolean
+  isRollback: boolean,
+  provisionerPath: string
 ): Promise<void> => {
-  const provisioner = (selectedStage?.stage as DeploymentStageElementConfig)?.spec?.infrastructure
-    ?.infrastructureDefinition?.provisioner
+  const provisioner = get(selectedStage?.stage as DeploymentStageElementConfig, `spec.${provisionerPath}`)
   if (drawerType === DrawerTypes.StepConfig && selectedStage?.stage?.spec?.execution) {
     const processingNodeIdentifier = data?.stepConfig?.node?.identifier
     const stageData = produce(selectedStage, draft => {
@@ -297,8 +322,7 @@ const updateWithNodeIdentifier = async (
   } else if (drawerType === DrawerTypes.ProvisionerStepConfig && provisioner) {
     const processingNodeIdentifier = data?.stepConfig?.node?.identifier
     const stageData = produce(selectedStage, draft => {
-      const provisionerInternal = (draft?.stage as DeploymentStageElementConfig)?.spec?.infrastructure
-        ?.infrastructureDefinition?.provisioner
+      const provisionerInternal = get(draft?.stage as DeploymentStageElementConfig, `spec.${provisionerPath}`)
       if (provisionerInternal) {
         updateStepWithinStage(provisionerInternal, processingNodeIdentifier, processNode, isRollback)
       }
@@ -325,7 +349,8 @@ const onSubmitStep = async (
   updatePipelineView: (data: PipelineViewData) => void,
   updateStage: (stage: StageElementConfig) => Promise<void>,
   pipelineView: PipelineViewData,
-  isRollback: boolean
+  isRollback: boolean,
+  provisionerPath: string
 ): Promise<void> => {
   if (data?.stepConfig?.node) {
     const processNode = processNodeImpl(item, data, trackEvent)
@@ -339,7 +364,8 @@ const onSubmitStep = async (
         updateStage,
         data,
         pipelineView,
-        isRollback
+        isRollback,
+        provisionerPath
       )
     }
   }
@@ -355,7 +381,8 @@ const applyChanges = async (
   trackEvent: TrackEvent,
   isRollback: boolean,
   selectedStage: StageElementWrapper<StageElementConfig> | undefined,
-  updateStage: (stage: StageElementConfig) => Promise<void>
+  updateStage: (stage: StageElementConfig) => Promise<void>,
+  provisionerPath: string
 ): Promise<void> => {
   if (checkDuplicateStep(formikRef, data, getString)) {
     return
@@ -365,8 +392,8 @@ const applyChanges = async (
     return
   } else {
     onSubmitStep(
-      cloneDeep(formikRef.current?.getValues()) as any,
-      DrawerTypes.StepConfig,
+      formikRef.current?.getValues() as Partial<Values>,
+      pipelineView.drawerData.type,
       data,
       trackEvent,
       selectedStage,
@@ -380,7 +407,8 @@ const applyChanges = async (
           })
         }
       }),
-      isRollback
+      isRollback,
+      provisionerPath
     )
 
     setSelectedStepId(undefined)
@@ -496,6 +524,7 @@ export function RightDrawer(): React.ReactElement {
   let stepData = (data?.stepConfig?.node as StepElementConfig)?.type
     ? stepsFactory.getStepData(defaultTo((data?.stepConfig?.node as StepElementConfig)?.type, ''))
     : null
+
   const templateStepTemplate = (data?.stepConfig?.node as TemplateStepNode)?.template
   const formikRef = React.useRef<StepFormikRef | null>(null)
   const flowControlRef = React.useRef<FlowControlRef | null>(null)
@@ -509,6 +538,17 @@ export function RightDrawer(): React.ReactElement {
     stepData = stepsFactory.getStepData(StepType.StepGroup)
   }
 
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+
+  const isNewEnvironmentEntityEnabled = isNewServiceEnvEntity(
+    !!NG_SVC_ENV_REDESIGN,
+    selectedStage?.stage as DeploymentStageElementConfig
+  )
+
+  const provisionerPath = isNewEnvironmentEntityEnabled
+    ? 'environment.provisioner'
+    : 'infrastructure.infrastructureDefinition.provisioner'
+
   const discardChanges = (): void => {
     updatePipelineView({
       ...pipelineView,
@@ -521,7 +561,10 @@ export function RightDrawer(): React.ReactElement {
   }
 
   if (stepData || templateStepTemplate) {
-    const stepType = stepData ? stepData?.type : get(templateTypes, templateStepTemplate.templateRef)
+    const stepType = stepData
+      ? stepData?.type
+      : get(templateTypes, templateStepTemplate.templateRef) ||
+        (data?.stepConfig?.node as TemplateStepNode)?.template?.templateInputs?.type
     const toolTipType = type ? `_${type}` : ''
     title = (
       <RightDrawerTitle
@@ -542,7 +585,8 @@ export function RightDrawer(): React.ReactElement {
             trackEvent,
             !!isRollbackToggled,
             selectedStage,
-            updateStage
+            updateStage,
+            provisionerPath
           )
         }
       ></RightDrawerTitle>
@@ -702,7 +746,8 @@ export function RightDrawer(): React.ReactElement {
           trackEvent,
           !!isRollbackToggled,
           selectedStage,
-          updateStage
+          updateStage,
+          provisionerPath
         )
       }
     },
@@ -711,15 +756,48 @@ export function RightDrawer(): React.ReactElement {
 
   const { onSearchInputChange } = usePipelineVariables()
 
+  const getStepNameSuffix = (stepType: string, stepName: string, isProvisioner = false) => {
+    let maxId = 0
+    const suffixNameArray: string[] = []
+    const stepsMap = data?.paletteData?.stepsMap
+    stepsMap?.forEach((_value, key: string) => {
+      const stepDetails = getStepFromId(
+        isProvisioner
+          ? get(selectedStage as StageElementWrapper<DeploymentStageElementConfig>, `stage.spec.${provisionerPath}`)
+          : selectedStage?.stage?.spec?.execution,
+        key
+      )
+      if (stepDetails?.node?.type === stepType) {
+        const stepNodeName = stepDetails?.node?.name
+        if (stepNodeName.length > stepName.length) {
+          const suffix = stepNodeName.slice(stepName.length)
+          suffixNameArray.push(suffix)
+        }
+        maxId++
+      }
+    })
+    let suffixString = `_${maxId + 1}`
+    let loopCount = 1
+    while (loopCount <= suffixNameArray.length) {
+      if (suffixNameArray.includes(suffixString)) {
+        suffixString += '_1'
+        loopCount++
+      } else break
+    }
+    return suffixString
+  }
+
   const onStepSelection = async (item: StepData): Promise<void> => {
     const paletteData = data?.paletteData
+    const suffixString = getStepNameSuffix(item.type, item.name)
+    const stepName = `${item.name}${suffixString}`
     if (paletteData?.entity) {
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(defaultTo(selectedStageId, '')))
       const newStepData = {
         step: {
           type: item.type,
-          name: item.name,
-          identifier: generateRandomString(item.name),
+          name: stepName,
+          identifier: stepName.split(' ').join(''),
           spec: {}
         }
       }
@@ -782,8 +860,7 @@ export function RightDrawer(): React.ReactElement {
       if (drawerType === DrawerTypes.StepConfig && draft?.stage?.spec?.execution) {
         updateStepWithinStage(draft.stage.spec.execution, processingNodeIdentifier, processNode, isRollback)
       } else if (drawerType === DrawerTypes.ProvisionerStepConfig) {
-        const provisionerInternal = (draft?.stage as DeploymentStageElementConfig)?.spec?.infrastructure
-          ?.infrastructureDefinition?.provisioner
+        const provisionerInternal = get(draft?.stage as DeploymentStageElementConfig, `spec.${provisionerPath}`)
         if (provisionerInternal) {
           updateStepWithinStage(provisionerInternal, processingNodeIdentifier, processNode, isRollback)
         }
@@ -911,7 +988,7 @@ export function RightDrawer(): React.ReactElement {
           isNewStep={!data.stepConfig.stepsMap.get(data.stepConfig.node.identifier)?.isSaved}
           stepsFactory={stepsFactory}
           hasStepGroupAncestor={!!data?.stepConfig?.isUnderStepGroup}
-          onUpdate={value =>
+          onUpdate={value => {
             onSubmitStep(
               value,
               DrawerTypes.StepConfig,
@@ -921,9 +998,10 @@ export function RightDrawer(): React.ReactElement {
               updatePipelineView,
               updateStage,
               pipelineView,
-              Boolean(isRollbackToggled)
+              Boolean(isRollbackToggled),
+              provisionerPath
             )
-          }
+          }}
           viewType={StepCommandsViews.Pipeline}
           allowableTypes={allowableTypes}
           onUseTemplate={(selectedTemplate: TemplateSummaryResponse) =>
@@ -1023,17 +1101,14 @@ export function RightDrawer(): React.ReactElement {
 
               data?.paletteData?.onUpdate?.(newStepData.step)
 
-              if (
-                pipelineStage &&
-                !get(pipelineStage?.stage, 'spec.infrastructure.infrastructureDefinition.provisioner')
-              ) {
-                set(pipelineStage, 'stage.spec.infrastructure.infrastructureDefinition.provisioner', {
+              if (pipelineStage && !get(pipelineStage?.stage, `spec.${provisionerPath}`)) {
+                set(pipelineStage, `stage.spec.${provisionerPath}`, {
                   steps: [],
                   rollbackSteps: []
                 })
               }
 
-              const provisioner = get(pipelineStage?.stage, 'spec.infrastructure.infrastructureDefinition.provisioner')
+              const provisioner = get(pipelineStage?.stage, `spec.${provisionerPath}`)
               // set empty arrays
               if (!paletteData.isRollback && !provisioner.steps) provisioner.steps = []
               if (paletteData.isRollback && !provisioner.rollbackSteps) provisioner.rollbackSteps = []
@@ -1096,7 +1171,8 @@ export function RightDrawer(): React.ReactElement {
               updatePipelineView,
               updateStage,
               pipelineView,
-              Boolean(isRollbackToggled)
+              Boolean(isRollbackToggled),
+              provisionerPath
             )
           }
           isStepGroup={data.stepConfig.isStepGroup}

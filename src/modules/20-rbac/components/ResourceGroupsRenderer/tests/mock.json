@@ -1,0 +1,209 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "totalPages": 5,
+    "totalItems": 43,
+    "pageItemCount": 10,
+    "pageSize": 10,
+    "content": [
+      {
+        "resourceGroup": {
+          "accountIdentifier": "testAcc",
+          "identifier": "ABAC_TEST",
+          "name": "ABAC TEST",
+          "color": "#0063f7",
+          "tags": {},
+          "description": "",
+          "allowedScopeLevels": ["account"],
+          "includedScopes": [{ "filter": "EXCLUDING_CHILD_SCOPES", "accountIdentifier": "testAcc" }],
+          "resourceFilter": {
+            "resources": [
+              {
+                "resourceType": "CONNECTOR",
+                "attributeFilter": { "attributeName": "category", "attributeValues": ["CODE_REPO", "ARTIFACTORY"] }
+              }
+            ],
+            "includeAllResources": false
+          }
+        },
+        "createdAt": 1665399181173,
+        "lastModifiedAt": 1665399214047,
+        "harnessManaged": false
+      },
+      {
+        "resourceGroup": {
+          "accountIdentifier": "testAcc",
+          "identifier": "APi_Key_resource_groiup",
+          "name": "APi Key resource groiup",
+          "color": "#0063f7",
+          "tags": {},
+          "description": "",
+          "allowedScopeLevels": ["account"],
+          "includedScopes": [{ "filter": "EXCLUDING_CHILD_SCOPES", "accountIdentifier": "testAcc" }],
+          "resourceFilter": { "resources": [], "includeAllResources": false }
+        },
+        "createdAt": 1648440917399,
+        "lastModifiedAt": 1656987116695,
+        "harnessManaged": false
+      },
+      {
+        "resourceGroup": {
+          "accountIdentifier": "testAcc",
+          "identifier": "CDCAccountaccess",
+          "name": "CDCAccountaccess",
+          "color": "#0063f7",
+          "tags": {},
+          "description": "",
+          "allowedScopeLevels": ["account"],
+          "includedScopes": [{ "filter": "EXCLUDING_CHILD_SCOPES", "accountIdentifier": "testAcc" }],
+          "resourceFilter": { "includeAllResources": true }
+        },
+        "createdAt": 1665399131224,
+        "lastModifiedAt": 1665399156722,
+        "harnessManaged": false
+      },
+      {
+        "resourceGroup": {
+          "accountIdentifier": "testAcc",
+          "identifier": "CDCAllAccess",
+          "name": "CDCAllAccess",
+          "color": "#0063f7",
+          "tags": {},
+          "description": "",
+          "allowedScopeLevels": ["account"],
+          "includedScopes": [{ "filter": "INCLUDING_CHILD_SCOPES", "accountIdentifier": "testAcc" }],
+          "resourceFilter": { "includeAllResources": true }
+        },
+        "createdAt": 1665399189452,
+        "lastModifiedAt": 1665399218571,
+        "harnessManaged": false
+      },
+      {
+        "resourceGroup": {
+          "accountIdentifier": "testAcc",
+          "identifier": "CDPResourceGroup",
+          "name": "CDP-ResourceGroup",
+          "color": "#00b7c4",
+          "tags": {},
+          "description": "",
+          "allowedScopeLevels": ["account"],
+          "includedScopes": [{ "filter": "INCLUDING_CHILD_SCOPES", "accountIdentifier": "testAcc" }],
+          "resourceFilter": {
+            "resources": [
+              { "resourceType": "SECRET" },
+              { "resourceType": "CONNECTOR" },
+              { "resourceType": "PIPELINE" }
+            ],
+            "includeAllResources": false
+          }
+        },
+        "createdAt": 1648440921059,
+        "lastModifiedAt": 1663865627131,
+        "harnessManaged": false
+      },
+      {
+        "resourceGroup": {
+          "accountIdentifier": "testAcc",
+          "identifier": "Dashboards_All",
+          "name": "Dashboards All",
+          "color": "#0063f7",
+          "tags": {},
+          "description": "",
+          "allowedScopeLevels": ["account"],
+          "includedScopes": [{ "filter": "EXCLUDING_CHILD_SCOPES", "accountIdentifier": "testAcc" }],
+          "resourceFilter": { "resources": [{ "resourceType": "DASHBOARDS" }], "includeAllResources": false }
+        },
+        "createdAt": 1655904560909,
+        "lastModifiedAt": 1655904568249,
+        "harnessManaged": false
+      },
+      {
+        "resourceGroup": {
+          "accountIdentifier": "testAcc",
+          "identifier": "Dashboards_Sean",
+          "name": "Dashboards Sean",
+          "color": "#0063f7",
+          "tags": {},
+          "description": "",
+          "allowedScopeLevels": ["account"],
+          "includedScopes": [{ "filter": "EXCLUDING_CHILD_SCOPES", "accountIdentifier": "testAcc" }],
+          "resourceFilter": {
+            "resources": [{ "resourceType": "DASHBOARDS", "identifiers": ["2492", "53"] }],
+            "includeAllResources": false
+          }
+        },
+        "createdAt": 1666605047849,
+        "lastModifiedAt": 1666605058165,
+        "harnessManaged": false
+      },
+      {
+        "resourceGroup": {
+          "accountIdentifier": "testAcc",
+          "identifier": "Org1",
+          "name": "Org1",
+          "color": "#0063f7",
+          "tags": {},
+          "description": "",
+          "allowedScopeLevels": ["account"],
+          "includedScopes": [{ "filter": "EXCLUDING_CHILD_SCOPES", "accountIdentifier": "testAcc" }],
+          "resourceFilter": {
+            "resources": [{ "resourceType": "USERGROUP", "identifiers": ["xyzpqr"] }],
+            "includeAllResources": false
+          }
+        },
+        "createdAt": 1655449414188,
+        "lastModifiedAt": 1657625780970,
+        "harnessManaged": false
+      },
+      {
+        "resourceGroup": {
+          "accountIdentifier": "testAcc",
+          "identifier": "Pipeline_Executor",
+          "name": "Pipeline Executor",
+          "color": "#e63535",
+          "tags": {},
+          "description": "",
+          "allowedScopeLevels": ["account"],
+          "includedScopes": [{ "filter": "INCLUDING_CHILD_SCOPES", "accountIdentifier": "testAcc" }],
+          "resourceFilter": { "resources": [{ "resourceType": "PIPELINE" }], "includeAllResources": false }
+        },
+        "createdAt": 1656313502082,
+        "lastModifiedAt": 1656313517721,
+        "harnessManaged": false
+      },
+      {
+        "resourceGroup": {
+          "accountIdentifier": "testAcc",
+          "identifier": "Ramya_Def_Proj_only_access",
+          "name": "Ramya_Def_Proj only access",
+          "color": "#0063f7",
+          "tags": {},
+          "description": "",
+          "allowedScopeLevels": ["account"],
+          "includedScopes": [
+            { "filter": "EXCLUDING_CHILD_SCOPES", "accountIdentifier": "testAcc" },
+            {
+              "filter": "EXCLUDING_CHILD_SCOPES",
+              "accountIdentifier": "testAcc",
+              "orgIdentifier": "default"
+            },
+            {
+              "filter": "EXCLUDING_CHILD_SCOPES",
+              "accountIdentifier": "testAcc",
+              "orgIdentifier": "default",
+              "projectIdentifier": "Ramya"
+            }
+          ],
+          "resourceFilter": { "includeAllResources": true }
+        },
+        "createdAt": 1665399292039,
+        "lastModifiedAt": 1665399361769,
+        "harnessManaged": false
+      }
+    ],
+    "pageIndex": 0,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "6e6b82b7-d1ae-424f-abb0-6334d265b2ad"
+}

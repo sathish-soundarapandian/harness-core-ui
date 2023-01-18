@@ -26,8 +26,14 @@ const contextValue: ExecutionContextParams = {
     mock.data.pipelineExecutionSummary.layoutNodeMap as any,
     mock.data.pipelineExecutionSummary.startingNodeId
   ),
+  childPipelineStagesMap: new Map([]),
+  allStagesMap: getPipelineStagesMap(
+    mock.data.pipelineExecutionSummary.layoutNodeMap as any,
+    mock.data.pipelineExecutionSummary.startingNodeId
+  ),
   selectedStageId: 'google_1',
   selectedStageExecutionId: '',
+  selectedCollapsedNodeId: '',
   selectedStepId: '',
   queryParams: {},
   loading: false,
@@ -37,7 +43,8 @@ const contextValue: ExecutionContextParams = {
   addNewNodeToMap: jest.fn(),
   setSelectedStepId: jest.fn(),
   setSelectedStageId: jest.fn(),
-  setSelectedStageExecutionId: jest.fn()
+  setSelectedStageExecutionId: jest.fn(),
+  setSelectedCollapsedNodeId: jest.fn()
 }
 
 const fetchMock = jest.spyOn(global, 'fetch' as any)

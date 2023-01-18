@@ -18,7 +18,8 @@ export enum TemplateType {
   CustomDeployment = 'CustomDeployment',
   MonitoredService = 'MonitoredService',
   SecretManager = 'SecretManager',
-  ArtifactSource = 'ArtifactSource'
+  ArtifactSource = 'ArtifactSource',
+  StepGroup = 'StepGroup'
 }
 
 export enum TemplateUsage {

@@ -14,7 +14,11 @@ export enum SettingType {
   DISABLE_HARNESS_BUILT_IN_SECRET_MANAGER = 'disable_harness_built_in_secret_manager',
   WEBHOOK_GITHUB_TRIGGERS_AUTHENTICATION = 'mandate_webhook_secrets_for_github_triggers',
   MANDATE_CUSTOM_WEBHOOK_AUTHORIZATION = 'mandate_custom_webhook_authorization',
-  ENABLE_FORCE_DELETE = 'enable_force_delete'
+  ENABLE_FORCE_DELETE = 'enable_force_delete',
+  PIPELINE_TIMEOUT = 'pipeline_timeout',
+  STAGE_TIMEOUT = 'stage_timeout',
+  STEP_TIMEOUT = 'step_timeout',
+  CONCURRENT_ACTIVE_PIPELINE_EXECUTIONS = 'concurrent_active_pipeline_executions'
 }
 export enum SettingGroups {
   test_group_2 = 'test_group_2'

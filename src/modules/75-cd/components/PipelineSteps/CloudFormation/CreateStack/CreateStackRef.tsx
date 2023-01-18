@@ -268,7 +268,7 @@ export const CreateStack = (
             return Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired'))
           }),
           configuration: Yup.object().shape({
-            connectorRef: ConnectorRefSchema(),
+            connectorRef: ConnectorRefSchema(getString),
             region: Yup.string().required(getString('cd.cloudFormation.errors.region')),
             stackName: Yup.string().required(getString('cd.cloudFormation.errors.stackName')),
             templateFile: Yup.object().shape({
@@ -331,22 +331,9 @@ export const CreateStack = (
               <FormMultiTypeDurationField
                 name="timeout"
                 label={getString('pipelineSteps.timeoutLabel')}
-                multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
+                multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
                 disabled={readonly}
               />
-              {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  value={defaultTo(values.timeout, '')}
-                  type="String"
-                  variableName="timeout"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  showAdvanced={true}
-                  onChange={value => formik.setFieldValue('timeout', value)}
-                  isReadonly={readonly}
-                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                />
-              )}
             </div>
             <div className={css.divider} />
             <div className={cx(stepCss.formGroup, stepCss.sm)}>

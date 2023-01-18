@@ -122,7 +122,7 @@ const SwitchAccount: React.FC<SwitchAccountProps> = ({ searchString = '' }) => {
         setSwitchAccountId(account.uuid)
         const response = await switchAccount({ accountId: account.uuid })
         if (response.resource?.requiresReAuthentication) {
-          const baseUrl = window.location.href.split('#')[0]
+          const baseUrl = window.location.origin + getLocationPathName()
           const returnUrl = `${baseUrl}#${routes.toMainDashboard({ accountId: account.uuid })}`
           history.push({
             pathname: routes.toRedirect(),

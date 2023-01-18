@@ -11,6 +11,7 @@ import {
   ButtonVariation,
   Container,
   Heading,
+  Icon,
   PopoverProps,
   SplitButton,
   SplitButtonOption,
@@ -358,29 +359,44 @@ function SavePipelinePopover(
       )
   })
 
-  const initPipelinePublish = async (latestPipeline: PipelineInfoConfig) => {
-    // if Git sync enabled then display modal
-    if (isGitSyncEnabled || storeMetadata?.storeType === 'REMOTE') {
-      if ((storeMetadata?.storeType !== 'REMOTE' && isEmpty(gitDetails.repoIdentifier)) || isEmpty(gitDetails.branch)) {
-        clear()
-        showError(getString('pipeline.gitExperience.selectRepoBranch'))
-        return
+  const initPipelinePublish = React.useCallback(
+    async (latestPipeline: PipelineInfoConfig): Promise<void> => {
+      // if Git sync enabled then display modal
+      if (isGitSyncEnabled || storeMetadata?.storeType === 'REMOTE') {
+        if (
+          (storeMetadata?.storeType !== 'REMOTE' && isEmpty(gitDetails.repoIdentifier)) ||
+          isEmpty(gitDetails.branch)
+        ) {
+          clear()
+          showError(getString('pipeline.gitExperience.selectRepoBranch'))
+          return
+        }
+        openSaveToGitDialog({
+          isEditing: pipelineIdentifier !== DefaultNewPipelineId,
+          resource: {
+            type: 'Pipelines',
+            name: latestPipeline.name,
+            identifier: latestPipeline.identifier,
+            gitDetails: gitDetails ?? {},
+            storeMetadata: storeMetadata?.storeType ? storeMetadata : undefined
+          },
+          payload: { pipeline: omit(latestPipeline, 'repo', 'branch') }
+        })
+      } else {
+        await saveAndPublishPipeline(latestPipeline, storeMetadata)
       }
-      openSaveToGitDialog({
-        isEditing: pipelineIdentifier !== DefaultNewPipelineId,
-        resource: {
-          type: 'Pipelines',
-          name: latestPipeline.name,
-          identifier: latestPipeline.identifier,
-          gitDetails: gitDetails ?? {},
-          storeMetadata: storeMetadata?.storeType ? storeMetadata : undefined
-        },
-        payload: { pipeline: omit(latestPipeline, 'repo', 'branch') }
-      })
-    } else {
-      await saveAndPublishPipeline(latestPipeline, storeMetadata)
-    }
-  }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      gitDetails,
+      isGitSyncEnabled,
+      openSaveToGitDialog,
+      pipelineIdentifier,
+      saveAndPublishPipeline,
+      showError,
+      storeMetadata
+    ]
+  )
 
   const saveAndPublish = React.useCallback(async () => {
     window.dispatchEvent(new CustomEvent('SAVE_PIPELINE_CLICKED'))
@@ -425,6 +441,35 @@ function SavePipelinePopover(
     initPipelinePublish
   ])
 
+  const [canExecute] = usePermission(
+    {
+      resourceScope: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier
+      },
+      resource: {
+        resourceType: ResourceType.PIPELINE,
+        resourceIdentifier: pipeline?.identifier
+      },
+      permissions: [PermissionIdentifier.EXECUTE_PIPELINE]
+    },
+    [orgIdentifier, projectIdentifier, accountId, pipeline?.identifier]
+  )
+
+  const permissionText = canExecute
+    ? getString('common.viewAndExecutePermissions')
+    : getString('common.readonlyPermissions')
+
+  const tooltip = isSaveDisabled ? (
+    <div className={css.readonlyAccessTag}>
+      <Icon name="eye-open" size={16} />
+      <span className={css.readonlyAccessText}>{permissionText}</span>
+    </div>
+  ) : undefined
+
+  const saveText: React.ReactNode = getString('save')
+
   React.useImperativeHandle(
     ref,
     () => ({
@@ -448,10 +493,11 @@ function SavePipelinePopover(
       return (
         <Button
           variation={ButtonVariation.PRIMARY}
-          text={getString('save')}
+          text={saveText}
           onClick={saveAndPublish}
           icon="send-data"
           disabled={isSaveDisabled}
+          tooltip={tooltip}
         />
       )
     } else {
@@ -463,9 +509,10 @@ function SavePipelinePopover(
     <SplitButton
       disabled={isSaveDisabled}
       variation={ButtonVariation.PRIMARY}
-      text={getString('save')}
+      text={saveText}
       loading={loading}
       onClick={saveAndPublish}
+      tooltip={tooltip}
     >
       <SplitButtonOption onClick={save} disabled={isIntermittentLoading} text={getString('common.saveAsTemplate')} />
     </SplitButton>

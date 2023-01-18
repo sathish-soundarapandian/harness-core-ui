@@ -14,6 +14,7 @@ import { useGetResourceGroupListV2 } from 'services/resourcegroups'
 import ResourceGroupListView from '@rbac/components/ResourceGroupList/ResourceGroupListView'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { useStateWithQueryParams } from '@common/hooks/useStateWithQueryParams'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -27,7 +28,7 @@ const ResourceGroupsList: React.FC = () => {
   const { getString } = useStrings()
   const history = useHistory()
   useDocumentTitle(getString('resourceGroups'))
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useStateWithQueryParams({ key: 'search' })
   const [page, setPage] = useState(0)
 
   const { data, loading, error, refetch } = useGetResourceGroupListV2({
@@ -95,6 +96,7 @@ const ResourceGroupsList: React.FC = () => {
         toolbar={
           <Layout.Horizontal margin={{ right: 'small' }} height="xxxlarge">
             <ExpandingSearchInput
+              defaultValue={searchTerm}
               alwaysExpanded
               placeholder={getString('common.searchPlaceholder')}
               onChange={e => {

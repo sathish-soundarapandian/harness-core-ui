@@ -36,8 +36,6 @@ import MetricsVerificationModal from '@cv/components/MetricsVerificationModal/Me
 import ValidationStatus from '@cv/pages/components/ValidationStatus/ValidationStatus'
 import { StatusOfValidation } from '@cv/pages/components/ValidationStatus/ValidationStatus.constants'
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import {
   getOptions,
@@ -98,7 +96,7 @@ export default function NewRelicHealthSource({
     result: []
   })
 
-  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
+  const isMetricThresholdEnabled = !isTemplate
 
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [showCustomMetric, setShowCustomMetric] = useState(!!Array.from(newRelicData?.mappedServicesAndEnvs)?.length)

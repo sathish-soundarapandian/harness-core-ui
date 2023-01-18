@@ -159,7 +159,7 @@ export function PipelineStageOverview(props: PipelineStageOverviewProps): React.
           >
             <Icon name="chained-pipeline" color={Color.PRIMARY_7} size={20} margin={{ right: 'xsmall' }} />
             <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
-              {`${getString('pipeline.pipelineChaining.childPipelineID')}: ${pipelineIdentifier}`}
+              {`${getString('common.pipeline')}: ${pipelineIdentifier}`}
             </Text>
             <Icon name="launch" color={Color.PRIMARY_7} size={16} margin={{ left: 'small' }} />
           </Link>

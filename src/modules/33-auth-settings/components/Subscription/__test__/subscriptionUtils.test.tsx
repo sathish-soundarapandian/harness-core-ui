@@ -230,6 +230,13 @@ describe.skip('subscriptionUtils', () => {
         description: 'common.purpose.sto.continuous',
         title: ''
       })
+
+      const chaos = getTitleByModule('chaos')
+      expect(chaos).toStrictEqual({
+        icon: 'chaos-solid',
+        description: 'common.purpose.chaos.continuous',
+        title: ''
+      })
     })
   })
 

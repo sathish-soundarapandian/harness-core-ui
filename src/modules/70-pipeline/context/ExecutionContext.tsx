@@ -11,20 +11,18 @@ import type { PipelineExecutionDetail, GraphLayoutNode, ExecutionNode } from 'se
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 
-export interface GraphCanvasState {
-  offsetX?: number
-  offsetY?: number
-  zoom?: number
-}
-
 export interface ExecutionContextParams {
   pipelineExecutionDetail: PipelineExecutionDetail | null
   allNodeMap: { [key: string]: ExecutionNode }
   pipelineStagesMap: Map<string, GraphLayoutNode>
+  childPipelineStagesMap: Map<string, GraphLayoutNode>
+  allStagesMap: Map<string, GraphLayoutNode>
   isPipelineInvalid?: boolean
   selectedStageId: string
+  selectedChildStageId?: string
   selectedStepId: string
   selectedStageExecutionId: string
+  selectedCollapsedNodeId: string
   loading: boolean
   isDataLoadedForSelectedStage: boolean
   queryParams: ExecutionPageQueryParams & GitQueryParams
@@ -32,11 +30,10 @@ export interface ExecutionContextParams {
   setLogsToken: (token: string) => void
   refetch?: (() => Promise<void>) | undefined
   addNewNodeToMap(id: string, node: ExecutionNode): void
-  setStepsGraphCanvasState?: (canvasState: GraphCanvasState) => void
-  stepsGraphCanvasState?: GraphCanvasState
   setSelectedStepId: (step: string) => void
   setSelectedStageId: (stage: string) => void
   setSelectedStageExecutionId: (stage: string) => void
+  setSelectedCollapsedNodeId: (collapsedNode: string) => void
   setIsPipelineInvalid?: (flag: boolean) => void
 }
 
@@ -44,10 +41,14 @@ export const ExecutionContext = createContext<ExecutionContextParams>({
   pipelineExecutionDetail: null,
   allNodeMap: {},
   pipelineStagesMap: new Map(),
+  childPipelineStagesMap: new Map(),
+  allStagesMap: new Map(),
   isPipelineInvalid: false,
   selectedStageId: '',
+  selectedChildStageId: '',
   selectedStepId: '',
   selectedStageExecutionId: '',
+  selectedCollapsedNodeId: '',
   loading: false,
   isDataLoadedForSelectedStage: false,
   queryParams: {},
@@ -55,11 +56,10 @@ export const ExecutionContext = createContext<ExecutionContextParams>({
   setLogsToken: () => void 0,
   refetch: undefined,
   addNewNodeToMap: () => void 0,
-  setStepsGraphCanvasState: () => undefined,
-  stepsGraphCanvasState: { offsetX: 0, offsetY: 0, zoom: 100 },
   setSelectedStepId: () => void 0,
   setSelectedStageId: () => void 0,
   setSelectedStageExecutionId: () => void 0,
+  setSelectedCollapsedNodeId: () => void 0,
   setIsPipelineInvalid: () => void 0
 })
 

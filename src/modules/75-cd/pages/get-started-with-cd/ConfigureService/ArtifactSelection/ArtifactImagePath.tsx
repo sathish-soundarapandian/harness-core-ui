@@ -18,7 +18,8 @@ import {
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
 import type { ArtifactConfig } from 'services/cd-ng'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
 import { getUniqueEntityIdentifier, ServiceDataType } from '../../CDOnboardingUtils'
 import type { ConfigureServiceInterface } from '../ConfigureService'
@@ -32,7 +33,7 @@ const ALLOWABLE_TYPES = [
 
 export default function ArtifactImagePath(): JSX.Element {
   const { values: formValues, setFieldValue } = useFormikContext<ConfigureServiceInterface>()
-  const { NG_ARTIFACT_SOURCES } = useFeatureFlags()
+  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const {
     state: { service: serviceData },
     saveServiceData
@@ -40,7 +41,7 @@ export default function ArtifactImagePath(): JSX.Element {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const isReadonly = false
-  const artifactPath = NG_ARTIFACT_SOURCES
+  const artifactPath = isSvcEnvEnabled
     ? 'serviceDefinition.spec.artifacts.primary.sources[0]'
     : 'serviceDefinition.spec.artifacts.primary'
   const getInitialArtifactLastStepData = React.useMemo(() => {

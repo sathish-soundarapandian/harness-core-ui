@@ -33,6 +33,7 @@ import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
 import type { AcrSpec } from 'services/pipeline-ng'
+import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { ImagePathProps } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -235,7 +236,7 @@ export function ACRArtifact({
         onSubmit={formData => {
           handleSubmit({
             ...formData,
-            connectorRef: prevStepData?.connectorId?.value
+            connectorRef: getConnectorIdValue(prevStepData)
           })
         }}
         enableReinitialize={true}

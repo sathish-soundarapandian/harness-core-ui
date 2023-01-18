@@ -17,7 +17,8 @@ import { DialogEmptyState } from './EnvironmentDetailsUtils'
 import css from './EnvironmentDetailSummary.module.scss'
 
 interface EnvironmentDetailInfraViewProps {
-  artifactFilter: string
+  artifactVersion: string
+  artifactPath: string
   serviceFilter: string
   envFilter: string
   data: InstanceGroupedByInfrastructureV2[][]
@@ -26,7 +27,15 @@ interface EnvironmentDetailInfraViewProps {
 }
 
 export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfraViewProps): React.ReactElement {
-  const { artifactFilter, envFilter, serviceFilter, data: dataInfra, isSearchApplied = false, resetSearch } = props
+  const {
+    artifactVersion,
+    artifactPath,
+    envFilter,
+    serviceFilter,
+    data: dataInfra,
+    isSearchApplied = false,
+    resetSearch
+  } = props
   const { getString } = useStrings()
 
   const headers = React.useMemo(() => {
@@ -78,7 +87,7 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
         {capitalize(getString('cd.serviceDashboard.artifact')) + ':'}
       </Text>
       <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1}>
-        {artifactFilter}
+        {artifactVersion}
       </Text>
     </Layout.Horizontal>
   )
@@ -107,7 +116,8 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
                   tableType={InfraViewTableType.FULL}
                   tableStyle={css.infraViewTableStyle}
                   data={[infra]}
-                  artifactFilter={artifactFilter}
+                  artifactVersion={artifactVersion}
+                  artifactPath={artifactPath}
                   envFilter={envFilter}
                   serviceFilter={serviceFilter}
                 />
@@ -124,7 +134,8 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
                   tableType={InfraViewTableType.SUMMARY}
                   tableStyle={css.infraViewTableStyle}
                   data={[infra]}
-                  artifactFilter={artifactFilter}
+                  artifactVersion={artifactVersion}
+                  artifactPath={artifactPath}
                   envFilter={envFilter}
                   serviceFilter={serviceFilter}
                 />
@@ -140,7 +151,8 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
                   tableType={InfraViewTableType.FULL}
                   tableStyle={css.infraViewTableStyle}
                   data={[infra]}
-                  artifactFilter={artifactFilter}
+                  artifactVersion={artifactVersion}
+                  artifactPath={artifactPath}
                   envFilter={envFilter}
                   serviceFilter={serviceFilter}
                 />

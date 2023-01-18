@@ -14,9 +14,7 @@ import type {
   GroupedMetric
 } from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/components/GroupedSideNav/GroupedSideNav.types'
 import type {
-  CommonRemoveMetricInterface,
   CustomSelectedAndMappedMetrics,
-  CommonSelectMetricInterface,
   CommonUpdateSelectedMetricsMapInterface,
   CreatedMetricsWithSelectedIndex,
   InitCustomFormData,
@@ -43,7 +41,7 @@ export function updateSelectedMetricsMap({
   const commonUpdatedMap = new Map(mappedMetrics)
 
   const duplicateName =
-    Array.from(mappedMetrics.keys()).indexOf(formikValues.metricName) > -1 && oldMetric !== formikValues?.metricName
+    Array.from(mappedMetrics?.keys()).indexOf(formikValues.metricName) > -1 && oldMetric !== formikValues?.metricName
   if (duplicateName) {
     return { selectedMetric: updatedMetric, mappedMetrics: commonUpdatedMap }
   }
@@ -120,62 +118,6 @@ export const getGroupedCreatedMetrics = (
   })
   return groupBy(filteredList.reverse(), function (item) {
     return (item?.groupName as SelectOption)?.label
-  })
-}
-
-export const onRemoveMetric = ({
-  removedMetric,
-  updatedMetric,
-  updatedList,
-  smIndex,
-  setCreatedMetrics,
-  setMappedMetrics,
-  formikValues
-}: CommonRemoveMetricInterface): void => {
-  setMappedMetrics(oldState => {
-    const { selectedMetric: oldMetric, mappedMetrics: oldMappedMetric } = oldState
-    const commonUpdatedMap = new Map(oldMappedMetric)
-
-    if (commonUpdatedMap.has(removedMetric)) {
-      commonUpdatedMap.delete(removedMetric)
-    } else {
-      // handle case where user updates the metric name for current selected metric
-      commonUpdatedMap.delete(oldMetric)
-    }
-
-    // update map with current values
-    if (formikValues?.metricName !== removedMetric && formikValues?.metricName === updatedMetric) {
-      commonUpdatedMap.set(updatedMetric, { ...formikValues } || { metricName: updatedMetric })
-    }
-
-    setCreatedMetrics({ selectedMetricIndex: smIndex, createdMetrics: updatedList })
-    return {
-      selectedMetric: updatedMetric,
-      mappedMetrics: commonUpdatedMap
-    }
-  })
-}
-
-export const onSelectMetric = ({
-  newMetric,
-  updatedList,
-  smIndex,
-  setCreatedMetrics,
-  setMappedMetrics,
-  formikValues,
-  initCustomForm,
-  isPrimaryMetric
-}: CommonSelectMetricInterface): void => {
-  setMappedMetrics(oldState => {
-    setCreatedMetrics({ selectedMetricIndex: smIndex, createdMetrics: updatedList })
-    return updateSelectedMetricsMap({
-      updatedMetric: newMetric,
-      oldMetric: oldState.selectedMetric,
-      mappedMetrics: oldState.mappedMetrics,
-      formikValues,
-      initCustomForm,
-      isPrimaryMetric
-    })
   })
 }
 

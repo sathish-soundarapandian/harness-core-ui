@@ -16,6 +16,7 @@ import mockImport from 'framework/utils/mockImport'
 import * as ffServices from 'services/cf'
 import mockFeatureFlags from '@cf/pages/feature-flags/__tests__/mockFeatureFlags'
 import { CF_DEFAULT_PAGE_SIZE } from '@cf/utils/CFUtils'
+import * as preferenceStoreContext from 'framework/PreferenceStore/PreferenceStoreContext'
 import { OnboardingDetailPage } from '../OnboardingDetailPage'
 import { SelectEnvironmentView } from '../views/SelectEnvironmentView'
 
@@ -33,17 +34,26 @@ const renderComponent = (): RenderResult => {
 describe('OnboardingDetailPage', () => {
   const spyGetAllFeatures = jest.spyOn(ffServices, 'useGetAllFeatures')
   const refetchFlags = jest.fn()
+  const preferenceURL = { pathname: '/testURL' }
 
   beforeEach(() => {
     jest.clearAllMocks()
-
     jest.mock('@common/hooks/useTelemetry', () => ({
       useTelemetry: () => ({ identifyUser: jest.fn(), trackEvent: jest.fn() })
     }))
+    jest.spyOn(preferenceStoreContext, 'usePreferenceStore').mockReturnValue({
+      setPreference: jest.fn(),
+      preference: JSON.stringify(preferenceURL),
+      clearPreference: jest.fn()
+    })
   })
 
   test('OnboardingDetailPage empty state should be rendered properly', () => {
     renderComponent()
+
+    //Logo and [x] button
+    expect(screen.getByText('common.purpose.cf.continuous')).toBeVisible()
+    expect(screen.getByTestId('close')).toBeVisible()
 
     // Progress Stepper
     expect(screen.getByTestId('getStartedProgressStepper')).toBeVisible()
@@ -51,7 +61,8 @@ describe('OnboardingDetailPage', () => {
     // Footer buttons
     expect(screen.getByText('next')).toBeVisible()
     expect(screen.getByText('next').closest('button')).toBeDisabled()
-    expect(screen.getByText('back')).toBeVisible()
+    //As it is on the first step the button should say 'Cancel'
+    expect(screen.getByText('cancel')).toBeVisible()
   })
 
   test('Should be able to create a flag', async () => {
@@ -243,5 +254,26 @@ describe('OnboardingDetailPage', () => {
     )
 
     expect(container).toMatchSnapshot()
+  })
+
+  test('should navigate to the previous page if you click the [x] icon and preference exists', async () => {
+    renderComponent()
+    userEvent.click(screen.getByTestId('close'))
+
+    expect(screen.getByTestId('location')).toHaveTextContent(preferenceURL.pathname)
+  })
+
+  test('should navigate to the configure path url if you click the [x] icon and preference does not exist', async () => {
+    jest.spyOn(preferenceStoreContext, 'usePreferenceStore').mockReturnValue({
+      setPreference: jest.fn(),
+      preference: null,
+      clearPreference: jest.fn()
+    })
+    renderComponent()
+    userEvent.click(screen.getByTestId('close'))
+
+    expect(screen.getByTestId('location')).toHaveTextContent(
+      '/account/dummy/cf/orgs/dummy/projects/dummy/configurePath'
+    )
   })
 })

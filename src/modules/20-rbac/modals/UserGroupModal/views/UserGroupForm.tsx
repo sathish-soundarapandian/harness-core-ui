@@ -139,8 +139,8 @@ const UserGroupForm: React.FC<UserGroupModalData> = props => {
       }}
       formName="userGroupForm"
       validationSchema={Yup.object().shape({
-        name: NameSchema(),
-        identifier: IdentifierSchema()
+        name: NameSchema(getString),
+        identifier: IdentifierSchema(getString)
       })}
       onSubmit={values => {
         modalErrorHandler?.hide()

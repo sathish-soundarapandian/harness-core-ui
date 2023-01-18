@@ -5,94 +5,77 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
-import { Button, Text, Container, ExpandingSearchInput, Layout } from '@harness/uicore'
-import { useParams } from 'react-router-dom'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import {
-  PagePMSPipelineSummaryResponse,
-  ResponsePagePMSPipelineSummaryResponse,
-  useGetPipelineList
-} from 'services/pipeline-ng'
-import { Page } from '@common/exports'
-import { useStrings } from 'framework/strings'
-import type { UseGetMockData } from '@common/utils/testUtils'
-import type { PipelineType } from '@common/interfaces/RouteInterfaces'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
+  Button,
+  ButtonVariation,
+  Container,
+  ExpandingSearchInput,
+  ExpandingSearchInputHandle,
+  Layout,
+  Text
+} from '@harness/uicore'
+import React, { useRef, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
-import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
+import { Page } from '@common/exports'
+import { useMutateAsGet } from '@common/hooks'
+import { CreatePipeline } from '@pipeline/pages/pipeline-list/CreatePipeline/CreatePipeline'
+import { PipelineListTable } from '@pipeline/pages/pipeline-list/PipelineListTable/PipelineListTable'
+import { DEFAULT_PAGE_INDEX, DEFAULT_PIPELINE_LIST_TABLE_SORT } from '@pipeline/utils/constants'
 import { getModuleRunType } from '@pipeline/utils/runPipelineUtils'
-import RunPipelineListView from './RunPipelineListView'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
+import { useStrings } from 'framework/strings'
+import { useGetPipelineList } from 'services/pipeline-ng'
+import type { PipelineListPagePathParams } from '@pipeline/pages/pipeline-list/types'
+import { getEmptyStateIllustration } from '@pipeline/pages/pipeline-list/PipelineListUtils'
 import css from './PipelineModalListView.module.scss'
 
 interface PipelineModalListViewProps {
   onClose: () => void
-  mockData?: UseGetMockData<ResponsePagePMSPipelineSummaryResponse>
 }
 
-export default function PipelineModalListView({ onClose, mockData }: PipelineModalListViewProps): React.ReactElement {
+export default function PipelineModalListView({ onClose }: PipelineModalListViewProps): React.ReactElement {
   const [page, setPage] = useState(0)
-  const [searchParam, setSearchParam] = React.useState('')
+  const [searchTerm, setSearchTerm] = React.useState('')
+  const searchRef = useRef({} as ExpandingSearchInputHandle)
+  const [sort, setSort] = React.useState(DEFAULT_PIPELINE_LIST_TABLE_SORT)
+  const [gitFilter, setGitFilter] = useState<GitFilterScope | null>(null)
+  const { repo: repoIdentifier, branch } = gitFilter || {}
   const { getString } = useStrings()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
-  const [gitFilter, setGitFilter] = useState<GitFilterScope | null>(null)
+  const { projectIdentifier, orgIdentifier, accountId, module } = useParams<PipelineListPagePathParams>()
 
-  const { projectIdentifier, orgIdentifier, accountId, module } = useParams<
-    PipelineType<{
-      projectIdentifier: string
-      orgIdentifier: string
-      accountId: string
-    }>
-  >()
-
-  const [data, setData] = React.useState<PagePMSPipelineSummaryResponse | undefined>()
-
-  const {
-    loading,
-    mutate: reloadPipelines,
-    cancel
-  } = useGetPipelineList({
+  const pipelinesQuery = useMutateAsGet(useGetPipelineList, {
+    body: {
+      filterType: 'PipelineSetup'
+    },
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      searchTerm: searchParam,
+      searchTerm,
       page,
-      sort: ['executionSummaryInfo.lastExecutionTs', 'DESC'],
-      size: 5,
-      ...(gitFilter?.repo &&
-        gitFilter.branch && {
-          repoIdentifier: gitFilter.repo,
-          branch: gitFilter.branch
+      sort,
+      size: 7,
+      ...(repoIdentifier &&
+        branch && {
+          repoIdentifier,
+          branch
         })
     },
-    mock: mockData,
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
-
-  const fetchPipelines = React.useCallback(async () => {
-    cancel()
-    setData(await (await reloadPipelines({ filterType: 'PipelineSetup' }))?.data)
-  }, [cancel])
-
-  React.useEffect(() => {
-    cancel()
-    fetchPipelines()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page, accountId, projectIdentifier, orgIdentifier, module, searchParam, gitFilter])
-
-  const handleSearch = (query: string): void => {
-    setSearchParam(query)
-  }
 
   return (
     <>
       <Page.Header
         title={
-          <Layout.Horizontal style={{ alignItems: 'center' }}>
-            <Text color={Color.GREY_800} font="medium">
-              {getString('runPipelineText')}
+          <Layout.Horizontal style={{ alignItems: 'center' }} spacing="xxlarge">
+            <Text font={{ variation: FontVariation.H4 }} color={Color.GREY_800}>
+              {getString('pipelines')}
             </Text>
             {isGitSyncEnabled && (
               <GitSyncStoreProvider>
@@ -105,6 +88,17 @@ export default function PipelineModalListView({ onClose, mockData }: PipelineMod
                 />
               </GitSyncStoreProvider>
             )}
+            <ExpandingSearchInput
+              alwaysExpanded
+              width={200}
+              placeholder={getString('search')}
+              onChange={text => {
+                setSearchTerm(text)
+                setPage(DEFAULT_PAGE_INDEX)
+              }}
+              ref={searchRef}
+              defaultValue={searchTerm}
+            />
           </Layout.Horizontal>
         }
         toolbar={
@@ -113,23 +107,42 @@ export default function PipelineModalListView({ onClose, mockData }: PipelineMod
           </Container>
         }
       />
-      <Page.Body className={css.main} loading={loading}>
-        <ExpandingSearchInput
-          alwaysExpanded
-          width={250}
-          placeholder={getString('search')}
-          throttle={200}
-          defaultValue={searchParam}
-          className={css.searchContainer}
-          onChange={handleSearch}
-        />
-
-        {!data?.content?.length ? (
-          <Text className={css.noResultSection} font={{ size: 'medium' }}>
-            {getString('pipeline.noRunsText', { moduleRunType: getModuleRunType(module) })}
-          </Text>
-        ) : (
-          <RunPipelineListView data={data} refetch={fetchPipelines} gotoPage={pageNumber => setPage(pageNumber)} />
+      <Page.Body
+        className={css.pageBody}
+        loading={pipelinesQuery.loading}
+        error={pipelinesQuery.error?.message}
+        retryOnError={pipelinesQuery.refetch}
+        noData={{
+          when: () => !pipelinesQuery.data?.data?.content?.length,
+          image: getEmptyStateIllustration(!!searchTerm, module),
+          messageTitle: searchTerm
+            ? getString('common.filters.noResultsFound')
+            : getString('pipeline.noPipelinesLabel', { moduleRunType: getModuleRunType(module) }),
+          message: searchTerm
+            ? getString('common.filters.noMatchingFilterData')
+            : getString('pipeline-list.aboutPipeline'),
+          button: searchTerm ? (
+            <Button
+              text={getString('common.filters.clearFilters')}
+              variation={ButtonVariation.LINK}
+              onClick={() => {
+                setSearchTerm('')
+                searchRef.current.clear()
+              }}
+            />
+          ) : (
+            <CreatePipeline onSuccess={pipelinesQuery.refetch} />
+          )
+        }}
+      >
+        {pipelinesQuery.data?.data && (
+          <PipelineListTable
+            gotoPage={pageNumber => setPage(pageNumber)}
+            data={pipelinesQuery.data.data}
+            setSortBy={setSort}
+            sortBy={sort}
+            minimal
+          />
         )}
       </Page.Body>
     </>

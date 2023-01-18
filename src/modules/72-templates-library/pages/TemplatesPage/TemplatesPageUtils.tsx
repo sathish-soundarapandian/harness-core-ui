@@ -63,6 +63,7 @@ export const getIconForTemplate = (
   switch (templateType) {
     case TemplateType.Step:
       return factory.getStepIcon(childType)
+    case TemplateType.StepGroup:
     case TemplateType.Stage:
       return stagesCollection.getStageAttributes(childType, getString)?.icon
     default:

@@ -10,13 +10,24 @@ import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Card, Container, LabelPosition, Layout, Text, WeightedStack, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { defaultTo } from 'lodash-es'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 // import { Ticker, TickerVerticalAlignment } from '@common/components/Ticker/Ticker'
 import { DeploymentsTimeRangeContext, getFixed } from '@cd/components/Services/common'
-import { DashboardWorkloadDeployment, GetWorkloadsQueryParams, useGetWorkloads } from 'services/cd-ng'
+import {
+  ChangeRate,
+  DashboardWorkloadDeployment,
+  DashboardWorkloadDeploymentV2,
+  GetWorkloadsQueryParams,
+  useGetWorkloads,
+  useGetWorkloadsV2,
+  WorkloadDeploymentInfo,
+  WorkloadDeploymentInfoV2
+} from 'services/cd-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FAIL_COLORS, SUCCESS_COLORS } from '@dashboards/constants'
 import { PageSpinner } from '@common/components'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import MostActiveServicesEmptyState from '@cd/icons/MostActiveServicesEmptyState.svg'
 import { getFormattedTimeRange } from '@cd/pages/dashboard/dashboardUtils'
 import css from '@cd/components/Services/MostActiveServicesWidget/MostActiveServicesWidget.module.scss'
@@ -37,7 +48,9 @@ export interface MostActiveServicesWidget {
     }
   }
   title?: string
-  parseByType?: (data: DashboardWorkloadDeployment | []) => MostActiveServicesWidgetData[]
+  parseByType?: (
+    dataInfo: DashboardWorkloadDeployment | DashboardWorkloadDeploymentV2 | []
+  ) => MostActiveServicesWidgetData[]
 }
 
 enum DEFAULT_TYPES_ENUM {
@@ -72,30 +85,34 @@ export const MostActiveServicesWidget: React.FC<MostActiveServicesWidget> = prop
   const { getString } = useStrings()
 
   const defaultParseByType = useCallback(
-    (data: DashboardWorkloadDeployment | [], selectedType: string): MostActiveServicesWidgetData[] => {
-      const items = ((data as DashboardWorkloadDeployment)?.workloadDeploymentInfoList || []).map(
-        workloadDeploymentInfo => {
-          const {
-            totalDeployments = 0,
-            failureRate = 0,
-            percentSuccess = 0,
-            failureRateChangeRate,
-            rateSuccess
-          } = workloadDeploymentInfo
-          let value = (workloadDeploymentInfo as any)?.totalSuccess || (totalDeployments * percentSuccess) / 100
-          if (selectedType === DEFAULT_TYPES_ENUM.ERRORS) {
-            value = (workloadDeploymentInfo as any)?.totalFailure || (totalDeployments * failureRate) / 100
-          }
-          const change = selectedType === DEFAULT_TYPES_ENUM.DEPLOYMENTS ? rateSuccess : failureRateChangeRate
-          return {
-            label: workloadDeploymentInfo.serviceName || '',
-            value: getFixed(value),
-            change: change || 0
-          }
+    (
+      dataInfo: DashboardWorkloadDeployment | DashboardWorkloadDeploymentV2 | [],
+      selectedTypeInfo: string
+    ): MostActiveServicesWidgetData[] => {
+      const items = (
+        (dataInfo as DashboardWorkloadDeployment | DashboardWorkloadDeploymentV2)?.workloadDeploymentInfoList || []
+      ).map((workloadDeploymentInfo: WorkloadDeploymentInfoV2 | WorkloadDeploymentInfo) => {
+        const {
+          totalDeployments = 0,
+          failureRate = 0,
+          percentSuccess = 0,
+          failureRateChangeRate,
+          rateSuccess
+        } = workloadDeploymentInfo
+        let value = (workloadDeploymentInfo as any)?.totalSuccess || (totalDeployments * percentSuccess) / 100
+        if (selectedTypeInfo === DEFAULT_TYPES_ENUM.ERRORS) {
+          value = (workloadDeploymentInfo as any)?.totalFailure || (totalDeployments * failureRate) / 100
         }
-      )
+        const change = selectedTypeInfo === DEFAULT_TYPES_ENUM.DEPLOYMENTS ? rateSuccess : failureRateChangeRate
+        const rateChange = flag && change ? (change as ChangeRate).percentChange : (change as number)
+        return {
+          label: workloadDeploymentInfo.serviceName || '',
+          value: getFixed(value),
+          change: defaultTo(rateChange, 0)
+        }
+      })
       items.sort((itemA, itemB) => (itemA.value > itemB.value ? -1 : 1))
-      const colorList = types[selectedType].colors || [Color.BLACK]
+      const colorList = types[selectedTypeInfo].colors || [Color.BLACK]
       return items
         .map((item, index) => ({ ...item, color: colorList[Math.min(index, colorList.length - 1)] }))
         .filter(item => item.value)
@@ -124,6 +141,7 @@ export const MostActiveServicesWidget: React.FC<MostActiveServicesWidget> = prop
   const [selectedEnvironmentType, setSelectedEnvironmentType] = useState(Object.keys(environmentTypes)[0])
   const [selectedType, setSelectedType] = useState(Object.keys(types)[0])
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const { CDC_DASHBOARD_ENHANCEMENT_NG: flag } = useFeatureFlags()
 
   const { timeRange } = useContext(DeploymentsTimeRangeContext)
   const [startTime, endTime] = getFormattedTimeRange(timeRange)
@@ -139,11 +157,21 @@ export const MostActiveServicesWidget: React.FC<MostActiveServicesWidget> = prop
     }
   }, [accountId, orgIdentifier, projectIdentifier, timeRange, environmentTypes, selectedEnvironmentType])
 
-  const { loading, error, data: workloadsData, refetch } = useGetWorkloads({ queryParams })
+  const { loading, error, data: workloadsData, refetch } = useGetWorkloads({ queryParams, lazy: flag })
+  const {
+    loading: loadingV2,
+    error: errorV2,
+    data: workloadsDataV2,
+    refetch: refetchV2
+  } = useGetWorkloadsV2({ queryParams, lazy: !flag })
+
+  const [workloadLoading, workloadsError, workloadsInfo, workloadsRefetch] = flag
+    ? [loadingV2, errorV2, workloadsDataV2, refetchV2]
+    : [loading, error, workloadsData, refetch]
 
   const data = useMemo(
-    () => parseByType(workloadsData?.data || [], selectedType),
-    [workloadsData?.data, selectedType, parseByType]
+    () => parseByType(workloadsInfo?.data || [], selectedType),
+    [workloadsInfo?.data, selectedType, parseByType]
   )
 
   const EnvironmentTypeComponent = useMemo(
@@ -246,19 +274,19 @@ export const MostActiveServicesWidget: React.FC<MostActiveServicesWidget> = prop
     )
   }
 
-  if (loading || error || !data || !data.length) {
+  if (workloadLoading || workloadsError || !data || !data.length) {
     const component = (() => {
-      if (loading) {
+      if (workloadLoading) {
         return (
           <Container data-test="mostActiveServicesWidgetLoader">
             <PageSpinner />
           </Container>
         )
       }
-      if (error) {
+      if (workloadsError) {
         return (
           <Container data-test="mostActiveServicesWidgetError" height={'100%'}>
-            <PageError onClick={() => refetch()} width={230} />
+            <PageError onClick={() => workloadsRefetch()} width={230} />
           </Container>
         )
       }

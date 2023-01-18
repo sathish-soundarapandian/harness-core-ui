@@ -16,7 +16,9 @@ export const shouldAllowOnlyOneFilePath = (selectedManifest: ManifestTypes): boo
     ManifestDataType.EcsScalableTargetDefinition,
     ManifestDataType.EcsScalingPolicyDefinition,
     ManifestDataType.TasManifest,
-    ManifestDataType.TasAutoScaler
+    ManifestDataType.TasAutoScaler,
+    ManifestDataType.AsgLaunchTemplate,
+    ManifestDataType.AsgConfiguration
   ].includes(selectedManifest)
 }
 

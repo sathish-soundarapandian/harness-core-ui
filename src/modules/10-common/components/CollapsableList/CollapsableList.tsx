@@ -53,7 +53,12 @@ export function CollapsableList<T extends ScopedObjectDTO>(props: CollapsableTab
     preSelectedRecord
   } = props
   const isPreselected = (item: EntityReferenceResponse<T>): boolean => {
-    return selectedRecords.length === 0 && !selectedRecord && item.identifier === preSelectedRecord?.identifier
+    return (
+      selectedRecords.length === 0 &&
+      !selectedRecord &&
+      item.identifier === preSelectedRecord?.identifier &&
+      getScopeFromDTO(item.record) === preSelectedRecord.scope
+    )
   }
   const isSelected = (item: EntityReferenceResponse<T>): boolean => {
     if (isMultiSelect)

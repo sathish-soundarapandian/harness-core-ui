@@ -16,7 +16,9 @@ import useCreateConnector from '@ce/components/CreateConnector/CreateConnector'
 import useCETrialModal from '@ce/modals/CETrialModal/useCETrialModal'
 import { useToaster } from '@common/components'
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
+import type { Module } from 'framework/types/ModuleName'
+import { getModuleToDefaultURLMap } from 'framework/LicenseStore/licenseStoreUtil'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { getGaClientID, getSavedRefererURL, isOnPrem } from '@common/utils/utils'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -31,10 +33,10 @@ const CETrialHomePage: React.FC = () => {
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const isFreeEnabled = !isOnPrem()
-  const module = 'ce'
+  const module = 'ce' as Module
   const moduleType = 'CE'
   const microfrontendEnabled = useFeatureFlag(FeatureFlag.CCM_MICRO_FRONTEND)
-
+  const isDefaultProjectCreated = useFeatureFlag(FeatureFlag.CREATE_DEFAULT_PROJECT)
   const { openModal } = useCreateConnector({
     onSuccess: () => {
       history.push(routes.toCEOverview({ accountId }))
@@ -83,7 +85,18 @@ const CETrialHomePage: React.FC = () => {
   const { showError } = useToaster()
 
   function startPlan(): Promise<ResponseModuleLicenseDTO> {
-    return isFreeEnabled ? startFreePlan() : startTrial({ moduleType, edition: Editions.ENTERPRISE })
+    return isFreeEnabled ? handleStartFree() : startTrial({ moduleType, edition: Editions.ENTERPRISE })
+  }
+
+  const handleStartFree = async (): Promise<ResponseModuleLicenseDTO> => {
+    const data = await startFreePlan()
+    if (isDefaultProjectCreated) {
+      const moduleUrlWithDefaultProject = getModuleToDefaultURLMap(accountId, module as Module)[module]
+      history.push(moduleUrlWithDefaultProject ? (moduleUrlWithDefaultProject as string) : routes.toHome({ accountId }))
+    } else {
+      microfrontendEnabled ? history.push(routes.toCEOverview({ accountId })) : showModal()
+    }
+    return data
   }
 
   const handleStartTrial = async (): Promise<void> => {

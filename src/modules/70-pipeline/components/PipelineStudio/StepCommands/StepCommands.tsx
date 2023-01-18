@@ -18,8 +18,9 @@ import { StepWidgetWithFormikRef } from '@pipeline/components/AbstractSteps/Step
 import { AdvancedStepsWithRef } from '@pipeline/components/PipelineSteps/AdvancedSteps/AdvancedSteps'
 import type { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { StageType } from '@pipeline/utils/stageHelpers'
-import type { StepElementConfig } from 'services/cd-ng'
+import type { StepOrStepGroupOrTemplateStepData } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
+import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
+import type { DeploymentStageConfig, StepElementConfig } from 'services/cd-ng'
 import { SaveTemplateButton } from '@pipeline/components/PipelineStudio/SaveTemplateButton/SaveTemplateButton'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
@@ -46,6 +47,8 @@ enum StepCommandTabs {
   StepConfiguration = 'StepConfiguration',
   Advanced = 'Advanced'
 }
+
+type SaveButtonType = 'Step' | 'StepGroup'
 
 export function StepCommands(
   props: StepCommandsProps & { checkDuplicateStep?: () => boolean },
@@ -105,11 +108,12 @@ export function StepCommands(
     }
   }
 
-  const stepType: StepType = isStepGroup
-    ? StepType.StepGroup
-    : isTemplateStep
-    ? StepType.Template
-    : ((step as StepElementConfig).type as StepType)
+  const stepType: StepType =
+    isStepGroup && !isTemplateStep
+      ? StepType.StepGroup
+      : isTemplateStep
+      ? StepType.Template
+      : ((step as StepElementConfig).type as StepType)
 
   React.useImperativeHandle(ref, () => ({
     setFieldError(fieldName: string, error: string) {
@@ -145,15 +149,16 @@ export function StepCommands(
     },
     getValues() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const stepObj = isStepGroup
-        ? (stepsFactory.getStep(StepType.StepGroup) as PipelineStep<any>)
-        : stepType === StepType.Template
-        ? (stepsFactory.getStep(StepType.Template) as PipelineStep<any>)
-        : (stepsFactory.getStep((step as StepElementConfig).type) as PipelineStep<any>)
+      const stepObj =
+        isStepGroup && !isTemplateStep
+          ? (stepsFactory.getStep(StepType.StepGroup) as PipelineStep<any>)
+          : stepType === StepType.Template
+          ? (stepsFactory.getStep(StepType.Template) as PipelineStep<any>)
+          : (stepsFactory.getStep((step as StepElementConfig).type) as PipelineStep<any>)
       return activeTab === StepCommandTabs.StepConfiguration && stepRef.current
         ? stepObj.processFormData(stepRef.current.values)
         : activeTab === StepCommandTabs.Advanced && advancedConfRef.current
-        ? advancedConfRef.current.values
+        ? { ...(advancedConfRef.current.values as Partial<Values>), tab: TabTypes.Advanced }
         : {}
     },
     resetForm() {
@@ -166,31 +171,6 @@ export function StepCommands(
       return noop
     }
   }))
-
-  const getStepWidgetWithFormikRef = (): JSX.Element => {
-    return (
-      <StepWidgetWithFormikRef
-        key={step.identifier}
-        factory={stepsFactory}
-        initialValues={step}
-        readonly={isReadonly}
-        isNewStep={isNewStep}
-        onChange={onChange}
-        onUpdate={onUpdate}
-        type={stepType}
-        stepViewType={stepViewType}
-        ref={stepRef}
-        allowableTypes={allowableTypes}
-        customStepProps={{
-          selectedStage: selectedStage
-        }}
-      />
-    )
-  }
-
-  if (withoutTabs) {
-    return <div className={cx(css.stepCommand, css.withoutTabs)}>{getStepWidgetWithFormikRef()}</div>
-  }
 
   const getStepDataForTemplate = async (): Promise<StepElementConfig> => {
     const stepObj = stepsFactory.getStep((step as StepElementConfig).type) as PipelineStep<any>
@@ -218,6 +198,76 @@ export function StepCommands(
     } else {
       return step as StepElementConfig
     }
+  }
+
+  const getStepGroupDataForTemplate = async (): Promise<StepOrStepGroupOrTemplateStepData> => {
+    const stepObj = stepsFactory.getStep(StepType.StepGroup) as PipelineStep<any>
+    if (activeTab === StepCommandTabs.StepConfiguration && stepRef.current) {
+      await stepRef.current.validateForm()
+      const errors = omit(stepRef.current.errors, 'name')
+      if (isEmpty(errors)) {
+        return {
+          ...omit(getStepDataFromValues(stepObj.processFormData(stepRef.current.values), step), 'spec'),
+          stageType: selectedStage?.stage?.type
+        }
+      } else {
+        await stepRef.current.submitForm()
+        throw errors
+      }
+    } else if (activeTab === StepCommandTabs.Advanced && advancedConfRef.current) {
+      await advancedConfRef.current.validateForm()
+      const errors = omit(advancedConfRef.current.errors, 'name')
+
+      if (isEmpty(errors)) {
+        return getStepDataFromValues(
+          { ...(advancedConfRef.current.values as Partial<Values>), tab: TabTypes.Advanced },
+          step
+        )
+      } else {
+        await advancedConfRef.current.submitForm()
+        throw errors
+      }
+    } else {
+      return step as StepOrStepGroupOrTemplateStepData
+    }
+  }
+
+  const SaveButtonProps = React.useMemo(() => {
+    if (isStepGroup) {
+      return {
+        getData: getStepGroupDataForTemplate,
+        type: StepType.StepGroup
+      }
+    }
+    return {
+      getData: getStepDataForTemplate,
+      type: 'Step'
+    }
+  }, [isStepGroup])
+
+  const getStepWidgetWithFormikRef = (): JSX.Element => {
+    return (
+      <StepWidgetWithFormikRef
+        key={step.identifier}
+        factory={stepsFactory}
+        initialValues={step}
+        readonly={isReadonly}
+        isNewStep={isNewStep}
+        onChange={onChange}
+        onUpdate={onUpdate}
+        type={stepType}
+        stepViewType={stepViewType}
+        ref={stepRef}
+        allowableTypes={allowableTypes}
+        customStepProps={{
+          selectedStage: selectedStage
+        }}
+      />
+    )
+  }
+
+  if (withoutTabs) {
+    return <div className={cx(css.stepCommand, css.withoutTabs)}>{getStepWidgetWithFormikRef()}</div>
   }
 
   return (
@@ -260,19 +310,22 @@ export function StepCommands(
                     ref={advancedConfRef}
                     stageType={defaultTo(selectedStage?.stage?.type, StageType.DEPLOY) as StageType}
                     stepType={stepType}
+                    deploymentType={defaultTo(
+                      (selectedStage?.stage?.spec as DeploymentStageConfig)?.deploymentType,
+                      ServiceDeploymentType.Kubernetes
+                    )}
                   />
                 }
               />
               {isSaveAsTemplateEnabled &&
-                !isStepGroup &&
                 viewType === StepCommandsViews.Pipeline &&
                 module !== 'cf' &&
                 (step as StepElementConfig).type !== StepType.FlagConfiguration && (
                   <>
                     <Expander />
                     <SaveTemplateButton
-                      data={getStepDataForTemplate}
-                      type={'Step'}
+                      data={SaveButtonProps.getData}
+                      type={SaveButtonProps.type as SaveButtonType}
                       gitDetails={gitDetails}
                       storeMetadata={storeMetadata}
                     />

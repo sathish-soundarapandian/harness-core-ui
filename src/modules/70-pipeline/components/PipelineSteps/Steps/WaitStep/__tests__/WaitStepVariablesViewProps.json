@@ -1,301 +1,309 @@
 {
-  "stageIdentifier": "this_is_a_new_stage",
+  "stageIdentifier": "s1",
   "metadataMap": {
-    "hvOUFkw6REGBf4Fc_84tRg": {
-      "yamlProperties": {
-        "fqn": "pipeline",
-        "localName": "pipeline"
-      },
-      "yamlOutputProperties": null
-    },
-    "kR8yeWjNQrW9cjAt9ITgYQ": {
+    "-Ve2RzhrQ0SG6mBen-GEWw": {
       "yamlProperties": {
         "fqn": "pipeline.name",
-        "localName": "pipeline.name"
+        "localName": "pipeline.name",
+        "variableName": "name",
+        "aliasFQN": "",
+        "visible": true
       },
-      "yamlOutputProperties": null
+      "yamlOutputProperties": null,
+      "yamlExtraProperties": null
     },
-    "FldYCK8rQTmoE1iBJh0vjg": {
+    "l76NGSBeTqCJgiOukUyV_w": {
+      "yamlProperties": {
+        "fqn": "pipeline.stages.s1.spec.execution.steps.Wait_1.name",
+        "localName": "execution.steps.Wait_1.name",
+        "variableName": "name",
+        "aliasFQN": "",
+        "visible": true
+      },
+      "yamlOutputProperties": null,
+      "yamlExtraProperties": null
+    },
+    "QLQnO1OXSGuSFuAfJrkJQg": {
+      "yamlProperties": {
+        "fqn": "pipeline.stages.s1.spec.execution.steps.Wait_1.description",
+        "localName": "execution.steps.Wait_1.description",
+        "variableName": "description",
+        "aliasFQN": "",
+        "visible": true
+      },
+      "yamlOutputProperties": null,
+      "yamlExtraProperties": null
+    },
+    "gzERWr5aSVOvralguTgO_A": {
+      "yamlProperties": {
+        "fqn": "pipeline.delegateSelectors",
+        "localName": "pipeline.delegateSelectors",
+        "variableName": "delegateSelectors",
+        "aliasFQN": "",
+        "visible": true
+      },
+      "yamlOutputProperties": null,
+      "yamlExtraProperties": null
+    },
+    "PdfaT9U6RiadoyrakZW_sg": {
+      "yamlProperties": {
+        "fqn": "pipeline.stages.s1.delegateSelectors",
+        "localName": "stage.delegateSelectors",
+        "variableName": "delegateSelectors",
+        "aliasFQN": "",
+        "visible": true
+      },
+      "yamlOutputProperties": null,
+      "yamlExtraProperties": null
+    },
+    "cIMH8m9LTxKa2Xdmdmr17Q": {
+      "yamlProperties": {
+        "fqn": "pipeline.stages.s1.spec.execution.steps.Wait_1.spec.duration",
+        "localName": "execution.steps.Wait_1.spec.duration",
+        "variableName": "duration",
+        "aliasFQN": "",
+        "visible": true
+      },
+      "yamlOutputProperties": null,
+      "yamlExtraProperties": null
+    },
+    "tjzK1u_6SPmmNxIIHp7Iaw": {
       "yamlProperties": {
         "fqn": "pipeline.description",
-        "localName": "pipeline.description"
+        "localName": "pipeline.description",
+        "variableName": "description",
+        "aliasFQN": "",
+        "visible": true
       },
-      "yamlOutputProperties": null
+      "yamlOutputProperties": null,
+      "yamlExtraProperties": null
     },
-    "eJxMCA_lS7maEIsMc6npEg": {
+    "OmQ07O6sRzSWYpWMYQFOgw": {
       "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.description",
-        "localName": "stage.description"
+        "fqn": "pipeline.stages.s1.name",
+        "localName": "stage.name",
+        "variableName": "name",
+        "aliasFQN": "",
+        "visible": true
       },
-      "yamlOutputProperties": null
+      "yamlOutputProperties": null,
+      "yamlExtraProperties": null
     },
-    "xjij9BX2SEKnnxCcTMaSRQ": {
+    "GoWjt0OdR2aqpw7bgeY4bw": {
       "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.infrastructure.infrastructureDefinition.spec.namespace",
-        "localName": "infrastructure.infrastructureDefinition.spec.namespace"
+        "fqn": "pipeline.stages.s1.description",
+        "localName": "stage.description",
+        "variableName": "description",
+        "aliasFQN": "",
+        "visible": true
       },
-      "yamlOutputProperties": null
+      "yamlOutputProperties": null,
+      "yamlExtraProperties": null
     },
-    "rnRwA5GJQEKEImxBCoDh4Q": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.infrastructure.infrastructureDefinition.spec.connectorRef",
-        "localName": "infrastructure.infrastructureDefinition.spec.connectorRef"
-      },
-      "yamlOutputProperties": null
+    "KDmoJUwVQnGv4_nyM_xZHw": {
+      "yamlProperties": null,
+      "yamlOutputProperties": null,
+      "yamlExtraProperties": {
+        "properties": [
+          {
+            "fqn": "pipeline.stages.s1.spec.execution.steps.Wait_1.type",
+            "localName": "execution.steps.Wait_1.type",
+            "variableName": "type",
+            "aliasFQN": "",
+            "visible": true
+          },
+          {
+            "fqn": "pipeline.stages.s1.spec.execution.steps.Wait_1.identifier",
+            "localName": "execution.steps.Wait_1.identifier",
+            "variableName": "identifier",
+            "aliasFQN": "",
+            "visible": true
+          },
+          {
+            "fqn": "pipeline.stages.s1.spec.execution.steps.Wait_1.when",
+            "localName": "execution.steps.Wait_1.when",
+            "variableName": "when",
+            "aliasFQN": "",
+            "visible": true
+          },
+          {
+            "fqn": "pipeline.stages.s1.spec.execution.steps.Wait_1.startTs",
+            "localName": "execution.steps.Wait_1.startTs",
+            "variableName": "",
+            "aliasFQN": "",
+            "visible": false
+          },
+          {
+            "fqn": "pipeline.stages.s1.spec.execution.steps.Wait_1.endTs",
+            "localName": "execution.steps.Wait_1.endTs",
+            "variableName": "",
+            "aliasFQN": "",
+            "visible": false
+          }
+        ],
+        "outputproperties": []
+      }
     },
-    "_sWGFAO8R8Od9CrEE2oRDg": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.infrastructure.environmentRef",
-        "localName": "infrastructure.environmentRef"
-      },
-      "yamlOutputProperties": null
+    "WZcx4f9rQAagBX3CNzZJqw": {
+      "yamlProperties": null,
+      "yamlOutputProperties": null,
+      "yamlExtraProperties": {
+        "properties": [
+          {
+            "fqn": "pipeline.identifier",
+            "localName": "pipeline.identifier",
+            "variableName": "identifier",
+            "aliasFQN": "",
+            "visible": true
+          },
+          {
+            "fqn": "pipeline.tags",
+            "localName": "pipeline.tags",
+            "variableName": "tags",
+            "aliasFQN": "",
+            "visible": true
+          },
+          {
+            "fqn": "pipeline.variables",
+            "localName": "pipeline.variables",
+            "variableName": "variables",
+            "aliasFQN": "",
+            "visible": true
+          },
+          {
+            "fqn": "pipeline.properties",
+            "localName": "pipeline.properties",
+            "variableName": "properties",
+            "aliasFQN": "",
+            "visible": true
+          },
+          {
+            "fqn": "pipeline.sequenceId",
+            "localName": "",
+            "variableName": "",
+            "aliasFQN": "",
+            "visible": false
+          },
+          {
+            "fqn": "pipeline.executionId",
+            "localName": "",
+            "variableName": "",
+            "aliasFQN": "",
+            "visible": false
+          },
+          {
+            "fqn": "pipeline.startTs",
+            "localName": "",
+            "variableName": "",
+            "aliasFQN": "",
+            "visible": false
+          },
+          {
+            "fqn": "pipeline.endTs",
+            "localName": "",
+            "variableName": "",
+            "aliasFQN": "",
+            "visible": false
+          },
+          {
+            "fqn": "pipeline.triggerType",
+            "localName": "",
+            "variableName": "",
+            "aliasFQN": "",
+            "visible": false
+          },
+          {
+            "fqn": "pipeline.triggeredBy.name",
+            "localName": "",
+            "variableName": "",
+            "aliasFQN": "",
+            "visible": false
+          },
+          {
+            "fqn": "pipeline.triggeredBy.email",
+            "localName": "",
+            "variableName": "",
+            "aliasFQN": "",
+            "visible": false
+          }
+        ],
+        "outputproperties": []
+      }
     },
-    "bIL6sYzbQlGgWYcs45Ph3g": {
-      "yamlProperties": {
-        "fqn": "serviceConfig",
-        "localName": ""
-      },
-      "yamlOutputProperties": null
-    },
-    "4RTsJbZpRYCnzZJANOxJZA": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.serviceConfig.serviceRef",
-        "localName": "serviceConfig.serviceRef"
-      },
-      "yamlOutputProperties": null
-    },
-    "rtbaOiHSQN2IKUhcRSz9fA": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.name",
-        "localName": "stage.name"
-      },
-      "yamlOutputProperties": null
-    },
-    "DZURJcS_SvOrECxrh4rPKw": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.infrastructure.infrastructureDefinition.spec.releaseName",
-        "localName": "infrastructure.infrastructureDefinition.spec.releaseName"
-      },
-      "yamlOutputProperties": null
-    },
-    "MSSKhHfRTLW5B1CMeGBEGw": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1",
-        "localName": "stage"
-      },
-      "yamlOutputProperties": null
-    },
-    "gD8HW7oqQxyTfodkLHSueQ": {
-      "yamlProperties": {
-        "fqn": "infrastructure",
-        "localName": ""
-      },
-      "yamlOutputProperties": null
-    },
-    "dkCB1Nf2SN-wS2Ub7hvvag": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Step_3.spec.policySets",
-        "localName": "execution.steps.Step_3.spec.policySets"
-      },
-      "yamlOutputProperties": null
-    },
-    "EAAdVBiZRE6eKPfqLSD0og": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Step_2.spec.includePipelineExecutionHistory",
-        "localName": "execution.steps.Step_2.spec.includePipelineExecutionHistory"
-      },
-      "yamlOutputProperties": null
-    },
-    "Eq71XheARzOZmn0EKX26eA": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Step_2",
-        "localName": "step"
-      },
-      "yamlOutputProperties": null
-    },
-    "PRwLLTIKQeeGF6wcCzGswg": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Fixed_Policy_Set.name",
-        "localName": "execution.steps.Fixed_Policy_Set.name"
-      },
-      "yamlOutputProperties": null
-    },
-    "MCTfwV-SS4qoS1x1CLhdlw": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Step_1.spec.environmentVariables.test",
-        "localName": "execution.steps.Step_1.spec.environmentVariables.test"
-      },
-      "yamlOutputProperties": null
-    },
-    "yeFbgabJRCGkOfmOrxbuoQ": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Step_2.spec.approvalMessage",
-        "localName": "execution.steps.Step_2.spec.approvalMessage"
-      },
-      "yamlOutputProperties": null
-    },
-    "HJbpD8ZNQ2Kt50x92na4Lw": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Fixed_Policy_Set",
-        "localName": "step"
-      },
-      "yamlOutputProperties": null
-    },
-    "N_vo0n4sTNeDhLeSfcJE-A": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Step_1.name",
-        "localName": "execution.steps.Step_1.name"
-      },
-      "yamlOutputProperties": null
-    },
-    "bKq1hIaESkuPNWEhfLwoUg": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Step_3",
-        "localName": "step"
-      },
-      "yamlOutputProperties": null
-    },
-    "t5K_dv_ZRRapAMPVkY37Tg": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Step_1",
-        "localName": "step"
-      },
-      "yamlOutputProperties": null
-    },
-    "sFSC6-gNS2mALG6af8nppg": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Step_1.spec.source.spec.script",
-        "localName": "execution.steps.Step_1.spec.source.spec.script"
-      },
-      "yamlOutputProperties": null
-    },
-    "W_OOwWJjRUOt7lWMm_eEpA": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Expression_Policy_Set.spec.policySets",
-        "localName": "execution.steps.Expression_Policy_Set.spec.policySets"
-      },
-      "yamlOutputProperties": null
-    },
-    "V7p_YOm3RIGRJ-5ZlB-eqw": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Step_3.name",
-        "localName": "execution.steps.Step_3.name"
-      },
-      "yamlOutputProperties": null
-    },
-    "MVjsfeaGSimFtcaaXyTaBA": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Fixed_Policy_Set.spec.policySpec.payload",
-        "localName": "execution.steps.Fixed_Policy_Set.spec.policySpec.payload"
-      },
-      "yamlOutputProperties": null
-    },
-    "2IsECMA2T6W4oxoEJnjB2w": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Expression_Policy_Set",
-        "localName": "step"
-      },
-      "yamlOutputProperties": null
-    },
-    "-A1JI8r-SESxrt3ebaEtQQ": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Expression_Policy_Set.timeout",
-        "localName": "execution.steps.Expression_Policy_Set.timeout"
-      },
-      "yamlOutputProperties": null
-    },
-    "iK1eEUQoRUup3-dRtwP8Fw": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Step_3.timeout",
-        "localName": "execution.steps.Step_3.timeout"
-      },
-      "yamlOutputProperties": null
-    },
-    "w8UDosimR5O6knGQ_SlPEA": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Step_1.spec.onDelegate",
-        "localName": "execution.steps.Step_1.spec.onDelegate"
-      },
-      "yamlOutputProperties": null
-    },
-    "U5tPU9ytRR-EmNjITVjuQQ": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Step_1.timeout",
-        "localName": "execution.steps.Step_1.timeout"
-      },
-      "yamlOutputProperties": null
-    },
-    "xRlIHNzITqixiypv-Q3HbQ": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Step_2.timeout",
-        "localName": "execution.steps.Step_2.timeout"
-      },
-      "yamlOutputProperties": null
-    },
-    "B0-7UesATrWkdZabuImCew": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Step_2.name",
-        "localName": "execution.steps.Step_2.name"
-      },
-      "yamlOutputProperties": null
-    },
-    "fVu89j8LRNyfq9v9KdpRlg": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Step_1.spec.shell",
-        "localName": "execution.steps.Step_1.spec.shell"
-      },
-      "yamlOutputProperties": null
-    },
-    "NAtZzkYzTaWiREM9JBDF0w": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Step_3.spec.policySpec.payload",
-        "localName": "execution.steps.Step_3.spec.policySpec.payload"
-      },
-      "yamlOutputProperties": null
-    },
-    "OZxp5I1tTtqRhwEVJpBfFg": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Fixed_Policy_Set.spec.policySets",
-        "localName": "execution.steps.Fixed_Policy_Set.spec.policySets"
-      },
-      "yamlOutputProperties": null
-    },
-    "uZjxsvD3TZe6v6lrUFzsZA": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Expression_Policy_Set.name",
-        "localName": "execution.steps.Expression_Policy_Set.name"
-      },
-      "yamlOutputProperties": null
-    },
-    "3-qHjTDZTKq1hKcpniBQqA": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Fixed_Policy_Set.timeout",
-        "localName": "execution.steps.Fixed_Policy_Set.timeout"
-      },
-      "yamlOutputProperties": null
-    },
-    "joGeGEPATL6qR1bVV4Lisg": {
-      "yamlProperties": {
-        "fqn": "pipeline.stages.Stage_1.spec.execution.steps.Expression_Policy_Set.spec.policySpec.payload",
-        "localName": "execution.steps.Expression_Policy_Set.spec.policySpec.payload"
-      },
-      "yamlOutputProperties": null
+    "X4qPYFBKSMqx8uzJZXVtKQ": {
+      "yamlProperties": null,
+      "yamlOutputProperties": null,
+      "yamlExtraProperties": {
+        "properties": [
+          {
+            "fqn": "pipeline.stages.s1.type",
+            "localName": "stage.type",
+            "variableName": "type",
+            "aliasFQN": "",
+            "visible": true
+          },
+          {
+            "fqn": "pipeline.stages.s1.identifier",
+            "localName": "stage.identifier",
+            "variableName": "identifier",
+            "aliasFQN": "",
+            "visible": true
+          },
+          {
+            "fqn": "pipeline.stages.s1.when",
+            "localName": "stage.when",
+            "variableName": "when",
+            "aliasFQN": "",
+            "visible": true
+          },
+          {
+            "fqn": "pipeline.stages.s1.variables",
+            "localName": "stage.variables",
+            "variableName": "variables",
+            "aliasFQN": "",
+            "visible": true
+          },
+          {
+            "fqn": "pipeline.stages.s1.tags",
+            "localName": "stage.tags",
+            "variableName": "tags",
+            "aliasFQN": "",
+            "visible": true
+          },
+          {
+            "fqn": "pipeline.stages.s1.startTs",
+            "localName": "stage.startTs",
+            "variableName": "",
+            "aliasFQN": "",
+            "visible": false
+          },
+          {
+            "fqn": "pipeline.stages.s1.endTs",
+            "localName": "stage.endTs",
+            "variableName": "",
+            "aliasFQN": "",
+            "visible": false
+          }
+        ],
+        "outputproperties": []
+      }
     }
   },
   "variablesData": {
     "type": "Wait",
-    "name": "uZjxsvD3TZe6v6lrUFzsZA",
-    "identifier": "Wait",
+    "identifier": "Wait_1",
+    "name": "l76NGSBeTqCJgiOukUyV_w",
+    "description": "QLQnO1OXSGuSFuAfJrkJQg",
+    "__uuid": "KDmoJUwVQnGv4_nyM_xZHw",
     "spec": {
-      "duration": "10s"
-    },
-    "timeout": "-A1JI8r-SESxrt3ebaEtQQ",
-    "__uuid": "2IsECMA2T6W4oxoEJnjB2w"
+      "duration": "cIMH8m9LTxKa2Xdmdmr17Q",
+      "__uuid": "KeKRNndzTgaSZ7KMitxa8g"
+    }
   },
   "initialValues": {
     "type": "Wait",
-    "name": "wait step",
-    "identifier": "Expression_Wait",
+    "name": "Wait_1",
+    "identifier": "Wait_1",
     "spec": {
       "duration": "10s"
     }

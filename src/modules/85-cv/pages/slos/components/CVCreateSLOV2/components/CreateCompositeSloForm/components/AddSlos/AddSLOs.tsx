@@ -87,7 +87,8 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
           serviceLevelObjectivesDetails={formikProps?.values?.serviceLevelObjectivesDetails || []}
         />
       )
-    }
+    },
+    drawerOptions: { size: '60%', canOutsideClickClose: false }
   })
 
   useEffect(() => {
@@ -271,7 +272,8 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
                 formikProps?.values?.serviceLevelObjectivesDetails as ServiceLevelObjectiveDetailsDTO[],
                 accountId,
                 orgIdentifier,
-                projectIdentifier
+                projectIdentifier,
+                isAccountLevel
               )
               formikProps.setFieldValue(SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS, updatedSLOList)
             }}
@@ -280,11 +282,12 @@ export const AddSLOs = (props: AddSLOsProp): JSX.Element => {
           </Button>
         </>
       ),
-      width: '10%',
+      width: '15%',
       Cell: RenderWeightInput
     },
     {
       id: 'deletSLO',
+      width: '5%',
       Cell: RenderDelete,
       disableSortBy: true
     }

@@ -239,139 +239,137 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
         </div>
       )}
       {getMultiTypeFromValue(template?.subscriptionId) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-          <SelectInputSetView
-            name={`${path}.subscriptionId`}
-            tooltipProps={{
-              dataTooltipId: 'azureInfraSubscription'
-            }}
-            disabled={readonly}
-            placeholder={
-              loadingSubscriptions
-                ? /* istanbul ignore next */ getString('loading')
-                : getString('cd.steps.azureInfraStep.subscriptionPlaceholder')
-            }
-            useValue
-            selectItems={subscriptions}
-            label={getString(subscriptionLabel)}
-            multiTypeInputProps={{
-              onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
-                if (value && type === MultiTypeInputType.FIXED) {
-                  if (!isEqual(getValue(value), subscriptionId)) {
-                    setSubscriptionId(getValue(value))
-                  }
-                } else if (type === MultiTypeInputType.EXPRESSION) {
-                  setSubscriptionId(value?.toString())
+        <SelectInputSetView
+          name={`${path}.subscriptionId`}
+          className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}
+          tooltipProps={{
+            dataTooltipId: 'azureInfraSubscription'
+          }}
+          disabled={readonly}
+          placeholder={
+            loadingSubscriptions
+              ? /* istanbul ignore next */ getString('loading')
+              : getString('cd.steps.azureInfraStep.subscriptionPlaceholder')
+          }
+          useValue
+          selectItems={subscriptions}
+          label={getString(subscriptionLabel)}
+          multiTypeInputProps={{
+            onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
+              if (value && type === MultiTypeInputType.FIXED) {
+                if (!isEqual(getValue(value), subscriptionId)) {
+                  setSubscriptionId(getValue(value))
                 }
-                setResourceGroups([])
-              },
-              onFocus: () => {
-                if (getMultiTypeFromValue(connector) !== MultiTypeInputType.RUNTIME) {
-                  refetchSubscriptions({
-                    queryParams
-                  })
-                }
-              },
-              selectProps: {
-                items: subscriptions,
-                allowCreatingNewItems: true,
-                addClearBtn: !(loadingSubscriptions || readonly),
-                noResults: (
-                  <Text padding={'small'}>
-                    {loadingSubscriptions
-                      ? getString('loading')
-                      : defaultTo(
-                          get(subscriptionsError, errorMessage, subscriptionsError?.message),
-                          getString('pipeline.ACR.subscriptionError')
-                        )}
-                  </Text>
-                )
-              },
-              expressions,
-              allowableTypes
-            }}
-            fieldPath="subscriptionId"
-            template={template}
-          />
-        </div>
+              } else if (type === MultiTypeInputType.EXPRESSION) {
+                setSubscriptionId(value?.toString())
+              }
+              setResourceGroups([])
+            },
+            onFocus: () => {
+              if (getMultiTypeFromValue(connector) !== MultiTypeInputType.RUNTIME) {
+                refetchSubscriptions({
+                  queryParams
+                })
+              }
+            },
+            selectProps: {
+              items: subscriptions,
+              allowCreatingNewItems: true,
+              addClearBtn: !(loadingSubscriptions || readonly),
+              noResults: (
+                <Text padding={'small'}>
+                  {loadingSubscriptions
+                    ? getString('loading')
+                    : defaultTo(
+                        get(subscriptionsError, errorMessage, subscriptionsError?.message),
+                        getString('pipeline.ACR.subscriptionError')
+                      )}
+                </Text>
+              )
+            },
+            expressions,
+            allowableTypes
+          }}
+          fieldPath="subscriptionId"
+          template={template}
+        />
       )}
       {getMultiTypeFromValue(template?.resourceGroup) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-          <SelectInputSetView
-            name={`${path}.resourceGroup`}
-            tooltipProps={{
-              dataTooltipId: 'azureInfraResourceGroup'
-            }}
-            disabled={readonly}
-            placeholder={
-              loadingResourceGroups || loadingResourceGroupsV2
-                ? /* istanbul ignore next */ getString('loading')
-                : getString('cd.steps.azureInfraStep.resourceGroupPlaceholder')
-            }
-            useValue
-            selectItems={resourceGroups}
-            label={getString(resourceGroupLabel)}
-            multiTypeInputProps={{
-              onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
-                if (value && type === MultiTypeInputType.FIXED) {
-                  setResourceGroupValue(getValue(value))
-                } else if (type === MultiTypeInputType.EXPRESSION) {
-                  setResourceGroupValue(value?.toString())
-                }
-              },
-              onFocus: () => {
-                if (connector && subscriptionId) {
-                  refetchResourceGroups({
-                    queryParams: {
-                      accountIdentifier: accountId,
-                      projectIdentifier,
-                      orgIdentifier,
-                      connectorRef: connector as string
-                    },
-                    pathParams: {
-                      subscriptionId: subscriptionId
-                    }
-                  })
-                } else if (fetchResourceUsingEnvId()) {
-                  refetchResourceGroupsV2({
-                    queryParams: {
-                      connectorRef: connector as string,
-                      accountIdentifier: accountId,
-                      orgIdentifier,
-                      projectIdentifier,
-                      envId: environmentRef,
-                      infraDefinitionId: infrastructureRef,
-                      subscriptionId: subscriptionId
-                    }
-                  })
-                }
-              },
+        <SelectInputSetView
+          name={`${path}.resourceGroup`}
+          className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}
+          tooltipProps={{
+            dataTooltipId: 'azureInfraResourceGroup'
+          }}
+          disabled={readonly}
+          placeholder={
+            loadingResourceGroups || loadingResourceGroupsV2
+              ? /* istanbul ignore next */ getString('loading')
+              : getString('cd.steps.azureInfraStep.resourceGroupPlaceholder')
+          }
+          useValue
+          selectItems={resourceGroups}
+          label={getString(resourceGroupLabel)}
+          multiTypeInputProps={{
+            onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
+              if (value && type === MultiTypeInputType.FIXED) {
+                setResourceGroupValue(getValue(value))
+              } else if (type === MultiTypeInputType.EXPRESSION) {
+                setResourceGroupValue(value?.toString())
+              }
+            },
+            onFocus: () => {
+              if (connector && subscriptionId) {
+                refetchResourceGroups({
+                  queryParams: {
+                    accountIdentifier: accountId,
+                    projectIdentifier,
+                    orgIdentifier,
+                    connectorRef: connector as string
+                  },
+                  pathParams: {
+                    subscriptionId: subscriptionId
+                  }
+                })
+              } else if (fetchResourceUsingEnvId()) {
+                refetchResourceGroupsV2({
+                  queryParams: {
+                    connectorRef: connector as string,
+                    accountIdentifier: accountId,
+                    orgIdentifier,
+                    projectIdentifier,
+                    envId: environmentRef,
+                    infraDefinitionId: infrastructureRef,
+                    subscriptionId: subscriptionId
+                  }
+                })
+              }
+            },
 
-              selectProps: {
-                items: resourceGroups,
-                allowCreatingNewItems: true,
-                addClearBtn: !(loadingResourceGroups || readonly),
-                noResults: (
-                  <Text padding={'small'}>
-                    {loadingResourceGroups || loadingResourceGroupsV2
-                      ? getString('loading')
-                      : defaultTo(
-                          defaultTo(
-                            get(resourceGroupsError, errorMessage, resourceGroupsError?.message),
-                            get(resourceGroupsErrorV2, errorMessage, resourceGroupsErrorV2?.message)
-                          ),
-                          getString('cd.steps.azureInfraStep.resourceGroupError')
-                        )}
-                  </Text>
-                )
-              },
-              expressions,
-              allowableTypes
-            }}
-            fieldPath="resourceGroup"
-            template={template}
-          />
-        </div>
+            selectProps: {
+              items: resourceGroups,
+              allowCreatingNewItems: true,
+              addClearBtn: !(loadingResourceGroups || readonly),
+              noResults: (
+                <Text padding={'small'}>
+                  {loadingResourceGroups || loadingResourceGroupsV2
+                    ? getString('loading')
+                    : defaultTo(
+                        defaultTo(
+                          get(resourceGroupsError, errorMessage, resourceGroupsError?.message),
+                          get(resourceGroupsErrorV2, errorMessage, resourceGroupsErrorV2?.message)
+                        ),
+                        getString('cd.steps.azureInfraStep.resourceGroupError')
+                      )}
+                </Text>
+              )
+            },
+            expressions,
+            allowableTypes
+          }}
+          fieldPath="resourceGroup"
+          template={template}
+        />
       )}
     </Layout.Vertical>
   )

@@ -682,7 +682,7 @@ exports[`Harness File Store with TAS Manifest tests initial rendering 1`] = `
                       </div>
                       <button
                         aria-label="plusAdd"
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-xlarge StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
+                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-top-small StyledProps--margin-bottom-medium Button--with-current-color Button--without-shadow"
                         data-testid="add-varsPaths"
                         style="padding: 0px;"
                         type="button"

@@ -57,6 +57,7 @@ export interface MultiTypeMapProps {
   isApplyingTemplate?: boolean
   appliedInputSetValue?: Record<string, any>
   hasValuesAsRuntimeInput?: boolean // doesn't support additional rows when fixed key/value expects value
+  keyValuePlaceholders?: Array<string>
 }
 
 function generateNewValue(): { id: string; key: string; value: string } {
@@ -85,6 +86,7 @@ export const MultiTypeMapInputSet = (props: MultiTypeMapProps): React.ReactEleme
     isApplyingTemplate,
     appliedInputSetValue,
     hasValuesAsRuntimeInput,
+    keyValuePlaceholders,
     ...restProps
   } = props
 
@@ -249,6 +251,7 @@ export const MultiTypeMapInputSet = (props: MultiTypeMapProps): React.ReactEleme
                       disabled={disabled || hasValuesAsRuntimeInput}
                       onChange={e => changeValue(index, 'key', (e.currentTarget as HTMLInputElement).value)}
                       data-testid={`key-${name}-[${index}]`}
+                      placeholder={keyValuePlaceholders?.[0]}
                     />
                   </div>
                   <div>
@@ -269,6 +272,7 @@ export const MultiTypeMapInputSet = (props: MultiTypeMapProps): React.ReactEleme
                         allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]}
                         {...valueMultiTextInputProps}
                         style={{ flexShrink: 1 }}
+                        placeholder={keyValuePlaceholders?.[1]}
                       />
                       {!disabled && !hasValuesAsRuntimeInput && (
                         <Button

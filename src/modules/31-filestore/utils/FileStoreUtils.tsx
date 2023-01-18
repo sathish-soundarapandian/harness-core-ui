@@ -198,6 +198,32 @@ export const getParamsByScope = (scope: string, params: ScopedObjectDTOParam): S
   }
 }
 
+export const getParamsByScopeAndPath = (scope: string, path: string, params: ScopedObjectDTOParam): ScopedObjectDTO => {
+  const { accountId, orgIdentifier, projectIdentifier } = params
+  const parsedPath = path.split(':')
+  const pathUrl = decodeURIComponent(parsedPath[parsedPath.length - 1])
+  switch (scope) {
+    case Scope.ACCOUNT:
+      return {
+        accountIdentifier: accountId,
+        path: pathUrl
+      }
+    case Scope.ORG:
+      return {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        path: pathUrl
+      }
+    default:
+      return {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        path: pathUrl
+      }
+  }
+}
+
 export const prepareFileValues = (values: any, currentNode: any, notCurrentNode: any) => {
   const data = new FormData()
 

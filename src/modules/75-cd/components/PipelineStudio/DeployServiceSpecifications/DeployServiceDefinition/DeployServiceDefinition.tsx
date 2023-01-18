@@ -54,7 +54,8 @@ function DeployServiceDefinition(): React.ReactElement {
     isServiceEntityModalView,
     isServiceCreateModalView,
     selectedDeploymentType: defaultDeploymentType,
-    gitOpsEnabled: defaultGitOpsValue
+    gitOpsEnabled: defaultGitOpsValue,
+    isDeploymentTypeDisabled
   } = useServiceContext()
 
   const { index: stageIndex } = getStageIndexFromPipeline(pipeline, selectedStageId || '')
@@ -97,7 +98,7 @@ function DeployServiceDefinition(): React.ReactElement {
   const selectedDeploymentTemplateRef = useRef<TemplateSummaryResponse | undefined>()
   const fromTemplateSelectorRef = useRef(false)
 
-  const disabledState = isServiceEntityModalView ? true : isReadonly
+  const disabledState = isDeploymentTypeDisabled || isReadonly
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debounceUpdateStage = useCallback(

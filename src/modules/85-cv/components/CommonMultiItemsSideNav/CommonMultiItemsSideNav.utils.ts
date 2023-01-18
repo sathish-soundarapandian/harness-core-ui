@@ -103,15 +103,14 @@ export const getFilteredGroupedCreatedMetric = (
 
 export function getUpdatedMetric(
   oldMetrics: string[],
-  removedItem: string,
-  index: number
+  removedItem: string
 ): {
   updatedMetric: string
   filteredOldMetrics: string[]
-  updateIndex: number
+  updateIndex?: number
 } {
   const filteredOldMetrics = oldMetrics.filter(item => item !== removedItem)
-  const updateIndex = index === 0 ? 0 : index - 1
-  const updatedMetric = filteredOldMetrics[updateIndex]
-  return { updatedMetric, filteredOldMetrics, updateIndex }
+  const deleteIndex = oldMetrics.indexOf(removedItem) <= 0 ? 0 : oldMetrics.indexOf(removedItem) - 1
+  const updatedMetric = filteredOldMetrics[deleteIndex]
+  return { updatedMetric, filteredOldMetrics, updateIndex: deleteIndex }
 }

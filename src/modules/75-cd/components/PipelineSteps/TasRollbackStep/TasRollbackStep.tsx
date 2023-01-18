@@ -76,8 +76,8 @@ export class TASRollbackStep extends PipelineStep<StepElementConfig> {
       return (
         <VariablesListTable
           className={pipelineVariableCss.variablePaddingL3}
-          data={variablesData}
-          originalData={initialValues}
+          data={variablesData.spec}
+          originalData={initialValues.spec}
           metadataMap={metadataMap}
         />
       )

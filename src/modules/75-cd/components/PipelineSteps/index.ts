@@ -36,6 +36,10 @@ import { TerraformRollback } from './TerraformRollback/TerraformRollback'
 import { TerraformDestroy } from './TerraformDestroy/TerraformDestroy'
 import { TerraformPlan } from './TerraformPlan/TerraformPlan'
 import { TerraformApply } from './TerraformApply/TerraformApply'
+import { TerragruntRollback } from './TerragruntRollback/TerragruntRollback'
+import { TerragruntPlan } from './TerragruntPlan/TerragruntPlan'
+import { TerragruntDestroy } from './TerragruntDestroy/TerragruntDestroy'
+import { TerragruntApply } from './TerragruntApply/TerragruntApply'
 import { InfraProvisioning } from './InfraProvisioning/InfraProvisioning'
 import { GcpInfrastructureSpec } from './GcpInfrastructureSpec/GcpInfrastructureSpec'
 import { PDCInfrastructureSpec } from './PDCInfrastructureSpec/PDCInfrastructureSpec'
@@ -103,6 +107,12 @@ import { TasBGAppSetupStep } from './TasBGAppSetup/TasBGAppSetup'
 import { TasCanaryAppSetupStep } from './TasCanaryAppSetup/TasCanaryAppSetup'
 import { AsgCanaryDeleteStep } from './AsgCanaryDeleteStep/AsgCanaryDeleteStep'
 import { AsgCanaryDeployStep } from './AsgCanaryDeploy/AsgCanaryDeployStep'
+import { AsgRollingRollbackStep } from './AsgRollingRollbackStep/AsgRollingRollbackStep'
+import { AsgRollingDeploy } from './AsgRollingDeployStep/AsgRollingDeployStep'
+import { ContainerStep } from './ContainerStep/ContainerStep'
+import { TASRollingRollbackStep } from './TasRollingRollbackStep/TasRollingRollbackStep'
+import { TasRollingDeploymentStep } from './TasRollingDeploymentStep/TasRollingDeploymentStep'
+import { K8sDryRunStep } from './K8sDryRunStep/K8sDryRunStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -116,7 +126,9 @@ factory.registerStep(new K8sScaleStep())
 factory.registerStep(new K8sCanaryDeleteStep())
 factory.registerStep(new K8sApplyStep())
 factory.registerStep(new K8sDeleteStep())
+factory.registerStep(new K8sDryRunStep())
 factory.registerStep(new ShellScriptStep())
+factory.registerStep(new ContainerStep())
 factory.registerStep(new KubernetesInfraSpec())
 factory.registerStep(new GcpInfrastructureSpec())
 factory.registerStep(new PDCInfrastructureSpec())
@@ -143,6 +155,10 @@ factory.registerStep(new TerraformRollback())
 factory.registerStep(new TerraformDestroy())
 factory.registerStep(new TerraformApply())
 factory.registerStep(new TerraformPlan())
+factory.registerStep(new TerragruntRollback())
+factory.registerStep(new TerragruntDestroy())
+factory.registerStep(new TerragruntApply())
+factory.registerStep(new TerragruntPlan())
 factory.registerStep(new InfraProvisioning())
 factory.registerStep(new PolicyStep())
 factory.registerStep(new ServerlessLambdaDeployStep())
@@ -198,5 +214,9 @@ factory.registerStep(new AppResizeStep())
 factory.registerStep(new TASBasicAppSetupStep())
 factory.registerStep(new TasBGAppSetupStep())
 factory.registerStep(new TasCanaryAppSetupStep())
+factory.registerStep(new TASRollingRollbackStep())
+factory.registerStep(new TasRollingDeploymentStep())
 factory.registerStep(new AsgCanaryDeleteStep())
 factory.registerStep(new AsgCanaryDeployStep())
+factory.registerStep(new AsgRollingRollbackStep())
+factory.registerStep(new AsgRollingDeploy())

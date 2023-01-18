@@ -1,0 +1,46 @@
+[
+  {
+    "project": {
+      "orgIdentifier": "default",
+      "identifier": "TestCiproject",
+      "name": "TestCiproject",
+      "color": "#0063F7",
+      "modules": ["CI", "CD"],
+      "description": "Test description",
+      "tags": { "tag1": "value" }
+    }
+  },
+  {
+    "project": {
+      "orgIdentifier": "default",
+      "identifier": "test11",
+      "name": "test11",
+      "color": "#0063F7",
+      "modules": ["CD"],
+      "description": "",
+      "tags": {}
+    }
+  },
+  {
+    "project": {
+      "orgIdentifier": "default",
+      "identifier": "Project_1",
+      "name": "Project 1",
+      "color": "#0063F7",
+      "modules": [],
+      "description": "",
+      "tags": {}
+    }
+  },
+  {
+    "project": {
+      "orgIdentifier": "testOrg",
+      "identifier": "fdfder32432",
+      "name": "fdfder32432",
+      "color": "#0063F7",
+      "modules": ["CD", "CF", "CE", "CI", "CV"],
+      "description": "",
+      "tags": {}
+    }
+  }
+]

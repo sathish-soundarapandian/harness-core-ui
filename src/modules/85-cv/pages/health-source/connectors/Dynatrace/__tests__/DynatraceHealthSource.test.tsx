@@ -164,8 +164,7 @@ describe('Validate DynatraceHealthSource', () => {
 
       expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
     })
-    test('should not render metric thresholds, if feature flag is turned off', async () => {
-      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(false)
+    test('should not render metric thresholds, if it is a template', async () => {
       render(
         <TestWrapper>
           <DynatraceHealthSource
@@ -173,6 +172,7 @@ describe('Validate DynatraceHealthSource', () => {
             onSubmit={jest.fn()}
             onPrevious={jest.fn()}
             connectorIdentifier="dynatrace"
+            isTemplate
           />
         </TestWrapper>
       )

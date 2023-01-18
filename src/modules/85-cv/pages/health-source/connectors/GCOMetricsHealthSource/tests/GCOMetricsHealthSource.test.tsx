@@ -27,11 +27,11 @@ import { FieldNames } from '../GCOMetricsHealthSource.constants'
 import type { GCOMetricsHealthSourceProps } from '../GCOMetricsHealthSource.type'
 import { riskCategoryMock } from '../../__tests__/HealthSources.mock'
 
-function WrapperComponent({ data, onSubmit }: GCOMetricsHealthSourceProps) {
+function WrapperComponent({ data, onSubmit, isTemplate = false }: GCOMetricsHealthSourceProps) {
   return (
     <TestWrapper>
       <SetupSourceTabs data={data} tabTitles={['MapMetrics']} determineMaxTab={() => 0}>
-        <GCOMetricsHealthSource data={data} onSubmit={onSubmit} />
+        <GCOMetricsHealthSource data={data} isTemplate={isTemplate} onSubmit={onSubmit} />
       </SetupSourceTabs>
     </TestWrapper>
   )
@@ -384,9 +384,8 @@ describe('Test GCOMetricsHealthSource', () => {
       expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (2)')).toBeInTheDocument()
     })
 
-    test('should not render metric thresholds when feature flag is turned off', () => {
-      jest.spyOn(useFeatureFlagMock, 'useFeatureFlag').mockReturnValue(false)
-      render(<WrapperComponent data={sourceDataUpdated} onSubmit={jest.fn()} />)
+    test('should not render metric thresholds if it is a template', () => {
+      render(<WrapperComponent data={sourceDataUpdated} isTemplate onSubmit={jest.fn()} />)
 
       expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
       expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()

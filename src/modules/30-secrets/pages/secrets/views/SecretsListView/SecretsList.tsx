@@ -19,9 +19,10 @@ import {
   TagsPopover,
   useConfirmationDialog,
   useToaster,
-  TableV2
+  TableV2,
+  ButtonVariation
 } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
 import { SecretResponseWrapper, useDeleteSecretV2, useGetSettingValue } from 'services/cd-ng'
@@ -69,12 +70,12 @@ const RenderColumnSecret: Renderer<CellProps<SecretResponseWrapper>> = ({ row })
       ) : null}
       <Layout.Vertical>
         <Layout.Horizontal spacing="small" width={230}>
-          <Text color={Color.BLACK} lineClamp={1} className={css.secretName}>
+          <Text color={Color.BLACK} lineClamp={1} className={css.secretName} font={{ variation: FontVariation.BODY2 }}>
             {data.name}
           </Text>
           {data.tags && Object.keys(data.tags).length ? <TagsPopover tags={data.tags} /> : null}
         </Layout.Horizontal>
-        <Text color={Color.GREY_600} font={{ size: 'small' }} width={230} lineClamp={1}>
+        <Text color={Color.GREY_600} font={{ variation: FontVariation.SMALL }} width={230} lineClamp={1}>
           {`${getString('common.ID')}: ${data.identifier}`}
         </Text>
       </Layout.Vertical>
@@ -281,8 +282,9 @@ export const SecretMenuItem: React.FC<SecretMenuItemProps> = ({
         position={Position.RIGHT_TOP}
       >
         <Button
-          minimal
+          variation={ButtonVariation.ICON}
           icon="Options"
+          aria-label="secret menu actions"
           onClick={e => {
             e.stopPropagation()
             setMenuOpen(true)

@@ -2,26 +2,6 @@
 
 exports[`<HarnessApprovalTab /> tests Non-Waiting Status form is not shown 1`] = `
 <div>
-  <div
-    class="info"
-    data-type="harness"
-  >
-    <div
-      class="infoHeader"
-    >
-      <div
-        class="statusMsg"
-      >
-        pipeline.approvalStep.execution.statusMsg
-      </div>
-    </div>
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--intent-warning StyledProps--font-align-left"
-      style="word-break: break-word; white-space: pre-wrap;"
-    >
-      Please review the following information and approve the pipeline progression
-    </p>
-  </div>
   <table
     class="detailsTable"
   >

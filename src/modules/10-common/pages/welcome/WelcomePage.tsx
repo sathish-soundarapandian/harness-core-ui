@@ -21,6 +21,7 @@ import ribbon_ff from './images/ribbon_ff.svg'
 import ribbon_ci from './images/ribbon_ci.svg'
 import ribbon_ccm from './images/ribbon_ccm.svg'
 import ribbon_cd from './images/ribbon_cd.svg'
+import ribbon_chaos from './images/ribbon_chaos.svg'
 import css from './WelcomePage.module.scss'
 
 interface ModuleProps {
@@ -37,7 +38,7 @@ const WelcomePage: React.FC = () => {
   const { getString } = useStrings()
   const [ribbonImg, setRibbonImg] = useState<string>(ribbon)
 
-  const { CVNG_ENABLED, CING_ENABLED, CFNG_ENABLED, CENG_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CING_ENABLED, CFNG_ENABLED, CENG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
   const CDNG_OPTIONS: ModuleProps = {
     enabled: true, // Continous delivery is enabled in CG
     titleIcon: 'cd-with-text',
@@ -78,6 +79,14 @@ const WelcomePage: React.FC = () => {
     description: getString('common.purpose.cf.descriptionOnly')
   }
 
+  const CHAOS_OPTIONS: ModuleProps = {
+    enabled: !!CHAOS_ENABLED,
+    titleIcon: 'chaos-with-text',
+    bodyIcon: 'chaos-sketch',
+    module: 'chaos',
+    description: getString('common.purpose.chaos.description')
+  }
+
   function getModuleProps(_module: Module): ModuleProps | undefined {
     switch (_module) {
       case 'cd':
@@ -90,12 +99,14 @@ const WelcomePage: React.FC = () => {
         return { ...CFNG_OPTIONS }
       case 'ci':
         return { ...CING_OPTIONS }
+      case 'chaos':
+        return { ...CHAOS_OPTIONS }
     }
   }
 
   const getOptions = (): ModuleProps[] => {
     const options: ModuleProps[] = []
-    ;[CDNG_OPTIONS, CING_OPTIONS, CVNG_OPTIONS, CFNG_OPTIONS, CENG_OPTIONS].forEach(option => {
+    ;[CDNG_OPTIONS, CING_OPTIONS, CVNG_OPTIONS, CFNG_OPTIONS, CENG_OPTIONS, CHAOS_OPTIONS].forEach(option => {
       if (option.enabled) {
         const { module: _module } = option
         const moduleProps = getModuleProps(_module)
@@ -132,6 +143,7 @@ const WelcomePage: React.FC = () => {
     ce: ribbon_ccm,
     cf: ribbon_ff,
     ci: ribbon_ci,
+    chaos: ribbon_chaos,
     default: ribbon
   }
 

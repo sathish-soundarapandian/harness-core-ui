@@ -73,3 +73,22 @@
 .placeholderClass {
   flex-grow: 1;
 }
+
+.noDataCardContainerConnector {
+  height: 100% !important;
+}
+.noDataCardContainerContent {
+  margin-top: 0px !important;
+}
+
+.environment-group-label {
+  padding-bottom: var(--spacing-small);
+  [data-testid='environmentGroupTooltip'] {
+    margin-bottom: 5px;
+  }
+  :global {
+    .TextInput--main {
+      margin-bottom: 0px;
+    }
+  }
+}

@@ -24,7 +24,7 @@ import pipelines from './mocks/pipelinesWithRecentExecutions.json'
 
 jest.useFakeTimers()
 
-const showImportResourceModal = jest.fn()
+const showMigrateResourceModal = jest.fn()
 const openRunPipelineModal = jest.fn()
 const useGetPipelineListMutate = jest.fn().mockResolvedValue(pipelines)
 const mockDeleteFunction = jest.fn()
@@ -83,8 +83,8 @@ jest.mock('services/cd-ng', () => ({
   useGetOrganizationList: jest.fn().mockReturnValue({ data: null, loading: false }),
   useGetProjectAggregateDTOList: jest.fn().mockReturnValue({ data: null, loading: false }),
   useGetServiceDefinitionTypes: jest.fn(() => ({ loading: false, data: deploymentTypes, refetch: jest.fn() })),
-  useGetServiceListForProject: jest.fn(() => ({ loading: false, data: services, refetch: jest.fn() })),
-  useGetEnvironmentListForProject: jest.fn(() => ({ loading: false, data: environments, refetch: jest.fn() })),
+  useGetServiceList: jest.fn(() => ({ loading: false, data: services, refetch: jest.fn() })),
+  useGetEnvironmentListV2: jest.fn(() => ({ loading: false, data: environments, refetch: jest.fn() })),
   getListOfBranchesByGitConfigPromise: jest.fn().mockReturnValue({ loading: false, data: [], refetch: jest.fn() }),
   useGetListOfBranchesWithStatus: jest.fn(() => ({
     data: branchStatusMock,
@@ -105,8 +105,8 @@ jest.mock('services/cd-ng-rq', () => ({
   })
 }))
 
-jest.mock('@pipeline/components/ImportResource/useImportResource', () => {
-  return () => ({ showImportResourceModal })
+jest.mock('@pipeline/components/MigrateResource/useMigrateResource', () => {
+  return () => ({ showMigrateResourceModal })
 })
 
 jest.mock('@pipeline/components/RunPipelineModal/useRunPipelineModal', () => ({
@@ -215,7 +215,7 @@ describe('CD Pipeline List Page', () => {
       })
     )
     userEvent.click(await screen.findByText('common.importFromGit'))
-    expect(showImportResourceModal).toHaveBeenCalled()
+    expect(showMigrateResourceModal).toHaveBeenCalled()
   })
 
   test('should be able to run pipeline from menu', async () => {

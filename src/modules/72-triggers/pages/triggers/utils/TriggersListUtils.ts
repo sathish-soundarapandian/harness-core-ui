@@ -9,8 +9,8 @@ import type { IconName } from '@harness/uicore'
 // temporary mock data
 import { parse } from 'yaml'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
-import type { AddDrawerMapInterface } from '@common/components/AddDrawer/AddDrawer'
-import type { StringKeys } from 'framework/strings'
+import type { AddDrawerMapInterface, CategoryInterface } from '@common/components/AddDrawer/AddDrawer'
+import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import {
   manifestTypeIcons,
   ManifestDataType,
@@ -21,6 +21,7 @@ import {
   ArtifactTitleIdByType,
   ENABLED_ARTIFACT_TYPES
 } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+import type { TriggerCatalogItem } from 'services/pipeline-ng'
 import { TriggerTypes, AWS_CODECOMMIT, AwsCodeCommit } from './TriggersWizardPageUtils'
 
 export const GitSourceProviders: Record<
@@ -35,7 +36,7 @@ export const GitSourceProviders: Record<
   CUSTOM: { value: 'Custom', iconName: 'build' }
 }
 
-const TriggerTypeIcons = {
+const TriggerTypeIcons: Record<'SCHEDULE' | 'NEW_ARTIFACT', IconName> = {
   SCHEDULE: 'trigger-schedule',
   NEW_ARTIFACT: 'new-artifact'
 }
@@ -79,7 +80,11 @@ export const getTriggerIcon = ({
   return 'yaml-builder-trigger'
 }
 
-const triggerDrawerMap = (getString: (key: StringKeys) => string, isNewService: boolean): AddDrawerMapInterface => ({
+const triggerDrawerMap = (
+  getString: (key: StringKeys) => string,
+  isNewService: boolean,
+  allowV2Artifacts: boolean | undefined
+): AddDrawerMapInterface => ({
   drawerLabel: getString('common.triggersLabel'),
   showAllLabel: getString('triggers.showAllTriggers'),
   categories: [
@@ -180,13 +185,31 @@ const triggerDrawerMap = (getString: (key: StringKeys) => string, isNewService: 
           iconName: ArtifactIconByType.GithubPackageRegistry as IconName,
           disabled: isNewService
         },
-        ...(isNewService
+        ...(allowV2Artifacts
           ? [
+              {
+                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Jenkins]),
+                value: ENABLED_ARTIFACT_TYPES.Jenkins,
+                iconName: ArtifactIconByType.Jenkins as IconName,
+                disabled: isNewService
+              },
+              {
+                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AzureArtifacts]),
+                value: ENABLED_ARTIFACT_TYPES.AzureArtifacts,
+                iconName: ArtifactIconByType.AzureArtifacts as IconName,
+                disabled: isNewService
+              },
               {
                 itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry]),
                 value: ENABLED_ARTIFACT_TYPES.Nexus3Registry,
                 iconName: ArtifactIconByType.Nexus3Registry as IconName,
-                disabled: true
+                disabled: isNewService
+              },
+              {
+                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonMachineImage]),
+                value: ENABLED_ARTIFACT_TYPES.AmazonMachineImage,
+                iconName: ArtifactIconByType.AmazonMachineImage as IconName,
+                disabled: isNewService
               }
             ]
           : [])
@@ -244,8 +267,9 @@ export const getSourceRepoOptions = (getString: (str: StringKeys) => string): { 
 
 export const getCategoryItems = (
   getString: (key: StringKeys) => string,
-  isNewService: boolean
-): AddDrawerMapInterface => triggerDrawerMap(getString, isNewService)
+  isNewService: boolean,
+  allowV2Artifacts: boolean | undefined
+): AddDrawerMapInterface => triggerDrawerMap(getString, isNewService, allowV2Artifacts)
 
 export interface ItemInterface {
   itemLabel: string
@@ -297,3 +321,78 @@ export const errorStatusList = [
   TriggerStatus.TIMEOUT,
   TriggerStatus.UNAVAILABLE
 ]
+
+const TriggerCategoryToLabelMap: Record<Required<TriggerCatalogItem>['category'], StringKeys> = {
+  Webhook: 'execution.triggerType.WEBHOOK',
+  Artifact: 'pipeline.artifactTriggerConfigPanel.artifact',
+  Manifest: 'manifestsText',
+  Scheduled: 'triggers.scheduledLabel'
+}
+
+type TriggerCatalogType = Required<TriggerCatalogItem>['triggerCatalogType'][number]
+
+const TriggerCatalogTypeToLabelMap: Record<TriggerCatalogType, StringKeys> = {
+  Github: 'common.repo_provider.githubLabel',
+  Gitlab: 'common.repo_provider.gitlabLabel',
+  Bitbucket: 'common.repo_provider.bitbucketLabel',
+  AwsCodeCommit: 'common.repo_provider.awscodecommit',
+  Custom: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.CustomArtifact],
+  Gcr: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Gcr],
+  Ecr: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Ecr],
+  DockerRegistry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.DockerRegistry],
+  ArtifactoryRegistry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry],
+  Acr: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Acr],
+  AmazonS3: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.AmazonS3],
+  GoogleArtifactRegistry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry],
+  CustomArtifact: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.CustomArtifact],
+  GithubPackageRegistry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GithubPackageRegistry],
+  Nexus2Registry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus2Registry],
+  Nexus3Registry: ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry],
+  HelmChart: manifestTypeLabels.HelmChart,
+  Cron: 'triggers.cronLabel'
+}
+
+const TriggerCatalogTypeToIconMap: Record<TriggerCatalogType, IconName> = {
+  Github: GitSourceProviders.GITHUB.iconName,
+  Gitlab: GitSourceProviders.GITLAB.iconName,
+  Bitbucket: GitSourceProviders.BITBUCKET.iconName,
+  AwsCodeCommit: GitSourceProviders.AWS_CODECOMMIT.iconName,
+  Custom: GitSourceProviders.CUSTOM.iconName,
+  Gcr: ArtifactIconByType.Gcr,
+  Ecr: ArtifactIconByType.Ecr,
+  DockerRegistry: ArtifactIconByType.DockerRegistry,
+  ArtifactoryRegistry: ArtifactIconByType.ArtifactoryRegistry,
+  Acr: ArtifactIconByType.Acr,
+  AmazonS3: ArtifactIconByType.AmazonS3,
+  GoogleArtifactRegistry: ArtifactIconByType.GoogleArtifactRegistry,
+  GithubPackageRegistry: ArtifactIconByType.GithubPackageRegistry,
+  CustomArtifact: ArtifactIconByType.CustomArtifact,
+  Nexus2Registry: ArtifactIconByType.Nexus2Registry,
+  Nexus3Registry: ArtifactIconByType.Nexus3Registry,
+  HelmChart: manifestTypeIcons.HelmChart,
+  Cron: TriggerTypeIcons.SCHEDULE
+}
+
+export const getTriggerCategoryDrawerMapFromTriggerCatalogItem = (
+  getString: UseStringsReturn['getString'],
+  triggerCatalogItems: TriggerCatalogItem[]
+): AddDrawerMapInterface => {
+  const categories: CategoryInterface[] = triggerCatalogItems.map(catalog => {
+    const { category, triggerCatalogType } = catalog
+    return {
+      categoryLabel: getString(TriggerCategoryToLabelMap[category]),
+      categoryValue: category,
+      items: triggerCatalogType.map(item => ({
+        itemLabel: getString(TriggerCatalogTypeToLabelMap[item]),
+        value: item,
+        iconName: TriggerCatalogTypeToIconMap[item]
+      }))
+    }
+  })
+
+  return {
+    drawerLabel: getString('common.triggersLabel'),
+    showAllLabel: getString('triggers.showAllTriggers'),
+    categories
+  }
+}

@@ -556,7 +556,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         }}
         noData={{
           when: () => !isSLOFilterApplied(getString, filterState) && !riskCountResponse?.data?.totalCount,
-          messageTitle: getString('cv.slos.noData'),
+          messageTitle: getString('common.sloNoData'),
           message: getString('cv.slos.noSLOsStateMessage'),
           button: getAddSLOButton(),
           image: slosEmptyState
@@ -582,6 +582,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
                   width={250}
                   throttle={500}
                   onChange={setSearch}
+                  autoFocus={false}
                   placeholder={getString('cv.slos.searchSLO')}
                 />
               </Container>

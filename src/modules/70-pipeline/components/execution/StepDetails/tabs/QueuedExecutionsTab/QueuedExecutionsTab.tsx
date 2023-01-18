@@ -25,6 +25,7 @@ import {
 } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import stepDetailsTabCss from '../StepDetailsTab/StepDetailsTab.module.scss'
 import css from './QueuedExecutionsTab.module.scss'
 
@@ -105,7 +106,7 @@ const renderData = (
                     to={route}
                     onClick={e => {
                       e.preventDefault()
-                      const baseUrl = window.location.href.split('#')[0]
+                      const baseUrl = windowLocationUrlPartBeforeHash()
                       window.open(`${baseUrl}#${route}`)
                     }}
                   >

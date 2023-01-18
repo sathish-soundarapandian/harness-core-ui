@@ -13,7 +13,7 @@ import {
   PipelineContextInterface
 } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { CacheResponseMetadata } from 'services/pipeline-ng'
-import PipelineCachedCopy from '../PipelineCachedCopy'
+import { PipelineCachedCopy, PipelineCachedCopyHandle } from '../PipelineCachedCopy'
 import { getDummyPipelineCanvasContextValue } from '../../__tests__/PipelineCanvasTestHelper'
 
 jest.mock('services/pipeline-ng', () => ({
@@ -62,16 +62,12 @@ describe('Test Pipeline gitx cache Copy', () => {
       </TestWrapper>
     )
 
-    const cacheCopyText = screen.getByText('pipeline.pipelineCachedCopy.cachedCopyText')
-    expect(cacheCopyText).toBeTruthy()
-    const refreshIcon = container.querySelector(`[data-icon="command-rollback"]`)
     const validcache = container.querySelector(`[data-icon="success-tick"]`)
-    expect(refreshIcon).toBeDefined()
     expect(validcache).toBeDefined()
   })
 
   test('should show last updated data on hover', async () => {
-    render(
+    const { container } = render(
       <TestWrapper defaultFeatureFlagValues={{ PIE_NG_GITX_CACHING: true }}>
         <PipelineContext.Provider value={cacheResponseContextValue}>
           <PipelineCachedCopy {...commonProps} />
@@ -79,18 +75,20 @@ describe('Test Pipeline gitx cache Copy', () => {
       </TestWrapper>
     )
 
-    const cacheCopyText = screen.getByText('pipeline.pipelineCachedCopy.cachedCopyText')
-    expect(cacheCopyText).toBeTruthy()
-    fireEvent.mouseOver(cacheCopyText)
-    expect(await screen.findByText('common.lastUpdatedAt')).toBeInTheDocument()
+    const validcache = container.querySelector(`[data-icon="success-tick"]`)!
+    fireEvent.mouseOver(validcache)
+    expect(await screen.findByText('pipeline.pipelineCachedCopy.cachedCopyText')).toBeInTheDocument()
   })
 
   test('reload the data from cache', async () => {
     const reloadFromCache = jest.fn()
-    const { container } = render(
+    const ref = React.createRef<PipelineCachedCopyHandle>()
+
+    render(
       <TestWrapper defaultFeatureFlagValues={{ PIE_NG_GITX_CACHING: true }}>
         <PipelineContext.Provider value={cacheResponseContextValue}>
           <PipelineCachedCopy
+            ref={ref}
             reloadContent="pipeline"
             reloadFromCache={reloadFromCache}
             cacheResponse={cacheResponseContextValue.state.cacheResponse as CacheResponseMetadata}
@@ -99,7 +97,8 @@ describe('Test Pipeline gitx cache Copy', () => {
       </TestWrapper>
     )
 
-    fireEvent.click(container.querySelector(`[data-icon="command-rollback"]`) as HTMLElement)
+    ref.current?.showConfirmationModal()
+
     await waitFor(() => screen.getByText('pipeline.pipelineCachedCopy.reloadPipeline'))
     const confirmReload = screen.getByRole('button', {
       name: /confirm/i

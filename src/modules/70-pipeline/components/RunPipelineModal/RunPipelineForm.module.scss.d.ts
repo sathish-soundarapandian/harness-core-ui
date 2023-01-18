@@ -33,6 +33,7 @@ declare const styles: {
   readonly multiSelectDropDownSelected: string
   readonly multiSelectDropDownWithBorder: string
   readonly noDisplay: string
+  readonly noInputSetSelectionRunPipeline: string
   readonly noPipelineInputSetForm: string
   readonly noRuntimeInput: string
   readonly optionBtns: string
@@ -55,7 +56,6 @@ declare const styles: {
   readonly stageSelectionItem: string
   readonly stageWarning: string
   readonly stagesDropdown: string
-  readonly templateErrorModalHeader: string
   readonly templateErrorView: string
   readonly underlineText: string
   readonly valueProviderRadio: string

@@ -37,6 +37,7 @@ import { Category, StageActions } from '@common/constants/TrackingConstants'
 import { CollapsableList } from '../CollapsableList/CollapsableList'
 import type { ScopeAndIdentifier } from '../MultiSelectEntityReference/MultiSelectEntityReference'
 import { EntityReferenceResponse, getScopeFromDTO, ScopedObjectDTO, TAB_ID } from './EntityReference.types'
+import { getCountOfSelectedRecordsInGivenScope } from './Utils'
 import css from './EntityReference.module.scss'
 
 export * from './EntityReference.types'
@@ -342,11 +343,12 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
 
   const renderTab = (
     show: boolean,
-    id: string,
+    id: TAB_ID,
     title: StringKeys,
     icon?: IconName,
     tabDesc = ''
   ): React.ReactElement | null => {
+    const selectedInGivenScope = getCountOfSelectedRecordsInGivenScope(tabIdToScopeMap[id], selectedRecords)
     return show ? (
       <Tab
         id={id}
@@ -364,10 +366,27 @@ export function EntityReference<T extends ScopedObjectDTO>(props: EntityReferenc
               <Text
                 lineClamp={1}
                 font={{ variation: FontVariation.FORM_LABEL, weight: 'light' }}
+                margin={{ right: 'small' }}
                 padding={{ left: 'xsmall' }}
                 className={css.tabValue}
               >
                 {`[${tabDesc}]`}
+              </Text>
+            )}
+            {selectedInGivenScope > 0 && (
+              <Text
+                itemType="span"
+                icon={'main-tick'}
+                iconProps={{
+                  color: Color.WHITE,
+                  size: 10
+                }}
+                className={css.selectedCount}
+                background={Color.PRIMARY_7}
+                color={Color.WHITE}
+                padding={{ right: 'small', left: 'small' }}
+              >
+                {selectedInGivenScope}
               </Text>
             )}
           </Layout.Horizontal>

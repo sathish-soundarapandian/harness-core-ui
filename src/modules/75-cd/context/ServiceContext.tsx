@@ -20,6 +20,8 @@ export interface ServiceContextValues {
   serviceCacheKey: string
   selectedDeploymentType: ServiceDeploymentType
   gitOpsEnabled: boolean
+  isDeploymentTypeDisabled: boolean
+  setIsDeploymentTypeDisabled?(status: boolean): void
 }
 
 export const ServiceContext = React.createContext<ServiceContextValues>({
@@ -31,7 +33,8 @@ export const ServiceContext = React.createContext<ServiceContextValues>({
   isServiceCreateModalView: false,
   serviceCacheKey: '',
   selectedDeploymentType: '' as ServiceDeploymentType,
-  gitOpsEnabled: false
+  gitOpsEnabled: false,
+  isDeploymentTypeDisabled: false
 })
 
 export interface ServiceContextProviderProps extends ServiceContextValues {

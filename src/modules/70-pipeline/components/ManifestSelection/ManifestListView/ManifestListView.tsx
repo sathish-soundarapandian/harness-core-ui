@@ -48,6 +48,8 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ManifestActions } from '@common/constants/TrackingConstants'
+import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
+import { getScope } from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
 import { ManifestWizard } from '../ManifestWizard/ManifestWizard'
 import { getStatus, getConnectorNameFromValue } from '../../PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useVariablesExpression } from '../../PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -157,6 +159,10 @@ function ManifestListView({
     setSelectedManifest(getManifestTypeToSelect(availableManifestTypes, preSelectedManifestType))
     showConnectorModal()
   }
+
+  const FileStoreModal = useFileStoreModal({
+    isReadonly: true
+  })
 
   const editManifest = (manifestType: ManifestTypes, store: ManifestStores, index: number): void => {
     setSelectedManifest(manifestType)
@@ -574,7 +580,35 @@ function ManifestListView({
 
                       {!isEmpty(manifestLocation) && (
                         <span>
-                          <Text lineClamp={1} width={200}>
+                          <Text
+                            lineClamp={1}
+                            width={200}
+                            alwaysShowTooltip
+                            tooltip={
+                              typeof manifestLocation === 'string' ? (
+                                manifestLocation
+                              ) : manifest?.spec?.store.type === ManifestStoreMap.Harness ? (
+                                <Container className={css.fsLinkWrapper} padding="small">
+                                  {manifestLocation.map((manifestPath: string, i: number) => {
+                                    const { path, scope } = getScope(manifestPath)
+                                    return (
+                                      <div
+                                        className={css.pathLink}
+                                        key={`${manifestPath}${i}`}
+                                        onClick={() => FileStoreModal.openFileStoreModal(path, scope)}
+                                      >
+                                        <Text margin={{ top: 'xsmall', bottom: 'xsmall' }} color={Color.BLACK}>
+                                          {manifestPath}
+                                        </Text>
+                                      </div>
+                                    )
+                                  })}
+                                </Container>
+                              ) : (
+                                manifestLocation.join(', ')
+                              )
+                            }
+                          >
                             {typeof manifestLocation === 'string' ? manifestLocation : manifestLocation.join(', ')}
                           </Text>
                         </span>

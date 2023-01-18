@@ -98,7 +98,19 @@ jest.mock('services/pipeline-ng', () => ({
     loading: false,
     cancel: jest.fn()
   })),
-  useGetInputsetYaml: jest.fn(() => ({ data: null }))
+  useGetInputsetYaml: jest.fn(() => ({ data: null })),
+  useDebugPipelineExecuteWithInputSetYaml: jest.fn(() => ({
+    loading: false,
+    refetch: jest.fn(),
+    mutate: jest.fn().mockResolvedValue({
+      data: {
+        correlationId: '',
+        status: 'SUCCESS',
+        metaData: null,
+        data: {}
+      }
+    })
+  }))
 }))
 
 const getListOfBranchesWithStatus = jest.fn(() => Promise.resolve(branchStatusMock))
@@ -108,10 +120,8 @@ jest.mock('services/cd-ng', () => ({
   useGetServiceDefinitionTypes: jest
     .fn()
     .mockImplementation(() => ({ loading: false, data: deploymentTypes, refetch: jest.fn() })),
-  useGetServiceListForProject: jest
-    .fn()
-    .mockImplementation(() => ({ loading: false, data: services, refetch: jest.fn() })),
-  useGetEnvironmentListForProject: jest
+  useGetServiceList: jest.fn().mockImplementation(() => ({ loading: false, data: services, refetch: jest.fn() })),
+  useGetEnvironmentListV2: jest
     .fn()
     .mockImplementation(() => ({ loading: false, data: environments, refetch: jest.fn() })),
   useGetListOfBranchesWithStatus: jest.fn().mockImplementation(() => {
@@ -131,7 +141,7 @@ jest.mock('services/cd-ng-rq', () => ({
 
 const commonRequest = (): any =>
   cloneDeep({
-    body: { filterType: 'PipelineExecution' },
+    body: null,
     queryParamStringifyOptions: { arrayFormat: 'repeat' },
     queryParams: {
       accountIdentifier: 'accountId',
@@ -378,6 +388,17 @@ describe('Execution List', () => {
 
     const request = commonRequest()
     request.queryParams.branch = 'main'
+    expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
+  })
+
+  test('sorting should fetch the executions with sorted column and order', async () => {
+    renderExecutionPage()
+    const pipelineName = await screen.findByText('filters.executions.pipelineName')
+    userEvent.click(pipelineName)
+    jest.runOnlyPendingTimers()
+
+    const request = commonRequest()
+    request.queryParams.sort = 'name,ASC'
     expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
   })
 })

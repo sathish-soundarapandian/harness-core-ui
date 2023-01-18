@@ -123,7 +123,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
   }, [jobParameterResponse])
 
   useEffect(() => {
-    if (!isArray(get(formik, `values.${prefix}spec.jobParameter`))) {
+    if (!isArray(get(formik, `values.${prefix}spec.jobParameter`)) && template?.spec?.jobParameter) {
       formik.setFieldValue(
         `${prefix}spec.jobParameter`,
         isArray(template?.spec?.jobParameter) ? template?.spec?.jobParameter : []
@@ -196,27 +196,28 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
     return jobDetails.find(job => job.label === get(formik, `values.${prefix}spec.jobName`)) as SelectWithSubmenuOption
   }
 
+  const jobParameters = get(formik.values, `${prefix}spec.jobParameter`)
+
   return (
     <>
       <FormikForm className={css.removeBpPopoverWrapperTopMargin}>
         {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(css.formGroup, css.sm)}>
-            <TimeoutFieldInputSetView
-              multiTypeDurationProps={{
-                configureOptionsProps: {
-                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-                },
-                allowableTypes,
-                expressions,
-                disabled: readonly
-              }}
-              label={getString('pipelineSteps.timeoutLabel')}
-              name={`${prefix}timeout`}
-              disabled={readonly}
-              fieldPath={'timeout'}
-              template={template}
-            />
-          </div>
+          <TimeoutFieldInputSetView
+            multiTypeDurationProps={{
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
+              allowableTypes,
+              expressions,
+              disabled: readonly
+            }}
+            label={getString('pipelineSteps.timeoutLabel')}
+            name={`${prefix}timeout`}
+            disabled={readonly}
+            fieldPath={'timeout'}
+            template={template}
+            className={cx(css.formGroup, css.sm)}
+          />
         )}
         {getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME ? (
           <FormMultiTypeConnectorField
@@ -317,8 +318,9 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
           </div>
         ) : null}
 
-        {isArray(template?.spec?.jobParameter) ||
-        getMultiTypeFromValue(template?.spec?.jobParameter) === MultiTypeInputType.RUNTIME ? (
+        {(isArray(template?.spec?.jobParameter) ||
+          getMultiTypeFromValue(template?.spec?.jobParameter) === MultiTypeInputType.RUNTIME) &&
+        Array.isArray(jobParameters) ? (
           <div className={css.formGroup}>
             <MultiTypeFieldSelector
               name={`${prefix}spec.jobParameter`}

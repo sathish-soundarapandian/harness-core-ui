@@ -49,23 +49,22 @@ export default function UpdateReleaseRepoInputStep(props: UpdateReleaseRepoInput
   return (
     <FormikForm>
       {getMultiTypeFromValue(get(template, 'timeout', '')) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${prefix}.timeout`}
-            disabled={readonly}
-            fieldPath={'timeout'}
-            template={template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${prefix}.timeout`}
+          disabled={readonly}
+          fieldPath={'timeout'}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
 
       {isArray(get(template, 'spec.variables', [])) && get(template, 'spec.variables', []).length ? (

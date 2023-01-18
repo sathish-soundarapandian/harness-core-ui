@@ -29,7 +29,7 @@ const CVHomePage: React.FC = () => {
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
 
   const { data, error, refetch, loading } = useGetLicensesAndSummary({
-    queryParams: { moduleType },
+    queryParams: { moduleType: ModuleName.SRM },
     accountIdentifier: accountId,
     lazy: true
   })
@@ -37,7 +37,7 @@ const CVHomePage: React.FC = () => {
   const { data: licenseData } = data || {}
   const expiryTime = licenseData?.maxExpiryTime
   const updatedLicenseInfo = licenseData && {
-    ...licenseInformation?.[moduleType],
+    ...licenseInformation?.[ModuleName.SRM],
     ...pick(licenseData, ['licenseType', 'edition']),
     expiryTime
   }

@@ -17,6 +17,6 @@ module.exports = [
   'code/PullRequest',
   'code/Settings',
   'code/Webhooks',
-  'code/CreateWebhook',
-  'code/EditWebhook'
+  'code/WebhookNew',
+  'code/WebhookDetails'
 ]

@@ -20,9 +20,8 @@ import type {
   SSHKeyReferenceCredentialDTO,
   SSHKeySpecDTO
 } from 'services/cd-ng'
-import { getSecretReferencesforSSH } from '@secrets/utils/SSHAuthUtils'
+import { getSecretReferencesForSSH } from '@secrets/utils/SSHAuthUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getScopeBasedProjectPathParams, getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import CreateSSHCredWizard, { SSHCredSharedObj } from './CreateSSHCredWizard'
 import css from './useCreateSSHCredModal.module.scss'
 
@@ -87,17 +86,13 @@ const useCreateSSHCredModal = (props: UseCreateSSHCredModalProps): UseCreateSSHC
 
   const open = useCallback(
     async (_sshData?: SecretDTOV2) => {
-      const params = getScopeBasedProjectPathParams(
-        projectPathParams,
-        getScopeFromValue((_sshData?.spec as SSHKeySpecDTO)?.auth.spec?.spec?.password)
-      )
       showModal()
 
       if (_sshData) {
         setView(Views.EDIT)
         setLoading(true)
 
-        const response = await getSecretReferencesforSSH(_sshData, params)
+        const response = await getSecretReferencesForSSH(_sshData, projectPathParams)
         setSSHData({
           detailsData: {
             ...pick(_sshData, 'name', 'identifier', 'description', 'tags')

@@ -56,6 +56,7 @@ import {
   lastEventRecieved
 } from '@ce/utils/cloudIntegrationUtils'
 
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { useCloudVisibilityModal } from '../CloudVisibilityModal/CloudVisibilityModal'
 import { useAutoStoppingModal } from '../AutoStoppingModal/AutoStoppingModal'
 import { EmptySearchState } from './NoConnectors'
@@ -297,7 +298,7 @@ const ViewCostsCell: CustomK8sCell = ({ row, column }) => {
       style={{ float: 'right' }}
       onClick={
         /* istanbul ignore next */ () => {
-          const baseUrl = window.location.href.split('#')[0]
+          const baseUrl = windowLocationUrlPartBeforeHash()
           window.open(`${baseUrl}#${route}`, '_blank')
         }
       }

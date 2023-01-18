@@ -576,7 +576,7 @@ export function getSLOsNoDataMessageTitle({
     return getString('cv.slos.noDataMS')
   } else {
     if (ifNoSLOsAreCreated(riskCountResponse, filterState, search)) {
-      return getString('cv.slos.noData')
+      return getString('common.sloNoData')
     } else if (!isEmpty(search)) {
       return getString('cv.slos.noMatchingDataForSearch')
     } else {

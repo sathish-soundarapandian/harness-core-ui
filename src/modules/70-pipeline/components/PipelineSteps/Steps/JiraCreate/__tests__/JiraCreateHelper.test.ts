@@ -17,7 +17,7 @@ describe('Jira Create process form data tests', () => {
       timeout: '10m',
       type: 'JiraCreate',
       spec: {
-        connectorRef: { label: 'conn', value: 'conn' },
+        connectorRef: 'conn',
         projectKey: { label: 'pid', value: 'pid', key: 'pid' },
         issueType: { label: 'iss', value: 'iss', key: 'iss' },
         fields: [

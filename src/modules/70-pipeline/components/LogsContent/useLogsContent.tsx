@@ -7,7 +7,7 @@
 
 import React, { Reducer } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, throttle } from 'lodash-es'
 import { EventSourcePolyfill } from 'event-source-polyfill'
 
 import type { ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
@@ -49,6 +49,32 @@ export function useLogsContent(): UseLogsContentReturn {
   const { logsToken, setLogsToken } = useExecutionContext()
   const { data: tokenData } = useGetToken({ queryParams: { accountID: accountId }, lazy: !!logsToken })
   const eventSource = React.useRef<null | EventSource>(null)
+  /**
+   * Here we are utilizing the concept of double buffering in case of streaming logs
+   * https://www.computerhope.com/jargon/d/doublebu.htm
+   */
+  const buffer1 = React.useRef<Record<string, string>>({})
+  const buffer2 = React.useRef<Record<string, string>>({})
+  const activeBuffer = React.useRef(buffer1.current)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const throlledSetState = React.useCallback(
+    throttle((props: StartStreamProps) => {
+      let data = ''
+      // switch buffer
+      if (activeBuffer.current === buffer1.current) {
+        data = buffer1.current[props.key]
+        activeBuffer.current = buffer2.current
+        buffer1.current[props.key] = ''
+      } else if (activeBuffer.current === buffer2.current) {
+        data = buffer2.current[props.key]
+        activeBuffer.current = buffer1.current
+        buffer2.current[props.key] = ''
+      }
+
+      actions.updateSectionData({ data, id: props.key, append: true }) // with old buffer
+    }, 500),
+    [actions]
+  )
 
   const closeStream = React.useCallback(() => {
     eventSource.current?.close()
@@ -74,7 +100,9 @@ export function useLogsContent(): UseLogsContentReturn {
 
         /* istanbul ignore else */
         if (e.data) {
-          actions.updateSectionData({ data: e.data, id: props.key, append: true })
+          // write to current buffer here
+          activeBuffer.current[props.key] += `\n${e.data}`
+          throlledSetState(props)
         }
       }
 

@@ -10,6 +10,7 @@ import type { FormikContextType } from 'formik'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
+import cx from 'classnames'
 import { Container, FormInput, Layout, SelectOption } from '@harness/uicore'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import {
@@ -47,6 +48,7 @@ interface GitSyncFormProps<T> {
   initialValues?: StoreMetadata
   errorData?: ResponseMessage[]
   entityScope?: Scope
+  className?: string
 }
 
 export const gitSyncFormSchema = (
@@ -90,7 +92,15 @@ const getSupportedProviders = () => {
 export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
   props: GitSyncFormProps<T>
 ): React.ReactElement {
-  const { formikProps, isEdit, disableFields = {}, initialValues, errorData, entityScope = Scope.PROJECT } = props
+  const {
+    formikProps,
+    isEdit,
+    disableFields = {},
+    initialValues,
+    errorData,
+    entityScope = Scope.PROJECT,
+    className = ''
+  } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
@@ -127,7 +137,7 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
       : formikProps.values.connectorRef?.value
 
   return (
-    <Container padding={{ top: 'large' }} className={css.gitSyncForm}>
+    <Container padding={{ top: 'large' }} className={cx(css.gitSyncForm, className)}>
       <Layout.Horizontal>
         <Layout.Vertical>
           <ConnectorReferenceField

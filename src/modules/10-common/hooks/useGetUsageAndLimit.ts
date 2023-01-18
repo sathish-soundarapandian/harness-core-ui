@@ -18,7 +18,8 @@ import {
   STOLicenseSummaryDTO,
   useGetCDLicenseUsageForServiceInstances,
   useGetCDLicenseUsageForServices,
-  CVLicenseSummaryDTO
+  CVLicenseSummaryDTO,
+  CHAOSLicenseSummaryDTO
 } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import { useGetLicenseUsage as useGetFFUsage } from 'services/cf'
@@ -28,7 +29,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useGetCCMLicenseUsage } from 'services/ce'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { useGetLicenseUsage } from 'services/cv'
+import { useGetSRMLicenseUsage } from 'services/cv'
 
 export interface UsageAndLimitReturn {
   limitData: LimitReturn
@@ -93,6 +94,10 @@ interface LimitProps {
   }
   cv?: {
     totalServices?: number
+  }
+  chaos?: {
+    totalChaosExperimentRuns?: number
+    totalChaosInfrastructures?: number
   }
 }
 
@@ -159,6 +164,15 @@ function useGetLimit(module: ModuleName): LimitReturn {
         moduleLimit = {
           cv: {
             totalServices: (limitData?.data as CVLicenseSummaryDTO)?.totalServices
+          }
+        }
+        break
+      }
+      case ModuleName.CHAOS: {
+        moduleLimit = {
+          chaos: {
+            totalChaosExperimentRuns: (limitData?.data as CHAOSLicenseSummaryDTO)?.totalChaosExperimentRuns,
+            totalChaosInfrastructures: (limitData?.data as CHAOSLicenseSummaryDTO)?.totalChaosInfrastructures
           }
         }
         break
@@ -287,7 +301,7 @@ export function useGetUsage(module: ModuleName): UsageReturn {
     loading: loadingCVUsage,
     error: cvUsageError,
     refetch: refetchCVUsage
-  } = useGetLicenseUsage({
+  } = useGetSRMLicenseUsage({
     queryParams: {
       accountIdentifier: accountId,
       timestamp

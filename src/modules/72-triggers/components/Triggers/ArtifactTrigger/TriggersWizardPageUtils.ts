@@ -29,7 +29,9 @@ import type {
   ArtifactTriggerConfig,
   CustomArtifactSpec,
   GithubPackagesSpec,
-  GarSpec
+  GarSpec,
+  AzureArtifactsRegistrySpec,
+  AMIRegistrySpec
 } from 'services/pipeline-ng'
 import type { PanelInterface } from '@common/components/Wizard/Wizard'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
@@ -54,7 +56,11 @@ import type {
   FlatOnEditValuesInterface
 } from '@triggers/pages/triggers/interface/TriggersWizardInterface'
 import type { AddConditionInterface } from '@triggers/pages/triggers/views/AddConditionsSection'
-import type { ArtifactTriggerSpec } from '@triggers/components/steps/ArtifactTriggerConfigPanel/ArtifactsSelection/ArtifactInterface'
+import {
+  ArtifactTriggerSpec,
+  RepositoryPortOrServer
+} from '@triggers/components/steps/ArtifactTriggerConfigPanel/ArtifactsSelection/ArtifactInterface'
+import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
 import type { TriggerType } from '../TriggerInterface'
 export const CUSTOM = 'Custom'
 export const AWS_CODECOMMIT = 'AWS_CODECOMMIT'
@@ -1900,9 +1906,14 @@ export const getArtifactManifestTriggerYaml = ({
     selectedArtifact,
     stageId,
     pipelineBranchName = getDefaultPipelineReferenceBranch(formikValueTriggerType, event),
-    inputSetRefs,
     source
   } = val
+
+  const inputSetRefs = get(
+    val,
+    'inputSetRefs',
+    get(val, 'inputSetSelected', []).map((_inputSet: InputSetValue) => _inputSet.value)
+  )
 
   const { type: triggerType, spec: triggerSpec } = source ?? {}
   const { type: artifactType, spec: artifactSpec } = triggerSpec ?? {}
@@ -2019,6 +2030,7 @@ export const getTriggerArtifactInitialSpec = (
   const connectorRef = ''
   const tag = '<+trigger.artifact.build>'
   const version = '<+trigger.artifact.build>'
+  const build = '<+trigger.artifact.build>'
   const eventConditions: TriggerEventDataCondition[] = []
   const imagePath = ''
 
@@ -2082,9 +2094,9 @@ export const getTriggerArtifactInitialSpec = (
         connectorRef,
         eventConditions,
         imagePath,
-        repositoryFormat: 'repositoryUrl',
-        repositoryName: '',
-        repositoryUrl: '',
+        repositoryFormat: 'docker',
+        repository: '',
+        repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryUrl,
         tag
       } as NexusRegistrySpec
     }
@@ -2094,7 +2106,7 @@ export const getTriggerArtifactInitialSpec = (
         connectorRef,
         eventConditions,
         jobName: '',
-        version
+        build
       } as JenkinsRegistrySpec
     }
     case 'CustomArtifact': {
@@ -2126,6 +2138,28 @@ export const getTriggerArtifactInitialSpec = (
         repositoryName: '',
         version
       } as GarSpec
+    }
+    case 'AzureArtifacts': {
+      return {
+        packageName: '',
+        connectorRef,
+        eventConditions,
+        packageType: 'maven',
+        scope: 'project',
+        project: '',
+        feed: '',
+        version
+      } as AzureArtifactsRegistrySpec
+    }
+    case 'AmazonMachineImage': {
+      return {
+        eventConditions,
+        connectorRef,
+        filters: [],
+        tags: [],
+        region: '',
+        version
+      } as AMIRegistrySpec
     }
   }
 }

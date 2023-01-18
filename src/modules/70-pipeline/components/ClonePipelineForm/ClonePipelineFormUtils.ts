@@ -36,8 +36,8 @@ export interface FormState
 
 export function getValidationSchema(getString: UseStringsReturn['getString']): Yup.ObjectSchema {
   return Yup.object().shape({
-    name: NameSchema(),
-    identifier: IdentifierSchema(),
+    name: NameSchema(getString),
+    identifier: IdentifierSchema(getString),
     destinationConfig: Yup.mixed().when('storeType', {
       is: StoreType.INLINE,
       then: Yup.object().shape({

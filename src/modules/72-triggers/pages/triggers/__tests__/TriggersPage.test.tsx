@@ -10,6 +10,7 @@ import { render, waitFor, queryByText, fireEvent, queryAllByText, getByText } fr
 import { renderHook } from '@testing-library/react-hooks'
 import { useStrings } from 'framework/strings'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
+import type { GetTriggerListForTargetQueryParams } from 'services/pipeline-ng'
 import * as usePermission from '@rbac/hooks/usePermission'
 import routes from '@common/RouteDefinitions'
 import { pipelinePathProps } from '@common/utils/routeUtils'
@@ -40,7 +41,9 @@ const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactEle
 )
 const { result } = renderHook(() => useStrings(), { wrapper })
 
-function WrapperComponent(): JSX.Element {
+function WrapperComponent(props: {
+  queryParams?: Pick<GetTriggerListForTargetQueryParams, 'searchTerm'>
+}): JSX.Element {
   return (
     <TestWrapper
       path={routes.toTriggersPage({ ...pipelinePathProps, module: ':module' })}
@@ -51,6 +54,7 @@ function WrapperComponent(): JSX.Element {
         pipelineIdentifier: 'pipelineIdentifier',
         module: 'cd'
       }}
+      queryParams={props.queryParams}
     >
       <TriggersPage />
     </TestWrapper>
@@ -155,22 +159,24 @@ describe('TriggersPage Triggers tests', () => {
     })
 
     test('Search for a trigger shows filtered results', async () => {
-      const { container } = render(<WrapperComponent />)
+      const searchTerm = 'test1'
+      const { container } = render(<WrapperComponent queryParams={{ searchTerm }} />)
       await waitFor(() => expect(result.current.getString('common.triggerLabel').toUpperCase()).not.toBeNull())
-      const searchInput = container.querySelector('[data-name="search"]')
+      const searchInput = container.querySelector('[type="search"]')
       if (!searchInput) {
         throw Error('No search input')
       }
-      fireEvent.change(searchInput, { target: { value: 'test1' } })
+      fireEvent.change(searchInput, { target: { value: searchTerm } })
 
       expect(mockGetTriggersFunction).toBeCalledWith({
-        debounce: 300,
         queryParams: {
           projectIdentifier: 'projectIdentifier',
           orgIdentifier: 'orgIdentifier',
           accountIdentifier: 'accountId',
           targetIdentifier: 'pipelineIdentifier',
-          searchTerm: 'test1'
+          searchTerm,
+          page: 0,
+          size: 20
         }
       })
     })

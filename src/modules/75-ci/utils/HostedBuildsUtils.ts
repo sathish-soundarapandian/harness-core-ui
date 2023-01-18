@@ -14,6 +14,7 @@ import { StringUtils } from '@common/exports'
 import { Connectors } from '@connectors/constants'
 import {
   ACCOUNT_SCOPE_PREFIX,
+  ORG_SCOPE_PREFIX,
   BitbucketPRTriggerActions,
   getCloudPipelinePayloadWithCodebase,
   getPipelinePayloadWithCodebase,
@@ -153,6 +154,16 @@ export const getFullRepoName = (repository: UserRepoResponse): string => {
   return namespace && repositoryName ? `${namespace}/${repositoryName}` : repositoryName ?? ''
 }
 
+export const getScmConnectorPrefix = ({ orgIdentifier, projectIdentifier }: ConnectorInfoDTO): string => {
+  if (orgIdentifier && projectIdentifier) {
+    return ''
+  }
+  if (orgIdentifier) {
+    return ORG_SCOPE_PREFIX
+  }
+  return ACCOUNT_SCOPE_PREFIX
+}
+
 export const getPayloadForPipelineCreation = ({
   pipelineYaml,
   pipelineName,
@@ -189,7 +200,7 @@ export const getPayloadForPipelineCreation = ({
     }_${UNIQUE_PIPELINE_ID}`,
     projectIdentifier,
     orgIdentifier,
-    connectorRef: `${ACCOUNT_SCOPE_PREFIX}${configuredGitConnector?.identifier}`,
+    connectorRef: `${getScmConnectorPrefix(configuredGitConnector)}${configuredGitConnector?.identifier}`,
     repoName: getFullRepoName(repository)
   })
 }

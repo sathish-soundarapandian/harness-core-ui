@@ -15,6 +15,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, FeatureActions } from '@common/constants/TrackingConstants'
 import ffOnboarding from '@cf/images/ff_onboarding.svg'
 import productsFreeForever from '@cf/images/products_free_forever.svg'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { OnboardingStepsDescription } from './OnboardingStepsDescription'
 import css from './OnboardingPage.module.scss'
 
@@ -23,6 +24,11 @@ export const OnboardingPage = (): React.ReactElement => {
   const { getString } = useStrings()
   const history = useHistory()
   const { trackEvent } = useTelemetry()
+
+  const { setPreference: setOnboardingBackLocation } = usePreferenceStore<string>(
+    PreferenceScope.USER,
+    'FF_ONBOARDING_LOCATION'
+  )
 
   return (
     <>
@@ -59,6 +65,7 @@ export const OnboardingPage = (): React.ReactElement => {
                 text={getString('cf.onboarding.tryItOut')}
                 size={ButtonSize.LARGE}
                 onClick={() => {
+                  setOnboardingBackLocation(JSON.stringify(history.location))
                   trackEvent(FeatureActions.GetStartedClick, {
                     category: Category.FEATUREFLAG
                   })

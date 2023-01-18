@@ -32,6 +32,7 @@ import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { StageFormContextProvider } from '@pipeline/context/StageFormContext'
 import { StageType } from '@pipeline/utils/stageHelpers'
+import { ConfigureOptionsContextProvider } from '@common/components/ConfigureOptions/ConfigureOptionsContext'
 import { StageInputSetForm } from './StageInputSetForm'
 import { StageAdvancedInputSetForm } from './StageAdvancedInputSetForm'
 import { CICodebaseInputSetForm } from './CICodebaseInputSetForm'
@@ -66,6 +67,7 @@ export interface PipelineInputSetFormProps {
   gitAwareForTriggerEnabled?: boolean
   selectedStageData?: StageSelectionData
   hideTitle?: boolean
+  disableRuntimeInputConfigureOptions?: boolean
 }
 
 export const stageTypeToIconMap: Record<string, IconName> = {
@@ -203,7 +205,7 @@ export function StageForm({
         <Layout.Horizontal spacing="small" padding={{ top: 'medium', left: 'large', right: 0, bottom: 0 }}>
           {type && <Icon name={stageTypeToIconMap[type]} size={18} />}
           <Text color={Color.BLACK_100} font={{ weight: 'semi-bold' }}>
-            Stage: {defaultTo(allValues?.stage?.name, '')}
+            Stage: {defaultTo(allValues?.stage?.name, defaultTo(allValues?.stage?.identifier, ''))}
           </Text>
         </Layout.Horizontal>
       )}
@@ -246,7 +248,8 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     viewTypeMetadata,
     allowableTypes,
     selectedStageData,
-    hideTitle
+    hideTitle,
+    disableRuntimeInputConfigureOptions: disableConfigureOptions
   } = props
   const { getString } = useStrings()
   const isTemplatePipeline = !!template?.template
@@ -316,7 +319,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
           <StepWidget<CustomVariablesData, CustomVariableInputSetExtraProps>
             factory={factory as unknown as AbstractStepFactory}
             initialValues={{
-              variables: (originalPipeline.variables || []) as AllNGVariables[],
+              variables: (originalPipeline?.variables || []) as AllNGVariables[],
               canAddVariable: true
             }}
             allowableTypes={getFilteredAllowableTypes(allowableTypes, viewType)}
@@ -346,9 +349,10 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
           {finalTemplate?.stages?.map((stageObj, index) => {
             const pathPrefix = !isEmpty(finalPath) ? `${finalPath}.` : ''
             if (stageObj.stage) {
-              const allValues = getStageFromPipeline(stageObj?.stage?.identifier || '', originalPipeline)
-              const pipelineStageTemplate = (stageObj?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
-              const pipelineStageOutputs = (stageObj?.stage?.spec as PipelineStageConfig)?.outputs
+              const allValues = getStageFromPipeline(stageObj.stage?.identifier || '', originalPipeline)
+              const pipelineStageTemplate = (stageObj.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
+              const pipelineStageOutputs = (stageObj.stage?.spec as PipelineStageConfig)?.outputs
+              const _originalPipeline = (allValues?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
 
               return (
                 <Layout.Vertical key={stageObj?.stage?.identifier || index}>
@@ -372,7 +376,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                         />
                       )}
                       <PipelineInputSetFormInternal
-                        originalPipeline={pipelineStageTemplate}
+                        originalPipeline={_originalPipeline}
                         template={pipelineStageTemplate}
                         path={`${pathPrefix}stages[${index}].stage.spec.inputs`}
                         readonly={readonly}
@@ -383,6 +387,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                         allowableTypes={allowableTypes}
                         selectedStageData={selectedStageData}
                         hideTitle={true}
+                        disableRuntimeInputConfigureOptions={disableConfigureOptions}
                       />
                     </>
                   ) : (
@@ -404,6 +409,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                 const allValues = getStageFromPipeline(stageP?.stage?.identifier || '', originalPipeline)
                 const pipelineStageTemplate = (stageP?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
                 const pipelineStageOutputs = (stageP?.stage?.spec as PipelineStageConfig)?.outputs
+                const _originalPipeline = (allValues?.stage?.spec as PipelineStageConfig)?.inputs as PipelineInfoConfig
 
                 return (
                   <Layout.Vertical key={`${stageObj?.stage?.identifier}-${stageP.stage?.identifier}-${indexp}`}>
@@ -427,7 +433,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                           />
                         )}
                         <PipelineInputSetFormInternal
-                          originalPipeline={pipelineStageTemplate}
+                          originalPipeline={_originalPipeline}
                           template={pipelineStageTemplate}
                           path={`${pathPrefix}stages[${index}].parallel[${indexp}].stage.spec.inputs`}
                           readonly={readonly}
@@ -438,6 +444,7 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
                           allowableTypes={allowableTypes}
                           selectedStageData={selectedStageData}
                           hideTitle={true}
+                          disableRuntimeInputConfigureOptions={disableConfigureOptions}
                         />
                       </>
                     ) : (
@@ -463,13 +470,15 @@ export function PipelineInputSetFormInternal(props: PipelineInputSetFormProps): 
     </Layout.Vertical>
   )
 }
+
 export function PipelineInputSetForm(props: Omit<PipelineInputSetFormProps, 'allowableTypes'>): React.ReactElement {
+  const { disableRuntimeInputConfigureOptions: disableConfigureOptions, isRunPipelineForm } = props
   const [template, setTemplate] = React.useState(props.template)
   const accountPathProps = useParams<AccountPathProps>()
   const { NG_EXECUTION_INPUT } = useFeatureFlags()
 
   useDeepCompareEffect(() => {
-    if (props.isRunPipelineForm) {
+    if (isRunPipelineForm) {
       PubSubPipelineActions.publish(PipelineActions.RunPipeline, {
         pipeline: props.originalPipeline,
         accountPathProps,
@@ -481,14 +490,16 @@ export function PipelineInputSetForm(props: Omit<PipelineInputSetFormProps, 'all
   }, [props?.template])
 
   return (
-    <PipelineInputSetFormInternal
-      {...props}
-      template={template}
-      allowableTypes={
-        NG_EXECUTION_INPUT
-          ? [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.EXECUTION_TIME]
-          : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
-      }
-    />
+    <ConfigureOptionsContextProvider disableConfigureOptions={!!disableConfigureOptions}>
+      <PipelineInputSetFormInternal
+        {...props}
+        template={template}
+        allowableTypes={
+          NG_EXECUTION_INPUT
+            ? [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.EXECUTION_TIME]
+            : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+        }
+      />
+    </ConfigureOptionsContextProvider>
   )
 }

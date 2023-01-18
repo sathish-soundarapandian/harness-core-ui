@@ -18,31 +18,13 @@ import {
   TemplateStudioSubHeaderProps
 } from '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/TemplateStudioSubHeader'
 
-jest.mock(
-  '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/views/TemplateStudioSubHeaderLeftView/TemplateStudioSubHeaderLeftView',
-  () => ({
-    ...jest.requireActual(
-      '@templates-library/components/TemplateStudio/TemplateStudioSubHeader/views/TemplateStudioSubHeaderLeftView/TemplateStudioSubHeaderLeftView'
-    ),
-    TemplateStudioSubHeaderLeftView: () => {
-      return <div className={'template-studio-sub-header-left-view-mock'}></div>
-    }
-  })
-)
-
-jest.mock('@templates-library/components/TemplateStudio/SaveTemplatePopover/SaveTemplatePopover', () => ({
-  ...jest.requireActual('@templates-library/components/TemplateStudio/SaveTemplatePopover/SaveTemplatePopover'),
-  SaveTemplatePopoverWithRef: React.forwardRef(() => {
-    return <div className={'save-template-popover-mock'}></div>
-  })
-}))
-
 const stepTemplateContext = getTemplateContextMock(TemplateType.Step)
 
 const baseProps: TemplateStudioSubHeaderProps = {
   onViewChange: jest.fn(),
   getErrors: jest.fn(),
-  onGitBranchChange: jest.fn()
+  onGitBranchChange: jest.fn(),
+  onReconcile: jest.fn()
 }
 
 describe('TemplateStudioSubHeader tests', async () => {

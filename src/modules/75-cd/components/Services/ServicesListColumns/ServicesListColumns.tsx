@@ -23,6 +23,7 @@ import { defaultTo, isEmpty, pick } from 'lodash-es'
 import { Classes, Intent, Menu, Popover, Position } from '@blueprintjs/core'
 import { useModalHook } from '@harness/use-modal'
 import routes from '@common/RouteDefinitions'
+import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -53,21 +54,15 @@ export enum DeploymentStatus {
 const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
   const { data: service, onRefresh } = props
   const [menuOpen, setMenuOpen] = useState(false)
-  const [deleteError, setDeleteError] = useState('')
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const history = useHistory()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  const isForceDeletedAllowed = useFeatureFlag(FeatureFlag.CDS_FORCE_DELETE_ENTITIES)
 
-  const { mutate: deleteService } = useDeleteServiceV2({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier: orgIdentifier,
-      projectIdentifier: projectIdentifier
-    }
-  })
+  const { mutate: deleteService } = useDeleteServiceV2({})
 
   const [showModal, hideModal] = useModalHook(
     () => (
@@ -102,27 +97,50 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
     [service, orgIdentifier, projectIdentifier]
   )
 
-  const { openDialog: openDeleteErrorDialog } = useConfirmationDialog({
-    titleText: getString('common.deleteServiceFailure'),
-    contentText: deleteError,
-    cancelButtonText: getString('close'),
-    confirmButtonText: getString('common.viewReferences'),
-    intent: Intent.DANGER,
-    onCloseDialog: async isConfirmed => {
-      setDeleteError('')
-      if (isConfirmed) {
-        history.push({
-          pathname: routes.toServiceStudio({
-            accountId,
-            orgIdentifier,
-            projectIdentifier,
-            serviceId: service?.identifier,
-            module
-          }),
-          search: `tab=${ServiceTabs.REFERENCED_BY}`
-        })
+  const deleteHandler = async (forceDelete?: boolean): Promise<void> => {
+    try {
+      const response = await deleteService(service?.identifier, {
+        headers: { 'content-type': 'application/json' },
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier,
+          forceDelete
+        }
+      })
+      if (response.status === 'SUCCESS') {
+        showSuccess(getString('common.deleteServiceMessage'))
+        onRefresh?.()
+      }
+    } catch (err: any) {
+      if (err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+        openReferenceErrorDialog()
+      } else {
+        showError(getRBACErrorMessage(err))
       }
     }
+  }
+
+  const redirectToReferencedBy = (): void => {
+    history.push({
+      pathname: routes.toServiceStudio({
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
+        serviceId: service?.identifier,
+        module
+      }),
+      search: `tab=${ServiceTabs.REFERENCED_BY}`
+    })
+  }
+
+  const { openDialog: openReferenceErrorDialog } = useEntityDeleteErrorHandlerDialog({
+    entity: {
+      type: ResourceType.SERVICE,
+      name: defaultTo(service?.name, '')
+    },
+    redirectToReferencedBy,
+    forceDeleteCallback: isForceDeletedAllowed ? () => deleteHandler(true) : undefined
   })
 
   const { openDialog } = useConfirmationDialog({
@@ -133,23 +151,7 @@ const ServiceMenu = (props: ServiceItemProps): React.ReactElement => {
     intent: Intent.DANGER,
     onCloseDialog: async isConfirmed => {
       if (isConfirmed) {
-        try {
-          const response = await deleteService(service?.identifier, {
-            headers: { 'content-type': 'application/json' }
-          })
-          if (response.status === 'SUCCESS') {
-            showSuccess(getString('common.deleteServiceMessage'))
-            onRefresh && onRefresh()
-          }
-        } catch (err: any) {
-          if (err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
-            // showing reference by error in modal
-            setDeleteError(err?.data?.message || err?.message)
-            openDeleteErrorDialog()
-          } else {
-            showError(getRBACErrorMessage(err))
-          }
-        }
+        deleteHandler(false)
       }
     }
   })

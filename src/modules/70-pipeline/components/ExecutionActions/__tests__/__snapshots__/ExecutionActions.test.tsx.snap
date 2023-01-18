@@ -89,23 +89,24 @@ exports[`<ExecutionActions /> tests snapshot tests "Aborted" status: Menu 1`] = 
 <ul
   class="bp3-menu"
 >
-  <li
-    class=""
+  <a
+    class="link"
+    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
   >
-    <a
-      class="bp3-menu-item bp3-popover-dismiss link"
+    <li
+      class=""
     >
       <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
+        class="bp3-menu-item bp3-popover-dismiss"
       >
-        <a
-          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        <div
+          class="bp3-text-overflow-ellipsis bp3-fill"
         >
           editPipeline
-        </a>
+        </div>
       </div>
-    </a>
-  </li>
+    </li>
+  </a>
   <li
     class=""
   >
@@ -253,23 +254,24 @@ exports[`<ExecutionActions /> tests snapshot tests "Expired" status: Menu 1`] = 
 <ul
   class="bp3-menu"
 >
-  <li
-    class=""
+  <a
+    class="link"
+    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
   >
-    <a
-      class="bp3-menu-item bp3-popover-dismiss link"
+    <li
+      class=""
     >
       <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
+        class="bp3-menu-item bp3-popover-dismiss"
       >
-        <a
-          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        <div
+          class="bp3-text-overflow-ellipsis bp3-fill"
         >
           editPipeline
-        </a>
+        </div>
       </div>
-    </a>
-  </li>
+    </li>
+  </a>
   <li
     class=""
   >
@@ -417,23 +419,24 @@ exports[`<ExecutionActions /> tests snapshot tests "Failed" status: Menu 1`] = `
 <ul
   class="bp3-menu"
 >
-  <li
-    class=""
+  <a
+    class="link"
+    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
   >
-    <a
-      class="bp3-menu-item bp3-popover-dismiss link"
+    <li
+      class=""
     >
       <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
+        class="bp3-menu-item bp3-popover-dismiss"
       >
-        <a
-          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        <div
+          class="bp3-text-overflow-ellipsis bp3-fill"
         >
           editPipeline
-        </a>
+        </div>
       </div>
-    </a>
-  </li>
+    </li>
+  </a>
   <li
     class=""
   >
@@ -581,23 +584,24 @@ exports[`<ExecutionActions /> tests snapshot tests "NotStarted" status: Menu 1`]
 <ul
   class="bp3-menu"
 >
-  <li
-    class=""
+  <a
+    class="link"
+    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
   >
-    <a
-      class="bp3-menu-item bp3-popover-dismiss link"
+    <li
+      class=""
     >
       <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
+        class="bp3-menu-item bp3-popover-dismiss"
       >
-        <a
-          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        <div
+          class="bp3-text-overflow-ellipsis bp3-fill"
         >
           editPipeline
-        </a>
+        </div>
       </div>
-    </a>
-  </li>
+    </li>
+  </a>
   <li
     class=""
   >
@@ -778,23 +782,24 @@ exports[`<ExecutionActions /> tests snapshot tests "Paused" status: Menu 1`] = `
 <ul
   class="bp3-menu"
 >
-  <li
-    class=""
+  <a
+    class="link"
+    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
   >
-    <a
-      class="bp3-menu-item bp3-popover-dismiss link"
+    <li
+      class=""
     >
       <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
+        class="bp3-menu-item bp3-popover-dismiss"
       >
-        <a
-          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        <div
+          class="bp3-text-overflow-ellipsis bp3-fill"
         >
           editPipeline
-        </a>
+        </div>
       </div>
-    </a>
-  </li>
+    </li>
+  </a>
   <li
     class=""
   >
@@ -975,23 +980,24 @@ exports[`<ExecutionActions /> tests snapshot tests "Queued" status: Menu 1`] = `
 <ul
   class="bp3-menu"
 >
-  <li
-    class=""
+  <a
+    class="link"
+    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
   >
-    <a
-      class="bp3-menu-item bp3-popover-dismiss link"
+    <li
+      class=""
     >
       <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
+        class="bp3-menu-item bp3-popover-dismiss"
       >
-        <a
-          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        <div
+          class="bp3-text-overflow-ellipsis bp3-fill"
         >
           editPipeline
-        </a>
+        </div>
       </div>
-    </a>
-  </li>
+    </li>
+  </a>
   <li
     class=""
   >
@@ -1172,23 +1178,24 @@ exports[`<ExecutionActions /> tests snapshot tests "ResourceWaiting" status: Men
 <ul
   class="bp3-menu"
 >
-  <li
-    class=""
+  <a
+    class="link"
+    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
   >
-    <a
-      class="bp3-menu-item bp3-popover-dismiss link"
+    <li
+      class=""
     >
       <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
+        class="bp3-menu-item bp3-popover-dismiss"
       >
-        <a
-          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        <div
+          class="bp3-text-overflow-ellipsis bp3-fill"
         >
           editPipeline
-        </a>
+        </div>
       </div>
-    </a>
-  </li>
+    </li>
+  </a>
   <li
     class=""
   >
@@ -1369,23 +1376,24 @@ exports[`<ExecutionActions /> tests snapshot tests "Running" status: Menu 1`] = 
 <ul
   class="bp3-menu"
 >
-  <li
-    class=""
+  <a
+    class="link"
+    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
   >
-    <a
-      class="bp3-menu-item bp3-popover-dismiss link"
+    <li
+      class=""
     >
       <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
+        class="bp3-menu-item bp3-popover-dismiss"
       >
-        <a
-          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        <div
+          class="bp3-text-overflow-ellipsis bp3-fill"
         >
           editPipeline
-        </a>
+        </div>
       </div>
-    </a>
-  </li>
+    </li>
+  </a>
   <li
     class=""
   >
@@ -1566,23 +1574,24 @@ exports[`<ExecutionActions /> tests snapshot tests "Success" status: Menu 1`] = 
 <ul
   class="bp3-menu"
 >
-  <li
-    class=""
+  <a
+    class="link"
+    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
   >
-    <a
-      class="bp3-menu-item bp3-popover-dismiss link"
+    <li
+      class=""
     >
       <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
+        class="bp3-menu-item bp3-popover-dismiss"
       >
-        <a
-          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        <div
+          class="bp3-text-overflow-ellipsis bp3-fill"
         >
           editPipeline
-        </a>
+        </div>
       </div>
-    </a>
-  </li>
+    </li>
+  </a>
   <li
     class=""
   >
@@ -1730,23 +1739,24 @@ exports[`<ExecutionActions /> tests snapshot tests "Suspended" status: Menu 1`] 
 <ul
   class="bp3-menu"
 >
-  <li
-    class=""
+  <a
+    class="link"
+    href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
   >
-    <a
-      class="bp3-menu-item bp3-popover-dismiss link"
+    <li
+      class=""
     >
       <div
-        class="bp3-text-overflow-ellipsis bp3-fill"
+        class="bp3-menu-item bp3-popover-dismiss"
       >
-        <a
-          href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+        <div
+          class="bp3-text-overflow-ellipsis bp3-fill"
         >
           editPipeline
-        </a>
+        </div>
       </div>
-    </a>
-  </li>
+    </li>
+  </a>
   <li
     class=""
   >

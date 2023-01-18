@@ -75,6 +75,14 @@ export const ServiceInstancesWidget: React.FC<ServiceInstanceWidgetProps> = prop
   const title = getString('cd.serviceDashboard.servicesInLast', {
     period: getString('common.duration.6months')
   })
+
+  const reducedData =
+    trendData.length >= 20
+      ? trendData.filter((_val, index) => {
+          return index % Math.floor(trendData.length / 20) === 0
+        })
+      : trendData
+
   return (
     <Card className={css.card}>
       <Layout.Vertical width={248}>
@@ -87,11 +95,11 @@ export const ServiceInstancesWidget: React.FC<ServiceInstanceWidgetProps> = prop
               <Text color={Color.BLACK} font={{ weight: 'bold' }} className={css.text}>
                 {numberFormatter(serviceCount)}
               </Text>
-              {trendData.length ? (
-                <TrendPopover title={title} data={trendData}>
+              {reducedData.length ? (
+                <TrendPopover title={title} data={reducedData}>
                   <SparklineChart
                     title={getString('cd.serviceDashboard.6monthTrend')}
-                    data={trendData}
+                    data={reducedData}
                     options={{ chart: { width: 80, height: 50 } }}
                     sparklineChartContainerStyles={css.hover}
                   />

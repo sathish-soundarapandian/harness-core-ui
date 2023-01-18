@@ -363,7 +363,12 @@ export function ServerlessLambdaWithS3({
         initialValues={getInitialValues()}
         formName="serverlessLambdaWithS3"
         validationSchema={Yup.object().shape({
-          ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
+          ...ManifestIdentifierValidation(
+            getString,
+            manifestIdsList,
+            initialValues?.identifier,
+            getString('pipeline.uniqueName')
+          ),
           region: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.region')),
           bucketName: Yup.string().trim().required(getString('pipeline.manifestType.bucketNameRequired')),
           paths: Yup.lazy((value): Yup.Schema<unknown> => {

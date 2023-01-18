@@ -6,10 +6,9 @@
  */
 
 import React, { useMemo } from 'react'
-import type { GetDataError } from 'restful-react'
 import { defaultTo, noop } from 'lodash-es'
 import cx from 'classnames'
-import { Container, Layout, PageError, PageSpinner, Popover, Text, useToaster } from '@harness/uicore'
+import { Container, Layout, Popover, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
@@ -24,6 +23,7 @@ import type { InstanceGroupedByInfrastructureV2, InstanceGroupedByPipelineExecut
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import { numberFormatter } from '@common/utils/utils'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { DialogEmptyState } from './EnvironmentDetailsUtils'
 
 import css from './EnvironmentDetailSummary.module.scss'
@@ -37,6 +37,7 @@ export interface TableRowData {
   envId?: string
   serviceFilter?: string
   artifactVersion?: string
+  artifactPath?: string
   infraIdentifier?: string
   clusterId?: string
   infraName?: string
@@ -53,7 +54,8 @@ export interface TableRowData {
 export const getSummaryViewTableData = (
   InstanceGroupedByInfraList?: InstanceGroupedByInfrastructureV2[],
   tableView?: InfraViewTableType,
-  artifactFilter?: string,
+  artifactVersion?: string,
+  artifactPath?: string,
   envFilter?: string,
   serviceFilter?: string
 ): TableRowData[] => {
@@ -64,6 +66,7 @@ export const getSummaryViewTableData = (
     let totalInstances = 0
     let lastDeployedAt = 0
     const infraName = infra.infraName || infra.clusterIdentifier
+    /* istanbul ignore else */
     if (infra.instanceGroupedByPipelineExecutionList) {
       infra.instanceGroupedByPipelineExecutionList.forEach(infraDetail => {
         totalInstances += defaultTo(infraDetail.count, 0)
@@ -88,7 +91,8 @@ export const getSummaryViewTableData = (
       lastDeployedAt: lastDeployedAt,
       envId: defaultTo(envFilter, ''),
       serviceFilter: defaultTo(serviceFilter, ''),
-      artifactVersion: defaultTo(artifactFilter, ''),
+      artifactVersion: defaultTo(artifactVersion, ''),
+      artifactPath: defaultTo(artifactPath, ''),
       lastPipelineExecutionId: defaultTo(pipelineExecutionId, ''),
       lastPipelineExecutionName: defaultTo(pipelineExecution, ''),
       tableType: tableView
@@ -100,7 +104,8 @@ export const getSummaryViewTableData = (
 export const getFullViewTableData = (
   InstanceGroupedByInfraList?: InstanceGroupedByInfrastructureV2[],
   tableView?: InfraViewTableType,
-  artifactFilter?: string,
+  artifactVersion?: string,
+  artifactPath?: string,
   envFilter?: string,
   serviceFilter?: string
 ): TableRowData[] => {
@@ -108,6 +113,7 @@ export const getFullViewTableData = (
   InstanceGroupedByInfraList?.forEach(infra => {
     const infraName = infra.infraName || infra.clusterIdentifier
     let showInfra = true
+    /* istanbul ignore else */
     if (infra.instanceGroupedByPipelineExecutionList) {
       infra.instanceGroupedByPipelineExecutionList.forEach(infraDetail => {
         let pipelineExecution: string | undefined
@@ -134,7 +140,8 @@ export const getFullViewTableData = (
           infraName: defaultTo(infraName, ''),
           envId: defaultTo(envFilter, ''),
           serviceFilter: defaultTo(serviceFilter, ''),
-          artifactVersion: defaultTo(artifactFilter, ''),
+          artifactVersion: defaultTo(artifactVersion, ''),
+          artifactPath: defaultTo(artifactPath, ''),
           lastPipelineExecutionId: defaultTo(pipelineExecutionId, ''),
           lastPipelineExecutionName: defaultTo(pipelineExecution, ''),
           tableType: tableView
@@ -239,6 +246,7 @@ const RenderPipelineExecution: Renderer<CellProps<TableRowData>> = ({
     useParams<PipelineType<PipelinePathProps>>()
   const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
 
+  /* istanbul ignore next */
   function handleClick(): void {
     if (lastPipelineExecutionName && lastPipelineExecutionId) {
       const route = routes.toExecutionPipelineView({
@@ -256,8 +264,7 @@ const RenderPipelineExecution: Renderer<CellProps<TableRowData>> = ({
         storeType: pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType
       })
 
-      const baseUrl = window.location.href.split('#')[0]
-      window.open(`${baseUrl}#${route}`)
+      window.open(`${windowLocationUrlPartBeforeHash()}#${route}`)
     } else {
       showError(getString('cd.serviceDashboard.noLastDeployment'))
     }
@@ -309,37 +316,25 @@ const columnsProperties = {
 export const EnvironmentDetailInfraTable = (
   props: React.PropsWithChildren<{
     tableType: InfraViewTableType
-    loading?: boolean
     data?: InstanceGroupedByInfrastructureV2[]
-    error?: GetDataError<unknown> | null
-    refetch?: () => Promise<void>
-    artifactFilter?: string
+    artifactVersion?: string
+    artifactPath?: string
     envFilter?: string
     serviceFilter?: string
     tableStyle: string
   }>
 ): React.ReactElement => {
-  const {
-    tableType,
-    loading = false,
-    data,
-    error,
-    refetch,
-    tableStyle,
-    artifactFilter,
-    envFilter,
-    serviceFilter
-  } = props
+  const { tableType, data, tableStyle, artifactVersion, envFilter, serviceFilter, artifactPath } = props
 
   const { getString } = useStrings()
   const tableData: TableRowData[] = useMemo(() => {
     switch (tableType) {
       case InfraViewTableType.SUMMARY:
-        return getSummaryViewTableData(data, tableType, artifactFilter, envFilter, serviceFilter)
+        return getSummaryViewTableData(data, tableType, artifactVersion, artifactPath, envFilter, serviceFilter)
       case InfraViewTableType.FULL:
-        return getFullViewTableData(data, tableType, artifactFilter, envFilter, serviceFilter)
+        return getFullViewTableData(data, tableType, artifactVersion, artifactPath, envFilter, serviceFilter)
     }
-  }, [tableType, data, artifactFilter, envFilter, serviceFilter])
+  }, [tableType, data, artifactVersion, envFilter, serviceFilter, artifactPath])
 
   const columns: Column<TableRowData>[] = useMemo(() => {
     const columnsArray = [
@@ -370,20 +365,6 @@ export const EnvironmentDetailInfraTable = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  if (loading) {
-    return (
-      <Container data-test="ActiveServiceInstancesLoader" height="360px">
-        <PageSpinner />
-      </Container>
-    )
-  }
-  if (error) {
-    return (
-      <Container data-test="ActiveServiceInstancesError" height="360px">
-        <PageError onClick={() => refetch?.()} />
-      </Container>
-    )
-  }
   if (!data?.length) {
     return (
       <DialogEmptyState

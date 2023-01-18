@@ -68,12 +68,12 @@ describe('Git Sync - entity tab', () => {
     expect(container).toMatchSnapshot()
 
     //testing expanded view and pagination for connector entity Type as it has more mock data than preview limit
-    expect(getByText('gitsync.seeMore')).toBeTruthy()
+    expect(getByText('common.seeMore')).toBeTruthy()
 
     await act(async () => {
-      fireEvent.click(getByText('gitsync.seeMore'))
+      fireEvent.click(getByText('common.seeMore'))
     })
-    expect(getByText('gitsync.seeLess')).toBeTruthy()
+    expect(getByText('common.seeLess')).toBeTruthy()
     expect(container).toMatchSnapshot()
   })
 })

@@ -182,32 +182,8 @@ describe('Test Wait Step', () => {
   })
 })
 
-describe('validate policy step input sets', () => {
+describe('validate wait step input sets', () => {
   test('validates default inputs set correctly', () => {
-    const response = new WaitStep().validateInputSet({
-      data: {
-        name: 'Wait Step',
-        identifier: 'WaitStep',
-        type: StepType.Wait,
-        spec: {
-          duration: '10'
-        }
-      },
-      template: {
-        name: 'Wait Step',
-        identifier: 'WaitStep',
-        type: StepType.Wait,
-        spec: {
-          duration: RUNTIME_INPUT_VALUE
-        }
-      },
-      viewType: StepViewType.DeploymentForm,
-      getString: jest.fn().mockImplementation(val => val)
-    })
-    expect(response).toMatchSnapshot()
-  })
-
-  test('validates timeout is min 10s', () => {
     const response = new WaitStep().validateInputSet({
       data: {
         name: 'Wait Step',
@@ -225,8 +201,34 @@ describe('validate policy step input sets', () => {
           duration: RUNTIME_INPUT_VALUE
         }
       },
+      viewType: StepViewType.DeploymentForm,
+      getString: jest.fn().mockImplementation(val => val)
+    })
+
+    expect(response).toEqual({})
+  })
+
+  test('validates timeout is min 10s', () => {
+    const response = new WaitStep().validateInputSet({
+      data: {
+        name: 'Wait Step',
+        identifier: 'WaitStep',
+        type: StepType.Wait,
+        spec: {
+          duration: '9s'
+        }
+      },
+      template: {
+        name: 'Wait Step',
+        identifier: 'WaitStep',
+        type: StepType.Wait,
+        spec: {
+          duration: RUNTIME_INPUT_VALUE
+        }
+      },
       viewType: StepViewType.DeploymentForm
     })
-    expect(response).toMatchSnapshot()
+
+    expect(response.spec).toHaveProperty('duration')
   })
 })

@@ -12,6 +12,8 @@ export interface CommonRecordsProps {
   data?: any
   loading?: boolean
   error?: any
+  className?: string
+  isQueryExecuted?: boolean
 }
 
 export interface HighchartsOptionAndRecords {

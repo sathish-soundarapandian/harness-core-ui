@@ -31,7 +31,6 @@ import {
 import UserGroupsInput from '@rbac/components/UserGroupsInput/UserGroupsInput'
 import { useGetCommunity } from '@common/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RoleAssignmentForm from './RoleAssignmentForm'
 import type { RoleAssignmentValues } from './RoleAssignment'
 import type { Assignment, UserRoleAssignmentValues } from './UserRoleAssigment'
@@ -57,7 +56,6 @@ const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const scope = getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
   const { getString } = useStrings()
-  const { ACCOUNT_BASIC_ROLE } = useFeatureFlags()
   const { getRBACErrorMessage } = useRBACError()
   const isCommunity = useGetCommunity()
   const { showSuccess } = useToaster()
@@ -66,7 +64,7 @@ const AssignRoles: React.FC<UserGroupRoleAssignmentData> = props => {
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
   })
 
-  const assignments: Assignment[] = getScopeBasedDefaultAssignment(scope, getString, isCommunity, !!ACCOUNT_BASIC_ROLE)
+  const assignments: Assignment[] = getScopeBasedDefaultAssignment(scope, getString, isCommunity, false)
 
   const handleRoleAssignment = async (values: UserGroupRoleAssignmentValues): Promise<void> => {
     /* istanbul ignore next */ if (values.assignments.length === 0) {

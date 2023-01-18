@@ -38,7 +38,7 @@ exports[`Test Azure Web App Swap Slot input set timeout should be updated 1`] = 
         >
           <div>
             <div
-              class="formGroup md"
+              class="fieldAndOptions formGroup sm"
             >
               <div
                 class="bp3-form-group"

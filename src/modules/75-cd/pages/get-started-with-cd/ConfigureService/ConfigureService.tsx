@@ -54,16 +54,18 @@ import {
 } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { Connectors } from '@connectors/constants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
+import { FeatureFlag } from '@common/featureFlags'
 import {
   BinaryValue,
   cleanServiceDataUtil,
   defaultManifestConfig,
   getUniqueEntityIdentifier,
   newServiceState,
+  ONBOARDING_PREFIX,
   ServiceDataType
 } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
@@ -123,7 +125,7 @@ const ConfigureServiceRef = (
   const { showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { disableNextBtn, enableNextBtn, onSuccess } = props
-  const { NG_ARTIFACT_SOURCES } = useFeatureFlags()
+  const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const {
     state: { service: serviceData, delegate: delegateData },
     saveServiceData
@@ -212,7 +214,7 @@ const ConfigureServiceRef = (
       const artifactObj = get(serviceData, 'serviceDefinition.spec.artifacts') as ArtifactListConfig
       const updatedArtifactObj = produce(artifactObj, draft => {
         if (draft) {
-          if (NG_ARTIFACT_SOURCES) {
+          if (isSvcEnvEnabled) {
             set(draft, 'primary.sources[0].type', formikRef?.current?.values?.artifactType)
             set(draft, 'primary.sources[0].spec', formikRef?.current?.values?.artifactConfig?.spec)
             set(draft, 'primary.primaryArtifactRef', formikRef?.current?.values?.artifactConfig?.identifier)
@@ -515,6 +517,10 @@ const ConfigureServiceRef = (
     enableNextBtn()
   }
 
+  const getValidConnectorRef = (): string =>
+    get(serviceData, 'data.connectorRef.identifier') ||
+    `${selectGitProviderRef.current?.values?.gitProvider?.type}_${ONBOARDING_PREFIX}`
+
   return createLoading ? (
     <ContainerSpinner />
   ) : (
@@ -533,7 +539,7 @@ const ConfigureServiceRef = (
                 <Layout.Vertical width="70%">
                   <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
                     <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_600}>
-                      {getString('cd.getStartedWithCD.configureService')}
+                      {getString('common.configureService')}
                     </Text>
                     <Layout.Horizontal flex={{ alignItems: 'center' }}>
                       {editService ? (
@@ -605,10 +611,7 @@ const ConfigureServiceRef = (
                               <li className={`${moduleCss.progressItem} ${moduleCss.progressItemActive}`}>
                                 <SelectRepository
                                   selectedRepository={formikProps.values?.repository}
-                                  validatedConnectorRef={
-                                    get(serviceData, 'data.gitValues.gitProvider.type') ||
-                                    selectGitProviderRef.current?.values?.gitProvider?.type
-                                  }
+                                  validatedConnectorRef={getValidConnectorRef()}
                                   onChange={onRepositoryChange}
                                 />
                               </li>

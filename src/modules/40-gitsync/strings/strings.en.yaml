@@ -12,8 +12,6 @@ addNewHarnessFolderLabel: 'Add new .harness folder'
 rootFolderListHeader: Path To Harness Root Folder
 successfullCreate: 'Git sync repository {{name}} created successfully'
 entitiesByRepositories: 'Entities By repositories'
-seeMore: 'See more'
-seeLess: 'See less'
 connectToGitProvider: How do you want to connect to the Git Provider?
 connectThroughManagerLabel: Connect Through Platform
 connectThroughDelegateLabel: Connect Through Delegate

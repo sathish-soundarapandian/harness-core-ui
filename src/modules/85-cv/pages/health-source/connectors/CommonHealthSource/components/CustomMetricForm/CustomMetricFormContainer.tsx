@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import React, { MutableRefObject, useContext, useEffect, useRef, useState } from 'react'
 import { useModalHook } from '@harness/use-modal'
 import {
   Button,
@@ -27,14 +27,19 @@ import CommonCustomMetric from '@cv/pages/health-source/common/CommonCustomMetri
 import type { CommonCustomMetricFormikInterface } from '../../CommonHealthSource.types'
 import type { AddMetricForm, CustomMetricFormContainerProps } from './CustomMetricForm.types'
 import {
+  cleanUpMappedMetrics,
   getAddMetricInitialValues,
   getHealthSourceConfigDetails,
+  getUpdatedMappedMetricsData,
   initHealthSourceCustomFormValue,
+  updateParentFormikWithLatestData,
   validateAddMetricForm
 } from './CustomMetricFormContainer.utils'
 import { resetShowCustomMetric } from '../../CommonHealthSource.utils'
 import AddMetric from './components/AddMetric/AddMetric'
 import CustomMetricForm from './CustomMetricForm'
+import { CommonConfigurationsFormFieldNames, CustomMetricFormFieldNames } from '../../CommonHealthSource.constants'
+import { useCommonHealthSource } from './components/CommonHealthSourceContext/useCommonHealthSource'
 import css from './CustomMetricForm.module.scss'
 
 export default function CustomMetricFormContainer(props: CustomMetricFormContainerProps): JSX.Element {
@@ -42,68 +47,65 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
   const {
     mappedMetrics,
     selectedMetric,
-    setMappedMetrics,
     isMetricThresholdEnabled,
     createdMetrics,
-    setCreatedMetrics,
-    setGroupedCreatedMetrics,
     healthSourceConfig,
-    healthSourceData,
     groupedCreatedMetrics,
     isTemplate,
     expressions,
     connectorIdentifier: connectorRef,
-    setConfigurationsFormikFieldValue
+    filterRemovedMetricNameThresholds
   } = props
 
-  const { values: formValues, setValues, isValid } = useFormikContext<CommonCustomMetricFormikInterface>()
+  const {
+    values: formValues,
+    setValues,
+    validateForm,
+    setFieldTouched
+  } = useFormikContext<CommonCustomMetricFormikInterface>()
   const wrapperRef = useRef(null)
   useUpdateConfigFormikOnOutsideClick(wrapperRef, mappedMetrics, selectedMetric, formValues)
-
   const { enabledDefaultGroupName, fieldLabel, shouldBeAbleToDeleteLastMetric, enabledRecordsAndQuery } =
     getHealthSourceConfigDetails(healthSourceConfig)
-
   const {
     sourceData: { existingMetricDetails }
   } = useContext(SetupSourceTabsContext)
+  const { updateParentFormik } = useCommonHealthSource()
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorRef) !== MultiTypeInputType.FIXED
-
   const [groupNames, setGroupName] = useState<SelectOption[]>(initializeGroupNames(mappedMetrics, getString))
-
   const [showCustomMetric, setShowCustomMetric] = useState(
-    !!Array.from(defaultTo(healthSourceData?.customMetricsMap, []))?.length &&
-      healthSourceConfig?.customMetrics?.enabled
+    !!Array.from(defaultTo(mappedMetrics, []))?.length && healthSourceConfig?.customMetrics?.enabled
   )
-
   const metricDefinitions = existingMetricDetails?.spec?.metricDefinitions
   const currentSelectedMetricDetail = metricDefinitions?.find(
     (metricDefinition: CustomHealthMetricDefinition) =>
       metricDefinition.metricName === mappedMetrics.get(selectedMetric || '')?.metricName
   )
-
-  const filterRemovedMetricNameThresholds = useCallback(
-    (deletedMetricName: string) => {
-      if (isMetricThresholdEnabled && deletedMetricName) {
-        // TODO implement this later
-      }
-    },
-    [isMetricThresholdEnabled]
-  )
+  const isEdit = Boolean(formValues?.identifier)
 
   function useUpdateConfigFormikOnOutsideClick(
-    ref: React.MutableRefObject<any>,
+    ref: MutableRefObject<any>,
     mappedMetricsData: Map<string, CommonCustomMetricFormikInterface>,
     selectedMetricName: string,
     formValuesData: CommonCustomMetricFormikInterface
   ): void {
     useEffect(() => {
-      /**
-       * update Parent formik when clicked outside.
-       */
-      function handleClickOutside(event: { target: unknown }): void {
-        if (ref.current && !ref.current.contains(event.target)) {
-          mappedMetricsData.set(selectedMetricName, formValuesData)
-          setConfigurationsFormikFieldValue('customMetricsMap', mappedMetricsData)
+      //  update Parent formik when clicked outside.
+      async function handleClickOutside(event: { target: unknown }): Promise<void> {
+        if (
+          ref.current &&
+          !ref.current.contains(event.target)
+          // && !isEqual(mappedMetricsData.get(selectedMetricName), formValuesData)
+        ) {
+          // This will be executed only when current form value changes.
+          const updatedMappedMetricsData = getUpdatedMappedMetricsData(
+            mappedMetricsData,
+            selectedMetricName,
+            formValuesData
+          )
+          setFieldTouched(CustomMetricFormFieldNames.QUERY)
+          await validateForm()
+          updateParentFormikWithLatestData(updateParentFormik, updatedMappedMetricsData, selectedMetricName)
         }
       }
       // Bind the event listener
@@ -128,7 +130,10 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
         canEscapeKeyClose
         canOutsideClickClose
         enforceFocus={false}
-        onClose={hideModal}
+        onClose={() => {
+          hideModal()
+          updateParentFormik(CommonConfigurationsFormFieldNames.SELECTED_METRIC, createdMetrics[0])
+        }}
       >
         <Formik<AddMetricForm>
           initialValues={getAddMetricInitialValues(formValues, enabledDefaultGroupName)}
@@ -138,12 +143,14 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
             hideModal()
             setShowCustomMetric(true)
           }}
-          onReset={hideModal}
-          validate={data => {
-            return validateAddMetricForm(data, getString, createdMetrics)
+          onReset={() => {
+            hideModal()
+            cleanUpMappedMetrics(mappedMetrics)
+            updateParentFormikWithLatestData(updateParentFormik, mappedMetrics, createdMetrics[0])
           }}
-          validateOnChange
-          validateOnBlur
+          validate={data => {
+            return validateAddMetricForm(data, getString, createdMetrics, groupedCreatedMetrics, fieldLabel)
+          }}
         >
           {() => {
             return (
@@ -153,6 +160,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
                 groupNames={groupNames}
                 setGroupName={setGroupName}
                 fieldLabel={fieldLabel}
+                isEdit={isEdit}
               />
             )
           }}
@@ -171,15 +179,11 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
           cardSectionClassName={css.customMetricContainer}
         >
           <CommonCustomMetric
-            isValidInput={isValid}
-            setMappedMetrics={setMappedMetrics}
             selectedMetric={selectedMetric}
             formikValues={formValues}
             mappedMetrics={mappedMetrics}
             createdMetrics={createdMetrics}
             groupedCreatedMetrics={groupedCreatedMetrics}
-            setCreatedMetrics={setCreatedMetrics}
-            setGroupedCreatedMetrics={setGroupedCreatedMetrics}
             defaultMetricName={'healthSourceMetric'}
             tooptipMessage={getString('cv.monitoringSources.gcoLogs.addQueryTooltip')}
             addFieldLabel={getString('common.addName', {
@@ -190,6 +194,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
             isMetricThresholdEnabled={isMetricThresholdEnabled}
             filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
             openEditMetricModal={openModal}
+            defaultServiceInstance={healthSourceConfig.customMetrics?.assign?.defaultServiceInstance}
           >
             <Container ref={wrapperRef}>
               <CustomMetricForm

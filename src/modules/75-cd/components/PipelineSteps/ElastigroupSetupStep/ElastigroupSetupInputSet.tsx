@@ -38,88 +38,83 @@ export default function ElastigroupSetupInputSet(props: ElastigroupSetupInputSet
   return (
     <FormikForm>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            multiTypeDurationProps={{
-              enableConfigureOptions: false,
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${prefix}timeout`}
-            disabled={readonly}
-            fieldPath={'timeout'}
-            template={template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          multiTypeDurationProps={{
+            enableConfigureOptions: false,
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${prefix}timeout`}
+          disabled={readonly}
+          fieldPath={'timeout'}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
-      {getMultiTypeFromValue(template?.spec.name) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${path}.spec.name`}
-            disabled={readonly}
-            placeholder={getString('cd.ElastigroupStep.appName')}
-            label={getString('cd.ElastigroupStep.appName')}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            template={template}
-            fieldPath={'spec.name'}
-          />
-        </div>
+      {getMultiTypeFromValue(template?.spec?.name) === MultiTypeInputType.RUNTIME && (
+        <TextFieldInputSetView
+          name={`${path}.spec.name`}
+          disabled={readonly}
+          placeholder={getString('cd.ElastigroupStep.appName')}
+          label={getString('cd.ElastigroupStep.appName')}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          template={template}
+          fieldPath={'spec.name'}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
-      {getMultiTypeFromValue(template?.spec.instances.spec.min) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${path}.spec.instances.spec.min`}
-            disabled={readonly}
-            placeholder={getString('cd.ElastigroupStep.minInstances')}
-            label={getString('cd.ElastigroupStep.minInstances')}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes,
-              textProps: { type: 'number' }
-            }}
-            template={template}
-            fieldPath={'spec.instances.spec.min'}
-          />
-        </div>
+      {getMultiTypeFromValue(template?.spec?.instances?.spec?.min) === MultiTypeInputType.RUNTIME && (
+        <TextFieldInputSetView
+          name={`${path}.spec.instances.spec.min`}
+          disabled={readonly}
+          placeholder={getString('cd.ElastigroupStep.minInstances')}
+          label={getString('cd.ElastigroupStep.minInstances')}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes,
+            textProps: { type: 'number' }
+          }}
+          template={template}
+          fieldPath={'spec.instances.spec.min'}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
-      {getMultiTypeFromValue(template?.spec.instances.spec.desired) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${path}.spec.instances.spec.desired`}
-            disabled={readonly}
-            placeholder={getString('cd.ElastigroupStep.desiredInstances')}
-            label={getString('cd.ElastigroupStep.desiredInstances')}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes,
-              textProps: { type: 'number' }
-            }}
-            template={template}
-            fieldPath={'spec.instances.spec.desired'}
-          />
-        </div>
+      {getMultiTypeFromValue(template?.spec?.instances?.spec?.desired) === MultiTypeInputType.RUNTIME && (
+        <TextFieldInputSetView
+          name={`${path}.spec.instances.spec.desired`}
+          disabled={readonly}
+          placeholder={getString('cd.ElastigroupStep.desiredInstances')}
+          label={getString('cd.ElastigroupStep.desiredInstances')}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes,
+            textProps: { type: 'number' }
+          }}
+          template={template}
+          fieldPath={'spec.instances.spec.desired'}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
-      {getMultiTypeFromValue(template?.spec.instances.spec.max) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${path}.spec.instances.spec.max`}
-            disabled={readonly}
-            placeholder={getString('cd.ElastigroupStep.maxInstances')}
-            label={getString('cd.ElastigroupStep.maxInstances')}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes,
-              textProps: { type: 'number' }
-            }}
-            template={template}
-            fieldPath={'spec.instances.spec.max'}
-          />
-        </div>
+      {getMultiTypeFromValue(template?.spec?.instances?.spec?.max) === MultiTypeInputType.RUNTIME && (
+        <TextFieldInputSetView
+          name={`${path}.spec.instances.spec.max`}
+          disabled={readonly}
+          placeholder={getString('cd.ElastigroupStep.maxInstances')}
+          label={getString('cd.ElastigroupStep.maxInstances')}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes,
+            textProps: { type: 'number' }
+          }}
+          template={template}
+          fieldPath={'spec.instances.spec.max'}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
     </FormikForm>
   )

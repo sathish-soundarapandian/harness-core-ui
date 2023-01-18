@@ -139,7 +139,7 @@ describe('Service V2', () => {
     cy.get('input[name="paths[0].path"]').type('root/bin/')
     cy.clickSubmit()
 
-    cy.contains('span', 'Add Primary Artifact').click()
+    cy.contains('span', 'Add Artifact Source').click()
 
     cy.contains('p', 'Artifact Repository Type').should('be.visible')
     cy.contains('p', 'Artifact Repository').should('be.visible')
@@ -162,6 +162,7 @@ describe('Service V2', () => {
     cy.get('span[data-icon="fixed-input"]').click()
     cy.contains('span', 'Runtime input').click()
     cy.get('input[value="<+input>"]').should('be.visible')
+    cy.get('input[name="identifier"]').type('test_artifact_source_name')
     cy.clickSubmit()
 
     cy.contains('div', 'Unsaved changes').should('be.visible') //
@@ -183,12 +184,12 @@ describe('Service V2', () => {
     cy.fillField('name', serviceName)
     cy.contains('span', 'Save').click()
     cy.contains('p', 'Secure Shell').click()
-    cy.contains('span', 'Add Primary Artifact').should('be.visible')
+    cy.contains('span', 'Add Artifact Source').should('be.visible')
     cy.get('button[id="add-config-file"]').within(() => {
       cy.get('span[class="bp3-button-text"]').should('be.visible')
     })
 
-    cy.contains('span', 'Add Primary Artifact').click()
+    cy.contains('span', 'Add Artifact Source').click()
     cy.contains('p', 'Specify Artifact Repository Type').should('be.visible')
 
     cy.contains('p', 'Artifactory').should('be.visible')
@@ -209,6 +210,7 @@ describe('Service V2', () => {
           cy.contains('span', 'Runtime input').click()
         })
     })
+    cy.get('input[name="identifier"]').type('test_artifact_source_name')
     cy.clickSubmit()
 
     cy.contains('span', 'Add Config File').click()
@@ -246,13 +248,13 @@ describe('Service V2', () => {
     cy.fillField('name', serviceName)
     cy.contains('span', 'Save').click()
     cy.contains('p', 'WinRM').click()
-    cy.contains('span', 'Add Primary Artifact').should('be.visible')
-    cy.contains('span', 'Add Primary Artifact').should('be.visible')
+    cy.contains('span', 'Add Artifact Source').should('be.visible')
+    cy.contains('span', 'Add Artifact Source').should('be.visible')
     cy.get('button[id="add-config-file"]').within(() => {
       cy.get('span[class="bp3-button-text"]').should('be.visible')
     })
 
-    cy.contains('span', 'Add Primary Artifact').click()
+    cy.contains('span', 'Add Artifact Source').click()
     cy.contains('p', 'Specify Artifact Repository Type').should('be.visible')
 
     cy.contains('p', 'Artifactory').should('be.visible')
@@ -273,7 +275,7 @@ describe('Service V2', () => {
           cy.contains('span', 'Runtime input').click()
         })
     })
-
+    cy.get('input[name="identifier"]').type('test_artifact_source_name')
     cy.clickSubmit()
 
     cy.contains('span', 'Add Config File').click()

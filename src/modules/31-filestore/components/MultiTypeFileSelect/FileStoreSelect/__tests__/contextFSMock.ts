@@ -117,6 +117,10 @@ export const getDummyFileStoreContextValue = (): FileStoreContextState => {
     addDeletedNode: jest.fn(),
     removeFromTempNodes: jest.fn(),
     isCachedNode: jest.fn(),
-    handleSetIsUnsaved: jest.fn()
+    handleSetIsUnsaved: jest.fn(),
+    scopeValue: '',
+    pathValue: '',
+    getNodeByPath: jest.fn(),
+    isReadonly: false
   } as any
 }

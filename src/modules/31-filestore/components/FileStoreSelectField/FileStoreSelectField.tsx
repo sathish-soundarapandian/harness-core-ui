@@ -46,6 +46,7 @@ const FileStoreInput: React.FC<FormikFileStoreInput> = (props: FileStoreSelectPr
   const { getString } = useStrings()
   const { formik, label, name, tooltipProps, placeholder, readonly = false } = props
   const fileStoreValue = get(formik.values, name)
+
   const modalFileStore = useFileStoreModal({
     applySelected: value => formik.setFieldValue(name, value)
   })
@@ -90,7 +91,7 @@ const FileStoreInput: React.FC<FormikFileStoreInput> = (props: FileStoreSelectPr
           className={css.container}
           onClick={() => {
             if (!readonly) {
-              modalFileStore.openFileStoreModal()
+              modalFileStore.openFileStoreModal(fileStoreValue?.name, fileStoreValue.scope)
             }
           }}
         >

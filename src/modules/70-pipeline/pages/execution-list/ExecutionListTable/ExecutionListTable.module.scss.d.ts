@@ -10,18 +10,24 @@ declare const styles: {
   readonly accordionBtn: string
   readonly cdExecutionSummary: string
   readonly checkbox: string
+  readonly childPipelineExecutionInfo: string
   readonly divider: string
+  readonly environment: string
   readonly environmentsText: string
   readonly execution: string
+  readonly gitOpsExecutionSummary: string
   readonly icon: string
   readonly iconWrapper: string
+  readonly marginLeftZero: string
   readonly matrixLabel: string
   readonly matrixStage: string
   readonly matrixStageList: string
   readonly matrixSummary: string
   readonly menu: string
   readonly multiSvcEnv: string
+  readonly parentPipelineLink: string
   readonly prState: string
+  readonly primary6: string
   readonly selectiveStageExecution: string
   readonly separator: string
   readonly service: string

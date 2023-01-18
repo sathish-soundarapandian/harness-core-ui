@@ -14,18 +14,21 @@ import css from './AddStageView.module.scss'
 
 interface StageHoverViewProps {
   selectedStageType: SelectedAddStageTypeData | undefined
+  showCloseBtn?: boolean
 }
-function StageHoverView({ selectedStageType }: StageHoverViewProps): React.ReactElement {
+function StageHoverView({ selectedStageType, showCloseBtn = true }: StageHoverViewProps): React.ReactElement {
   const { getString } = useStrings()
   return (
     <div className={css.hoverStageSection}>
       {selectedStageType?.isComingSoon && <div className={css.comingSoonBanner}>{getString('common.comingSoon2')}</div>}
-      <Icon
-        name="main-close"
-        size={12}
-        className={css.closeIcon}
-        onClick={() => window.dispatchEvent(new CustomEvent('CLOSE_CREATE_STAGE_POPOVER'))}
-      />
+      {showCloseBtn && (
+        <Icon
+          name="main-close"
+          size={12}
+          className={css.closeIcon}
+          onClick={() => window.dispatchEvent(new CustomEvent('CLOSE_CREATE_STAGE_POPOVER'))}
+        />
+      )}
       <Layout.Vertical
         flex={{ justifyContent: 'space-between' }}
         height={'100%'}

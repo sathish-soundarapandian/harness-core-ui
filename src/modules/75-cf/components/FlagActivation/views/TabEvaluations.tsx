@@ -6,7 +6,7 @@
  */
 
 import React, { useMemo } from 'react'
-import { Container, Icon, Layout, Text, PageError, NoDataCard } from '@harness/uicore'
+import { Container, Layout, Text, PageError } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
@@ -21,6 +21,8 @@ import { CFVariationColors } from '@cf/constants'
 import { Feature, FeatureEvaluation, GetFeatureEvaluationsQueryParams, useGetFeatureEvaluations } from 'services/cf'
 import { formatDate, formatNumber, getErrorMessage } from '@cf/utils/CFUtils'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
+import { NoData } from '@cf/components/NoData/NoData'
+import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { EvaluationsChart } from './EvaluationsChart'
 import css from './MetricsView.module.scss'
 
@@ -137,10 +139,12 @@ export const TabEvaluations: React.FC<TabEvaluationsProps> = ({ flagData, startD
   const sum = total?.reduce((_sum, entry) => _sum + (entry.count || 0), 0) || 0
   return (
     <Container className={css.contentBody}>
-      {loading && <Icon name="spinner" size={16} color="blue500" />}
+      {loading && <ContainerSpinner flex={{ align: 'center-center' }} />}
       {error && <PageError message={getErrorMessage(error)} onClick={() => refetch()} />}
       {!loading && !error && _data?.length === 0 && (
-        <NoDataCard icon="cf-main" message={getString('cf.featureFlags.metrics.noData')} />
+        <Container height="100%" flex={{ align: 'center-center' }}>
+          <NoData message={getString('cf.featureFlags.metrics.noData')} icon="cf-main" />
+        </Container>
       )}
       {!loading && !error && !!_data?.length && (
         <Container margin={{ top: 'medium' }}>

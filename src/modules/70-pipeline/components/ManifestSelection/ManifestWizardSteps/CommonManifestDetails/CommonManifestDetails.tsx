@@ -153,7 +153,12 @@ export function CommonManifestDetails({
         formName="manifestDetails"
         validationSchema={Yup.object().shape({
           ...(showIdentifierField
-            ? ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName'))
+            ? ManifestIdentifierValidation(
+                getString,
+                manifestIdsList,
+                initialValues?.identifier,
+                getString('pipeline.uniqueName')
+              )
             : {}),
           branch: Yup.string().when('gitFetchType', {
             is: 'Branch',

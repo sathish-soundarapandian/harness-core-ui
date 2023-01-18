@@ -3,8 +3,6 @@ import { useFormikContext } from 'formik'
 import { Container } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import CustomMetricSideNav from './components/CustomMetricSideNav'
 import CustomMetricDetails from './components/CustomMetricDetails'
 import type { CommonCustomMetricPropertyType, CommonCustomMetricsType } from './CustomMetric.types'
@@ -36,7 +34,7 @@ export default function CustomMetricV2<T extends CommonCustomMetricPropertyType>
 
   const { isTemplate } = useCustomMetricV2HelperContext()
 
-  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
+  const isMetricThresholdEnabled = !isTemplate
 
   const { getString } = useStrings()
 

@@ -162,6 +162,7 @@ const MetricsAnalysisContainer: React.FC<MetricsAnalysisProps> = ({
           throttle={500}
           onChange={setFilterString}
           placeholder={getString('pipeline.verification.metricViewPlaceholder')}
+          autoFocus={false}
         />
       </Layout.Horizontal>
 

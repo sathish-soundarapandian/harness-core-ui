@@ -10,24 +10,17 @@ import type { Diagnostic } from 'vscode-languageserver-types'
 import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { OverviewChartsWithToggleProps } from '@common/components/OverviewChartsWithToggle/OverviewChartsWithToggle'
 import type { NavigationCheckProps } from '@common/components/NavigationCheck/NavigationCheck'
-import type {
-  UseCreateConnectorModalProps,
-  UseCreateConnectorModalReturn
-} from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import type { DurationProps } from '@common/exports'
 
 export interface ChaosCustomMicroFrontendProps {
   customComponents: {
-    ConnectorReferenceField: React.ComponentType<ConnectorReferenceFieldProps>
-    OverviewChartsWithToggle: React.ComponentType<OverviewChartsWithToggleProps>
-    Duration: React.ComponentType<DurationProps>
-    NavigationCheck: React.ComponentType<NavigationCheckProps>
-  }
-  customHooks: {
-    useCreateConnectorModal: (props: UseCreateConnectorModalProps) => UseCreateConnectorModalReturn
+    ConnectorReferenceField?: React.ComponentType<ConnectorReferenceFieldProps>
+    OverviewChartsWithToggle?: React.ComponentType<OverviewChartsWithToggleProps>
+    Duration?: React.ComponentType<DurationProps>
+    NavigationCheck?: React.ComponentType<NavigationCheckProps>
   }
   customFunctions: {
-    validateYAMLWithSchema: (yamlString: string, schema: Record<string, any>) => Promise<Diagnostic[]>
+    validateYAMLWithSchema?: (yamlString: string, schema: Record<string, any>) => Promise<Diagnostic[]>
   }
 }
 
@@ -38,7 +31,7 @@ export interface ChaosExperiment {
 
 export interface PipelineExperimentSelectProps {
   onSelect: (experiment: ChaosExperiment) => void
-  goToNewExperiment: () => void
+  goToNewExperiment: (query?: string) => void
 }
 
 export interface ExperimentPreviewProps {

@@ -18,12 +18,12 @@ import css from './RunPipelineSummary.module.scss'
 
 interface RunPipelineSummaryProps {
   onSuccess: () => void
+  setSelectedSectionId: React.Dispatch<React.SetStateAction<DeployProvisiongWizardStepId>>
 }
 
-const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element => {
+const RunPipelineSummary = ({ onSuccess, setSelectedSectionId }: RunPipelineSummaryProps): JSX.Element => {
   const {
-    state: { service, delegate },
-    setSelectedSectionId
+    state: { service, delegate }
   } = useCDOnboardingContext()
   const { getString } = useStrings()
   const text = delegate?.delegateInstalled ? getString('connected') : getString('delegate.notConnected')
@@ -95,7 +95,7 @@ const RunPipelineSummary = ({ onSuccess }: RunPipelineSummaryProps): JSX.Element
           >
             <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
               <Text font={{ variation: FontVariation.H5 }} padding={{ right: 'medium' }}>
-                {getString('cd.getStartedWithCD.configureEnvironment')}
+                {getString('common.connectEnvironment')}
               </Text>
               <Icon
                 name="Edit"

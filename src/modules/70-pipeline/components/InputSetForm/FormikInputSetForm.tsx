@@ -20,6 +20,7 @@ import {
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type { FormikErrors, FormikProps } from 'formik'
+import { Callout } from '@blueprintjs/core'
 import type {
   PipelineInfoConfig,
   ResponsePMSPipelineResponseDTO,
@@ -49,8 +50,8 @@ import {
 import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { getYamlFileName } from '@pipeline/utils/yamlUtils'
-import { memoizedParse, parse } from '@common/utils/YamlHelperMethods'
-import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
+import { parse } from '@common/utils/YamlHelperMethods'
+import { hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
@@ -60,11 +61,11 @@ import { StepViewType } from '../AbstractSteps/Step'
 import css from './InputSetForm.module.scss'
 
 export const showPipelineInputSetForm = (
-  resolvedTemplatesPipelineYaml: string | undefined,
+  resolvedPipeline: PipelineInfoConfig | undefined,
   template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
 ): boolean => {
   return !!(
-    resolvedTemplatesPipelineYaml &&
+    resolvedPipeline &&
     template?.data?.inputSetTemplateYaml &&
     parse<Pipeline>(template.data.inputSetTemplateYaml)
   )
@@ -94,7 +95,7 @@ interface FormikInputSetFormProps {
   inputSet: InputSetDTO | InputSetType
   template: ResponseInputSetTemplateWithReplacedExpressionsResponse | null
   pipeline: ResponsePMSPipelineResponseDTO | null
-  resolvedTemplatesPipelineYaml?: string
+  resolvedPipeline?: PipelineInfoConfig
   handleSubmit: (
     inputSetObjWithGitInfo: InputSetDTO,
     gitDetails?: EntityGitDetails,
@@ -145,8 +146,8 @@ function useValidateValues({
 } {
   const { getString } = useStrings()
   const NameIdSchema = Yup.object({
-    name: NameSchema(),
-    identifier: IdentifierSchema()
+    name: NameSchema(getString),
+    identifier: IdentifierSchema(getString)
   })
   return {
     validateValues: async (
@@ -221,7 +222,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     inputSet,
     template,
     pipeline,
-    resolvedTemplatesPipelineYaml,
+    resolvedPipeline,
     handleSubmit,
     formErrors,
     setFormErrors,
@@ -243,11 +244,8 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     PipelineType<InputSetPathProps> & { accountId: string }
   >()
   const { repoIdentifier, branch, connectorRef, storeType, repoName } = useQueryParams<InputSetGitQueryParams>()
+  const inputSetStoreType = isGitSyncEnabled ? undefined : inputSet.storeType
   const history = useHistory()
-  const resolvedPipeline = defaultTo(
-    memoizedParse<Pipeline>(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline,
-    {} as PipelineInfoConfig
-  )
 
   useEffect(() => {
     if (!isUndefined(inputSet?.outdated) && yamlHandler?.setLatestYaml) {
@@ -274,7 +272,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     }
   }, [formikRef.current?.values?.pipeline?.template])
 
-  const [isEditable] = usePermission(
+  const [hasEditPermission] = usePermission(
     {
       resourceScope: {
         projectIdentifier,
@@ -293,11 +291,14 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     [projectIdentifier, orgIdentifier, accountId, pipelineIdentifier]
   )
 
+  const isEditable =
+    hasEditPermission && (isGitSyncEnabled ? true : !hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit))
+
   const { validateValues } = useValidateValues({ template, pipeline, formErrors, setFormErrors, resolvedPipeline })
 
   const NameIdSchema = Yup.object({
-    name: NameSchema(),
-    identifier: IdentifierSchema()
+    name: NameSchema(getString),
+    identifier: IdentifierSchema(getString)
   })
   const formRefDom = React.useRef<HTMLElement | undefined>()
   const getPipelineData = (): Pipeline => {
@@ -311,7 +312,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     return mergeTemplateWithInputSetData({
       templatePipeline: omittedPipeline,
       inputSetPortion: omittedPipeline,
-      allValues: { pipeline: resolvedPipeline },
+      allValues: { pipeline: resolvedPipeline as PipelineInfoConfig },
       shouldUseDefaultValues: !isEdit
     })
   }
@@ -430,15 +431,14 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                                 ></GitSyncForm>
                               </Container>
                             )}
-                            {showPipelineInputSetForm(resolvedTemplatesPipelineYaml, template) && (
+                            {showPipelineInputSetForm(resolvedPipeline, template) && (
                               <PipelineInputSetForm
                                 path="pipeline"
                                 readonly={!isEditable}
-                                originalPipeline={
-                                  parse<Pipeline>(defaultTo(resolvedTemplatesPipelineYaml, ''))?.pipeline
-                                }
+                                originalPipeline={resolvedPipeline as PipelineInfoConfig}
                                 template={parse<Pipeline>(get(template, 'data.inputSetTemplateYaml', '')).pipeline}
                                 viewType={StepViewType.InputSet}
+                                disableRuntimeInputConfigureOptions
                               />
                             )}
                           </Layout.Vertical>
@@ -475,6 +475,9 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                         fromInputSetForm={true}
                       />
                     )}
+                    {hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit) ? (
+                      <Callout intent="danger">{getString('pipeline.inputSetInvalidStoreTypeCallout')}</Callout>
+                    ) : null}
                     <Layout.Vertical className={css.content} padding="xlarge">
                       <YamlBuilderMemo
                         {...yamlBuilderReadOnlyModeProps}
@@ -486,6 +489,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                         }}
                         bind={setYamlHandler}
                         isReadOnlyMode={!isEditable}
+                        hideErrorMesageOnReadOnlyMode={hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
                         invocationMap={factory.getInvocationMap()}
                         height="calc(100vh - 230px)"
                         width="calc(100vw - 350px)"
@@ -509,7 +513,6 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                           const inputSetDto: InputSetDTO = parse<{ inputSet: InputSetDTO }>(latestYaml)?.inputSet
                           const identifier = inputSetDto.identifier
                           const defaultFilePath = identifier ? `.harness/${identifier}.yaml` : ''
-
                           handleSubmit(
                             inputSetDto,
                             {

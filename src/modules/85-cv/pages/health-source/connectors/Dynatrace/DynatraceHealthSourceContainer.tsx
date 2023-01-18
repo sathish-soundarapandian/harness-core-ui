@@ -16,14 +16,12 @@ import {
   mapHealthSourceToDynatraceMetricData,
   mapDynatraceMetricDataToHealthSource
 } from '@cv/pages/health-source/connectors/Dynatrace/DynatraceHealthSource.utils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 
 export default function DynatraceHealthSourceContainer(props: DynatraceHealthSourceContainerProps): JSX.Element {
   const { data: sourceData, onSubmit, isTemplate, expressions } = props
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
-  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
+  const isMetricThresholdEnabled = !isTemplate
 
   const handleSubmit = useCallback(
     async (dynatraceMetric: DynatraceMetricData) => {

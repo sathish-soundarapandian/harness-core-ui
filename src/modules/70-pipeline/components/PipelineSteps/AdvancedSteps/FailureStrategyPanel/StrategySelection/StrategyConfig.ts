@@ -43,6 +43,7 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
         [Modes.STEP]: [
           Strategy.ManualIntervention,
           // Strategy.StageRollback,
+          // Strategy.PipelineRollback,
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
@@ -52,6 +53,7 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
         [Modes.STEP_GROUP]: [
           Strategy.ManualIntervention,
           // Strategy.StageRollback,
+          // Strategy.PipelineRollback,
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
@@ -60,6 +62,7 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
         [Modes.STAGE]: [
           Strategy.ManualIntervention,
           // Strategy.StageRollback,
+          // Strategy.PipelineRollback,
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
@@ -72,6 +75,7 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
         [Modes.STEP]: [
           Strategy.ManualIntervention,
           Strategy.StageRollback,
+          Strategy.PipelineRollback,
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
@@ -81,6 +85,7 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
         [Modes.STEP_GROUP]: [
           Strategy.ManualIntervention,
           Strategy.StageRollback,
+          Strategy.PipelineRollback,
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
@@ -94,6 +99,7 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
         [Modes.STEP]: [
           Strategy.ManualIntervention,
           Strategy.StageRollback,
+          Strategy.PipelineRollback,
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
@@ -103,6 +109,7 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
         [Modes.STEP_GROUP]: [
           Strategy.ManualIntervention,
           Strategy.StageRollback,
+          Strategy.PipelineRollback,
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
@@ -111,6 +118,7 @@ export const allowedStrategiesAsPerStep: (domain: StageType) => Record<Modes, St
         [Modes.STAGE]: [
           Strategy.ManualIntervention,
           Strategy.StageRollback,
+          Strategy.PipelineRollback,
           Strategy.Ignore,
           Strategy.Retry,
           Strategy.MarkAsSuccess,
@@ -186,5 +194,7 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
   [StageType.Template]: [],
   [StageType.MATRIX]: [],
   [StageType.LOOP]: [],
-  [StageType.PARALLELISM]: []
+  [StageType.PARALLELISM]: [],
+  [StageType.ROLLBACK]: [],
+  [StageType.IACM]: []
 }

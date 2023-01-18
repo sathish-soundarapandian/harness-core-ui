@@ -49,10 +49,29 @@ export interface FileStoreFieldData {
   scope: string
 }
 
+export const getScope = (fsValue: string): FileStoreFieldData => {
+  const [scope, path] = (fsValue && fsValue.split(':')) || ['', '']
+  switch (scope) {
+    case Scope.ACCOUNT:
+    case Scope.ORG:
+      return {
+        scope,
+        path
+      }
+    default:
+      return {
+        scope: Scope.PROJECT,
+        path: fsValue || ''
+      }
+  }
+}
+
 function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
   const { getString } = useStrings()
   const { formik, label, name, tooltipProps, placeholder, readonly = false, onChange, fileUsage } = props
   const fileStoreValue = get(formik?.values, name)
+  const [valuePath, setValuePath] = React.useState(get(formik?.values, name))
+
   const prepareFileStoreValue = (scopeType: string, path: string): string => {
     switch (scopeType) {
       case Scope.ACCOUNT:
@@ -63,22 +82,10 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
     }
   }
 
-  const getScope = (fsValue: string): FileStoreFieldData => {
-    const [scope, path] = (fsValue && fsValue.split(':')) || ['', '']
-    switch (scope) {
-      case Scope.ACCOUNT:
-      case Scope.ORG:
-        return {
-          scope,
-          path
-        }
-      default:
-        return {
-          scope: Scope.PROJECT,
-          path: fsValue || ''
-        }
-    }
-  }
+  React.useEffect(() => {
+    setValuePath(get(formik?.values, name))
+  }, [formik?.values])
+
   const modalFileStore = useFileStoreModal({
     applySelected: value => {
       const { scope, path } = value
@@ -87,7 +94,9 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
       formik.setFieldValue(name, preparedValue)
     },
     fileUsage,
-    defaultTab: fileStoreValue ? getScope(fileStoreValue)?.scope : ''
+    defaultTab: fileStoreValue ? getScope(fileStoreValue)?.scope : '',
+    pathValue: valuePath || '',
+    scopeValue: getScope(fileStoreValue)?.scope || ''
   })
   const placeholder_ = defaultTo(placeholder, getString('select'))
 
@@ -119,7 +128,7 @@ function FileStoreInput(props: FormikFileStoreInput): React.ReactElement {
           data-testid="container-fs"
           onClick={() => {
             if (!readonly) {
-              modalFileStore.openFileStoreModal()
+              modalFileStore.openFileStoreModal(get(formik?.values, name), getScope(fileStoreValue)?.scope)
             }
           }}
         >

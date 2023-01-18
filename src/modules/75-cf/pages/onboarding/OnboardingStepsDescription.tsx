@@ -16,7 +16,7 @@ import envIcon from '@cf/images/icons/environment.svg'
 export const OnboardingStepsDescription = (): React.ReactElement => {
   const { getString } = useStrings()
   const steps = [
-    { label: getString('cf.onboarding.createAFlag'), imgSrc: createFlagIcon },
+    { label: getString('common.createFlag'), imgSrc: createFlagIcon },
     { label: getString('cf.onboarding.createEnvAndSdk'), imgSrc: envIcon },
     { label: getString('cf.onboarding.setupCode'), imgSrc: codeIcon }
   ]

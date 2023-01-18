@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { IconName, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import { defaultTo, set } from 'lodash-es'
+import { defaultTo, isEmpty, set } from 'lodash-es'
 import * as Yup from 'yup'
 import { FormikErrors, yupToFormErrors } from 'formik'
 import { StepProps, StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
@@ -62,7 +62,7 @@ export class TasBGAppSetupStep extends PipelineStep<TasBGAppSetupData> {
     type: StepType.BGAppSetup,
     spec: {
       tasInstanceCountType: InstancesType.FromManifest,
-      existingVersionToKeep: 1,
+      existingVersionToKeep: 3,
       tempRoutes: []
     }
   }
@@ -89,7 +89,7 @@ export class TasBGAppSetupStep extends PipelineStep<TasBGAppSetupData> {
       return (
         <TasBasicAppSetupInputSet<TasBGAppSetupStepInfo>
           initialValues={initialValues}
-          onUpdate={data => onUpdate?.(this.processFormData(data))}
+          onUpdate={/* istanbul ignore next */ data => onUpdate?.(this.processFormData(data))}
           stepViewType={stepViewType}
           readonly={!!inputSetData?.readonly}
           template={inputSetData?.template}
@@ -104,8 +104,8 @@ export class TasBGAppSetupStep extends PipelineStep<TasBGAppSetupData> {
       return (
         <VariablesListTable
           className={pipelineVariablesCss.variablePaddingL3}
-          data={variablesData}
-          originalData={initialValues}
+          data={variablesData.spec}
+          originalData={initialValues.spec}
           metadataMap={metadataMap}
         />
       )
@@ -171,7 +171,14 @@ export class TasBGAppSetupStep extends PipelineStep<TasBGAppSetupData> {
         })
       )
     }
-    // Additional Routes
+    /* istanbul ignore else */
+    if (
+      getMultiTypeFromValue(template?.spec?.tempRoutes) === MultiTypeInputType.RUNTIME &&
+      isRequired &&
+      isEmpty(data?.spec?.tempRoutes)
+    ) {
+      set(errors, 'spec.tempRoutes', getString?.('fieldRequired', { field: 'Temp Routes' }))
+    }
     return errors
   }
 }

@@ -23,6 +23,7 @@ import RoleCard from '@rbac/components/RoleCard/RoleCard'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useRoleModal } from '@rbac/modals/RoleModal/useRoleModal'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { useStateWithQueryParams } from '@common/hooks/useStateWithQueryParams'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -39,7 +40,7 @@ const RolesList: React.FC = () => {
   const history = useHistory()
   useDocumentTitle(getString('roles'))
   const [page, setPage] = useState(0)
-  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [searchTerm, setSearchTerm] = useStateWithQueryParams({ key: 'search' })
   const { data, loading, error, refetch } = useGetRoleList({
     queryParams: {
       accountIdentifier: accountId,
@@ -109,6 +110,7 @@ const RolesList: React.FC = () => {
         toolbar={
           <Layout.Horizontal margin={{ right: 'small' }} height="xxxlarge">
             <ExpandingSearchInput
+              defaultValue={searchTerm}
               alwaysExpanded
               placeholder={getString('common.searchPlaceholder')}
               onChange={text => {

@@ -6,10 +6,14 @@
  */
 
 import React, { FormEvent } from 'react'
-import { Checkbox, FormInput, FormError, Layout } from '@harness/uicore'
+import { Checkbox, FormInput, FormError, Layout, MultiTypeInputType } from '@harness/uicore'
 import type { SettingRendererProps } from '@default-settings/factories/DefaultSettingsFactory'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import { useStrings } from 'framework/strings'
+import {
+  FormMultiTypeDurationField,
+  MultiTypeDurationProps
+} from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import css from './SettingsCategorySection.module.scss'
 
 export const DefaultSettingStringDropDown: React.FC<SettingRendererProps> = ({
@@ -46,18 +50,25 @@ export const DefaultSettingNumberTextbox: React.FC<SettingRendererProps> = ({
   identifier,
   settingValue
 }) => {
+  const handleChange: MultiTypeDurationProps['onChange'] = React.useCallback(
+    val => {
+      onSettingSelectionChange(val)
+    },
+    [onSettingSelectionChange]
+  )
   return (
-    <>
-      <FormInput.Text
-        name={identifier}
-        disabled={settingValue && !settingValue.isSettingEditable}
-        className={css.defaultSettingRenderer}
-        inputGroup={{ type: 'number' }}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          onSettingSelectionChange(e.target.value)
-        }}
-      />
-    </>
+    <FormInput.MultiTextInput
+      name={identifier}
+      label=""
+      disabled={settingValue && !settingValue.isSettingEditable}
+      multiTextInputProps={{
+        textProps: {
+          type: 'number'
+        },
+        allowableTypes: [MultiTypeInputType.FIXED]
+      }}
+      onChange={handleChange}
+    />
   )
 }
 export interface DefaultSettingRadioBtnWithTrueAndFalseProps extends SettingRendererProps {
@@ -118,16 +129,45 @@ export const DefaultSettingTextbox: React.FC<SettingRendererProps> = ({
   identifier,
   settingValue
 }) => {
+  const handleChange: MultiTypeDurationProps['onChange'] = React.useCallback(
+    val => {
+      onSettingSelectionChange(val)
+    },
+    [onSettingSelectionChange]
+  )
   return (
-    <>
-      <FormInput.Text
-        name={identifier}
-        disabled={settingValue && !settingValue.isSettingEditable}
-        className={css.defaultSettingRenderer}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-          onSettingSelectionChange(e.target.value)
-        }}
-      />
-    </>
+    <FormInput.MultiTextInput
+      name={identifier}
+      label=""
+      disabled={settingValue && !settingValue.isSettingEditable}
+      multiTextInputProps={{
+        allowableTypes: [MultiTypeInputType.FIXED]
+      }}
+      onChange={handleChange}
+    />
+  )
+}
+
+export const DefaultSettingDurationField: React.FC<SettingRendererProps> = ({
+  onSettingSelectionChange,
+  identifier,
+  settingValue
+}) => {
+  const handleChange: MultiTypeDurationProps['onChange'] = React.useCallback(
+    val => {
+      onSettingSelectionChange(val)
+    },
+    [onSettingSelectionChange]
+  )
+  return (
+    <FormMultiTypeDurationField
+      name={identifier}
+      label=""
+      disabled={settingValue && !settingValue.isSettingEditable}
+      onChange={handleChange}
+      multiTypeDurationProps={{
+        allowableTypes: [MultiTypeInputType.FIXED]
+      }}
+    />
   )
 }

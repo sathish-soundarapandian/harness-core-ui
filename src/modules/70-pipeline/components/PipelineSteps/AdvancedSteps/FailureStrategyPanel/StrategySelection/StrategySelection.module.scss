@@ -39,9 +39,25 @@ $step-width: 140px;
   }
 }
 
+.thumbnailSelect {
+  :global(.Layout--horizontal) {
+    flex-wrap: wrap;
+    gap: var(--layout-spacing);
+  }
+}
+
 .thumbnail {
   cursor: pointer;
+
+  & + & {
+    margin-left: 0 !important;
+  }
+
   :global(.bp3-icon) {
     --intent-color: var(--primary-7);
+
+    &[data-icon='main-resume'] path {
+      fill: var(--primary-7) !important;
+    }
   }
 }

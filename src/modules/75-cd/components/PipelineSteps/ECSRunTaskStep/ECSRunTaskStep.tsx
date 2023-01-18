@@ -24,7 +24,9 @@ import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVar
 
 export interface ECSRunTaskStepInitialValues extends StepElementConfig {
   spec: {
+    taskDefinitionType?: string
     taskDefinition?: StoreConfigWrapper
+    taskDefinitionArn?: string
     runTaskRequestDefinition?: StoreConfigWrapper
     skipSteadyStateCheck?: boolean
   }
@@ -41,7 +43,7 @@ interface ECSRunTaskVariableStepProps {
 export class ECSRunTaskStep extends PipelineStep<ECSRunTaskStepInitialValues> {
   protected type = StepType.EcsRunTask
   protected stepName = 'Configure ECS Run Task'
-  protected stepIcon: IconName = 'command-shell-script'
+  protected stepIcon: IconName = 'run-task-step'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ECSRunTask'
   protected isHarnessSpecific = false
   protected defaultValues: ECSRunTaskStepInitialValues = {

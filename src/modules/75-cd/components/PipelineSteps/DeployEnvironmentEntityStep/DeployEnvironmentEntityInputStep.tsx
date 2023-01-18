@@ -324,6 +324,11 @@ export default function DeployEnvironmentEntityInputStep({
                   item => item !== MultiTypeInputType.EXPRESSION && item !== MultiTypeInputType.EXECUTION_TIME
                 ) as AllowedTypes
               }}
+              multitypeInputValue={
+                typeof environmentValues === 'string'
+                  ? getMultiTypeFromValue(environmentValues)
+                  : MultiTypeInputType.FIXED
+              }
             />
           ) : (
             <FormMultiTypeMultiSelectDropDown

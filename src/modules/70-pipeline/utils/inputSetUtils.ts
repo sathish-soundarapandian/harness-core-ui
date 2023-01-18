@@ -6,6 +6,7 @@
  */
 
 import { cloneDeep, isNull, isUndefined, omitBy } from 'lodash-es'
+import type { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetSummaryResponse } from 'services/pipeline-ng'
 import { changeEmptyValuesToRunTimeInput } from './stageHelpers'
 import type { InputSetDTO } from './types'
@@ -37,7 +38,22 @@ export const isInputSetInvalid = (data: InputSetSummaryResponseExtended): boolea
   return false
 }
 
+export const isInputSetStoreTypeInvalid = (
+  pipelineStoreType: StoreType | undefined,
+  inputSetStoreType: InputSetSummaryResponse['storeType']
+): boolean => {
+  return inputSetStoreType !== pipelineStoreType
+}
+
 export const clearNullUndefined = /* istanbul ignore next */ (data: InputSetDTO): InputSetDTO => {
   const omittedInputset = omitBy(omitBy(data, isUndefined), isNull)
   return changeEmptyValuesToRunTimeInput(cloneDeep(omittedInputset), '')
+}
+
+export const hasStoreTypeMismatch = (
+  pipelineStoreType: StoreMetadata['storeType'],
+  inputSetStoreType: StoreMetadata['storeType'],
+  isEdit: boolean
+): boolean => {
+  return isEdit && pipelineStoreType !== inputSetStoreType
 }

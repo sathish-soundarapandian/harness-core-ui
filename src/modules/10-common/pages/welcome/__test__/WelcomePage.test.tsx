@@ -35,6 +35,29 @@ jest.mock('services/cd-ng', () => ({
           correlationId: '9e8b87e6-afbb-44b6-b2b1-b96710328548'
         })
     }
+  }),
+  useStartTrialLicense: jest.fn().mockImplementation(() => {
+    return {
+      mutate: () =>
+        Promise.resolve({
+          status: 'SUCCESS',
+          data: {
+            id: '631a3cd31353c237dedfb3a2',
+            accountIdentifier: '7-dnAHjpSNuHHQ2OChaiRw',
+            moduleType: 'CHAOS',
+            edition: 'ENTERPRISE',
+            licenseType: 'TRIAL',
+            status: 'ACTIVE',
+            premiumSupport: true,
+            selfService: false,
+            createdAt: 1662663890993,
+            lastModifiedAt: 1662663890993,
+            numberOfCommitters: -1
+          },
+          metaData: null,
+          correlationId: '9e8b87e6-afbb-44b6-b2b1-b96710328548'
+        })
+    }
   })
 }))
 
@@ -43,7 +66,8 @@ const featureFlags = {
   CVNG_ENABLED: true,
   CING_ENABLED: true,
   CENG_ENABLED: true,
-  CFNG_ENABLED: true
+  CFNG_ENABLED: true,
+  CHAOS_ENABLED: true
 }
 
 describe('Welcome Page', () => {
@@ -80,6 +104,19 @@ describe('Welcome Page', () => {
     fireEvent.click(getByTestId('cd'))
     fireEvent.click(getByText('continue'))
     await waitFor(() => expect(queryByText('common.purpose.cd.description')).not.toBeInTheDocument())
+    expect(container).toMatchSnapshot()
+  })
+
+  test('Should go to module home page when chaos module is selected and continue is clicked', async () => {
+    const { container, getByText, getByTestId, queryByText } = render(
+      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+        <WelcomePage />
+      </TestWrapper>
+    )
+    await waitFor(() => expect(queryByText('common.purpose.chaos.description')).toBeInTheDocument())
+    fireEvent.click(getByTestId('chaos'))
+    fireEvent.click(getByText('continue'))
+    await waitFor(() => expect(queryByText('common.purpose.chaos.description')).not.toBeInTheDocument())
     expect(container).toMatchSnapshot()
   })
 })

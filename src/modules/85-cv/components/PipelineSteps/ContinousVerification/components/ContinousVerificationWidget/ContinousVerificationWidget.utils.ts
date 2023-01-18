@@ -7,7 +7,7 @@
 
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { FormikErrors, FormikProps } from 'formik'
-import { set } from 'lodash-es'
+import { isEmpty, set } from 'lodash-es'
 import {
   getValidationLabelByNameForTemplateInputs,
   getNestedFields
@@ -22,6 +22,12 @@ import type {
 } from '../../types'
 import { isAnExpression } from './components/ContinousVerificationWidgetSections/components/MonitoredService/MonitoredService.utils'
 import { MONITORED_SERVICE_TYPE } from './components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
+import {
+  METRIC_DEFINITIONS,
+  NEWRELIC_METRIC_DEFINITIONS,
+  QUERIES,
+  QUERY_DEFINITIONS
+} from './components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/components/MonitoredServiceInputTemplatesHealthSources/MonitoredServiceInputTemplatesHealthSources.constants'
 
 export function healthSourcesValidation(
   monitoredServiceRef: string | undefined,
@@ -194,18 +200,20 @@ export function validateTemplateInputsHealthSources(
   healthSourcesToValidate.forEach((healthSource: any, index: number) => {
     const actualHealthSources = templateInputs[key]?.healthSources || []
     const actualHealthSource = actualHealthSources?.length ? actualHealthSources[index] : null
+    const metricDefinitionsKey = getMetricDefinitionsKey(healthSource)
     Object.keys(healthSource?.spec).map(healthSourceKey => {
       const path = `sources.healthSources.${index}.spec`
-      if (healthSourceKey === 'metricDefinitions') {
-        const metricDefinitionsToValidate = healthSource?.spec['metricDefinitions']
-        const actualMetricDefinitionsToValidate = actualHealthSource?.spec['metricDefinitions']
+      if (healthSourceKey === metricDefinitionsKey) {
+        const metricDefinitionsToValidate = healthSource?.spec[metricDefinitionsKey]
+        const actualMetricDefinitionsToValidate = actualHealthSource?.spec[metricDefinitionsKey]
         if (metricDefinitionsToValidate.length) {
           validateMetricDefinitions(
             metricDefinitionsToValidate,
             actualMetricDefinitionsToValidate,
             path,
             errors,
-            getString
+            getString,
+            metricDefinitionsKey
           )
         }
       } else if (!actualHealthSource?.spec[healthSourceKey]) {
@@ -224,12 +232,17 @@ export function validateMetricDefinitions(
   actualMetricDefinitionsToValidate: any,
   path: string,
   errors: FormikErrors<ContinousVerificationData>,
-  getString: (key: StringKeys) => string
+  getString: (key: StringKeys) => string,
+  metricDefinitionsKey: string
 ): void {
   metricDefinitionsToValidate.forEach((metricDefinition: any, idx: number) => {
     const actualMetricDefinition = actualMetricDefinitionsToValidate[idx]
-    const metricDefinitionFields = getNestedFields(metricDefinition, [], `${path}.metricDefinitions.${idx}`)
-    const actualMetricDefinitionFields = getNestedFields(actualMetricDefinition, [], `${path}.metricDefinitions.${idx}`)
+    const metricDefinitionFields = getNestedFields(metricDefinition, [], `${path}.${metricDefinitionsKey}.${idx}`)
+    const actualMetricDefinitionFields = getNestedFields(
+      actualMetricDefinition,
+      [],
+      `${path}.${metricDefinitionsKey}.${idx}`
+    )
 
     for (const metricDefinitionField of metricDefinitionFields) {
       const actualMetricDefinitionField = actualMetricDefinitionFields.find(
@@ -266,4 +279,16 @@ export function resetFormik(
 ): void {
   const formNewValues = { ...formValues, spec: newSpecs }
   formik.resetForm({ values: formNewValues })
+}
+
+export function getMetricDefinitionsKey(healthSource: any): string {
+  let metricDefinitionsKey = METRIC_DEFINITIONS
+  if (!isEmpty(healthSource?.spec[QUERY_DEFINITIONS])) {
+    metricDefinitionsKey = QUERY_DEFINITIONS
+  } else if (!isEmpty(healthSource?.spec[QUERIES])) {
+    metricDefinitionsKey = QUERIES
+  } else if (!isEmpty(healthSource?.spec[NEWRELIC_METRIC_DEFINITIONS])) {
+    metricDefinitionsKey = NEWRELIC_METRIC_DEFINITIONS
+  }
+  return metricDefinitionsKey
 }

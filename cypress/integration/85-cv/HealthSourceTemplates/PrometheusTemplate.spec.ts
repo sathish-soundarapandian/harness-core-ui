@@ -19,9 +19,7 @@ import {
   metricListAPI,
   metricListResponse,
   sampleDataAPI,
-  sampleDataResponse,
-  metricPackAPI,
-  metricPackResponse
+  sampleDataResponse
 } from '../../../support/85-cv/monitoredService/health-sources/Prometheus/constant'
 import { errorResponse } from '../../../support/85-cv/slos/constants'
 import { Connectors } from '../../../utils/connctors-utils'
@@ -159,6 +157,8 @@ describe('Health Source - Prometheus', () => {
     cy.intercept('GET', metricListAPI, metricListResponse)
 
     cy.populateDefineHealthSource(Connectors.PROMETHEUS, '', 'Prometheus')
+    cy.get('.GroupedThumbnailSelect--thumbnailsRow [data-icon="service-prometheus"]').should('exist')
+    cy.get('.GroupedThumbnailSelect--thumbnailsRow [data-icon="service-prometheus"]').scrollIntoView().click()
     cy.setConnectorRuntime()
 
     cy.findByRole('button', { name: /Next/i }).click()

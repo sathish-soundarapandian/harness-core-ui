@@ -82,6 +82,7 @@ export abstract class Step<T> {
   protected stepAdditionalInfo?: keyof StringsMap
   protected _hasStepVariables = false
   protected _hasDelegateSelectionVisible = false
+  protected _hasCommandFlagSelectionVisible = false
   protected isHarnessSpecific = false
   protected isStepNonDeletable = false // If true, the step can not be deleted from pipeline execution tab view
   protected invocationMap?: Map<
@@ -148,6 +149,9 @@ export abstract class Step<T> {
 
   get hasDelegateSelectionVisible(): boolean {
     return this._hasDelegateSelectionVisible
+  }
+  get hasCommandFlagSelectionVisible(): boolean {
+    return this._hasCommandFlagSelectionVisible
   }
 
   get hasStepVariables(): boolean {

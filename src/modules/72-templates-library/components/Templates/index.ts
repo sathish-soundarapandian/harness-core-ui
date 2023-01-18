@@ -8,9 +8,12 @@
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 import { StageTemplate } from '@templates-library/components/Templates/StageTemplate/StageTemplate'
 import { PipelineTemplate } from '@templates-library/components/Templates/PipelineTemplate/PipelineTemplate'
+import { StepGroupTemplate } from '@templates-library/components/Templates/StepGroupTemplate/StepGroupTemplate'
+
 import templateFactory from './TemplatesFactory'
 
 // common
 templateFactory.registerTemplate(new StepTemplate())
 templateFactory.registerTemplate(new StageTemplate())
 templateFactory.registerTemplate(new PipelineTemplate())
+templateFactory.registerTemplate(new StepGroupTemplate())

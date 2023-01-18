@@ -146,7 +146,7 @@ describe('SwapRollbackStep tests', () => {
   })
 
   test('Variables view renders fine', async () => {
-    const { getByText } = render(
+    const { container } = render(
       <TestStepWidget
         initialValues={existingInitialValues}
         type={StepType.SwapRollback}
@@ -158,32 +158,36 @@ describe('SwapRollbackStep tests', () => {
           stageIdentifier: 'testStage',
           variablesData: existingInitialValues,
           metadataMap: {
-            SwapRollback: {
+            'Swap Route Step Default': {
               yamlProperties: {
-                fqn: 'pipeline.stages.testStage.execution.steps.SwapRollbackStep.name',
-                localName: 'step.SwapRollbackStep.name'
+                fqn: 'pipeline.stages.testStage.spec.execution.steps.SwapRollback_1.name',
+                localName: 'execution.steps.SwapRollback_1.name',
+                variableName: 'name',
+                aliasFQN: '',
+                visible: true
               }
             },
             '10m': {
               yamlProperties: {
-                fqn: 'pipeline.stages.testStage.execution.steps.SwapRollbackStep.timeout',
-                localName: 'step.SwapRollback.timeout'
+                fqn: 'pipeline.stages.testStage.spec.execution.steps.SwapRollback_1.timeout',
+                localName: 'execution.steps.SwapRollback_1.timeout',
+                variableName: 'timeout',
+                aliasFQN: '',
+                visible: true
               }
             },
-            false: {
-              yamlProperties: {
-                fqn: 'pipeline.stages.testStage.execution.steps.SwapRollbackStep.spec.upsizeInActiveApp',
-                localName: 'step.upsizeInActiveApp'
-              }
+            upsizeInActiveApp: {
+              fqn: 'pipeline.stages.testStage.spec.execution.steps.SwapRollback_1.spec.upsizeInActiveApp',
+              localName: 'execution.steps.SwapRollback_1.spec.upsizeInActiveApp',
+              variableName: 'upsizeInActiveApp',
+              aliasFQN: '',
+              visible: true
             }
           }
         }}
       />
     )
 
-    expect(getByText('name')).toBeVisible()
-    expect(getByText('SwapRollback')).toBeVisible()
-    expect(getByText('timeout')).toBeVisible()
-    expect(getByText('10m')).toBeVisible()
+    expect(container).toMatchSnapshot()
   })
 })

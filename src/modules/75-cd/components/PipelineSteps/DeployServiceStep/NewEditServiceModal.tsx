@@ -187,8 +187,8 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
           onSubmit(values)
         }}
         validationSchema={Yup.object().shape({
-          name: NameSchema({ requiredErrorMsg: getString?.('fieldRequired', { field: 'Service' }) }),
-          identifier: IdentifierSchema()
+          name: NameSchema(getString, { requiredErrorMsg: getString?.('fieldRequired', { field: 'Service' }) }),
+          identifier: IdentifierSchema(getString)
         })}
       >
         {formikProps => {

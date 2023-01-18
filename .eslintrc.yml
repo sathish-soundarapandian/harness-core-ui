@@ -44,6 +44,7 @@ rules:
   no-only-tests: 'warn'
   duplicate-data-tooltip-id: 'warn'
   no-direct-runtime-comparision: 2
+  timeout-runtime: 2
   jest-no-mock:
     - 2
     - module:

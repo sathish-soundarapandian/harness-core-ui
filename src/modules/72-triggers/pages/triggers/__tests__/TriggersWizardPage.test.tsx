@@ -9,6 +9,7 @@ import React from 'react'
 import { render, waitFor, queryByText, fireEvent } from '@testing-library/react'
 import { renderHook } from '@testing-library/react-hooks'
 import type { UseMutateReturn } from 'restful-react'
+import userEvent from '@testing-library/user-event'
 import { useStrings } from 'framework/strings'
 import * as pipelineNg from 'services/pipeline-ng'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
@@ -327,6 +328,9 @@ describe('TriggersWizardPage Triggers tests', () => {
         throw Error('No Pipeline Input tab')
       }
       fireEvent.click(tab3)
+      const pipelineInputVariable = container.querySelector('[name="pipeline.variables[0].value"]') as HTMLInputElement
+      await waitFor(() => expect(pipelineInputVariable).toBeInTheDocument())
+      userEvent.type(pipelineInputVariable, 'test')
       await waitFor(() => expect(result.current.getString('triggers.updateTrigger')).not.toBeNull())
       const updateButton = queryByText(container, result.current.getString('triggers.updateTrigger'))
       if (!updateButton) {
@@ -392,6 +396,9 @@ describe('TriggersWizardPage Triggers tests', () => {
         throw Error('No Pipeline Input tab')
       }
       fireEvent.click(tab3)
+      const pipelineInputVariable = container.querySelector('[name="pipeline.variables[0].value"]') as HTMLInputElement
+      await waitFor(() => expect(pipelineInputVariable).toBeInTheDocument())
+      userEvent.type(pipelineInputVariable, 'test')
       await waitFor(() => expect(result.current.getString('triggers.updateTrigger')).not.toBeNull())
       const updateButton = queryByText(container, result.current.getString('triggers.updateTrigger'))
       if (!updateButton) {
@@ -457,6 +464,9 @@ describe('TriggersWizardPage Triggers tests', () => {
         throw Error('No Pipeline Input tab')
       }
       fireEvent.click(tab3)
+      const pipelineInputVariable = container.querySelector('[name="pipeline.variables[0].value"]') as HTMLInputElement
+      await waitFor(() => expect(pipelineInputVariable).toBeInTheDocument())
+      userEvent.type(pipelineInputVariable, 'test')
       await waitFor(() => expect(result.current.getString('triggers.updateTrigger')).not.toBeNull())
       const updateButton = queryByText(container, result.current.getString('triggers.updateTrigger'))
       if (!updateButton) {
@@ -514,6 +524,9 @@ describe('TriggersWizardPage Triggers tests', () => {
         throw Error('No Pipeline Input tab')
       }
       fireEvent.click(tab3)
+      const pipelineInputVariable = container.querySelector('[name="pipeline.variables[0].value"]') as HTMLInputElement
+      await waitFor(() => expect(pipelineInputVariable).toBeInTheDocument())
+      userEvent.type(pipelineInputVariable, 'test')
       await waitFor(() => expect(result.current.getString('triggers.updateTrigger')).not.toBeNull())
       const updateButton = queryByText(container, result.current.getString('triggers.updateTrigger'))
       if (!updateButton) {
@@ -565,6 +578,9 @@ describe('TriggersWizardPage Triggers tests', () => {
         throw Error('No Pipeline Input tab')
       }
       fireEvent.click(tab3)
+      const pipelineInputVariable = container.querySelector('[name="pipeline.variables[0].value"]') as HTMLInputElement
+      await waitFor(() => expect(pipelineInputVariable).toBeInTheDocument())
+      userEvent.type(pipelineInputVariable, 'test')
       await waitFor(() => expect(result.current.getString('triggers.updateTrigger')).not.toBeNull())
       const updateButton = queryByText(container, result.current.getString('triggers.updateTrigger'))
       if (!updateButton) {
@@ -691,6 +707,9 @@ describe('TriggersWizardPage Triggers tests', () => {
       }
 
       fireEvent.click(tab3)
+      const pipelineInputVariable = container.querySelector('[name="pipeline.variables[0].value"]') as HTMLInputElement
+      await waitFor(() => expect(pipelineInputVariable).toBeInTheDocument())
+      userEvent.type(pipelineInputVariable, 'test')
       const updateButton = queryByText(container, result.current.getString('triggers.updateTrigger'))
 
       if (!updateButton) {

@@ -50,7 +50,7 @@ function WaitStepWidget(
       validate={formValues => {
         /* istanbul ignore next */ onChange?.(formValues)
       }}
-      formName="stepStepForm"
+      formName="waitStepForm"
       initialValues={initialValues}
       validationSchema={validationSchema}
     >

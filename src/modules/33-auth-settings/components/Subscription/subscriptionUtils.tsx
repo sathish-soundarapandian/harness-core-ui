@@ -219,6 +219,11 @@ export function getTitleByModule(module: Module): { icon?: string; description?:
       description = 'common.purpose.sto.continuous'
       break
     }
+    case 'chaos': {
+      icon = 'chaos-solid'
+      description = 'common.purpose.chaos.continuous'
+      break
+    }
   }
 
   return { icon, description, title }

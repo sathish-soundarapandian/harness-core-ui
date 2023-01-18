@@ -6,7 +6,7 @@
  */
 
 import type { Column } from 'react-table'
-import type { NotificationToToggle } from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.types'
+import type { NotificationToToggle } from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.types'
 import type { NotificationRuleResponse, RestResponseNotificationRuleResponse } from 'services/cv'
 import type { SRMNotification } from '../../NotificationsContainer.types'
 

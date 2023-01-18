@@ -12,7 +12,7 @@ import { isEmpty } from 'lodash-es'
 import { NameSchema } from '@common/utils/Validation'
 import { Connectors } from '@connectors/constants'
 import type { ArtifactSource, ConnectorInfoDTO, PrimaryArtifact, ServiceDefinition } from 'services/cd-ng'
-import type { StringKeys } from 'framework/strings'
+import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { ArtifactType } from './ArtifactInterface'
 
@@ -28,15 +28,27 @@ export const isAllowedCustomArtifactDeploymentTypes = (deploymentType: ServiceDe
     deploymentType === ServiceDeploymentType.Kubernetes ||
     deploymentType === ServiceDeploymentType.NativeHelm ||
     deploymentType === ServiceDeploymentType.ECS ||
-    deploymentType == ServiceDeploymentType.TAS
+    deploymentType === ServiceDeploymentType.TAS
   )
 }
 
-export const isAllowedGoogleArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
+export const isAllowedGithubPackageRegistryDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
   return (
     deploymentType === ServiceDeploymentType.Kubernetes ||
-    deploymentType === ServiceDeploymentType.CustomDeployment ||
-    deploymentType === ServiceDeploymentType.TAS
+    deploymentType === ServiceDeploymentType.TAS ||
+    deploymentType === ServiceDeploymentType.CustomDeployment
+  )
+}
+
+export const isAllowedAzureArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
+  return (
+    deploymentType === ServiceDeploymentType.Kubernetes || deploymentType === ServiceDeploymentType.CustomDeployment
+  )
+}
+
+export const isAllowedAMIDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
+  return (
+    deploymentType === ServiceDeploymentType.Kubernetes || deploymentType === ServiceDeploymentType.CustomDeployment
   )
 }
 
@@ -154,7 +166,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Ecr,
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
-    ENABLED_ARTIFACT_TYPES.Acr
+    ENABLED_ARTIFACT_TYPES.Acr,
+    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
   ],
   NativeHelm: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
@@ -175,7 +188,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.CustomArtifact,
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.AmazonS3,
-    ENABLED_ARTIFACT_TYPES.Nexus2Registry
+    ENABLED_ARTIFACT_TYPES.Nexus2Registry,
+    ENABLED_ARTIFACT_TYPES.AzureArtifacts
   ],
   WinRm: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
@@ -183,7 +197,8 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.CustomArtifact,
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.AmazonS3,
-    ENABLED_ARTIFACT_TYPES.Nexus2Registry
+    ENABLED_ARTIFACT_TYPES.Nexus2Registry,
+    ENABLED_ARTIFACT_TYPES.AzureArtifacts
   ],
   AzureWebApp: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
@@ -210,11 +225,13 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
     ENABLED_ARTIFACT_TYPES.Jenkins,
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
+    ENABLED_ARTIFACT_TYPES.Nexus2Registry,
     ENABLED_ARTIFACT_TYPES.AmazonS3,
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
     ENABLED_ARTIFACT_TYPES.Ecr,
     ENABLED_ARTIFACT_TYPES.Gcr,
-    ENABLED_ARTIFACT_TYPES.Acr
+    ENABLED_ARTIFACT_TYPES.Acr,
+    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
   ],
   TAS: [
     ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry,
@@ -224,8 +241,10 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.AmazonS3,
     ENABLED_ARTIFACT_TYPES.Gcr,
     ENABLED_ARTIFACT_TYPES.Ecr,
-    ENABLED_ARTIFACT_TYPES.Acr
-  ]
+    ENABLED_ARTIFACT_TYPES.Acr,
+    ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
+  ],
+  GoogleCloudFunctions: []
 }
 
 export const tagOptions: IOptionProps[] = [
@@ -262,17 +281,18 @@ export const repositoryPortOrServer: IOptionProps[] = [
 ]
 
 export const ArtifactIdentifierValidation = (
+  getString: UseStringsReturn['getString'],
   artifactIdentifiers: string[],
   id: string | undefined,
   validationMsg: string
 ): { identifier: Schema<unknown> } => {
   if (!id) {
     return {
-      identifier: NameSchema().notOneOf(artifactIdentifiers, validationMsg)
+      identifier: NameSchema(getString).notOneOf(artifactIdentifiers, validationMsg)
     }
   }
   return {
-    identifier: NameSchema()
+    identifier: NameSchema(getString)
   }
 }
 

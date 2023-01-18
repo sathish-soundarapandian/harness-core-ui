@@ -19,7 +19,7 @@ import {
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
-import type { InputSetResponse, PipelineInfoConfig } from 'services/pipeline-ng'
+import type { InputSetResponse, PipelineConfig, PipelineInfoConfig } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   useGetTemplateFromPipeline,
@@ -49,13 +49,14 @@ import { AppStoreContext } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitContextProps } from '@common/components/GitContextForm/GitContextForm'
-import { memoizedParse, parse } from '@common/utils/YamlHelperMethods'
+import { parse, yamlParse } from '@common/utils/YamlHelperMethods'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { InputSetDTO, InputSetType, Pipeline, InputSet } from '@pipeline/utils/types'
-import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
+import { hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
+import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import GitPopover from '../GitPopover/GitPopover'
 import FormikInputSetForm from './FormikInputSetForm'
 import { useSaveInputSet } from './useSaveInputSet'
@@ -137,7 +138,8 @@ const getInputSet = (
       gitDetails: defaultTo(inputSetObj.gitDetails, {}),
       inputSetErrorWrapper: defaultTo(inputSetObj.inputSetErrorWrapper, {}),
       entityValidityDetails: defaultTo(inputSetObj.entityValidityDetails, {}),
-      outdated: inputSetObj.outdated
+      outdated: inputSetObj.outdated,
+      storeType: inputSetObj.storeType
     }
   }
   return getDefaultInputSet(
@@ -156,6 +158,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   >()
   const { repoIdentifier, branch, inputSetRepoIdentifier, inputSetBranch, connectorRef, repoName, storeType } =
     useQueryParams<InputSetGitQueryParams>()
+
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
     gitSyncEnabledOnlyForFF,
@@ -188,6 +191,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   const [selectedView, setSelectedView] = React.useState<SelectedView>(SelectedView.VISUAL)
   const [yamlHandler, setYamlHandler] = React.useState<YamlBuilderHandlerBinding | undefined>()
   const [formErrors, setFormErrors] = React.useState<Record<string, any>>({})
+  const [resolvedPipeline, setResolvedPipeline] = React.useState<PipelineInfoConfig | undefined>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
 
@@ -227,7 +231,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
       repoIdentifier: isGitSyncEnabled ? inputSetRepoIdentifier : repoName,
       branch: isGitSyncEnabled ? inputSetBranch : branch,
       parentEntityConnectorRef: connectorRef,
-      parentEntityRepoName: repoIdentifier
+      parentEntityRepoName: repoName
     }
   })
 
@@ -316,22 +320,44 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
     })
   }
 
+  const parsedPipeline: PipelineInfoConfig | undefined = React.useMemo(
+    () => yamlParse<PipelineConfig>(defaultTo(pipeline?.data?.yamlPipeline, ''))?.pipeline,
+    [pipeline?.data?.yamlPipeline]
+  )
+
+  React.useEffect(() => {
+    setResolvedPipeline(
+      yamlParse<PipelineConfig>(defaultTo(pipeline?.data?.resolvedTemplatesPipelineYaml, ''))?.pipeline
+    )
+  }, [pipeline?.data?.resolvedTemplatesPipelineYaml])
+
+  const { loadingResolvedChildPipeline, resolvedMergedPipeline } = useGetResolvedChildPipeline(
+    { accountId, repoIdentifier, branch, connectorRef },
+    parsedPipeline,
+    resolvedPipeline
+  )
+
   React.useEffect(() => {
     if (!isEmpty(inputSet)) setFilePath(getFilePath(inputSet))
-    if (!isInputSetInvalid(inputSet)) {
+    if (!isInputSetInvalid(inputSet) && !hasStoreTypeMismatch(storeType, inputSetResponse?.data?.storeType, isEdit)) {
       setSelectedView(SelectedView.VISUAL)
     } else {
       setSelectedView(SelectedView.YAML)
     }
-  }, [inputSet, inputSet.entityValidityDetails?.valid])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputSet, inputSet.entityValidityDetails?.valid, storeType, isEdit])
 
   React.useEffect(() => {
-    if (inputSet.entityValidityDetails?.valid === false || inputSet.outdated) {
+    if (
+      inputSet.entityValidityDetails?.valid === false ||
+      inputSet.outdated ||
+      hasStoreTypeMismatch(storeType, inputSetResponse?.data?.storeType, isEdit)
+    ) {
       setDisableVisualView(true)
     } else {
       setDisableVisualView(false)
     }
-  }, [inputSet.entityValidityDetails?.valid, inputSet.outdated])
+  }, [inputSet.entityValidityDetails?.valid, inputSet.outdated, storeType, inputSetResponse?.data?.storeType, isEdit])
 
   React.useEffect(() => {
     if (inputSetIdentifier !== '-1' && !isNewInModal) {
@@ -418,7 +444,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   const child = React.useCallback(
     () => (
       <PipelineVariablesContextProvider
-        pipeline={memoizedParse<Pipeline>(defaultTo(pipeline?.data?.yamlPipeline, ''))?.pipeline as PipelineInfoConfig}
+        pipeline={parsedPipeline}
         enablePipelineTemplatesResolution={true}
         storeMetadata={{ storeType, connectorRef, repoName, branch, filePath }}
       >
@@ -426,7 +452,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
           inputSet={isNewInModal && inputSetInitialValue ? merge(inputSet, inputSetInitialValue) : inputSet}
           template={template}
           pipeline={pipeline}
-          resolvedTemplatesPipelineYaml={pipeline?.data?.resolvedTemplatesPipelineYaml}
+          resolvedPipeline={resolvedMergedPipeline}
           handleSubmit={handleSubmit}
           formErrors={formErrors}
           setFormErrors={setFormErrors}
@@ -450,7 +476,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
       inputSet,
       template,
       pipeline,
-      pipeline?.data?.resolvedTemplatesPipelineYaml,
+      resolvedMergedPipeline,
       handleSubmit,
       formErrors,
       setFormErrors,
@@ -476,7 +502,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
     )
   }
 
-  if (loadingInputSet || loadingPipeline || loadingTemplate || loadingMerge) {
+  if (loadingInputSet || loadingPipeline || loadingTemplate || loadingMerge || loadingResolvedChildPipeline) {
     return <ContainerSpinner height={'100vh'} flex={{ align: 'center-center' }} />
   }
 
@@ -552,7 +578,7 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
                   }}
                   disableToggle={disableVisualView}
                   disableToggleReasonIcon={'danger-icon'}
-                  showDisableToggleReason={true}
+                  showDisableToggleReason={!hasStoreTypeMismatch(storeType, inputSet?.storeType, isEdit)}
                 />
               </div>
             </Layout.Horizontal>

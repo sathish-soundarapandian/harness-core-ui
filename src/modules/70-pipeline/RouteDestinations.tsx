@@ -33,6 +33,7 @@ import ExecutionPipelineView from '@pipeline/pages/execution/ExecutionPipelineVi
 import ExecutionPolicyEvaluationsView from '@pipeline/pages/execution/ExecutionPolicyEvaluationsView/ExecutionPolicyEvaluationsView'
 import ExecutionSecurityView from '@pipeline/pages/execution/ExecutionSecurityView/ExecutionSecurityView'
 import BuildTestsApp from '@pipeline/pages/execution/ExecutionTestView/BuildTestsApp'
+import ResilienceView from '@pipeline/pages/execution/ResilienceView/ResilienceView'
 import FullPageLogView from '@pipeline/pages/full-page-log-view/FullPageLogView'
 import InputSetList from '@pipeline/pages/inputSet-list/InputSetList'
 import PipelineDetails from '@pipeline/pages/pipeline-details/PipelineDetails'
@@ -642,6 +643,37 @@ export function PipelineRouteDestinations({
       >
         <ExecutionLandingPage>
           <BuildTestsApp />
+        </ExecutionLandingPage>
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        layout={MinimalLayout}
+        path={routes.toResilienceView({
+          ...accountPathProps,
+          ...executionPathProps,
+          ...moduleParams
+        })}
+        pageName={PAGE_NAME.ExecutionResilienceView}
+      >
+        <ExecutionLandingPage>
+          <ResilienceView />
+        </ExecutionLandingPage>
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={ProjectDetailsSideNavProps}
+        layout={MinimalLayout}
+        path={routes.toResilienceView({
+          ...accountPathProps,
+          ...executionPathProps
+        })}
+        pageName={PAGE_NAME.ExecutionResilienceView}
+      >
+        <ExecutionLandingPage>
+          <ResilienceView />
         </ExecutionLandingPage>
       </RouteWithLayout>
       <RouteWithLayout

@@ -372,7 +372,7 @@ exports[`Create CE K8s Connector Wizard Proceed with following steps 1`] = `
                                 class="Tooltip--acenter"
                                 data-tooltip-id="overViewStepForm_name"
                               >
-                                name
+                                connectors.ceK8.overview.ccmConnectorNameLabel
                               </span>
                                
                               <span
@@ -1694,7 +1694,7 @@ exports[`Create CE K8s Connector Wizard Step One 1`] = `
                                 class="Tooltip--acenter"
                                 data-tooltip-id="overViewStepForm_name"
                               >
-                                name
+                                connectors.ceK8.overview.ccmConnectorNameLabel
                               </span>
                                
                               <span

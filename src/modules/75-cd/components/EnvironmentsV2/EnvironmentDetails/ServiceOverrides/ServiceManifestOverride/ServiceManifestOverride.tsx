@@ -6,7 +6,8 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import { AllowedTypes, Button, ButtonSize, ButtonVariation, Layout, StepProps } from '@harness/uicore'
+import { useParams } from 'react-router-dom'
+import { AllowedTypes, Button, ButtonSize, ButtonVariation, Layout, StepProps, StepWizard } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
 import { get, noop } from 'lodash-es'
@@ -17,7 +18,12 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ManifestWizard } from '@pipeline/components/ManifestSelection/ManifestWizard/ManifestWizard'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
-import { isGitTypeManifestStore } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import {
+  getBuildPayload,
+  isGitTypeManifestStore,
+  ManifestStoreMap,
+  ManifestToConnectorMap
+} from '@pipeline/components/ManifestSelection/Manifesthelper'
 import OpenShiftParamWithGit from '@pipeline/components/ManifestSelection/ManifestWizardSteps/OpenShiftParam/OSWithGit'
 import KustomizePatchDetails from '@pipeline/components/ManifestSelection/ManifestWizardSteps/KustomizePatchesDetails/KustomizePatchesDetails'
 import InheritFromManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/InheritFromManifest/InheritFromManifest'
@@ -33,6 +39,26 @@ import {
 import TasManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/TasManifest/TasManifest'
 import TASWithHarnessStore from '@pipeline/components/ManifestSelection/ManifestWizardSteps/TASWithHarnessStore/TASWithHarnessStore'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import ConnectorDetailsStep from '@connectors/components/CreateConnector/commonSteps/ConnectorDetailsStep'
+import DelegateSelectorStep from '@connectors/components/CreateConnector/commonSteps/DelegateSelectorStep/DelegateSelectorStep'
+import ConnectorTestConnection from '@connectors/common/ConnectorTestConnection/ConnectorTestConnection'
+import StepAWSAuthentication from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
+import GcpAuthentication from '@connectors/components/CreateConnector/GcpConnector/StepAuth/GcpAuthentication'
+import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
+import StepGitAuthentication from '@connectors/components/CreateConnector/GitConnector/StepAuth/StepGitAuthentication'
+import StepGithubAuthentication from '@connectors/components/CreateConnector/GithubConnector/StepAuth/StepGithubAuthentication'
+import StepBitbucketAuthentication from '@connectors/components/CreateConnector/BitbucketConnector/StepAuth/StepBitbucketAuthentication'
+import StepGitlabAuthentication from '@connectors/components/CreateConnector/GitlabConnector/StepAuth/StepGitlabAuthentication'
+import { Connectors, CONNECTOR_CREDENTIALS_STEP_IDENTIFIER } from '@connectors/constants'
+import {
+  buildAWSPayload,
+  buildGcpPayload,
+  buildHelmPayload,
+  buildOCIHelmPayload
+} from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { useQueryParams } from '@common/hooks'
+import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import StepHelmAuth from '@connectors/components/CreateConnector/HelmRepoConnector/StepHelmRepoAuth'
 import {
   OverrideManifestTypes,
   OverrideManifestStores,
@@ -79,7 +105,12 @@ function ServiceManifestOverride({
   const { getString } = useStrings()
   const [selectedManifest, setSelectedManifest] = useState<OverrideManifestTypes | null>(null)
   const [manifestStore, setManifestStore] = useState('')
+  const [connectorView, setConnectorView] = useState(false)
+  const [isEditMode, setIsEditMode] = useState(false)
   const [manifestIndex, setEditIndex] = useState(0)
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+
   const { CDS_TAS_NG } = useFeatureFlags()
 
   const createNewManifestOverride = (): void => {
@@ -96,6 +127,10 @@ function ServiceManifestOverride({
     setManifestStore(store)
     setEditIndex(index)
     showModal()
+  }
+
+  const handleConnectorViewChange = (isConnectorView: boolean): void => {
+    setConnectorView(isConnectorView)
   }
 
   const changeManifestType = (selected: OverrideManifestTypes | null): void => {
@@ -238,6 +273,104 @@ function ServiceManifestOverride({
     }
   }, [CDS_TAS_NG, serviceType])
 
+  const connectorDetailStepProps = {
+    type: ManifestToConnectorMap[manifestStore],
+    name: getString('overview'),
+    isEditMode,
+    gitDetails: { repoIdentifier, branch, getDefaultFromOtherRepo: true }
+  }
+  const delegateSelectorStepProps = {
+    name: getString('delegate.DelegateselectionLabel'),
+    isEditMode,
+    setIsEditMode,
+    connectorInfo: undefined
+  }
+  const ConnectorTestConnectionProps = {
+    name: getString('connectors.stepThreeName'),
+    connectorInfo: undefined,
+    isStep: true,
+    isLastStep: false,
+    type: ManifestToConnectorMap[manifestStore]
+  }
+  const gitTypeStoreAuthenticationProps = {
+    name: getString('credentials'),
+    isEditMode,
+    setIsEditMode,
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    connectorInfo: undefined,
+    onConnectorCreated: noop
+  }
+  const authenticationStepProps = {
+    ...gitTypeStoreAuthenticationProps,
+    identifier: CONNECTOR_CREDENTIALS_STEP_IDENTIFIER
+  }
+
+  const getNewConnectorSteps = useCallback((): JSX.Element => {
+    const buildPayload = getBuildPayload(ManifestToConnectorMap[manifestStore])
+    switch (manifestStore) {
+      case ManifestStoreMap.Http:
+      case ManifestStoreMap.OciHelmChart:
+        return (
+          <StepWizard title={getString('connectors.createNewConnector')}>
+            <ConnectorDetailsStep {...connectorDetailStepProps} />
+            <StepHelmAuth {...authenticationStepProps} isOCIHelm={manifestStore === ManifestStoreMap.OciHelmChart} />
+            <DelegateSelectorStep
+              {...delegateSelectorStepProps}
+              buildPayload={manifestStore === ManifestStoreMap.Http ? buildHelmPayload : buildOCIHelmPayload}
+            />
+            <ConnectorTestConnection {...ConnectorTestConnectionProps} />
+          </StepWizard>
+        )
+      case ManifestStoreMap.S3:
+        return (
+          <StepWizard iconProps={{ size: 37 }} title={getString('connectors.createNewConnector')}>
+            <ConnectorDetailsStep {...connectorDetailStepProps} />
+            <StepAWSAuthentication {...authenticationStepProps} />
+            <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildAWSPayload} />
+            <ConnectorTestConnection {...ConnectorTestConnectionProps} />
+          </StepWizard>
+        )
+      case ManifestStoreMap.Gcs:
+        return (
+          <StepWizard iconProps={{ size: 37 }} title={getString('connectors.createNewConnector')}>
+            <ConnectorDetailsStep {...connectorDetailStepProps} />
+            <GcpAuthentication {...authenticationStepProps} />
+            <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildGcpPayload} />
+            <ConnectorTestConnection {...ConnectorTestConnectionProps} />
+          </StepWizard>
+        )
+      default:
+        return (
+          <StepWizard title={getString('connectors.createNewConnector')}>
+            <ConnectorDetailsStep {...connectorDetailStepProps} />
+            <GitDetailsStep
+              type={ManifestToConnectorMap[manifestStore]}
+              name={getString('details')}
+              isEditMode={isEditMode}
+              connectorInfo={undefined}
+            />
+            {ManifestToConnectorMap[manifestStore] === Connectors.GIT ? (
+              <StepGitAuthentication {...gitTypeStoreAuthenticationProps} />
+            ) : null}
+            {ManifestToConnectorMap[manifestStore] === Connectors.GITHUB ? (
+              <StepGithubAuthentication {...gitTypeStoreAuthenticationProps} />
+            ) : null}
+            {ManifestToConnectorMap[manifestStore] === Connectors.BITBUCKET ? (
+              <StepBitbucketAuthentication {...gitTypeStoreAuthenticationProps} />
+            ) : null}
+            {ManifestToConnectorMap[manifestStore] === Connectors.GITLAB ? (
+              <StepGitlabAuthentication {...authenticationStepProps} />
+            ) : null}
+            <DelegateSelectorStep {...delegateSelectorStepProps} buildPayload={buildPayload} />
+            <ConnectorTestConnection {...ConnectorTestConnectionProps} />
+          </StepWizard>
+        )
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connectorView, manifestStore, isEditMode])
+
   const [showModal, hideModal] = useModalHook(() => {
     const onClose = (): void => {
       hideModal()
@@ -252,25 +385,26 @@ function ServiceManifestOverride({
             manifestStoreTypes={OverrideManifestStoreMap[selectedManifest as OverrideManifestTypes]}
             labels={getLabels()}
             selectedManifest={selectedManifest}
-            newConnectorView={false}
+            newConnectorView={connectorView}
             expressions={expressions}
             allowableTypes={allowableTypes}
             changeManifestType={changeManifestType}
             handleStoreChange={handleStoreChange}
             initialValues={getInitialValues()}
             lastSteps={getLastSteps()}
+            newConnectorSteps={getNewConnectorSteps()}
+            handleConnectorViewChange={handleConnectorViewChange}
             iconsProps={{
               name: ManifestIcons[selectedManifest as OverrideManifestTypes]
             }}
             isReadonly={isReadonly}
-            handleConnectorViewChange={noop}
             listOfDisabledManifestTypes={getListOfDisabledManifestTypes(manifestOverrides)}
           />
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
       </Dialog>
     )
-  }, [selectedManifest, manifestIndex, manifestStore, expressions.length, expressions, allowableTypes])
+  }, [selectedManifest, manifestIndex, manifestStore, expressions.length, expressions, allowableTypes, connectorView])
 
   const addBtnCommonProps = {
     size: ButtonSize.SMALL,

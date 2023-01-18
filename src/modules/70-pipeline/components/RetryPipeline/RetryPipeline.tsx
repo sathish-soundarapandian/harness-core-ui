@@ -41,8 +41,7 @@ import {
   useGetMergeInputSetFromPipelineTemplateWithListInput,
   useGetPipeline,
   useGetRetryStages,
-  useRetryPipeline,
-  useValidateTemplateInputs
+  useRetryPipeline
 } from 'services/pipeline-ng'
 
 import type {
@@ -59,7 +58,7 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
-import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
+import { parse, yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
@@ -70,11 +69,11 @@ import {
   mergeTemplateWithInputSetData
 } from '@pipeline/utils/runPipelineUtils'
 import type { InputSet, InputSetDTO, Pipeline } from '@pipeline/utils/types'
-import { PipelineErrorView } from '@pipeline/components/RunPipelineModal/PipelineErrorView'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
+import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import { ErrorsStrip } from '../ErrorsStrip/ErrorsStrip'
 import GitPopover from '../GitPopover/GitPopover'
 import SelectStagetoRetry from './SelectStagetoRetry'
@@ -209,18 +208,6 @@ function RetryPipeline({
     }
   })
 
-  const { data: validateTemplateInputsResponse, loading: loadingValidateTemplateInputs } = useValidateTemplateInputs({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      identifier: pipelineId,
-      repoIdentifier,
-      branch,
-      getDefaultFromOtherRepo: true
-    }
-  })
-
   const { data: inputSetData, loading: loadingTemplate } = useGetInputsetYamlV2({
     planExecutionId: planExecutionIdentifier,
     queryParams: {
@@ -330,7 +317,11 @@ function RetryPipeline({
   })
   /*------------------------------------------------API Calls------------------------------*/
 
-  const pipeline: PipelineInfoConfig | undefined = parse<Pipeline>(pipelineResponse?.data?.yamlPipeline || '')?.pipeline
+  const pipeline: PipelineInfoConfig | undefined = React.useMemo(
+    () => yamlParse<Pipeline>(defaultTo(pipelineResponse?.data?.yamlPipeline, ''))?.pipeline,
+    [pipelineResponse?.data?.yamlPipeline]
+  )
+
   const valuesPipelineRef = useRef<PipelineInfoConfig>()
   const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
     fileName: `retry-pipeline.yaml`,
@@ -369,6 +360,12 @@ function RetryPipeline({
       setResolvedPipeline(parse<Pipeline>(mergedPipelineYaml)?.pipeline)
     }
   }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
+
+  const { loadingResolvedChildPipeline, resolvedMergedPipeline } = useGetResolvedChildPipeline(
+    { accountId, repoIdentifier, branch, connectorRef },
+    pipeline,
+    resolvedPipeline
+  )
 
   useEffect(() => {
     // Won't actually render out RunPipelineForm
@@ -683,12 +680,12 @@ function RetryPipeline({
       )
     }
     const templateSource = inputSetTemplateYaml
-    if (currentPipeline?.pipeline && resolvedPipeline && templateSource) {
+    if (currentPipeline?.pipeline && resolvedMergedPipeline && templateSource) {
       return (
         <>
           {existingProvide === 'existing' ? <div className={css.divider} /> : null}
           <PipelineInputSetForm
-            originalPipeline={resolvedPipeline}
+            originalPipeline={resolvedMergedPipeline}
             template={parse<Pipeline>(templateSource)?.pipeline}
             readonly={false}
             path=""
@@ -697,6 +694,7 @@ function RetryPipeline({
             maybeContainerClass={existingProvide === 'provide' ? css.inputSetFormRunPipeline : ''}
             listOfSelectedStages={listOfSelectedStages}
             isRetryFormStageSelected={selectedStage !== null}
+            disableRuntimeInputConfigureOptions
           />
         </>
       )
@@ -710,27 +708,10 @@ function RetryPipeline({
     loadingTemplate ||
     inputSetLoading ||
     loadingRetry ||
-    loadingValidateTemplateInputs ||
-    loadingInputSetTemplate
+    loadingInputSetTemplate ||
+    loadingResolvedChildPipeline
   ) {
     return <PageSpinner />
-  }
-
-  if (validateTemplateInputsResponse?.data?.validYaml === false) {
-    // repoName={repoIdentifier} because values is calculated at top and one of them (repoIdentifier, repoName)
-    // will be undefined based on the enabled flag (isGitSyncEnabled)
-    return (
-      <PipelineErrorView
-        errorNodeSummary={validateTemplateInputsResponse.data.errorNodeSummary}
-        pipelineIdentifier={pipelineId}
-        repoIdentifier={repoIdentifier}
-        repoName={repoIdentifier}
-        branch={branch}
-        connectorRef={connectorRef}
-        storeType={storeType}
-        onClose={onClose}
-      />
-    )
   }
 
   return (

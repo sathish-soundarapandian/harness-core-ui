@@ -6,13 +6,21 @@
  */
 
 import { get } from 'lodash-es'
-import { Utils, Views, SelectOption, MultiSelectOption } from '@harness/uicore'
+import {
+  Utils,
+  Views,
+  SelectOption,
+  MultiSelectOption,
+  getMultiTypeFromValue,
+  MultiTypeInputType
+} from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
 import type { ResponseListEnvironmentResponse, EnvironmentResponse } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
 import type { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
-import type { CVNGLogTag, SloHealthIndicatorDTO } from 'services/cv'
+import type { CVNGLogTag, MonitoredServiceDetail, SloHealthIndicatorDTO } from 'services/cv'
+import { getLocationPathName } from 'framework/utils/WindowLocation'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
 
 export enum EVENT_TYPE {
@@ -276,6 +284,8 @@ export const getDetailsLabel = (key: string, getString: UseStringsReturn['getStr
       return getString('common.executedBy')
     case 'eventType':
       return getString('pipeline.verification.logs.eventType')
+    case 'updatedBy':
+      return getString('common.updatedBy')
     default:
       return key
   }
@@ -283,4 +293,45 @@ export const getDetailsLabel = (key: string, getString: UseStringsReturn['getStr
 
 export const getIsValidPrimitive = <T>(value: T): value is NonNullable<T> => {
   return value !== undefined && value !== null
+}
+
+export const getMonitoredServiceIdentifiers = (
+  isAccountLevel: boolean,
+  monitoredServiceDetails?: MonitoredServiceDetail[]
+): string[] =>
+  monitoredServiceDetails?.map(serviceDetails => {
+    return isAccountLevel
+      ? `PROJECT.${serviceDetails.projectParams?.accountIdentifier}.${serviceDetails.projectParams?.orgIdentifier}.${serviceDetails.projectParams?.projectIdentifier}.${serviceDetails.monitoredServiceIdentifier}`
+      : serviceDetails.monitoredServiceIdentifier ?? ''
+  }) || []
+
+export const getTypeOfInput = (value: SelectOption | string) => {
+  const selectedItem = typeof value === 'string' ? value : value?.label
+  if (getMultiTypeFromValue(selectedItem) === MultiTypeInputType.RUNTIME) {
+    return MultiTypeInputType.RUNTIME
+  }
+  if (/^</.test(selectedItem)) {
+    return MultiTypeInputType.EXPRESSION
+  }
+  return MultiTypeInputType.FIXED
+}
+
+export const openWindowInNewTab = (url?: string): void => {
+  const targetUrl = `${window.location.origin}${getLocationPathName()}#${url}`
+  if (url) {
+    window.open(targetUrl, '_blank')
+  }
+}
+
+export const getMonitoredServiceIdentifierProp = (
+  isAccountLevel: boolean,
+  monitoredServiceIdentifiers?: string[],
+  monitoredServiceIdentifier?: string
+) => {
+  if (isAccountLevel) {
+    return { scopedMonitoredServiceIdentifiers: monitoredServiceIdentifiers }
+  } else if (monitoredServiceIdentifier) {
+    return { monitoredServiceIdentifiers: [monitoredServiceIdentifier] }
+  }
+  return {}
 }

@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, pickBy, set } from 'lodash-es'
-import { getMultiTypeFromValue, MultiTypeInputType, PageSpinner } from '@harness/uicore'
+import { EXECUTION_TIME_INPUT_VALUE, getMultiTypeFromValue, MultiTypeInputType, PageSpinner } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import type {
   AccountPathProps,
@@ -82,10 +82,14 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
   const [selectedProjectValue, setSelectedProjectValue] = useState<JiraProjectSelectOption>()
   const [selectedIssueTypeValue, setSelectedIssueTypeValue] = useState<JiraProjectSelectOption>()
 
-  const connectorRefFixedValue = getGenuineValue(
-    initialValues.spec?.connectorRef || (inputSetData?.allValues?.spec?.connectorRef as string)
-  )
-  const projectKeyFixedValue = initialValues.spec?.projectKey || inputSetData?.allValues?.spec?.projectKey
+  const connectorRefFixedValue =
+    template?.spec?.connectorRef === EXECUTION_TIME_INPUT_VALUE
+      ? formContentProps?.formik?.values?.spec?.connectorRef
+      : getGenuineValue(initialValues.spec?.connectorRef || (inputSetData?.allValues?.spec?.connectorRef as string))
+  const projectKeyFixedValue =
+    template?.spec?.projectKey === EXECUTION_TIME_INPUT_VALUE
+      ? formContentProps?.formik?.values?.spec?.projectKey
+      : initialValues.spec?.projectKey || inputSetData?.allValues?.spec?.projectKey
 
   const issueTypeFixedValue = initialValues.spec?.issueType || inputSetData?.allValues?.spec?.issueType
   const [fields, setFields] = useState<JiraFieldNGWithValue[]>([])
@@ -202,7 +206,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
         <TimeoutFieldInputSetView
           name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
           label={getString('pipelineSteps.timeoutLabel')}
-          className={css.deploymentViewMedium}
+          className={css.deploymentViewFieldWidth}
           multiTypeDurationProps={{
             configureOptionsProps: {
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
@@ -226,7 +230,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          width={385}
+          width={400}
           setRefValue
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeProps={{
@@ -243,7 +247,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
       {getMultiTypeFromValue(template?.spec?.projectKey) === MultiTypeInputType.RUNTIME ? (
         <SelectInputSetView
           selectItems={projectOptions}
-          className={css.deploymentViewMedium}
+          className={css.deploymentViewFieldWidth}
           label={getString('pipeline.jiraApprovalStep.project')}
           name={`${prefix}spec.projectKey`}
           useValue
@@ -274,7 +278,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
       {getMultiTypeFromValue(template?.spec?.issueType) === MultiTypeInputType.RUNTIME ? (
         <SelectInputSetView
           selectItems={setIssueTypeOptions(projectMetadata?.issuetypes)}
-          className={css.deploymentViewMedium}
+          className={css.deploymentViewFieldWidth}
           placeholder={
             fetchingProjectMetadata
               ? getString('pipeline.jiraApprovalStep.fetchingIssueTypePlaceholder')

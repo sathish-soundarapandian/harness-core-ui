@@ -156,23 +156,10 @@ function FormContent({
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeDurationProps={{
             expressions,
-            enableConfigureOptions: false,
+            enableConfigureOptions: true,
             allowableTypes
           }}
         />
-        {getMultiTypeFromValue(formik.values.timeout) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={defaultTo(formik.values.timeout, '')}
-            type="String"
-            variableName="timeout"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={value => formik.setFieldValue('timeout', value)}
-            isReadonly={readonly}
-            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-          />
-        )}
       </div>
 
       <div className={stepCss.divider} />
@@ -384,7 +371,7 @@ function ServiceNowApprovalStepMode(
         ...getNameAndIdentifierSchema(getString, stepViewType),
         timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
         spec: Yup.object().shape({
-          connectorRef: ConnectorRefSchema({
+          connectorRef: ConnectorRefSchema(getString, {
             requiredErrorMsg: getString('pipeline.serviceNowApprovalStep.validations.connectorRef')
           }),
           ticketType: Yup.string().required(getString('pipeline.serviceNowApprovalStep.validations.ticketType')),

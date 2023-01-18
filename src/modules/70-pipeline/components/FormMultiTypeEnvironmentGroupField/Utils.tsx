@@ -13,6 +13,7 @@ import cx from 'classnames'
 import type { ReferenceSelectProps } from '@common/components/ReferenceSelect/ReferenceSelect'
 import { EnvironmentGroupResponseDTO, Failure, getEnvironmentGroupListPromise } from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import environmentGroupEmptyStateSvc from '@pipeline/icons/noDataFound.svg'
 import css from './FormMultiTypeEnvironmentGroupField.module.scss'
 
 export function getReferenceFieldProps({
@@ -35,11 +36,11 @@ export function getReferenceFieldProps({
   return {
     name,
     width,
-    selectAnReferenceLabel: 'Select an existing Environment Group',
+    selectAnReferenceLabel: getString('pipeline.envGroupLabel'),
     selected,
     placeholder,
     defaultScope,
-    createNewLabel: 'Environment Group',
+    createNewLabel: getString('common.environmentGroup.label'),
     isNewConnectorLabelVisible: true,
     fetchRecords: (done, search, page, scope, signal = undefined) => {
       const request = getEnvironmentGroupListPromise(
@@ -87,10 +88,13 @@ export function getReferenceFieldProps({
     },
     projectIdentifier,
     orgIdentifier,
-    noRecordsText: 'No Environment Group found',
-    componentName: 'Environment Group',
+    noRecordsText: getString('pipeline.noEnvironmentGroupsFound'),
+    componentName: getString('common.environmentGroup.label'),
     noDataCard: {
-      message: 'No Environment Groups Found'
+      image: environmentGroupEmptyStateSvc,
+      message: getString('pipeline.noEnvironmentGroupsFound'),
+      containerClassName: css.noDataCardContainerConnector,
+      className: css.noDataCardContainerContent
     },
     isMultiSelect,
     selectedReferences: selectedEnvironmentGroups,

@@ -8,7 +8,7 @@
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import type { Module } from '@common/interfaces/RouteInterfaces'
+import type { Module } from 'framework/types/ModuleName'
 import { useStartTrialLicense, useStartFreeLicense } from 'services/cd-ng'
 import useStartTrialModal from '@common/modals/StartTrial/StartTrialModal'
 import { StartTrialTemplate } from '../StartTrialTemplate'

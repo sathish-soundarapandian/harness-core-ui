@@ -47,6 +47,7 @@ import { areTemplatesSame } from '@pipeline/utils/templateUtils'
 import { useTemplateSelectorContext } from 'framework/Templates/TemplateSelectorContext/TemplateSelectorContext'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
 import RepoFilter from '@common/components/RepoFilter/RepoFilter'
+
 import css from './TemplateSelectorLeftView.module.scss'
 
 export interface TemplateSelectorLeftViewProps {
@@ -64,7 +65,6 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
   const [page, setPage] = useState(0)
   const [view, setView] = useState<Views>(Views.GRID)
   const [selectedRepo, setSelectedRepo] = useState<string>()
-
   const [searchParam, setSearchParam] = useState('')
   const { module, ...params } = useParams<ProjectPathProps & ModulePathParams>()
   const { projectIdentifier, orgIdentifier, accountId } = params
@@ -74,6 +74,7 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
     gitSyncEnabledOnlyForFF,
     supportingTemplatesGitx
   } = useAppStore()
+
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [selectedChildType, setSelectedChildType] = React.useState<string | undefined>(
     childTypes.length === 1 ? childTypes[0] : undefined
@@ -98,9 +99,11 @@ export const TemplateSelectorLeftView: React.FC<TemplateSelectorLeftViewProps> =
   }, [selectedScope, orgIdentifier])
 
   const body = React.useMemo(() => {
+    const isStepType = templateType === TemplateType.Step
+    const templateEntityTypes = isStepType ? [templateType, TemplateType.StepGroup] : [templateType]
     return {
       filterType: 'Template',
-      templateEntityTypes: [templateType],
+      templateEntityTypes: templateEntityTypes,
       repoName: selectedRepo,
       childTypes: selectedChildType ? [selectedChildType] : childTypes,
       templateIdentifiers: selectedTemplateRefs,

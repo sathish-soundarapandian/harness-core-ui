@@ -23,7 +23,22 @@ const getInitialProps = (): UseInputSetsProps => ({
   orgIdentifier: 'TEST_ORG',
   pipelineIdentifier: 'TEST_PIPELINE',
   projectIdentifier: 'TEST_PROJECT',
-  selectedStageData: { allStagesSelected: true, selectedStages: [], selectedStageItems: [] },
+  selectedStageData: {
+    allStagesSelected: true,
+    selectedStages: [
+      {
+        stageIdentifier: 'all',
+        stagesRequired: [],
+        stageName: 'All Stages'
+      }
+    ],
+    selectedStageItems: [
+      {
+        label: 'All Stages',
+        value: 'all'
+      }
+    ]
+  },
   executionInputSetTemplateYaml: '',
   setSelectedInputSets: jest.fn()
 })

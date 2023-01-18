@@ -100,7 +100,12 @@ function InlineManifest({
         initialValues={getInitialValues()}
         formName="manifestDetails"
         validationSchema={Yup.object().shape({
-          ...ManifestIdentifierValidation(manifestIdsList, initialValues?.identifier, getString('pipeline.uniqueName')),
+          ...ManifestIdentifierValidation(
+            getString,
+            manifestIdsList,
+            initialValues?.identifier,
+            getString('pipeline.uniqueName')
+          ),
           content: Yup.string().required(getString('common.contentRequired'))
         })}
         onSubmit={formData => {

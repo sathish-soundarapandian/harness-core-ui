@@ -422,13 +422,13 @@ const BasicTemplateDetails = (
         validate={setPreviewValues}
         formName={`create${initialValues.type}Template`}
         validationSchema={Yup.object().shape({
-          name: NameSchema({
+          name: NameSchema(getString, {
             requiredErrorMsg: getString('common.validation.fieldIsRequired', {
               name: getString('templatesLibrary.createNewModal.nameError')
             })
           }),
-          identifier: IdentifierSchema(),
-          versionLabel: TemplateVersionLabelSchema(),
+          identifier: IdentifierSchema(getString),
+          versionLabel: TemplateVersionLabelSchema(getString),
           iconFile: iconFileValidationSchema,
           ...gitxValidationSchema,
           ...gitsyncValidationSchema

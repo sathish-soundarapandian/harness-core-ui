@@ -59,6 +59,8 @@ import { usePipelineVariables } from '@pipeline/components/PipelineVariablesCont
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { useDeepCompareEffect } from '@common/hooks'
 import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import {
   DeployServiceEntityData,
   DeployServiceEntityCustomProps,
@@ -316,11 +318,13 @@ export default function DeployServiceEntityWidget({
     if (formikRef.current) {
       queryClient.invalidateQueries(['getServicesYamlAndRuntimeInputs'])
       const { values, setValues } = formikRef.current
+
+      const scope = getScopeFromValue(values?.service as string)
       const body = {
         queryParams: {
           accountIdentifier: accountId,
-          orgIdentifier,
-          projectIdentifier
+          orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
+          projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined
         },
         serviceIdentifier: updatedService.identifier,
         pathParams: { serviceIdentifier: updatedService.identifier },
@@ -477,7 +481,7 @@ export default function DeployServiceEntityWidget({
           const isMultiSvc = !isNil(values.services)
           const isFixed = isMultiSvc ? Array.isArray(values.services) : serviceInputType === MultiTypeInputType.FIXED
           let placeHolderForServices =
-            Array.isArray(values.services) && values.services
+            Array.isArray(values.services) && !isEmpty(values.services)
               ? getString('services')
               : getString('cd.pipelineSteps.serviceTab.selectServices')
           const placeHolderForService = loading
@@ -538,6 +542,7 @@ export default function DeployServiceEntityWidget({
                                 placeholder={placeHolderForServices}
                                 openAddNewModal={openAddNewModal}
                                 isMultiSelect={true}
+                                isNewConnectorLabelVisible
                                 onMultiSelectChange={handleMultiSelectChange}
                                 width={300}
                                 multiTypeProps={{
@@ -563,6 +568,7 @@ export default function DeployServiceEntityWidget({
                                 setRefValue={true}
                                 disabled={readonly || (isFixed && loading)}
                                 openAddNewModal={openAddNewModal}
+                                isNewConnectorLabelVisible
                                 onChange={handleSingleSelectChange}
                                 width={300}
                                 multiTypeProps={{

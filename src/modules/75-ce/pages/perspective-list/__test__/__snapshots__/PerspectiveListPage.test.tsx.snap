@@ -824,7 +824,7 @@ exports[`test cases for Perspective details Page should be able to render and sw
               class="bp3-input  ExpandingSearchInput--filter"
               dir="auto"
               placeholder="ce.perspectives.searchPerspectives"
-              style="padding-right: 0px;"
+              style="padding-right: 38px;"
               type="search"
               value=""
             />
@@ -2398,7 +2398,7 @@ exports[`test cases for Perspective details Page should be able to render the de
               class="bp3-input  ExpandingSearchInput--filter"
               dir="auto"
               placeholder="ce.perspectives.searchPerspectives"
-              style="padding-right: 0px;"
+              style="padding-right: 38px;"
               type="search"
               value=""
             />

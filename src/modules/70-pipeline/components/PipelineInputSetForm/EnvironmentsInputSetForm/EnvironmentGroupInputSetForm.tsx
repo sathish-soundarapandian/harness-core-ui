@@ -62,7 +62,7 @@ export function EnvironmentGroupInputSetForm({
    * 1. Env group is fixed in the pipeline studio (deploymentStage), or
    * 2. Env group is runtime in pipeline studio and the value is then selected in the input form (deploymentStageInputSet)
    */
-  const showEnvironmentsInputSetForm = isValueRuntimeInput(deploymentStageTemplate.environmentGroup.envGroupRef)
+  const envGroupRef = isValueRuntimeInput(deploymentStageTemplate.environmentGroup.envGroupRef)
     ? deploymentStageInputSet?.environmentGroup?.envGroupRef
     : deploymentStage?.environmentGroup?.envGroupRef
 
@@ -108,7 +108,7 @@ export function EnvironmentGroupInputSetForm({
               />
             )}
             <Container padding={{ left: 'medium' }}>
-              {showEnvironmentsInputSetForm && (
+              {envGroupRef && (
                 <MultiEnvironmentsInputSetForm
                   deploymentStage={deploymentStage}
                   deploymentStageTemplate={deploymentStageTemplate}
@@ -118,6 +118,7 @@ export function EnvironmentGroupInputSetForm({
                   readonly={readonly}
                   stageIdentifier={stageIdentifier}
                   pathToEnvironments="environmentGroup.environments"
+                  envGroupRef={envGroupRef}
                   entityType="environmentGroup"
                 />
               )}

@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import Draggable, { DraggableData } from 'react-draggable'
+import React, { useRef } from 'react'
+import Draggable, { DraggableData, DraggableEventHandler } from 'react-draggable'
 import { usePopper } from 'react-popper'
-import { Button, ButtonVariation } from '@harness/uicore'
+import { Button, ButtonVariation, Icon } from '@harness/uicore'
 
 import { String } from 'framework/strings'
 import { useLocalStorage } from '@common/hooks'
@@ -20,7 +20,7 @@ import css from './ExecutionLayoutFloatingView.module.scss'
  * This component will only be rendered when layout === 'FLOATING'
  */
 export default function ExecutionLayoutFloatingView(props: React.PropsWithChildren<unknown>): React.ReactElement {
-  const { layout, restoreDialog } = useExecutionLayoutContext()
+  const { layout, restoreDialog, isCollapsedNodePaneVisible } = useExecutionLayoutContext()
   const [position, setPosition] = useLocalStorage('execution_layout_float_position', { x: -40, y: -30 })
   const [isOpen, setIsOpen] = React.useState(true)
   const [referenceElement, setReferenceElement] = React.useState<HTMLElement | null>(null)
@@ -34,8 +34,11 @@ export default function ExecutionLayoutFloatingView(props: React.PropsWithChildr
       }
     ]
   })
+  const isDragging = useRef(false)
 
   function toggleDialog(): void {
+    if (isDragging.current) return
+
     if (layout === ExecutionLayoutState.FLOATING) {
       setIsOpen(status => !status)
     }
@@ -50,6 +53,15 @@ export default function ExecutionLayoutFloatingView(props: React.PropsWithChildr
     forceUpdate?.()
   }
 
+  const onDrag: DraggableEventHandler = () => {
+    isDragging.current = true
+  }
+
+  const onStop: DraggableEventHandler = (_e, data) => {
+    handlePosition(data)
+    setTimeout(() => (isDragging.current = false), 0)
+  }
+
   React.useEffect(() => {
     setIsOpen(layout !== ExecutionLayoutState.MINIMIZE)
   }, [layout])
@@ -61,20 +73,22 @@ export default function ExecutionLayoutFloatingView(props: React.PropsWithChildr
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           offsetParent={document.getElementById('pipeline-execution-container')!}
           position={position}
-          onStop={(_e, data) => handlePosition(data)}
+          onDrag={onDrag}
+          onStop={onStop}
           handle="#pipeline-step-details-drag"
         >
-          <div className={css.stepDetails} ref={setReferenceElement}>
-            <Button minimal icon="drag-handle-vertical" id="pipeline-step-details-drag">
-              <Button
-                onClick={toggleDialog}
-                className={css.toggleButton}
-                rightIcon={isOpen ? 'minus' : 'plus'}
-                variation={ButtonVariation.LINK}
-                data-testid="restore"
-              >
-                <String stringID="pipeline.stepDetails" />
-              </Button>
+          <div className={css.stepDetails} ref={setReferenceElement} id="pipeline-step-details-drag">
+            <Icon name="drag-handle-vertical" />
+            <Button
+              onClick={toggleDialog}
+              className={css.toggleButton}
+              rightIcon={isOpen ? 'minus' : 'plus'}
+              variation={ButtonVariation.LINK}
+              data-testid="restore"
+            >
+              <String
+                stringID={isCollapsedNodePaneVisible ? 'pipeline.execution.listDetails' : 'pipeline.stepDetails'}
+              />
             </Button>
           </div>
         </Draggable>

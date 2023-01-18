@@ -511,6 +511,9 @@ planEnforcement:
     approachingLimit: 'You have used {{ clientMauUsagePercentage }}% of your Monthly Active Users (MAU) subscription limit.'
     upgradeRequired: 'You have exceeded your Monthly Active Users (MAU) subscription limit.'
 onboarding:
+  multiStep:
+    createEnv: Create an Environment and SDK key
+    validate: Validate
   freeBanner: All Products are free forever. For greater functionality explore plans.
   simpliestFlag: Our Simplest Flag
   simpliestFlagDescription: 'You’re creating our simplest feature flag type: Boolean Flag. This flag type is commonly used as a feature toggle, which effectively shows/hides features from your targets.'
@@ -519,7 +522,6 @@ onboarding:
   title: Feature Flags Quick Start Guide
   subTitle: Everything you need to know in less than 15 minutes.
   tryItOut: '{{ $.getStarted }}'
-  createAFlag: Create a Flag
   createEnvAndSdk: Create an Environment and SDK Key
   setupCode: Setup your Code
   oneCreateAFlag: '1. Create a Flag'
@@ -1381,6 +1383,13 @@ onboarding:
       # Initialization
 
       CfClient is a base class that provides all features of the SDK.
+
+      Add CFClient and Target imports to your app.py
+
+      ```
+      from featureflags.client import CfClient
+      from featureflags.evaluations.auth_target import Target
+      ```
 
       Put the API Key here from your environment
 

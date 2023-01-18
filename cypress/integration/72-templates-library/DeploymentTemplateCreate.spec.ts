@@ -14,10 +14,12 @@ import {
 describe('Deployment Template creation and assertion', () => {
   const templateCreationCall =
     '/template/api/templates?accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&comments='
-  const templatesListCall =
-    '/template/api/templates/list?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&templateListType=Stable&searchTerm=&page=0&size=20&includeAllTemplatesAvailableAtScope=true'
-  const templateListCallAfterSelection =
-    '/template/api/templates/list?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&module=cd&templateListType=All'
+
+  const templateMetadataCall = `/template/api/templates/list-metadata?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&templateListType=Stable&searchTerm=&page=0&size=20&includeAllTemplatesAvailableAtScope=true`
+
+  const templateMetadataCallAfterSelection =
+    '/template/api/templates/list-metadata?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&module=cd&templateListType=All'
+
   const templateInputsCallAfterSelection =
     '/template/api/templates/templateInputs/testStepTemplate_Cypress?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&versionLabel=212&getDefaultFromOtherRepo=true'
   const connectorsListCall =
@@ -50,7 +52,7 @@ describe('Deployment Template creation and assertion', () => {
           }
         ]
       }).as('enableFeatureFlag')
-      cy.intercept('POST', templatesListCall, { fixture: '/ng/api/deploymentTemplate/stepTemplateList' }).as(
+      cy.intercept('POST', templateMetadataCall, { fixture: '/ng/api/deploymentTemplate/stepTemplateList' }).as(
         'stepTemplateListCallDeploymentTemplates'
       )
 
@@ -62,7 +64,9 @@ describe('Deployment Template creation and assertion', () => {
       timeout: 30000
     })
     cy.intercept('POST', templateCreationCall, incompleteTemplateCreationResponse).as('templateCreation')
-    cy.intercept('POST', templateListCallAfterSelection, stepTemplateListCallAfterSelectionResponse).as('stepListCall')
+    cy.intercept('POST', templateMetadataCallAfterSelection, stepTemplateListCallAfterSelectionResponse).as(
+      'stepListCall'
+    )
     cy.intercept('GET', templateInputsCallAfterSelection, deploymentTemplateInputCallAfterSelectionResponse).as(
       'Step Template Input'
     )

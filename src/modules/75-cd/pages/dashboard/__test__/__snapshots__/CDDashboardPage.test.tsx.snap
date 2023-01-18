@@ -142,7 +142,7 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main cardHeader"
             >
-              Total Executions
+              pipeline.dashboards.totalExecutions
             </p>
             <div
               class="StyledProps--font StyledProps--main"
@@ -163,29 +163,37 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                     class="StyledProps--font StyledProps--main StyledProps--flex"
                   >
                     <span
-                      class="bp3-icon bp3-icon-caret-right StyledProps--main StyledProps--margin-left-small"
-                      icon="caret-right"
+                      class="bp3-popover-wrapper"
                     >
-                      <svg
-                        data-icon="caret-right"
-                        height="14"
-                        viewBox="0 0 16 16"
-                        width="14"
+                      <span
+                        class="bp3-popover-target"
                       >
-                        <desc>
-                          caret-right
-                        </desc>
-                        <path
-                          d="M11 8c0-.15-.07-.28-.17-.37l-4-3.5A.495.495 0 006 4.5v7a.495.495 0 00.83.37l4-3.5c.1-.09.17-.22.17-.37z"
-                          fill-rule="evenodd"
-                        />
-                      </svg>
+                        <div
+                          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                          tabindex="0"
+                        >
+                          <span
+                            class="bp3-icon bp3-icon-caret-right StyledProps--main StyledProps--margin-left-small"
+                            icon="caret-right"
+                          >
+                            <svg
+                              data-icon="caret-right"
+                              height="14"
+                              viewBox="0 0 16 16"
+                              width="14"
+                            >
+                              <desc>
+                                caret-right
+                              </desc>
+                              <path
+                                d="M11 8c0-.15-.07-.28-.17-.37l-4-3.5A.495.495 0 006 4.5v7a.495.495 0 00.83.37l4-3.5c.1-.09.17-.22.17-.37z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </span>
                     </span>
-                    <p
-                      class="StyledProps--font StyledProps--main"
-                    >
-                      0%
-                    </p>
                   </div>
                 </div>
                 <div
@@ -203,7 +211,7 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                   <p
                     class="StyledProps--font StyledProps--main cardHeader"
                   >
-                    Successful
+                    Cd.getstartedwithcd.successfull
                   </p>
                   <div
                     class="StyledProps--font StyledProps--main"
@@ -228,30 +236,43 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                         <div
                           class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
                         >
-                          <p
-                            class="StyledProps--font StyledProps--main StyledProps--margin-left-xsmall"
-                          >
-                            700
-                            %
-                          </p>
                           <span
-                            class="bp3-icon bp3-icon-caret-up StyledProps--main"
-                            icon="caret-up"
+                            class="bp3-popover-wrapper"
                           >
-                            <svg
-                              data-icon="caret-up"
-                              height="14"
-                              viewBox="0 0 16 16"
-                              width="14"
+                            <span
+                              class="bp3-popover-target"
                             >
-                              <desc>
-                                caret-up
-                              </desc>
-                              <path
-                                d="M11.87 9.17s.01 0 0 0l-3.5-4C8.28 5.07 8.15 5 8 5s-.28.07-.37.17l-3.5 4a.495.495 0 00.37.83h7a.495.495 0 00.37-.83z"
-                                fill-rule="evenodd"
-                              />
-                            </svg>
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                                tabindex="0"
+                              >
+                                <p
+                                  class="StyledProps--font StyledProps--main StyledProps--margin-left-xsmall"
+                                >
+                                  700
+                                  %
+                                </p>
+                                <span
+                                  class="bp3-icon bp3-icon-caret-up StyledProps--main"
+                                  icon="caret-up"
+                                >
+                                  <svg
+                                    data-icon="caret-up"
+                                    height="14"
+                                    viewBox="0 0 16 16"
+                                    width="14"
+                                  >
+                                    <desc>
+                                      caret-up
+                                    </desc>
+                                    <path
+                                      d="M11.87 9.17s.01 0 0 0l-3.5-4C8.28 5.07 8.15 5 8 5s-.28.07-.37.17l-3.5 4a.495.495 0 00.37.83h7a.495.495 0 00.37-.83z"
+                                      fill-rule="evenodd"
+                                    />
+                                  </svg>
+                                </span>
+                              </div>
+                            </span>
                           </span>
                         </div>
                       </div>
@@ -267,7 +288,7 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                   <p
                     class="StyledProps--font StyledProps--main cardHeader"
                   >
-                    Failed
+                    failed
                   </p>
                   <div
                     class="StyledProps--font StyledProps--main"
@@ -293,29 +314,42 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                           class="StyledProps--font StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
                         >
                           <span
-                            class="bp3-icon bp3-icon-caret-right StyledProps--main"
-                            icon="caret-right"
+                            class="bp3-popover-wrapper"
                           >
-                            <svg
-                              data-icon="caret-right"
-                              height="14"
-                              viewBox="0 0 16 16"
-                              width="14"
+                            <span
+                              class="bp3-popover-target"
                             >
-                              <desc>
-                                caret-right
-                              </desc>
-                              <path
-                                d="M11 8c0-.15-.07-.28-.17-.37l-4-3.5A.495.495 0 006 4.5v7a.495.495 0 00.83.37l4-3.5c.1-.09.17-.22.17-.37z"
-                                fill-rule="evenodd"
-                              />
-                            </svg>
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                                tabindex="0"
+                              >
+                                <span
+                                  class="bp3-icon bp3-icon-caret-right StyledProps--main"
+                                  icon="caret-right"
+                                >
+                                  <svg
+                                    data-icon="caret-right"
+                                    height="14"
+                                    viewBox="0 0 16 16"
+                                    width="14"
+                                  >
+                                    <desc>
+                                      caret-right
+                                    </desc>
+                                    <path
+                                      d="M11 8c0-.15-.07-.28-.17-.37l-4-3.5A.495.495 0 006 4.5v7a.495.495 0 00.83.37l4-3.5c.1-.09.17-.22.17-.37z"
+                                      fill-rule="evenodd"
+                                    />
+                                  </svg>
+                                </span>
+                                <p
+                                  class="StyledProps--font StyledProps--main"
+                                >
+                                  0%
+                                </p>
+                              </div>
+                            </span>
                           </span>
-                          <p
-                            class="StyledProps--font StyledProps--main"
-                          >
-                            0%
-                          </p>
                         </div>
                       </div>
                     </div>
@@ -330,7 +364,7 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                   <p
                     class="StyledProps--font StyledProps--main cardHeader"
                   >
-                    Active
+                    active
                   </p>
                   <div
                     class="StyledProps--font StyledProps--main"
@@ -370,7 +404,7 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                 <p
                   class="StyledProps--font StyledProps--main cardHeader"
                 >
-                  Environment Changes
+                  cd.envChanges
                 </p>
               </div>
               <div
@@ -495,39 +529,49 @@ exports[`CDDashboardPage snapshot test should render properly 1`] = `
                       class="StyledProps--font StyledProps--main statContent"
                     />
                     <div
-                      class="StyledProps--font StyledProps--main statWrap"
+                      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-end"
                     >
                       <p
-                        class="StyledProps--font StyledProps--main statContent"
+                        class="StyledProps--font StyledProps--main statContent statWrap"
                       >
                         0
                         %
                       </p>
                       <span
-                        class="bp3-icon bp3-icon-caret-down StyledProps--main"
-                        icon="caret-down"
+                        class="bp3-popover-wrapper"
                       >
-                        <svg
-                          data-icon="caret-down"
-                          height="14"
-                          viewBox="0 0 16 16"
-                          width="14"
+                        <span
+                          class="bp3-popover-target"
                         >
-                          <desc>
-                            caret-down
-                          </desc>
-                          <path
-                            d="M12 6.5c0-.28-.22-.5-.5-.5h-7a.495.495 0 00-.37.83l3.5 4c.09.1.22.17.37.17s.28-.07.37-.17l3.5-4c.08-.09.13-.2.13-.33z"
-                            fill-rule="evenodd"
-                          />
-                        </svg>
+                          <div
+                            class="Layout--horizontal StyledProps--main statWrap"
+                            tabindex="0"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-caret-right StyledProps--main"
+                              icon="caret-right"
+                            >
+                              <svg
+                                data-icon="caret-right"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  caret-right
+                                </desc>
+                                <path
+                                  d="M11 8c0-.15-.07-.28-.17-.37l-4-3.5A.495.495 0 006 4.5v7a.495.495 0 00.83.37l4-3.5c.1-.09.17-.22.17-.37z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                            <p
+                              class="StyledProps--font StyledProps--main rateDiffValue"
+                            />
+                          </div>
+                        </span>
                       </span>
-                      <p
-                        class="StyledProps--font StyledProps--main rateDiffValue"
-                      >
-                        NaN
-                        %
-                      </p>
                     </div>
                   </div>
                 </div>

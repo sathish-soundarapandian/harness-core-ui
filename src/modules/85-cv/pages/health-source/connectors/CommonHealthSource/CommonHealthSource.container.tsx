@@ -5,34 +5,50 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useContext } from 'react'
+import React, { useCallback, useContext } from 'react'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
-import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import CommonHealthSource from './CommonHealthSource'
-import { createHealthSourceData } from './CommonHealthSource.utils'
+import { createHealthSourcePayload, createHealthSourceConfigurationsData } from './CommonHealthSource.utils'
 import type { CommonHealthSourceConfigurations, HealthSourceConfig } from './CommonHealthSource.types'
+import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 
 export interface CommonHealthSourceContainerProps {
-  // TODO - type will be added once the backend entities are available
   data: any
-  onSubmit: (formdata: any, UpdatedHealthSource: UpdatedHealthSource) => Promise<void>
+  onSubmit: (formdata: any, updatedHealthSource: UpdatedHealthSource) => Promise<void>
   isTemplate?: boolean
   expressions?: string[]
   healthSourceConfig: HealthSourceConfig
 }
 
 export default function CommonHealthSourceContainer(props: CommonHealthSourceContainerProps): JSX.Element {
-  const { data: sourceData, isTemplate, expressions, healthSourceConfig } = props
+  const { data: sourceData, isTemplate, expressions, healthSourceConfig, onSubmit } = props
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
-  const handleSubmit = () => {
-    // TODO will be implemented
-  }
+  const handleSubmit = useCallback(
+    async (configureHealthSourceData: CommonHealthSourceConfigurations) => {
+      const { product, sourceType, identifier, healthSourceName, healthSourceIdentifier, connectorRef } = sourceData
+      const defineHealthSourcedata = {
+        product,
+        sourceType,
+        identifier,
+        healthSourceName,
+        connectorRef,
+        healthSourceIdentifier
+      }
+      const healthSourcePayload = createHealthSourcePayload(
+        defineHealthSourcedata,
+        configureHealthSourceData,
+        isTemplate
+      )
+      await onSubmit(sourceData, healthSourcePayload)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [sourceData]
+  )
 
   return (
     <CommonHealthSource
-      // TODO - will be a common method to create the initial data for the form.
-      data={createHealthSourceData(sourceData)}
+      data={createHealthSourceConfigurationsData(sourceData, isTemplate)}
       onSubmit={handleSubmit}
       onPrevious={(formikValues: CommonHealthSourceConfigurations) => {
         onPrevious({ ...sourceData, ...formikValues })
@@ -40,6 +56,7 @@ export default function CommonHealthSourceContainer(props: CommonHealthSourceCon
       isTemplate={isTemplate}
       expressions={expressions}
       healthSourceConfig={healthSourceConfig}
+      connectorRef={sourceData?.connectorRef}
     />
   )
 }

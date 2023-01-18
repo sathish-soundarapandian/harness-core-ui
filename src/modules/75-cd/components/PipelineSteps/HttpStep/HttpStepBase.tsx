@@ -68,26 +68,13 @@ export default function HttpStepBase(props: {
           name="timeout"
           label={getString('pipelineSteps.timeoutLabel')}
           multiTypeDurationProps={{
-            enableConfigureOptions: false,
+            enableConfigureOptions: true,
             expressions,
             disabled: readonly,
             allowableTypes
           }}
           disabled={readonly}
         />
-        {getMultiTypeFromValue(formValues.timeout) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={formValues.timeout || ''}
-            type="String"
-            variableName="timeout"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={value => setFieldValue('timeout', value)}
-            isReadonly={readonly}
-            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-          />
-        )}
       </div>
 
       <div className={stepCss.divider} />

@@ -55,7 +55,7 @@ const useLdapTestConfigurationProvider = ({
   const formRef = useRef<FormikProps<LDAPConnectionTestConfig>>(null)
   const [errorMessages, setErrorMessages] = useState<ResponseMessage[] | null>(null)
   const validationSchema = Yup.object().shape({
-    email: EmailSchema(),
+    email: EmailSchema(getString),
     password: Yup.string().min(6).required(getString('password'))
   })
 

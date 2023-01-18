@@ -36,8 +36,7 @@ import { StringUtils } from '@common/exports'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Connectors } from '@connectors/constants'
-import { addDetailsToPipeline } from '@ci/utils/HostedBuildsUtils'
-import { ACCOUNT_SCOPE_PREFIX } from './Constants'
+import { addDetailsToPipeline, getScmConnectorPrefix } from '@ci/utils/HostedBuildsUtils'
 import k8sStarterTemplates from './starter-templates/k8s.json'
 import vmStarterTemplates from './starter-templates/vm.json'
 
@@ -125,7 +124,9 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
 
   const configuredGitConnectorIdentifier = useMemo(
     (): string =>
-      configuredGitConnector?.identifier ? ACCOUNT_SCOPE_PREFIX.concat(configuredGitConnector.identifier) : '',
+      configuredGitConnector?.identifier
+        ? `${getScmConnectorPrefix(configuredGitConnector)}${configuredGitConnector.identifier}`
+        : '',
     [configuredGitConnector]
   )
 

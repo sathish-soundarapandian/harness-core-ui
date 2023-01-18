@@ -7,6 +7,8 @@
 
 import { isEqual, defaultTo, pick } from 'lodash-es'
 import * as Yup from 'yup'
+import { Utils } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
 import type {
   CalenderSLOTargetSpec,
@@ -15,8 +17,14 @@ import type {
   ServiceLevelObjectiveV2DTO,
   SLOTargetDTO
 } from 'services/cv'
-import { PeriodLengthTypes, PeriodTypes } from '../CVCreateSLO/CVCreateSLO.types'
-import { GetSLOIdentifierWithOrgAndProjectProps, SLOObjective, SLOV2Form, SLOV2FormFields } from './CVCreateSLOV2.types'
+import {
+  PeriodLengthTypes,
+  PeriodTypes,
+  SLOObjective,
+  SLOV2Form,
+  SLOV2FormFields,
+  GetSLOIdentifierWithOrgAndProjectProps
+} from './CVCreateSLOV2.types'
 import { serviceLevelObjectiveKeys } from './components/CreateCompositeSloForm/CreateCompositeSloForm.constant'
 
 export const filterServiceLevelObjectivesDetailsFromSLOObjective = (
@@ -199,3 +207,36 @@ export const getSLOIdentifierWithOrgAndProject = (item: GetSLOIdentifierWithOrgA
 
 export const getSLORefIdWithOrgAndProject = (item: Partial<ServiceLevelObjectiveDetailsDTO>) =>
   `${item.serviceLevelObjectiveRef}.${item.orgIdentifier}.${item.projectIdentifier}`
+
+export const getCustomOptionsForSLOTargetChart = (
+  SLOTargetPercentage: SLOV2Form['SLOTargetPercentage']
+): Highcharts.Options => {
+  const labelColor = Utils.getRealCSSColor(Color.PRIMARY_7)
+
+  return {
+    chart: { height: 200 },
+    yAxis: {
+      min: 0,
+      max: 100,
+      tickInterval: 25,
+      plotLines: [
+        {
+          value: Number((Number(SLOTargetPercentage) || 0).toFixed(2)),
+          color: Utils.getRealCSSColor(Color.PRIMARY_7),
+          width: 2,
+          zIndex: 4,
+          label: {
+            useHTML: true,
+            formatter: function () {
+              return `
+                  <div style="background-color:${labelColor};padding:4px 6px;border-radius:4px" >
+                    <span style="color:white" >${Number((Number(SLOTargetPercentage) || 0).toFixed(2))}%</span>
+                  </div>
+                `
+            }
+          }
+        }
+      ]
+    }
+  }
+}

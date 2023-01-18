@@ -23,19 +23,18 @@ exports[`Validate MetricLineChart should render with error state 1`] = `
 exports[`Validate MetricLineChart should render with loading state 1`] = `
 <div>
   <div
-    class="StyledProps--font StyledProps--main"
+    class="StyledProps--font StyledProps--main loadingContainer"
     data-testid="loading"
-    style="height: 300px;"
   >
     <span
-      class="bp3-icon StyledProps--main StyledProps--margin-bottom-medium"
+      class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey600"
       data-icon="spinner"
     >
       <svg
         fill="none"
-        height="24"
+        height="32"
         viewBox="0 0 36 36"
-        width="24"
+        width="32"
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
@@ -48,6 +47,11 @@ exports[`Validate MetricLineChart should render with loading state 1`] = `
         />
       </svg>
     </span>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--padding-top-small StyledProps--padding-left-medium"
+    >
+      cv.monitoringSources.commonHealthSource.metricsChart.fetchingCharts
+    </p>
   </div>
 </div>
 `;

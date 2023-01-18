@@ -18,6 +18,7 @@ scripts/ @harness/ui-council
 certificates/ @harness/ui-council
 configs/modulefederation.config.js @abhinavrastogi-harness @vkbansal-harness @knagurski @tan-nhu
 configs/ @harness/ui-council @abhinavrastogi-harness @vkbansal-harness
+src/index.html @harness/ui-council
 src/microfrontends/ @abhinavrastogi-harness @vkbansal-harness @knagurski @tan-nhu
 src/framework/ @harness/ui-council
 src/framework/featureStore @harness/ui-plg
@@ -86,3 +87,5 @@ src/modules/75-ce/pages/home @harness/ui-plg
 src/modules/75-cf/modals/FFTrial @harness/ui-plg
 src/modules/75-cf/pages/home @harness/ui-plg
 src/modules/75-ce @harness/ui-ce
+src/modules/75-chaos @harness/ui-chaos
+src/modules/70-pipeline/pages/execution/ResilienceView @harness/ui-chaos

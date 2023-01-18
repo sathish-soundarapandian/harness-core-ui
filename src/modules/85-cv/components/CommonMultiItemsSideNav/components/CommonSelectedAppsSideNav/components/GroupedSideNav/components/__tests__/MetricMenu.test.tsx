@@ -9,13 +9,17 @@ import React from 'react'
 import { act, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
+import CommonHealthSourceProvider from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
+import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
 import type { MetricMenuProps } from '../MetricMenu.types'
 import MetricMenu from '../MetricMenu'
 
 function WrapperComponent(props: MetricMenuProps): JSX.Element {
   return (
     <TestWrapper>
-      <MetricMenu {...props} />
+      <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
+        <MetricMenu {...props} />
+      </CommonHealthSourceProvider>
     </TestWrapper>
   )
 }

@@ -139,9 +139,14 @@ const ConfigureSlackNotifications: React.FC<ConfigureSlackNotificationsProps> = 
             // TODO: Create global validation function for url validation
             webhookUrl: Yup.string().when('userGroups', {
               is: val => isEmpty(val),
-              then: webhookUrlType === MultiTypeInputType.EXPRESSION ? Yup.string().required() : URLValidationSchema(),
+              then:
+                webhookUrlType === MultiTypeInputType.EXPRESSION
+                  ? Yup.string().required()
+                  : URLValidationSchema(getString),
               otherwise:
-                webhookUrlType === MultiTypeInputType.EXPRESSION ? Yup.string() : URLValidationSchemaWithoutRequired()
+                webhookUrlType === MultiTypeInputType.EXPRESSION
+                  ? Yup.string()
+                  : URLValidationSchemaWithoutRequired(getString)
             })
           })}
           initialValues={{

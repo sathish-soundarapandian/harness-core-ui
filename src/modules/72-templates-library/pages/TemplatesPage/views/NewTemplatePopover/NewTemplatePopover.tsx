@@ -41,15 +41,22 @@ function NewTemplatePopoverWrapper({ onImportTemplateClick }: NewTemplatePopover
   const history = useHistory()
   const { module, ...params } = useParams<ProjectPathProps & ModulePathParams>()
   const { projectIdentifier, orgIdentifier, accountId } = params
-  const { CUSTOM_SECRET_MANAGER_NG, CVNG_TEMPLATE_MONITORED_SERVICE, NG_SVC_ENV_REDESIGN, ARTIFACT_SOURCE_TEMPLATE } =
-    useFeatureFlags()
+  const {
+    CUSTOM_SECRET_MANAGER_NG,
+    CVNG_TEMPLATE_MONITORED_SERVICE,
+    NG_SVC_ENV_REDESIGN,
+    ARTIFACT_SOURCE_TEMPLATE,
+    CDS_STEPGROUP_TEMPLATE
+  } = useFeatureFlags()
   const allowedTemplateTypes = getAllowedTemplateTypes(getScopeFromDTO(params), {
     [TemplateType.SecretManager]: !!CUSTOM_SECRET_MANAGER_NG,
     [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE,
     [TemplateType.CustomDeployment]: !!NG_SVC_ENV_REDESIGN,
-    [TemplateType.ArtifactSource]: !!ARTIFACT_SOURCE_TEMPLATE
+    [TemplateType.ArtifactSource]: !!ARTIFACT_SOURCE_TEMPLATE,
+    [TemplateType.StepGroup]: !!CDS_STEPGROUP_TEMPLATE
   })
   const { supportingTemplatesGitx } = useAppStore()
+
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { enabled: templatesEnabled } = useFeature({
     featureRequest: {

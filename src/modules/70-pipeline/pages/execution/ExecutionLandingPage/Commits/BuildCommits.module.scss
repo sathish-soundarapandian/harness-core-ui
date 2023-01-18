@@ -1,0 +1,180 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.wrapper {
+  // 96px is ExtendedPageHeader's height
+  // 56px is Tabs's height
+  // --spacing-huge * 2 is top + bottom margins
+  height: calc(100vh - 96px - 56px - var(--spacing-huge) * 2);
+  width: 1000px;
+  margin-right: auto;
+  margin-left: auto;
+  overflow: auto;
+  padding-right: var(--spacing-large);
+  margin-top: var(--spacing-huge);
+  margin-bottom: var(--spacing-huge);
+}
+
+.stack {
+  position: relative;
+  padding-bottom: var(--spacing-xxxlarge);
+  overflow: hidden;
+
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10px;
+    width: 1px;
+    height: 100%;
+    // TODO: Replace color once it is available in UIKit
+    background-color: var(--grey-200);
+  }
+
+  &:last-child {
+    padding-bottom: var(--spacing-xsmall);
+  }
+  :not(:nth-last-of-type(.commit)) {
+    border-bottom: none !important;
+  }
+}
+
+.stackHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-small);
+}
+
+.stackHeaderIcon {
+  position: relative;
+  z-index: 1;
+  // TODO: Replace color once it is available in UIKit
+  color: var(--grey-500) !important;
+  background-color: var(--primary-bg) !important;
+}
+
+.stackHeaderText {
+  // TODO: Replace color once it is available in UIKit
+  color: var(--grey-500);
+}
+
+.commit {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: none !important;
+  border: 1px solid var(--grey-200) !important;
+  padding-top: var(--spacing-3) !important;
+  padding-bottom: var(--spacing-3) !important;
+  margin-left: 34px;
+  border-bottom: none !important;
+  border-radius: 0 !important;
+
+  &:nth-child(2) {
+    border-top-left-radius: 4px !important;
+    border-top-right-radius: 4px !important;
+  }
+
+  &:last-child {
+    border-bottom: 1px solid var(--grey-200) !important;
+    border-bottom-left-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+  }
+
+  :global(.bp3-popover-wrapper),
+  :global(.bp3-popover-target) {
+    display: block !important;
+  }
+
+  p {
+    --font-size: var(--font-size-small) !important;
+    --intent-color: var(--grey-900) !important;
+  }
+
+  [data-name='commitId'] {
+    min-width: 90px;
+  }
+}
+.commitTitle {
+  // TODO: Replace color once it is available in UIKit
+  color: rgba(0, 19, 37, 0.87);
+}
+
+.commitDescription {
+  // TODO: Replace color once it is available in UIKit
+  color: rgba(0, 0, 0, 0.6);
+  opacity: 0.68;
+}
+
+.user {
+  display: flex;
+  font-size: var(--font-size-small);
+  color: var(--grey-600) !important;
+}
+
+.timeStamp {
+  color: var(--grey-600) !important;
+}
+.rightSideCommitDetails {
+  > span {
+    width: 90px !important;
+  }
+}
+
+.label {
+  display: flex !important;
+  align-items: center !important;
+  white-space: nowrap !important;
+  font-size: var(--font-size-small) !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  color: var(--primary-7) !important;
+  background-color: var(--primary-1) !important;
+  border-radius: 8px !important;
+  padding: var(--spacing-xsmall) var(--spacing-small) !important;
+  margin: 0 var(--spacing-xsmall);
+
+  svg {
+    margin-right: var(--spacing-xsmall);
+
+    path {
+      fill: currentColor !important;
+    }
+  }
+}
+
+.hash {
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  // TODO: Replace color once it is available in UIKit
+  background: rgba(196, 196, 196, 0.2);
+  // TODO: Replace color once it is available in UIKit
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  padding: 0;
+}
+
+.hashText {
+  color: var(--black);
+  // TODO: Replace color once it is available in UIKit
+  border-right: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.emptyCommits {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 160px !important;
+}
+
+.zeroState {
+  width: 515px !important;
+  margin: 0 auto !important;
+  padding-top: 140px !important;
+  text-align: center;
+}

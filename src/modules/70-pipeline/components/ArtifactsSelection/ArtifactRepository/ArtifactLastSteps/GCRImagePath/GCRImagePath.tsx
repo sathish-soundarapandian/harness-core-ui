@@ -87,6 +87,7 @@ export function GCRImagePath({
   const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
+      getString,
       artifactIdentifiers,
       initialValues?.identifier,
       getString('pipeline.uniqueIdentifier')
@@ -208,7 +209,7 @@ export function GCRImagePath({
       >
         {formik => (
           <FormikForm>
-            <div className={cx(css.connectorForm, formClassName)}>
+            <div className={cx(css.artifactForm, formClassName)}>
               {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
               {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
               <div className={css.imagePathContainer}>

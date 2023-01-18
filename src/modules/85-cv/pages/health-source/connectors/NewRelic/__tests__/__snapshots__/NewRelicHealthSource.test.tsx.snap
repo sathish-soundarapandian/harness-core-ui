@@ -457,11 +457,26 @@ exports[`Unit tests for NewRelic health source Test NewRelic healthSource contai
                                         class="StyledProps--font StyledProps--main emptyThresholdsContainer"
                                         data-testid="emptyThresholdsDisplay"
                                       >
-                                        <p
-                                          class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
+                                        <div
+                                          class="StyledProps--font StyledProps--main NoDataCard--noDataCard noThresholdsMessageCard StyledProps--flex StyledProps--flex-align-center-center"
                                         >
-                                          cv.metricThresholds.noThresholdsMessage
-                                        </p>
+                                          <div
+                                            class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+                                            style="align-items: center; margin-top: -48px; width: 470px;"
+                                          >
+                                            <img
+                                              src="test-file-stub"
+                                            />
+                                            <p
+                                              class="StyledProps--font StyledProps--main NoDataCard--message StyledProps--font-align-center StyledProps--color StyledProps--color-grey600"
+                                            >
+                                              cv.metricThresholds.noThresholdsMessage
+                                            </p>
+                                            <div
+                                              class="NoDataCard--buttonContainer"
+                                            />
+                                          </div>
+                                        </div>
                                       </div>
                                     </div>
                                   </div>

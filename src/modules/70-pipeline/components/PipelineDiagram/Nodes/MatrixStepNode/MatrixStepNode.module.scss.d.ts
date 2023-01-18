@@ -29,13 +29,13 @@ declare const styles: {
   readonly markerStart: string
   readonly matrixBorderWrapper: string
   readonly matrixFooter: string
+  readonly matrixNodesGridWrapper: string
   readonly matrixStepGroup: string
   readonly nestedGroup: string
   readonly nestedStepGroup: string
   readonly nodeNameText: string
   readonly readonly: string
   readonly runningAnimation: string
-  readonly showNodeText: string
   readonly showNodes: string
   readonly stageName: string
   readonly stepCount: string

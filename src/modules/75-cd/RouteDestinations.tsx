@@ -18,7 +18,8 @@ import {
   servicePathProps,
   environmentGroupPathProps,
   environmentPathProps,
-  orgPathProps
+  orgPathProps,
+  executionPathProps
 } from '@common/utils/routeUtils'
 import type { ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
@@ -69,6 +70,8 @@ import { FeatureFlag } from '@common/featureFlags'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
 import { AccountSideNavProps, MainDashboardSideNavProps } from '@common/RouteDestinations'
 import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
+import ExecutionLandingPage from '@pipeline/pages/execution/ExecutionLandingPage/ExecutionLandingPage'
+import { BuildCommits } from '@pipeline/pages/execution/ExecutionLandingPage/Commits/BuildCommits'
 import { Environments } from './components/Environments/Environments'
 import { Environments as EnvironmentsV2 } from './components/EnvironmentsV2/Environments'
 import EnvironmentDetails from './components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetails'
@@ -246,7 +249,9 @@ const CDSideNavProps: SidebarContext = {
   navComponent: CDSideNav,
   subtitle: 'Continuous',
   title: 'Delivery',
-  icon: 'cd-main'
+  icon: 'cd-main',
+  launchButtonText: 'cd.cdLaunchText',
+  launchButtonRedirectUrl: '#/account/{replaceAccountId}/dashboard'
 }
 
 const moduleParams: ModulePathParams = {
@@ -280,7 +285,6 @@ export default (
       sidebarProps={CDSideNavProps}
       pageName={PAGE_NAME.GetStartedWithCD}
       path={routes.toGetStartedWithCD({ ...accountPathProps, ...projectPathProps, ...moduleParams })}
-      layout={MinimalLayout}
     >
       <GetStartedWithCD />
     </RouteWithLayout>
@@ -627,6 +631,22 @@ export default (
       pageName={PAGE_NAME.EnvironmentGroupDetails}
     >
       <EnvironmentGroupDetails />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      exact
+      licenseRedirectData={licenseRedirectData}
+      sidebarProps={CDSideNavProps}
+      path={routes.toExecutionCommitsView({
+        ...accountPathProps,
+        ...executionPathProps,
+        ...moduleParams
+      })}
+      pageName={PAGE_NAME.BuildCommits}
+    >
+      <ExecutionLandingPage>
+        <BuildCommits />
+      </ExecutionLandingPage>
     </RouteWithLayout>
 
     {

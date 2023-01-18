@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FC, ReactNode, useMemo, useRef, useState } from 'react'
+import React, { CSSProperties, FC, ReactNode, useMemo, useRef, useState } from 'react'
 import {
   Button,
   ExpressionAndRuntimeTypeProps,
@@ -67,12 +67,13 @@ export interface ReferenceSelectProps<T extends MinimalObject>
   hideModal?: boolean
   selectedRenderer?: JSX.Element
   editRenderer?: JSX.Element
-  width?: number
+  width?: CSSProperties['width']
   isNewConnectorLabelVisible?: boolean
   onChange: (record: T, scope: Scope) => void
   disabled?: boolean
   componentName?: string
   isMultiSelect?: boolean
+  isOnlyFixedtype?: boolean
   selectedReferences?: string[] | Item[]
   onMultiSelectChange?: (records: ScopeAndIdentifier[]) => void
 }
@@ -278,6 +279,19 @@ function MultiTypeReferenceInputFixedTypeComponent<T extends MinimalObject>(
 }
 export function MultiTypeReferenceInput<T extends MinimalObject>(props: MultiTypeReferenceInputProps<T>): JSX.Element {
   const { referenceSelectProps, ...rest } = props
+  if (referenceSelectProps.isOnlyFixedtype) {
+    const { selected, width = 300, ...restProps } = referenceSelectProps
+    return (
+      <ReferenceSelect
+        {...restProps}
+        selected={selected}
+        width={width}
+        onChange={(record, scope) => {
+          rest.onChange?.({ record, scope } as any, MultiTypeInputValue.SELECT_OPTION, MultiTypeInputType.FIXED)
+        }}
+      />
+    )
+  }
   return (
     <ExpressionAndRuntimeType<MultiTypeReferenceInputProps<T>['referenceSelectProps']>
       width={referenceSelectProps.width}
@@ -325,12 +339,18 @@ export const MultiReferenceSelectPlaceholder: FC<MultiReferenceSelectPlaceholder
         <Layout.Horizontal
           spacing="xsmall"
           flex={{ alignItems: 'center', justifyContent: 'space-between' }}
-          className={css.layoutHeight}
+          className={cx(css.layoutHeight, !disabled && css.pointer)}
         >
           <Layout.Horizontal
-            width={'95%'}
+            className={css.groupedReferences}
             spacing="xsmall"
             flex={{ alignItems: 'center', justifyContent: 'flex-start' }}
+            onClick={() => {
+              if (disabled) {
+                return
+              }
+              onClick()
+            }}
           >
             {groupedReferences
               .filter(el => el.count)
@@ -340,16 +360,16 @@ export const MultiReferenceSelectPlaceholder: FC<MultiReferenceSelectPlaceholder
                     padding={{ top: 'xsmall', right: 'small', bottom: 'xsmall', left: 'small' }}
                     background={Color.PRIMARY_2}
                     key={scope}
-                    onClick={() => {
+                    onClick={event => {
+                      event.stopPropagation()
                       if (disabled) return
 
                       onClick(scope)
                     }}
                     border={{ radius: 100 }}
-                    className={css.pointer}
                   >
                     <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Text font={{ size: 'small' }} color={Color.BLACK}>
+                      <Text lineClamp={1} font={{ size: 'small' }} color={Color.BLACK}>
                         {scope.toUpperCase()}
                       </Text>
                       <Text
@@ -368,24 +388,26 @@ export const MultiReferenceSelectPlaceholder: FC<MultiReferenceSelectPlaceholder
               })}
           </Layout.Horizontal>
           <Icon
-            className={css.pointer}
             margin={{ left: 'medium' }}
             name="cross"
             color={Color.GREY_500}
             size={14}
-            onClick={onClear}
+            onClick={() => !disabled && onClear()}
           />
         </Layout.Horizontal>
       ) : (
         <Container
-          className={css.pointer}
+          className={cx(!disabled && css.pointer)}
           onClick={() => {
+            if (disabled) {
+              return
+            }
             onClick()
           }}
         >
           <Text
-            color={Color.PRIMARY_7}
-            className={css.selectBtn}
+            color={!disabled ? Color.PRIMARY_7 : undefined}
+            className={cx(!disabled && css.selectBtn)}
             flex={{ alignItems: 'center', justifyContent: 'flex-start', inline: false }}
             padding="xsmall"
           >

@@ -28,7 +28,8 @@ import routes from '@common/RouteDefinitions'
 import type { ExecutionPathProps, PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 
-import GitOpsExecutionSummaryInfo from './GitOpsExecutionSummary'
+import { NodeType } from '@pipeline/utils/executionUtils'
+import GitOpsExecutionSummary from './GitOpsExecutionSummary'
 import { CDExecutionSummary } from './CDExecutionSummary'
 
 import css from './ExecutionListTable.module.scss'
@@ -55,7 +56,8 @@ export const stageIconMap: Partial<Record<StageType, IconProps>> = {
   [StageType.FEATURE]: { name: 'ff-solid' },
   [StageType.APPROVAL]: { name: 'approval-stage-icon' },
   [StageType.CUSTOM]: { name: 'pipeline-custom' },
-  [StageType.MATRIX]: { name: 'looping', color: Color.GREY_900 }
+  [StageType.MATRIX]: { name: 'looping', color: Color.GREY_900 },
+  [StageType.PIPELINE]: { name: 'chained-pipeline' }
 }
 
 export function ExecutionStage(props: ExecutionStageProps): React.ReactElement {
@@ -82,6 +84,7 @@ export function ExecutionStage(props: ExecutionStageProps): React.ReactElement {
   const cdStageInfo = (stage.data as PipelineExecutionSummary)?.moduleInfo?.cd || {}
   const stoStageInfo = (stage.data as PipelineExecutionSummary)?.moduleInfo?.sto || {}
   const stoInfo = executionFactory.getCardInfo(StageType.SECURITY)
+  const selectedNodeId = stage?.data?.nodeType === NodeType.RUNTIME_INPUT ? stage.identifier : stage.id
   const {
     accountId,
     orgIdentifier,
@@ -111,8 +114,8 @@ export function ExecutionStage(props: ExecutionStageProps): React.ReactElement {
               branch,
               repoName,
               storeType,
-              stage: stage.stageNodeId,
-              stageExecId: stage.id
+              stage: stage.stageNodeId ?? selectedNodeId,
+              ...(stage.stageNodeId && { stageExecId: stage.id })
             })}
           >
             {stage.name}
@@ -128,7 +131,7 @@ export function ExecutionStage(props: ExecutionStageProps): React.ReactElement {
 
       <div className={css.stageInfo}>
         <CDExecutionSummary stageInfo={cdStageInfo} />
-        <GitOpsExecutionSummaryInfo stageInfo={cdStageInfo} limit={1} />
+        <GitOpsExecutionSummary stageInfo={cdStageInfo} />
 
         {stage.type === StageType.SECURITY &&
           !isEmpty(stoStageInfo) &&

@@ -56,9 +56,9 @@ export const LoadSourceByType = ({
   expressions?: string[]
 }): JSX.Element | null => {
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
-  const isCloudWatchEnabled = useFeatureFlag(FeatureFlag.SRM_ENABLE_HEALTHSOURCE_CLOUDWATCH_METRICS)
   const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
-  const healthSourceConfig = healthSourcesConfig[`${type}_${data?.product?.value}`]
+  const selectedProduct = data?.product?.value || data?.existingMetricDetails?.type
+  const healthSourceConfig = healthSourcesConfig[selectedProduct]
 
   switch (type) {
     case HealthSourceTypes.AppDynamics:
@@ -148,7 +148,7 @@ export const LoadSourceByType = ({
       return <SplunkMetricsHealthSource data={data} onSubmit={onSubmit} />
     case HealthSourceTypes.CustomHealth:
       if (data.product?.value === CustomHealthProduct.METRICS || shouldRenderCustomHealthMetric(data)) {
-        return <CustomHealthSource data={data} onSubmit={onSubmit} />
+        return <CustomHealthSource data={data} isTemplate={isTemplate} onSubmit={onSubmit} />
       } else {
         return <CustomHealthLogSource data={data} onSubmit={onSubmit} />
       }
@@ -156,12 +156,11 @@ export const LoadSourceByType = ({
       return <ErrorTrackingHealthSource data={data} onSubmit={onSubmit} />
     case Connectors.AWS:
     case HealthSourceTypes.CloudWatchMetrics:
-      if (!isCloudWatchEnabled) {
-        return null
-      }
       return <CloudWatch data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
 
     case HealthSourceTypes.SumoLogic:
+    case HealthSourceTypes.SumologicLogs:
+    case HealthSourceTypes.SumologicMetrics:
       if (!isSumoLogicEnabled) {
         return null
       }

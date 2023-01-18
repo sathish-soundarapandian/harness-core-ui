@@ -58,6 +58,7 @@
   }
 
   .centerElement {
+    display: flex;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -69,7 +70,7 @@
   }
   .chartContainer {
     position: relative;
-    height: 387px !important;
+    height: 354px !important;
     width: 100% !important;
     border: 1px solid var(--grey-200);
     border-radius: var(--spacing-3);
@@ -106,4 +107,17 @@
   .chartContainer {
     height: 580px !important;
   }
+}
+
+.stackTracePanelClassName {
+  height: auto;
+  min-height: 800px;
+}
+
+.noDataContainer > div:first-child {
+  height: unset !important;
+}
+
+.noDataContainer > div:first-child > div:first-child {
+  margin-top: 0 !important;
 }

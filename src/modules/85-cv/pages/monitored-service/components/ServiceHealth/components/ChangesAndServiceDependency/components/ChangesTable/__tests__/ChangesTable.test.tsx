@@ -21,8 +21,18 @@ jest.mock('services/cv', () => ({
       error: null,
       loading: false
     }
+  }),
+  useChangeEventListForAccount: jest.fn().mockImplementation(() => {
+    return {
+      data: {},
+      refetch: jest.fn(),
+      error: null,
+      loading: false,
+      cancel: jest.fn()
+    }
   })
 }))
+
 describe('Change table', () => {
   test('should render with no data', async () => {
     const { container, getByText } = render(
@@ -39,6 +49,7 @@ describe('Change table', () => {
     await waitFor(() => expect(getByText('cv.monitoredServices.noAvailableData')).toBeTruthy())
     expect(container).toMatchSnapshot()
   })
+
   test('should render with loading state', async () => {
     jest.spyOn(cvService, 'useChangeEventList').mockImplementation(
       () =>
@@ -115,6 +126,7 @@ describe('Change table', () => {
 
     expect(container).toMatchSnapshot()
   })
+
   test('should verify pagination', async () => {
     const refetchChangeList = jest.fn()
     jest.spyOn(cvService, 'useChangeEventList').mockImplementation(
@@ -197,15 +209,17 @@ describe('Change table', () => {
     await waitFor(() => expect(getByText('Kubernetes Deployment event')).toBeTruthy())
     await waitFor(() => expect(getByText('Deployment of manager in prod HarnessCD')).toBeTruthy())
     await waitFor(() => expect(getByText('Deployment of manager in prod HarnessCDNextGen')).toBeTruthy())
+    await waitFor(() => expect(getByText('CV Trial Limit')).toBeTruthy())
 
     // verify types column
     await waitFor(() => expect(getByText('HarnessCD')).toBeTruthy())
     await waitFor(() => expect(getByText('HarnessCDNextGen')).toBeTruthy())
     await waitFor(() => expect(getByText('PagerDuty')).toBeTruthy())
     await waitFor(() => expect(getByText('K8sCluster')).toBeTruthy())
+    await waitFor(() => expect(getByText('HarnessFF')).toBeTruthy())
 
     // verify count on table title
-    await waitFor(() => expect(getByText('changes(4)')).toBeTruthy())
+    await waitFor(() => expect(getByText('changes(5)')).toBeTruthy())
 
     expect(container).toMatchSnapshot()
   })

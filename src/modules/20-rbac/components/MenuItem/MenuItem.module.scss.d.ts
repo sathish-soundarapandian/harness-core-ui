@@ -8,6 +8,8 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly icon: string
+  readonly linkIcon: string
+  readonly openNewTabStyle: string
   readonly popover: string
 }
 export default styles

@@ -29,6 +29,7 @@ export interface ResourceOption {
   subLabel?: JSX.Element
   disabled?: boolean
   selectable?: boolean
+  bgColor?: string
 }
 interface ResourceCardListProps {
   items?: ResourceOption[]
@@ -167,28 +168,33 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
 
   const gitOpsEntities = [
     {
-      label: <String stringID="common.agents" />,
+      label: <String stringID="common.gitopsAgents" />,
       icon: 'gitops-agent-blue',
+      bgColor: 'var(--orange-50)',
       route: routes.toAccountResourcesGitOps({ accountId, entity: 'agents' })
     } as ResourceOption,
     {
       label: <String stringID="repositories" />,
       icon: 'gitops-repository-blue',
+      bgColor: 'var(--primary-1)',
       route: routes.toAccountResourcesGitOps({ accountId, entity: 'repositories' })
-    } as ResourceOption,
-    {
-      label: <String stringID="common.repositoryCertificates" />,
-      icon: 'gitops-repo-cert-blue',
-      route: routes.toAccountResourcesGitOps({ accountId, entity: 'repoCertificates' })
     } as ResourceOption,
     {
       label: <String stringID="common.clusters" />,
       icon: 'gitops-clusters-blue',
+      bgColor: 'var(--purple-50)',
       route: routes.toAccountResourcesGitOps({ accountId, entity: 'clusters' })
+    } as ResourceOption,
+    {
+      label: <String stringID="common.repositoryCertificates" />,
+      icon: 'gitops-repo-cert-blue',
+      bgColor: 'var(--yellow-50)',
+      route: routes.toAccountResourcesGitOps({ accountId, entity: 'repoCertificates' })
     } as ResourceOption,
     {
       label: <String stringID="common.gnupgKeys" />,
       icon: 'gitops-gnupg-key-blue',
+      bgColor: 'var(--magenta-50)',
       route: routes.toAccountResourcesGitOps({ accountId, entity: 'gnuPGKeys' })
     } as ResourceOption
   ]
@@ -230,6 +236,9 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
               <Card
                 key={gitOpsEntity.icon}
                 className={cx(css.card)}
+                style={{
+                  background: gitOpsEntity.bgColor
+                }}
                 onClick={() => {
                   gitOpsEntity?.onClick?.()
                   if (gitOpsEntity.route) {
@@ -238,8 +247,14 @@ const ResourceCardList: React.FC<ResourceCardListProps> = ({ items }) => {
                 }}
               >
                 <Layout.Vertical flex spacing="large" style={{ textAlign: 'center' }}>
-                  <Icon name={gitOpsEntity.icon} size={70} />
-                  <Text color={Color.BLACK} font={{ weight: 'semi-bold' }} lineClamp={2} width={85}>
+                  <Icon name={gitOpsEntity.icon} size={70} className={css.gitOpsIcon} />
+                  <Text
+                    color={Color.BLACK}
+                    font={{ weight: 'semi-bold' }}
+                    lineClamp={2}
+                    width={100}
+                    style={{ wordBreak: 'break-word' }}
+                  >
                     {gitOpsEntity.label}
                   </Text>
                   {gitOpsEntity.subLabel}

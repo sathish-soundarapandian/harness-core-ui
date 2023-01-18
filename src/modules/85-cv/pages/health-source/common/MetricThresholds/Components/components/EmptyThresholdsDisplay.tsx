@@ -1,6 +1,7 @@
 import React from 'react'
-import { Container, Text } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Container, NoDataCard } from '@harness/uicore'
+import emptyData from '@cv/assets/emptyData.svg'
+
 import { useStrings } from 'framework/strings'
 import css from '../MetricThreshold.module.scss'
 
@@ -9,7 +10,11 @@ export default function EmptyThresholdsDisplay(): JSX.Element {
 
   return (
     <Container className={css.emptyThresholdsContainer} data-testid="emptyThresholdsDisplay">
-      <Text font={{ variation: FontVariation.BODY }}>{getString('cv.metricThresholds.noThresholdsMessage')}</Text>
+      <NoDataCard
+        containerClassName={css.noThresholdsMessageCard}
+        image={emptyData}
+        message={getString('cv.metricThresholds.noThresholdsMessage')}
+      />
     </Container>
   )
 }

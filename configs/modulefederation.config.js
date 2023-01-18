@@ -31,7 +31,8 @@ module.exports = ({
   enableCODE,
   enableFFUI,
   enableCIUI,
-  enableTIUI
+  enableTIUI,
+  enableIACM
 }) => {
   const remotes = {}
 
@@ -72,6 +73,10 @@ module.exports = ({
 
   if (enableTIUI) {
     remotes.tiui = "tiui@[window.getApiBaseUrl('tiui/remoteEntry.js')]"
+  }
+
+  if (enableIACM) {
+    remotes.iacm = "remoteIACM@[window.getApiBaseUrl('iacm/remoteEntry.js')]"
   }
 
   if (process.env.TARGET_LOCALHOST) {

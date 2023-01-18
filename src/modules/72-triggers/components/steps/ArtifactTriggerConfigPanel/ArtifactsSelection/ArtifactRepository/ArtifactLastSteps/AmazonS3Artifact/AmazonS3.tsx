@@ -31,6 +31,7 @@ import { ArtifactConfig, BucketResponse, ConnectorConfigDTO, useGetV2BucketListF
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { ArtifactIdentifierValidation } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useListAwsRegions } from 'services/portal'
+import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { ImagePathProps } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -114,7 +115,7 @@ export function AmazonS3(
   }
   const sidecarSchema = Yup.object().shape({
     ...schemaObject,
-    ...ArtifactIdentifierValidation([], initialValues?.identifier, getString('pipeline.uniqueIdentifier'))
+    ...ArtifactIdentifierValidation(getString, [], initialValues?.identifier, getString('pipeline.uniqueIdentifier'))
   })
 
   const primarySchema = Yup.object().shape(schemaObject)
@@ -179,7 +180,7 @@ export function AmazonS3(
         onSubmit={formData => {
           handleSubmit({
             ...formData,
-            connectorRef: prevStepData?.connectorId?.value
+            connectorRef: getConnectorIdValue(prevStepData)
           })
         }}
       >

@@ -8,10 +8,12 @@
 
 import { Color } from '@harness/design-system'
 import { Text } from '@harness/uicore'
+import { Link } from 'react-router-dom'
 import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance } from 'react-table'
 import React from 'react'
 import moment from 'moment'
 import type { ActiveServiceDTO } from 'services/cd-ng'
+import routes from '@common/RouteDefinitions'
 
 type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance<D> & {
   column: ColumnInstance<D>
@@ -21,8 +23,7 @@ type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance
 }
 
 type CellType = Renderer<CellTypeWithActions<ActiveServiceDTO>>
-
-export const LastModifiedNameCell: CellType = ({ row }) => {
+export const ServiceNameCell: CellType = ({ row }) => {
   const data = row.original
   return (
     <Text color={Color.GREY_900} font={{ size: 'small' }}>
@@ -49,10 +50,22 @@ export const ProjectCell: CellType = ({ row }) => {
 }
 export const LastModifiedServiceIdCell: CellType = ({ row }) => {
   const data = row.original
+  const accountId = data.accountIdentifier || ''
+  const serviceId = data.identifier
   return (
-    <Text color={Color.GREY_900} font={{ size: 'small' }}>
-      {data.identifier}
-    </Text>
+    <Link
+      to={routes.toServiceStudio({
+        accountId,
+        orgIdentifier: data.orgIdentifier,
+        projectIdentifier: data.projectIdentifier,
+        serviceId,
+        module: 'cd'
+      })}
+    >
+      <Text color={Color.PRIMARY_7} font={{ size: 'small' }}>
+        {data.identifier}
+      </Text>
+    </Link>
   )
 }
 export const ServiceInstancesCell: CellType = ({ row }) => {
@@ -67,7 +80,7 @@ export const LastDeployedCell: CellType = ({ row }) => {
   const data = row.original
   return (
     <Text color={Color.GREY_900} font={{ size: 'small' }}>
-      {moment(data.lastDeployed).format('DD-MM-YYYY')}
+      {moment(data.lastDeployed).format('MM-DD-YYYY')}
     </Text>
   )
 }

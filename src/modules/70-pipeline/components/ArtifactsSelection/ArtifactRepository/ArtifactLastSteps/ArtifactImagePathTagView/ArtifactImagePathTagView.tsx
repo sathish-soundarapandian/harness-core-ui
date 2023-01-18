@@ -11,12 +11,13 @@ import { Menu } from '@blueprintjs/core'
 import { FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 import { isNil, get, memoize } from 'lodash-es'
 import type { GetDataError } from 'restful-react'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { useStrings } from 'framework/strings'
-import { EXPRESSION_STRING } from '@pipeline/utils/constants'
-import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
 
 import type { Failure, Error, ArtifactoryBuildDetailsDTO, DockerBuildDetailsDTO } from 'services/cd-ng'
+import { useStrings } from 'framework/strings'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
 import { tagOptions } from '../../../ArtifactHelper'
 import { getArtifactPathToFetchTags, helperTextData, resetTag } from '../../../ArtifactUtils'
 import type { ArtifactImagePathTagViewProps } from '../../../ArtifactInterface'
@@ -242,7 +243,8 @@ function ArtifactImagePathTagView({
 
           {getMultiTypeFromValue(formik?.values?.tag) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
-              <ConfigureOptions
+              <SelectConfigureOptions
+                options={tags}
                 value={formik?.values?.tag}
                 type="String"
                 variableName="tag"

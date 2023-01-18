@@ -29,8 +29,6 @@ import { useStrings } from 'framework/strings'
 import { useQueryParams } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ProjectSetupMenu from '@common/navigation/ProjectSetupMenu/ProjectSetupMenu'
-import { returnLaunchUrl } from '@common/utils/routeUtils'
-import { LaunchButton } from '@common/components/LaunchButton/LaunchButton'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { isOnPrem, useGetCommunity } from '@common/utils/utils'
 import { useGetPipelines } from '@pipeline/hooks/useGetPipelines'
@@ -187,17 +185,29 @@ export default function CDSideNav(): React.ReactElement {
               })
             )
           } else if (experience) {
-            // when it's on trial page, forward to pipeline
-            history.push({
-              pathname: routes.toPipelineStudio({
-                orgIdentifier: data.orgIdentifier || '',
-                projectIdentifier: data.identifier || '',
-                pipelineIdentifier: '-1',
-                accountId,
-                module
-              }),
-              search: `?modal=${experience}`
-            })
+            // when it's on trial page, forward to get-started (behind FF)/ pipeline
+            history.push(
+              CD_ONBOARDING_ENABLED
+                ? {
+                    pathname: routes.toGetStartedWithCD({
+                      orgIdentifier: data.orgIdentifier || '',
+                      projectIdentifier: data.identifier || '',
+                      accountId,
+                      module
+                    }),
+                    search: `?modal=${experience}`
+                  }
+                : {
+                    pathname: routes.toPipelineStudio({
+                      orgIdentifier: data.orgIdentifier || '',
+                      projectIdentifier: data.identifier || '',
+                      pipelineIdentifier: '-1',
+                      accountId,
+                      module
+                    }),
+                    search: `?modal=${experience}`
+                  }
+            )
           } else {
             history.push(
               routes.toProjectOverview({
@@ -228,10 +238,6 @@ export default function CDSideNav(): React.ReactElement {
           <ProjectSetupMenu module={module} />
         </React.Fragment>
       ) : null}
-      <LaunchButton
-        launchButtonText={getString('cd.cdLaunchText')}
-        redirectUrl={returnLaunchUrl(`#/account/${params.accountId}/dashboard`)}
-      />
     </Layout.Vertical>
   )
 }

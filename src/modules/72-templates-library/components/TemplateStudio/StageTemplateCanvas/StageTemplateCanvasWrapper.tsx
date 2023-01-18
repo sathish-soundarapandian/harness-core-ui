@@ -6,7 +6,7 @@
  */
 
 import produce from 'immer'
-import { get, merge, omit, set } from 'lodash-es'
+import { get, isEmpty, merge, omit, set } from 'lodash-es'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import {
@@ -48,11 +48,13 @@ const StageTemplateCanvasWrapper = () => {
   )
 
   const onUpdatePipeline = async (pipelineConfig: PipelineInfoConfig) => {
-    const stage = get(pipelineConfig, 'stages[0].stage')
-    const processNode = omit(stage, 'name', 'identifier', 'description', 'tags')
-    sanitize(processNode, { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false })
-    set(template, 'spec', processNode)
-    await updateTemplate(template)
+    if (!isEmpty(template?.type)) {
+      const stage = get(pipelineConfig, 'stages[0].stage')
+      const processNode = omit(stage, 'name', 'identifier', 'description', 'tags')
+      sanitize(processNode, { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false })
+      set(template, 'spec', processNode)
+      await updateTemplate(template)
+    }
   }
 
   return (

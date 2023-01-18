@@ -7,12 +7,15 @@
 
 import React, { ReactNode } from 'react'
 import { Button, ButtonProps, ButtonVariation, Container, Heading, Layout, Text } from '@harness/uicore'
+import { Icon, IconName, IconProps } from '@harness/icons'
 import type { LayoutProps } from '@harness/uicore/dist/layouts/Layout'
 import { Color, FontVariation } from '@harness/design-system'
 import css from './NoData.module.scss'
 
 export interface NoDataProps extends LayoutProps {
   imageURL?: string
+  icon?: IconName
+  iconProps?: Partial<IconProps>
   message: string
   description?: ReactNode
   width?: number | string
@@ -25,6 +28,8 @@ export interface NoDataProps extends LayoutProps {
 
 export const NoData: React.FC<NoDataProps> = ({
   imageURL,
+  icon,
+  iconProps = {},
   message,
   description,
   width,
@@ -39,6 +44,7 @@ export const NoData: React.FC<NoDataProps> = ({
   return (
     <Layout.Vertical flex={{ justifyContent: 'center' }} spacing="xlarge" width={width || 540} {...props}>
       {imageURL && <img src={imageURL} width={imgWidth || 320} height={220} alt="" data-testid="nodata-image" />}
+      {!imageURL && icon && <Icon name={icon} size={48} color={Color.GREY_600} {...iconProps} />}
 
       <Container>
         <Layout.Vertical spacing="medium">

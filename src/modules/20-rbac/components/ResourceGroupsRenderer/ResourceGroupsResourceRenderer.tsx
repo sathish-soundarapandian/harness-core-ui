@@ -10,7 +10,7 @@ import type { RbacResourceRendererProps } from '@rbac/factories/RbacFactory'
 import StaticResourceRenderer from '@rbac/components/StaticResourceRenderer/StaticResourceRenderer'
 import { PageSpinner } from '@common/components'
 import { RenderColumnDetails } from '@rbac/components/ResourceGroupList/ResourceGroupListView'
-import { useGetFilterResourceGroupList } from 'services/resourcegroups'
+import { useGetFilterResourceGroupListV2 } from 'services/resourcegroups'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import type { ResourceGroupColumn } from './ResourceGroupsResourceModalBody'
 
@@ -21,7 +21,7 @@ const ResourceGroupsResourceRenderer: React.FC<RbacResourceRendererProps> = ({
   onResourceSelectionChange
 }) => {
   const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
-  const { data, loading } = useMutateAsGet(useGetFilterResourceGroupList, {
+  const { data, loading } = useMutateAsGet(useGetFilterResourceGroupListV2, {
     body: { accountIdentifier, orgIdentifier, projectIdentifier, identifierFilter: identifiers },
     queryParams: {
       accountIdentifier,

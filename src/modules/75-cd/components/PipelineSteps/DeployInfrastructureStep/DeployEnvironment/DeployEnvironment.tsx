@@ -56,6 +56,7 @@ import { useStageFormContext } from '@pipeline/context/StageFormContext'
 
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import { isEditEnvironment } from '../utils'
 
@@ -97,7 +98,7 @@ function DeployEnvironment({
   const [selectedEnvironment, setSelectedEnvironment] = useState<EnvironmentResponseDTO>()
   const [environmentsSelectOptions, setEnvironmentsSelectOptions] = useState<SelectOption[]>()
   const [firstRender, setFirstRender] = React.useState<boolean>(true)
-
+  const isEnvInputLoaded = environmentRefType === MultiTypeInputType.FIXED
   const {
     data: environmentsResponse,
     loading: environmentsLoading,
@@ -106,7 +107,8 @@ function DeployEnvironment({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
-      projectIdentifier
+      projectIdentifier,
+      includeAllAccessibleAtScope: CDS_OrgAccountLevelServiceEnvEnvGroup
     },
     body: {
       filterType: 'Environment'
@@ -149,6 +151,7 @@ function DeployEnvironment({
         )
 
         if (path) {
+          const existingTemplate: any = getStageFormTemplate(path)
           updateStageFormTemplate(
             {
               environmentRef: RUNTIME_INPUT_VALUE,
@@ -158,6 +161,7 @@ function DeployEnvironment({
               ...(parsedServiceOverridesYaml?.serviceOverrideInputs && {
                 serviceOverrideInputs: parsedServiceOverridesYaml?.serviceOverrideInputs
               }),
+              provisioner: existingTemplate.provisioner,
               ...(!gitOpsEnabled && { infrastructureDefinitions: RUNTIME_INPUT_VALUE }),
               ...(gitOpsEnabled && { gitOpsClusters: RUNTIME_INPUT_VALUE })
             },
@@ -205,7 +209,10 @@ function DeployEnvironment({
               get(formik?.values, 'infrastructureRef') === '') &&
               set(values, `environment.infrastructureDefinitions`, '')
           }
-          formik?.setValues({ ...values, isEnvInputLoaded: true })
+          formik?.setValues({
+            ...values,
+            isEnvInputLoaded: isEnvInputLoaded
+          })
         } else {
           formik?.setValues({
             ...formik.values,
@@ -256,7 +263,7 @@ function DeployEnvironment({
                 gitOpsClusters: environmentValues.environmentRef === RUNTIME_INPUT_VALUE ? RUNTIME_INPUT_VALUE : []
               })
             },
-            isEnvInputLoaded: true
+            isEnvInputLoaded: isEnvInputLoaded
           } as any)
           updateStageFormTemplate(updatedTemplate, path)
         }
@@ -274,7 +281,7 @@ function DeployEnvironment({
         accountIdentifier: accountId,
         orgIdentifier,
         projectIdentifier,
-        environmentIdentifier: selectedEnvironment?.identifier
+        environmentIdentifier: getScopedValueFromDTO(selectedEnvironment)
       }
       refetchEnvironmentInputs({
         queryParams
@@ -320,7 +327,7 @@ function DeployEnvironment({
     if (!isNil(environments)) {
       setEnvironmentsSelectOptions(
         environments.map(environment => {
-          return { label: defaultTo(environment.name, ''), value: defaultTo(environment.identifier, '') }
+          return { label: defaultTo(environment.name, ''), value: defaultTo(getScopedValueFromDTO(environment), '') }
         })
       )
     }
@@ -354,7 +361,7 @@ function DeployEnvironment({
             })
           )
           setSelectedEnvironment(
-            environments?.find(environment => environment.identifier === existingEnvironment?.value)
+            environments?.find(environment => getScopedValueFromDTO(environment) === existingEnvironment?.value)
           )
         }
       }
@@ -428,7 +435,7 @@ function DeployEnvironment({
           setRefValue={true}
           isNewConnectorLabelVisible={false}
           onChange={item => {
-            setSelectedEnvironment(environments?.find(environment => environment.identifier === item))
+            setSelectedEnvironment(environments?.find(environment => getScopedValueFromDTO(environment) === item))
             if (formik?.values['infrastructureRef'] && item !== RUNTIME_INPUT_VALUE) {
               formik?.setFieldValue('infrastructureRef', '')
             }
@@ -459,7 +466,6 @@ function DeployEnvironment({
               }
             },
             selectProps: {
-              addClearBtn: !readonly,
               items: defaultTo(environmentsSelectOptions, [])
             },
             allowableTypes,

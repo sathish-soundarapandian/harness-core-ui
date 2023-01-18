@@ -84,6 +84,7 @@ export class WaitStep extends PipelineStep<WaitStepData> {
         readonly={readonly}
         ref={formikRef}
         allowableTypes={allowableTypes}
+        stepViewType={stepViewType}
       />
     )
   }

@@ -115,6 +115,7 @@ describe('Validate ChangeCard', () => {
     // Card details title
     await waitFor(() => expect(getByText('details')).toBeTruthy())
   })
+
   test('should render Deployment Harness NextGen card without metadata', async () => {
     jest.spyOn(cvService, 'useGetChangeEventDetail').mockImplementation(
       () =>

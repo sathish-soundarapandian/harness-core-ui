@@ -38,37 +38,35 @@ export default function TasBasicAppSetupInputSet<T>(props: TasBasicAppSetupInput
   return (
     <FormikForm>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            multiTypeDurationProps={{
-              enableConfigureOptions: false,
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${prefix}timeout`}
-            disabled={readonly}
-            fieldPath={'timeout'}
-            template={template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          multiTypeDurationProps={{
+            enableConfigureOptions: false,
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${prefix}timeout`}
+          disabled={readonly}
+          fieldPath={'timeout'}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
       {getMultiTypeFromValue((template?.spec as any)?.existingVersionToKeep) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${path}.spec.existingVersionToKeep`}
-            disabled={readonly}
-            label={getString('cd.steps.tas.existingVersionToKeep')}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes,
-              textProps: { type: 'number' }
-            }}
-            template={template}
-            fieldPath={'spec.existingVersionToKeep'}
-          />
-        </div>
+        <TextFieldInputSetView
+          name={`${path}.spec.existingVersionToKeep`}
+          disabled={readonly}
+          label={getString('cd.steps.tas.existingVersionToKeep')}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes,
+            textProps: { type: 'number' }
+          }}
+          template={template}
+          fieldPath={'spec.existingVersionToKeep'}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
       {getMultiTypeFromValue((template?.spec as any)?.additionalRoutes) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -79,6 +77,7 @@ export default function TasBasicAppSetupInputSet<T>(props: TasBasicAppSetupInput
               expressions,
               allowableTypes
             }}
+            type={getString('tagLabel')}
             label={getString('cd.steps.tas.additionalRoutes')}
             enableConfigureOptions
             isArray={true}
@@ -95,6 +94,7 @@ export default function TasBasicAppSetupInputSet<T>(props: TasBasicAppSetupInput
               expressions,
               allowableTypes
             }}
+            type={getString('tagLabel')}
             label={getString('cd.steps.tas.tempRoutes')}
             enableConfigureOptions
             isArray={true}

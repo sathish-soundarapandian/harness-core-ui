@@ -404,6 +404,96 @@ exports[`SubscriptionUtils SubscriptionDetailsCardInfo CF enterprise expired pla
 </div>
 `;
 
+exports[`SubscriptionUtils SubscriptionDetailsCardInfo CHAOS enterprise expired plan 1`] = `
+<div>
+  <div
+    class="detailFields"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600"
+    >
+      common.accountName
+    </p>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+    >
+      account name
+    </p>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600"
+    >
+      common.subscriptions.overview.plan
+    </p>
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+      >
+        common.subscriptions.paid
+      </p>
+      <div
+        class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+      >
+        <span
+          class="bp3-icon bp3-icon-warning-sign StyledProps--main expiryIcon StyledProps--color StyledProps--color-red700"
+          icon="warning-sign"
+        >
+          <svg
+            data-icon="warning-sign"
+            height="12"
+            viewBox="0 0 16 16"
+            width="12"
+          >
+            <desc>
+              warning-sign
+            </desc>
+            <path
+              d="M15.84 13.5l.01-.01-7-12-.01.01c-.17-.3-.48-.5-.85-.5s-.67.2-.85.5l-.01-.01-7 12 .01.01c-.09.15-.15.31-.15.5 0 .55.45 1 1 1h14c.55 0 1-.45 1-1 0-.19-.06-.35-.15-.5zm-6.85-.51h-2v-2h2v2zm0-3h-2v-5h2v5z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-red700"
+        >
+          common.subscriptions.expired
+        </p>
+      </div>
+    </div>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600"
+    >
+      common.account.licenseCount
+    </p>
+    <div
+      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+      >
+        common.subscriptions.chaos.experiments
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+      >
+        common.subscriptions.chaos.infrastructures
+      </p>
+    </div>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600"
+    >
+      common.extendTrial.expiryDate
+    </p>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold"
+    >
+      23 Dec 2020
+    </p>
+  </div>
+</div>
+`;
+
 exports[`SubscriptionUtils SubscriptionDetailsCardInfo CI team trial plan 1`] = `
 <div>
   <div

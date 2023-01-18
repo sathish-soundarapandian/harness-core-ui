@@ -14,7 +14,7 @@ import { useStrings } from 'framework/strings'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
@@ -51,7 +51,7 @@ function QueueWidget(props: QueueProps, formikRef: StepFormikFowardRef<QueueData
         })}
       >
         {(formik: FormikProps<QueueData>) => {
-          const { values, setFieldValue } = formik
+          const { values } = formik
           setFormikRef(formikRef, formik)
           return (
             <>
@@ -66,26 +66,11 @@ function QueueWidget(props: QueueProps, formikRef: StepFormikFowardRef<QueueData
                   name="timeout"
                   label={getString('pipelineSteps.timeoutLabel')}
                   multiTypeDurationProps={{
-                    enableConfigureOptions: false,
+                    enableConfigureOptions: true,
                     disabled: readonly,
                     allowableTypes
                   }}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('timeout', value)
-                    }}
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
 
               <div className={stepCss.divider} />

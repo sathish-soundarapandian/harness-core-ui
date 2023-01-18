@@ -1,0 +1,12 @@
+.stepGroupForm {
+  :global {
+    .bp3-tab-list {
+      border-bottom: none !important;
+      box-shadow: var(--elevation-2);
+    }
+    .bp3-tab-panel {
+      padding: var(--spacing-xxlarge) var(--spacing-huge) !important;
+      width: 50%;
+    }
+  }
+}

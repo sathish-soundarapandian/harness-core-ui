@@ -84,8 +84,11 @@ const Step = ({
         isOptional={isOptional}
       />
       <Container
-        data-testid={`preview_${id}`}
-        className={cx(css.alignContainerRight, (index !== stepList.length - 1 || isLastStep) && css.borderLeft)}
+        data-testid={`step_container_${id}`}
+        className={cx(css.alignContainerRight, {
+          [css.borderLeft]: index !== stepList.length - 1 || isLastStep,
+          [css.stepMargin]: isCurrentStep || isErrorMessageVisible || isPreviewVisible
+        })}
       >
         {isPreviewVisible && (
           <Container data-testid={`preview_${id}`} width={500}>
@@ -103,7 +106,7 @@ const Step = ({
                 ) : (
                   step.errorMessage?.map((error, errorIndex) => {
                     return (
-                      <Text key={errorIndex} margin={{ bottom: isCurrentStep ? 'large' : 'medium' }} intent="danger">
+                      <Text key={errorIndex} margin={{ bottom: isCurrentStep ? 'large' : 'small' }} intent="danger">
                         {error}
                       </Text>
                     )

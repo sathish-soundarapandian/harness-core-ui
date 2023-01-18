@@ -8,7 +8,7 @@
 import React from 'react'
 import { unstable_batchedUpdates } from 'react-dom'
 import { useFormikContext } from 'formik'
-import { get, isBoolean, isEmpty, isNil, omit, pick, set } from 'lodash-es'
+import { defaultTo, get, isBoolean, isEmpty, isNil, omit, pick, set } from 'lodash-es'
 
 import { Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -42,10 +42,12 @@ export function MultiEnvironmentsInputSetForm({
   stageIdentifier,
   allowableTypes,
   entityType,
-  pathToEnvironments
+  pathToEnvironments,
+  envGroupRef
 }: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier'> & {
   entityType: 'environments' | 'environmentGroup'
   pathToEnvironments: 'environments.values' | 'environmentGroup.environments'
+  envGroupRef?: string
 }): React.ReactElement {
   const { getString } = useStrings()
   const formik = useFormikContext<DeploymentStageConfig>()
@@ -72,7 +74,10 @@ export function MultiEnvironmentsInputSetForm({
       (Array.isArray(get(deploymentStageTemplate, pathToEnvironments)) &&
         deploymentStage?.environmentGroup?.deployToAll !== false))
 
+  // This condition is required to prevent the selection of the child entities if filters are added
   const areFiltersAdded = !isEmpty(get(deploymentStage, `${entityType}.filters`))
+  // This condition is to display the runtime fields inside any filter
+  const areFiltersRuntime = !isEmpty(get(deploymentStageTemplate, `${entityType}.filters`))
 
   return (
     <>
@@ -90,9 +95,7 @@ export function MultiEnvironmentsInputSetForm({
             gitOpsEnabled: deploymentStage?.gitOpsEnabled,
             pathToEnvironments,
             // If this is passed, the environments list is fetched based on this query param
-            envGroupIdentifier: isValueRuntimeInput(deploymentStageTemplate.environmentGroup?.envGroupRef as string)
-              ? deploymentStageInputSet.environmentGroup.envGroupRef
-              : deploymentStage?.environmentGroup?.envGroupRef,
+            envGroupIdentifier: envGroupRef,
             isMultiEnvironment: true,
             /** This takes care of hiding the field in case deployToAll is true
              * If the question arises why another condition for this scenario?
@@ -110,6 +113,20 @@ export function MultiEnvironmentsInputSetForm({
               }
             })
           }}
+        />
+      )}
+
+      {areFiltersRuntime && (
+        <StepWidget
+          factory={factory}
+          initialValues={get(deploymentStageInputSet, `${entityType}.filters`) as Partial<DeploymentStageConfig>}
+          template={get(deploymentStageTemplate, `${entityType}.filters`)}
+          type={StepType.InlineEntityFilters}
+          stepViewType={viewType}
+          path={`${path}.${entityType}.filters`}
+          allowableTypes={allowableTypes}
+          readonly={readonly}
+          allValues={get(deploymentStage, `${entityType}.filters`)}
         />
       )}
 
@@ -167,7 +184,8 @@ export function MultiEnvironmentsInputSetForm({
                 showInfrastructuresSelectionInputField ||
                 showInfrastructuresInputSetForm
 
-              const areEnvironmentFiltersAdded = !isEmpty((environmentInDeploymentStage as any).filters)
+              const areEnvironmentFiltersAdded = !isEmpty(environmentInDeploymentStage.filters)
+              const areEnvironmentFiltersRuntime = !isEmpty(environmentTemplate.filters)
 
               return (
                 deploymentType &&
@@ -183,6 +201,19 @@ export function MultiEnvironmentsInputSetForm({
                       </Text>
                     )}
                     <Container padding={{ left: 'medium' }}>
+                      {areEnvironmentFiltersRuntime && (
+                        <StepWidget
+                          factory={factory}
+                          initialValues={get(environment, 'filters')}
+                          template={get(environmentTemplate, 'filters')}
+                          type={StepType.InlineEntityFilters}
+                          stepViewType={viewType}
+                          path={`${path}.${pathToEnvironments}[${index}].filters`}
+                          allowableTypes={allowableTypes}
+                          readonly={readonly}
+                          allValues={get(environmentInDeploymentStage, 'filters')}
+                        />
+                      )}
                       {/* If there are runtime environment inputs */}
                       {showEnvironmentVariables && (
                         <>
@@ -301,9 +332,7 @@ export function MultiEnvironmentsInputSetForm({
                           customStepProps={{
                             deploymentType,
                             environmentIdentifier: environment.environmentRef,
-                            scope: getScopeFromValue(
-                              get(deploymentStageInputSet, 'environmentGroup.envGroupRef') as string
-                            ),
+                            scope: getScopeFromValue(defaultTo(envGroupRef, '')),
                             isMultipleInfrastructure: true,
                             customDeploymentRef: deploymentStage?.customDeploymentRef,
                             deployToAllInfrastructures: environmentInDeploymentStage?.deployToAll,

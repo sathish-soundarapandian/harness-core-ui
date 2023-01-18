@@ -188,10 +188,13 @@ const DelegateSelectorWizardRef = (
   })
 
   React.useEffect(() => {
-    const updatedContextDelegate = produce(newDelegateState.delegate, draft => {
-      set(draft, 'delegateType', delegateType)
-      set(draft, 'delegateInstalled', isDelegateInstalled)
-    })
+    const updatedContextDelegate = produce(
+      delegateData?.environmentEntities?.delegate ? delegateData : newDelegateState.delegate,
+      draft => {
+        set(draft, 'delegateType', delegateType)
+        set(draft, 'delegateInstalled', isDelegateInstalled)
+      }
+    )
     saveDelegateData(updatedContextDelegate)
   }, [delegateType, isDelegateInstalled, saveDelegateData])
 

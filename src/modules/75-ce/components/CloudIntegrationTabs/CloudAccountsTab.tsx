@@ -42,6 +42,7 @@ import {
 } from '@ce/utils/cloudIntegrationUtils'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import { EmptySearchState } from './NoConnectors'
 
 import css from './CloudIntegrationTabs.module.scss'
@@ -155,7 +156,7 @@ const ViewCostsCell: CustomCloudCell = ({ row, column }) => {
       onClick={
         /* istanbul ignore next */ e => {
           e.stopPropagation()
-          const baseUrl = window.location.href.split('#')[0]
+          const baseUrl = windowLocationUrlPartBeforeHash()
           window.open(`${baseUrl}#${route}`, '_blank')
         }
       }

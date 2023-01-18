@@ -26,6 +26,15 @@ jest.mock('services/cv', () => ({
       error: null,
       loading: false
     }
+  }),
+  useChangeEventListForAccount: jest.fn().mockImplementation(() => {
+    return {
+      data: {},
+      refetch: jest.fn(),
+      error: null,
+      loading: false,
+      cancel: jest.fn()
+    }
   })
 }))
 describe('ChangesAndServiceDependency', () => {

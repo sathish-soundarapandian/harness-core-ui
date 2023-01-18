@@ -56,7 +56,14 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     isReadonly
   } = usePipelineContext()
 
-  const { isServiceEntityModalView, isServiceCreateModalView, onServiceCreate, onCloseModal } = useServiceContext()
+  const {
+    isServiceEntityModalView,
+    isServiceCreateModalView,
+    onServiceCreate,
+    onCloseModal,
+    serviceResponse: serviceData,
+    setIsDeploymentTypeDisabled
+  } = useServiceContext()
   const [selectedTabId, setSelectedTabId] = useState(tab ?? ServiceTabs.SUMMARY)
   const { showSuccess, showError, clear } = useToaster()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
@@ -95,13 +102,12 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
 
     let updatedService
     const isVisualView = view === SelectedView.VISUAL
+    const newServiceDefinition = get(pipeline, 'stages[0].stage.spec.serviceConfig.serviceDefinition')
     if (!isVisualView) {
-      const stage = get(pipeline, 'stages[0].stage.spec.serviceConfig.serviceDefinition')
-
       updatedService = produce(props.serviceData, draft => {
         if (draft) {
           setNameIDDescription(draft.service as PipelineInfoConfig, pipeline as ServicePipelineConfig)
-          set(draft, 'service.serviceDefinition', stage)
+          set(draft, 'service.serviceDefinition', newServiceDefinition)
         }
       })
     }
@@ -116,8 +122,8 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
 
     const body = {
       ...omit(cloneDeep(finalServiceData?.service), 'serviceDefinition', 'gitOpsEnabled'),
-      projectIdentifier,
-      orgIdentifier,
+      projectIdentifier: isServiceCreateModalView ? projectIdentifier : serviceData?.projectIdentifier,
+      orgIdentifier: isServiceCreateModalView ? orgIdentifier : serviceData?.orgIdentifier,
       //serviceId is not present in queryParam when service is created in pipeline studio.
       identifier: defaultTo(serviceId, finalServiceData?.service?.identifier),
       yaml: yamlStringify(sanitize({ ...finalServiceData }, { removeEmptyObject: false, removeEmptyString: false }))
@@ -140,6 +146,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
               : getString('common.serviceUpdated')
           )
           fetchPipeline({ forceFetch: true, forceUpdate: true })
+          setIsDeploymentTypeDisabled?.(!!newServiceDefinition.type)
         }
       } else {
         throw response

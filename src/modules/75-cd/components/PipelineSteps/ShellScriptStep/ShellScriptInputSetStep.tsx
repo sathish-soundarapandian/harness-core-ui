@@ -45,23 +45,22 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
   return (
     <FormikForm>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${prefix}timeout`}
-            disabled={readonly}
-            fieldPath={'timeout'}
-            template={template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${prefix}timeout`}
+          disabled={readonly}
+          fieldPath={'timeout'}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
 
       {getMultiTypeFromValue(template?.spec?.source?.spec?.script) === MultiTypeInputType.RUNTIME ? (
@@ -206,26 +205,25 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
           </MultiTypeFieldSelector>
         </div>
       ) : null}
-      {getMultiTypeFromValue(template?.spec?.executionTarget?.host) === MultiTypeInputType.RUNTIME ? (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            placeholder={getString('cd.specifyTargetHost')}
-            label={getString('targetHost')}
-            multiTextInputProps={{
-              expressions,
-              disabled: readonly,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            disabled={readonly}
-            name={`${prefix}spec.executionTarget.host`}
-            fieldPath={`spec.executionTarget.host`}
-            template={template}
-          />
-        </div>
-      ) : null}
+      {getMultiTypeFromValue(template?.spec?.executionTarget?.host) === MultiTypeInputType.RUNTIME && (
+        <TextFieldInputSetView
+          placeholder={getString('cd.specifyTargetHost')}
+          label={getString('targetHost')}
+          multiTextInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          disabled={readonly}
+          name={`${prefix}spec.executionTarget.host`}
+          fieldPath={`spec.executionTarget.host`}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
+      )}
 
       {getMultiTypeFromValue(template?.spec?.executionTarget?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -244,26 +242,25 @@ export default function ShellScriptInputSetStep(props: ShellScriptInputSetStepPr
         </div>
       )}
 
-      {getMultiTypeFromValue(template?.spec?.executionTarget?.workingDirectory) === MultiTypeInputType.RUNTIME ? (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            disabled={readonly}
-            placeholder={getString('cd.enterWorkDirectory')}
-            label={getString('workingDirectory')}
-            multiTextInputProps={{
-              expressions,
-              disabled: readonly,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            name={`${prefix}spec.executionTarget.workingDirectory`}
-            fieldPath={`spec.executionTarget.workingDirectory`}
-            template={template}
-          />
-        </div>
-      ) : null}
+      {getMultiTypeFromValue(template?.spec?.executionTarget?.workingDirectory) === MultiTypeInputType.RUNTIME && (
+        <TextFieldInputSetView
+          disabled={readonly}
+          placeholder={getString('cd.enterWorkDirectory')}
+          label={getString('workingDirectory')}
+          multiTextInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          name={`${prefix}spec.executionTarget.workingDirectory`}
+          fieldPath={`spec.executionTarget.workingDirectory`}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
+      )}
     </FormikForm>
   )
 }

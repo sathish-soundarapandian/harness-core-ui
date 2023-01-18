@@ -101,8 +101,8 @@ const ResourceGroupForm: React.FC<ResourceGroupModalData> = props => {
       }}
       formName="resourceGroupModalForm"
       validationSchema={Yup.object().shape({
-        name: NameSchema(),
-        identifier: IdentifierSchema(),
+        name: NameSchema(getString),
+        identifier: IdentifierSchema(getString),
         color: Yup.string().trim().required()
       })}
       onSubmit={values => {

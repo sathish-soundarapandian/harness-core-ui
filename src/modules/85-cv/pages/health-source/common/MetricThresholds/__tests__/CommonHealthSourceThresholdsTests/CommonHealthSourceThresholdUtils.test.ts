@@ -128,7 +128,7 @@ describe('CommonHealthSourceThresholdUtils', () => {
   describe('getCanShowMetricThresholds', () => {
     test('getCanShowMetricThresholds should return true if user have atleast one custom metric with CV enabled', () => {
       const result = getCanShowMetricThresholds({
-        isMetricThresholdFFEnabled: true,
+        isMetricThresholdEnabled: true,
         isMetricPacksEnabled: false,
         isMetricThresholdConfigEnabled: true,
         groupedCreatedMetrics: groupedCreatedMetricsForPassCVEnableTest
@@ -139,7 +139,7 @@ describe('CommonHealthSourceThresholdUtils', () => {
 
     test('getCanShowMetricThresholds should return true if user have atleast one custom metric with CV enabled and metric packs are enabled', () => {
       const result = getCanShowMetricThresholds({
-        isMetricThresholdFFEnabled: true,
+        isMetricThresholdEnabled: true,
         isMetricPacksEnabled: true,
         isMetricThresholdConfigEnabled: true,
         groupedCreatedMetrics: groupedCreatedMetricsForFailCVEnableTest,
@@ -151,7 +151,7 @@ describe('CommonHealthSourceThresholdUtils', () => {
 
     test('getCanShowMetricThresholds should return false if user have atleast one custom metric with CV disabled and metric packs are enabled with all false', () => {
       const result = getCanShowMetricThresholds({
-        isMetricThresholdFFEnabled: true,
+        isMetricThresholdEnabled: true,
         isMetricPacksEnabled: true,
         isMetricThresholdConfigEnabled: true,
         groupedCreatedMetrics: groupedCreatedMetricsForFailCVEnableTest,
@@ -163,7 +163,7 @@ describe('CommonHealthSourceThresholdUtils', () => {
 
     test('getCanShowMetricThresholds should return false if user have atleast one custom metric with CV disabled and metric packs are disabled', () => {
       const result = getCanShowMetricThresholds({
-        isMetricThresholdFFEnabled: true,
+        isMetricThresholdEnabled: true,
         isMetricPacksEnabled: false,
         isMetricThresholdConfigEnabled: true,
         groupedCreatedMetrics: groupedCreatedMetricsForFailCVEnableTest
@@ -174,7 +174,7 @@ describe('CommonHealthSourceThresholdUtils', () => {
 
     test('getCanShowMetricThresholds should return false if config value for metric thresholds are disabled', () => {
       const result = getCanShowMetricThresholds({
-        isMetricThresholdFFEnabled: true,
+        isMetricThresholdEnabled: true,
         isMetricPacksEnabled: true,
         isMetricThresholdConfigEnabled: false,
         groupedCreatedMetrics: groupedCreatedMetricsForFailCVEnableTest,
@@ -186,7 +186,7 @@ describe('CommonHealthSourceThresholdUtils', () => {
 
     test('getCanShowMetricThresholds should return false if feature flag value for metric thresholds are disabled', () => {
       const result = getCanShowMetricThresholds({
-        isMetricThresholdFFEnabled: false,
+        isMetricThresholdEnabled: false,
         isMetricPacksEnabled: true,
         isMetricThresholdConfigEnabled: true,
         groupedCreatedMetrics: groupedCreatedMetricsForFailCVEnableTest,

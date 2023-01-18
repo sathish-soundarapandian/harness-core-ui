@@ -36,6 +36,16 @@ module.exports = {
       ? { file: process.env.cdng_schema_path }
       : { url: 'http://localhost:7457/swagger.json' })
   },
+  'cd-ng-open-api': {
+    output: 'src/services/cd-ng-open-api/index.tsx',
+    transformer: 'scripts/swagger-transform.js',
+    customImport: `import { getConfig, getUsingFetch, GetUsingFetchProps } from "../config";`,
+    customProps: {
+      base: `{getConfig("ng/api")}`
+    },
+    customGenerator: arg => customGenerator(arg, "getConfig('ng/api')"),
+    file: 'src/services/cd-ng-open-api/open-api.yaml'
+  },
   'pipeline-ng': {
     output: 'src/services/pipeline-ng/index.tsx',
     url: 'http://localhost:12001/api/swagger.json',

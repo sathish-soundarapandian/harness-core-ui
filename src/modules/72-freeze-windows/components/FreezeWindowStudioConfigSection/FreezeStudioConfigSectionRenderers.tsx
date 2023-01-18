@@ -7,6 +7,7 @@
 
 import React from 'react'
 import classnames from 'classnames'
+import { set, cloneDeep } from 'lodash-es'
 import type { SelectOption } from '@harness/uicore'
 import { FormInput, Heading } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -83,6 +84,8 @@ interface OrganizationfieldPropsInterface {
   organizations: SelectOption[]
   values: any
   setFieldValue: any
+  formikValues: any
+  setValues: any
   fetchProjectsForOrgId: (orgId: string) => void
 }
 
@@ -92,7 +95,9 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
   organizations,
   values,
   setFieldValue,
-  fetchProjectsForOrgId
+  fetchProjectsForOrgId,
+  formikValues,
+  setValues
 }) => {
   const orgValue = values[FIELD_KEYS.Org]
   const excludeOrgCheckboxValue = values[FIELD_KEYS.ExcludeOrgCheckbox]
@@ -126,24 +131,30 @@ export const Organizationfield: React.FC<OrganizationfieldPropsInterface> = ({
           const isMultiSelected = selectedLen > 1
           const isSingleSelected = selectedLen === 1
           const isEmptyOrg = selectedLen === 0
+          const clonedFormikValues = cloneDeep(formikValues)
 
           // Only All Orgs is selected
           if ((isAllSelected && !isMultiSelected) || isEmptyOrg) {
             // set projects fields
-            setFieldValue(projFieldName, [allProjectsObj(getString)])
-            setFieldValue(projCheckBoxName, false)
-            setFieldValue(excludeProjName, undefined)
+            set(clonedFormikValues, projFieldName, [allProjectsObj(getString)])
+            set(clonedFormikValues, projCheckBoxName, false)
+            set(clonedFormikValues, excludeProjName, undefined)
           }
 
           if (isMultiSelected || isEmptyOrg) {
             // Set org field
-            setFieldValue(orgCheckBoxName, false)
-            setFieldValue(excludeOrgName, undefined)
+            set(clonedFormikValues, orgCheckBoxName, false)
+            set(clonedFormikValues, excludeOrgName, undefined)
             // Set Project field
-            setFieldValue(projFieldName, [allProjectsObj(getString)])
-            setFieldValue(projCheckBoxName, false)
-            setFieldValue(excludeProjName, undefined)
+            set(clonedFormikValues, projFieldName, [allProjectsObj(getString)])
+            set(clonedFormikValues, projCheckBoxName, false)
+            set(clonedFormikValues, excludeProjName, undefined)
           }
+
+          // Set Org field value
+          set(clonedFormikValues, orgFieldName, selected)
+
+          setValues(clonedFormikValues)
 
           if (!isAllSelected && isSingleSelected) {
             fetchProjectsForOrgId(selected?.[0]?.value as string)
@@ -173,13 +184,17 @@ interface ProjectFieldPropsInterface {
   resources: ResourcesInterface
   values: any
   setFieldValue: any
+  formikValues: any
+  setValues: any
 }
 export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
   getString,
   namePrefix,
   resources,
   values,
-  setFieldValue
+  setFieldValue,
+  formikValues,
+  setValues
 }) => {
   const { projects, freezeWindowLevel } = resources
   const [excludeProjects, setExcludeProjects] = React.useState(projects)
@@ -226,9 +241,15 @@ export const ProjectField: React.FC<ProjectFieldPropsInterface> = ({
         onChange={(selected?: SelectOption[]) => {
           const isAllSelected = isAllOptionSelected(selected)
           const isMultiSelected = (selected || []).length > 1
+
           if (!isAllSelected || isMultiSelected) {
-            setFieldValue(projCheckBoxName, false)
-            setFieldValue(excludeProjName, undefined)
+            const clonedFormikValues = cloneDeep(formikValues)
+            set(clonedFormikValues, projCheckBoxName, false)
+            set(clonedFormikValues, excludeProjName, undefined)
+
+            // Set Proj field value
+            set(clonedFormikValues, projFieldName, selected)
+            setValues(clonedFormikValues)
           }
         }}
       />

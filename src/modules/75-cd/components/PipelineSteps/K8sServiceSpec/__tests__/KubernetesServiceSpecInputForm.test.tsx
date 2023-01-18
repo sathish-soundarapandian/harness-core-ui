@@ -14,6 +14,7 @@ import type { AllNGVariables } from '@pipeline/utils/types'
 import { CustomVariables } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariables'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepFormikRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { imagesListData } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ECRArtifact/__tests__/mock'
 import {
   TestStepWidget,
   factory as testStepFactory
@@ -34,6 +35,7 @@ import {
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@common/utils/YamlUtils', () => ({}))
 
+const fetchImages = jest.fn().mockReturnValue(imagesListData)
 jest.mock('services/cd-ng', () => ({
   useGetConnectorListV2: () => jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   getConnectorListPromise: () => Promise.resolve(mockConnectorsListResponse),
@@ -84,6 +86,13 @@ jest.mock('services/pipeline-ng', () => ({
 
 jest.mock('services/portal', () => ({
   useListAwsRegions: () => jest.fn(() => mockAwsRegionsResponse)
+}))
+
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+  useMutateAsGet: jest.fn().mockImplementation(() => {
+    return { data: null, refetch: fetchImages, error: null, loading: false }
+  })
 }))
 
 describe('DOCKER', () => {

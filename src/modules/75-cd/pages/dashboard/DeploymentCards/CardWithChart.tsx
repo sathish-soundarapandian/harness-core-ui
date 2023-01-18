@@ -12,9 +12,11 @@ import { FontVariation, Color } from '@harness/design-system'
 import moment from 'moment'
 import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
-import { defaultTo, merge } from 'lodash-es'
+import { defaultTo, isNumber, merge } from 'lodash-es'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Duration, UserLabel } from '@common/exports'
 import { String, useStrings } from 'framework/strings'
+import type { ChangeRate } from 'services/cd-ng'
 import {
   ActiveStatus,
   diffStartAndEndTime,
@@ -26,7 +28,10 @@ import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { defaultChartOptions } from '@pipeline/components/Dashboards/BuildCards/RepositoryCard'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import type { ExecutorInfoDTO } from 'services/pipeline-ng'
+import { INVALID_CHANGE_RATE } from '@cd/components/Services/common'
 import { TimePopoverWithLocal } from '@pipeline/components/ExecutionCard/TimePopoverWithLocal'
+import { calcTrend, calcTrendCaret, calcTrendColor, RateTrend, TrendPopover } from '../dashboardUtils'
+
 import styles from './CardWithChart.module.scss'
 
 interface BuildCount {
@@ -45,7 +50,7 @@ export interface ServiceCardWithChartProps {
   endTime?: number
   count: number
   successRate: number
-  successRateDiff: number
+  successRateDiff: number | ChangeRate
   countLabel?: string
   seriesName?: string
   countList?: BuildInfo[]
@@ -75,7 +80,7 @@ export default function ServiceCardWithChart({
   endTime,
   count,
   successRate,
-  successRateDiff,
+  successRateDiff: successRateDelta,
   countLabel = 'builds',
   seriesName = 'Builds',
   countList,
@@ -83,11 +88,19 @@ export default function ServiceCardWithChart({
   className,
   lastExecutionStatus,
   profileUrl
-}: ServiceCardWithChartProps) {
+}: ServiceCardWithChartProps): JSX.Element {
   const { getString } = useStrings()
   const [chartOptions, setChartOptions] = useState(defaultChartOptions)
   const duration = diffStartAndEndTime(startTime, endTime)
   const mapTime = (value: BuildInfo) => (value?.time ? moment(value.time).format('YYYY-MM-DD') : '')
+  const { CDC_DASHBOARD_ENHANCEMENT_NG } = useFeatureFlags()
+  const successRateDiff: number | undefined = CDC_DASHBOARD_ENHANCEMENT_NG
+    ? (successRateDelta as ChangeRate).percentChange
+    : (successRateDelta as number)
+
+  const successRateTrend = CDC_DASHBOARD_ENHANCEMENT_NG
+    ? ((successRateDelta as ChangeRate).trend as RateTrend)
+    : calcTrend(successRateDelta as number)
 
   useEffect(() => {
     if (countList?.length) {
@@ -112,7 +125,7 @@ export default function ServiceCardWithChart({
     }
   }, [countList])
 
-  const rateColor = successRateDiff >= 0 ? 'var(--ci-color-green-500)' : 'var(--ci-color-red-500)'
+  const rateColor = calcTrendColor(successRateTrend)
   return (
     <Card
       className={cx(styles.cardStyle, styles.lastExecutionStatus, className)}
@@ -129,24 +142,30 @@ export default function ServiceCardWithChart({
               <Text className={styles.statHeader}>{countLabel}</Text>
               <Text className={styles.statHeader}>{getString('pipeline.dashboards.successRate')}</Text>
               <Text className={styles.statContent}>{count}</Text>
-              <Container className={styles.statWrap}>
-                <Text className={styles.statContent}>{roundNumber(successRate)}%</Text>
-                <Icon
-                  size={14}
-                  name={successRateDiff >= 0 ? 'caret-up' : 'caret-down'}
-                  style={{
-                    color: rateColor
-                  }}
-                />
-                <Text
-                  className={styles.rateDiffValue}
-                  style={{
-                    color: rateColor
-                  }}
-                >
-                  {Math.abs(roundNumber(successRateDiff)!)}%
-                </Text>
-              </Container>
+              <Layout.Horizontal flex={{ alignItems: 'flex-end' }}>
+                <Text className={cx(styles.statContent, styles.statWrap)}>{roundNumber(successRate)}%</Text>
+                <TrendPopover trend={successRateTrend}>
+                  <Layout.Horizontal className={styles.statWrap}>
+                    <Icon
+                      size={14}
+                      name={calcTrendCaret(successRateTrend)}
+                      style={{
+                        color: rateColor
+                      }}
+                    />
+                    <Text
+                      className={styles.rateDiffValue}
+                      style={{
+                        color: rateColor
+                      }}
+                    >
+                      {isNumber(successRateDiff) && successRateDiff !== INVALID_CHANGE_RATE
+                        ? `${Math.abs(defaultTo(roundNumber(successRateDiff), 0))}%`
+                        : null}
+                    </Text>
+                  </Layout.Horizontal>
+                </TrendPopover>
+              </Layout.Horizontal>
             </Container>
           </Container>
           <Container className={styles.chartWrapper} height={40} margin={{ left: 'medium' }}>

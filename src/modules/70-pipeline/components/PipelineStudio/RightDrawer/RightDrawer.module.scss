@@ -164,6 +164,9 @@ $top-offset: 110px;
 
 .dialogWrapper {
   padding-top: var(--spacing-xxlarge) !important;
+  p {
+    word-break: normal;
+  }
   :global(.bp3-button-text) {
     flex-shrink: 0 !important;
   }

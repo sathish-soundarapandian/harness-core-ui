@@ -10,19 +10,13 @@ import type {
   ClusterResponse,
   DeploymentStageConfig,
   EnvironmentGroupResponseDTO,
-  FilterSpec,
+  ExecutionElementConfig,
+  FilterYaml,
   InfrastructureDefinitionConfig,
   NGEnvironmentInfoConfig,
   ServiceDefinition,
   TemplateLinkConfig
 } from 'services/cd-ng'
-
-export interface FilterYaml {
-  identifier: string
-  entities: ('infrastructures' | 'gitOpsClusters' | 'environments')[]
-  spec: FilterSpec
-  type: 'tags' | 'all'
-}
 
 export interface DeployEnvironmentEntityConfig extends Omit<DeploymentStageConfig, 'execution'> {
   environment?: DeploymentStageConfig['environment']
@@ -48,6 +42,7 @@ export interface DeployEnvironmentEntityFormState {
   environmentGroupFilters?: FilterYaml[]
   environmentFilters?: Record<string, FilterYaml[]>
   infraClusterFilters?: FilterYaml[]
+  provisioner?: ExecutionElementConfig
 }
 
 export interface DeployEnvironmentEntityCustomStepProps {

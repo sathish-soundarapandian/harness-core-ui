@@ -375,6 +375,29 @@ export const GetInvalidOverlayISInline: UseGetReturnData<ResponseOverlayInputSet
   }
 }
 
+export const GetInvalidOverlayOldGitSync: UseGetReturnData<ResponseOverlayInputSetResponse> = {
+  loading: false,
+  refetch: jest.fn(),
+  error: null,
+  data: {
+    status: 'SUCCESS',
+    data: {
+      accountId: 'OgiB4-xETamKNVAz-wQRjw',
+      orgIdentifier: 'default',
+      projectIdentifier: 'Eric',
+      pipelineIdentifier: 'testpip',
+      identifier: 'overlayInp1',
+      name: 'overlayInp1',
+      inputSetReferences: ['testInp2', 'testInp1'],
+      overlayInputSetYaml:
+        'overlayInputSet:\n  name: overlayInp1\n  identifier: overlayInp1\n  orgIdentifier: default\n  projectIdentifier: Eric\n  pipelineIdentifier: testpip\n  inputSetReferences:\n    - testInp2\n    - testInp1\n  tags: {}\n',
+      errorResponse: false,
+      outdated: true
+    },
+    correlationId: 'e41afc14-a831-4187-96da-6dba2a3b1037'
+  }
+}
+
 export const GetInvalidOverlayISRemote: UseGetReturnData<ResponseOverlayInputSetResponse> = {
   loading: false,
   refetch: jest.fn(),

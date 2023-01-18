@@ -22,7 +22,8 @@ import FeatureBanner from './FeatureBanner'
 import css from './layouts.module.scss'
 
 export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.ReactElement {
-  const { title, subtitle, icon, navComponent: NavComponent } = useSidebar()
+  const { title, subtitle, icon, navComponent: NavComponent, launchButtonText, launchButtonRedirectUrl } = useSidebar()
+
   const { pageName } = usePage()
   const { module } = useModuleInfo()
   const { trackPage, identifyUser } = useTelemetry()
@@ -39,7 +40,14 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
   return (
     <div className={css.main} data-layout="default">
       <MainNav />
-      <SideNav title={title} subtitle={subtitle} icon={icon} data-testid="side-nav">
+      <SideNav
+        title={title}
+        subtitle={subtitle}
+        icon={icon}
+        launchButtonText={launchButtonText}
+        launchButtonRedirectUrl={launchButtonRedirectUrl}
+        data-testid="side-nav"
+      >
         <NavComponent />
       </SideNav>
       <div className={css.rhs}>

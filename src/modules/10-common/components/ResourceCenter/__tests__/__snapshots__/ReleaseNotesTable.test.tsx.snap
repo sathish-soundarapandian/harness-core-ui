@@ -1,0 +1,112 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`module version table Rendering module version table not showing up 1`] = `
+<div>
+  <table
+    class="bp3-html-table table"
+    data-testid="release-note-table"
+  >
+    <thead>
+      <tr
+        data-testid="release-note-table-head"
+        style="background-color: rgb(226, 245, 255);"
+      >
+        <th
+          class="th"
+        >
+          Component
+        </th>
+        <th
+          class="th"
+        >
+          Version
+        </th>
+        <th
+          class="th"
+        >
+          Last Updated
+        </th>
+        <th
+          class="th"
+        >
+          Release Notes
+        </th>
+      </tr>
+    </thead>
+    <tbody />
+  </table>
+</div>
+`;
+
+exports[`module version table Rendering module version table showing up 1`] = `
+<div>
+  <table
+    class="bp3-html-table table"
+    data-testid="release-note-table"
+  >
+    <thead>
+      <tr
+        data-testid="release-note-table-head"
+        style="background-color: rgb(226, 245, 255);"
+      >
+        <th
+          class="th"
+        >
+          Component
+        </th>
+        <th
+          class="th"
+        >
+          Version
+        </th>
+        <th
+          class="th"
+        >
+          Last Updated
+        </th>
+        <th
+          class="th"
+        >
+          Release Notes
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        class="tr"
+      >
+        <td
+          class="td"
+          data-testid="name"
+        >
+          testDisplayName
+        </td>
+        <td
+          class="td"
+          data-testid="version"
+        >
+          7800
+        </td>
+        <td
+          class="td"
+          data-testid="updated"
+        >
+          testUpdate
+        </td>
+        <td
+          class="td"
+          data-testid="link"
+        >
+          <a
+            href="link"
+            rel="noreferrer noopener"
+            target="_blank"
+          >
+            Link
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

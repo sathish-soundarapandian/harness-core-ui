@@ -100,6 +100,13 @@ exports[`Environment Group Tests first render and search term change 1`] = `
       >
         environment
       </a>
+      <a
+        aria-current="page"
+        class="TabNavigation--tags TabNavigation--small TabNavigation--active"
+        href="/account/dummy/cd/orgs/dummy/projects/dummy/environment-group"
+      >
+        common.environmentGroups.label
+      </a>
     </div>
   </div>
   <div

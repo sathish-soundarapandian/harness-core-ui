@@ -72,6 +72,8 @@ import type {
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { NoTagResults, selectItemsMapper } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
@@ -120,6 +122,7 @@ function Artifactory({
   const isAzureWebAppDeploymentTypeSelected = isAzureWebAppDeploymentType(selectedDeploymentType)
   const isCustomDeploymentTypeSelected = isCustomDeploymentType(selectedDeploymentType)
   const isTasDeploymentTypeSelected = isTASDeploymentType(selectedDeploymentType)
+  const CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY = useFeatureFlag(FeatureFlag.CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY)
 
   const showRepositoryFormatForAllowedTypes =
     isSSHWinRmDeploymentType ||
@@ -175,6 +178,9 @@ function Artifactory({
     tag: Yup.mixed().when('tagType', {
       is: 'value',
       then: Yup.mixed().required(getString('pipeline.artifactsSelection.validation.tag'))
+    }),
+    ...(CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY && {
+      repositoryUrl: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.repositoryUrl'))
     })
   }
 
@@ -203,6 +209,7 @@ function Artifactory({
   const sidecarSchema = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
+      getString,
       artifactIdentifiers,
       initialValues?.identifier,
       getString('pipeline.uniqueIdentifier')
@@ -212,6 +219,7 @@ function Artifactory({
   const serverlessSidecarSchema = Yup.object().shape({
     ...serverlessArtifactorySchema,
     ...ArtifactIdentifierValidation(
+      getString,
       artifactIdentifiers,
       initialValues?.identifier,
       getString('pipeline.uniqueIdentifier')
@@ -470,7 +478,7 @@ function Artifactory({
           }
           return (
             <FormikForm>
-              <div className={cx(css.connectorForm, formClassName)}>
+              <div className={cx(css.artifactForm, formClassName)}>
                 {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
                 {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
                 {showRepositoryFormatForAllowedTypes && (
@@ -616,12 +624,12 @@ function Artifactory({
                     <FormInput.MultiTextInput
                       label={getString('repositoryUrlLabel')}
                       name="repositoryUrl"
-                      isOptional
                       placeholder={getString('pipeline.repositoryUrlPlaceholder')}
                       multiTextInputProps={{
                         expressions,
                         allowableTypes
                       }}
+                      isOptional={!CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY}
                     />
                     {getMultiTypeFromValue(formik.values.repositoryUrl) === MultiTypeInputType.RUNTIME && (
                       <div className={css.configureOptions}>

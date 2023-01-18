@@ -10,16 +10,7 @@ import { defaultTo } from 'lodash-es'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import {
-  Accordion,
-  AllowedTypes,
-  Checkbox,
-  Formik,
-  FormInput,
-  getMultiTypeFromValue,
-  MultiTypeInputType,
-  Text
-} from '@harness/uicore'
+import { Accordion, AllowedTypes, Checkbox, Formik, FormInput, Text } from '@harness/uicore'
 
 import { Color } from '@harness/design-system'
 
@@ -31,7 +22,6 @@ import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/compo
 import { useStrings } from 'framework/strings'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { CommandScriptsData, CommandScriptsFormData } from './CommandScriptsTypes'
 import { CommandList } from './CommandList'
 import { VariableList } from './VariableList'
@@ -114,7 +104,7 @@ function CommandScriptsEditWidget(
                 name="timeout"
                 label={getString('pipelineSteps.timeoutLabel')}
                 multiTypeDurationProps={{
-                  enableConfigureOptions: false,
+                  enableConfigureOptions: true,
                   expressions,
                   disabled: readonly,
                   allowableTypes
@@ -122,21 +112,6 @@ function CommandScriptsEditWidget(
                 className={stepCss.duration}
                 disabled={readonly}
               />
-              {getMultiTypeFromValue(formik.values?.timeout) === MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  value={formik.values?.timeout as string}
-                  type="String"
-                  variableName="step.timeout"
-                  showRequiredField={false}
-                  showDefaultField={false}
-                  showAdvanced={true}
-                  onChange={value => {
-                    formik.setFieldValue('timeout', value)
-                  }}
-                  isReadonly={readonly}
-                  allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                />
-              )}
             </div>
             <div className={stepCss.divider} />
             <CommandList allowableTypes={allowableTypes} readonly={readonly} />

@@ -3,7 +3,7 @@
 exports[`Pipeline Execution Warning component testing Inital render should match snapshot 1`] = `
 <div>
   <div
-    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main warningBanner StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--padding-left-xlarge"
+    class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main warningBanner StyledProps--flex StyledProps--flex-justifyContent-space-between"
   >
     tag1(1.0.0) and tag2(1.0.1)
     <button

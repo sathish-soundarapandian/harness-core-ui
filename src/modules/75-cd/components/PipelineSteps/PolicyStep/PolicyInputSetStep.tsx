@@ -40,24 +40,22 @@ export default function PolicyInputSetStep(props: {
   return (
     <>
       {getMultiTypeFromValue(/* istanbul ignore next */ template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.lg)}>
-          <TimeoutFieldInputSetView
-            name={`${prefix}timeout`}
-            label={getString('pipelineSteps.timeoutLabel')}
-            disabled={readonly}
-            className={stepCss.duration}
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              expressions,
-              disabled: readonly,
-              allowableTypes
-            }}
-            fieldPath={'timeout'}
-            template={template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          name={`${prefix}timeout`}
+          label={getString('pipelineSteps.timeoutLabel')}
+          disabled={readonly}
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            expressions,
+            disabled: readonly,
+            allowableTypes
+          }}
+          fieldPath={'timeout'}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.lg, stepCss.duration)}
+        />
       )}
       {getMultiTypeFromValue(/* istanbul ignore next */ template?.spec?.policySets) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.alignStart)}>

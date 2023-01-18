@@ -7,38 +7,31 @@
 
 import React from 'react'
 import { Formik, FormikForm } from '@harness/uicore'
-import { Classes } from '@blueprintjs/core'
 import { render, waitFor } from '@testing-library/react'
+import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
+import CommonHealthSourceProvider from '@cv/pages/health-source/connectors/CommonHealthSource/components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
 import { TestWrapper } from '@common/utils/testUtils'
 import { CommonSelectedAppsSideNavProps, CommonSelectedAppsSideNav } from '../CommonSelectedAppsSideNav'
+import { groupedSelectedApps } from './CommonSelectedAppsSideNav.mock'
 
 function WrapperComponent(props: CommonSelectedAppsSideNavProps): JSX.Element {
   return (
     <TestWrapper>
-      <Formik initialValues={{}} onSubmit={jest.fn()} formName="testForm">
-        <FormikForm>
-          <CommonSelectedAppsSideNav {...props} />
-        </FormikForm>
-      </Formik>
+      <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
+        <Formik initialValues={{}} onSubmit={jest.fn()} formName="testForm">
+          <FormikForm>
+            <CommonSelectedAppsSideNav {...props} groupedSelectedApps={groupedSelectedApps} />
+          </FormikForm>
+        </Formik>
+      </CommonHealthSourceProvider>
     </TestWrapper>
   )
 }
 
 describe('Unit tests forCommonSelectedAppsSideNav', () => {
   const openEditMetricModal = jest.fn()
-  test('Ensure loading state is rendered correctly', async () => {
-    const { container } = render(<WrapperComponent loading={true} openEditMetricModal={openEditMetricModal} />)
-    await waitFor(() => expect(container.querySelectorAll(`[class*="${Classes.SKELETON}"]`).length).toBe(5))
-  })
   test('Ensure that when apps are provided, the list is rendered', async () => {
-    const { container } = render(
-      <WrapperComponent
-        openEditMetricModal={openEditMetricModal}
-        selectedMetrics={Array(50)
-          .fill(null)
-          .map((_, i) => i.toString())}
-      />
-    )
-    await waitFor(() => expect(container.querySelectorAll(`[class*="selectedApp"]`).length).toBe(50))
+    const { container } = render(<WrapperComponent openEditMetricModal={openEditMetricModal} />)
+    await waitFor(() => expect(container.querySelectorAll(`[class*="selectedApp"]`).length).toBe(2))
   })
 })

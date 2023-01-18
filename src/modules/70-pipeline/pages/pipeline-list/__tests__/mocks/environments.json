@@ -7,16 +7,18 @@
     "pageSize": 100,
     "content": [
       {
-        "accountId": "sngXpnd5R_ioho_s8eNLLg",
-        "orgIdentifier": "Harness",
-        "projectIdentifier": "Sample",
-        "identifier": "Sam_env",
-        "name": "Sam env",
-        "description": null,
-        "type": "PreProduction",
-        "deleted": false,
-        "tags": {},
-        "version": 16
+        "environment": {
+          "accountId": "sngXpnd5R_ioho_s8eNLLg",
+          "orgIdentifier": "Harness",
+          "projectIdentifier": "Sample",
+          "identifier": "Sam_env",
+          "name": "Sam env",
+          "description": null,
+          "type": "PreProduction",
+          "deleted": false,
+          "tags": {},
+          "version": 16
+        }
       }
     ],
     "pageIndex": 0,

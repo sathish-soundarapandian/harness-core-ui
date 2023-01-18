@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
-import { useParams } from 'react-router-dom'
 import { Formik, FormikForm } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { useMutateAsGet } from '@common/hooks'
@@ -43,12 +42,6 @@ jest.mock('services/cd-ng', () => ({
   useCreatePRV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useGetFileContent: jest.fn().mockImplementation(() => ({ refetch: jest.fn() })),
   useGetFileByBranch: jest.fn().mockImplementation(() => ({ refetch: jest.fn() }))
-}))
-
-// eslint-disable-next-line jest-no-mock
-jest.mock('react-router-dom', () => ({
-  ...(jest.requireActual('react-router-dom') as any),
-  useParams: jest.fn()
 }))
 
 jest.mock('services/pipeline-ng', () => ({
@@ -89,7 +82,7 @@ function RenderComponent(props: { initialValues: any }): JSX.Element {
         accountId: 'testAcc',
         orgIdentifier: 'testOrg',
         projectIdentifier: 'test',
-        pipelineIdentifier: 'editPipeline',
+        pipelineIdentifier: DefaultNewPipelineId,
         module: 'cf'
       }}
       defaultAppStoreValues={defaultAppStoreValues}
@@ -112,11 +105,6 @@ function RenderComponent(props: { initialValues: any }): JSX.Element {
 
 describe('Stage Overview Tests', () => {
   beforeEach(() => {
-    // eslint-disable-next-line
-    // @ts-ignore
-    useParams.mockImplementation(() => {
-      return { pipelineIdentifier: DefaultNewPipelineId }
-    })
     // eslint-disable-next-line
     // @ts-ignore
     useMutateAsGet.mockImplementation(() => {
@@ -150,7 +138,7 @@ describe('Stage Overview Tests', () => {
           accountId: 'testAcc',
           orgIdentifier: 'testOrg',
           projectIdentifier: 'test',
-          pipelineIdentifier: 'editPipeline',
+          pipelineIdentifier: DefaultNewPipelineId,
           module: 'cf'
         }}
         defaultAppStoreValues={defaultAppStoreValues}

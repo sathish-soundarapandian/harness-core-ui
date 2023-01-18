@@ -12,7 +12,7 @@ import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { FilterProperties } from 'services/pipeline-ng'
 import {
-  getOptionsForMultiSelect,
+  getExecutionStatusOptions,
   BUILD_TYPE,
   DeploymentTypeContext,
   BuildTypeContext
@@ -43,6 +43,7 @@ export function ExecutionListFilterForm<
   const { getString } = useStrings()
   const { module } = useParams<ModulePathParams>()
   const { type, formikProps, isCDEnabled, isCIEnabled, initialValues } = props
+
   const getBuildTypeOptions = (): React.ReactElement => {
     let buildTypeField: JSX.Element = <></>
     const buildType = formikProps?.values?.buildType as BuildTypeContext['buildType']
@@ -157,6 +158,7 @@ export function ExecutionListFilterForm<
               : NO_SELECTION
           }
         /> */}
+
         <FormInput.MultiSelect
           items={services || []}
           name="services"
@@ -167,6 +169,7 @@ export function ExecutionListFilterForm<
             allowCreatingNewItems: false
           }}
         />
+
         <FormInput.MultiSelect
           items={environments || []}
           name="environments"
@@ -193,19 +196,18 @@ export function ExecutionListFilterForm<
           placeholder={getString('pipeline.filters.pipelineNamePlaceholder')}
         />
         {isPipeSetupType ? (
-          <>
-            <FormInput.Text
-              name={'description'}
-              label={getString('description')}
-              placeholder={getString('common.descriptionPlaceholder')}
-              key={'description'}
-            />
-            <FormInput.KVTagInput name="pipelineTags" label={getString('tagsLabel')} key="pipelineTags" />
-          </>
+          <FormInput.Text
+            name={'description'}
+            label={getString('description')}
+            placeholder={getString('common.descriptionPlaceholder')}
+            key={'description'}
+          />
         ) : null}
+        <FormInput.KVTagInput name="pipelineTags" label={getString('tagsLabel')} key="pipelineTags" />
+
         {type === 'PipelineExecution' ? (
           <FormInput.MultiSelect
-            items={getOptionsForMultiSelect()}
+            items={getExecutionStatusOptions()}
             name="status"
             label={getString('status')}
             placeholder={getString('pipeline.jiraUpdateStep.selectStatus')}

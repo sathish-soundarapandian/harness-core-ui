@@ -32,7 +32,8 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 import '@testing-library/cypress/add-commands'
 import { addMatchImageSnapshotCommand } from 'cypress-image-snapshot/command'
-import { getConnectorIconByType } from '../utils/connctors-utils'
+import { Connectors, getConnectorIconByType } from '../utils/connctors-utils'
+import { addHashInCypressURLBasedOnBrowserRouter } from '../utils/windowLocation'
 import { activeTabClassName } from './70-pipeline/constants'
 import {
   servicesCall,
@@ -153,7 +154,7 @@ Cypress.Commands.add('fillField', (fieldName: string, value: string) => {
 })
 
 Cypress.Commands.add('login', (emailValue: string, password: string) => {
-  cy.visit('#/login')
+  cy.visit(`${addHashInCypressURLBasedOnBrowserRouter()}login`)
   cy.get('[data-id="email-0"] input').clear().type(emailValue)
   cy.get('[data-id="password-1"] input').clear().type(password)
   cy.clickSubmit()
@@ -369,6 +370,10 @@ Cypress.Commands.add('populateDefineHealthSource', (connectorType, connectorName
 
   if (connectorName) {
     cy.contains('span', 'Connector Selection is required.').should('be.visible')
+    if (connectorType === Connectors.PROMETHEUS) {
+      cy.get('.GroupedThumbnailSelect--thumbnailsRow [data-icon="service-prometheus"]').should('exist')
+      cy.get('.GroupedThumbnailSelect--thumbnailsRow [data-icon="service-prometheus"]').scrollIntoView().click()
+    }
     cy.get('button[data-testid="cr-field-connectorRef"]').click()
     cy.contains('p', connectorName).click()
     cy.contains('span', 'Apply Selected').click()

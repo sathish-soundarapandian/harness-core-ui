@@ -25,7 +25,8 @@ export enum AdvancedPanels {
   FailureStrategy = 'failureStrategy',
   DelegateSelectors = 'delegateSelectors',
   ConditionalExecution = 'conditionalExecution',
-  LoopingStrategy = 'loopingStrategy'
+  LoopingStrategy = 'loopingStrategy',
+  CommandFlags = 'commandFlags'
 }
 
 export enum StepCommandsViews {
@@ -63,7 +64,15 @@ export enum TabTypes {
   Advanced = 'ADVANCED'
 }
 
-export type StepOrStepGroupOrTemplateStepData = StepElementConfig | StepGroupElementConfig | TemplateStepNode
+export interface StepGroupWithStageElementConfig extends StepGroupElementConfig {
+  stageType?: string
+}
+
+export type StepOrStepGroupOrTemplateStepData =
+  | StepElementConfig
+  | StepGroupElementConfig
+  | TemplateStepNode
+  | StepGroupWithStageElementConfig
 
 export type Values = StepOrStepGroupOrTemplateStepData & {
   tab?: TabTypes
@@ -73,4 +82,6 @@ export type Values = StepOrStepGroupOrTemplateStepData & {
   failureStrategies?: FailureStrategyConfig[]
   template?: TemplateLinkConfig
   strategy?: any
+  commandFlags?: any
+  stageType?: string
 }

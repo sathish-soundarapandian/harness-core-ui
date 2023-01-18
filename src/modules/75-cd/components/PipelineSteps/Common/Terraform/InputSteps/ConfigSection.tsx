@@ -35,7 +35,7 @@ import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { fileTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import type { TerraformData, TerraformProps } from '../TerraformInterfaces'
-import { getPath } from '../Editview/TerraformConfigFormHelper'
+import { getPath } from '../../ConfigFileStore/ConfigFileStoreHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 function ConfigSectionRef<T extends TerraformData = TerraformData>(
@@ -47,7 +47,7 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
   const { expressions } = useVariablesExpression()
   const { inputSetData, readonly, initialValues, path, allowableTypes, formik, stepViewType, isBackendConfig } = props
 
-  const configPath = getPath(false, isBackendConfig)
+  const configPath = getPath(false, false, isBackendConfig)
   const config = inputSetData?.template?.spec?.configuration
   const configSpec = get(inputSetData?.template, configPath)
   const store = configSpec?.store
@@ -118,23 +118,22 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
         </Label>
       )}
       {getMultiTypeFromValue(config?.spec?.workspace) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${path}.spec.configuration.spec.workspace`}
-            placeholder={getString('pipeline.terraformStep.workspace')}
-            label={getString('pipelineSteps.workspace')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            template={inputSetData?.template}
-            fieldPath={'spec.configuration.spec.workspace'}
-          />
-        </div>
+        <TextFieldInputSetView
+          name={`${path}.spec.configuration.spec.workspace`}
+          placeholder={getString('pipeline.terraformStep.workspace')}
+          label={getString('pipelineSteps.workspace')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={inputSetData?.template}
+          fieldPath={'spec.configuration.spec.workspace'}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
       {getMultiTypeFromValue(configSpec?.store?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>

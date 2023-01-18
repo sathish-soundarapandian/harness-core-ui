@@ -78,6 +78,7 @@ declare interface Window {
   featureFlagsConfig: {
     useLegacyFeatureFlags: boolean
     baseUrl: string
+    eventUrl: string
     enableStream: boolean
     sdkKey: string
     async: boolean
@@ -101,8 +102,6 @@ declare interface Document {
 }
 
 declare const monaco: any
-
-declare module 'event-source-polyfill'
 
 declare module 'refiner-js'
 
@@ -131,6 +130,12 @@ declare module 'chaos/ExperimentPreview' {
 }
 
 declare module 'chaos/ChaosStepExecution' {
+  import type { ChildAppComponent } from './microfrontends'
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'chaos/ResilienceViewContent' {
   import type { ChildAppComponent } from './microfrontends'
   const ChildApp: ChildAppComponent
   export default ChildApp
@@ -180,8 +185,20 @@ declare module 'stoV2/PipelineSecurityView' {
   export default ChildApp
 }
 
+declare module 'iacm/MicroFrontendApp' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
+declare module 'iacm/IACMStage' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare type Optional<T, K extends keyof T = keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
 declare type Mutable<T> = {
   -readonly [K in keyof T]: T[K]
 }
+
+declare type ValueOf<T> = T[keyof T]

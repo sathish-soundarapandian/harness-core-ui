@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { deleteDB, IDBPDatabase, openDB } from 'idb'
-import { merge, cloneDeep, defaultTo, isEqual, maxBy, isEmpty } from 'lodash-es'
+import { merge, cloneDeep, defaultTo, isEqual, maxBy } from 'lodash-es'
 import { VisualYamlSelectedView as SelectedView } from '@harness/uicore'
 import { parse } from 'yaml'
 import type { Color } from '@harness/design-system'
@@ -30,9 +30,7 @@ import {
   NGTemplateInfoConfig,
   TemplateMetadataSummaryResponse,
   TemplateResponse,
-  TemplateSummaryResponse,
-  validateTemplateInputsPromise,
-  ValidateTemplateInputsQueryParams
+  TemplateSummaryResponse
 } from 'services/template-ng'
 import type { Error } from 'services/template-ng'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -191,28 +189,6 @@ const getTemplatesByIdentifier = (
     })
 }
 
-const getTemplateErrorNodeSummary = (
-  queryParams: ValidateTemplateInputsQueryParams,
-  isGitCacheEnabled: boolean,
-  loadFromCache: boolean
-): Promise<ErrorNodeSummary | undefined> => {
-  return validateTemplateInputsPromise({
-    queryParams,
-    requestOptions: { headers: { ...(isGitCacheEnabled && loadFromCache ? { 'Load-From-Cache': 'true' } : {}) } }
-  })
-    .then(response => {
-      if (response && response.status === 'SUCCESS') {
-        if (response.data?.validYaml === false && response.data.errorNodeSummary) {
-          return response.data.errorNodeSummary
-        }
-      }
-      throw response
-    })
-    .catch(_error => {
-      return undefined
-    })
-}
-
 interface DispatchTemplateSuccessArgs {
   dispatch: React.Dispatch<ActionReturnType>
   data: TemplatePayload
@@ -224,7 +200,6 @@ interface DispatchTemplateSuccessArgs {
   id: string
   stableVersion: string | undefined
   lastPublishedVersion: string | undefined
-  templateInputsErrorNodeSummary?: ErrorNodeSummary
 }
 const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promise<void> => {
   const {
@@ -237,8 +212,7 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
     templateWithGitDetails,
     id,
     stableVersion,
-    lastPublishedVersion,
-    templateInputsErrorNodeSummary
+    lastPublishedVersion
   } = args
   const storeMetadata = {
     connectorRef: (templateWithGitDetails as TemplateResponse)?.connectorRef,
@@ -266,7 +240,6 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
         cacheResponseMetadata: (templateWithGitDetails as TemplateResponse)?.cacheResponseMetadata,
         storeMetadata,
         templateYaml: data?.templateYaml,
-        templateInputsErrorNodeSummary,
         templateYamlError: undefined
       })
     )
@@ -287,8 +260,7 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
         defaultTo(data?.entityValidityDetails, {})
       ),
       cacheResponseMetadata: (templateWithGitDetails as TemplateResponse)?.cacheResponseMetadata,
-      templateYaml: templateYamlStr,
-      templateInputsErrorNodeSummary
+      templateYaml: templateYamlStr
     }
     await IdbTemplate.put(IdbTemplateStoreName, payload)
     dispatch(
@@ -306,7 +278,6 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
         entityValidityDetails: payload.entityValidityDetails,
         cacheResponseMetadata: payload.cacheResponseMetadata,
         templateYaml: payload.templateYaml,
-        templateInputsErrorNodeSummary,
         templateYamlError: undefined
       })
     )
@@ -327,7 +298,6 @@ const dispatchTemplateSuccess = async (args: DispatchTemplateSuccessArgs): Promi
         entityValidityDetails: defaultTo(templateWithGitDetails?.entityValidityDetails, {}),
         cacheResponseMetadata: (templateWithGitDetails as TemplateResponse)?.cacheResponseMetadata,
         templateYaml: templateYamlStr,
-        templateInputsErrorNodeSummary,
         templateYamlError: undefined
       })
     )
@@ -390,19 +360,6 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
           signal
         )
 
-        const templateInputsErrorNodeSummary = await getTemplateErrorNodeSummary(
-          {
-            ...queryParams,
-            templateIdentifier,
-            versionLabel,
-            repoIdentifier: templateWithGitDetails.gitDetails?.repoName,
-            branch: templateWithGitDetails.gitDetails?.branch,
-            getDefaultFromOtherRepo: true
-          },
-          !!isGitCacheEnabled,
-          loadFromCache
-        )
-
         id = getId(
           queryParams.accountIdentifier,
           defaultTo(queryParams.orgIdentifier, ''),
@@ -438,8 +395,7 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
           template,
           templateWithGitDetails,
           templateYamlStr,
-          versions,
-          templateInputsErrorNodeSummary
+          versions
         })
       } catch (error) {
         if (
@@ -528,16 +484,8 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
 }
 
 const _fetchTemplateV1 = async (props: FetchTemplateBoundProps, params: FetchTemplateUnboundProps): Promise<void> => {
-  const {
-    dispatch,
-    queryParams,
-    templateIdentifier,
-    versionLabel = '',
-    gitDetails,
-    templateType,
-    isGitCacheEnabled
-  } = props
-  const { forceFetch = false, forceUpdate = false, signal, repoIdentifier, branch, loadFromCache = true } = params
+  const { dispatch, queryParams, templateIdentifier, versionLabel = '', gitDetails, templateType } = props
+  const { forceFetch = false, forceUpdate = false, signal, repoIdentifier, branch } = params
   let id = getId(
     queryParams.accountIdentifier,
     defaultTo(queryParams.orgIdentifier, ''),
@@ -552,19 +500,6 @@ const _fetchTemplateV1 = async (props: FetchTemplateBoundProps, params: FetchTem
     let data: TemplatePayload = await IdbTemplate.get(IdbTemplateStoreName, id)
     if ((!data || forceFetch) && templateIdentifier !== DefaultNewTemplateId) {
       try {
-        const templateInputsErrorNodeSummary = await getTemplateErrorNodeSummary(
-          {
-            ...queryParams,
-            templateIdentifier,
-            versionLabel,
-            repoIdentifier,
-            branch,
-            getDefaultFromOtherRepo: true
-          },
-          !!isGitCacheEnabled,
-          loadFromCache
-        )
-
         const templatesList: TemplateSummaryResponse[] = await getTemplatesByIdentifier(
           {
             ...queryParams,
@@ -616,8 +551,7 @@ const _fetchTemplateV1 = async (props: FetchTemplateBoundProps, params: FetchTem
           template,
           templateWithGitDetails,
           templateYamlStr,
-          versions,
-          templateInputsErrorNodeSummary
+          versions
         })
       } catch (_) {
         logger.info('Failed to fetch template list')
@@ -713,10 +647,7 @@ const _updateTemplate = async (
       isUpdated,
       gitDetails
     }
-    // type is a mandatory field in template, this safe check has been added to ensure that IndexedDb and the template context
-    // never gets updated with an incorrect template object which does not contain type, as this template payload is sent by
-    // different child components for different template types.
-    if (IdbTemplate && !isEmpty((template as NGTemplateInfoConfig)?.type)) {
+    if (IdbTemplate) {
       await IdbTemplate.put(IdbTemplateStoreName, payload)
       dispatch(TemplateContextActions.success({ error: '', template: template as NGTemplateInfoConfig, isUpdated }))
     }

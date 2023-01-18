@@ -11,8 +11,6 @@ import { noop } from 'lodash-es'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
 import useGroupedSideNaveHook from '@cv/hooks/GroupedSideNaveHook/useGroupedSideNaveHook'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { useStrings } from 'framework/strings'
 import {
   transformCustomHealthSourceToSetupSource,
@@ -37,6 +35,7 @@ import css from './CustomHealthSource.module.scss'
 
 export interface CustomHealthSourceProps {
   data: any
+  isTemplate?: boolean
   onSubmit: (formdata: CustomHealthSourceSetupSource, UpdatedHealthSource: UpdatedHealthSource) => Promise<void>
 }
 
@@ -44,9 +43,9 @@ export function CustomHealthSource(props: CustomHealthSourceProps): JSX.Element 
   const { getString } = useStrings()
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
-  const { data: sourceData, onSubmit } = props
+  const { data: sourceData, onSubmit, isTemplate } = props
 
-  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD)
+  const isMetricThresholdEnabled = !isTemplate
 
   const transformedSourceData = useMemo(
     () => transformCustomHealthSourceToSetupSource(sourceData, isMetricThresholdEnabled),

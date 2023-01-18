@@ -7,8 +7,6 @@
 
 import React, { useContext, useCallback } from 'react'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import { createNewRelicData, createNewRelicPayload } from './NewRelicHealthSourceContainer.util'
 import NewRelicHealthSource from './NewRelicHealthSource'
@@ -24,7 +22,7 @@ export default function NewrelicMonitoredSourceContainer(props: NewRelicHealthSo
   const { data: sourceData, onSubmit, isTemplate, expressions } = props
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
-  const isMetricThresholdEnabled = useFeatureFlag(FeatureFlag.CVNG_METRIC_THRESHOLD) && !isTemplate
+  const isMetricThresholdEnabled = !isTemplate
 
   const handleSubmit = useCallback(
     async (formValues: UpdatedHealthSource) => {

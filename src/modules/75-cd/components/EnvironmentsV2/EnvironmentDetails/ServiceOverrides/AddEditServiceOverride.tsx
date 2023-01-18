@@ -51,7 +51,6 @@ import { ApplicationConfigSelectionTypes } from '@pipeline/components/Applicatio
 import ApplicationConfigSelection from '@pipeline/components/ApplicationConfig/ApplicationConfigSelection'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { getRefFromIdentifier } from '@common/utils/utils'
 import ServiceVariableOverride from './ServiceVariableOverride'
 import ServiceManifestOverride from './ServiceManifestOverride/ServiceManifestOverride'
 import { ServiceOverrideTab } from './ServiceOverridesUtils'
@@ -252,18 +251,16 @@ export default function AddEditServiceOverride({
   }, [])
   /**********************************************Service Override CRUD Operations ************************************************/
 
-  const environmentRef = getRefFromIdentifier(environmentIdentifier, orgIdentifier, projectIdentifier)
-
   const onSubmit = async (values: AddEditServiceOverrideFormProps): Promise<void> => {
     try {
       const response = await upsertServiceOverride({
-        environmentIdentifier: environmentRef,
+        environmentIdentifier,
         serviceIdentifier: values.serviceRef as string,
         orgIdentifier,
         projectIdentifier,
         yaml: yamlStringify({
           serviceOverrides: {
-            environmentRef: environmentRef,
+            environmentRef: environmentIdentifier,
             serviceRef: values.serviceRef,
             variables: getOverrideFormdata(values, 'variables'),
             manifests: getOverrideFormdata(values, 'manifests'),
@@ -287,7 +284,7 @@ export default function AddEditServiceOverride({
   const existingJSON = useMemo(() => {
     return {
       serviceOverrides: {
-        environmentRef: environmentRef,
+        environmentRef: environmentIdentifier,
         serviceRef: formikRef.current?.values.serviceRef,
         variables: getOverrideValues('variables'),
         manifests: getOverrideValues('manifests'),
@@ -343,7 +340,7 @@ export default function AddEditServiceOverride({
       formName="addEditServiceOverrideForm"
       initialValues={{
         serviceRef: selectedService,
-        environmentRef: environmentRef,
+        environmentRef: environmentIdentifier,
         variables: getOverrideObject('variables') as VariableOverride[],
         manifests: getOverrideObject('manifests') as ManifestConfigWrapper[],
         configFiles: getOverrideObject('configFiles') as ConfigFileWrapper[],
@@ -394,6 +391,7 @@ export default function AddEditServiceOverride({
                     disabled={!isEmpty(selectedService)}
                     isNewConnectorLabelVisible={false}
                     setRefValue
+                    isOnlyFixedType
                     multiTypeProps={{
                       defaultValueToReset: ''
                     }}

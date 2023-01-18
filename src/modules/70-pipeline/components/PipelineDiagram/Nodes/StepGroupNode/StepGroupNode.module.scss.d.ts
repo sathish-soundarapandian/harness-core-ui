@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly childPipelineDetails: string
   readonly closeNode: string
   readonly collapseIcon: string
   readonly conditional: string
@@ -22,7 +23,9 @@ declare const styles: {
   readonly nestedGroup: string
   readonly nodeNameText: string
   readonly parallelNodes: string
+  readonly pipelineStageHeader: string
   readonly readonly: string
+  readonly rollbackGroup: string
   readonly stageName: string
   readonly stepGroup: string
   readonly stepGroupBody: string
@@ -32,5 +35,6 @@ declare const styles: {
   readonly stepGroupParent: string
   readonly svgLeftJointPoint: string
   readonly svgRightJointPoint: string
+  readonly templateStepGroup: string
 }
 export default styles

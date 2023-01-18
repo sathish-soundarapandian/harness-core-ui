@@ -589,8 +589,8 @@ export function getNameAndIdentifierSchema(
 ): { [key: string]: yup.Schema<string | undefined> } {
   return stepViewType !== StepViewType.Template
     ? {
-        name: NameSchema({ requiredErrorMsg: getString('pipelineSteps.stepNameRequired') }),
-        identifier: IdentifierSchema()
+        name: NameSchema(getString, { requiredErrorMsg: getString('pipelineSteps.stepNameRequired') }),
+        identifier: IdentifierSchema(getString)
       }
     : {}
 }

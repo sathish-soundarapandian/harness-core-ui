@@ -57,8 +57,8 @@ export const FreezeStudioOverviewSection = (
       initialValues={initialValues}
       validate={validate}
       validationSchema={Yup.object().shape({
-        name: NameSchema(),
-        identifier: IdentifierSchema()
+        name: NameSchema(getString),
+        identifier: IdentifierSchema(getString)
       })}
     >
       {formikProps => {

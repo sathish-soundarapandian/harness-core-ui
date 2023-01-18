@@ -31,9 +31,11 @@ import {
   HARNESS_COMMUNITY_SLACK_LINK,
   HARNESS_DOCS_LINK,
   HARNESS_API_DOCS_LINK,
-  SITE_STATUS_LINK
+  SITE_STATUS_LINK,
+  HARNESS_TUTORIALS
 } from './utils'
 import { CommunitySubmitTicket } from './MenuItems'
+import { useReleaseNotesModal } from './ReleaseNotesModal/useReleaseNotesModal'
 import css from './ResourceCenter.module.scss'
 
 const refinerProjectId = window.refinerProjectToken
@@ -48,9 +50,10 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
   const { currentUserInfo } = useAppStore()
   const [buttonDisabled, setButtonDisabled] = useState(false)
   const [show, setShow] = useState<boolean>(false)
+  const { showModal } = useReleaseNotesModal()
 
   const isCommunity = useGetCommunity()
-  const { SHOW_NG_REFINER_FEEDBACK } = useFeatureFlags()
+  const { SHOW_NG_REFINER_FEEDBACK, SPG_MODULE_VERSION_INFO } = useFeatureFlags()
   useEffect(() => {
     _refiner('dismissForm', refinerSurveryId)
     _refiner('setProject', refinerProjectId)
@@ -84,13 +87,15 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
         icon: 'pipeline-deploy',
         iconClassname: css.iconFilled,
         className: css.bottom,
-        onClick: (e: React.MouseEvent<Element, MouseEvent>) => openFileATicket(e, currentUserInfo, setShow)
+        onClick: (e: React.MouseEvent<Element, MouseEvent>) => openFileATicket(e, currentUserInfo, setShow),
+        testId: 'submit-ticket'
       },
       {
         title: getString('common.resourceCenter.ticketmenu.viewTicket'),
         icon: 'copy-doc',
         className: css.bottom,
-        onClick: (e: React.MouseEvent<Element, MouseEvent>) => openZendeskSupport(e)
+        onClick: (e: React.MouseEvent<Element, MouseEvent>) => openZendeskSupport(e),
+        testId: 'view-ticket'
       }
     ]
     if (SHOW_NG_REFINER_FEEDBACK) {
@@ -183,13 +188,21 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
             <ResourceSection
               title={getString('common.resourceCenter.productUpdates.title')}
               resources={[
-                {
-                  title: getString('common.resourceCenter.productUpdates.whatsnew'),
-                  icon: 'stars',
-                  iconClassname: css.iconFilled,
-                  onClick: (e: React.MouseEvent<Element, MouseEvent>) => openWhatsNew(e),
-                  testId: 'whatsnew'
-                },
+                SPG_MODULE_VERSION_INFO
+                  ? {
+                      title: getString('common.resourceCenter.bottomlayout.releaseNote'),
+                      icon: 'stars',
+                      iconClassname: css.iconFilled,
+                      onClick: showModal,
+                      testId: 'release-notes'
+                    }
+                  : {
+                      title: getString('common.resourceCenter.productUpdates.whatsnew'),
+                      icon: 'stars',
+                      iconClassname: css.iconFilled,
+                      onClick: (e: React.MouseEvent<Element, MouseEvent>) => openWhatsNew(e),
+                      testId: 'whats-new'
+                    },
                 {
                   title: getString('common.resourceCenter.productUpdates.earlyAcess'),
                   icon: 'flag-tick',
@@ -209,36 +222,77 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
           <Text font={{ variation: FontVariation.BODY2 }} padding={{ bottom: 'medium' }} color={Color.WHITE}>
             {getString('common.resourceCenter.bottomlayout.desc')}
           </Text>
-          <Layout.Horizontal flex={{ justifyContent: 'space-around' }}>
-            {getButton(getString('search'), 'thinner-search', HARNESS_SEARCH_LINK, css.iconSize)}
-            {getButton(
-              getString('common.resourceCenter.bottomlayout.university'),
-              'university',
-              HARNESS_UNIVERISITY_LINK,
-              css.university
-            )}
-            {getButton(getString('common.community'), 'resource-center-community-icon', HARNESS_COMMUNITY_LINK)}
-            {getButton(
-              getString('common.resourceCenter.communitySlack'),
-              'service-slack',
-              HARNESS_COMMUNITY_SLACK_LINK,
-              cx(css.iconSize, css.marginTop)
-            )}
-          </Layout.Horizontal>
-          <Layout.Horizontal flex={{ justifyContent: 'space-around' }} padding={{ top: 'small' }}>
-            {getButton(
-              getString('common.resourceCenter.bottomlayout.docs'),
-              'resource-center-docs-icon',
-              HARNESS_DOCS_LINK
-            )}
-            {getButton(getString('common.resourceCenter.bottomlayout.apiDocs'), 'api-docs', HARNESS_API_DOCS_LINK)}
-            {getButton(getString('common.resourceCenter.bottomlayout.releaseNote'), 'change-log', releaseNodeLink)}
-            {getButton(
-              getString('common.resourceCenter.bottomlayout.sitestatus'),
-              'right-bar-notification',
-              SITE_STATUS_LINK
-            )}
-          </Layout.Horizontal>
+          {SPG_MODULE_VERSION_INFO ? (
+            <>
+              <Layout.Horizontal flex={{ justifyContent: 'space-around' }}>
+                {getButton(getString('common.resourceCenter.bottomlayout.tutorials'), 'change-log', HARNESS_TUTORIALS)}
+                {getButton(
+                  getString('common.resourceCenter.bottomlayout.docs'),
+                  'resource-center-docs-icon',
+                  HARNESS_DOCS_LINK
+                )}
+                {getButton(getString('common.resourceCenter.bottomlayout.apiDocs'), 'api-docs', HARNESS_API_DOCS_LINK)}
+                {getButton(
+                  getString('common.resourceCenter.bottomlayout.university'),
+                  'university',
+                  HARNESS_UNIVERISITY_LINK,
+                  css.university
+                )}
+              </Layout.Horizontal>
+              <Layout.Horizontal flex={{ justifyContent: 'space-around' }} padding={{ top: 'small' }}>
+                {getButton(getString('search'), 'thinner-search', HARNESS_SEARCH_LINK, css.iconSize)}
+                {getButton(
+                  getString('common.communityForum'),
+                  'resource-center-community-icon',
+                  HARNESS_COMMUNITY_LINK
+                )}
+                {getButton(
+                  getString('common.resourceCenter.communitySlack'),
+                  'service-slack',
+                  HARNESS_COMMUNITY_SLACK_LINK,
+                  cx(css.iconSize, css.marginTop)
+                )}
+                {getButton(
+                  getString('common.resourceCenter.bottomlayout.sitestatus'),
+                  'right-bar-notification',
+                  SITE_STATUS_LINK
+                )}
+              </Layout.Horizontal>
+            </>
+          ) : (
+            <>
+              <Layout.Horizontal flex={{ justifyContent: 'space-around' }}>
+                {getButton(getString('search'), 'thinner-search', HARNESS_SEARCH_LINK, css.iconSize)}
+                {getButton(
+                  getString('common.resourceCenter.bottomlayout.university'),
+                  'university',
+                  HARNESS_UNIVERISITY_LINK,
+                  css.university
+                )}
+                {getButton(getString('common.community'), 'resource-center-community-icon', HARNESS_COMMUNITY_LINK)}
+                {getButton(
+                  getString('common.resourceCenter.communitySlack'),
+                  'service-slack',
+                  HARNESS_COMMUNITY_SLACK_LINK,
+                  cx(css.iconSize, css.marginTop)
+                )}
+              </Layout.Horizontal>
+              <Layout.Horizontal flex={{ justifyContent: 'space-around' }} padding={{ top: 'small' }}>
+                {getButton(
+                  getString('common.resourceCenter.bottomlayout.docs'),
+                  'resource-center-docs-icon',
+                  HARNESS_DOCS_LINK
+                )}
+                {getButton(getString('common.resourceCenter.bottomlayout.apiDocs'), 'api-docs', HARNESS_API_DOCS_LINK)}
+                {getButton(getString('common.resourceCenter.bottomlayout.releaseNote'), 'change-log', releaseNodeLink)}
+                {getButton(
+                  getString('common.resourceCenter.bottomlayout.sitestatus'),
+                  'right-bar-notification',
+                  SITE_STATUS_LINK
+                )}
+              </Layout.Horizontal>
+            </>
+          )}
         </Layout.Vertical>
       </Layout.Vertical>
     </Drawer>

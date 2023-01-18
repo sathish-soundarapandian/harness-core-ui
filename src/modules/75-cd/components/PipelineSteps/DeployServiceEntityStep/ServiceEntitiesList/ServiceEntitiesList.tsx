@@ -62,7 +62,7 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
     isMultiSvc
   } = props
   const { getString } = useStrings()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
+  const { accountId } = useParams<PipelinePathProps>()
 
   const [serviceToEdit, setServiceToEdit] = React.useState<ServiceData | null>(null)
   const [serviceToDelete, setServiceToDelete] = React.useState<ServiceData | null>(null)
@@ -127,9 +127,7 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
             serviceToEdit?.service.serviceDefinition?.type as ServiceDeploymentType,
             selectedDeploymentType
           )}
-          serviceResponse={
-            serviceToEdit ? { ...serviceToEdit.service, accountId, projectIdentifier, orgIdentifier } : undefined
-          }
+          serviceResponse={serviceToEdit ? { ...serviceToEdit.service, accountId } : undefined}
           onCloseModal={onCloseEditModal}
           onServiceCreate={handleServiceEntityUpdate}
           isServiceCreateModalView={false}

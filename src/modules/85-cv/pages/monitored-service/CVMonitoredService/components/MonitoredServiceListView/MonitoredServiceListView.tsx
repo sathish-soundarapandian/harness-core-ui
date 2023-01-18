@@ -27,8 +27,9 @@ import type { MonitoredServiceListItemDTO } from 'services/cv'
 import { EnvironmentToolTipDisplay } from '@cv/components/HarnessServiceAndEnvironment/components/EnvironmentToolTipDisplay'
 import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { ModuleName } from 'framework/types/ModuleName'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import IconGrid from '../IconGrid/IconGrid'
@@ -41,7 +42,7 @@ import {
 } from '../../CVMonitoredService.utils'
 import type { MonitoredServiceListViewProps } from '../../CVMonitoredService.types'
 import MonitoredServiceCategory from '../../../components/Configurations/components/Dependency/component/components/MonitoredServiceCategory/MonitoredServiceCategory'
-import { getListTitle } from './MonitoredServiceListView.utils'
+import { getIsSwitchEnabled, getListTitle } from './MonitoredServiceListView.utils'
 import SLOsIconGrid from '../SLOsIconGrid/SLOsIconGrid'
 import css from '../../CVMonitoredService.module.scss'
 
@@ -217,7 +218,11 @@ const MonitoredServiceListView: React.FC<MonitoredServiceListViewProps> = ({
     }
   })
 
-  const isSRMLicenseEnabled = useFeatureFlag(FeatureFlag.CVNG_LICENSE_ENFORCEMENT)
+  const { licenseInformation } = useLicenseStore()
+
+  const isSRMLicensePresentAndActive = licenseInformation[ModuleName.CV]?.status === 'ACTIVE'
+
+  const { CVNG_ENABLED: isSRMEnabled, CVNG_LICENSE_ENFORCEMENT: isSRMEnforcementLicenseEnabled } = useFeatureFlags()
 
   const RenderContextMenu: Renderer<CellProps<MonitoredServiceListItemDTO>> = ({ row }) => {
     const monitoredService = row.original
@@ -287,8 +292,13 @@ ET_DEPLOYMENT_NAME: <replace with deployment version>`
       [projectIdentifier]
     )
 
-    const canDisableMonitoredServiceToggle =
-      isSRMLicenseEnabled && !monitoredService?.serviceLicenseEnabled && !srmServicesFeatureEnabled
+    const canDisableMonitoredServiceToggle = !getIsSwitchEnabled({
+      isSRMLicensePresentAndActive,
+      isSRMEnforcementLicenseEnabled,
+      srmServicesFeatureEnabled,
+      serviceMonitoringEnabled: monitoredService?.serviceMonitoringEnabled,
+      isSRMEnabled
+    })
 
     const getTooltip = (): ReactElement | undefined => {
       if (!canToggle) {

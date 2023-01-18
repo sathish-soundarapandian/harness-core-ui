@@ -5,17 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import type { Column } from 'react-table'
+import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Text, TableV2, Layout, Card, Heading, NoDataCard } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Text, TableV2, Layout, Card, Heading, NoDataCard, DropDown, SelectOption, PageSpinner } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import moment from 'moment'
-import { String, useStrings } from 'framework/strings'
-import type { PageActiveServiceDTO, LicenseUsageDTO } from 'services/cd-ng'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { String, useStrings, StringKeys } from 'framework/strings'
+import { PageActiveServiceDTO, LicenseUsageDTO, useGetProjectList, useGetOrganizationList } from 'services/cd-ng'
 import type { SortBy } from './types'
+
 import {
-  LastModifiedNameCell,
+  ServiceNameCell,
   OrganizationCell,
   ProjectCell,
   LastModifiedServiceIdCell,
@@ -23,8 +26,12 @@ import {
   LastDeployedCell,
   LicenseConsumedCell
 } from './ServiceLicenseTableCells'
+import { getInfoIcon } from './UsageInfoCard'
 import pageCss from '../SubscriptionsPage.module.scss'
 
+enum OrgFilter {
+  ALL = '$$ALL$$'
+}
 const DEFAULT_PAGE_INDEX = 0
 const DEFAULT_PAGE_SIZE = 30
 export interface ServiceLicenseTableProps {
@@ -32,13 +39,17 @@ export interface ServiceLicenseTableProps {
   gotoPage: (pageNumber: number) => void
   setSortBy: (sortBy: string[]) => void
   sortBy: string[]
+  updateFilters: (orgId: string, projId: string) => void
+  servicesLoading: boolean
 }
 
 export function ServiceLicenseTable({
   data,
   gotoPage,
   sortBy,
-  setSortBy
+  setSortBy,
+  updateFilters,
+  servicesLoading
 }: ServiceLicenseTableProps): React.ReactElement {
   const { getString } = useStrings()
   const {
@@ -49,6 +60,16 @@ export function ServiceLicenseTable({
     size = DEFAULT_PAGE_SIZE
   } = data
   const [currentSort, currentOrder] = sortBy
+  const NameHeader = (headerName: StringKeys, tooltip?: StringKeys) => {
+    return (
+      <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'baseline' }}>
+        <Text font={{ size: 'small' }} color={Color.GREY_700}>
+          {getString(headerName)}
+        </Text>
+        {tooltip && getInfoIcon(getString(tooltip))}
+      </Layout.Horizontal>
+    )
+  }
 
   const columns: Column<LicenseUsageDTO>[] = React.useMemo(() => {
     const getServerSortProps = (id: string) => {
@@ -63,58 +84,102 @@ export function ServiceLicenseTable({
     }
     return [
       {
-        Header: getString('common.purpose.service'),
+        Header: NameHeader('common.purpose.service', 'common.subscriptions.usage.cdServiceTooltip'),
         accessor: 'name',
-        width: '16%',
+        width: '14%',
         disableSortBy: true,
-        Cell: LastModifiedNameCell
+        Cell: ServiceNameCell
       },
       {
-        Header: getString('common.organizations'),
+        Header: NameHeader('common.organizations'),
         accessor: 'storeType',
         disableSortBy: true,
-        width: '16%',
+        width: '13%',
         Cell: OrganizationCell
       },
       {
-        Header: getString('common.projects'),
+        Header: NameHeader('common.projects', 'common.trialInProgressDescription'),
         accessor: 'storeType1',
         disableSortBy: true,
-        width: '16%',
+        width: '15%',
         Cell: ProjectCell
       },
       {
-        Header: getString('common.serviceId'),
-        accessor: 'executionSummaryInfo.lastExecutionTs',
+        Header: NameHeader('common.serviceId'),
+        accessor: 'identifier',
         disableSortBy: true,
-        width: '15%',
+        width: '18%',
         Cell: LastModifiedServiceIdCell
       },
       {
-        Header: getString('common.servicesInstances'),
+        Header: NameHeader('common.servicesInstances'),
         accessor: 'serviceInstances',
-        width: '20%',
+        width: '15%',
         Cell: ServiceInstancesCell,
         serverSortProps: getServerSortProps('common.servicesInstances')
       },
       {
-        Header: getString('common.lastDeployed'),
+        Header: NameHeader('common.lastDeployed'),
         accessor: 'lastDeployed',
-        width: '16%',
+        width: '12%',
         Cell: LastDeployedCell,
         serverSortProps: getServerSortProps('common.lastDeployed')
       },
       {
-        Header: getString('common.licensesConsumed'),
+        Header: NameHeader('common.licensesConsumed'),
         accessor: 'licensesConsumed',
-        width: '5%',
+        width: '15%',
         Cell: LicenseConsumedCell,
         serverSortProps: getServerSortProps('licensesConsumed')
       }
     ] as unknown as Column<LicenseUsageDTO>[]
   }, [currentOrder, currentSort])
+  const { accountId } = useParams<AccountPathProps>()
+  const [orgName, setOrgName] = useState<string>('')
+  const [projName, setProjName] = useState<string>('')
   const activeServiceText = `${totalElements}`
   const timeValue = moment(content[0]?.timestamp).format('DD-MM-YYYY h:mm:ss')
+  const { data: projectListData, loading: projLoading } = useGetProjectList({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+
+  const allOrgsSelectOption: SelectOption = useMemo(
+    () => ({
+      label: getString('all'),
+      value: OrgFilter.ALL
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
+  const { data: orgsData, loading: orgLoading } = useGetOrganizationList({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+  const projectsMapped: SelectOption[] = useMemo(() => {
+    return [
+      allOrgsSelectOption,
+      ...(projectListData?.data?.content?.map(proj => {
+        return {
+          label: proj.project.name,
+          value: proj.project.identifier
+        }
+      }) || [])
+    ]
+  }, [projectListData?.data?.content, allOrgsSelectOption])
+  const organizations: SelectOption[] = useMemo(() => {
+    return [
+      allOrgsSelectOption,
+      ...(orgsData?.data?.content?.map(org => {
+        return {
+          label: org.organization.name,
+          value: org.organization.identifier
+        }
+      }) || [])
+    ]
+  }, [orgsData?.data?.content, allOrgsSelectOption])
   return (
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
@@ -141,7 +206,51 @@ export function ServiceLicenseTable({
               <Text className={pageCss.badgeText}>{timeValue}</Text>
             </div>
           </Layout.Vertical>
+          <Layout.Vertical>
+            <DropDown
+              disabled={orgLoading}
+              filterable={false}
+              className={pageCss.orgDropdown}
+              items={organizations}
+              value={orgName || OrgFilter.ALL}
+              onChange={item => {
+                if (item.value === OrgFilter.ALL) {
+                  setOrgName(OrgFilter.ALL)
+                } else {
+                  setOrgName(item.value as string)
+                }
+              }}
+              getCustomLabel={item => getString('common.tabOrgs', { name: item.label })}
+            />
+          </Layout.Vertical>
+          <DropDown
+            disabled={projLoading}
+            filterable={false}
+            className={pageCss.orgDropdown}
+            items={projectsMapped}
+            value={projName || OrgFilter.ALL}
+            onChange={item => {
+              if (item.value === OrgFilter.ALL) {
+                setProjName(OrgFilter.ALL)
+              } else {
+                setProjName(item.value as string)
+              }
+            }}
+            getCustomLabel={item => getString('common.tabProjects', { name: item.label })}
+          />
+          <Text
+            className={pageCss.fetchButton}
+            font={{ variation: FontVariation.LEAD }}
+            color={Color.PRIMARY_7}
+            lineClamp={1}
+            onClick={() => {
+              updateFilters(orgName, projName)
+            }}
+          >
+            Fetch
+          </Text>
         </Layout.Horizontal>
+        {servicesLoading && <PageSpinner />}
         {content.length > 0 ? (
           <TableV2
             className={pageCss.table}

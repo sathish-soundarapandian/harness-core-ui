@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { defaultTo, toLower } from 'lodash-es'
+import { toLower } from 'lodash-es'
 import { useParams, Link } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
 import { Container, Layout, Text } from '@harness/uicore'
@@ -17,7 +17,14 @@ import type { CDStageModuleInfo } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ExecutionPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
-import { isServerlessDeploymentType } from '@pipeline/utils/stageHelpers'
+import {
+  isAzureWebAppOrSshWinrmGenericDeploymentType,
+  isEcsDeploymentType,
+  isElastigroupDeploymentType,
+  isNativeHelmDeploymentType,
+  isServerlessDeploymentType,
+  isTASDeploymentType
+} from '@pipeline/utils/stageHelpers'
 
 export interface ResourceConstraintTooltipProps {
   loading: boolean
@@ -51,9 +58,26 @@ export default function ResourceConstraintTooltip(props: ResourceConstraintToolt
     props?.data?.executionList,
     props.data?.executionId
   )
-
+  const getDeploymentTypeResourceWaitingText = (deploymentType: string): string => {
+    switch (true) {
+      case isServerlessDeploymentType(deploymentType):
+        return getString('pipeline.resourceConstraints.serverlessInfraEntity')
+      case isElastigroupDeploymentType(deploymentType):
+        return getString('pipeline.resourceConstraints.elastigroupInfraEntity')
+      case isTASDeploymentType(deploymentType):
+        return getString('pipeline.resourceConstraints.tanzuInfraEntity')
+      case isNativeHelmDeploymentType(deploymentType):
+        return getString('pipeline.resourceConstraints.k8sNamespaceText')
+      case isEcsDeploymentType(deploymentType):
+        return getString('pipeline.resourceConstraints.ecsInfraEntity')
+      case isAzureWebAppOrSshWinrmGenericDeploymentType(deploymentType, undefined):
+        return getString('pipeline.resourceConstraints.traditionalInfraEntity')
+      default:
+        return getString('pipeline.resourceConstraints.k8sNamespaceText')
+    }
+  }
   const stageDeploymentType = module ? props.data?.moduleInfo?.[module]?.serviceInfo?.deploymentType : undefined
-  const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(defaultTo(stageDeploymentType, ''))
+  const resourceWaitingText = getDeploymentTypeResourceWaitingText(stageDeploymentType as string)
 
   return props.loading ? (
     <Container border={{ top: true, width: 1, color: Color.GREY_100 }} padding={'medium'}>
@@ -70,9 +94,7 @@ export default function ResourceConstraintTooltip(props: ResourceConstraintToolt
                 noOfExecutionsBeforePipeline > 1
                   ? toLower(getString('executionsText'))
                   : toLower(getString('executionText')),
-              infraEntityText: isServerlessDeploymentTypeSelected
-                ? getString('pipeline.resourceConstraints.serverlessInfraEntity')
-                : getString('pipeline.resourceConstraints.k8sNamespaceText')
+              infraEntityText: resourceWaitingText
             })}
             <a href="https://docs.harness.io/article/jrzwrdpvm2" target="_blank" rel="noopener noreferrer">
               {getString('learnMore')}

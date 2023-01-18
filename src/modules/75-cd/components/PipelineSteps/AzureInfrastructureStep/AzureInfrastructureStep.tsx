@@ -349,246 +349,241 @@ const AzureInfrastructureSpecInputForm: React.FC<AzureInfrastructureSpecEditable
         </div>
       )}
       {getMultiTypeFromValue(template?.subscriptionId) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-          <SelectInputSetView
-            name={`${path}.subscriptionId`}
-            tooltipProps={{
-              dataTooltipId: 'azureInfraSubscription'
-            }}
-            disabled={readonly}
-            placeholder={
-              loadingSubscriptions
-                ? /* istanbul ignore next */ getString('loading')
-                : getString('cd.steps.azureInfraStep.subscriptionPlaceholder')
-            }
-            useValue
-            selectItems={subscriptions}
-            label={getString(subscriptionLabel)}
-            multiTypeInputProps={{
-              onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
-                if (value && type === MultiTypeInputType.FIXED) {
-                  if (!isEqual(getValue(value), subscriptionId)) {
-                    setSubscriptionId(getValue(value))
+        <SelectInputSetView
+          name={`${path}.subscriptionId`}
+          className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}
+          tooltipProps={{
+            dataTooltipId: 'azureInfraSubscription'
+          }}
+          disabled={readonly}
+          placeholder={
+            loadingSubscriptions
+              ? /* istanbul ignore next */ getString('loading')
+              : getString('cd.steps.azureInfraStep.subscriptionPlaceholder')
+          }
+          useValue
+          selectItems={subscriptions}
+          label={getString(subscriptionLabel)}
+          multiTypeInputProps={{
+            onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
+              if (value && type === MultiTypeInputType.FIXED) {
+                if (!isEqual(getValue(value), subscriptionId)) {
+                  setSubscriptionId(getValue(value))
+                }
+              } else if (type === MultiTypeInputType.EXPRESSION) {
+                setSubscriptionId(value?.toString())
+              }
+              setResourceGroups([])
+              setClusters([])
+            },
+            onFocus: () => {
+              if (connector) {
+                refetchSubscriptions({
+                  queryParams: {
+                    accountIdentifier: accountId,
+                    projectIdentifier,
+                    orgIdentifier,
+                    connectorRef: connector
                   }
-                } else if (type === MultiTypeInputType.EXPRESSION) {
-                  setSubscriptionId(value?.toString())
-                }
-                setResourceGroups([])
-                setClusters([])
-              },
-              onFocus: () => {
-                if (connector) {
-                  refetchSubscriptions({
-                    queryParams: {
-                      accountIdentifier: accountId,
-                      projectIdentifier,
-                      orgIdentifier,
-                      connectorRef: connector
-                    }
-                  })
-                }
-              },
-              selectProps: {
-                items: subscriptions,
-                allowCreatingNewItems: true,
-                addClearBtn: !(loadingSubscriptions || readonly),
-                noResults: (
-                  <Text padding={'small'}>
-                    {loadingSubscriptions
-                      ? getString('loading')
-                      : defaultTo(
-                          get(subscriptionsError, errorMessage, subscriptionsError?.message),
-                          getString('pipeline.ACR.subscriptionError')
-                        )}
-                  </Text>
-                )
-              },
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            fieldPath={'subscriptionId'}
-            template={template}
-          />
-        </div>
+                })
+              }
+            },
+            selectProps: {
+              items: subscriptions,
+              allowCreatingNewItems: true,
+              addClearBtn: !(loadingSubscriptions || readonly),
+              noResults: (
+                <Text padding={'small'}>
+                  {loadingSubscriptions
+                    ? getString('loading')
+                    : defaultTo(
+                        get(subscriptionsError, errorMessage, subscriptionsError?.message),
+                        getString('pipeline.ACR.subscriptionError')
+                      )}
+                </Text>
+              )
+            },
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          fieldPath={'subscriptionId'}
+          template={template}
+        />
       )}
       {getMultiTypeFromValue(template?.resourceGroup) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-          <SelectInputSetView
-            name={`${path}.resourceGroup`}
-            tooltipProps={{
-              dataTooltipId: 'azureInfraResourceGroup'
-            }}
-            disabled={readonly}
-            placeholder={
-              loadingResourceGroups
-                ? /* istanbul ignore next */ getString('loading')
-                : getString('cd.steps.azureInfraStep.resourceGroupPlaceholder')
-            }
-            useValue
-            selectItems={resourceGroups}
-            label={getString(resourceGroupLabel)}
-            multiTypeInputProps={{
-              onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
-                if (value && type === MultiTypeInputType.FIXED) {
-                  setResourceGroupValue(getValue(value))
-                } else if (type === MultiTypeInputType.EXPRESSION) {
-                  setResourceGroupValue(value?.toString())
-                }
-                setClusters([])
-              },
-              onFocus: () => {
-                if (connector && subscriptionId) {
-                  refetchResourceGroups({
-                    queryParams: {
-                      accountIdentifier: accountId,
-                      projectIdentifier,
-                      orgIdentifier,
-                      connectorRef: connector as string
-                    },
-                    pathParams: {
-                      subscriptionId: subscriptionId
-                    }
-                  })
-                }
-              },
-              selectProps: {
-                items: resourceGroups,
-                allowCreatingNewItems: true,
-                addClearBtn: !(loadingResourceGroups || readonly),
-                noResults: loadingResourceGroups ? (
-                  getString('loading')
-                ) : (
-                  <Text padding={'small'}>
-                    {defaultTo(
-                      get(resourceGroupsError, errorMessage, resourceGroupsError?.message),
-                      getString('cd.steps.azureInfraStep.resourceGroupError')
-                    )}
-                  </Text>
-                )
-              },
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            fieldPath={'resourceGroup'}
-            template={template}
-          />
-        </div>
+        <SelectInputSetView
+          className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}
+          name={`${path}.resourceGroup`}
+          tooltipProps={{
+            dataTooltipId: 'azureInfraResourceGroup'
+          }}
+          disabled={readonly}
+          placeholder={
+            loadingResourceGroups
+              ? /* istanbul ignore next */ getString('loading')
+              : getString('cd.steps.azureInfraStep.resourceGroupPlaceholder')
+          }
+          useValue
+          selectItems={resourceGroups}
+          label={getString(resourceGroupLabel)}
+          multiTypeInputProps={{
+            onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
+              if (value && type === MultiTypeInputType.FIXED) {
+                setResourceGroupValue(getValue(value))
+              } else if (type === MultiTypeInputType.EXPRESSION) {
+                setResourceGroupValue(value?.toString())
+              }
+              setClusters([])
+            },
+            onFocus: () => {
+              if (connector && subscriptionId) {
+                refetchResourceGroups({
+                  queryParams: {
+                    accountIdentifier: accountId,
+                    projectIdentifier,
+                    orgIdentifier,
+                    connectorRef: connector as string
+                  },
+                  pathParams: {
+                    subscriptionId: subscriptionId
+                  }
+                })
+              }
+            },
+            selectProps: {
+              items: resourceGroups,
+              allowCreatingNewItems: true,
+              addClearBtn: !(loadingResourceGroups || readonly),
+              noResults: loadingResourceGroups ? (
+                getString('loading')
+              ) : (
+                <Text padding={'small'}>
+                  {defaultTo(
+                    get(resourceGroupsError, errorMessage, resourceGroupsError?.message),
+                    getString('cd.steps.azureInfraStep.resourceGroupError')
+                  )}
+                </Text>
+              )
+            },
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          fieldPath={'resourceGroup'}
+          template={template}
+        />
       )}
       {getMultiTypeFromValue(template?.cluster) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
-          <SelectInputSetView
-            name={`${path}.cluster`}
-            tooltipProps={{
-              dataTooltipId: 'azureInfraCluster'
-            }}
-            disabled={readonly}
-            placeholder={
-              loadingClusters
-                ? /* istanbul ignore next */ getString('loading')
-                : getString('cd.steps.common.selectOrEnterClusterPlaceholder')
-            }
-            useValue
-            selectItems={clusters}
-            label={getString(clusterLabel)}
-            multiTypeInputProps={{
-              onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
-                if (value && type === MultiTypeInputType.FIXED) {
-                  setClusterValue(getValue(value))
-                } else if (type === MultiTypeInputType.EXPRESSION) {
-                  setClusterValue(value?.toString())
-                }
-              },
-              onFocus: () => {
-                if (connector && subscriptionId && resourceGroupValue) {
-                  refetchClusters({
-                    queryParams: {
-                      accountIdentifier: accountId,
-                      projectIdentifier,
-                      orgIdentifier,
-                      connectorRef: connector as string
-                    },
-                    pathParams: {
-                      subscriptionId: subscriptionId,
-                      resourceGroup: resourceGroupValue
-                    }
-                  })
-                }
-              },
-              selectProps: {
-                items: clusters,
-                allowCreatingNewItems: true,
-                addClearBtn: !(loadingClusters || readonly),
-                noResults: loadingClusters ? (
-                  getString('loading')
-                ) : (
-                  <Text padding={'small'}>
-                    {defaultTo(
-                      get(clustersError, errorMessage, clustersError?.message),
-                      getString('cd.steps.azureInfraStep.clusterError')
-                    )}
-                  </Text>
-                )
-              },
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            template={template}
-            fieldPath={'cluster'}
-          />
-        </div>
+        <SelectInputSetView
+          name={`${path}.cluster`}
+          className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}
+          tooltipProps={{
+            dataTooltipId: 'azureInfraCluster'
+          }}
+          disabled={readonly}
+          placeholder={
+            loadingClusters
+              ? /* istanbul ignore next */ getString('loading')
+              : getString('cd.steps.common.selectOrEnterClusterPlaceholder')
+          }
+          useValue
+          selectItems={clusters}
+          label={getString(clusterLabel)}
+          multiTypeInputProps={{
+            onChange: /* istanbul ignore next */ (value, _typeValue, type) => {
+              if (value && type === MultiTypeInputType.FIXED) {
+                setClusterValue(getValue(value))
+              } else if (type === MultiTypeInputType.EXPRESSION) {
+                setClusterValue(value?.toString())
+              }
+            },
+            onFocus: () => {
+              if (connector && subscriptionId && resourceGroupValue) {
+                refetchClusters({
+                  queryParams: {
+                    accountIdentifier: accountId,
+                    projectIdentifier,
+                    orgIdentifier,
+                    connectorRef: connector as string
+                  },
+                  pathParams: {
+                    subscriptionId: subscriptionId,
+                    resourceGroup: resourceGroupValue
+                  }
+                })
+              }
+            },
+            selectProps: {
+              items: clusters,
+              allowCreatingNewItems: true,
+              addClearBtn: !(loadingClusters || readonly),
+              noResults: loadingClusters ? (
+                getString('loading')
+              ) : (
+                <Text padding={'small'}>
+                  {defaultTo(
+                    get(clustersError, errorMessage, clustersError?.message),
+                    getString('cd.steps.azureInfraStep.clusterError')
+                  )}
+                </Text>
+              )
+            },
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={template}
+          fieldPath={'cluster'}
+        />
       )}
       {getMultiTypeFromValue(template?.namespace) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${path}.namespace`}
-            tooltipProps={{
-              dataTooltipId: 'azureInfraNamespace'
-            }}
-            label={getString('common.namespace')}
-            disabled={readonly}
-            multiTextInputProps={{
-              allowableTypes,
-              expressions
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
-            template={template}
-            fieldPath={'namespace'}
-          />
-        </div>
+        <TextFieldInputSetView
+          name={`${path}.namespace`}
+          tooltipProps={{
+            dataTooltipId: 'azureInfraNamespace'
+          }}
+          label={getString('common.namespace')}
+          disabled={readonly}
+          multiTextInputProps={{
+            allowableTypes,
+            expressions
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
+          template={template}
+          fieldPath={'namespace'}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
       {getMultiTypeFromValue(template?.releaseName) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${path}.releaseName`}
-            tooltipProps={{
-              dataTooltipId: 'azureInfraReleaseName'
-            }}
-            multiTextInputProps={{
-              allowableTypes,
-              expressions
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            label={getString('common.releaseName')}
-            disabled={readonly}
-            placeholder={getString('cd.steps.common.releaseNamePlaceholder')}
-            fieldPath={'releaseName'}
-            template={template}
-          />
-        </div>
+        <TextFieldInputSetView
+          name={`${path}.releaseName`}
+          tooltipProps={{
+            dataTooltipId: 'azureInfraReleaseName'
+          }}
+          multiTextInputProps={{
+            allowableTypes,
+            expressions
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          label={getString('common.releaseName')}
+          disabled={readonly}
+          placeholder={getString('cd.steps.common.releaseNamePlaceholder')}
+          fieldPath={'releaseName'}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
     </Layout.Vertical>
   )

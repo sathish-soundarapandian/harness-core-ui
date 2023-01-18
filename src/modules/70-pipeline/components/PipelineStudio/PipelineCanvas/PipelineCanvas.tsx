@@ -10,28 +10,24 @@ import { Classes, Dialog, IDialogProps, Intent } from '@blueprintjs/core'
 import cx from 'classnames'
 import {
   Button,
-  ButtonSize,
   ButtonVariation,
   Container,
-  Icon,
   Layout,
   PageSpinner,
   SelectOption,
-  Text,
   useConfirmationDialog,
   useToaster,
-  VisualYamlSelectedView as SelectedView,
-  VisualYamlToggle
+  VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { matchPath, useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, isEqual, merge, omit } from 'lodash-es'
 import produce from 'immer'
-import { parse, stringify } from '@common/utils/YamlHelperMethods'
-import type { CacheResponseMetadata, Error, PipelineInfoConfig } from 'services/pipeline-ng'
+import { parse } from '@common/utils/YamlHelperMethods'
+import type { Error, PipelineInfoConfig } from 'services/pipeline-ng'
 import { EntityGitDetails, InputSetSummaryResponse, useGetInputsetYaml } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
-import { AppStoreContext, useAppStore } from 'framework/AppStore/AppStoreContext'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { NavigationCheck } from '@common/components/NavigationCheck/NavigationCheck'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import type {
@@ -43,47 +39,30 @@ import type {
   ProjectPathProps,
   RunPipelineQueryParams
 } from '@common/interfaces/RouteInterfaces'
-import RbacButton from '@rbac/components/Button/Button'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { usePermission } from '@rbac/hooks/usePermission'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
-import { TagsPopover } from '@common/components'
 import type { IGitContextFormProps } from '@common/components/GitContextForm/GitContextForm'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { PipelineVariablesContextProvider } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
 import NoEntityFound, { handleFetchFailure } from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
-import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
 import { RunPipelineForm } from '@pipeline/components/RunPipelineModal/RunPipelineForm'
 import { createTemplate } from '@pipeline/utils/templateUtils'
 import StageBuilder from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilder'
 import { TemplatePipelineBuilder } from '@pipeline/components/PipelineStudio/PipelineTemplateBuilder/TemplatePipelineBuilder/TemplatePipelineBuilder'
-import {
-  SavePipelineHandle,
-  SavePipelinePopoverWithRef
-} from '@pipeline/components/PipelineStudio/SavePipelinePopover/SavePipelinePopover'
+
 import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hooks/useSaveTemplateListener'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
-import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 import type { Pipeline } from '@pipeline/utils/types'
-import useDiffDialog from '@common/hooks/useDiffDialog'
-import { PipelineOutOfSyncErrorStrip } from '@pipeline/components/TemplateLibraryErrorHandling/PipelineOutOfSyncErrorStrip/PipelineOutOfSyncErrorStrip'
-import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import CreatePipelines from '../CreateModal/PipelineCreate'
-import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
+import { DefaultNewPipelineId } from '../PipelineContext/PipelineActions'
 import PipelineYamlView from '../PipelineYamlView/PipelineYamlView'
 import { RightBar } from '../RightBar/RightBar'
-import StudioGitPopover from '../StudioGitPopover'
 import usePipelineErrors from './PipelineErrors/usePipelineErrors'
-import { getDuplicateStepIdentifierList } from './PipelineCanvasUtils'
-import PipelineCachedCopy from './PipelineCachedCopy/PipelineCachedCopy'
+import { PipelineCanvasHeader } from './PipelineCanvasHeader'
 import css from './PipelineCanvas.module.scss'
 
 interface OtherModalProps {
@@ -134,8 +113,12 @@ export function PipelineCanvas({
   toPipelineList,
   toPipelineStudio,
   getOtherModal
-}: PipelineCanvasProps): JSX.Element {
-  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = React.useContext(AppStoreContext)
+}: PipelineCanvasProps): React.ReactElement {
+  const {
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF,
+    supportingGitSimplification
+  } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const {
     state,
@@ -146,10 +129,7 @@ export function PipelineCanvas({
     fetchPipeline,
     view,
     setView,
-    isReadonly,
-    updatePipelineView,
-    setSelectedStageId,
-    setSelectedSectionId
+    isReadonly
   } = usePipelineContext()
   const { getTemplate } = useTemplateSelector()
   const {
@@ -171,9 +151,7 @@ export function PipelineCanvas({
   const {
     pipeline,
     isUpdated,
-    modules,
     pipelineView: { isYamlEditable },
-    pipelineView,
     isLoading,
     isInitialized,
     originalPipeline,
@@ -184,22 +162,14 @@ export function PipelineCanvas({
     storeMetadata,
     entityValidityDetails,
     templateError,
-    yamlSchemaErrorWrapper,
-    cacheResponse: pipelineCacheResponse
+    yamlSchemaErrorWrapper
   } = state
 
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier, module } = useParams<
-    PipelineType<{
-      orgIdentifier: string
-      projectIdentifier: string
-      pipelineIdentifier: string
-      accountId: string
-    }> &
-      GitQueryParams
+    PipelineType<PipelinePathProps> & GitQueryParams
   >()
   const history = useHistory()
-  const isPipelineGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
 
   // For remote pipeline queryParam will always as branch as selected branch except coming from list view
   // While opeining studio from list view, selected branch can be any branch as in pipeline response
@@ -222,6 +192,7 @@ export function PipelineCanvas({
 
   useDocumentTitle([parse(pipeline?.name || getString('pipelines'))])
   const [discardBEUpdateDialog, setDiscardBEUpdate] = React.useState(false)
+
   const { openDialog: openConfirmBEUpdateError } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
     contentText: getString('pipelines-studio.pipelineUpdatedError'),
@@ -237,11 +208,9 @@ export function PipelineCanvas({
     }
   })
 
-  const { supportingGitSimplification } = useAppStore()
   const { openPipelineErrorsModal } = usePipelineErrors()
   const isYaml = view === SelectedView.YAML
   const [isYamlError, setYamlError] = React.useState(false)
-  const [loadFromCache, setLoadFromCache] = React.useState(true)
   const [blockNavigation, setBlockNavigation] = React.useState(false)
   const [selectedBranch, setSelectedBranch] = React.useState(defaultTo(branch, ''))
   const [disableVisualView, setDisableVisualView] = React.useState(entityValidityDetails?.valid === false)
@@ -249,7 +218,6 @@ export function PipelineCanvas({
   const [modalMode, setModalMode] = React.useState<'edit' | 'create'>('create')
 
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
-  const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
 
   React.useEffect(() => {
     if (isGitSyncEnabled || isPipelineRemote) {
@@ -258,53 +226,12 @@ export function PipelineCanvas({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [yamlSchemaErrorWrapper, isGitSyncEnabled, isPipelineRemote])
 
-  const [canExecute] = usePermission(
-    {
-      resourceScope: {
-        accountIdentifier: accountId,
-        orgIdentifier,
-        projectIdentifier
-      },
-      resource: {
-        resourceType: ResourceType.PIPELINE,
-        resourceIdentifier: pipeline?.identifier as string
-      },
-      permissions: [PermissionIdentifier.EXECUTE_PIPELINE]
-    },
-    [orgIdentifier, projectIdentifier, accountId, pipeline?.identifier]
-  )
-
-  const permissionText = canExecute
-    ? getString('common.viewAndExecutePermissions')
-    : getString('common.readonlyPermissions')
-
-  const customButtonContainer = (
-    <Container className={css.customButtons}>
-      <Button
-        text={getString('pipeline.discard')}
-        variation={ButtonVariation.SECONDARY}
-        size={ButtonSize.MEDIUM}
-        onClick={() => {
-          updatePipelineView({ ...pipelineView, isYamlEditable: false })
-          fetchPipeline({ forceFetch: true, forceUpdate: true })
-          closeUnsavedChangesDialog()
-        }}
-      />
-      <Button
-        text={getString('cancel')}
-        variation={ButtonVariation.TERTIARY}
-        size={ButtonSize.MEDIUM}
-        onClick={() => closeUnsavedChangesDialog()}
-      />
-    </Container>
-  )
-
-  const { openDialog: openUnsavedChangesDialog, closeDialog: closeUnsavedChangesDialog } = useConfirmationDialog({
-    className: css.paddingTop8,
-    customButtons: customButtonContainer,
+  const { openDialog: openUnsavedChangesDialog } = useConfirmationDialog({
+    cancelButtonText: getString('common.stayOnThisPage'),
+    className: css.dialogStyle,
     contentText: isYamlError ? getString('navigationYamlError') : getString('navigationCheckText'),
     titleText: isYamlError ? getString('navigationYamlErrorTitle') : getString('navigationCheckTitle'),
-    confirmButtonText: getString('confirm'),
+    confirmButtonText: getString('common.leaveThisPage'),
     intent: Intent.WARNING,
     showCloseButton: false,
     onCloseDialog: async isConfirmed => {
@@ -332,32 +259,6 @@ export function PipelineCanvas({
       setBlockNavigation(false)
     }
   })
-
-  const isValidYaml = function (): boolean {
-    if (yamlHandler) {
-      try {
-        const parsedYaml = parse<Pipeline>(yamlHandler.getLatestYaml())
-        if (!parsedYaml) {
-          clear()
-          showError(getString('invalidYamlText'))
-          return false
-        }
-        if (yamlHandler.getYAMLValidationErrorMap()?.size > 0) {
-          clear()
-          setYamlError(true)
-          showError(getString('invalidYamlText'))
-          return false
-        }
-        updatePipeline(parsedYaml.pipeline)
-      } catch (e) {
-        clear()
-        setYamlError(true)
-        showError(defaultTo(e.message, getString('invalidYamlText')))
-        return false
-      }
-    }
-    return true
-  }
 
   useSaveTemplateListener()
 
@@ -405,6 +306,7 @@ export function PipelineCanvas({
               closeModal={onCloseCreate}
               gitDetails={{ ...gitDetails, remoteFetchFailed: Boolean(remoteFetchError) } as IGitContextFormProps}
               primaryButtonText={modalMode === 'create' ? getString('start') : getString('continue')}
+              isReadonly={isReadonly}
             />
           </Dialog>
         </PipelineVariablesContextProvider>
@@ -419,7 +321,8 @@ export function PipelineCanvas({
     gitDetails,
     branch,
     connectorRef,
-    modalMode
+    modalMode,
+    isReadonly
   ])
 
   React.useEffect(() => {
@@ -591,37 +494,6 @@ export function PipelineCanvas({
     }
   }, [useTemplate, gitDetails, isGitSyncEnabled, storeMetadata, supportingGitSimplification])
 
-  function handleViewChange(newView: SelectedView): boolean {
-    if (newView === view) return false
-    if (newView === SelectedView.VISUAL) {
-      const duplicateStepIdentifiersList = pipeline?.stages ? getDuplicateStepIdentifierList(pipeline?.stages) : []
-      if (duplicateStepIdentifiersList.length) {
-        clear()
-        showError(
-          getString('pipeline.duplicateStepIdentifiers', {
-            duplicateIdString: duplicateStepIdentifiersList.join(', ')
-          }),
-          5000
-        )
-        return false
-      }
-      if (yamlHandler && isYamlEditable) {
-        if (!isValidYaml()) return false
-      }
-    }
-    setView(newView)
-    updatePipelineView({
-      splitViewData: {},
-      isDrawerOpened: false,
-      isYamlEditable: false,
-      isSplitViewOpen: false,
-      drawerData: { type: DrawerTypes.AddStep }
-    })
-    setSelectedStageId(undefined)
-    setSelectedSectionId(undefined)
-    return true
-  }
-
   const [inputSetYaml, setInputSetYaml] = React.useState('')
 
   const { data, refetch, loading } = useGetInputsetYaml({
@@ -727,9 +599,7 @@ export function PipelineCanvas({
               repoIdentifier={isPipelineRemote ? repoName : repoIdentifier}
               branch={branch}
               source="executions"
-              onClose={() => {
-                onCloseRunPipelineModal()
-              }}
+              onClose={onCloseRunPipelineModal}
               stagesExecuted={stagesExecuted}
               storeType={storeType}
               storeMetadata={storeMetadata}
@@ -738,9 +608,7 @@ export function PipelineCanvas({
               aria-label="close modal"
               icon="cross"
               variation={ButtonVariation.ICON}
-              onClick={() => {
-                onCloseRunPipelineModal()
-              }}
+              onClick={onCloseRunPipelineModal}
               className={css.crossIcon}
             />
           </Layout.Vertical>
@@ -758,13 +626,6 @@ export function PipelineCanvas({
       inputSetLabel,
       pipelineIdentifier
     ]
-  )
-
-  const updateEntity = React.useCallback(
-    async (entityYaml: string) => {
-      await savePipelineHandleRef.current?.updatePipeline(entityYaml)
-    },
-    [savePipelineHandleRef.current]
   )
 
   const onGitBranchChange = React.useMemo(
@@ -824,12 +685,6 @@ export function PipelineCanvas({
     ]
   )
 
-  const { open: openDiffModal } = useDiffDialog({
-    originalYaml: stringify(originalPipeline),
-    updatedYaml: stringify(pipeline),
-    title: getString('pipeline.piplineDiffTitle')
-  })
-
   if (isLoading) {
     return (
       <React.Fragment>
@@ -862,11 +717,6 @@ export function PipelineCanvas({
       >
         <NavigationCheck
           when={getOtherModal && pipeline.identifier !== ''}
-          onDiscardButtonClick={() => {
-            updatePipelineView({ ...pipelineView, isYamlEditable: false })
-            fetchPipeline({ forceFetch: true, forceUpdate: true })
-          }}
-          showDiscardBtn={true}
           shouldBlockNavigation={nextLocation => {
             let localUpdated = isUpdated
             const matchDefault = matchPath(nextLocation.pathname, {
@@ -920,169 +770,17 @@ export function PipelineCanvas({
           }}
         />
         <Layout.Vertical height={'100%'}>
-          {(remoteFetchError as Error)?.code === 'ENTITY_NOT_FOUND' ? null : (
-            <div className={css.titleBar}>
-              <div className={css.titleSubheader}>
-                <div
-                  className={cx(css.breadcrumbsMenu, {
-                    [css.remotePipelineName]: isPipelineRemote
-                  })}
-                >
-                  <div className={css.pipelineMetadataContainer}>
-                    <Layout.Horizontal className={css.pipelineNameContainer}>
-                      <Icon className={css.pipelineIcon} padding={{ right: 'small' }} name="pipeline" size={32} />
-                      <Text className={css.pipelineName} lineClamp={1}>
-                        {pipeline?.name}
-                      </Text>
-                      {!isEmpty(pipeline?.tags) && pipeline.tags && (
-                        <Container className={css.tagsContainer}>
-                          <TagsPopover tags={pipeline.tags} />
-                        </Container>
-                      )}
-                      {pipeline.description && (
-                        <Container className={cx({ [css.tagsContainer]: isGitSyncEnabled })}>
-                          <DescriptionPopover text={pipeline.description} />
-                        </Container>
-                      )}
-                      {isGitSyncEnabled && (
-                        <StudioGitPopover
-                          gitDetails={gitDetails}
-                          identifier={pipelineIdentifier}
-                          isReadonly={isReadonly}
-                          entityData={{ ...pipeline, versionLabel: '', type: 'Step' }} // Just to avoid type issues
-                          onGitBranchChange={onGitBranchChange}
-                          entityType={'Pipeline'}
-                        />
-                      )}
-                      {isYaml || isReadonly ? null : (
-                        <Button
-                          variation={ButtonVariation.ICON}
-                          icon="Edit"
-                          onClick={() => {
-                            setModalMode('edit')
-                            showModal()
-                          }}
-                          aria-label={getString('editPipeline')}
-                        />
-                      )}
-                    </Layout.Horizontal>
-                  </div>
-                </div>
-                {isPipelineRemote && (
-                  <div className={css.gitRemoteDetailsWrapper}>
-                    <GitRemoteDetails
-                      connectorRef={connectorRef}
-                      repoName={repoName || gitDetails.repoName || gitDetails.repoIdentifier || ''}
-                      filePath={defaultTo(gitDetails.filePath, '')}
-                      fileUrl={defaultTo(gitDetails.fileUrl, '')}
-                      branch={defaultTo(branch, '')}
-                      onBranchChange={onGitBranchChange}
-                      flags={{
-                        readOnly: pipelineIdentifier === DefaultNewPipelineId
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
-              {remoteFetchError ? null : (
-                <>
-                  <VisualYamlToggle
-                    className={css.visualYamlToggle}
-                    selectedView={isYaml || disableVisualView ? SelectedView.YAML : SelectedView.VISUAL}
-                    disableToggle={disableVisualView}
-                    onChange={nextMode => {
-                      handleViewChange(nextMode)
-                    }}
-                    showDisableToggleReason={true}
-                  />
-                  <div>
-                    <div className={css.savePublishContainer}>
-                      {isPipelineGitCacheEnabled && !isEmpty(pipelineCacheResponse) && (
-                        <PipelineCachedCopy
-                          reloadContent={getString('common.pipeline')}
-                          cacheResponse={pipelineCacheResponse as CacheResponseMetadata}
-                          reloadFromCache={() => {
-                            setLoadFromCache(false)
-                            updatePipelineView({ ...pipelineView, isYamlEditable: false })
-                            fetchPipeline({ forceFetch: true, forceUpdate: true, loadFromCache: false })
-                          }}
-                          fetchError={remoteFetchError}
-                        />
-                      )}
-                      {isReadonly && (
-                        <div className={css.readonlyAccessTag}>
-                          <Icon name="eye-open" size={16} />
-                          <div className={css.readonlyAccessText}>{permissionText}</div>
-                        </div>
-                      )}
-                      {isUpdated && !isReadonly && (
-                        <Button
-                          variation={ButtonVariation.LINK}
-                          intent="warning"
-                          className={css.unsavedChanges}
-                          onClick={openDiffModal}
-                        >
-                          {getString('unsavedChanges')}
-                        </Button>
-                      )}
-                      <SavePipelinePopoverWithRef toPipelineStudio={toPipelineStudio} ref={savePipelineHandleRef} />
-                      {pipelineIdentifier !== DefaultNewPipelineId && !isReadonly && (
-                        <Button
-                          disabled={!isUpdated}
-                          onClick={() => {
-                            updatePipelineView({ ...pipelineView, isYamlEditable: false })
-                            fetchPipeline({ forceFetch: true, forceUpdate: true })
-                          }}
-                          className={css.discardBtn}
-                          variation={ButtonVariation.SECONDARY}
-                          text={getString('pipeline.discard')}
-                        />
-                      )}
-                      <RbacButton
-                        data-testid="card-run-pipeline"
-                        variation={ButtonVariation.PRIMARY}
-                        icon="run-pipeline"
-                        intent="success"
-                        disabled={isUpdated || entityValidityDetails?.valid === false}
-                        className={css.runPipelineBtn}
-                        text={getString('runPipelineText')}
-                        tooltip={
-                          entityValidityDetails?.valid === false
-                            ? getString('pipeline.cannotRunInvalidPipeline')
-                            : isUpdated
-                            ? 'Please click Save and then run the pipeline.'
-                            : ''
-                        }
-                        onClick={e => {
-                          e.stopPropagation()
-                          openRunPipelineModal()
-                        }}
-                        featuresProps={getFeaturePropsForRunPipelineButton({
-                          modules,
-                          getString
-                        })}
-                        permission={{
-                          resourceScope: {
-                            accountIdentifier: accountId,
-                            orgIdentifier,
-                            projectIdentifier
-                          },
-                          resource: {
-                            resourceType: ResourceType.PIPELINE,
-                            resourceIdentifier: pipeline?.identifier as string
-                          },
-                          permission: PermissionIdentifier.EXECUTE_PIPELINE
-                        }}
-                      />
-                    </div>
-                  </div>
-                </>
-              )}
-            </div>
-          )}
-          <PipelineOutOfSyncErrorStrip
-            updateRootEntity={updateEntity}
-            loadFromcache={isPipelineGitCacheEnabled && loadFromCache}
+          <PipelineCanvasHeader
+            module={module}
+            isPipelineRemote={!!isPipelineRemote}
+            isGitSyncEnabled={!!isGitSyncEnabled}
+            onGitBranchChange={onGitBranchChange}
+            setModalMode={setModalMode}
+            setYamlError={setYamlError}
+            showModal={showModal}
+            disableVisualView={disableVisualView}
+            toPipelineStudio={toPipelineStudio}
+            openRunPipelineModal={openRunPipelineModal}
           />
           {remoteFetchError ? (
             handleFetchFailure(

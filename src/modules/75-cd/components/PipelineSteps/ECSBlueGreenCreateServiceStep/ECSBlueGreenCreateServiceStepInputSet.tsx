@@ -333,169 +333,163 @@ const ECSBlueGreenCreateServiceStepInputSet = (
         </div>
       )}
       {getMultiTypeFromValue(inputSetData.template?.spec?.loadBalancer) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <SelectInputSetView
-            name={`${prefix}spec.loadBalancer`}
-            selectItems={loadBalancerOptions}
-            useValue
-            multiTypeInputProps={{
-              selectProps: {
-                items: loadBalancerOptions,
-                popoverClassName: css.dropdownMenu,
-                loadingItems: loadingLoadBalancers
-              },
-              allowableTypes,
-              expressions,
-              onChange: selectedValue => {
-                const selectedValueString =
-                  typeof selectedValue === 'string' ? selectedValue : ((selectedValue as SelectOption)?.value as string)
-                onLoadBalancerChange(selectedValueString)
-              },
-              onFocus: fetchLoadBalancers
-            }}
-            label={getString('cd.steps.ecsBGCreateServiceStep.labels.elasticLoadBalancer')}
-            placeholder={loadingLoadBalancers ? getString('loading') : getString('select')}
-            disabled={defaultTo(loadingLoadBalancers, readonly)}
-            fieldPath={`spec.loadBalancer`}
-            template={template}
-          />
-        </div>
+        <SelectInputSetView
+          className={cx(stepCss.formGroup, stepCss.md)}
+          name={`${prefix}spec.loadBalancer`}
+          selectItems={loadBalancerOptions}
+          useValue
+          multiTypeInputProps={{
+            selectProps: {
+              items: loadBalancerOptions,
+              popoverClassName: css.dropdownMenu,
+              loadingItems: loadingLoadBalancers
+            },
+            allowableTypes,
+            expressions,
+            onChange: selectedValue => {
+              const selectedValueString =
+                typeof selectedValue === 'string' ? selectedValue : ((selectedValue as SelectOption)?.value as string)
+              onLoadBalancerChange(selectedValueString)
+            },
+            onFocus: fetchLoadBalancers
+          }}
+          label={getString('cd.steps.ecsBGCreateServiceStep.labels.elasticLoadBalancer')}
+          placeholder={loadingLoadBalancers ? getString('loading') : getString('select')}
+          disabled={defaultTo(loadingLoadBalancers, readonly)}
+          fieldPath={`spec.loadBalancer`}
+          template={template}
+        />
       )}
       {getMultiTypeFromValue(inputSetData.template?.spec?.prodListener) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <SelectInputSetView
-            name={`${prefix}spec.prodListener`}
-            selectItems={listenerOptions}
-            useValue
-            multiTypeInputProps={{
-              selectProps: {
-                items: listenerOptions,
-                popoverClassName: css.dropdownMenu,
-                loadingItems: loadingListeners
-              },
-              allowableTypes,
-              expressions,
-              onChange: selectedValue => {
-                const selectedValueString =
-                  typeof selectedValue === 'string' ? selectedValue : ((selectedValue as SelectOption).value as string)
-                const updatedValues = produce(formik?.values, draft => {
-                  if (draft) {
-                    set(draft, `${prefix}spec.prodListener`, selectedValueString)
-                    if (
-                      getMultiTypeFromValue(get(draft, `${prefix}spec.prodListenerRuleArn}`)) ===
-                      MultiTypeInputType.FIXED
-                    ) {
-                      set(draft, `${prefix}spec.prodListenerRuleArn`, '')
-                    }
+        <SelectInputSetView
+          className={cx(stepCss.formGroup, stepCss.md)}
+          name={`${prefix}spec.prodListener`}
+          selectItems={listenerOptions}
+          useValue
+          multiTypeInputProps={{
+            selectProps: {
+              items: listenerOptions,
+              popoverClassName: css.dropdownMenu,
+              loadingItems: loadingListeners
+            },
+            allowableTypes,
+            expressions,
+            onChange: selectedValue => {
+              const selectedValueString =
+                typeof selectedValue === 'string' ? selectedValue : ((selectedValue as SelectOption).value as string)
+              const updatedValues = produce(formik?.values, draft => {
+                if (draft) {
+                  set(draft, `${prefix}spec.prodListener`, selectedValueString)
+                  if (
+                    getMultiTypeFromValue(get(draft, `${prefix}spec.prodListenerRuleArn}`)) === MultiTypeInputType.FIXED
+                  ) {
+                    set(draft, `${prefix}spec.prodListenerRuleArn`, '')
                   }
-                })
-                if (updatedValues) {
-                  formik?.setValues(updatedValues)
                 }
-              },
-              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                fetchListeners(e, get(formik?.values, `${prefix}spec.loadBalancer`))
+              })
+              if (updatedValues) {
+                formik?.setValues(updatedValues)
               }
-            }}
-            label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListener')}
-            placeholder={loadingListeners ? getString('loading') : getString('select')}
-            disabled={defaultTo(loadingListeners, readonly)}
-            fieldPath={`spec.prodListener`}
-            template={template}
-          />
-        </div>
+            },
+            onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+              fetchListeners(e, get(formik?.values, `${prefix}spec.loadBalancer`))
+            }
+          }}
+          label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListener')}
+          placeholder={loadingListeners ? getString('loading') : getString('select')}
+          disabled={defaultTo(loadingListeners, readonly)}
+          fieldPath={`spec.prodListener`}
+          template={template}
+        />
       )}
       {getMultiTypeFromValue(inputSetData.template?.spec?.prodListenerRuleArn) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <SelectInputSetView
-            name={`${prefix}spec.prodListenerRuleArn`}
-            selectItems={prodListenerRules}
-            useValue
-            isOptional={true}
-            multiTypeInputProps={{
-              selectProps: {
-                items: prodListenerRules,
-                popoverClassName: css.dropdownMenu,
-                loadingItems: prodListenerRulesLoading
-              },
-              allowableTypes,
-              expressions
-            }}
-            label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN')}
-            placeholder={prodListenerRulesLoading ? getString('loading') : getString('select')}
-            disabled={defaultTo(prodListenerRulesLoading, readonly)}
-            fieldPath={`spec.prodListenerRuleArn`}
-            template={template}
-          />
-        </div>
+        <SelectInputSetView
+          className={cx(stepCss.formGroup, stepCss.md)}
+          name={`${prefix}spec.prodListenerRuleArn`}
+          selectItems={prodListenerRules}
+          useValue
+          isOptional={true}
+          multiTypeInputProps={{
+            selectProps: {
+              items: prodListenerRules,
+              popoverClassName: css.dropdownMenu,
+              loadingItems: prodListenerRulesLoading
+            },
+            allowableTypes,
+            expressions
+          }}
+          label={getString('cd.steps.ecsBGCreateServiceStep.labels.prodListenerRuleARN')}
+          placeholder={prodListenerRulesLoading ? getString('loading') : getString('select')}
+          disabled={defaultTo(prodListenerRulesLoading, readonly)}
+          fieldPath={`spec.prodListenerRuleArn`}
+          template={template}
+        />
       )}
       {getMultiTypeFromValue(inputSetData.template?.spec?.stageListener) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <SelectInputSetView
-            name={`${prefix}spec.stageListener`}
-            selectItems={listenerOptions}
-            useValue
-            multiTypeInputProps={{
-              selectProps: {
-                items: listenerOptions,
-                popoverClassName: css.dropdownMenu,
-                loadingItems: loadingListeners
-              },
-              allowableTypes,
-              expressions,
-              onChange: selectedValue => {
-                const selectedValueString =
-                  typeof selectedValue === 'string' ? selectedValue : ((selectedValue as SelectOption).value as string)
-                const updatedValues = produce(formik?.values, draft => {
-                  if (draft) {
-                    set(draft, `${prefix}spec.stageListener`, selectedValueString)
-                    if (
-                      getMultiTypeFromValue(get(draft, `${prefix}spec.stageListenerRuleArn}`)) ===
-                      MultiTypeInputType.FIXED
-                    ) {
-                      set(draft, `${prefix}spec.stageListenerRuleArn`, '')
-                    }
+        <SelectInputSetView
+          className={cx(stepCss.formGroup, stepCss.md)}
+          name={`${prefix}spec.stageListener`}
+          selectItems={listenerOptions}
+          useValue
+          multiTypeInputProps={{
+            selectProps: {
+              items: listenerOptions,
+              popoverClassName: css.dropdownMenu,
+              loadingItems: loadingListeners
+            },
+            allowableTypes,
+            expressions,
+            onChange: selectedValue => {
+              const selectedValueString =
+                typeof selectedValue === 'string' ? selectedValue : ((selectedValue as SelectOption).value as string)
+              const updatedValues = produce(formik?.values, draft => {
+                if (draft) {
+                  set(draft, `${prefix}spec.stageListener`, selectedValueString)
+                  if (
+                    getMultiTypeFromValue(get(draft, `${prefix}spec.stageListenerRuleArn}`)) ===
+                    MultiTypeInputType.FIXED
+                  ) {
+                    set(draft, `${prefix}spec.stageListenerRuleArn`, '')
                   }
-                })
-                if (updatedValues) {
-                  formik?.setValues(updatedValues)
                 }
-              },
-              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                fetchListeners(e, get(formik?.values, `${prefix}spec.loadBalancer`))
+              })
+              if (updatedValues) {
+                formik?.setValues(updatedValues)
               }
-            }}
-            label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')}
-            placeholder={loadingListeners ? getString('loading') : getString('select')}
-            disabled={defaultTo(loadingListeners, readonly)}
-            fieldPath={`spec.stageListener`}
-            template={template}
-          />
-        </div>
+            },
+            onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+              fetchListeners(e, get(formik?.values, `${prefix}spec.loadBalancer`))
+            }
+          }}
+          label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListener')}
+          placeholder={loadingListeners ? getString('loading') : getString('select')}
+          disabled={defaultTo(loadingListeners, readonly)}
+          fieldPath={`spec.stageListener`}
+          template={template}
+        />
       )}
       {getMultiTypeFromValue(inputSetData.template?.spec?.stageListenerRuleArn) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <SelectInputSetView
-            name={`${prefix}spec.stageListenerRuleArn`}
-            selectItems={stageListenerRules}
-            useValue
-            isOptional={true}
-            multiTypeInputProps={{
-              selectProps: {
-                items: stageListenerRules,
-                popoverClassName: css.dropdownMenu,
-                loadingItems: stageListenerRulesLoading
-              },
-              allowableTypes,
-              expressions
-            }}
-            label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')}
-            placeholder={stageListenerRulesLoading ? getString('loading') : getString('select')}
-            disabled={defaultTo(stageListenerRulesLoading, readonly)}
-            fieldPath={`spec.stageListenerRuleArn`}
-            template={template}
-          />
-        </div>
+        <SelectInputSetView
+          className={cx(stepCss.formGroup, stepCss.md)}
+          name={`${prefix}spec.stageListenerRuleArn`}
+          selectItems={stageListenerRules}
+          useValue
+          isOptional={true}
+          multiTypeInputProps={{
+            selectProps: {
+              items: stageListenerRules,
+              popoverClassName: css.dropdownMenu,
+              loadingItems: stageListenerRulesLoading
+            },
+            allowableTypes,
+            expressions
+          }}
+          label={getString('cd.steps.ecsBGCreateServiceStep.labels.stageListenerRuleARN')}
+          placeholder={stageListenerRulesLoading ? getString('loading') : getString('select')}
+          disabled={defaultTo(stageListenerRulesLoading, readonly)}
+          fieldPath={`spec.stageListenerRuleArn`}
+          template={template}
+        />
       )}
     </>
   )

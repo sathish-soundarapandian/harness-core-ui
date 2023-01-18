@@ -77,9 +77,20 @@ describe('Nexus Artifact tests', () => {
     })
   })
 
-  test(`renders without crashing`, () => {
+  test(`renders without crashing: CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY = false`, () => {
     const { container } = render(
-      <TestWrapper>
+      <TestWrapper defaultFeatureFlagValues={{ CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY: false }}>
+        <Artifactory key={'key'} initialValues={initialValues} {...props} />
+      </TestWrapper>
+    )
+
+    expect(container.querySelector('input[name="repositoryFormat"]')!).toBeNull()
+    expect(container).toMatchSnapshot()
+  })
+
+  test(`renders without crashing: CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY = true`, () => {
+    const { container } = render(
+      <TestWrapper defaultFeatureFlagValues={{ CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY: true }}>
         <Artifactory key={'key'} initialValues={initialValues} {...props} />
       </TestWrapper>
     )
@@ -148,7 +159,7 @@ describe('Nexus Artifact tests', () => {
     })
   })
 
-  test(`form renders correctly in Edit Case`, async () => {
+  test(`form renders correctly in Edit Case: CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY = false`, async () => {
     const filledInValues = {
       identifier: 'nexusSidecarId',
       artifactPath: 'nexus-imagepath',
@@ -159,7 +170,30 @@ describe('Nexus Artifact tests', () => {
       repositoryUrl: 'repositoryUrl'
     }
     const { container } = render(
-      <TestWrapper>
+      <TestWrapper defaultFeatureFlagValues={{ CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY: false }}>
+        <Artifactory key={'key'} initialValues={filledInValues} {...props} />
+      </TestWrapper>
+    )
+    const repositoryField = container.querySelector('input[name="repository"]')
+    expect(repositoryField).not.toBeNull()
+    expect(container.querySelector('input[name="artifactPath"]')).not.toBeNull()
+    expect(container.querySelector('input[name="repositoryUrl"]')).not.toBeNull()
+
+    expect(container).toMatchSnapshot()
+  })
+
+  test(`form renders correctly in Edit Case: CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY = true`, async () => {
+    const filledInValues = {
+      identifier: 'nexusSidecarId',
+      artifactPath: 'nexus-imagepath',
+      tagType: TagTypes.Value,
+      tag: 'tag',
+      tagRegex: '',
+      repository: 'repository-name',
+      repositoryUrl: 'repositoryUrl'
+    }
+    const { container } = render(
+      <TestWrapper defaultFeatureFlagValues={{ CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY: true }}>
         <Artifactory key={'key'} initialValues={filledInValues} {...props} />
       </TestWrapper>
     )

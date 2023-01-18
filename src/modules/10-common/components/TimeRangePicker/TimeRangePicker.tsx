@@ -31,21 +31,22 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import css from './TimeRangePicker.module.scss'
 
-const getDateLabelToDisplayText: (getString: UseStringsReturn['getString']) => Record<string, string> = getString => {
-  return {
-    [DATE_RANGE_SHORTCUTS_NAME.LAST_7_DAYS]: getString('common.timeRangeConstants.last7Days'),
-    [DATE_RANGE_SHORTCUTS_NAME.CURRENT_MONTH]: getString('common.timeRangeConstants.thisMonth'),
-    [DATE_RANGE_SHORTCUTS_NAME.LAST_30_DAYS]: getString('common.subscriptions.usage.last30days'),
-    [DATE_RANGE_SHORTCUTS_NAME.THIS_QUARTER]: getString('common.timeRangeConstants.thisQuarter'),
-    [DATE_RANGE_SHORTCUTS_NAME.THIS_YEAR]: getString('common.timeRangeConstants.thisYear'),
-    [DATE_RANGE_SHORTCUTS_NAME.LAST_MONTH]: getString('common.timeRangeConstants.lastMonth'),
-    [DATE_RANGE_SHORTCUTS_NAME.LAST_QUARTER]: getString('common.timeRangeConstants.lastQuarter'),
-    [DATE_RANGE_SHORTCUTS_NAME.LAST_YEAR]: getString('common.timeRangeConstants.lastYear'),
-    [DATE_RANGE_SHORTCUTS_NAME.LAST_3_MONTHS]: getString('common.timeRangeConstants.last3Months'),
-    [DATE_RANGE_SHORTCUTS_NAME.LAST_6_MONTHS]: getString('common.timeRangeConstants.last6Months'),
-    [DATE_RANGE_SHORTCUTS_NAME.LAST_12_MONTHS]: getString('common.timeRangeConstants.last12Months')
+export const getDateLabelToDisplayText: (getString: UseStringsReturn['getString']) => Record<string, string> =
+  getString => {
+    return {
+      [DATE_RANGE_SHORTCUTS_NAME.LAST_7_DAYS]: getString('common.timeRangeConstants.last7Days'),
+      [DATE_RANGE_SHORTCUTS_NAME.CURRENT_MONTH]: getString('common.timeRangeConstants.thisMonth'),
+      [DATE_RANGE_SHORTCUTS_NAME.LAST_30_DAYS]: getString('common.subscriptions.usage.last30days'),
+      [DATE_RANGE_SHORTCUTS_NAME.THIS_QUARTER]: getString('common.timeRangeConstants.thisQuarter'),
+      [DATE_RANGE_SHORTCUTS_NAME.THIS_YEAR]: getString('common.timeRangeConstants.thisYear'),
+      [DATE_RANGE_SHORTCUTS_NAME.LAST_MONTH]: getString('common.timeRangeConstants.lastMonth'),
+      [DATE_RANGE_SHORTCUTS_NAME.LAST_QUARTER]: getString('common.timeRangeConstants.lastQuarter'),
+      [DATE_RANGE_SHORTCUTS_NAME.LAST_YEAR]: getString('common.timeRangeConstants.lastYear'),
+      [DATE_RANGE_SHORTCUTS_NAME.LAST_3_MONTHS]: getString('common.timeRangeConstants.last3Months'),
+      [DATE_RANGE_SHORTCUTS_NAME.LAST_6_MONTHS]: getString('common.timeRangeConstants.last6Months'),
+      [DATE_RANGE_SHORTCUTS_NAME.LAST_12_MONTHS]: getString('common.timeRangeConstants.last12Months')
+    }
   }
-}
 
 const RECOMMENDED_DATES = [
   {
@@ -274,10 +275,13 @@ const TimeRangePicker: React.FC<TimeRangePickerProps> = ({ timeRange, setTimeRan
                   dateRange={item.dateRange}
                   text={item.label}
                   onClick={() => {
-                    setTimeRange({
-                      from: item.dateRange[0].format(CE_DATE_FORMAT_INTERNAL),
-                      to: item.dateRange[1].format(CE_DATE_FORMAT_INTERNAL)
-                    })
+                    setTimeRange(
+                      {
+                        from: item.dateRange[0].format(CE_DATE_FORMAT_INTERNAL),
+                        to: item.dateRange[1].format(CE_DATE_FORMAT_INTERNAL)
+                      },
+                      item.label
+                    )
                   }}
                 />
               )
@@ -356,10 +360,13 @@ const TimeRangePicker: React.FC<TimeRangePickerProps> = ({ timeRange, setTimeRan
                   dateRange={item.dateRange}
                   text={item.label}
                   onClick={() => {
-                    setTimeRange({
-                      from: item.dateRange[0].format(CE_DATE_FORMAT_INTERNAL),
-                      to: item.dateRange[1].format(CE_DATE_FORMAT_INTERNAL)
-                    })
+                    setTimeRange(
+                      {
+                        from: item.dateRange[0].format(CE_DATE_FORMAT_INTERNAL),
+                        to: item.dateRange[1].format(CE_DATE_FORMAT_INTERNAL)
+                      },
+                      item.label
+                    )
                   }}
                 />
               )
@@ -388,10 +395,13 @@ const TimeRangePicker: React.FC<TimeRangePickerProps> = ({ timeRange, setTimeRan
                   dateRange={item.dateRange}
                   text={item.label}
                   onClick={() => {
-                    setTimeRange({
-                      from: item.dateRange[0].format(CE_DATE_FORMAT_INTERNAL),
-                      to: item.dateRange[1].format(CE_DATE_FORMAT_INTERNAL)
-                    })
+                    setTimeRange(
+                      {
+                        from: item.dateRange[0].format(CE_DATE_FORMAT_INTERNAL),
+                        to: item.dateRange[1].format(CE_DATE_FORMAT_INTERNAL)
+                      },
+                      item.label
+                    )
                   }}
                 />
               )

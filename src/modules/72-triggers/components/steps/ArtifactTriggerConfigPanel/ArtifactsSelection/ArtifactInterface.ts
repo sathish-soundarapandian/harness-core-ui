@@ -49,6 +49,8 @@ export type ArtifactType =
   | 'AmazonS3'
   | 'GoogleArtifactRegistry'
   | 'GithubPackageRegistry'
+  | 'AzureArtifacts'
+  | 'AmazonMachineImage'
 export interface OrganizationCreationType {
   type: ArtifactType
 }

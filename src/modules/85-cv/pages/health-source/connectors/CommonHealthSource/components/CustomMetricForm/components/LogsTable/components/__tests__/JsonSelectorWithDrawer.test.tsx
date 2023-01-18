@@ -2,28 +2,34 @@ import React from 'react'
 import { Formik } from 'formik'
 import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { commonHealthSourceProviderPropsMock } from '@cv/components/CommonMultiItemsSideNav/tests/CommonMultiItemsSideNav.mock'
 import { FIELD_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import { TestWrapper } from '@common/utils/testUtils'
 import JsonSelectorWithDrawer from '../JsonSelectorWithDrawer'
+import CommonHealthSourceProvider from '../../../CommonHealthSourceContext/CommonHealthSourceContext'
 
 describe('JsonSelectorWithDrawer', () => {
   test('should pass correct selected data', async () => {
     render(
       <TestWrapper>
-        <Formik initialValues={{ serviceInstance: 'test' }} onSubmit={() => Promise.resolve()}>
-          <JsonSelectorWithDrawer
-            jsonData={{ propertyName: 'test value' }}
-            fieldMappings={[
-              {
-                type: FIELD_ENUM.JSON_SELECTOR,
-                label: 'Identifier service path',
-                identifier: 'serviceInstance',
-                defaultValue: '_sourcehost'
-              }
-            ]}
-            disableFields={false}
-          />
-        </Formik>
+        <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
+          <Formik initialValues={{ serviceInstance: 'test' }} onSubmit={() => Promise.resolve()}>
+            <JsonSelectorWithDrawer
+              jsonData={{ propertyName: 'test value' }}
+              fieldMappings={[
+                {
+                  type: FIELD_ENUM.JSON_SELECTOR,
+                  label: 'Identifier service path',
+                  identifier: 'serviceInstance',
+                  defaultValue: '_sourcehost'
+                }
+              ]}
+              disableFields={false}
+              multiTypeRecord={null}
+              setMultiTypeRecord={() => void 0}
+            />
+          </Formik>
+        </CommonHealthSourceProvider>
       </TestWrapper>
     )
 
@@ -47,20 +53,24 @@ describe('JsonSelectorWithDrawer', () => {
   test('should not render anything if invalid config is passed', async () => {
     render(
       <TestWrapper>
-        <Formik initialValues={{ serviceInstance: 'test' }} onSubmit={() => Promise.resolve()}>
-          <JsonSelectorWithDrawer
-            jsonData={{ propertyName: 'test value' }}
-            fieldMappings={[
-              {
-                type: 'JsonSelector_abc' as FIELD_ENUM.JSON_SELECTOR,
-                label: 'Identifier service path',
-                identifier: 'serviceInstance',
-                defaultValue: '_sourcehost'
-              }
-            ]}
-            disableFields={false}
-          />
-        </Formik>
+        <CommonHealthSourceProvider {...commonHealthSourceProviderPropsMock}>
+          <Formik initialValues={{ serviceInstance: 'test' }} onSubmit={() => Promise.resolve()}>
+            <JsonSelectorWithDrawer
+              jsonData={{ propertyName: 'test value' }}
+              fieldMappings={[
+                {
+                  type: 'JsonSelector_abc' as FIELD_ENUM.JSON_SELECTOR,
+                  label: 'Identifier service path',
+                  identifier: 'serviceInstance',
+                  defaultValue: '_sourcehost'
+                }
+              ]}
+              disableFields={false}
+              multiTypeRecord={null}
+              setMultiTypeRecord={() => void 0}
+            />
+          </Formik>
+        </CommonHealthSourceProvider>
       </TestWrapper>
     )
 

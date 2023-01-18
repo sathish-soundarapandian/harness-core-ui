@@ -146,7 +146,7 @@ describe('SwapRouteStep tests', () => {
   })
 
   test('Variables view renders fine', async () => {
-    const { getByText } = render(
+    const { container } = render(
       <TestStepWidget
         initialValues={existingInitialValues}
         type={StepType.SwapRoutes}
@@ -160,29 +160,35 @@ describe('SwapRouteStep tests', () => {
           metadataMap: {
             'Swap Route Step Default': {
               yamlProperties: {
-                fqn: 'pipeline.stages.testStage.execution.steps.SwapRoutesStep.name',
-                localName: 'step.SwapRoutesStep.name'
+                fqn: 'pipeline.stages.testStage.spec.execution.steps.Swap_Route_Step_Default.name',
+                localName: 'execution.steps.Swap_Route_Step_Default.name',
+                variableName: 'name',
+                aliasFQN: '',
+                visible: true
               }
             },
             '10m': {
               yamlProperties: {
-                fqn: 'pipeline.stages.testStage.execution.steps.SwapRoutesStep.timeout',
-                localName: 'step.SwapRoute.timeout'
+                fqn: 'pipeline.stages.testStage.spec.execution.steps.Swap_Route_Step_Default.timeout',
+                localName: 'execution.steps.Swap_Route_Step_Default.timeout',
+                variableName: 'timeout',
+                aliasFQN: '',
+                visible: true
               }
             },
-            false: {
+            downSizeOldApplication: {
               yamlProperties: {
-                fqn: 'pipeline.stages.testStage.execution.steps.SwapRoutesStep.spec.downSizeOldApplication',
-                localName: 'step.downSizeOldApplication'
+                fqn: 'pipeline.stages.testStage.spec.execution.steps.Swap_Route_Step_Default.spec.downSizeOldApplication',
+                localName: 'execution.steps.Swap_Route_Step_Default.spec.downSizeOldApplication',
+                variableName: 'downSizeOldApplication',
+                aliasFQN: '',
+                visible: true
               }
             }
           }
         }}
       />
     )
-    expect(getByText('name')).toBeVisible()
-    expect(getByText('Swap Route Step Default')).toBeVisible()
-    expect(getByText('timeout')).toBeVisible()
-    expect(getByText('10m')).toBeVisible()
+    expect(container).toMatchSnapshot()
   })
 })

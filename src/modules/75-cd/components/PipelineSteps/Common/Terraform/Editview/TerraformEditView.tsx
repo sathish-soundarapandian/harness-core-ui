@@ -75,9 +75,15 @@ import {
   TerraformProps,
   TFFormData
 } from '../TerraformInterfaces'
-import { TerraformConfigStepOne } from './TerraformConfigFormStepOne'
-import { TerraformConfigStepTwo } from './TerraformConfigFormStepTwo'
-import { ConnectorTypes, ConnectorMap, getBuildPayload, getPath, getConfigFilePath } from './TerraformConfigFormHelper'
+import { ConfigFileStoreStepOne } from '../../ConfigFileStore/ConfigFileStoreStepOne'
+import { ConfigFileStoreStepTwo } from '../../ConfigFileStore/ConfigFileStoreStepTwo'
+import {
+  ConnectorMap,
+  ConnectorTypes,
+  getBuildPayload,
+  getConfigFilePath,
+  getPath
+} from '../../ConfigFileStore/ConfigFileStoreHelper'
 import { formatArtifactoryData } from './TerraformArtifactoryFormHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './TerraformVarfile.module.scss'
@@ -288,7 +294,7 @@ export default function TerraformEditView(
     <Layout.Vertical flex style={{ justifyContent: 'center', alignItems: 'center' }} margin={{ bottom: 'xlarge' }}>
       <Icon name="service-terraform" className={css.remoteIcon} size={50} padding={{ bottom: 'large' }} />
       <Text color={Color.WHITE}>
-        {isBackendConfig ? getString('cd.backendConfigFileStoreTitle') : getString('cd.configFileStoreTitle')}
+        {isBackendConfig ? getString('cd.backendConfigFileStoreTitle') : getString('cd.terraformConfigFileStore')}
       </Text>
     </Layout.Vertical>
   )
@@ -338,8 +344,8 @@ export default function TerraformEditView(
   const newConfigFileComponent = (formik: any, isConfig: boolean, isBackendConfig: boolean): React.ReactElement => {
     return (
       <StepWizard title={getTitle(isBackendConfig)} className={css.configWizard} onStepChange={onStepChange}>
-        <TerraformConfigStepOne
-          name={isBackendConfig ? getString('cd.backendConfigFileStepOne') : getString('cd.configFileStepOne')}
+        <ConfigFileStoreStepOne
+          name={isBackendConfig ? getString('cd.backendConfigFileStepOne') : getString('cd.terraformConfigFileStepOne')}
           data={formik.values}
           isBackendConfig={isBackendConfig}
           isReadonly={readonly}
@@ -348,6 +354,7 @@ export default function TerraformEditView(
           setConnectorView={setConnectorView}
           selectedConnector={selectedConnector}
           setSelectedConnector={setSelectedConnector}
+          isTerragrunt={false}
         />
         {connectorView ? getNewConnectorSteps() : null}
         {selectedConnector === 'Artifactory' ? (
@@ -358,7 +365,7 @@ export default function TerraformEditView(
             allowableTypes={allowableTypes}
             name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
             onSubmitCallBack={(data: any, prevStepData: any) => {
-              const path = getPath(false, isBackendConfig)
+              const path = getPath(false, false, isBackendConfig)
               const configObject = get(prevStepData?.formValues, path)
 
               const valObj = formatArtifactoryData(
@@ -376,13 +383,13 @@ export default function TerraformEditView(
             }}
           />
         ) : (
-          <TerraformConfigStepTwo
+          <ConfigFileStoreStepTwo
             name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
             isBackendConfig={isBackendConfig}
             isReadonly={readonly}
             allowableTypes={allowableTypes}
             onSubmitCallBack={(data: any, prevStepData: any) => {
-              const path = getPath(false, isBackendConfig)
+              const path = getPath(false, false, isBackendConfig)
               const configObject = get(data, path) || {
                 store: {}
               }
@@ -421,6 +428,7 @@ export default function TerraformEditView(
               setShowModal(false)
               setShowBackendConfigRemoteWizard(false)
             }}
+            isTerragrunt={false}
           />
         )}
       </StepWizard>
@@ -524,25 +532,9 @@ export default function TerraformEditView(
                 <FormMultiTypeDurationField
                   name="timeout"
                   label={getString('pipelineSteps.timeoutLabel')}
-                  multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
+                  multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
                   disabled={readonly}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      /* istanbul ignore next */
-                      setFieldValue('timeout', value)
-                    }}
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
 
               <div className={css.divider} />

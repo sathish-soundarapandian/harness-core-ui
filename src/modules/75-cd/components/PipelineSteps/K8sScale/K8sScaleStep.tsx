@@ -34,7 +34,7 @@ import {
   FormMultiTypeDurationField,
   getDurationValidationSchema
 } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions, VALIDATORS } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import { useStrings } from 'framework/strings'
 import { getInstanceDropdownSchema } from '@common/components/InstanceDropdownField/InstanceDropdownField'
@@ -129,27 +129,11 @@ function K8ScaleDeployWidget(props: K8sScaleProps, formikRef: StepFormikFowardRe
                     disabled={readonly}
                     multiTypeDurationProps={{
                       expressions,
-                      enableConfigureOptions: false,
+                      enableConfigureOptions: true,
                       disabled: readonly,
                       allowableTypes
                     }}
                   />
-                  {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                    <ConfigureOptions
-                      allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                      allowedValuesValidator={VALIDATORS[ALLOWED_VALUES_TYPE.TIME]({ minimum: '10s' })}
-                      value={values.timeout as string}
-                      type="String"
-                      variableName="step.timeout"
-                      showRequiredField={false}
-                      showDefaultField={false}
-                      showAdvanced={true}
-                      onChange={value => {
-                        setFieldValue('timeout', value)
-                      }}
-                      isReadonly={readonly}
-                    />
-                  )}
                 </div>
 
                 <div className={stepCss.divider} />
@@ -236,43 +220,41 @@ const K8ScaleInputStep: React.FC<K8sScaleProps> = ({ template, readonly, path, a
   return (
     <>
       {getMultiTypeFromValue(template?.spec?.workload) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            template={template}
-            fieldPath={'spec.workload'}
-            name={`${prefix}spec.workload`}
-            placeholder={getString('pipeline.kubernetesStep.workload')}
-            label={getString('pipelineSteps.workload')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              disabled: readonly,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-          />
-        </div>
+        <TextFieldInputSetView
+          template={template}
+          fieldPath={'spec.workload'}
+          name={`${prefix}spec.workload`}
+          placeholder={getString('pipeline.kubernetesStep.workload')}
+          label={getString('pipelineSteps.workload')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            disabled: readonly,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            template={template}
-            fieldPath={'timeout'}
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes,
-              expressions,
-              disabled: readonly
-            }}
-            label={getString('pipelineSteps.timeoutLabel')}
-            name={`${prefix}timeout`}
-            disabled={readonly}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          template={template}
+          fieldPath={'timeout'}
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes,
+            expressions,
+            disabled: readonly
+          }}
+          label={getString('pipelineSteps.timeoutLabel')}
+          name={`${prefix}timeout`}
+          disabled={readonly}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       ) : null}
       {(getMultiTypeFromValue(
         (template?.spec?.instanceSelection?.spec as CountInstanceSelection | undefined)?.count as any

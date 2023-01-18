@@ -46,8 +46,6 @@ export const SelectRepository = (props: SelectRepositoryProps): React.ReactEleme
   } = useGetListOfAllReposByRefConnector({
     queryParams: {
       accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier,
       connectorRef: ''
     },
     lazy: true
@@ -58,8 +56,6 @@ export const SelectRepository = (props: SelectRepositoryProps): React.ReactEleme
       fetchRepositories({
         queryParams: {
           accountIdentifier: accountId,
-          projectIdentifier,
-          orgIdentifier,
           connectorRef: `${ACCOUNT_SCOPE_PREFIX}${validatedConnectorRef}`
         }
       })

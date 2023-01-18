@@ -309,6 +309,22 @@ export function validateCommonFieldsForMetricThreshold(
   }
 }
 
+export const validateMetricThresholds = ({
+  thresholdName,
+  errors,
+  thresholdValues,
+  getString,
+  isValidateGroup
+}: {
+  thresholdName: string
+  errors: Record<string, string>
+  thresholdValues: MetricThresholdType[] | null
+  getString: UseStringsReturn['getString']
+  isValidateGroup: boolean
+}): void => {
+  validateCommonFieldsForMetricThreshold(thresholdName, errors, thresholdValues, getString, isValidateGroup)
+}
+
 export const getIsMetricPacksSelected = (metricData: { [key: string]: boolean }): boolean => {
   if (!metricData) return false
 
@@ -857,18 +873,18 @@ export const getFilteredMetricThresholdValuesV2 = (
  */
 export const getCanShowMetricThresholds = ({
   isMetricThresholdConfigEnabled,
-  isMetricThresholdFFEnabled,
+  isMetricThresholdEnabled,
   isMetricPacksEnabled,
   groupedCreatedMetrics,
   metricData
 }: {
   isMetricThresholdConfigEnabled: boolean
-  isMetricThresholdFFEnabled?: boolean
+  isMetricThresholdEnabled?: boolean
   isMetricPacksEnabled?: boolean
   groupedCreatedMetrics: GroupedCreatedMetrics
   metricData?: { [key: string]: boolean }
 }): boolean => {
-  if (!isMetricThresholdConfigEnabled || !isMetricThresholdFFEnabled || isEmpty(groupedCreatedMetrics)) {
+  if (!isMetricThresholdConfigEnabled || !isMetricThresholdEnabled || isEmpty(groupedCreatedMetrics)) {
     return false
   }
 

@@ -1,0 +1,1370 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Environment Detail Summary Initial render - basic snapshot 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main PageBody--pageBody"
+    data-name="page-body"
+    data-testid="page-body"
+  >
+    <div
+      class="StyledProps--font StyledProps--main"
+    >
+      <div
+        class="titleStyle"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold"
+        >
+          services
+        </p>
+        <button
+          aria-label="cd.environmentDetailPage.viewInTable"
+          class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-link"
+          style="padding-right: 0px;"
+          type="button"
+        >
+          <span
+            class="bp3-icon bp3-icon-panel-table StyledProps--main StyledProps--padding-right-xsmall"
+            icon="panel-table"
+          >
+            <svg
+              data-icon="panel-table"
+              height="16"
+              viewBox="0 0 16 16"
+              width="16"
+            >
+              <desc>
+                panel-table
+              </desc>
+              <path
+                d="M15 1H1c-.6 0-1 .4-1 1v11c0 .6.4 1 1 1h14c.6 0 1-.4 1-1V2c0-.6-.4-1-1-1zM8 9H6V7h2v2zm0-3H6V4h2v2zm-6 6V3h3v9H2zm4 0v-2h2v2H6zm8 0H9v-2h5v2zm0-3H9V7h5v2zm0-3H9V4h5v2z"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </span>
+          <span
+            class="bp3-button-text"
+          >
+            cd.environmentDetailPage.viewInTable
+          </span>
+        </button>
+      </div>
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main Carousel--carousel StyledProps--padding-small"
+      >
+        <div
+          class="Carousel--carouselView"
+        >
+          <span>
+            <span />
+             
+          </span>
+          <div
+            class="Carousel--carouselItem Carousel--active slideStyle"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main cardGrid"
+            >
+              <div
+                class="bp3-card bp3-elevation-0 Card--card serviceCards cursor"
+              >
+                <div
+                  class="serviceCardTitle"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="services"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 25 24"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M10.52 2.991a1 1 0 011-1h2a1 1 0 011 1v1.241l.003.004c.004.005.011.01.022.013a7.953 7.953 0 012.019.837c.01.006.018.007.024.006h.005l.878-.879a1 1 0 011.414 0L20.3 5.627a1 1 0 010 1.415l-.879.878v.002l-.001.003c0 .006 0 .015.006.024.366.624.65 1.301.836 2.018.003.01.009.018.014.022a.015.015 0 00.003.002h1.242a1 1 0 011 1v2a1 1 0 01-1 1h-1.242l-.003.003a.042.042 0 00-.014.022 7.954 7.954 0 01-.838 2.02.041.041 0 00-.006.025v.004l.878.878a1 1 0 010 1.414l-1.414 1.414a1 1 0 01-1.414 0l-.879-.878h-.001l-.003-.001c-.006 0-.015 0-.025.006-.622.365-1.3.648-2.015.835a.043.043 0 00-.022.013l-.003.004v1.241a1 1 0 01-1 1h-2a1 1 0 01-1-1V19.75l-.002-.004a.042.042 0 00-.022-.013 7.956 7.956 0 01-2.017-.837.041.041 0 00-.025-.006l-.004.001-.878.879a1 1 0 01-1.415 0l-1.414-1.415a1 1 0 010-1.414l.878-.878.001-.004c0-.006 0-.016-.006-.025a7.955 7.955 0 01-.837-2.018.042.042 0 00-.013-.022.012.012 0 00-.004-.003H3.521a1 1 0 01-1-1v-2a1 1 0 011-1h1.241l.004-.002a.042.042 0 00.013-.022c.187-.717.47-1.394.836-2.018a.041.041 0 00.006-.024V7.92l-.88-.879a1 1 0 010-1.414l1.415-1.414a1 1 0 011.414 0l.878.879h.005c.006.001.015 0 .025-.005a7.955 7.955 0 012.018-.837.042.042 0 00.022-.014.015.015 0 00.002-.004v-1.24zm3 0h-2v1.241c0 .482-.337.872-.771.985a6.955 6.955 0 00-1.765.732c-.388.227-.902.19-1.243-.15l-.878-.879-1.414 1.414.879.88c.34.34.377.854.15 1.241a6.955 6.955 0 00-.731 1.764 1.024 1.024 0 01-.985.772H3.521v2h1.241c.482 0 .872.338.985.772a6.93 6.93 0 00.732 1.765c.227.387.19.902-.15 1.242l-.879.878 1.415 1.414.878-.878c.34-.34.855-.377 1.242-.15.545.32 1.137.568 1.764.731.434.113.771.503.771.985v1.241h2V19.75c0-.482.338-.872.772-.985a6.958 6.958 0 001.763-.73c.387-.227.901-.19 1.242.15l.878.88 1.414-1.415-.877-.877a1.024 1.024 0 01-.15-1.243c.32-.546.569-1.14.733-1.767.113-.434.503-.772.984-.772h1.242v-2h-1.242c-.481 0-.871-.337-.984-.772a6.952 6.952 0 00-.732-1.764 1.024 1.024 0 01.15-1.242l.88-.879-1.415-1.414-.878.879c-.34.34-.855.377-1.242.15a6.956 6.956 0 00-1.766-.732 1.024 1.024 0 01-.772-.985v-1.24zM12.477 7.53c-2.487 0-4.5 2.008-4.5 4.48 0 2.472 2.013 4.48 4.5 4.48 2.488 0 4.501-2.008 4.501-4.48 0-2.472-2.013-4.48-4.5-4.48zm-5.5 4.48c0-3.028 2.464-5.48 5.5-5.48 3.037 0 5.501 2.452 5.501 5.48 0 3.029-2.465 5.48-5.5 5.48-3.037 0-5.502-2.451-5.502-5.48z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-card-title"
+                    style="--text-line-clamp: 1;"
+                  >
+                    svc1
+                  </p>
+                </div>
+                <div
+                  class="TableV2--table summaryTableStyle"
+                >
+                  <div
+                    class="TableV2--header"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 0%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 26%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        cd.serviceDashboard.artifact
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 58%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600"
+                          style="--text-line-clamp: 1;"
+                        >
+                          cd.environmentDetailPage.infraSlashCluster
+                        </p>
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 15%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        cd.serviceDashboard.headers.instances
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--body"
+                  >
+                    <div
+                      class="TableV2--row TableV2--card"
+                      role="row"
+                    >
+                      <div
+                        class="TableV2--cells"
+                      >
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 0%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main latestArtifact"
+                          />
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 26%;"
+                        >
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main latestArtifact marginBottom1"
+                                />
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                                  style="max-width: 62px; --text-line-clamp: 1;"
+                                >
+                                  tag4
+                                </p>
+                              </div>
+                            </span>
+                          </span>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 58%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main infraContainer"
+                          >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                              style="--text-line-clamp: 1;"
+                            >
+                              infraStructure4, infra3
+                            </p>
+                            <p
+                              class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-small"
+                            >
+                              + 
+                              1
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 15%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                            >
+                              12
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--row TableV2--card"
+                      role="row"
+                    >
+                      <div
+                        class="TableV2--cells"
+                      >
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 0%;"
+                        />
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 26%;"
+                        >
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                                tabindex="0"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                                  style="max-width: 70px; --text-line-clamp: 1;"
+                                >
+                                  tag3
+                                </p>
+                              </div>
+                            </span>
+                          </span>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 58%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main infraContainer"
+                          >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                              style="--text-line-clamp: 1;"
+                            >
+                              infra31, infra21
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 15%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                            >
+                              16
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--row TableV2--card"
+                      role="row"
+                    >
+                      <div
+                        class="TableV2--cells"
+                      >
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 0%;"
+                        />
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 26%;"
+                        >
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                                tabindex="0"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                                  style="max-width: 70px; --text-line-clamp: 1;"
+                                >
+                                  tag2
+                                </p>
+                              </div>
+                            </span>
+                          </span>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 58%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main infraContainer"
+                          >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                              style="--text-line-clamp: 1;"
+                            >
+                              clusterId1
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 15%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                            >
+                              11
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main cursor StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-body2"
+                  style="width: 50px;"
+                >
+                  cd.environmentDetailPage.seeFull
+                </p>
+              </div>
+              <div
+                class="bp3-card bp3-elevation-0 Card--card serviceCards cursor"
+              >
+                <div
+                  class="serviceCardTitle"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="services"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 25 24"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M10.52 2.991a1 1 0 011-1h2a1 1 0 011 1v1.241l.003.004c.004.005.011.01.022.013a7.953 7.953 0 012.019.837c.01.006.018.007.024.006h.005l.878-.879a1 1 0 011.414 0L20.3 5.627a1 1 0 010 1.415l-.879.878v.002l-.001.003c0 .006 0 .015.006.024.366.624.65 1.301.836 2.018.003.01.009.018.014.022a.015.015 0 00.003.002h1.242a1 1 0 011 1v2a1 1 0 01-1 1h-1.242l-.003.003a.042.042 0 00-.014.022 7.954 7.954 0 01-.838 2.02.041.041 0 00-.006.025v.004l.878.878a1 1 0 010 1.414l-1.414 1.414a1 1 0 01-1.414 0l-.879-.878h-.001l-.003-.001c-.006 0-.015 0-.025.006-.622.365-1.3.648-2.015.835a.043.043 0 00-.022.013l-.003.004v1.241a1 1 0 01-1 1h-2a1 1 0 01-1-1V19.75l-.002-.004a.042.042 0 00-.022-.013 7.956 7.956 0 01-2.017-.837.041.041 0 00-.025-.006l-.004.001-.878.879a1 1 0 01-1.415 0l-1.414-1.415a1 1 0 010-1.414l.878-.878.001-.004c0-.006 0-.016-.006-.025a7.955 7.955 0 01-.837-2.018.042.042 0 00-.013-.022.012.012 0 00-.004-.003H3.521a1 1 0 01-1-1v-2a1 1 0 011-1h1.241l.004-.002a.042.042 0 00.013-.022c.187-.717.47-1.394.836-2.018a.041.041 0 00.006-.024V7.92l-.88-.879a1 1 0 010-1.414l1.415-1.414a1 1 0 011.414 0l.878.879h.005c.006.001.015 0 .025-.005a7.955 7.955 0 012.018-.837.042.042 0 00.022-.014.015.015 0 00.002-.004v-1.24zm3 0h-2v1.241c0 .482-.337.872-.771.985a6.955 6.955 0 00-1.765.732c-.388.227-.902.19-1.243-.15l-.878-.879-1.414 1.414.879.88c.34.34.377.854.15 1.241a6.955 6.955 0 00-.731 1.764 1.024 1.024 0 01-.985.772H3.521v2h1.241c.482 0 .872.338.985.772a6.93 6.93 0 00.732 1.765c.227.387.19.902-.15 1.242l-.879.878 1.415 1.414.878-.878c.34-.34.855-.377 1.242-.15.545.32 1.137.568 1.764.731.434.113.771.503.771.985v1.241h2V19.75c0-.482.338-.872.772-.985a6.958 6.958 0 001.763-.73c.387-.227.901-.19 1.242.15l.878.88 1.414-1.415-.877-.877a1.024 1.024 0 01-.15-1.243c.32-.546.569-1.14.733-1.767.113-.434.503-.772.984-.772h1.242v-2h-1.242c-.481 0-.871-.337-.984-.772a6.952 6.952 0 00-.732-1.764 1.024 1.024 0 01.15-1.242l.88-.879-1.415-1.414-.878.879c-.34.34-.855.377-1.242.15a6.956 6.956 0 00-1.766-.732 1.024 1.024 0 01-.772-.985v-1.24zM12.477 7.53c-2.487 0-4.5 2.008-4.5 4.48 0 2.472 2.013 4.48 4.5 4.48 2.488 0 4.501-2.008 4.501-4.48 0-2.472-2.013-4.48-4.5-4.48zm-5.5 4.48c0-3.028 2.464-5.48 5.5-5.48 3.037 0 5.501 2.452 5.501 5.48 0 3.029-2.465 5.48-5.5 5.48-3.037 0-5.502-2.451-5.502-5.48z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-card-title"
+                    style="--text-line-clamp: 1;"
+                  >
+                    svc2
+                  </p>
+                </div>
+                <div
+                  class="TableV2--table summaryTableStyle"
+                >
+                  <div
+                    class="TableV2--header"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 0%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 26%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        cd.serviceDashboard.artifact
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 58%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600"
+                          style="--text-line-clamp: 1;"
+                        >
+                          cd.environmentDetailPage.infraSlashCluster
+                        </p>
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 15%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        cd.serviceDashboard.headers.instances
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--body"
+                  >
+                    <div
+                      class="TableV2--row TableV2--card"
+                      role="row"
+                    >
+                      <div
+                        class="TableV2--cells"
+                      >
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 0%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main latestArtifact"
+                          />
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 26%;"
+                        >
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main latestArtifact marginBottom1"
+                                />
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                                  style="max-width: 62px; --text-line-clamp: 1;"
+                                >
+                                  tag4
+                                </p>
+                              </div>
+                            </span>
+                          </span>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 58%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main infraContainer"
+                          >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                              style="--text-line-clamp: 1;"
+                            >
+                              infra4
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 15%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                            >
+                              1
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--row TableV2--card"
+                      role="row"
+                    >
+                      <div
+                        class="TableV2--cells"
+                      >
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 0%;"
+                        />
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 26%;"
+                        >
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                                tabindex="0"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                                  style="max-width: 70px; --text-line-clamp: 1;"
+                                >
+                                  tag3
+                                </p>
+                              </div>
+                            </span>
+                          </span>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 58%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main infraContainer"
+                          >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                              style="--text-line-clamp: 1;"
+                            >
+                              infra4, infra3
+                            </p>
+                            <p
+                              class="StyledProps--font StyledProps--main plusMore StyledProps--font-size-small"
+                            >
+                              + 
+                              3
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 15%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                            >
+                              5
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main cursor StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-body2"
+                  style="width: 50px;"
+                >
+                  cd.environmentDetailPage.seeFull
+                </p>
+              </div>
+              <div
+                class="bp3-card bp3-elevation-0 Card--card serviceCards cursor"
+              >
+                <div
+                  class="serviceCardTitle"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="services"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 25 24"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M10.52 2.991a1 1 0 011-1h2a1 1 0 011 1v1.241l.003.004c.004.005.011.01.022.013a7.953 7.953 0 012.019.837c.01.006.018.007.024.006h.005l.878-.879a1 1 0 011.414 0L20.3 5.627a1 1 0 010 1.415l-.879.878v.002l-.001.003c0 .006 0 .015.006.024.366.624.65 1.301.836 2.018.003.01.009.018.014.022a.015.015 0 00.003.002h1.242a1 1 0 011 1v2a1 1 0 01-1 1h-1.242l-.003.003a.042.042 0 00-.014.022 7.954 7.954 0 01-.838 2.02.041.041 0 00-.006.025v.004l.878.878a1 1 0 010 1.414l-1.414 1.414a1 1 0 01-1.414 0l-.879-.878h-.001l-.003-.001c-.006 0-.015 0-.025.006-.622.365-1.3.648-2.015.835a.043.043 0 00-.022.013l-.003.004v1.241a1 1 0 01-1 1h-2a1 1 0 01-1-1V19.75l-.002-.004a.042.042 0 00-.022-.013 7.956 7.956 0 01-2.017-.837.041.041 0 00-.025-.006l-.004.001-.878.879a1 1 0 01-1.415 0l-1.414-1.415a1 1 0 010-1.414l.878-.878.001-.004c0-.006 0-.016-.006-.025a7.955 7.955 0 01-.837-2.018.042.042 0 00-.013-.022.012.012 0 00-.004-.003H3.521a1 1 0 01-1-1v-2a1 1 0 011-1h1.241l.004-.002a.042.042 0 00.013-.022c.187-.717.47-1.394.836-2.018a.041.041 0 00.006-.024V7.92l-.88-.879a1 1 0 010-1.414l1.415-1.414a1 1 0 011.414 0l.878.879h.005c.006.001.015 0 .025-.005a7.955 7.955 0 012.018-.837.042.042 0 00.022-.014.015.015 0 00.002-.004v-1.24zm3 0h-2v1.241c0 .482-.337.872-.771.985a6.955 6.955 0 00-1.765.732c-.388.227-.902.19-1.243-.15l-.878-.879-1.414 1.414.879.88c.34.34.377.854.15 1.241a6.955 6.955 0 00-.731 1.764 1.024 1.024 0 01-.985.772H3.521v2h1.241c.482 0 .872.338.985.772a6.93 6.93 0 00.732 1.765c.227.387.19.902-.15 1.242l-.879.878 1.415 1.414.878-.878c.34-.34.855-.377 1.242-.15.545.32 1.137.568 1.764.731.434.113.771.503.771.985v1.241h2V19.75c0-.482.338-.872.772-.985a6.958 6.958 0 001.763-.73c.387-.227.901-.19 1.242.15l.878.88 1.414-1.415-.877-.877a1.024 1.024 0 01-.15-1.243c.32-.546.569-1.14.733-1.767.113-.434.503-.772.984-.772h1.242v-2h-1.242c-.481 0-.871-.337-.984-.772a6.952 6.952 0 00-.732-1.764 1.024 1.024 0 01.15-1.242l.88-.879-1.415-1.414-.878.879c-.34.34-.855.377-1.242.15a6.956 6.956 0 00-1.766-.732 1.024 1.024 0 01-.772-.985v-1.24zM12.477 7.53c-2.487 0-4.5 2.008-4.5 4.48 0 2.472 2.013 4.48 4.5 4.48 2.488 0 4.501-2.008 4.501-4.48 0-2.472-2.013-4.48-4.5-4.48zm-5.5 4.48c0-3.028 2.464-5.48 5.5-5.48 3.037 0 5.501 2.452 5.501 5.48 0 3.029-2.465 5.48-5.5 5.48-3.037 0-5.502-2.451-5.502-5.48z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-card-title"
+                    style="--text-line-clamp: 1;"
+                  >
+                    svc3
+                  </p>
+                </div>
+                <div
+                  class="TableV2--table summaryTableStyle"
+                >
+                  <div
+                    class="TableV2--header"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 0%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 26%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        cd.serviceDashboard.artifact
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 58%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600"
+                          style="--text-line-clamp: 1;"
+                        >
+                          cd.environmentDetailPage.infraSlashCluster
+                        </p>
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 15%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        cd.serviceDashboard.headers.instances
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--body"
+                  >
+                    <div
+                      class="TableV2--row TableV2--card"
+                      role="row"
+                    >
+                      <div
+                        class="TableV2--cells"
+                      >
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 0%;"
+                        />
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 26%;"
+                        >
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                                tabindex="0"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                                  style="max-width: 70px; --text-line-clamp: 1;"
+                                >
+                                  tag3
+                                </p>
+                              </div>
+                            </span>
+                          </span>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 58%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main infraContainer"
+                          >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                              style="--text-line-clamp: 1;"
+                            >
+                              infra44, infra313
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 15%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                            >
+                              2
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--row TableV2--card"
+                      role="row"
+                    >
+                      <div
+                        class="TableV2--cells"
+                      >
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 0%;"
+                        />
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 26%;"
+                        >
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                                tabindex="0"
+                              >
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                                  style="max-width: 70px; --text-line-clamp: 1;"
+                                >
+                                  tag22
+                                </p>
+                              </div>
+                            </span>
+                          </span>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 58%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main infraContainer"
+                          >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                              style="--text-line-clamp: 1;"
+                            >
+                              infra4
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 15%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                            >
+                              1
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main cursor StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-body2"
+                  style="width: 50px;"
+                >
+                  cd.environmentDetailPage.seeFull
+                </p>
+              </div>
+              <div
+                class="bp3-card bp3-elevation-0 Card--card serviceCards cursor"
+              >
+                <div
+                  class="serviceCardTitle"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="services"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 25 24"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M10.52 2.991a1 1 0 011-1h2a1 1 0 011 1v1.241l.003.004c.004.005.011.01.022.013a7.953 7.953 0 012.019.837c.01.006.018.007.024.006h.005l.878-.879a1 1 0 011.414 0L20.3 5.627a1 1 0 010 1.415l-.879.878v.002l-.001.003c0 .006 0 .015.006.024.366.624.65 1.301.836 2.018.003.01.009.018.014.022a.015.015 0 00.003.002h1.242a1 1 0 011 1v2a1 1 0 01-1 1h-1.242l-.003.003a.042.042 0 00-.014.022 7.954 7.954 0 01-.838 2.02.041.041 0 00-.006.025v.004l.878.878a1 1 0 010 1.414l-1.414 1.414a1 1 0 01-1.414 0l-.879-.878h-.001l-.003-.001c-.006 0-.015 0-.025.006-.622.365-1.3.648-2.015.835a.043.043 0 00-.022.013l-.003.004v1.241a1 1 0 01-1 1h-2a1 1 0 01-1-1V19.75l-.002-.004a.042.042 0 00-.022-.013 7.956 7.956 0 01-2.017-.837.041.041 0 00-.025-.006l-.004.001-.878.879a1 1 0 01-1.415 0l-1.414-1.415a1 1 0 010-1.414l.878-.878.001-.004c0-.006 0-.016-.006-.025a7.955 7.955 0 01-.837-2.018.042.042 0 00-.013-.022.012.012 0 00-.004-.003H3.521a1 1 0 01-1-1v-2a1 1 0 011-1h1.241l.004-.002a.042.042 0 00.013-.022c.187-.717.47-1.394.836-2.018a.041.041 0 00.006-.024V7.92l-.88-.879a1 1 0 010-1.414l1.415-1.414a1 1 0 011.414 0l.878.879h.005c.006.001.015 0 .025-.005a7.955 7.955 0 012.018-.837.042.042 0 00.022-.014.015.015 0 00.002-.004v-1.24zm3 0h-2v1.241c0 .482-.337.872-.771.985a6.955 6.955 0 00-1.765.732c-.388.227-.902.19-1.243-.15l-.878-.879-1.414 1.414.879.88c.34.34.377.854.15 1.241a6.955 6.955 0 00-.731 1.764 1.024 1.024 0 01-.985.772H3.521v2h1.241c.482 0 .872.338.985.772a6.93 6.93 0 00.732 1.765c.227.387.19.902-.15 1.242l-.879.878 1.415 1.414.878-.878c.34-.34.855-.377 1.242-.15.545.32 1.137.568 1.764.731.434.113.771.503.771.985v1.241h2V19.75c0-.482.338-.872.772-.985a6.958 6.958 0 001.763-.73c.387-.227.901-.19 1.242.15l.878.88 1.414-1.415-.877-.877a1.024 1.024 0 01-.15-1.243c.32-.546.569-1.14.733-1.767.113-.434.503-.772.984-.772h1.242v-2h-1.242c-.481 0-.871-.337-.984-.772a6.952 6.952 0 00-.732-1.764 1.024 1.024 0 01.15-1.242l.88-.879-1.415-1.414-.878.879c-.34.34-.855.377-1.242.15a6.956 6.956 0 00-1.766-.732 1.024 1.024 0 01-.772-.985v-1.24zM12.477 7.53c-2.487 0-4.5 2.008-4.5 4.48 0 2.472 2.013 4.48 4.5 4.48 2.488 0 4.501-2.008 4.501-4.48 0-2.472-2.013-4.48-4.5-4.48zm-5.5 4.48c0-3.028 2.464-5.48 5.5-5.48 3.037 0 5.501 2.452 5.501 5.48 0 3.029-2.465 5.48-5.5 5.48-3.037 0-5.502-2.451-5.502-5.48z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-card-title"
+                    style="--text-line-clamp: 1;"
+                  >
+                    svc4
+                  </p>
+                </div>
+                <div
+                  class="TableV2--table summaryTableStyle"
+                >
+                  <div
+                    class="TableV2--header"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 0%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 26%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        cd.serviceDashboard.artifact
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 58%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600"
+                          style="--text-line-clamp: 1;"
+                        >
+                          cd.environmentDetailPage.infraSlashCluster
+                        </p>
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 15%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        cd.serviceDashboard.headers.instances
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--body"
+                  >
+                    <div
+                      class="TableV2--row TableV2--card"
+                      role="row"
+                    >
+                      <div
+                        class="TableV2--cells"
+                      >
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 0%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main latestArtifact"
+                          />
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 26%;"
+                        >
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main latestArtifact marginBottom1"
+                                />
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                                  style="max-width: 62px; --text-line-clamp: 1;"
+                                >
+                                  tag4
+                                </p>
+                              </div>
+                            </span>
+                          </span>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 58%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main infraContainer"
+                          >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                              style="--text-line-clamp: 1;"
+                            >
+                              infra45
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 15%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                            >
+                              3
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main cursor StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-body2"
+                  style="width: 50px;"
+                >
+                  cd.environmentDetailPage.seeFull
+                </p>
+              </div>
+            </div>
+          </div>
+          <div
+            class="Carousel--carouselItem Carousel--carouselItemNext slideStyle"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main cardGrid"
+            >
+              <div
+                class="bp3-card bp3-elevation-0 Card--card serviceCards cursor"
+              >
+                <div
+                  class="serviceCardTitle"
+                >
+                  <span
+                    class="bp3-icon StyledProps--main"
+                    data-icon="services"
+                  >
+                    <svg
+                      fill="currentColor"
+                      height="16"
+                      viewBox="0 0 25 24"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M10.52 2.991a1 1 0 011-1h2a1 1 0 011 1v1.241l.003.004c.004.005.011.01.022.013a7.953 7.953 0 012.019.837c.01.006.018.007.024.006h.005l.878-.879a1 1 0 011.414 0L20.3 5.627a1 1 0 010 1.415l-.879.878v.002l-.001.003c0 .006 0 .015.006.024.366.624.65 1.301.836 2.018.003.01.009.018.014.022a.015.015 0 00.003.002h1.242a1 1 0 011 1v2a1 1 0 01-1 1h-1.242l-.003.003a.042.042 0 00-.014.022 7.954 7.954 0 01-.838 2.02.041.041 0 00-.006.025v.004l.878.878a1 1 0 010 1.414l-1.414 1.414a1 1 0 01-1.414 0l-.879-.878h-.001l-.003-.001c-.006 0-.015 0-.025.006-.622.365-1.3.648-2.015.835a.043.043 0 00-.022.013l-.003.004v1.241a1 1 0 01-1 1h-2a1 1 0 01-1-1V19.75l-.002-.004a.042.042 0 00-.022-.013 7.956 7.956 0 01-2.017-.837.041.041 0 00-.025-.006l-.004.001-.878.879a1 1 0 01-1.415 0l-1.414-1.415a1 1 0 010-1.414l.878-.878.001-.004c0-.006 0-.016-.006-.025a7.955 7.955 0 01-.837-2.018.042.042 0 00-.013-.022.012.012 0 00-.004-.003H3.521a1 1 0 01-1-1v-2a1 1 0 011-1h1.241l.004-.002a.042.042 0 00.013-.022c.187-.717.47-1.394.836-2.018a.041.041 0 00.006-.024V7.92l-.88-.879a1 1 0 010-1.414l1.415-1.414a1 1 0 011.414 0l.878.879h.005c.006.001.015 0 .025-.005a7.955 7.955 0 012.018-.837.042.042 0 00.022-.014.015.015 0 00.002-.004v-1.24zm3 0h-2v1.241c0 .482-.337.872-.771.985a6.955 6.955 0 00-1.765.732c-.388.227-.902.19-1.243-.15l-.878-.879-1.414 1.414.879.88c.34.34.377.854.15 1.241a6.955 6.955 0 00-.731 1.764 1.024 1.024 0 01-.985.772H3.521v2h1.241c.482 0 .872.338.985.772a6.93 6.93 0 00.732 1.765c.227.387.19.902-.15 1.242l-.879.878 1.415 1.414.878-.878c.34-.34.855-.377 1.242-.15.545.32 1.137.568 1.764.731.434.113.771.503.771.985v1.241h2V19.75c0-.482.338-.872.772-.985a6.958 6.958 0 001.763-.73c.387-.227.901-.19 1.242.15l.878.88 1.414-1.415-.877-.877a1.024 1.024 0 01-.15-1.243c.32-.546.569-1.14.733-1.767.113-.434.503-.772.984-.772h1.242v-2h-1.242c-.481 0-.871-.337-.984-.772a6.952 6.952 0 00-.732-1.764 1.024 1.024 0 01.15-1.242l.88-.879-1.415-1.414-.878.879c-.34.34-.855.377-1.242.15a6.956 6.956 0 00-1.766-.732 1.024 1.024 0 01-.772-.985v-1.24zM12.477 7.53c-2.487 0-4.5 2.008-4.5 4.48 0 2.472 2.013 4.48 4.5 4.48 2.488 0 4.501-2.008 4.501-4.48 0-2.472-2.013-4.48-4.5-4.48zm-5.5 4.48c0-3.028 2.464-5.48 5.5-5.48 3.037 0 5.501 2.452 5.501 5.48 0 3.029-2.465 5.48-5.5 5.48-3.037 0-5.502-2.451-5.502-5.48z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  <p
+                    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-variation-card-title"
+                    style="--text-line-clamp: 1;"
+                  >
+                    svc5
+                  </p>
+                </div>
+                <div
+                  class="TableV2--table summaryTableStyle"
+                >
+                  <div
+                    class="TableV2--header"
+                    role="row"
+                  >
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 0%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 26%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        cd.serviceDashboard.artifact
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 58%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-grey600"
+                          style="--text-line-clamp: 1;"
+                        >
+                          cd.environmentDetailPage.infraSlashCluster
+                        </p>
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      colspan="1"
+                      role="columnheader"
+                      style="width: 15%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                      >
+                        cd.serviceDashboard.headers.instances
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="TableV2--body"
+                  >
+                    <div
+                      class="TableV2--row TableV2--card"
+                      role="row"
+                    >
+                      <div
+                        class="TableV2--cells"
+                      >
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 0%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main latestArtifact"
+                          />
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 26%;"
+                        >
+                          <span
+                            class="bp3-popover-wrapper"
+                          >
+                            <span
+                              class="bp3-popover-target"
+                            >
+                              <div
+                                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                                tabindex="0"
+                              >
+                                <div
+                                  class="StyledProps--font StyledProps--main latestArtifact marginBottom1"
+                                />
+                                <p
+                                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                                  style="max-width: 62px; --text-line-clamp: 1;"
+                                >
+                                  tag42
+                                </p>
+                              </div>
+                            </span>
+                          </span>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 58%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main infraContainer"
+                          >
+                            <p
+                              class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey800"
+                              style="--text-line-clamp: 1;"
+                            >
+                              infra452
+                            </p>
+                          </div>
+                        </div>
+                        <div
+                          class="TableV2--cell"
+                          role="cell"
+                          style="width: 15%;"
+                        >
+                          <div
+                            class="StyledProps--font StyledProps--main"
+                          >
+                            <p
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                            >
+                              3
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p
+                  class="StyledProps--font StyledProps--main cursor StyledProps--color StyledProps--color-primary7 StyledProps--font-variation-body2"
+                  style="width: 50px;"
+                >
+                  cd.environmentDetailPage.seeFull
+                </p>
+              </div>
+            </div>
+          </div>
+          <span>
+            <button
+              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main nextButton StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
+              type="button"
+            >
+              <span
+                class="bp3-icon bp3-icon-double-chevron-right StyledProps--main StyledProps--color StyledProps--color-primary7"
+                icon="double-chevron-right"
+              >
+                <svg
+                  data-icon="double-chevron-right"
+                  height="22"
+                  viewBox="0 0 20 20"
+                  width="22"
+                >
+                  <desc>
+                    double-chevron-right
+                  </desc>
+                  <path
+                    d="M11 10c0-.28-.11-.53-.29-.71l-6-6a1.003 1.003 0 00-1.42 1.42L8.59 10 3.3 15.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l6-6c.18-.18.29-.43.29-.71zm5.71-.71l-6-6a1.003 1.003 0 00-1.42 1.42l5.3 5.29-5.29 5.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l6-6c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </button>
+             
+          </span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div
+        class="titleStyle"
+      >
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey800 StyledProps--font-weight-bold"
+        >
+          pipeline.dashboards.totalExecutions: 0 
+        </p>
+        <div
+          class="bp3-input-group ui-search-box ExpandingSearchInput--main   ExpandingSearchInput--alwaysExpanded ExpandingSearchInput--light"
+          data-name=""
+          style="width: 200px; max-width: 200px;"
+        >
+          <span
+            class="bp3-icon StyledProps--main ExpandingSearchInput--icon StyledProps--color StyledProps--color-grey700"
+            data-icon="thinner-search"
+          >
+            <svg
+              fill="none"
+              height="14"
+              viewBox="0 0 16 16"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7.125 13.25c1.617 0 3.32-.695 4.375-1.75L15 15l-3.5-3.5c1.021-1.005 1.75-2.894 1.75-4.375a6.125 6.125 0 10-6.125 6.125z"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <input
+            class="bp3-input  ExpandingSearchInput--filter"
+            dir="auto"
+            placeholder="Search"
+            style="padding-right: 38px;"
+            type="search"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        class="StyledProps--font StyledProps--main loadingContainer"
+      >
+        <span
+          class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-blue500"
+          data-icon="spinner"
+        >
+          <svg
+            fill="none"
+            height="30"
+            viewBox="0 0 36 36"
+            width="30"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
+              stroke="currentColor"
+              stroke-dasharray="75,100"
+              stroke-linecap="round"
+              stroke-width="2.8"
+              style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
+            />
+          </svg>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;

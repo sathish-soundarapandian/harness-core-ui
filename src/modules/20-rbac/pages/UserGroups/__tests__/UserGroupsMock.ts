@@ -101,14 +101,15 @@ export const userGroupsAggregate: ResponsePageUserGroupAggregateDTO = {
         userGroupDTO: {
           accountIdentifier: 'testAcc',
           identifier: 'Testing_User_Group_with_sso_no_users',
-          name: 'Testing User Group With SSO no Users',
+          name: 'Testing User Group With linked LDAP SSO no Users',
           users: [],
           notificationConfigs: [],
           description: '',
           tags: {},
           ssoGroupName: 'TEST SSO GROUP NAME',
           ssoLinked: true,
-          linkedSsoDisplayName: 'TEST_LINKED_SSO'
+          linkedSsoDisplayName: 'TEST_LINKED_SSO',
+          linkedSsoType: 'LDAP'
         },
         users: [],
         roleAssignmentsMetadataDTO: [],

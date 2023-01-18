@@ -88,7 +88,7 @@ export function JiraCreateUpdateView(props: JiraCreateUpdateViewProps): React.Re
       <Tabs.Tab
         id={ApprovalStepTab.INPUT}
         title={getString('common.input')}
-        panel={<InputOutputTab baseFqn={step.baseFqn} mode="input" data={step.stepParameters} />}
+        panel={<InputOutputTab baseFqn={step.baseFqn} mode="input" data={step.stepParameters} isMultiline />}
       />
       <Tabs.Tab
         id={ApprovalStepTab.OUTPUT}
@@ -98,6 +98,7 @@ export function JiraCreateUpdateView(props: JiraCreateUpdateViewProps): React.Re
             baseFqn={step.baseFqn}
             mode="output"
             data={Array.isArray(step.outcomes) ? { output: merge({}, ...step.outcomes) } : step.outcomes}
+            isMultiline
           />
         }
       />

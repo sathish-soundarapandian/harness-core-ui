@@ -70,64 +70,60 @@ export const FileInputStep = (props: AzureArmProps & { formik?: FormikContextTyp
         </div>
       )}
       {(isAccount || isValueRuntimeInput(inputSet?.store?.spec?.repoName as string)) && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TextFieldInputSetView
-            name={`${path}.spec.configuration.${type}.store.spec.repoName`}
-            label={getString('pipelineSteps.repoName')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            fieldPath={`spec.configuration.${type}.store.spec.repoName`}
-            template={undefined}
-          />
-        </div>
+        <TextFieldInputSetView
+          name={`${path}.spec.configuration.${type}.store.spec.repoName`}
+          label={getString('pipelineSteps.repoName')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          fieldPath={`spec.configuration.${type}.store.spec.repoName`}
+          template={undefined}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
       {isValueRuntimeInput(inputSet?.store?.spec?.branch as string) && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TextFieldInputSetView
-            name={`${path}.spec.configuration.${type}.store.spec.branch`}
-            label={getString('pipelineSteps.deploy.inputSet.branch')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            fieldPath={`spec.configuration.${type}.store.spec.branch`}
-            template={undefined}
-          />
-        </div>
+        <TextFieldInputSetView
+          name={`${path}.spec.configuration.${type}.store.spec.branch`}
+          label={getString('pipelineSteps.deploy.inputSet.branch')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          fieldPath={`spec.configuration.${type}.store.spec.branch`}
+          template={undefined}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
       {isValueRuntimeInput(inputSet?.store?.spec?.commitId as string) && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TextFieldInputSetView
-            name={`${path}.spec.configuration.${type}.store.spec.commitId`}
-            label={getString('pipeline.manifestType.commitId')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            fieldPath={`spec.configuration.${type}.store.spec.commitId`}
-            template={undefined}
-          />
-        </div>
+        <TextFieldInputSetView
+          name={`${path}.spec.configuration.${type}.store.spec.commitId`}
+          label={getString('pipeline.manifestType.commitId')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          fieldPath={`spec.configuration.${type}.store.spec.commitId`}
+          template={undefined}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
       {isValueRuntimeInput(inputSet?.store?.spec?.paths as string) && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TextFieldInputSetView
-            name={`${path}.spec.configuration.${type}.store.spec.paths[0]`}
-            label={getString('common.git.filePath')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            fieldPath={`spec.configuration.${type}.store.spec.paths[0]`}
-            template={undefined}
-          />
-        </div>
+        <TextFieldInputSetView
+          name={`${path}.spec.configuration.${type}.store.spec.paths[0]`}
+          label={getString('common.git.filePath')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          fieldPath={`spec.configuration.${type}.store.spec.paths[0]`}
+          template={undefined}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
       {inputSet?.store?.type === 'Harness' && isValueRuntimeInput(inputSet?.store?.spec?.files as string) && (
         <Layout.Vertical className={cx(css.inputWidth, css.layoutVerticalSpacing)}>

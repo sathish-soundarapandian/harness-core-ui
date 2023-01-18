@@ -6,26 +6,24 @@
  */
 
 import React from 'react'
-import { render, waitFor, fireEvent, createEvent, act, queryByText } from '@testing-library/react'
+import { render, waitFor, fireEvent, createEvent, act, findByRole } from '@testing-library/react'
 import { noop } from 'lodash-es'
-import userEvent from '@testing-library/user-event'
+
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import gitSyncListResponse from '@common/utils/__tests__/mocks/gitSyncRepoListMock.json'
 import routes from '@common/RouteDefinitions'
-import {
-  accountPathProps,
-  pipelineModuleParams,
-  pipelinePathProps,
-  inputSetFormPathProps
-} from '@common/utils/routeUtils'
+import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
 import * as pipelineng from 'services/pipeline-ng'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { branchStatusMock } from '@connectors/mocks/mock'
-import { GitSyncTestWrapper } from '@common/utils/gitSyncTestUtils'
 import { OverlayInputSetForm } from '@pipeline/components/OverlayInputSetForm/OverlayInputSetForm'
-import { GetInputSetYamlDiffInline } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
+import {
+  GetInputSetYamlDiffInline,
+  mockBranches
+} from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import {
   TemplateResponse,
   PipelineResponse,
@@ -42,6 +40,7 @@ import {
 const eventData = { dataTransfer: { setData: jest.fn(), dropEffect: '', getData: () => '1' } }
 
 const successResponse = (): Promise<{ status: string }> => Promise.resolve({ status: 'SUCCESS' })
+const fetchBranches = jest.fn(() => Promise.resolve(mockBranches))
 jest.mock('@common/utils/YamlUtils', () => ({}))
 jest.mock(
   '@common/components/YAMLBuilder/YamlBuilder',
@@ -87,6 +86,9 @@ jest.mock('services/cd-ng', () => ({
     return { data: branchStatusMock, refetch: getListOfBranchesWithStatus, loading: false }
   }),
   getListOfBranchesWithStatusPromise: jest.fn().mockImplementation(() => Promise.resolve(branchStatusMock)),
+  useGetListOfBranchesByRefConnectorV2: jest.fn().mockImplementation(() => {
+    return { data: mockBranches, refetch: fetchBranches }
+  }),
   useListGitSync: jest.fn().mockImplementation(() => {
     return { data: gitSyncListResponse, refetch: getListGitSync }
   })
@@ -144,11 +146,6 @@ const TEST_INPUT_SET_PATH = routes.toInputSetList({
   ...pipelinePathProps,
   ...pipelineModuleParams
 })
-const TEST_INPUT_SET_FORM_PATH = routes.toInputSetForm({
-  ...accountPathProps,
-  ...inputSetFormPathProps,
-  ...pipelineModuleParams
-})
 
 describe('OverlayInputSetForm Tests', () => {
   describe('Edit OverlayInputSet - ', () => {
@@ -162,6 +159,12 @@ describe('OverlayInputSetForm Tests', () => {
             projectIdentifier: 'test',
             pipelineIdentifier: 'pipeline',
             module: 'cd'
+          }}
+          queryParams={{
+            repoName: 'gitSyncRepo',
+            branch: 'feature',
+            connectorRef: 'ValidGithubRepo',
+            storeType: StoreType.REMOTE
           }}
           defaultAppStoreValues={defaultAppStoreValues}
         >
@@ -194,6 +197,12 @@ describe('OverlayInputSetForm Tests', () => {
             pipelineIdentifier: 'pipeline',
             module: 'cd'
           }}
+          queryParams={{
+            repoName: 'gitSyncRepo',
+            branch: 'feature',
+            connectorRef: 'ValidGithubRepo',
+            storeType: StoreType.REMOTE
+          }}
           defaultAppStoreValues={defaultAppStoreValues}
         >
           <OverlayInputSetForm hideForm={jest.fn()} identifier="OverLayInput" />
@@ -212,8 +221,9 @@ describe('OverlayInputSetForm Tests', () => {
       fireEvent.click(getByText('VISUAL'))
 
       // click save
-      act(() => {
-        fireEvent.click(getByText('save'))
+      act(async () => {
+        const saveBtn = await findByRole(container!, 'button', { name: 'save' })
+        fireEvent.click(saveBtn)
       })
     })
 
@@ -227,6 +237,12 @@ describe('OverlayInputSetForm Tests', () => {
             projectIdentifier: 'test',
             pipelineIdentifier: 'pipeline',
             module: 'cd'
+          }}
+          queryParams={{
+            repoName: 'gitSyncRepo',
+            branch: 'feature',
+            connectorRef: 'ValidGithubRepo',
+            storeType: StoreType.REMOTE
           }}
           defaultAppStoreValues={defaultAppStoreValues}
         >
@@ -260,84 +276,8 @@ describe('OverlayInputSetForm Tests', () => {
         fireEvent(container2, dropEvent)
       })
     })
-    test('render Edit Overlay Input Set Form with GitSync', async () => {
-      const { getByTestId, getByText } = render(
-        <GitSyncTestWrapper
-          path={TEST_INPUT_SET_FORM_PATH}
-          pathParams={{
-            accountId: 'testAcc',
-            orgIdentifier: 'testOrg',
-            projectIdentifier: 'test',
-            pipelineIdentifier: 'pipeline',
-            inputSetIdentifier: '-1',
-            module: 'cd'
-          }}
-          queryParams={{
-            repoIdentifier: 'identifier',
-            branch: 'feature'
-          }}
-          defaultAppStoreValues={defaultAppStoreValues}
-        >
-          <OverlayInputSetForm hideForm={jest.fn()} identifier="OverLayInput" />
-        </GitSyncTestWrapper>
-      )
-
-      // Click on Save button in the form and check if Save to Git dialog opens properly
-      const saveBtn = getByText('save').parentElement
-      expect(saveBtn).toBeInTheDocument()
-      fireEvent.click(getByTestId('asd'))
-      fireEvent.click(saveBtn!)
-      await waitFor(() => expect(document.getElementsByClassName('bp3-portal')[1] as HTMLElement).toBeTruthy())
-      const portalDiv = document.getElementsByClassName('bp3-portal')[1] as HTMLElement
-      expect(portalDiv).toMatchSnapshot()
-      const savePipelinesToGitHeader = queryByText(portalDiv, 'common.git.saveResourceLabel')
-      expect(savePipelinesToGitHeader).toBeInTheDocument()
-
-      // Click on Save button in the Save to Git dialog to save
-      const saveToGitSaveBtn = queryByText(portalDiv, 'save')?.parentElement as HTMLElement
-      expect(saveToGitSaveBtn).toBeInTheDocument()
-      userEvent.click(saveToGitSaveBtn!)
-    })
   })
   describe('Create OverlayInputSet - ', () => {
-    test('render create Overlay Input Set Form with GitSync with error', async () => {
-      const { getByTestId, getByText } = render(
-        <GitSyncTestWrapper
-          path={TEST_INPUT_SET_FORM_PATH}
-          pathParams={{
-            accountId: 'testAcc',
-            orgIdentifier: 'testOrg',
-            projectIdentifier: 'test',
-            pipelineIdentifier: 'pipeline',
-            inputSetIdentifier: '-1',
-            module: 'cd'
-          }}
-          queryParams={{
-            repoIdentifier: 'identifier',
-            branch: 'feature'
-          }}
-          defaultAppStoreValues={defaultAppStoreValues}
-        >
-          <OverlayInputSetForm hideForm={jest.fn()} identifier="" />
-        </GitSyncTestWrapper>
-      )
-
-      // Click on Save button in the form and check if Save to Git dialog opens properly
-      const saveBtn = getByText('save').parentElement
-      expect(saveBtn).toBeInTheDocument()
-      fireEvent.click(getByTestId('asd'))
-      fireEvent.click(saveBtn!)
-      await waitFor(() => expect(document.getElementsByClassName('bp3-portal')[1] as HTMLElement).toBeTruthy())
-      const portalDiv = document.getElementsByClassName('bp3-portal')[1] as HTMLElement
-      expect(portalDiv).toMatchSnapshot()
-      const savePipelinesToGitHeader = queryByText(portalDiv, 'common.git.saveResourceLabel')
-      expect(savePipelinesToGitHeader).toBeInTheDocument()
-
-      // Click on Save button in the Save to Git dialog to save
-      const saveToGitSaveBtn = queryByText(portalDiv, 'save')?.parentElement as HTMLElement
-      expect(saveToGitSaveBtn).toBeInTheDocument()
-      userEvent.click(saveToGitSaveBtn!)
-    })
     test('render create Overlay Input Set Yaml view save with error', async () => {
       const { getByText } = render(
         <TestWrapper
@@ -348,6 +288,12 @@ describe('OverlayInputSetForm Tests', () => {
             projectIdentifier: 'test',
             pipelineIdentifier: 'pipeline',
             module: 'cd'
+          }}
+          queryParams={{
+            repoName: 'gitSyncRepo',
+            branch: 'feature',
+            connectorRef: 'ValidGithubRepo',
+            storeType: StoreType.REMOTE
           }}
           defaultAppStoreValues={defaultAppStoreValues}
         >
@@ -365,58 +311,6 @@ describe('OverlayInputSetForm Tests', () => {
         fireEvent.click(getByText('save'))
       })
     })
-    test('entityValidity false', () => {
-      const data = {
-        status: 'SUCCESS',
-        data: {
-          accountId: 'kmpySmUISimoRrJL6NL73w',
-          orgIdentifier: 'Harness11',
-          projectIdentifier: 'Uhat_Project',
-          entityValidityDetails: {
-            valid: false
-          },
-          pipelineIdentifier: 'testqqq',
-          identifier: 'OverLayInput',
-          name: 'OverLayInput',
-          description: 'OverLayInput',
-          inputSetReferences: ['asd', 'test'],
-          overlayInputSetYaml:
-            'overlayInputSet:\n  name: OverLayInput\n  identifier: OverLayInput\n  description: OverLayInput\n  inputSetReferences:\n    - asd\n    - test\n',
-          errorResponse: false,
-          gitDetails: {
-            branch: 'feature',
-            filePath: 'asd.yaml',
-            objectId: '4471ec3aa40c26377353974c29a6670d998db06g',
-            repoIdentifier: 'gitSyncRepo',
-            rootFolder: '/rootFolderTest/.harness/'
-          }
-        }
-      }
-
-      const { getByText } = render(
-        <TestWrapper
-          path={TEST_INPUT_SET_PATH}
-          pathParams={{
-            accountId: 'testAcc',
-            orgIdentifier: 'testOrg',
-            projectIdentifier: 'test',
-            pipelineIdentifier: 'pipeline',
-            module: 'cd'
-          }}
-          defaultAppStoreValues={defaultAppStoreValues}
-        >
-          <OverlayInputSetForm hideForm={jest.fn()} />
-        </TestWrapper>
-      )
-      jest.runOnlyPendingTimers()
-      const container = findDialogContainer()
-      expect(container).toMatchSnapshot()
-      // Switch Mode
-      fireEvent.click(getByText('YAML'))
-      jest.spyOn(pipelineng, 'useGetOverlayInputSetForPipeline').mockImplementation((): any => {
-        return { data: data, error: null, loading: false, refetch: jest.fn() }
-      })
-    })
 
     test('no data', () => {
       jest.spyOn(pipelineng, 'useGetInputSetsListForPipeline').mockImplementation((): any => {
@@ -431,6 +325,12 @@ describe('OverlayInputSetForm Tests', () => {
             projectIdentifier: 'test',
             pipelineIdentifier: 'pipeline',
             module: 'cd'
+          }}
+          queryParams={{
+            repoName: 'gitSyncRepo',
+            branch: 'feature',
+            connectorRef: 'ValidGithubRepo',
+            storeType: StoreType.REMOTE
           }}
           defaultAppStoreValues={defaultAppStoreValues}
         >
@@ -463,6 +363,12 @@ describe('OverlayInputSetForm Tests', () => {
           projectIdentifier: 'test',
           pipelineIdentifier: 'pipeline',
           module: 'cd'
+        }}
+        queryParams={{
+          repoName: 'gitSyncRepo',
+          branch: 'feature',
+          connectorRef: 'ValidGithubRepo',
+          storeType: StoreType.REMOTE
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >

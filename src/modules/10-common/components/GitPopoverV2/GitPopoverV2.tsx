@@ -12,6 +12,7 @@ import { Color, FontVariation } from '@harness/design-system'
 import React, { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo, isEmpty } from 'lodash-es'
+import cx from 'classnames'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { EntityGitDetails } from 'services/template-ng'
 import { useStrings } from 'framework/strings'
@@ -26,8 +27,10 @@ interface GitPopoverV2Props {
   storeMetadata: StoreMetadata
   gitDetails: EntityGitDetails
   onGitBranchChange: (selectedFilter: GitFilterScope) => void
-  isReadonly?: boolean
+  branchChangeDisabled?: boolean
   forceFetch?: boolean
+  customIcon?: React.ReactNode
+  btnClassName?: string
 }
 
 const createSelectOption = (value?: string): SelectOption => {
@@ -35,15 +38,6 @@ const createSelectOption = (value?: string): SelectOption => {
     label: defaultTo(value, ''),
     value: defaultTo(value, '')
   }
-}
-
-const CustomButtom = (): JSX.Element => {
-  return (
-    <div className={css.customButton}>
-      <Icon name="git-popover" size={15} />
-      <Icon name="main-chevron-down" size={8} />
-    </div>
-  )
 }
 
 interface ItemUIProps {
@@ -101,9 +95,11 @@ const getActualTemplateValue = (
 export const GitPopoverV2 = ({
   storeMetadata = {},
   gitDetails = {},
-  isReadonly = false,
+  branchChangeDisabled = false,
   forceFetch = false,
-  onGitBranchChange
+  onGitBranchChange,
+  customIcon,
+  btnClassName
 }: GitPopoverV2Props): JSX.Element => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
@@ -130,10 +126,10 @@ export const GitPopoverV2 = ({
   })
 
   useEffect(() => {
-    if (!isReadonly || forceFetch) {
+    if (!branchChangeDisabled || forceFetch) {
       refetch()
     }
-  }, [forceFetch, isReadonly, refetch])
+  }, [forceFetch, branchChangeDisabled, refetch])
 
   const branchOptions = useMemo(() => {
     if (response?.status === 'SUCCESS' && !isEmpty(response?.data)) {
@@ -168,29 +164,32 @@ export const GitPopoverV2 = ({
   if (storeMetadata.storeType !== StoreType.REMOTE) return <></>
 
   return (
-    <Popover interactionKind={PopoverInteractionKind.HOVER} autoFocus={false}>
-      <CustomButtom />
-      <Layout.Vertical padding={{ top: 'large', bottom: 'large', left: 'xlarge', right: 'xlarge' }}>
-        {/* Heading */}
-        <Text font={{ size: 'small', weight: 'bold' }} color={Color.BLACK}>
-          {getString('common.gitDetailsTitle').toUpperCase()}
-        </Text>
+    <div className={cx(css.customButton, btnClassName)}>
+      <Popover interactionKind={PopoverInteractionKind.HOVER} autoFocus={false}>
+        <Icon name="git-popover" size={15} />
+        <Layout.Vertical padding={{ top: 'large', bottom: 'large', left: 'xlarge', right: 'xlarge' }}>
+          {/* Heading */}
+          <Text font={{ size: 'small', weight: 'bold' }} color={Color.BLACK}>
+            {getString('common.gitDetailsTitle').toUpperCase()}
+          </Text>
 
-        {/* Repository */}
-        {repoName && <ItemUI label={getString('repository')} icon="repository" value={repoName} />}
+          {/* Repository */}
+          {repoName && <ItemUI label={getString('repository')} icon="repository" value={repoName} />}
 
-        {/* FilePath */}
-        {fileUrl && <ItemUI label={getString('common.git.filePath')} icon="repository" value={fileUrl} />}
+          {/* FilePath */}
+          {fileUrl && <ItemUI label={getString('common.git.filePath')} icon="repository" value={fileUrl} />}
 
-        {/* Branch */}
-        {selectedBranch.value && (
-          <ItemUI
-            label={getString('gitBranch')}
-            icon="git-new-branch"
-            value={isReadonly ? selectedBranch.value : branchUI}
-          />
-        )}
-      </Layout.Vertical>
-    </Popover>
+          {/* Branch */}
+          {selectedBranch.value && (
+            <ItemUI
+              label={getString('gitBranch')}
+              icon="git-new-branch"
+              value={branchChangeDisabled ? selectedBranch.value : branchUI}
+            />
+          )}
+        </Layout.Vertical>
+      </Popover>
+      {customIcon || <Icon name="main-chevron-down" size={8} />}
+    </div>
   )
 }

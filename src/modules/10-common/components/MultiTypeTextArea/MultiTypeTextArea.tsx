@@ -93,7 +93,7 @@ export const MultiTypeTextArea: React.FC<MultiTypeTextAreaProps> = props => {
               showDefaultField={false}
               showAdvanced={true}
               onChange={val => onChange?.(val, MultiTypeInputValue.STRING, MultiTypeInputType.RUNTIME)}
-              style={{ marginLeft: 'var(--spacing-medium)', marginBottom: 12 }}
+              style={{ marginBottom: 12 }}
               {...configureOptionsProps}
               isReadonly={props.disabled}
             />

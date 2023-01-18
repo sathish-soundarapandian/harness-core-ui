@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { defaultTo } from 'lodash-es'
 import { Color } from '@harness/design-system'
@@ -6,6 +13,7 @@ import cx from 'classnames'
 import type { ReferenceSelectProps } from '@common/components/ReferenceSelect/ReferenceSelect'
 import { Failure, getServiceAccessListPromise, ServiceDefinition, ServiceResponseDTO } from 'services/cd-ng'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import serviceEmptyStateSvg from '@pipeline/icons/emptyInstanceDetail.svg'
 import css from './FormMultiTypeServiceField.module.scss'
 
 export function getReferenceFieldProps({
@@ -30,11 +38,11 @@ export function getReferenceFieldProps({
   return {
     name,
     width,
-    selectAnReferenceLabel: 'Select an existing service',
+    selectAnReferenceLabel: getString('pipeline.serviceLabel'),
     selected,
     placeholder,
     defaultScope,
-    createNewLabel: 'Service',
+    createNewLabel: getString('service'),
     isNewConnectorLabelVisible: true,
     fetchRecords: (done, search, page, scope, signal = undefined) => {
       const request = getServiceAccessListPromise(
@@ -77,10 +85,13 @@ export function getReferenceFieldProps({
     },
     projectIdentifier,
     orgIdentifier,
-    noRecordsText: 'No services found',
-    componentName: 'Service',
+    noRecordsText: getString('pipeline.noServicesFound'),
+    componentName: getString('service'),
     noDataCard: {
-      message: 'No Services Found'
+      image: serviceEmptyStateSvg,
+      message: getString('pipeline.noServicesFound'),
+      containerClassName: css.noDataCardContainerConnector,
+      className: css.noDataCardContainerContent
     },
     isMultiSelect,
     selectedReferences: selectedServices,

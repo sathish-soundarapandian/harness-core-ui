@@ -179,7 +179,7 @@ describe('<TemplateSelectorLeftView> tests', () => {
         body: {
           childTypes: ['ShellScript'],
           filterType: 'Template',
-          templateEntityTypes: ['Step'],
+          templateEntityTypes: ['Step', 'StepGroup'],
           templateIdentifiers: ['manjutesttemplate'],
           listingScope: { accountIdentifier: 'accountId', orgIdentifier: 'default', projectIdentifier: 'Yogesh_Test' }
         }
@@ -256,7 +256,7 @@ describe('<TemplateSelectorLeftView> tests', () => {
         body: {
           childTypes: ['HarnessApproval', 'ShellScript'],
           filterType: 'Template',
-          templateEntityTypes: ['Step'],
+          templateEntityTypes: ['Step', 'StepGroup'],
           templateIdentifiers: ['manjutesttemplate'],
           listingScope: { accountIdentifier: 'accountId', orgIdentifier: 'default', projectIdentifier: 'Yogesh_Test' }
         },

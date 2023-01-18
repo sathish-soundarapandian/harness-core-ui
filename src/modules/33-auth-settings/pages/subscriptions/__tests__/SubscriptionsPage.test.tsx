@@ -14,12 +14,16 @@ import {
   useGetAccountNG,
   useGetModuleLicensesByAccountAndModuleType,
   useExtendTrialLicense,
-  useSaveFeedback
+  useSaveFeedback,
+  useGetOrganizationList,
+  useGetProjectList
 } from 'services/cd-ng'
 import { CDLicenseType, Editions } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
 import SubscriptionsPage from '../SubscriptionsPage'
 import activeServices from './mocks/activeServices.json'
+import orgMockData from './mocks/orgMockData.json'
+import projMockData from './mocks/projMockData.json'
 jest.mock('services/cd-ng')
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
@@ -35,6 +39,14 @@ useSaveFeedbackMock.mockImplementation(() => {
     mutate: jest.fn()
   }
 })
+const useGetOrganizationListMock = useGetOrganizationList as jest.MockedFunction<any>
+useGetOrganizationListMock.mockImplementation(() => {
+  return { ...orgMockData, refetch: jest.fn(), error: null }
+})
+const useGetProjectListMock = useGetProjectList as jest.MockedFunction<any>
+useGetProjectListMock.mockImplementation(() => {
+  return { ...projMockData, refetch: jest.fn(), error: null }
+})
 jest.mock('@common/hooks', () => ({
   ...(jest.requireActual('@common/hooks') as any),
   useMutateAsGet: jest.fn().mockImplementation(() => {
@@ -48,7 +60,8 @@ const featureFlags = {
   CVNG_ENABLED: true,
   CING_ENABLED: true,
   CENG_ENABLED: true,
-  CFNG_ENABLED: true
+  CFNG_ENABLED: true,
+  CHAOS_ENABLED: true
 }
 
 describe('Subscriptions Page', () => {
@@ -58,7 +71,8 @@ describe('Subscriptions Page', () => {
         data: {
           data: [
             {
-              edition: Editions.ENTERPRISE
+              edition: Editions.ENTERPRISE,
+              cdLicenseType: CDLicenseType.SERVICES
             }
           ],
           status: 'SUCCESS'
@@ -91,6 +105,50 @@ describe('Subscriptions Page', () => {
     expect(getByText('common.licensesConsumed')).toBeTruthy()
     userEvent.click(getByText('common.licensesConsumed'))
   })
+  test('test for fetching active services by clicking the fetch button using filters', async () => {
+    useGetModuleLicenseInfoMock.mockImplementation(() => {
+      return {
+        data: {
+          data: [
+            {
+              edition: Editions.ENTERPRISE,
+              cdLicenseType: CDLicenseType.SERVICES
+            }
+          ],
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
+    })
+
+    useGetAccountMock.mockImplementation(() => {
+      return {
+        data: {
+          data: {
+            accountId: '123'
+          },
+          status: 'SUCCESS'
+        },
+        refetch: jest.fn()
+      }
+    })
+
+    const { getByText } = render(
+      <TestWrapper defaultAppStoreValues={{ featureFlags }}>
+        <SubscriptionsPage />
+      </TestWrapper>
+    )
+    expect(getByText('common.licensesConsumed')).toBeTruthy()
+    userEvent.click(getByText('common.licensesConsumed'))
+    const orgFilter = document.body.getElementsByClassName('DropDown--dropdownButton')[0]
+    userEvent.click(orgFilter)
+    const orgName = await waitFor(() => getByText('default'))
+    expect(orgName).toBeDefined()
+    userEvent.click(orgName)
+    const fetchButton = getByText('Fetch')
+    expect(fetchButton).toBeDefined()
+    userEvent.click(fetchButton)
+  })
 
   test('it renders the correct card in the subscriptions page', () => {
     useGetModuleLicenseInfoMock.mockImplementation(() => {
@@ -98,7 +156,8 @@ describe('Subscriptions Page', () => {
         data: {
           data: [
             {
-              edition: Editions.ENTERPRISE
+              edition: Editions.ENTERPRISE,
+              cdLicenseType: CDLicenseType.SERVICES
             }
           ],
           status: 'SUCCESS'
@@ -210,6 +269,7 @@ describe('Subscriptions Page', () => {
           data: [
             {
               edition: Editions.ENTERPRISE,
+              cdLicenseType: CDLicenseType.SERVICES,
               expiryTime: 0
             }
           ],
@@ -390,7 +450,8 @@ describe('Subscriptions Page', () => {
         data: {
           data: [
             {
-              edition: Editions.ENTERPRISE
+              edition: Editions.ENTERPRISE,
+              cdLicenseType: CDLicenseType.SERVICES
             }
           ],
           status: 'SUCCESS'
@@ -610,6 +671,46 @@ describe('Subscriptions Page', () => {
 
       expect(getByText('common.subscriptions.featureFlags.users')).toBeInTheDocument()
       expect(getByText('common.subscriptions.featureFlags.mau')).toBeInTheDocument()
+    })
+
+    test('should render CHAOS details', () => {
+      useGetModuleLicenseInfoMock.mockImplementation(() => {
+        return {
+          data: {
+            data: [
+              {
+                edition: Editions.ENTERPRISE,
+                totalChaosExperimentRuns: 10000,
+                totalChaosInfrastructures: 1000,
+                moduleType: 'CHAOS'
+              }
+            ],
+            status: 'SUCCESS'
+          },
+          refetch: jest.fn()
+        }
+      })
+
+      useGetAccountMock.mockImplementation(() => {
+        return {
+          data: {
+            data: {
+              accountId: '123'
+            },
+            status: 'SUCCESS'
+          },
+          refetch: jest.fn()
+        }
+      })
+
+      const { getByText } = render(
+        <TestWrapper defaultAppStoreValues={{ featureFlags }} pathParams={{ module: ModuleName.CHAOS }}>
+          <SubscriptionsPage />
+        </TestWrapper>
+      )
+
+      expect(getByText('common.subscriptions.chaos.experiments')).toBeInTheDocument()
+      expect(getByText('common.subscriptions.chaos.infrastructures')).toBeInTheDocument()
     })
   })
 })

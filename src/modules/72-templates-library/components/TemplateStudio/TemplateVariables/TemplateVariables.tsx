@@ -17,8 +17,16 @@ import { PageSpinner } from '@common/components'
 import type { NGTemplateInfoConfig } from 'services/template-ng'
 import StageCard from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StageCard'
 import { TemplateContext } from '@templates-library/components/TemplateStudio/TemplateContext/TemplateContext'
-import type { PipelineInfoConfig, StageElementConfig, StepElementConfig } from 'services/pipeline-ng'
-import { StepCardPanel } from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StepCard'
+import type {
+  PipelineInfoConfig,
+  StageElementConfig,
+  StepElementConfig,
+  StepGroupElementConfig
+} from 'services/pipeline-ng'
+import {
+  StepCardPanel,
+  StepGroupTemplateCard
+} from '@pipeline/components/PipelineStudio/PipelineVariables/Cards/StepCard'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { DefaultNewStageId } from '@templates-library/components/TemplateStudio/StageTemplateCanvas/StageTemplateForm/StageTemplateForm'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
@@ -52,7 +60,14 @@ const TemplateVariables: React.FC = (): JSX.Element => {
   const [templateAtState, setTemplateAtState] = React.useState<NGTemplateInfoConfig>(originalTemplate)
 
   const onUpdate = useCallback(
-    async (values: PipelineInfoConfig | StageElementConfig | StepElementConfig | DeploymentTemplateConfig) => {
+    async (
+      values:
+        | PipelineInfoConfig
+        | StageElementConfig
+        | StepElementConfig
+        | DeploymentTemplateConfig
+        | StepGroupElementConfig
+    ) => {
       const processNode = omit(values, 'name', 'identifier', 'description', 'tags')
       sanitize(processNode, { removeEmptyArray: false, removeEmptyObject: false, removeEmptyString: false })
       const updatedTemplate = produce(templateAtState, draft => {
@@ -75,6 +90,7 @@ const TemplateVariables: React.FC = (): JSX.Element => {
   if (initLoading) {
     return <PageSpinner />
   }
+
   return (
     <div className={css.pipelineVariables}>
       {error ? (
@@ -121,6 +137,22 @@ const TemplateVariables: React.FC = (): JSX.Element => {
                     stageIdentifier={DefaultNewStageId}
                     onUpdateStep={onUpdate}
                     stepsFactory={factory}
+                  />
+                )}
+                {originalTemplate.type === TemplateType.StepGroup && (
+                  <StepGroupTemplateCard
+                    templateSteps={variablesTemplate as StepGroupElementConfig}
+                    originalSteps={originalTemplate?.spec?.steps}
+                    stageIdentifier={DefaultNewStageId}
+                    stepGroupIdentifier={originalTemplate.identifier}
+                    stepGroupName={originalTemplate.name}
+                    stepGroupOriginalName={originalTemplate.name}
+                    metadataMap={metadataMap}
+                    allowableTypes={allowableTypes}
+                    stepsFactory={factory}
+                    onUpdateStep={onUpdate}
+                    readonly={isReadonly}
+                    path={'template'}
                   />
                 )}
                 {originalTemplate.type === TemplateType.SecretManager && (

@@ -130,7 +130,7 @@ exports[`Project Page List Create Project and Close 1`] = `
                   data-testid="dropdown-value"
                   style="--text-line-clamp: 1;"
                 >
-                  projectsOrgs.tabOrgs
+                  common.tabOrgs
                 </p>
               </div>
               <div
@@ -3930,7 +3930,7 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
                   data-testid="dropdown-value"
                   style="--text-line-clamp: 1;"
                 >
-                  projectsOrgs.tabOrgs
+                  common.tabOrgs
                 </p>
               </div>
               <div
@@ -7730,7 +7730,7 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
                   data-testid="dropdown-value"
                   style="--text-line-clamp: 1;"
                 >
-                  projectsOrgs.tabOrgs
+                  common.tabOrgs
                 </p>
               </div>
               <div
@@ -11530,7 +11530,7 @@ exports[`Project Page List Whole Modal Test 1`] = `
                   data-testid="dropdown-value"
                   style="--text-line-clamp: 1;"
                 >
-                  projectsOrgs.tabOrgs
+                  common.tabOrgs
                 </p>
               </div>
               <div

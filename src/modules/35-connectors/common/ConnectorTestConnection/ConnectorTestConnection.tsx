@@ -378,7 +378,9 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
                   className={cx(css.veiwPermission, { [css.marginAuto]: props.isStep })}
                   intent="primary"
                 >
-                  {getString('connectors.testConnectionStep.viewPermissions')}
+                  {(connectorInfo as ConnectorInfoDTO).type === Connectors.SERVICE_NOW
+                    ? getString('connectors.serviceNow.serviceNowViewPermissions')
+                    : getString('connectors.testConnectionStep.viewPermissions')}
                 </Text>
               )}
             </Layout.Horizontal>

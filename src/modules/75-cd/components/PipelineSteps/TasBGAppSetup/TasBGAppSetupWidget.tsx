@@ -46,6 +46,7 @@ export function TasBGAppSetupWidget(
       })
     }
     if (value < 1) {
+      /* istanbul ignore next */
       return this.createError({
         message: getString('cd.ElastigroupStep.valueCannotBeLessThan', {
           value: valueString,
@@ -113,6 +114,7 @@ export function TasBGAppSetupWidget(
                 multiTypeProps={{
                   allowableTypes
                 }}
+                type={getString('tagLabel')}
                 label={getString('cd.steps.tas.tempRoutes')}
                 enableConfigureOptions
                 isArray={true}

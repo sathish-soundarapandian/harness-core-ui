@@ -30,44 +30,42 @@ export function AzureArmRollbackInputStepRef<T extends RollbackStackData = Rollb
       {
         /* istanbul ignore next */
         getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <TimeoutFieldInputSetView
-              template={inputSetData?.template}
-              fieldPath={'timeout'}
-              label={getString('pipelineSteps.timeoutLabel')}
-              name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-              disabled={readonly}
-              multiTypeDurationProps={{
-                configureOptionsProps: {
-                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-                },
-                allowableTypes,
-                expressions,
-                disabled: readonly
-              }}
-            />
-          </div>
+          <TimeoutFieldInputSetView
+            template={inputSetData?.template}
+            fieldPath={'timeout'}
+            label={getString('pipelineSteps.timeoutLabel')}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+            disabled={readonly}
+            multiTypeDurationProps={{
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
+              allowableTypes,
+              expressions,
+              disabled: readonly
+            }}
+            className={cx(stepCss.formGroup, stepCss.md)}
+          />
         )
       }
       {
         /* istanbul ignore next */
         getMultiTypeFromValue(inputSetData?.template?.spec?.provisionerIdentifier) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <TextFieldInputSetView
-              template={inputSetData?.template}
-              fieldPath={'spec.provisionerIdentifier'}
-              name={`${path}.spec.provisionerIdentifier`}
-              label={getString('pipelineSteps.provisionerIdentifier')}
-              disabled={readonly}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              configureOptionsProps={{
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              }}
-            />
-          </div>
+          <TextFieldInputSetView
+            template={inputSetData?.template}
+            fieldPath={'spec.provisionerIdentifier'}
+            name={`${path}.spec.provisionerIdentifier`}
+            label={getString('pipelineSteps.provisionerIdentifier')}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            className={cx(stepCss.formGroup, stepCss.md)}
+          />
         )
       }
     </FormikForm>

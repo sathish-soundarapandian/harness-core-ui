@@ -6,6 +6,7 @@
  */
 
 import { RiskValues } from '@cv/utils/CommonUtils'
+import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import type { ResponsePageMonitoredServiceListItemDTO, MonitoredServiceListItemDTO, CountServiceDTO } from 'services/cv'
 
 export const yamlResponse = {
@@ -78,7 +79,7 @@ const MSListContent: MonitoredServiceListItemDTO[] = [
     environmentRef: 'new_env_test',
     type: 'Application',
     healthMonitoringEnabled: true,
-    serviceLicenseEnabled: true,
+    serviceMonitoringEnabled: true,
     historicalTrend: {
       healthScores: [{ riskStatus: RiskValues.NO_DATA }]
     },
@@ -92,7 +93,7 @@ const MSListContent: MonitoredServiceListItemDTO[] = [
     environmentRef: 'AppDTestEnv1',
     serviceName: 'ServiceName 2',
     environmentName: 'EnvironmentName 2',
-    serviceLicenseEnabled: true,
+    serviceMonitoringEnabled: true,
     type: 'Application',
     healthMonitoringEnabled: true,
     historicalTrend: {
@@ -108,7 +109,7 @@ const MSListContent: MonitoredServiceListItemDTO[] = [
     environmentRef: 'AppDTestEnv2',
     serviceName: 'ServiceName 3',
     environmentName: 'EnvironmentName 3',
-    serviceLicenseEnabled: true,
+    serviceMonitoringEnabled: true,
     type: 'Application',
     healthMonitoringEnabled: true,
     historicalTrend: {
@@ -129,7 +130,7 @@ const MSListContentMock2: MonitoredServiceListItemDTO[] = [
     environmentRef: 'new_env_test',
     type: 'Application',
     healthMonitoringEnabled: true,
-    serviceLicenseEnabled: false,
+    serviceMonitoringEnabled: false,
     historicalTrend: {
       healthScores: [{ riskStatus: RiskValues.NO_DATA }]
     },
@@ -148,7 +149,7 @@ const MSListContentEnforcementMock: MonitoredServiceListItemDTO[] = [
     environmentRef: 'new_env_test',
     type: 'Application',
     healthMonitoringEnabled: true,
-    serviceLicenseEnabled: false,
+    serviceMonitoringEnabled: false,
     historicalTrend: {
       healthScores: [{ riskStatus: RiskValues.NO_DATA }]
     },
@@ -357,5 +358,21 @@ export const checkFeatureReturnMock = {
   featureDetail: {
     count: 1,
     limit: 5
+  }
+}
+
+export const licenseWithSRMActive = {
+  licenseInformation: {
+    CV: {
+      status: LICENSE_STATE_VALUES.ACTIVE
+    }
+  }
+}
+
+export const licenseWithSRMExpired = {
+  licenseInformation: {
+    CV: {
+      status: LICENSE_STATE_VALUES.EXPIRED
+    }
   }
 }

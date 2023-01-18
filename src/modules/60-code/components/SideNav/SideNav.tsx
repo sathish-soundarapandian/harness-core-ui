@@ -8,6 +8,7 @@
 import React from 'react'
 import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
 import { Layout } from '@harness/uicore'
+import cx from 'classnames'
 import { ProjectSelector, ProjectSelectorProps } from '@projects-orgs/components/ProjectSelector/ProjectSelector'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -28,7 +29,8 @@ export default function CODESideNav(): React.ReactElement {
       routes.toCODERepositories({ space: [accountId, data.orgIdentifier as string, data.identifier].join('/') })
     )
   }
-  const isFiles = path.endsWith(':repoName') || path.includes(':repoName/files/')
+  const isFiles =
+    path.endsWith(':repoName') || path.includes(':repoName/files/') || path.endsWith(':gitRef*/~/:resourcePath*')
 
   return (
     <Layout.Vertical spacing="small">
@@ -50,7 +52,7 @@ export default function CODESideNav(): React.ReactElement {
               icon="code-file-light"
               textProps={{
                 iconProps: {
-                  size: 16
+                  size: 18
                 }
               }}
               label={getString('common.files')}
@@ -112,15 +114,15 @@ export default function CODESideNav(): React.ReactElement {
 
           {repoName && (
             <SidebarLink
-              className={css.subNav}
-              icon="cog"
+              className={cx(css.subNav, css.webhooks)}
+              icon="code-webhook"
               textProps={{
                 iconProps: {
-                  size: 14
+                  size: 20
                 }
               }}
-              label={getString('settingsLabel')}
-              to={routes.toCODESettings({
+              label={getString('code.webhooks')}
+              to={routes.toCODEWebhooks({
                 repoPath: [accountId, orgIdentifier, projectIdentifier, repoName].join('/')
               })}
             />

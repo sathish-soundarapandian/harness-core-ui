@@ -16,9 +16,7 @@ import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
-import { returnLaunchUrl } from '@common/utils/routeUtils'
 import NavExpandable from '@common/navigation/NavExpandable/NavExpandable'
-import { LaunchButton } from '@common/components/LaunchButton/LaunchButton'
 import { USER_JOURNEY_EVENTS } from '@ce/TrackingEventsConstants'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { featureNames } from '@ce/constants'
@@ -256,10 +254,6 @@ const SideNavItems = () => {
           </Layout.Vertical>
         </NavExpandable>
       </React.Fragment>
-      <LaunchButton
-        launchButtonText={getString('common.ce.visibilityLaunchButton')}
-        redirectUrl={returnLaunchUrl(`#/account/${accountId}/continuous-efficiency/overview`)}
-      />
     </Layout.Vertical>
   )
 }

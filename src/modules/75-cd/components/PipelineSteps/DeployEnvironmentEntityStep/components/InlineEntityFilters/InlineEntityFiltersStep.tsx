@@ -7,11 +7,14 @@
 
 import React from 'react'
 import type { IconName } from '@harness/icons'
+
 import { Step, StepProps } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { isTemplatizedView } from '@pipeline/utils/stepUtils'
 
 import type { InlineEntityFiltersProps } from './InlineEntityFiltersUtils'
-import InlineEntityFiltersWidget from './InlineEntityFiltersWidget'
+import InlineEntityFiltersWidget from './InlineEntityFiltersWidget/InlineEntityFiltersWidget'
+import InlineEntityFiltersInputStep from './InlineEntityFiltersInputStep/InlineEntityFiltersInputStep'
 
 export class InlineEntityFiltersStep extends Step<InlineEntityFiltersProps> {
   constructor() {
@@ -24,7 +27,17 @@ export class InlineEntityFiltersStep extends Step<InlineEntityFiltersProps> {
   protected defaultValues: InlineEntityFiltersProps = {} as any
 
   renderStep(props: StepProps<InlineEntityFiltersProps>): JSX.Element {
-    const { initialValues, readonly, allowableTypes } = props
+    const { initialValues, readonly, allowableTypes, stepViewType, inputSetData } = props
+
+    if (isTemplatizedView(stepViewType)) {
+      return (
+        <InlineEntityFiltersInputStep
+          readonly={!!readonly}
+          allowableTypes={allowableTypes}
+          inputSetData={inputSetData}
+        />
+      )
+    }
 
     return <InlineEntityFiltersWidget {...initialValues} readonly={!!readonly} allowableTypes={allowableTypes} />
   }

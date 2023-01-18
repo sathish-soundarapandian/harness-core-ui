@@ -323,7 +323,11 @@ export const isMultiArtifactSourceEnabled = (
   stage: DeploymentStageElementConfig,
   isServiceEntityPage: boolean
 ): boolean => {
-  return isMultiArtifactSource && (isEmpty(stage?.spec?.serviceConfig?.serviceDefinition?.type) || isServiceEntityPage)
+  return (
+    isMultiArtifactSource &&
+    (isEmpty(stage?.spec?.serviceConfig?.serviceDefinition?.type) ||
+      (isServiceEntityPage && isEmpty(stage?.spec?.serviceConfig?.serviceDefinition?.spec?.artifacts?.primary?.type)))
+  )
 }
 
 export const shouldFetchFieldData = (fieldList: string[]) => {

@@ -6,6 +6,7 @@
  */
 import React, { useState } from 'react'
 import { Classes, FormGroup, IFormGroupProps, Intent } from '@blueprintjs/core'
+import cx from 'classnames'
 import { useFormikContext } from 'formik'
 import { Color } from '@harness/design-system'
 import {
@@ -36,6 +37,9 @@ import {
 } from '@common/components/ReferenceSelect/ReferenceSelect'
 import { useStrings } from 'framework/strings'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { getIdentifierFromScopedRef } from '@common/utils/utils'
 import { getReferenceFieldProps } from './Utils'
 import css from './FormMultiTypeEnvironmentField.module.scss'
 
@@ -59,14 +63,16 @@ export interface EnvironmentReferenceFieldProps extends Omit<IFormGroupProps, 'l
   error?: string
   isMultiSelect?: boolean
   onMultiSelectChange?: any
+  isOnlyFixedType?: boolean
   isNewConnectorLabelVisible?: boolean
+  labelClass?: string
 }
 
 export function getSelectedRenderer(selected: any): JSX.Element {
   return (
     <Layout.Horizontal spacing="small" flex={{ distribution: 'space-between' }} className={css.selectWrapper}>
       <Text tooltip={defaultTo(selected?.name, selected)} color={Color.GREY_800} className={css.label}>
-        {defaultTo(selected?.label, selected)}
+        {getIdentifierFromScopedRef(defaultTo(defaultTo(selected?.label, selected), ''))}
       </Text>
       <Tag minimal id={css.tag}>
         {getScopeFromValue(selected?.value || selected)}
@@ -102,7 +108,9 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
     onMultiSelectChange,
     openAddNewModal,
     isNewConnectorLabelVisible,
+    isOnlyFixedType = false,
     placeholder,
+    labelClass: labelClassFromProps = '',
     disabled,
     width,
     ...restProps
@@ -148,7 +156,7 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
     onMultiSelectChange(environments)
   }
   return (
-    <div style={style}>
+    <div style={style} className={cx(css.environmentLabel, labelClassFromProps)}>
       <Container data-testid="environmentTooltip">
         <HarnessDocTooltip tooltipId={dataTooltipId} labelText={label} className={Classes.LABEL} />
       </Container>
@@ -166,6 +174,7 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
               disableCollapse: true,
               selectedRenderer: getSelectedRenderer(selected),
               hideModal: hideModal,
+              isOnlyFixedtype: isOnlyFixedType,
               onMultiSelectChange: handleMultiSelectChange,
               isMultiSelect: isMultiSelect,
               pagination: {
@@ -184,7 +193,12 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
                   }}
                   text={`+ ${createNewLabel || 'Environment'}`}
                   margin={{ right: 'small' }}
-                  // TODO add permissions here depending on the tab from which it is clicked
+                  permission={{
+                    resource: {
+                      resourceType: ResourceType.ENVIRONMENT
+                    },
+                    permission: PermissionIdentifier.EDIT_ENVIRONMENT
+                  }}
                 ></RbacButton>
               ) : null
             } as ReferenceSelectProps<EnvironmentResponseDTO>

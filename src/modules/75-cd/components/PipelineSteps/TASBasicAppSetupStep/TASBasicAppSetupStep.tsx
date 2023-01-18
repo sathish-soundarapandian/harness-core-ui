@@ -62,7 +62,7 @@ export class TASBasicAppSetupStep extends PipelineStep<TASBasicAppSetupData> {
     type: StepType.BasicAppSetup,
     spec: {
       tasInstanceCountType: InstancesType.FromManifest,
-      existingVersionToKeep: 1
+      existingVersionToKeep: 3
     }
   }
 
@@ -84,7 +84,7 @@ export class TASBasicAppSetupStep extends PipelineStep<TASBasicAppSetupData> {
       return (
         <TasBasicAppSetupInputSet<TasBasicAppSetupStepInfo>
           initialValues={initialValues}
-          onUpdate={data => onUpdate?.(this.processFormData(data))}
+          onUpdate={/* istanbul ignore next */ data => onUpdate?.(this.processFormData(data))}
           stepViewType={stepViewType}
           readonly={!!inputSetData?.readonly}
           template={inputSetData?.template}
@@ -99,8 +99,8 @@ export class TASBasicAppSetupStep extends PipelineStep<TASBasicAppSetupData> {
       return (
         <VariablesListTable
           className={pipelineVariablesCss.variablePaddingL3}
-          data={variablesData}
-          originalData={initialValues}
+          data={variablesData.spec}
+          originalData={initialValues.spec}
           metadataMap={metadataMap}
         />
       )

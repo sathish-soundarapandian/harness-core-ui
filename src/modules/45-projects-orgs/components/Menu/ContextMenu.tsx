@@ -36,7 +36,7 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const { project, editProject, collaborators, setMenuOpen, openDialog } = props
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
   const permissionRequest: Optional<PermissionRequest, 'permission'> = {
@@ -137,6 +137,18 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
       })
     )
   }
+  const handleChaos = (event: React.MouseEvent<HTMLElement, MouseEvent>): void => {
+    event.stopPropagation()
+    setMenuOpen?.(false)
+    history.push(
+      routes.toProjectOverview({
+        projectIdentifier: project.identifier,
+        orgIdentifier: project.orgIdentifier || /* istanbul ignore next */ '',
+        accountId,
+        module: 'chaos'
+      })
+    )
+  }
 
   return (
     <Menu style={{ minWidth: 'unset' }}>
@@ -207,6 +219,19 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
           onClick={handleSTO}
         />
       ) : null}
+
+      {CHAOS_ENABLED && project.modules?.includes(ModuleName.CHAOS) ? (
+        <Menu.Item
+          text={
+            <Layout.Horizontal spacing="xsmall">
+              <Icon name="chaos-main" size={20} />
+              <Text color={Color.WHITE}>{getString('projectsOrgs.gotoCHAOS')}</Text>
+            </Layout.Horizontal>
+          }
+          onClick={handleChaos}
+        />
+      ) : null}
+
       <RbacMenuItem
         icon="edit"
         text={getString('edit')}

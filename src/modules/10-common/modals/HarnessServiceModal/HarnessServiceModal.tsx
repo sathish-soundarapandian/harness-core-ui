@@ -108,8 +108,8 @@ export const HarnessServicetModal: React.FC<HarnessServicetModalProps> = ({
         onSubmit(values)
       }}
       validationSchema={Yup.object().shape({
-        name: NameSchema({ requiredErrorMsg: getString?.('fieldRequired', { field }) }),
-        identifier: IdentifierSchema()
+        name: NameSchema(getString, { requiredErrorMsg: getString?.('fieldRequired', { field }) }),
+        identifier: IdentifierSchema(getString)
       })}
     >
       {formikProps => (

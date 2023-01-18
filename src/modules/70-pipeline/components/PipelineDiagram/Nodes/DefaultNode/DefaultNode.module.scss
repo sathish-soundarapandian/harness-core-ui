@@ -275,7 +275,7 @@
     top: 22px; // half the height of node
   }
   &.stageAddIcon {
-    top: 10px; // half the height of node
+    top: 22px; // half the height of node
   }
   &:hover,
   &.show {
@@ -308,7 +308,7 @@
   z-index: 99;
   &.stageMarkerLeft {
     left: -10px !important;
-    top: 9px !important;
+    top: 22px !important;
   }
   &.stepMarkerLeft {
     left: -10px !important;
@@ -320,7 +320,7 @@
   }
   &.diamondStageLeft {
     left: -20px !important;
-    top: 9px !important;
+    top: 22px !important;
   }
   &.diamondStep {
     left: -20px !important;
@@ -339,7 +339,7 @@
   z-index: 99;
   &.stageMarkerRight {
     right: -10px !important;
-    top: 9px !important;
+    top: 22px !important;
   }
   &.stepMarkerRight {
     right: -9px !important;
@@ -351,7 +351,7 @@
   }
   &.diamondStageRight {
     right: -20px !important;
-    top: 9px !important;
+    top: 22px !important;
   }
   &.diamondStep {
     right: -20px !important;

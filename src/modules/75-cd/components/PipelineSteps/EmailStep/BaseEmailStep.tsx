@@ -9,7 +9,6 @@ import React from 'react'
 import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import cx from 'classnames'
-import { defaultTo } from 'lodash-es'
 
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
@@ -60,26 +59,13 @@ const BaseEmailStep = (props: BaseEmailStepProps): React.ReactElement => {
           name="timeout"
           label={getString('pipelineSteps.timeoutLabel')}
           multiTypeDurationProps={{
-            enableConfigureOptions: false,
+            enableConfigureOptions: true,
             expressions,
             disabled: readonly,
             allowableTypes
           }}
           disabled={readonly}
         />
-        {getMultiTypeFromValue(formValues.timeout) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={defaultTo(formValues.timeout, '')}
-            type="String"
-            variableName="timeout"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={/* istanbul ignore next */ value => setFieldValue('timeout', value)}
-            isReadonly={readonly}
-            allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-          />
-        )}
       </div>
 
       <div className={stepCss.divider} />

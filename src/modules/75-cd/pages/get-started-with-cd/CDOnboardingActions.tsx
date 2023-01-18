@@ -34,7 +34,6 @@ export interface CDOnboardingReducerState {
   isLoading?: boolean
   isInitialized?: boolean
   isUpdated?: boolean
-  selectedSectionId?: string
 }
 
 export enum CDOnboardingActions {
@@ -46,8 +45,7 @@ export enum CDOnboardingActions {
   UpdateInfrastructure = 'UpdateInfrastructure',
   UpdateDelegate = 'UpdateDelegate',
   Success = 'Success',
-  Error = 'Error',
-  UpdateSelection = 'UpdateSelection'
+  Error = 'Error'
 }
 
 export interface ActionResponse {
@@ -59,7 +57,6 @@ export interface ActionResponse {
   environment?: EnvironmentRequestDTO
   infrastructure?: InfrastructureDataType
   delegate?: DelegateDataType
-  selectedSectionId?: string
 }
 
 export interface ActionReturnType {
@@ -86,10 +83,6 @@ const updateDelegate = (response: ActionResponse): ActionReturnType => ({
   type: CDOnboardingActions.UpdateDelegate,
   response
 })
-const updateSectionId = (response: ActionResponse): ActionReturnType => ({
-  type: CDOnboardingActions.UpdateSelection,
-  response
-})
 
 const fetching = (): ActionReturnType => ({ type: CDOnboardingActions.Fetching })
 const success = (response: ActionResponse): ActionReturnType => ({ type: CDOnboardingActions.Success, response })
@@ -102,7 +95,6 @@ export const CDOnboardingContextActions = {
   updateEnvironment,
   updateInfrastructure,
   updateDelegate,
-  updateSectionId,
   fetching,
   success,
   error
@@ -117,8 +109,7 @@ export const initialState: CDOnboardingReducerState = {
   schemaErrors: false,
   isLoading: false,
   isUpdated: false,
-  isInitialized: false,
-  selectedSectionId: 'CONFIGURE_SERVICE'
+  isInitialized: false
 }
 
 export const CDOnboardingReducer = (state = initialState, data: ActionReturnType): CDOnboardingReducerState => {
@@ -156,11 +147,6 @@ export const CDOnboardingReducer = (state = initialState, data: ActionReturnType
       return {
         ...state,
         delegate: response?.delegate ? clone(response?.delegate) : state.delegate
-      }
-    case CDOnboardingActions.UpdateSelection:
-      return {
-        ...state,
-        selectedSectionId: response?.selectedSectionId
       }
     case CDOnboardingActions.Fetching:
       return {

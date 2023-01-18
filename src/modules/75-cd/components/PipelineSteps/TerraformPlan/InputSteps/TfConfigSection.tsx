@@ -27,7 +27,7 @@ import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInpu
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { fileTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
 import type { TerraformPlanProps } from '../../Common/Terraform/TerraformInterfaces'
-import { getPath } from '../../Common/Terraform/Editview/TerraformConfigFormHelper'
+import { getPath } from '../../Common/ConfigFileStore/ConfigFileStoreHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.ReactElement {
@@ -36,7 +36,7 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
   const { getRBACErrorMessage } = useRBACError()
   const { inputSetData, readonly, initialValues, path, allowableTypes, formik, stepViewType, isBackendConfig } = props
 
-  const configPath = getPath(true, isBackendConfig)
+  const configPath = getPath(true, false, isBackendConfig)
   const config = inputSetData?.template?.spec?.configuration
   const configSpec = get(inputSetData?.template, configPath)
   const store = configSpec?.store
@@ -106,23 +106,22 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
         </Label>
       )}
       {getMultiTypeFromValue(config?.workspace) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${path}.spec.configuration.workspace`}
-            placeholder={getString('pipeline.terraformStep.workspace')}
-            label={getString('pipelineSteps.workspace')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            template={inputSetData?.template}
-            fieldPath={`${path}.spec.configuration.workspace`}
-          />
-        </div>
+        <TextFieldInputSetView
+          name={`${path}.spec.configuration.workspace`}
+          placeholder={getString('pipeline.terraformStep.workspace')}
+          label={getString('pipelineSteps.workspace')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={inputSetData?.template}
+          fieldPath={`${path}.spec.configuration.workspace`}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
       {getMultiTypeFromValue(configSpec?.store?.spec?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -151,70 +150,111 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
         </div>
       )}
       {getMultiTypeFromValue(configSpec?.store?.spec?.repoName) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            label={getString('pipelineSteps.repoName')}
-            name={`${path}.${configPath}.store.spec.repoName`}
-            placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            template={inputSetData?.template}
-            fieldPath={`${path}.${configPath}.store.spec.repoName`}
-          />
-        </div>
+        <TextFieldInputSetView
+          label={getString('pipelineSteps.repoName')}
+          name={`${path}.${configPath}.store.spec.repoName`}
+          placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={inputSetData?.template}
+          fieldPath={`${path}.${configPath}.store.spec.repoName`}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
 
       {getMultiTypeFromValue(configSpec?.store?.spec?.branch) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            label={getString('pipelineSteps.deploy.inputSet.branch')}
-            name={`${path}.${configPath}.store.spec.branch`}
-            placeholder={getString('pipeline.manifestType.branchPlaceholder')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            template={inputSetData?.template}
-            fieldPath={`${path}.${configPath}.store.spec.branch`}
-          />
-        </div>
+        <TextFieldInputSetView
+          label={getString('pipelineSteps.deploy.inputSet.branch')}
+          name={`${path}.${configPath}.store.spec.branch`}
+          placeholder={getString('pipeline.manifestType.branchPlaceholder')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={inputSetData?.template}
+          fieldPath={`${path}.${configPath}.store.spec.branch`}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
 
       {getMultiTypeFromValue(configSpec?.store?.spec?.commitId) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            label={getString('pipeline.manifestType.commitId')}
-            name={`${path}.${configPath}.store.spec.commitId`}
-            placeholder={getString('pipeline.manifestType.commitPlaceholder')}
-            disabled={readonly}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            template={inputSetData?.template}
-            fieldPath={`${path}.${configPath}.store.spec.commitId`}
-          />
-        </div>
+        <TextFieldInputSetView
+          label={getString('pipeline.manifestType.commitId')}
+          name={`${path}.${configPath}.store.spec.commitId`}
+          placeholder={getString('pipeline.manifestType.commitPlaceholder')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={inputSetData?.template}
+          fieldPath={`${path}.${configPath}.store.spec.commitId`}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
 
       {getMultiTypeFromValue(configSpec?.store?.spec?.folderPath) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
+        <TextFieldInputSetView
+          label={getString('common.git.folderPath')}
+          name={`${path}.${configPath}.store.spec.folderPath`}
+          placeholder={getString('pipeline.manifestType.pathPlaceholder')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={inputSetData?.template}
+          fieldPath={`${path}.${configPath}.store.spec.folderPath`}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
+      )}
+
+      {reposRequired && (
+        <SelectInputSetView
+          className={cx(stepCss.formGroup, stepCss.md)}
+          label={getString('pipelineSteps.repoName')}
+          name={`${path}.${configPath}.store.spec.repositoryName`}
+          placeholder={getString(ArtifactRepoLoading ? 'common.loading' : 'cd.selectRepository')}
+          disabled={readonly}
+          selectItems={connectorRepos ? connectorRepos : []}
+          useValue
+          multiTypeInputProps={{
+            selectProps: {
+              allowCreatingNewItems: true,
+              items: connectorRepos ? connectorRepos : []
+            },
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={inputSetData?.template}
+          fieldPath={`${path}.${configPath}.store.spec.repositoryName`}
+        />
+      )}
+
+      {store?.type === Connectors.ARTIFACTORY &&
+        getMultiTypeFromValue(configSpec?.store?.spec?.artifactPaths) === MultiTypeInputType.RUNTIME && (
           <TextFieldInputSetView
-            label={getString('common.git.folderPath')}
-            name={`${path}.${configPath}.store.spec.folderPath`}
+            label={getString('pipeline.artifactPathLabel')}
+            name={`${path}.${configPath}.store.spec.artifactPaths`}
             placeholder={getString('pipeline.manifestType.pathPlaceholder')}
             disabled={readonly}
             multiTextInputProps={{
@@ -225,57 +265,10 @@ function ConfigSectionRef(props: TerraformPlanProps & { formik?: any }): React.R
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             template={inputSetData?.template}
-            fieldPath={`${path}.${configPath}.store.spec.folderPath`}
+            fieldPath={`${path}.${configPath}.store.spec.artifactPaths`}
+            onChange={value => formik?.setFieldValue(`${path}.${configPath}.store.spec.artifactPaths`, [value])}
+            className={cx(stepCss.formGroup, stepCss.md)}
           />
-        </div>
-      )}
-
-      {reposRequired && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <SelectInputSetView
-            label={getString('pipelineSteps.repoName')}
-            name={`${path}.${configPath}.store.spec.repositoryName`}
-            placeholder={getString(ArtifactRepoLoading ? 'common.loading' : 'cd.selectRepository')}
-            disabled={readonly}
-            selectItems={connectorRepos ? connectorRepos : []}
-            useValue
-            multiTypeInputProps={{
-              selectProps: {
-                allowCreatingNewItems: true,
-                items: connectorRepos ? connectorRepos : []
-              },
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            template={inputSetData?.template}
-            fieldPath={`${path}.${configPath}.store.spec.repositoryName`}
-          />
-        </div>
-      )}
-
-      {store?.type === Connectors.ARTIFACTORY &&
-        getMultiTypeFromValue(configSpec?.store?.spec?.artifactPaths) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <TextFieldInputSetView
-              label={getString('pipeline.artifactPathLabel')}
-              name={`${path}.${configPath}.store.spec.artifactPaths`}
-              placeholder={getString('pipeline.manifestType.pathPlaceholder')}
-              disabled={readonly}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              configureOptionsProps={{
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              }}
-              template={inputSetData?.template}
-              fieldPath={`${path}.${configPath}.store.spec.artifactPaths`}
-              onChange={value => formik?.setFieldValue(`${path}.${configPath}.store.spec.artifactPaths`, [value])}
-            />
-          </div>
         )}
 
       {store?.type === 'Harness' &&

@@ -13,7 +13,7 @@ import GroupName from '@cv/components/GroupName/GroupName'
 import { NameId } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useStrings } from 'framework/strings'
 import type { CustomHealthMetricDefinition } from 'services/cv'
-import { CommonHealthSourceFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import type { AddMetricForm } from '../../CustomMetricForm.types'
 
 export interface AddMetricProps {
@@ -22,26 +22,27 @@ export interface AddMetricProps {
   groupNames: SelectOption[]
   setGroupName: Dispatch<SetStateAction<SelectOption[]>>
   fieldLabel: string
+  isEdit: boolean
 }
 
 export default function AddMetric(props: AddMetricProps): JSX.Element {
-  const { enableDefaultGroupName, currentSelectedMetricDetail, groupNames, setGroupName, fieldLabel } = props
+  const { enableDefaultGroupName, currentSelectedMetricDetail, groupNames, setGroupName, fieldLabel, isEdit } = props
   const { handleReset, handleSubmit, values, setFieldValue } = useFormikContext<AddMetricForm>()
   const { getString } = useStrings()
   const handleSubmitData = (): void => handleSubmit()
+  const labelName = isEdit ? 'common.editName' : 'common.addName'
+
   return (
     <Container padding="large">
       <Text font={{ weight: 'bold', size: 'large' }} color={Color.BLACK} padding={{ bottom: 'xxlarge' }}>
-        {getString('common.addName', {
-          name: fieldLabel
-        })}
+        {getString(labelName, { name: fieldLabel })}
       </Text>
       <Layout.Vertical spacing="small">
         <NameId
           nameLabel={getString('cv.monitoringSources.commonHealthSource.metricName', { name: fieldLabel })}
           identifierProps={{
-            inputName: CommonHealthSourceFieldNames.METRIC_NAME,
-            idName: CommonHealthSourceFieldNames.METRIC_IDENTIFIER,
+            inputName: CustomMetricFormFieldNames.METRIC_NAME,
+            idName: CustomMetricFormFieldNames.METRIC_IDENTIFIER,
             isIdentifierEditable: Boolean(!currentSelectedMetricDetail?.identifier)
           }}
         />
@@ -53,7 +54,7 @@ export default function AddMetric(props: AddMetricProps): JSX.Element {
             setGroupNames={setGroupName}
             label={getString('rbac.userDetails.linkToSSOProviderModal.groupNameLabel')}
             title={getString('cv.monitoringSources.commonHealthSource.addGroupName')}
-            fieldName={CommonHealthSourceFieldNames.GROUP_NAME}
+            fieldName={CustomMetricFormFieldNames.GROUP_NAME}
           />
         ) : null}
         <Container style={{ paddingTop: 'var(--spacing-xlarge)' }}>

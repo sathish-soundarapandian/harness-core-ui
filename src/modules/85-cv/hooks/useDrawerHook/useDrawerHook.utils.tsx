@@ -9,15 +9,8 @@ import { Position, IDrawerProps } from '@blueprintjs/core'
 import { merge } from 'lodash-es'
 import { DRAWER_OFFSET_LEFT } from './useDrawerHook.constant'
 
-export const getDefaultDrawerProps = ({
-  showWarning,
-  header
-}: {
-  showWarning: () => void
-  header: JSX.Element | undefined
-}): IDrawerProps => {
+export const getDefaultDrawerProps = ({ header }: { header: JSX.Element | undefined }): IDrawerProps => {
   return {
-    onClose: showWarning,
     usePortal: true,
     autoFocus: true,
     canEscapeKeyClose: true,

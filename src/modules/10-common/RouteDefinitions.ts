@@ -52,7 +52,8 @@ import type {
   EnvironmentQueryParams,
   AccountLevelGitOpsPathProps,
   TemplateType,
-  AccountRoutePlacement
+  AccountRoutePlacement,
+  ExecutionQueryParams
 } from '@common/interfaces/RouteInterfaces'
 
 const CV_HOME = `/cv/home`
@@ -1125,7 +1126,7 @@ const routes = {
       module,
       source,
       ...rest
-    }: PipelineType<ExecutionPathProps> & GitQueryParams) => {
+    }: PipelineType<ExecutionPathProps> & GitQueryParams & ExecutionQueryParams) => {
       const basePath = module || 'home'
       const queryString = qs.stringify(rest, { skipNulls: true })
       if (queryString.length > 0) {
@@ -1222,6 +1223,19 @@ const routes = {
     }: PipelineType<ExecutionPathProps>) => {
       const basePath = module || 'home'
       return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/et`
+    }
+  ),
+  toResilienceView: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      executionIdentifier,
+      module,
+      source
+    }: PipelineType<ExecutionPathProps>) => {
+      const basePath = module || 'home'
+      return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/resilience`
     }
   ),
   /********************************************************************************************************************/
@@ -1865,6 +1879,11 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
       `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/security-review`
   ),
+  toSTOGettingStarted: withAccountId(() => '/sto/getting-started'),
+  toSTOProjectGettingStarted: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/getting-started`
+  ),
   /********************************************************************************************************************/
   toOldCustomDashboard: withAccountId(() => '/home/dashboards*'),
   toCustomDashboard: withAccountId(() => '/dashboards'),
@@ -1930,6 +1949,17 @@ const routes = {
       environmentIdentifier
     }: Partial<ProjectPathProps> & { environmentIdentifier: string }) =>
       `/chaos/orgs/${orgIdentifier}/projects/${projectIdentifier}/environments/${environmentIdentifier}`
+  ),
+
+  /*********************** IACM */
+  toIACM: withAccountId(() => `/iacm`),
+  toIACMMicroFrontend: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
+  ),
+  toIACMStacks: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/stacks`
   )
 }
 

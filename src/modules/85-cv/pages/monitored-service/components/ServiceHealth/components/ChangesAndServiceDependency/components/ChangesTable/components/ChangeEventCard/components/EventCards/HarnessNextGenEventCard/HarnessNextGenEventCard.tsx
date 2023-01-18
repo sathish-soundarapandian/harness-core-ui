@@ -24,8 +24,8 @@ import { createChangeTitleData, createChangeDetailsData } from '../../../ChangeE
 import ChangeDetails from '../../ChangeDetails/ChangeDetails'
 import DeploymentTimeDuration from '../../DeploymentTimeDuration/DeploymentTimeDuration'
 import { TWO_HOURS_IN_MILLISECONDS } from '../../../ChangeEventCard.constant'
-import ChangeTitleForHarness from '../../ChangeTitleForHarnessCD/ChangePipelineForHarnessCD'
 import { durationAsString } from '../../DeploymentTimeDuration/DeploymentTimeDuration.utils'
+import ChangeTitleWithRedirectButton from '../../ChangeTitleWithRedirectButton/ChangeTitleWithRedirectButton'
 import css from '../../../ChangeEventCard.module.scss'
 
 export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO }): JSX.Element {
@@ -67,7 +67,7 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
 
   return (
     <Card className={css.main}>
-      <ChangeTitleForHarness changeTitleData={changeTitleData} />
+      <ChangeTitleWithRedirectButton changeTitleData={changeTitleData} />
       <Container margin={{ top: 'medium', bottom: 'medium' }} height={1} background={Color.GREY_200} />
 
       <ChangeDetails
@@ -85,7 +85,7 @@ export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO
                     margin={{ bottom: 'medium' }}
                   >
                     <UserLabel
-                      name={identifier || extraInfo?.emai}
+                      name={identifier || extraInfo?.email}
                       email={extraInfo?.email}
                       iconProps={{ size: 16 }}
                       textProps={{ font: { size: 'small', weight: 'semi-bold' }, color: Color.BLACK_100 }}

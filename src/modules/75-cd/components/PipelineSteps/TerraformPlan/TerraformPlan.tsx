@@ -94,19 +94,18 @@ import TfVarFileList from './TfPlanVarFileList'
 
 import TerraformInputStep from './TfPlanInputStep'
 import { TerraformVariableStep } from './TfPlanVariableView'
-import { TerraformConfigStepOne } from '../Common/Terraform/Editview/TerraformConfigFormStepOne'
-import { TerraformConfigStepTwo } from '../Common/Terraform/Editview/TerraformConfigFormStepTwo'
+import { TFArtifactoryForm } from '../Common/Terraform/Editview/TerraformArtifactoryForm'
+import { formatArtifactoryData } from '../Common/Terraform/Editview/TerraformArtifactoryFormHelper'
+import { TFMonaco } from '../Common/Terraform/Editview/TFMonacoEditor'
 import {
   ConnectorMap,
   ConnectorTypes,
   getBuildPayload,
   getConfigFilePath,
   getPath
-} from '../Common/Terraform/Editview/TerraformConfigFormHelper'
-import { TFArtifactoryForm } from '../Common/Terraform/Editview/TerraformArtifactoryForm'
-import { formatArtifactoryData } from '../Common/Terraform/Editview/TerraformArtifactoryFormHelper'
-
-import { TFMonaco } from '../Common/Terraform/Editview/TFMonacoEditor'
+} from '../Common/ConfigFileStore/ConfigFileStoreHelper'
+import { ConfigFileStoreStepTwo } from '../Common/ConfigFileStore/ConfigFileStoreStepTwo'
+import { ConfigFileStoreStepOne } from '../Common/ConfigFileStore/ConfigFileStoreStepOne'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from '../Common/Terraform/Editview/TerraformVarfile.module.scss'
 
@@ -159,20 +158,20 @@ function TerraformPlanWidget(
     style: { width: 1175, minHeight: 640, borderLeft: 0, paddingBottom: 0, position: 'relative', overflow: 'hidden' }
   }
 
-  const onCloseOfRemoteWizard = () => {
+  const onCloseOfRemoteWizard = (): void => {
     setConnectorView(false)
     setShowRemoteWizard(false)
     setIsEditMode(false)
   }
 
-  const onCloseBackendConfigRemoteWizard = () => {
+  const onCloseBackendConfigRemoteWizard = (): void => {
     setConnectorView(false)
     setShowBackendConfigRemoteWizard(false)
     setIsEditMode(false)
   }
 
   /* istanbul ignore next */
-  const getNewConnectorSteps = () => {
+  const getNewConnectorSteps = (): React.ReactElement => {
     const connectorType = ConnectorMap[selectedConnector]
     const buildPayload = getBuildPayload(connectorType)
     return (
@@ -330,8 +329,8 @@ function TerraformPlanWidget(
   ) => {
     return (
       <StepWizard title={getTitle(isBackendConfig)} className={css.configWizard} onStepChange={onStepChange}>
-        <TerraformConfigStepOne
-          name={isBackendConfig ? getString('cd.backendConfigFileStepOne') : getString('cd.configFileStepOne')}
+        <ConfigFileStoreStepOne
+          name={isBackendConfig ? getString('cd.backendConfigFileStepOne') : getString('cd.terraformConfigFileStepOne')}
           data={formik.values}
           isBackendConfig={isBackendConfig}
           isTerraformPlan
@@ -341,6 +340,7 @@ function TerraformPlanWidget(
           setConnectorView={setConnectorView}
           selectedConnector={selectedConnector}
           setSelectedConnector={setSelectedConnector}
+          isTerragrunt={false}
         />
         {connectorView ? getNewConnectorSteps() : null}
         {
@@ -352,7 +352,7 @@ function TerraformPlanWidget(
               allowableTypes={allowableTypes}
               name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
               onSubmitCallBack={(data: any, prevStepData: any) => {
-                const path = getPath(isTerraformPlan, isBackendConfig)
+                const path = getPath(isTerraformPlan, false, isBackendConfig)
                 const configObject = get(prevStepData?.formValues, path)
 
                 const valObj = formatArtifactoryData(
@@ -370,14 +370,15 @@ function TerraformPlanWidget(
               }}
             />
           ) : (
-            <TerraformConfigStepTwo
+            <ConfigFileStoreStepTwo
               name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
               isTerraformPlan
               isBackendConfig={isBackendConfig}
+              isTerragrunt={false}
               isReadonly={readonly}
               allowableTypes={allowableTypes}
               onSubmitCallBack={(data: any, prevStepData: any) => {
-                const path = getPath(isTerraformPlan, isBackendConfig)
+                const path = getPath(isTerraformPlan, false, isBackendConfig)
                 const configObject = get(data, path) || {
                   store: {}
                 }
@@ -529,25 +530,9 @@ function TerraformPlanWidget(
                 <FormMultiTypeDurationField
                   name="timeout"
                   label={getString('pipelineSteps.timeoutLabel')}
-                  multiTypeDurationProps={{ enableConfigureOptions: false, expressions, allowableTypes }}
+                  multiTypeDurationProps={{ enableConfigureOptions: true, expressions, allowableTypes }}
                   disabled={readonly}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      /* istanbul ignore next */
-                      setFieldValue('timeout', value)
-                    }}
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
 
               <div className={css.divider} />
@@ -779,8 +764,8 @@ function TerraformPlanWidget(
                           placeholder={getString('cd.enterTragets')}
                           multiTextInputProps={{
                             expressions,
-                            allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(item =>
-                              isMultiTypeRuntime(item)
+                            allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                              item => !isMultiTypeRuntime(item)
                             ) as AllowedTypes
                           }}
                           multiTypeFieldSelectorProps={{
@@ -800,8 +785,8 @@ function TerraformPlanWidget(
                           name="spec.configuration.environmentVariables"
                           valueMultiTextInputProps={{
                             expressions,
-                            allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(item =>
-                              isMultiTypeRuntime(item)
+                            allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                              item => !isMultiTypeRuntime(item)
                             ) as AllowedTypes
                           }}
                           multiTypeFieldSelectorProps={{

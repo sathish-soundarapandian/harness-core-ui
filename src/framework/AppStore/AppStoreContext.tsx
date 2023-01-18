@@ -69,6 +69,7 @@ export interface AppStoreContextProps {
 export interface SavedProjectDetails {
   projectIdentifier: string
   orgIdentifier: string
+  name?: string
 }
 
 export const AppStoreContext = React.createContext<AppStoreContextProps>({
@@ -78,6 +79,8 @@ export const AppStoreContext = React.createContext<AppStoreContextProps>({
   connectivityMode: undefined,
   updateAppStore: () => void 0
 })
+
+const MAX_RECENT_PROJECTS_COUNT = 5
 
 export function useAppStore(): AppStoreContextProps {
   return React.useContext(AppStoreContext)
@@ -118,6 +121,10 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
     setPreference: setSavedProject,
     clearPreference: clearSavedProject
   } = usePreferenceStore<SavedProjectDetails>(PreferenceScope.USER, 'savedProject')
+
+  const { preference: recentProjects = [], setPreference: setRecentProjects } = usePreferenceStore<
+    SavedProjectDetails[]
+  >(PreferenceScope.USER, 'recentProjects')
 
   const [state, setState] = React.useState<Omit<AppStoreContextProps, 'updateAppStore' | 'strings'>>({
     featureFlags: {},
@@ -286,7 +293,7 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
           isGitSimplificationEnabled: gitXEnabled,
           supportingGitSimplification,
           gitSyncEnabledOnlyForFF: gitSyncEnabledOnlyForFF,
-          supportingTemplatesGitx: supportingGitSimplification && state.featureFlags['NG_TEMPLATE_GITX']
+          supportingTemplatesGitx: supportingGitSimplification
         }))
       })
     } else {
@@ -296,7 +303,7 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
         connectivityMode: undefined,
         isGitSimplificationEnabled: false,
         supportingGitSimplification: true,
-        supportingTemplatesGitx: state.featureFlags['NG_TEMPLATE_GITX'],
+        supportingTemplatesGitx: !state.featureFlags['USE_OLD_GIT_SYNC'],
         gitSyncEnabledOnlyForFF: false
       }))
     }
@@ -306,8 +313,7 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
     projectIdentifierFromPath,
     orgIdentifierFromPath,
     state.isGitSyncEnabled,
-    state.featureFlags[FeatureFlag.USE_OLD_GIT_SYNC],
-    state.featureFlags[FeatureFlag.NG_TEMPLATE_GITX]
+    state.featureFlags[FeatureFlag.USE_OLD_GIT_SYNC]
   ])
 
   // set selectedOrg when orgDetails are fetched
@@ -335,7 +341,17 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
             ...prevState,
             selectedProject: project
           }))
+          const indexInRecentProjects = recentProjects.findIndex(item => item.projectIdentifier === projectIdentifier)
+          const recentProjectsCopy = [...recentProjects]
+
+          if (indexInRecentProjects > -1) {
+            recentProjectsCopy.splice(indexInRecentProjects, 1)
+          } else if (recentProjectsCopy.length === MAX_RECENT_PROJECTS_COUNT) {
+            recentProjectsCopy.splice(recentProjectsCopy.length - 1, 1)
+          }
+
           setSavedProject({ projectIdentifier, orgIdentifier })
+          setRecentProjects([{ projectIdentifier, orgIdentifier, name: project.name }, ...recentProjectsCopy])
         } else {
           // if no project was fetched, clear preference
           clearSavedProject()

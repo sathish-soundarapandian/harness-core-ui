@@ -185,9 +185,12 @@ function FormComponent({
     </div>
   ))
 
+  const canFetchVersion =
+    getMultiTypeFromValue(formik.values?.spec?.region) === MultiTypeInputType.RUNTIME || !formik.values?.spec?.region
+
   return (
     <FormikForm>
-      <div className={cx(css.connectorForm, formClassName)}>
+      <div className={cx(css.artifactForm, formClassName)}>
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.imagePathContainer}>
@@ -307,7 +310,16 @@ function FormComponent({
                     <NoTagResults
                       tagError={versionError}
                       isServerlessDeploymentTypeSelected={false}
-                      defaultErrorText={getString('pipeline.artifactsSelection.validation.noVersion')}
+                      defaultErrorText={
+                        isVersionLoading
+                          ? getString('loading')
+                          : canFetchVersion
+                          ? getString('pipeline.requiredToFetch', {
+                              requiredField: 'Region',
+                              dependentField: 'version'
+                            })
+                          : getString('pipeline.artifactsSelection.validation.noVersion')
+                      }
                     />
                   ),
                   itemRenderer: itemRenderer,
@@ -317,7 +329,8 @@ function FormComponent({
                 onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                   if (
                     e?.target?.type !== 'text' ||
-                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                    (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+                    canFetchVersion
                   ) {
                     return
                   }
@@ -457,6 +470,7 @@ export function AmazonMachineImage(
   const schemaWithIdentifier = Yup.object().shape({
     ...schemaObject,
     ...ArtifactIdentifierValidation(
+      getString,
       artifactIdentifiers,
       initialValues?.identifier,
       getString('pipeline.uniqueIdentifier')

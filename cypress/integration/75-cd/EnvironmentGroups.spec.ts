@@ -1,3 +1,4 @@
+import { contains } from 'cypress/types/jquery'
 import {
   createEnvironmentGroupsCall,
   environmentGroupRoute,
@@ -5,6 +6,7 @@ import {
   environmentGroupDetailsCall,
   environmentGroupYamlSchemaCall
 } from '../../support/75-cd/constants'
+import { addHashInCypressURLBasedOnBrowserRouter } from '../../utils/windowLocation'
 
 describe('Environment Groups CRUD', () => {
   beforeEach(() => {
@@ -62,10 +64,11 @@ describe('Environment Groups CRUD', () => {
     cy.wait('@createEnvironmentGroup')
     cy.contains('span', 'Environment Group created successfully').should('be.visible')
 
-    cy.location('hash').should(
-      'eq',
-      '#/account/accountId/cd/orgs/default/projects/project1/environment-group/testEnvGroup/details?sectionId=ENVIRONMENTS'
-    )
+    cy.location().should(loc => {
+      expect(loc.href).contains(
+        `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/project1/environment-group/testEnvGroup/details?sectionId=ENVIRONMENTS`
+      )
+    })
   })
 
   it('should be able to view environment groups and interact with environment groups', () => {
@@ -133,10 +136,11 @@ describe('Environment Groups CRUD', () => {
     cy.get('svg[data-icon="more"]').should('be.visible').click()
     cy.contains('div', 'Edit').click()
 
-    cy.location('hash').should(
-      'eq',
-      '#/account/accountId/cd/orgs/default/projects/project1/environment-group/testEnvGroup/details?sectionId=CONFIGURATION'
-    )
+    cy.location().should(loc => {
+      expect(loc.href).contains(
+        `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/project1/environment-group/testEnvGroup/details?sectionId=CONFIGURATION`
+      )
+    })
 
     cy.wait('@environmentGroupDetailsCall')
 

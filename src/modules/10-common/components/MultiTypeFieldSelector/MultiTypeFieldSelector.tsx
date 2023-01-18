@@ -146,7 +146,7 @@ export function MultiTypeFieldSelector(props: ConnectedMultiTypeFieldSelectorPro
       ) : type === MultiTypeInputType.EXPRESSION && typeof expressionRender === 'function' ? (
         expressionRender()
       ) : isMultiTypeRuntime(type) && typeof value === 'string' ? (
-        <Layout.Horizontal spacing={'medium'}>
+        <Layout.Horizontal>
           <FormInput.Text style={{ flexGrow: 1 }} className={css.runtimeDisabled} name={name} disabled label="" />
           {enableConfigureOptions && (
             <ConfigureOptions

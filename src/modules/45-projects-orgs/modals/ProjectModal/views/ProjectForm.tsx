@@ -90,8 +90,8 @@ const ProjectForm: React.FC<StepProps<Project> & ProjectModalData> = props => {
       formName="projectsForm"
       enableReinitialize={true}
       validationSchema={Yup.object().shape({
-        name: NameSchema(),
-        identifier: IdentifierSchema(),
+        name: NameSchema(getString),
+        identifier: IdentifierSchema(getString),
         orgIdentifier: Yup.string().required(getString('validation.orgValidation'))
       })}
       onSubmit={(values: AboutPageData) => {

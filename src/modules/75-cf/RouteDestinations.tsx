@@ -18,7 +18,7 @@ import {
   targetPathProps
 } from '@common/utils/routeUtils'
 import type { AccountPathProps, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { MinimalLayout } from '@common/layouts'
+import { EmptyLayout, MinimalLayout } from '@common/layouts'
 import CFHomePage from '@cf/pages/home/CFHomePage'
 import FeatureFlagsDetailPage from '@cf/pages/feature-flags-detail/FeatureFlagsDetailPage'
 import EnvironmentsPage from '@cf/pages/environments/EnvironmentsPage'
@@ -315,6 +315,7 @@ const CFRoutes: FC = () => {
       </RouteWithLayout>
 
       <RouteWithLayout
+        layout={EmptyLayout}
         licenseRedirectData={licenseRedirectData}
         sidebarProps={CFSideNavProps}
         path={routes.toCFOnboardingDetail({ ...accountPathProps, ...projectPathProps, ...environmentPathProps })}

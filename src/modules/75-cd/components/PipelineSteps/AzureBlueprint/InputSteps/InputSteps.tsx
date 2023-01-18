@@ -37,23 +37,22 @@ const InputStepRef = (props: AzureBlueprintProps & { formik?: FormikContextType<
       {
         /* istanbul ignore next */
         isValueRuntimeInput(inputSetData?.template?.timeout as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.sm)}>
-            <TimeoutFieldInputSetView
-              label={getString('pipelineSteps.timeoutLabel')}
-              name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
-              disabled={readonly}
-              multiTypeDurationProps={{
-                configureOptionsProps: {
-                  isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-                },
-                allowableTypes,
-                expressions,
-                disabled: readonly
-              }}
-              fieldPath={'timeout'}
-              template={inputSetData?.template}
-            />
-          </div>
+          <TimeoutFieldInputSetView
+            label={getString('pipelineSteps.timeoutLabel')}
+            name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
+            disabled={readonly}
+            multiTypeDurationProps={{
+              configureOptionsProps: {
+                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+              },
+              allowableTypes,
+              expressions,
+              disabled: readonly
+            }}
+            fieldPath={'timeout'}
+            template={inputSetData?.template}
+            className={cx(stepCss.formGroup, stepCss.sm)}
+          />
         )
       }
       {
@@ -83,23 +82,22 @@ const InputStepRef = (props: AzureBlueprintProps & { formik?: FormikContextType<
       {
         /* istanbul ignore next */
         isValueRuntimeInput(inputSetData?.template?.spec?.configuration?.assignmentName as string) && (
-          <div className={cx(stepCss.formGroup, stepCss.md)}>
-            <TextFieldInputSetView
-              name={`${path}.spec.configuration.assignmentName`}
-              label={getString('cd.azureBlueprint.assignmentName')}
-              disabled={readonly}
-              multiTextInputProps={{
-                expressions,
-                allowableTypes
-              }}
-              configureOptionsProps={{
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              }}
-              data-testid={`${path}.spec.configuration.assignmentName`}
-              template={inputSetData?.template}
-              fieldPath={'spec.configuration.assignmentName'}
-            />
-          </div>
+          <TextFieldInputSetView
+            name={`${path}.spec.configuration.assignmentName`}
+            label={getString('cd.azureBlueprint.assignmentName')}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            data-testid={`${path}.spec.configuration.assignmentName`}
+            template={inputSetData?.template}
+            fieldPath={'spec.configuration.assignmentName'}
+            className={cx(stepCss.formGroup, stepCss.md)}
+          />
         )
       }
       {

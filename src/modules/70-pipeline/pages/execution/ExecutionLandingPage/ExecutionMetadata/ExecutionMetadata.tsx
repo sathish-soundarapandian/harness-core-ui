@@ -7,16 +7,20 @@
 
 import React from 'react'
 import { Text, Icon, Tag, Popover } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import { HTMLTable, Position } from '@blueprintjs/core'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
+import { Link, useParams } from 'react-router-dom'
 import { useStrings, String } from 'framework/strings'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { hasCDStage, hasCIStage, StageType } from '@pipeline/utils/stageHelpers'
 import factory from '@pipeline/factories/ExecutionFactory'
-import type { ExecutorInfoDTO } from 'services/pipeline-ng'
+import type { ExecutorInfoDTO, PipelineStageInfo } from 'services/pipeline-ng'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { UserLabel } from '@common/components/UserLabel/UserLabel'
 
+import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
 import css from './ExecutionMetadata.module.scss'
 
 // stage executed name limit, exceeding this we will show a popover
@@ -24,10 +28,16 @@ const LIMIT = 3
 
 function ExecutionMetadataTrigger(): React.ReactElement {
   const { getString } = useStrings()
+  const { accountId, module, source = 'executions' } = useParams<PipelineType<ExecutionPathProps>>()
 
   const { pipelineExecutionDetail } = useExecutionContext()
   const { pipelineExecutionSummary } = pipelineExecutionDetail || {}
 
+  const { executionid, hasparentpipeline, identifier, orgid, projectid, stagenodeid, runsequence } = get(
+    pipelineExecutionSummary,
+    'parentStageInfo',
+    {} as PipelineStageInfo
+  )
   const type = pipelineExecutionSummary?.executionTriggerInfo?.triggerType as ExecutorInfoDTO['triggerType']
 
   if (type === 'WEBHOOK' || type === 'WEBHOOK_CUSTOM' || type === 'SCHEDULER_CRON') {
@@ -58,6 +68,36 @@ function ExecutionMetadataTrigger(): React.ReactElement {
           email={pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.extraInfo?.email}
           iconProps={{ size: 16 }}
         />
+        {hasparentpipeline && (
+          <Link
+            to={routes.toExecutionPipelineView({
+              accountId,
+              orgIdentifier: orgid,
+              projectIdentifier: projectid,
+              pipelineIdentifier: identifier,
+              executionIdentifier: executionid,
+              module,
+              source,
+              stage: stagenodeid
+            })}
+            target="_blank"
+            className={css.parentPipelineDetails}
+          >
+            <Icon name="chained-pipeline" color={Color.PRIMARY_7} size={20} margin={{ right: 'xsmall' }} />
+            <Text
+              font={{ variation: FontVariation.LEAD }}
+              color={Color.PRIMARY_7}
+              lineClamp={1}
+              style={{ maxWidth: '150px' }}
+              margin={{ right: 'xsmall' }}
+            >
+              {`${identifier}`}
+            </Text>
+            <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
+              {`(ID: ${runsequence})`}
+            </Text>
+          </Link>
+        )}
       </div>
     )
   }

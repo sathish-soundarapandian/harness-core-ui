@@ -11,8 +11,7 @@ const projectIdentifier = 'project1'
 const connectorIdentifier = 'prometheussale'
 const dataSourceType = 'PROMETHEUS'
 
-export const sampleDataAPI = `/cv/api/prometheus/sample-data?routingId=${accountId}&accountId=${accountId}&projectIdentifier=${projectIdentifier}&orgIdentifier=${orgIdentifier}&query=*&tracingId=*&connectorIdentifier=${connectorIdentifier}`
-
+export const sampleDataAPI = `/cv/api/prometheus/sample-data?routingId=${accountId}&accountId=${accountId}&projectIdentifier=${projectIdentifier}&orgIdentifier=${orgIdentifier}&query=*&tracingId=*&connectorIdentifier=${connectorIdentifier}&dataSourceType=*`
 export const sampleDataResponse = {
   status: 'SUCCESS',
   data: [
@@ -144,7 +143,7 @@ export const metricPackResponse = {
   responseMessages: []
 }
 
-export const labelNamesAPI = `/cv/api/prometheus/label-names?routingId=${accountId}&projectIdentifier=${projectIdentifier}&orgIdentifier=${orgIdentifier}&accountId=${accountId}&connectorIdentifier=${connectorIdentifier}&tracingId=*`
+export const labelNamesAPI = `/cv/api/prometheus/label-names?routingId=${accountId}&projectIdentifier=${projectIdentifier}&orgIdentifier=${orgIdentifier}&accountId=${accountId}&connectorIdentifier=${connectorIdentifier}&tracingId=*&dataSourceType=*`
 
 export const labelNamesResponse = {
   status: 'SUCCESS',
@@ -166,9 +165,9 @@ export const labelNamesResponse = {
   correlationId: '49e05f9e-2098-4efe-a7ee-c9b74083c436'
 }
 
-export const labelValuesAPI = `/cv/api/prometheus/label-values?routingId=${accountId}&projectIdentifier=${projectIdentifier}&orgIdentifier=${orgIdentifier}&accountId=${accountId}&connectorIdentifier=${connectorIdentifier}&labelName=*&tracingId=*`
+export const labelValuesAPI = `/cv/api/prometheus/label-values?routingId=${accountId}&projectIdentifier=${projectIdentifier}&orgIdentifier=${orgIdentifier}&accountId=${accountId}&connectorIdentifier=${connectorIdentifier}&dataSourceType=*&labelName=*&tracingId=*`
 
-export const metricListAPI = `/cv/api/prometheus/metric-list?routingId=${accountId}&projectIdentifier=${projectIdentifier}&orgIdentifier=${orgIdentifier}&accountId=${accountId}&tracingId=*&connectorIdentifier=${connectorIdentifier}`
+export const metricListAPI = `/cv/api/prometheus/metric-list?routingId=${accountId}&projectIdentifier=${projectIdentifier}&orgIdentifier=${orgIdentifier}&accountId=${accountId}&tracingId=*&connectorIdentifier=${connectorIdentifier}&dataSourceType=*`
 
 export const metricListResponse = {
   status: 'SUCCESS',

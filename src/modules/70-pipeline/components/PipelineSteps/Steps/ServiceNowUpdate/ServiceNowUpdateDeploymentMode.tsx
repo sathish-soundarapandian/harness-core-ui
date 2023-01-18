@@ -243,22 +243,21 @@ function FormContent(formContentProps: ServiceNowUpdateDeploymentModeFormContent
       ) : null}
 
       {getMultiTypeFromValue(template?.spec?.ticketNumber) === MultiTypeInputType.RUNTIME ? (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            label={getString('pipeline.serviceNowApprovalStep.issueNumber')}
-            name={`${prefix}spec.ticketNumber`}
-            multiTextInputProps={{
-              disabled: isApprovalStepFieldDisabled(readonly),
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            template={template}
-            fieldPath="spec.ticketNumber"
-          />
-        </div>
+        <TextFieldInputSetView
+          label={getString('pipeline.serviceNowApprovalStep.issueNumber')}
+          name={`${prefix}spec.ticketNumber`}
+          multiTextInputProps={{
+            disabled: isApprovalStepFieldDisabled(readonly),
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={template}
+          fieldPath="spec.ticketNumber"
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       ) : null}
       {getMultiTypeFromValue(
         template?.spec?.fields?.find(field => field.name === ServiceNowStaticFields.description)?.value as string

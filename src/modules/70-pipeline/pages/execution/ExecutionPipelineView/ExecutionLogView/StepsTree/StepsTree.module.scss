@@ -11,7 +11,7 @@ $height: 40px;
 
 .root {
   padding: 0;
-  margin: 0;
+  margin: var(--spacing-3);
   list-style: none;
 
   .item {

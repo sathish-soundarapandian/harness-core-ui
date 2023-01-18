@@ -7,25 +7,27 @@
 
 import React from 'react'
 import { Menu } from '@blueprintjs/core'
-import { Layout, SelectOption, Text } from '@harness/uicore'
+import { Layout, SelectOption, Text, TextProps } from '@harness/uicore'
 import type { IItemRendererProps } from '@blueprintjs/select'
 interface ItemRendererWithMenuItemProps {
   item: SelectOption
   itemProps: IItemRendererProps
   disabled?: boolean
+  style?: TextProps
 }
 
 const ItemRendererWithMenuItem = ({
   item,
   itemProps,
-  disabled = false
+  disabled = false,
+  style
 }: ItemRendererWithMenuItemProps): React.ReactElement => {
   const { handleClick } = itemProps
   return (
     <div key={item.label.toString()}>
       <Menu.Item
         text={
-          <Layout.Horizontal spacing="small">
+          <Layout.Horizontal spacing="small" {...style}>
             <Text>{item.label}</Text>
           </Layout.Horizontal>
         }

@@ -89,11 +89,12 @@ describe('useSaveTemplateListener tests', () => {
     await act(async () => {
       window.dispatchEvent(new CustomEvent('TEMPLATE_SAVED', { detail: pipelineTemplate.data }))
     })
-    await waitFor(() => expect(findDialogContainer()).toBeDefined())
+
     const dialogContainer = findDialogContainer() as HTMLElement
-    await act(async () => {
-      fireEvent.click(getByText(dialogContainer, 'yes'))
-    })
+    await waitFor(() => expect(findDialogContainer()).toBeDefined())
+
+    fireEvent.click(getByText(dialogContainer, 'yes'))
+
     await waitFor(() =>
       expect(pipelineContextMock.updatePipeline).toBeCalledWith({
         description: undefined,

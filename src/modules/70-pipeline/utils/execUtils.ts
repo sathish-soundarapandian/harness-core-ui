@@ -7,6 +7,7 @@
 
 import type { IconName } from '@harness/uicore'
 import { defaultTo, get, isEmpty } from 'lodash-es'
+import { v4 as uuid } from 'uuid'
 import { PipelineGraphState, PipelineGraphType } from '@pipeline/components/PipelineDiagram/types'
 import type { ExecutionGraph, ExecutionNode, NodeRunInfo } from 'services/pipeline-ng'
 import {
@@ -156,7 +157,7 @@ const processParallelNodeData = ({
       ? ((parentNodeData?.stepParameters?.strategyType || 'MATRIX') as string)
       : (parentNodeData?.stepType as string)
   items.push({
-    name: parentNodeData?.name as string,
+    name: getExecutionNodeName(parentNodeData),
     identifier: parentNodeData?.identifier as string,
     id: parentNodeData?.uuid as string,
     nodeType: nodeStrategyType,
@@ -169,7 +170,7 @@ const processParallelNodeData = ({
         ? {
             isNestedGroup,
             stepGroup: {
-              name: parentNodeData?.name || /* istanbul ignore next */ '',
+              name: getExecutionNodeName(parentNodeData),
               identifier: parentNodeData?.identifier,
               id: parentNodeData?.uuid as string,
               skipCondition: parentNodeData?.skipInfo?.evaluatedCondition
@@ -186,6 +187,7 @@ const processParallelNodeData = ({
             maxParallelism: parentNodeData?.stepParameters?.maxConcurrency,
             stepGroup: {
               ...parentNodeData,
+              name: getExecutionNodeName(parentNodeData),
               id: parentNodeData?.uuid as string,
               skipCondition: parentNodeData?.skipInfo?.evaluatedCondition
                 ? parentNodeData.skipInfo.skipCondition
@@ -199,7 +201,7 @@ const processParallelNodeData = ({
             }
           }
         : {
-            name: parentNodeData?.name || /* istanbul ignore next */ '',
+            name: getExecutionNodeName(parentNodeData),
             identifier: parentNodeData?.identifier,
             id: parentNodeData?.uuid as string,
             skipCondition: parentNodeData?.skipInfo?.evaluatedCondition
@@ -287,6 +289,7 @@ const processStepGroupSteps = ({
       steps.push({
         step: {
           ...nodeData,
+          name: getExecutionNodeName(nodeData),
           ...getNodeConditions(nodeData as ExecutionNode),
           graphType: PipelineGraphType.STEP_GRAPH,
           ...getIconDataBasedOnType(nodeData),
@@ -298,6 +301,7 @@ const processStepGroupSteps = ({
                 data: {
                   ...nodeData?.progressData,
                   ...nodeData,
+                  name: getExecutionNodeName(nodeData),
                   isNestedGroup: true, // strategy in step_group
                   maxParallelism: nodeData?.stepParameters?.maxConcurrency,
                   matrixNodeName,
@@ -355,7 +359,7 @@ const processSingleItem = ({
 
   const iconData = getIconDataBasedOnType(nodeData)
   const item = {
-    name: nodeData?.name || /* istanbul ignore next */ '',
+    name: getExecutionNodeName(nodeData),
     identifier: nodeData?.identifier,
     id: nodeData?.uuid,
     skipCondition: nodeData?.skipInfo?.evaluatedCondition ? nodeData.skipInfo.skipCondition : undefined,
@@ -370,7 +374,7 @@ const processSingleItem = ({
       ? ((nodeData?.stepParameters?.strategyType || 'MATRIX') as string)
       : (nodeData?.stepType as string)
   const finalItem = {
-    name: nodeData?.name as string,
+    name: getExecutionNodeName(nodeData),
     identifier: nodeData?.identifier as string,
     id: nodeData?.uuid as string,
     nodeType: nodeStrategyType,
@@ -514,6 +518,7 @@ ProcessGroupItemArgs): void => {
                 //strategy
                 ...stepNodeData,
                 ...getNodeConditions(stepNodeData as ExecutionNode),
+                name: getExecutionNodeName(stepNodeData),
                 type: nodeStrategyType,
                 nodeType: nodeStrategyType,
                 graphType: PipelineGraphType.STEP_GRAPH,
@@ -552,8 +557,8 @@ ProcessGroupItemArgs): void => {
       if (childStep?.stepType === NodeType.STEP_GROUP) {
         steps.push({
           step: {
-            name: childStep?.name || /* istanbul ignore next */ '',
             ...childStepIconData,
+            name: getExecutionNodeName(childStep),
             identifier: childStep?.identifier as string,
             uuid: childStep?.uuid as string,
             skipCondition: childStep?.skipInfo?.evaluatedCondition ? childStep.skipInfo.skipCondition : undefined,
@@ -596,8 +601,8 @@ ProcessGroupItemArgs): void => {
 
         steps.push({
           step: {
-            name: childStep?.name || /* istanbul ignore next */ '',
             ...childStepIconData,
+            name: getExecutionNodeName(childStep),
             identifier: childStep?.identifier as string,
             uuid: childStep?.uuid as string,
             skipCondition: childStep?.skipInfo?.evaluatedCondition ? childStep.skipInfo.skipCondition : undefined,
@@ -645,7 +650,7 @@ ProcessGroupItemArgs): void => {
   })
 
   const item = {
-    name: nodeData?.name || /* istanbul ignore next */ '',
+    name: getExecutionNodeName(nodeData),
     identifier: nodeData?.identifier,
     skipCondition: nodeData?.skipInfo?.evaluatedCondition ? nodeData.skipInfo.skipCondition : undefined,
     when: nodeData?.nodeRunInfo,
@@ -664,7 +669,7 @@ ProcessGroupItemArgs): void => {
   const finalDataItem = {
     id: nodeData.uuid as string,
     identifier: nodeData?.identifier as string,
-    name: nodeData?.name as string,
+    name: getExecutionNodeName(nodeData),
     type: nodeStrategyType,
     nodeType: nodeStrategyType,
     icon: StepTypeIconsMap.STEP_GROUP as IconName,
@@ -768,7 +773,7 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
       items.push({
         name: 'Runtime Inputs',
         identifier: rootNodeId,
-        id: rootNode?.uuid as string,
+        id: uuid(),
         icon: StepTypeIconsMap.RUNTIME_INPUT,
         type: StepType.StageRuntimeInput,
         nodeType: NodeType.RUNTIME_INPUT,
@@ -808,12 +813,11 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
                 rootNodes: []
               })
               items.push({
-                name: nodeData.name || /* istanbul ignore next */ '',
+                name: getExecutionNodeName(nodeData),
                 identifier: nodeId,
                 id: nodeData.uuid as string,
                 data: {
                   graphType: PipelineGraphType.STEP_GRAPH,
-
                   type: 'STEP_GROUP',
                   nodeType: 'STEP_GROUP',
                   icon: StepTypeIconsMap.STEP_GROUP,
@@ -854,7 +858,7 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
 
           items.push({
             id: nodeData.uuid as string,
-            name: nodeData.name || /* istanbul ignore next */ '',
+            name: getExecutionNodeName(nodeData),
             identifier: nodeData.identifier as string,
             icon: iconData.icon as IconName,
             type: nodeData.stepType,
@@ -862,7 +866,7 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
             status: nodeData?.status as ExecutionStatus,
             data: {
               ...iconData,
-              name: nodeData.name || /* istanbul ignore next */ '',
+              name: getExecutionNodeName(nodeData),
               skipCondition: nodeData.skipInfo?.evaluatedCondition ? nodeData.skipInfo.skipCondition : undefined,
               when: nodeData.nodeRunInfo,
               showInLabel: nodeData.stepType === NodeType.SERVICE || nodeData.stepType === NodeType.INFRASTRUCTURE,
@@ -884,34 +888,45 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
 interface GetExecutionStageDiagramListenersParams {
   onMouseEnter: ({ data, event }: { data: any; event: any }) => void
   allNodeMap?: any
+  allChildNodeMap?: any
   onMouseLeave: () => void
-  onStepSelect: (id: string, stageExecId?: string) => void
+  onStepSelect: (id: string, parentStageId?: string, stageExecId?: string) => void
+  onCollapsedNodeSelect?: (collapsedNodeId?: string) => void
 }
 export const getExecutionStageDiagramListeners = ({
   allNodeMap,
+  allChildNodeMap,
   onMouseEnter,
   onMouseLeave,
-  onStepSelect
+  onStepSelect,
+  onCollapsedNodeSelect
 }: GetExecutionStageDiagramListenersParams): { [key: string]: (event: any) => void } => {
   const nodeListeners: { [key: string]: (event?: any) => void } = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [Event.ClickNode]: (event: any) => {
+      const selectedNodeId = event?.data?.nodeType === NodeType.RUNTIME_INPUT ? event.data.identifier : event.data?.id
       event?.data?.data?.stageNodeId
-        ? onStepSelect(event?.data?.data?.stageNodeId, event?.data?.id)
-        : onStepSelect(event?.data?.id)
+        ? onStepSelect(event?.data?.data?.stageNodeId, event?.data?.parentStageId, event?.data?.id)
+        : onStepSelect(selectedNodeId, event?.data?.parentStageId)
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [Event.MouseEnterNode]: (event: any) => {
       const nodeID = defaultTo(event?.data?.nodeExecutionId, event?.data?.id)
-      const stageData = allNodeMap[nodeID]
+      const stageData = allNodeMap[nodeID] ?? allChildNodeMap[nodeID]
       const target = document.querySelector(`[data-nodeid="${event?.data?.id}"]`)
       if (stageData) {
-        onMouseEnter({ data: { ...stageData, ...getNodeConditions(stageData) }, event: { ...event, target } })
+        onMouseEnter({
+          data: { ...stageData, name: getExecutionNodeName(stageData), ...getNodeConditions(stageData) },
+          event: { ...event, target }
+        })
       }
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [Event.MouseLeaveNode]: () => {
       onMouseLeave()
+    },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [Event.CollapsedNodeClick]: (event: any) => {
+      onCollapsedNodeSelect?.(event?.data?.id)
     }
   }
   return nodeListeners
@@ -924,4 +939,18 @@ const getNodeConditions = (node: ExecutionNode): { skipCondition: any | undefine
     skipCondition: skipInfo?.evaluatedCondition ? skipInfo.skipCondition : undefined,
     when
   }
+}
+
+export const getExecutionNodeName = (node?: ExecutionNode): string => {
+  if (!node) {
+    return ''
+  }
+
+  const hostName = node.strategyMetadata?.formetadata?.value
+
+  if (hostName) {
+    return hostName
+  }
+
+  return node.name ?? ''
 }

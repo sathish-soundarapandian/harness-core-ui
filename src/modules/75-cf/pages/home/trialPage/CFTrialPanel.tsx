@@ -10,19 +10,22 @@ import { Button, ButtonVariation, Heading, Layout, Text, useToaster } from '@har
 import React, { FC, ReactNode } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import type { ResponseModuleLicenseDTO } from 'services/cd-ng'
-import type { Module } from '@common/interfaces/RouteInterfaces'
+import type { Module } from 'framework/types/ModuleName'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { String, useStrings } from 'framework/strings'
 import useStartTrialModal from '@common/modals/StartTrial/StartTrialModal'
 import { ModuleLicenseType, Editions } from '@common/constants/SubscriptionTypes'
 import { PlanActions, TrialActions, Category, CFOverviewActions } from '@common/constants/TrackingConstants'
 import routes from '@common/RouteDefinitions'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import RbacButton from '@rbac/components/Button/Button'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import { useLicenseStore, handleUpdateLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { isOnPrem } from '@common/utils/utils'
+import { FeatureFlag } from '@common/featureFlags'
+import { getModuleToDefaultURLMap } from 'framework/LicenseStore/licenseStoreUtil'
 import css from './CFTrialPage.module.scss'
 
 interface CFTrialProps {
@@ -63,6 +66,7 @@ const CardSection: FC<CardSectionProps> = ({ title, listItems }) => (
 const CFTrialPanel: React.FC<CFTrialProps> = cfTrialProps => {
   const module = 'cf' as Module
   const { startBtn, shouldShowStartTrialModal, startTrial, loading } = cfTrialProps
+  const isDefaultProjectCreated = useFeatureFlag(FeatureFlag.CREATE_DEFAULT_PROJECT)
   const { accountId, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const history = useHistory()
   const { trackEvent } = useTelemetry()
@@ -96,11 +100,17 @@ const CFTrialPanel: React.FC<CFTrialProps> = cfTrialProps => {
       const data = await startTrial()
 
       handleUpdateLicenseStore({ ...licenseInformation }, updateLicenseStore, module, data?.data)
-
-      history.push({
-        pathname: routes.toModuleHome({ accountId, module }),
-        search: `modal=${modal}&experience=${experience}`
-      })
+      if (isDefaultProjectCreated) {
+        const moduleUrlWithDefaultProject = getModuleToDefaultURLMap(accountId, module as Module)[module]
+        history.push(
+          moduleUrlWithDefaultProject ? (moduleUrlWithDefaultProject as string) : routes.toHome({ accountId })
+        )
+      } else {
+        history.push({
+          pathname: routes.toModuleHome({ accountId, module }),
+          search: `modal=${modal}&experience=${experience}`
+        })
+      }
 
       //FF Overview Page Track
       trackEvent(CFOverviewActions.OverviewStartFreePlan, {

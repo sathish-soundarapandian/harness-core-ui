@@ -31,13 +31,7 @@ export const MetricsView: React.FC<{ flagData: Feature }> = ({ flagData }) => {
   })
 
   return (
-    <Container
-      style={{
-        marginTop: '-20px',
-        height: 'calc(100vh - 135px)',
-        overflow: 'auto'
-      }}
-    >
+    <Container style={{ marginTop: '-20px' }}>
       <MetricsToolbar
         startDate={startDate}
         endDate={endDate}

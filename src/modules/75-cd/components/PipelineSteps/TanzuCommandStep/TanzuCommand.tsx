@@ -14,21 +14,19 @@ import {
   getMultiTypeFromValue,
   MultiTypeInputType,
   AllowedTypes,
-  Text
+  Container,
+  Label
 } from '@harness/uicore'
-import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { FormikErrors, FormikProps, yupToFormErrors } from 'formik'
+import { FormikErrors, FormikProps, useFormikContext, yupToFormErrors } from 'formik'
 
-import { defaultTo, isArray, isEmpty, set } from 'lodash-es'
-import produce from 'immer'
+import { defaultTo, isEmpty, set } from 'lodash-es'
 import { StepViewType, StepProps, ValidateInputSetProps, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import type { StepElementConfig, StoreConfig, TasCommandStepInfo } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
-import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import { useStrings } from 'framework/strings'
@@ -43,10 +41,17 @@ import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/Time
 import type { StringsMap } from 'stringTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import { isRuntimeInput } from '@pipeline/utils/CIUtils'
-import { MultiConfigSelectField } from '@pipeline/components/StartupScriptSelection/MultiConfigSelectField'
+import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
+import { InstanceScriptTypes } from '@cd/components/TemplateStudio/DeploymentTemplateCanvas/DeploymentTemplateForm/DeploymentInfraWrapper/DeploymentInfraUtils'
+import { FileSelectList } from '@filestore/components/FileStoreList/FileStoreList'
+import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
+import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import { FileUsage } from '@filestore/interfaces/FileStore'
+import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import pipelineVariablesCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
+import css from './TanzuCommand.module.scss'
 
 interface TanzuCommandData extends StepElementConfig {
   spec: TasCommandStepInfo
@@ -75,6 +80,7 @@ interface TanzuCommandProps {
   }
   formikRef?: any
 }
+const scriptType: ScriptType = 'Bash'
 
 function TanzuCommandWidget(
   props: TanzuCommandProps,
@@ -84,178 +90,289 @@ function TanzuCommandWidget(
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
-  const getInitialValues = (): TanzuCommandData => {
-    const updatedValues = produce(initialValues, draft => {
-      if (draft.spec.script.store.spec?.files && isArray(draft.spec.script.store.spec?.files)) {
-        draft.spec.script.store.spec.files = draft.spec.script.store.spec?.files[0]
-      }
-    })
-    return updatedValues
+  const scriptWidgetTitle = React.useMemo(
+    (): JSX.Element => (
+      <Layout.Vertical>
+        <Label>{getString('common.script')}</Label>
+      </Layout.Vertical>
+    ),
+    [getString]
+  )
+
+  /* istanbul ignore next */
+  const onSelectChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    values: TanzuCommandData,
+    setFieldValue: (field: string, value: any) => void
+  ): void => {
+    const fieldName = 'spec.script.store'
+    if (e.target.value === InstanceScriptTypes.Inline) {
+      setFieldValue(fieldName, {
+        type: InstanceScriptTypes.Inline,
+        spec: {
+          content: values?.spec?.script?.store?.spec?.content || ''
+        }
+      })
+    } else {
+      setFieldValue(fieldName, {
+        type: InstanceScriptTypes.FileStore,
+        spec: {
+          files: !isEmpty(values?.spec?.script?.store?.spec?.files) ? values?.spec?.script?.store?.spec?.files : ['']
+        }
+      })
+    }
   }
 
   return (
-    <>
-      <Formik<TanzuCommandData>
-        onSubmit={(values: TanzuCommandData) => {
-          /* istanbul ignore next */
-          onUpdate?.(values)
-        }}
-        formName="TanzuCommandStep"
-        initialValues={getInitialValues()}
-        validate={data => {
-          /* istanbul ignore next */
-          onChange?.(data)
-        }}
-        validationSchema={Yup.object().shape({
-          ...getNameAndIdentifierSchema(getString, stepViewType),
-          timeout: getDurationValidationSchema({ minimum: '10s' }).required(
-            getString('validation.timeout10SecMinimum')
-          ),
-          spec: Yup.object().shape({
-            script: Yup.object().shape({
-              store: Yup.object().shape({
-                type: Yup.string(),
-                spec: Yup.object().shape({
-                  files: Yup.lazy(() =>
-                    Yup.string().required(
-                      getString('common.validation.fieldIsRequired', { name: getString('common.file') })
-                    )
-                  )
+    <Formik<TanzuCommandData>
+      onSubmit={(values: TanzuCommandData) => {
+        /* istanbul ignore next */
+        onUpdate?.(values)
+      }}
+      formName="TanzuCommandStep"
+      initialValues={initialValues}
+      validate={data => {
+        /* istanbul ignore next */
+        onChange?.(data)
+      }}
+      validationSchema={Yup.object().shape({
+        ...getNameAndIdentifierSchema(getString, stepViewType),
+        timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
+        spec: Yup.object().shape({
+          script: Yup.object().shape({
+            store: Yup.object().shape({
+              type: Yup.string(),
+              spec: Yup.object()
+                .when('type', {
+                  is: value => value === InstanceScriptTypes.Inline,
+                  then: Yup.object().shape({
+                    content: Yup.string()
+                      .trim()
+                      .required(getString('common.validation.fieldIsRequired', { name: getString('common.script') }))
+                  })
                 })
-              })
+                .when('type', {
+                  is: value => value === InstanceScriptTypes.FileStore,
+                  /* istanbul ignore next */
+                  then: Yup.object().shape({
+                    /* istanbul ignore next */
+                    files: Yup.lazy((value): Yup.Schema<unknown> => {
+                      /* istanbul ignore next */
+                      if (getMultiTypeFromValue(value as string[]) === MultiTypeInputType.FIXED) {
+                        return Yup.array().of(
+                          Yup.string().required(
+                            getString('common.validation.fieldIsRequired', { name: getString('common.file') })
+                          )
+                        )
+                      }
+                      /* istanbul ignore next */
+                      return Yup.string().required(
+                        getString('common.validation.fieldIsRequired', { name: getString('common.file') })
+                      )
+                    })
+                  })
+                })
             })
           })
-        })}
-      >
-        {(formik: FormikProps<TanzuCommandData>) => {
-          const { values, setFieldValue } = formik
-          setFormikRef(formikRef, formik)
+        })
+      })}
+    >
+      {(formik: FormikProps<TanzuCommandData>) => {
+        const { values, setFieldValue } = formik
+        const templateFileType = values?.spec?.script?.store?.type
+        setFormikRef(formikRef, formik)
 
-          return (
-            <Layout.Vertical padding={{ left: 'xsmall', right: 'xsmall' }}>
-              {stepViewType !== StepViewType.Template && (
-                <div className={cx(stepCss.formGroup, stepCss.lg)}>
-                  <FormInput.InputWithIdentifier
-                    inputLabel={getString('name')}
-                    isIdentifierEditable={isNewStep}
-                    inputGroupProps={{
-                      placeholder: getString('pipeline.stepNamePlaceholder'),
-                      disabled: readonly
-                    }}
-                  />
-                </div>
-              )}
-
-              <div className={cx(stepCss.formGroup, stepCss.sm)}>
-                <FormMultiTypeDurationField
-                  name="timeout"
-                  disabled={readonly}
-                  label={getString('pipelineSteps.timeoutLabel')}
-                  multiTypeDurationProps={{
-                    enableConfigureOptions: false,
-                    expressions,
-                    disabled: readonly,
-                    allowableTypes
+        return (
+          <Layout.Vertical padding={{ left: 'xsmall', right: 'xsmall' }}>
+            {stepViewType !== StepViewType.Template && (
+              <div className={cx(stepCss.formGroup, stepCss.lg)}>
+                <FormInput.InputWithIdentifier
+                  inputLabel={getString('name')}
+                  isIdentifierEditable={isNewStep}
+                  inputGroupProps={{
+                    placeholder: getString('pipeline.stepNamePlaceholder'),
+                    disabled: readonly
                   }}
                 />
-                {getMultiTypeFromValue(values.timeout) === MultiTypeInputType.RUNTIME && (
-                  <ConfigureOptions
-                    value={values.timeout as string}
-                    type="String"
-                    variableName="step.timeout"
-                    showRequiredField={false}
-                    showDefaultField={false}
-                    showAdvanced={true}
-                    onChange={value => {
-                      setFieldValue('timeout', value)
-                    }}
-                    isReadonly={readonly}
-                    allowedValuesType={ALLOWED_VALUES_TYPE.TIME}
-                  />
-                )}
               </div>
+            )}
 
+            <div className={cx(stepCss.formGroup, stepCss.sm)}>
+              <FormMultiTypeDurationField
+                name="timeout"
+                disabled={readonly}
+                label={getString('pipelineSteps.timeoutLabel')}
+                multiTypeDurationProps={{
+                  enableConfigureOptions: true,
+                  expressions,
+                  disabled: readonly,
+                  allowableTypes
+                }}
+              />
+            </div>
+
+            <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>
+              <Container className={css.typeSelect}>
+                <select
+                  className={css.selectDropdown}
+                  name="spec.script.store.type"
+                  disabled={readonly}
+                  value={templateFileType}
+                  onChange={
+                    /* istanbul ignore next */ e => {
+                      onSelectChange(e, values, setFieldValue)
+                    }
+                  }
+                  data-testid="templateOptions"
+                >
+                  <option value={InstanceScriptTypes.FileStore}>{getString('resourcePage.fileStore')}</option>
+                  <option value={InstanceScriptTypes.Inline}>{getString('inline')}</option>
+                </select>
+              </Container>
+            </Layout.Horizontal>
+
+            {templateFileType === InstanceScriptTypes.FileStore && (
               <div className={cx(stepCss.formGroup, stepCss.md)}>
                 <MultiConfigSelectField
-                  fileType={'fileStore'}
                   name="spec.script.store.spec.files"
+                  allowableTypes={allowableTypes}
+                  fileType={FILE_TYPE_VALUES.FILE_STORE}
                   formik={formik}
                   expressions={expressions}
+                  fileUsage={FileUsage.SCRIPT}
                   values={defaultTo(formik.values.spec?.script?.store?.spec?.files, [''])}
                   multiTypeFieldSelectorProps={{
                     disableTypeSelection: false,
-                    label: (
-                      <Text color={Color.GREY_600} padding={{ bottom: 4 }}>
-                        {getString('common.script')}
-                      </Text>
-                    )
+                    disabled: readonly,
+                    label: scriptWidgetTitle
                   }}
+                  restrictToSingleEntry={true}
                 />
               </div>
-            </Layout.Vertical>
-          )
-        }}
-      </Formik>
-    </>
+            )}
+
+            {templateFileType === InstanceScriptTypes.Inline && (
+              <div>
+                <MultiTypeFieldSelector
+                  name="spec.script.store.spec.content"
+                  label={scriptWidgetTitle}
+                  defaultValueToReset=""
+                  disabled={readonly}
+                  allowedTypes={allowableTypes}
+                  disableTypeSelection={readonly}
+                  skipRenderValueInExpressionLabel
+                  expressionRender={
+                    /* istanbul ignore next */ () => {
+                      return (
+                        <ShellScriptMonacoField
+                          name="spec.script.store.spec.content"
+                          scriptType={scriptType}
+                          disabled={readonly}
+                          expressions={expressions}
+                        />
+                      )
+                    }
+                  }
+                >
+                  <ShellScriptMonacoField
+                    name="spec.script.store.spec.content"
+                    scriptType={scriptType}
+                    disabled={readonly}
+                    expressions={expressions}
+                  />
+                </MultiTypeFieldSelector>
+              </div>
+            )}
+          </Layout.Vertical>
+        )
+      }}
+    </Formik>
   )
 }
 
-const TanzuCommandInputStep: React.FC<TanzuCommandProps> = ({
-  inputSetData,
-  allowableTypes,
-  stepViewType,
-  initialValues
-}) => {
+const TanzuCommandInputStep: React.FC<TanzuCommandProps> = props => {
+  const { inputSetData, allowableTypes, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   /* istanbul ignore next */
   const getNameEntity = (fieldName: string): string =>
     `${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}${fieldName}`
   const prefix = isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`
-
+  const formik = useFormikContext()
   return (
     <>
       {getMultiTypeFromValue(inputSetData?.template?.timeout) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
-          <TimeoutFieldInputSetView
-            name={getNameEntity('timeout')}
-            label={getString('pipelineSteps.timeoutLabel')}
-            multiTypeDurationProps={{
-              configureOptionsProps: {
-                isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-              },
-              allowableTypes: allowableTypes,
-              expressions,
-              disabled: inputSetData?.readonly
-            }}
-            disabled={inputSetData?.readonly}
-            fieldPath={'timeout'}
-            template={inputSetData?.template}
-          />
-        </div>
+        <TimeoutFieldInputSetView
+          name={getNameEntity('timeout')}
+          label={getString('pipelineSteps.timeoutLabel')}
+          multiTypeDurationProps={{
+            configureOptionsProps: {
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            },
+            allowableTypes: allowableTypes,
+            expressions,
+            disabled: inputSetData?.readonly
+          }}
+          disabled={inputSetData?.readonly}
+          fieldPath={'timeout'}
+          template={inputSetData?.template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
       )}
 
       {getMultiTypeFromValue(inputSetData?.template?.spec?.script?.store?.spec?.files) ===
       MultiTypeInputType.RUNTIME ? (
         <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>
-          <MultiConfigSelectField
-            fileType={'fileStore'}
+          <FileSelectList
+            label={
+              <Layout.Vertical>
+                <Label>{getString('common.script')}</Label>
+              </Layout.Vertical>
+            }
             name={`${prefix}spec.script.store.spec.files`}
+            disabled={inputSetData?.readonly}
+            style={{ marginBottom: 'var(--spacing-small)' }}
             expressions={expressions}
-            values={defaultTo(initialValues.spec?.script?.store?.spec?.files, '')}
-            multiTypeFieldSelectorProps={{
-              disableTypeSelection: false,
-              label: (
-                <Text color={Color.GREY_600} padding={{ bottom: 4 }}>
-                  {getString('common.script')}
-                </Text>
-              ),
-              allowedTypes: allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
+            isNameOfArrayType
+            type={SELECT_FILES_TYPE.FILE_STORE}
+            formik={formik}
+            allowOnlyOne
           />
+        </div>
+      ) : null}
+
+      {getMultiTypeFromValue(inputSetData?.template?.spec?.script?.store?.spec?.content) ===
+      MultiTypeInputType.RUNTIME ? (
+        <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>
+          <MultiTypeFieldSelector
+            name={`${prefix}spec.script.store.spec.content`}
+            label={
+              <Layout.Vertical>
+                <Label>{getString('common.script')}</Label>
+              </Layout.Vertical>
+            }
+            defaultValueToReset=""
+            allowedTypes={allowableTypes}
+            skipRenderValueInExpressionLabel
+            disabled={inputSetData?.readonly}
+            expressionRender={
+              /* istanbul ignore next */ () => (
+                <ShellScriptMonacoField
+                  name={`${prefix}spec.script.store.spec.content`}
+                  scriptType={scriptType}
+                  disabled={inputSetData?.readonly}
+                  expressions={expressions}
+                />
+              )
+            }
+          >
+            <ShellScriptMonacoField
+              name={`${prefix}spec.script.store.spec.content`}
+              scriptType={scriptType}
+              disabled={inputSetData?.readonly}
+              expressions={expressions}
+            />
+          </MultiTypeFieldSelector>
         </div>
       ) : null}
     </>
@@ -288,7 +405,7 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
         <TanzuCommandInputStep
           allowableTypes={allowableTypes}
           initialValues={initialValues}
-          onUpdate={data => onUpdate?.(this.processFormData(data))}
+          onUpdate={/* istanbul ignore next */ data => onUpdate?.(this.processFormData(data))}
           stepViewType={stepViewType}
           inputSetData={inputSetData}
           formikRef={formikRef}
@@ -296,6 +413,7 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
       )
     } else if (stepViewType === StepViewType.InputVariable) {
       const { variablesData, metadataMap } = customStepProps as TanzuCommandVariableStepProps
+      /* istanbul ignore else */
       if ((variablesData.spec.script.store as StoreConfig)?.spec.files) {
         variablesData.spec['spec.script.store.spec.files'] = defaultTo(
           (variablesData.spec.script.store as StoreConfig)?.spec.files,
@@ -306,8 +424,8 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
       return (
         <VariablesListTable
           className={pipelineVariablesCss.variablePaddingL3}
-          data={variablesData}
-          originalData={initialValues}
+          data={variablesData.spec}
+          originalData={initialValues.spec}
           metadataMap={metadataMap}
         />
       )
@@ -336,8 +454,10 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const errors = { spec: {} } as any
+    /* istanbul ignore else */
     if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
       let timeoutSchema = getDurationValidationSchema({ minimum: '10s' })
+      /* istanbul ignore else */
       if (isRequired) {
         /* istanbul ignore next */
         timeoutSchema = timeoutSchema.required(getString?.('validation.timeout10SecMinimum'))
@@ -357,6 +477,8 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
         }
       }
     }
+
+    /* istanbul ignore else */
     if (
       getMultiTypeFromValue(template?.spec?.script?.store?.spec?.files) === MultiTypeInputType.RUNTIME &&
       isRequired &&
@@ -364,6 +486,15 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
     ) {
       set(errors, 'spec.script.store.spec.files', getString?.('fieldRequired', { field: 'File path' }))
     }
+    /* istanbul ignore else */
+    if (
+      getMultiTypeFromValue(template?.spec?.script?.store?.spec?.content) === MultiTypeInputType.RUNTIME &&
+      isRequired &&
+      isEmpty(data?.spec?.script?.store?.spec?.content)
+    ) {
+      set(errors, 'spec.script.store.spec.content', getString?.('fieldRequired', { field: 'Script' }))
+    }
+
     /* istanbul ignore else */
     if (isEmpty(errors.spec)) {
       delete errors.spec
@@ -379,6 +510,7 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
 
   processFormData(values: TanzuCommandData): TanzuCommandData {
     const fileFormData = values.spec.script.store.spec?.files
+    const templateFile = values.spec.script.store.type
     return {
       ...values,
       spec: {
@@ -387,9 +519,15 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
           ...values.spec.script,
           store: {
             ...values.spec.script.store,
-            spec: {
-              files: isRuntimeInput(fileFormData) ? fileFormData : [fileFormData]
-            }
+            type: templateFile,
+            spec:
+              templateFile === InstanceScriptTypes.Inline
+                ? {
+                    content: values.spec.script.store?.spec?.content
+                  }
+                : {
+                    files: fileFormData
+                  }
           }
         }
       }
@@ -399,12 +537,14 @@ export class TanzuCommandStep extends PipelineStep<TanzuCommandData> {
     identifier: '',
     name: '',
     type: StepType.TanzuCommand,
-    timeout: '10m',
+    timeout: '',
     spec: {
       script: {
         store: {
           type: 'Harness',
-          spec: {}
+          spec: {
+            files: ['']
+          }
         }
       }
     }

@@ -16,24 +16,9 @@ import {
 } from '../../../support/85-cv/monitoredService/health-sources/GoogleCloudOperations/constants'
 import { errorResponse } from '../../../support/85-cv/slos/constants'
 import { Connectors } from '../../../utils/connctors-utils'
-import { featureFlagsCall } from '../../72-freeze-windows/constants'
 
 describe('Health Source - Google Cloud Operations', () => {
   beforeEach(() => {
-    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
-      cy.intercept('GET', featureFlagsCall, {
-        ...featureFlagsData,
-        resource: [
-          ...featureFlagsData.resource,
-          {
-            uuid: null,
-            name: 'ELK_HEALTH_SOURCE',
-            enabled: true,
-            lastUpdatedAt: 0
-          }
-        ]
-      })
-    })
     cy.on('uncaught:exception', () => {
       return false
     })

@@ -106,6 +106,7 @@ export interface FlatOnEditValuesInterface {
   pipelineBranchName?: string
   inputSetRefs?: string[]
   pollInterval?: string
+  webhookId?: string
   encryptedWebhookSecretIdentifier?: string
 }
 
@@ -141,6 +142,7 @@ export interface FlatValidWebhookFormikValuesInterface {
   pipelineBranchName?: string
   inputSetRefs?: string[]
   pollInterval?: string
+  webhookId?: string
   encryptedWebhookSecretIdentifier?: SecretReference
 }
 

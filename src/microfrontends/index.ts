@@ -25,6 +25,7 @@ import type useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { usePermission } from '@rbac/hooks/usePermission'
 import type useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import type { useFeature } from '@common/hooks/useFeatures'
+import type { useEventSourceListener } from '@common/hooks/useEventSourceListener'
 
 // parent context types
 import type { AppStoreContext, AppStoreContextProps } from 'framework/AppStore/AppStoreContext'
@@ -44,6 +45,7 @@ import type { TIUIAppCustomProps } from '@pipeline/pages/execution/ExecutionTest
 import type { ChaosCustomMicroFrontendProps } from '@chaos/interfaces/Chaos.types'
 import type { FFCustomMicroFrontendProps } from '@cf/FFCustomMicroFrontendProps.types'
 import type { getLocationPathName } from 'framework/utils/WindowLocation'
+import type { IACMCustomMicroFrontendProps } from '@iacm/interfaces/IACMCustomMicroFrontendProps.types'
 
 export interface Scope {
   accountId?: string
@@ -70,6 +72,7 @@ export interface Hooks {
   usePermission?: typeof usePermission
   useCreateConnectorModal?: typeof useCreateConnectorModal
   useFeature?: typeof useFeature
+  useEventSourceListener?: typeof useEventSourceListener
 }
 
 export interface Utils {
@@ -113,5 +116,6 @@ export {
   CCMUIAppCustomProps,
   TIUIAppCustomProps,
   ChaosCustomMicroFrontendProps,
-  FFCustomMicroFrontendProps
+  FFCustomMicroFrontendProps,
+  IACMCustomMicroFrontendProps
 }

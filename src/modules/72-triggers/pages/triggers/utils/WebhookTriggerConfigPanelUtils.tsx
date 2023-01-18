@@ -155,19 +155,27 @@ export const renderNonCustomEventFields = ({
           )}
 
           {isGitWebhookPollingEnabled && sourceRepo === GitSourceProviders.GITHUB.value && (
-            <FormMultiTypeDurationField
-              name="pollInterval"
-              label={getString('triggers.triggerConfigurationPanel.pollingFrequency')}
-              tooltipProps={{
-                dataTooltipId: 'pollInterval'
-              }}
-              multiTypeDurationProps={{
-                enableConfigureOptions: false,
-                allowableTypes: [MultiTypeInputType.FIXED],
-                width: 324
-              }}
-              placeholder="Enter h/m/s/ms"
-            />
+            <>
+              <FormMultiTypeDurationField
+                name="pollInterval"
+                label={getString('triggers.triggerConfigurationPanel.pollingFrequency')}
+                tooltipProps={{
+                  dataTooltipId: 'pollInterval'
+                }}
+                multiTypeDurationProps={{
+                  enableConfigureOptions: false,
+                  allowableTypes: [MultiTypeInputType.FIXED],
+                  width: 324
+                }}
+                placeholder={getString('triggers.triggerConfigurationPanel.pollingFrequencyPlaceholder')}
+              />
+              <FormInput.Text
+                name="webhookId"
+                label={getString('triggers.triggerConfigurationPanel.webhookId')}
+                placeholder={getString('triggers.triggerConfigurationPanel.webhookIdPlaceholder')}
+                isOptional
+              />
+            </>
           )}
         </>
       )}

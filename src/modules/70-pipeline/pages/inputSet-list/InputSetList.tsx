@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { defaultTo, isEmpty, pick } from 'lodash-es'
 import { Popover, Layout, TextInput, Text, ButtonVariation, useToaster } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
@@ -20,6 +20,7 @@ import {
   useGetInputSetsListForPipeline,
   useGetTemplateFromPipeline
 } from 'services/pipeline-ng'
+import type { Error } from 'services/template-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { OverlayInputSetForm } from '@pipeline/components/OverlayInputSetForm/OverlayInputSetForm'
 import routes from '@common/RouteDefinitions'
@@ -31,7 +32,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
 import NoEntityFound from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
-import useImportResource from '@pipeline/components/ImportResource/useImportResource'
+import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType as ImportResourceType } from '@common/interfaces/GitSyncInterface'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
@@ -77,14 +78,14 @@ function InputSetList(): React.ReactElement {
     debounce: !isEmpty(searchParam) ? 300 : false
   })
 
-  const { showImportResourceModal } = useImportResource({
+  const { showMigrateResourceModal: showImportResourceModal } = useMigrateResource({
     resourceType: ImportResourceType.INPUT_SETS,
     modalTitle: getString('common.importEntityFromGit', { resourceType: getString('inputSets.inputSetLabel') }),
     onSuccess: refetch,
     extraQueryParams: { pipelineIdentifier: pipelineIdentifier }
   })
 
-  const { data: template } = useMutateAsGet(useGetTemplateFromPipeline, {
+  const { data: template, error: templateError } = useMutateAsGet(useGetTemplateFromPipeline, {
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
@@ -118,7 +119,16 @@ function InputSetList(): React.ReactElement {
     },
     { staleTime: 5 * 60 * 1000 }
   )
-  const isPipelineInvalid = !pipelineMetadata?.data?.entityValidityDetails?.valid
+
+  const isPipelineInvalid = useMemo(() => {
+    if (pipelineMetadata?.data && !pipelineMetadata?.data?.entityValidityDetails?.valid) {
+      return true
+    }
+    if ((templateError?.data as Error)?.status === 'ERROR') {
+      return true
+    }
+    return false
+  }, [pipelineMetadata, templateError])
 
   const { mutate: deleteInputSet } = useDeleteInputSetForPipeline({
     queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier, pipelineIdentifier }
@@ -240,12 +250,15 @@ function InputSetList(): React.ReactElement {
     }
   }
 
-  function getTooltipText(): JSX.Element | undefined {
-    if (isPipelineInvalid) return <Text padding="medium">{getString('pipeline.cannotAddInputSetInvalidPipeline')}</Text>
+  const getTooltipText: () => JSX.Element | undefined = useCallback((): JSX.Element | undefined => {
+    if (isPipelineInvalid) {
+      return <Text padding="medium">{getString('pipeline.cannotAddInputSetInvalidPipeline')}</Text>
+    }
 
-    if (!pipelineHasRuntimeInputs)
+    if (!pipelineHasRuntimeInputs) {
       return <Text padding="medium">{getString('pipeline.inputSets.noRuntimeInputsCurrently')}</Text>
-  }
+    }
+  }, [isPipelineInvalid, pipelineHasRuntimeInputs])
 
   const NewInputSetButtonPopover = (
     <Popover
@@ -340,6 +353,7 @@ function InputSetList(): React.ReactElement {
             gotoPage={setPage}
             pipelineHasRuntimeInputs={pipelineHasRuntimeInputs}
             isPipelineInvalid={isPipelineInvalid}
+            pipelineStoreType={pipelineMetadata?.data?.storeType as StoreType}
             goToInputSetDetail={inputSetTemp => {
               setSelectedInputSet({
                 identifier: inputSetTemp?.identifier,

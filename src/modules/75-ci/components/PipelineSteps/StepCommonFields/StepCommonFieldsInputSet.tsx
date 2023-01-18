@@ -16,10 +16,8 @@ import type { StringsMap } from 'stringTypes'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import {
-  GetShellOptions,
-  GetImagePullPolicyOptions
-} from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
+import { getImagePullPolicyOptions, getShellOptions } from '@common/utils/ContainerRunStepUtils'
+import {} from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import type { InputSetData } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -40,10 +38,11 @@ interface StepCommonFieldsInputSetProps<T> extends Omit<InputSetData<T>, 'path' 
   enableFields?: string[]
   stepViewType: StepViewType
   allowableTypes?: AllowedTypes
+  disableRunAsUser?: boolean
 }
 
 function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): JSX.Element | null {
-  const { path, template, readonly, withoutTimeout, enableFields = [], stepViewType } = props
+  const { path, template, readonly, withoutTimeout, enableFields = [], stepViewType, disableRunAsUser } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const isRunAsUserRuntime = getMultiTypeFromValue(template?.spec?.runAsUser) === MultiTypeInputType.RUNTIME
@@ -120,11 +119,11 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
               </Layout.Horizontal>
             }
             multiTypeInputProps={{
-              selectItems: GetImagePullPolicyOptions(),
+              selectItems: getImagePullPolicyOptions(getString),
               placeholder: getString('select'),
               multiTypeInputProps: {
                 expressions,
-                selectProps: { addClearBtn: true, items: GetImagePullPolicyOptions() },
+                selectProps: { addClearBtn: true, items: getImagePullPolicyOptions(getString) },
                 allowableTypes: AllMultiTypeInputTypesForInputSet
               },
               disabled: readonly
@@ -149,11 +148,11 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
               </Layout.Horizontal>
             }
             multiTypeInputProps={{
-              selectItems: GetImagePullPolicyOptions(),
+              selectItems: getImagePullPolicyOptions(getString),
               placeholder: getString('select'),
               multiTypeInputProps: {
                 expressions,
-                selectProps: { addClearBtn: true, items: GetShellOptions(getString) },
+                selectProps: { addClearBtn: true, items: getShellOptions(getString) },
                 allowableTypes: AllMultiTypeInputTypesForInputSet
               },
               disabled: readonly
@@ -163,7 +162,7 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
           />
         </Container>
       )}
-      {isRunAsUserRuntime && (
+      {isRunAsUserRuntime && !disableRunAsUser && (
         <Container className={cx(css.formGroup, stepCss, css.topSpacingLarge, css.bottomMargin5)}>
           {renderMultiTypeTextField({
             name: `${isEmpty(path) ? '' : `${path}.`}spec.runAsUser`,

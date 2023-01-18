@@ -257,7 +257,11 @@ const OverviewStep: React.FC<StepProps<ConnectorConfigDTO> & OverviewStepProps> 
                   <NameIdDescriptionTags
                     className={cx(css.formElm, overviewCss.nameField)}
                     formikProps={formikProps}
-                    identifierProps={{ inputName: 'name', isIdentifierEditable: !isEdit }}
+                    identifierProps={{
+                      inputName: 'name',
+                      isIdentifierEditable: !isEdit,
+                      inputLabel: getString('connectors.ceK8.overview.ccmConnectorNameLabel')
+                    }}
                   />
                 </Container>
                 <Layout.Horizontal>

@@ -389,6 +389,15 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
     lazy: true,
     debounce: 300
   })
+  const getTagRegexFieldName = (): string => {
+    if (isGenericArtifactory) {
+      return `artifacts.${artifactPath}.spec.artifactPathFilter`
+    }
+    return `artifacts.${artifactPath}.spec.tagRegex`
+  }
+
+  const getFQNFieldName = (): string =>
+    isGenericArtifactory ? 'artifactPath' : isFieldRuntime(getTagRegexFieldName(), template) ? 'tagRegex' : 'tag'
 
   const {
     data: imagePathV2Data,
@@ -420,7 +429,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
             : artifactPath,
           ''
         ),
-        isGenericArtifactory ? 'artifactPath' : 'tag'
+        getFQNFieldName()
       )
     },
     lazy: true
@@ -741,36 +750,34 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
             </div>
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.repository`, template) && (
-            <div className={css.inputFieldLayout}>
-              <ServerlessArtifactoryRepository
-                connectorRef={
-                  get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '') || artifact?.spec?.connectorRef
-                }
-                repoFormat={isGenericArtifactory ? 'generic' : repoFormat}
-                expressions={expressions}
-                allowableTypes={allowableTypes}
-                formik={formik}
-                fieldName={`${path}.artifacts.${artifactPath}.spec.repository`}
-                fieldPath={`artifacts.${artifactPath}.spec.repository`}
-                template={template}
-                serviceId={isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined}
-                fqnPath={getConnectorRefFqnPath(
-                  path as string,
-                  !!isPropagatedStage,
-                  stageIdentifier,
-                  defaultTo(
-                    isSidecar
-                      ? artifactPath
-                          ?.split('[')[0]
-                          .concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
-                      : artifactPath,
-                    ''
-                  ),
-                  'connectorRef'
-                )}
-                stepViewType={stepViewType}
-              />
-            </div>
+            <ServerlessArtifactoryRepository
+              connectorRef={
+                get(initialValues, `artifacts.${artifactPath}.spec.connectorRef`, '') || artifact?.spec?.connectorRef
+              }
+              repoFormat={isGenericArtifactory ? 'generic' : repoFormat}
+              expressions={expressions}
+              allowableTypes={allowableTypes}
+              formik={formik}
+              fieldName={`${path}.artifacts.${artifactPath}.spec.repository`}
+              fieldPath={`artifacts.${artifactPath}.spec.repository`}
+              template={template}
+              serviceId={isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined}
+              fqnPath={getConnectorRefFqnPath(
+                path as string,
+                !!isPropagatedStage,
+                stageIdentifier,
+                defaultTo(
+                  isSidecar
+                    ? artifactPath
+                        ?.split('[')[0]
+                        .concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+                    : artifactPath,
+                  ''
+                ),
+                'connectorRef'
+              )}
+              stepViewType={stepViewType}
+            />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactDirectory`, template) && isGenericArtifactory && (
             <TextFieldInputSetView

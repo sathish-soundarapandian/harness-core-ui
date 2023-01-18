@@ -76,6 +76,7 @@ export interface ExecutionActionsProps {
   source: ExecutionPathProps['source']
   onViewCompiledYaml?: () => void
   onCompareExecutions?: () => void
+  onReRunInDebugMode?: () => void
   menuOnlyActions?: boolean
   isExecutionListView?: boolean
 }
@@ -155,6 +156,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     isPipelineInvalid,
     onViewCompiledYaml,
     onCompareExecutions,
+    onReRunInDebugMode,
     menuOnlyActions,
     isExecutionListView
   } = props
@@ -374,27 +376,31 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
               />
             )}
             {isExecutionListView && (
-              <Menu.Item
-                className={css.link}
-                text={<Link to={executionDetailsView}>{getString('pipeline.viewExecution')}</Link>}
-              />
+              <Link to={executionDetailsView} className={css.link}>
+                <Menu.Item tagName="div" text={getString('pipeline.viewExecution')} />
+              </Link>
             )}
-            <Menu.Item
-              hidden={!showEditButton}
-              disabled={!canEdit}
-              className={css.link}
-              text={
-                <Link to={pipelineDetailsView}>
-                  {canEdit ? getString('editPipeline') : getString('pipeline.viewPipeline')}
-                </Link>
-              }
-            />
+            {showEditButton && (
+              <Link to={pipelineDetailsView} className={css.link}>
+                <Menu.Item
+                  tagName="div"
+                  text={canEdit ? getString('editPipeline') : getString('pipeline.viewPipeline')}
+                />
+              </Link>
+            )}
             {!stageId && (
               <RbacMenuItem
                 featuresProps={getFeaturePropsForRunPipelineButton({ modules, getString })}
                 text={getString(rerunText)}
                 disabled={!canRerun || isPipelineInvalid}
                 onClick={reRunPipeline}
+              />
+            )}
+            {onReRunInDebugMode && (
+              <MenuItem
+                text={getString('pipeline.execution.actions.reRunInDebugMode')}
+                onClick={onReRunInDebugMode}
+                disabled={!canRerun || isPipelineInvalid}
               />
             )}
             <MenuItem text={getString(abortText)} onClick={openAbortDialog} disabled={!canAbort} />

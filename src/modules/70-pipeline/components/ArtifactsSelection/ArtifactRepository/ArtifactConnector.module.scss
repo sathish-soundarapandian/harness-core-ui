@@ -53,21 +53,12 @@
     display: grid;
     grid-template-columns: 400px 20px;
   }
-  .imagePathContainer {
-    display: grid;
-    grid-template-columns: 400px 20px;
-    margin-top: var(--spacing-large);
-    div.configureOptions {
-      position: relative;
-      top: 22px;
-    }
-  }
   .inputWidth {
     width: 50% !important;
   }
   .customArtifactContainer {
     display: grid;
-    grid-template-columns: 400px 20px;
+    grid-template-columns: 400px 42px;
     div.configureOptions {
       position: relative;
       top: 22px;
@@ -99,6 +90,16 @@
         }
       }
     }
+  }
+}
+
+.imagePathContainer {
+  display: grid;
+  grid-template-columns: 400px 42px;
+  margin-top: var(--spacing-large);
+  div.configureOptions {
+    position: relative;
+    top: 22px;
   }
 }
 

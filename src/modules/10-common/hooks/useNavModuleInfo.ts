@@ -25,6 +25,7 @@ export type NavModuleName =
   | ModuleName.CHAOS
   | ModuleName.STO
   | ModuleName.CODE
+  | ModuleName.IACM
 
 // Default order of modules on side nav, please add modules to this list accordingly.
 // For any module to be visible on side nav, it has to be added in this list
@@ -36,7 +37,8 @@ export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
   ModuleName.CE,
   ModuleName.CV,
   ModuleName.STO,
-  ModuleName.CHAOS
+  ModuleName.CHAOS,
+  ModuleName.IACM
 ]
 
 export interface useNavModuleInfoReturnType {
@@ -46,6 +48,7 @@ export interface useNavModuleInfoReturnType {
   homePageUrl: string
   hasLicense?: boolean
   color: string
+  backgroundColor?: string
 }
 
 interface ModuleInfo {
@@ -54,6 +57,7 @@ interface ModuleInfo {
   getHomePageUrl: (accountId: string) => string
   featureFlagName?: FeatureFlag
   color: string
+  backgroundColor?: string
 }
 
 const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
@@ -62,48 +66,55 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     label: 'common.cdAndGitops',
     getHomePageUrl: (accountId: string) => routes.toCD({ accountId }),
     featureFlagName: FeatureFlag.CDNG_ENABLED,
-    color: '--cd-border'
+    color: '--cd-border',
+    backgroundColor: '--cd-background'
   },
   [ModuleName.CI]: {
     icon: 'ci-main',
     label: 'common.purpose.ci.continuous',
     getHomePageUrl: (accountId: string) => routes.toCI({ accountId }),
     featureFlagName: FeatureFlag.CING_ENABLED,
-    color: '--ci-border'
+    color: '--ci-border',
+    backgroundColor: '--ci-background'
   },
   [ModuleName.CV]: {
     icon: 'cv-main',
     label: 'common.serviceReliabilityManagement',
     getHomePageUrl: (accountId: string) => routes.toCV({ accountId }),
     featureFlagName: FeatureFlag.CVNG_ENABLED,
-    color: '--srm-border'
+    color: '--srm-border',
+    backgroundColor: '--srm-background'
   },
   [ModuleName.CF]: {
     icon: 'ff-solid',
     label: 'common.purpose.cf.continuous',
     getHomePageUrl: (accountId: string) => routes.toCF({ accountId }),
     featureFlagName: FeatureFlag.CFNG_ENABLED,
-    color: '--ff-border'
+    color: '--ff-border',
+    backgroundColor: '--ff-background'
   },
   [ModuleName.CE]: {
     icon: 'ce-main',
     label: 'common.purpose.ce.continuous',
     getHomePageUrl: (accountId: string) => routes.toCE({ accountId }),
     featureFlagName: FeatureFlag.CENG_ENABLED,
-    color: '--ccm-border'
+    color: '--ccm-border',
+    backgroundColor: '--ccm-background'
   },
   [ModuleName.STO]: {
     icon: 'sto-color-filled',
     label: 'common.purpose.sto.continuous',
     getHomePageUrl: (accountId: string) => routes.toSTO({ accountId }),
-    color: '--sto-border'
+    color: '--sto-border',
+    backgroundColor: '--sto-background'
   },
   [ModuleName.CHAOS]: {
     icon: 'chaos-main',
-    label: 'chaos.homepage.chaosHomePageTitle',
+    label: 'common.purpose.chaos.continuous',
     getHomePageUrl: (accountId: string) => routes.toChaos({ accountId }),
     featureFlagName: FeatureFlag.CHAOS_ENABLED,
-    color: '--chaos-border'
+    color: '--chaos-border',
+    backgroundColor: '--chaos-background'
   },
   [ModuleName.CODE]: {
     icon: 'code',
@@ -111,6 +122,13 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     getHomePageUrl: (accountId: string) => routes.toCODE({ accountId }),
     featureFlagName: FeatureFlag.CODE_ENABLED,
     color: '--default-module-border'
+  },
+  [ModuleName.IACM]: {
+    icon: 'iacm',
+    label: 'iacm.navTitle',
+    getHomePageUrl: (accountId: string) => routes.toIACM({ accountId }),
+    featureFlagName: FeatureFlag.IACM_ENABLED,
+    color: '--iacm-border'
   }
 }
 
@@ -123,7 +141,7 @@ export interface GroupConfig {
 export const moduleGroupConfig: GroupConfig[] = [
   {
     label: 'common.moduleList.buildAndTest',
-    items: [ModuleName.CI, ModuleName.CHAOS, ModuleName.STO]
+    items: [ModuleName.CI, ModuleName.CHAOS, ModuleName.STO, ModuleName.IACM]
   },
   {
     label: 'common.moduleList.deployChanges',
@@ -140,7 +158,8 @@ const getModuleInfo = (
   accountId: string,
   hasLicense: boolean,
   shouldVisible: boolean,
-  color: string
+  color: string,
+  backgroundColor?: string
 ): useNavModuleInfoReturnType => {
   const { icon: moduleIcon, label, getHomePageUrl } = moduleInfo
   return {
@@ -149,7 +168,8 @@ const getModuleInfo = (
     homePageUrl: getHomePageUrl(accountId),
     shouldVisible: shouldVisible,
     hasLicense,
-    color
+    color,
+    backgroundColor
   }
 }
 
@@ -157,8 +177,17 @@ const shouldBeVisible = (
   module: NavModuleName,
   featureFlags: Partial<Record<FeatureFlag, boolean>>,
   licenseInformation: { [key: string]: ModuleLicenseDTO } | Record<string, undefined>
-) => {
+): boolean => {
   const featureFlagName = moduleInfoMap[module]?.featureFlagName
+
+  if (module === ModuleName.CV) {
+    return Boolean(
+      licenseInformation[ModuleName.CV]?.status === 'ACTIVE' ||
+        licenseInformation[ModuleName.CD]?.status === 'ACTIVE' ||
+        (featureFlagName && !!featureFlags[featureFlagName])
+    )
+  }
+
   return featureFlagName !== undefined
     ? !!featureFlags[featureFlagName]
     : licenseInformation[module]?.status === 'ACTIVE'
@@ -169,14 +198,15 @@ const useNavModuleInfo = (module: NavModuleName) => {
   const featureFlags = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
-  const { color } = moduleInfoMap[module]
+  const { color, backgroundColor } = moduleInfoMap[module]
 
   return getModuleInfo(
     moduleInfoMap[module],
     accountId,
     !!licenseInformation[module]?.id,
     shouldBeVisible(module, featureFlags, licenseInformation),
-    color
+    color,
+    backgroundColor
   ) as useNavModuleInfoReturnType
 }
 

@@ -594,81 +594,78 @@ const GcpInfrastructureSpecInputForm: React.FC<GcpInfrastructureSpecEditableProp
         </div>
       )}
       {getMultiTypeFromValue(template?.cluster) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md, css.clusterInputWrapper)}>
-          <SelectInputSetView
-            name={`${path}.cluster`}
-            disabled={loadingClusterNames || loadingClusterNamesForInfra || readonly}
-            placeholder={
-              loadingClusterNames || loadingClusterNamesForInfra
-                ? /* istanbul ignore next */ getString('loading')
-                : getString('cd.steps.common.selectOrEnterClusterPlaceholder')
-            }
-            useValue
-            selectItems={clusterOptions}
-            label={getString('common.cluster')}
-            multiTypeInputProps={{
-              selectProps: {
-                items: clusterOptions,
-                itemRenderer: itemRenderer,
-                allowCreatingNewItems: true,
-                addClearBtn: !(loadingClusterNames || loadingClusterNamesForInfra || readonly),
-                noResults: (
-                  <Text padding={'small'}>
-                    {defaultTo(
-                      getRBACErrorMessage((clusterError || clustersForInfraError) as RBACError),
-                      getString('cd.pipelineSteps.infraTab.clusterError')
-                    )}
-                  </Text>
-                )
-              },
-              expressions,
-              allowableTypes
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            fieldPath="cluster"
-            template={template}
-          />
-        </div>
+        <SelectInputSetView
+          className={cx(stepCss.formGroup, stepCss.md, css.clusterInputWrapper)}
+          name={`${path}.cluster`}
+          disabled={loadingClusterNames || loadingClusterNamesForInfra || readonly}
+          placeholder={
+            loadingClusterNames || loadingClusterNamesForInfra
+              ? /* istanbul ignore next */ getString('loading')
+              : getString('cd.steps.common.selectOrEnterClusterPlaceholder')
+          }
+          useValue
+          selectItems={clusterOptions}
+          label={getString('common.cluster')}
+          multiTypeInputProps={{
+            selectProps: {
+              items: clusterOptions,
+              itemRenderer: itemRenderer,
+              allowCreatingNewItems: true,
+              addClearBtn: !(loadingClusterNames || loadingClusterNamesForInfra || readonly),
+              noResults: (
+                <Text padding={'small'}>
+                  {defaultTo(
+                    getRBACErrorMessage((clusterError || clustersForInfraError) as RBACError),
+                    getString('cd.pipelineSteps.infraTab.clusterError')
+                  )}
+                </Text>
+              )
+            },
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          fieldPath="cluster"
+          template={template}
+        />
       )}
       {getMultiTypeFromValue(template?.namespace) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${path}.namespace`}
-            label={getString('common.namespace')}
-            disabled={readonly}
-            multiTextInputProps={{
-              allowableTypes,
-              expressions
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
-            fieldPath="namespace"
-            template={template}
-          />
-        </div>
+        <TextFieldInputSetView
+          name={`${path}.namespace`}
+          label={getString('common.namespace')}
+          disabled={readonly}
+          multiTextInputProps={{
+            allowableTypes,
+            expressions
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          placeholder={getString('pipeline.infraSpecifications.namespacePlaceholder')}
+          fieldPath="namespace"
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
       {getMultiTypeFromValue(template?.releaseName) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <TextFieldInputSetView
-            name={`${path}.releaseName`}
-            multiTextInputProps={{
-              allowableTypes,
-              expressions
-            }}
-            configureOptionsProps={{
-              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-            }}
-            label={getString('common.releaseName')}
-            disabled={readonly}
-            placeholder={getString('cd.steps.common.releaseNamePlaceholder')}
-            fieldPath="releaseName"
-            template={template}
-          />
-        </div>
+        <TextFieldInputSetView
+          name={`${path}.releaseName`}
+          multiTextInputProps={{
+            allowableTypes,
+            expressions
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          label={getString('common.releaseName')}
+          disabled={readonly}
+          placeholder={getString('cd.steps.common.releaseNamePlaceholder')}
+          fieldPath="releaseName"
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
     </Layout.Vertical>
   )

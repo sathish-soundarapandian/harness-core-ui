@@ -928,14 +928,18 @@ const cleanUpDBRefs = (): void => {
 const _initializeDb = async (dispatch: React.Dispatch<ActionReturnType>, version: number, trial = 0): Promise<void> => {
   if (!IdbPipeline) {
     try {
-      dispatch(PipelineContextActions.updating())
+      // show loading spinner during idb initialization to prevent rendering default/initial state on mount
+      // isLoading is set to false after fetching pipeline (_fetchPipeline)
+      dispatch(PipelineContextActions.setLoading(true))
       IdbPipeline = await openDB(PipelineDBName, version, {
         upgrade(db) {
-          try {
-            db.deleteObjectStore(IdbPipelineStoreName)
-          } catch (_) {
-            // logger.error(DBNotFoundErrorMessage)
-            dispatch(PipelineContextActions.error({ error: DBNotFoundErrorMessage }))
+          if (db.objectStoreNames.contains(IdbPipelineStoreName)) {
+            try {
+              db.deleteObjectStore(IdbPipelineStoreName)
+            } catch (_) {
+              // logger.error(DBNotFoundErrorMessage)
+              dispatch(PipelineContextActions.error({ error: DBNotFoundErrorMessage }))
+            }
           }
           if (!db.objectStoreNames.contains(IdbPipelineStoreName)) {
             const objectStore = db.createObjectStore(IdbPipelineStoreName, { keyPath: KeyPath, autoIncrement: false })
@@ -952,8 +956,11 @@ const _initializeDb = async (dispatch: React.Dispatch<ActionReturnType>, version
       dispatch(PipelineContextActions.dbInitialized())
     } catch (e) {
       logger.info('DB downgraded, deleting and re creating the DB')
-
-      await deleteDB(PipelineDBName)
+      try {
+        await deleteDB(PipelineDBName)
+      } catch (_) {
+        // ignore
+      }
       IdbPipeline = undefined
 
       ++trial
@@ -962,7 +969,9 @@ const _initializeDb = async (dispatch: React.Dispatch<ActionReturnType>, version
         await _initializeDb(dispatch, version, trial)
       } else {
         logger.error(DBInitializationFailed)
-        dispatch(PipelineContextActions.error({ error: DBInitializationFailed }))
+        // continue loading if initialization failed, isLoading is set to false after fetching pipeline
+        dispatch(PipelineContextActions.error({ error: DBInitializationFailed, isLoading: true }))
+        dispatch(PipelineContextActions.setDBInitializationFailed(true))
       }
     }
   } else {
@@ -994,7 +1003,6 @@ const _deletePipelineCache = async (
   )
   deletePipelineCacheFromIDB(IdbPipeline, id)
 
-  // due to async operation, IdbPipeline may be undefined
   const defaultId = getId(
     queryParams.accountIdentifier,
     queryParams.orgIdentifier || '',
@@ -1010,7 +1018,8 @@ export enum PipelineContextType {
   Pipeline = 'Pipeline',
   StageTemplate = 'StageTemplate',
   PipelineTemplate = 'PipelineTemplate',
-  Standalone = 'Standalone'
+  Standalone = 'Standalone',
+  StepGroupTemplate = 'StepGroupTemplate'
 }
 
 export const PipelineContext = React.createContext<PipelineContextInterface>({
@@ -1341,7 +1350,8 @@ export function PipelineProvider({
   })
 
   React.useEffect(() => {
-    if (state.isDBInitialized) {
+    // fetch pipeline after trying to initialize idb
+    if (state.isDBInitialized || state.isDBInitializationFailed) {
       abortControllerRef.current = new AbortController()
       fetchPipeline({ forceFetch: true, signal: abortControllerRef.current?.signal })
     }
@@ -1352,7 +1362,7 @@ export function PipelineProvider({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.isDBInitialized])
+  }, [state.isDBInitialized, state.isDBInitializationFailed])
 
   React.useEffect(() => {
     isMounted.current = true

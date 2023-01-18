@@ -29,11 +29,10 @@ describe('Pipeline Template creation and assertion', () => {
     '/template/api/templates/applyTemplates?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&getDefaultFromOtherRepo=true'
   const pipelineTemplateCreationCall =
     '/template/api/templates?accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&comments='
-  const templatesListCall =
-    '/template/api/templates/list?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&templateListType=Stable&searchTerm=&page=0&size=20&includeAllTemplatesAvailableAtScope=true'
+  const templateMetadataCall = `/template/api/templates/list-metadata?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&templateListType=Stable&searchTerm=&page=0&size=20&includeAllTemplatesAvailableAtScope=true`
+  const templateMetadataCallAfterSelection =
+    '/template/api/templates/list-metadata?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&module=cd&templateListType=All'
 
-  const templateListCallAfterSelection =
-    '//template/api/templates/list?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&module=cd&templateListType=All'
   const applyTemplateEndpoint =
     '/template/api/templates/applyTemplates?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&getDefaultFromOtherRepo=true'
   const afterUseTemplateEndPoint =
@@ -67,7 +66,7 @@ describe('Pipeline Template creation and assertion', () => {
     cy.visitPageAssertion('[class*=TemplatesPage-module_templatesPageBody]')
 
     cy.contains('span', 'New Template').click()
-    cy.get('.bp3-menu > :nth-child(3)').click() // querying "Pipeline" in "New Template" menu and clicking it
+    cy.get('.bp3-menu > :nth-child(4)').click() // querying "Pipeline" in "New Template" menu and clicking it
 
     cy.contains('p', 'Create New Pipeline Template').should('be.visible')
     cy.contains('p', 'PIPELINE').should('be.visible') //
@@ -88,10 +87,10 @@ describe('Pipeline Template creation and assertion', () => {
     cy.contains('span', 'yamlNode provided doesn not have root yaml field: pipeline').should('be.visible') //
   })
   it('create pipeline with pipeline template', () => {
-    cy.intercept('POST', templatesListCall, selectedTemplateListFromPipeline).as('templateListCallPipelineTemplate')
+    cy.intercept('POST', templateMetadataCall, selectedTemplateListFromPipeline).as('templateListCallPipelineTemplate')
     cy.intercept('GET', templateDetailsCall, selectedPipelineTemplateResponse).as('selectedPipelineTemplateResponse')
     cy.intercept('POST', applyTemplateEndpoint, applyTemplateResponse).as('applyTemplateCall')
-    cy.intercept('POST', templateListCallAfterSelection, templateListCallAfterSelectionResponse).as(
+    cy.intercept('POST', templateMetadataCallAfterSelection, templateListCallAfterSelectionResponse).as(
       'templateListCallAfterSelection'
     )
     cy.intercept('POST', afterUseTemplateEndPoint, afterUseTemplateEndpointResponse).as('afterUseTemplate')

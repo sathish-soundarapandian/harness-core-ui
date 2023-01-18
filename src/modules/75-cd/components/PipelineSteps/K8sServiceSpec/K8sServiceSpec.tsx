@@ -356,6 +356,15 @@ export class GenericServiceSpec extends Step<ServiceSpec> {
         )
       }
 
+      if (
+        isArray(manifest.manifest?.spec?.valuesPaths) &&
+        manifest.manifest?.spec?.valuesPaths?.includes('') &&
+        getMultiTypeFromValue(get(template, `manifests[${index}].manifest.spec.valuesPaths`, '')) ===
+          MultiTypeInputType.RUNTIME
+      ) {
+        set(errors, `manifests[${index}].manifest.spec.valuesPaths`, getString?.('cd.valuesYamlValidation'))
+      }
+
       // Harness manifest store spcific fields
       if (
         isEmpty(manifest?.manifest?.spec?.store?.spec?.files?.[0]) &&

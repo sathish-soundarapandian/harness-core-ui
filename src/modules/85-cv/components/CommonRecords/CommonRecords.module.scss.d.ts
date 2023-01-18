@@ -14,6 +14,7 @@ declare const styles: {
   readonly formQueryBox: string
   readonly labelText: string
   readonly main: string
+  readonly noDataContainer: string
   readonly noQueryChart: string
   readonly noRecords: string
   readonly queryAndRecords: string
@@ -21,6 +22,7 @@ declare const styles: {
   readonly queryIcons: string
   readonly queryViewDialog: string
   readonly recordContainer: string
+  readonly stackTracePanelClassName: string
   readonly tooManyRecords: string
 }
 export default styles

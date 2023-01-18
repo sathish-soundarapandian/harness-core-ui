@@ -16,6 +16,18 @@ jest.mock('../OverviewGlanceCardsContainer/OverviewGlanceCardsContainer', () => 
   }
 })
 
+jest.mock('../NotificationsCard/NotificationsCard', () => {
+  return () => {
+    return 'Notifications card'
+  }
+})
+
+jest.mock('../ModuleOverview/Grid/ModuleOverviewGrid', () => {
+  return () => {
+    return <div data-testid="moduleOverview">moduleOverview</div>
+  }
+})
+
 jest.mock('@common/components/TimeRangePicker/TimeRangePicker', () => {
   return (props: any) => (
     <button

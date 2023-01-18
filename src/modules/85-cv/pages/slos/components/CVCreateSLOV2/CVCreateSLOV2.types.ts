@@ -76,3 +76,14 @@ export interface GetSLOIdentifierWithOrgAndProjectProps {
   sloIdentifier?: string
   projectParams?: ProjectParams
 }
+
+export enum PeriodTypes {
+  ROLLING = 'Rolling',
+  CALENDAR = 'Calender'
+}
+
+export enum PeriodLengthTypes {
+  WEEKLY = 'Weekly',
+  MONTHLY = 'Monthly',
+  QUARTERLY = 'Quarterly'
+}

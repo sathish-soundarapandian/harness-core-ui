@@ -72,7 +72,7 @@ const ManifestGitStoreRuntimeFields = ({
               allowableTypes,
               expressions
             }}
-            width={391}
+            width={400}
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
@@ -128,21 +128,20 @@ const ManifestGitStoreRuntimeFields = ({
         )}
       </div>
 
-      <div className={css.inputFieldLayout}>
-        {isFieldRuntime(`${manifestPath}.spec.store.spec.branch`, template) && (
-          <TextFieldInputSetView
-            disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.branch`)}
-            name={`${path}.${manifestPath}.spec.store.spec.branch`}
-            multiTextInputProps={{
-              expressions,
-              allowableTypes
-            }}
-            label={getString('pipelineSteps.deploy.inputSet.branch')}
-            fieldPath={`${manifestPath}.spec.store.spec.branch`}
-            template={template}
-          />
-        )}
-      </div>
+      {isFieldRuntime(`${manifestPath}.spec.store.spec.branch`, template) && (
+        <TextFieldInputSetView
+          disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.branch`)}
+          name={`${path}.${manifestPath}.spec.store.spec.branch`}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          label={getString('pipelineSteps.deploy.inputSet.branch')}
+          fieldPath={`${manifestPath}.spec.store.spec.branch`}
+          template={template}
+          className={css.inputFieldLayout}
+        />
+      )}
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.store.spec.commitId`, template) && (
           <div className={css.verticalSpacingInput}>

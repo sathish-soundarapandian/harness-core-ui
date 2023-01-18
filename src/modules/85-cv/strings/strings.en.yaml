@@ -4,6 +4,7 @@ methodLabel: Method Label
 request: '{{ $.common.request }}'
 response: Response
 responseBody: Response Body
+dateAndTimeLabel: Date and Time
 statusCode: Status Code
 failures: Failures
 initiated: Initiated
@@ -224,14 +225,41 @@ monitoringSources:
     defineQueryDescriptionMetrics: Queries can only be defined for a single timeseries.
     defineQuerySubDescription: Learn how to find the query to monitor your data source with Harness.
     querySectionSecondaryTitle: Query Section
+    records:
+      fetchingRecords: Fetching records ...
+      runQueryToSeeRecords: Please run the query to see the records.
+    metricsChart:
+      fetchingCharts: Fetching charts data ...
     logsTable:
       title: Field Mapping
       subTitle: Choose the data to display the logs from the fields below
       sampleLogButtonText: Get sample log messages
+      sampleLogMessageDrawerTitle: Sample Log Messages
       noSampleAvailable: No sample data available
       timestamp: Timestamp
       ServiceInstance: Service Instance
       jsonSelectorDrawerTitlePrefix: Select path for
+      validationMessage: '{{fieldName}} is required'
+      fetchLogDataButtonDisableMessage: Records are not available
+    assign:
+      subHeader: Select services to which the metric and custom metric will be applied.
+      riskProfileSubHeader: Harness will verify and rate your events based on your selected risk category and deviation.
+      continuousVerification:
+        title: Continuous Verification (Applied to the pipelines in the Continuous Deployment)
+        helptext: Apply this to the pipeline in the Continuous Deployment to verify that the deployed service is running safely, perform automatic rollbacks, and apply machine learning to every deployment to find and highlight problems in future deployments.
+      serviceHealth:
+        helptext: Apply this to track the changes in the health trend of your Monitored Service.
+      serviceLevelIndicator:
+        title: Service Level Indicator (SLI)
+        helptext: Use this metric to measure the SLI to obtain the service’s performance
+      deviation:
+        title: Deviation Compared To Baseline
+        helptext: Measures your service’s normal behaviour by comparing it to the deviation from your health source
+      serviceInstance:
+        title: Map service instance identifier
+        helptext: A Service Instance represents a dynamically created service you deploy through Harness.
+        higherLabel: Higher counts = higher risk
+        lowerLabel: Lower counts = higher risk
   appD:
     advancedOptional: Advanced (Optional)
     ignoreThresholds: Ignore Thresholds
@@ -638,12 +666,16 @@ changeSource:
     information: Information
     triggred: Triggered
     viewDeployment: View Deployment
+    viewFeatureFlag: View Feature Flag
     finished: 'Finished: '
     deploymentHealth: Deployment Health
     ago: ago
   kubernetes:
     validatingConnector: Validating permissions to fetch Kubernetes events.
     invalidConnector: Unable to fetch kubernetes events for this connector. Please use a connector with permissions to fetch events from the cluster.
+  FeatureFlag:
+    noDataAvailableForYAMLDiff: No data available for YAML Difference
+    label: Harness FF
 Dependency:
   serviceList: Service list
   noData: No Data For Dependency Graph
@@ -664,7 +696,6 @@ healthSource:
   selectHealthSource: Select health source type
   defineYourSource: Define Your Sources
   defineHealthSource: Define Health Source
-  customizeHealthSource: Customize Health Source
   deleteHealthSourceWarning: Are you sure you want to delete Health Source
   deleteHealthSource: Delete Health Source
   selectConnectionTypeInfo: Select the connection type to see your hosted entities directly in Harness
@@ -676,6 +707,8 @@ healthSource:
   dataSourceTypeValidation: Connection Type is required
   noDataPresentHealthSource: No data is present for the selected Health Source
   seriveEnvironmentNote: Service selected is {{service}} and Environment selected is {{environment}}
+  productChangeConfirmationHeader: Changing feature will reset the configurations.
+  productChangeConfirmation: Are you sure you want to change the feature ?
   table:
     serviceMapping: Service Mapping
     environmentMapping: Environment Mapping
@@ -768,7 +801,6 @@ slos:
   healthSource: Health source
   sloCreated: SLO created successfully
   sloUpdated: SLO updated successfully
-  noData: You don’t have any SLO created yet
   noDataMS: There are no SLOs available for this service
   noMatchingData: No matching data for the applied filters.
   noMatchingDataForSearch: No matching data for the applied search.

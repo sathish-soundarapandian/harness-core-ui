@@ -13,6 +13,7 @@ import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { mockData } from '@cv/pages/health-source/connectors/CloudWatch/__tests__/CloudWatch.mock'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { accountPathProps, projectPathProps } from '@common/utils/routeUtils'
+import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import { sourceData, sourceDataSplunkMetric } from './CustomiseHealthSource.mock'
 import CustomiseHealthSource from '../CustomiseHealthSource'
 
@@ -24,6 +25,10 @@ jest.mock('@cv/pages/health-source/connectors/SplunkMetricsHealthSourceV2/Splunk
 
 jest.mock('@cv/pages/health-source/connectors/CloudWatch/CloudWatch', () => () => (
   <div data-testid="cloudWatchComponent" />
+))
+
+jest.mock('@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource', () => () => (
+  <div data-testid="commonHealthSourceComponent" />
 ))
 
 const testWrapperProps: TestWrapperProps = {
@@ -77,6 +82,22 @@ jest.mock('services/cv', () => ({
   useFetchSampleData: jest.fn().mockImplementation(() => ({ loading: false, error: null, mutate: jest.fn() } as any)),
   useFetchTimeSeries: jest.fn().mockImplementation(() => ({ loading: false, error: null, data: {} } as any))
 }))
+
+jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', () => ({
+  ...(jest.requireActual('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs') as any),
+  get SetupSourceTabsContext() {
+    return React.createContext({
+      tabsInfo: [],
+      sourceData,
+      onNext: onNextMock,
+      onPrevious: onPrevious
+    })
+  }
+}))
+
+const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlag')
+useFeatureFlags.mockReturnValue(true)
+
 describe('CustomiseHealthSource', () => {
   test('Validate AppDynamics loads', () => {
     const { getByText } = render(
@@ -93,17 +114,7 @@ describe('CustomiseHealthSource', () => {
 
   test('should load Custom Health Source ', () => {
     sourceData.sourceType = 'CustomHealth'
-    jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', () => ({
-      ...(jest.requireActual('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs') as any),
-      get SetupSourceTabsContext() {
-        return React.createContext({
-          tabsInfo: [],
-          sourceData,
-          onNext: onNextMock,
-          onPrevious: onPrevious
-        })
-      }
-    }))
+
     const { getByText } = render(
       <TestWrapper {...testWrapperProps}>
         <LoadSourceByType type={sourceData?.sourceType} data={sourceData} onSubmit={jest.fn()} />
@@ -113,21 +124,31 @@ describe('CustomiseHealthSource', () => {
     expect(getByText('cv.monitoringSources.prometheus.querySpecificationsAndMappings')).toBeVisible()
   })
 
-  test('should load Splunk metric health source', () => {
-    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlag')
-    useFeatureFlags.mockReturnValue(true)
-    jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', () => ({
-      ...(jest.requireActual('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs') as any),
-      get SetupSourceTabsContext() {
-        return React.createContext({
-          tabsInfo: [],
-          sourceData,
-          onNext: onNextMock,
-          onPrevious: onPrevious
-        })
-      }
-    }))
+  test('should load Common Health source component when healthsourc type is sumo metrics ', () => {
+    sourceData.sourceType = HealthSourceTypes.SumologicMetrics
 
+    const { queryByTestId } = render(
+      <TestWrapper {...testWrapperProps}>
+        <LoadSourceByType type={sourceData?.sourceType} data={sourceData} onSubmit={jest.fn()} />
+      </TestWrapper>
+    )
+
+    expect(queryByTestId('commonHealthSourceComponent')).toBeInTheDocument()
+  })
+
+  test('should load Common Health source component when healthsourc type is sumo logs ', () => {
+    sourceData.sourceType = HealthSourceTypes.SumologicLogs
+
+    const { queryByTestId } = render(
+      <TestWrapper {...testWrapperProps}>
+        <LoadSourceByType type={sourceData?.sourceType} data={sourceData} onSubmit={jest.fn()} />
+      </TestWrapper>
+    )
+
+    expect(queryByTestId('commonHealthSourceComponent')).toBeInTheDocument()
+  })
+
+  test('should load Splunk metric health source', () => {
     render(
       <TestWrapper {...testWrapperProps}>
         <LoadSourceByType type="SplunkMetric" data={sourceDataSplunkMetric} onSubmit={jest.fn()} />
@@ -137,47 +158,7 @@ describe('CustomiseHealthSource', () => {
     expect(screen.getByTestId('SplunkMetricsHealthSource')).toBeInTheDocument()
   })
 
-  test('should not load Cloud watch health source, if its feature flag is disabled', () => {
-    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlag')
-    useFeatureFlags.mockReturnValue(false)
-    jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', () => ({
-      ...(jest.requireActual('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs') as any),
-      get SetupSourceTabsContext() {
-        return React.createContext({
-          tabsInfo: [],
-          sourceData,
-          onNext: onNextMock,
-          onPrevious: onPrevious
-        })
-      }
-    }))
-
-    const { container } = render(
-      <TestWrapper {...testWrapperProps}>
-        <LoadSourceByType type="Aws" data={mockData} onSubmit={jest.fn()} />
-      </TestWrapper>
-    )
-
-    expect(screen.queryByTestId('cloudWatchComponent')).not.toBeInTheDocument()
-
-    expect(container.firstChild).toBeNull()
-  })
-
   test('should render Cloud watch health source, if its feature flag is enabled', () => {
-    const useFeatureFlags = jest.spyOn(hooks, 'useFeatureFlag')
-    useFeatureFlags.mockReturnValue(true)
-    jest.mock('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs', () => ({
-      ...(jest.requireActual('@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs') as any),
-      get SetupSourceTabsContext() {
-        return React.createContext({
-          tabsInfo: [],
-          sourceData,
-          onNext: onNextMock,
-          onPrevious: onPrevious
-        })
-      }
-    }))
-
     render(
       <TestWrapper {...testWrapperProps}>
         <LoadSourceByType type="Aws" data={mockData} onSubmit={jest.fn()} />

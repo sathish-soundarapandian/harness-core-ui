@@ -21,7 +21,7 @@ import {
   PipelineResponse,
   ConnectorResponse,
   GetInputSetsResponse,
-  GetInputSetEdit,
+  GetInputSetEdit_oldGitSync,
   MergeInputSetResponse,
   GetOverlayInputSetEdit,
   createInputSetCallFirstArg,
@@ -65,7 +65,7 @@ const createInputSet = jest.fn().mockImplementation(() => Promise.resolve({ stat
 const updateInputSet = jest.fn().mockImplementation(() => Promise.resolve({ status: 'SUCCESS' }))
 
 jest.mock('services/pipeline-ng', () => ({
-  useGetInputSetForPipeline: jest.fn(() => GetInputSetEdit),
+  useGetInputSetForPipeline: jest.fn(() => GetInputSetEdit_oldGitSync),
   useCreateVariablesV2: () => jest.fn(() => ({})),
   useGetMergeInputSetFromPipelineTemplateWithListInput: jest.fn(() => MergeInputSetResponse),
   useGetPipeline: jest.fn(() => PipelineResponse),
@@ -189,11 +189,11 @@ describe('InputSetFrom testing - When GitSync is enabled', () => {
 
   describe('Create InputSet', () => {
     beforeEach(() => {
-      delete GetInputSetEdit.data?.data?.gitDetails?.filePath
-      delete GetInputSetEdit.data?.data?.gitDetails?.objectId
+      delete GetInputSetEdit_oldGitSync.data?.data?.gitDetails?.filePath
+      delete GetInputSetEdit_oldGitSync.data?.data?.gitDetails?.objectId
 
       jest.mock('services/pipeline-ng', () => ({
-        useGetInputSetForPipeline: jest.fn(() => GetInputSetEdit)
+        useGetInputSetForPipeline: jest.fn(() => GetInputSetEdit_oldGitSync)
       }))
     })
     test('render Input Set Form view in create mode', async () => {

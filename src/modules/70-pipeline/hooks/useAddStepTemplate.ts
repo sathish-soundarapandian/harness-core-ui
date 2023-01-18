@@ -22,6 +22,8 @@ import { useMutateAsGet } from '@common/hooks'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import { StepType as PipelineStepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+
 import type { DeploymentStageConfig } from 'services/cd-ng'
 
 interface AddStepTemplateReturnType {
@@ -64,12 +66,14 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
     getStageFromPipeline,
     updatePipelineView
   } = pipelineContext
+
   const { getTemplate } = useTemplateSelector()
   const { stage: selectedStage } = getStageFromPipeline(selectedStageId)
   const customDeploymentTemplateRef = defaultTo(
     (selectedStage?.stage?.spec as DeploymentStageConfig)?.customDeploymentRef?.templateRef,
     ''
   )
+
   const resolvedCustomDeploymentDetails = get(
     resolvedCustomDeploymentDetailsByRef,
     customDeploymentTemplateRef,
@@ -86,7 +90,10 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
 
   React.useEffect(() => {
     if (stepsData?.data?.stepCategories) {
-      setAllChildTypes(getStepTypesFromCategories(stepsData.data.stepCategories))
+      setAllChildTypes([
+        ...getStepTypesFromCategories(stepsData.data.stepCategories),
+        selectedStage?.stage?.type as string
+      ])
     }
   }, [stepsData?.data?.stepCategories])
 
@@ -103,7 +110,9 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
         gitDetails,
         storeMetadata
       })
-      const newStepData = { step: createStepNodeFromTemplate(template, isCopied) }
+      const stepType = template.templateEntityType === PipelineStepType.StepGroup ? 'stepGroup' : 'step'
+      const newStepData = { [stepType]: createStepNodeFromTemplate(template, isCopied) }
+
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))
       if (pipelineStage && !pipelineStage.stage?.spec) {
         set(pipelineStage, 'stage.spec', {})
@@ -115,7 +124,7 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
           set(pipelineStage, 'stage.spec.execution', { steps: [] })
         }
       }
-      executionRef?.stepGroupUpdated?.(newStepData.step)
+      executionRef?.stepGroupUpdated?.(newStepData[stepType])
       addStepOrGroup(
         event.entity,
         pipelineStage?.stage?.spec?.execution as any,
@@ -126,6 +135,7 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
       if (pipelineStage?.stage) {
         await updateStage(pipelineStage?.stage)
       }
+
       updatePipelineView({
         ...pipelineView,
         isDrawerOpened: true,
@@ -133,10 +143,10 @@ export function useAddStepTemplate(props: AddStepTemplate): AddStepTemplateRetur
           type: DrawerTypes.StepConfig,
           data: {
             stepConfig: {
-              node: newStepData.step,
+              node: newStepData[stepType],
               stepsMap: event.stepsMap,
               onUpdate: executionRef?.stepGroupUpdated,
-              isStepGroup: false,
+              isStepGroup: template?.templateEntityType === PipelineStepType.StepGroup,
               addOrEdit: 'edit',
               hiddenAdvancedPanels: [AdvancedPanels.PreRequisites]
             }
