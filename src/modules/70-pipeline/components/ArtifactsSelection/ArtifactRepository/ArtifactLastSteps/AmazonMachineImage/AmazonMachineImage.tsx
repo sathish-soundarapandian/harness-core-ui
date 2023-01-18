@@ -201,7 +201,8 @@ function FormComponent({
             multiTypeInputProps={{
               selectProps: {
                 items: regions
-              }
+              },
+              allowableTypes: [MultiTypeInputType.FIXED]
             }}
             label={getString('regionLabel')}
             placeholder={getString('select')}
@@ -230,7 +231,7 @@ function FormComponent({
             name="spec.tags"
             className="tags-select"
             expressions={expressions}
-            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+            allowableTypes={[MultiTypeInputType.FIXED]}
             tags={tags}
             label={'AMI Tags'}
             isLoadingTags={isTagsLoading}
@@ -260,7 +261,7 @@ function FormComponent({
             name="spec.filters"
             className="tags-select"
             expressions={expressions}
-            allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
+            allowableTypes={[MultiTypeInputType.FIXED]}
             tags={amiFilters}
             label={'AMI Filters'}
             initialTags={formik?.initialValues?.spec?.filters || {}}
