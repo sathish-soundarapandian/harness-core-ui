@@ -288,6 +288,10 @@ export enum CDOnboardingActions {
   MoveToPipelineSummary = 'Move to Pipeline summary page '
 }
 
+export enum CDOnboardingGitopsActions {
+  GetStartedClicked = 'Clicked on Get Started for CD GitOps'
+}
+
 export enum CFOverviewActions {
   OverviewStartFreePlan = 'FF Overview - Start a free plan',
   InviteCollaboratorsClick = 'Clicked Invite Collaborators'

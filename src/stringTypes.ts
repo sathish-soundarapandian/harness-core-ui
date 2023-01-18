@@ -5093,7 +5093,9 @@ export interface StringsMap {
   'cd.getStartedWithCD.manifestStoreLabel': string
   'cd.getStartedWithCD.manifestTypeSelection': string
   'cd.getStartedWithCD.onBoardingSubTitle': string
+  'cd.getStartedWithCD.onBoardingSubTitleGitops': string
   'cd.getStartedWithCD.onboardingTitle': string
+  'cd.getStartedWithCD.onboardingTitleGitops': string
   'cd.getStartedWithCD.provideManifest': string
   'cd.getStartedWithCD.reposubheading': string
   'cd.getStartedWithCD.runDelegateSubtitle': string

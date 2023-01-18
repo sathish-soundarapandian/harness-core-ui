@@ -13,6 +13,7 @@ declare const styles: {
   readonly centerAlign: string
   readonly closeWizard: string
   readonly containerItemCss: string
+  readonly harnessGitopsLogo: string
   readonly iconPadding: string
   readonly iconPaddingSmall: string
   readonly image: string

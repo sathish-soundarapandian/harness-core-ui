@@ -90,3 +90,11 @@
   right: var(--spacing-large);
   top: var(--spacing-large);
 }
+
+/*** GITOPS **/
+.harnessGitopsLogo {
+  width: 480px;
+  height: 75px;
+  position: relative;
+  bottom: 25px;
+}

@@ -545,7 +545,9 @@ skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Dry Run Apply the service manifests and leverage the dry run yaml as output for subsequent steps
 getStartedWithCD:
   onboardingTitle: Start your deployments journey with Harness CD
+  onboardingTitleGitops: Enhance your CD Pipeline with
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
+  onBoardingSubTitleGitops: Enable enterprise continuous delivery (CD) workflows for application and infrastructure deployments.
   runDelegateSubtitle: You can install the Delegate in your target environment.
   delegateInstalled: Delegate installed successfully
   selectDeploymentType: Select deployment type
