@@ -23,6 +23,7 @@ declare const styles: {
   readonly lightBg: string
   readonly main: string
   readonly pluginDecorator: string
+  readonly resizeIcon: string
   readonly splitPanel: string
   readonly summaryPopover: string
   readonly validationIcon: string

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { defaultTo, isEqual, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { ButtonVariation, Checkbox, Container, Layout, Tag } from '@harness/uicore'
@@ -79,6 +79,7 @@ function PipelineYamlView(): React.ReactElement {
   expressionRef.current = expressions
   const updateEntityValidityDetailsRef = React.useRef<(entityValidityDetails: EntityValidityDetails) => Promise<void>>()
   updateEntityValidityDetailsRef.current = updateEntityValidityDetails
+  const [shouldShowPluginsPanel, setShouldShowPluginsPanel] = useState<boolean>(false)
 
   const remoteFileName = React.useMemo(
     () =>
@@ -162,9 +163,9 @@ function PipelineYamlView(): React.ReactElement {
     }
   }, [userPreferenceEditMode])
 
-  const shouldShowReadOnlyMode = isReadonly || !isYamlEditable
-
-  const shouldShowPluginsPanel = !shouldShowReadOnlyMode
+  React.useEffect(() => {
+    setShouldShowPluginsPanel(!(isReadonly || !isYamlEditable))
+  }, [isReadonly, isYamlEditable])
 
   return (
     <div className={css.yamlBuilder}>
@@ -185,7 +186,8 @@ function PipelineYamlView(): React.ReactElement {
             height={'calc(100vh - 150px)'}
             width={shouldShowPluginsPanel ? '50vw' : 'calc(80vw + 10px)'}
             onEnableEditMode={enableEditMode}
-            showPluginsPanel={shouldShowPluginsPanel}
+            shouldShowPluginsPanel={shouldShowPluginsPanel}
+            toggleResizeButton={() => setShouldShowPluginsPanel((shouldRender: boolean) => !shouldRender)}
             invocationMap={stepsFactory.getInvocationMap()}
             schema={pipelineSchema?.data}
             isEditModeSupported={!isReadonly}

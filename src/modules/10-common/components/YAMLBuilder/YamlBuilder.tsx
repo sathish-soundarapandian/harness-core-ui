@@ -138,8 +138,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     openDialogProp,
     showCopyIcon = true,
     comparableYaml,
-    showPluginsPanel = false,
-    displayBorder = true
+    displayBorder = true,
+    shouldShowPluginsPanel = false,
+    toggleResizeButton
   } = props
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
 
@@ -162,6 +163,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const currentCursorPosition = useRef<Position>()
   const codeLensRegistrations = useRef<Map<number, IDisposable>>(new Map<number, IDisposable>())
   const [selectedPlugin, setSelectedPlugin] = useState<Record<string, any>>()
+  const shouldRenderPluginsPanel = !isReadOnlyMode && isEditModeSupported && shouldShowPluginsPanel
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -171,8 +173,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const { getString } = useStrings()
 
   const yamlError = getString('yamlBuilder.yamlError')
-
-  const shouldRenderPluginsPanel: boolean = !isReadOnlyMode && isEditModeSupported && showPluginsPanel
 
   const handler = React.useMemo(
     () =>
@@ -1018,6 +1018,16 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     [currentCursorPosition, currentYaml]
   )
 
+  const renderEditorControls = useCallback((): React.ReactElement => {
+    return !isReadOnlyMode && isEditModeSupported ? (
+      <Layout.Horizontal>
+        <Icon className={css.resizeIcon} name="main-minimize" onClick={toggleResizeButton} />
+      </Layout.Horizontal>
+    ) : (
+      <></>
+    )
+  }, [isReadOnlyMode, isEditModeSupported])
+
   return (
     <Layout.Horizontal>
       <Layout.Vertical>
@@ -1029,7 +1039,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           )}
         >
           <div className={css.editor}>
-            {defaultTo(renderCustomHeader, renderHeader)()}
+            <Layout.Horizontal flex={{ justifyContent: 'flex-end' }} spacing="medium">
+              {renderEditorControls()}
+              {defaultTo(renderCustomHeader, renderHeader)()}
+            </Layout.Horizontal>
             {renderEditor()}
           </div>
         </div>
