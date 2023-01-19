@@ -486,8 +486,8 @@ function PipelineInputSetFormBasic(): React.ReactElement {
                         maybeContainerClass={
                           existingProvide === 'provide' && hasInputSets ? css.inputSetFormRunPipeline : ''
                         }
-                        selectedStageData={{} as StageSelectionData}
                         allowableTypes={allowableTypes}
+                        viewTypeMetadata={{ isTemplateBuilder: true }}
                       />
                     </>
                   ) : null}

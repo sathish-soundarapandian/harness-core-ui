@@ -360,6 +360,7 @@ export interface AccessControlCheckError {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -1042,6 +1043,24 @@ export type ArtifactoryUsernamePasswordAuth = ArtifactoryAuthCredentials & {
 export interface ArtifactsSummary {
   primary?: ArtifactSummary
   sidecars?: ArtifactSummary[]
+}
+
+export type AsgBlueGreenDeployStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  loadBalancer: string
+  prodListener: string
+  prodListenerRuleArn: string
+  stageListener: string
+  stageListenerRuleArn: string
+}
+
+export type AsgBlueGreenRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export type AsgBlueGreenSwapServiceStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  downsizeOldAsg: boolean
 }
 
 export type AsgCanaryDeleteStepInfo = StepSpecType & {
@@ -3734,6 +3753,13 @@ export interface EntityDetail {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
 }
 
 export interface EntityDetailProtoDTO {
@@ -4325,6 +4351,7 @@ export interface Error {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -4689,6 +4716,7 @@ export interface ErrorMetadata {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -5104,6 +5132,7 @@ export interface Failure {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -6152,6 +6181,13 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   )[]
   moduleType?:
     | 'CD'
@@ -6352,6 +6388,13 @@ export interface GitEntityFilterProperties {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6623,6 +6666,13 @@ export interface GitFullSyncEntityInfoDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6817,6 +6867,13 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7132,6 +7189,13 @@ export interface GitSyncEntityDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7320,6 +7384,13 @@ export interface GitSyncEntityListDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7525,6 +7596,13 @@ export interface GitSyncErrorDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -7875,6 +7953,11 @@ export interface HelmManifestCommandFlag {
     | 'Update'
     | 'Version'
   flag?: string
+}
+
+export type HelmRepoOverrideManifest = ManifestAttributes & {
+  metadata?: string
+  store?: StoreConfigWrapper
 }
 
 export type HelmRollbackStepInfo = StepSpecType & {
@@ -9093,6 +9176,7 @@ export interface ManifestConfig {
   spec: ManifestAttributes
   type:
     | 'HelmChart'
+    | 'HelmRepoOverride'
     | 'K8sManifest'
     | 'Kustomize'
     | 'KustomizePatches'
@@ -10729,6 +10813,13 @@ export interface ReferencedByDTO {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
 }
 
 export interface RefreshResponse {
@@ -11963,6 +12054,13 @@ export interface ResponseListEntityType {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -12583,6 +12681,7 @@ export interface ResponseMessage {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -15132,6 +15231,11 @@ export interface StepData {
     | 'ElastigroupSwapRoute'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
 }
 
 export interface StepElementConfig {
@@ -16578,6 +16682,7 @@ export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
 export type DeleteManyFreezesBodyRequestBody = string[]
 
 export type GetBuildDetailsForAcrArtifactWithYamlBodyRequestBody = string
+export type GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody = string
 
 export type ListTagsForAMIArtifactBodyRequestBody = string
 
@@ -17295,6 +17400,13 @@ export interface ListActivitiesQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17475,6 +17587,13 @@ export interface ListActivitiesQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -17759,6 +17878,13 @@ export interface GetActivitiesSummaryQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17939,6 +18065,13 @@ export interface GetActivitiesSummaryQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -32203,6 +32336,53 @@ export const updateSelectorsNgPromise = (
     UpdateSelectorsNgPathParams
   >('PUT', getConfig('ng/api'), `/delegate-profiles/ng/${delegateProfileId}/selectors`, props, signal)
 
+export interface GenerateTerraformModuleQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export type GenerateTerraformModuleProps = Omit<GetProps<void, void, GenerateTerraformModuleQueryParams, void>, 'path'>
+
+/**
+ * Generate delegate terraform example module file
+ */
+export const GenerateTerraformModule = (props: GenerateTerraformModuleProps) => (
+  <Get<void, void, GenerateTerraformModuleQueryParams, void>
+    path={`/delegate-setup/delegate-terraform-module-file`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGenerateTerraformModuleProps = Omit<
+  UseGetProps<void, void, GenerateTerraformModuleQueryParams, void>,
+  'path'
+>
+
+/**
+ * Generate delegate terraform example module file
+ */
+export const useGenerateTerraformModule = (props: UseGenerateTerraformModuleProps) =>
+  useGet<void, void, GenerateTerraformModuleQueryParams, void>(`/delegate-setup/delegate-terraform-module-file`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Generate delegate terraform example module file
+ */
+export const generateTerraformModulePromise = (
+  props: GetUsingFetchProps<void, void, GenerateTerraformModuleQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<void, void, GenerateTerraformModuleQueryParams, void>(
+    getConfig('ng/api'),
+    `/delegate-setup/delegate-terraform-module-file`,
+    props,
+    signal
+  )
+
 export interface DeleteDelegateQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -33348,6 +33528,13 @@ export interface ListReferredByEntitiesQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -33589,6 +33776,13 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   searchTerm?: string
 }
 
@@ -35562,6 +35756,7 @@ export interface DeleteEnvironmentV2QueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  forceDelete?: boolean
 }
 
 export type DeleteEnvironmentV2Props = Omit<
@@ -36225,6 +36420,58 @@ export const downloadFilePromise = (
     signal
   )
 
+export interface GetFileStoreNodesOnPathQueryParams {
+  accountIdentifier?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  path: string
+  fileUsage?: 'MANIFEST_FILE' | 'CONFIG' | 'SCRIPT'
+}
+
+export type GetFileStoreNodesOnPathProps = Omit<
+  GetProps<ResponseFolderNodeDTO, Failure | Error, GetFileStoreNodesOnPathQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get file store nodes on path
+ */
+export const GetFileStoreNodesOnPath = (props: GetFileStoreNodesOnPathProps) => (
+  <Get<ResponseFolderNodeDTO, Failure | Error, GetFileStoreNodesOnPathQueryParams, void>
+    path={`/file-store/folder`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetFileStoreNodesOnPathProps = Omit<
+  UseGetProps<ResponseFolderNodeDTO, Failure | Error, GetFileStoreNodesOnPathQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get file store nodes on path
+ */
+export const useGetFileStoreNodesOnPath = (props: UseGetFileStoreNodesOnPathProps) =>
+  useGet<ResponseFolderNodeDTO, Failure | Error, GetFileStoreNodesOnPathQueryParams, void>(`/file-store/folder`, {
+    base: getConfig('ng/api'),
+    ...props
+  })
+
+/**
+ * Get file store nodes on path
+ */
+export const getFileStoreNodesOnPathPromise = (
+  props: GetUsingFetchProps<ResponseFolderNodeDTO, Failure | Error, GetFileStoreNodesOnPathQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseFolderNodeDTO, Failure | Error, GetFileStoreNodesOnPathQueryParams, void>(
+    getConfig('ng/api'),
+    `/file-store/folder`,
+    props,
+    signal
+  )
+
 export interface GetFolderNodesQueryParams {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -36841,6 +37088,13 @@ export interface GetReferencedByQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   searchTerm?: string
 }
 
@@ -39344,6 +39598,13 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -39592,6 +39853,13 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'TanzuCommand'
       | 'AsgRollingDeploy'
       | 'AsgRollingRollback'
+      | 'GovernanceRuleAWS'
+      | 'TasRollingDeploy'
+      | 'TasRollingRollback'
+      | 'K8sDryRun'
+      | 'AsgBlueGreenSwapService'
+      | 'AsgBlueGreenDeploy'
+      | 'AsgBlueGreenRollback'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -45538,6 +45806,13 @@ export interface GetStepYamlSchemaQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   yamlGroup?: string
 }
 
@@ -45846,6 +46121,13 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -59240,6 +59522,13 @@ export interface GetYamlSchemaQueryParams {
     | 'TanzuCommand'
     | 'AsgRollingDeploy'
     | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   subtype?:
     | 'K8sCluster'
     | 'Git'

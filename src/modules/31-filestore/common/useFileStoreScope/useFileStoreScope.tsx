@@ -7,22 +7,32 @@
 
 import { useParams } from 'react-router-dom'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getParamsByScope } from '@filestore/utils/FileStoreUtils'
+import { getParamsByScope, getParamsByScopeAndPath } from '@filestore/utils/FileStoreUtils'
 
 interface useFileStoreScopeProps {
   scope: string
   isModalView: boolean
+  scopeValue: string
+  pathValue: string
 }
 
 export interface ScopedObjectDTO {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  path?: string
 }
 
-export const useFileStoreScope = ({ scope }: useFileStoreScopeProps): ScopedObjectDTO => {
+export const useFileStoreScope = ({
+  scope,
+  pathValue = '',
+  scopeValue = ''
+}: useFileStoreScopeProps): ScopedObjectDTO => {
   const params = useParams<ProjectPathProps & ModulePathParams>()
   const { accountId, orgIdentifier, projectIdentifier } = params
+  if (pathValue && scope === scopeValue) {
+    return getParamsByScopeAndPath(scopeValue, pathValue, { accountId, orgIdentifier, projectIdentifier })
+  }
 
   return getParamsByScope(scope, { accountId, orgIdentifier, projectIdentifier })
 }

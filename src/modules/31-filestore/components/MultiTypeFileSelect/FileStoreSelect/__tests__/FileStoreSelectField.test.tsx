@@ -52,7 +52,13 @@ jest.mock('services/cd-ng', () => ({
   prepareFileStoreValue: jest.fn().mockReturnValue('account:/test'),
   getNode: jest.fn(),
   useDownloadFile: jest.fn().mockImplementation(() => ({ data: null })),
-  useCreate: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
+  useCreate: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  getFileStoreNodesOnPathPromise: jest.fn().mockResolvedValue(() => ({
+    data: {
+      children: []
+    },
+    status: 'SUCCESS'
+  }))
 }))
 
 jest.useFakeTimers()

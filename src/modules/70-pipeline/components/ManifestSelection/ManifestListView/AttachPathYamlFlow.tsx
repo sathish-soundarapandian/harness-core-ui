@@ -30,6 +30,8 @@ import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
+import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
+import { getScope } from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
 import { ManifestStoreMap, ManifestToPathLabelMap, ManifestToPathMap } from '../Manifesthelper'
@@ -79,6 +81,8 @@ function AttachPathYamlFlow({
   const getInitialValues = (): { valuesPaths: string | string[] | Array<{ path: string; uuid: string }> } => ({
     valuesPaths: typeof valuesPaths === 'string' ? valuesPaths : getValuesPathInitialValue()
   })
+
+  const FileStoreModal = useFileStoreModal({ isReadonly: true })
 
   const getFinalPathYamlData = (formData: ConnectorConfigDTO): ConnectorConfigDTO => {
     if (manifestStore === ManifestStoreMap.Harness) {
@@ -200,7 +204,19 @@ function AttachPathYamlFlow({
                   {index + 1}.
                 </Text>
                 <Icon name={valuesPathsIcon} inline padding={{ right: 'medium' }} size={24} />
-                <Text lineClamp={1}>{valuesPathValue}</Text>
+                {manifestStore === ManifestStoreMap.Harness ? (
+                  <div
+                    className={css.pathLink}
+                    onClick={() => {
+                      const { scope, path } = getScope(valuesPathValue)
+                      FileStoreModal.openFileStoreModal(path, scope)
+                    }}
+                  >
+                    <Text lineClamp={1}>{valuesPathValue}</Text>
+                  </div>
+                ) : (
+                  <Text lineClamp={1}>{valuesPathValue}</Text>
+                )}
               </Layout.Horizontal>
               {renderConnectorField}
               {!isReadonly && (

@@ -7,7 +7,7 @@
 
 import React, { createContext, useState, useCallback, useEffect } from 'react'
 import type { FileStoreNodeDTO as NodeDTO, FileDTO, NGTag } from 'services/cd-ng'
-import { useGetFolderNodes } from 'services/cd-ng'
+import { useGetFolderNodes, getFileStoreNodesOnPathPromise } from 'services/cd-ng'
 import { FILE_VIEW_TAB, FileStoreNodeTypes, SORT_TYPE } from '@filestore/interfaces/FileStore'
 import { FILE_STORE_ROOT } from '@filestore/utils/constants'
 import type { FileUsage, SortType, NodeSortDTO } from '@filestore/interfaces/FileStore'
@@ -69,6 +69,10 @@ export interface FileStoreContextState {
   getSortTypeById: (nodeId: string, nodes: NodeSortDTO[]) => SortType
   globalSort: SortType
   updateGlobalSort: (sortType: SortType) => void
+  pathValue: string
+  scopeValue: string
+  getNodeByPath: () => void
+  isReadonly: boolean
 }
 
 export interface GetNodeConfig {
@@ -88,13 +92,26 @@ interface FileStoreContextProps {
   children?: any
   fileUsage?: FileUsage
   handleSetIsUnsaved?: (status: boolean) => void
+  scopeValue?: string
+  pathValue?: string
+  isReadonly?: boolean
 }
 
 export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props: FileStoreContextProps) => {
-  const { scope = '', isModalView = false, fileUsage, handleSetIsUnsaved } = props
+  const {
+    scope = '',
+    isModalView = false,
+    fileUsage,
+    handleSetIsUnsaved,
+    scopeValue = '',
+    pathValue = '',
+    isReadonly = false
+  } = props
   const queryParams = useFileStoreScope({
     scope,
-    isModalView
+    isModalView,
+    scopeValue,
+    pathValue
   })
   const [fileStore, setFileStore] = useState<FileStoreNodeDTO[] | undefined>()
   const [tempNodes, setTempNodes] = useState<FileStoreNodeDTO[]>([])
@@ -215,6 +232,83 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
     [tempNodes]
   )
 
+  const findNodeByPath = (nodes: FileStoreNodeDTO[], paths: string[], parentName: string): void => {
+    if (nodes) {
+      paths.forEach((path: string) => {
+        nodes.find((node: FileStoreNodeDTO) => {
+          if (node.name === path) {
+            setCurrentNode({
+              ...node,
+              children: node?.children?.map((nodeItem: FileStoreNodeDTO) => {
+                return {
+                  ...nodeItem,
+                  parentName: parentName
+                }
+              })
+            })
+            if (node?.children?.length) {
+              findNodeByPath(
+                node.children,
+                paths.filter(pathItem => pathItem !== path),
+                node.name
+              )
+            }
+          }
+        })
+      })
+    }
+  }
+
+  const getNodeByPath = async (): Promise<void> => {
+    getFileStoreNodesOnPathPromise({
+      queryParams: {
+        ...queryParams,
+        path: queryParams?.path as string
+      }
+    }).then(res => {
+      if (res?.data?.children) {
+        setFileStore(
+          sortNodesByType(
+            res.data.children.map(node => {
+              return {
+                ...node,
+                parentName: FILE_STORE_ROOT
+              }
+            }),
+            globalSort
+          )
+        )
+
+        if (pathValue === '/') {
+          setCurrentNode({
+            ...res.data,
+            parentName: FILE_STORE_ROOT
+          })
+        } else {
+          const paths = pathValue.split('/').slice(1)
+          setCurrentNode({
+            ...res.data,
+            parentName: FILE_STORE_ROOT
+          })
+          findNodeByPath(res.data.children, paths, FILE_STORE_ROOT)
+        }
+      }
+      if (!res?.data) {
+        getFolderNodes({ identifier: FILE_STORE_ROOT, name: FILE_STORE_ROOT, type: FileStoreNodeTypes.FOLDER }).then(
+          response => {
+            if (response?.data?.children) {
+              setFileStore(response.data.children)
+              setCurrentNode({
+                ...response.data,
+                parentName: FILE_STORE_ROOT
+              })
+            }
+          }
+        )
+      }
+    })
+  }
+
   const getNode = async (nodeParams: FileStoreNodeDTO, config?: GetNodeConfig): Promise<void> => {
     const getParentName = (node: FileStoreNodeDTO): string => {
       if (node?.path) {
@@ -326,7 +420,11 @@ export const FileStoreContextProvider: React.FC<FileStoreContextProps> = (props:
         getSortTypeById,
         sortNode,
         globalSort,
-        updateGlobalSort
+        updateGlobalSort,
+        scopeValue,
+        pathValue,
+        getNodeByPath,
+        isReadonly
       }}
     >
       {props.children}

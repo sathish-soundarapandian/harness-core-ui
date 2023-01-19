@@ -16,11 +16,13 @@ declare const styles: {
   readonly connectorNameField: string
   readonly createConnectorWizard: string
   readonly crossIcon: string
+  readonly fsLinkWrapper: string
   readonly listHeader: string
   readonly manifestList: string
   readonly manifestLocation: string
   readonly modal: string
   readonly noWrap: string
+  readonly pathLink: string
   readonly rowItem: string
   readonly type: string
   readonly valuesList: string

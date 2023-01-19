@@ -18,6 +18,7 @@ declare const styles: {
   readonly createConnectorWizard: string
   readonly crossIcon: string
   readonly listHeader: string
+  readonly locationLink: string
   readonly modal: string
   readonly noWrap: string
   readonly rowItem: string

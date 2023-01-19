@@ -25,7 +25,7 @@ import FileStorePage from '@filestore/pages/filestore/FileStorePage'
 import css from './FileStoreComponent.module.scss'
 
 export interface UseFileStoreModalReturn {
-  openFileStoreModal: () => void
+  openFileStoreModal: (path?: string, scope?: string) => void
   closeFileStoreModal: () => void
 }
 
@@ -34,18 +34,24 @@ interface FileStoreNodeDTOWithScope extends FileStoreNodeDTO {
 }
 
 interface UseFileStoreModalProps {
-  applySelected: (file: any) => void
+  applySelected?: (file: any) => void
   fileUsage?: FileUsage
   defaultTab?: string
+  pathValue?: string
+  scopeValue?: string
+  isReadonly?: boolean
 }
 
 const useFileStoreModal = ({
   applySelected,
   fileUsage,
-  defaultTab
+  isReadonly = false
 }: UseFileStoreModalProps): UseFileStoreModalReturn => {
   const [activeTab, setActiveTab] = useState<string>(Scope.ACCOUNT)
   const [isUnsaved, setIsUnsaved] = useState<boolean>(false)
+  const [pathValue, setPathValue] = useState<string>('/')
+  const [scopeValue, setScopeValue] = useState<string>(Scope.ACCOUNT)
+  const [defaultTab, setDefaultTab] = useState<string>(Scope.ACCOUNT)
 
   React.useEffect(() => {
     if (defaultTab) {
@@ -74,7 +80,9 @@ const useFileStoreModal = ({
   }
 
   const handleApplySelectedFile = (): void => {
-    applySelected(selectedFile)
+    if (applySelected) {
+      applySelected(selectedFile)
+    }
     setSelectedFile({} as FileStoreNodeDTOWithScope)
     hideModal()
   }
@@ -92,7 +100,10 @@ const useFileStoreModal = ({
     isModalView: true,
     onNodeChange: handleSelectFile,
     fileUsage,
-    handleSetIsUnsaved: setIsUnsaved
+    handleSetIsUnsaved: setIsUnsaved,
+    pathValue,
+    scopeValue,
+    isReadonly
   }
 
   const renderTab = (
@@ -153,7 +164,7 @@ const useFileStoreModal = ({
         </div>
       </Container>
     )
-  }, [activeTab])
+  }, [activeTab, pathValue, scopeValue, defaultTab])
 
   const [showModal, hideModal] = useModalHook(() => {
     return (
@@ -171,28 +182,33 @@ const useFileStoreModal = ({
         className={cx(css.fileStoreField, css.dialog)}
       >
         {TabsRender}
-        <Layout.Horizontal spacing="medium" padding={{ top: 'medium' }}>
-          <Button
-            variation={ButtonVariation.PRIMARY}
-            text={getString('entityReference.apply')}
-            onClick={handleApplySelectedFile}
-            disabled={selectedFile?.name === FILE_STORE_ROOT || isUnsaved}
-            className={cx(Classes.POPOVER_DISMISS)}
-          />
-          {
+        {!isReadonly && (
+          <Layout.Horizontal spacing="medium" padding={{ top: 'medium' }}>
             <Button
-              variation={ButtonVariation.TERTIARY}
-              text={getString('cancel')}
-              onClick={handleCancelSelectedFile}
+              variation={ButtonVariation.PRIMARY}
+              text={getString('entityReference.apply')}
+              onClick={handleApplySelectedFile}
+              disabled={selectedFile?.name === FILE_STORE_ROOT || isUnsaved}
+              className={cx(Classes.POPOVER_DISMISS)}
             />
-          }
-        </Layout.Horizontal>
+            {
+              <Button
+                variation={ButtonVariation.TERTIARY}
+                text={getString('cancel')}
+                onClick={handleCancelSelectedFile}
+              />
+            }
+          </Layout.Horizontal>
+        )}
       </Dialog>
     )
-  }, [activeTab, selectedFile, isUnsaved])
+  }, [activeTab, selectedFile, isUnsaved, pathValue, scopeValue, isReadonly])
 
   return {
-    openFileStoreModal: () => {
+    openFileStoreModal: (valuePath = '/', scope = Scope.ACCOUNT) => {
+      setPathValue(valuePath)
+      setScopeValue(scope)
+      setDefaultTab(scope)
       showModal()
     },
     closeFileStoreModal: hideModal
