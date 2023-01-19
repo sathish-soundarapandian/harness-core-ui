@@ -53,13 +53,12 @@ const EditOrganization: React.FC<StepProps<Organization> & EditModalData> = prop
 
   const onComplete = async (values: Organization): Promise<void> => {
     const dataToSubmit: OrganizationQuery = {
-      slug: values?.identifier || '',
-      ...pick(values, ['name', 'description', 'tags'])
+      ...pick(values, ['name', 'identifier', 'description', 'tags'])
     }
 
     try {
       await editOrganization({
-        org: dataToSubmit.slug,
+        org: dataToSubmit.identifier,
         body: { org: dataToSubmit },
         headers: { 'If-Match': version as string }
       })

@@ -34,8 +34,7 @@ const CreateOrganization: React.FC<StepProps<Organization> & OrgModalData> = pro
 
   const onComplete = async (values: Organization): Promise<void> => {
     const dataToSubmit: OrganizationQuery = {
-      slug: values?.identifier || '',
-      ...pick(values, ['name', 'description', 'tags'])
+      ...pick(values, ['name', 'identifier', 'description', 'tags'])
     }
     try {
       createOrganization({

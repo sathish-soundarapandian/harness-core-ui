@@ -104,6 +104,13 @@ jest.mock('services/cd-ng', () => ({
   })
 }))
 
+jest.mock('@harnessio/react-ng-manager-client', () => ({
+  useGetOrganizationsQuery: jest.fn().mockImplementation(args => {
+    getOrg(args)
+    return { ...OrgMockData, refetch: jest.fn(), error: null, loading: false }
+  })
+}))
+
 jest.mock('services/rbac', () => ({
   useGetRoleList: jest.fn().mockImplementation(() => ({ data: roleMockData, loading: false, refetch: jest.fn() }))
 }))

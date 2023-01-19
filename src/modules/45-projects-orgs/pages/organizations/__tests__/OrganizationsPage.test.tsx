@@ -44,16 +44,12 @@ const deleteOrganizationMock = (): Promise<{ status: string }> => {
   return Promise.resolve({ status: 'SUCCESS' })
 }
 jest.mock('services/cd-ng', () => ({
-  usePostOrganization: jest.fn().mockImplementation(() => createOrgMockData),
   useGetOrganizationList: jest.fn().mockImplementation(args => {
     getOrganizationList(args)
     return { ...orgMockData, refetch: jest.fn(), error: null }
   }),
   useDeleteOrganization: jest.fn().mockImplementation(() => ({ mutate: deleteOrganizationMock })),
-  usePutOrganization: jest.fn().mockImplementation(args => {
-    editOrg(args)
-    return createOrgMockData
-  }),
+
   useGetOrganization: jest.fn().mockImplementation(args => {
     getOrg(args)
     return { ...getOrgMockData, refetch: jest.fn(), error: null, loading: false }
@@ -68,6 +64,14 @@ jest.mock('services/cd-ng', () => ({
   useAddUsers: jest.fn().mockImplementation(() => ({ mutate: () => Promise.resolve(response) })),
   useDeleteInvite: jest.fn().mockImplementation(() => ({ mutate: () => Promise.resolve(response) })),
   useUpdateInvite: jest.fn().mockImplementation(() => ({ mutate: () => Promise.resolve(response) }))
+}))
+
+jest.mock('@harnessio/react-ng-manager-client', () => ({
+  useCreateOrganizationMutation: jest.fn().mockImplementation(() => createOrgMockData),
+  useUpdateOrganizationMutation: jest.fn().mockImplementation(args => {
+    editOrg(args)
+    return createOrgMockData
+  })
 }))
 
 jest.mock('services/rbac', () => ({

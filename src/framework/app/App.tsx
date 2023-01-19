@@ -14,7 +14,6 @@ import { FocusStyleManager } from '@blueprintjs/core'
 import { PageSpinner, useToaster, MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY } from '@harness/uicore'
 import { HELP_PANEL_STORAGE_KEY } from '@harness/help-panel'
 import { HarnessReactAPIClient as NG_API_Client } from '@harnessio/react-ng-manager-client'
-import { HarnessReactAPIClient as PMS_API_Client } from '@harnessio/react-pipeline-service-client'
 import { noop } from 'lodash-es'
 import { setAutoFreeze, enableMapSet } from 'immer'
 import SessionToken from 'framework/utils/SessionToken'
@@ -184,15 +183,6 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   useEffect(() => {
     // Initializing open-api clients
     new NG_API_Client({
-      responseInterceptor: globalResponseHandler,
-      requestInterceptor: noop,
-      getHeaders: () => {
-        return { token: SessionToken.getToken(), 'Harness-Account': accountId }
-      },
-      setHeaders: noop
-    })
-
-    new PMS_API_Client({
       responseInterceptor: globalResponseHandler,
       requestInterceptor: noop,
       getHeaders: () => {

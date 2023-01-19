@@ -113,7 +113,7 @@ const ProjectsListPage: React.FC = () => {
           if (item?.org) {
             orgList.push({
               label: item?.org?.name,
-              value: item?.org?.slug
+              value: item?.org?.identifier
             })
           }
           return orgList
