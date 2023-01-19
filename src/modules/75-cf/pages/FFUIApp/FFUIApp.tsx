@@ -29,6 +29,7 @@ import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { getIdentifierFromName } from '@common/utils/StringUtils'
 import * as trackingConstants from '@common/constants/TrackingConstants'
+import { getErrorMessage } from '@cf/utils/CFUtils'
 
 // eslint-disable-next-line import/no-unresolved
 const FFUIMFEApp = lazy(() => import('ffui/MicroFrontendApp'))
@@ -54,7 +55,7 @@ const FFUIApp: FC = () => (
     }}
     customComponents={{ RbacOptionsMenuButton, ContainerSpinner, Description }}
     customRoutes={routes}
-    customUtils={{ NameSchema, getIdentifierFromName, IdentifierSchema }}
+    customUtils={{ NameSchema, getIdentifierFromName, IdentifierSchema, getErrorMessage }}
     customEnums={{ FeatureIdentifier, PreferenceScope, trackingConstants }}
   />
 )

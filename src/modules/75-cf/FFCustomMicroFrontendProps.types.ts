@@ -26,6 +26,7 @@ import type { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext
 import type { getIdentifierFromName } from '@common/utils/StringUtils'
 import type * as trackingConstants from '@common/constants/TrackingConstants'
 import type useActiveEnvironment from './hooks/useActiveEnvironment'
+import type { getErrorMessage } from './utils/CFUtils'
 
 export interface FFCustomMicroFrontendProps {
   ffServices: typeof ffServices & {
@@ -53,6 +54,7 @@ export interface FFCustomMicroFrontendProps {
     IdentifierSchema: typeof IdentifierSchema
     NameSchema: typeof NameSchema
     getIdentifierFromName: typeof getIdentifierFromName
+    getErrorMessage: typeof getErrorMessage
   }
   customEnums: {
     FeatureIdentifier: typeof FeatureIdentifier
