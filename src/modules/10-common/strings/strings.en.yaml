@@ -1186,6 +1186,7 @@ lastUpdatedAt: Last updated at
 tryAgain: Try Again
 reload: Reload
 plugins: Plugins
+noPluginInputsRequired: No inputs are required for this plugin.
 seeDocumentation: See Documentation
 recents: Recents
 favorites: Favorites

@@ -193,7 +193,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
 
   const renderPluginForm = useCallback((): JSX.Element => {
     const { inputs = [] } = plugin || {}
-    return (
+    return false && inputs.length > 0 ? (
       <Layout.Vertical height="100%">
         {inputs.map((input: Input) => {
           const { name, secret } = input
@@ -212,6 +212,11 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
             </Layout.Horizontal>
           ) : null
         })}
+      </Layout.Vertical>
+    ) : (
+      <Layout.Vertical flex={{ justifyContent: 'center' }} spacing="large" height="100%">
+        <Icon name="plugin-inputs" size={35} />
+        <Text font={{ variation: FontVariation.BODY2 }}>{getString('common.noPluginInputsRequired')}</Text>
       </Layout.Vertical>
     )
   }, [plugin])

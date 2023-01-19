@@ -608,6 +608,7 @@ export interface StringsMap {
   'common.noDeployments': string
   'common.noInfo': string
   'common.noNotifications': string
+  'common.noPluginInputsRequired': string
   'common.noRecentProjects': string
   'common.noRefData': string
   'common.noSearchResultsFound': string
