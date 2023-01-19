@@ -1871,8 +1871,10 @@
     openapi-types "^12.0.2"
     zod "^3.19.1"
 
-"@harnessio/react-ng-manager-client@file:.yalc/@harnessio/react-ng-manager-client":
+"@harnessio/react-ng-manager-client@^1.0.6":
   version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@harnessio/react-ng-manager-client/-/react-ng-manager-client-1.0.6.tgz#08abd3af05ae4b51772a1f536c6e5730433bb6f3"
+  integrity sha512-+oeJElK79KDi7PGkdcE0KWNPeHYEmMJZJwR79dQvVbYHNIbb9rQVL0wG8AGgqd/G4HHJkyr/jn6yQgCoDoE6UA==
   dependencies:
     "@tanstack/react-query" "^4.10.3"
     "@types/qs" "^6.9.7"
