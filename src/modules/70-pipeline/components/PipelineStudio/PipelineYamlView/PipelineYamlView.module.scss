@@ -9,16 +9,9 @@
   position: relative;
 
   .buttonsWrapper {
-    position: absolute;
-    right: calc(2 * var(--spacing-xxlarge));
-    top: var(--spacing-medium);
-    display: flex;
-    column-gap: var(--spacing-large);
-    align-items: center;
+    height: 50px;
     & > .editModeCheckbox {
-      margin-bottom: 0 !important;
-      margin-top: 0 !important;
-      margin-right: calc(3 * var(--spacing-14)) !important;
+      padding: var(--spacing-3) !important;
     }
   }
 }
