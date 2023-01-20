@@ -317,6 +317,15 @@ function FormComponent({
                       org: 'automation-cdc'
                     }
                   })
+                },
+                onChange: (e: any) => {
+                  if (getMultiTypeFromValue(formik?.values?.feed) !== MultiTypeInputType.RUNTIME) {
+                    formik.setFieldValue('feed', '')
+                  }
+                  if (getMultiTypeFromValue(formik?.values?.package) !== MultiTypeInputType.RUNTIME) {
+                    formik.setFieldValue('package', '')
+                  }
+                  formik.setFieldValue('project', e?.value)
                 }
               }}
             />
@@ -375,6 +384,15 @@ function FormComponent({
                     project: projectValue
                   }
                 })
+              },
+              onChange: (e: any) => {
+                if (getMultiTypeFromValue(formik?.values?.version) !== MultiTypeInputType.RUNTIME) {
+                  formik.setFieldValue('version', '')
+                }
+                if (getMultiTypeFromValue(formik?.values?.package) !== MultiTypeInputType.RUNTIME) {
+                  formik.setFieldValue('package', '')
+                }
+                formik.setFieldValue('feed', e?.value)
               }
             }}
           />
@@ -393,7 +411,18 @@ function FormComponent({
           )}
         </div>
         <div className={css.imagePathContainer}>
-          <FormInput.Select name="packageType" label={getString('pipeline.packageType')} items={packageTypeOptions} />
+          <FormInput.Select
+            name="packageType"
+            label={getString('pipeline.packageType')}
+            items={packageTypeOptions}
+            onChange={e => {
+              formik.setFieldValue('packageType', e.value)
+
+              if (getMultiTypeFromValue(formik.values.package) !== MultiTypeInputType.RUNTIME) {
+                formik.setFieldValue('package', '')
+              }
+            }}
+          />
         </div>
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
