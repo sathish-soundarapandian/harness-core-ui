@@ -34,12 +34,33 @@ const props = {
 }
 
 describe('Azure Artifacts tests', () => {
-  test(`renders without crashing`, () => {
+  test(`renders without crashing - when scope is org`, () => {
     const initialValues = {
       identifier: 'test-azure-id',
 
       versionType: 'value',
       scope: Scope.ORG,
+
+      feed: 'test',
+      packageType: 'Maven',
+      package: 'test',
+      version: '<+input>'
+    }
+
+    const { container } = render(
+      <TestWrapper>
+        <AzureArtifacts key={'key'} initialValues={initialValues} {...props} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test(`renders without crashing - when scope is project`, () => {
+    const initialValues = {
+      identifier: 'test-azure-id',
+
+      versionType: 'value',
+      scope: Scope.PROJECT,
 
       feed: 'test',
       packageType: 'Maven',
