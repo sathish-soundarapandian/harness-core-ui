@@ -182,6 +182,8 @@ allowpaths:
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/records
   - /usage/SRM
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/logRecords
+  - /account/{accountIdentifier}/orgs/{orgIdentifier}/projects/{projectIdentifier}/verifications/{verifyStepExecutionId}/overview
+  - /account/{accountIdentifier}/orgs/{orgIdentifier}/projects/{projectIdentifier}/verifications/{verifyStepExecutionId}/analysis/metrics
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

@@ -11,24 +11,25 @@ import cx from 'classnames'
 import { Container, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { DeploymentNodes } from '@cv/components/ExecutionVerification/components/DeploymentProgressAndNodes/components/DeploymentNodes/DeploymentNodes'
-import type { DeploymentNodeAnalysisResult } from '../../../DeploymentProgressAndNodes/components/DeploymentNodes/DeploymentNodes.constants'
+import type { AbstractAnalysedNode } from 'services/cv'
+import { NodeLabelMapping } from './PrimaryAndCanaryNodes.constants'
 import css from './PrimaryAndCanaryNodes.module.scss'
 
 interface PrimaryAndCanaryNodesProps {
-  primaryNodes: DeploymentNodeAnalysisResult[]
-  canaryNodes: DeploymentNodeAnalysisResult[]
+  primaryNodes: AbstractAnalysedNode[]
+  canaryNodes: AbstractAnalysedNode[]
   primaryNodeLabel: string
   canaryNodeLabel: string
-  onSelectNode?: (selectedNode?: DeploymentNodeAnalysisResult) => void
+  onSelectNode?: (selectedNode?: AbstractAnalysedNode) => void
   isConsoleView?: boolean
 }
 
 export function PrimaryAndCanaryNodes(props: PrimaryAndCanaryNodesProps): JSX.Element {
   const { canaryNodes, primaryNodes, onSelectNode, primaryNodeLabel, canaryNodeLabel, isConsoleView } = props
   const { getString } = useStrings()
-  const [selectedNode, setSelectedNode] = useState<DeploymentNodeAnalysisResult | undefined>()
+  const [selectedNode, setSelectedNode] = useState<AbstractAnalysedNode | undefined>()
   const onNodeSelect = useCallback(
-    (newlySelectedNode?: DeploymentNodeAnalysisResult) => {
+    (newlySelectedNode?: AbstractAnalysedNode) => {
       setSelectedNode(newlySelectedNode)
       onSelectNode?.(newlySelectedNode)
     },
@@ -50,7 +51,7 @@ export function PrimaryAndCanaryNodes(props: PrimaryAndCanaryNodesProps): JSX.El
         <DeploymentNodes nodes={primaryNodes} selectedNode={selectedNode} />
       </Container>
       <Container className={css.canaryNodes}>
-        <Text>{canaryNodeLabel?.toLocaleUpperCase()}</Text>
+        <Text>{NodeLabelMapping[canaryNodeLabel?.toLocaleUpperCase()]}</Text>
         <Text className={css.details}>
           {canaryNodes.length} {getString('pipeline.nodes')}
         </Text>

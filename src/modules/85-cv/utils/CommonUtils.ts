@@ -19,7 +19,7 @@ import type { UseStringsReturn } from 'framework/strings'
 import type { ResponseListEnvironmentResponse, EnvironmentResponse } from 'services/cd-ng'
 import type { StringsMap } from 'stringTypes'
 import type { MonitoredServiceEnum } from '@cv/pages/monitored-service/MonitoredServicePage.constants'
-import type { CVNGLogTag, MonitoredServiceDetail, SloHealthIndicatorDTO } from 'services/cv'
+import type { AnalysedDeploymentNode, CVNGLogTag, MonitoredServiceDetail, SloHealthIndicatorDTO } from 'services/cv'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 import { formatDatetoLocale } from '@common/utils/dateUtils'
 
@@ -36,7 +36,9 @@ export enum RiskValues {
   HEALTHY = 'HEALTHY',
   OBSERVE = 'OBSERVE',
   NEED_ATTENTION = 'NEED_ATTENTION',
-  UNHEALTHY = 'UNHEALTHY'
+  UNHEALTHY = 'UNHEALTHY',
+  FAILED = 'FAILED',
+  PASSED = 'PASSED'
 }
 
 export enum SLOErrorBudget {
@@ -48,7 +50,7 @@ type OldRiskTypes = 'LOW' | 'MEDIUM' | 'HIGH'
 type RiskTypes = keyof typeof RiskValues | OldRiskTypes
 
 export const getRiskColorValue = (
-  riskStatus?: RiskTypes | SloHealthIndicatorDTO['errorBudgetRisk'],
+  riskStatus?: RiskTypes | SloHealthIndicatorDTO['errorBudgetRisk'] | AnalysedDeploymentNode['verificationResult'],
   realCSSColor = true,
   dark = true
 ): string => {
@@ -56,12 +58,14 @@ export const getRiskColorValue = (
 
   switch (riskStatus) {
     case RiskValues.HEALTHY:
+    case RiskValues.PASSED:
       return realCSSColor ? Utils.getRealCSSColor(Color.GREEN_500) : Color.GREEN_500
     case RiskValues.OBSERVE:
       return realCSSColor ? Utils.getRealCSSColor(Color.YELLOW_800) : Color.YELLOW_800
     case RiskValues.NEED_ATTENTION:
       return realCSSColor ? Utils.getRealCSSColor(Color.ORANGE_600) : Color.ORANGE_600
     case RiskValues.UNHEALTHY:
+    case RiskValues.FAILED:
       return realCSSColor ? Utils.getRealCSSColor(Color.RED_600) : Color.RED_600
     case SLOErrorBudget.EXHAUSTED:
       return realCSSColor ? Utils.getRealCSSColor(Color.RED_800) : Color.RED_800

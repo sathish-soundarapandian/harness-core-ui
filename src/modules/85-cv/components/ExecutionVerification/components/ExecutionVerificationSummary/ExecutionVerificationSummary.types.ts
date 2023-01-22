@@ -6,14 +6,14 @@
  */
 
 import type { StageType } from '@pipeline/utils/stageHelpers'
+import type { AnalysedNodeOverview } from 'services/cv'
 import type { ExecutionNode } from 'services/pipeline-ng'
-import type { DeploymentNodeAnalysisResult } from '../DeploymentProgressAndNodes/components/DeploymentNodes/DeploymentNodes.constants'
 
 export interface VerifyExecutionProps {
   step: ExecutionNode
   stageType?: StageType
   displayAnalysisCount?: boolean
-  onSelectNode?: (selectedNode?: DeploymentNodeAnalysisResult) => void
+  onSelectNode?: (selectedNode?: AnalysedNodeOverview) => void
   className?: string
   isConsoleView?: boolean
 }

@@ -32,7 +32,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import {
   GetVerifyStepDeploymentMetricsQueryParams,
-  useGetVerifyStepDeploymentMetrics,
+  useGetMetricsAnalysisForVerifyStepExecutionId,
   useGetVerifyStepHealthSources,
   useGetVerifyStepNodeNames,
   useGetVerifyStepTransactionNames
@@ -84,7 +84,8 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
   const { getString } = useStrings()
   const pageParams = useQueryParams<ExecutionQueryParams>()
 
-  const { accountId } = useParams<ProjectPathProps>()
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+
   const [anomalousMetricsFilterChecked, setAnomalousMetricsFilterChecked] = useState(
     pageParams.filterAnomalous === 'true'
   )
@@ -109,8 +110,10 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
       currentViewData: []
     }
   )
-  const { loading, error, data, refetch } = useGetVerifyStepDeploymentMetrics({
-    queryParams,
+  const { loading, error, data, refetch } = useGetMetricsAnalysisForVerifyStepExecutionId({
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier,
     verifyStepExecutionId: activityId,
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
