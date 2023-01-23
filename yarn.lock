@@ -1871,12 +1871,12 @@
     openapi-types "^12.0.2"
     zod "^3.19.1"
 
-"@harnessio/react-ng-manager-client@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@harnessio/react-ng-manager-client/-/react-ng-manager-client-1.0.6.tgz#08abd3af05ae4b51772a1f536c6e5730433bb6f3"
-  integrity sha512-+oeJElK79KDi7PGkdcE0KWNPeHYEmMJZJwR79dQvVbYHNIbb9rQVL0wG8AGgqd/G4HHJkyr/jn6yQgCoDoE6UA==
+"@harnessio/react-ng-manager-client@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@harnessio/react-ng-manager-client/-/react-ng-manager-client-1.0.7.tgz#9fda5ab5cb27d37bf39578df0bcc203ef79be00c"
+  integrity sha512-xom7/Ylib41gEp6U1ixU7GIfLSROFRus0aezyrV/EAQL6bLa8AxzLwz23uxMHQBXDNuUkFja4UVtd+4D4sWLlA==
   dependencies:
-    "@tanstack/react-query" "^4.10.3"
+    "@tanstack/react-query" "^4.20.4"
     "@types/qs" "^6.9.7"
     qs "^6.9.4"
 
@@ -3314,17 +3314,17 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@tanstack/query-core@4.14.1":
-  version "4.14.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.14.1.tgz#a74c4da03e79a8be07fa5ab2ebc12865146915e2"
-  integrity sha512-mUejKoFDe4NZB8jQJR1uuAl6IwvkUpOD2m8NcuTVPOu0pcxeeFPdrnHaljwOEFPtlqXoiiIIQGYy6whjCMN+iQ==
+"@tanstack/query-core@4.22.4":
+  version "4.22.4"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.22.4.tgz#aca622d2f8800a147ece5520d956a076ab92f0ea"
+  integrity sha512-t79CMwlbBnj+yL82tEcmRN93bL4U3pae2ota4t5NN2z3cIeWw74pzdWrKRwOfTvLcd+b30tC+ciDlfYOKFPGUw==
 
-"@tanstack/react-query@^4.10.3", "@tanstack/react-query@^4.14.1":
-  version "4.14.1"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.14.1.tgz#336545119b191e2096c394a3f2df2744cdc5e041"
-  integrity sha512-cRgNzigw4GSPwGlTEkXi8hi/xgUnSEt9jCkiC8oAT3PEIdsQ50onZcpXd+JNJcZk2RTh8KM1fGyWz6xYLiY8bg==
+"@tanstack/react-query@^4.20.4":
+  version "4.22.4"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.22.4.tgz#851581c645f1c9cfcd394448fedd980a39bbc3fe"
+  integrity sha512-e5j5Z88XUQGeEPMyz5XF1V0mMf6Da+6URXiTpZfUb9nuHs2nlNoA+EoIvnhccE5b9YT6Yg7kARhn2L7u94M/4A==
   dependencies:
-    "@tanstack/query-core" "4.14.1"
+    "@tanstack/query-core" "4.22.4"
     use-sync-external-store "^1.2.0"
 
 "@testing-library/dom@^7.2.2":
