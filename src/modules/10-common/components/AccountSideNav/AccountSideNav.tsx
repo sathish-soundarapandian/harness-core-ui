@@ -51,6 +51,7 @@ export default function AccountSideNav(): React.ReactElement {
       )}
       <SidebarLink label={getString('common.auditTrail')} to={routes.toAuditTrail({ accountId })} />
       <SidebarLink label={getString('orgsText')} to={routes.toOrganizations({ accountId })} />
+      {true && <SidebarLink label={getString('common.jira.tickets')} to={routes.toTickets({ accountId })} />}
     </Layout.Vertical>
   )
 }

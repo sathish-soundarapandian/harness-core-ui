@@ -148,8 +148,8 @@ jenkinsStep:
   captureEnvironmentVariable: Capture environment variables from Jenkins build
 jiraApprovalStep:
   connectToJira: Connect to Jira
-  connectorRef: Jira Connector
-  jiraConnectorPlaceholder: Select Jira Connector
+  connectorRef: '{{$.common.jira.connector}}'
+  jiraConnectorPlaceholder: '{{$.common.jira.selectConnector}}'
   project: Jira Project
   issueType: Issue Type
   issueTypePlaceholder: Select Issue Type

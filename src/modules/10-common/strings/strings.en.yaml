@@ -1341,3 +1341,11 @@ python: Python
 # SSCS module
 sscs: SSCS
 sscsText: Software Supply Chain Security
+jira:
+  selectConnector: 'Select Jira Connector'
+  selectProjectName: 'Select Project Name'
+  connector: 'Jira Connector'
+  defaultProjectName: 'Default Project Name'
+  tickets: 'Tickets'
+  ticketComment: 'Append comment to ticket when Security Issue changes are detected (coming soon)'
+  ticketExemption: 'Create a ticket when an Exemption is created (coming soon)'

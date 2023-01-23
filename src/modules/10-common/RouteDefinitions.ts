@@ -1939,6 +1939,8 @@ const routes = {
       `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/ticket-summary/${issueId}`
   ),
   /********************************************************************************************************************/
+  toTickets: withAccountId(() => `/settings/tickets`),
+  /********************************************************************************************************************/
   toOldCustomDashboard: withAccountId(() => '/home/dashboards*'),
   toCustomDashboard: withAccountId(() => '/dashboards'),
   toCustomDashboardHome: withAccountId(

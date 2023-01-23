@@ -517,6 +517,13 @@ export interface StringsMap {
   'common.invalidIdentifiers': string
   'common.jexlCondition': string
   'common.jexlExpression': string
+  'common.jira.connector': string
+  'common.jira.defaultProjectName': string
+  'common.jira.selectConnector': string
+  'common.jira.selectProjectName': string
+  'common.jira.ticketComment': string
+  'common.jira.ticketExemption': string
+  'common.jira.tickets': string
   'common.labelTestConnection': string
   'common.last7days': string
   'common.lastConnected': string
