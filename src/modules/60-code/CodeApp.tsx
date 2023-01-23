@@ -14,6 +14,7 @@ import { useStrings } from 'framework/strings'
 import SessionToken from 'framework/utils/SessionToken'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { global401HandlerUtils } from '@common/utils/global401HandlerUtils'
+import commonRoutes from '@common/RouteDefinitions'
 import routes from './RouteDefinitions'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -82,6 +83,7 @@ const CODERemoteComponentMounter: React.FC<{
           hooks={{
             useGetToken
           }}
+          currentUserProfileURL={commonRoutes.toUserProfile({ accountId: params.accountId })}
         >
           {component}
         </RemoteCodeApp>
