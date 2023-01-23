@@ -1006,12 +1006,20 @@ exports[`Create Secret Manager Wizard should render form 2`] = `
               </div>
               <ul>
                 <li>
-                  <a>
+                  <a
+                    href="https://cloud.google.com/billing/docs/how-to/export-data-bigquery-setup"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     connectors.ceGcp.billingExtention.link1
                   </a>
                 </li>
                 <li>
-                  <a>
+                  <a
+                    href="https://developer.harness.io/docs/cloud-cost-management/onboard-with-cloud-cost-management/set-up-cloud-cost-management/set-up-cost-visibility-for-gcp/"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
                     connectors.ceGcp.billingExtention.link2
                   </a>
                 </li>

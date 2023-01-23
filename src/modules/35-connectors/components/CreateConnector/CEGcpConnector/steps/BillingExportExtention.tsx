@@ -38,10 +38,22 @@ const BillingExportExtention: React.FC = () => {
           <div> {getString('connectors.ceGcp.billingExtention.otherLinks')}</div>
           <ul>
             <li>
-              <a>{getString('connectors.ceGcp.billingExtention.link1')}</a>
+              <a
+                href="https://cloud.google.com/billing/docs/how-to/export-data-bigquery-setup"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {getString('connectors.ceGcp.billingExtention.link1')}
+              </a>
             </li>
             <li>
-              <a>{getString('connectors.ceGcp.billingExtention.link2')}</a>
+              <a
+                href="https://developer.harness.io/docs/cloud-cost-management/onboard-with-cloud-cost-management/set-up-cloud-cost-management/set-up-cost-visibility-for-gcp/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {getString('connectors.ceGcp.billingExtention.link2')}
+              </a>
             </li>
           </ul>
         </div>
