@@ -319,12 +319,18 @@ function FormComponent({
                   })
                 },
                 onChange: (e: any) => {
-                  if (getMultiTypeFromValue(formik?.values?.feed) !== MultiTypeInputType.RUNTIME) {
-                    formik.setFieldValue('feed', '')
-                  }
-                  if (getMultiTypeFromValue(formik?.values?.package) !== MultiTypeInputType.RUNTIME) {
-                    formik.setFieldValue('package', '')
-                  }
+                  formik.setValues({
+                    ...formik.values,
+                    feed:
+                      getMultiTypeFromValue(formik?.values?.feed) === MultiTypeInputType.FIXED
+                        ? ''
+                        : formik?.values?.feed,
+                    package:
+                      getMultiTypeFromValue(formik?.values?.feed) === MultiTypeInputType.FIXED
+                        ? ''
+                        : formik?.values?.package
+                  })
+
                   formik.setFieldValue('project', e?.value)
                 }
               }}
@@ -386,12 +392,18 @@ function FormComponent({
                 })
               },
               onChange: (e: any) => {
-                if (getMultiTypeFromValue(formik?.values?.version) !== MultiTypeInputType.RUNTIME) {
-                  formik.setFieldValue('version', '')
-                }
-                if (getMultiTypeFromValue(formik?.values?.package) !== MultiTypeInputType.RUNTIME) {
-                  formik.setFieldValue('package', '')
-                }
+                formik.setValues({
+                  ...formik.values,
+                  version:
+                    getMultiTypeFromValue(formik?.values?.version) === MultiTypeInputType.FIXED
+                      ? ''
+                      : formik?.values?.version,
+                  package:
+                    getMultiTypeFromValue(formik?.values?.package) === MultiTypeInputType.FIXED
+                      ? ''
+                      : formik?.values?.package
+                })
+
                 formik.setFieldValue('feed', e?.value)
               }
             }}
@@ -418,7 +430,7 @@ function FormComponent({
             onChange={e => {
               formik.setFieldValue('packageType', e.value)
 
-              if (getMultiTypeFromValue(formik.values.package) !== MultiTypeInputType.RUNTIME) {
+              if (getMultiTypeFromValue(formik.values.package) === MultiTypeInputType.FIXED) {
                 formik.setFieldValue('package', '')
               }
             }}
