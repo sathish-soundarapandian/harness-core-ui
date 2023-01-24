@@ -85,7 +85,7 @@ describe('Retry History Button tests', () => {
     jest.spyOn(usePermission, 'usePermission').mockImplementation(() => [false, false, false])
     render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
-        <ExecutionHeader onRunPipelineInDebugMode={jest.fn()} />
+        <ExecutionHeader />
       </TestWrapper>
     )
     const retryHistoryButton = await screen.findByRole('button', {
@@ -98,7 +98,7 @@ describe('Retry History Button tests', () => {
     jest.spyOn(usePermission, 'usePermission').mockImplementation(() => [true, true, false])
     render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
-        <ExecutionHeader onRunPipelineInDebugMode={jest.fn()} />
+        <ExecutionHeader />
       </TestWrapper>
     )
     const retryHistoryButton = await screen.findByRole('button', {
@@ -121,7 +121,7 @@ describe('Retry History Button tests', () => {
     })
     render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
-        <ExecutionHeader onRunPipelineInDebugMode={jest.fn()} />
+        <ExecutionHeader />
       </TestWrapper>
     )
     const retryHistoryButton = await screen.findByRole('button', {
@@ -144,7 +144,7 @@ describe('Retry History Button tests', () => {
     } as any)
     render(
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
-        <ExecutionHeader onRunPipelineInDebugMode={jest.fn()} />
+        <ExecutionHeader />
       </TestWrapper>
     )
     const viewLatestText = await screen.findByText('common.viewLatest')
