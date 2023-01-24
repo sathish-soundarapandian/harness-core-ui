@@ -622,11 +622,12 @@ export function AzureArtifacts(
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const getInitialValues = (): AzureArtifactsInitialValues => {
-    return getArtifactFormData(
+    const vals = getArtifactFormData(
       initialValues,
       selectedArtifact as ArtifactType,
       isIdentifierAllowed
     ) as AzureArtifactsInitialValues
+    return vals
   }
 
   const handleValidate = (formData: AzureArtifactsInitialValues) => {

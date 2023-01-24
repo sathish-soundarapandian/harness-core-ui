@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { findByText, render, waitFor } from '@testing-library/react'
+import { act, findByText, fireEvent, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 
@@ -29,6 +29,25 @@ const fetchProjects = jest.fn().mockReturnValue({
     }
   ]
 })
+
+const fetchFeeds = jest.fn().mockReturnValue({
+  data: [
+    {
+      fullyQualifiedName: 'feedproject',
+      id: '6434318d-7904-4b76-a503-332951acb8a2',
+      name: 'feedproject'
+    }
+  ]
+})
+
+const fetchPackages = jest.fn().mockReturnValue({
+  data: [
+    {
+      id: 'test',
+      name: 'test'
+    }
+  ]
+})
 jest.mock('services/cd-ng', () => ({
   useListProjectsForAzureArtifacts: jest.fn().mockImplementation(() => {
     return {
@@ -44,10 +63,29 @@ jest.mock('services/cd-ng', () => ({
     }
   }),
   useListFeedsForAzureArtifacts: jest.fn().mockImplementation(() => {
-    return { data: [], error: null, loading: false }
+    return {
+      data: [
+        {
+          fullyQualifiedName: 'feedproject',
+          id: '6434318d-7904-4b76-a503-332951acb8a2',
+          name: 'feedproject'
+        }
+      ],
+      error: null,
+      loading: false
+    }
   }),
   useListPackagesForAzureArtifacts: jest.fn().mockImplementation(() => {
-    return { data: [], error: null, loading: false }
+    return {
+      data: [
+        {
+          id: 'test',
+          name: 'test'
+        }
+      ],
+      error: null,
+      loading: false
+    }
   }),
   useListVersionsFromPackage: jest.fn().mockImplementation(() => {
     return { data: [], error: null, loading: false }
@@ -71,6 +109,21 @@ const props = {
     connectorId: {
       value: 'testConnector'
     }
+  }
+}
+
+const editValues = {
+  identifier: 'test-id',
+  type: 'AzureArtifacts' as ArtifactType,
+  spec: {
+    versionType: '',
+    scope: Scope.PROJECT,
+    project: 'sample-k8s-manifests',
+    feed: 'feedproject',
+    packageType: 'Maven',
+    package: 'test',
+    version: '1',
+    versionRegex: ''
   }
 }
 
@@ -156,5 +209,101 @@ describe('Azure Artifacts tests', () => {
     const loadingBucketsOption = await findByText(selectListMenu as HTMLElement, 'Loading Projects...')
     expect(loadingBucketsOption).toBeDefined()
     await waitFor(() => expect(fetchProjects).toHaveBeenCalledTimes(1))
+  })
+
+  test('clicking on feeds dropdown', async () => {
+    jest.spyOn(cdng, 'useListFeedsForAzureArtifacts').mockImplementation((): any => {
+      return {
+        loading: true,
+        data: null,
+        refetch: fetchFeeds
+      }
+    })
+
+    const initialValues = {
+      identifier: 'test-id',
+      type: 'AzureArtifacts' as ArtifactType,
+      spec: {
+        versionType: '',
+        scope: Scope.PROJECT,
+        project: 'sample-k8s-manifests',
+        feed: 'feedproject',
+        packageType: 'Maven',
+        package: 'test',
+        version: '1'
+      }
+    }
+
+    const { container } = render(
+      <TestWrapper>
+        <AzureArtifacts key={'key'} initialValues={initialValues as any} {...props} />
+      </TestWrapper>
+    )
+
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+    expect(container).toMatchSnapshot()
+    const feedDropDwmBtn = container.querySelectorAll('[data-icon="chevron-down"]')[2]
+
+    userEvent.click(feedDropDwmBtn!)
+
+    const dropdownPortalDiv = portalDivs[0]
+    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
+
+    const loadingBucketsOption = await findByText(selectListMenu as HTMLElement, 'Loading Feeds...')
+    expect(loadingBucketsOption).toBeDefined()
+    await waitFor(() => expect(fetchFeeds).toHaveBeenCalledTimes(1))
+  })
+
+  test('clicking on package name dropdown', async () => {
+    jest.spyOn(cdng, 'useListPackagesForAzureArtifacts').mockImplementation((): any => {
+      return {
+        loading: true,
+        data: null,
+        refetch: fetchPackages
+      }
+    })
+    const { container } = render(
+      <TestWrapper>
+        <AzureArtifacts key={'key'} initialValues={editValues as any} {...props} />
+      </TestWrapper>
+    )
+
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+    expect(container).toMatchSnapshot()
+    const packageDropdwnBtn = container.querySelectorAll('[data-icon="chevron-down"]')[4]
+    userEvent.click(packageDropdwnBtn!)
+
+    const dropdownPortalDiv = portalDivs[0]
+    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
+
+    const loadingBucketsOption = await findByText(selectListMenu as HTMLElement, 'Loading Packages...')
+    expect(loadingBucketsOption).toBeDefined()
+    await waitFor(() => expect(fetchPackages).toHaveBeenCalledTimes(1))
+  })
+
+  test('should throw validation error for version when it is not a runtime input', async () => {
+    const versionVals = {
+      ...editValues,
+
+      spec: {
+        ...editValues.spec,
+        version: ''
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <AzureArtifacts key={'key'} initialValues={versionVals as any} {...props} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+
+    await act(async () => {
+      const submitBtn = container.querySelector('button[type="submit"]')!
+
+      fireEvent.click(submitBtn)
+    })
+    expect(container).toMatchSnapshot()
   })
 })
