@@ -17,6 +17,7 @@ export const deploymentIconMap: Record<string, IconName> = {
   [ServiceDeploymentType.AzureWebApp]: 'azurewebapp',
   [ServiceDeploymentType.ECS]: 'service-amazon-ecs',
   [ServiceDeploymentType.Kubernetes]: 'service-kubernetes',
+  [ServiceDeploymentType.KubernetesGitops]: 'kubernetes-gitops',
   [ServiceDeploymentType.NativeHelm]: 'service-helm',
   [ServiceDeploymentType.Pdc]: 'pdc',
   [ServiceDeploymentType.ServerlessAwsLambda]: 'service-serverless-aws',

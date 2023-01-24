@@ -4258,6 +4258,7 @@ export interface StringsMap {
   'pipeline.serviceDeploymentTypes.elastigroup': string
   'pipeline.serviceDeploymentTypes.googleCloudFunctions': string
   'pipeline.serviceDeploymentTypes.kubernetes': string
+  'pipeline.serviceDeploymentTypes.kubernetesWithGitops': string
   'pipeline.serviceDeploymentTypes.serverlessAwsLambda': string
   'pipeline.serviceDeploymentTypes.serverlessAwsType': string
   'pipeline.serviceDeploymentTypes.serverlessAzureFunctions': string
@@ -5070,6 +5071,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.azureAKSHelperText': string
   'cd.getStartedWithCD.azureK8s': string
   'cd.getStartedWithCD.checkDelegateInstalled': string
+  'cd.getStartedWithCD.clickForOtherDeploymentTypes': string
   'cd.getStartedWithCD.closeOnboarding.subtitle': string
   'cd.getStartedWithCD.closeOnboarding.title': string
   'cd.getStartedWithCD.codeRepos': string

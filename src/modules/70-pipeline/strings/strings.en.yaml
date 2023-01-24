@@ -1344,6 +1344,7 @@ invalidRequest: Invalid Request
 serviceDeploymentTypes:
   elastigroup: Elastigroup
   kubernetes: '{{$.kubernetesText}}'
+  kubernetesWithGitops: Kubernetes with GitOps
   amazonEcs: '{{$.delegate.cardData.amazonECS.name}}'
   amazonAmi: AWS AMI
   awsCodeDeploy: CodeDeploy

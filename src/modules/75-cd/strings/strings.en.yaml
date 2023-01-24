@@ -548,6 +548,7 @@ instanceWarmupPlaceholder: Instance Warmup
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Dry Run Apply the service manifests and leverage the dry run yaml as output for subsequent steps
 getStartedWithCD:
+  clickForOtherDeploymentTypes: Click here for other deployment types
   createCluster: Create a cluster if needed
   awsRegionHelperText: replace REGION with your AWS region, for example us-west-1
   azureAKSHelperText: replace myResourceGroup with your AKS resource group
