@@ -39,7 +39,6 @@ import css from './ExecutionListTable.module.scss'
 export interface ExecutionListColumnActions {
   onViewCompiledYaml: (pipelineExecutionSummary: PipelineExecutionSummary) => void
   isPipelineInvalid?: boolean
-  setLoadingForDebugMode?: (loading: boolean) => void
 }
 
 export interface ExecutionListTableProps extends ExecutionListColumnActions {
@@ -49,8 +48,7 @@ export interface ExecutionListTableProps extends ExecutionListColumnActions {
 function ExecutionListTable({
   executionList,
   isPipelineInvalid,
-  onViewCompiledYaml,
-  setLoadingForDebugMode
+  onViewCompiledYaml
 }: ExecutionListTableProps): React.ReactElement {
   const history = useHistory()
   const { updateQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
@@ -123,11 +121,10 @@ function ExecutionListTable({
         Cell: MenuCell,
         isPipelineInvalid,
         onViewCompiledYaml,
-        setLoadingForDebugMode,
         disableSortBy: true
       }
     ]
-  }, [isCompareMode, isPipelineInvalid, onViewCompiledYaml, currentOrder, currentSort, setLoadingForDebugMode])
+  }, [isCompareMode, isPipelineInvalid, onViewCompiledYaml, currentOrder, currentSort])
 
   const renderRowSubComponent = React.useCallback(({ row }) => <ExecutionStageList row={row} />, [])
 
