@@ -4,6 +4,7 @@ import { debounce } from 'lodash-es'
 import type { TemplateFormRef } from '@templates-library/components/TemplateStudio/TemplateStudioInternal'
 import { StepGroupTemplateDiagram } from '@templates-library/components/TemplateStudio/StepGroupTemplateCanvas/StepGroupTemplateDiagram/StepGroupTemplateDiagram'
 import { StepGroupTemplateFormWithRef } from '@templates-library/components/TemplateStudio/StepGroupTemplateCanvas/StepGroupTemplateForm/StepGroupTemplateForm'
+import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hooks/useSaveTemplateListener'
 
 const StepGroupTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef) => {
   const [splitPaneSize, setSplitPaneSize] = React.useState(400)
@@ -14,6 +15,8 @@ const StepGroupTemplateCanvas = (_props: unknown, formikRef: TemplateFormRef) =>
   const resizerStyle = navigator.userAgent.match(/firefox/i)
     ? { display: 'flow-root list-item' }
     : { display: 'inline-table' }
+
+  useSaveTemplateListener()
 
   return (
     <SplitPane

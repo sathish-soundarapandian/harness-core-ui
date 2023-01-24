@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { set } from 'lodash-es'
-import { Dialog } from '@harness/uicore'
+import { ModalDialog } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -110,7 +110,7 @@ export function StepGroupTemplateDiagram(): React.ReactElement {
   return (
     <>
       {!template?.spec?.stageType ? (
-        <Dialog style={{ width: 700 }} enforceFocus={false} isOpen={true} isCloseButtonShown={false}>
+        <ModalDialog style={{ width: 700 }} enforceFocus={false} isOpen={true} isCloseButtonShown={false}>
           <AddStageView
             stages={stages}
             isParallel={true}
@@ -120,7 +120,7 @@ export function StepGroupTemplateDiagram(): React.ReactElement {
             }}
             showCloseBtn={false}
           />
-        </Dialog>
+        </ModalDialog>
       ) : (
         <>
           <ExecutionGraph

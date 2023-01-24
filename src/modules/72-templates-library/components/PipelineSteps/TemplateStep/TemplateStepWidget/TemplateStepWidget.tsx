@@ -27,6 +27,7 @@ import {
   getScopeBasedProjectPathParams,
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
+import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import { validateStep, validateSteps } from '@pipeline/components/PipelineStudio/StepUtil'
 import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
@@ -71,6 +72,8 @@ function TemplateStepWidget(
   const [allValues, setAllValues] = React.useState<StepElementConfig>()
   const [templateInputs, setTemplateInputs] = React.useState<StepElementConfig>()
   const selectedStage = (customStepProps as any)?.selectedStage
+
+  const { orgIdentifier, projectIdentifier } = queryParams
 
   const {
     data: stepTemplateResponse,
@@ -245,6 +248,13 @@ function TemplateStepWidget(
                     <Heading level={5} color={Color.BLACK}>
                       {getString('pipeline.templateInputs')}
                     </Heading>
+                    {!isEmpty((templateInputs as StepGroupElementConfig)?.delegateSelectors) ? (
+                      <MultiTypeDelegateSelector
+                        name={`${TEMPLATE_INPUT_PATH}.delegateSelectors`}
+                        inputProps={{ readonly, orgIdentifier, projectIdentifier }}
+                        allowableTypes={allowableTypes}
+                      />
+                    ) : null}
                     {!isEmpty((templateInputs as StepGroupElementConfig)?.steps) ? (
                       <>
                         <ExecutionWrapperInputSetForm
