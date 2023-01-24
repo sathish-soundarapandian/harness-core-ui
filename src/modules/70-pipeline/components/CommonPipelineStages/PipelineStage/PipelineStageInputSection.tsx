@@ -23,7 +23,7 @@ import {
 } from 'services/pipeline-ng'
 import type { GitQueryParams, PipelineType, RunPipelineQueryParams } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { StageSelectionData, mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
+import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import { stringify, yamlParse, parse } from '@common/utils/YamlHelperMethods'
 import type { InputSetDTO, Pipeline } from '@pipeline/utils/types'
 import { useDeepCompareEffect } from '@common/hooks/useDeepCompareEffect'
@@ -267,8 +267,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
   const getFormErrors = async (
     latestPipeline: { pipeline: PipelineInfoConfig },
     latestYamlTemplate: PipelineInfoConfig,
-    orgPipeline: PipelineInfoConfig | undefined,
-    selectedStages: StageSelectionData | undefined
+    orgPipeline: PipelineInfoConfig | undefined
   ): Promise<FormikErrors<InputSetDTO>> => {
     let errors = formErrors
     function validateErrors(): Promise<FormikErrors<InputSetDTO>> {
@@ -281,7 +280,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
             resolvedPipeline,
             getString,
             viewType: StepViewType.DeploymentForm,
-            selectedStageData: selectedStages
+            viewTypeMetadata: { isInputSet: true }
           }) as any) || formErrors
         resolve(validatedErrors)
       })
@@ -324,8 +323,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
     const inputTabFormErrors = await getFormErrors(
       { pipeline: tempPipeline } as Required<Pipeline>,
       defaultTo(inputSetTemplate?.pipeline, {} as PipelineInfoConfig),
-      pipeline,
-      {} as StageSelectionData
+      pipeline
     )
     const stageData = produce(selectedStage, (draft: StageElementWrapper<PipelineStageElementConfig>) => {
       set(draft, 'stage.spec.inputs', tempPipeline)
