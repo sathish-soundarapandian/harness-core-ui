@@ -662,15 +662,11 @@ export const validateCICodebase = ({
       (requiresConnectorRuntimeInputValue && !isEmpty(pipeline?.properties?.ci?.codebase?.connectorRef))) // ci codebase field is hidden until connector is selected
   const shouldValidate = !Object.keys(viewTypeMetadata || {}).includes('isTemplateBuilder')
   const isInputSetForm = viewTypeMetadata?.isInputSet // should not require any values
-  if (
-    shouldValidate &&
-    shouldValidateCICodebase &&
-    !isInputSetForm &&
+  const isCodebaseBuildEmpty =
     has(originalPipeline, 'properties') &&
     has(originalPipeline?.properties, 'ci') &&
-    isEmpty(get(originalPipeline, 'properties.ci.codebase.build')) &&
-    getString
-  ) {
+    isEmpty(get(originalPipeline, 'properties.ci.codebase.build') || get(pipeline, 'properties.ci.codebase.build'))
+  if (shouldValidate && shouldValidateCICodebase && !isInputSetForm && isCodebaseBuildEmpty && getString) {
     set(errors, 'properties.ci.codebase', getString('fieldRequired', { field: getString('ciCodebase') }))
   }
 
