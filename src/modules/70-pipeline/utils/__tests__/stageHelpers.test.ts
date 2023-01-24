@@ -26,7 +26,16 @@ import {
   isWinRmDeploymentType,
   isAzureWebAppDeploymentType,
   isElastigroupDeploymentType,
-  hasOverviewDetail
+  hasOverviewDetail,
+  isAzureWebAppGenericDeploymentType,
+  isCustomDeploymentType,
+  isEcsDeploymentType,
+  isNativeHelmDeploymentType,
+  isTASDeploymentType,
+  RepositoryFormatTypes,
+  isAzureWebAppOrSshWinrmGenericDeploymentType,
+  isCustomDTGenericDeploymentType,
+  isTasGenericDeploymentType
 } from '../stageHelpers'
 import inputSetPipeline from './inputset-pipeline.json'
 test('if empty values are being replaced with <+input> except for tags', () => {
@@ -193,6 +202,47 @@ test('isAzureWebAppDeploymentType', () => {
 test('isElastigroupDeploymentType', () => {
   expect(isElastigroupDeploymentType(ServiceDeploymentType.Elastigroup)).toBe(true)
   expect(isElastigroupDeploymentType(ServiceDeploymentType.WinRm)).toBe(false)
+})
+
+test('isCustomDeploymentType', () => {
+  expect(isCustomDeploymentType(ServiceDeploymentType.CustomDeployment)).toBe(true)
+  expect(isCustomDeploymentType(ServiceDeploymentType.WinRm)).toBe(false)
+})
+test('isNativeHelmDeploymentType', () => {
+  expect(isNativeHelmDeploymentType(ServiceDeploymentType.NativeHelm)).toBe(true)
+  expect(isNativeHelmDeploymentType(ServiceDeploymentType.WinRm)).toBe(false)
+})
+test('isEcsDeploymentType', () => {
+  expect(isEcsDeploymentType(ServiceDeploymentType.ECS)).toBe(true)
+  expect(isEcsDeploymentType(ServiceDeploymentType.WinRm)).toBe(false)
+})
+test('isAzureWebAppGenericDeploymentType', () => {
+  expect(isAzureWebAppGenericDeploymentType(ServiceDeploymentType.Elastigroup, '')).toBe(false)
+  expect(isAzureWebAppGenericDeploymentType(ServiceDeploymentType.AzureWebApp, RepositoryFormatTypes.Generic)).toBe(
+    true
+  )
+})
+
+test('isAzureWebAppOrSshWinrmGenericDeploymentType', () => {
+  expect(
+    isAzureWebAppOrSshWinrmGenericDeploymentType(ServiceDeploymentType.AzureWebApp, RepositoryFormatTypes.Generic)
+  ).toBe(true)
+})
+
+test('isCustomDTGenericDeploymentType', () => {
+  expect(isCustomDTGenericDeploymentType(ServiceDeploymentType.CustomDeployment, RepositoryFormatTypes.Generic)).toBe(
+    true
+  )
+  expect(isCustomDTGenericDeploymentType(ServiceDeploymentType.WinRm, RepositoryFormatTypes.Generic)).toBe(false)
+})
+
+test('isTasGenericDeploymentType', () => {
+  expect(isTasGenericDeploymentType(ServiceDeploymentType.TAS, RepositoryFormatTypes.Generic)).toBe(true)
+})
+
+test('isTASDeploymentType', () => {
+  expect(isTASDeploymentType(ServiceDeploymentType.TAS)).toBe(true)
+  expect(isTASDeploymentType(ServiceDeploymentType.Elastigroup)).toBe(false)
 })
 
 test('getHelpeTextForTags', () => {
