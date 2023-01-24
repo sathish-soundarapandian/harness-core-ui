@@ -90,6 +90,13 @@ function RetryHistory({ canExecute, showRetryHistory, canRetry }: RetryHistoryPr
     }
   }, [showRetryHistory, canRetry])
 
+  useEffect(() => {
+    // cleanup function to clear the toaster when navigating out of the current screen
+    return () => {
+      clear()
+    }
+  }, [])
+
   const {
     data: retryHistoryResponse,
     loading: loadingRetryHistory,
