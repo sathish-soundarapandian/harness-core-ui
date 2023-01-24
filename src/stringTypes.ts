@@ -8468,10 +8468,12 @@ export interface StringsMap {
   'sto.stepField.target.variant': string
   'sto.stepField.target.workspace': string
   'sto.stepField.tool.context': string
+  'sto.stepField.tool.exclude': string
   'sto.stepField.tool.imageName': string
   'sto.stepField.tool.javaBinaries': string
   'sto.stepField.tool.javaLibraries': string
   'sto.stepField.tool.port': string
+  'sto.stepField.tool.productLookupType': string
   'sto.stepField.tool.productName': string
   'sto.stepField.tool.productToken': string
   'sto.stepField.tool.projectToken': string

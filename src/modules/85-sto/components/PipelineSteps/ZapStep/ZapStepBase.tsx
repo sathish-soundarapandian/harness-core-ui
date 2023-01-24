@@ -34,7 +34,9 @@ import {
   dividerBottomMargin,
   INGESTION_SCAN_MODE,
   INSTANCE_TARGET_TYPE,
+  logLevelOptions,
   ORCHESTRATION_SCAN_MODE,
+  severityOptions,
   ZAP_ATTACK_CONFIG,
   ZAP_DEFAULT_CONFIG,
   ZAP_QUICK_CONFIG,
@@ -170,7 +172,31 @@ export const ZapStepBase = (
               </>
             )}
 
+            <>
+              <SecurityField
+                stepViewType={stepViewType}
+                allowableTypes={allowableTypes}
+                formik={formik}
+                enableFields={{
+                  'spec.advanced.log.level': {
+                    optional: true,
+                    fieldType: 'dropdown',
+                    label: 'sto.stepField.advanced.logLevel',
+                    selectItems: logLevelOptions(getString)
+                  },
+                  'spec.advanced.fail_on_severity': {
+                    optional: true,
+                    fieldType: 'dropdown',
+                    label: 'sto.stepField.advanced.failOnSeverity',
+                    selectItems: severityOptions(getString)
+                  }
+                }}
+              />
+              <Divider style={{ marginBottom: dividerBottomMargin }} />
+            </>
+
             <AdditionalFields
+              showAdvancedFields={false}
               readonly={readonly}
               currentStage={currentStage}
               stepViewType={stepViewType}

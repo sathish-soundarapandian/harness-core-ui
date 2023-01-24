@@ -42,9 +42,11 @@ stepField:
     imageName: Tool Image Name
     teamName: Tool Team Name
     projectVersion: Tool Project Version
-    productToken: Product token
+    productToken: Product Token
     productName: Product Name
-    projectToken: Project token
+    projectToken: Project Token
+    productLookupType: Product Lookup Type
+    exclude: Product Tool Exclude
   image:
     type: Image Type
     domain: Image Domain

@@ -90,10 +90,6 @@ export const AquatrivyStepBase = (
 
         const targetTypeSelectItems = [CONTAINER_TARGET_TYPE]
 
-        if (targetTypeSelectItems.length === 1 && formik.values.spec.target.type !== 'container') {
-          formik.setFieldValue('spec.target.type', 'container')
-        }
-
         if (formik.values.spec.privileged !== true && formik.values.spec.mode === 'orchestration') {
           formik.setFieldValue('spec.privileged', true)
         } else if (formik.values.spec.privileged === true && formik.values.spec.mode !== 'orchestration') {

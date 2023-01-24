@@ -278,10 +278,11 @@ type AdditionalFieldsProps = {
   stepViewType: StepViewType
   allowableTypes: AllowedTypes
   formik: FormikProps<SecurityStepData<SecurityStepSpec>>
+  showAdvancedFields?: boolean
 }
 
 export const AdditionalFields = (props: AdditionalFieldsProps) => {
-  const { currentStage, readonly, stepViewType, allowableTypes, formik } = props
+  const { currentStage, readonly, stepViewType, allowableTypes, formik, showAdvancedFields = true } = props
   const { getString } = useStrings()
   const buildInfrastructureType =
     (get(currentStage, 'stage.spec.infrastructure.type') as CIBuildInfrastructureType) ||
@@ -289,7 +290,9 @@ export const AdditionalFields = (props: AdditionalFieldsProps) => {
 
   return (
     <>
-      <SecurityAdvancedFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+      {showAdvancedFields && (
+        <SecurityAdvancedFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+      )}
 
       <CIStepOptionalConfig
         stepViewType={stepViewType}

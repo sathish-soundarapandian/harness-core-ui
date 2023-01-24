@@ -36,7 +36,8 @@ import {
   ORCHESTRATION_SCAN_MODE,
   EXTRACTION_SCAN_MODE,
   REPOSITORY_TARGET_TYPE,
-  dividerBottomMargin
+  dividerBottomMargin,
+  CONTAINER_TARGET_TYPE
 } from '../constants'
 import SecurityField from '../SecurityField'
 
@@ -59,6 +60,36 @@ export const MendStepBase = (
     transformValuesFieldsConfig(initialValues),
     { imagePullPolicyOptions: getImagePullPolicyOptions(getString) }
   )
+
+  type LookupType = 'appendToProductByToken' | 'appendToProductByName' | 'byTokens' | 'byNames'
+  type LookupTypeOption = {
+    value: LookupType
+    label: string
+  }
+  const orchestrationLookupTypes: LookupTypeOption[] = [
+    {
+      label: 'By Token',
+      value: 'appendToProductByToken'
+    },
+    {
+      label: 'By Name',
+      value: 'appendToProductByName'
+    }
+  ]
+
+  const extractionLookupTypes: LookupTypeOption[] = [
+    {
+      label: 'By Tokens',
+      value: 'byTokens'
+    },
+    {
+      label: 'By Names',
+      value: 'byNames'
+    }
+  ]
+  // BlackduckStep
+  // mend
+  // prisma
 
   return (
     <Formik
@@ -95,6 +126,43 @@ export const MendStepBase = (
         // This is required
         setFormikRef?.(formikRef, formik)
 
+        const getProductLookupType = () => {
+          if (formik.values.spec.mode === 'orchestration') {
+            return orchestrationLookupTypes
+          }
+          if (formik.values.spec.mode === 'extraction') {
+            return extractionLookupTypes
+          }
+          return []
+        }
+
+        const show_product_token_field =
+          formik.values.spec.mode != 'ingestion' &&
+          (formik.values.spec.tool?.product_lookup_type === 'byTokens' ||
+            formik.values.spec.tool?.product_lookup_type === 'appendToProductByToken')
+        const show_project_token_field =
+          formik.values.spec.mode === 'extraction' && formik.values.spec.tool?.product_lookup_type === 'byTokens'
+        const show_product_name_field =
+          formik.values.spec.mode != 'ingestion' &&
+          (formik.values.spec.tool?.product_lookup_type === 'byNames' ||
+            formik.values.spec.tool?.product_lookup_type === 'appendToProductByName')
+        const show_project_name_field =
+          formik.values.spec.mode === 'extraction' && formik.values.spec.tool?.product_lookup_type === 'byNames'
+
+        if (formik.values.spec.mode === 'ingestion' && formik.values.spec.tool?.product_lookup_type) {
+          formik.setFieldValue('spec.tool.product_lookup_type', undefined)
+        }
+
+        if (
+          formik.values.spec.privileged !== true &&
+          formik.values.spec.mode === 'orchestration' &&
+          formik.values.spec.target.type === 'container'
+        ) {
+          formik.setFieldValue('spec.privileged', true)
+        } else if (formik.values.spec.privileged === true && formik.values.spec.mode !== 'orchestration') {
+          formik.setFieldValue('spec.privileged', false)
+        }
+
         return (
           <FormikForm>
             <CIStep
@@ -120,7 +188,7 @@ export const MendStepBase = (
               allowableTypes={allowableTypes}
               formik={formik}
               stepViewType={stepViewType}
-              targetTypeSelectItems={[REPOSITORY_TARGET_TYPE]}
+              targetTypeSelectItems={[REPOSITORY_TARGET_TYPE, CONTAINER_TARGET_TYPE]}
             />
 
             <SecurityImageFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
@@ -137,40 +205,51 @@ export const MendStepBase = (
               formik={formik}
               stepViewType={stepViewType}
             />
-            {/* <DropDown
-              onChange={(item)=>{ 
-                setLookupType(item.value as lookupTypeValues)
-              }
-              }
-              value={lookupType}
-              items={getLookupTypes()} /> */}
+
+            <SecurityField
+              stepViewType={stepViewType}
+              allowableTypes={allowableTypes}
+              formik={formik}
+              enableFields={{
+                'spec.tool.product_lookup_type': {
+                  label: 'sto.stepField.tool.productLookupType',
+                  fieldType: 'dropdown',
+                  selectItems: getProductLookupType(),
+                  readonly: formik.values.spec.mode === 'ingestion'
+                }
+              }}
+            />
             <>
               <SecurityField
                 stepViewType={stepViewType}
                 allowableTypes={allowableTypes}
                 formik={formik}
                 enableFields={{
+                  'spec.tool.product_token': {
+                    label: 'sto.stepField.tool.productToken',
+                    hide: !show_product_token_field
+                  },
+                  'spec.tool.product_name': {
+                    label: 'sto.stepField.tool.productName',
+                    hide: !show_product_name_field
+                  },
+                  'spec.tool.project_token': {
+                    label: 'sto.stepField.tool.projectToken',
+                    hide: !show_project_token_field
+                  },
+                  'spec.tool.project_name': {
+                    label: 'projectCard.projectName',
+                    hide: !show_project_name_field
+                  },
+                  'spec.tool.exclude': {
+                    label: 'sto.stepField.tool.exclude',
+                    optional: true,
+                    hide: !(formik.values.spec.mode === 'orchestration' || formik.values.spec.mode === 'extraction')
+                  },
                   'spec.tool.include': {
                     label: 'sto.stepField.toolInclude',
                     optional: true,
                     hide: !(formik.values.spec.mode === 'orchestration' || formik.values.spec.mode === 'extraction')
-                  },
-                  'spec.tool.product_token': {
-                    label: 'sto.stepField.tool.productToken',
-                    hide: !(formik.values.spec.mode === 'orchestration' || formik.values.spec.mode === 'extraction')
-                  },
-                  'spec.tool.product_name': {
-                    label: 'sto.stepField.tool.productName',
-                    hide: !(formik.values.spec.mode === 'orchestration' || formik.values.spec.mode === 'extraction')
-                  },
-                  'spec.tool.project_token': {
-                    label: 'sto.stepField.tool.projectToken',
-                    hide: formik.values.spec.mode !== 'extraction'
-                  },
-                  'spec.tool.project_name': {
-                    label: 'projectCard.projectName',
-                    hide: formik.values.spec.mode !== 'extraction',
-                    optional: true
                   }
                 }}
               />
