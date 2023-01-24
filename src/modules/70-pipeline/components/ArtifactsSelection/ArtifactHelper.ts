@@ -40,17 +40,11 @@ export const isAllowedGithubPackageRegistryDeploymentTypes = (deploymentType: Se
   )
 }
 
-export const isAllowedAzureArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
-  return (
-    deploymentType === ServiceDeploymentType.Kubernetes || deploymentType === ServiceDeploymentType.CustomDeployment
-  )
-}
+export const isAllowedAzureArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean =>
+  deploymentType === ServiceDeploymentType.CustomDeployment
 
-export const isAllowedAMIDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
-  return (
-    deploymentType === ServiceDeploymentType.Kubernetes || deploymentType === ServiceDeploymentType.CustomDeployment
-  )
-}
+export const isAllowedAMIDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean =>
+  deploymentType === ServiceDeploymentType.CustomDeployment
 
 export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isReadOnly: boolean): boolean => {
   return (
