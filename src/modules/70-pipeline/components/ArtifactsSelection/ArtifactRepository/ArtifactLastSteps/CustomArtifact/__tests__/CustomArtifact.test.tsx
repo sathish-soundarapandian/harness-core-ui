@@ -32,6 +32,13 @@ const props = {
 const initialValues = {
   identifier: '',
   spec: {
+    version: '123'
+  }
+}
+
+const scriptInitValues = {
+  identifier: '',
+  spec: {
     version: '123',
     delegateSelectors: '<+input>',
     inputs: [
@@ -144,7 +151,7 @@ describe('Custom Artifact tests', () => {
   test('render form when script pulled dynamically from artifact location', () => {
     const { container } = render(
       <TestWrapper>
-        <CustomArtifact key={'key'} initialValues={initialValues as CustomArtifactSource} {...props} />
+        <CustomArtifact key={'key'} initialValues={scriptInitValues as CustomArtifactSource} {...props} />
       </TestWrapper>
     )
 
@@ -171,7 +178,7 @@ describe('Custom Artifact tests', () => {
     }
     const { container } = render(
       <TestWrapper>
-        <CustomArtifact key={'key'} initialValues={initialValues as CustomArtifactSource} {...scriptEditProps} />
+        <CustomArtifact key={'key'} initialValues={scriptInitValues as CustomArtifactSource} {...scriptEditProps} />
       </TestWrapper>
     )
 
@@ -187,5 +194,90 @@ describe('Custom Artifact tests', () => {
         }
       })
     })
+  })
+
+  test(`should throw validation error on submit`, async () => {
+    const formVals = {
+      identifier: '',
+      spec: {
+        version: '',
+        delegateSelectors: '<+input>',
+        inputs: [
+          {
+            id: 'variable1',
+            name: 'variable1',
+            type: 'String',
+            value: '<+input>'
+          }
+        ],
+        timeout: '<+input>',
+        scripts: {
+          fetchAllArtifacts: {
+            artifactsArrayPath: '<+input>',
+            attributes: [
+              {
+                id: 'variable',
+                name: 'variable',
+                type: 'String',
+                value: '<+input>'
+              }
+            ],
+            versionPath: '<+input>',
+            spec: {
+              shell: 'BASH',
+              source: {
+                spec: {
+                  script: '<+input>'
+                },
+                type: '<+input>'
+              }
+            }
+          }
+        }
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <CustomArtifact key={'key'} initialValues={formVals as CustomArtifactSource} {...props} />
+      </TestWrapper>
+    )
+
+    const checkbox = container.querySelector('input[type="checkbox"][value=manual]')
+    fireEvent.click(checkbox!)
+
+    const submitBtn = container.querySelector('button[type="submit"]')!
+
+    await act(async () => {
+      fireEvent.change(queryByNameAttribute('identifier', container)!, { target: { value: 'testidentifier' } })
+    })
+    fireEvent.click(submitBtn)
+
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should throw validation error for on submit - for script type', async () => {
+    const scriptFormVal = {
+      identifier: '',
+      spec: {
+        version: ''
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <CustomArtifact key={'key'} initialValues={scriptFormVal as CustomArtifactSource} {...props} />
+      </TestWrapper>
+    )
+
+    const checkbox = container.querySelector('input[type="checkbox"][value=script]')
+    fireEvent.click(checkbox!)
+
+    const submitBtn = container.querySelector('button[type="submit"]')!
+
+    await act(async () => {
+      fireEvent.change(queryByNameAttribute('identifier', container)!, { target: { value: 'testidentifier' } })
+    })
+    fireEvent.click(submitBtn)
+
+    expect(container).toMatchSnapshot()
   })
 })

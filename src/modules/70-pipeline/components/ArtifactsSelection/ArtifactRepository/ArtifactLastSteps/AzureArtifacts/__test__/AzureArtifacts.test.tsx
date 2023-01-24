@@ -330,4 +330,66 @@ describe('Azure Artifacts tests', () => {
 
     expect(container).toMatchSnapshot()
   })
+
+  test('shows validation error on submit when form is empty', async () => {
+    const errorVals = {
+      identifier: '',
+      spec: {
+        versionType: '',
+        scope: Scope.ORG,
+        project: '',
+        feed: '',
+        packageType: 'Maven',
+        package: '',
+        version: '',
+        versionRegex: ''
+      },
+
+      type: 'AzureArtifacts' as ArtifactType
+    }
+
+    const { container } = render(
+      <TestWrapper>
+        <AzureArtifacts key={'key'} initialValues={errorVals as any} {...props} />
+      </TestWrapper>
+    )
+
+    await act(async () => {
+      const submitBtn = container.querySelector('button[type="submit"]')!
+
+      fireEvent.click(submitBtn)
+    })
+    expect(container).toMatchSnapshot()
+  })
+
+  test('shows validation error on submit when form is empty, when scope is project', async () => {
+    const errorVals = {
+      identifier: '',
+      spec: {
+        versionType: '',
+        scope: Scope.PROJECT,
+        project: '',
+        feed: '',
+        packageType: 'Maven',
+        package: '',
+        version: '',
+        versionRegex: ''
+      },
+
+      type: 'AzureArtifacts' as ArtifactType
+    }
+
+    const { container } = render(
+      <TestWrapper>
+        <AzureArtifacts key={'key'} initialValues={errorVals as any} {...props} />
+      </TestWrapper>
+    )
+
+    await act(async () => {
+      const submitBtn = container.querySelector('button[type="submit"]')!
+
+      fireEvent.click(submitBtn)
+    })
+    expect(container).toMatchSnapshot()
+  })
 })
