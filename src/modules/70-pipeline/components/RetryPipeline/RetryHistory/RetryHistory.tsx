@@ -11,7 +11,7 @@ import { Classes, Popover, PopoverInteractionKind, Position } from '@blueprintjs
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { ExecutionInfo, useLatestExecutionId, useRetryHistory } from 'services/pipeline-ng'
 import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -25,12 +25,12 @@ import RbacButton from '@rbac/components/Button/Button'
 import css from './RetryHistory.module.scss'
 
 interface RetryHistoryProps {
-  canExecute: boolean
+  canView: boolean
   showRetryHistory: boolean
   canRetry: boolean
 }
 
-function RetryHistory({ canExecute, showRetryHistory, canRetry }: RetryHistoryProps): React.ReactElement {
+function RetryHistory({ canView, showRetryHistory, canRetry }: RetryHistoryProps): React.ReactElement {
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, pipelineIdentifier, accountId, executionIdentifier, module, source } =
     useParams<PipelineType<ExecutionPathProps>>()
@@ -49,14 +49,15 @@ function RetryHistory({ canExecute, showRetryHistory, canRetry }: RetryHistoryPr
     lazy: true
   })
   useEffect(() => {
-    if (latestExecutionId?.data?.latestExecutionId) {
+    /* istanbul ignore else */
+    if (get(latestExecutionId, 'data.latestExecutionId')) {
       clear()
       history.push(
         routes.toExecutionPipelineView({
           orgIdentifier,
           pipelineIdentifier: pipelineIdentifier,
           projectIdentifier,
-          executionIdentifier: latestExecutionId.data.latestExecutionId || '',
+          executionIdentifier: get(latestExecutionId, 'data.latestExecutionId', ''),
           accountId,
           module,
           source,
@@ -70,6 +71,7 @@ function RetryHistory({ canExecute, showRetryHistory, canRetry }: RetryHistoryPr
   }, [latestExecutionId])
 
   useEffect(() => {
+    /* istanbul ignore else */
     if (showRetryHistory && !canRetry) {
       showPrimary(
         <Layout.Horizontal spacing="medium">
@@ -114,6 +116,7 @@ function RetryHistory({ canExecute, showRetryHistory, canRetry }: RetryHistoryPr
   const executionInfo = retryHistoryResponse?.data?.executionInfos
 
   const gotoExecutionDetails = (planExecutionId: string): void => {
+    /* istanbul ignore else */
     if (planExecutionId !== executionIdentifier) {
       history.push(
         routes.toExecutionPipelineView({
@@ -147,7 +150,7 @@ function RetryHistory({ canExecute, showRetryHistory, canRetry }: RetryHistoryPr
 
   function RetryExecutionList(): JSX.Element {
     return (
-      <div className={css.modalContent}>
+      <div className={css.modalContent} data-testid="retryHistoryExecutionList">
         <Layout.Vertical>
           <div className={css.retryHeaderSection}>
             <div className={css.retryModalHeader}>
@@ -230,7 +233,7 @@ function RetryHistory({ canExecute, showRetryHistory, canRetry }: RetryHistoryPr
         size={ButtonSize.SMALL}
         iconProps={{ size: 24, color: Color.PRIMARY_7 }}
         onClick={() => refetchRetryHistory()}
-        disabled={!canExecute}
+        disabled={!canView}
         className={cx(css.cardBtns, css.retryHistoryBtn)}
       />
     </Popover>

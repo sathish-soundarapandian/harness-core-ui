@@ -54,7 +54,7 @@ export function ExecutionHeader(): React.ReactElement {
   } = useAppStore()
   const { getString } = useStrings()
   const { pipelineExecutionSummary = {} } = pipelineExecutionDetail || {}
-  const [canEdit, canExecute] = usePermission(
+  const [canView, canEdit, canExecute] = usePermission(
     {
       resourceScope: {
         accountIdentifier: accountId,
@@ -65,7 +65,11 @@ export function ExecutionHeader(): React.ReactElement {
         resourceType: ResourceType.PIPELINE,
         resourceIdentifier: pipelineIdentifier as string
       },
-      permissions: [PermissionIdentifier.EDIT_PIPELINE, PermissionIdentifier.EXECUTE_PIPELINE]
+      permissions: [
+        PermissionIdentifier.VIEW_PIPELINE,
+        PermissionIdentifier.EDIT_PIPELINE,
+        PermissionIdentifier.EXECUTE_PIPELINE
+      ]
     },
     [orgIdentifier, projectIdentifier, accountId, pipelineIdentifier]
   )
@@ -155,7 +159,7 @@ export function ExecutionHeader(): React.ReactElement {
           />
           {pipelineExecutionSummary.showRetryHistory && (
             <RetryHistory
-              canExecute={canExecute}
+              canView={canView}
               showRetryHistory={pipelineExecutionSummary.showRetryHistory}
               canRetry={pipelineExecutionSummary.canRetry || false}
             />
