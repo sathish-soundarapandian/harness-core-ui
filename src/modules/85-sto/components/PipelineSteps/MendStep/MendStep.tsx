@@ -108,30 +108,27 @@ export class MendStep extends PipelineStep<MendStepData> {
       allowableTypes
     } = props
 
-    switch (stepViewType) {
-      case StepViewType.InputSet:
-      case StepViewType.DeploymentForm:
-        return (
-          <MendStepInputSet
-            initialValues={initialValues}
-            template={inputSetData?.template}
-            path={inputSetData?.path || ''}
-            readonly={!!inputSetData?.readonly}
-            stepViewType={stepViewType}
-            onUpdate={onUpdate}
-            onChange={onChange}
-            allowableTypes={allowableTypes}
-          />
-        )
-
-      case StepViewType.InputVariable:
-        return (
-          <MendStepVariables
-            {...(customStepProps as MendStepVariablesProps)}
-            initialValues={initialValues}
-            onUpdate={onUpdate}
-          />
-        )
+    if (this.isTemplatizedView(stepViewType)) {
+      return (
+        <MendStepInputSet
+          initialValues={initialValues}
+          template={inputSetData?.template}
+          path={inputSetData?.path || ''}
+          readonly={!!inputSetData?.readonly}
+          stepViewType={stepViewType}
+          onUpdate={onUpdate}
+          onChange={onChange}
+          allowableTypes={allowableTypes}
+        />
+      )
+    } else if (stepViewType === StepViewType.InputVariable) {
+      return (
+        <MendStepVariables
+          {...(customStepProps as MendStepVariablesProps)}
+          initialValues={initialValues}
+          onUpdate={onUpdate}
+        />
+      )
     }
 
     return (

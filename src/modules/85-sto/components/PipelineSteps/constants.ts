@@ -666,7 +666,9 @@ export const inputSetFields = (
         // Advanced fields
         ...(shouldRenderRunTimeInputView(template?.spec.advanced?.log?.level) && {
           [getInputSetFieldName(prefix, 'spec.advanced.log.level')]: {
-            label: 'sto.stepField.advanced.logLevel'
+            label: 'sto.stepField.advanced.logLevel',
+            fieldType: 'dropdown',
+            selectItems: logLevelOptions(getString)
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.advanced?.log?.serializer) && {

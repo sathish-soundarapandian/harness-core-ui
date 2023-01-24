@@ -113,32 +113,29 @@ export class BlackduckStep extends PipelineStep<BlackduckStepData> {
       allowableTypes
     } = props
 
-    switch (stepViewType) {
-      case StepViewType.InputSet:
-      case StepViewType.DeploymentForm:
-        return (
-          <BlackduckStepInputSet
-            initialValues={initialValues}
-            /* istanbul ignore next */
-            template={inputSetData?.template}
-            /* istanbul ignore next */
-            path={inputSetData?.path || ''}
-            readonly={!!inputSetData?.readonly}
-            stepViewType={stepViewType}
-            onUpdate={onUpdate}
-            onChange={onChange}
-            allowableTypes={allowableTypes}
-          />
-        )
-
-      case StepViewType.InputVariable:
-        return (
-          <BlackduckStepVariables
-            {...(customStepProps as BlackduckStepVariablesProps)}
-            initialValues={initialValues}
-            onUpdate={onUpdate}
-          />
-        )
+    if (this.isTemplatizedView(stepViewType)) {
+      return (
+        <BlackduckStepInputSet
+          initialValues={initialValues}
+          /* istanbul ignore next */
+          template={inputSetData?.template}
+          /* istanbul ignore next */
+          path={inputSetData?.path || ''}
+          readonly={!!inputSetData?.readonly}
+          stepViewType={stepViewType}
+          onUpdate={onUpdate}
+          onChange={onChange}
+          allowableTypes={allowableTypes}
+        />
+      )
+    } else if (stepViewType === StepViewType.InputVariable) {
+      return (
+        <BlackduckStepVariables
+          {...(customStepProps as BlackduckStepVariablesProps)}
+          initialValues={initialValues}
+          onUpdate={onUpdate}
+        />
+      )
     }
 
     return (

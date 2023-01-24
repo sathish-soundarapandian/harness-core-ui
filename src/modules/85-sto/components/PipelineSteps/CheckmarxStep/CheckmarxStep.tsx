@@ -109,31 +109,28 @@ export class CheckmarxStep extends PipelineStep<CheckmarxStepData> {
       allowableTypes
     } = props
 
-    switch (stepViewType) {
-      case StepViewType.InputSet:
-      case StepViewType.DeploymentForm:
-        return (
-          <CheckmarxStepInputSet
-            initialValues={initialValues}
-            template={inputSetData?.template}
-            /* istanbul ignore next */
-            path={inputSetData?.path || ''}
-            readonly={!!inputSetData?.readonly}
-            stepViewType={stepViewType}
-            onUpdate={onUpdate}
-            onChange={onChange}
-            allowableTypes={allowableTypes}
-          />
-        )
-
-      case StepViewType.InputVariable:
-        return (
-          <CheckmarxStepVariables
-            {...(customStepProps as CheckmarxStepVariablesProps)}
-            initialValues={initialValues}
-            onUpdate={onUpdate}
-          />
-        )
+    if (this.isTemplatizedView(stepViewType)) {
+      return (
+        <CheckmarxStepInputSet
+          initialValues={initialValues}
+          template={inputSetData?.template}
+          /* istanbul ignore next */
+          path={inputSetData?.path || ''}
+          readonly={!!inputSetData?.readonly}
+          stepViewType={stepViewType}
+          onUpdate={onUpdate}
+          onChange={onChange}
+          allowableTypes={allowableTypes}
+        />
+      )
+    } else if (stepViewType === StepViewType.InputVariable) {
+      return (
+        <CheckmarxStepVariables
+          {...(customStepProps as CheckmarxStepVariablesProps)}
+          initialValues={initialValues}
+          onUpdate={onUpdate}
+        />
+      )
     }
 
     return (

@@ -107,32 +107,29 @@ export class SnykStep extends PipelineStep<SnykStepData> {
       allowableTypes
     } = props
 
-    switch (stepViewType) {
-      case StepViewType.InputSet:
-      case StepViewType.DeploymentForm:
-        return (
-          <SnykStepInputSet
-            initialValues={initialValues}
-            /* istanbul ignore next */
-            template={inputSetData?.template}
-            /* istanbul ignore next */
-            path={inputSetData?.path || ''}
-            readonly={!!inputSetData?.readonly}
-            stepViewType={stepViewType}
-            onUpdate={onUpdate}
-            onChange={onChange}
-            allowableTypes={allowableTypes}
-          />
-        )
-
-      case StepViewType.InputVariable:
-        return (
-          <SnykStepVariables
-            {...(customStepProps as SnykStepVariablesProps)}
-            initialValues={initialValues}
-            onUpdate={onUpdate}
-          />
-        )
+    if (this.isTemplatizedView(stepViewType)) {
+      return (
+        <SnykStepInputSet
+          initialValues={initialValues}
+          /* istanbul ignore next */
+          template={inputSetData?.template}
+          /* istanbul ignore next */
+          path={inputSetData?.path || ''}
+          readonly={!!inputSetData?.readonly}
+          stepViewType={stepViewType}
+          onUpdate={onUpdate}
+          onChange={onChange}
+          allowableTypes={allowableTypes}
+        />
+      )
+    } else if (stepViewType === StepViewType.InputVariable) {
+      return (
+        <SnykStepVariables
+          {...(customStepProps as SnykStepVariablesProps)}
+          initialValues={initialValues}
+          onUpdate={onUpdate}
+        />
+      )
     }
 
     return (
