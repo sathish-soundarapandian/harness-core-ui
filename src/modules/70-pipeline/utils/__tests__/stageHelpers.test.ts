@@ -17,7 +17,16 @@ import {
   ServiceDeploymentType,
   getCustomStepProps,
   getStepTypeByDeploymentType,
-  deleteStageData
+  deleteStageData,
+  hasCDStage,
+  hasCIStage,
+  hasServiceDetail,
+  hasSTOStage,
+  isSSHWinRMDeploymentType,
+  isWinRmDeploymentType,
+  isAzureWebAppDeploymentType,
+  isElastigroupDeploymentType,
+  hasOverviewDetail
 } from '../stageHelpers'
 import inputSetPipeline from './inputset-pipeline.json'
 test('if empty values are being replaced with <+input> except for tags', () => {
@@ -44,6 +53,51 @@ test('isCDStage', () => {
   expect(isCDStage({})).toBe(false)
   expect(isCDStage({ module: 'cd' })).toBe(true)
   expect(isCDStage({ moduleInfo: { cd: { test: {} } } })).toBe(true)
+})
+
+test('hasCDStage', () => {
+  expect(hasCDStage({})).toBe(false)
+  expect(
+    hasCDStage({
+      modules: ['cd']
+    })
+  ).toBe(true)
+})
+
+test('hasServiceDetail', () => {
+  expect(hasServiceDetail({})).toBe(false)
+  expect(
+    hasServiceDetail({
+      modules: ['cd', 'serviceDetail']
+    })
+  ).toBe(true)
+})
+
+test('hasOverviewDetail', () => {
+  expect(hasOverviewDetail({})).toBe(false)
+  expect(
+    hasOverviewDetail({
+      modules: ['cd', 'overviewPage']
+    })
+  ).toBe(true)
+})
+
+test('hasCIStage', () => {
+  expect(hasCIStage({})).toBe(false)
+  expect(
+    hasCIStage({
+      modules: ['ci', 'overviewPage']
+    })
+  ).toBe(true)
+})
+
+test('hasSTOStage', () => {
+  expect(hasSTOStage({})).toBe(false)
+  expect(
+    hasSTOStage({
+      modules: ['sto', 'ci']
+    })
+  ).toBe(true)
 })
 
 test('isInfraDefinitionPresent', () => {
@@ -116,6 +170,29 @@ test('isServerlessDeploymentType', () => {
   expect(isServerlessDeploymentType(ServiceDeploymentType.AmazonSAM)).toBe(true)
   expect(isServerlessDeploymentType(ServiceDeploymentType.AzureFunctions)).toBe(true)
   expect(isServerlessDeploymentType(ServiceDeploymentType.Kubernetes)).toBe(false)
+})
+
+test('isSSHWinRMDeploymentType', () => {
+  expect(isSSHWinRMDeploymentType(ServiceDeploymentType.WinRm)).toBe(true)
+  expect(isSSHWinRMDeploymentType(ServiceDeploymentType.Ssh)).toBe(true)
+  expect(isSSHWinRMDeploymentType(ServiceDeploymentType.AzureWebApp)).toBe(false)
+})
+
+test('isWinRmDeploymentType', () => {
+  expect(isWinRmDeploymentType(ServiceDeploymentType.WinRm)).toBe(true)
+  expect(isWinRmDeploymentType(ServiceDeploymentType.Ssh)).toBe(false)
+  expect(isWinRmDeploymentType(ServiceDeploymentType.AzureWebApp)).toBe(false)
+})
+
+test('isAzureWebAppDeploymentType', () => {
+  expect(isAzureWebAppDeploymentType(ServiceDeploymentType.WinRm)).toBe(false)
+  expect(isAzureWebAppDeploymentType(ServiceDeploymentType.Ssh)).toBe(false)
+  expect(isAzureWebAppDeploymentType(ServiceDeploymentType.AzureWebApp)).toBe(true)
+})
+
+test('isElastigroupDeploymentType', () => {
+  expect(isElastigroupDeploymentType(ServiceDeploymentType.Elastigroup)).toBe(true)
+  expect(isElastigroupDeploymentType(ServiceDeploymentType.WinRm)).toBe(false)
 })
 
 test('getHelpeTextForTags', () => {

@@ -140,4 +140,52 @@ describe('Custom Artifact tests', () => {
     )
     expect(container).toMatchSnapshot()
   })
+
+  test('render form when script pulled dynamically from artifact location', () => {
+    const { container } = render(
+      <TestWrapper>
+        <CustomArtifact key={'key'} initialValues={initialValues as CustomArtifactSource} {...props} />
+      </TestWrapper>
+    )
+
+    const checkbox = container.querySelector('input[type="checkbox"][value=script]')
+    fireEvent.click(checkbox!)
+
+    expect(container).toMatchSnapshot()
+  })
+
+  test('fill form with details - for script option', async () => {
+    const scriptEditProps = {
+      ...props,
+      identifier: 'test-identifier',
+      spec: {
+        timeout: '2h',
+        scripts: {
+          fetchAllArtifacts: {
+            artifactsArrayPath: 'tes',
+            versionPath: 'test-versionPath'
+          }
+        },
+        version: '1'
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <CustomArtifact key={'key'} initialValues={initialValues as CustomArtifactSource} {...scriptEditProps} />
+      </TestWrapper>
+    )
+
+    fireEvent.change(queryByNameAttribute('identifier', container)!, { target: { value: 'testidentifier' } })
+    const submitBtn = container.querySelector('button[type="submit"]')!
+    fireEvent.click(submitBtn)
+
+    await waitFor(() => {
+      expect(props.handleSubmit).toHaveBeenCalledWith({
+        identifier: 'testidentifier',
+        spec: {
+          version: '123'
+        }
+      })
+    })
+  })
 })
