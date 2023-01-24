@@ -306,4 +306,28 @@ describe('Azure Artifacts tests', () => {
     })
     expect(container).toMatchSnapshot()
   })
+
+  test('when scope is changed to org', () => {
+    const orgValues = {
+      identifier: 'test-id',
+      type: 'AzureArtifacts' as ArtifactType,
+      spec: {
+        versionType: '',
+        scope: Scope.ORG,
+        feed: 'feedproject',
+        packageType: 'Maven',
+        package: 'test',
+        version: '1',
+        versionRegex: ''
+      }
+    }
+
+    const { container } = render(
+      <TestWrapper>
+        <AzureArtifacts key={'key'} initialValues={orgValues as any} {...props} />
+      </TestWrapper>
+    )
+
+    expect(container).toMatchSnapshot()
+  })
 })

@@ -97,6 +97,7 @@ function FormComponent({
   const feedValue = defaultTo(getGenuineValue(formik.values.feed), '')
   const packageValue = defaultTo(getGenuineValue(formik.values.package), '')
   const packageTypeValue = defaultTo(getGenuineValue(formik.values.packageType), '')
+
   const getConnectorRefQueryData = (): string => {
     return defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
   }
