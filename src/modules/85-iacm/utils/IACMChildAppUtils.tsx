@@ -27,6 +27,9 @@ import IACMResourceStackWizard from '@iacm/components/IACMResourceStackWizard'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import ExecutionGraph from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
+import RbacButton from '@rbac/components/Button/Button'
+import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
+import { usePermission } from '@rbac/hooks/usePermission'
 
 const customComponents: IACMCustomMicroFrontendProps['customComponents'] = {
   ApprovalStageOverview,
@@ -36,7 +39,9 @@ const customComponents: IACMCustomMicroFrontendProps['customComponents'] = {
   IACMResourceStackWizard,
   MultiTypeConnectorField,
   MultiTypeFieldSelector,
-  ExecutionGraph
+  ExecutionGraph,
+  RbacOptionsMenuButton,
+  RbacButton
 }
 
 const customFunctions: IACMCustomMicroFrontendProps['customFunctions'] = {
@@ -49,7 +54,8 @@ const customFunctions: IACMCustomMicroFrontendProps['customFunctions'] = {
 const customHooks: IACMCustomMicroFrontendProps['customHooks'] = {
   usePipelineContext,
   useLocation,
-  useVariablesExpression
+  useVariablesExpression,
+  usePermission
 }
 
 const IACMSideNavProps: SidebarContext = {

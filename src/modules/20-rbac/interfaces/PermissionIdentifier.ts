@@ -193,5 +193,10 @@ export enum PermissionIdentifier {
   // Billing Permissions
   EDIT_LICENSE = 'core_license_edit',
   DELETE_LICENSE = 'core_license_delete',
-  VIEW_LICENSE = 'core_license_view'
+  VIEW_LICENSE = 'core_license_view',
+
+  // IACM Permissions
+  IAC_VIEW_STACK = 'iac_stack_view',
+  IAC_EDIT_STACK = 'iac_stack_edit',
+  IAC_DELETE_STACK = 'iac_stack_delete'
 }

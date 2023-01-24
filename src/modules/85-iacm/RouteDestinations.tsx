@@ -11,7 +11,28 @@ import routes from '@common/RouteDefinitions'
 import { accountPathProps, orgPathProps, projectPathProps } from '@common/utils/routeUtils'
 import { IACMSideNavProps, RedirectToIACMProject } from '@iacm/utils/IACMChildAppUtils'
 import '@iacm/components/IACMStage'
+import { String } from 'framework/strings'
+import RbacFactory from '@rbac/factories/RbacFactory'
+import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { IACMApp } from './components/IACMApp'
+
+RbacFactory.registerResourceCategory(ResourceCategory.IACM, {
+  icon: 'iacm',
+  label: 'iacm.navTitle'
+})
+
+RbacFactory.registerResourceTypeHandler(ResourceType.IAC_STACK, {
+  icon: 'nav-settings',
+  label: 'iacm.permissions.iacmStacks',
+  labelSingular: 'iacm.permissions.iacmStack',
+  category: ResourceCategory.IACM,
+  permissionLabels: {
+    [PermissionIdentifier.IAC_VIEW_STACK]: <String stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.IAC_EDIT_STACK]: <String stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.IAC_DELETE_STACK]: <String stringID="rbac.permissionLabels.delete" />
+  }
+})
 
 function IACMRoutes(): JSX.Element {
   return (

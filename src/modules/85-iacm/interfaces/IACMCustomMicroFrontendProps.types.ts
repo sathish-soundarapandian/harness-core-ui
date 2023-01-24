@@ -20,12 +20,16 @@ import type { useVariablesExpression } from '@pipeline/components/PipelineStudio
 import type IACMResourceStackWizard from '@iacm/components/IACMResourceStackWizard'
 import type { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import type ExecutionGraph from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
+import type RbacButton from '@rbac/components/Button/Button'
+import type RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
+import type { usePermission } from '@rbac/hooks/usePermission'
 
 export interface IACMCustomMicroFrontendProps {
   customHooks: {
     usePipelineContext: typeof usePipelineContext
     useVariablesExpression: typeof useVariablesExpression
     useLocation: typeof useLocation
+    usePermission: typeof usePermission
   }
   customFunctions: {
     createTemplate: typeof createTemplate
@@ -42,5 +46,7 @@ export interface IACMCustomMicroFrontendProps {
     IACMResourceStackWizard: typeof IACMResourceStackWizard
     MultiTypeFieldSelector: typeof MultiTypeFieldSelector
     ExecutionGraph: typeof ExecutionGraph
+    RbacOptionsMenuButton: typeof RbacOptionsMenuButton
+    RbacButton: typeof RbacButton
   }
 }

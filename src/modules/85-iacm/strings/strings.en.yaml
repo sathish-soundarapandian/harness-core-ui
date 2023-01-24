@@ -27,3 +27,6 @@ stackWizard:
   scriptsPathRequired: Scripts path is required
   repoConnectorTypeRequired: Repository Connector type is required
   gitFetchTypeRequired: Git Fetch Type is required
+permissions:
+  iacmStacks: IACM Resource Stacks
+  iacmStack: IACM Resource Stack

@@ -8379,6 +8379,8 @@ export interface StringsMap {
   'iacm.cloudformation': string
   'iacm.createStack': string
   'iacm.navTitle': string
+  'iacm.permissions.iacmStack': string
+  'iacm.permissions.iacmStacks': string
   'iacm.pulumi': string
   'iacm.stackWizard.autoApprove': string
   'iacm.stackWizard.autoApproveRequired': string
