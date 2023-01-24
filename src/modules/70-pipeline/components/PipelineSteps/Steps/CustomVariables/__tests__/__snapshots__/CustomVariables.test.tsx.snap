@@ -1218,7 +1218,7 @@ exports[`Custom Variables can delete variable: Before Delete 1`] = `
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                style="flex-grow: 1;"
+                style="flex-grow: 1; width: 100%;"
               >
                 <div
                   class="TextInput--main MultiTypeInput--input"
@@ -2003,7 +2003,7 @@ exports[`Custom Variables should render variables 1`] = `
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                style="flex-grow: 1;"
+                style="flex-grow: 1; width: 100%;"
               >
                 <div
                   class="TextInput--main MultiTypeInput--input"
