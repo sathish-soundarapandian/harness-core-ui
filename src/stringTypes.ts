@@ -158,6 +158,7 @@ export interface StringsMap {
   'common.confictOccured': string
   'common.config': string
   'common.configDetails': string
+  'common.configure': string
   'common.configureJfrog': string
   'common.configureModuleList': string
   'common.configureNav': string
@@ -183,6 +184,7 @@ export interface StringsMap {
   'common.configureService': string
   'common.confirmAction': string
   'common.confirmText': string
+  'common.connect': string
   'common.connectEnvironment': string
   'common.connectGitRepo': string
   'common.connectThroughDelegate': string
@@ -226,6 +228,7 @@ export interface StringsMap {
   'common.deleteServiceConfirmation': string
   'common.deleteServiceFailure': string
   'common.deleteServiceMessage': string
+  'common.deploy': string
   'common.deployToEntity': string
   'common.deployToFilteredList': string
   'common.deploymentTemplateSteps': string
@@ -5096,6 +5099,9 @@ export interface StringsMap {
   'cd.getStartedWithCD.envName': string
   'cd.getStartedWithCD.environmentDetails': string
   'cd.getStartedWithCD.gitOpsAgent': string
+  'cd.getStartedWithCD.gitopsOnboardingAgentStep': string
+  'cd.getStartedWithCD.gitopsOnboardingConfigureStep': string
+  'cd.getStartedWithCD.gitopsOnboardingDeployStep': string
   'cd.getStartedWithCD.gitopsRedirect.subtitle': string
   'cd.getStartedWithCD.gitopsRedirect.title': string
   'cd.getStartedWithCD.googleGKEHelperText': string

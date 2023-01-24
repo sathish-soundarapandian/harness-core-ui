@@ -48,7 +48,7 @@ export interface SelectDeploymentTypeInterface {
 interface SelectDeploymentTypeProps {
   disableNextBtn: () => void
   enableNextBtn: () => void
-  onSuccess: () => void
+  onSuccess: (selectedDeploymentType: string) => void
 }
 
 export type SelectDeploymentTypeForwardRef =
@@ -84,12 +84,12 @@ const SelectDeploymentTypeRef = (
       label: 'pipeline.serviceDeploymentTypes.kubernetes',
       icon: deploymentIconMap[ServiceDeploymentType.Kubernetes],
       value: ServiceDeploymentType.Kubernetes
+    },
+    {
+      label: 'pipeline.serviceDeploymentTypes.kubernetesWithGitops',
+      icon: deploymentIconMap[ServiceDeploymentType.KubernetesGitops],
+      value: ServiceDeploymentType.KubernetesGitops
     }
-    // {
-    //   label: 'pipeline.serviceDeploymentTypes.kubernetesWithGitops',
-    //   icon: deploymentIconMap[ServiceDeploymentType.KubernetesGitops],
-    //   value: ServiceDeploymentType.KubernetesGitops
-    // }
   ]
 
   useEffect(() => {
@@ -115,7 +115,7 @@ const SelectDeploymentTypeRef = (
       set(draft, 'serviceDefinition.type', selectedDeploymentType?.value as unknown as ServiceDefinition['type'])
     })
     saveServiceData(updatedContextService)
-    onSuccess()
+    onSuccess(selectedDeploymentType?.value)
   }
 
   return (

@@ -559,6 +559,9 @@ getStartedWithCD:
   googleGKEHelperText: replace ZONE with your GCP region, for example us-central1-c
   onboardingTitle: Start your deployments journey with Harness CD
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
+  gitopsOnboardingAgentStep: Connect to Harness by provisioning hosted Agent
+  gitopsOnboardingConfigureStep: Configure the source and destination
+  gitopsOnboardingDeployStep: You are all set!
   runDelegateSubtitle: You can install the Delegate in your target environment.
   delegateInstalled: Delegate installed successfully
   selectDeploymentType: Select deployment type
