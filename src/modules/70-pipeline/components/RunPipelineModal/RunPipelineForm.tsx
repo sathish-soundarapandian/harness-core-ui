@@ -38,7 +38,8 @@ import {
   useRerunStagesWithRuntimeInputYaml,
   useGetStagesExecutionList,
   useValidateTemplateInputs,
-  Failure
+  Failure,
+  useDebugPipelineExecuteWithInputSetYaml
 } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -118,6 +119,7 @@ export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & G
   executionIdentifier?: string
   source: ExecutionPathProps['source']
   storeMetadata?: StoreMetadata
+  isDebugMode?: boolean
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -148,7 +150,8 @@ function RunPipelineFormBasic({
   executionInputSetTemplateYaml = '',
   executionInputSetTemplateYamlError,
   stagesExecuted,
-  executionIdentifier
+  executionIdentifier,
+  isDebugMode
 }: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
   const isNgDeploymentFreezeEnabled = useFeatureFlag(FeatureFlag.NG_DEPLOYMENT_FREEZE)
   const [skipPreFlightCheck, setSkipPreFlightCheck] = useState<boolean>(false)
@@ -366,6 +369,22 @@ function RunPipelineFormBasic({
     originalExecutionId: defaultTo(pipelineExecutionId, '')
   })
 
+  const { mutate: runPipelineInDebugMode, loading: reRunDebugModeLoading } = useDebugPipelineExecuteWithInputSetYaml({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      moduleType: module || ''
+    },
+    identifier: pipelineIdentifier,
+    originalExecutionId: defaultTo(pipelineExecutionId, ''),
+    requestOptions: {
+      headers: {
+        'content-type': 'application/yaml'
+      }
+    }
+  })
+
   const { data: stageExecutionData } = useGetStagesExecutionList({
     queryParams: {
       accountIdentifier: accountId,
@@ -495,7 +514,8 @@ function RunPipelineFormBasic({
     )
   }, [notifyOnlyMe])
 
-  const isExecutingPipeline = runPipelineLoading || reRunPipelineLoading || runStagesLoading || reRunStagesLoading
+  const isExecutingPipeline =
+    runPipelineLoading || reRunPipelineLoading || runStagesLoading || reRunStagesLoading || reRunDebugModeLoading
 
   const handleRunPipeline = useCallback(
     async (valuesPipeline?: PipelineInfoConfig, forceSkipFlightCheck = false) => {
@@ -521,7 +541,9 @@ function RunPipelineFormBasic({
           ? ''
           : yamlStringify({ pipeline: omitBy(valuesPipelineRef.current, (_val, key) => key.startsWith('_')) })
 
-        if (isEmpty(pipelineExecutionId)) {
+        if (isDebugMode) {
+          response = await runPipelineInDebugMode(finalYaml as any)
+        } else if (isEmpty(pipelineExecutionId)) {
           response = selectedStageData.allStagesSelected
             ? await runPipeline(finalYaml as any)
             : await runStage({

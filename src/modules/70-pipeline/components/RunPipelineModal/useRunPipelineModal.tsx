@@ -23,6 +23,7 @@ export interface RunPipelineModalParams {
   executionId?: string
   inputSetSelected?: InputSetSelectorProps['value']
   stagesExecuted?: string[]
+  isDebugMode?: boolean
 }
 
 export interface UseRunPipelineModalReturn {
@@ -41,7 +42,8 @@ export const useRunPipelineModal = (
     connectorRef,
     storeType,
     executionId,
-    stagesExecuted
+    stagesExecuted,
+    isDebugMode
   } = runPipelineModaParams
   const {
     projectIdentifier,
@@ -143,6 +145,7 @@ export const useRunPipelineModal = (
               stagesExecuted={stagesExecuted}
               executionIdentifier={planExecutionId}
               storeMetadata={storeMetadata}
+              isDebugMode={isDebugMode}
             />
             <Button
               aria-label="close modal"

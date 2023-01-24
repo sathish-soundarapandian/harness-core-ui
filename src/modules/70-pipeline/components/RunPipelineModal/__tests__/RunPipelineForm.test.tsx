@@ -149,7 +149,8 @@ jest.mock('services/pipeline-ng', () => ({
   useUpdateInputSetForPipeline: jest.fn().mockImplementation(() => ({ mutate: successResponse })),
   useUpdateOverlayInputSetForPipeline: jest.fn().mockImplementation(() => ({ mutate: successResponse })),
   useYamlDiffForInputSet: jest.fn(() => GetInputSetYamlDiffInline),
-  useDeleteInputSetForPipeline: jest.fn(() => ({ mutate: jest.fn() }))
+  useDeleteInputSetForPipeline: jest.fn(() => ({ mutate: jest.fn() })),
+  useDebugPipelineExecuteWithInputSetYaml: jest.fn().mockImplementation(() => ({ mutate: successResponse }))
 }))
 
 describe('STUDIO MODE', () => {
