@@ -37,6 +37,7 @@ import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextFi
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { Connectors } from '@connectors/constants'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 import type {
   ServiceNowImportSetData,
   ServiceNowImportSetFormContentInterface,
@@ -82,11 +83,14 @@ function FormContent({
         tempErrorMessage = JSON.parse(errorMessage)
         // eslint-disable-next-line no-empty
       } catch (_) {}
-      tempErrorMessage = get(tempErrorMessage, 'error.message', errorMessage)
-      formik.setFieldValue('spec.stagingTableName', '')
+      tempErrorMessage =
+        isMultiTypeRuntime(connectorValueType) || isEmpty(formik.values.spec.connectorRef)
+          ? ''
+          : get(tempErrorMessage, 'error.message', errorMessage)
       handleErrorMessage(tempErrorMessage)
+      formik.setFieldTouched('spec.stagingTableName', true)
     }
-  }, [getServiceNowStagingTablesQuery.error, connectorRefFixedValue])
+  }, [getServiceNowStagingTablesQuery.error, connectorValueType, formik.values.spec.connectorRef])
 
   const stagingTableFixedValue =
     getMultiTypeFromValue(formik.values.spec.stagingTableName) === MultiTypeInputType.FIXED &&
@@ -216,6 +220,8 @@ function FormContent({
             placeholder={
               getServiceNowStagingTablesQuery.loading
                 ? fetchingStagingTableNamePlaceholder
+                : isMultiTypeRuntime(connectorValueType) || isEmpty(formik.values.spec.connectorRef)
+                ? getString('select')
                 : get(getServiceNowStagingTablesQuery, 'error.message', getString('select'))
             }
             useValue

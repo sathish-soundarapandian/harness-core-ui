@@ -1979,7 +1979,7 @@ exports[`ServiceNowImportSet Step Test Edit Stage -> Readonly view: edit-stage-r
                         class="bp3-input"
                         disabled=""
                         name="spec.stagingTableName"
-                        placeholder="Search..."
+                        placeholder="select"
                         style="padding-right: 0px;"
                         type="text"
                         value=""
