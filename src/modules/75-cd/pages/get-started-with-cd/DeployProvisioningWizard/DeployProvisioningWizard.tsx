@@ -342,7 +342,6 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
     history.push(routes.toGetStartedWithCD({ accountId, orgIdentifier, projectIdentifier, module: 'cd' }))
   }
 
-  console.log('selectedDeploymentType', selectedDeploymentType, serviceData)
   const firstStep = [
     DeployProvisiongWizardStepId.SelectDeploymentType,
     {
@@ -648,7 +647,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
         {/* header */}
         <Container className={css.header}>
           <MultiStepProgressIndicator
-            progressMap={multiStepProgressMap}
+            progressMap={multiStepProgressMap as any}
             textClassName={css.stepWizardText}
             barWidth={230}
           />
