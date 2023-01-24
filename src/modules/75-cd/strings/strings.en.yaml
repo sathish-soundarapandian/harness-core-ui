@@ -531,7 +531,11 @@ manifestId: Manifest Id
 azureWebAppRollbackDescription: Rollback to the last successfully deployed app.
 azureWebAppSwapSlotDescription: Azure Swap environment slot with new instance.
 asgCanaryDeleteStepDescription: Asg Canary Delete
+asgRollingDeployStepDescription: Asg Rolling Deploy
 asgRollingRollbackStepDescription: Asg Rolling Rollback
+asgBlueGreenRollbackStepDescription: Asg Blue Green Rollback
+asgBlueGreenSwapServiceStepDescription: Asg Blue Green Swap Service
+downsizeOldAsg: Downsize old ASG
 minimumHealthyPercentageMaxLimit: Minimum Healthy Percentage should be less than 100%
 minimumHealthyPercentageMinLimit: Minimum Healthy Percentage should be positive percentage
 instanceWarmupError: Instance Warmup must be a positive number

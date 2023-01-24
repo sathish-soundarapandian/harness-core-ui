@@ -4874,7 +4874,10 @@ export interface StringsMap {
   'cd.artifactRepoTooltip': string
   'cd.artifactSource.artifactRepositoryTypeIsRequired': string
   'cd.artifactVersion': string
+  'cd.asgBlueGreenRollbackStepDescription': string
+  'cd.asgBlueGreenSwapServiceStepDescription': string
   'cd.asgCanaryDeleteStepDescription': string
+  'cd.asgRollingDeployStepDescription': string
   'cd.asgRollingRollbackStepDescription': string
   'cd.attributeFilters': string
   'cd.awsCli': string
@@ -5006,6 +5009,7 @@ export interface StringsMap {
   'cd.deletedSuccessfully': string
   'cd.deploymentSteps': string
   'cd.deploymentTemplates': string
+  'cd.downsizeOldAsg': string
   'cd.duplicateGitOpsServerIdError': string
   'cd.duplicateIdError': string
   'cd.duplicateStep': string

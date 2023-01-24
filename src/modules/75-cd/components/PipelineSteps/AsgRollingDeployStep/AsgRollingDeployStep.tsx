@@ -339,7 +339,7 @@ export class AsgRollingDeploy extends PipelineStep<AsgRollingDeployData> {
   protected stepName = 'Asg Rolling Deploy'
   protected referenceId = 'asgRollingDeploy'
   protected stepIcon: IconName = 'asg-deploy'
-  protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.AppResize'
+  protected stepDescription: keyof StringsMap = 'cd.asgRollingDeployStepDescription'
   protected isHarnessSpecific = false
   protected defaultValues: AsgRollingDeployData = {
     identifier: '',

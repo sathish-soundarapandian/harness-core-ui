@@ -113,6 +113,8 @@ import { ContainerStep } from './ContainerStep/ContainerStep'
 import { TASRollingRollbackStep } from './TasRollingRollbackStep/TasRollingRollbackStep'
 import { TasRollingDeploymentStep } from './TasRollingDeploymentStep/TasRollingDeploymentStep'
 import { K8sDryRunStep } from './K8sDryRunStep/K8sDryRunStep'
+import { AsgSwapService } from './AsgSwapServiceStep/AsgSwapServiceStep'
+import { AsgBlueGreenRollbackStep } from './AsgBlueGreenRollbackStep/AsgBlueGreenRollbackStep'
 
 factory.registerStep(new CommandScriptsStep())
 factory.registerStep(new EmailStep())
@@ -220,3 +222,5 @@ factory.registerStep(new AsgCanaryDeleteStep())
 factory.registerStep(new AsgCanaryDeployStep())
 factory.registerStep(new AsgRollingRollbackStep())
 factory.registerStep(new AsgRollingDeploy())
+factory.registerStep(new AsgSwapService())
+factory.registerStep(new AsgBlueGreenRollbackStep())
