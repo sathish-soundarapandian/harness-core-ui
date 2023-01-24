@@ -28,6 +28,24 @@ $height: 40px;
     &[data-type='parallel'] > .step {
       cursor: not-allowed;
     }
+
+    .step {
+      &[data-status='notstarted'],
+      &[data-status='queued'] {
+        cursor: not-allowed;
+      }
+    }
+
+    &.active {
+      .step {
+        --icon-color: var(--white);
+        background: var(--primary-2);
+
+        &::before {
+          background: var(--primary-2);
+        }
+      }
+    }
   }
 
   .step {
@@ -91,26 +109,6 @@ $height: 40px;
       white-space: nowrap !important;
       z-index: 1;
       font-size: var(--font-size-xsmall) !important;
-    }
-  }
-
-  .item {
-    .step {
-      &[data-status='notstarted'],
-      &[data-status='queued'] {
-        cursor: not-allowed;
-      }
-    }
-  }
-
-  .item.active {
-    .step {
-      --icon-color: var(--white);
-      background: var(--primary-2);
-
-      &::before {
-        background: var(--primary-2);
-      }
     }
   }
 }

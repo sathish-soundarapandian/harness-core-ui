@@ -14,9 +14,11 @@ declare const styles: {
   readonly accordionSummary: string
   readonly heatmap: string
   readonly icon: string
+  readonly inputWaiting: string
   readonly mainAccordion: string
   readonly mainContainer: string
   readonly spinner: string
+  readonly stageName: string
   readonly statusHeader: string
 }
 export default styles

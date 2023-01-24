@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Container } from '@harness/uicore'
+import React, { useState } from 'react'
+import { Container, Dialog } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { defaultTo, get, has } from 'lodash-es'
 
@@ -14,14 +14,15 @@ import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import factory from '@pipeline/factories/ExecutionFactory'
 import { isExecutionSkipped } from '@pipeline/utils/statusHelpers'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import { useGetExecutionNode } from 'services/pipeline-ng'
+import { ExecutionNode, useGetExecutionNode } from 'services/pipeline-ng'
 import type { ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ConsoleViewStepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
+import { ExecutionInputs } from '@pipeline/components/execution/StepDetails/tabs/ExecutionInputs/ExecutionInputs'
 import { StageSelection } from './StageSelection/StageSelection'
 import css from './ExecutionLogView.module.scss'
 
 export default function ExecutionLogView(): React.ReactElement {
-  const { allNodeMap, selectedStepId, queryParams, addNewNodeToMap } = useExecutionContext()
+  const { allNodeMap, selectedStepId, queryParams, addNewNodeToMap, pipelineExecutionDetail } = useExecutionContext()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ExecutionPathProps>()
   const { data: executionNode, loading } = useGetExecutionNode({
     queryParams: {
@@ -37,11 +38,24 @@ export default function ExecutionLogView(): React.ReactElement {
      */
     lazy: !queryParams.retryStep || has(allNodeMap, queryParams.retryStep)
   })
+  const [executionInputStep, setExecutionInputStep] = useState<ExecutionNode | null>(null)
 
   const selectedStep = allNodeMap[selectedStepId]
   const errorMessage =
     get(selectedStep, 'failureInfo.message') || get(selectedStep, 'executableResponses[0].skipTask.message')
   const isSkipped = isExecutionSkipped(selectedStep?.status)
+  const openExecutionTimeInputsForStep = React.useCallback(
+    (node?: ExecutionNode): void => {
+      if (node) {
+        setExecutionInputStep(node)
+      }
+    },
+    [setExecutionInputStep]
+  )
+
+  const closeExecutionTimeInputsModal = React.useCallback((): void => {
+    setExecutionInputStep(null)
+  }, [setExecutionInputStep])
 
   const stepDetails = factory.getConsoleViewStepDetails(selectedStep?.stepType as StepType)
 
@@ -55,13 +69,35 @@ export default function ExecutionLogView(): React.ReactElement {
 
   return (
     <Container className={css.logsContainer}>
-      <StageSelection />
+      <StageSelection openExecutionTimeInputsForStep={openExecutionTimeInputsForStep} />
       {React.createElement<ConsoleViewStepDetailProps>(stepDetails.component, {
         step: selectedStep,
         errorMessage,
         isSkipped,
         loading
       })}
+      <Dialog
+        title={defaultTo(executionInputStep?.name, '')}
+        lazy
+        isOpen={!!executionInputStep}
+        enforceFocus={false}
+        onClose={closeExecutionTimeInputsModal}
+        className={css.executionInputDialog}
+      >
+        {executionInputStep ? (
+          <ExecutionInputs
+            step={executionInputStep}
+            className={css.executionInput}
+            executionMetadata={defaultTo(
+              pipelineExecutionDetail?.childGraph?.executionGraph?.executionMetadata,
+              defaultTo(pipelineExecutionDetail?.executionGraph?.executionMetadata, {})
+            )}
+            onSuccess={closeExecutionTimeInputsModal}
+          />
+        ) : (
+          <div />
+        )}
+      </Dialog>
     </Container>
   )
 }
