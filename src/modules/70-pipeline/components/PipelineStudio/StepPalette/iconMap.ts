@@ -67,6 +67,7 @@ export const iconMapByName: iconMapOptions = {
   'Continuous Verification': { icon: 'cv-solid-current-color' },
   Jira: { icon: 'step-jira', keepOriginal: true },
   Approval: { icon: 'approval-stage-icon' },
+  Terragrunt: { icon: 'service-terragrunt', keepOriginal: true },
   Terraform: { icon: 'service-terraform' },
   'Serverless Lambda': {
     icon: 'service-serverless'
