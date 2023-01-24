@@ -6,10 +6,11 @@
  */
 
 import React from 'react'
-import { render, waitFor } from '@testing-library/react'
+import { findByText, render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
+
+import * as cdng from 'services/cd-ng'
 
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -117,6 +118,13 @@ describe('Azure Artifacts tests', () => {
   })
 
   test('clicking on projects dropdown', async () => {
+    jest.spyOn(cdng, 'useListProjectsForAzureArtifacts').mockImplementation((): any => {
+      return {
+        loading: true,
+        data: null,
+        refetch: fetchProjects
+      }
+    })
     const initialValues = {
       identifier: '',
 
@@ -137,11 +145,16 @@ describe('Azure Artifacts tests', () => {
 
     const portalDivs = document.getElementsByClassName('bp3-portal')
     expect(portalDivs.length).toBe(0)
-    const projectDropdownBtn = container.querySelector('[data-id=project-2] .bp3-icon-chevron-down')
+    const projectDropdownBtn = container.querySelectorAll('[data-icon="chevron-down"]')[1]
 
     userEvent.click(projectDropdownBtn!)
 
     expect(portalDivs.length).toBe(1)
+    const dropdownPortalDiv = portalDivs[0]
+    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
+
+    const loadingBucketsOption = await findByText(selectListMenu as HTMLElement, 'Loading Projects...')
+    expect(loadingBucketsOption).toBeDefined()
     await waitFor(() => expect(fetchProjects).toHaveBeenCalledTimes(1))
   })
 })
