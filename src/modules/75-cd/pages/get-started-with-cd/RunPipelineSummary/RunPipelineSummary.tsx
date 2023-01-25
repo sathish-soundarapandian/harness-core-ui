@@ -101,7 +101,7 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId }: RunPipelineSumm
                 name="Edit"
                 size={18}
                 color={Color.PRIMARY_7}
-                onClick={() => setSelectedSectionId(DeployProvisiongWizardStepId.DelegateSelector)}
+                onClick={() => setSelectedSectionId(DeployProvisiongWizardStepId.Deploy)}
               />
             </Layout.Horizontal>
             {successsFullConfiguration}
@@ -154,7 +154,7 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId }: RunPipelineSumm
                 name="Edit"
                 size={18}
                 color={Color.PRIMARY_7}
-                onClick={() => setSelectedSectionId(DeployProvisiongWizardStepId.ConfigureService)}
+                onClick={() => setSelectedSectionId(DeployProvisiongWizardStepId.Configure)}
               />
             </Layout.Horizontal>
             {successsFullConfiguration}
