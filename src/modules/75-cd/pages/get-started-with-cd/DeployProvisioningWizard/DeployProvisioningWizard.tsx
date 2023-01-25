@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Container,
   Button,
@@ -42,7 +42,7 @@ import { WizardStep, StepStatus, DeployProvisiongWizardStepId, DeployProvisionin
 import { SelectDeploymentType, SelectDeploymentTypeRefInstance } from '../SelectWorkload/SelectDeploymentType'
 import type { SelectInfrastructureRefInstance } from '../SelectInfrastructure/SelectInfrastructure'
 import { DelegateSelectorRefInstance, DelegateSelectorWizard } from '../DelegateSelectorWizard/DelegateSelectorWizard'
-import { ConfigureService } from '../ConfigureService/ConfigureService'
+import { Configure } from '../ConfigureService/ConfigureService'
 import {
   DEFAULT_PIPELINE_NAME,
   DEFAULT_PIPELINE_PAYLOAD,
@@ -53,6 +53,7 @@ import {
 } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import RunPipelineSummary from '../RunPipelineSummary/RunPipelineSummary'
+import { ConfigureGitops } from '../ConfigureGitops/ConfigureGitops'
 import commonCss from '../GetStartedWithCD.module.scss'
 import css from './DeployProvisioningWizard.module.scss'
 
@@ -65,7 +66,7 @@ const WizardStepOrder = [
 ]
 
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {
-  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.RunPipeline } = props
+  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.Deploy } = props
   const {
     state: { service: serviceData, infrastructure, environment }
   } = useCDOnboardingContext()
@@ -243,14 +244,14 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
 
   const moveToConfigureService = (): void => {
     setDisableBtn(true)
-    setSelectedSectionId(DeployProvisiongWizardStepId.ConfigureService)
-    setCurrentWizardStepId(DeployProvisiongWizardStepId.ConfigureService)
+    setSelectedSectionId(DeployProvisiongWizardStepId.Configure)
+    setCurrentWizardStepId(DeployProvisiongWizardStepId.Configure)
     updateStepStatus(
-      [DeployProvisiongWizardStepId.SelectDeploymentType, DeployProvisiongWizardStepId.DelegateSelector],
+      [DeployProvisiongWizardStepId.SelectDeploymentType, DeployProvisiongWizardStepId.Connect],
       StepStatus.Success
     )
-    updateStepStatus([DeployProvisiongWizardStepId.ConfigureService], StepStatus.InProgress)
-    updateStepStatus([DeployProvisiongWizardStepId.RunPipeline], StepStatus.ToDo)
+    updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.InProgress)
+    updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
     trackEvent(CDOnboardingActions.MoveToServiceSelection, {})
   }
 
@@ -348,20 +349,14 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       stepRender: (
         <SelectDeploymentType
           ref={SelectDeploymentTypeRef}
-          onSuccess={deploymentType => {
+          onSuccess={() => {
             setDisableBtn(true)
-            if (deploymentType === ServiceDeploymentType.KubernetesGitops) {
-              setSelectedSectionId(DeployProvisiongWizardStepId.Connect)
-              setCurrentWizardStepId(DeployProvisiongWizardStepId.Connect)
-              updateStepStatus([DeployProvisiongWizardStepId.Connect], StepStatus.InProgress)
-            } else {
-              setSelectedSectionId(DeployProvisiongWizardStepId.DelegateSelector)
-              setCurrentWizardStepId(DeployProvisiongWizardStepId.DelegateSelector)
-              updateStepStatus([DeployProvisiongWizardStepId.DelegateSelector], StepStatus.InProgress)
-            }
+            setSelectedSectionId(DeployProvisiongWizardStepId.Connect)
+            setCurrentWizardStepId(DeployProvisiongWizardStepId.Connect)
+            updateStepStatus([DeployProvisiongWizardStepId.Connect], StepStatus.InProgress)
             updateStepStatus([DeployProvisiongWizardStepId.SelectDeploymentType], StepStatus.Success)
-            updateStepStatus([DeployProvisiongWizardStepId.ConfigureService], StepStatus.ToDo)
-            updateStepStatus([DeployProvisiongWizardStepId.RunPipeline], StepStatus.ToDo)
+            updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.ToDo)
+            updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
             trackEvent(CDOnboardingActions.MovetoConfigureEnvironment, {})
           }}
           disableNextBtn={() => setDisableBtn(true)}
@@ -404,13 +399,13 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           trackEvent(CDOnboardingActions.MoveToServiceSelection, {})
         },
 
-        stepFooterLabel: 'common.configure'
+        stepFooterLabel: 'connectors.ceAws.curExtention.stepB.step1.p1'
       }
     ],
     [
       DeployProvisiongWizardStepId.Configure,
       {
-        stepRender: <div>{getString('cd.getStartedWithCD.gitopsOnboardingConfigureStep')}</div>,
+        stepRender: <ConfigureGitops ref={delegateSelectorRef} />,
         onClickBack: () => {
           setSelectedSectionId(DeployProvisiongWizardStepId.Connect)
           setCurrentWizardStepId(DeployProvisiongWizardStepId.Connect)
@@ -443,7 +438,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
 
   const CDWizardSteps: any = [
     [
-      DeployProvisiongWizardStepId.DelegateSelector,
+      DeployProvisiongWizardStepId.Connect,
       {
         stepRender: (
           <>
@@ -457,7 +452,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
         onClickBack: () => {
           setSelectedSectionId(DeployProvisiongWizardStepId.SelectDeploymentType)
           setCurrentWizardStepId(DeployProvisiongWizardStepId.SelectDeploymentType)
-          updateStepStatus([DeployProvisiongWizardStepId.DelegateSelector], StepStatus.ToDo)
+          updateStepStatus([DeployProvisiongWizardStepId.Connect], StepStatus.ToDo)
           trackEvent(CDOnboardingActions.SelectDeploymentType, {})
         },
         onClickNext: async () => {
@@ -469,18 +464,18 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       }
     ],
     [
-      DeployProvisiongWizardStepId.ConfigureService,
+      DeployProvisiongWizardStepId.Configure,
       {
         stepRender: (
-          <ConfigureService
+          <Configure
             onSuccess={() => {
-              setSelectedSectionId(DeployProvisiongWizardStepId.RunPipeline)
-              setCurrentWizardStepId(DeployProvisiongWizardStepId.RunPipeline)
+              setSelectedSectionId(DeployProvisiongWizardStepId.Deploy)
+              setCurrentWizardStepId(DeployProvisiongWizardStepId.Deploy)
               updateStepStatus(
                 [
                   DeployProvisiongWizardStepId.SelectDeploymentType,
-                  DeployProvisiongWizardStepId.DelegateSelector,
-                  DeployProvisiongWizardStepId.ConfigureService
+                  DeployProvisiongWizardStepId.Connect,
+                  DeployProvisiongWizardStepId.Configure
                 ],
                 StepStatus.Success
               )
@@ -488,7 +483,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
                 setServiceIdentifier(serviceData.identifier)
                 refetchServicesData()
               }
-              updateStepStatus([DeployProvisiongWizardStepId.RunPipeline], StepStatus.InProgress)
+              updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.InProgress)
               trackEvent(CDOnboardingActions.MoveToPipelineSummary, {})
             }}
             ref={configureServiceRef}
@@ -497,9 +492,9 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           />
         ),
         onClickBack: () => {
-          setSelectedSectionId(DeployProvisiongWizardStepId.DelegateSelector)
-          setCurrentWizardStepId(DeployProvisiongWizardStepId.DelegateSelector)
-          updateStepStatus([DeployProvisiongWizardStepId.ConfigureService], StepStatus.ToDo)
+          setSelectedSectionId(DeployProvisiongWizardStepId.Connect)
+          setCurrentWizardStepId(DeployProvisiongWizardStepId.Connect)
+          updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.ToDo)
           trackEvent(CDOnboardingActions.MovetoConfigureEnvironment, {})
         },
         onClickNext: async () => {
@@ -514,7 +509,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       }
     ],
     [
-      DeployProvisiongWizardStepId.RunPipeline,
+      DeployProvisiongWizardStepId.Deploy,
       {
         stepRender: (
           <RunPipelineSummary
@@ -530,9 +525,9 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
               updateStepStatus(
                 [
                   DeployProvisiongWizardStepId.SelectDeploymentType,
-                  DeployProvisiongWizardStepId.DelegateSelector,
-                  DeployProvisiongWizardStepId.ConfigureService,
-                  DeployProvisiongWizardStepId.RunPipeline
+                  DeployProvisiongWizardStepId.Connect,
+                  DeployProvisiongWizardStepId.Configure,
+                  DeployProvisiongWizardStepId.Deploy
                 ],
                 StepStatus.Success
               )
@@ -541,8 +536,8 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           />
         ),
         onClickBack: () => {
-          setCurrentWizardStepId(DeployProvisiongWizardStepId.ConfigureService)
-          updateStepStatus([DeployProvisiongWizardStepId.RunPipeline], StepStatus.ToDo)
+          setCurrentWizardStepId(DeployProvisiongWizardStepId.Configure)
+          updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
         },
         stepFooterLabel: 'common.createPipeline'
       }
@@ -562,76 +557,44 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
     wizardStepStatus.get(name) !== StepStatus.ToDo && setCurrentWizardStepId(name)
   }
 
-  const firstProgressStep = [
-    0,
-    {
-      StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.SelectDeploymentType), StepStatus.ToDo),
-      StepName: getString('cd.getStartedWithCD.selectDeploymentType'),
-      onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.SelectDeploymentType)
-    }
-  ]
-
-  const gitopsProgressSteps: any = [
-    [
-      1,
-      {
-        StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.Connect), StepStatus.ToDo),
-        StepName: getString('common.connect'),
-        onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.Connect)
-      }
-    ],
-    [
-      2,
-      {
-        StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.Configure), StepStatus.ToDo),
-        StepName: getString('common.configure'),
-        onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.Configure)
-      }
-    ],
-    [
-      3,
-      {
-        StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.Deploy), StepStatus.ToDo),
-        StepName: getString('common.deploy'),
-        onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.Deploy)
-      }
-    ]
-  ]
-
-  const nonGitopsProgressSteps: any = [
-    [
-      1,
-      {
-        StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.DelegateSelector), StepStatus.ToDo),
-        StepName: getString('common.connectEnvironment'),
-        onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.DelegateSelector)
-      }
-    ],
-    [
-      2,
-      {
-        StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.ConfigureService), StepStatus.ToDo),
-        StepName: getString('common.configureService'),
-        onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.ConfigureService)
-      }
-    ],
-    [
-      3,
-      {
-        StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.RunPipeline), StepStatus.ToDo),
-        StepName: getString('runPipeline'),
-        onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.RunPipeline)
-      }
-    ]
-  ]
-
   const multiStepProgressMap = React.useMemo(
     () =>
       new Map([
-        firstProgressStep,
-        ...(selectedDeploymentType === ServiceDeploymentType.KubernetesGitops
-          ? gitopsProgressSteps
-          : nonGitopsProgressSteps)
+        [
+          0,
+          {
+            StepStatus: defaultTo(
+              wizardStepStatus.get(DeployProvisiongWizardStepId.SelectDeploymentType),
+              StepStatus.ToDo
+            ),
+            StepName: getString('cd.getStartedWithCD.selectDeploymentType'),
+            onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.SelectDeploymentType)
+          }
+        ],
+        [
+          1,
+          {
+            StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.Connect), StepStatus.ToDo),
+            StepName: getString('common.connect'),
+            onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.Connect)
+          }
+        ],
+        [
+          2,
+          {
+            StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.Configure), StepStatus.ToDo),
+            StepName: getString('connectors.ceAws.curExtention.stepB.step1.p1'),
+            onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.Configure)
+          }
+        ],
+        [
+          3,
+          {
+            StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.Deploy), StepStatus.ToDo),
+            StepName: getString('pipelineSteps.deploy.create.deployStageName'),
+            onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.Deploy)
+          }
+        ]
       ]),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [getString, wizardStepStatus]
@@ -687,7 +650,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
               onClick={() => onClickBack?.()}
             />
           )}
-          {currentWizardStepId !== DeployProvisiongWizardStepId.RunPipeline && (
+          {currentWizardStepId !== DeployProvisiongWizardStepId.Deploy && (
             <Button
               text={buttonLabel}
               variation={ButtonVariation.PRIMARY}

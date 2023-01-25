@@ -1211,9 +1211,7 @@ sloDowntimeLabel: SLO Downtime
 connectGitRepo: Connect to Git Repository
 clickToExpand: Click to expand
 configureService: Configure Service
-configure: Configure
 connect: Connect
-deploy: Deploy
 connectEnvironment: Connect to Environment
 moduleOverviewLabel:
   cv: Manage Service Level Objectives

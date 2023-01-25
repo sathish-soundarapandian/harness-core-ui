@@ -158,7 +158,6 @@ export interface StringsMap {
   'common.confictOccured': string
   'common.config': string
   'common.configDetails': string
-  'common.configure': string
   'common.configureJfrog': string
   'common.configureModuleList': string
   'common.configureNav': string
@@ -228,7 +227,6 @@ export interface StringsMap {
   'common.deleteServiceConfirmation': string
   'common.deleteServiceFailure': string
   'common.deleteServiceMessage': string
-  'common.deploy': string
   'common.deployToEntity': string
   'common.deployToFilteredList': string
   'common.deploymentTemplateSteps': string
@@ -5095,6 +5093,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.deployToGitops': string
   'cd.getStartedWithCD.deploymentType': string
   'cd.getStartedWithCD.directK8s': string
+  'cd.getStartedWithCD.doesntHaveGitRepo': string
   'cd.getStartedWithCD.entityCreationTitle': string
   'cd.getStartedWithCD.envName': string
   'cd.getStartedWithCD.environmentDetails': string
@@ -5102,11 +5101,13 @@ export interface StringsMap {
   'cd.getStartedWithCD.gitopsOnboardingAgentStep': string
   'cd.getStartedWithCD.gitopsOnboardingConfigureStep': string
   'cd.getStartedWithCD.gitopsOnboardingDeployStep': string
+  'cd.getStartedWithCD.gitopsOnboardingSource': string
   'cd.getStartedWithCD.gitopsRedirect.subtitle': string
   'cd.getStartedWithCD.gitopsRedirect.title': string
   'cd.getStartedWithCD.googleGKEHelperText': string
   'cd.getStartedWithCD.googleK8s': string
   'cd.getStartedWithCD.harnessFileStore': string
+  'cd.getStartedWithCD.haveGitRepo': string
   'cd.getStartedWithCD.helm': string
   'cd.getStartedWithCD.helpAndTroubleshoot': string
   'cd.getStartedWithCD.hideDelegateDetails': string

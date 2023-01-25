@@ -48,7 +48,7 @@ export interface SelectDeploymentTypeInterface {
 interface SelectDeploymentTypeProps {
   disableNextBtn: () => void
   enableNextBtn: () => void
-  onSuccess: (selectedDeploymentType: string) => void
+  onSuccess: () => void
 }
 
 export type SelectDeploymentTypeForwardRef =
@@ -115,7 +115,7 @@ const SelectDeploymentTypeRef = (
       set(draft, 'serviceDefinition.type', selectedDeploymentType?.value as unknown as ServiceDefinition['type'])
     })
     saveServiceData(updatedContextService)
-    onSuccess(selectedDeploymentType?.value)
+    onSuccess()
   }
 
   return (

@@ -18,7 +18,13 @@ import {
   CDOnboardingReducerState,
   initialState
 } from './CDOnboardingActions'
-import { DelegateDataType, DrawerMode, InfrastructureDataType, ServiceDataType } from './CDOnboardingUtils'
+import {
+  DelegateDataType,
+  DrawerMode,
+  InfrastructureDataType,
+  RepoDataType,
+  ServiceDataType
+} from './CDOnboardingUtils'
 
 export interface WizardStepQueryParams {
   sectionId?: string | null
@@ -36,6 +42,7 @@ export interface CDOnboardingContextInterface {
   saveEnvironmentData: (data: EnvironmentRequestDTO) => void
   saveInfrastructureData: (data: InfrastructureDataType) => void
   saveDelegateData: (data: DelegateDataType) => void
+  saveRepositoryData: (data: RepoDataType) => void
 }
 const initialDrawerData = { fileContent: undefined, mode: DrawerMode.Preview }
 
@@ -45,6 +52,7 @@ export const CDOnboardingContext = React.createContext<CDOnboardingContextInterf
   setDrawerData: noop,
   saveServiceData: () => new Promise<void>(() => undefined),
   saveEnvironmentData: () => new Promise<void>(() => undefined),
+  saveRepositoryData: () => new Promise<void>(() => undefined),
   saveInfrastructureData: () => new Promise<void>(() => undefined),
   saveDelegateData: () => new Promise<void>(() => undefined)
 })
@@ -99,10 +107,15 @@ export function CDOnboardingProvider({
     dispatch(CDOnboardingContextActions.updateDelegate({ delegate: data }))
   }, [])
 
+  const saveRepositoryData = React.useCallback((data: RepoDataType) => {
+    dispatch(CDOnboardingContextActions.updateDelegate({ repository: data }))
+  }, [])
+
   return (
     <CDOnboardingContext.Provider
       value={{
         state,
+        saveRepositoryData,
         saveServiceData,
         saveEnvironmentData,
         saveInfrastructureData,

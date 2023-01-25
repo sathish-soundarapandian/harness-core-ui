@@ -560,9 +560,12 @@ getStartedWithCD:
   onboardingTitle: Start your deployments journey with Harness CD
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
   gitopsOnboardingAgentStep: Connect to Harness by provisioning hosted Agent
+  gitopsOnboardingSource: Where is your source?
   gitopsOnboardingConfigureStep: Configure the source and destination
   gitopsOnboardingDeployStep: You are all set!
   runDelegateSubtitle: You can install the Delegate in your target environment.
+  haveGitRepo: Do you have a git repo you can connect to?
+  doesntHaveGitRepo: No, connect to sample source
   delegateInstalled: Delegate installed successfully
   selectDeploymentType: Select deployment type
   deployToGitops: Do you want to deploy using GitOps?
