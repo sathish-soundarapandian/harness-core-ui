@@ -28,9 +28,9 @@ declare const styles: {
   readonly listContainerCss: string
   readonly listItemCss: string
   readonly paddingXSmall: string
+  readonly progressItem: string
   readonly provisioningText: string
   readonly samplePipeline: string
-  readonly sectionNumberBlue: string
   readonly separator: string
   readonly topPage: string
 }

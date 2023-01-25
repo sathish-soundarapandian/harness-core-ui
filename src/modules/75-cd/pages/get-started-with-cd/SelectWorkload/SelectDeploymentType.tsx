@@ -159,7 +159,7 @@ const SelectDeploymentTypeRef = (
                           <>
                             <Layout.Vertical flex>
                               <Icon name={item.icon} size={48} flex className={css.serviceDeploymentTypeIcon} />
-                              <Text font={{ variation: FontVariation.BODY2 }} className={css.text1}>
+                              <Text font={{ variation: FontVariation.CARD_TITLE }} className={css.text1}>
                                 {getString(item.label)}
                               </Text>
                             </Layout.Vertical>
@@ -184,11 +184,7 @@ const SelectDeploymentTypeRef = (
                       ) : null}
                     </Container>
                     <Link to={routes.toPipelines({ orgIdentifier, projectIdentifier, accountId, module: 'cd' })}>
-                      <Text
-                        color={Color.PRIMARY_7}
-                        font={{ variation: FontVariation.SMALL_SEMI }}
-                        margin={{ top: 'huge' }}
-                      >
+                      <Text color={Color.PRIMARY_7} font={{ variation: FontVariation.BODY2 }} margin={{ top: 'huge' }}>
                         {getString('cd.getStartedWithCD.clickForOtherDeploymentTypes')}
                       </Text>
                     </Link>

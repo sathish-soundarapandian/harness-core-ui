@@ -42,6 +42,7 @@
 }
 .text1 {
   padding-top: var(--spacing-xxxlarge) !important;
+  text-align: center;
 }
 
 .formInput {
@@ -63,6 +64,7 @@
   height: 120px;
   width: 120px;
   margin-right: var(--spacing-large);
+  padding: var(--spacing-large) 0 !important;
 }
 
 .serviceDeploymentTypeIcon {

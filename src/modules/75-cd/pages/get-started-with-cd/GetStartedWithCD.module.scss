@@ -120,7 +120,6 @@
   align-items: center;
   color: var(--grey-800);
   padding-bottom: var(--spacing-xsmall);
-  padding-left: var(--spacing-xxxlarge);
 }
 
 .provisioningText {
@@ -136,20 +135,6 @@
   margin-right: var(--spacing-small);
 }
 
-.sectionNumberBlue {
-  width: 20px;
-  height: 20px;
-  background: var(--primary-7);
-  box-shadow: 0px 0px 1px rgb(40 41 61 / 8%), 0px 0.5px 2px rgb(96 97 112 / 16%);
-  color: var(--primary-light-hover);
-  border-radius: 50%;
-  margin-left: 8px;
-  margin-right: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-}
-
 .agentFirstSection {
   display: flex;
   align-items: center;
@@ -159,7 +144,6 @@
 .agentSecondSection {
   display: flex;
   align-items: center;
-  margin-top: var(--spacing-large);
   margin-bottom: var(--spacing-small);
 }
 
@@ -167,4 +151,9 @@
   display: flex;
   align-items: center;
   margin-top: var(--spacing-large);
+}
+
+.progressItem:after {
+  border-color: var(--primary-7) !important;
+  background-color: var(--primary-7) !important;
 }

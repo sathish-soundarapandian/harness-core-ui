@@ -27,6 +27,7 @@ export interface WizardStep {
   onClickNext?: () => void
   onClickBack?: () => void
   stepFooterLabel?: keyof StringsMap
+  showFooter?: boolean
 }
 
 export enum ProvisioningStatus {

@@ -21,7 +21,7 @@ import {
 } from '@harness/uicore'
 import cx from 'classnames'
 import { Color, Intent } from '@harness/design-system'
-import { defaultTo, get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty, noop } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
 import { Classes, IDialogProps } from '@blueprintjs/core'
@@ -54,6 +54,7 @@ import {
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import RunPipelineSummary from '../RunPipelineSummary/RunPipelineSummary'
 import { ConfigureGitops } from '../ConfigureGitops/ConfigureGitops'
+import { GitOpsAgent } from '../GitOpsAgent/GitOpsAgent'
 import commonCss from '../GetStartedWithCD.module.scss'
 import css from './DeployProvisioningWizard.module.scss'
 
@@ -379,26 +380,31 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
     [
       DeployProvisiongWizardStepId.Connect,
       {
-        stepRender: <div>{getString('cd.getStartedWithCD.gitopsOnboardingAgentStep')}</div>,
-        onClickBack: () => {
-          setSelectedSectionId(DeployProvisiongWizardStepId.SelectDeploymentType)
-          setCurrentWizardStepId(DeployProvisiongWizardStepId.SelectDeploymentType)
-          updateStepStatus([DeployProvisiongWizardStepId.Connect], StepStatus.ToDo)
-          trackEvent(CDOnboardingActions.SelectDeploymentType, {})
-        },
-        onClickNext: async () => {
-          setDisableBtn(true)
-          setSelectedSectionId(DeployProvisiongWizardStepId.Configure)
-          setCurrentWizardStepId(DeployProvisiongWizardStepId.Configure)
-          updateStepStatus(
-            [DeployProvisiongWizardStepId.SelectDeploymentType, DeployProvisiongWizardStepId.Connect],
-            StepStatus.Success
-          )
-          updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.InProgress)
-          updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
-          trackEvent(CDOnboardingActions.MoveToServiceSelection, {})
-        },
-
+        stepRender: (
+          <GitOpsAgent
+            onBack={() => {
+              setSelectedSectionId(DeployProvisiongWizardStepId.SelectDeploymentType)
+              setCurrentWizardStepId(DeployProvisiongWizardStepId.SelectDeploymentType)
+              updateStepStatus([DeployProvisiongWizardStepId.Connect], StepStatus.ToDo)
+              trackEvent(CDOnboardingActions.SelectDeploymentType, {})
+            }}
+            onNext={() => {
+              setDisableBtn(true)
+              setSelectedSectionId(DeployProvisiongWizardStepId.Configure)
+              setCurrentWizardStepId(DeployProvisiongWizardStepId.Configure)
+              updateStepStatus(
+                [DeployProvisiongWizardStepId.SelectDeploymentType, DeployProvisiongWizardStepId.Connect],
+                StepStatus.Success
+              )
+              updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.InProgress)
+              updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
+              trackEvent(CDOnboardingActions.MoveToServiceSelection, {})
+            }}
+          />
+        ),
+        showFooter: false,
+        onClickBack: noop,
+        onClickNext: noop,
         stepFooterLabel: 'connectors.ceAws.curExtention.stepB.step1.p1'
       }
     ],
@@ -549,7 +555,13 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
     ...(selectedDeploymentType === ServiceDeploymentType.KubernetesGitops ? WizardStepsgitOpsEnabled : CDWizardSteps)
   ])
 
-  const { stepRender, onClickBack, onClickNext, stepFooterLabel } = WizardSteps.get(currentWizardStepId) ?? {}
+  const {
+    stepRender,
+    onClickBack,
+    onClickNext,
+    stepFooterLabel,
+    showFooter = true
+  } = WizardSteps.get(currentWizardStepId) ?? {}
 
   const buttonLabel = stepFooterLabel ? `${getString('next')}: ${getString(stepFooterLabel)}` : getString('next')
 
@@ -639,28 +651,30 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       </Layout.Vertical>
 
       {/* footer */}
-      <Layout.Vertical padding={{ left: 'huge' }} className={css.footer}>
-        <Layout.Horizontal spacing="medium" padding={{ top: 'medium', bottom: 'large' }} width="100%">
-          {currentWizardStepId !== DeployProvisiongWizardStepId.SelectDeploymentType && (
-            <Button
-              variation={ButtonVariation.SECONDARY}
-              text={getString('back')}
-              icon="chevron-left"
-              minimal
-              onClick={() => onClickBack?.()}
-            />
-          )}
-          {currentWizardStepId !== DeployProvisiongWizardStepId.Deploy && (
-            <Button
-              text={buttonLabel}
-              variation={ButtonVariation.PRIMARY}
-              rightIcon="chevron-right"
-              onClick={() => onClickNext?.()}
-              disabled={disableBtn}
-            />
-          )}
-        </Layout.Horizontal>
-      </Layout.Vertical>
+      {showFooter ? (
+        <Layout.Vertical padding={{ left: 'huge' }} className={css.footer}>
+          <Layout.Horizontal spacing="medium" padding={{ top: 'medium', bottom: 'large' }} width="100%">
+            {currentWizardStepId !== DeployProvisiongWizardStepId.SelectDeploymentType && (
+              <Button
+                variation={ButtonVariation.SECONDARY}
+                text={getString('back')}
+                icon="chevron-left"
+                minimal
+                onClick={() => onClickBack?.()}
+              />
+            )}
+            {currentWizardStepId !== DeployProvisiongWizardStepId.Deploy && (
+              <Button
+                text={buttonLabel}
+                variation={ButtonVariation.PRIMARY}
+                rightIcon="chevron-right"
+                onClick={() => onClickNext?.()}
+                disabled={disableBtn}
+              />
+            )}
+          </Layout.Horizontal>
+        </Layout.Vertical>
+      ) : null}
     </Layout.Vertical>
   ) : null
 }
