@@ -6,16 +6,9 @@
  */
 
 import React from 'react'
-import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
-import cx from 'classnames'
+import { Button, ButtonVariation, Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { ExecutionListProps } from '@pipeline/pages/execution-list/ExecutionList'
-import emptyExecutionList from '@pipeline/pages/execution-list/images/cd-execution-illustration.svg'
-import {
-  getIsAnyFilterApplied,
-  useExecutionListQueryParams
-} from '@pipeline/pages/execution-list/utils/executionListUtil'
 import emptyInstanceDetail from '@pipeline/icons/emptyInstanceDetail.svg'
 import emptyServiceDetail from '@pipeline/icons/emptyServiceDetail.svg'
 import noDataFound from '@pipeline/icons/noDataFound.svg'
@@ -61,41 +54,6 @@ export function ServiceDetailEmptyState(): JSX.Element {
     <Container className={css.serviceDetailEmptyState}>
       <img src={emptyServiceDetail} alt={getString('cd.environmentDetailPage.emptyServiceDetailMsg')} />
       <Text>{getString('cd.environmentDetailPage.emptyServiceDetailMsg')}</Text>
-    </Container>
-  )
-}
-
-export function ExecutionListEmptyState({
-  resetFilter
-}: Pick<ExecutionListProps, 'isPipelineInvalid'> & { resetFilter: () => void }): JSX.Element {
-  const { getString } = useStrings()
-  const queryParams = useExecutionListQueryParams()
-  const isAnyFilterApplied = getIsAnyFilterApplied(queryParams)
-
-  return (
-    <Container className={cx(css.serviceDetailEmptyState, css.executionListEmpty)}>
-      {isAnyFilterApplied ? (
-        <Layout.Vertical flex={{ alignItems: 'center' }}>
-          <img src={noDataFound} alt={getString('common.filters.noResultsFound')} />
-          <Text
-            margin={{ top: 'large', bottom: 'small' }}
-            font={{ weight: 'bold', size: 'medium' }}
-            color={Color.GREY_800}
-          >
-            {getString('common.filters.noResultsFound')}
-          </Text>
-          <Button
-            text={getString('common.filters.clearFilters')}
-            variation={ButtonVariation.LINK}
-            onClick={resetFilter}
-          />
-        </Layout.Vertical>
-      ) : (
-        <Layout.Vertical>
-          <img src={emptyExecutionList} alt={getString('cd.environmentDetailPage.emptyExecutionListMsg')} />
-          <Text>{getString('cd.environmentDetailPage.emptyExecutionListMsg')}</Text>
-        </Layout.Vertical>
-      )}
     </Container>
   )
 }

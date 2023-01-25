@@ -3686,6 +3686,7 @@ export interface StringsMap {
   'pipeline.duplicateImportTemplate': string
   'pipeline.duplicateStepIdentifiers': string
   'pipeline.duration': string
+  'pipeline.emptyExecutionListMsg': string
   'pipeline.enableVerificationHelpText': string
   'pipeline.enableVerificationOptions': string
   'pipeline.enableVerificationTitle': string
@@ -5153,7 +5154,6 @@ export interface StringsMap {
   'cd.environmentCreated': string
   'cd.environmentDelete': string
   'cd.environmentDeleteMessage': string
-  'cd.environmentDetailPage.emptyExecutionListMsg': string
   'cd.environmentDetailPage.emptyInstanceDetailMsg': string
   'cd.environmentDetailPage.emptyServiceDetailMsg': string
   'cd.environmentDetailPage.infraSlashCluster': string

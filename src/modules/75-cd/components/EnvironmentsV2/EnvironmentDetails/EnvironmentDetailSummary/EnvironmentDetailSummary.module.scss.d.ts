@@ -14,7 +14,6 @@ declare const styles: {
   readonly detailSummaryView: string
   readonly dialogBase: string
   readonly dialogWrap: string
-  readonly executionListEmpty: string
   readonly fullViewTableStyle: string
   readonly hex: string
   readonly hexContainer: string

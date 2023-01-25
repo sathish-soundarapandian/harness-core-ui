@@ -1615,3 +1615,4 @@ commitsTab:
   youWillSeeYourCommitsHere: You will see your commits here
 commitsOn: 'Commits on'
 vmLabel: VM
+emptyExecutionListMsg: 'There are no executions for this given criteria.'

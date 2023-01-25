@@ -9,6 +9,7 @@
 declare const styles: {
   readonly card: string
   readonly fullWidth: string
+  readonly pageStyles: string
   readonly timeRangeContainer: string
 }
 export default styles

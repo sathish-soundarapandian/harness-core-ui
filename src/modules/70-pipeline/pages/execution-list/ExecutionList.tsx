@@ -26,7 +26,7 @@ import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useStrings } from 'framework/strings'
 import { GetListOfExecutionsQueryParams, PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
-import { ExecutionListEmpty } from './ExecutionListEmpty/ExecutionListEmpty'
+import { ExecutionListEmpty, ExecutionListEmptyWithoutCta } from './ExecutionListEmpty/ExecutionListEmpty'
 import { ExecutionListSubHeader } from './ExecutionListSubHeader/ExecutionListSubHeader'
 import { MemoisedExecutionListTable } from './ExecutionListTable/ExecutionListTable'
 import { getIsAnyFilterApplied, getIsSavedFilterApplied, useExecutionListQueryParams } from './utils/executionListUtil'
@@ -34,15 +34,17 @@ import { prepareFiltersPayload } from '../utils/Filters/filters'
 import css from './ExecutionList.module.scss'
 
 export interface ExecutionListProps {
-  onRunPipeline(): void
+  onRunPipeline?(): void
   showHealthAndExecution?: boolean
   isPipelineInvalid?: boolean
   showBranchFilter?: boolean
+  isExecutionPage?: boolean
+  filters?: any
 }
 
 function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const params = useParams<PipelinePathProps>()
-  const { showHealthAndExecution, ...rest } = props
+  const { showHealthAndExecution, isExecutionPage = true, ...rest } = props
   const { getString } = useStrings()
   const defaultBranchSelect: string = getString('common.gitSync.selectBranch')
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
@@ -123,6 +125,8 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     body:
       !isSavedFilterApplied && queryParams.filters
         ? { ...prepareFiltersPayload(queryParams.filters), filterType: 'PipelineExecution' }
+        : !isExecutionPage && !isSavedFilterApplied
+        ? { ...props.filters }
         : null
   })
 
@@ -168,6 +172,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
             repoName={repoName}
             borderless
             ref={searchRef}
+            isExecutionPage={isExecutionPage}
             {...rest}
           />
         )}
@@ -189,8 +194,10 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
               {...rest}
             />
           </>
-        ) : (
+        ) : isExecutionPage ? (
           <ExecutionListEmpty {...rest} resetFilter={resetFilter} />
+        ) : (
+          <ExecutionListEmptyWithoutCta resetFilter={resetFilter} />
         )}
       </Page.Body>
     </>
