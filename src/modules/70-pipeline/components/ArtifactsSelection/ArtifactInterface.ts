@@ -243,6 +243,20 @@ export interface JenkinsArtifactProps {
   isMultiArtifactSource?: boolean
 }
 
+export interface BambooArtifactProps {
+  key: string
+  name: string
+  expressions: string[]
+  context: number
+  initialValues: BambooArtifactType
+  handleSubmit: (data: ArtifactConfig) => void
+  artifactIdentifiers: string[]
+  isReadonly?: boolean
+  selectedArtifact: ArtifactType | null
+  allowableTypes: AllowedTypes
+  isMultiArtifactSource?: boolean
+}
+
 export interface GoogleArtifactRegistryInitialValuesType {
   identifier?: string
   versionType?: TagTypes
@@ -311,6 +325,16 @@ export interface Nexus2InitialValuesType {
 }
 
 export interface JenkinsArtifactType {
+  identifier: string
+  spec: {
+    connectorRef?: string
+    artifactPath?: SelectOption | string
+    build?: SelectOption | string
+    jobName?: SelectOption | string
+  }
+}
+
+export interface BambooArtifactType {
   identifier: string
   spec: {
     connectorRef?: string
