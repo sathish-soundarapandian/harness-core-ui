@@ -33,7 +33,7 @@ const MetricsAccordionPanelSummary: React.FC<MetricsAccordionPanelSummaryProps> 
           <a href={deeplinkURL} target="_blank" rel="noreferrer">
             {metricName}
             <span>
-              <Icon name="link" size={16} padding={{ left: 'small' }} color={Color.PRIMARY_7} />
+              <Icon name="link" height={16} width={12} padding={{ left: 'small' }} color={Color.PRIMARY_7} />
             </span>
           </a>
         </Container>
