@@ -3921,7 +3921,17 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["HarnessCDNextGen", "PagerDuty", "K8sCluster", "HarnessCD", "HarnessFF"]
+              "enum": [
+                "HarnessCDNextGen",
+                "PagerDuty",
+                "K8sCluster",
+                "HarnessCD",
+                "HarnessFF",
+                "CustomDeploy",
+                "CustomIncident",
+                "CustomInfrastructure",
+                "CustomFF"
+              ]
             },
             "collectionFormat": "multi"
           },
@@ -4034,7 +4044,17 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["HarnessCDNextGen", "PagerDuty", "K8sCluster", "HarnessCD", "HarnessFF"]
+              "enum": [
+                "HarnessCDNextGen",
+                "PagerDuty",
+                "K8sCluster",
+                "HarnessCD",
+                "HarnessFF",
+                "CustomDeploy",
+                "CustomIncident",
+                "CustomInfrastructure",
+                "CustomFF"
+              ]
             },
             "collectionFormat": "multi"
           },
@@ -4161,7 +4181,17 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["HarnessCDNextGen", "PagerDuty", "K8sCluster", "HarnessCD", "HarnessFF"]
+              "enum": [
+                "HarnessCDNextGen",
+                "PagerDuty",
+                "K8sCluster",
+                "HarnessCD",
+                "HarnessFF",
+                "CustomDeploy",
+                "CustomIncident",
+                "CustomInfrastructure",
+                "CustomFF"
+              ]
             },
             "collectionFormat": "multi"
           },
@@ -4293,7 +4323,17 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["HarnessCDNextGen", "PagerDuty", "K8sCluster", "HarnessCD", "HarnessFF"]
+              "enum": [
+                "HarnessCDNextGen",
+                "PagerDuty",
+                "K8sCluster",
+                "HarnessCD",
+                "HarnessFF",
+                "CustomDeploy",
+                "CustomIncident",
+                "CustomInfrastructure",
+                "CustomFF"
+              ]
             },
             "collectionFormat": "multi"
           },
@@ -4449,7 +4489,17 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["HarnessCDNextGen", "PagerDuty", "K8sCluster", "HarnessCD", "HarnessFF"]
+              "enum": [
+                "HarnessCDNextGen",
+                "PagerDuty",
+                "K8sCluster",
+                "HarnessCD",
+                "HarnessFF",
+                "CustomDeploy",
+                "CustomIncident",
+                "CustomInfrastructure",
+                "CustomFF"
+              ]
             },
             "collectionFormat": "multi"
           },
@@ -4595,7 +4645,17 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["HarnessCDNextGen", "PagerDuty", "K8sCluster", "HarnessCD", "HarnessFF"]
+              "enum": [
+                "HarnessCDNextGen",
+                "PagerDuty",
+                "K8sCluster",
+                "HarnessCD",
+                "HarnessFF",
+                "CustomDeploy",
+                "CustomIncident",
+                "CustomInfrastructure",
+                "CustomFF"
+              ]
             },
             "collectionFormat": "multi"
           },
@@ -4702,7 +4762,17 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["HarnessCDNextGen", "PagerDuty", "K8sCluster", "HarnessCD", "HarnessFF"]
+              "enum": [
+                "HarnessCDNextGen",
+                "PagerDuty",
+                "K8sCluster",
+                "HarnessCD",
+                "HarnessFF",
+                "CustomDeploy",
+                "CustomIncident",
+                "CustomInfrastructure",
+                "CustomFF"
+              ]
             },
             "collectionFormat": "multi"
           },
@@ -4875,7 +4945,17 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["HarnessCDNextGen", "PagerDuty", "K8sCluster", "HarnessCD", "HarnessFF"]
+              "enum": [
+                "HarnessCDNextGen",
+                "PagerDuty",
+                "K8sCluster",
+                "HarnessCD",
+                "HarnessFF",
+                "CustomDeploy",
+                "CustomIncident",
+                "CustomInfrastructure",
+                "CustomFF"
+              ]
             },
             "collectionFormat": "multi"
           },
@@ -4943,7 +5023,17 @@
             "type": "array",
             "items": {
               "type": "string",
-              "enum": ["HarnessCDNextGen", "PagerDuty", "K8sCluster", "HarnessCD", "HarnessFF"]
+              "enum": [
+                "HarnessCDNextGen",
+                "PagerDuty",
+                "K8sCluster",
+                "HarnessCD",
+                "HarnessFF",
+                "CustomDeploy",
+                "CustomIncident",
+                "CustomInfrastructure",
+                "CustomFF"
+              ]
             },
             "collectionFormat": "multi"
           },
@@ -9897,6 +9987,60 @@
             "required": false,
             "schema": {
               "$ref": "#/definitions/PagerDutyWebhookEvent"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/webhook/custom-change": {
+      "post": {
+        "tags": ["webhook"],
+        "summary": "accepts a custom change webhook request",
+        "description": "",
+        "operationId": "handleCustomChangeWebhookRequest",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "accountIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "monitoredServiceIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "changeSourceIdentifier",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "required": false,
+            "schema": {
+              "$ref": "#/definitions/CustomChangeWebhookPayload"
             }
           }
         ],
@@ -16496,6 +16640,13 @@
           "items": {
             "$ref": "#/definitions/TimestampFrequencyCount"
           }
+        },
+        "baseline": {
+          "$ref": "#/definitions/LogAnalysisRadarChartListDTO"
+        },
+        "hasControlData": {
+          "type": "boolean",
+          "readOnly": true
         }
       }
     },
@@ -16932,10 +17083,6 @@
           "type": "integer",
           "format": "int64"
         },
-        "nano": {
-          "type": "integer",
-          "format": "int32"
-        },
         "negative": {
           "type": "boolean"
         },
@@ -16947,6 +17094,10 @@
           "items": {
             "$ref": "#/definitions/TemporalUnit"
           }
+        },
+        "nano": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -16971,18 +17122,18 @@
           "type": "integer",
           "format": "int64"
         },
+        "failedStatus": {
+          "type": "boolean"
+        },
+        "timeTakenToFinish": {
+          "$ref": "#/definitions/Duration"
+        },
         "finalState": {
           "type": "boolean"
         },
         "verificationJobExecutionStatus": {
           "type": "string",
           "enum": ["QUEUED", "RUNNING", "FAILED", "SUCCESS", "TIMEOUT", "ABORTED"]
-        },
-        "failedStatus": {
-          "type": "boolean"
-        },
-        "timeTakenToFinish": {
-          "$ref": "#/definitions/Duration"
         }
       }
     },
@@ -17038,25 +17189,24 @@
         "providerName": {
           "type": "string",
           "enum": [
-            "APP_DYNAMICS",
-            "SPLUNK",
-            "SPLUNK_METRIC",
-            "STACKDRIVER",
-            "STACKDRIVER_LOG",
-            "KUBERNETES",
-            "NEW_RELIC",
-            "PROMETHEUS",
-            "DATADOG_METRICS",
-            "DATADOG_LOG",
-            "ERROR_TRACKING",
-            "DYNATRACE",
-            "CUSTOM_HEALTH_METRIC",
-            "CUSTOM_HEALTH_LOG",
-            "ELASTICSEARCH",
-            "CLOUDWATCH_METRICS",
-            "AWS_PROMETHEUS",
-            "SUMOLOGIC_METRICS",
-            "SUMOLOGIC_LOG"
+            "AppDynamics",
+            "NewRelic",
+            "StackdriverLog",
+            "Stackdriver",
+            "Prometheus",
+            "Splunk",
+            "DatadogMetrics",
+            "DatadogLog",
+            "Dynatrace",
+            "ErrorTracking",
+            "CustomHealthMetric",
+            "CustomHealthLog",
+            "SplunkMetric",
+            "ElasticSearch",
+            "CloudWatchMetrics",
+            "AwsPrometheus",
+            "SumologicMetrics",
+            "SumologicLogs"
           ]
         },
         "providerType": {
@@ -17352,7 +17502,7 @@
         },
         "thresholdType": {
           "type": "string",
-          "enum": ["IgnoreThreshold", "FailImmediately"]
+          "enum": ["FAIL_FAST", "IGNORE"]
         },
         "isUserDefined": {
           "type": "boolean"
@@ -17369,7 +17519,7 @@
     "MetricValueV2": {
       "type": "object",
       "properties": {
-        "timestamp": {
+        "timestampInMillis": {
           "type": "integer",
           "format": "int64"
         },
@@ -17401,8 +17551,8 @@
             "PERFORMANCE_RESPONSE_TIME"
           ]
         },
-        "healthSourceIdentifier": {
-          "type": "string"
+        "healthSource": {
+          "$ref": "#/definitions/HealthSourceV2"
         },
         "thresholds": {
           "type": "array",
@@ -18356,13 +18506,78 @@
         },
         "type": {
           "type": "string",
-          "enum": ["HarnessCDNextGen", "PagerDuty", "K8sCluster", "HarnessCD", "HarnessFF"]
+          "enum": [
+            "HarnessCDNextGen",
+            "PagerDuty",
+            "K8sCluster",
+            "HarnessCD",
+            "HarnessFF",
+            "CustomDeploy",
+            "CustomIncident",
+            "CustomInfrastructure",
+            "CustomFF"
+          ]
         }
       }
     },
     "ChangeEventMetadata": {
       "type": "object",
-      "discriminator": "type"
+      "description": "This is the change Source entity defined in Harness"
+    },
+    "CustomChangeEvent": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "changeEventDetailsLink": {
+          "type": "string"
+        },
+        "internalLinkToEntity": {
+          "type": "string"
+        }
+      }
+    },
+    "CustomChangeEventMetadata": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChangeEventMetadata"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "user": {
+              "type": "string"
+            },
+            "startTime": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "endTime": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "customChangeEvent": {
+              "$ref": "#/definitions/CustomChangeEvent"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "HarnessCDNextGen",
+                "PagerDuty",
+                "K8sCluster",
+                "HarnessCD",
+                "HarnessFF",
+                "CustomDeploy",
+                "CustomIncident",
+                "CustomInfrastructure",
+                "CustomFF"
+              ]
+            }
+          },
+          "description": "This is the change Source entity defined in Harness"
+        }
+      ]
     },
     "DeepLink": {
       "type": "object",
@@ -18422,7 +18637,8 @@
             "artifactName": {
               "type": "string"
             }
-          }
+          },
+          "description": "This is the change Source entity defined in Harness"
         }
       ]
     },
@@ -18472,7 +18688,8 @@
             "pipelinePath": {
               "type": "string"
             }
-          }
+          },
+          "description": "This is the change Source entity defined in Harness"
         }
       ]
     },
@@ -18510,7 +18727,11 @@
                 "HARNESS_CD",
                 "PAGER_DUTY",
                 "HARNESS_CD_CURRENT_GEN",
-                "FEATURE_FLAG"
+                "FEATURE_FLAG",
+                "CUSTOM_DEPLOY",
+                "CUSTOM_INCIDENT",
+                "CUSTOM_INFRA",
+                "CUSTOM_FF"
               ]
             },
             "updatedBy": {
@@ -18527,7 +18748,8 @@
               "type": "integer",
               "format": "int64"
             }
-          }
+          },
+          "description": "This is the change Source entity defined in Harness"
         }
       ]
     },
@@ -18578,7 +18800,8 @@
             "dependentMonitoredService": {
               "type": "string"
             }
-          }
+          },
+          "description": "This is the change Source entity defined in Harness"
         }
       ]
     },
@@ -18661,7 +18884,8 @@
             "escalationPolicyUrl": {
               "type": "string"
             }
-          }
+          },
+          "description": "This is the change Source entity defined in Harness"
         }
       ]
     },
@@ -18730,7 +18954,17 @@
       "properties": {
         "changeSourceType": {
           "type": "string",
-          "enum": ["HarnessCDNextGen", "PagerDuty", "K8sCluster", "HarnessCD", "HarnessFF"]
+          "enum": [
+            "HarnessCDNextGen",
+            "PagerDuty",
+            "K8sCluster",
+            "HarnessCD",
+            "HarnessFF",
+            "CustomDeploy",
+            "CustomIncident",
+            "CustomInfrastructure",
+            "CustomFF"
+          ]
         },
         "changeSourceIdentifier": {
           "type": "string"
@@ -19588,10 +19822,10 @@
             "type": "string"
           }
         },
-        "isCustomCreatedMetric": {
+        "isManualQuery": {
           "type": "boolean"
         },
-        "isManualQuery": {
+        "isCustomCreatedMetric": {
           "type": "boolean"
         }
       }
@@ -21161,7 +21395,17 @@
         },
         "type": {
           "type": "string",
-          "enum": ["HarnessCDNextGen", "PagerDuty", "K8sCluster", "HarnessCD", "HarnessFF"]
+          "enum": [
+            "HarnessCDNextGen",
+            "PagerDuty",
+            "K8sCluster",
+            "HarnessCD",
+            "HarnessFF",
+            "CustomDeploy",
+            "CustomIncident",
+            "CustomInfrastructure",
+            "CustomFF"
+          ]
         },
         "enabled": {
           "type": "boolean"
@@ -21177,7 +21421,33 @@
     },
     "ChangeSourceSpec": {
       "type": "object",
-      "discriminator": "type"
+      "description": "This is the change Source entity defined in Harness"
+    },
+    "CustomChangeSourceSpec": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChangeSourceSpec"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "webhookUrl": {
+              "type": "string"
+            },
+            "webhookCurlCommand": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": ["Deployment", "Infrastructure", "Alert", "FeatureFlag"]
+            }
+          },
+          "description": "This is the change Source entity defined in Harness"
+        }
+      ]
     },
     "HarnessCDChangeSourceSpec": {
       "allOf": [
@@ -21185,7 +21455,8 @@
           "$ref": "#/definitions/ChangeSourceSpec"
         },
         {
-          "type": "object"
+          "type": "object",
+          "description": "This is the change Source entity defined in Harness"
         }
       ]
     },
@@ -21207,7 +21478,8 @@
             "harnessEnvironmentId": {
               "type": "string"
             }
-          }
+          },
+          "description": "This is the change Source entity defined in Harness"
         }
       ]
     },
@@ -21264,7 +21536,8 @@
             "connectorRef": {
               "type": "string"
             }
-          }
+          },
+          "description": "This is the change Source entity defined in Harness"
         }
       ]
     },
@@ -21411,7 +21684,8 @@
             "pagerDutyServiceId": {
               "type": "string"
             }
-          }
+          },
+          "description": "This is the change Source entity defined in Harness"
         }
       ]
     },
@@ -21456,7 +21730,17 @@
           "uniqueItems": true,
           "items": {
             "type": "string",
-            "enum": ["HarnessCDNextGen", "PagerDuty", "K8sCluster", "HarnessCD", "HarnessFF"]
+            "enum": [
+              "HarnessCDNextGen",
+              "PagerDuty",
+              "K8sCluster",
+              "HarnessCD",
+              "HarnessFF",
+              "CustomDeploy",
+              "CustomIncident",
+              "CustomInfrastructure",
+              "CustomFF"
+            ]
           }
         }
       }
@@ -26664,6 +26948,47 @@
         },
         "data": {
           "$ref": "#/definitions/PagerDutyIncidentDTO"
+        }
+      }
+    },
+    "CustomChangeWebhookEventDetail": {
+      "type": "object",
+      "required": ["description", "name"],
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "changeEventDetailsLink": {
+          "type": "string"
+        },
+        "externalLinkToEntity": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "CustomChangeWebhookPayload": {
+      "type": "object",
+      "required": ["endTime", "eventDetail", "startTime", "user"],
+      "properties": {
+        "eventIdentifier": {
+          "type": "string"
+        },
+        "startTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "endTime": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "user": {
+          "type": "string"
+        },
+        "eventDetail": {
+          "$ref": "#/definitions/CustomChangeWebhookEventDetail"
         }
       }
     },

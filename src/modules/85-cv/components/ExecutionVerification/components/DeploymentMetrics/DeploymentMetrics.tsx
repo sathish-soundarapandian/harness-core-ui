@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useCallback, useRef } from 'react'
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import {
   Container,
   Text,
@@ -20,7 +20,9 @@ import {
   ButtonVariation,
   MultiSelectDropDown,
   MultiSelectOption,
-  Icon
+  Icon,
+  Select,
+  SelectOption
 } from '@harness/uicore'
 import cx from 'classnames'
 import { isEqual } from 'lodash-es'
@@ -32,15 +34,15 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import {
   GetVerifyStepDeploymentMetricsQueryParams,
+  useGetHealthSourcesForVerifyStepExecutionId,
   useGetMetricsAnalysisForVerifyStepExecutionId,
-  useGetVerifyStepHealthSources,
-  useGetVerifyStepNodeNames,
-  useGetVerifyStepTransactionNames
+  useGetTransactionGroupsForVerifyStepExecutionId,
+  useGetVerifyStepNodeNames
 } from 'services/cv'
 import type { ExecutionQueryParams } from '@pipeline/utils/executionUtils'
 import { VerificationType } from '@cv/components/HealthSourceDropDown/HealthSourceDropDown.constants'
 import noDataImage from '@cv/assets/noData.svg'
-import { POLLING_INTERVAL, PAGE_SIZE, DEFAULT_PAGINATION_VALUEE } from './DeploymentMetrics.constants'
+import { POLLING_INTERVAL, PAGE_SIZE, DEFAULT_PAGINATION_VALUEE, DATA_OPTIONS } from './DeploymentMetrics.constants'
 import { RefreshViewForNewData } from '../RefreshViewForNewDataButton/RefreshForNewData'
 import type { DeploymentNodeAnalysisResult } from '../DeploymentProgressAndNodes/components/DeploymentNodes/DeploymentNodes.constants'
 import {
@@ -59,7 +61,8 @@ import {
   getShouldShowSpinner,
   getShouldShowError,
   isErrorOrLoading,
-  isStepRunningOrWaiting
+  isStepRunningOrWaiting,
+  generateHealthSourcesOptionsData
 } from './DeploymentMetrics.utils'
 import MetricsAccordionPanelSummary from './components/DeploymentAccordionPanel/MetricsAccordionPanelSummary'
 import { HealthSourceMultiSelectDropDown } from '../HealthSourcesMultiSelectDropdown/HealthSourceMultiSelectDropDown'
@@ -102,6 +105,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
   const [selectedHealthSources, setSelectedHealthSources] = useState<MultiSelectOption[]>([])
   const [selectedNodeName, setSelectedNodeName] = useState<MultiSelectOption[]>(() => getInitialNodeName(selectedNode))
   const [selectedTransactionName, setSelectedTransactionName] = useState<MultiSelectOption[]>([])
+  const [selectedDataFormat, setSelectedDataFormat] = useState<SelectOption>(DATA_OPTIONS[0])
   const [{ hasNewData, shouldUpdateView, currentViewData, showSpinner }, setUpdateViewInfo] = useState<UpdateViewState>(
     {
       hasNewData: false,
@@ -124,11 +128,11 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     data: transactionNames,
     loading: transactionNameLoading,
     error: transactionNameError
-  } = useGetVerifyStepTransactionNames({
-    verifyStepExecutionId: activityId,
-    queryParams: {
-      accountId
-    }
+  } = useGetTransactionGroupsForVerifyStepExecutionId({
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier,
+    verifyStepExecutionId: activityId
   })
 
   const {
@@ -158,9 +162,11 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     error: healthSourcesError,
     loading: healthSourcesLoading,
     refetch: fetchHealthSources
-  } = useGetVerifyStepHealthSources({
-    queryParams: { accountId },
-    verifyStepExecutionId: activityId as string,
+  } = useGetHealthSourcesForVerifyStepExecutionId({
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier,
+    verifyStepExecutionId: activityId,
     lazy: true
   })
 
@@ -237,7 +243,15 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     setUpdateViewInfo(oldInfo => ({ ...oldInfo, shouldUpdateView: true, showSpinner: true }))
   }, [anomalousMetricsFilterChecked])
 
-  const paginationInfo = data?.resource?.pageResponse || DEFAULT_PAGINATION_VALUEE
+  const { pageIndex, pageItemCount, pageSize, totalItems, totalPages } = data || {}
+  const paginationInfo =
+    {
+      pageIndex,
+      pageItemCount,
+      pageSize,
+      totalPages,
+      totalItems
+    } || DEFAULT_PAGINATION_VALUEE
 
   useEffect(() => {
     const healthSourceQueryParams = selectedHealthSources.map(item => item.value) as string[]
@@ -261,8 +275,13 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
   const handleTransactionNameChange = useCallback(selectedTransactionNameFitlers => {
     setSelectedTransactionName(selectedTransactionNameFitlers)
   }, [])
+
   const handleNodeNameChange = useCallback(selectedNodeNameFitlers => {
     setSelectedNodeName(selectedNodeNameFitlers)
+  }, [])
+
+  const hanldeDataFormatChange = useCallback(dataFormat => {
+    setSelectedDataFormat(dataFormat)
   }, [])
 
   const updatedAnomalousMetricsFilter = useCallback(
@@ -272,6 +291,11 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
 
   const getNoDataAvailableOrError = (): boolean | null =>
     (!currentViewData?.length && !loading) || getShouldShowError(error, shouldUpdateView)
+
+  const healthSourcesDataOptions = useMemo(
+    () => generateHealthSourcesOptionsData(healthSourcesData),
+    [healthSourcesData]
+  )
 
   const renderContent = (): JSX.Element => {
     if (getShouldShowSpinner(loading, showSpinner)) {
@@ -304,7 +328,19 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
           ref={accordionRef}
         >
           {currentViewData?.map(analysisRow => {
-            const { transactionName, metricName, healthSourceType } = analysisRow
+            const {
+              transactionName,
+              metricName,
+              healthSourceType,
+              controlData,
+              testData,
+              normalisedControlData,
+              normalisedTestData
+            } = analysisRow || {}
+            //TODO - check later
+            const controlDataInfo = selectedDataFormat?.value === 'normalised' ? normalisedControlData : controlData
+            const testDataInfo = selectedDataFormat?.value === 'normalised' ? normalisedTestData : testData
+            const updatedAnalysisRow = { ...analysisRow, controlDataInfo, testDataInfo }
             return (
               <Accordion.Panel
                 key={`${transactionName}-${metricName}-${healthSourceType}`}
@@ -313,7 +349,8 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
                 details={
                   <DeploymentMetricsAnalysisRow
                     key={`${transactionName}-${metricName}-${healthSourceType}`}
-                    {...analysisRow}
+                    {...updatedAnalysisRow}
+                    selectedDataFormat={selectedDataFormat}
                     className={css.analysisRow}
                   />
                 }
@@ -333,7 +370,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
           placeholder={getFilteredText(selectedTransactionName, 'rbac.group')}
           value={selectedTransactionName}
           className={css.filterDropdown}
-          items={getDropdownItems(transactionNames?.resource as string[], transactionNameLoading, transactionNameError)}
+          items={getDropdownItems(transactionNames, transactionNameLoading, transactionNameError)}
           onChange={handleTransactionNameChange}
           buttonTestId={'transaction_name_filter'}
         />
@@ -346,7 +383,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
           buttonTestId={'node_name_filter'}
         />
         <HealthSourceMultiSelectDropDown
-          data={healthSourcesData}
+          data={healthSourcesDataOptions}
           loading={healthSourcesLoading}
           error={healthSourcesError}
           onChange={handleHealthSourceChange}
@@ -354,14 +391,21 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
           selectedValues={selectedHealthSources}
           className={css.filterDropdown}
         />
-
-        <Checkbox
-          onChange={updatedAnomalousMetricsFilter}
-          checked={anomalousMetricsFilterChecked}
-          label={getString('pipeline.verification.anomalousMetricsFilterLabel')}
-          data-testid="anomalousFilterCheckbox"
+        <Select
+          name="data"
+          className={css.filterDropdown}
+          value={selectedDataFormat}
+          items={DATA_OPTIONS}
+          onChange={hanldeDataFormatChange}
         />
       </Container>
+      <Checkbox
+        onChange={updatedAnomalousMetricsFilter}
+        checked={anomalousMetricsFilterChecked}
+        label={getString('pipeline.verification.anomalousMetricsFilterLabel')}
+        data-testid="anomalousFilterCheckbox"
+        className={css.anomolousCheckbox}
+      />
       <Layout.Horizontal className={css.filterSecondRow} border={{ bottom: true }}>
         <Container className={css.accordionToggleButtons}>
           {Boolean(currentViewData.length) && (

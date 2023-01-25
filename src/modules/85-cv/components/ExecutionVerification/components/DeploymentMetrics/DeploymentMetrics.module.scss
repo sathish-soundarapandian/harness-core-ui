@@ -20,6 +20,7 @@
   width: 100% !important;
   padding: var(--spacing-medium) !important;
   padding-top: 0 !important;
+  padding-bottom: var(--spacing-none) !important;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -32,7 +33,7 @@
   }
 
   .filters {
-    margin-bottom: var(--spacing-medium) !important;
+    margin-bottom: var(--spacing-small) !important;
     display: flex;
     align-items: center;
     > * {
@@ -179,6 +180,7 @@
 
   div[class*='Accordion--details'] {
     padding-top: var(--spacing-large) !important;
+    padding-bottom: var(--spacing-none) !important;
   }
 }
 
@@ -231,4 +233,8 @@
       font-weight: 500 !important;
     }
   }
+}
+
+.anomolousCheckbox {
+  padding-bottom: var(--spacing-small) !important;
 }

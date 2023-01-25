@@ -36,6 +36,7 @@ export enum RiskValues {
   HEALTHY = 'HEALTHY',
   OBSERVE = 'OBSERVE',
   NEED_ATTENTION = 'NEED_ATTENTION',
+  WARNING = 'WARNING',
   UNHEALTHY = 'UNHEALTHY',
   FAILED = 'FAILED',
   PASSED = 'PASSED'
@@ -61,6 +62,7 @@ export const getRiskColorValue = (
     case RiskValues.PASSED:
       return realCSSColor ? Utils.getRealCSSColor(Color.GREEN_500) : Color.GREEN_500
     case RiskValues.OBSERVE:
+    case RiskValues.WARNING:
       return realCSSColor ? Utils.getRealCSSColor(Color.YELLOW_800) : Color.YELLOW_800
     case RiskValues.NEED_ATTENTION:
       return realCSSColor ? Utils.getRealCSSColor(Color.ORANGE_600) : Color.ORANGE_600
@@ -123,6 +125,8 @@ export const getRiskLabelStringId = (
       return 'cv.monitoredServices.serviceHealth.serviceDependencies.states.healthy'
     case RiskValues.OBSERVE:
       return 'cv.monitoredServices.serviceHealth.serviceDependencies.states.observe'
+    case RiskValues.WARNING:
+      return 'cv.monitoredServices.serviceHealth.serviceDependencies.states.warning'
     case RiskValues.NEED_ATTENTION:
       return 'cv.monitoredServices.serviceHealth.serviceDependencies.states.needsAttention'
     case RiskValues.UNHEALTHY:

@@ -184,6 +184,8 @@ allowpaths:
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/logRecords
   - /account/{accountIdentifier}/orgs/{orgIdentifier}/projects/{projectIdentifier}/verifications/{verifyStepExecutionId}/overview
   - /account/{accountIdentifier}/orgs/{orgIdentifier}/projects/{projectIdentifier}/verifications/{verifyStepExecutionId}/analysis/metrics
+  - /account/{accountIdentifier}/orgs/{orgIdentifier}/projects/{projectIdentifier}/verifications/{verifyStepExecutionId}/health-sources
+  - /account/{accountIdentifier}/orgs/{orgIdentifier}/projects/{projectIdentifier}/verifications/{verifyStepExecutionId}/transaction-groups
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

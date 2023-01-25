@@ -601,6 +601,7 @@ monitoredServices:
         observe: Observe
         healthy: Healthy
         exhausted: Exhausted
+        warning: Warning
   monitoredServiceTabs:
     serviceHealth: Service Health
     configurations: Configurations

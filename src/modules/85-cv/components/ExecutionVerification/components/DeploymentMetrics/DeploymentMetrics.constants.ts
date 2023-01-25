@@ -23,6 +23,11 @@ export const MetricTypeOptions: SelectOption[] = [
   }
 ]
 
+export const DATA_OPTIONS = [
+  { label: 'Raw', value: 'raw' },
+  { label: 'Normalised', value: 'normalised' }
+]
+
 export const POLLING_INTERVAL = 15000
 export const PAGE_SIZE = 10
 export const DEFAULT_PAGINATION_VALUEE = {

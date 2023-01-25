@@ -13,6 +13,7 @@ declare const styles: {
   readonly actualObserve: string
   readonly actualWarning: string
   readonly analysisRow: string
+  readonly anomolousCheckbox: string
   readonly content: string
   readonly deploymentMetricsAccordionPanel: string
   readonly deploymentMetricsAccordionSummary: string

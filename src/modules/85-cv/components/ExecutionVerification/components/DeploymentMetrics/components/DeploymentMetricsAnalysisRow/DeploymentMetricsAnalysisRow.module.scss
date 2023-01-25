@@ -113,3 +113,20 @@
 :global(.metricsGraph_tooltip.highcharts-tooltip *) {
   box-sizing: border-box;
 }
+
+.showDetailsText {
+  color: var(--primary-7) !important;
+}
+
+.metricInfo {
+  display: flex !important;
+  align-items: center;
+}
+
+.node {
+  width: 8px;
+  height: 8px;
+  border: 1px solid;
+  border-radius: 1px;
+  margin-right: var(--spacing-small) !important;
+}

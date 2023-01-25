@@ -16,6 +16,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useLogContentHook } from '@cv/hooks/useLogContentHook/useLogContentHook'
 import { LogTypes } from '@cv/hooks/useLogContentHook/useLogContentHook.types'
+import type { AnalysedNodeOverview } from 'services/cv'
 import { DeploymentMetrics } from './components/DeploymentMetrics/DeploymentMetrics'
 import { ExecutionVerificationSummary } from './components/ExecutionVerificationSummary/ExecutionVerificationSummary'
 import type { DeploymentNodeAnalysisResult } from './components/DeploymentProgressAndNodes/components/DeploymentNodes/DeploymentNodes.constants'
@@ -32,7 +33,7 @@ interface ExecutionVerificationViewProps {
 export function ExecutionVerificationView(props: ExecutionVerificationViewProps): JSX.Element {
   const { step } = props
   const { getString } = useStrings()
-  const [selectedNode, setSelectedNode] = useState<DeploymentNodeAnalysisResult | undefined>()
+  const [selectedNode, setSelectedNode] = useState<AnalysedNodeOverview | undefined>()
   const activityId = useMemo(() => getActivityId(step), [step])
   const { type } = useQueryParams<{ type?: string }>()
   const defaultTabId = useMemo(() => getDefaultTabId(getString, type), [type])

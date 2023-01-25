@@ -8,14 +8,10 @@
 import React from 'react'
 import { Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import type { NodeRiskCountDTO } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import NodeRiskCountsDisplay from './NodeRiskCountsDisplay'
+import type { NodeCountProps } from './NodesCount.types'
 import DeploymentMetricsStyle from '../../../DeploymentMetrics.module.scss'
-
-interface NodeCountProps {
-  nodeRiskCount?: NodeRiskCountDTO
-}
 
 const NodeCount: React.FC<NodeCountProps> = props => {
   const { getString } = useStrings()

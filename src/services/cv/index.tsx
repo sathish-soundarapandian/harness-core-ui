@@ -641,9 +641,21 @@ export interface ChangeEventDTO {
   projectIdentifier: string
   serviceIdentifier?: string
   serviceName?: string
-  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF'
+  type?:
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
 }
 
+/**
+ * This is the change Source entity defined in Harness
+ */
 export interface ChangeEventMetadata {
   [key: string]: any
 }
@@ -664,9 +676,21 @@ export interface ChangeSourceDTO {
   identifier?: string
   name?: string
   spec: ChangeSourceSpec
-  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF'
+  type?:
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
 }
 
+/**
+ * This is the change Source entity defined in Harness
+ */
 export interface ChangeSourceSpec {
   [key: string]: any
 }
@@ -828,6 +852,51 @@ export interface CountServiceDTO {
 export interface CrossAccountAccess {
   crossAccountRoleArn: string
   externalId?: string
+}
+
+export interface CustomChangeEvent {
+  changeEventDetailsLink?: string
+  description?: string
+  internalLinkToEntity?: string
+}
+
+export type CustomChangeEventMetadata = ChangeEventMetadata & {
+  customChangeEvent?: CustomChangeEvent
+  endTime?: number
+  startTime?: number
+  type?:
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
+  user?: string
+}
+
+export type CustomChangeSourceSpec = ChangeSourceSpec & {
+  name?: string
+  type?: 'Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag'
+  webhookCurlCommand?: string
+  webhookUrl?: string
+}
+
+export interface CustomChangeWebhookEventDetail {
+  changeEventDetailsLink?: string
+  description: string
+  externalLinkToEntity?: string
+  name: string
+}
+
+export interface CustomChangeWebhookPayload {
+  endTime: number
+  eventDetail: CustomChangeWebhookEventDetail
+  eventIdentifier?: string
+  startTime: number
+  user: string
 }
 
 export type CustomHealthConnectorDTO = ConnectorConfigDTO & {
@@ -1053,7 +1122,16 @@ export interface DeepLink {
 
 export interface DemoChangeEventDTO {
   changeSourceIdentifier?: string
-  changeSourceType?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF'
+  changeSourceType?:
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
   monitoredServiceIdentifier?: string
 }
 
@@ -2488,25 +2566,24 @@ export interface HealthSourceV2 {
   healthSourceIdentifier?: string
   healthSourceName?: string
   providerName?:
-    | 'APP_DYNAMICS'
-    | 'SPLUNK'
-    | 'SPLUNK_METRIC'
-    | 'STACKDRIVER'
-    | 'STACKDRIVER_LOG'
-    | 'KUBERNETES'
-    | 'NEW_RELIC'
-    | 'PROMETHEUS'
-    | 'DATADOG_METRICS'
-    | 'DATADOG_LOG'
-    | 'ERROR_TRACKING'
-    | 'DYNATRACE'
-    | 'CUSTOM_HEALTH_METRIC'
-    | 'CUSTOM_HEALTH_LOG'
-    | 'ELASTICSEARCH'
-    | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
-    | 'SUMOLOGIC_METRICS'
-    | 'SUMOLOGIC_LOG'
+    | 'AppDynamics'
+    | 'NewRelic'
+    | 'StackdriverLog'
+    | 'Stackdriver'
+    | 'Prometheus'
+    | 'Splunk'
+    | 'DatadogMetrics'
+    | 'DatadogLog'
+    | 'Dynatrace'
+    | 'ErrorTracking'
+    | 'CustomHealthMetric'
+    | 'CustomHealthLog'
+    | 'SplunkMetric'
+    | 'ElasticSearch'
+    | 'CloudWatchMetrics'
+    | 'AwsPrometheus'
+    | 'SumologicMetrics'
+    | 'SumologicLogs'
   providerType?: 'ERRORS' | 'LOGS' | 'METRICS'
 }
 
@@ -2605,6 +2682,10 @@ export type InternalChangeEventMetaData = ChangeEventMetadata & {
     | 'PAGER_DUTY'
     | 'HARNESS_CD_CURRENT_GEN'
     | 'FEATURE_FLAG'
+    | 'CUSTOM_DEPLOY'
+    | 'CUSTOM_INCIDENT'
+    | 'CUSTOM_INFRA'
+    | 'CUSTOM_FF'
   eventEndTime?: number
   eventStartTime?: number
   internalChangeEvent?: InternalChangeEvent
@@ -2879,9 +2960,11 @@ export interface LogAnalysisRadarChartClusterDTO {
 
 export interface LogAnalysisRadarChartListDTO {
   averageControlFrequencyData?: TimestampFrequencyCount[]
+  baseline?: LogAnalysisRadarChartListDTO
   clusterId?: string
   clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
+  hasControlData?: boolean
   label?: number
   message?: string
   risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
@@ -3172,7 +3255,7 @@ export interface MetricThresholdV2 {
   criteria?: MetricThresholdCriteriaV2
   id?: string
   isUserDefined?: boolean
-  thresholdType?: 'IgnoreThreshold' | 'FailImmediately'
+  thresholdType?: 'FAIL_FAST' | 'IGNORE'
 }
 
 export interface MetricValidationResponse {
@@ -3182,13 +3265,13 @@ export interface MetricValidationResponse {
 }
 
 export interface MetricValueV2 {
-  timestamp?: number
+  timestampInMillis?: number
   value?: number
 }
 
 export interface MetricsAnalysis {
   analysisResult?: 'HEALTHY' | 'NO_ANALYSIS' | 'UNHEALTHY' | 'WARNING'
-  healthSourceIdentifier?: string
+  healthSource?: HealthSourceV2
   metricIdentifier?: string
   metricName?: string
   metricType?: 'ERROR' | 'INFRASTRUCTURE' | 'PERFORMANCE_THROUGHPUT' | 'PERFORMANCE_OTHER' | 'PERFORMANCE_RESPONSE_TIME'
@@ -5511,7 +5594,17 @@ export interface ServiceDependencyGraphDTO {
 }
 
 export interface ServiceDependencyMetadata {
-  supportedChangeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  supportedChangeSourceTypes?: (
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
+  )[]
   type?: 'KUBERNETES'
 }
 
@@ -6403,7 +6496,17 @@ export interface ChangeEventListForAccountQueryParams {
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: (
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
+  )[]
   searchText?: string
   startTime: number
   endTime: number
@@ -6497,7 +6600,17 @@ export interface ChangeEventTimelineForAccountQueryParams {
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: (
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
+  )[]
   searchText?: string
   startTime: number
   endTime: number
@@ -6592,7 +6705,17 @@ export interface ChangeEventListQueryParams {
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: (
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
+  )[]
   searchText?: string
   startTime: number
   endTime: number
@@ -6680,7 +6803,17 @@ export interface ChangeEventTimelineQueryParams {
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: (
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
+  )[]
   searchText?: string
   startTime: number
   endTime: number
@@ -7265,6 +7398,87 @@ export const getMetricsAnalysisForVerifyStepExecutionIdPromise = (
     signal
   )
 
+export interface GetHealthSourcesForVerifyStepExecutionIdPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  verifyStepExecutionId: string
+}
+
+export type GetHealthSourcesForVerifyStepExecutionIdProps = Omit<
+  GetProps<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams>,
+  'path'
+> &
+  GetHealthSourcesForVerifyStepExecutionIdPathParams
+
+/**
+ * get all the health sources
+ */
+export const GetHealthSourcesForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: GetHealthSourcesForVerifyStepExecutionIdProps) => (
+  <Get<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams>
+    path={`/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/health-sources`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetHealthSourcesForVerifyStepExecutionIdProps = Omit<
+  UseGetProps<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams>,
+  'path'
+> &
+  GetHealthSourcesForVerifyStepExecutionIdPathParams
+
+/**
+ * get all the health sources
+ */
+export const useGetHealthSourcesForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: UseGetHealthSourcesForVerifyStepExecutionIdProps) =>
+  useGet<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams>(
+    (paramsInPath: GetHealthSourcesForVerifyStepExecutionIdPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/orgs/${paramsInPath.orgIdentifier}/projects/${paramsInPath.projectIdentifier}/verifications/${paramsInPath.verifyStepExecutionId}/health-sources`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, verifyStepExecutionId },
+      ...props
+    }
+  )
+
+/**
+ * get all the health sources
+ */
+export const getHealthSourcesForVerifyStepExecutionIdPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    verifyStepExecutionId,
+    ...props
+  }: GetUsingFetchProps<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams> & {
+    accountIdentifier: string
+    orgIdentifier: string
+    projectIdentifier: string
+    verifyStepExecutionId: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams>(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/health-sources`,
+    props,
+    signal
+  )
+
 export interface GetVerificationOverviewForVerifyStepExecutionIdPathParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -7342,6 +7556,87 @@ export const getVerificationOverviewForVerifyStepExecutionIdPromise = (
   getUsingFetch<VerificationOverview, unknown, void, GetVerificationOverviewForVerifyStepExecutionIdPathParams>(
     getConfig('cv/api'),
     `/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/overview`,
+    props,
+    signal
+  )
+
+export interface GetTransactionGroupsForVerifyStepExecutionIdPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  verifyStepExecutionId: string
+}
+
+export type GetTransactionGroupsForVerifyStepExecutionIdProps = Omit<
+  GetProps<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams>,
+  'path'
+> &
+  GetTransactionGroupsForVerifyStepExecutionIdPathParams
+
+/**
+ * get all the transaction groups
+ */
+export const GetTransactionGroupsForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: GetTransactionGroupsForVerifyStepExecutionIdProps) => (
+  <Get<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams>
+    path={`/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/transaction-groups`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetTransactionGroupsForVerifyStepExecutionIdProps = Omit<
+  UseGetProps<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams>,
+  'path'
+> &
+  GetTransactionGroupsForVerifyStepExecutionIdPathParams
+
+/**
+ * get all the transaction groups
+ */
+export const useGetTransactionGroupsForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: UseGetTransactionGroupsForVerifyStepExecutionIdProps) =>
+  useGet<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams>(
+    (paramsInPath: GetTransactionGroupsForVerifyStepExecutionIdPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/orgs/${paramsInPath.orgIdentifier}/projects/${paramsInPath.projectIdentifier}/verifications/${paramsInPath.verifyStepExecutionId}/transaction-groups`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, verifyStepExecutionId },
+      ...props
+    }
+  )
+
+/**
+ * get all the transaction groups
+ */
+export const getTransactionGroupsForVerifyStepExecutionIdPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    verifyStepExecutionId,
+    ...props
+  }: GetUsingFetchProps<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams> & {
+    accountIdentifier: string
+    orgIdentifier: string
+    projectIdentifier: string
+    verifyStepExecutionId: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams>(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/transaction-groups`,
     props,
     signal
   )
@@ -7982,7 +8277,17 @@ export interface GetMonitoredServiceChangeEventSummaryQueryParams {
   monitoredServiceIdentifiers?: string[]
   isMonitoredServiceIdentifierScoped?: boolean
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: (
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
+  )[]
   startTime: number
   endTime: number
 }
@@ -8041,7 +8346,17 @@ export interface GetMonitoredServiceChangeTimelineQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   monitoredServiceIdentifier?: string
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: (
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
+  )[]
   searchText?: string
   duration: 'FOUR_HOURS' | 'TWENTY_FOUR_HOURS' | 'THREE_DAYS' | 'SEVEN_DAYS' | 'THIRTY_DAYS'
   endTime: number

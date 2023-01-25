@@ -44,7 +44,7 @@ export function PrimaryAndCanaryNodes(props: PrimaryAndCanaryNodesProps): JSX.El
       })}
     >
       <Container className={css.primaryNodes}>
-        <Text>{primaryNodeLabel?.toLocaleUpperCase()}</Text>
+        <Text>{NodeLabelMapping[primaryNodeLabel?.toLocaleUpperCase()]}</Text>
         <Text className={css.details}>
           {primaryNodes.length} {getString('pipeline.nodes')}
         </Text>

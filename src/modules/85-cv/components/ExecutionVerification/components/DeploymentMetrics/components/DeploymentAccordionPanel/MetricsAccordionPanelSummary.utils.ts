@@ -1,9 +1,9 @@
 import { getRiskLabelStringId } from '@cv/utils/CommonUtils'
 import type { UseStringsReturn } from 'framework/strings'
-import type { TransactionMetric } from 'services/cv'
+import type { MetricsAnalysis } from 'services/cv'
 
 export function getRiskDisplayName(
-  risk: TransactionMetric['risk'],
+  risk: MetricsAnalysis['analysisResult'],
   getString: UseStringsReturn['getString']
 ): string | undefined {
   return getString(getRiskLabelStringId(risk))

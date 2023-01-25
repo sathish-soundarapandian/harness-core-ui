@@ -9,18 +9,14 @@ import React from 'react'
 import cx from 'classnames'
 import { Container, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import type { NodeRiskCount } from 'services/cv'
 import { RiskValues } from '@cv/utils/CommonUtils'
+import type { NodeCountDisplayProps } from './NodesCount.types'
 import css from './NodesCount.module.scss'
 
-interface NodeCountProps {
-  nodeDetails?: NodeRiskCount[]
-}
-
-const NodeRiskCountsDisplay: React.FC<NodeCountProps> = props => {
+const NodeRiskCountsDisplay: React.FC<NodeCountDisplayProps> = props => {
   const { nodeDetails } = props
 
-  const { HEALTHY, NEED_ATTENTION, OBSERVE, UNHEALTHY } = RiskValues
+  const { HEALTHY, NEED_ATTENTION, OBSERVE, UNHEALTHY, WARNING } = RiskValues
 
   const { nodeCountDisplayHealthy, nodeCountDisplayNeedAttention, nodeCountDisplayObserve, nodeCountDisplayUnhealthy } =
     css
@@ -29,11 +25,6 @@ const NodeRiskCountsDisplay: React.FC<NodeCountProps> = props => {
     <Layout.Horizontal style={{ flexWrap: 'wrap' }}>
       {nodeDetails?.map(node => {
         const { risk, count } = node
-
-        if (!count) {
-          // to avoid displaying count 0
-          return null
-        }
 
         return (
           <Container
@@ -44,7 +35,7 @@ const NodeRiskCountsDisplay: React.FC<NodeCountProps> = props => {
             className={cx(css.nodeCountDisplay, {
               [nodeCountDisplayHealthy]: risk === HEALTHY,
               [nodeCountDisplayNeedAttention]: risk === NEED_ATTENTION,
-              [nodeCountDisplayObserve]: risk === OBSERVE,
+              [nodeCountDisplayObserve]: risk === OBSERVE || risk === WARNING,
               [nodeCountDisplayUnhealthy]: risk === UNHEALTHY
             })}
           >

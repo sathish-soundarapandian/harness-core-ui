@@ -7785,6 +7785,7 @@ export interface StringsMap {
   'cv.monitoredServices.serviceHealth.serviceDependencies.states.needsAttention': string
   'cv.monitoredServices.serviceHealth.serviceDependencies.states.observe': string
   'cv.monitoredServices.serviceHealth.serviceDependencies.states.unhealthy': string
+  'cv.monitoredServices.serviceHealth.serviceDependencies.states.warning': string
   'cv.monitoredServices.serviceHealth.userMessage': string
   'cv.monitoredServices.serviceHealthScoreDataNotAvailable': string
   'cv.monitoredServices.serviceValidation': string

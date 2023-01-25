@@ -22,6 +22,7 @@ import type { VerifyExecutionProps } from './ExecutionVerificationSummary.types'
 import { getActivityId } from '../../ExecutionVerificationView.utils'
 import { ManualInterventionVerifyStep } from '../ManualInterventionVerifyStep/ManualInterventionVerifyStep'
 import InterruptedHistory from '../InterruptedHistory/InterruptedHistory'
+import { SummaryOfDeployedNodes } from './components/SummaryOfDeployedNodes/SummaryOfDeployedNodes'
 import css from './ExecutionVerificationSummary.module.scss'
 
 const POLLING_INTERVAL = 15000
@@ -127,21 +128,26 @@ export function ExecutionVerificationSummary(props: VerifyExecutionProps): JSX.E
         onSelectNode={onSelectNode}
         isConsoleView={isConsoleView}
       />
-      {/* Todo - This has to be confirmed from Dhruv */}
-      {/* {displayAnalysisCount && (
+      {displayAnalysisCount && (
         <SummaryOfDeployedNodes
-          metricsInViolation={timeSeriesAnalysisSummary?.numAnomMetrics || 0}
-          totalMetrics={timeSeriesAnalysisSummary?.totalNumMetrics || 0}
-          logClustersInViolation={
-            logsAnalysisSummary?.anomalousClusterCount || 0
+          metricsInViolation={metricsAnalysis?.unhealthy || 0}
+          totalMetrics={
+            (metricsAnalysis?.unhealthy || 0) + (metricsAnalysis?.healthy || 0) + (metricsAnalysis?.noAnalysis || 0)
           }
-          totalLogClusters={logsAnalysisSummary?.totalClusterCount || 0}
-          errorClustersInViolation={
-            errorAnalysisSummary?.anomalousClusterCount || 0
+          logClustersInViolation={logClusters?.unknownClustersCount || 0}
+          totalLogClusters={
+            (logClusters?.unknownClustersCount || 0) +
+            (logClusters?.unknownClustersCount || 0) +
+            (logClusters?.unexpectedFrequencyClustersCount || 0)
           }
-          totalErrorClusters={errorAnalysisSummary?.totalClusterCount || 0}
+          errorClustersInViolation={errorClusters?.unknownClustersCount || 0}
+          totalErrorClusters={
+            (errorClusters?.unknownClustersCount || 0) +
+            (errorClusters?.unknownClustersCount || 0) +
+            (errorClusters?.unexpectedFrequencyClustersCount || 0)
+          }
         />
-      )} */}
+      )}
     </Container>
   )
 }

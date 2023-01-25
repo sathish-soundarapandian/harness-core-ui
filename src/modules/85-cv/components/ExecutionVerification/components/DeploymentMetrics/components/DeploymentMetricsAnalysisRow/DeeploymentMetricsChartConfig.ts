@@ -36,11 +36,6 @@ export function chartsConfig(
 
       labels: {
         enabled: false
-      },
-
-      title: {
-        text: testData?.name,
-        align: 'low'
       }
     },
     yAxis: {
