@@ -40,9 +40,9 @@ import idp from '@idp/strings/strings.en.yaml'
 import ssca from '@ssca/strings/strings.en.yaml'
 import cv from '@cv/strings/strings.en.yaml'
 import iacm from '@iacm/strings/strings.en.yaml'
+import sscs from '@sscs/strings/strings.en.yaml'
 import sto from '@sto/strings/strings.en.yaml'
 import gitops from '@gitops/strings/strings.en.yaml'
-import sscs from '@sscs/strings/strings.en.yaml'
 
 export default function languageLoader() {
   return {
@@ -76,8 +76,8 @@ export default function languageLoader() {
     ssca,
     cv,
     iacm,
+    sscs,
     sto,
-    gitops,
-    sscs
+    gitops
   }
 }

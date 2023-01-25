@@ -61,7 +61,7 @@ export const editViewValidateFieldsConfig = [
   {
     name: 'spec.artifactType',
     type: ValidationFieldTypes.List,
-    label: 'ci.sscs.artifactType',
+    label: 'pipeline.artifactsSelection.artifactType',
     isRequired: true
   },
   {
@@ -108,7 +108,7 @@ export function getInputSetViewValidateFieldsConfig(
     {
       name: 'spec.artifactType',
       type: ValidationFieldTypes.List,
-      label: 'ci.sscs.artifactType',
+      label: 'pipeline.artifactsSelection.artifactType',
       isRequired
     },
     {

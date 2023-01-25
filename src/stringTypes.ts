@@ -7663,7 +7663,6 @@ export interface StringsMap {
   'ci.runTestsStep.validation.namespacesRequiredWhenCsharp': string
   'ci.save': string
   'ci.secrets': string
-  'ci.sscs.artifactType': string
   'ci.sscs.generationType': string
   'ci.sscs.sbomFormat': string
   'ci.sscs.sbomGenerationTool': string
@@ -8723,6 +8722,7 @@ export interface StringsMap {
   'iacm.stageDescription': string
   'iacm.stageTitle': string
   'iacm.terragrunt': string
+  'sscs.navTitle': string
   'sto.Critical': string
   'sto.Info': string
   'sto.Unassigned': string

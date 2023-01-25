@@ -227,7 +227,6 @@ getStartedWithCI:
       seamlessIntegration: Harness CI seamlessly integrates with other Harness modules like Continuous Delivery, Cloud Cost Management, and Feature Flags.
 sscs:
   generationType: Generation Type
-  artifactType: Artifact Type
   sbomGenerationTool: Pick a SBOM Generation tool
   sbomFormat: SBOM Format
   signed: Sign this SBOM

@@ -689,8 +689,8 @@ export const CIStep: React.FC<CIStepProps> = props => {
           <FormInput.Select
             items={artifactTypeOptions}
             name={`${prefix}spec.artifactType`}
-            label={getString('ci.sscs.artifactType')}
-            placeholder={getString('ci.sscs.artifactType')}
+            label={getString('pipeline.artifactsSelection.artifactType')}
+            placeholder={getString('pipeline.artifactsSelection.artifactType')}
             disabled={readonly}
           />
         </Container>
