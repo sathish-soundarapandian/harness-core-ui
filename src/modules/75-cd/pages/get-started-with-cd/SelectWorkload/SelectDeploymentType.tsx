@@ -84,12 +84,12 @@ const SelectDeploymentTypeRef = (
       label: 'pipeline.serviceDeploymentTypes.kubernetes',
       icon: deploymentIconMap[ServiceDeploymentType.Kubernetes],
       value: ServiceDeploymentType.Kubernetes
+    },
+    {
+      label: 'pipeline.serviceDeploymentTypes.kubernetesWithGitops',
+      icon: deploymentIconMap[ServiceDeploymentType.KubernetesGitops],
+      value: ServiceDeploymentType.KubernetesGitops
     }
-    // {
-    //   label: 'pipeline.serviceDeploymentTypes.kubernetesWithGitops',
-    //   icon: deploymentIconMap[ServiceDeploymentType.KubernetesGitops],
-    //   value: ServiceDeploymentType.KubernetesGitops
-    // }
   ]
 
   useEffect(() => {

@@ -640,6 +640,10 @@ getStartedWithCD:
   redisCache: Redis cache
   applicationController: Application controller
   provisioningText: Provisioning these components will take up to 1 minute
+  setupIPWhiteListing: Set up IP Whitelisting for Harness to connect to your cluster
+  agentProvisionedSuccessfully: Your agent has been provisioned successfully
+  agentSetupTimeInfo: This process may take up to 1 minutes to complete. While the agent is being provisioned, please set up IP Whitelisting so Harness can connect to your cluster
+  ensureFullConnectivity: To ensure the full connectivity, please make sure you have set up IP Whitelisting before moving to the next step
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment

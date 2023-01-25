@@ -192,7 +192,6 @@ getStartedWithCI:
   fetchingRepos: Please wait while we fetch git repositories...
   pleaseChoose: 'Please choose {{field}}'
   fieldIsMissing: '{{field}} is missing'
-  startProvisioning: Start Provisioning
   provisioningHelpText: Provision the '{{ $.ci.getStartedWithCI.hostedByHarness }}' Infrastructure (~2 mins)
   settingUpCIPipeline: Just a moment while we set up a CI pipeline for you...
   nonGitCloneOption: Use this option if your Git provider is not supported by Harness or if you have nothing to clone.

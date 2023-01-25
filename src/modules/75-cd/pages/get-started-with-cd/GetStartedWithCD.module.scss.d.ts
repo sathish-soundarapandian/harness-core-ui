@@ -20,6 +20,7 @@ declare const styles: {
   readonly centerAlign: string
   readonly closeWizard: string
   readonly containerItemCss: string
+  readonly error: string
   readonly iconPadding: string
   readonly iconPaddingSmall: string
   readonly image: string
@@ -29,6 +30,8 @@ declare const styles: {
   readonly listItemCss: string
   readonly paddingXSmall: string
   readonly progressItem: string
+  readonly provisioningInfo: string
+  readonly provisioningSecondaryInfo: string
   readonly provisioningText: string
   readonly samplePipeline: string
   readonly separator: string

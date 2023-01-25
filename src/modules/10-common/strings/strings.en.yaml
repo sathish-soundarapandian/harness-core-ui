@@ -243,6 +243,8 @@ ce:
 launchFirstGen: 'Launch {{module}} First Generation'
 startTrial: 'Start 14 day {{module}} Enterprise trial'
 new: new
+gitops:
+  startProvisioning: Start Provisioning
 purpose:
   welcome: 'Hello there, welcome to Harness'
   howToProceed: 'How would you like to proceed?'

@@ -450,6 +450,7 @@ export interface StringsMap {
   'common.gitSync.unSynced.message2': string
   'common.gitSync.unableToCreatePR': string
   'common.gitSync.updateResource': string
+  'common.gitops.startProvisioning': string
   'common.gitopsAgents': string
   'common.gnupgKeys': string
   'common.goBack': string
@@ -5065,6 +5066,8 @@ export interface StringsMap {
   'cd.gcloudClusterCmd': string
   'cd.gcloudClusterCreate': string
   'cd.gcloudClusterList': string
+  'cd.getStartedWithCD.agentProvisionedSuccessfully': string
+  'cd.getStartedWithCD.agentSetupTimeInfo': string
   'cd.getStartedWithCD.allSet': string
   'cd.getStartedWithCD.applicationController': string
   'cd.getStartedWithCD.artifactLocation': string
@@ -5097,6 +5100,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.deploymentType': string
   'cd.getStartedWithCD.directK8s': string
   'cd.getStartedWithCD.doesntHaveGitRepo': string
+  'cd.getStartedWithCD.ensureFullConnectivity': string
   'cd.getStartedWithCD.entityCreationTitle': string
   'cd.getStartedWithCD.envName': string
   'cd.getStartedWithCD.environmentDetails': string
@@ -5144,6 +5148,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.serviceHeading': string
   'cd.getStartedWithCD.serviceName': string
   'cd.getStartedWithCD.setupDelegate': string
+  'cd.getStartedWithCD.setupIPWhiteListing': string
   'cd.getStartedWithCD.setupaNewDelegate': string
   'cd.getStartedWithCD.successFull': string
   'cd.getStartedWithCD.testConnection': string
@@ -7376,7 +7381,6 @@ export interface StringsMap {
   'ci.getStartedWithCI.selectInfra': string
   'ci.getStartedWithCI.setUpAuth': string
   'ci.getStartedWithCI.settingUpCIPipeline': string
-  'ci.getStartedWithCI.startProvisioning': string
   'ci.getStartedWithCI.starterPipeline': string
   'ci.getStartedWithCI.starterPipelineHelptext': string
   'ci.getStartedWithCI.takeToTheNextLevel': string

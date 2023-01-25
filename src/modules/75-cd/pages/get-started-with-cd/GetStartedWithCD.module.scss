@@ -114,7 +114,7 @@
 }
 
 .installedComponent {
-  font-size: 13px;
+  font-size: var(--form-input-font-size);
   line-height: 24px;
   display: flex;
   align-items: center;
@@ -156,4 +156,24 @@
 .progressItem:after {
   border-color: var(--primary-7) !important;
   background-color: var(--primary-7) !important;
+}
+
+.provisioningInfo {
+  height: 32px;
+  margin-top: var(--spacing-xxxlarge);
+  display: flex;
+  font-weight: 500;
+  font-size: var(--form-input-font-size);
+  color: var(--grey-900);
+}
+
+.provisioningSecondaryInfo {
+  margin: var(--spacing-medium) 0 var(--spacing-xxxlarge);
+  font-size: var(--font-size-normal);
+  color: var(--grey-900);
+  min-height: 40px;
+}
+
+.error {
+  color: var(--error);
 }

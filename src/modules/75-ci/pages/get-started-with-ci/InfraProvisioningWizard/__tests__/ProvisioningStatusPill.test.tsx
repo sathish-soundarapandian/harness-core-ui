@@ -26,7 +26,7 @@ describe('Test ProvisioningStatusPill component', () => {
     const { getByText } = render(
       <ProvisioningStatusPill provisioningStatus={ProvisioningStatus.TO_DO} onStartProvisioning={jest.fn()} />
     )
-    expect(getByText('ci.getStartedWithCI.startProvisioning')).toBeInTheDocument()
+    expect(getByText('common.gitops.startProvisioning')).toBeInTheDocument()
   })
 
   test('Render FAILURE state', () => {
