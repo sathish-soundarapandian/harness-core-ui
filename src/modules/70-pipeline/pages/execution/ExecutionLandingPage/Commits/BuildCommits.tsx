@@ -13,7 +13,7 @@ import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { CIBuildCommit, CIPipelineModuleInfo } from 'services/ci'
 import { UserLabel, TimeAgoPopover } from '@common/exports'
 import { useStrings } from 'framework/strings'
-import { CommitId } from '@ci/components/CommitsInfo/CommitsInfo'
+import { CommitId } from '@pipeline/components/CommitsInfo/CommitsInfo'
 import commitsEmptyState from './images/commits_empty_state.svg'
 import css from './BuildCommits.module.scss'
 
@@ -81,7 +81,7 @@ const CommitsGroupedByTimestamp: React.FC<{
       <div className={css.stackHeader}>
         <Icon className={css.stackHeaderIcon} name="git-commit" size={20} margin={{ right: 'medium' }} />
         <Text className={css.stackHeaderText} font="small">
-          {getString('ci.commitsOn')} {moment(timeStamp).format('MMM D, YYYY')}
+          {getString('pipeline.commitsOn')} {moment(timeStamp).format('MMM D, YYYY')}
         </Text>
       </div>
       <Commits commits={commits} showAvatar={showCommitAuthorAvatar} />
@@ -89,7 +89,7 @@ const CommitsGroupedByTimestamp: React.FC<{
   ))
 }
 
-const BuildCommits: React.FC = () => {
+export function BuildCommits() {
   const context = useExecutionContext()
   const { getString } = useStrings()
 
@@ -133,9 +133,9 @@ const BuildCommits: React.FC = () => {
       <Container className={css.emptyCommits}>
         <img src={commitsEmptyState} />
         <Text font={{ size: 'medium' }} padding={{ top: 'xlarge' }}>
-          {getString('ci.commitsTab.youHaveNoCommits')}
+          {getString('pipeline.commitsTab.youHaveNoCommits')}
         </Text>
-        <Text padding={{ top: 'xsmall' }}>{getString('ci.commitsTab.youWillSeeYourCommitsHere')}</Text>
+        <Text padding={{ top: 'xsmall' }}>{getString('pipeline.commitsTab.youWillSeeYourCommitsHere')}</Text>
       </Container>
     )
   }
@@ -174,5 +174,3 @@ const BuildCommits: React.FC = () => {
     </div>
   )
 }
-
-export default BuildCommits

@@ -33,7 +33,7 @@ exports[`BuildCommits snapshot test should render properly 1`] = `
         <p
           class="StyledProps--font StyledProps--main stackHeaderText StyledProps--font-small"
         >
-          ci.commitsOn
+          pipeline.commitsOn
            
           Jan 8, 2021
         </p>
@@ -332,7 +332,7 @@ exports[`BuildCommits snapshot test should render properly 1`] = `
         <p
           class="StyledProps--font StyledProps--main stackHeaderText StyledProps--font-small"
         >
-          ci.commitsOn
+          pipeline.commitsOn
            
           Jan 1, 1970
         </p>

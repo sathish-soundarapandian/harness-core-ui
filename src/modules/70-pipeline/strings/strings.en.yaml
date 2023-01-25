@@ -1567,3 +1567,8 @@ noEnvironmentGroupsFound: No Environment Groups Available
 envGroupLabel: Select an existing Environment Group
 envLabel: Select an existing Environment
 serviceLabel: Select an existing service
+moreCommitsLabel: 'More commits'
+commitsTab:
+  youHaveNoCommits: You have no commits
+  youWillSeeYourCommitsHere: You will see your commits here
+commitsOn: 'Commits on'

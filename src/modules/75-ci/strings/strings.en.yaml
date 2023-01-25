@@ -1,7 +1,7 @@
 continuous: '{{$.common.purpose.ci.continuous}}'
 learnMore: Learn more about Continuous Integration
 prSymbol: '#'
-moreCommitsLabel: 'More commits'
+
 ciTrialHomePage:
   startTrial:
     description: '{{ $.ci.dashboard.subHeading }}'
@@ -10,7 +10,6 @@ ciTrialHomePage:
 dashboard:
   subHeading: Take your software build processes to the next level using our Harness Continuous Integration
   createProject: '{{$.createProject}}'
-commitsOn: 'Commits on'
 committed: 'committed'
 clipboardCopySuccess: '{{ $.clipboardCopySuccess }}'
 clipboardCopyFail: '{{ $.clipboardCopyFail }}'
@@ -105,9 +104,6 @@ gradleNote1: |
 gradleNote2: Test intelligence assumes ./gradlew is present in the root of the project. If not, it falls back to the gradle tool to run the tests. As long as the gradle version has test filtering support, it will be able to run test intelligence.
 testSummary: Test Summary
 successful: Successful
-commitsTab:
-  youHaveNoCommits: You have no commits
-  youWillSeeYourCommitsHere: You will see your commits here
 artifactoryConnectorLabel: Artifactory Connector
 buildInfra:
   label: Build Infrastructure is required

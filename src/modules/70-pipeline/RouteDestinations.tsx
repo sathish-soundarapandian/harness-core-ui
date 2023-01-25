@@ -78,6 +78,7 @@ import ExecutionErrorTrackingView from './pages/execution/ExecutionErrorTracking
 import { ExecutionListPage } from './pages/execution-list-page/ExecutionListPage'
 import EnvironmentResourceRenderer from './components/RbacResourceTables/EnvironmentAttributeRenderer/EnvironmentResourceRenderer'
 import EnvironmentAttributeRenderer from './components/RbacResourceTables/EnvironmentAttributeRenderer/EnvironmentAttributeRenderer'
+import { BuildCommits } from './pages/execution/ExecutionLandingPage/Commits/BuildCommits'
 /**
  * Register RBAC resources
  */
@@ -643,6 +644,21 @@ export function PipelineRouteDestinations({
       >
         <ExecutionLandingPage>
           <BuildTestsApp />
+        </ExecutionLandingPage>
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={ProjectDetailsSideNavProps}
+        layout={MinimalLayout}
+        path={routes.toExecutionCommitsView({
+          ...accountPathProps,
+          ...executionPathProps
+        })}
+        pageName={PAGE_NAME.BuildCommits}
+      >
+        <ExecutionLandingPage>
+          <BuildCommits />
         </ExecutionLandingPage>
       </RouteWithLayout>
       <RouteWithLayout

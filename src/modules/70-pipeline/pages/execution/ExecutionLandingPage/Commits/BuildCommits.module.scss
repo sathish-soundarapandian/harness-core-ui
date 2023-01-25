@@ -54,7 +54,7 @@
   z-index: 1;
   // TODO: Replace color once it is available in UIKit
   color: var(--grey-500) !important;
-  background-color: #fafcff !important;
+  background-color: var(--primary-bg) !important;
 }
 
 .stackHeaderText {
@@ -163,11 +163,6 @@
   color: var(--black);
   // TODO: Replace color once it is available in UIKit
   border-right: 1px solid rgba(0, 0, 0, 0.05);
-}
-
-.hashIcon {
-  // TODO: Replace color once it is available in UIKit
-  color: #999999 !important;
 }
 
 .emptyCommits {

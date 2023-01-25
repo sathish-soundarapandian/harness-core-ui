@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-export const successData = {
+export const prData = {
   __recast: 'io.harness.ci.plan.creator.execution.CIPipelineModuleInfo',
   branch: 'master',
   ciExecutionInfoDTO: {
@@ -54,6 +54,61 @@ export const successData = {
   },
   repoName: 'portal'
 }
+
+export const branchData = {
+  __recast: 'io.harness.ci.plan.creator.execution.CIPipelineModuleInfo',
+  branch: 'main',
+  buildType: 'branch',
+  ciExecutionInfoDTO: {
+    __recast: 'io.harness.ci.pipeline.executions.beans.CIWebhookInfoDTO',
+    event: 'branch',
+    branch: {
+      __recast: 'io.harness.ci.pipeline.executions.beans.CIBuildBranchHook',
+      commits: [
+        {
+          __recast: 'io.harness.ci.pipeline.executions.beans.CIBuildCommit',
+          id: 'f79d5680f69d21248041ab55b5d8b05fdad673b1',
+          link: 'https://github.com/wings-software/ti-ui/commit/f79d5680f69d21248041ab55b5d8b05fdad673b1',
+          message: 'rebase',
+          ownerName: 'user',
+          ownerId: 'user',
+          ownerEmail: 'michael.tran@harness.io',
+          timeStamp: 1669676823000
+        }
+      ]
+    }
+  },
+  imageDetailsList: [
+    {
+      __recast: 'io.harness.ci.pipeline.executions.beans.CIImageDetails',
+      imageName: 'harness/drone-git',
+      imageTag: '1.2.7-rootless'
+    },
+    { __recast: 'io.harness.ci.pipeline.executions.beans.CIImageDetails', imageName: 'node', imageTag: '' }
+  ],
+  infraDetailsList: [
+    {
+      __recast: 'io.harness.ci.pipeline.executions.beans.CIInfraDetails',
+      infraType: 'KubernetesDirect',
+      infraOSType: 'Linux',
+      infraHostType: 'Self Hosted',
+      infraArchType: 'Amd64'
+    }
+  ],
+  isPrivateRepo: true,
+  repoName: 'ti-ui',
+  scmDetailsList: [
+    {
+      __recast: 'io.harness.ci.pipeline.executions.beans.CIScmDetails',
+      scmUrl: 'https://github.com/wings-software/ti-ui',
+      scmProvider: 'Github',
+      scmAuthType: 'Http',
+      scmHostType: 'SaaS'
+    }
+  ],
+  tiBuildDetailsList: []
+}
+
 export const successNodeMapValue = {
   nodeType: 'CI',
   nodeGroup: 'STAGE',

@@ -11,7 +11,7 @@ import { Text, Button, Icon, Utils, Container, Layout } from '@harness/uicore'
 import { Collapse } from '@blueprintjs/core'
 import { FontVariation, Color } from '@harness/design-system'
 import type { CIBuildCommit } from 'services/ci'
-import { String, useStrings } from 'framework/strings'
+import { useStrings } from 'framework/strings'
 import { UserLabel, TimeAgoPopover } from '@common/exports'
 
 import css from './CommitsInfo.module.scss'
@@ -120,7 +120,7 @@ export function CommitsInfo(props: CommitsInfoProps): React.ReactElement | null 
             iconProps={{ size: 8 }}
             onClick={toggleCommits}
           >
-            <String stringID="ci.moreCommitsLabel" />
+            {getString('pipeline.moreCommitsLabel')}
           </Button>
 
           <Collapse isOpen={showCommits}>

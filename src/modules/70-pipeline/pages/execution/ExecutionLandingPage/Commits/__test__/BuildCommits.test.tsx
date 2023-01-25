@@ -9,7 +9,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 jest.mock('copy-to-clipboard')
 import { StringsContext } from 'framework/strings'
-import BuildCommits from '../BuildCommits'
+import { BuildCommits } from '../BuildCommits'
 import BuildMock from './mock/build.json'
 
 jest.mock('@pipeline/utils/CIUtils', () => ({
