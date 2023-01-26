@@ -270,9 +270,17 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     setSelectedNodeName(selectedNodeNameFitlers)
   }, [])
 
-  const hanldeDataFormatChange = useCallback(dataFormat => {
-    setSelectedDataFormat(dataFormat)
-  }, [])
+  const hanldeDataFormatChange = useCallback(
+    dataFormat => {
+      const updatedData = transformMetricData(dataFormat, data)
+      setUpdateViewInfo(prevState => ({
+        ...prevState,
+        currentViewData: updatedData
+      }))
+      setSelectedDataFormat(dataFormat)
+    },
+    [data]
+  )
 
   const updatedAnomalousMetricsFilter = useCallback(
     () => setAnomalousMetricsFilterChecked(currentFilterStatus => !currentFilterStatus),

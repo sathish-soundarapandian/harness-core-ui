@@ -7,7 +7,6 @@
 
 import { RiskValues } from '@cv/utils/CommonUtils'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
-import type { NodeRiskCount } from 'services/cv'
 
 export const MetricType = {
   ANOMALOUS: 'Anomalous',

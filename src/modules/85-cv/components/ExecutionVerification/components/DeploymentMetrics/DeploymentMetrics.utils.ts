@@ -33,8 +33,10 @@ export function transformMetricData(
   if (!(Array.isArray(metricData?.content) && metricData?.content.length)) {
     return []
   }
+
+  const metricInfo = { ...metricData }
   const graphData: DeploymentMetricsAnalysisRowProps[] = []
-  for (const analysisData of metricData.content || []) {
+  for (const analysisData of metricInfo.content || []) {
     const {
       metricName,
       transactionGroup,
@@ -141,10 +143,8 @@ export function transformMetricData(
     }
 
     graphData.push({
-      controlData: [...controlPoints],
-      testData: [...testPoints],
-      normalisedControlData: [...normalisedControlPoints],
-      normalisedTestData: [...normalisedTestPoints],
+      controlData: selectedDataFormat?.value === 'normalised' ? [...normalisedControlPoints] : [...controlPoints],
+      testData: selectedDataFormat?.value === 'normalised' ? [...normalisedTestPoints] : [...testPoints],
       transactionName: transactionGroup as string,
       metricName: metricName as string,
       risk: analysisResult,

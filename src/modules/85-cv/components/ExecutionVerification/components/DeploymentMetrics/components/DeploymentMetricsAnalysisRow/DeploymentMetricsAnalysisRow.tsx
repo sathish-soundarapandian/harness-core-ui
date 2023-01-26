@@ -31,8 +31,6 @@ export interface DeploymentMetricsAnalysisRowProps {
   metricName: string
   controlData?: HostControlTestData[]
   testData?: HostTestData[]
-  normalisedControlData: HostControlTestData[]
-  normalisedTestData: HostTestData[]
   className?: string
   risk?: MetricsAnalysis['analysisResult']
   nodeRiskCount?: NodeRiskCountDTO
@@ -43,34 +41,14 @@ export interface DeploymentMetricsAnalysisRowProps {
 }
 
 export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRowProps): JSX.Element {
-  const {
-    controlData = [],
-    testData = [],
-    normalisedControlData = [],
-    normalisedTestData = [],
-    className,
-    metricName,
-    transactionName,
-    thresholds,
-    selectedDataFormat,
-    healthSource
-  } = props
+  const { controlData = [], testData = [], className, metricName, transactionName, thresholds, healthSource } = props
   const graphContainerRef = useRef<HTMLDivElement>(null)
   const [graphWidth, setGraphWidth] = useState(0)
   const { type } = healthSource || {}
 
-  const { controlDataInfo, testDataInfo } = useMemo(() => {
-    const data1 = selectedDataFormat?.value === 'normalised' ? [...normalisedControlData] : [...controlData]
-    const data2 = selectedDataFormat?.value === 'normalised' ? [...normalisedTestData] : [...testData]
-    return {
-      controlDataInfo: data1,
-      testDataInfo: data2
-    }
-  }, [controlData, normalisedControlData, normalisedTestData, selectedDataFormat?.value, testData])
-
   const charts: DeploymentMetricsAnalysisRowChartSeries[][] = useMemo(() => {
-    return transformControlAndTestDataToHighChartsSeries(controlDataInfo || [], testDataInfo || [])
-  }, [controlDataInfo, testDataInfo])
+    return transformControlAndTestDataToHighChartsSeries(controlData || [], testData || [])
+  }, [controlData, testData])
 
   const [chartsOffset, setChartsOffset] = useState(1)
   const filteredCharts = filterRenderCharts(charts, chartsOffset)
@@ -99,19 +77,19 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
               <HighchartsReact
                 key={index}
                 highcharts={Highcharts}
-                options={chartsConfig(series, graphWidth, testData?.[index], controlDataInfo?.[index], getString)}
+                options={chartsConfig(series, graphWidth, testData?.[index], controlData?.[index], getString)}
               />
               <Container className={css.metricInfo} padding={{ bottom: 'small' }}>
                 <Container
                   className={css.node}
-                  background={getRiskColorValue(testDataInfo?.[index]?.risk, false)}
+                  background={getRiskColorValue(testData?.[index]?.risk, false)}
                 ></Container>
                 <Text
-                  tooltip={testDataInfo?.[index]?.name}
+                  tooltip={testData?.[index]?.name}
                   font={{ variation: FontVariation.SMALL }}
                   margin={{ right: 'large' }}
                 >
-                  {`Test host: ${testDataInfo?.[index]?.name}`}
+                  {`Test host: ${testData?.[index]?.name}`}
                 </Text>
                 <Container
                   style={{ borderColor: Color.PRIMARY_7 }}
@@ -119,22 +97,22 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
                   background={Color.PRIMARY_2}
                 ></Container>
                 <Text
-                  tooltip={controlDataInfo?.[index]?.name as string}
+                  tooltip={controlData?.[index]?.name as string}
                   font={{ variation: FontVariation.SMALL }}
-                >{`Control host: ${controlDataInfo?.[index]?.name}`}</Text>
+                >{`Control host: ${controlData?.[index]?.name}`}</Text>
               </Container>
               <Container className={css.metricInfo}>
                 <Text
                   font={{ variation: FontVariation.TABLE_HEADERS }}
-                  color={getRiskColorValue(testDataInfo?.[index]?.risk, false)}
-                  style={{ background: getSecondaryRiskColorValue(testDataInfo?.[index]?.risk) }}
+                  color={getRiskColorValue(testData?.[index]?.risk, false)}
+                  style={{ background: getSecondaryRiskColorValue(testData?.[index]?.risk) }}
                   className={css.metricRisk}
                   margin={{ right: 'small' }}
                 >
-                  {testDataInfo?.[index]?.risk}
+                  {testData?.[index]?.risk}
                 </Text>
                 <Text font={{ variation: FontVariation.BODY2_SEMI }}>
-                  {ANALYSIS_REASON_MAPPING[testDataInfo?.[index]?.analysisReason as string]}
+                  {ANALYSIS_REASON_MAPPING[testData?.[index]?.analysisReason as string]}
                 </Text>
               </Container>
             </>
