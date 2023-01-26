@@ -289,7 +289,13 @@ export function generateHealthSourcesOptionsData(
   return healthSourcesOptionsData
 }
 
-export function getPaginationInfo(data: PageMetricsAnalysis | null) {
+export function getPaginationInfo(data: PageMetricsAnalysis | null): {
+  pageIndex?: number
+  pageItemCount?: number
+  limit?: number
+  totalPages?: number
+  totalItems?: number
+} {
   const { pageIndex, pageItemCount, pageSize, totalItems, totalPages } = data || {}
   const paginationInfo =
     {
