@@ -57,3 +57,5 @@ export const DEFAULT_NODE_RISK_COUNTS = [
     displayName: 'Healthy'
   }
 ]
+
+export const INITIAL_PAGE_NUMBER = 1

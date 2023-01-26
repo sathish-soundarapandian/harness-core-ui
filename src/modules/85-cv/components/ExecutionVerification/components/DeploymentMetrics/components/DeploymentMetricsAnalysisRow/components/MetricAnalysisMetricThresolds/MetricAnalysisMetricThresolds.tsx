@@ -51,17 +51,17 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
     const data = row.original
     const { criteria } = data || {}
     const { greaterThanThreshold, lessThanThreshold } = (criteria || {}) as MetricThresholdCriteriaV2
-    if (greaterThanThreshold || lessThanThreshold) {
+    if (isNumber(greaterThanThreshold) || isNumber(lessThanThreshold)) {
       return (
         <Layout.Horizontal>
           {isNumber(lessThanThreshold) ? (
             <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1} padding={{ right: 'small' }}>
-              {`< ${greaterThanThreshold}`}
+              {`< ${lessThanThreshold}`}
             </Text>
           ) : null}
           {isNumber(greaterThanThreshold) ? (
             <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1} padding={{ right: 'small' }}>
-              {` - > ${lessThanThreshold}`}
+              {isNumber(lessThanThreshold) ? ` - > ${greaterThanThreshold}` : `   > ${greaterThanThreshold}`}
             </Text>
           ) : null}
         </Layout.Horizontal>

@@ -10,6 +10,7 @@ import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import type {
+  AnalysedDeploymentNode,
   HealthSourceDTO,
   HealthSourceV2,
   HostData,
@@ -22,7 +23,6 @@ import type {
   HostTestData
 } from './components/DeploymentMetricsAnalysisRow/DeploymentMetricsAnalysisRow.constants'
 import type { DeploymentMetricsAnalysisRowProps } from './components/DeploymentMetricsAnalysisRow/DeploymentMetricsAnalysisRow'
-import type { DeploymentNodeAnalysisResult } from '../DeploymentProgressAndNodes/components/DeploymentNodes/DeploymentNodes.constants'
 import { DEFAULT_NODE_RISK_COUNTS, DEFAULT_PAGINATION_VALUEE } from './DeploymentMetrics.constants'
 
 export function transformMetricData(
@@ -35,10 +35,8 @@ export function transformMetricData(
   const graphData: DeploymentMetricsAnalysisRowProps[] = []
   for (const analysisData of metricData.content || []) {
     const {
-      metricIdentifier,
       metricName,
       transactionGroup,
-      healthSourceIdentifier,
       analysisResult,
       testDataNodes = [],
       thresholds,
@@ -177,7 +175,7 @@ export function getErrorMessage(errorObj?: any): string | undefined {
 export const getAccordionIds = (data: DeploymentMetricsAnalysisRowProps[]): string[] => {
   if (data.length) {
     return data?.map(
-      analysisRow => `${analysisRow.transactionName}-${analysisRow.metricName}-${analysisRow.healthSourceType}`
+      analysisRow => `${analysisRow?.transactionName}-${analysisRow?.metricName}-${analysisRow?.healthSource?.type}`
     )
   }
   return []
@@ -198,15 +196,15 @@ export const getDropdownItems = (
   }))
 }
 
-export function getInitialNodeName(selectedNode: DeploymentNodeAnalysisResult | undefined): MultiSelectOption[] {
+export function getInitialNodeName(selectedNode: AnalysedDeploymentNode | undefined): MultiSelectOption[] {
   if (!selectedNode) {
     return []
   }
 
   return [
     {
-      label: selectedNode?.hostName,
-      value: selectedNode?.hostName
+      label: selectedNode?.nodeIdentifier as string,
+      value: selectedNode?.nodeIdentifier as string
     }
   ]
 }
@@ -268,7 +266,7 @@ export function getPaginationInfo(data: PageMetricsAnalysis | null) {
     {
       pageIndex,
       pageItemCount,
-      pageSize,
+      limit: pageSize,
       totalPages,
       totalItems
     } || DEFAULT_PAGINATION_VALUEE

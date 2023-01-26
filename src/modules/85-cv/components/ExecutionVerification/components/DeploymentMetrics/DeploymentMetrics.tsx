@@ -33,7 +33,8 @@ import { useQueryParams } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import {
-  GetVerifyStepDeploymentMetricsQueryParams,
+  AnalysedDeploymentNode,
+  GetMetricsAnalysisForVerifyStepExecutionIdQueryParams,
   useGetHealthSourcesForVerifyStepExecutionId,
   useGetMetricsAnalysisForVerifyStepExecutionId,
   useGetTransactionGroupsForVerifyStepExecutionId,
@@ -42,9 +43,8 @@ import {
 import type { ExecutionQueryParams } from '@pipeline/utils/executionUtils'
 import { VerificationType } from '@cv/components/HealthSourceDropDown/HealthSourceDropDown.constants'
 import noDataImage from '@cv/assets/noData.svg'
-import { POLLING_INTERVAL, PAGE_SIZE, DATA_OPTIONS } from './DeploymentMetrics.constants'
+import { POLLING_INTERVAL, PAGE_SIZE, DATA_OPTIONS, INITIAL_PAGE_NUMBER } from './DeploymentMetrics.constants'
 import { RefreshViewForNewData } from '../RefreshViewForNewDataButton/RefreshForNewData'
-import type { DeploymentNodeAnalysisResult } from '../DeploymentProgressAndNodes/components/DeploymentNodes/DeploymentNodes.constants'
 import {
   DeploymentMetricsAnalysisRow,
   DeploymentMetricsAnalysisRowProps
@@ -73,7 +73,7 @@ import css from './DeploymentMetrics.module.scss'
 interface DeploymentMetricsProps {
   step: ExecutionNode
   activityId: string
-  selectedNode?: DeploymentNodeAnalysisResult
+  selectedNode?: AnalysedDeploymentNode
 }
 
 type UpdateViewState = {
@@ -93,13 +93,11 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
   const [anomalousMetricsFilterChecked, setAnomalousMetricsFilterChecked] = useState(
     pageParams.filterAnomalous === 'true'
   )
-  const [queryParams, setQueryParams] = useState<GetVerifyStepDeploymentMetricsQueryParams>({
-    accountId,
+  const [queryParams, setQueryParams] = useState<GetMetricsAnalysisForVerifyStepExecutionIdQueryParams>({
     anomalousMetricsOnly: anomalousMetricsFilterChecked,
-    anomalousNodesOnly: anomalousMetricsFilterChecked,
-    hostNames: getQueryParamForHostname(selectedNode?.hostName),
-    pageNumber: 0,
-    pageSize: PAGE_SIZE
+    node: getQueryParamForHostname(selectedNode?.hostName),
+    page: INITIAL_PAGE_NUMBER,
+    limit: PAGE_SIZE
   })
   const accordionRef = useRef<AccordionHandle>(null)
   const [pollingIntervalId, setPollingIntervalId] = useState(-1)
@@ -120,6 +118,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     orgIdentifier,
     projectIdentifier,
     verifyStepExecutionId: activityId,
+    queryParams,
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
     }
@@ -127,7 +126,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
   const paginationInfo = getPaginationInfo(data)
 
   const {
-    data: transactionNames,
+    data: transactionGroup,
     loading: transactionNameLoading,
     error: transactionNameError
   } = useGetTransactionGroupsForVerifyStepExecutionId({
@@ -180,8 +179,8 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     setUpdateViewInfo({ currentViewData: [], hasNewData: false, shouldUpdateView: true, showSpinner: true })
     setQueryParams(oldParams => ({
       ...oldParams,
-      hostNames: undefined,
-      pageNumber: 0
+      node: undefined,
+      page: INITIAL_PAGE_NUMBER
     }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activityId])
@@ -202,7 +201,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
   useEffect(() => {
     const updatedQueryParams = {
       ...queryParams,
-      hostNames: getQueryParamForHostname(selectedNode?.hostName)
+      node: getQueryParamForHostname(selectedNode?.hostName)
     }
     if (!isEqual(updatedQueryParams, queryParams)) {
       setQueryParams(updatedQueryParams)
@@ -238,7 +237,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
   useEffect(() => {
     setQueryParams(oldQueryParams => ({
       ...oldQueryParams,
-      pageNumber: 0,
+      page: INITIAL_PAGE_NUMBER,
       anomalousMetricsOnly: anomalousMetricsFilterChecked,
       anomalousNodesOnly: anomalousMetricsFilterChecked
     }))
@@ -252,10 +251,10 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
 
     setQueryParams(prevQueryParams => ({
       ...prevQueryParams,
-      pageNumber: 0,
+      page: INITIAL_PAGE_NUMBER,
       healthSources: getQueryParamFromFilters(healthSourceQueryParams),
-      transactionNames: getQueryParamFromFilters(transactionNameParams),
-      hostNames: getQueryParamFromFilters(nodeNameParams)
+      transactionGroup: getQueryParamFromFilters(transactionNameParams),
+      node: getQueryParamFromFilters(nodeNameParams)
     }))
     setUpdateViewInfo(oldInfo => ({ ...oldInfo, shouldUpdateView: true, showSpinner: true }))
   }, [selectedHealthSources, selectedTransactionName, selectedNodeName])
@@ -351,7 +350,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
           placeholder={getFilteredText(selectedTransactionName, 'rbac.group')}
           value={selectedTransactionName}
           className={css.filterDropdown}
-          items={getDropdownItems(transactionNames, transactionNameLoading, transactionNameError)}
+          items={getDropdownItems(transactionGroup, transactionNameLoading, transactionNameError)}
           onChange={handleTransactionNameChange}
           buttonTestId={'transaction_name_filter'}
         />
@@ -440,12 +439,12 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
       </Container>
       <Pagination
         className={css.metricsPagination}
-        pageSize={paginationInfo.pageSize as number}
+        limit={paginationInfo.limit as number}
         pageCount={paginationInfo.totalPages as number}
         itemCount={paginationInfo.totalItems as number}
         pageIndex={paginationInfo.pageIndex}
         gotoPage={selectedPage => {
-          setQueryParams(oldQueryParams => ({ ...oldQueryParams, pageNumber: selectedPage }))
+          setQueryParams(oldQueryParams => ({ ...oldQueryParams, page: selectedPage }))
           setUpdateViewInfo(oldInfo => ({ ...oldInfo, shouldUpdateView: true, showSpinner: true }))
         }}
       />

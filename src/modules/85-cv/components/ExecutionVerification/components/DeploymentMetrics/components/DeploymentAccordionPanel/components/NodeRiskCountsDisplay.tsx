@@ -17,7 +17,6 @@ const NodeRiskCountsDisplay: React.FC<NodeCountDisplayProps> = props => {
   const { nodeDetails } = props
 
   const { HEALTHY, NEED_ATTENTION, OBSERVE, UNHEALTHY, WARNING } = RiskValues
-
   const { nodeCountDisplayHealthy, nodeCountDisplayNeedAttention, nodeCountDisplayObserve, nodeCountDisplayUnhealthy } =
     css
 
