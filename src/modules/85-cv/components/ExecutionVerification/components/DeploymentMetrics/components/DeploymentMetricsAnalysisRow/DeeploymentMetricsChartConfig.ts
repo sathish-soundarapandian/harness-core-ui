@@ -72,17 +72,15 @@ export function chartsConfig(
         const baseDataDisplayValue = baseDataValue?.toFixed(3) ?? getString('noData')
         const testDataDisplayValue = testDataValue?.toFixed(3) ?? getString('noData')
 
-        const baseDataTimestamp = moment(
-          // eslint-disable-next-line
-          // @ts-ignore
-          controlData?.points[this?.points?.[0]?.point.index]?.x + controlData?.initialXvalue
-        ).format('lll')
+        // eslint-disable-next-line
+        // @ts-ignore
+        const baseDataTime = controlData?.points[this?.points?.[0]?.point.index]?.x + controlData?.initialXvalue
+        const baseDataTimestamp = baseDataTime ? moment(baseDataTime).format('lll') : getString('noData')
 
-        const testDataTimestamp = moment(
-          // eslint-disable-next-line
-          // @ts-ignore
-          testData?.points[this?.points?.[0]?.point.index]?.x + testData?.initialXvalue
-        ).format('lll')
+        // eslint-disable-next-line
+        // @ts-ignore
+        const testeDataTime = testData?.points[this?.points?.[0]?.point.index]?.x + testData?.initialXvalue
+        const testDataTimestamp = testeDataTime ? moment(testeDataTime).format('lll') : getString('noData')
 
         return `
         <div style="margin-bottom: var(--spacing-xsmall); color: var(--grey-350">${baseDataTimestamp}</div>
