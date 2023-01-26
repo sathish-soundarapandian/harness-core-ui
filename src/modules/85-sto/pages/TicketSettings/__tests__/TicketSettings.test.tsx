@@ -11,13 +11,14 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 
 import routes from '@common/RouteDefinitions'
-import Tickets from '../Tickets'
+import { accountPathProps } from '@common/utils/routeUtils'
+import TicketSettings from '../TicketSettings'
 
 describe('Tickets Page', () => {
   test('The ticket settings page renders ', () => {
     const { container } = render(
-      <TestWrapper path={routes.toSignup()} defaultAppStoreValues={defaultAppStoreValues}>
-        <Tickets />
+      <TestWrapper path={routes.toTickets({ ...accountPathProps })} defaultAppStoreValues={defaultAppStoreValues}>
+        <TicketSettings />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

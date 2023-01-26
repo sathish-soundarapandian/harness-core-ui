@@ -517,13 +517,6 @@ export interface StringsMap {
   'common.invalidIdentifiers': string
   'common.jexlCondition': string
   'common.jexlExpression': string
-  'common.jira.connector': string
-  'common.jira.defaultProjectName': string
-  'common.jira.selectConnector': string
-  'common.jira.selectProjectName': string
-  'common.jira.ticketComment': string
-  'common.jira.ticketExemption': string
-  'common.jira.tickets': string
   'common.labelTestConnection': string
   'common.last7days': string
   'common.lastConnected': string
@@ -1107,6 +1100,13 @@ export interface StringsMap {
   'common.test.connectionSuccessful': string
   'common.test.inProgress': string
   'common.test.retest': string
+  'common.tickets.connector': string
+  'common.tickets.defaultProjectName': string
+  'common.tickets.selectConnector': string
+  'common.tickets.selectProjectName': string
+  'common.tickets.ticketComment': string
+  'common.tickets.ticketExemption': string
+  'common.tickets.tickets': string
   'common.timeRange.calendarMonths': string
   'common.timeRange.recommended': string
   'common.timeRange.relativeDates': string

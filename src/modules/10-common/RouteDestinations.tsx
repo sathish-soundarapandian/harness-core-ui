@@ -21,7 +21,6 @@ import WelcomePage from './pages/welcome/WelcomePage'
 import HomeSideNav from './components/HomeSideNav/HomeSideNav'
 import AccountSideNav from './components/AccountSideNav/AccountSideNav'
 import AccountResources from './pages/AccountResources/AccountResources'
-import Tickets from './pages/Tickets/Tickets'
 import SmtpDetails from './components/Smtp/SmtpDetails'
 import { useFeatureFlags } from './hooks/useFeatureFlag'
 import MainDashboardSideNav from './components/HomeSideNav/MainDashboardSideNav'
@@ -105,9 +104,5 @@ export default (
         <WelcomePage />
       </ModalProvider>
     </Route>
-
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toTickets({ ...accountPathProps })} exact>
-      <Tickets />
-    </RouteWithLayout>
   </>
 )

@@ -58,6 +58,8 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { RedirectToModuleTrialHomeFactory, RedirectToSubscriptionsFactory } from '@common/Redirects'
 import { ModuleName } from 'framework/types/ModuleName'
+import { AccountSideNavProps } from '@common/RouteDestinations'
+import TicketSettings from './pages/TicketSettings/TicketSettings'
 
 const STOSideNavProps: SidebarContext = {
   navComponent: STOSideNav,
@@ -404,6 +406,10 @@ const RouteDestinations: React.FC = () => {
           pathProps={{ ...accountPathProps, ...projectPathProps, ...moduleParams }}
         />
       </Route>
+
+      <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toTickets({ ...accountPathProps })} exact>
+        <TicketSettings />
+      </RouteWithLayout>
     </>
   )
 }

@@ -150,6 +150,7 @@ const routes = {
   toAuthenticationSettings: withAccountId(() => '/settings/authentication'),
   toAccountConfiguration: withAccountId(() => '/settings/authentication/configuration'),
   toAccountActivityLog: withAccountId(() => '/settings/authentication/activity-log'),
+  toTickets: withAccountId(() => `/settings/tickets`),
 
   // Governance
   toGovernance: withAccountId(({ orgIdentifier, projectIdentifier, module }: GovernancePathProps) =>
@@ -1938,8 +1939,6 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, issueId }: ProjectPathProps & { issueId: string }) =>
       `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/ticket-summary/${issueId}`
   ),
-  /********************************************************************************************************************/
-  toTickets: withAccountId(() => `/settings/tickets`),
   /********************************************************************************************************************/
   toOldCustomDashboard: withAccountId(() => '/home/dashboards*'),
   toCustomDashboard: withAccountId(() => '/dashboards'),
