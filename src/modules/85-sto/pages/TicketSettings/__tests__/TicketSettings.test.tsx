@@ -8,16 +8,13 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 
-import routes from '@common/RouteDefinitions'
-import { accountPathProps } from '@common/utils/routeUtils'
 import TicketSettings from '../TicketSettings'
 
-describe('Tickets Page', () => {
-  test('The ticket settings page renders ', () => {
+describe('Ticket Settings Page', () => {
+  test('matches snapshot', () => {
     const { container } = render(
-      <TestWrapper path={routes.toTickets({ ...accountPathProps })} defaultAppStoreValues={defaultAppStoreValues}>
+      <TestWrapper>
         <TicketSettings />
       </TestWrapper>
     )
