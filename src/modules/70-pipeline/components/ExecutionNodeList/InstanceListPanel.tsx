@@ -82,7 +82,7 @@ const GlobalCheckboxHeader: HeaderRenderer = () => {
 const InstanceCheckboxCell: CellRenderer = ({ row }) => {
   const [{ visibilityMap }, collapsedNodeDispatch] = useCollapsedNodeStore()
   const nodeId = row.original.uuid
-  const checked = !!nodeId && visibilityMap.get(nodeId)
+  const checked = !!(nodeId && visibilityMap.get(nodeId))
 
   const onChange: CheckboxProps['onChange'] = event => {
     const _checked = event.currentTarget.checked
@@ -197,6 +197,7 @@ export function InstanceListPanel(): JSX.Element | null {
     <div className={styles.container}>
       <div className={styles.header}>
         <Text
+          data-testid="nodes-total-count"
           lineClamp={1}
           font={{
             size: 'normal',

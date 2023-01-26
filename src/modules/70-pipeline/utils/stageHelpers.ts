@@ -51,6 +51,7 @@ export enum StageType {
 
 export enum ServiceDeploymentType {
   Kubernetes = 'Kubernetes',
+  KubernetesGitops = 'KubernetesGitops',
   NativeHelm = 'NativeHelm',
   amazonAmi = 'amazonAmi',
   awsCodeDeploy = 'awsCodeDeploy',

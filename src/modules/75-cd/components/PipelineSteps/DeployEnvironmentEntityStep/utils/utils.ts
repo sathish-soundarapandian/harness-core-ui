@@ -54,13 +54,13 @@ export function processInitialValues(
               values: [{ ...initialValues.environment }]
             }
           },
-          gitOpsEnabled
+          customStepProps
         )
       }
-      return processSingleEnvironmentInitialValues(initialValues.environment, gitOpsEnabled)
+      return processSingleEnvironmentInitialValues(initialValues.environment, customStepProps)
     }
   } else if (initialValues.environments) {
-    return processMultiEnvironmentInitialValues(initialValues, gitOpsEnabled)
+    return processMultiEnvironmentInitialValues(initialValues, customStepProps)
   } else if (initialValues.environmentGroup) {
     // This handles the migration from runtime environment group of old pipeline to post multi infra handling
     if (
@@ -78,7 +78,7 @@ export function processInitialValues(
       }
 
       onUpdate?.(updatedInitialValues)
-      return processEnvironmentGroupInitialValues(updatedInitialValues, gitOpsEnabled)
+      return processEnvironmentGroupInitialValues(updatedInitialValues, customStepProps)
     } else if (
       // This handles the migration from 'all' environments under environment group of old pipeline to post multi infra handling
       initialValues.environmentGroup.deployToAll === true &&
@@ -94,10 +94,10 @@ export function processInitialValues(
       }
 
       onUpdate?.(updatedInitialValues)
-      return processEnvironmentGroupInitialValues(updatedInitialValues, gitOpsEnabled)
+      return processEnvironmentGroupInitialValues(updatedInitialValues, customStepProps)
     }
 
-    return processEnvironmentGroupInitialValues(initialValues, gitOpsEnabled)
+    return processEnvironmentGroupInitialValues(initialValues, customStepProps)
   }
 
   return {
@@ -116,12 +116,12 @@ export function processFormValues(
     if (gitOpsEnabled) {
       return processSingleEnvironmentGitOpsFormValues(data)
     } else {
-      return processSingleEnvironmentFormValues(data, gitOpsEnabled)
+      return processSingleEnvironmentFormValues(data, customStepProps)
     }
   } else if (data.category === 'group') {
-    return processEnvironmentGroupFormValues(data, gitOpsEnabled)
+    return processEnvironmentGroupFormValues(data, customStepProps)
   } else if (data.category === 'multi') {
-    return processMultiEnvironmentFormValues(data, gitOpsEnabled)
+    return processMultiEnvironmentFormValues(data, customStepProps)
   }
   return {}
 }

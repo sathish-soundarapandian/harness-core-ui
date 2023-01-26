@@ -25,8 +25,7 @@ import type {
   PipelineInfoConfig,
   ResponsePMSPipelineResponseDTO,
   EntityGitDetails,
-  ResponseInputSetTemplateWithReplacedExpressionsResponse,
-  InputSetResponse
+  ResponseInputSetTemplateWithReplacedExpressionsResponse
 } from 'services/pipeline-ng'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import type { InputSetGitQueryParams, InputSetPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -51,8 +50,7 @@ import { mergeTemplateWithInputSetData } from '@pipeline/utils/runPipelineUtils'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { getYamlFileName } from '@pipeline/utils/yamlUtils'
 import { parse } from '@common/utils/YamlHelperMethods'
-import { hasStoreTypeMismatch, isInputSetInvalid } from '@pipeline/utils/inputSetUtils'
-import { OutOfSyncErrorStrip } from '@pipeline/components/InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
+import { hasStoreTypeMismatch } from '@pipeline/utils/inputSetUtils'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import factory from '../PipelineSteps/PipelineStepFactory'
@@ -114,7 +112,6 @@ interface FormikInputSetFormProps {
   className?: string
   onCancel?: () => void
   filePath?: string
-  inputSetUpdateResponseHandler?: (responseData: InputSetResponse) => void
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -236,8 +233,7 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
     setYamlHandler,
     className,
     onCancel,
-    filePath,
-    inputSetUpdateResponseHandler
+    filePath
   } = props
   const { getString } = useStrings()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier } = useParams<
@@ -467,14 +463,6 @@ export default function FormikInputSetForm(props: FormikInputSetFormProps): Reac
                 ) : (
                   <div className={css.editor}>
                     <ErrorsStrip formErrors={formErrors} />
-                    {isInputSetInvalid(inputSet) && (
-                      <OutOfSyncErrorStrip
-                        inputSet={inputSet}
-                        pipelineGitDetails={get(pipeline, 'data.gitDetails')}
-                        inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
-                        fromInputSetForm={true}
-                      />
-                    )}
                     {hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit) ? (
                       <Callout intent="danger">{getString('pipeline.inputSetInvalidStoreTypeCallout')}</Callout>
                     ) : null}

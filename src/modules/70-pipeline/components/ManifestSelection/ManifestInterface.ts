@@ -37,6 +37,7 @@ export type ManifestTypes =
   | 'AsgLaunchTemplate'
   | 'AsgScalingPolicy'
   | 'AsgScheduledUpdateGroupAction'
+  | 'HelmRepoOverride'
 
 export type PrimaryManifestType =
   | 'K8sManifest'
@@ -113,6 +114,9 @@ export interface CommonManifestDataType {
   skipResourceVersioning?: boolean
   repoName?: string
   valuesPaths?: any
+}
+export interface HelmRepoOverrideManifestDataType {
+  identifier: string
 }
 export interface ManifestLastStepProps {
   key: string

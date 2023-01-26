@@ -25,7 +25,7 @@ export const NodeSortMenu = (): React.ReactElement => {
   }, [])
 
   return (
-    <Container margin={{ right: 'medium' }}>
+    <Container margin={{ right: 'medium', left: 'medium' }} width={'100%'}>
       <DropDown
         items={options}
         value={globalSort}
@@ -33,7 +33,7 @@ export const NodeSortMenu = (): React.ReactElement => {
           updateGlobalSort(selected.value as SortType)
         }}
         icon="swap-vertical"
-        width={170}
+        width={'100%'}
       />
     </Container>
   )

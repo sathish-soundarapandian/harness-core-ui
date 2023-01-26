@@ -62,6 +62,7 @@ describe('deploy environment entity widget', () => {
           stageIdentifier="dummy_stage"
           readonly={false}
           gitOpsEnabled={false}
+          serviceIdentifiers={[]}
           deploymentType={'Kubernetes'}
           customDeploymentRef={{
             templateRef: 'test'
@@ -92,6 +93,7 @@ describe('deploy environment entity widget', () => {
           stageIdentifier="dummy_stage"
           readonly={false}
           gitOpsEnabled={false}
+          serviceIdentifiers={[]}
           deploymentType={'Kubernetes'}
           customDeploymentRef={{
             templateRef: 'test'

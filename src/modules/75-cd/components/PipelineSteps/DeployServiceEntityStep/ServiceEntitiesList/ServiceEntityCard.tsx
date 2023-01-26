@@ -28,7 +28,6 @@ import { useParams } from 'react-router-dom'
 import { getStepTypeByDeploymentType, ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { deploymentIconMap } from '@cd/utils/deploymentUtils'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -86,7 +85,6 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
   } = props
   const [showInputs, setShowInputs] = React.useState(!!defaultExpanded)
   const { getString } = useStrings()
-  const { MULTI_SERVICE_INFRA } = useFeatureFlags()
   const formik = useFormikContext<FormState>()
   const scopedServiceRef = getScopedRefUsingIdentifier(formik, service)
   const [template, setTemplate] = React.useState<any>(serviceInputs?.serviceDefinition?.spec)
@@ -163,7 +161,7 @@ export function ServiceEntityCard(props: ServiceEntityCardProps): React.ReactEle
           </Layout.Horizontal>
         )}
       </div>
-      {serviceInputs && MULTI_SERVICE_INFRA && formik?.values?.serviceInputs?.[scopedServiceRef as string] ? (
+      {serviceInputs && formik?.values?.serviceInputs?.[scopedServiceRef as string] ? (
         <>
           <div className={css.toggleWrapper}>
             <Button

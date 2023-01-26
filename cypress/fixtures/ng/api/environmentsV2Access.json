@@ -1,0 +1,23 @@
+{
+  "status": "SUCCESS",
+  "data": [
+    {
+      "environment": {
+        "accountId": "kmpySmUISimoRrJL6NL73w",
+        "orgIdentifier": "harness",
+        "identifier": "testEnv",
+        "name": "testEnv",
+        "description": null,
+        "color": "#0063F7",
+        "type": "Production",
+        "deleted": false,
+        "tags": {},
+        "version": 0
+      },
+      "createdAt": null,
+      "lastModifiedAt": null
+    }
+  ],
+  "metaData": null,
+  "correlationId": "4e1c4292-52be-440a-b21d-35bc7b6d737f"
+}

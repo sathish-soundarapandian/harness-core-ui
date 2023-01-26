@@ -100,7 +100,11 @@ export const ServicesListPage: React.FC = () => {
             serviceId: selectedService?.identifier,
             module
           }),
-          search: isSvcEnvEntityEnabled ? `tab=${ServiceTabs.Configuration}` : `tab=${ServiceTabs.SUMMARY}`
+          search: isSvcEnvEntityEnabled
+            ? `tab=${ServiceTabs.Configuration}`
+            : projectIdentifier
+            ? `tab=${ServiceTabs.SUMMARY}`
+            : `tab=${ServiceTabs.REFERENCED_BY}`
         })
       } else {
         showError(getString('cd.serviceList.noIdentifier'))

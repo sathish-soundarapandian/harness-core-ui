@@ -20,7 +20,7 @@ export interface Params {
   orgIdentifier: string
   useArtifactV1Data?: boolean
   serviceId?: string
-  connectorRefFqnPath: string
+  subscriptionsFqnPath: string
 }
 
 interface ReturnType {
@@ -38,7 +38,7 @@ export function useGetSubscriptionsForAcrArtifact(params: Params): ReturnType {
     orgIdentifier,
     useArtifactV1Data,
     serviceId,
-    connectorRefFqnPath
+    subscriptionsFqnPath
   } = params
 
   const {
@@ -69,7 +69,7 @@ export function useGetSubscriptionsForAcrArtifact(params: Params): ReturnType {
       orgIdentifier,
       projectIdentifier,
       serviceId,
-      fqnPath: connectorRefFqnPath
+      fqnPath: subscriptionsFqnPath
     },
     lazy: true,
     debounce: 300

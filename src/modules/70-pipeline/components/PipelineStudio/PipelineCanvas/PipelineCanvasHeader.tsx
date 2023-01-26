@@ -261,14 +261,9 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     setShouldShowOutOfSyncError(true)
   }
 
-  // Need to show reload option only when we are showing a cached response and it is not valid
+  // Need to show reload option only when we are showing a cached response
   function showReloadFromGitoption(): boolean {
-    return Boolean(
-      isPipelineRemote &&
-        isPipelineGitCacheEnabled &&
-        pipelineCacheResponse &&
-        pipelineCacheResponse?.cacheState !== 'VALID_CACHE'
-    )
+    return Boolean(isPipelineRemote && isPipelineGitCacheEnabled && pipelineCacheResponse)
   }
 
   function handleReloadFromGitClick(): void {

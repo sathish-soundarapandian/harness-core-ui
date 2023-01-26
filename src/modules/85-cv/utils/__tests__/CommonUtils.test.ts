@@ -132,8 +132,8 @@ describe('test for logs screen utils', () => {
   test('getEventTypeChartColor should return correct realCSSColor values', () => {
     expect(getEventTypeChartColor(EVENT_TYPE.UNKNOWN)).toEqual(Utils.getRealCSSColor(Color.RED_400))
     expect(getEventTypeChartColor(EVENT_TYPE.UNKNOWN, true)).toEqual('var(--red-400)')
-    expect(getEventTypeChartColor(EVENT_TYPE.KNOWN)).toEqual(Utils.getRealCSSColor(Color.PRIMARY_4))
-    expect(getEventTypeChartColor(EVENT_TYPE.KNOWN, true)).toEqual('var(--primary-4)')
+    expect(getEventTypeChartColor(EVENT_TYPE.KNOWN)).toEqual(Utils.getRealCSSColor(Color.PRIMARY_5))
+    expect(getEventTypeChartColor(EVENT_TYPE.KNOWN, true)).toEqual('var(--primary-5)')
     expect(getEventTypeChartColor(EVENT_TYPE.FREQUENCY)).toEqual(Utils.getRealCSSColor(Color.YELLOW_700))
     expect(getEventTypeChartColor(EVENT_TYPE.FREQUENCY, true)).toEqual('var(--yellow-700)')
     expect(getEventTypeChartColor(EVENT_TYPE.BASELINE)).toEqual(Utils.getRealCSSColor(Color.GREY_300))
@@ -142,7 +142,7 @@ describe('test for logs screen utils', () => {
 
   test('getEventTypeChartColor should return correct non realCSSColor values', () => {
     expect(getEventTypeChartColor(EVENT_TYPE.UNKNOWN, false)).toEqual(Color.RED_400)
-    expect(getEventTypeChartColor(EVENT_TYPE.KNOWN, false)).toEqual(Color.PRIMARY_4)
+    expect(getEventTypeChartColor(EVENT_TYPE.KNOWN, false)).toEqual(Color.PRIMARY_5)
     expect(getEventTypeChartColor(EVENT_TYPE.FREQUENCY, false)).toEqual(Color.YELLOW_700)
     expect(getEventTypeChartColor(EVENT_TYPE.BASELINE, false)).toEqual(Color.GREY_300)
   })

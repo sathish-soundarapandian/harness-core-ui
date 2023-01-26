@@ -5,102 +5,22 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { RiskValues } from '@cv/utils/CommonUtils'
 import type { RestResponseLogAnalysisRadarChartListWithCountDTO } from 'services/cv'
 
 export const mockedLogAnalysisData: RestResponseLogAnalysisRadarChartListWithCountDTO = {
   metaData: {},
-
   resource: {
-    logAnalysisRadarCharts: {
-      totalPages: 1,
-      totalItems: 8,
-      pageItemCount: 8,
-      pageSize: 10,
-      content: [
-        {
-          message:
-            'java.lang.RuntimeException: java.io.IOException: Error reading and writing to file  at io.IOExceptionGenerator.generateIOException(IOExceptionGenerator.java:16)  at inside.RequestException.doGet(RequestException.java:128)  at javax.servlet.http.HttpServlet.service(HttpServlet.java:635)  at javax.servlet.http.HttpServlet.service(HttpServlet.java:742)  at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)  at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)  at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)  at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)  at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)  at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:199)  at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)  at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)  at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:137)  at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:81)  at org.apache.catalina.valves.AbstractAccessLogValve.invoke(AbstractAccessLogValve.java:660)  at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)  at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)  at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:798)  at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)  at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:808)  at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1498)  at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)  at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)  at java.lang.Thread.run(Thread.java:748) Caused by: java.io.IOException: Error reading and writing to file  ... 26 more ',
-          label: 12,
-          clusterType: 'UNKNOWN_EVENT',
-          risk: RiskValues.UNHEALTHY,
-          count: 14,
-          frequencyData: [12.0, 8.0, 8.0, 20.0, 4.0, 3.0, 5.0, 4.0, 2.0]
-          // testFrequencyData: [14.0, 10.0, 8.0, 20.0, 4.0, 5.0, 5.0, 4.0, 5.0]
-        },
-        {
-          message:
-            'java.lang.RuntimeException: java.io.IOException: Error reading and writing to file  at io.IOExceptionGenerator.generateIOException(IOExceptionGenerator.java:16)  at inside.RequestException.doGet(RequestException.java:128)  at javax.servlet.http.HttpServlet.service(HttpServlet.java:635)  at javax.servlet.http.HttpServlet.service(HttpServlet.java:742)  at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)  at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)  at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)  at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)  at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)  at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:199)  at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)  at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)  at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:137)  at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:81)  at org.apache.catalina.valves.AbstractAccessLogValve.invoke(AbstractAccessLogValve.java:660)  at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)  at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)  at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:798)  at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)  at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:808)  at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1498)  at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)  at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)  at java.lang.Thread.run(Thread.java:748) Caused by: java.io.IOException: Error reading and writing to file  ... 26 more ',
-          label: 12,
-          clusterType: 'UNKNOWN_EVENT',
-          risk: RiskValues.UNHEALTHY,
-          count: 14,
-          frequencyData: [12.0, 8.0, 8.0, 20.0, 4.0, 3.0, 5.0, 4.0, 2.0]
-        },
-        {
-          message:
-            'java.lang.RuntimeException: java.io.FileNotFoundException: could not find the file  at file.FileExecptionGenerator.generateFileNotFoundException(FileExecptionGenerator.java:22)  at inside.RequestException.doGet(RequestException.java:125)  at javax.servlet.http.HttpServlet.service(HttpServlet.java:635)  at javax.servlet.http.HttpServlet.service(HttpServlet.java:742)  at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)  at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)  at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)  at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)  at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)  at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:199)  at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)  at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)  at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:137)  at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:81)  at org.apache.catalina.valves.AbstractAccessLogValve.invoke(AbstractAccessLogValve.java:660)  at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)  at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)  at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:798)  at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)  at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:808)  at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1498)  at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)  at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)  at java.lang.Thread.run(Thread.java:748) Caused by: java.io.FileNotFoundException: could not find the file  ... 26 more ',
-          label: 4,
-          clusterType: 'UNEXPECTED_FREQUENCY',
-          risk: RiskValues.NEED_ATTENTION,
-          count: 269,
-          frequencyData: [8.0, 10.0, 8.0, 20.0, 4.0, 5.0, 5.0, 104.0, 105.0]
-        },
-        {
-          message:
-            'java.lang.RuntimeException: java.io.FileNotFoundException: could not find the file  at file.FileExecptionGenerator.generateFileNotFoundException(FileExecptionGenerator.java:22)  at inside.RequestException.doGet(RequestException.java:125)  at javax.servlet.http.HttpServlet.service(HttpServlet.java:635)  at javax.servlet.http.HttpServlet.service(HttpServlet.java:742)  at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)  at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)  at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)  at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)  at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)  at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:199)  at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)  at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)  at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:137)  at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:81)  at org.apache.catalina.valves.AbstractAccessLogValve.invoke(AbstractAccessLogValve.java:660)  at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)  at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)  at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:798)  at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)  at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:808)  at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1498)  at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)  at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)  at java.lang.Thread.run(Thread.java:748) Caused by: java.io.FileNotFoundException: could not find the file  ... 26 more ',
-          label: 4,
-          clusterType: 'UNEXPECTED_FREQUENCY',
-          risk: RiskValues.NEED_ATTENTION,
-          count: 269,
-          frequencyData: [8.0, 10.0, 8.0, 20.0, 4.0, 5.0, 5.0, 104.0, 105.0]
-        },
-        {
-          message:
-            'java.lang.NullPointerException: Null pointer exception  at com.realtime.StreamProcessor.processStreamData(StreamProcessor.java:13)  at inside.RequestException.doGet(RequestException.java:108)  at javax.servlet.http.HttpServlet.service(HttpServlet.java:635)  at javax.servlet.http.HttpServlet.service(HttpServlet.java:742)  at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)  at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)  at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)  at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)  at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)  at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:199)  at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)  at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)  at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:137)  at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:81)  at org.apache.catalina.valves.AbstractAccessLogValve.invoke(AbstractAccessLogValve.java:660)  at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)  at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)  at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:798)  at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)  at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:808)  at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1498)  at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)  at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)  at java.lang.Thread.run(Thread.java:748) ',
-          label: 0,
-          clusterType: 'KNOWN_EVENT',
-          risk: RiskValues.HEALTHY,
-          count: 58,
-          frequencyData: [10.0, 4.0, 11.0, 9.0, 6.0, 4.0, 10.0, 4.0]
-        },
-        {
-          message:
-            'java.lang.RuntimeException: Method throws runtime exception  at com.runtime.RunTimeExceptionGenerator.generateRunTimeException(RunTimeExceptionGenerator.java:16)  at inside.RequestException.doGet(RequestException.java:99)  at javax.servlet.http.HttpServlet.service(HttpServlet.java:635)  at javax.servlet.http.HttpServlet.service(HttpServlet.java:742)  at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)  at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)  at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)  at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)  at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)  at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:199)  at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)  at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)  at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:137)  at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:81)  at org.apache.catalina.valves.AbstractAccessLogValve.invoke(AbstractAccessLogValve.java:660)  at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)  at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)  at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:798)  at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)  at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:808)  at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1498)  at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)  at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)  at java.lang.Thread.run(Thread.java:748) ',
-          label: 1,
-          clusterType: 'KNOWN_EVENT',
-          risk: RiskValues.HEALTHY,
-          count: 69,
-          frequencyData: [8.0, 10.0, 8.0, 20.0, 4.0, 5.0, 5.0, 4.0, 5.0]
-        },
-        {
-          message:
-            'java.lang.NullPointerException: Null pointer exception  at com.realtime.StreamProcessor.processStreamData(StreamProcessor.java:13)  at inside.RequestException.doGet(RequestException.java:108)  at javax.servlet.http.HttpServlet.service(HttpServlet.java:635)  at javax.servlet.http.HttpServlet.service(HttpServlet.java:742)  at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)  at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)  at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)  at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)  at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)  at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:199)  at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)  at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)  at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:137)  at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:81)  at org.apache.catalina.valves.AbstractAccessLogValve.invoke(AbstractAccessLogValve.java:660)  at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)  at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)  at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:798)  at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)  at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:808)  at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1498)  at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)  at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)  at java.lang.Thread.run(Thread.java:748) ',
-          label: 0,
-          clusterType: 'KNOWN_EVENT',
-          risk: RiskValues.HEALTHY,
-          count: 58,
-          frequencyData: [10.0, 4.0, 11.0, 9.0, 6.0, 4.0, 10.0, 4.0]
-        },
-        {
-          message:
-            'java.lang.RuntimeException: Method throws runtime exception  at com.runtime.RunTimeExceptionGenerator.generateRunTimeException(RunTimeExceptionGenerator.java:16)  at inside.RequestException.doGet(RequestException.java:99)  at javax.servlet.http.HttpServlet.service(HttpServlet.java:635)  at javax.servlet.http.HttpServlet.service(HttpServlet.java:742)  at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)  at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)  at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)  at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)  at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)  at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:199)  at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)  at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:493)  at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:137)  at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:81)  at org.apache.catalina.valves.AbstractAccessLogValve.invoke(AbstractAccessLogValve.java:660)  at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)  at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)  at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:798)  at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:66)  at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:808)  at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1498)  at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)  at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)  at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)  at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)  at java.lang.Thread.run(Thread.java:748) ',
-          label: 1,
-          clusterType: 'KNOWN_EVENT',
-          risk: RiskValues.HEALTHY,
-          count: 69,
-          frequencyData: [8.0, 10.0, 8.0, 20.0, 4.0, 5.0, 5.0, 4.0, 5.0]
-        }
-      ],
-      pageIndex: 0,
-      empty: false
-    },
-    totalClusters: 3,
+    totalClusters: 1,
     eventCounts: [
       {
         clusterType: 'KNOWN_EVENT',
-        count: 3,
+        count: 1,
         displayName: 'Known'
+      },
+      {
+        clusterType: 'UNEXPECTED_FREQUENCY',
+        count: 0,
+        displayName: 'Unexpected Frequency'
       },
       {
         clusterType: 'UNKNOWN_EVENT',
@@ -108,11 +28,176 @@ export const mockedLogAnalysisData: RestResponseLogAnalysisRadarChartListWithCou
         displayName: 'Unknown'
       },
       {
-        clusterType: 'UNEXPECTED_FREQUENCY',
-        count: 0,
-        displayName: 'Unexpected Frequency'
+        clusterType: 'BASELINE',
+        count: 1,
+        displayName: 'Baseline'
       }
-    ]
+    ],
+    logAnalysisRadarCharts: {
+      totalPages: 1,
+      totalItems: 1,
+      pageItemCount: 1,
+      pageSize: 10,
+      content: [
+        {
+          message: 'test data - host1 - log1',
+          clusterId: '29659f5a-f6ad-308c-97dc-d54d0ac07c1c',
+          label: 0,
+          risk: 'HEALTHY',
+          clusterType: 'KNOWN_EVENT',
+          count: 8,
+
+          testHostFrequencyData: [
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 1.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 0.0
+                }
+              ],
+              host: 'host1'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 2.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 0.0
+                }
+              ],
+              host: 'host2'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 2.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 2.0
+                }
+              ],
+              host: 'host3'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 4.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 4.0
+                }
+              ],
+              host: 'host4'
+            }
+          ],
+          totalTestFrequencyData: [
+            {
+              timeStamp: 1672845420,
+              count: 3.0
+            },
+            {
+              timeStamp: 1672845480,
+              count: 0.0
+            },
+            {
+              timeStamp: 1672845540,
+              count: 0.0
+            },
+            {
+              timeStamp: 1672845600,
+              count: 6.0
+            },
+            {
+              timeStamp: 1672845660,
+              count: 6.0
+            }
+          ],
+          averageControlFrequencyData: [
+            {
+              timeStamp: 1672845060,
+              count: 1
+            },
+            {
+              timeStamp: 1672845120,
+              count: 2
+            },
+            {
+              timeStamp: 1672845180,
+              count: 1
+            },
+            {
+              timeStamp: 1672845240,
+              count: 3
+            },
+            {
+              timeStamp: 1672845300,
+              count: 10
+            }
+          ]
+        }
+      ],
+      pageIndex: 0,
+      empty: false
+    }
   },
   responseMessages: []
 }

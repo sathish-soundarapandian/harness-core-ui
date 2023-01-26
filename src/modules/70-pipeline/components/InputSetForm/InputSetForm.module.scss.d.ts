@@ -27,6 +27,7 @@ declare const styles: {
   readonly nameiddescription: string
   readonly optionBtns: string
   readonly pageHeaderStyles: string
+  readonly reconcileMenu: string
   readonly treeSidebar: string
   readonly withError: string
 }

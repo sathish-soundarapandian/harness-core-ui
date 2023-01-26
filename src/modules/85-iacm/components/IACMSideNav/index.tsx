@@ -21,7 +21,6 @@ export default function IACMSideNav(): React.ReactElement {
   const params = useParams<ProjectPathProps>()
   const { accountId, projectIdentifier, orgIdentifier } = params
   const { getString } = useStrings()
-
   const { updateAppStore } = useAppStore()
   const history = useHistory()
 
@@ -45,8 +44,9 @@ export default function IACMSideNav(): React.ReactElement {
       )}
       {projectIdentifier && orgIdentifier && (
         <>
-          <SidebarLink label={getString('overview')} to={routes.toProjectOverview({ ...params, module: 'iacm' })} />
+          {/* <SidebarLink label={getString('overview')} to={routes.toProjectOverview({ ...params, module: 'iacm' })} /> */}
           <SidebarLink label={getString('iacm.stacks')} to={routes.toIACMStacks({ ...params })} />
+          <SidebarLink label={getString('pipelines')} to={routes.toPipelines({ ...params, module: 'iacm' })} />
           <ProjectSetupMenu module="iacm" />
         </>
       )}

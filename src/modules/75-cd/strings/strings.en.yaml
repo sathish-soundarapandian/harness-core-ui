@@ -45,6 +45,7 @@ steps:
     attributesPlaceholder: Specify list of comma separated attributes and values. E.g. hostType:DB, region:west
     specifyHostsOption: Specify hosts
     preconfiguredHostsOption: Select preconfigured hosts from Physical Data Center
+    dynamicProvision: Map Dynamically Provisioned Infrastructure
     pdcConnectorLabel: Physical Datacentar Connector
     includeAllHosts: Include all hosts
     filterHostName: Filter by host name
@@ -54,6 +55,11 @@ steps:
     specificAttributes: Specific Attributes
     specificAttributesOptional: Specific Attributes (Optional)
     hostsOptional: Hosts (Optional)
+    hostDataMapping: Host Data Mapping
+    hostDataMappingEmptyKey: Field cannot have empty key entry
+    hostnameRqrd: A hostname key attribute is required
+    hostObjectPath: Host Object Array Path
+    hostObjectPathPlaceholder: Path value
     previewHosts: Preview Hosts
     noHosts: No hosts provided
     title: Select Hosts
@@ -176,7 +182,7 @@ cdSwitchToFirstGen:
 chooseProvisionerText: What type of provisioner do you want to use?
 setUpProvisionerBtnText: Set Up Provisioner
 
-filePathRequired: Atleast one file path is required
+filePathRequired: At least one file path is required
 pathCannotBeEmpty: File Path cannot be empty
 configFilePlaceHolder: 'Specify Config File...'
 backendConfigFilePlaceHolder: 'Specify Backend Config File...'
@@ -233,8 +239,12 @@ pipelineSteps:
     clusterIsRequired: 'Cluster is required'
     multiEnvToggleText: 'Deploy to multiple Environments or {{name}}'
     envGroupToggleText: 'Deploy to Environment Group'
-    viewEnvironmentInputs: View environment inputs
-    hideEnvironmentInputs: Hide environment inputs
+    viewEnvironmentInputs: View Environment inputs
+    hideEnvironmentInputs: Hide Environment inputs
+    viewServiceOverrideInputs: View Service Override inputs
+    hideServiceOverrideInputs: Hide Service Override inputs
+    viewEnvironmentServiceOverrideInputs: View Environment inputs & Service Override inputs
+    hideEnvironmentServiceOverrideInputs: Hide Environment inputs & Service Override inputs
     viewInfrastructureInputs: View infrastructure inputs
     hideInfrastructureInputs: Hide infrastructure inputs
     multiEnvironmentsParallelDeployLabel: Deploy to Environments or Infrastructures in parallel?
@@ -531,7 +541,12 @@ manifestId: Manifest Id
 azureWebAppRollbackDescription: Rollback to the last successfully deployed app.
 azureWebAppSwapSlotDescription: Azure Swap environment slot with new instance.
 asgCanaryDeleteStepDescription: Asg Canary Delete
+asgRollingDeployStepDescription: Asg Rolling Deploy
 asgRollingRollbackStepDescription: Asg Rolling Rollback
+asgBlueGreenRollbackStepDescription: Asg Blue Green Rollback
+asgBlueGreenSwapServiceStepDescription: Asg Blue Green Swap Service
+downsizeOldAsg: Downsize old ASG
+asgBlueGreenDeployStepDescription: Asg Blue Green Deploy
 minimumHealthyPercentageMaxLimit: Minimum Healthy Percentage should be less than 100%
 minimumHealthyPercentageMinLimit: Minimum Healthy Percentage should be positive percentage
 instanceWarmupError: Instance Warmup must be a positive number
@@ -541,12 +556,24 @@ minimumHealthyPercentageLabel: Minimum Healthy Percentage (Optional)
 minimumHealthyPercentagePlaceholder: Minimum Healthy Percentage
 instanceWarmupLabel: Instance Warmup (Optional)
 instanceWarmupPlaceholder: Instance Warmup
+loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Dry Run Apply the service manifests and leverage the dry run yaml as output for subsequent steps
 getStartedWithCD:
+  clickForOtherDeploymentTypes: Click here for other deployment types
+  createCluster: Create a cluster if needed
+  awsRegionHelperText: replace REGION with your AWS region, for example us-west-1
+  azureAKSHelperText: replace myResourceGroup with your AKS resource group
+  googleGKEHelperText: replace ZONE with your GCP region, for example us-central1-c
   onboardingTitle: Start your deployments journey with Harness CD
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
+  gitopsOnboardingAgentStep: Connect to Harness by provisioning hosted Agent
+  gitopsOnboardingSource: Where is your source?
+  gitopsOnboardingConfigureStep: Configure the source and destination
+  gitopsOnboardingDeployStep: You are all set!
   runDelegateSubtitle: You can install the Delegate in your target environment.
+  haveGitRepo: Do you have a git repo you can connect to?
+  doesntHaveGitRepo: No, connect to sample source
   delegateInstalled: Delegate installed successfully
   selectDeploymentType: Select deployment type
   deployToGitops: Do you want to deploy using GitOps?
@@ -610,6 +637,19 @@ getStartedWithCD:
   installDelegateToTargetEnv: Install a Harness Delegate in your target environment.
   delegateDescription: A Delegate is a service that runs on your infrastructure to execute tasks on behalf of the Harness platform.
   helpAndTroubleshoot: Help & Troubleshoot
+  hostedAgentExplain: What is it?
+  hostedAgentExplainContent: Sample Text
+  hostedAgentInstall: What will be installed
+  hostedAgentInfoTitle: What you need to do
+  gitOpsAgent: GitOps agent
+  repoServer: Repo server
+  redisCache: Redis cache
+  applicationController: Application controller
+  provisioningText: Provisioning these components will take up to 1 minute
+  setupIPWhiteListing: Set up IP Whitelisting for Harness to connect to your cluster
+  agentProvisionedSuccessfully: Your agent has been provisioned successfully
+  agentSetupTimeInfo: This process may take up to 1 minutes to complete. While the agent is being provisioned, please set up IP Whitelisting so Harness can connect to your cluster
+  ensureFullConnectivity: To ensure the full connectivity, please make sure you have set up IP Whitelisting before moving to the next step
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment
@@ -667,10 +707,13 @@ kubectlCommand: gcloud components install kubectl
 oauthPlugin: Install Google auth plugin to the cluster
 oauthPluginCmd: gcloud components install gke-gcloud-auth-plugin
 clusterVerify: Verify the connection to the cluster
+gcloudClusterCreate: gcloud container clusters create mycluster --machine-type n1-standard-2 --num-nodes 2 --zone ZONE
+gcloudClusterList: gcloud container clusters list
 gcloudClusterCmd: gcloud container clusters get-credentials CLUSTER_NAME
 kubectlNamespace: kubectl get namespaces
 pluginVersion: gke-gcloud-auth-plugin --version
 awsCli: Make sure the aws cli and eksctl and are installed
+awsClusterCreate: eksctl create cluster --name mycluster --version 1.18 --region REGION --nodegroup-name standard-workers --node-type t3.xlarge --nodes 2 --nodes-min 1 --nodes-max 3 --node-ami auto
 amazonElasticCmd: eksctl utils write-kubeconfig --cluster=delegate
 azureCli: Make sure the Azure CLI is installed
 azureCliCmd: az aks install-cli

@@ -3,7 +3,7 @@
 exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUpdate if valid values entered - inputset 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main pdcInfraContainer"
   >
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-variation-form-title"
@@ -20,7 +20,7 @@ exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUp
           checked=""
           name="Blueprint3.RadioGroup-2"
           type="radio"
-          value="false"
+          value="specified"
         />
         <span
           class="bp3-control-indicator"
@@ -33,7 +33,7 @@ exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUp
         <input
           name="Blueprint3.RadioGroup-2"
           type="radio"
-          value="true"
+          value="preconfigured"
         />
         <span
           class="bp3-control-indicator"
@@ -125,7 +125,7 @@ exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUp
               </div>
             </div>
             <div
-              class="credRefWidth"
+              class="inputWrapper"
             >
               <div
                 class="bp3-form-group"
@@ -155,7 +155,7 @@ exports[`Test PDCInfrastructureSpec behavior - No Preconfigured should call onUp
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="flex-grow: 1;"
+                      style="flex-grow: 1; width: 100%;"
                     >
                       <button
                         class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"

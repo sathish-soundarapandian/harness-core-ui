@@ -5,21 +5,23 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import type { Column } from 'react-table'
 import { defaultTo, get } from 'lodash-es'
 
 import { TableV2, useToaster } from '@harness/uicore'
-import { EnvironmentResponse, useDeleteEnvironmentV2 } from 'services/cd-ng'
+import { EnvironmentResponse, EnvironmentResponseDTO, useDeleteEnvironmentV2 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { FeatureFlag } from '@common/featureFlags'
+import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import {
   EnvironmentMenu,
   EnvironmentName,
@@ -36,6 +38,8 @@ export default function EnvironmentsList({ response, refetch }: any) {
   const { getString } = useStrings()
   const history = useHistory()
   const { CDC_ENVIRONMENT_DASHBOARD_NG } = useFeatureFlags()
+  const [environmentToDelete, setEnvironmentToDelete] = useState<EnvironmentResponseDTO>({})
+  const isForceDeletedAllowed = useFeatureFlag(FeatureFlag.CDS_FORCE_DELETE_ENTITIES)
 
   const { mutate: deleteItem } = useDeleteEnvironmentV2({
     queryParams: {
@@ -58,15 +62,50 @@ export default function EnvironmentsList({ response, refetch }: any) {
     )
   }
 
-  const handleEnvDelete = async (id: string) => {
+  const handleEnvDelete = async (
+    environment: Required<EnvironmentResponseDTO>,
+    forceDelete?: boolean
+  ): Promise<void> => {
     try {
-      await deleteItem(id, { headers: { 'content-type': 'application/json' } })
+      await deleteItem(environment.identifier, {
+        headers: { 'content-type': 'application/json' },
+        queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier, forceDelete }
+      })
       showSuccess(getString('cd.environment.deleted'))
       refetch()
     } catch (e: any) {
-      showError(getRBACErrorMessage(e))
+      if (isForceDeletedAllowed && e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+        setEnvironmentToDelete(environment)
+        openReferenceErrorDialog()
+      } else {
+        showError(getRBACErrorMessage(e))
+      }
     }
   }
+
+  const redirectToReferencedBy = (): void => {
+    history.push(
+      routes.toEnvironmentDetails({
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
+        environmentIdentifier: environmentToDelete.identifier as string,
+        module,
+        sectionId: EnvironmentDetailsTab.REFERENCED_BY
+      })
+    )
+  }
+
+  const { openDialog: openReferenceErrorDialog } = useEntityDeleteErrorHandlerDialog({
+    entity: {
+      type: ResourceType.ENVIRONMENT,
+      name: environmentToDelete.name as string
+    },
+    redirectToReferencedBy,
+    forceDeleteCallback: isForceDeletedAllowed
+      ? () => handleEnvDelete(environmentToDelete as Required<EnvironmentResponseDTO>, true)
+      : undefined
+  })
 
   type CustomColumn<T extends Record<string, any>> = Column<T>
 
@@ -114,9 +153,10 @@ export default function EnvironmentsList({ response, refetch }: any) {
             projectIdentifier,
             module,
             environmentIdentifier: get(row, 'environment.identifier', ''),
-            sectionId: CDC_ENVIRONMENT_DASHBOARD_NG
-              ? EnvironmentDetailsTab.SUMMARY
-              : EnvironmentDetailsTab.CONFIGURATION
+            sectionId:
+              CDC_ENVIRONMENT_DASHBOARD_NG && projectIdentifier
+                ? EnvironmentDetailsTab.SUMMARY
+                : EnvironmentDetailsTab.CONFIGURATION
           })
         )
       }}

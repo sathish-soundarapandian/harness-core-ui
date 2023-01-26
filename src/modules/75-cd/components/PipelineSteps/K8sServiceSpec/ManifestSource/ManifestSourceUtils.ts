@@ -48,10 +48,10 @@ export const isFieldfromTriggerTabDisabled = (
 
 export const shouldDisplayRepositoryName = (item: any): boolean => {
   return (
-    item?.record?.spec?.connectionType === GitRepoName.Repo ||
-    item?.record?.spec?.type === GitRepoName.Repo ||
-    item?.connector?.spec?.connectionType === GitRepoName.Repo ||
-    item?.connector?.spec?.type === GitRepoName.Repo
+    item?.record?.spec?.connectionType === GitRepoName.Account ||
+    item?.record?.spec?.type === GitRepoName.Account ||
+    item?.connector?.spec?.connectionType === GitRepoName.Account ||
+    item?.connector?.spec?.type === GitRepoName.Account
   )
 }
 

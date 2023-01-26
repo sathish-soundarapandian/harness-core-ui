@@ -96,6 +96,16 @@ export const PrismaCloudStepBase = (
         // This is required
         setFormikRef?.(formikRef, formik)
 
+        if (
+          formik.values.spec.privileged !== true &&
+          formik.values.spec.mode === 'orchestration' &&
+          formik.values.spec.target.type === 'container'
+        ) {
+          formik.setFieldValue('spec.privileged', true)
+        } else if (formik.values.spec.privileged === true && formik.values.spec.mode !== 'orchestration') {
+          formik.setFieldValue('spec.privileged', false)
+        }
+
         return (
           <FormikForm>
             <CIStep
@@ -133,6 +143,7 @@ export const PrismaCloudStepBase = (
               allowableTypes={allowableTypes}
               formik={formik}
               stepViewType={stepViewType}
+              authDomainPlaceHolder="https://us-west1.cloud.twistlock.com/us-3-123456789"
             />
 
             {formik.values.spec.mode === 'extraction' && (

@@ -831,7 +831,7 @@ exports[`Rule details page tests should render successfully 1`] = `
                             class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7"
                             style="display: flex; align-items: center;"
                           >
-                            ce.common.expand
+                            common.expand
                             <span
                               class="bp3-icon StyledProps--main Text--icon StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-primary7"
                               data-icon="main-chevron-down"
@@ -1799,7 +1799,7 @@ exports[`Rule details page tests should render successfully 2`] = `
                             class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-primary7"
                             style="display: flex; align-items: center;"
                           >
-                            ce.common.expand
+                            common.expand
                             <span
                               class="bp3-icon StyledProps--main Text--icon StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-primary7"
                               data-icon="main-chevron-down"

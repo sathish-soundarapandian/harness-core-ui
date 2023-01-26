@@ -40,7 +40,7 @@ const instanceFieldsTransformConfig = [
   }
 ]
 
-const instanceFieldsValidationConfig = [
+const instanceFieldsValidationConfig: InputSetViewValidateFieldsConfig[] = [
   {
     name: 'spec.instance.domain',
     type: ValidationFieldTypes.Text,
@@ -89,7 +89,7 @@ export const transformValuesFieldsConfig = (data: ZapStepData): Field[] => {
   return transformValuesFieldsConfigValues
 }
 
-const toolFieldsValidationConfig = (data: ZapStepData) =>
+const toolFieldsValidationConfig = (data: ZapStepData): InputSetViewValidateFieldsConfig[] =>
   data.spec.mode === 'orchestration'
     ? [
         {

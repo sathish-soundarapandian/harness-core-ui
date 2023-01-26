@@ -192,7 +192,7 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
                     height={300}
                     disabled={readonly}
                     fullScreenAllowed
-                    fullScreenTitle={getString('tagsLabel')}
+                    fullScreenTitle={getString('cd.backEndConfig')}
                   />
                 )
               }
@@ -203,7 +203,7 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
               expressions={expressions}
               height={300}
               fullScreenAllowed
-              fullScreenTitle={getString('tagsLabel')}
+              fullScreenTitle={getString('cd.backEndConfig')}
             />
           </MultiTypeFieldSelector>
         </div>

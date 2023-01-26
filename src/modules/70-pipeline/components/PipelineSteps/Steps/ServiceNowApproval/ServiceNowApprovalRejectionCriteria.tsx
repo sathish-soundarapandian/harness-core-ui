@@ -107,6 +107,7 @@ export function Conditions({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const name = `spec.${mode}.spec.conditions`
+  const approvalRejectionCriteriaError = get(formik?.errors, name)
   if (isFetchingFields) {
     return <div className={css.fetching}>{getString('pipeline.approvalCriteria.fetchingFields')}</div>
   }
@@ -212,9 +213,9 @@ export function Conditions({
           }}
         />
       </div>
-      {errorCheck(name, formik) ? (
+      {errorCheck(name, formik) && typeof approvalRejectionCriteriaError === 'string' ? (
         <Text className={css.formikError} intent="danger">
-          {get(formik?.errors, name)}
+          {approvalRejectionCriteriaError}
         </Text>
       ) : null}
     </div>

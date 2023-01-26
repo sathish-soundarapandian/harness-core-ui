@@ -6,6 +6,7 @@
  */
 
 import React, { useState } from 'react'
+import { identity } from 'lodash-es'
 import { Button, ButtonVariation, ExpandingSearchInput, Layout } from '@harness/uicore'
 import cx from 'classnames'
 import { useHistory, useParams } from 'react-router-dom'
@@ -16,7 +17,7 @@ import { useQueryParams } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { useStateWithQueryParams } from '@common/hooks/useStateWithQueryParams'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -32,7 +33,10 @@ const UsersPage: React.FC = () => {
   const { getString } = useStrings()
   useDocumentTitle(getString('users'))
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
-  const [searchParam, setSearchParam] = useStateWithQueryParams({ key: 'search' })
+  const [searchParam, setSearchParam] = useQueryParamsState<string | undefined>('search', '', {
+    serializer: identity,
+    deserializer: identity
+  })
   const { view } = useQueryParams<{ view: string }>()
   const [reload, setReload] = useState<boolean>()
   const history = useHistory()

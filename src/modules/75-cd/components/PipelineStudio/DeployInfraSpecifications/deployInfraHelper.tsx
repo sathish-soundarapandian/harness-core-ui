@@ -153,7 +153,16 @@ export const getInfrastructureDefaultValue = (
       }
     }
     case InfraDeploymentType.PDC: {
-      const { connectorRef, credentialsRef, delegateSelectors, hostFilter, hosts } = infrastructure?.spec || {}
+      const {
+        connectorRef,
+        credentialsRef,
+        delegateSelectors,
+        hostFilter,
+        hosts,
+        hostAttributes,
+        hostObjectArray,
+        dynamicallyProvisioned
+      } = infrastructure?.spec || {}
 
       return {
         connectorRef,
@@ -162,7 +171,10 @@ export const getInfrastructureDefaultValue = (
         hosts,
         delegateSelectors,
         hostFilter,
-        serviceType
+        serviceType,
+        hostAttributes,
+        hostObjectArray,
+        dynamicallyProvisioned
       }
     }
     case InfraDeploymentType.SshWinRmAzure: {
@@ -470,6 +482,11 @@ export const isElastigroupInfrastructureType = (infrastructureType?: string): bo
 export const isCustomDeploymentInfrastructureType = (infrastructureType?: string): boolean => {
   return infrastructureType === InfraDeploymentType.CustomDeployment
 }
+
+export const isPDCDeploymentInfrastructureType = (infrastructureType?: string): boolean => {
+  return infrastructureType === InfraDeploymentType.PDC
+}
+
 export const isTASInfrastructureType = (infrastructureType?: string): boolean => {
   return infrastructureType === InfraDeploymentType.TAS
 }

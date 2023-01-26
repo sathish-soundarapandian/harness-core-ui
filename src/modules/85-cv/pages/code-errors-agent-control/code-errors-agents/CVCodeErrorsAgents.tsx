@@ -21,7 +21,7 @@ export const CVCodeErrorsAgents = (props: Props): JSX.Element => {
     pathname: props.pathComponentLocation
   }
 
-  useDocumentTitle([getString('cv.srmTitle'), getString('cv.codeErrorsAgents')])
+  useDocumentTitle([getString('cv.srmTitle'), getString('cv.codeErrors.agents')])
 
   return <ChildAppMounter<AgentListProps> ChildApp={ErrorTracking} componentLocation={componentLocation} />
 }

@@ -30,7 +30,7 @@ const toolFieldsTransformConfig = (data: PrismaCloudStepData) =>
       ]
     : []
 
-const toolFieldsValidationConfig = (data: PrismaCloudStepData) =>
+const toolFieldsValidationConfig = (data: PrismaCloudStepData): InputSetViewValidateFieldsConfig[] =>
   data.spec.mode === 'extraction'
     ? [
         {
@@ -55,7 +55,7 @@ const extraAuthFieldsTransformConfig = (data: PrismaCloudStepData) =>
         }
       ]
     : []
-const extraAuthFieldsValidationConfig = (data: PrismaCloudStepData) =>
+const extraAuthFieldsValidationConfig = (data: PrismaCloudStepData): InputSetViewValidateFieldsConfig[] =>
   data.spec.mode === 'orchestration'
     ? [
         {

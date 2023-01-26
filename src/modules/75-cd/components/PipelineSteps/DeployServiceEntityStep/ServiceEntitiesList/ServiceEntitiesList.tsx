@@ -18,6 +18,7 @@ import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { ServiceYaml } from 'services/cd-ng'
 
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import type { ServiceData } from '../DeployServiceEntityUtils'
 import { ServiceEntityCard } from './ServiceEntityCard'
 import css from './ServiceEntitiesList.module.scss'
@@ -81,7 +82,7 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
 
   function handleDeleteConfirmation(confirmed: boolean): void {
     if (serviceToDelete && confirmed) {
-      onRemoveServiceFormList(serviceToDelete.service.identifier)
+      onRemoveServiceFormList(getScopedValueFromDTO(serviceToDelete.service))
     }
     closeDeleteConfirmation()
     onCloseEditModal()

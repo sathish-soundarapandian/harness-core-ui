@@ -6,13 +6,14 @@
  */
 
 import React, { useState } from 'react'
+import { identity } from 'lodash-es'
 import { ButtonSize, ButtonVariation, ExpandingSearchInput, Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { useStateWithQueryParams } from '@common/hooks/useStateWithQueryParams'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { useServiceAccountModal } from '@rbac/modals/ServiceAccountModal/useServiceAccountModal'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import { useListAggregatedServiceAccounts } from 'services/cd-ng'
@@ -28,7 +29,10 @@ const ServiceAccountsPage: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
   useDocumentTitle(getString('rbac.serviceAccounts.label'))
-  const [searchTerm, setsearchTerm] = useStateWithQueryParams({ key: 'search' })
+  const [searchTerm, setsearchTerm] = useQueryParamsState<string | undefined>('search', '', {
+    serializer: identity,
+    deserializer: identity
+  })
   const [page, setPage] = useState(0)
 
   const { data, loading, error, refetch } = useListAggregatedServiceAccounts({

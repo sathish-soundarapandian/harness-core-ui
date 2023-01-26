@@ -27,6 +27,7 @@ export enum EVENT_TYPE {
   KNOWN = 'KNOWN',
   UNKNOWN = 'UNKNOWN',
   FREQUENCY = 'UNEXPECTED_FREQUENCY',
+  UNEXPECTED = 'UNEXPECTED',
   BASELINE = 'BASELINE'
 }
 
@@ -253,9 +254,10 @@ export function getEventTypeChartColor(eventType?: string, realCSSColor = true):
       return realCSSColor ? Utils.getRealCSSColor(Color.RED_400) : Color.RED_400
     case EVENT_TYPE.KNOWN:
     case 'KNOWN_EVENT':
-      return realCSSColor ? Utils.getRealCSSColor(Color.PRIMARY_4) : Color.PRIMARY_4
+      return realCSSColor ? Utils.getRealCSSColor(Color.PRIMARY_5) : Color.PRIMARY_5
     case EVENT_TYPE.FREQUENCY:
     case 'UNEXPECTED_FREQUENCY':
+    case 'UNEXPECTED':
       return realCSSColor ? Utils.getRealCSSColor(Color.YELLOW_700) : Color.YELLOW_700
     case EVENT_TYPE.BASELINE:
     default:

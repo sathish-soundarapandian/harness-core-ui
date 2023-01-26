@@ -138,4 +138,35 @@ describe('EnvironmentsList', () => {
     fireEvent.click(getByText(form, 'delete') as HTMLButtonElement)
     await waitFor(() => expect(mockErrorHandler).toHaveBeenCalled())
   })
+
+  test('Error handling during the deletion of items from the Environment Menu for force ref entity', async () => {
+    mockImport('services/cd-ng', {
+      useDeleteEnvironmentV2: () => ({
+        mutate: jest.fn().mockRejectedValue({
+          data: {
+            status: 'ERROR',
+            code: 'ENTITY_REFERENCE_EXCEPTION',
+            message: 'Error Detected'
+          }
+        })
+      })
+    })
+
+    render(
+      <TestWrapper
+        defaultFeatureFlagValues={{ SPG_MODULE_VERSION_INFO: true }}
+        path={routes.toEnvironment({ ...projectPathProps, ...modulePathProps })}
+        pathParams={{ accountId: 'dummy', module: 'cd', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <EnvironmentsList response={mockEnvironments.data} refetch={jest.fn()} />
+      </TestWrapper>
+    )
+    fireEvent.click(screen.getAllByRole('button', { name: /more/i })[0])
+    fireEvent.click(screen.getAllByText(/delete/i)[0])
+    const form = findDialogContainer() as HTMLElement
+    expect(form).toBeTruthy()
+    expect(getByText(form, 'delete')).toBeInTheDocument()
+    fireEvent.click(getByText(form, 'delete') as HTMLButtonElement)
+    await waitFor(() => expect(mockErrorHandler).toHaveBeenCalled())
+  })
 })

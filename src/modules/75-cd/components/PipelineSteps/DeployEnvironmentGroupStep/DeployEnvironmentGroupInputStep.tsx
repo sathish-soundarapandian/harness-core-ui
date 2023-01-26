@@ -30,11 +30,13 @@ export interface DeployEnvironmentGroupInputStepProps {
     readonly?: boolean
     allValues?: DeployEnvironmentEntityConfig
   }
+  gitOpsEnabled: boolean
 }
 
 export default function DeployEnvironmentGroupInputStep({
   allowableTypes,
-  inputSetData
+  inputSetData,
+  gitOpsEnabled
 }: DeployEnvironmentGroupInputStepProps): React.ReactElement {
   const { getString } = useStrings()
   const formik = useFormikContext<DeployEnvironmentEntityConfig>()
@@ -69,7 +71,22 @@ export default function DeployEnvironmentGroupInputStep({
     <>
       {getMultiTypeFromValue(inputSetData?.template?.environmentGroup?.envGroupRef) === MultiTypeInputType.RUNTIME && (
         <Layout.Horizontal spacing="medium" style={{ alignItems: 'flex-end' }}>
-          {!CDS_OrgAccountLevelServiceEnvEnvGroup ? (
+          {CDS_OrgAccountLevelServiceEnvEnvGroup && !gitOpsEnabled ? (
+            <MultiTypeEnvironmentGroupField
+              tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
+              label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
+              name={`${pathPrefix}environmentGroup.envGroupRef`}
+              placeholder={getString('cd.pipelineSteps.environmentTab.selectEnvironmentGroup')}
+              setRefValue
+              multiTypeProps={{
+                allowableTypes: (allowableTypes as MultiTypeInputType[])?.filter(
+                  item => item !== MultiTypeInputType.EXPRESSION && item !== MultiTypeInputType.EXECUTION_TIME
+                ) as AllowedTypes
+              }}
+              disabled={inputSetData?.readonly}
+              className={css.inputWidth}
+            />
+          ) : (
             <ExperimentalInput
               tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
               label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
@@ -88,21 +105,6 @@ export default function DeployEnvironmentGroupInputStep({
               disabled={inputSetData?.readonly}
               className={css.inputWidth}
               formik={formik}
-            />
-          ) : (
-            <MultiTypeEnvironmentGroupField
-              tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
-              label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
-              name={`${pathPrefix}environmentGroup.envGroupRef`}
-              placeholder={getString('cd.pipelineSteps.environmentTab.selectEnvironmentGroup')}
-              setRefValue
-              multiTypeProps={{
-                allowableTypes: (allowableTypes as MultiTypeInputType[])?.filter(
-                  item => item !== MultiTypeInputType.EXPRESSION && item !== MultiTypeInputType.EXECUTION_TIME
-                ) as AllowedTypes
-              }}
-              disabled={inputSetData?.readonly}
-              className={css.inputWidth}
             />
           )}
           {loading ? <Spinner className={css.inputSetSpinner} size={16} /> : null}

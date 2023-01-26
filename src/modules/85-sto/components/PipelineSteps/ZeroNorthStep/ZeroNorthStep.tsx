@@ -83,7 +83,7 @@ export class ZeroNorthStep extends PipelineStep<ZeroNorthStepData> {
   protected stepIcon: IconName = 'sto-color-filled'
   protected stepDescription: keyof StringsMap = 'sto.stepDescription.ZeroNorth'
   protected stepPaletteVisible = false
-
+  protected isHarnessSpecific = true
   protected defaultValues: ZeroNorthStepData = {
     identifier: '',
     type: StepType.ZeroNorth as string,

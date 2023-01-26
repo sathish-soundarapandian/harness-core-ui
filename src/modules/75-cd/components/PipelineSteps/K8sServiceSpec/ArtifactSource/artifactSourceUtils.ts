@@ -206,23 +206,6 @@ export function getFqnPath(
   }
 }
 
-export function getConnectorRefFqnPath(
-  path: string,
-  isPropagatedStage: boolean,
-  stageIdentifier: string,
-  artifactPath: string,
-  fieldName: string
-): string {
-  if (isNewServiceEnvEntity(path)) {
-    return `pipeline.stages.${stageIdentifier}.spec.service.serviceInputs.serviceDefinition.spec.artifacts.${artifactPath}.spec.${fieldName}`
-  } else {
-    if (isPropagatedStage) {
-      return `pipeline.stages.${stageIdentifier}.spec.serviceConfig.stageOverrides.artifacts.${artifactPath}.spec.${fieldName}`
-    }
-    return `pipeline.stages.${stageIdentifier}.spec.serviceConfig.serviceDefinition.spec.artifacts.${artifactPath}.spec.${fieldName}`
-  }
-}
-
 export const getYamlData = (formikValues: Record<string, any>, stepViewType: StepViewType, path: string): any =>
   yamlStringify({
     pipeline:

@@ -4432,7 +4432,9 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
               >
                 <button
                   aria-label="continue"
-                  class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+                  class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+                  disabled=""
+                  tabindex="-1"
                   type="button"
                 >
                   <span
@@ -5595,7 +5597,9 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
               >
                 <button
                   aria-label="continue"
-                  class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+                  class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+                  disabled=""
+                  tabindex="-1"
                   type="button"
                 >
                   <span

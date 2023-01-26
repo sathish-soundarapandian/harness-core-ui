@@ -15,7 +15,6 @@ import {
   useGetAllRadarChartLogsData,
   useGetVerifyStepDeploymentLogAnalysisRadarChartResult
 } from 'services/cv'
-import { getSingleLogData } from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.utils'
 import type { PipelinePathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getEventTypeColor, getEventTypeLightColor } from '@cv/utils/CommonUtils'
 import { LogAnalysisRiskAndJiraModal } from './components/LogAnalysisRiskAndJiraModal/LogAnalysisRiskAndJiraModal'
@@ -31,6 +30,7 @@ import {
   isNoLogSelected,
   onClickErrorTrackingRow
 } from './LogAnalysisRow.utils'
+import { getSingleLogData } from '../LogAnalysisForServiceHealth/LogAnalysisForServiceHealth.utils'
 import css from './LogAnalysisRow.module.scss'
 
 function ColumnHeaderRow(): JSX.Element {

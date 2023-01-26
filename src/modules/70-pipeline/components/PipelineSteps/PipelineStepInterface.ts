@@ -153,8 +153,10 @@ export enum StepType {
   AsgInfraSpec = 'AsgInfraSpec',
   Aquatrivy = 'AquaTrivy',
   Bandit = 'Bandit',
+  BlackDuck = 'BlackDuck',
   Burp = 'Burp',
   Snyk = 'Snyk',
+  Grype = 'Grype',
   Sonarqube = 'Sonarqube',
   Zap = 'Zap',
   AsgCanaryDelete = 'AsgCanaryDelete',
@@ -164,7 +166,12 @@ export enum StepType {
   AsgCanaryDeploy = 'AsgCanaryDeploy',
   AsgRollingRollback = 'AsgRollingRollback',
   AsgRollingDeploy = 'AsgRollingDeploy',
-  PrismaCloud = 'PrismaCloud'
+  PrismaCloud = 'PrismaCloud',
+  Checkmarx = 'Checkmarx',
+  Mend = 'Mend',
+  AsgBlueGreenRollback = 'AsgBlueGreenRollback',
+  AsgBlueGreenSwapService = 'AsgBlueGreenSwapService',
+  AsgBlueGreenDeploy = 'AsgBlueGreenDeploy'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

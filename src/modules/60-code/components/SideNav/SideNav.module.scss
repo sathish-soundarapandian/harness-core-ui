@@ -9,6 +9,19 @@
   padding-left: var(--spacing-medium);
   margin-left: var(--spacing-xxlarge);
 
+  &[aria-disabled='true'] {
+    cursor: not-allowed !important;
+    opacity: 0.4;
+
+    &:active {
+      pointer-events: none !important;
+    }
+
+    &:hover {
+      background-color: transparent !important;
+    }
+  }
+
   > p {
     > span {
       padding-right: var(--spacing-small) !important;

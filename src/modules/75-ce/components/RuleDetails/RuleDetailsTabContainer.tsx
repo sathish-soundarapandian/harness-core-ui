@@ -108,7 +108,7 @@ const ManagedVms: React.FC<{ resources: Resource[] }> = ({ resources }) => {
               color={Color.PRIMARY_7}
               onClick={toggle}
             >
-              {state ? getString('ce.common.collapse') : getString('ce.common.expand')}
+              {state ? getString('common.collapse') : getString('common.expand')}
             </Text>
           </Container>
         )}

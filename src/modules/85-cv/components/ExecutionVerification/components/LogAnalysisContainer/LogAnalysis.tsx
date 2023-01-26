@@ -11,11 +11,11 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import noDataImage from '@cv/assets/noData.svg'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
-import { LogAnalysisRow } from '@cv/components/LogsAnalysis/components/LogAnalysisRow/LogAnalysisRow'
 import type { LogAnalysisProps, LogAnalysisRowData } from './LogAnalysis.types'
 import LogAnalysisRadarChartHeader from './components/LogAnalysisRadarChartHeader'
 import LogAnalysisRadarChart from './components/LogAnalysisRadarChart'
 import { getLogAnalysisData } from './LogAnalysis.utils'
+import { LogAnalysisRow } from './components/LogAnalysisRow/LogAnalysisRow'
 import styles from './LogAnalysis.module.scss'
 
 export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
@@ -41,7 +41,7 @@ export default function LogAnalysis(props: LogAnalysisProps): JSX.Element {
   const { getString } = useStrings()
 
   const logAnalysisData = useMemo((): LogAnalysisRowData[] => {
-    return getLogAnalysisData(data, isServicePage)
+    return getLogAnalysisData(data)
   }, [data, isServicePage])
 
   const [selectedLog, setSelectedLog] = useState<string | null>(null)

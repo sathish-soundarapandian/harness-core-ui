@@ -426,7 +426,7 @@ function DeployEnvironment({
       spacing="medium"
       flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
     >
-      {CDS_OrgAccountLevelServiceEnvEnvGroup ? (
+      {CDS_OrgAccountLevelServiceEnvEnvGroup && !gitOpsEnabled ? (
         <MultiTypeEnvironmentField
           {...commonProps}
           placeholder={

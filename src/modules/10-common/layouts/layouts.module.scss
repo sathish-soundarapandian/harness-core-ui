@@ -54,6 +54,7 @@
 }
 
 .rhs {
+  flex: 1;
   .children {
     min-height: var(--page-min-height);
     background-color: var(--primary-bg);
@@ -76,6 +77,10 @@
 .main {
   display: grid;
   grid-template-columns: 88px 184px 1fr;
+
+  &.flex {
+    display: flex;
+  }
 
   &[data-layout='minimal'] {
     grid-template-columns: 88px 1fr;

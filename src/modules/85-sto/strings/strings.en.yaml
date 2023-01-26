@@ -1,9 +1,10 @@
 stepDescription:
   ZeroNorth: Run a security tool to test for vulnerabilities.
   Bandit: Use Bandit to test for vulnerabilities.
-  Blackduckhub: Use Black Duck Hub to test for vulnerabilities.
+  Blackduck: Use Black Duck to test for vulnerabilities.
   Brakeman: Use Brakeman to test for vulnerabilities.
   Burp: Use Burp to test for vulnerabilities.
+  Grype: Use Anchore Grype to test for vulnerabilities.
   Snyk: Use Snyk to test for vulnerabilities.
   Sonarqube: Use Sonarqube to test for vulnerabilities.
   AquaTrivy: Use Aqua Trivy to test for vulnerabilities.
@@ -17,6 +18,7 @@ stepDescription:
   WhiteSource: Use WhiteSource to test for vulnerabilities.
   Zap: Use Zap to test for vulnerabilities.
   PrismaCloud: Use Prisma Cloud to test for vulnerabilities.
+  Mend: Use Mend to test for vulnerabilities.
 stepField:
   mode: Scan Mode
   config: Scan Configuration
@@ -29,6 +31,8 @@ stepField:
   authDomain: Auth Domain
   authAccessId: Auth Access Id
   authSsl: Enforce SSL
+  authVersion: Auth API Version
+  authType: Auth type
   toolInclude: Include
   tool:
     javaLibraries: Java Libraries
@@ -36,12 +40,20 @@ stepField:
     context: Tool Context Name
     port: Tool Port
     imageName: Tool Image Name
+    teamName: Team Name
+    projectVersion: Project Version
+    productToken: Product Token
+    productName: Product Name
+    projectToken: Project Token
+    productLookupType: Product Lookup Type
+    exclude: Exclude
   image:
     type: Image Type
     domain: Image Domain
     region: Image Region
     accessId: Image Access Id
     token: Image Access Token
+    tag: Image Tag
   container:
     containerAccessToken: Container Access Token
     containerRegion: Container Region
@@ -70,6 +82,7 @@ targets:
 issues: Issues
 scans: Scans
 exemptions: Exemptions
+tickets: Tickets
 noSecurityResults: No Security Results Processed
 failedToGetIssueCounts: Failed to get issue counts
 noSecurityIssues: No Security Issues

@@ -12,10 +12,12 @@ import type { EnvironmentRequestDTO } from 'services/cd-ng'
 import {
   newServiceState as initialServiceState,
   newEnvironmentState as initialEnvironmentState,
+  newRepositoryData as initialRepositoryData,
   ServiceDataType,
   InfrastructureDataType,
   newDelegateState,
-  DelegateDataType
+  DelegateDataType,
+  RepoDataType
 } from './CDOnboardingUtils'
 
 export const DefaultPipeline: PipelineInfoConfig = {
@@ -28,6 +30,7 @@ export interface CDOnboardingReducerState {
   service?: ServiceDataType
   environment?: EnvironmentRequestDTO
   infrastructure?: InfrastructureDataType
+  repository?: RepoDataType
   delegate?: DelegateDataType
   error?: string
   schemaErrors?: boolean
@@ -40,6 +43,7 @@ export enum CDOnboardingActions {
   Initialize = 'Initialize',
   Fetching = 'Fetching',
   UpdatePipeline = 'UpdatePipeline',
+  UpdateRepository = 'UpdateRepository',
   UpdateService = 'UpdateService',
   UpdateEnvironment = 'UpdateEnvironment',
   UpdateInfrastructure = 'UpdateInfrastructure',
@@ -54,6 +58,7 @@ export interface ActionResponse {
   isUpdated?: boolean
   pipeline?: PipelineInfoConfig
   service?: ServiceDataType
+  repository?: RepoDataType
   environment?: EnvironmentRequestDTO
   infrastructure?: InfrastructureDataType
   delegate?: DelegateDataType
@@ -84,6 +89,11 @@ const updateDelegate = (response: ActionResponse): ActionReturnType => ({
   response
 })
 
+const UpdateRepository = (response: ActionResponse): ActionReturnType => ({
+  type: CDOnboardingActions.UpdateRepository,
+  response
+})
+
 const fetching = (): ActionReturnType => ({ type: CDOnboardingActions.Fetching })
 const success = (response: ActionResponse): ActionReturnType => ({ type: CDOnboardingActions.Success, response })
 const error = (response: ActionResponse): ActionReturnType => ({ type: CDOnboardingActions.Error, response })
@@ -95,6 +105,7 @@ export const CDOnboardingContextActions = {
   updateEnvironment,
   updateInfrastructure,
   updateDelegate,
+  UpdateRepository,
   fetching,
   success,
   error
@@ -103,6 +114,7 @@ export const CDOnboardingContextActions = {
 export const initialState: CDOnboardingReducerState = {
   pipeline: { ...DefaultPipeline },
   service: initialServiceState,
+  repository: initialRepositoryData,
   environment: initialEnvironmentState.environment,
   infrastructure: initialEnvironmentState.infrastructure,
   delegate: newDelegateState.delegate,
@@ -125,6 +137,12 @@ export const CDOnboardingReducer = (state = initialState, data: ActionReturnType
         ...state,
         isUpdated: response?.isUpdated ?? true,
         pipeline: response?.pipeline ? clone(response?.pipeline) : state.pipeline
+      }
+    case CDOnboardingActions.UpdateRepository:
+      return {
+        ...state,
+        isUpdated: response?.isUpdated ?? true,
+        repository: response?.repository ? clone(response?.repository) : state.repository
       }
     case CDOnboardingActions.UpdateService:
       return {

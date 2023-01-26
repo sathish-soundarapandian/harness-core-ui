@@ -10,7 +10,7 @@ exports[`RouteWithLayout basic 1`] = `
       Main nav
     </div>
     <div
-      class="main"
+      class="main sideNavExpanded"
     >
       <div>
         <div>
@@ -106,7 +106,7 @@ exports[`RouteWithLayout that the license store will render the child if the lic
       Main nav
     </div>
     <div
-      class="main"
+      class="main sideNavExpanded"
     >
       <div>
         <div>
@@ -189,22 +189,6 @@ exports[`RouteWithLayout that the license store will route to the subscriptions 
   >
     <div>
       Main nav
-    </div>
-    <div
-      class="main"
-    >
-      <div />
-      <div
-        class="StyledProps--font StyledProps--main bottomContainer"
-      >
-        <div
-          class="titleContainer"
-        >
-          <div
-            class="Layout--vertical StyledProps--main"
-          />
-        </div>
-      </div>
     </div>
     <div
       class="rhs"

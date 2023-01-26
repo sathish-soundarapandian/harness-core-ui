@@ -7,9 +7,8 @@
 
 import React from 'react'
 import { render } from '@testing-library/react'
-
 import { Formik, FormikForm, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import { TestWrapper } from '@common/utils/testUtils'
+import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 
@@ -176,5 +175,70 @@ describe('Test terraform input set', () => {
     )
 
     expect(getByText('pipelineSteps.backendConfig')).toBeInTheDocument()
+  })
+
+  test('Render repoName in runtime form if connector is runtime', () => {
+    const { container, findByTestId } = render(
+      <TestWrapper>
+        <Formik initialValues={{}} onSubmit={() => undefined} formName="">
+          <FormikForm>
+            <TerraformInputStep
+              initialValues={
+                {
+                  spec: {
+                    configuration: {
+                      type: 'Inline',
+                      spec: {
+                        configFiles: {
+                          store: {
+                            type: 'Git',
+                            spec: {
+                              gitFetchType: 'Branch',
+                              branch: 'test',
+                              folderPath: 'folder',
+                              connectorRef: ''
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                } as any
+              }
+              stepType={StepType.TerraformDestroy}
+              stepViewType={StepViewType.InputSet}
+              inputSetData={
+                {
+                  template: {
+                    spec: {
+                      configuration: {
+                        type: 'Inline',
+                        spec: {
+                          configFiles: {
+                            store: {
+                              type: 'Git',
+                              spec: {
+                                connectorRef: RUNTIME_INPUT_VALUE
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                } as any
+              }
+              path="test"
+              allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]}
+            />
+          </FormikForm>
+        </Formik>
+      </TestWrapper>
+    )
+
+    expect(findByTestId('cr-field-test.spec.configuration.spec.configFiles.store.spec.connectorRef')).not.toBeNull()
+    expect(
+      queryByNameAttribute('test.spec.configuration.spec.configFiles.store.spec.repoName', container)
+    ).not.toBeNull()
   })
 })

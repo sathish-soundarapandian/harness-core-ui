@@ -79,7 +79,7 @@ export default function CVSideNav(): React.ReactElement {
           />
           {SRM_ET_EXPERIMENTAL ? (
             <SidebarLink
-              label={getString('cv.codeErrors')}
+              label={getString('cv.codeErrors.title')}
               to={routes.toCVCodeErrors({ accountId, projectIdentifier, orgIdentifier })}
             />
           ) : null}

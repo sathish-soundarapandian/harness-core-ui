@@ -74,7 +74,7 @@ export const useOrganizationModal = ({ onSuccess }: UseOrganizationModalArgs): U
         />
       </Dialog>
     ),
-    [view, orgData]
+    [view, orgData, onSuccess]
   )
   const open = useCallback(
     (_org?: Organization) => {

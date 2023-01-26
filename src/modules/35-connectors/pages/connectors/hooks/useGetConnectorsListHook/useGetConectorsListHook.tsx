@@ -30,7 +30,6 @@ export const useGetConnectorsListHook = (
   catalogueMockData?: UseGetMockData<ResponseConnectorCatalogueResponse>
 ): UseGetConnectorsListHookReturn => {
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
-  const isCustomSMEnabled = useFeatureFlag(FeatureFlag.CUSTOM_SECRET_MANAGER_NG)
   const isGcpSMEnabled = useFeatureFlag(FeatureFlag.PL_ENABLE_GOOGLE_SECRET_MANAGER_IN_NG)
   const isSpotElastigroupEnabled = useFeatureFlag(FeatureFlag.SPOT_ELASTIGROUP_NG)
   const isTasEnabled = useFeatureFlag(FeatureFlag.CDS_TAS_NG)
@@ -144,8 +143,6 @@ export const useGetConnectorsListHook = (
         switch (connector) {
           case Connectors.ERROR_TRACKING:
             return isErrorTrackingEnabled
-          case Connectors.CUSTOM_SECRET_MANAGER:
-            return isCustomSMEnabled
           case Connectors.SPOT:
             return isSpotElastigroupEnabled
           case Connectors.TAS:
@@ -187,13 +184,6 @@ export const useGetConnectorsListHook = (
               item.connectors
                 ?.filter(connector => filterConnectors(connector))
                 .sort((a, b) => (getConnectorDisplayName(a) < getConnectorDisplayName(b) ? -1 : 1))
-                .filter(entry => {
-                  const name = entry.valueOf() || ''
-                  if (name === 'CustomSecretManager') {
-                    return isCustomSMEnabled
-                  }
-                  return true
-                })
                 .map(entry => {
                   const name = entry.valueOf() || ''
                   categoriesList.push(name)

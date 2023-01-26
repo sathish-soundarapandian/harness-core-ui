@@ -32,6 +32,13 @@ const props = {
 const initialValues = {
   identifier: '',
   spec: {
+    version: '123'
+  }
+}
+
+const scriptInitValues = {
+  identifier: '',
+  spec: {
     version: '123',
     delegateSelectors: '<+input>',
     inputs: [
@@ -70,7 +77,7 @@ const initialValues = {
 }
 
 // eslint-disable-next-line jest/no-disabled-tests
-describe.skip('Custom Artifact tests', () => {
+describe('Custom Artifact tests', () => {
   test(`renders without crashing`, () => {
     const { container } = render(
       <TestWrapper>
@@ -80,28 +87,36 @@ describe.skip('Custom Artifact tests', () => {
     expect(container).toMatchSnapshot()
   })
   // eslint-disable-next-line jest/no-disabled-tests
-  test.skip(`version should have default value of runtimeinput`, async () => {
+  test(`version should have default value of runtimeinput`, async () => {
     const { container } = render(
       <TestWrapper>
         <CustomArtifact key={'key'} initialValues={initialValues as CustomArtifactSource} {...props} />
       </TestWrapper>
     )
+    const checkbox = container.querySelector('input[type="checkbox"][value=manual]')
+
+    fireEvent.click(checkbox!)
+
     const versionField = queryByNameAttribute('spec.version', container) as HTMLInputElement
     expect(versionField).toBeTruthy()
+    fireEvent.change(versionField, { target: { value: '123' } })
     expect(versionField.value).toEqual('123')
-
-    const submitBtn = container.querySelector('button[type="submit"]')!
-    fireEvent.click(submitBtn)
-    expect(container).toMatchSnapshot()
   })
 
   // eslint-disable-next-line jest/no-disabled-tests
-  test.skip(`able to submit form when the form is non empty`, async () => {
+  test(`able to submit form when the form is non empty`, async () => {
     const { container } = render(
       <TestWrapper>
         <CustomArtifact key={'key'} initialValues={initialValues as CustomArtifactSource} {...props} />
       </TestWrapper>
     )
+
+    const checkbox = container.querySelector('input[type="checkbox"][value=manual]')
+    fireEvent.click(checkbox!)
+    const versionField = queryByNameAttribute('spec.version', container) as HTMLInputElement
+    expect(versionField).toBeTruthy()
+    fireEvent.change(versionField, { target: { value: '123' } })
+
     const submitBtn = container.querySelector('button[type="submit"]')!
     fireEvent.click(submitBtn)
 
@@ -111,26 +126,157 @@ describe.skip('Custom Artifact tests', () => {
     fireEvent.click(submitBtn)
 
     await waitFor(() => {
-      expect(props.nextStep).toBeCalled()
-      expect(props.nextStep).toHaveBeenCalledWith({
-        ...initialValues,
-        identifier: 'testidentifier'
+      expect(props.handleSubmit).toHaveBeenCalledWith({
+        identifier: 'testidentifier',
+        spec: {
+          version: '123'
+        }
       })
     })
   })
 
-  test(`form renders correctly in Edit Case`, async () => {
-    const filledInValues = {
-      identifier: 'nexusSidecarId',
-      version: 'artifact-version'
+  test('form able to render in edit case', async () => {
+    const editValues = {
+      ...initialValues,
+      identifier: 'test-identifier'
     }
     const { container } = render(
       <TestWrapper>
-        <CustomArtifact key={'key'} initialValues={filledInValues as CustomArtifactSource} {...props} />
+        <CustomArtifact key={'key'} initialValues={editValues as CustomArtifactSource} {...props} />
       </TestWrapper>
     )
-    const versionField = container.querySelector('input[name="spec.version"]')
-    expect(versionField).not.toBeNull()
+    expect(container).toMatchSnapshot()
+  })
+
+  test('render form when script pulled dynamically from artifact location', () => {
+    const { container } = render(
+      <TestWrapper>
+        <CustomArtifact key={'key'} initialValues={scriptInitValues as CustomArtifactSource} {...props} />
+      </TestWrapper>
+    )
+
+    const checkbox = container.querySelector('input[type="checkbox"][value=script]')
+    fireEvent.click(checkbox!)
+
+    expect(container).toMatchSnapshot()
+  })
+
+  test('fill form with details - for script option', async () => {
+    const scriptEditProps = {
+      ...props,
+      identifier: 'test-identifier',
+      spec: {
+        timeout: '2h',
+        scripts: {
+          fetchAllArtifacts: {
+            artifactsArrayPath: 'tes',
+            versionPath: 'test-versionPath'
+          }
+        },
+        version: '1'
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <CustomArtifact key={'key'} initialValues={scriptInitValues as CustomArtifactSource} {...scriptEditProps} />
+      </TestWrapper>
+    )
+
+    fireEvent.change(queryByNameAttribute('identifier', container)!, { target: { value: 'testidentifier' } })
+    const submitBtn = container.querySelector('button[type="submit"]')!
+    fireEvent.click(submitBtn)
+
+    await waitFor(() => {
+      expect(props.handleSubmit).toHaveBeenCalledWith({
+        identifier: 'testidentifier',
+        spec: {
+          version: '123'
+        }
+      })
+    })
+  })
+
+  test(`should throw validation error on submit`, async () => {
+    const formVals = {
+      identifier: '',
+      spec: {
+        version: '',
+        delegateSelectors: '<+input>',
+        inputs: [
+          {
+            id: 'variable1',
+            name: 'variable1',
+            type: 'String',
+            value: '<+input>'
+          }
+        ],
+        timeout: '<+input>',
+        scripts: {
+          fetchAllArtifacts: {
+            artifactsArrayPath: '<+input>',
+            attributes: [
+              {
+                id: 'variable',
+                name: 'variable',
+                type: 'String',
+                value: '<+input>'
+              }
+            ],
+            versionPath: '<+input>',
+            spec: {
+              shell: 'BASH',
+              source: {
+                spec: {
+                  script: '<+input>'
+                },
+                type: '<+input>'
+              }
+            }
+          }
+        }
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <CustomArtifact key={'key'} initialValues={formVals as CustomArtifactSource} {...props} />
+      </TestWrapper>
+    )
+
+    const checkbox = container.querySelector('input[type="checkbox"][value=manual]')
+    fireEvent.click(checkbox!)
+
+    const submitBtn = container.querySelector('button[type="submit"]')!
+
+    await act(async () => {
+      fireEvent.change(queryByNameAttribute('identifier', container)!, { target: { value: 'testidentifier' } })
+    })
+    fireEvent.click(submitBtn)
+
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should throw validation error for on submit - for script type', async () => {
+    const scriptFormVal = {
+      identifier: '',
+      spec: {
+        version: ''
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <CustomArtifact key={'key'} initialValues={scriptFormVal as CustomArtifactSource} {...props} />
+      </TestWrapper>
+    )
+
+    const checkbox = container.querySelector('input[type="checkbox"][value=script]')
+    fireEvent.click(checkbox!)
+
+    const submitBtn = container.querySelector('button[type="submit"]')!
+
+    await act(async () => {
+      fireEvent.change(queryByNameAttribute('identifier', container)!, { target: { value: 'testidentifier' } })
+    })
+    fireEvent.click(submitBtn)
 
     expect(container).toMatchSnapshot()
   })

@@ -7,10 +7,11 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { defaultTo, get, isString } from 'lodash-es'
+import { defaultTo, get, isEmpty, isString } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
-import { AllowedTypes, getMultiTypeFromValue, Layout, MultiTypeInputType } from '@harness/uicore'
+import { AllowedTypes, FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
+import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
@@ -25,6 +26,8 @@ import MultiTypeSecretInput, {
   getMultiTypeSecretInputType
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
+import { MultiTypeMap } from '@common/components/MultiTypeMap/MultiTypeMap'
 import { HostScope, parseAttributes, parseHosts, PdcInfraTemplate } from './PDCInfrastructureInterface'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PDCInfrastructureSpec.module.scss'
@@ -73,6 +76,22 @@ export const getAttributeFilters = (value: PdcInfrastructure): string => {
   return Object.entries(defaultTo(attributeValue, {}))
     .map(group => `${group[0]}:${group[1]}`)
     .join('\n')
+}
+
+export const getHostAttributes = (value: PdcInfrastructure) => {
+  const attributes = value.hostAttributes || {}
+
+  if (typeof attributes === 'string' && isValueRuntimeInput(attributes)) {
+    return attributes
+  }
+
+  const hostAttributesKeyValue = Object.keys(attributes).map(key => ({
+    id: uuid('', nameSpace()),
+    key: key,
+    value: attributes[key]
+  }))
+
+  return isEmpty(attributes) ? [{ id: uuid('', nameSpace()), value: '', key: '' }] : hostAttributesKeyValue
 }
 
 export const getHostNames = (value: PdcInfrastructure): string => {
@@ -168,6 +187,39 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
             />
           </div>
         )}
+        {getMultiTypeFromValue(template?.hostObjectArray) === MultiTypeInputType.RUNTIME && (
+          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
+            <FormInput.MultiTextInput
+              name={`${path}.hostObjectArray`}
+              placeholder={getString('cd.steps.pdcStep.hostObjectPathPlaceholder')}
+              multiTextInputProps={{
+                allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME],
+                expressions
+              }}
+              label={getString('cd.steps.pdcStep.hostObjectPath')}
+            />
+          </div>
+        )}
+        {getMultiTypeFromValue(template?.hostAttributes) === MultiTypeInputType.RUNTIME && (
+          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
+            <MultiTypeMap
+              formik={formik}
+              name={`${path}.hostAttributes`}
+              enableConfigureOptions={false}
+              valueMultiTextInputProps={{
+                expressions,
+                allowableTypes: (allowableTypes as MultiTypeInputType[]).filter(
+                  item => !isMultiTypeRuntime(item)
+                ) as AllowedTypes
+              }}
+              multiTypeFieldSelectorProps={{
+                label: <Text style={{ color: 'rgb(11, 11, 13)' }}>{getString('cd.steps.pdcStep.hostDataMapping')}</Text>
+              }}
+              disableValueTypeSelection
+              disabled={readonly}
+            />
+          </div>
+        )}
         {template?.hostFilter?.type === HostScope.HOST_NAME &&
           getMultiTypeFromValue(template?.hostFilter?.spec?.value) === MultiTypeInputType.RUNTIME && (
             <div className={cx(stepCss.formGroup, stepCss.md)}>
@@ -231,7 +283,7 @@ export const PDCInfrastructureSpecInputForm: React.FC<PDCInfrastructureSpecInput
             </div>
           )}
         {getMultiTypeFromValue(template?.credentialsRef) === MultiTypeInputType.RUNTIME && (
-          <div className={cx(stepCss.formGroup, stepCss.md, css.credRefWidth)}>
+          <div className={cx(stepCss.formGroup, stepCss.md, css.inputWrapper)}>
             <MultiTypeSecretInput
               name={`${path}.credentialsRef`}
               type={getMultiTypeSecretInputType(defaultTo(initialValues.serviceType, 'SSHKey'))}

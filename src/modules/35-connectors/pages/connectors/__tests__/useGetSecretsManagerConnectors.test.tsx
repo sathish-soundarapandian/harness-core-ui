@@ -28,8 +28,8 @@ describe('useGetSecretsManagerConnectorsHook', () => {
       'AzureKeyVault',
       'AwsSecretManager',
       'GcpKms',
-      'GcpSecretManager',
-      'CustomSecretManager'
+      'CustomSecretManager',
+      'GcpSecretManager'
     ])
   })
   test('useGetSecretsManagerConnectorsHook render data, disabled ff', () => {
@@ -41,7 +41,14 @@ describe('useGetSecretsManagerConnectorsHook', () => {
     const { result } = renderHook(useGetSecretsManagerConnectorsHook, { wrapper })
 
     const { secretsManager } = result.current
-    expect(secretsManager).toHaveLength(5)
-    expect(secretsManager).toEqual(['Vault', 'AwsKms', 'AzureKeyVault', 'AwsSecretManager', 'GcpKms'])
+    expect(secretsManager).toHaveLength(6)
+    expect(secretsManager).toEqual([
+      'Vault',
+      'AwsKms',
+      'AzureKeyVault',
+      'AwsSecretManager',
+      'GcpKms',
+      'CustomSecretManager'
+    ])
   })
 })

@@ -8,14 +8,20 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly bottomContainer: string
+  readonly collapse: string
+  readonly expand: string
   readonly icon: string
   readonly iconContainer: string
   readonly link: string
   readonly main: string
+  readonly popover: string
   readonly selected: string
+  readonly sideNavExpanded: string
+  readonly sideNavResizeBtn: string
   readonly subTitle: string
   readonly text: string
   readonly title: string
   readonly titleContainer: string
+  readonly triangle: string
 }
 export default styles

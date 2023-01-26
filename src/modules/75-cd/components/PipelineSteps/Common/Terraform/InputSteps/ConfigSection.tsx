@@ -28,9 +28,11 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { isMultiTypeFixed, isValueRuntimeInput } from '@common/utils/utils'
+import { shouldDisplayRepositoryName } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ManifestSourceUtils'
 import { Connectors } from '@connectors/constants'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
+import { GitConfigDTO, Scope, useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import FileStoreList from '@filestore/components/FileStoreList/FileStoreList'
 import { fileTypes } from '@pipeline/components/StartupScriptSelection/StartupScriptInterface.types'
@@ -110,6 +112,12 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
     }
   }, [ArtifactRepoData, connectorVal, storeType])
 
+  const [showRepoName, setShowRepoName] = useState(true)
+  const isRepoRuntime =
+    (isValueRuntimeInput(store?.spec?.connectorRef) || isValueRuntimeInput(store?.spec?.repoName)) &&
+    showRepoName &&
+    storeType !== Connectors.ARTIFACTORY
+
   return (
     <>
       {(configSpec?.store?.spec || config?.spec?.workspace) && (
@@ -143,7 +151,7 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
             multiTypeProps={{ allowableTypes, expressions }}
-            width={400}
+            width={388}
             type={
               store?.type === Connectors.ARTIFACTORY
                 ? [Connectors.ARTIFACTORY]
@@ -154,9 +162,38 @@ function ConfigSectionRef<T extends TerraformData = TerraformData>(
             placeholder={getString('select')}
             disabled={readonly}
             setRefValue
+            onChange={(selected, _itemType, multiType) => {
+              const item = selected as unknown as { record?: GitConfigDTO; scope: Scope }
+              if (isMultiTypeFixed(multiType)) {
+                if (shouldDisplayRepositoryName(item)) {
+                  setShowRepoName(true)
+                } else {
+                  setShowRepoName(false)
+                  formik?.setFieldValue(`${path}.${configPath}.store.spec.repoName`, '')
+                }
+              }
+            }}
             gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
           />
         </div>
+      )}
+      {isRepoRuntime && (
+        <TextFieldInputSetView
+          label={getString('pipelineSteps.repoName')}
+          name={`${path}.${configPath}.store.spec.repoName`}
+          placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={inputSetData?.template}
+          fieldPath={`${configPath}.store.spec.repoName`}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
 
       {getMultiTypeFromValue(configSpec?.store?.spec?.branch) === MultiTypeInputType.RUNTIME && (

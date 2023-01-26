@@ -96,6 +96,7 @@ My: My
 ok: OK
 ID: Id
 org: Org
+askUs: ask us
 variables: Variables
 copyVariableName: Copy variable name
 copyFqn: Copy fully qualified name
@@ -242,6 +243,8 @@ ce:
 launchFirstGen: 'Launch {{module}} First Generation'
 startTrial: 'Start 14 day {{module}} Enterprise trial'
 new: new
+gitops:
+  startProvisioning: Start Provisioning
 purpose:
   welcome: 'Hello there, welcome to Harness'
   howToProceed: 'How would you like to proceed?'
@@ -1025,7 +1028,7 @@ moduleConfig:
   restoreDefault: Restore Default Settings
 selectModules: Select Modules
 configureModuleList: Configure Module List
-codeErrorsAgents: Code Error Agents
+codeErrorsSettings: Code Error Settings
 cdAndGitops: Continuous Delivery & GitOps
 stoText: Security Testing Orchestration
 
@@ -1087,6 +1090,7 @@ directly: Directly
 noAvailableTags: No available tags
 loadBalancer: Load Balancer
 environmentInputs: Environment inputs
+serviceOverrideInputs: Service Override inputs
 infrastructures: Infrastructures
 infrastructureInputs: Infrastructure inputs
 environmentPrefix: 'Environment: {{ name }}'
@@ -1149,6 +1153,7 @@ singularLabels:
   testTarget: Test Target
   scan: Scan
   issue: Issue
+  ticket: Ticket
 pipelineExecution: Pipeline Executions
 platformServiceVersions: Platform Service Versions
 executionTab:
@@ -1204,9 +1209,11 @@ noNotifications: No Notifications
 createFlag: Create a Flag
 learnMore: Learn more
 sloNoData: You don’t have any SLO created yet
+sloDowntimeLabel: SLO Downtime
 connectGitRepo: Connect to Git Repository
 clickToExpand: Click to expand
 configureService: Configure Service
+connect: Connect
 connectEnvironment: Connect to Environment
 moduleOverviewLabel:
   cv: Manage Service Level Objectives
@@ -1290,3 +1297,5 @@ matchType: Match type
 svcEnv2Banner: 'Harness has made a significant update to the services and environments in CD. Services and Environments now have definitions that are associated with the respective object and can be managed independent of the pipeline. This change is a forward looking change that won’t impact your existing pipelines. However, we do plan on reducing our support on the service v1 and environments v1 and plan to deprecate by end of January. We have an automated migration tool to support our users. Please contact <a href= {{support}} target="_blank" rel="noreferrer"> <b>&nbsp;support.harness.io&nbsp;</b> </a> for further questions.'
 svcEnvV2Truncated: 'Harness has made a significant update to the services and environments in CD. Services and Environments now have definitions that are associated with the respective object and can be managed ...'
 ifNotPresent: 'If Not Present'
+collapse: Collapse
+expand: Expand

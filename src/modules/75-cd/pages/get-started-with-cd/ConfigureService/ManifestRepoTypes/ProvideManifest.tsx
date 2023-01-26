@@ -57,8 +57,8 @@ export const ProvideManifest = (): React.ReactElement => {
   const prevStepData = {
     connectorRef: {
       connector: connectorResponse,
-      label: connectorResponse.name,
-      value: `${scope}.${connectorResponse.identifier}`,
+      label: connectorResponse?.name,
+      value: `${scope}.${connectorResponse?.identifier}`,
       scope,
       live: connectorResponse?.status?.status === 'SUCCESS'
     },
@@ -75,7 +75,7 @@ export const ProvideManifest = (): React.ReactElement => {
     const updatedInitialValueWithUserRepo = produce(values?.manifestConfig?.manifest as ManifestConfig, draft => {
       if (draft) {
         values?.repository && set(draft, 'spec.store.spec.repoName', defaultTo(values?.repository?.name, ''))
-        set(draft, 'spec.store.spec.connectorRef', `${scope}.${connectorResponse.identifier}`)
+        set(draft, 'spec.store.spec.connectorRef', `${scope}.${connectorResponse?.identifier}`)
       }
     })
     return updatedInitialValueWithUserRepo

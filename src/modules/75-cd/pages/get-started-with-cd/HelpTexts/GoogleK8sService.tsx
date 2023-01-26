@@ -27,6 +27,16 @@ export const GoogleK8sService = (): JSX.Element => {
       </li>
       <li>
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
+          {`${getString('cd.getStartedWithCD.createCluster')} ( ${getString(
+            'cd.getStartedWithCD.googleGKEHelperText'
+          )}):`}
+        </Text>
+
+        <CommandWithCopyField label={'cd.gcloudClusterCreate'} />
+        <CommandWithCopyField label={'cd.gcloudClusterList'} />
+      </li>
+      <li>
+        <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
           {getString('cd.oauthPlugin')}
         </Text>
         <CommandWithCopyField label={'cd.oauthPluginCmd'} />

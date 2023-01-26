@@ -21,7 +21,7 @@ export const CVCodeErrors = (): JSX.Element => {
     pathname: '/eventsummary'
   }
 
-  useDocumentTitle([getString('cv.srmTitle'), getString('cv.codeErrors')])
+  useDocumentTitle([getString('cv.srmTitle'), getString('cv.codeErrors.title')])
 
   if (SRM_ET_EXPERIMENTAL) {
     return <ChildAppMounter ChildApp={ErrorTracking} componentLocation={componentLocation} />

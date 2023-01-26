@@ -124,7 +124,15 @@ describe('Environment Groups List View', () => {
     })
 
     await waitFor(() =>
-      expect(mutate).toHaveBeenCalledWith('Env_Group_4', { headers: { 'content-type': 'application/json' } })
+      expect(mutate).toHaveBeenCalledWith('Env_Group_4', {
+        headers: { 'content-type': 'application/json' },
+        queryParams: {
+          accountIdentifier: 'dummy',
+          forceDelete: undefined,
+          orgIdentifier: 'dummy',
+          projectIdentifier: 'dummy'
+        }
+      })
     )
   })
 

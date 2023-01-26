@@ -73,7 +73,8 @@ export const ManifestDataType: Record<ManifestTypes, ManifestTypes> = {
   AsgConfiguration: 'AsgConfiguration',
   AsgLaunchTemplate: 'AsgLaunchTemplate',
   AsgScalingPolicy: 'AsgScalingPolicy',
-  AsgScheduledUpdateGroupAction: 'AsgScheduledUpdateGroupAction'
+  AsgScheduledUpdateGroupAction: 'AsgScheduledUpdateGroupAction',
+  HelmRepoOverride: 'HelmRepoOverride'
 }
 
 export const TASManifestTypes = [ManifestDataType.TasManifest, ManifestDataType.TasVars, ManifestDataType.TasAutoScaler]
@@ -205,7 +206,8 @@ export const ManifestTypetoStoreMap: Record<ManifestTypes, ManifestStores[]> = {
   AsgLaunchTemplate: gitStoreTypesWithHarnessStoreType,
   AsgConfiguration: gitStoreTypesWithHarnessStoreType,
   AsgScalingPolicy: gitStoreTypesWithHarnessStoreType,
-  AsgScheduledUpdateGroupAction: gitStoreTypesWithHarnessStoreType
+  AsgScheduledUpdateGroupAction: gitStoreTypesWithHarnessStoreType,
+  HelmRepoOverride: [ManifestStoreMap.Http, ManifestStoreMap.OciHelmChart, ManifestStoreMap.S3, ManifestStoreMap.Gcs]
 }
 
 export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
@@ -227,7 +229,8 @@ export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
   AsgLaunchTemplate: 'aws-asg',
   AsgConfiguration: 'aws-asg',
   AsgScalingPolicy: 'aws-asg',
-  AsgScheduledUpdateGroupAction: 'aws-asg'
+  AsgScheduledUpdateGroupAction: 'aws-asg',
+  HelmRepoOverride: 'service-helm'
 }
 
 export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
@@ -249,7 +252,8 @@ export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
   AsgLaunchTemplate: 'pipeline.manifestTypeLabels.AsgLaunchTemplate',
   AsgConfiguration: 'pipeline.manifestTypeLabels.AsgConfiguration',
   AsgScalingPolicy: 'pipeline.manifestTypeLabels.AsgScalingPolicy',
-  AsgScheduledUpdateGroupAction: 'pipeline.manifestTypeLabels.AsgScheduledUpdateGroupAction'
+  AsgScheduledUpdateGroupAction: 'pipeline.manifestTypeLabels.AsgScheduledUpdateGroupAction',
+  HelmRepoOverride: 'pipeline.manifestTypeLabels.HelmRepoOverride'
 }
 
 export const helmVersions: Array<{ label: string; value: HelmVersionOptions }> = [
@@ -442,4 +446,9 @@ const getConnectorId = (prevStepData?: ConnectorConfigDTO): string => {
 
 export const getConnectorRefOrConnectorId = (prevStepData?: ConnectorConfigDTO): string => {
   return prevStepData?.connectorRef ? getConnectorRef(prevStepData) : getConnectorId(prevStepData)
+}
+
+// Record to control manifest override limits
+export const allowedOverrideManfests: Record<keyof Pick<typeof ManifestDataType, 'HelmRepoOverride'>, number> = {
+  HelmRepoOverride: 1
 }

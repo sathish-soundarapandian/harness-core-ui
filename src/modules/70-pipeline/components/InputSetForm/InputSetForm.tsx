@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { defaultTo, isEmpty, merge, noop, omit } from 'lodash-es'
+import { defaultTo, get, isEmpty, merge, noop, omit } from 'lodash-es'
 import {
   Layout,
   NestedAccordionProvider,
@@ -14,11 +14,16 @@ import {
   PageHeader,
   PageBody,
   VisualYamlSelectedView as SelectedView,
-  VisualYamlToggle
+  VisualYamlToggle,
+  Popover,
+  Button,
+  ButtonVariation
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
+import { Classes, Menu, Position } from '@blueprintjs/core'
+import cx from 'classnames'
 import type { InputSetResponse, PipelineConfig, PipelineInfoConfig } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
@@ -61,6 +66,7 @@ import GitPopover from '../GitPopover/GitPopover'
 import FormikInputSetForm from './FormikInputSetForm'
 import { useSaveInputSet } from './useSaveInputSet'
 import { PipelineVariablesContextProvider } from '../PipelineVariablesContext/PipelineVariablesContext'
+import { OutOfSyncErrorStrip } from '../InputSetErrorHandling/OutOfSyncErrorStrip/OutOfSyncErrorStrip'
 import css from './InputSetForm.module.scss'
 
 const getDefaultInputSet = (
@@ -191,6 +197,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   const [selectedView, setSelectedView] = React.useState<SelectedView>(SelectedView.VISUAL)
   const [yamlHandler, setYamlHandler] = React.useState<YamlBuilderHandlerBinding | undefined>()
   const [formErrors, setFormErrors] = React.useState<Record<string, any>>({})
+  const [menuOpen, setMenuOpen] = React.useState(false)
   const [resolvedPipeline, setResolvedPipeline] = React.useState<PipelineInfoConfig | undefined>()
   const { showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
@@ -286,6 +293,10 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
     setFormErrors,
     onCreateSuccess
   })
+
+  const handleMenu = (state: boolean): void => {
+    setMenuOpen(state)
+  }
 
   const inputSet: InputSetDTO | InputSetType = React.useMemo(() => {
     if (inputSetUpdateResponse) {
@@ -467,7 +478,6 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
           className={className}
           onCancel={onCancel}
           filePath={filePath}
-          inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
         />
       </PipelineVariablesContextProvider>
     ),
@@ -516,6 +526,9 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
       pipeline={pipeline}
       isGitSyncEnabled={isGitSyncEnabled}
       disableVisualView={disableVisualView}
+      inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
+      menuOpen={menuOpen}
+      handleMenu={handleMenu}
     >
       {child()}
     </InputSetFormWrapper>
@@ -532,6 +545,9 @@ export interface InputSetFormWrapperProps {
   pipeline: ResponsePMSPipelineResponseDTO | null
   isGitSyncEnabled?: boolean
   disableVisualView: boolean
+  inputSetUpdateResponseHandler?: (responseData: InputSetResponse) => void
+  menuOpen: boolean
+  handleMenu: (state: boolean) => void
 }
 
 export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.ReactElement {
@@ -544,7 +560,10 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
     inputSet,
     pipeline,
     isGitSyncEnabled,
-    disableVisualView
+    disableVisualView,
+    inputSetUpdateResponseHandler,
+    menuOpen,
+    handleMenu
   } = props
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
     PipelineType<InputSetPathProps> & { accountId: string }
@@ -581,6 +600,30 @@ export function InputSetFormWrapper(props: InputSetFormWrapperProps): React.Reac
                   showDisableToggleReason={!hasStoreTypeMismatch(storeType, inputSet?.storeType, isEdit)}
                 />
               </div>
+              <Popover
+                className={cx(Classes.DARK, css.reconcileMenu)}
+                position={Position.LEFT}
+                isOpen={menuOpen}
+                onInteraction={nextOpenState => {
+                  handleMenu(nextOpenState)
+                }}
+              >
+                <Button
+                  variation={ButtonVariation.ICON}
+                  icon="Options"
+                  aria-label="input set menu actions"
+                  onClick={() => handleMenu(true)}
+                />
+                <Menu style={{ backgroundColor: 'unset' }}>
+                  <OutOfSyncErrorStrip
+                    inputSet={inputSet}
+                    pipelineGitDetails={get(pipeline, 'data.gitDetails')}
+                    fromInputSetForm
+                    inputSetUpdateResponseHandler={inputSetUpdateResponseHandler}
+                    closeReconcileMenu={() => handleMenu(false)}
+                  />
+                </Menu>
+              </Popover>
             </Layout.Horizontal>
           }
           breadcrumbs={

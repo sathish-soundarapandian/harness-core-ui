@@ -52,7 +52,7 @@ export const Basic: Story = args => {
   return (
     <TestWrapper>
       <ExecutionContext.Provider value={contextValue}>
-        <StageSelection {...args} />
+        <StageSelection {...args} openExecutionTimeInputsForStep={jest.fn()} />
       </ExecutionContext.Provider>
     </TestWrapper>
   )

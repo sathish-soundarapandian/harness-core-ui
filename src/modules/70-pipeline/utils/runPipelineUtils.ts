@@ -32,7 +32,7 @@ export interface MergeStageProps {
  * Loops over the pipeline and clears all the runtime inputs i.e. <+input>
  */
 export function clearRuntimeInput<T = PipelineInfoConfig>(template: T, shouldAlsoClearRuntimeInputs?: boolean): T {
-  const runtimeCollectionFieldsWhiteList = ['files', 'encryptedFiles']
+  const runtimeCollectionFieldsWhiteList = ['files', 'encryptedFiles', 'hostAttributes']
 
   const RUNTIME_INPUT_REGEX = new RegExp(`"${INPUT_EXPRESSION_REGEX_STRING}"`, 'g')
   const INPUT_EXPRESSION_REGEX = `${RUNTIME_INPUT_REGEX.source.slice(1).slice(0, -1)}`
@@ -233,18 +233,18 @@ export const mergeTemplateWithInputSetData = (props: MergeTemplateWithInputSetDa
     This is why 'toBeUpdated' pipeline should have the variables
     */
 
-    if (inputSetPortion.pipeline.variables) {
+    if (inputSetPortion.pipeline?.variables) {
       // If we have variables saved in input set, pick them and update
 
       toBeUpdated.pipeline.variables = getMergedVariables({
-        variables: defaultTo(toBeUpdated.pipeline.variables, []) as AllNGVariables[],
+        variables: defaultTo(toBeUpdated.pipeline?.variables, []) as AllNGVariables[],
         inputSetVariables: defaultTo(inputSetPortion.pipeline.variables, []) as AllNGVariables[],
-        allVariables: defaultTo(allValues.pipeline.variables, []) as AllNGVariables[],
+        allVariables: defaultTo(allValues.pipeline?.variables, []) as AllNGVariables[],
         shouldUseDefaultValues
       })
     }
 
-    if (inputSetPortion.pipeline.delegateSelectors) {
+    if (inputSetPortion.pipeline?.delegateSelectors) {
       toBeUpdated.pipeline.delegateSelectors = inputSetPortion.pipeline.delegateSelectors
     }
   }

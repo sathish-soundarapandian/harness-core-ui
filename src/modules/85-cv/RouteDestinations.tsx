@@ -56,10 +56,11 @@ import { MonitoredServiceProvider } from './pages/monitored-service/MonitoredSer
 import MonitoredServiceInputSetsTemplate from './pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate'
 import { CVCodeErrors } from './pages/code-errors/CVCodeErrors'
 import { CVCodeErrorsAgents } from './pages/code-errors-agent-control/code-errors-agents/CVCodeErrorsAgents'
-import CVCodeErrorsAgentsControl from './pages/code-errors-agent-control/CVCodeErrorsAgentsControl'
+import CVCodeErrorsSettings from './pages/code-errors-agent-control/CVCodeErrorsSettings'
 import CVCreateSLOV2 from './pages/slos/components/CVCreateSLOV2/CVCreateSLOV2'
 import { getIsValuePresent } from './utils/licenseBannerUtils'
 import { ThresholdPercentageToShowBanner } from './constants'
+import SLODowntimePage from './pages/slos/SLODowntimePage/SLODowntimePage'
 
 // PubSubPipelineActions.subscribe(
 //   PipelineActions.RunPipeline,
@@ -331,7 +332,7 @@ export default (
     <RouteWithLayout
       exact
       sidebarProps={CVSideNavProps}
-      path={[routes.toCVCodeErrorsAgentsControl({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })]}
+      path={[routes.toCVCodeErrorsSettings({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })]}
     >
       <RedirectToCVCodeErrorsControl />
     </RouteWithLayout>
@@ -341,9 +342,9 @@ export default (
       sidebarProps={CVSideNavProps}
       path={[routes.toCVCodeErrorsAgents({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })]}
     >
-      <CVCodeErrorsAgentsControl>
+      <CVCodeErrorsSettings>
         <CVCodeErrorsAgents pathComponentLocation={'/agents'} />
-      </CVCodeErrorsAgentsControl>
+      </CVCodeErrorsSettings>
     </RouteWithLayout>
 
     <RouteWithLayout
@@ -351,9 +352,27 @@ export default (
       sidebarProps={CVSideNavProps}
       path={[routes.toCVCodeErrorsAgentsTokens({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })]}
     >
-      <CVCodeErrorsAgentsControl>
+      <CVCodeErrorsSettings>
         <CVCodeErrorsAgents pathComponentLocation={'/tokens'} />
-      </CVCodeErrorsAgentsControl>
+      </CVCodeErrorsSettings>
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      exact
+      sidebarProps={CVSideNavProps}
+      path={[routes.toCVCodeErrorsCriticalEvents({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })]}
+    >
+      <CVCodeErrorsSettings>
+        <CVCodeErrorsAgents pathComponentLocation={'/criticalevents'} />
+      </CVCodeErrorsSettings>
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      exact
+      sidebarProps={CVSideNavProps}
+      path={[routes.toCVSLODowntime({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })]}
+    >
+      <SLODowntimePage />
     </RouteWithLayout>
 
     <RouteWithLayout

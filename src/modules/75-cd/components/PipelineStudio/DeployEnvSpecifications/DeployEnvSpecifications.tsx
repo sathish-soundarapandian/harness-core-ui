@@ -10,14 +10,12 @@ import { debounce, defaultTo, get } from 'lodash-es'
 import produce from 'immer'
 import cx from 'classnames'
 
-import { Card, Container, RUNTIME_INPUT_VALUE, Text } from '@harness/uicore'
+import { Container, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
-import { useStrings } from 'framework/strings'
 import type { StageElementConfig } from 'services/cd-ng'
 
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -32,6 +30,7 @@ import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { getAllowableTypesWithoutFixedValue } from '@pipeline/utils/runPipelineUtils'
 
 import ErrorsStripBinded from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
+import { getAllFixedServices } from '@cd/components/PipelineSteps/DeployServiceEntityStep/DeployServiceEntityUtils'
 import type { DeployEnvironmentEntityConfig } from '@cd/components/PipelineSteps/DeployEnvironmentEntityStep/types'
 
 import { isContextTypeTemplateType } from '@pipeline/components/PipelineStudio/PipelineUtils'
@@ -39,13 +38,10 @@ import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
 export default function DeployEnvSpecifications(props: PropsWithChildren<unknown>): JSX.Element {
   const scrollRef = useRef<HTMLDivElement | null>(null)
-  const { getString } = useStrings()
   const { submitFormsForTab } = useContext(StageErrorContext)
   const { errorMap } = useValidationErrors()
 
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
-
-  const isMultiInfra = useFeatureFlag(FeatureFlag.MULTI_SERVICE_INFRA)
 
   useEffect(() => {
     if (errorMap.size > 0) {
@@ -138,65 +134,32 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
 
   const filteredAllowableTypes = useMemo(
     () =>
-      scope === Scope.PROJECT || CDS_OrgAccountLevelServiceEnvEnvGroup
+      scope === Scope.PROJECT || (CDS_OrgAccountLevelServiceEnvEnvGroup && !stage?.stage?.spec?.gitOpsEnabled)
         ? allowableTypes
         : getAllowableTypesWithoutFixedValue(allowableTypes),
-    [scope, CDS_OrgAccountLevelServiceEnvEnvGroup, allowableTypes]
+    [scope, CDS_OrgAccountLevelServiceEnvEnvGroup, allowableTypes, stage?.stage?.spec?.gitOpsEnabled]
   )
 
   return (
     <div className={stageCss.deployStage} key="1">
       <ErrorsStripBinded domRef={scrollRef as MutableRefObject<HTMLElement | undefined>} />
       <div className={cx(stageCss.contentSection, stageCss.paddedSection)} ref={scrollRef}>
-        {isMultiInfra ? (
-          <StepWidget<DeployEnvironmentEntityConfig>
-            type={StepType.DeployEnvironmentEntity}
-            readonly={isReadonly}
-            initialValues={initialValues}
-            allowableTypes={filteredAllowableTypes}
-            onUpdate={updateEnvStep}
-            factory={factory}
-            stepViewType={StepViewType.Edit}
-            customStepProps={{
-              stageIdentifier: defaultTo(stage?.stage?.identifier, ''),
-              deploymentType: stage?.stage?.spec?.deploymentType,
-              gitOpsEnabled: defaultTo(stage?.stage?.spec?.gitOpsEnabled, false),
-              customDeploymentRef: stage?.stage?.spec?.customDeploymentRef
-            }}
-          />
-        ) : (
-          <>
-            <Text className={stageCss.tabHeading} id="environment" margin={{ bottom: 'small' }}>
-              {getString('environment')}
-            </Text>
-            <Card>
-              <StepWidget
-                type={StepType.DeployInfrastructure}
-                readonly={isReadonly}
-                initialValues={{
-                  gitOpsEnabled: get(stage, 'stage.spec.gitOpsEnabled', false),
-                  ...(get(stage, 'stage.spec.environment', false) && {
-                    environment: get(stage, 'stage.spec.environment')
-                  }),
-                  ...(!(scope === Scope.PROJECT && !isContextTypeTemplateType(contextType)) && {
-                    environment: { environmentRef: RUNTIME_INPUT_VALUE }
-                  }),
-                  ...(get(stage, 'stage.spec.environmentGroup', false) && {
-                    environmentGroup: get(stage, 'stage.spec.environmentGroup')
-                  })
-                }}
-                allowableTypes={filteredAllowableTypes}
-                onUpdate={val => updateEnvStep(val)}
-                factory={factory}
-                stepViewType={StepViewType.Edit}
-                customStepProps={{
-                  getString: getString,
-                  serviceRef: stage?.stage?.spec?.service?.serviceRef
-                }}
-              />
-            </Card>
-          </>
-        )}
+        <StepWidget<DeployEnvironmentEntityConfig>
+          type={StepType.DeployEnvironmentEntity}
+          readonly={isReadonly}
+          initialValues={initialValues}
+          allowableTypes={filteredAllowableTypes}
+          onUpdate={updateEnvStep}
+          factory={factory}
+          stepViewType={StepViewType.Edit}
+          customStepProps={{
+            serviceIdentifiers: getAllFixedServices(defaultTo(stage?.stage?.spec, {})),
+            stageIdentifier: defaultTo(stage?.stage?.identifier, ''),
+            deploymentType: stage?.stage?.spec?.deploymentType,
+            gitOpsEnabled: defaultTo(stage?.stage?.spec?.gitOpsEnabled, false),
+            customDeploymentRef: stage?.stage?.spec?.customDeploymentRef
+          }}
+        />
         <Container margin={{ top: 'xxlarge' }}>{props.children}</Container>
       </div>
     </div>

@@ -461,7 +461,7 @@ function SavePipelinePopover(
     ? getString('common.viewAndExecutePermissions')
     : getString('common.readonlyPermissions')
 
-  const tooltip = isSaveDisabled ? (
+  const tooltip = isReadonly ? (
     <div className={css.readonlyAccessTag}>
       <Icon name="eye-open" size={16} />
       <span className={css.readonlyAccessText}>{permissionText}</span>

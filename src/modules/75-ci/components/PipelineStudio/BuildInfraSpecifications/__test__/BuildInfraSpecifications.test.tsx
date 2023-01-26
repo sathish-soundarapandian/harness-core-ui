@@ -298,20 +298,20 @@ describe('BuildInfraSpecifications snapshot tests for AWS Build Infra', () => {
     jest.spyOn(featureFlags, 'useFeatureFlags').mockImplementation(() => ({
       CI_VM_INFRASTRUCTURE: true
     }))
-    const { container, findByText: getByText } = render(
+    const { container } = render(
       <TestWrapper pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}>
         <BuildInfraSpecifications />
       </TestWrapper>
     )
     const buildInfraTypeTiles = container.querySelectorAll('input[type="checkbox"]')
     expect(buildInfraTypeTiles[0]).toBeTruthy()
-    const awsTile = buildInfraTypeTiles[1]
+    const awsTile = container.querySelector('input[value="VM"]')
     expect(awsTile).toBeTruthy()
-    fireEvent.click(awsTile)
+    awsTile && fireEvent.click(awsTile)
     expect(container).toMatchSnapshot()
-    const poolNameInputText = await getByText('pipeline.buildInfra.poolName')
+    const poolNameInputText = await container.querySelector('input[name="poolName"]')
     expect(poolNameInputText).toBeTruthy()
-    const osInputText = await getByText('pipeline.infraSpecifications.os')
+    const osInputText = await container.querySelector('input[name="os"]')
     expect(osInputText).toBeTruthy()
   })
 })
@@ -527,7 +527,7 @@ describe('Hosted by Harness', () => {
       </TestWrapper>
     )
     const buildInfraTypeTiles = container.querySelectorAll('input[type="checkbox"]')
-    expect(buildInfraTypeTiles.length).toBe(1)
+    expect(buildInfraTypeTiles.length).toBe(4)
     fireEvent.click(buildInfraTypeTiles[0])
     expect(getByText('ci.getStartedWithCI.provisioningHelpText')).toBeTruthy()
   })

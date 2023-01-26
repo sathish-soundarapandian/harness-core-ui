@@ -21,6 +21,7 @@ import {
 } from '@harness/uicore'
 import { Intent, Spinner } from '@blueprintjs/core'
 import type { FormikErrors } from 'formik'
+import cx from 'classnames'
 
 import {
   ExecutionGraph,
@@ -53,10 +54,13 @@ export interface ExecutionInputsProps {
   step: ExecutionNode
   executionMetadata: ExecutionGraph['executionMetadata']
   factory?: AbstractStepFactory
+  className?: string
+  onSuccess?(): void
+  onError?(): void
 }
 
 export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement {
-  const { step, factory = pipelineFactory, executionMetadata } = props
+  const { step, factory = pipelineFactory, executionMetadata, className, onSuccess, onError } = props
   const { accountId, projectIdentifier, orgIdentifier, planExecutionId } = defaultTo(executionMetadata, {})
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
@@ -145,8 +149,10 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
       await submitInput(stringify(isStageForm ? formData : { step: formData }))
       setHasSubmitted(true)
       showSuccess(getString('common.dataSubmitSuccess'))
+      onSuccess?.()
     } catch (e: unknown) {
       showError(getRBACErrorMessage(e as RBACError))
+      onError?.()
     }
 
     return formData
@@ -158,8 +164,10 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
       try {
         await abortPipeline({} as never)
         showSuccess(getString('pipeline.execution.pipelineActionMessages.abortedMessage'))
+        onSuccess?.()
       } catch (e: unknown) {
         showError(getRBACErrorMessage(e as RBACError))
+        onError?.()
       }
     }
 
@@ -290,5 +298,5 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
     )
   }
 
-  return <div className={css.main}>{content}</div>
+  return <div className={cx(css.main, className)}>{content}</div>
 }

@@ -296,6 +296,16 @@ export const FolderNode = React.memo((props: PropsWithChildren<FileStoreNodeDTO>
     )
   }, [childNodes])
 
+  const collapseIconType = React.useMemo(() => {
+    return isOpenNode ? 'main-chevron-down' : 'main-chevron-right'
+  }, [isOpenNode])
+
+  const CollapseIcon = React.useMemo(() => {
+    return !isRootNode ? (
+      <Icon className={cx(css.nodeCollapseItem, css.nodeCollapseActive)} name={collapseIconType} size={12} />
+    ) : null
+  }, [isRootNode, collapseIconType])
+
   return (
     <Layout.Vertical style={{ marginLeft: !isRootNode ? '3%' : 'none', cursor: 'pointer' }} key={identifier}>
       {isFolderNode ? (
@@ -305,32 +315,28 @@ export const FolderNode = React.memo((props: PropsWithChildren<FileStoreNodeDTO>
             handleGetNodes(e, true)
           }}
         >
-          <Icon
-            className={cx(css.nodeCollapseItem, css.nodeCollapseActive)}
-            name={isRootNode ? 'main-chevron-down' : isOpenNode ? 'main-chevron-down' : 'main-chevron-right'}
-            size={12}
-          />
+          {CollapseIcon}
         </Container>
       ) : null}
       <div
         className={cx(css.mainNode, isActiveNode && css.activeNode)}
-        style={{ position: 'relative' }}
+        style={{ position: 'relative', width: '100%' }}
         onClick={e => {
           handleUnsavedConfirmation(e)
         }}
       >
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', width: '80%' }} className={css.navItemName}>
           <img src={getNodeIcon(type)} alt={type} />
           <Text
             font={{ size: 'normal' }}
             color={!isActiveNode ? Color.PRIMARY_9 : Color.GREY_0}
             tooltip={nodeItem.name}
             style={{
-              maxWidth: 150,
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap'
             }}
+            width={'100%'}
           >
             {nodeItem.name}
           </Text>

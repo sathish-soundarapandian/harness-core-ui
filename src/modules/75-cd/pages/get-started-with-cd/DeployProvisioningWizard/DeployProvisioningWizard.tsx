@@ -21,7 +21,7 @@ import {
 } from '@harness/uicore'
 import cx from 'classnames'
 import { Color, Intent } from '@harness/design-system'
-import { defaultTo, get, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty, noop } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
 import { Classes, IDialogProps } from '@blueprintjs/core'
@@ -37,11 +37,12 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { useGetServicesData } from '@cd/components/PipelineSteps/DeployServiceEntityStep/useGetServicesData'
 import { RunPipelineForm } from '@pipeline/components/RunPipelineModal/RunPipelineForm'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { WizardStep, StepStatus, DeployProvisiongWizardStepId, DeployProvisioningWizardProps } from './Constants'
 import { SelectDeploymentType, SelectDeploymentTypeRefInstance } from '../SelectWorkload/SelectDeploymentType'
 import type { SelectInfrastructureRefInstance } from '../SelectInfrastructure/SelectInfrastructure'
 import { DelegateSelectorRefInstance, DelegateSelectorWizard } from '../DelegateSelectorWizard/DelegateSelectorWizard'
-import { ConfigureService } from '../ConfigureService/ConfigureService'
+import { Configure } from '../ConfigureService/ConfigureService'
 import {
   DEFAULT_PIPELINE_NAME,
   DEFAULT_PIPELINE_PAYLOAD,
@@ -52,17 +53,21 @@ import {
 } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import RunPipelineSummary from '../RunPipelineSummary/RunPipelineSummary'
+import { ConfigureGitops } from '../ConfigureGitops/ConfigureGitops'
+import { GitOpsAgent } from '../GitOpsAgent/GitOpsAgent'
 import commonCss from '../GetStartedWithCD.module.scss'
 import css from './DeployProvisioningWizard.module.scss'
+
+// this needs to be worked upon after confirming the steps name
 const WizardStepOrder = [
   DeployProvisiongWizardStepId.SelectDeploymentType,
-  DeployProvisiongWizardStepId.DelegateSelector,
-  DeployProvisiongWizardStepId.ConfigureService,
-  DeployProvisiongWizardStepId.RunPipeline
+  DeployProvisiongWizardStepId.Connect,
+  DeployProvisiongWizardStepId.Configure,
+  DeployProvisiongWizardStepId.Deploy
 ]
 
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {
-  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.RunPipeline } = props
+  const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.Deploy } = props
   const {
     state: { service: serviceData, infrastructure, environment }
   } = useCDOnboardingContext()
@@ -72,6 +77,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   const history = useHistory()
   const { showError } = useToaster()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const selectedDeploymentType: string | undefined = get(serviceData, 'serviceDefinition.type')
 
   const [selectedSectionId, setSelectedSectionId] = React.useState<DeployProvisiongWizardStepId>(
     DeployProvisiongWizardStepId.SelectDeploymentType
@@ -109,12 +115,13 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
     }
   })
 
+  // this needs to be worked upon after confirming the steps name
   const [wizardStepStatus, setWizardStepStatus] = React.useState<Map<DeployProvisiongWizardStepId, StepStatus>>(
     new Map<DeployProvisiongWizardStepId, StepStatus>([
       [DeployProvisiongWizardStepId.SelectDeploymentType, StepStatus.InProgress],
-      [DeployProvisiongWizardStepId.DelegateSelector, StepStatus.ToDo],
-      [DeployProvisiongWizardStepId.ConfigureService, StepStatus.ToDo],
-      [DeployProvisiongWizardStepId.RunPipeline, StepStatus.ToDo]
+      [DeployProvisiongWizardStepId.Connect, StepStatus.ToDo],
+      [DeployProvisiongWizardStepId.Configure, StepStatus.ToDo],
+      [DeployProvisiongWizardStepId.Deploy, StepStatus.ToDo]
     ])
   )
 
@@ -238,14 +245,14 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
 
   const moveToConfigureService = (): void => {
     setDisableBtn(true)
-    setSelectedSectionId(DeployProvisiongWizardStepId.ConfigureService)
-    setCurrentWizardStepId(DeployProvisiongWizardStepId.ConfigureService)
+    setSelectedSectionId(DeployProvisiongWizardStepId.Configure)
+    setCurrentWizardStepId(DeployProvisiongWizardStepId.Configure)
     updateStepStatus(
-      [DeployProvisiongWizardStepId.SelectDeploymentType, DeployProvisiongWizardStepId.DelegateSelector],
+      [DeployProvisiongWizardStepId.SelectDeploymentType, DeployProvisiongWizardStepId.Connect],
       StepStatus.Success
     )
-    updateStepStatus([DeployProvisiongWizardStepId.ConfigureService], StepStatus.InProgress)
-    updateStepStatus([DeployProvisiongWizardStepId.RunPipeline], StepStatus.ToDo)
+    updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.InProgress)
+    updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
     trackEvent(CDOnboardingActions.MoveToServiceSelection, {})
   }
 
@@ -333,99 +340,82 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   }
 
   const closeCDWizard = (): void => {
-    history.push(routes.toPipelines({ accountId, orgIdentifier, projectIdentifier, module: 'cd' }))
+    trackEvent(CDOnboardingActions.ExitCDOnboarding, {})
+    history.push(routes.toGetStartedWithCD({ accountId, orgIdentifier, projectIdentifier, module: 'cd' }))
   }
 
-  const WizardSteps: Map<DeployProvisiongWizardStepId, WizardStep> = new Map([
-    [
-      DeployProvisiongWizardStepId.SelectDeploymentType,
-      {
-        stepRender: (
-          <SelectDeploymentType
-            ref={SelectDeploymentTypeRef}
-            onSuccess={() => {
-              setDisableBtn(true)
-              setSelectedSectionId(DeployProvisiongWizardStepId.DelegateSelector)
-              setCurrentWizardStepId(DeployProvisiongWizardStepId.DelegateSelector)
-              updateStepStatus([DeployProvisiongWizardStepId.SelectDeploymentType], StepStatus.Success)
-              updateStepStatus([DeployProvisiongWizardStepId.DelegateSelector], StepStatus.InProgress)
-              updateStepStatus([DeployProvisiongWizardStepId.ConfigureService], StepStatus.ToDo)
-              updateStepStatus([DeployProvisiongWizardStepId.RunPipeline], StepStatus.ToDo)
-              trackEvent(CDOnboardingActions.MovetoConfigureEnvironment, {})
-            }}
-            disableNextBtn={() => setDisableBtn(true)}
-            enableNextBtn={() => setDisableBtn(false)}
-          />
-        ),
-        onClickNext: async () => {
-          const { submitForm } = SelectDeploymentTypeRef.current || {}
-          try {
-            submitForm?.()
-          } catch (_e) {
-            // catch any errors and do nothing
-          }
-        },
-        stepFooterLabel: 'common.connectEnvironment'
-      }
-    ],
-    [
-      DeployProvisiongWizardStepId.DelegateSelector,
-      {
-        stepRender: (
-          <>
-            <DelegateSelectorWizard
-              disableNextBtn={() => setDisableBtn(true)}
-              enableNextBtn={() => setDisableBtn(false)}
-              ref={delegateSelectorRef}
-            />
-          </>
-        ),
-        onClickBack: () => {
-          setSelectedSectionId(DeployProvisiongWizardStepId.SelectDeploymentType)
-          setCurrentWizardStepId(DeployProvisiongWizardStepId.SelectDeploymentType)
-          updateStepStatus([DeployProvisiongWizardStepId.DelegateSelector], StepStatus.ToDo)
-          trackEvent(CDOnboardingActions.SelectDeploymentType, {})
-        },
-        onClickNext: async () => {
-          const { isDelegateInstalled } = delegateSelectorRef.current || {}
-          isDelegateInstalled ? moveToConfigureService() : showDelegateRequiredWarning()
-        },
+  const firstStep = [
+    DeployProvisiongWizardStepId.SelectDeploymentType,
+    {
+      stepRender: (
+        <SelectDeploymentType
+          ref={SelectDeploymentTypeRef}
+          onSuccess={() => {
+            setDisableBtn(true)
+            setSelectedSectionId(DeployProvisiongWizardStepId.Connect)
+            setCurrentWizardStepId(DeployProvisiongWizardStepId.Connect)
+            updateStepStatus([DeployProvisiongWizardStepId.Connect], StepStatus.InProgress)
+            updateStepStatus([DeployProvisiongWizardStepId.SelectDeploymentType], StepStatus.Success)
+            updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.ToDo)
+            updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
+            trackEvent(CDOnboardingActions.MovetoConfigureEnvironment, {})
+          }}
+          disableNextBtn={() => setDisableBtn(true)}
+          enableNextBtn={() => setDisableBtn(false)}
+        />
+      ),
+      onClickNext: async () => {
+        const { submitForm } = SelectDeploymentTypeRef.current || {}
+        try {
+          submitForm?.()
+        } catch (_e) {
+          // catch any errors and do nothing
+        }
+      },
+      stepFooterLabel: 'common.connectEnvironment'
+    }
+  ]
 
-        stepFooterLabel: 'common.configureService'
-      }
-    ],
+  const WizardStepsgitOpsEnabled: any = [
     [
-      DeployProvisiongWizardStepId.ConfigureService,
+      DeployProvisiongWizardStepId.Connect,
       {
         stepRender: (
-          <ConfigureService
-            onSuccess={() => {
-              setSelectedSectionId(DeployProvisiongWizardStepId.RunPipeline)
-              setCurrentWizardStepId(DeployProvisiongWizardStepId.RunPipeline)
+          <GitOpsAgent
+            onBack={() => {
+              setSelectedSectionId(DeployProvisiongWizardStepId.SelectDeploymentType)
+              setCurrentWizardStepId(DeployProvisiongWizardStepId.SelectDeploymentType)
+              updateStepStatus([DeployProvisiongWizardStepId.Connect], StepStatus.ToDo)
+              trackEvent(CDOnboardingActions.SelectDeploymentType, {})
+            }}
+            onNext={() => {
+              setDisableBtn(true)
+              setSelectedSectionId(DeployProvisiongWizardStepId.Configure)
+              setCurrentWizardStepId(DeployProvisiongWizardStepId.Configure)
               updateStepStatus(
-                [
-                  DeployProvisiongWizardStepId.SelectDeploymentType,
-                  DeployProvisiongWizardStepId.DelegateSelector,
-                  DeployProvisiongWizardStepId.ConfigureService
-                ],
+                [DeployProvisiongWizardStepId.SelectDeploymentType, DeployProvisiongWizardStepId.Connect],
                 StepStatus.Success
               )
-              if (serviceData?.identifier) {
-                setServiceIdentifier(serviceData.identifier)
-                refetchServicesData()
-              }
-              updateStepStatus([DeployProvisiongWizardStepId.RunPipeline], StepStatus.InProgress)
-              trackEvent(CDOnboardingActions.MoveToPipelineSummary, {})
+              updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.InProgress)
+              updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
+              trackEvent(CDOnboardingActions.MoveToServiceSelection, {})
             }}
-            ref={configureServiceRef}
-            disableNextBtn={() => setDisableBtn(true)}
-            enableNextBtn={() => setDisableBtn(false)}
           />
         ),
+        showFooter: false,
+        onClickBack: noop,
+        onClickNext: noop,
+        stepFooterLabel: 'connectors.ceAws.curExtention.stepB.step1.p1'
+      }
+    ],
+    [
+      DeployProvisiongWizardStepId.Configure,
+      {
+        stepRender: <ConfigureGitops ref={delegateSelectorRef} />,
         onClickBack: () => {
-          setSelectedSectionId(DeployProvisiongWizardStepId.DelegateSelector)
-          setCurrentWizardStepId(DeployProvisiongWizardStepId.DelegateSelector)
-          updateStepStatus([DeployProvisiongWizardStepId.ConfigureService], StepStatus.ToDo)
+          setSelectedSectionId(DeployProvisiongWizardStepId.Connect)
+          setCurrentWizardStepId(DeployProvisiongWizardStepId.Connect)
+          updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.ToDo)
           trackEvent(CDOnboardingActions.MovetoConfigureEnvironment, {})
         },
         onClickNext: async () => {
@@ -440,7 +430,92 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       }
     ],
     [
-      DeployProvisiongWizardStepId.RunPipeline,
+      DeployProvisiongWizardStepId.Deploy,
+      {
+        stepRender: <div>{getString('cd.getStartedWithCD.gitopsOnboardingDeployStep')}</div>,
+        onClickBack: () => {
+          setCurrentWizardStepId(DeployProvisiongWizardStepId.Configure)
+          updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
+        },
+        stepFooterLabel: 'common.createPipeline'
+      }
+    ]
+  ]
+
+  const CDWizardSteps: any = [
+    [
+      DeployProvisiongWizardStepId.Connect,
+      {
+        stepRender: (
+          <>
+            <DelegateSelectorWizard
+              disableNextBtn={() => setDisableBtn(true)}
+              enableNextBtn={() => setDisableBtn(false)}
+              ref={delegateSelectorRef}
+            />
+          </>
+        ),
+        onClickBack: () => {
+          setSelectedSectionId(DeployProvisiongWizardStepId.SelectDeploymentType)
+          setCurrentWizardStepId(DeployProvisiongWizardStepId.SelectDeploymentType)
+          updateStepStatus([DeployProvisiongWizardStepId.Connect], StepStatus.ToDo)
+          trackEvent(CDOnboardingActions.SelectDeploymentType, {})
+        },
+        onClickNext: async () => {
+          const { isDelegateInstalled } = delegateSelectorRef.current || {}
+          isDelegateInstalled ? moveToConfigureService() : showDelegateRequiredWarning()
+        },
+
+        stepFooterLabel: 'common.configureService'
+      }
+    ],
+    [
+      DeployProvisiongWizardStepId.Configure,
+      {
+        stepRender: (
+          <Configure
+            onSuccess={() => {
+              setSelectedSectionId(DeployProvisiongWizardStepId.Deploy)
+              setCurrentWizardStepId(DeployProvisiongWizardStepId.Deploy)
+              updateStepStatus(
+                [
+                  DeployProvisiongWizardStepId.SelectDeploymentType,
+                  DeployProvisiongWizardStepId.Connect,
+                  DeployProvisiongWizardStepId.Configure
+                ],
+                StepStatus.Success
+              )
+              if (serviceData?.identifier) {
+                setServiceIdentifier(serviceData.identifier)
+                refetchServicesData()
+              }
+              updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.InProgress)
+              trackEvent(CDOnboardingActions.MoveToPipelineSummary, {})
+            }}
+            ref={configureServiceRef}
+            disableNextBtn={() => setDisableBtn(true)}
+            enableNextBtn={() => setDisableBtn(false)}
+          />
+        ),
+        onClickBack: () => {
+          setSelectedSectionId(DeployProvisiongWizardStepId.Connect)
+          setCurrentWizardStepId(DeployProvisiongWizardStepId.Connect)
+          updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.ToDo)
+          trackEvent(CDOnboardingActions.MovetoConfigureEnvironment, {})
+        },
+        onClickNext: async () => {
+          const { submitForm } = configureServiceRef.current || {}
+          try {
+            submitForm?.()
+          } catch (_e) {
+            // catch any errors and do nothing
+          }
+        },
+        stepFooterLabel: 'common.createPipeline'
+      }
+    ],
+    [
+      DeployProvisiongWizardStepId.Deploy,
       {
         stepRender: (
           <RunPipelineSummary
@@ -456,9 +531,9 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
               updateStepStatus(
                 [
                   DeployProvisiongWizardStepId.SelectDeploymentType,
-                  DeployProvisiongWizardStepId.DelegateSelector,
-                  DeployProvisiongWizardStepId.ConfigureService,
-                  DeployProvisiongWizardStepId.RunPipeline
+                  DeployProvisiongWizardStepId.Connect,
+                  DeployProvisiongWizardStepId.Configure,
+                  DeployProvisiongWizardStepId.Deploy
                 ],
                 StepStatus.Success
               )
@@ -467,15 +542,26 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           />
         ),
         onClickBack: () => {
-          setCurrentWizardStepId(DeployProvisiongWizardStepId.ConfigureService)
-          updateStepStatus([DeployProvisiongWizardStepId.RunPipeline], StepStatus.ToDo)
+          setCurrentWizardStepId(DeployProvisiongWizardStepId.Configure)
+          updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
         },
         stepFooterLabel: 'common.createPipeline'
       }
     ]
+  ]
+
+  const WizardSteps: Map<DeployProvisiongWizardStepId, WizardStep> = new Map([
+    firstStep,
+    ...(selectedDeploymentType === ServiceDeploymentType.KubernetesGitops ? WizardStepsgitOpsEnabled : CDWizardSteps)
   ])
 
-  const { stepRender, onClickBack, onClickNext, stepFooterLabel } = WizardSteps.get(currentWizardStepId) ?? {}
+  const {
+    stepRender,
+    onClickBack,
+    onClickNext,
+    stepFooterLabel,
+    showFooter = true
+  } = WizardSteps.get(currentWizardStepId) ?? {}
 
   const buttonLabel = stepFooterLabel ? `${getString('next')}: ${getString(stepFooterLabel)}` : getString('next')
 
@@ -500,25 +586,25 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
         [
           1,
           {
-            StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.DelegateSelector), StepStatus.ToDo),
-            StepName: getString('common.connectEnvironment'),
-            onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.DelegateSelector)
+            StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.Connect), StepStatus.ToDo),
+            StepName: getString('common.connect'),
+            onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.Connect)
           }
         ],
         [
           2,
           {
-            StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.ConfigureService), StepStatus.ToDo),
-            StepName: getString('common.configureService'),
-            onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.ConfigureService)
+            StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.Configure), StepStatus.ToDo),
+            StepName: getString('connectors.ceAws.curExtention.stepB.step1.p1'),
+            onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.Configure)
           }
         ],
         [
           3,
           {
-            StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.RunPipeline), StepStatus.ToDo),
-            StepName: getString('runPipeline'),
-            onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.RunPipeline)
+            StepStatus: defaultTo(wizardStepStatus.get(DeployProvisiongWizardStepId.Deploy), StepStatus.ToDo),
+            StepName: getString('pipelineSteps.deploy.create.deployStageName'),
+            onClick: () => onwizardStepClick(DeployProvisiongWizardStepId.Deploy)
           }
         ]
       ]),
@@ -536,7 +622,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
         {/* header */}
         <Container className={css.header}>
           <MultiStepProgressIndicator
-            progressMap={multiStepProgressMap}
+            progressMap={multiStepProgressMap as any}
             textClassName={css.stepWizardText}
             barWidth={230}
           />
@@ -565,28 +651,30 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       </Layout.Vertical>
 
       {/* footer */}
-      <Layout.Vertical padding={{ left: 'huge' }} className={css.footer}>
-        <Layout.Horizontal spacing="medium" padding={{ top: 'medium', bottom: 'large' }} width="100%">
-          {currentWizardStepId !== DeployProvisiongWizardStepId.SelectDeploymentType && (
-            <Button
-              variation={ButtonVariation.SECONDARY}
-              text={getString('back')}
-              icon="chevron-left"
-              minimal
-              onClick={() => onClickBack?.()}
-            />
-          )}
-          {currentWizardStepId !== DeployProvisiongWizardStepId.RunPipeline && (
-            <Button
-              text={buttonLabel}
-              variation={ButtonVariation.PRIMARY}
-              rightIcon="chevron-right"
-              onClick={() => onClickNext?.()}
-              disabled={disableBtn}
-            />
-          )}
-        </Layout.Horizontal>
-      </Layout.Vertical>
+      {showFooter ? (
+        <Layout.Vertical padding={{ left: 'huge' }} className={css.footer}>
+          <Layout.Horizontal spacing="medium" padding={{ top: 'medium', bottom: 'large' }} width="100%">
+            {currentWizardStepId !== DeployProvisiongWizardStepId.SelectDeploymentType && (
+              <Button
+                variation={ButtonVariation.SECONDARY}
+                text={getString('back')}
+                icon="chevron-left"
+                minimal
+                onClick={() => onClickBack?.()}
+              />
+            )}
+            {currentWizardStepId !== DeployProvisiongWizardStepId.Deploy && (
+              <Button
+                text={buttonLabel}
+                variation={ButtonVariation.PRIMARY}
+                rightIcon="chevron-right"
+                onClick={() => onClickNext?.()}
+                disabled={disableBtn}
+              />
+            )}
+          </Layout.Horizontal>
+        </Layout.Vertical>
+      ) : null}
     </Layout.Vertical>
   ) : null
 }

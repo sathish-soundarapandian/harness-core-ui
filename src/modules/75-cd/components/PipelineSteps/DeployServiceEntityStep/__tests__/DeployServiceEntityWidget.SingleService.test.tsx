@@ -235,7 +235,7 @@ describe('DeployServiceEntityWidget - single service tests', () => {
 
     await waitFor(() => expect(dialog).not.toBeInTheDocument())
 
-    expect(onUpdate).toHaveBeenLastCalledWith({ service: { serviceInputs: undefined, serviceRef: 'svc_4' } })
+    expect(onUpdate).toHaveBeenLastCalledWith({ service: { serviceInputs: undefined, serviceRef: 'account.svc_4' } })
   })
 
   test('user can make service as runtime input', async () => {

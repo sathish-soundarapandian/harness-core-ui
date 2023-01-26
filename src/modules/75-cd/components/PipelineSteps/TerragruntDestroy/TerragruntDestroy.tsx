@@ -100,6 +100,10 @@ export class TerragruntDestroy extends PipelineStep<TerragruntData> {
           ...configData,
           spec: {
             ...configData?.spec,
+            moduleConfig: {
+              terragruntRunType: data.spec.configuration.spec?.moduleConfig?.terragruntRunType || 'RunModule',
+              path: data.spec.configuration.spec?.moduleConfig?.path
+            },
             targets: !isTargetRunTime
               ? Array.isArray(get(configData, 'spec.targets'))
                 ? (get(configData, 'spec.targets') as string[]).map((target: string) => ({

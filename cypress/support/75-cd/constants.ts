@@ -1,4 +1,4 @@
-import { addHashInCypressURLBasedOnBrowserRouter } from "../../utils/windowLocation"
+import { addHashInCypressURLBasedOnBrowserRouter } from '../../utils/windowLocation'
 
 export const accountIdentifier = 'accountId'
 export const orgIdentifier = 'default'

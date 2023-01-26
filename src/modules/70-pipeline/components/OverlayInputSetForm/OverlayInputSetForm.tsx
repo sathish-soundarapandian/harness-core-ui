@@ -8,7 +8,7 @@
 import React, { useMemo } from 'react'
 import { defaultTo, get, isNull, isUndefined, omit, omitBy, remove, set } from 'lodash-es'
 import type { MutateRequestOptions } from 'restful-react/dist/Mutate'
-import { Callout, Classes, Dialog, IDialogProps } from '@blueprintjs/core'
+import { Callout, Classes, Dialog, IDialogProps, Menu, Position } from '@blueprintjs/core'
 import * as Yup from 'yup'
 import {
   Button,
@@ -21,7 +21,8 @@ import {
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle,
   Heading,
-  Container
+  Container,
+  Popover
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -185,6 +186,7 @@ export function OverlayInputSetForm({
   const [formErrors, setFormErrors] = React.useState<Record<string, any>>({})
   const [invalidInputSetIds, setInvalidInputSetIds] = React.useState<Array<string>>([])
   const [invokeMergeInp, setInvokeMergeInp] = React.useState<boolean>(false)
+  const [menuOpen, setMenuOpen] = React.useState(false)
   const isPipelineRemote = gitSimplification && storeType === StoreType.REMOTE
   const commonQueryParams = useMemo(() => {
     return {
@@ -656,17 +658,47 @@ export function OverlayInputSetForm({
       {anyApiLoading && selectedView === SelectedView.VISUAL && <PageSpinner />}
       <div className={Classes.DIALOG_BODY}>
         <Layout.Vertical spacing="medium">
-          <div className={css.optionBtns}>
-            <VisualYamlToggle
-              selectedView={selectedView}
-              onChange={nextMode => {
-                handleModeSwitch(nextMode)
+          <Layout.Horizontal className={css.rowBtns}>
+            <div className={css.optionBtns}>
+              <VisualYamlToggle
+                selectedView={selectedView}
+                onChange={nextMode => {
+                  handleModeSwitch(nextMode)
+                }}
+                disableToggle={disableVisualView}
+                disableToggleReasonIcon={'danger-icon'}
+                showDisableToggleReason={!hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
+              />
+            </div>
+            <Popover
+              className={Classes.DARK}
+              position={Position.LEFT}
+              isOpen={menuOpen}
+              onInteraction={nextOpenState => {
+                setMenuOpen(nextOpenState)
               }}
-              disableToggle={disableVisualView}
-              disableToggleReasonIcon={'danger-icon'}
-              showDisableToggleReason={!hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit)}
-            />
-          </div>
+            >
+              <Button
+                variation={ButtonVariation.ICON}
+                icon="Options"
+                aria-label="overlay input set menu actions"
+                onClick={() => setMenuOpen(true)}
+              />
+              <Menu style={{ backgroundColor: 'unset' }}>
+                <OutOfSyncErrorStrip
+                  inputSet={inputSet}
+                  overlayInputSetRepoIdentifier={overlayInputSetRepoIdentifier}
+                  overlayInputSetBranch={overlayInputSetBranch}
+                  overlayInputSetIdentifier={identifier}
+                  pipelineGitDetails={get(pipeline, 'data.gitDetails')}
+                  hideForm={hideForm}
+                  isOverlayInputSet
+                  hideInputSetButton
+                  closeReconcileMenu={() => setMenuOpen(false)}
+                />
+              </Menu>
+            </Popover>
+          </Layout.Horizontal>
 
           <Formik<OverlayInputSetDTO & GitContextProps & StoreMetadata>
             initialValues={{
@@ -807,18 +839,6 @@ export function OverlayInputSetForm({
                         <PageSpinner />
                       ) : (
                         <>
-                          {isInputSetInvalid(inputSet) && (
-                            <OutOfSyncErrorStrip
-                              inputSet={inputSet}
-                              overlayInputSetRepoIdentifier={overlayInputSetRepoIdentifier}
-                              overlayInputSetBranch={overlayInputSetBranch}
-                              overlayInputSetIdentifier={identifier}
-                              pipelineGitDetails={get(pipeline, 'data.gitDetails')}
-                              hideForm={hideForm}
-                              isOverlayInputSet={true}
-                              hideInputSetButton={true}
-                            />
-                          )}
                           {hasStoreTypeMismatch(storeType, inputSetStoreType, isEdit) ? (
                             <Callout intent="danger">{getString('pipeline.inputSetInvalidStoreTypeCallout')}</Callout>
                           ) : null}

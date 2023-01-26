@@ -141,14 +141,16 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.PolicyEvaluationFailure,
     ErrorType.AllErrors,
     ErrorType.InputTimeoutError,
-    ErrorType.ApprovalRejection
+    ErrorType.ApprovalRejection,
+    ErrorType.DelegateRestart
   ],
   [StageType.BUILD]: [
     ErrorType.Timeout,
     ErrorType.Unknown,
     ErrorType.InputTimeoutError,
     ErrorType.AllErrors,
-    ErrorType.ApprovalRejection
+    ErrorType.ApprovalRejection,
+    ErrorType.DelegateRestart
   ],
   [StageType.APPROVAL]: [
     ErrorType.Authentication,
@@ -161,7 +163,8 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.AllErrors,
     ErrorType.PolicyEvaluationFailure,
     ErrorType.InputTimeoutError,
-    ErrorType.ApprovalRejection
+    ErrorType.ApprovalRejection,
+    ErrorType.DelegateRestart
   ],
   [StageType.FEATURE]: [ErrorType.Timeout, ErrorType.Unknown, ErrorType.InputTimeoutError, ErrorType.AllErrors],
   [StageType.SECURITY]: [ErrorType.Timeout, ErrorType.Unknown, ErrorType.InputTimeoutError, ErrorType.AllErrors],
@@ -176,7 +179,8 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.AllErrors,
     ErrorType.PolicyEvaluationFailure,
     ErrorType.InputTimeoutError,
-    ErrorType.ApprovalRejection
+    ErrorType.ApprovalRejection,
+    ErrorType.DelegateRestart
   ],
   [StageType.CUSTOM]: [
     ErrorType.Authentication,
@@ -189,7 +193,8 @@ export const errorTypesForStages: Record<StageType, FailureErrorType[]> = {
     ErrorType.AllErrors,
     ErrorType.PolicyEvaluationFailure,
     ErrorType.InputTimeoutError,
-    ErrorType.ApprovalRejection
+    ErrorType.ApprovalRejection,
+    ErrorType.DelegateRestart
   ],
   [StageType.Template]: [],
   [StageType.MATRIX]: [],

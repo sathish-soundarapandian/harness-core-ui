@@ -343,6 +343,7 @@ export interface AccessControlCheckError {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -827,7 +828,7 @@ export interface CodeBase {
 export interface Condition {
   key: string
   operator: 'equals' | 'not equals' | 'in' | 'not in'
-  value?: string
+  value: string
 }
 
 export interface ConditionDTO {
@@ -1417,6 +1418,7 @@ export interface Error {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -1778,6 +1780,7 @@ export interface ErrorMetadata {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -2342,6 +2345,7 @@ export interface Failure {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -2407,6 +2411,7 @@ export interface FailureInfoDTO {
     | 'POLICY_EVALUATION_FAILURE'
     | 'INPUT_TIMEOUT_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'DELEGATE_RESTART'
   )[]
   message?: string
   responseMessages?: ResponseMessage[]
@@ -3266,6 +3271,7 @@ export interface OnFailureConfig {
     | 'PolicyEvaluationFailure'
     | 'InputTimeoutError'
     | 'ApprovalRejection'
+    | 'DelegateRestart'
   )[]
 }
 
@@ -4712,6 +4718,7 @@ export interface ResponseMessage {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -4771,6 +4778,7 @@ export interface ResponseMessage {
     | 'POLICY_EVALUATION_FAILURE'
     | 'INPUT_TIMEOUT_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'DELEGATE_RESTART'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -5860,7 +5868,7 @@ export interface WaitStepExecutionDetailsDto {
 }
 
 export type WaitStepInfo = StepSpecType & {
-  duration?: string
+  duration: string
   metadata?: string
 }
 
@@ -15774,6 +15782,9 @@ export interface GetSchemaYamlQueryParams {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
@@ -16058,6 +16069,9 @@ export interface GetStepYamlSchemaQueryParams {
     | 'TasRollingDeploy'
     | 'TasRollingRollback'
     | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 

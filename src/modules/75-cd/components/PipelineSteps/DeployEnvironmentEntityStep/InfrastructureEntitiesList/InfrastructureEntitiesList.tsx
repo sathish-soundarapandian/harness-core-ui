@@ -18,6 +18,7 @@ import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 
 import InfrastructureModal from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureModal'
 
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import type { DeployEnvironmentEntityCustomStepProps, InfrastructureData } from '../types'
 import { InfrastructureEntityCard } from './InfrastructureEntityCard'
 
@@ -123,6 +124,7 @@ export default function InfrastructureEntitiesList({
           stageDeploymentType={infrastructureToEdit?.infrastructureDefinition.deploymentType as ServiceDeploymentType}
           stageCustomDeploymentData={customDeploymentRef}
           getTemplate={getTemplate}
+          scope={getScopeFromValue(environmentIdentifier)}
         />
       </ModalDialog>
 

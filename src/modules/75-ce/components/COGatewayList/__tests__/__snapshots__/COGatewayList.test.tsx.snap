@@ -331,7 +331,7 @@ exports[`Test COGatewayList able to search through the list 1`] = `
                 class="StyledProps--font StyledProps--main pointerCursor StyledProps--color StyledProps--color-primary7"
                 style="display: flex; align-items: center;"
               >
-                ce.common.collapse
+                common.collapse
                 <span
                   class="bp3-icon StyledProps--main Text--icon StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-primary7"
                   data-icon="main-chevron-up"
@@ -2336,7 +2336,7 @@ exports[`Test COGatewayList clicking on refresh button refetch all rules 1`] = `
                 class="StyledProps--font StyledProps--main pointerCursor StyledProps--color StyledProps--color-primary7"
                 style="display: flex; align-items: center;"
               >
-                ce.common.collapse
+                common.collapse
                 <span
                   class="bp3-icon StyledProps--main Text--icon StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-primary7"
                   data-icon="main-chevron-up"

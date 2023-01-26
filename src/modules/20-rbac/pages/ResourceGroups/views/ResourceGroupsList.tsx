@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
+import { identity } from 'lodash-es'
 import { Layout, ExpandingSearchInput, ButtonVariation, PageHeader, PageBody } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -14,7 +15,7 @@ import { useGetResourceGroupListV2 } from 'services/resourcegroups'
 import ResourceGroupListView from '@rbac/components/ResourceGroupList/ResourceGroupListView'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { useStateWithQueryParams } from '@common/hooks/useStateWithQueryParams'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -28,7 +29,10 @@ const ResourceGroupsList: React.FC = () => {
   const { getString } = useStrings()
   const history = useHistory()
   useDocumentTitle(getString('resourceGroups'))
-  const [searchTerm, setSearchTerm] = useStateWithQueryParams({ key: 'search' })
+  const [searchTerm, setSearchTerm] = useQueryParamsState<string | undefined>('search', '', {
+    serializer: identity,
+    deserializer: identity
+  })
   const [page, setPage] = useState(0)
 
   const { data, loading, error, refetch } = useGetResourceGroupListV2({

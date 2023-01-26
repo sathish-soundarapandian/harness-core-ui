@@ -1,0 +1,180 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.main {
+  .headingContainer {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-medium) var(--spacing-7) !important;
+    border-bottom: 1px solid var(--grey-200);
+    align-items: center;
+  }
+
+  .iconContainer {
+    cursor: pointer;
+    &:not(:last-of-type) {
+      margin-right: var(--spacing-small);
+    }
+    .logo {
+      margin-right: var(--spacing-xsmall);
+    }
+  }
+
+  .formAndMessageContainer {
+    height: 100%;
+
+    .chartSection {
+      width: 60%;
+      height: 100%;
+      padding: var(--padding-section) !important;
+      padding-bottom: 80px !important;
+      overflow-y: auto;
+    }
+    .sampleMessageSection {
+      width: 40%;
+      height: 100%;
+      padding: var(--padding-section) !important;
+      background: var(--primary-bg);
+      border-left: 1px solid var(--grey-200);
+    }
+  }
+
+  .formContainer {
+    .message textarea {
+      min-height: 130px;
+      max-height: 385px;
+    }
+  }
+}
+
+.sharePopoverContent {
+  width: 200px;
+  padding: var(--spacing-small) !important;
+  .urlContent {
+    background-color: var(--grey-100);
+    padding: var(--spacing-small);
+    p {
+      font-size: var(--font-size-xsmall);
+      word-break: break-all;
+    }
+  }
+
+  .copyButton {
+    margin-top: var(--spacing-small);
+    font-size: var(--font-size-xsmall);
+    position: relative;
+    left: 70%;
+  }
+
+  .copySuccess {
+    margin-top: var(--spacing-small);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    > span {
+      position: relative;
+      bottom: 1px;
+    }
+    p {
+      margin-left: var(--spacing-xsmall);
+      font-size: var(--font-size-xsmall);
+    }
+  }
+}
+
+.activityContainer {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: var(--spacing-8) !important;
+  border-radius: 8px;
+
+  .firstRow {
+    > div {
+      display: grid;
+
+      &:not(:last-child) {
+        margin-right: var(--spacing-7);
+      }
+
+      p:not(.reasonText) {
+        &:first-child {
+          font-size: var(--font-size-small) !important;
+          margin-bottom: var(--spacing-small) !important;
+          color: var(--grey-400) !important;
+        }
+
+        &:last-child {
+          width: fit-content !important;
+        }
+      }
+    }
+
+    .reasonTextContainer {
+      p {
+        width: 150px !important;
+      }
+    }
+  }
+}
+
+.chartContainer {
+  width: 100%;
+  margin-bottom: var(--spacing-large) !important;
+  > div {
+    width: 100%;
+    height: 100%;
+    overflow: visible !important;
+  }
+
+  :global(.highcharts-container) {
+    overflow: visible !important;
+
+    :global(svg) {
+      overflow: visible !important;
+    }
+  }
+}
+.dataNameData {
+  width: 150px;
+  height: 50px;
+  margin-bottom: var(--spacing-small) !important;
+  .dataContent {
+    margin-top: var(--spacing-small) !important;
+    font-size: var(--font-size-small);
+  }
+}
+
+.logMessageContainer {
+  .sampleEvent {
+    margin-bottom: var(--spacing-small);
+  }
+
+  .logMessage {
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    font-size: var(--font-size-xsmall);
+    font-family: var(--font-family-mono) !important;
+  }
+}
+
+.almostFullScreenCloseBtn:global(.bp3-button.bp3-minimal) {
+  position: fixed;
+  top: 0;
+  right: 80%;
+  background: #00ade4 !important;
+  color: var(--white) !important;
+  border-radius: 4px 0 0 4px !important;
+  padding: 0 !important;
+  z-index: 99;
+}
+
+.messageContainer {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}

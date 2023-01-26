@@ -6,15 +6,18 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import { Spinner } from '@blueprintjs/core'
 import { Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import type { ExecutionCardInfoProps } from '@pipeline/factories/ExecutionFactory/types'
 import SeverityPill from '@sto/components/SeverityPill/SeverityPill'
 import { SeverityCode } from '@sto/types'
 import { useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
-import { useIssueCounts } from 'services/sto'
+import { useFrontendExecutionIssueCounts } from 'services/sto/stoComponents'
+import type { IssueCounts } from 'services/sto/stoSchemas'
 import css from './STOExecutionCardSummary.module.scss'
 
 export default function STOExecutionCardSummary(
@@ -23,8 +26,20 @@ export default function STOExecutionCardSummary(
   const { data } = props
   const { pipelineIdentifier = '', planExecutionId: executionId = '', status: pipelineStatus = '' } = data
 
+  const { projectIdentifier: projectId, orgIdentifier: orgId, accountId } = useParams<PipelinePathProps>()
   const { getString } = useStrings()
-  const { data: issueCounts, loading, error } = useIssueCounts(pipelineIdentifier, executionId)
+  const {
+    data: issueCounts,
+    isLoading,
+    error
+  } = useFrontendExecutionIssueCounts<Record<string, IssueCounts>>({
+    queryParams: {
+      accountId,
+      orgId,
+      projectId,
+      executionIds: executionId
+    }
+  })
 
   if (!pipelineIdentifier || !executionId || !pipelineStatus) {
     return <></>
@@ -45,7 +60,7 @@ export default function STOExecutionCardSummary(
   }
 
   function RenderSecurityResults(): React.ReactElement {
-    if (loading) {
+    if (isLoading) {
       if (pipelineStatuses['Loading'].includes(pipelineStatus)) {
         return <></>
       } else {

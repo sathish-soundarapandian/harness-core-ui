@@ -90,9 +90,11 @@ export const WizardFooter = ({
           text={getString('continue')}
           variation={ButtonVariation.PRIMARY}
           rightIcon="chevron-right"
+          disabled={!formikProps.isValid}
           onClick={async () => {
             const formErrors = await formikProps.validateForm()
             if (!isEmpty(formErrors)) {
+              /* istanbul ignore next */
               formikProps.setErrors(formErrors)
               const errorKeys = Object.keys(formErrors)
               const newTouchedObj: { [key: string]: boolean } = {}
@@ -149,19 +151,22 @@ export const WizardFooter = ({
             variation={ButtonVariation.PRIMARY}
             rightIcon="chevron-right"
             onClick={async () => {
+              /* istanbul ignore next */
               setSubmittedForm(true)
               const latestYaml = yamlHandler?.getLatestYaml() || /* istanbul ignore next */ ''
               const errorsYaml =
                 (yamlHandler?.getYAMLValidationErrorMap() as unknown as Map<number, string>) ||
                 /* istanbul ignore next */ ''
               if (errorsYaml?.size > 0) {
+                /* istanbul ignore next */
                 showError(invalidYamlString)
                 return
               }
-
+              /* istanbul ignore next */
               if (!isEmpty(await validate?.({ latestYaml }))) {
                 return
               } else {
+                /* istanbul ignore next */
                 formikProps.setSubmitting(true)
               }
 

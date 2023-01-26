@@ -57,7 +57,9 @@ import { useGetInfrastructuresData } from './useGetInfrastructuresData'
 import css from './DeployInfrastructure.module.scss'
 
 interface DeployInfrastructureProps
-  extends Required<Omit<DeployEnvironmentEntityCustomStepProps, 'gitOpsEnabled' | 'stageIdentifier'>> {
+  extends Required<
+    Omit<DeployEnvironmentEntityCustomStepProps, 'gitOpsEnabled' | 'stageIdentifier' | 'serviceIdentifiers'>
+  > {
   initialValues: DeployEnvironmentEntityFormState
   readonly: boolean
   allowableTypes: AllowedTypes
@@ -440,6 +442,7 @@ export default function DeployInfrastructure({
           stageDeploymentType={deploymentType as ServiceDeploymentType}
           stageCustomDeploymentData={customDeploymentRef}
           getTemplate={getTemplate}
+          scope={getScopeFromValue(environmentIdentifier)}
         />
       </ModalDialog>
     </>

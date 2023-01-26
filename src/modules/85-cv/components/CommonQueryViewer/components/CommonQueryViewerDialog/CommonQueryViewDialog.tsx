@@ -27,7 +27,11 @@ export function CommonQueryViewDialog(props: CommonQueryViewDialogProps): JSX.El
             <Text font={{ variation: FontVariation.H6 }} margin={{ top: 'xxlarge', bottom: 'small' }}>
               {getString('cv.query')}
             </Text>
-            <FormInput.TextArea name={CustomMetricFormFieldNames.QUERY} className={css.formQueryBox} />
+            <FormInput.TextArea
+              name={CustomMetricFormFieldNames.QUERY}
+              className={css.formQueryBox}
+              placeholder={getString('cv.monitoringSources.commonHealthSource.submitQueryToSeeRecords')}
+            />
           </Container>
           <Container className={css.queryPanel}>
             <CommonRecords

@@ -161,6 +161,16 @@ const TEST_INPUT_SET_PATH = routes.toInputSetList({
   ...pipelineModuleParams
 })
 
+const clickOnReconcileButton = async (): Promise<void> => {
+  const reconcileMenuOption = await screen.findByRole('button', {
+    name: /overlay input set menu actions/i
+  })
+  userEvent.click(reconcileMenuOption)
+  const reconcileBtn = await screen.findByText('pipeline.outOfSyncErrorStrip.reconcile')
+  userEvent.click(reconcileBtn)
+  expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+}
+
 const renderComponent = (): RenderResult => {
   return render(
     <TestWrapper
@@ -183,12 +193,16 @@ const renderComponent = (): RenderResult => {
 }
 
 describe('Inline Overlay Input Set Error Exp', () => {
-  test('should open yaml view and render out of sync error strip ', async () => {
+  test('should render input set menu action button', async () => {
     renderComponent()
     jest.runOnlyPendingTimers()
 
     const container = findDialogContainer()
-    expect(screen.getByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })).toBeDefined()
+    expect(
+      screen.getByRole('button', {
+        name: /overlay input set menu actions/i
+      })
+    ).toBeDefined()
     expect(container).toMatchSnapshot()
   })
 
@@ -196,9 +210,7 @@ describe('Inline Overlay Input Set Error Exp', () => {
     renderComponent()
     jest.runOnlyPendingTimers()
 
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
     await screen.findByText('pipeline.inputSetErrorStrip.reconcileDialogTitle')
     const removeInvalidFieldBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
@@ -220,9 +232,7 @@ describe('Inline Overlay Input Set Error Exp', () => {
     renderComponent()
     jest.runOnlyPendingTimers()
 
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
     await screen.findByText('pipeline.inputSets.invalidOverlayISDesc1')
     const deleteOverlayISBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.deleteOverlayIS' })

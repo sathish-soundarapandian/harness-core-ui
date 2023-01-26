@@ -10,7 +10,7 @@ import { Text, Icon, StepWizard, StepProps, AllowedTypes } from '@harness/uicore
 import type { IconProps } from '@harness/icons'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { ConnectorConfigDTO } from 'services/cd-ng'
+import type { ConnectorConfigDTO, ManifestConfigWrapper } from 'services/cd-ng'
 import type { ConnectorRefLabelType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ManifestRepoTypes } from '../ManifestWizardSteps/ManifestRepoTypes'
 import ManifestStore from '../ManifestWizardSteps/ManifestStore'
@@ -41,6 +41,7 @@ interface ManifestWizardStepsProps<T, U> {
   changeManifestType: (data: U | null) => void
   types: ManifestTypes[]
   listOfDisabledManifestTypes?: ManifestTypes[]
+  existingManifestOverrides?: ManifestConfigWrapper[]
 }
 
 const showManifestStoreStepDirectly = (selectedManifest: ManifestTypes | null): boolean => {
@@ -76,7 +77,8 @@ export function ManifestWizard<T, U>({
   changeManifestType,
   iconsProps,
   isReadonly,
-  listOfDisabledManifestTypes
+  listOfDisabledManifestTypes,
+  existingManifestOverrides
 }: ManifestWizardStepsProps<T, U>): React.ReactElement {
   const { getString } = useStrings()
   const onStepChange = (arg: StepChangeData<any>): void => {
@@ -127,6 +129,7 @@ export function ManifestWizard<T, U>({
         changeManifestType={changeManifestTypeRef}
         initialValues={initialValues}
         listOfDisabledManifestTypes={listOfDisabledManifestTypes}
+        manifestOverridesList={existingManifestOverrides}
       />
       <ManifestStore
         name={getString('pipeline.manifestType.manifestSource')}

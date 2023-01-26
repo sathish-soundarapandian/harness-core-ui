@@ -1,10 +1,8 @@
 import {
-  pipelineDetailsAPI,
   pipelineExecutionAPI,
   pipelineExecutionForNodeAPI,
   pipelineExecutionSummaryAPI,
-  pipelineListAPI,
-  pipelineSummaryAPI
+  pipelineListAPI
 } from '../../../support/70-pipeline/constants'
 
 import {
@@ -25,6 +23,9 @@ import {
   logsRadarChartDataCLusterFilterCall,
   logsRadarChartDataNodeFilterCall,
   nodeNamesFilterAPI,
+  pipelinesFetchCall,
+  pipelinesSummaryFetchCall,
+  pipelinesYamlFetchCall,
   sourceCodeManagerCall,
   transactionsFilterAPI
 } from '../../../support/85-cv/verifyStep/constants'
@@ -32,10 +33,10 @@ import {
 describe('Verify step', () => {
   beforeEach(() => {
     cy.intercept('POST', pipelineListAPI, { fixture: '/pipeline/api/pipelines/getPipelineList' }).as('pipelineList')
-    cy.intercept('GET', pipelineSummaryAPI, { fixture: '/pipeline/api/pipelines/pipelineSummary' }).as(
+    cy.intercept('GET', pipelinesSummaryFetchCall, { fixture: '/pipeline/api/pipelines/pipelineSummary' }).as(
       'pipelineSummary'
     )
-    cy.intercept('GET', pipelineDetailsAPI, { fixture: '/pipeline/api/pipelines/getPipelineDetails' }).as(
+    cy.intercept('GET', pipelinesFetchCall, { fixture: '/pipeline/api/pipelines/getPipelineDetails' }).as(
       'pipelineDetails'
     )
     cy.intercept('POST', pipelineExecutionSummaryAPI, {
@@ -68,11 +69,13 @@ describe('Verify step', () => {
     }).as('deploymentTimeseriesDataWithFilters')
 
     cy.intercept('GET', gitSyncCall, {}).as('gitSyncCall')
+    cy.intercept('GET', pipelinesYamlFetchCall, {}).as('pipelinesYamlFetchCall')
     cy.intercept('GET', sourceCodeManagerCall, {}).as('sourceCodeManagerCall')
     cy.intercept('GET', aggregateProjectsCall, {}).as('aggregateProjectsCall')
 
     cy.on('uncaught:exception', () => false)
     cy.login('test', 'test')
+    cy.visitPageAssertion('[class^=SideNav-module_main]')
     cy.contains('p', 'Projects').click()
     cy.contains('p', 'Project 1').click()
     cy.contains('p', 'Delivery').click()
@@ -80,11 +83,9 @@ describe('Verify step', () => {
 
     cy.wait('@pipelineList')
     cy.wait('@aggregateProjectsCall')
-    cy.wait('@sourceCodeManagerCall')
-    cy.wait('@gitSyncCall')
   })
 
-  it.skip('should verify logs screen', () => {
+  it('should verify logs screen', () => {
     cy.intercept('GET', logsListCall, logsListCallResponse).as('logsListCall')
     cy.intercept('GET', logsRadarChartDataCall, logsRadarChartDataCallResponse).as('logsRadarChartDataCall')
     cy.intercept('GET', logsListNodeFilterCall, logsListCallResponse).as('logsListNodeFilterCall')
@@ -98,12 +99,16 @@ describe('Verify step', () => {
     )
     cy.intercept('GET', logsListMinSliderFilterCall, logsListCallResponse).as('logsListMinSliderFilterCall')
 
-    cy.findByText('appd-test').click()
+    cy.findByText('NG Docker Image').click()
+
+    cy.wait('@sourceCodeManagerCall')
+    cy.wait('@gitSyncCall')
+    cy.wait('@pipelinesYamlFetchCall')
 
     cy.wait('@pipelineSummary')
     cy.wait('@pipelineDetails')
 
-    cy.url().should('include', '/pipelines/appdtest/pipeline-studio')
+    cy.url().should('include', '/pipelines/NG_Docker_Image/pipeline-studio')
 
     cy.findByRole('link', { name: /Execution History/i }).click()
 
@@ -117,16 +122,13 @@ describe('Verify step', () => {
     cy.wait('@pipelineExecution')
     cy.wait('@pipelineExecutionForNode')
 
-    cy.url().should('include', '/pipelines/appdtest/executions/C9mgNjxSS7-B-qQek27iuA/pipeline')
+    cy.url().should('include', '/pipelines/NG_Docker_Image/executions/C9mgNjxSS7-B-qQek27iuA/pipeline')
 
     cy.findByText(/appd_dev/i).click()
 
     cy.wait('@deployment-activity-summary')
 
-    cy.url().should(
-      'include',
-      '/pipelines/appdtest/executions/C9mgNjxSS7-B-qQek27iuA/pipeline?stage=g_LkakmWRPm-wC6rfC2ufg&step=MC56t3BmR4mUBHPuiL6JWQ'
-    )
+    cy.url().should('include', '/pipelines/NG_Docker_Image/executions/')
 
     cy.findByTestId(/Logs/i).click()
 
@@ -136,10 +138,10 @@ describe('Verify step', () => {
 
     cy.url().should(
       'include',
-      '/pipelines/appdtest/executions/C9mgNjxSS7-B-qQek27iuA/pipeline?stage=g_LkakmWRPm-wC6rfC2ufg&step=MC56t3BmR4mUBHPuiL6JWQ&view=log&type=Logs&filterAnomalous=true'
+      '/pipelines/NG_Docker_Image/executions/C9mgNjxSS7-B-qQek27iuA/pipeline?storeType=INLINE&view=log&type=Logs&filterAnomalous=true'
     )
 
-    cy.findAllByTestId(/logs-data-row/i).should('have.length', 10)
+    cy.findAllByTestId(/logs-data-row/i).should('have.length', 3)
 
     cy.findAllByTestId(/logs-data-row/i)
       .first()
@@ -147,8 +149,10 @@ describe('Verify step', () => {
 
     cy.findByTestId(/LogAnalysis_detailsDrawer/i).should('exist')
 
-    cy.findByTestId(/ActivityHeadingContent_eventType/i).should('have.text', 'Unexpected Frequency')
-    cy.findByTestId(/ActivityHeadingContent_count/i).should('have.text', '258')
+    cy.findByTestId(/ActivityHeadingContent_eventType/i).should('have.text', 'Known')
+    cy.findByTestId(/ActivityHeadingContent_count/i).should('have.text', '8')
+
+    cy.findAllByTestId(/activityHeadingContent-chart/i).should('have.length', '4')
 
     cy.findByTestId(/DrawerClose_button/i).click()
 
@@ -195,7 +199,7 @@ describe('Verify step', () => {
 
     cy.url().should(
       'include',
-      '/projects/project1/pipelines/appdtest/executions/C9mgNjxSS7-B-qQek27iuA/pipeline?stage=g_LkakmWRPm-wC6rfC2ufg&step=MC56t3BmR4mUBHPuiL6JWQ&view=log&type=Metrics&filterAnomalous=false'
+      'pipelines/NG_Docker_Image/executions/C9mgNjxSS7-B-qQek27iuA/pipeline?storeType=INLINE&view=log&type=Metrics&filterAnomalous=false'
     )
 
     cy.findByTestId('Known').should('exist')

@@ -85,14 +85,14 @@ export function LastUpdatedBy({ lastModifiedAt }: EnvironmentResponse): React.Re
 }
 
 export function EnvironmentMenu({
-  environment: { identifier },
+  environment,
   onEdit,
   onDelete
 }: {
   environment: EnvironmentResponseDTO
   onEdit: (identifier: string) => void
-  onDelete: (identifier: string) => void
-}) {
+  onDelete: (environment: EnvironmentResponseDTO) => void
+}): React.ReactElement {
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
 
@@ -106,19 +106,19 @@ export function EnvironmentMenu({
     onCloseDialog: async (isConfirmed: boolean) => {
       /* istanbul ignore else */
       if (isConfirmed) {
-        await onDelete(defaultTo(identifier, ''))
+        onDelete(environment)
       }
       setMenuOpen(false)
     }
   })
 
-  const handleEdit = (event: React.MouseEvent) => {
+  const handleEdit = (event: React.MouseEvent): void => {
     event.stopPropagation()
-    onEdit(defaultTo(identifier, ''))
+    onEdit(defaultTo(environment?.identifier, ''))
     setMenuOpen(false)
   }
 
-  const handleDelete = (event: React.MouseEvent) => {
+  const handleDelete = (event: React.MouseEvent): void => {
     event.stopPropagation()
     openDialog()
     setMenuOpen(false)

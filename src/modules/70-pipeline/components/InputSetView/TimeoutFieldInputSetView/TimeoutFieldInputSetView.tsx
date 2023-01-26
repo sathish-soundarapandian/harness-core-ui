@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { MultiTypeInputType, getMultiTypeFromValue } from '@harness/uicore'
+import { MultiTypeInputType, getMultiTypeFromValue, AllowedTypesWithRunTime } from '@harness/uicore'
 import { defaultTo, get } from 'lodash-es'
 import {
   FormMultiTypeDurationField,
@@ -30,12 +30,16 @@ export function TimeoutFieldInputSetView(props: TimeoutFieldInputSetViewProps): 
   const { enableConfigureOptions = true, configureOptionsProps } = multiTypeDurationProps || {}
   const value = get(formik?.values, name, '')
 
+  const allowedTypes = defaultTo(multiTypeDurationProps?.allowableTypes, [MultiTypeInputType.FIXED]).filter(
+    type => type !== MultiTypeInputType.EXECUTION_TIME
+  ) as AllowedTypesWithRunTime[]
+
   const { getMultiTypeInputWithAllowedValues } = useRenderMultiTypeInputWithAllowedValues({
     name: name,
     labelKey: label,
     placeholderKey: placeholder,
     fieldPath: fieldPath,
-    allowedTypes: defaultTo(multiTypeDurationProps?.allowableTypes, [MultiTypeInputType.FIXED]),
+    allowedTypes,
     template: template,
     readonly: disabled,
     tooltipProps: tooltipProps

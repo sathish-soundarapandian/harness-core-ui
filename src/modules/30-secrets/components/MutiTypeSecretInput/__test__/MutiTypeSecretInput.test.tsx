@@ -15,7 +15,7 @@ import connectorsListMockData from './connectorsListMockdata.json'
 import secretsListMockData from './secretsListMockData.json'
 import connectorDetailsMockData from './getConnectorMock.json'
 
-import MutiTypeSecretInput from '../MultiTypeSecretInput'
+import MutiTypeSecretInput, { getMultiTypeSecretInputType } from '../MultiTypeSecretInput'
 
 jest.mock('services/cd-ng', () => ({
   ...(jest.requireActual('services/cd-ng') as any),
@@ -48,6 +48,7 @@ describe('SecretInput', () => {
                   label="test"
                   onSuccess={handleSuccess}
                   secretsListMockData={secretsListMockData as any}
+                  enableConfigureOptions={true}
                 />
               </FormikForm>
             )
@@ -84,5 +85,12 @@ describe('SecretInput', () => {
     act(() => {
       fireEvent.click(closeButton!)
     })
+  })
+
+  test('getMultiTypeSecretInputType function', () => {
+    const winRMType = getMultiTypeSecretInputType('WinRm')
+    expect(winRMType).toMatch('WinRmCredentials')
+    const type = getMultiTypeSecretInputType('Ssh')
+    expect(type).toMatch('SSHKey')
   })
 })

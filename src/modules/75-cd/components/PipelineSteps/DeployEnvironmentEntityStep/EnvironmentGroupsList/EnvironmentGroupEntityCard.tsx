@@ -58,6 +58,7 @@ export function EnvironmentGroupCard({
   onEditClick,
   onDeleteClick,
   initialValues,
+  serviceIdentifiers,
   stageIdentifier,
   deploymentType,
   customDeploymentRef,
@@ -147,6 +148,7 @@ export function EnvironmentGroupCard({
                 allowableTypes={allowableTypes}
                 isMultiEnvironment
                 isUnderEnvGroup
+                serviceIdentifiers={serviceIdentifiers}
                 stageIdentifier={stageIdentifier}
                 deploymentType={deploymentType}
                 customDeploymentRef={customDeploymentRef}

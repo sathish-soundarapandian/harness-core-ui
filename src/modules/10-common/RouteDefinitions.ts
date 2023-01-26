@@ -1557,7 +1557,12 @@ const routes = {
       `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/tokens`
   ),
 
-  toCVCodeErrorsAgentsControl: withAccountId(
+  toCVCodeErrorsCriticalEvents: withAccountId(
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/criticalevents`
+  ),
+
+  toCVCodeErrorsSettings: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
       `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et`
   ),
@@ -1605,6 +1610,19 @@ const routes = {
   toAccountCVCreateCompositeSLOs: withAccountId(({ module = 'cv' }: { module?: string }) => {
     return `/${module}/slos/create/composite`
   }),
+  toCVSLODowntime: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
+      const path = `resources/slo-downtime`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
   toCVAddMonitoringServicesSetup: withAccountId(
     ({ projectIdentifier, orgIdentifier }: Partial<ProjectPathProps & { identifier: string }>) =>
       `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservices/setup`
@@ -1960,6 +1978,14 @@ const routes = {
   toIACMStacks: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/stacks`
+  ),
+  toIACMSetup: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/`
+  ),
+  toIACMPipelines: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines`
   )
 }
 

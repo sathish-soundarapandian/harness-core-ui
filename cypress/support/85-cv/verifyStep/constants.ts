@@ -35,6 +35,9 @@ export const serviceEnvironmentTest1Call = `/cv/api/monitored-service/service-en
 export const serviceEnvironmentTest2Call = `/cv/api/monitored-service/service-environment?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1&environmentIdentifier=prod&serviceIdentifier=testService2`
 export const serviceEnvironmentTest3Call = `/cv/api/monitored-service/service-environment?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}&environmentIdentifier=${ENV}&serviceIdentifier=testService3`
 
+export const pipelinesFetchCall = `/pipeline/api/pipelines/NG_Docker_Image?*`
+export const pipelinesSummaryFetchCall = `/pipeline/api/pipelines/summary/NG_Docker_Image?*`
+export const pipelinesYamlFetchCall = `/pipeline/api/yaml-schema?*`
 // git sync call
 export const gitSyncCall = `/ng/api/git-sync?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${org}&projectIdentifier=${project}`
 export const aggregateProjectsCall = `/ng/api/aggregate/projects?routingId=${accountId}&accountIdentifier=${accountId}&pageIndex=0&pageSize=50`
@@ -834,187 +837,496 @@ export const inputSetTemplateRuntimeServiceResponse = {
 export const logsListCallResponse = {
   metaData: {},
   resource: {
-    totalClusters: 29,
+    totalClusters: 1,
     eventCounts: [
-      { clusterType: 'KNOWN_EVENT', count: 24, displayName: 'Known' },
-      { clusterType: 'UNKNOWN_EVENT', count: 4, displayName: 'Unknown' },
-      { clusterType: 'UNEXPECTED_FREQUENCY', count: 1, displayName: 'Unexpected Frequency' }
+      {
+        clusterType: 'KNOWN_EVENT',
+        count: 1,
+        displayName: 'Known'
+      },
+      {
+        clusterType: 'UNEXPECTED_FREQUENCY',
+        count: 0,
+        displayName: 'Unexpected Frequency'
+      },
+      {
+        clusterType: 'UNKNOWN_EVENT',
+        count: 0,
+        displayName: 'Unknown'
+      },
+      {
+        clusterType: 'BASELINE',
+        count: 1,
+        displayName: 'Baseline'
+      }
     ],
     logAnalysisRadarCharts: {
-      totalPages: 3,
-      totalItems: 29,
-      pageItemCount: 10,
+      totalPages: 1,
+      totalItems: 1,
+      pageItemCount: 1,
       pageSize: 10,
       content: [
         {
-          message: 'Test Message',
+          message: 'test 1',
+          clusterId: '29659f5a-f6ad-308c-97dc-d54d0ac07c1c',
           label: 0,
-          risk: 'UNHEALTHY',
+          risk: 'HEALTHY',
+          clusterType: 'KNOWN_EVENT',
+          count: 8,
+          testHostFrequencyData: [
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 1.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 0.0
+                }
+              ],
+              host: 'host1'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 2.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 0.0
+                }
+              ],
+              host: 'host2'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 2.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 2.0
+                }
+              ],
+              host: 'host3'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 4.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 4.0
+                }
+              ],
+              host: 'host4'
+            }
+          ],
+          totalTestFrequencyData: [
+            {
+              timeStamp: 1672845420,
+              count: 3.0
+            },
+            {
+              timeStamp: 1672845480,
+              count: 0.0
+            },
+            {
+              timeStamp: 1672845540,
+              count: 0.0
+            },
+            {
+              timeStamp: 1672845600,
+              count: 6.0
+            },
+            {
+              timeStamp: 1672845660,
+              count: 6.0
+            }
+          ],
+          averageControlFrequencyData: [
+            {
+              timeStamp: 1672845060,
+              count: 1
+            },
+            {
+              timeStamp: 1672845120,
+              count: 2
+            },
+            {
+              timeStamp: 1672845180,
+              count: 1
+            },
+            {
+              timeStamp: 1672845240,
+              count: 3
+            },
+            {
+              timeStamp: 1672845300,
+              count: 10
+            }
+          ]
+        },
+        {
+          message: 'test 2',
+          clusterId: '29659f5a-f6ad-308c-97dc-d54d0ac07c1a',
+          label: 0,
+          risk: 'HEALTHY',
+          clusterType: 'UNKNOWN_EVENT',
+          count: 8,
+          testHostFrequencyData: [
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 1.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 0.0
+                }
+              ],
+              host: 'host1'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 2.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 0.0
+                }
+              ],
+              host: 'host2'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 2.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 2.0
+                }
+              ],
+              host: 'host3'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 4.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 4.0
+                }
+              ],
+              host: 'host4'
+            }
+          ],
+          totalTestFrequencyData: [
+            {
+              timeStamp: 1672845420,
+              count: 3.0
+            },
+            {
+              timeStamp: 1672845480,
+              count: 0.0
+            },
+            {
+              timeStamp: 1672845540,
+              count: 0.0
+            },
+            {
+              timeStamp: 1672845600,
+              count: 6.0
+            },
+            {
+              timeStamp: 1672845660,
+              count: 6.0
+            }
+          ],
+          averageControlFrequencyData: [
+            {
+              timeStamp: 1672845060,
+              count: 1
+            },
+            {
+              timeStamp: 1672845120,
+              count: 2
+            },
+            {
+              timeStamp: 1672845180,
+              count: 1
+            },
+            {
+              timeStamp: 1672845240,
+              count: 3
+            },
+            {
+              timeStamp: 1672845300,
+              count: 10
+            }
+          ]
+        },
+        {
+          message: 'test 2',
+          clusterId: '29659f5a-f6ad-308c-97dc-d54d0ac07c1d',
+          label: 0,
+          risk: 'HEALTHY',
           clusterType: 'UNEXPECTED_FREQUENCY',
-          count: 258,
-          frequencyData: [45.0, 74.0, 44.0, 43.0, 52.0],
-          baseline: {
-            message: '< Transfer-Encoding: chunked\r\n',
-            label: 0,
-            risk: 'NO_ANALYSIS',
-            clusterType: 'BASELINE',
-            count: 0,
-            frequencyData: [2.0],
-            baseline: null,
-            hasControlData: false
-          },
-          hasControlData: true,
-          cluterId: 1
-        },
-        {
-          message:
-            '2022-02-10 07:22:59 UTC | TRACE | INFO | (pkg/trace/info/stats.go:104 in LogStats) | No data received\n',
-          label: 30003,
-          risk: 'UNHEALTHY',
-          clusterType: 'UNKNOWN_EVENT',
-          count: 1,
-          frequencyData: [1.0],
-          baseline: null,
-          hasControlData: false,
-          cluterId: 2
-        },
-        {
-          message:
-            '  A v e r a g e   S p e e d       T i m  e         T i m e        D lToiamde    UCpuload   Trorteanlt \n',
-          label: 30001,
-          risk: 'UNHEALTHY',
-          clusterType: 'UNKNOWN_EVENT',
-          count: 1,
-          frequencyData: [1.0],
-          baseline: null,
-          hasControlData: false,
-          cluterId: 3
-        },
-        {
-          message:
-            '  % Total    % Received % Xferd  Average Spee d   %  TTimoet a  l  T i m e%   R e c eTiivmeed   %C uXrfreerndt \n',
-          label: 30002,
-          risk: 'UNHEALTHY',
-          clusterType: 'UNKNOWN_EVENT',
-          count: 1,
-          frequencyData: [1.0],
-          baseline: null,
-          hasControlData: false,
-          cluterId: 4
-        },
-        {
-          message:
-            '    \r     0          D0l o a d   Up0l o a d    0  T   o0 t a l    S p0e n t     L   e0f t       0S p-e-e:d-\n',
-          label: 30000,
-          risk: 'UNHEALTHY',
-          clusterType: 'UNKNOWN_EVENT',
-          count: 1,
-          frequencyData: [1.0],
-          baseline: null,
-          hasControlData: false,
-          cluterId: 5
-        },
-        {
-          message: '{ [2938 bytes data]\n',
-          label: 11,
-          risk: 'HEALTHY',
-          clusterType: 'KNOWN_EVENT',
-          count: 21,
-          frequencyData: [3.0, 6.0, 4.0, 4.0, 4.0],
-          baseline: {
-            message: '{ [2938 bytes data]\n',
-            label: 11,
-            risk: 'NO_ANALYSIS',
-            clusterType: 'BASELINE',
-            count: 0,
-            frequencyData: [38.0],
-            baseline: null,
-            hasControlData: false
-          },
-          hasControlData: true,
-          cluterId: 6
-        },
-        {
-          message:
-            '</pre><p><b>Note</b> The full stack trace of the root cause is available in the server logs.</p><hr class="line" /><h3>Apache Tomcat/8.5.41</h3></body></html><!doctype html><html lang="en"><head><title>HTTP Status 500 – Internal Server Error</title><style type="text/css">h1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;} h2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;} h3 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:14px;} body {font-family:Tahoma,Arial,sans-serif;color:black;background-color:white;} b {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;} p {font-family:Tahoma,Arial,sans-serif;background:white;color:black;font-size:12px;} a {color:black;} a.name {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 500 – Internal Server Error</h1><hr class="line" /><p><b>Type</b> Exception Report</p><p><b>Description</b> The server encountered an unexpected condition that prevented it from fulfilling the request.</p><p><b>Exception</b></p><pre>java.lang.NullPointerException\n',
-          label: 98,
-          risk: 'HEALTHY',
-          clusterType: 'KNOWN_EVENT',
-          count: 4,
-          frequencyData: [1.0, 1.0, 1.0, 1.0],
-          baseline: {
-            message:
-              '</pre><p><b>Note</b> The full stack trace of the root cause is available in the server logs.</p><hr class="line" /><h3>Apache Tomcat/8.5.41</h3></body></html><!doctype html><html lang="en"><head><title>HTTP Status 500 – Internal Server Error</title><style type="text/css">h1 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:22px;} h2 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:16px;} h3 {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;font-size:14px;} body {font-family:Tahoma,Arial,sans-serif;color:black;background-color:white;} b {font-family:Tahoma,Arial,sans-serif;color:white;background-color:#525D76;} p {font-family:Tahoma,Arial,sans-serif;background:white;color:black;font-size:12px;} a {color:black;} a.name {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 500 – Internal Server Error</h1><hr class="line" /><p><b>Type</b> Exception Report</p><p><b>Description</b> The server encountered an unexpected condition that prevented it from fulfilling the request.</p><p><b>Exception</b></p><pre>java.lang.NullPointerException\n',
-            label: 98,
-            risk: 'NO_ANALYSIS',
-            clusterType: 'BASELINE',
-            count: 0,
-            frequencyData: [8.0],
-            baseline: null,
-            hasControlData: false
-          },
-          hasControlData: true,
-          cluterId: 7
-        },
-        {
-          message: '< Location: display.jsp\r\n',
-          label: 112,
-          risk: 'HEALTHY',
-          clusterType: 'KNOWN_EVENT',
-          count: 3,
-          frequencyData: [1.0, 1.0, 1.0],
-          baseline: {
-            message: '< Location: display.jsp\r\n',
-            label: 112,
-            risk: 'NO_ANALYSIS',
-            clusterType: 'BASELINE',
-            count: 0,
-            frequencyData: [4.0],
-            baseline: null,
-            hasControlData: false
-          },
-          hasControlData: true,
-          cluterId: 8
-        },
-        {
-          message: '< Date: Thu, 10 Feb 2022 07:22:58 GMT\r\n',
-          label: 80,
-          risk: 'HEALTHY',
-          clusterType: 'KNOWN_EVENT',
-          count: 25,
-          frequencyData: [5.0, 7.0, 4.0, 4.0, 5.0],
-          baseline: {
-            message: '< Date: Thu, 10 Feb 2022 07:22:58 GMT\r\n',
-            label: 80,
-            risk: 'NO_ANALYSIS',
-            clusterType: 'BASELINE',
-            count: 0,
-            frequencyData: [41.0],
-            baseline: null,
-            hasControlData: false
-          },
-          hasControlData: true,
-          cluterId: 9
-        },
-        {
-          message: '* upload completely sent off: 47 out of 47 bytes\n',
-          label: 89,
-          risk: 'HEALTHY',
-          clusterType: 'KNOWN_EVENT',
-          count: 10,
-          frequencyData: [2.0, 3.0, 2.0, 2.0, 1.0],
-          baseline: {
-            message: '* upload completely sent off: 47 out of 47 bytes\n',
-            label: 89,
-            risk: 'NO_ANALYSIS',
-            clusterType: 'BASELINE',
-            count: 0,
-            frequencyData: [16.0],
-            baseline: null,
-            hasControlData: false
-          },
-          hasControlData: true,
-          cluterId: 10
+          count: 8,
+          testHostFrequencyData: [
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 1.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 0.0
+                }
+              ],
+              host: 'host1'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 2.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 0.0
+                }
+              ],
+              host: 'host2'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 2.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 2.0
+                }
+              ],
+              host: 'host3'
+            },
+            {
+              frequencies: [
+                {
+                  timeStamp: 1672845420,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845480,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845540,
+                  count: 0.0
+                },
+                {
+                  timeStamp: 1672845600,
+                  count: 4.0
+                },
+                {
+                  timeStamp: 1672845660,
+                  count: 4.0
+                }
+              ],
+              host: 'host4'
+            }
+          ],
+          totalTestFrequencyData: [
+            {
+              timeStamp: 1672845420,
+              count: 3.0
+            },
+            {
+              timeStamp: 1672845480,
+              count: 0.0
+            },
+            {
+              timeStamp: 1672845540,
+              count: 0.0
+            },
+            {
+              timeStamp: 1672845600,
+              count: 6.0
+            },
+            {
+              timeStamp: 1672845660,
+              count: 6.0
+            }
+          ],
+          averageControlFrequencyData: [
+            {
+              timeStamp: 1672845060,
+              count: 1
+            },
+            {
+              timeStamp: 1672845120,
+              count: 2
+            },
+            {
+              timeStamp: 1672845180,
+              count: 1
+            },
+            {
+              timeStamp: 1672845240,
+              count: 3
+            },
+            {
+              timeStamp: 1672845300,
+              count: 10
+            }
+          ]
         }
       ],
       pageIndex: 0,
@@ -1032,6 +1344,7 @@ export const logsRadarChartDataCallResponse = {
       message: 'Test Message',
       risk: 'UNHEALTHY',
       radius: 1.664038103272266,
+      clusterId: '29659f5a-f6ad-308c-97dc-d54d0ac07c1c',
       angle: 0.0,
       baseline: {
         label: 0,

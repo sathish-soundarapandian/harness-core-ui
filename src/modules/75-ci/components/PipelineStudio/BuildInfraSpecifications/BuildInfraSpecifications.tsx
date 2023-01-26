@@ -20,9 +20,9 @@ import {
   ThumbnailSelectProps,
   Container,
   getMultiTypeFromValue,
-  Icon,
   MultiTypeInputType,
-  PageSpinner
+  PageSpinner,
+  Icon
 } from '@harness/uicore'
 import type { Item } from '@harness/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
 import { isEmpty, isUndefined, set, uniqBy, get } from 'lodash-es'
@@ -31,6 +31,7 @@ import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { produce } from 'immer'
 import type { FormikProps } from 'formik'
+import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { DelegateGroupDetails, useGetDelegateGroupsNGV2 } from 'services/portal'
 import Volumes, { VolumesTypes } from '@pipeline/components/Volumes/Volumes'
 import MultiTypeCustomMap from '@common/components/MultiTypeCustomMap/MultiTypeCustomMap'
@@ -63,7 +64,6 @@ import type {
 import { useGitScope } from '@pipeline/utils/CIUtils'
 import { MultiTypeList } from '@common/components/MultiTypeList/MultiTypeList'
 import { useHostedBuilds } from '@common/hooks/useHostedBuild'
-import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import type {
@@ -126,6 +126,7 @@ interface KubernetesBuildInfraFormValues {
   harnessImageConnectorRef?: string
   os?: string
   hostNames?: MultiTypeListUIType
+  arch?: string
 }
 
 interface ContainerSecurityContext {
@@ -141,6 +142,7 @@ interface AWSVMInfraFormValues {
   poolName?: string
   harnessImageConnectorRef?: string
   os?: string
+  arch?: string
 }
 
 interface CloudInfraFormValues {
@@ -352,7 +354,6 @@ const renderUseFromStageCloud = ({
 }
 
 export default function BuildInfraSpecifications({ children }: React.PropsWithChildren<unknown>): JSX.Element {
-  const { module } = useParams<Partial<PipelineType<PipelinePathProps>>>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const gitScope = useGitScope()
@@ -382,8 +383,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
   const formikRef = React.useRef<FormikProps<BuildInfraFormValues>>()
   const { initiateProvisioning, delegateProvisioningStatus } = useProvisionDelegateForHostedBuilds()
-  const { CIE_HOSTED_VMS, CI_DOCKER_INFRASTRUCTURE, CIE_HOSTED_VMS_MAC, CIE_HOSTED_VMS_WINDOWS, ENABLE_K8_BUILDS } =
-    useFeatureFlags()
+  const { CIE_HOSTED_VMS, CIE_HOSTED_VMS_MAC, CIE_HOSTED_VMS_WINDOWS, ENABLE_K8_BUILDS } = useFeatureFlags()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const [isProvisionedByHarnessDelegateHealthy, setIsProvisionedByHarnessDelegateHealthy] = useState<boolean>(false)
   const { licenseInformation } = useLicenseStore()
@@ -419,15 +419,11 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           } as Item
         ]
       : []),
-    ...(CI_DOCKER_INFRASTRUCTURE
-      ? [
-          {
-            label: getString('delegate.cardData.docker.name'),
-            icon: 'docker-step',
-            value: CIBuildInfrastructureType.Docker
-          } as Item
-        ]
-      : []),
+    {
+      label: getString('common.local'),
+      icon: 'docker-step',
+      value: CIBuildInfrastructureType.Docker
+    } as Item,
     ...(!isFreeEdition || isSecurityEnterprise
       ? [
           {
@@ -444,7 +440,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
 
   const { stage } = getStageFromPipeline<BuildStageElementConfig>(selectedStageId || '')
 
-  const [currentMode, setCurrentMode] = React.useState(() =>
+  const [currentMode, setCurrentMode] = React.useState<Modes>(() =>
     (stage?.stage?.spec?.infrastructure as UseFromStageInfraYaml)?.useFromStage
       ? Modes.Propagate
       : Modes.NewConfiguration
@@ -482,7 +478,6 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       formikRef?.current?.validateForm()
     }
   }, [delegateProvisioningStatus])
-
   React.useEffect(() => {
     const stageBuildInfraType =
       (stage?.stage?.spec?.infrastructure?.type as CIBuildInfrastructureType) ||
@@ -1201,14 +1196,23 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
       </>
     )
 
-  const renderPlatformInfraSection = (): React.ReactElement => {
+  const renderPlatformInfraSection = (formik: FormikProps<BuildInfraFormValues>): React.ReactElement => {
     let buildInfraSelectOptions = []
     const buildArchSelectOptions = [
       {
-        label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
-        value: ArchTypes.Amd64
+        label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
+        value: ArchTypes.Arm64
       }
     ]
+
+    if (formik.values.os !== OsTypes.MacOS) {
+      buildArchSelectOptions.push({
+        label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
+        value: ArchTypes.Amd64
+      })
+    } else if (formik.values.os === OsTypes.MacOS && formik.values?.arch === ArchTypes.Amd64) {
+      formik.setValues({ ...formik.values, arch: ArchTypes.Arm64 })
+    }
 
     switch (buildInfraType) {
       case CIBuildInfrastructureType.KubernetesDirect:
@@ -1233,6 +1237,15 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             value: OsTypes.Windows
           })
         break
+      case CIBuildInfrastructureType.Docker:
+        buildInfraSelectOptions = [
+          { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
+          {
+            label: getString('pipeline.infraSpecifications.osTypes.macos'),
+            value: OsTypes.MacOS
+          }
+        ]
+        break
       default:
         buildInfraSelectOptions = [
           { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
@@ -1243,12 +1256,6 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           }
         ]
     }
-
-    if (CIE_HOSTED_VMS_MAC)
-      buildArchSelectOptions.push({
-        label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
-        value: ArchTypes.Arm64
-      })
 
     return (
       <>
@@ -1395,35 +1402,6 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             }}
           />
         </div>
-        {!CIE_HOSTED_VMS && !CI_DOCKER_INFRASTRUCTURE && (
-          <div className={cx(css.fieldsGroup, css.withoutSpacing)}>
-            <MultiTypeSelectField
-              label={
-                <Text
-                  tooltipProps={{ dataTooltipId: 'os' }}
-                  font={{ variation: FontVariation.FORM_LABEL }}
-                  margin={{ bottom: 'xsmall' }}
-                >
-                  {getString('pipeline.infraSpecifications.os')}
-                </Text>
-              }
-              name={'os'}
-              style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
-              multiTypeInputProps={{
-                selectItems: [
-                  { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
-                  { label: getString('pipeline.infraSpecifications.osTypes.macos'), value: OsTypes.MacOS },
-                  { label: getString('pipeline.infraSpecifications.osTypes.windows'), value: OsTypes.Windows }
-                ],
-                multiTypeInputProps: {
-                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
-                  disabled: isReadonly
-                }
-              }}
-              useValue
-            />
-          </div>
-        )}
         {renderHarnessImageConnectorRefField()}
       </>
     )
@@ -1469,34 +1447,6 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             }}
           />
         </div>
-        {!CIE_HOSTED_VMS && !CI_DOCKER_INFRASTRUCTURE && (
-          <div className={cx(css.fieldsGroup, css.withoutSpacing)}>
-            <MultiTypeSelectField
-              label={
-                <Text
-                  tooltipProps={{ dataTooltipId: 'os' }}
-                  font={{ variation: FontVariation.FORM_LABEL }}
-                  margin={{ bottom: 'xsmall' }}
-                >
-                  {getString('pipeline.infraSpecifications.os')}
-                </Text>
-              }
-              name={'os'}
-              style={{ width: 300, paddingBottom: 'var(--spacing-small)' }}
-              multiTypeInputProps={{
-                selectItems: [
-                  { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
-                  { label: getString('pipeline.infraSpecifications.osTypes.windows'), value: OsTypes.Windows }
-                ],
-                multiTypeInputProps: {
-                  allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
-                  disabled: isReadonly
-                }
-              }}
-              useValue
-            />
-          </div>
-        )}
       </>
     )
   }, [expressions])
@@ -1930,260 +1880,267 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                     </>
                   )}
 
-                  <Accordion activeId={''}>
-                    <Accordion.Panel
-                      id="advanced"
-                      addDomId={true}
-                      summary={
-                        <div
-                          className={css.tabHeading}
-                          id="advanced"
-                          style={{ paddingLeft: 'var(--spacing-small)', marginBottom: 0 }}
-                        >
-                          {getString('advancedTitle')}
-                        </div>
-                      }
-                      details={
-                        <>
-                          {renderPropagateDynamicList({
-                            value: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.volumes,
-                            stringKey: 'pipeline.buildInfra.volumes'
-                          })}
-                          {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                            ?.serviceAccountName && (
-                            <>
-                              <Text
-                                font={{ variation: FontVariation.FORM_LABEL }}
-                                margin={{ bottom: 'xsmall' }}
-                                tooltipProps={{ dataTooltipId: 'serviceAccountName' }}
-                              >
-                                {getString('pipeline.infraSpecifications.serviceAccountName')}
-                              </Text>
-                              <Text color="black" margin={{ bottom: 'medium' }}>
-                                {
-                                  (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                                    ?.serviceAccountName
-                                }
-                              </Text>
-                            </>
-                          )}
-                          {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.runAsUser && (
-                            <>
-                              <Text
-                                font={{ variation: FontVariation.FORM_LABEL }}
-                                margin={{ bottom: 'xsmall' }}
-                                tooltipProps={{ dataTooltipId: 'runAsUser' }}
-                              >
-                                {getString(runAsUserStringKey)}
-                              </Text>
-                              <Text color="black" margin={{ bottom: 'medium' }}>
-                                {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.runAsUser}
-                              </Text>
-                            </>
-                          )}
-                          {renderPropagateKeyValuePairs({
-                            keyValue: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                              ?.labels,
-                            stringKey: 'ci.labels'
-                          })}
-                          {renderPropagateKeyValuePairs({
-                            keyValue: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                              ?.annotations,
-                            stringKey: 'ci.annotations'
-                          })}
-                          {renderPropagateList({
-                            value: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                              ?.hostNames,
-                            stringKey: 'ci.buildInfra.hostNames'
-                          })}
-                          {typeof (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                            ?.automountServiceAccountToken !== 'undefined' && (
-                            <>
-                              <Text
-                                font={{ variation: FontVariation.FORM_LABEL }}
-                                margin={{ bottom: 'xsmall' }}
-                                tooltipProps={{ dataTooltipId: 'timeout' }}
-                              >
-                                {getString('pipeline.buildInfra.automountServiceAccountToken')}
-                              </Text>
-                              <Text color="black" margin={{ bottom: 'medium' }}>
-                                {`${
-                                  (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                                    ?.automountServiceAccountToken
-                                }`}
-                              </Text>
-                            </>
-                          )}
-                          {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                            ?.priorityClassName && (
-                            <>
-                              <Text
-                                font={{ variation: FontVariation.FORM_LABEL }}
-                                margin={{ bottom: 'xsmall' }}
-                                tooltipProps={{ dataTooltipId: 'timeout' }}
-                              >
-                                {getString(priorityClassNameStringKey)}
-                              </Text>
-                              <Text color="black" margin={{ bottom: 'medium' }}>
-                                {
-                                  (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                                    ?.priorityClassName
-                                }
-                              </Text>
-                            </>
-                          )}
-                          <div className={css.tabSubHeading} id="containerSecurityContext">
-                            {getString('pipeline.buildInfra.containerSecurityContext')}
+                  {currentMode === Modes.Propagate && (
+                    <Accordion activeId={''}>
+                      <Accordion.Panel
+                        id="advanced"
+                        addDomId={true}
+                        summary={
+                          <div
+                            className={css.tabHeading}
+                            id="advanced"
+                            style={{ paddingLeft: 'var(--spacing-small)', marginBottom: 0 }}
+                          >
+                            {getString('advancedTitle')}
                           </div>
-                          {typeof (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                            ?.containerSecurityContext?.privileged !== 'undefined' && (
-                            <>
-                              <Text
-                                font={{ variation: FontVariation.FORM_LABEL }}
-                                margin={{ bottom: 'xsmall' }}
-                                tooltipProps={{ dataTooltipId: 'timeout' }}
-                              >
-                                {getString('pipeline.buildInfra.privileged')}
-                              </Text>
-                              <Text color="black" margin={{ bottom: 'medium' }}>
-                                {`${
-                                  (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                                    ?.containerSecurityContext?.privileged
-                                }`}
-                              </Text>
-                            </>
-                          )}
-                          {typeof (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                            ?.containerSecurityContext?.allowPrivilegeEscalation !== 'undefined' && (
-                            <>
-                              <Text
-                                font={{ variation: FontVariation.FORM_LABEL }}
-                                margin={{ bottom: 'xsmall' }}
-                                tooltipProps={{ dataTooltipId: 'timeout' }}
-                              >
-                                {getString('pipeline.buildInfra.allowPrivilegeEscalation')}
-                              </Text>
-                              <Text color="black" margin={{ bottom: 'medium' }}>
-                                {`${
-                                  (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                                    ?.containerSecurityContext?.allowPrivilegeEscalation
-                                }`}
-                              </Text>
-                            </>
-                          )}
-                          {renderPropagateList({
-                            value: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                              ?.containerSecurityContext?.capabilities?.add,
-                            stringKey: 'pipeline.buildInfra.addCapabilities'
-                          })}
-                          {renderPropagateList({
-                            value: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                              ?.containerSecurityContext?.capabilities?.drop,
-                            stringKey: 'pipeline.buildInfra.dropCapabilities'
-                          })}
-                          {typeof (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                            ?.containerSecurityContext?.runAsNonRoot !== 'undefined' && (
-                            <>
-                              <Text
-                                font={{ variation: FontVariation.FORM_LABEL }}
-                                margin={{ bottom: 'xsmall' }}
-                                tooltipProps={{ dataTooltipId: 'timeout' }}
-                              >
-                                {getString('pipeline.buildInfra.runAsNonRoot')}
-                              </Text>
-                              <Text color="black" margin={{ bottom: 'medium' }}>
-                                {`${
-                                  (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                                    ?.containerSecurityContext?.runAsNonRoot
-                                }`}
-                              </Text>
-                            </>
-                          )}
-                          {typeof (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                            ?.containerSecurityContext?.readOnlyRootFilesystem !== 'undefined' && (
-                            <>
-                              <Text
-                                font={{ variation: FontVariation.FORM_LABEL }}
-                                margin={{ bottom: 'xsmall' }}
-                                tooltipProps={{ dataTooltipId: 'timeout' }}
-                              >
-                                {getString('pipeline.buildInfra.readOnlyRootFilesystem')}
-                              </Text>
-                              <Text color="black" margin={{ bottom: 'medium' }}>
-                                {`${
-                                  (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                                    ?.containerSecurityContext?.readOnlyRootFilesystem
-                                }`}
-                              </Text>
-                            </>
-                          )}
-                          {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                            ?.containerSecurityContext?.runAsUser && (
-                            <>
-                              <Text
-                                font={{ variation: FontVariation.FORM_LABEL }}
-                                margin={{ bottom: 'xsmall' }}
-                                tooltipProps={{ dataTooltipId: 'timeout' }}
-                              >
-                                {getString(runAsUserStringKey)}
-                              </Text>
-                              <Text color="black" margin={{ bottom: 'medium' }}>
-                                {`${
-                                  (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                                    ?.containerSecurityContext?.runAsUser
-                                }`}
-                              </Text>
-                            </>
-                          )}
-                          {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                            ?.priorityClassName && (
-                            <>
-                              <Text
-                                font={{ variation: FontVariation.FORM_LABEL }}
-                                margin={{ bottom: 'xsmall' }}
-                                tooltipProps={{ dataTooltipId: 'timeout' }}
-                              >
-                                {getString(priorityClassNameStringKey)}
-                              </Text>
-                              <Text color="black" margin={{ bottom: 'medium' }}>
-                                {
-                                  (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                                    ?.priorityClassName
-                                }
-                              </Text>
-                            </>
-                          )}
-                          {renderPropagateKeyValuePairs({
-                            keyValue: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                              ?.nodeSelector,
-                            stringKey: 'pipeline.buildInfra.nodeSelector'
-                          })}
-                          {renderPropagateDynamicList({
-                            value: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                              ?.tolerations,
-                            stringKey: 'pipeline.buildInfra.tolerations'
-                          })}
-                          {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.initTimeout && (
-                            <>
-                              <Text
-                                font={{ variation: FontVariation.FORM_LABEL }}
-                                margin={{ bottom: 'xsmall' }}
-                                tooltipProps={{ dataTooltipId: 'timeout' }}
-                              >
-                                {getString('pipeline.infraSpecifications.initTimeout')}
-                              </Text>
-                              <Text color="black" margin={{ bottom: 'medium' }}>
-                                {
-                                  (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
-                                    ?.initTimeout
-                                }
-                              </Text>
-                            </>
-                          )}
-                        </>
-                      }
-                    />
-                  </Accordion>
+                        }
+                        details={
+                          <>
+                            {renderPropagateDynamicList({
+                              value: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                ?.volumes,
+                              stringKey: 'pipeline.buildInfra.volumes'
+                            })}
+                            {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                              ?.serviceAccountName && (
+                              <>
+                                <Text
+                                  font={{ variation: FontVariation.FORM_LABEL }}
+                                  margin={{ bottom: 'xsmall' }}
+                                  tooltipProps={{ dataTooltipId: 'serviceAccountName' }}
+                                >
+                                  {getString('pipeline.infraSpecifications.serviceAccountName')}
+                                </Text>
+                                <Text color="black" margin={{ bottom: 'medium' }}>
+                                  {
+                                    (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                      ?.serviceAccountName
+                                  }
+                                </Text>
+                              </>
+                            )}
+                            {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec?.runAsUser && (
+                              <>
+                                <Text
+                                  font={{ variation: FontVariation.FORM_LABEL }}
+                                  margin={{ bottom: 'xsmall' }}
+                                  tooltipProps={{ dataTooltipId: 'runAsUser' }}
+                                >
+                                  {getString(runAsUserStringKey)}
+                                </Text>
+                                <Text color="black" margin={{ bottom: 'medium' }}>
+                                  {
+                                    (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                      ?.runAsUser
+                                  }
+                                </Text>
+                              </>
+                            )}
+                            {renderPropagateKeyValuePairs({
+                              keyValue: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                ?.labels,
+                              stringKey: 'ci.labels'
+                            })}
+                            {renderPropagateKeyValuePairs({
+                              keyValue: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                ?.annotations,
+                              stringKey: 'ci.annotations'
+                            })}
+                            {renderPropagateList({
+                              value: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                ?.hostNames,
+                              stringKey: 'ci.buildInfra.hostNames'
+                            })}
+                            {typeof (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                              ?.automountServiceAccountToken !== 'undefined' && (
+                              <>
+                                <Text
+                                  font={{ variation: FontVariation.FORM_LABEL }}
+                                  margin={{ bottom: 'xsmall' }}
+                                  tooltipProps={{ dataTooltipId: 'timeout' }}
+                                >
+                                  {getString('pipeline.buildInfra.automountServiceAccountToken')}
+                                </Text>
+                                <Text color="black" margin={{ bottom: 'medium' }}>
+                                  {`${
+                                    (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                      ?.automountServiceAccountToken
+                                  }`}
+                                </Text>
+                              </>
+                            )}
+                            {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                              ?.priorityClassName && (
+                              <>
+                                <Text
+                                  font={{ variation: FontVariation.FORM_LABEL }}
+                                  margin={{ bottom: 'xsmall' }}
+                                  tooltipProps={{ dataTooltipId: 'timeout' }}
+                                >
+                                  {getString(priorityClassNameStringKey)}
+                                </Text>
+                                <Text color="black" margin={{ bottom: 'medium' }}>
+                                  {
+                                    (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                      ?.priorityClassName
+                                  }
+                                </Text>
+                              </>
+                            )}
+                            <div className={css.tabSubHeading} id="containerSecurityContext">
+                              {getString('pipeline.buildInfra.containerSecurityContext')}
+                            </div>
+                            {typeof (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                              ?.containerSecurityContext?.privileged !== 'undefined' && (
+                              <>
+                                <Text
+                                  font={{ variation: FontVariation.FORM_LABEL }}
+                                  margin={{ bottom: 'xsmall' }}
+                                  tooltipProps={{ dataTooltipId: 'timeout' }}
+                                >
+                                  {getString('pipeline.buildInfra.privileged')}
+                                </Text>
+                                <Text color="black" margin={{ bottom: 'medium' }}>
+                                  {`${
+                                    (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                      ?.containerSecurityContext?.privileged
+                                  }`}
+                                </Text>
+                              </>
+                            )}
+                            {typeof (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                              ?.containerSecurityContext?.allowPrivilegeEscalation !== 'undefined' && (
+                              <>
+                                <Text
+                                  font={{ variation: FontVariation.FORM_LABEL }}
+                                  margin={{ bottom: 'xsmall' }}
+                                  tooltipProps={{ dataTooltipId: 'timeout' }}
+                                >
+                                  {getString('pipeline.buildInfra.allowPrivilegeEscalation')}
+                                </Text>
+                                <Text color="black" margin={{ bottom: 'medium' }}>
+                                  {`${
+                                    (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                      ?.containerSecurityContext?.allowPrivilegeEscalation
+                                  }`}
+                                </Text>
+                              </>
+                            )}
+                            {renderPropagateList({
+                              value: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                ?.containerSecurityContext?.capabilities?.add,
+                              stringKey: 'pipeline.buildInfra.addCapabilities'
+                            })}
+                            {renderPropagateList({
+                              value: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                ?.containerSecurityContext?.capabilities?.drop,
+                              stringKey: 'pipeline.buildInfra.dropCapabilities'
+                            })}
+                            {typeof (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                              ?.containerSecurityContext?.runAsNonRoot !== 'undefined' && (
+                              <>
+                                <Text
+                                  font={{ variation: FontVariation.FORM_LABEL }}
+                                  margin={{ bottom: 'xsmall' }}
+                                  tooltipProps={{ dataTooltipId: 'timeout' }}
+                                >
+                                  {getString('pipeline.buildInfra.runAsNonRoot')}
+                                </Text>
+                                <Text color="black" margin={{ bottom: 'medium' }}>
+                                  {`${
+                                    (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                      ?.containerSecurityContext?.runAsNonRoot
+                                  }`}
+                                </Text>
+                              </>
+                            )}
+                            {typeof (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                              ?.containerSecurityContext?.readOnlyRootFilesystem !== 'undefined' && (
+                              <>
+                                <Text
+                                  font={{ variation: FontVariation.FORM_LABEL }}
+                                  margin={{ bottom: 'xsmall' }}
+                                  tooltipProps={{ dataTooltipId: 'timeout' }}
+                                >
+                                  {getString('pipeline.buildInfra.readOnlyRootFilesystem')}
+                                </Text>
+                                <Text color="black" margin={{ bottom: 'medium' }}>
+                                  {`${
+                                    (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                      ?.containerSecurityContext?.readOnlyRootFilesystem
+                                  }`}
+                                </Text>
+                              </>
+                            )}
+                            {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                              ?.containerSecurityContext?.runAsUser && (
+                              <>
+                                <Text
+                                  font={{ variation: FontVariation.FORM_LABEL }}
+                                  margin={{ bottom: 'xsmall' }}
+                                  tooltipProps={{ dataTooltipId: 'timeout' }}
+                                >
+                                  {getString(runAsUserStringKey)}
+                                </Text>
+                                <Text color="black" margin={{ bottom: 'medium' }}>
+                                  {`${
+                                    (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                      ?.containerSecurityContext?.runAsUser
+                                  }`}
+                                </Text>
+                              </>
+                            )}
+                            {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                              ?.priorityClassName && (
+                              <>
+                                <Text
+                                  font={{ variation: FontVariation.FORM_LABEL }}
+                                  margin={{ bottom: 'xsmall' }}
+                                  tooltipProps={{ dataTooltipId: 'timeout' }}
+                                >
+                                  {getString(priorityClassNameStringKey)}
+                                </Text>
+                                <Text color="black" margin={{ bottom: 'medium' }}>
+                                  {
+                                    (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                      ?.priorityClassName
+                                  }
+                                </Text>
+                              </>
+                            )}
+                            {renderPropagateKeyValuePairs({
+                              keyValue: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                ?.nodeSelector,
+                              stringKey: 'pipeline.buildInfra.nodeSelector'
+                            })}
+                            {renderPropagateDynamicList({
+                              value: (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                ?.tolerations,
+                              stringKey: 'pipeline.buildInfra.tolerations'
+                            })}
+                            {(propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                              ?.initTimeout && (
+                              <>
+                                <Text
+                                  font={{ variation: FontVariation.FORM_LABEL }}
+                                  margin={{ bottom: 'xsmall' }}
+                                  tooltipProps={{ dataTooltipId: 'timeout' }}
+                                >
+                                  {getString('pipeline.infraSpecifications.initTimeout')}
+                                </Text>
+                                <Text color="black" margin={{ bottom: 'medium' }}>
+                                  {
+                                    (propagatedStage?.stage?.spec?.infrastructure as K8sDirectInfraYaml)?.spec
+                                      ?.initTimeout
+                                  }
+                                </Text>
+                              </>
+                            )}
+                          </>
+                        }
+                      />
+                    </Accordion>
+                  )}
                 </>
               )}
               {buildInfraType === CIBuildInfrastructureType.VM &&
@@ -2261,13 +2218,13 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                     setBuildInfraType(infraType)
                   }}
                 />
+                {renderInfo(buildInfraType)}
               </>
             </div>
           </Layout.Horizontal>
           {currentMode === Modes.NewConfiguration ? (
             <>
-              {buildInfraType ? <Separator topSeparation={30} /> : null}
-              {CIE_HOSTED_VMS && <Container margin={{ top: 'large' }}>{renderPlatformInfraSection()}</Container>}
+              <Container margin={{ top: 'large' }}>{renderPlatformInfraSection(formik)}</Container>
               <Container margin={{ top: 'large' }}>{renderBuildInfraMainSection()}</Container>
             </>
           ) : null}
@@ -2279,162 +2236,53 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     )
   }
 
-  const renderOldInfraSection = (): JSX.Element => {
-    return (
-      <div className={css.wrapper}>
-        <ErrorsStripBinded domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
-        <div className={css.contentSection} ref={scrollRef}>
-          <Formik
-            initialValues={getInitialValues}
-            validationSchema={getValidationSchema()}
-            validate={handleValidate}
-            formName="ciBuildInfra"
-            onSubmit={values => logger.info(JSON.stringify(values))}
-          >
-            {formik => {
-              window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: BuildTabs.INFRASTRUCTURE }))
-              formikRef.current = formik
-              return (
-                <Layout.Vertical>
-                  <Text font={{ variation: FontVariation.H5 }} id="infrastructureDefinition">
-                    {getString(
-                      (() => {
-                        switch (module) {
-                          case 'sto':
-                            return 'ci.pipelineSteps.build.infraSpecifications.whereToRunSTO'
-                          default:
-                            return 'pipelineSteps.build.infraSpecifications.whereToRun'
-                        }
-                      })()
-                    )}
-                  </Text>
-                  <FormikForm>
-                    <Layout.Horizontal spacing="xxlarge">
-                      <Layout.Vertical>
-                        {otherBuildStagesWithInfraConfigurationOptions.length ? (
-                          renderPropagationSection(formik)
-                        ) : (
-                          <>
-                            <Card disabled={isReadonly} className={cx(css.sectionCard)}>
-                              <Layout.Vertical spacing="small">
-                                <>
-                                  <Text
-                                    font={{ variation: FontVariation.FORM_INPUT_TEXT }}
-                                    padding={{ bottom: 'medium' }}
-                                  >
-                                    {getString('ci.buildInfra.selectInfra')}
-                                  </Text>
-                                  <ThumbnailSelect
-                                    name={'buildInfraType'}
-                                    items={BuildInfraTypes}
-                                    isReadonly={isReadonly}
-                                    onChange={val => {
-                                      const infraType = val as CIBuildInfrastructureType
-                                      setBuildInfraType(infraType)
-                                      if (infraType === CIBuildInfrastructureType.KubernetesHosted) {
-                                        fetchDelegateDetails()
-                                      }
-
-                                      // macOs is only supported for VMs - default to linux
-                                      const os =
-                                        formik?.values?.os === OsTypes.MacOS &&
-                                        infraType !== CIBuildInfrastructureType.VM
-                                          ? OsTypes.Linux
-                                          : formik?.values?.os
-
-                                      formik.setValues({
-                                        ...formik.values,
-                                        buildInfraType: infraType,
-                                        automountServiceAccountToken:
-                                          infraType === CIBuildInfrastructureType.KubernetesDirect ? true : undefined,
-                                        os
-                                      })
-                                    }}
-                                  />
-                                </>
-                                <>
-                                  {buildInfraType ? <Separator topSeparation={10} /> : null}
-                                  {renderBuildInfraMainSection()}
-                                </>
-                              </Layout.Vertical>
-                            </Card>
-                            {buildInfraType === CIBuildInfrastructureType.KubernetesDirect
-                              ? renderKubernetesBuildInfraAdvancedSection({ showCardView: true, formik })
-                              : null}
-                          </>
-                        )}
-                      </Layout.Vertical>
-                      {enabledHostedBuildsForFreeUsers ? (
-                        <Container
-                          className={css.helptext}
-                          margin={{ top: 'medium' }}
-                          padding={{ top: 'xlarge', bottom: 'xlarge', left: 'large', right: 'large' }}
-                        >
-                          <Layout.Horizontal spacing="xsmall" flex={{ justifyContent: 'start' }}>
-                            <Icon name="info-messaging" size={20} />
-                            <Text font={{ variation: FontVariation.H5 }}>
-                              {getString('ci.buildInfra.infrastructureTypesLabel')}
-                            </Text>
-                          </Layout.Horizontal>
-                          {enabledHostedBuildsForFreeUsers ? (
-                            <>
-                              <Text
-                                font={{ variation: FontVariation.BODY2 }}
-                                padding={{ top: 'xlarge', bottom: 'xsmall' }}
-                              >
-                                {getString('ci.getStartedWithCI.hostedByHarness')}
-                              </Text>
-                              <Text font={{ variation: FontVariation.SMALL }}>
-                                {getString('ci.getStartedWithCI.hostedByHarnessBuildLocation')}
-                              </Text>
-                              <Separator />
-                            </>
-                          ) : null}
-                          <>
-                            <Text
-                              font={{ variation: FontVariation.BODY2 }}
-                              padding={{ top: enabledHostedBuildsForFreeUsers ? 0 : 'xlarge', bottom: 'xsmall' }}
-                            >
-                              {getString('ci.buildInfra.k8sLabel')}
-                            </Text>
-                            <Text font={{ variation: FontVariation.SMALL }}>
-                              {getString('ci.buildInfra.kubernetesHelpText')}
-                            </Text>
-                          </>
-                          <>
-                            <Separator />
-                            <Text font={{ variation: FontVariation.BODY2 }} padding={{ bottom: 'xsmall' }}>
-                              {getString('ci.buildInfra.vmLabel')}
-                            </Text>
-                            <Text font={{ variation: FontVariation.SMALL }}>
-                              {getString('ci.buildInfra.awsHelpText')}
-                            </Text>
-                          </>
-                        </Container>
-                      ) : null}
-                    </Layout.Horizontal>
-                  </FormikForm>
-                </Layout.Vertical>
-              )
-            }}
-          </Formik>
-          {children}
-          {showInfraProvisioningCarousel ? (
-            <InfraProvisioningCarousel
-              show={showInfraProvisioningCarousel}
-              onClose={() => setShowInfraProvisioningCarousel(false)}
-              provisioningStatus={delegateProvisioningStatus}
-            />
-          ) : null}
-        </div>
+  const renderInfo = (infraType: CIBuildInfrastructureType | undefined): JSX.Element | null => {
+    const iconDiv = (
+      <div className={cx(css.infoIcon)}>
+        <Icon name="code-info" size={21} />
       </div>
     )
+    const localLink = (
+      <a
+        target="_blank"
+        href="https://developer.harness.io/docs/continuous-integration/use-ci/set-up-build-infrastructure/define-a-docker-build-infrastructure"
+        rel="noreferrer"
+      >
+        {getString('ci.buildInfra.info.localLink')}
+      </a>
+    )
+    switch (infraType) {
+      case CIBuildInfrastructureType.Cloud:
+        return (
+          <div className={cx(css.infoWrap)}>
+            {iconDiv}
+            <div>
+              <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>{getString('ci.buildInfra.info.cloud')}</Text>
+            </div>
+          </div>
+        )
+      case CIBuildInfrastructureType.Docker:
+        return (
+          <div className={cx(css.infoWrap)}>
+            {iconDiv}
+            <div>
+              <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>{getString('ci.buildInfra.info.local1')}</Text>
+              <Text font={{ variation: FontVariation.FORM_INPUT_TEXT }}>
+                {getString('ci.buildInfra.info.local2')} {localLink}
+              </Text>
+            </div>
+          </div>
+        )
+      default:
+        return null
+    }
   }
 
-  const renderNewInfraSection = (): JSX.Element => {
+  const renderInfraSection = (): JSX.Element => {
     return (
       <div className={css.wrapper}>
         <ErrorsStripBinded domRef={scrollRef as React.MutableRefObject<HTMLElement | undefined>} />
+        <HelpPanel referenceId="ciInfrastructureType" type={HelpPanelType.FLOATING_CONTAINER} />
         <div className={css.contentSection} ref={scrollRef}>
           <Formik
             initialValues={getInitialValues}
@@ -2466,16 +2314,37 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                           onChange={val => {
                             const infraType = val as CIBuildInfrastructureType
                             setBuildInfraType(infraType)
+                            if (infraType === CIBuildInfrastructureType.KubernetesHosted) {
+                              fetchDelegateDetails()
+                            }
+
+                            // macOs is not supported for K8s - default to linux
+                            const os =
+                              formik?.values?.os === OsTypes.MacOS &&
+                              infraType === CIBuildInfrastructureType.KubernetesDirect
+                                ? OsTypes.Linux
+                                : formik?.values?.os
+
+                            formik.setValues({
+                              ...formik.values,
+                              buildInfraType: infraType,
+                              automountServiceAccountToken:
+                                infraType === CIBuildInfrastructureType.KubernetesDirect ? true : undefined,
+                              os
+                            })
                           }}
                           expandAllByDefault
                         />
+                        {renderInfo(buildInfraType)}
                       </Card>
                       <Text font={{ variation: FontVariation.H5 }} id="infrastructureDefinition">
                         {getString('auditTrail.Platform')}
                       </Text>
                       <Card disabled={isReadonly} className={cx(css.sectionCard)}>
-                        {buildInfraType !== CIBuildInfrastructureType.KubernetesHosted && renderPlatformInfraSection()}
-                        {![
+                        {buildInfraType !== CIBuildInfrastructureType.KubernetesHosted &&
+                          renderPlatformInfraSection(formik)}
+                        {buildInfraType &&
+                        ![
                           CIBuildInfrastructureType.Cloud,
                           CIBuildInfrastructureType.Docker,
                           CIBuildInfrastructureType.KubernetesHosted
@@ -2494,10 +2363,17 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             }}
           </Formik>
           {children}
+          {showInfraProvisioningCarousel ? (
+            <InfraProvisioningCarousel
+              show={showInfraProvisioningCarousel}
+              onClose={() => setShowInfraProvisioningCarousel(false)}
+              provisioningStatus={delegateProvisioningStatus}
+            />
+          ) : null}
         </div>
       </div>
     )
   }
 
-  return CIE_HOSTED_VMS || CI_DOCKER_INFRASTRUCTURE ? renderNewInfraSection() : renderOldInfraSection()
+  return renderInfraSection()
 }

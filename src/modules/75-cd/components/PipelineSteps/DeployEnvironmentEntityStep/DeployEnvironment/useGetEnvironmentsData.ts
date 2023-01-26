@@ -7,7 +7,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isNil } from 'lodash-es'
 
 import { shouldShowError, useToaster } from '@harness/uicore'
 
@@ -30,6 +30,7 @@ import type { EnvironmentData } from '../types'
 
 export interface UseGetEnvironmentsDataProps {
   envIdentifiers: string[]
+  serviceIdentifiers: string[]
   envGroupIdentifier?: string
 }
 
@@ -50,6 +51,7 @@ export interface UseGetEnvironmentsDataReturn {
 
 export function useGetEnvironmentsData({
   envIdentifiers,
+  serviceIdentifiers,
   envGroupIdentifier
 }: UseGetEnvironmentsDataProps): UseGetEnvironmentsDataReturn {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
@@ -93,7 +95,7 @@ export function useGetEnvironmentsData({
     },
     body: {
       ...(envIdentifiers ? { envIdentifiers } : { ...(envGroupIdentifier && { envGroupIdentifier }) }),
-      serviceIdentifiers: []
+      serviceIdentifiers
     },
     lazy: !(envGroupIdentifier || envIdentifiers.length)
   })
@@ -128,7 +130,8 @@ export function useGetEnvironmentsData({
         return {
           environmentIdentifier: environmentInResponse.envRef,
           environmentYaml: environmentInResponse.envYaml,
-          environmentRuntimeTemplateYaml: environmentInResponse.envRuntimeInputYaml
+          environmentRuntimeTemplateYaml: environmentInResponse.envRuntimeInputYaml,
+          serviceOverrideList: environmentInResponse.servicesOverrides
         }
       })
 
@@ -144,7 +147,7 @@ export function useGetEnvironmentsData({
           /* istanbul ignore else */
           if (environment) {
             const existsInList = _environmentsList.find(
-              svc => svc.identifier === getIdentifierFromScopedRef(row.environmentIdentifier as string)
+              env => env.identifier === getIdentifierFromScopedRef(row.environmentIdentifier as string)
             )
 
             if (!existsInList) {
@@ -152,10 +155,28 @@ export function useGetEnvironmentsData({
             }
           }
 
-          return { environment, environmentInputs }
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const serviceOverrideInputs: Record<string, any> = {}
+
+          row.serviceOverrideList?.forEach(serviceOverrideInList => {
+            const serviceOverridesYamlValue = yamlParse<Pick<EnvironmentData, 'serviceOverrideInputs'>>(
+              defaultTo(serviceOverrideInList.serviceOverridesYaml, '{}')
+            ).serviceOverrideInputs
+
+            if (!isNil(serviceOverridesYamlValue)) {
+              serviceOverrideInputs[serviceOverrideInList.serviceRef as string] = serviceOverridesYamlValue
+            }
+          })
+
+          return {
+            environment,
+            environmentInputs,
+            serviceOverrideInputs: {
+              [environment.identifier as string]: serviceOverrideInputs
+            }
+          }
         })
       }
-
       setEnvironmentsList(_environmentsList)
       setEnvironmentsData(_environmentsData)
     }

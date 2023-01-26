@@ -25,11 +25,14 @@ import List from '@common/components/List/List'
 import { Connectors } from '@connectors/constants'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
+import { GitConfigDTO, Scope, useGetRepositoriesDetailsForArtifactory } from 'services/cd-ng'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { isMultiTypeFixed, isValueRuntimeInput } from '@common/utils/utils'
+import { shouldDisplayRepositoryName } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ManifestSourceUtils'
 import type { TerraformData, TerraformProps } from '../TerraformInterfaces'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -40,7 +43,7 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
     formik?: FormikContextType<any>
   }
 ): React.ReactElement {
-  const { remoteVar, index, allowableTypes, formik } = props
+  const { remoteVar, index, allowableTypes, formik, inputSetData, stepViewType } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { showError } = useToaster()
@@ -106,6 +109,14 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
       setConnectorRepos(map(ArtifactRepoData.data?.repositories, repo => ({ label: repo, value: repo })))
     }
   }, [ArtifactRepoData, connectorVal, storeType])
+
+  const [showRepoName, setShowRepoName] = useState(true)
+  const isRepoRuntime =
+    (isValueRuntimeInput(get(remoteVar?.varFile, 'spec.store.spec.connectorRef')) ||
+      isValueRuntimeInput(get(remoteVar?.varFile, 'spec.store.spec.repoName'))) &&
+    showRepoName &&
+    storeType !== Connectors.ARTIFACTORY
+
   return (
     <>
       <Container flex width={150}>
@@ -124,14 +135,47 @@ function TFRemoteSectionRef<T extends TerraformData = TerraformData>(
           multiTypeProps={{ allowableTypes, expressions }}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          width={445}
+          width={388}
           type={[remoteVar?.varFile?.spec?.store?.type]}
           name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.connectorRef`}
           label={getString('connector')}
           placeholder={getString('select')}
           disabled={readonly}
+          onChange={(selected, _itemType, multiType) => {
+            const item = selected as unknown as { record?: GitConfigDTO; scope: Scope }
+            if (isMultiTypeFixed(multiType)) {
+              if (shouldDisplayRepositoryName(item)) {
+                setShowRepoName(true)
+              } else {
+                setShowRepoName(false)
+                formik?.setFieldValue(
+                  `${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.repoName`,
+                  ''
+                )
+              }
+            }
+          }}
           setRefValue
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
+        />
+      )}
+
+      {isRepoRuntime && (
+        <TextFieldInputSetView
+          label={getString('pipelineSteps.repoName')}
+          name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.repoName`}
+          placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={inputSetData?.template}
+          fieldPath={`spec.configuration.spec.varFiles[${index}].varFile.spec.store.spec.repoName`}
+          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
 

@@ -9,7 +9,6 @@
   :global {
     .bp3-input-action {
       > span {
-        padding-top: 12px !important;
         padding-right: 0px !important;
       }
     }
@@ -17,7 +16,6 @@
       > input {
         width: 100% !important;
         border: 0px !important;
-        padding: var(--spacing-small) 0;
         min-width: 190px;
         text-align: end !important;
         background-color: var(--form-bg);

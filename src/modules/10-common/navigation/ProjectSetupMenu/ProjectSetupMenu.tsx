@@ -42,7 +42,8 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     CD_ONBOARDING_ENABLED,
     NG_DEPLOYMENT_FREEZE,
     SRM_ET_EXPERIMENTAL,
-    NEW_LEFT_NAVBAR_SETTINGS
+    NEW_LEFT_NAVBAR_SETTINGS,
+    SRM_DOWNTIME
   } = useFeatureFlags()
   const { showGetStartedTabInMainMenu, showGetStartedCDTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
@@ -122,12 +123,14 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
         {CD_ONBOARDING_ENABLED && module === 'cd' && !showGetStartedCDTabInMainMenu && (
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
         )}
-
         {SRM_ET_EXPERIMENTAL && module === 'cv' && !showGetStartedTabInMainMenu && (
           <SidebarLink
-            label={getString('common.codeErrorsAgents')}
-            to={routes.toCVCodeErrorsAgentsControl({ ...params })}
+            label={getString('common.codeErrorsSettings')}
+            to={routes.toCVCodeErrorsSettings({ ...params })}
           />
+        )}
+        {SRM_DOWNTIME && isCV && (
+          <SidebarLink label={getString('common.sloDowntimeLabel')} to={routes.toCVSLODowntime({ ...params })} />
         )}
       </Layout.Vertical>
     </NavExpandable>

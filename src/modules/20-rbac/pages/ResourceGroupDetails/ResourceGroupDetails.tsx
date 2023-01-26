@@ -137,9 +137,6 @@ const ResourceGroupDetails: React.FC = () => {
     const types = getFilteredResourceTypes(resourceTypeData, selectedScope)
     setResourceTypes(types)
     setResourceCategoryMap(_map => RbacFactory.getResourceCategoryList(types))
-    setSelectedResourceMap(_selectedResourcesMap =>
-      cleanUpResourcesMap(types, _selectedResourcesMap, selectionType, selectedScope)
-    )
   }, [selectedScope, resourceTypeData, includedScopes])
 
   const { mutate: updateResourceGroup, loading: updating } = useUpdateResourceGroupV2({
@@ -322,8 +319,15 @@ const ResourceGroupDetails: React.FC = () => {
             includedScopes={includedScopes}
             isHarnessManaged={isHarnessManaged}
             onSuccess={scopes => {
+              const scopeSelected = getSelectedScopeType(resourceGroupScope, scopes)
               setIncludedScopes(_scopes => scopes)
-              setSelectedScope(_scope => getSelectedScopeType(resourceGroupScope, scopes))
+              setSelectedScope(scopeSelected)
+              cleanUpResourcesMap(
+                getFilteredResourceTypes(resourceTypeData, scopeSelected),
+                selectedResourcesMap,
+                selectionType,
+                getSelectedScopeType(resourceGroupScope, scopes)
+              )
             }}
             setIsUpdated={setIsUpdated}
           />
@@ -337,7 +341,17 @@ const ResourceGroupDetails: React.FC = () => {
                 preSelectedResourceList={Array.from(selectedResourcesMap.keys())}
                 disableAddingResources={disableAddingResources}
                 isHarnessManaged={isHarnessManaged}
-                onSelectionTypeChange={onSelectionTypeChange}
+                onSelectionTypeChange={(type: SelectionType) => {
+                  onSelectionTypeChange(type)
+                  if (selectedScope) {
+                    cleanUpResourcesMap(
+                      getFilteredResourceTypes(resourceTypeData, selectedScope),
+                      selectedResourcesMap,
+                      type,
+                      selectedScope
+                    )
+                  }
+                }}
               />
             </Container>
             <Layout.Vertical spacing="small">

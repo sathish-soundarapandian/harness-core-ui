@@ -51,7 +51,7 @@ describe('Zap Step', () => {
           settings: RUNTIME_INPUT_VALUE,
           instance: {
             domain: 'auth domain',
-            protocol: 'token',
+            protocol: 'http',
             path: 'true',
             port: 8080
           },
@@ -174,7 +174,7 @@ describe('Zap Step', () => {
           },
           instance: {
             domain: 'auth domain',
-            protocol: 'token',
+            protocol: 'https',
             path: true,
             port: 8080
           },
@@ -523,7 +523,7 @@ describe('Zap Step', () => {
         },
         instance: {
           domain: 'auth domain',
-          protocol: 'token',
+          protocol: 'https',
           path: 'true',
           port: 8080
         },

@@ -9,7 +9,8 @@
   .authHeaderRow {
     display: flex;
     justify-content: space-between;
-    & > [data-tooltip-id='helmConnectorAuthentication'] {
+    & > [data-tooltip-id='helmConnectorAuthentication'],
+    & > [data-tooltip-id='OciHelmRepoAuthentication'] {
       margin: 0 0 7px;
     }
   }

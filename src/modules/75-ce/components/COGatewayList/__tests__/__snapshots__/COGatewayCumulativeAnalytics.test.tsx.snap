@@ -24,7 +24,7 @@ exports[`Cumulative Analytics tests render component 1`] = `
             class="StyledProps--font StyledProps--main pointerCursor StyledProps--color StyledProps--color-primary7"
             style="display: flex; align-items: center;"
           >
-            ce.common.collapse
+            common.collapse
             <span
               class="bp3-icon StyledProps--main Text--icon StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-primary7"
               data-icon="main-chevron-up"
@@ -227,7 +227,7 @@ exports[`Cumulative Analytics tests render component in Dry run mode 1`] = `
             class="StyledProps--font StyledProps--main pointerCursor StyledProps--color StyledProps--color-primary7"
             style="display: flex; align-items: center;"
           >
-            ce.common.collapse
+            common.collapse
             <span
               class="bp3-icon StyledProps--main Text--icon StyledProps--padding-left-xsmall StyledProps--color StyledProps--color-primary7"
               data-icon="main-chevron-up"

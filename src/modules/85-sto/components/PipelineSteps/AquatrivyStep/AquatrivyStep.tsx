@@ -56,18 +56,19 @@ export class AquatrivyStep extends PipelineStep<AquatrivyStepData> {
       mode: 'orchestration',
       config: 'default',
       target: {
-        type: 'repository',
+        type: 'container',
         name: '',
         variant: '',
-        workspace: '/harness'
+        workspace: ''
       },
       image: {
         type: 'docker_v2',
         name: '',
         domain: '',
         access_id: '',
-        access_token: '<+secrets.getValue("your_aquatrivy_token_secret")>',
-        region: ''
+        access_token: '',
+        region: '',
+        tag: ''
       },
       advanced: {
         log: {
@@ -112,30 +113,27 @@ export class AquatrivyStep extends PipelineStep<AquatrivyStepData> {
       allowableTypes
     } = props
 
-    switch (stepViewType) {
-      case StepViewType.InputSet:
-      case StepViewType.DeploymentForm:
-        return (
-          <AquatrivyStepInputSet
-            initialValues={initialValues}
-            template={inputSetData?.template}
-            path={inputSetData?.path || ''}
-            readonly={!!inputSetData?.readonly}
-            stepViewType={stepViewType}
-            onUpdate={onUpdate}
-            onChange={onChange}
-            allowableTypes={allowableTypes}
-          />
-        )
-
-      case StepViewType.InputVariable:
-        return (
-          <AquatrivyStepVariables
-            {...(customStepProps as AquatrivyStepVariablesProps)}
-            initialValues={initialValues}
-            onUpdate={onUpdate}
-          />
-        )
+    if (this.isTemplatizedView(stepViewType)) {
+      return (
+        <AquatrivyStepInputSet
+          initialValues={initialValues}
+          template={inputSetData?.template}
+          path={inputSetData?.path || ''}
+          readonly={!!inputSetData?.readonly}
+          stepViewType={stepViewType}
+          onUpdate={onUpdate}
+          onChange={onChange}
+          allowableTypes={allowableTypes}
+        />
+      )
+    } else if (stepViewType === StepViewType.InputVariable) {
+      return (
+        <AquatrivyStepVariables
+          {...(customStepProps as AquatrivyStepVariablesProps)}
+          initialValues={initialValues}
+          onUpdate={onUpdate}
+        />
+      )
     }
 
     return (

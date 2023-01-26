@@ -536,9 +536,14 @@ function JiraApprovalStepMode(props: JiraApprovalStepModeProps, formikRef: StepF
             spec: Yup.object().when('type', {
               is: ApprovalRejectionCriteriaType.KeyValues,
               then: Yup.object().shape({
-                conditions: Yup.array().required(
-                  getString('pipeline.approvalCriteria.validations.approvalCriteriaCondition')
-                )
+                conditions: Yup.array()
+                  .min(1, getString('pipeline.approvalCriteria.validations.approvalCriteriaCondition'))
+                  .of(
+                    Yup.object().shape({
+                      key: Yup.string().required(getString('common.validation.fieldIsRequired', { name: 'Field' })),
+                      value: Yup.string().trim().required(getString('common.validation.valueIsRequired'))
+                    })
+                  )
               }),
               otherwise: Yup.object().shape({
                 expression: Yup.string().trim().required(getString('pipeline.approvalCriteria.validations.expression'))

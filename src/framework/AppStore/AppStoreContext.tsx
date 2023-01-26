@@ -333,37 +333,41 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
           accountIdentifier: accountId,
           orgIdentifier
         }
-      }).then(response => {
-        const project = response?.data?.project
-
-        if (project) {
-          setState(prevState => ({
-            ...prevState,
-            selectedProject: project
-          }))
-          const indexInRecentProjects = recentProjects.findIndex(item => item.projectIdentifier === projectIdentifier)
-          const recentProjectsCopy = [...recentProjects]
-
-          if (indexInRecentProjects > -1) {
-            recentProjectsCopy.splice(indexInRecentProjects, 1)
-          } else if (recentProjectsCopy.length === MAX_RECENT_PROJECTS_COUNT) {
-            recentProjectsCopy.splice(recentProjectsCopy.length - 1, 1)
-          }
-
-          setSavedProject({ projectIdentifier, orgIdentifier })
-          setRecentProjects([{ projectIdentifier, orgIdentifier, name: project.name }, ...recentProjectsCopy])
-        } else {
-          // if no project was fetched, clear preference
-          clearSavedProject()
-          setState(prevState => ({
-            ...prevState,
-            selectedOrg: undefined,
-            selectedProject: undefined
-          }))
-          // if user is on a URL with projectId and orgId in path, show toast error & redirect
-          showErrorAndRedirect(response as Error)
-        }
       })
+        .then(response => {
+          const project = response?.data?.project
+
+          if (project) {
+            setState(prevState => ({
+              ...prevState,
+              selectedProject: project
+            }))
+            const indexInRecentProjects = recentProjects.findIndex(item => item.projectIdentifier === projectIdentifier)
+            const recentProjectsCopy = [...recentProjects]
+
+            if (indexInRecentProjects > -1) {
+              recentProjectsCopy.splice(indexInRecentProjects, 1)
+            } else if (recentProjectsCopy.length === MAX_RECENT_PROJECTS_COUNT) {
+              recentProjectsCopy.splice(recentProjectsCopy.length - 1, 1)
+            }
+
+            setSavedProject({ projectIdentifier, orgIdentifier })
+            setRecentProjects([{ projectIdentifier, orgIdentifier, name: project.name }, ...recentProjectsCopy])
+          } else {
+            // if no project was fetched, clear preference
+            clearSavedProject()
+            setState(prevState => ({
+              ...prevState,
+              selectedOrg: undefined,
+              selectedProject: undefined
+            }))
+            // if user is on a URL with projectId and orgId in path, show toast error & redirect
+            showErrorAndRedirect(response as Error)
+          }
+        })
+        .catch(err => {
+          showError(err?.message)
+        })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectIdentifier, orgIdentifier])

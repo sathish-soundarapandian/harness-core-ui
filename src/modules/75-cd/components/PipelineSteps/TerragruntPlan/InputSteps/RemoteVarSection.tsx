@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import cx from 'classnames'
 import { connect, FormikContextType } from 'formik'
 import { useParams } from 'react-router-dom'
@@ -13,13 +13,15 @@ import { get } from 'lodash-es'
 import { Container, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import List from '@common/components/List/List'
-import { isValueRuntimeInput } from '@common/utils/utils'
+import { isMultiTypeFixed, isValueRuntimeInput } from '@common/utils/utils'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
+import type { GitConfigDTO, Scope } from 'services/cd-ng'
+import { shouldDisplayRepositoryName } from '../../K8sServiceSpec/ManifestSource/ManifestSourceUtils'
 import type { TerragruntPlanProps } from '../../Common/Terragrunt/TerragruntInterface'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -30,9 +32,14 @@ function TgPlanRemoteSectionRef(
     formik?: FormikContextType<any>
   }
 ): React.ReactElement {
-  const { remoteVar, index, allowableTypes, formik, readonly, initialValues, path, inputSetData, stepViewType } = props
+  const { remoteVar, index, allowableTypes, readonly, initialValues, path, inputSetData, stepViewType, formik } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const [showRepoName, setShowRepoName] = useState(true)
+  const isRepoRuntime =
+    (isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.repoName')) ||
+      isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.connectorRef'))) &&
+    showRepoName
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<{
     projectIdentifier: string
@@ -41,20 +48,6 @@ function TgPlanRemoteSectionRef(
   }>()
 
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  let connectorVal = get(
-    formik?.values,
-    `${path}.spec.configuration.varFiles[${index}].varFile.spec.store.spec.connectorRef`
-  )
-  if (!connectorVal) {
-    const varFiles = get(props?.allValues, 'spec.configuration.varFiles', [])
-    const varID = get(formik?.values, `${path}.spec.configuration.varFiles[${index}].varFile.identifier`, '')
-    /* istanbul ignore next */
-    varFiles.forEach((file: any) => {
-      if (file?.varFile?.identifier === varID) {
-        connectorVal = get(file?.varFile, 'spec.store.spec.connectorRef')
-      }
-    })
-  }
 
   return (
     <>
@@ -81,10 +74,43 @@ function TgPlanRemoteSectionRef(
             placeholder={getString('select')}
             disabled={readonly}
             setRefValue
+            onChange={(selected, _itemType, multiType) => {
+              const item = selected as unknown as { record?: GitConfigDTO; scope: Scope }
+              if (isMultiTypeFixed(multiType)) {
+                if (shouldDisplayRepositoryName(item)) {
+                  setShowRepoName(true)
+                } else {
+                  setShowRepoName(false)
+                  formik?.setFieldValue(
+                    `${path}.spec.configuration.varFiles[${index}].varFile.spec.store.spec.repoName`,
+                    ''
+                  )
+                }
+              }
+            }}
             gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
             multiTypeProps={{ expressions, allowableTypes }}
           />
         </div>
+      )}
+
+      {isRepoRuntime && (
+        <TextFieldInputSetView
+          label={getString('pipelineSteps.repoName')}
+          name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.store.spec.repoName`}
+          placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
+          disabled={readonly}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          configureOptionsProps={{
+            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+          }}
+          template={inputSetData?.template}
+          fieldPath={`spec.configuration.varFiles[${index}].varFile.spec.store.spec.repoName`}
+          className={cx(stepCss.formGroup, stepCss.md)}
+        />
       )}
 
       {isValueRuntimeInput(get(remoteVar.varFile, 'spec.store.spec.branch')) && (

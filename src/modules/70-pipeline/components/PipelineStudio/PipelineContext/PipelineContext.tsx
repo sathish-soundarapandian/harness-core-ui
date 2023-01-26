@@ -446,7 +446,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
     defaultTo(queryParams.orgIdentifier, ''),
     defaultTo(queryParams.projectIdentifier, ''),
     pipelineId,
-    defaultTo(gitDetails.repoIdentifier, ''),
+    getRepoIdentifierName(gitDetails),
     defaultTo(gitDetails.branch, '')
   )
   dispatch(PipelineContextActions.fetching())
@@ -700,7 +700,7 @@ const _softFetchPipeline = async (
     queryParams.orgIdentifier || '',
     queryParams.projectIdentifier || '',
     pipelineId,
-    gitDetails.repoIdentifier || '',
+    getRepoIdentifierName(gitDetails),
     gitDetails.branch || ''
   )
   if (IdbPipeline) {
@@ -805,7 +805,7 @@ const _updateGitDetails = async (args: UpdateGitDetailsArgs, gitDetails: EntityG
     queryParams.orgIdentifier || '',
     queryParams.projectIdentifier || '',
     identifier,
-    gitDetails.repoIdentifier || '',
+    getRepoIdentifierName(gitDetails),
     gitDetails.branch || ''
   )
   const isUpdated = !isEqual(originalPipeline, pipeline)
@@ -847,7 +847,7 @@ const _updateEntityValidityDetails = async (
     queryParams.orgIdentifier || '',
     queryParams.projectIdentifier || '',
     identifier,
-    gitDetails.repoIdentifier || '',
+    getRepoIdentifierName(gitDetails),
     gitDetails.branch || ''
   )
   if (IdbPipeline) {
@@ -883,7 +883,7 @@ const _updatePipeline = async (
     queryParams.orgIdentifier || '',
     queryParams.projectIdentifier || '',
     identifier,
-    gitDetails.repoIdentifier || '',
+    getRepoIdentifierName(gitDetails),
     gitDetails.branch || ''
   )
 
@@ -1084,7 +1084,7 @@ export function PipelineProvider({
     MultiTypeInputType.RUNTIME,
     MultiTypeInputType.EXPRESSION
   ]
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
+  const { repoIdentifier, repoName, branch } = useQueryParams<GitQueryParams>()
   const abortControllerRef = React.useRef<AbortController | null>(null)
   const { supportingTemplatesGitx } = useAppStore()
   const isMounted = React.useRef(false)
@@ -1115,6 +1115,7 @@ export function PipelineProvider({
     pipelineIdentifier,
     gitDetails: {
       repoIdentifier,
+      repoName,
       branch
     },
     storeMetadata: state.storeMetadata,

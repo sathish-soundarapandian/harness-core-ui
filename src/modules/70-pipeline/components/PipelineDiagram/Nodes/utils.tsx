@@ -28,12 +28,12 @@ export const getPositionOfAddIcon = (props: any, isRightNode?: boolean): string 
     return '-40px'
   }
   if (props?.children?.length) {
-    if (props?.prevNode?.children) {
+    if (props?.prevNode?.children?.length) {
       return '-65px'
     }
     if (props?.prevNode) return '-58px'
   }
-  if (props?.prevNode?.children) {
+  if (props?.prevNode?.children?.length) {
     return '-58px'
   }
   if (props?.parentIdentifier && !props.prevNode) {
@@ -94,8 +94,14 @@ export const getMatrixHeight = (
 export const attachDragImageToEventHandler = (event: React.DragEvent<HTMLDivElement>, type?: NodeEntity): void => {
   // set drag image preview to custom icon in case of safari browser, as safari blocks image preview if dom tree have transform property on any parent
   if (navigator.userAgent.search('Safari') >= 0 && navigator.userAgent.search('Chrome') < 0) {
-    const dragIcon = document.createElement('img')
-    dragIcon.src = type === NodeEntity.STAGE ? dragStagePlaceholderImageBase64 : dragPlaceholderImageBase64
-    event.dataTransfer.setDragImage(dragIcon, 25, 25)
+    const dragImage = document.createElement('img')
+    dragImage.src = type === NodeEntity.STAGE ? dragStagePlaceholderImageBase64 : dragPlaceholderImageBase64
+    dragImage.style.position = 'absolute'
+    dragImage.style.left = '-100%'
+
+    document.body.append(dragImage)
+    setTimeout(() => dragImage.remove(), 0)
+
+    event.dataTransfer.setDragImage(dragImage, dragImage.width / 2, dragImage.height / 2)
   }
 }

@@ -16,7 +16,8 @@ import {
   SelectOption,
   getMultiTypeFromValue,
   Text,
-  RUNTIME_INPUT_VALUE
+  RUNTIME_INPUT_VALUE,
+  Container
 } from '@harness/uicore'
 import type { AllowedTypes } from '@harness/uicore'
 import { parse } from 'yaml'
@@ -45,6 +46,8 @@ import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiT
 import MultiTypeSecretInput, {
   getMultiTypeSecretInputType
 } from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+
 import { StepViewType, StepProps, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
 import { getConnectorName, getConnectorValue } from '@pipeline/components/PipelineSteps/Steps/StepsHelper'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
@@ -52,6 +55,7 @@ import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { isRuntimeInput } from '@pipeline/utils/CIUtils'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
@@ -277,7 +281,7 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                       }
                     />
                   </Layout.Vertical>
-                  <Layout.Vertical>
+                  <Layout.Vertical className={css.regionWrapper}>
                     <FormInput.MultiTypeInput
                       name="region"
                       className={`${css.inputWidth}`}
@@ -315,6 +319,19 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                         }
                       }}
                     />
+                    {isRuntimeInput(get(formik.values, 'region')) && (
+                      <Container className={css.regionConfig}>
+                        <ConfigureOptions
+                          value={(get(formik.values, 'region') || '') as string}
+                          type={'String'}
+                          variableName={'region'}
+                          showRequiredField={false}
+                          showDefaultField={false}
+                          showAdvanced={true}
+                          onChange={val => formik?.setFieldValue('region', val)}
+                        />
+                      </Container>
+                    )}
                   </Layout.Vertical>
                   <Layout.Vertical className={css.inputWidth} margin={{ bottom: 'medium' }}>
                     <MultiTypeTagSelector
@@ -540,6 +557,7 @@ export class SshWinRmAwsInfrastructureSpec extends PipelineStep<SshWinRmAwsInfra
 
   renderStep(props: StepProps<SshWinRmAwsInfrastructure>): JSX.Element {
     const { initialValues, onUpdate, stepViewType, customStepProps, readonly, allowableTypes, inputSetData } = props
+
     if (this.isTemplatizedView(stepViewType)) {
       return (
         <SshWimRmAwsInfrastructureSpecInputForm

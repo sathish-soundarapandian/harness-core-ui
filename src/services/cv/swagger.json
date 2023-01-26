@@ -17083,10 +17083,6 @@
           "type": "integer",
           "format": "int64"
         },
-        "nano": {
-          "type": "integer",
-          "format": "int32"
-        },
         "negative": {
           "type": "boolean"
         },
@@ -17098,6 +17094,10 @@
           "items": {
             "$ref": "#/definitions/TemporalUnit"
           }
+        },
+        "nano": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

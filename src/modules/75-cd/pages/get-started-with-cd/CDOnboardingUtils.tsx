@@ -90,6 +90,32 @@ export interface ServiceData {
   fileNodesData?: FileStoreNodeDTO[]
 }
 
+export interface RepoDataType {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier?: string
+  createdAt?: string
+  hasRepo?: boolean
+  identifier?: string
+  lastModifiedAt?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  repository?: RepositoriesRepository
+  repositoryCredentialsId?: string
+  stale?: boolean
+}
+
 export interface ArtifactoryGenericFormInterface {
   dockerRegistryUrl?: string
   authType?: string
@@ -146,6 +172,49 @@ export const defaultArtifactConfig = {
     }
   }
 } as ArtifactListConfig
+
+export const newRepositoryData = {
+  accountIdentifier: '',
+  agentIdentifier: '',
+  identifier: '',
+  orgIdentifier: '',
+  projectIdentifier: '',
+  hasRepo: true,
+  repository: {
+    type: 'git'
+  } as RepositoriesRepository
+}
+export interface RepositoriesRepository {
+  connectionType?: string
+  /**
+   * EnableLFS specifies whether git-lfs support should be enabled for this repo. Only valid for Git repositories.
+   */
+  enableLfs?: boolean
+  enableOCI?: boolean
+  githubAppEnterpriseBaseUrl?: string
+  githubAppID?: string
+  githubAppInstallationID?: string
+  githubAppPrivateKey?: string
+  inheritedCreds?: boolean
+  insecure?: boolean
+  insecureIgnoreHostKey?: boolean
+  name?: string
+  password?: string
+  project?: string
+  proxy?: string
+  repo?: string
+  /**
+   * SSHPrivateKey contains the PEM data for authenticating at the repo server. Only used with Git repos.
+   */
+  sshPrivateKey?: string
+  tlsClientCertData?: string
+  tlsClientCertKey?: string
+  /**
+   * Type specifies the type of the repo. Can be either "git" or "helm. "git" is assumed if empty or absent.
+   */
+  type?: string
+  username?: string
+}
 
 export const newServiceState = {
   name: 'sample_service',

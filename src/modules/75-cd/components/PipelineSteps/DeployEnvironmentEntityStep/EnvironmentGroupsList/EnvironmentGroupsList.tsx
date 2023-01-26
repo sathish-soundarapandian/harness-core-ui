@@ -39,6 +39,7 @@ export default function EnvironmentGroupsList({
   onEnvironmentGroupEntityUpdate,
   onRemoveEnvironmentGroupFromList,
   initialValues,
+  serviceIdentifiers,
   stageIdentifier,
   deploymentType,
   customDeploymentRef,
@@ -96,6 +97,7 @@ export default function EnvironmentGroupsList({
               onEditClick={setEnvironmentGroupToEdit}
               allowableTypes={allowableTypes}
               readonly={readonly}
+              serviceIdentifiers={serviceIdentifiers}
               stageIdentifier={stageIdentifier}
               deploymentType={deploymentType}
               customDeploymentRef={customDeploymentRef}

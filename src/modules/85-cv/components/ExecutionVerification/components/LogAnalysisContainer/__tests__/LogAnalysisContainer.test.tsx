@@ -196,7 +196,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
     expect((screen.getByTestId('cv.unknown') as HTMLInputElement).checked).toBe(true)
     expect((screen.getByTestId('cv.unexpectedFrequency') as HTMLInputElement).checked).toBe(true)
 
-    expect(screen.getByTestId('LogAnalysis_totalClusters')).toHaveTextContent('3')
+    expect(screen.getByTestId('LogAnalysis_totalClusters')).toHaveTextContent('1')
 
     fireEvent.click(screen.getByTestId('cv.known'))
 

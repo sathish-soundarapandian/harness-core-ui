@@ -498,6 +498,7 @@ gitSync:
   gitServiceApiError: To continue work you can turn off Git Synchronization. All changes will be saved to Harness. When Git Sync is re-enabled we'll attempt to push the latest changes to Git
   goToGit: Go to Git to fix issue
   invalidYaml: 'We are unable to render your {{{ flagsYamlFilename }}} file because it is invalid. Fix the following issues on Git and try again.'
+  setUpGitConnection: Set up a Git connection
 policyEvaluations:
   failedToSave: Flag cannot be saved due to the policy evaluation failures
   warning: Flag saved with policy warnings

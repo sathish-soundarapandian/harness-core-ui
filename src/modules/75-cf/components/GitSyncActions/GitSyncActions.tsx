@@ -9,7 +9,7 @@ import React, { ReactElement, useState } from 'react'
 import { Text, Container, Icon, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useFFGitSyncContext } from '@cf/contexts/ff-git-sync-context/FFGitSyncContext'
-import { GitSyncSetupRedirect } from '@cf/components/GitSyncSetupRedirect/GitSyncSetupRedirect'
+import SetUpGitSync from '@cf/components/SetUpGitSync/SetUpGitSync'
 import BranchSettingsButton from './BranchSettingsButton'
 import css from './GitSyncActions.module.scss'
 
@@ -39,7 +39,7 @@ const GitSyncActions = ({ isLoading }: GitSyncActionsProps): ReactElement => {
       </Container>
     </Layout.Horizontal>
   ) : (
-    <GitSyncSetupRedirect />
+    <SetUpGitSync />
   )
 }
 

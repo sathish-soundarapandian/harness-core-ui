@@ -377,6 +377,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
   const history = useHistory()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const { CDS_FORCE_DELETE_ENTITIES } = useFeatureFlags()
+  const [serviceInstance, setServiceInstance] = useState(false)
 
   const { mutate: deleteService } = useDeleteServiceV2({})
 
@@ -425,6 +426,9 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
     } catch (err: any) {
       if (err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
         openReferenceErrorDialog()
+      } else if (err?.data?.code === 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION') {
+        setServiceInstance(true)
+        openReferenceErrorDialog()
       } else {
         showError(getRBACErrorMessage(err as RBACError))
       }
@@ -463,6 +467,7 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
       name: defaultTo(data?.name, '')
     },
     redirectToReferencedBy,
+    hideReferencedByButton: serviceInstance,
     forceDeleteCallback: CDS_FORCE_DELETE_ENTITIES ? () => deleteHandler(true) : undefined
   })
 

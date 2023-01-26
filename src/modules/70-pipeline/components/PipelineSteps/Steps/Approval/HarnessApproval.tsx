@@ -100,15 +100,19 @@ export class HarnessApproval extends PipelineStep<HarnessApprovalData> {
             orgIdentifier,
             projectIdentifier
           }
-        }).then(response => {
-          const data =
-            response?.data?.content?.map(service => ({
-              label: service.name || '',
-              insertText: service.identifier || '',
-              kind: CompletionItemKind.Field
-            })) || []
-          return data
         })
+          .then(response => {
+            const data =
+              response?.data?.content?.map(service => ({
+                label: service.name || '',
+                insertText: service.identifier || '',
+                kind: CompletionItemKind.Field
+              })) || []
+            return data
+          })
+          .catch(err => {
+            return err?.message
+          })
       }
     }
 

@@ -15,6 +15,7 @@ import cfExtendTrialImg from './images/cf-extend-trial.svg'
 import ciExtendTrialImg from './images/ci-extend-trial.svg'
 import cdExtendTrialImg from './images/cd-extend-trial.svg'
 import ceExtendTrialImg from './images/ce-extend-trial.svg'
+import srmExtendTrialImg from './images/srm-extend-trial.svg'
 import css from './useExtendTrialOrFeedbackModal.module.scss'
 
 export interface FeedbackFormValues {
@@ -53,6 +54,8 @@ const getBgImg = (module: string): string => {
       return cdExtendTrialImg
     case 'CE':
       return ceExtendTrialImg
+    case 'CV':
+      return srmExtendTrialImg
   }
   return ''
 }

@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { debounce, defaultTo } from 'lodash-es'
-import { Icon, Text, Button, ButtonVariation, IconName, Utils } from '@harness/uicore'
+import { HarnessIcons, Icon, Text, Button, ButtonVariation, IconName, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { DiagramDrag, DiagramType, Event } from '@pipeline/components/PipelineDiagram/Constants'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
@@ -64,6 +64,18 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
   }
 
   const stepIcon = defaultTo(defaultTo(stepData?.icon, props?.icon), props?.data?.step?.icon)
+  const isSelectedCss = () => {
+    if (!isSelectedNode()) {
+      return {}
+    }
+    if (HarnessIcons[`${stepIcon}-inverse`]) {
+      // Use inverted icon if it exists within harness/uicore
+      return { inverse: true }
+    }
+    // flatten icon to white
+    return { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true }
+  }
+
   const stepIconUrl = props.iconUrl
 
   const onDropEvent = (event: React.DragEvent) => {
@@ -200,11 +212,7 @@ function PipelineStepNode(props: PipelineStepNodeProps): JSX.Element {
         ) : (
           stepIcon && (
             <>
-              <Icon
-                size={stepIconSize || 28}
-                {...(isSelectedNode() ? { color: Color.WHITE, className: defaultCss.primaryIcon, inverse: true } : {})}
-                name={defaultTo(stepIcon, 'cross') as IconName}
-              />
+              <Icon size={stepIconSize || 28} {...isSelectedCss()} name={defaultTo(stepIcon, 'cross') as IconName} />
             </>
           )
         )}

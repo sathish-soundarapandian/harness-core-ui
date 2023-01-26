@@ -1771,10 +1771,10 @@
     "@contentful/rich-text-react-renderer" "^15.12.0"
     contentful "^9.1.20"
 
-"@harness/icons@1.99.0":
-  version "1.99.0"
-  resolved "https://npm.pkg.github.com/download/@harness/icons/1.99.0/c259ea97fe1b4de8d7ff4775421c76d741060bcc#c259ea97fe1b4de8d7ff4775421c76d741060bcc"
-  integrity sha512-C0zbqVetqaDbRw/xSiNM18CurfIbB0c6BXtCICsExg5Ys7SWytX2yGd20Qd86HNh93aTRslXKu4IVIu7nRQ69g==
+"@harness/icons@1.101.1":
+  version "1.101.1"
+  resolved "https://npm.pkg.github.com/download/@harness/icons/1.101.1/b15024459bc229e20ca6ba48f86d038a576173c9#b15024459bc229e20ca6ba48f86d038a576173c9"
+  integrity sha512-IMYSDpWT/Hi8XlkM+XjpquJlaCLAVH7aWzbfxkJl/rraD0btym72/08lVM5xTLRlwLgQt9Y3TAL2f0JvWGU0NA==
 
 "@harness/jarvis@0.16.0":
   version "0.16.0"
@@ -1816,10 +1816,10 @@
   resolved "https://npm.pkg.github.com/download/@harness/telemetry/1.0.42/60bc34c133bb40f0e0aa08f80620a1b23f3f089070e8550767e9d3fce8ca6e25#4d3f71026a03c898992d902f13a6c6d9cb0edac6"
   integrity sha512-pwjPYnQ8du1UswlX7A/apewGVDmbmaKKWTQSXtSHhKf9ekZ8WCwVvFcrM8ZIq/QbTn7Z8BXFYtMJdSG25oNtOg==
 
-"@harness/uicore@^3.102.3":
-  version "3.102.3"
-  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.102.3/b49d7c10e72baa86887dad6bdf723087210b347e#b49d7c10e72baa86887dad6bdf723087210b347e"
-  integrity sha512-BPCZl7aHSmIl+cnMxUDx9nDt9n0bBO8oHxA7FlKSAipue9xmA9bikqbtxKfCLJ0oF1hR+H+5RqHycPiW1DsM+g==
+"@harness/uicore@^3.106.0":
+  version "3.106.0"
+  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.106.0/9a893b4b87284052b7b9e27e2c657827c0f729d4#9a893b4b87284052b7b9e27e2c657827c0f729d4"
+  integrity sha512-C+sOLJLqaOa2y1Xu6TZA5jLH/5SQwIe71wKnhFBv+Nha4AK1hY5T+awv8Dc5KlCxVvqfFhFtKpeJq6Cl6R0O2g==
 
 "@harness/use-modal@1.1.0":
   version "1.1.0"

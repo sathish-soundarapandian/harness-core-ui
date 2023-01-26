@@ -29,6 +29,8 @@ export interface DeployEnvironmentEntityFormState {
   environments?: SelectOption[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   environmentInputs?: Record<string, any>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  serviceOverrideInputs?: Record<string, any>
   parallel?: boolean
   infrastructure?: string
   infrastructures?: Record<string, SelectOption[]>
@@ -46,6 +48,7 @@ export interface DeployEnvironmentEntityFormState {
 }
 
 export interface DeployEnvironmentEntityCustomStepProps {
+  serviceIdentifiers?: string[]
   stageIdentifier?: string
   deploymentType?: ServiceDefinition['type']
   gitOpsEnabled?: boolean
@@ -66,6 +69,8 @@ export interface EnvironmentData {
   environment: NGEnvironmentInfoConfig & { yaml: string }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   environmentInputs?: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  serviceOverrideInputs?: any
 }
 
 export interface EnvironmentWithInputs {

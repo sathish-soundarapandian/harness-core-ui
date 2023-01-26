@@ -646,6 +646,7 @@ exports[`Bandit Step Edit View edit mode works 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.target.workspace"
+                        placeholder="/harness"
                         type="text"
                         value="~/workspace"
                       />
@@ -3413,8 +3414,9 @@ exports[`Bandit Step Edit View should render properly 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.target.workspace"
+                        placeholder="/harness"
                         type="text"
-                        value="/harness"
+                        value=""
                       />
                     </div>
                     <span

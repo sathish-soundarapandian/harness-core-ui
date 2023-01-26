@@ -11,6 +11,13 @@
   width: fit-content;
 }
 
+.rowBtns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: calc(-1 * (var(--spacing-small))) !important;
+}
+
 .basicForm {
   width: 350px;
   padding-bottom: var(--spacing-medium);

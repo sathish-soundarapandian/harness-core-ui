@@ -57,6 +57,57 @@ export const AWS_ECR_CONTAINER_TYPE = {
   label: 'AWS ECR'
 }
 
+export const API_KEY_AUTH_TYPE = {
+  value: 'apiKey',
+  label: 'API Key'
+}
+export const USER_PASSWORD_AUTH_TYPE = {
+  value: 'usernamePassword',
+  label: 'Username & Password'
+}
+
+export const API_VERSION_5_0_2 = {
+  value: '5.0.2',
+  label: '5.0.2'
+}
+export const API_VERSION_4_1_0 = {
+  value: '4.1.0',
+  label: '4.1.0'
+}
+
+export const API_VERSION_4_2_0 = {
+  value: '4.2.0',
+  label: '4.2.0'
+}
+
+export const ZAP_STANDARD_CONFIG = {
+  value: 'standard',
+  label: 'Standard'
+}
+export const ZAP_ATTACK_CONFIG = {
+  value: 'attack',
+  label: 'Attack'
+}
+export const ZAP_QUICK_CONFIG = {
+  value: 'quick',
+  label: 'Quick'
+}
+export const ZAP_DEFAULT_CONFIG = {
+  value: 'default',
+  label: 'Default'
+}
+
+export const instanceProtocolSelectItems = [
+  {
+    value: 'https',
+    label: 'https'
+  },
+  {
+    value: 'http',
+    label: 'http'
+  }
+]
+
 export const logLevelOptions = (getString: getStringProp) => [
   {
     label: getString('sto.stepField.optionLabels.logLevel.debug'),
@@ -104,20 +155,12 @@ const specSettings = 'spec.settings'
 const specRunAsUser = 'spec.runAsUser'
 
 export const authFieldsTransformConfig = (data: SecurityStepData<SecurityStepSpec>) =>
-  data.spec.mode === 'orchestration'
+  data.spec.mode !== 'ingestion'
     ? [
         {
           name: 'spec.auth.access_token',
           type: TransformValuesTypes.Text
         }
-        // {
-        //   name: 'spec.auth.domain',
-        //   type: TransformValuesTypes.Text
-        // },
-        // {
-        //   name: 'spec.auth.ssl',
-        //   type: TransformValuesTypes.Boolean
-        // }
       ]
     : []
 
@@ -163,10 +206,6 @@ export const commonFieldsTransformConfig = (data: SecurityStepData<SecurityStepS
       name: 'spec.advanced.log.serializer',
       type: TransformValuesTypes.Text
     },
-    // { // for future implementation
-    //   name: 'spec.advanced.args.passthrough',
-    //   type: TransformValuesTypes.Text
-    // },
     {
       name: 'spec.advanced.fail_on_severity',
       type: TransformValuesTypes.Text
@@ -237,6 +276,10 @@ export const commonFieldsTransformConfig = (data: SecurityStepData<SecurityStepS
       {
         name: 'spec.image.access_token',
         type: TransformValuesTypes.Text
+      },
+      {
+        name: 'spec.image.tag',
+        type: TransformValuesTypes.Text
       }
     )
   }
@@ -274,16 +317,6 @@ export const authFieldsValidationConfig = (
     label: 'sto.stepField.authToken',
     isRequired: data.spec.mode !== 'ingestion'
   }
-  // {
-  //   name: 'spec.auth.domain',
-  //   type: ValidationFieldTypes.Text,
-  //   label: 'sto.stepField.authDomain'
-  // },
-  // {
-  //   name: 'spec.auth.ssl',
-  //   type: ValidationFieldTypes.Text,
-  //   label: 'sto.stepField.authSsl'
-  // }
 ]
 
 export const ingestionFieldValidationConfig = (
@@ -332,6 +365,12 @@ export const imageFieldsValidationConfig = (
     name: 'spec.image.access_id',
     type: ValidationFieldTypes.Text,
     label: 'sto.stepField.image.accessId'
+  },
+  {
+    name: 'spec.image.tag',
+    type: ValidationFieldTypes.Text,
+    label: 'sto.stepField.image.tag',
+    isRequired: data.spec.target?.type === 'container' && data.spec.mode === 'orchestration'
   }
 ]
 
@@ -386,11 +425,6 @@ export const commonFieldsValidationConfig: InputSetViewValidateFieldsConfig[] = 
     type: ValidationFieldTypes.Text,
     label: 'sto.stepField.advanced.cli'
   },
-  // { // for future implementation
-  //   name: 'spec.advanced.args.passthrough',
-  //   type: ValidationFieldTypes.Text,
-  //   label: 'sto.stepField.advanced.passthrough'
-  // },
   {
     name: 'spec.advanced.fail_on_severity',
     type: ValidationFieldTypes.Text,
@@ -439,7 +473,7 @@ export const additionalFieldsValidationConfigEitView = [
   }
 ]
 
-export const additionalFieldsValidationConfigInputSet = [
+export const additionalFieldsValidationConfigInputSet: InputSetViewValidateFieldsConfig[] = [
   {
     name: 'spec.limitMemory',
     type: ValidationFieldTypes.LimitMemory
@@ -467,11 +501,12 @@ export const inputSetFields = (
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.config) && {
-          [getInputSetFieldName(prefix, 'spec.mode')]: {
+          [getInputSetFieldName(prefix, 'spec.config')]: {
             label: 'sto.stepField.config'
           }
         }),
 
+        // Target fields
         ...(shouldRenderRunTimeInputView(template?.spec.target.name) && {
           [getInputSetFieldName(prefix, 'spec.target.name')]: {
             label: 'sto.stepField.target.name'
@@ -493,12 +528,14 @@ export const inputSetFields = (
           }
         }),
 
+        // Ingestion fields
         ...(shouldRenderRunTimeInputView(template?.spec.ingestion?.file) && {
           [getInputSetFieldName(prefix, 'spec.ingestion.file')]: {
             label: 'sto.stepField.ingestion.file'
           }
         }),
 
+        // Image fields
         ...(shouldRenderRunTimeInputView(template?.spec.image?.name) && {
           [getInputSetFieldName(prefix, 'spec.image.name')]: {
             label: 'imageNameLabel'
@@ -524,7 +561,18 @@ export const inputSetFields = (
             label: 'sto.stepField.image.region'
           }
         }),
+        ...(shouldRenderRunTimeInputView(template?.spec.image?.type) && {
+          [getInputSetFieldName(prefix, 'spec.image.type')]: {
+            label: 'sto.stepField.image.type'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.image?.tag) && {
+          [getInputSetFieldName(prefix, 'spec.image.tag')]: {
+            label: 'sto.stepField.image.tag'
+          }
+        }),
 
+        // Instance fields
         ...(shouldRenderRunTimeInputView(template?.spec.instance?.domain) && {
           [getInputSetFieldName(prefix, 'spec.instance.domain')]: {
             label: 'sto.stepField.instance.domain'
@@ -559,8 +607,7 @@ export const inputSetFields = (
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.java?.binaries) && {
           [getInputSetFieldName(prefix, 'spec.tool.java.binaries')]: {
-            label: 'sto.stepField.tool.javaBinaries',
-            fieldType: 'checkbox'
+            label: 'sto.stepField.tool.javaBinaries'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.context) && {
@@ -573,30 +620,81 @@ export const inputSetFields = (
             label: 'sto.stepField.tool.port'
           }
         }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.image_name) && {
+          [getInputSetFieldName(prefix, 'spec.tool.image_name')]: {
+            label: 'sto.stepField.tool.imageName'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.project_name) && {
+          [getInputSetFieldName(prefix, 'spec.tool.project_name')]: {
+            label: 'projectCard.projectName'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.project_version) && {
+          [getInputSetFieldName(prefix, 'spec.tool.project_version')]: {
+            label: 'sto.stepField.tool.projectVersion'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.team_name) && {
+          [getInputSetFieldName(prefix, 'spec.tool.team_name')]: {
+            label: 'sto.stepField.tool.teamName'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.product_token) && {
+          [getInputSetFieldName(prefix, 'spec.tool.product_token')]: {
+            label: 'sto.stepField.tool.productToken'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.product_name) && {
+          [getInputSetFieldName(prefix, 'spec.tool.product_name')]: {
+            label: 'sto.stepField.tool.productName'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.project_token) && {
+          [getInputSetFieldName(prefix, 'spec.tool.project_token')]: {
+            label: 'sto.stepField.tool.projectToken'
+          }
+        }),
 
         // Auth fields
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.access_token) && {
-          [getInputSetFieldName(prefix, 'spec.auth.context')]: {
+          [getInputSetFieldName(prefix, 'spec.auth.access_token')]: {
             label: 'sto.stepField.authToken'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.domain) && {
-          [getInputSetFieldName(prefix, 'spec.auth.port')]: {
+          [getInputSetFieldName(prefix, 'spec.auth.domain')]: {
             label: 'sto.stepField.authDomain'
           }
         }),
+        ...(shouldRenderRunTimeInputView(template?.spec.auth?.access_id) && {
+          [getInputSetFieldName(prefix, 'spec.auth.access_id')]: {
+            label: 'sto.stepField.authAccessId'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.auth?.type) && {
+          [getInputSetFieldName(prefix, 'spec.auth.type')]: {
+            label: 'sto.stepField.authType'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.auth?.version) && {
+          [getInputSetFieldName(prefix, 'spec.auth.version')]: {
+            label: 'sto.stepField.authVersion'
+          }
+        }),
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.ssl) && {
-          [getInputSetFieldName(prefix, 'spec.auth.context')]: {
+          [getInputSetFieldName(prefix, 'spec.auth.ssl')]: {
             label: 'sto.stepField.authSsl',
             fieldType: 'checkbox'
           }
         }),
 
         // Advanced fields
-
         ...(shouldRenderRunTimeInputView(template?.spec.advanced?.log?.level) && {
           [getInputSetFieldName(prefix, 'spec.advanced.log.level')]: {
-            label: 'sto.stepField.advanced.logLevel'
+            label: 'sto.stepField.advanced.logLevel',
+            fieldType: 'dropdown',
+            selectItems: logLevelOptions(getString)
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.advanced?.log?.serializer) && {

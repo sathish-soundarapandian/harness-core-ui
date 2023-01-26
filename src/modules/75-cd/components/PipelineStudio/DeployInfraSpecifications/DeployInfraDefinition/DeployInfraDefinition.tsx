@@ -94,6 +94,7 @@ import {
   isAzureWebAppInfrastructureType,
   isCustomDeploymentInfrastructureType,
   isElastigroupInfrastructureType,
+  isPDCDeploymentInfrastructureType,
   isServerlessInfrastructureType,
   isTASInfrastructureType
 } from '../deployInfraHelper'
@@ -579,7 +580,10 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   hostFilter: value.hostFilter,
                   hosts: value.hosts,
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments,
-                  delegateSelectors: value.delegateSelectors
+                  delegateSelectors: value.delegateSelectors,
+                  hostAttributes: value.hostAttributes,
+                  hostObjectArray: value.hostObjectArray,
+                  dynamicallyProvisioned: value.dynamicallyProvisioned
                 },
                 InfraDeploymentType.PDC
               )
@@ -891,6 +895,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       {selectedInfrastructureType && (
         <>
           {(isAzureWebAppDeploymentType(selectedInfrastructureType) ||
+            isPDCDeploymentInfrastructureType(selectedInfrastructureType) ||
             isCustomDeploymentInfrastructureType(selectedInfrastructureType)) &&
           isSvcEnvEnabled ? (
             <></>

@@ -73,7 +73,7 @@ export default function EnvironmentDetails(): React.ReactElement {
   const { showSuccess, showError, clear } = useToaster()
   const { GITOPS_ONPREM_ENABLED, CDC_ENVIRONMENT_DASHBOARD_NG } = useFeatureFlags()
   const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
-  const environmentSummaryEnabled = CDC_ENVIRONMENT_DASHBOARD_NG
+  const environmentSummaryEnabled = CDC_ENVIRONMENT_DASHBOARD_NG && projectIdentifier
 
   const formikRef = useRef<FormikProps<NGEnvironmentInfoConfig>>()
 
@@ -160,7 +160,7 @@ export default function EnvironmentDetails(): React.ReactElement {
   const { name, identifier, description, tags, type } = defaultTo(parsedYamlEnvironment, {}) as NGEnvironmentInfoConfig
   const variables = defaultTo(parsedYamlEnvironment?.variables, [])
   const overrides = parsedYamlEnvironment?.overrides
-
+  const hideGitopsCluster = !projectIdentifier || (!gitopsOnPremEnabled && isOnPrem())
   const validate = (values: NGEnvironmentInfoConfig): void => {
     const {
       name: newName,
@@ -192,7 +192,9 @@ export default function EnvironmentDetails(): React.ReactElement {
         <Page.Header
           className={cx({ [css.environmentDetailsHeader]: Boolean(description) })}
           size={'large'}
-          title={<PageHeaderTitle {...data?.data?.environment} />}
+          title={
+            <PageHeaderTitle name={name} identifier={identifier} description={description} tags={tags} type={type} />
+          }
           toolbar={<PageHeaderToolbar createdAt={createdAt} lastModifiedAt={lastModifiedAt} />}
         />
       )}
@@ -274,7 +276,7 @@ export default function EnvironmentDetails(): React.ReactElement {
                         id: EnvironmentDetailsTab.GITOPS,
                         title: getString('cd.gitOpsCluster'),
                         panel: <GitOpsCluster envRef={identifier} />,
-                        hidden: !gitopsOnPremEnabled && isOnPrem()
+                        hidden: hideGitopsCluster
                       },
                       {
                         id: EnvironmentDetailsTab.REFERENCED_BY,

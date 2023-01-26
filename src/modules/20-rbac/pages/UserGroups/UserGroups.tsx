@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react'
+import { identity } from 'lodash-es'
 import { ButtonSize, ButtonVariation, ExpandingSearchInput, Layout, PageHeader } from '@harness/uicore'
 
 import { useParams } from 'react-router-dom'
@@ -17,7 +18,7 @@ import UserGroupsListView from '@rbac/pages/UserGroups/views/UserGroupsListView'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { useStateWithQueryParams } from '@common/hooks/useStateWithQueryParams'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PrincipalType } from '@rbac/utils/utils'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
@@ -41,7 +42,10 @@ const UserGroupsPage: React.FC = () => {
   const { getString } = useStrings()
   useDocumentTitle(getString('common.userGroups'))
   const [page, setPage] = useState(0)
-  const [searchTerm, setsearchTerm] = useStateWithQueryParams({ key: 'search' })
+  const [searchTerm, setsearchTerm] = useQueryParamsState<string | undefined>('search', '', {
+    serializer: identity,
+    deserializer: identity
+  })
   const { data, loading, error, refetch } = useGetUserGroupAggregateList({
     queryParams: {
       accountIdentifier: accountId,

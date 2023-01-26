@@ -6,6 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
+import { identity } from 'lodash-es'
 import {
   ButtonVariation,
   Container,
@@ -23,7 +24,7 @@ import RoleCard from '@rbac/components/RoleCard/RoleCard'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useRoleModal } from '@rbac/modals/RoleModal/useRoleModal'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { useStateWithQueryParams } from '@common/hooks/useStateWithQueryParams'
+import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -40,7 +41,10 @@ const RolesList: React.FC = () => {
   const history = useHistory()
   useDocumentTitle(getString('roles'))
   const [page, setPage] = useState(0)
-  const [searchTerm, setSearchTerm] = useStateWithQueryParams({ key: 'search' })
+  const [searchTerm, setSearchTerm] = useQueryParamsState<string | undefined>('search', '', {
+    serializer: identity,
+    deserializer: identity
+  })
   const { data, loading, error, refetch } = useGetRoleList({
     queryParams: {
       accountIdentifier: accountId,

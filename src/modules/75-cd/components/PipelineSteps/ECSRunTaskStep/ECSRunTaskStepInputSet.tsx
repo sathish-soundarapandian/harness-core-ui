@@ -214,9 +214,9 @@ const TaskDefinitionFields = (props: TaskDefinitionFieldsProps) => {
               }
               if (multiType === MultiTypeInputType.FIXED) {
                 if (shouldDisplayRepositoryName(item)) {
-                  setShowRepoName(false)
-                } else {
                   setShowRepoName(true)
+                } else {
+                  setShowRepoName(false)
                 }
               }
             }}

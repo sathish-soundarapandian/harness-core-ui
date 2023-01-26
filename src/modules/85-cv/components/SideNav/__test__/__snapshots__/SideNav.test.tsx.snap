@@ -109,7 +109,7 @@ exports[`Sidenav render 1`] = `
             <p
               class="StyledProps--font StyledProps--main text"
             >
-              cv.codeErrors
+              cv.codeErrors.title
             </p>
           </a>
           <div>

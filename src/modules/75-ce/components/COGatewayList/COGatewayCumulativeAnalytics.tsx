@@ -123,7 +123,7 @@ const COGatewayCumulativeAnalytics: React.FC<COGatewayCumulativeAnalyticsProps> 
               onClick={() => setCollapse(!collapse)}
               className={css.pointerCursor}
             >
-              {!collapse ? getString('ce.common.collapse') : getString('ce.common.expand')}
+              {!collapse ? getString('common.collapse') : getString('common.expand')}
             </Text>
           </Layout.Horizontal>
           {!collapse && (

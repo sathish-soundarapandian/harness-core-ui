@@ -233,6 +233,14 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
             }}
             disabled={!(column as any).canUpdate}
           />
+          <OutOfSyncErrorStrip
+            inputSet={data}
+            hideInputSetButton={true}
+            isOverlayInputSet={get(data, 'inputSetType') === 'OVERLAY_INPUT_SET'}
+            fromInputSetForm={false}
+            refetchInputSets={(column as any)?.refetchInputSet}
+            closeReconcileMenu={() => setMenuOpen(false)}
+          />
         </Menu>
       </Popover>
     </Layout.Horizontal>

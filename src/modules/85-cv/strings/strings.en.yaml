@@ -1,6 +1,7 @@
 continuous: '{{$.common.purpose.cv.serviceReliability}}'
 srmTitle: SRM
 methodLabel: Method Label
+count: count
 request: '{{ $.common.request }}'
 response: Response
 responseBody: Response Body
@@ -33,6 +34,14 @@ trend: Trend
 known: Known
 unknown: Unknown
 unexpected: Unexpected
+knownEvents: Known events
+baselineEvents: Baseline events
+unknownEvents: Unknown events
+unexpectedEvents: Unexpected events
+knownEvent: Known event
+baselineEvent: Baseline event
+unknownEvent: Unknown event
+unexpectedEvent: Unexpected event
 unexpectedFrequency: Unexpected Frequency
 copyURL: Copy URL
 urlCopied: URL Copied
@@ -219,7 +228,7 @@ monitoringSources:
     addGroupName: Add group Name
     runQuery: Run Query
     confirmDeleteMetric: 'Are you sure you want to delete metric {{name}}'
-    submitQueryToSeeRecords: Run query to see records ...
+    submitQueryToSeeRecords: Enter your query
     searchMetric: Search ...
     defineQuery: Define Query
     defineQueryDescriptionMetrics: Queries can only be defined for a single timeseries.
@@ -915,6 +924,10 @@ CompositeSLO:
     minSLOCount: Should have minimun 2 SLOs
     maxSLOCount: Should have maximum 20 SLOs
     weightMinMax: SLO weight should be between 0.01 to 99.99
+sloDowntime:
+  label: Downtime
+  noData: No SLO downtime configured
+  info: During downtime, SLO status and error budget calculations will be excluded for that specific time period.
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on
@@ -1048,7 +1061,9 @@ logs:
   eventPriorityUpdate: This event was marked with priority
   notARisk: Not a Risk
   reportedBy: Reported by
+  totalCount: Total Count
   radarChartInfo: Each point in the graph above represents a log message. The region inside innermost circle represents logs from baseline/control nodes. The region between outermost circle and second circle is used for unknown logs seen in canary nodes while  the region between second circle and innermost circle is used for logs with unexpected frequency. The points that are related (logs observed in both canary and baseline nodes) will be shown on the same radii.The circle is divided into several sectors with each sector having several log messages. Use the slider to narrow down to the specific sector.
+  baselineLegendTooltip: Average of the event counts across all of the control hosts
 externalAPICalls: External API Calls
 somethingWentWrongWhileParsingTheData: Something went wrong while parsing the data
 fetchingDataFrom: Fetching data from
@@ -1069,11 +1084,11 @@ metricThresholds:
   noThresholdsMessage: No thresholds created yet
   metricPacksDeletePromptContent: Unchecking the metric pack will also remove the corresponding metric thresholds settings. This action cannot be undone.
   customMetricsDeletePromptContent: Deleting the custom metric will also remove the corresponding metric thresholds settings. This action cannot be undone.
-codeErrors: Code Errors
-codeErrorsHeading: Review code errors related to your project
-codeErrorsAgents: '{{projectName}} Code Error Agents'
-codeErrorsAgentsHeading: Agents running on your machines connected to Code Errors.
-codeErrorsAgentsTokens: '{{projectName}} Code Error Tokens'
+codeErrors:
+  title: Code Errors
+  agents: '{{ $.common.agents }}'
+  agentTokens: '{{ $.common.tokens }}'
+  criticalEvents: 'Critical Events'
 CVStepper:
   StepError: Required fields are missing or incorrect data
 licenseBanner:

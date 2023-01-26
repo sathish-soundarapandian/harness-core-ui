@@ -75,7 +75,6 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
 
   const { module } = useModuleInfo()
   const [viewCompiledYaml, setViewCompiledYaml] = React.useState<PipelineExecutionSummary | undefined>(undefined)
-  const [loadingForDebugMode, setLoadingForDebugMode] = useState(false)
   const location = useLocation()
 
   const isExecutionHistoryView = !!matchPath(location.pathname, {
@@ -89,10 +88,6 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
       branch
     })
   })
-
-  const handleSetLoadingForDebugMode = (value: boolean) => {
-    setLoadingForDebugMode(value)
-  }
 
   const isDeploymentsPage = !!matchPath(location.pathname, {
     path: routes.toDeployments({ ...params, module })
@@ -143,7 +138,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const hasExecutions = executionList?.totalElements && executionList?.totalElements > 0
   const showSubHeader = hasExecutions || isAnyFilterApplied || selectedBranch !== defaultBranchSelect
 
-  const showSpinner = initLoading || (loading && !isPolling) || loadingForDebugMode
+  const showSpinner = initLoading || (loading && !isPolling)
 
   const onChangeRepo = (_repoName: string): void => {
     setSelectedBranch(undefined)
@@ -191,7 +186,6 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
             <MemoisedExecutionListTable
               executionList={executionList}
               onViewCompiledYaml={setViewCompiledYaml}
-              setLoadingForDebugMode={handleSetLoadingForDebugMode}
               {...rest}
             />
           </>

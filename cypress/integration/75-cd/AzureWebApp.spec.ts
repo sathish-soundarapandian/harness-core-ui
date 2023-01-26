@@ -81,6 +81,7 @@ describe('Azure web app end to end test', () => {
     cy.wait('@servicesV2Call')
     cy.contains('span', 'Add Service').should('be.visible').click()
     cy.get('input[name="name"]').should('be.visible').type('testService').should('have.value', 'testService')
+    cy.wait(1000)
 
     // adding a startup command
     cy.contains('span', 'Add Startup Command').should('be.visible').click()
@@ -111,7 +112,7 @@ describe('Azure web app end to end test', () => {
     //save services
     cy.get('[class*="Dialog--children"] > div:nth-child(2) > button:nth-child(1)').contains('Save').click()
 
-    cy.wait(1000)
+    cy.wait(500)
     //Add Environment
     cy.contains('Continue').click()
     cy.get('#add-new-environment').click()
@@ -125,7 +126,7 @@ describe('Azure web app end to end test', () => {
 
     // creating a new infrastructure
     cy.wait(500)
-    cy.get('label[for="infrastructureRef"] + div[class="bp3-form-content"] span[data-icon="fixed-input"]')
+    cy.get('label[for="infrastructure"] + div[class="bp3-form-content"] span[data-icon="fixed-input"]')
       .should('be.visible')
       .click()
     cy.get('span[class="MultiTypeInput--menuItemLabel"]').contains('Runtime input').click()

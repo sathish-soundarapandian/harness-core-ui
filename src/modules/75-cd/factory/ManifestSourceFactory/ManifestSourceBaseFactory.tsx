@@ -26,6 +26,7 @@ import { DeploymentRepoManifestSource } from '@cd/components/PipelineSteps/K8sSe
 
 import { TASManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/TASManifestSource/TASManifestSource'
 import { TASAutoScalerSource } from '@cd/components/PipelineSteps/TasServiceSpec/ManifestSource/TASAutoScalerSource/TASAutoScalerSource'
+import { HelmRepoOverrideManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/HelmRepoOverrideManifestSource/HelmRepoOverrideManifestSource'
 import { TASVarsSource } from '@cd/components/PipelineSteps/TasServiceSpec/ManifestSource/TASVarsSource/TASVarsSource'
 import type { ManifestSourceBase } from './ManifestSourceBase'
 
@@ -73,5 +74,6 @@ manifestSourceBaseFactory.registerManifestSource(new DeploymentRepoManifestSourc
 manifestSourceBaseFactory.registerManifestSource(new TASManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new TASAutoScalerSource())
 manifestSourceBaseFactory.registerManifestSource(new TASVarsSource())
+manifestSourceBaseFactory.registerManifestSource(new HelmRepoOverrideManifestSource())
 
 export default manifestSourceBaseFactory

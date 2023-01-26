@@ -5,19 +5,22 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { MultiSelectOption } from '@harness/uicore'
+import { isEmpty } from 'lodash-es'
+import type { SeriesColumnOptions } from 'highcharts'
+import { MultiSelectOption, Utils } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { getEventTypeChartColor } from '@cv/utils/CommonUtils'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
 import type { UseStringsReturn } from 'framework/strings'
 import type {
-  AnalyzedRadarChartLogDataDTO,
-  FrequencyDTO,
+  HostFrequencyData,
   LogAnalysisRadarChartListDTO,
   LogData,
   RestResponseAnalyzedRadarChartLogDataWithCountDTO,
-  RestResponseLogAnalysisRadarChartListWithCountDTO
+  RestResponseLogAnalysisRadarChartListWithCountDTO,
+  TimestampFrequencyCount
 } from 'services/cv'
-import type { LogAnalysisRowData } from './LogAnalysis.types'
+import type { LogAnalysisMessageFrequency, LogAnalysisRowData } from './LogAnalysis.types'
 import { EventTypeFullName } from './LogAnalysis.constants'
 
 export const mapClusterType = (type: string): LogData['tag'] => {
@@ -41,40 +44,114 @@ export const getClusterTypes = (getString: UseStringsReturn['getString']): Selec
   ]
 }
 
-function getFrequencyDataValues(frequencyData?: number[] | FrequencyDTO[], isServicePage?: boolean): number[] {
-  if (!isServicePage || typeof frequencyData === 'undefined') return frequencyData as number[]
+function getFrequencyDataValues(frequencyData?: TimestampFrequencyCount[]): number[] {
+  if (isEmpty(frequencyData)) {
+    return []
+  }
 
-  return (frequencyData as FrequencyDTO[]).map((datum: FrequencyDTO) => datum.count) as number[]
+  return (frequencyData as TimestampFrequencyCount[]).map((datum: TimestampFrequencyCount) => datum.count) as number[]
 }
 
-export const getSingleLogData = (
-  logData: LogAnalysisRadarChartListDTO | AnalyzedRadarChartLogDataDTO,
-  isServicePage?: boolean
-): LogAnalysisRowData => {
+function getTimestampValues(frequencyData?: TimestampFrequencyCount[]): number[] {
+  if (isEmpty(frequencyData)) {
+    return []
+  }
+
+  return (frequencyData as TimestampFrequencyCount[]).map(
+    (datum: TimestampFrequencyCount) => datum.timeStamp
+  ) as number[]
+}
+
+function getBaselineData({
+  averageControlFrequencyData
+}: {
+  averageControlFrequencyData?: TimestampFrequencyCount[]
+}): SeriesColumnOptions {
+  if (!averageControlFrequencyData || isEmpty(averageControlFrequencyData)) {
+    return {} as SeriesColumnOptions
+  }
+  return {
+    color: Utils.getRealCSSColor(Color.GREY_300),
+    data: getFrequencyDataValues(averageControlFrequencyData),
+    type: 'column',
+    custom: {
+      timestamp: getTimestampValues(averageControlFrequencyData)
+    }
+  }
+}
+
+function getMessgeFrequencyChartValues({
+  testFrequencies,
+  averageControlFrequencyData,
+  clusterType
+}: {
+  testFrequencies?: TimestampFrequencyCount[]
+  averageControlFrequencyData?: TimestampFrequencyCount[]
+  clusterType: LogAnalysisRadarChartListDTO['clusterType']
+}): SeriesColumnOptions[] {
+  if (!testFrequencies || isEmpty(testFrequencies)) {
+    return []
+  }
+
+  const baselinedata: SeriesColumnOptions = getBaselineData({ averageControlFrequencyData })
+
+  const barColorInChart = getEventTypeChartColor(clusterType)
+
+  const testDataValues: SeriesColumnOptions[] = [
+    {
+      color: barColorInChart,
+      data: getFrequencyDataValues(testFrequencies),
+      type: 'column',
+      custom: {
+        timestamp: getTimestampValues(testFrequencies)
+      }
+    }
+  ]
+
+  if (clusterType !== EventTypeFullName.UNKNOWN_EVENT) {
+    testDataValues.unshift(baselinedata)
+  }
+
+  return testDataValues
+}
+
+function getMessgeFrequencies(logData: LogAnalysisRadarChartListDTO): LogAnalysisMessageFrequency[] {
+  if (isEmpty(logData) || isEmpty(logData.testHostFrequencyData)) {
+    return []
+  }
+
+  return (logData.testHostFrequencyData as HostFrequencyData[]).map(datum => {
+    return {
+      hostName: datum.host as string,
+      data: getMessgeFrequencyChartValues({
+        clusterType: logData.clusterType,
+        testFrequencies: datum?.frequencies,
+        averageControlFrequencyData: logData.averageControlFrequencyData
+      })
+    }
+  })
+}
+
+export const getSingleLogData = (logData: LogAnalysisRadarChartListDTO): LogAnalysisRowData => {
+  if (!logData) {
+    return {} as LogAnalysisRowData
+  }
   return {
     clusterType: mapClusterType(logData?.clusterType as string),
     count: logData?.count as number,
     message: logData?.message as string,
-    messageFrequency: [
-      {
-        name: 'testData',
-        type: 'column',
-        color: getEventTypeChartColor(logData?.clusterType),
-        data: getFrequencyDataValues(logData?.frequencyData, isServicePage)
-      }
-    ],
     clusterId: logData?.clusterId,
-    riskStatus: logData?.risk
+    riskStatus: logData?.risk,
+    messageFrequency: getMessgeFrequencies(logData)
   }
 }
 
 export function getLogAnalysisData(
-  data: RestResponseLogAnalysisRadarChartListWithCountDTO | RestResponseAnalyzedRadarChartLogDataWithCountDTO | null,
-  isServicePage?: boolean
+  data: RestResponseLogAnalysisRadarChartListWithCountDTO | RestResponseAnalyzedRadarChartLogDataWithCountDTO | null
 ): LogAnalysisRowData[] {
   return (
-    data?.resource?.logAnalysisRadarCharts?.content?.map(
-      (datum: LogAnalysisRadarChartListDTO | AnalyzedRadarChartLogDataDTO) => getSingleLogData(datum, isServicePage)
+    data?.resource?.logAnalysisRadarCharts?.content?.map((datum: LogAnalysisRadarChartListDTO) =>
+      getSingleLogData(datum)
     ) ?? []
   )
 }

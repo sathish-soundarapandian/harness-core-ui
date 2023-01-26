@@ -103,6 +103,13 @@
     }
   }
 
+  &InputCount {
+    margin-right: var(--spacing-none) !important;
+    input {
+      width: 100% !important;
+    }
+  }
+
   &Criteria {
     margin-right: var(--spacing-3);
   }

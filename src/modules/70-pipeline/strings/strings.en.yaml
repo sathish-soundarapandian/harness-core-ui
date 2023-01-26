@@ -382,6 +382,10 @@ manifestType:
   customRemoteExtractedFileLocation: Extracted Manifest File Location
   customRemoteExtractedFileLocationPlaceholder: Enter Extracted Manifest File Location
   paramsYamlPath: Openshift Parameters
+  helmRepoOverride:
+    locationText: Chart Location Referenced From Service
+    allowedLimitForEnvironment: You cannot configure multiple Helm Repo Overrides at the Environment Level.
+    allowedLimitForService: You cannot configure multiple Helm Repo Overrides for the Service.
   http:
     chartName: 'Chart Name'
     chartVersion: 'Chart Version'
@@ -422,6 +426,7 @@ manifestTypeLabels:
   TASManifest: TAS Manifest
   VarsYAML: Vars
   Autoscaler: AutoScaler
+  HelmRepoOverride: Helm Repo Override
 manifestToConnectorLabelMap:
   AWSLabel: '{{ $.common.aws }}'
 failureStrategies:
@@ -461,6 +466,7 @@ failureStrategies:
     PolicyEvaluationFailure: Policy Evaluation Failures
     InputTimeoutError: Execution-time Inputs Timeout Errors
     ApprovalRejection: Approval Rejection
+    DelegateRestart: Delegate Restart
   validation:
     arrayOrUndefined: Value must be an array if defined.
     strategyRequired: 'At least 1 strategy is required'
@@ -556,7 +562,7 @@ execution:
     downloadLogs: Download logs
     viewCompiledYaml: View Compiled YAML
     compareExecutions: Compare Pipeline Executions
-    reRunInDebugMode: Re-run in debug mode
+    reRunInDebugMode: Re-run in Debug Mode
   layouts:
     bottom: Align to bottom
     right: Align to right
@@ -1047,7 +1053,7 @@ stepCommonFields:
     notIn: '{{label}} must not be one of the following values: {{notAllowedValues}}'
 ciCodebase:
   prCloneStrategy: Pull Request Clone Strategy
-  ciCodebaseBuildType: CI Codebase Build Type
+  ciCodebaseBuildType: CI Codebase build type
   pullRequestNumber: Pull Request Number
   validation:
     oneOfValues: Value must be one of these values [{{values}}]
@@ -1345,6 +1351,7 @@ invalidRequest: Invalid Request
 serviceDeploymentTypes:
   elastigroup: Elastigroup
   kubernetes: '{{$.kubernetesText}}'
+  kubernetesWithGitops: Kubernetes with GitOps
   amazonEcs: '{{$.delegate.cardData.amazonECS.name}}'
   amazonAmi: AWS AMI
   awsCodeDeploy: CodeDeploy
@@ -1535,7 +1542,7 @@ phasesForm:
 draft: 'Draft'
 duplicateStepIdentifiers: 'Duplicate identifiers found: {{duplicateIdString}}'
 alwaysEditModeYAML: Enable read/write mode always
-warningForInvalidYAMLDiscard: Enabling this sets the YAML editor in read/write mode for the Pipelines you view. You can enable/disable this setting in any Pipeline.
+warningForInvalidYAMLDiscard: Enabling this option lets you edit and save changes to the YAML code of the pipelines you are viewing. You can toggle this setting on or off in any pipeline.
 azureWebApp:
   name: Azure Web App
   strategy:

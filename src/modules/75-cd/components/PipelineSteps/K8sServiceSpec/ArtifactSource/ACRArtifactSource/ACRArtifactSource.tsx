@@ -31,12 +31,14 @@ import {
   ConnectorReferenceDTO,
   FormMultiTypeConnectorField
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { getScopeAppendedToIdentifier } from '@common/utils/StringUtils'
+import type { Scope } from '@common/interfaces/SecretsInterface'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
-  getConnectorRefFqnPath,
   getDefaultQueryParam,
   getFinalQueryParamValue,
+  getFqnPath,
   getValidInitialValuePath,
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity,
@@ -98,18 +100,17 @@ const Content = (props: ACRRenderContent): JSX.Element => {
   })
 
   const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
-  const connectorRefFqnPath = getConnectorRefFqnPath(
-    path as string,
-    !!isPropagatedStage,
-    stageIdentifier,
-    defaultTo(
-      isSidecar
-        ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
-        : artifactPath,
-      ''
-    ),
-    'connectorRef'
+  const resolvedArtifactPath = defaultTo(
+    isSidecar
+      ? artifactPath?.split('[')[0].concat(`.${get(initialValues?.artifacts, `${artifactPath}.identifier`)}`)
+      : artifactPath,
+    ''
   )
+  const getFqnPathForEntity = (entityName: string): string =>
+    getFqnPath(path as string, !!isPropagatedStage, stageIdentifier, resolvedArtifactPath, entityName)
+  const subscriptionsFqnPath = getFqnPathForEntity('subscriptionId')
+  const registryFqnPath = getFqnPathForEntity('registry')
+  const repositoryFqnPath = getFqnPathForEntity('repository')
 
   const connectorRefValue = getDefaultQueryParam(
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.connectorRef`, ''), artifact?.spec?.connectorRef),
@@ -159,7 +160,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
       projectIdentifier,
       serviceId,
       useArtifactV1Data,
-      connectorRefFqnPath
+      subscriptionsFqnPath
     })
 
   useEffect(() => {
@@ -181,7 +182,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
             orgIdentifier,
             projectIdentifier,
             serviceId,
-            fqnPath: connectorRefFqnPath
+            fqnPath: subscriptionsFqnPath
           }
         })
       }
@@ -199,7 +200,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
   }, [subscriptionsData])
 
   const {
-    data: registiresData,
+    data: registriesData,
     refetch: refetchRegistries,
     loading: loadingRegistries,
     error: registriesError
@@ -211,7 +212,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
       projectIdentifier,
       subscriptionId: artifact?.spec?.subscriptionId,
       serviceId,
-      fqnPath: connectorRefFqnPath
+      fqnPath: registryFqnPath
     },
     lazy: true,
     debounce: 300
@@ -230,7 +231,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
           projectIdentifier,
           subscriptionId: artifact?.spec?.subscriptionId,
           serviceId,
-          fqnPath: connectorRefFqnPath
+          fqnPath: registryFqnPath
         }
       })
     }
@@ -239,12 +240,12 @@ const Content = (props: ACRRenderContent): JSX.Element => {
 
   useEffect(() => {
     const options =
-      defaultTo(registiresData?.data?.registries, []).map(registry => ({
+      defaultTo(registriesData?.data?.registries, []).map(registry => ({
         label: registry.registry,
         value: registry.registry
       })) || /* istanbul ignore next */ []
     setRegistries(options)
-  }, [registiresData])
+  }, [registriesData])
 
   const {
     data: repositoriesData,
@@ -260,7 +261,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
       subscriptionId: artifact?.spec?.subscriptionId,
       registry: artifact?.spec?.registry,
       serviceId,
-      fqnPath: connectorRefFqnPath
+      fqnPath: repositoryFqnPath
     },
     lazy: true,
     debounce: 300
@@ -281,7 +282,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
           subscriptionId: artifact?.spec?.subscriptionId,
           registry: artifact?.spec?.registry,
           serviceId,
-          fqnPath: connectorRefFqnPath
+          fqnPath: repositoryFqnPath
         }
       })
     }
@@ -386,12 +387,13 @@ const Content = (props: ACRRenderContent): JSX.Element => {
               onChange={
                 /* istanbul ignore next */ (value, _valueType, type) => {
                   resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)
-                  const { record } = value as unknown as { record: ConnectorReferenceDTO }
+                  const { record, scope } = value as unknown as { record: ConnectorReferenceDTO; scope: Scope }
+                  const connectorRef = getScopeAppendedToIdentifier(record?.identifier, scope)
                   if (record && type === MultiTypeInputType.FIXED) {
                     if (useArtifactV1Data) {
                       refetchSubscriptions({
                         queryParams: {
-                          connectorRef: record?.identifier,
+                          connectorRef,
                           accountIdentifier: accountId,
                           orgIdentifier,
                           projectIdentifier
@@ -400,12 +402,12 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                     } else {
                       refetchSubscriptions({
                         queryParams: {
-                          connectorRef: record?.identifier,
+                          connectorRef,
                           accountIdentifier: accountId,
                           orgIdentifier,
                           projectIdentifier,
                           serviceId,
-                          fqnPath: connectorRefFqnPath
+                          fqnPath: subscriptionsFqnPath
                         }
                       })
                     }
@@ -449,7 +451,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                         projectIdentifier,
                         subscriptionId: getValue(value),
                         serviceId,
-                        fqnPath: connectorRefFqnPath
+                        fqnPath: registryFqnPath
                       }
                     })
                   } else {
@@ -513,7 +515,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
                         projectIdentifier,
                         subscriptionId,
                         serviceId,
-                        fqnPath: connectorRefFqnPath,
+                        fqnPath: repositoryFqnPath,
                         registry: getValue(value)
                       }
                     })

@@ -159,17 +159,17 @@ const NodesList: React.FC = () => {
 
   const columns: Column<FileStoreNodeDTO>[] = [
     {
-      Header: getString('filestore.view.fileName'),
+      Header: getString('name'),
       accessor: row => row?.name,
       id: 'fileName',
-      width: '30%',
+      width: '45%',
       Cell: RenderColumnName
     },
     {
       Header: getString('common.file'),
       accessor: row => row.type,
       id: 'fileType',
-      width: '15%',
+      width: '10%',
       Cell: RenderColumnType
     },
     {
@@ -196,7 +196,7 @@ const NodesList: React.FC = () => {
     {
       accessor: row => row,
       id: 'menu',
-      width: '10%',
+      width: '5%',
       Cell: RenderColumnMenu
     }
   ]

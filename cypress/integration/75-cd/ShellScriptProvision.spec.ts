@@ -2,8 +2,7 @@ import {
   pipelineSaveCall,
   stepLibrary,
   pipelineDetails,
-  pipelineStudioRoute,
-  accountId
+  pipelineStudioRoute
 } from '../../support/70-pipeline/constants'
 
 describe('Shell Script Provision', () => {
@@ -14,9 +13,9 @@ describe('Shell Script Provision', () => {
     cy.wait(2000)
     cy.visitPageAssertion()
   }
-  const createdBy = `/ng/api/file-store/files/createdBy?routingId=${accountId}&accountIdentifier=${accountId}`
-  const supportedEntityTypes = `/ng/api/file-store/supported-entity-types?routingId=${accountId}&accountIdentifier=${accountId}`
-  const folderFileStore = `ng/api/file-store/folder?routingId=${accountId}&accountIdentifier=${accountId}`
+  const createdBy = `ng/api/file-store/files/createdBy*`
+  const supportedEntityTypes = `/ng/api/file-store/supported-entity-types*`
+  const folderFileStore = `ng/api/file-store/folder*`
 
   beforeEach(() => {
     cy.on('uncaught:exception', () => {

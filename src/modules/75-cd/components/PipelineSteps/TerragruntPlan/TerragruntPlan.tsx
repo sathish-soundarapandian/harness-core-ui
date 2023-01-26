@@ -995,7 +995,7 @@ export class TerragruntPlan extends PipelineStep<TGPlanFormData> {
   }
 
   private getInitialValues(data: TGPlanFormData): TGPlanFormData {
-    const configData = data.spec.configuration
+    const configData = data.spec?.configuration
     const envVars = get(configData, 'environmentVariables') as StringNGVariable[]
     const isEnvRunTime =
       getMultiTypeFromValue(get(configData, 'environmentVariables') as any) === MultiTypeInputType.RUNTIME

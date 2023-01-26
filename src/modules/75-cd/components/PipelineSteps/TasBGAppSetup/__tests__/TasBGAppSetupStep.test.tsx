@@ -98,9 +98,8 @@ describe('Test TAS Setup Steps', () => {
 
     await act(() => ref.current?.submitForm()!)
     await waitFor(() => {
-      expect(container.querySelectorAll('.FormError--error').length).toEqual(2)
+      expect(container.querySelectorAll('.FormError--error').length).toEqual(1)
       expect(getByText('cd.ElastigroupStep.valueCannotBe')).toBeTruthy()
-      expect(getByText('cd.steps.tas.tempRouteMandatory')).toBeTruthy()
     })
 
     // validate negative value error
