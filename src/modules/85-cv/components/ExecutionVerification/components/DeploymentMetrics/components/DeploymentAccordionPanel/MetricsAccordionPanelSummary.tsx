@@ -9,22 +9,16 @@ import React from 'react'
 import { Container, Icon, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { getRiskColorValue } from '@cv/utils/CommonUtils'
-import { useStrings } from 'framework/strings'
 import { getIconBySourceType } from '@cv/pages/health-source/HealthSourceTable/HealthSourceTable.utils'
-import { HorizontalLayout } from '@cv/pages/health-source/common/StyledComponents'
 import type { MetricsAccordionPanelSummaryProps } from './MetricsAccordionPanelSummary.types'
 import NodeCount from './components/NodesCount'
-import { getRiskDisplayName } from './MetricsAccordionPanelSummary.utils'
 import css from '../DeploymentMetricsAnalysisRow/DeploymentMetricsAnalysisRow.module.scss'
 
 const MetricsAccordionPanelSummary: React.FC<MetricsAccordionPanelSummaryProps> = props => {
   const {
     analysisRow: { metricName, risk, transactionName, nodeRiskCount, healthSource, deeplinkURL }
   } = props
-  const { healthSourceName, providerName } = healthSource || {}
-
-  const { getString } = useStrings()
-  const riskDisplayName = getRiskDisplayName(risk, getString)
+  const { name, type } = healthSource || {}
 
   return (
     <>
@@ -45,9 +39,9 @@ const MetricsAccordionPanelSummary: React.FC<MetricsAccordionPanelSummaryProps> 
       <Text font={{ variation: FontVariation.BODY2_SEMI }} tooltip={transactionName}>
         {transactionName}
       </Text>
-      <Text lineClamp={1} tooltip={healthSourceName} font={{ variation: FontVariation.BODY2_SEMI }}>
-        <Icon name={getIconBySourceType(providerName as string)} margin={{ right: 'small' }} size={16} />
-        {healthSourceName}
+      <Text lineClamp={1} tooltip={name} font={{ variation: FontVariation.BODY2_SEMI }}>
+        <Icon name={getIconBySourceType(type as string)} margin={{ right: 'small' }} size={16} />
+        {name}
       </Text>
       <Text
         font={{ variation: FontVariation.TABLE_HEADERS }}
@@ -55,7 +49,7 @@ const MetricsAccordionPanelSummary: React.FC<MetricsAccordionPanelSummaryProps> 
         style={{ borderColor: getRiskColorValue(risk, false) }}
         className={css.metricRisk}
       >
-        {riskDisplayName}
+        {risk}
       </Text>
       <Container>
         <NodeCount nodeRiskCount={nodeRiskCount} />

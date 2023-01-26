@@ -33,14 +33,7 @@ export type AnalysedDeploymentNode = AbstractAnalysedNode & {
 }
 
 export interface AnalysedDeploymentTestDataNode {
-  analysisReason?:
-    | 'CUSTOM_FAIL_FAST_THRESHOLD'
-    | 'CUSTOM_IGNORE_THRESHOLD'
-    | 'DEFAULT_FAIL_FAST_THRESHOLD'
-    | 'DEFAULT_IGNORE_THRESHOLD'
-    | 'ML_ANALYSIS'
-    | 'NO_CONTROL_DATA'
-    | 'NO_TEST_DATA'
+  analysisReason?: 'CUSTOM_FAIL_FAST_THRESHOLD' | 'ML_ANALYSIS' | 'NO_CONTROL_DATA' | 'NO_TEST_DATA'
   analysisResult?: 'HEALTHY' | 'NO_ANALYSIS' | 'UNHEALTHY' | 'WARNING'
   appliedThresholds?: string[]
   controlData?: MetricValueV2[]
@@ -857,7 +850,7 @@ export interface CrossAccountAccess {
 export interface CustomChangeEvent {
   changeEventDetailsLink?: string
   description?: string
-  internalLinkToEntity?: string
+  externalLinkToEntity?: string
 }
 
 export type CustomChangeEventMetadata = ChangeEventMetadata & {
@@ -2563,9 +2556,10 @@ export interface HealthSourceSummary {
 }
 
 export interface HealthSourceV2 {
-  healthSourceIdentifier?: string
-  healthSourceName?: string
-  providerName?:
+  identifier?: string
+  name?: string
+  providerType?: 'ERRORS' | 'LOGS' | 'METRICS'
+  type?:
     | 'AppDynamics'
     | 'NewRelic'
     | 'StackdriverLog'
@@ -2584,7 +2578,6 @@ export interface HealthSourceV2 {
     | 'AwsPrometheus'
     | 'SumologicMetrics'
     | 'SumologicLogs'
-  providerType?: 'ERRORS' | 'LOGS' | 'METRICS'
 }
 
 export interface HistoricalTrend {
@@ -3271,6 +3264,7 @@ export interface MetricValueV2 {
 
 export interface MetricsAnalysis {
   analysisResult?: 'HEALTHY' | 'NO_ANALYSIS' | 'UNHEALTHY' | 'WARNING'
+  deeplinkURL?: string
   healthSource?: HealthSourceV2
   metricIdentifier?: string
   metricName?: string

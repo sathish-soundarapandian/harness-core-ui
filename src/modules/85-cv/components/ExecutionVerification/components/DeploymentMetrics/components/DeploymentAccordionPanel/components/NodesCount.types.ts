@@ -1,15 +1,16 @@
 import type { RiskValues } from '@cv/utils/CommonUtils'
+import type { NodeRiskCount } from 'services/cv'
 
 export interface NodeCountProps {
   nodeRiskCount?: {
     anomalousNodeCount?: number
-    nodeRiskCounts?: NodeDetail[]
+    nodeRiskCounts?: NodeDetail[] | NodeRiskCount[]
     totalNodeCount?: number
   }
 }
 
 export interface NodeCountDisplayProps {
-  nodeDetails?: NodeDetail[]
+  nodeDetails?: NodeDetail[] | NodeRiskCount[]
 }
 
 export interface NodeDetail {

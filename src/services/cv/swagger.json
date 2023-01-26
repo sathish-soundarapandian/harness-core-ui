@@ -15112,11 +15112,11 @@
           "type": "integer",
           "format": "int64"
         },
-        "endTime": {
+        "startTime": {
           "type": "integer",
           "format": "int64"
         },
-        "startTime": {
+        "endTime": {
           "type": "integer",
           "format": "int64"
         },
@@ -17083,6 +17083,10 @@
           "type": "integer",
           "format": "int64"
         },
+        "nano": {
+          "type": "integer",
+          "format": "int32"
+        },
         "negative": {
           "type": "boolean"
         },
@@ -17094,10 +17098,6 @@
           "items": {
             "$ref": "#/definitions/TemporalUnit"
           }
-        },
-        "nano": {
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -17122,18 +17122,18 @@
           "type": "integer",
           "format": "int64"
         },
-        "failedStatus": {
-          "type": "boolean"
-        },
-        "timeTakenToFinish": {
-          "$ref": "#/definitions/Duration"
-        },
         "finalState": {
           "type": "boolean"
         },
         "verificationJobExecutionStatus": {
           "type": "string",
           "enum": ["QUEUED", "RUNNING", "FAILED", "SUCCESS", "TIMEOUT", "ABORTED"]
+        },
+        "failedStatus": {
+          "type": "boolean"
+        },
+        "timeTakenToFinish": {
+          "$ref": "#/definitions/Duration"
         }
       }
     },
@@ -17180,13 +17180,13 @@
     "HealthSourceV2": {
       "type": "object",
       "properties": {
-        "healthSourceIdentifier": {
+        "identifier": {
           "type": "string"
         },
-        "healthSourceName": {
+        "name": {
           "type": "string"
         },
-        "providerName": {
+        "type": {
           "type": "string",
           "enum": [
             "AppDynamics",
@@ -17424,15 +17424,7 @@
         },
         "analysisReason": {
           "type": "string",
-          "enum": [
-            "CUSTOM_FAIL_FAST_THRESHOLD",
-            "CUSTOM_IGNORE_THRESHOLD",
-            "DEFAULT_FAIL_FAST_THRESHOLD",
-            "DEFAULT_IGNORE_THRESHOLD",
-            "ML_ANALYSIS",
-            "NO_CONTROL_DATA",
-            "NO_TEST_DATA"
-          ]
+          "enum": ["CUSTOM_FAIL_FAST_THRESHOLD", "ML_ANALYSIS", "NO_CONTROL_DATA", "NO_TEST_DATA"]
         },
         "controlDataType": {
           "type": "string",
@@ -17569,6 +17561,9 @@
           "items": {
             "$ref": "#/definitions/AnalysedDeploymentTestDataNode"
           }
+        },
+        "deeplinkURL": {
+          "type": "string"
         }
       }
     },
@@ -18151,75 +18146,15 @@
     "JsonNode": {
       "type": "object"
     },
-    "PartialSchemaDTO": {
+    "ResponseJsonNode": {
       "type": "object",
       "properties": {
-        "schema": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
           "$ref": "#/definitions/JsonNode"
-        },
-        "nodeType": {
-          "type": "string"
-        },
-        "nodeName": {
-          "type": "string"
-        },
-        "namespace": {
-          "type": "string"
-        },
-        "skipStageSchema": {
-          "type": "boolean"
-        },
-        "moduleType": {
-          "type": "string",
-          "enum": [
-            "CD",
-            "CI",
-            "CV",
-            "CF",
-            "CE",
-            "STO",
-            "CHAOS",
-            "SRM",
-            "CODE",
-            "CORE",
-            "PMS",
-            "TEMPLATESERVICE",
-            "GOVERNANCE",
-            "IACM"
-          ]
-        }
-      }
-    },
-    "ResponseListPartialSchemaDTO": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PartialSchemaDTO"
-          }
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "ResponseYamlSchemaDetailsWrapper": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/YamlSchemaDetailsWrapper"
         },
         "metaData": {
           "type": "object"
@@ -18336,7 +18271,46 @@
         }
       }
     },
-    "ResponseJsonNode": {
+    "PartialSchemaDTO": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "$ref": "#/definitions/JsonNode"
+        },
+        "nodeType": {
+          "type": "string"
+        },
+        "nodeName": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "skipStageSchema": {
+          "type": "boolean"
+        },
+        "moduleType": {
+          "type": "string",
+          "enum": [
+            "CD",
+            "CI",
+            "CV",
+            "CF",
+            "CE",
+            "STO",
+            "CHAOS",
+            "SRM",
+            "CODE",
+            "CORE",
+            "PMS",
+            "TEMPLATESERVICE",
+            "GOVERNANCE",
+            "IACM"
+          ]
+        }
+      }
+    },
+    "ResponseListPartialSchemaDTO": {
       "type": "object",
       "properties": {
         "status": {
@@ -18344,7 +18318,28 @@
           "enum": ["SUCCESS", "FAILURE", "ERROR"]
         },
         "data": {
-          "$ref": "#/definitions/JsonNode"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PartialSchemaDTO"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseYamlSchemaDetailsWrapper": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/YamlSchemaDetailsWrapper"
         },
         "metaData": {
           "type": "object"
@@ -18533,7 +18528,7 @@
         "changeEventDetailsLink": {
           "type": "string"
         },
-        "internalLinkToEntity": {
+        "externalLinkToEntity": {
           "type": "string"
         }
       }

@@ -6,14 +6,13 @@
  */
 
 import { get } from 'lodash-es'
-import type { MultiSelectOption } from '@harness/uicore'
+import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import type {
   HealthSourceDTO,
   HealthSourceV2,
   HostData,
-  NodeRiskCount,
   PageMetricsAnalysis,
   RestResponseSetHealthSourceDTO
 } from 'services/cv'
@@ -24,14 +23,16 @@ import type {
 } from './components/DeploymentMetricsAnalysisRow/DeploymentMetricsAnalysisRow.constants'
 import type { DeploymentMetricsAnalysisRowProps } from './components/DeploymentMetricsAnalysisRow/DeploymentMetricsAnalysisRow'
 import type { DeploymentNodeAnalysisResult } from '../DeploymentProgressAndNodes/components/DeploymentNodes/DeploymentNodes.constants'
+import { DEFAULT_NODE_RISK_COUNTS, DEFAULT_PAGINATION_VALUEE } from './DeploymentMetrics.constants'
 
-export function transformMetricData(metricData?: PageMetricsAnalysis | null): DeploymentMetricsAnalysisRowProps[] {
+export function transformMetricData(
+  selectedDataFormat: SelectOption,
+  metricData?: PageMetricsAnalysis | null
+): DeploymentMetricsAnalysisRowProps[] {
   if (!(Array.isArray(metricData?.content) && metricData?.content.length)) {
     return []
   }
-
   const graphData: DeploymentMetricsAnalysisRowProps[] = []
-
   for (const analysisData of metricData.content || []) {
     const {
       metricIdentifier,
@@ -53,23 +54,7 @@ export function transformMetricData(metricData?: PageMetricsAnalysis | null): De
     const nodeRiskCountDTO = {
       totalNodeCount: testDataNodes.length,
       anomalousNodeCount: 0,
-      nodeRiskCounts: [
-        {
-          risk: RiskValues.UNHEALTHY as NodeRiskCount['risk'],
-          count: 0,
-          displayName: 'Unhealthy'
-        },
-        {
-          risk: RiskValues.WARNING as NodeRiskCount['risk'],
-          count: 0,
-          displayName: 'Warning'
-        },
-        {
-          risk: RiskValues.HEALTHY as NodeRiskCount['risk'],
-          count: 0,
-          displayName: 'Healthy'
-        }
-      ]
+      nodeRiskCounts: DEFAULT_NODE_RISK_COUNTS
     }
 
     for (const hostInfo of testDataNodes) {
@@ -79,7 +64,6 @@ export function transformMetricData(metricData?: PageMetricsAnalysis | null): De
         nodeIdentifier,
         analysisResult: testAnalysisResult,
         analysisReason,
-        controlDataType,
         controlNodeIdentifier,
         normalisedControlData,
         normalisedTestData
@@ -89,14 +73,18 @@ export function transformMetricData(metricData?: PageMetricsAnalysis | null): De
       const hostNormalisedControlData: Highcharts.SeriesLineOptions['data'] = []
       const hostNormalisedTestData: Highcharts.SeriesLineOptions['data'] = []
 
-      const sortedControlData = controlData?.sort((a, b) => (a?.timestampInMillis || 0) - (b?.timestampInMillis || 0))
-      const sortedTestData = testData?.sort((a, b) => (a?.timestampInMillis || 0) - (b?.timestampInMillis || 0))
-      const sortedNormalisedControlData = normalisedControlData?.sort(
-        (a, b) => (a?.timestampInMillis || 0) - (b?.timestampInMillis || 0)
-      )
-      const sortedNormalisedTestData = normalisedTestData?.sort(
-        (a, b) => (a?.timestampInMillis || 0) - (b?.timestampInMillis || 0)
-      )
+      const sortedControlData = controlData
+        ?.slice()
+        ?.sort((a, b) => (a?.timestampInMillis || 0) - (b?.timestampInMillis || 0))
+      const sortedTestData = testData
+        ?.slice()
+        ?.sort((a, b) => (a?.timestampInMillis || 0) - (b?.timestampInMillis || 0))
+      const sortedNormalisedControlData = normalisedControlData
+        ?.slice()
+        ?.sort((a, b) => (a?.timestampInMillis || 0) - (b?.timestampInMillis || 0))
+      const sortedNormalisedTestData = normalisedTestData
+        ?.slice()
+        ?.sort((a, b) => (a?.timestampInMillis || 0) - (b?.timestampInMillis || 0))
 
       const controlDataInitialXValue = sortedControlData?.[0]?.timestampInMillis || 0
       const testDataInitialXValue = sortedTestData?.[0]?.timestampInMillis || 0
@@ -125,19 +113,29 @@ export function transformMetricData(metricData?: PageMetricsAnalysis | null): De
         })
       })
 
-      controlPoints.push({ points: hostControlData, name: nodeIdentifier })
+      controlPoints.push({
+        points: [...hostControlData],
+        name: nodeIdentifier,
+        initialXvalue: controlDataInitialXValue
+      })
       testPoints.push({
-        points: hostTestData,
+        points: [...hostTestData],
         risk: analysisResult as HostData['risk'],
         analysisReason,
-        name: controlNodeIdentifier as string
+        name: controlNodeIdentifier as string,
+        initialXvalue: testDataInitialXValue
       })
-      normalisedControlPoints.push({ points: hostNormalisedControlData, name: nodeIdentifier })
+      normalisedControlPoints.push({
+        points: [...hostNormalisedControlData],
+        name: nodeIdentifier,
+        initialXvalue: normalisedControlDataInitialXValue
+      })
       normalisedTestPoints.push({
-        points: hostNormalisedTestData,
+        points: [...hostNormalisedTestData],
         risk: analysisResult as HostData['risk'],
         name: controlNodeIdentifier as string,
-        analysisReason
+        analysisReason,
+        initialXvalue: normalisedTestDataInitialXValue
       })
 
       switch (testAnalysisResult) {
@@ -154,19 +152,18 @@ export function transformMetricData(metricData?: PageMetricsAnalysis | null): De
     }
 
     graphData.push({
-      controlData: controlPoints,
-      testData: testPoints,
-      normalisedControlData: normalisedControlPoints,
-      normalisedTestData: normalisedTestPoints,
+      controlData: [...controlPoints],
+      testData: [...testPoints],
+      normalisedControlData: [...normalisedControlPoints],
+      normalisedTestData: [...normalisedTestPoints],
       transactionName: transactionGroup as string,
       metricName: metricName as string,
-      healthSourceType: '', // Todo,
       risk: analysisResult,
-      connectorName: '', // Todo
       nodeRiskCount: nodeRiskCountDTO,
       thresholds,
       healthSource,
-      deeplinkURL
+      deeplinkURL,
+      selectedDataFormat
     })
   }
 
@@ -253,13 +250,27 @@ export function generateHealthSourcesOptionsData(
   }
 
   healthSourcesData?.forEach((el: HealthSourceV2) => {
+    const { identifier, name, type, providerType } = el
     healthSourcesOptionsData.resource.push({
-      identifier: el?.healthSourceIdentifier,
-      name: el?.healthSourceName,
-      type: el?.providerName as HealthSourceDTO['type'],
-      verificationType: el?.providerType === 'METRICS' ? 'TIME_SERIES' : 'LOG'
+      identifier,
+      name,
+      type: type as HealthSourceDTO['type'],
+      verificationType: providerType === 'METRICS' ? 'TIME_SERIES' : 'LOG'
     })
   })
 
   return healthSourcesOptionsData
+}
+
+export function getPaginationInfo(data: PageMetricsAnalysis | null) {
+  const { pageIndex, pageItemCount, pageSize, totalItems, totalPages } = data || {}
+  const paginationInfo =
+    {
+      pageIndex,
+      pageItemCount,
+      pageSize,
+      totalPages,
+      totalItems
+    } || DEFAULT_PAGINATION_VALUEE
+  return paginationInfo
 }

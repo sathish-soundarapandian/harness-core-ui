@@ -12,11 +12,13 @@ export type HostTestData = {
   points: Highcharts.SeriesLineOptions['data']
   name: string
   analysisReason?: AnalysedDeploymentTestDataNode['analysisReason']
+  initialXvalue: number
 }
 
 export type HostControlTestData = Omit<HostTestData, 'risk' | 'name'> & {
   risk?: HostData['risk']
   name?: string | null
+  initialXvalue: number
 }
 
 export const ANALYSIS_REASON_MAPPING: { [key: string]: string } = {

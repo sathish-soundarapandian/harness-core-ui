@@ -1007,7 +1007,9 @@ verification:
   collapseAll: Collapse All
   predicted: Predicted
   testHost: Test Host
+  testData: Test Data
   controlHost: Control Host
+  controlData: Control Data
 
   logs:
     logCluster: Log cluster

@@ -5,7 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { RiskValues } from '@cv/utils/CommonUtils'
 import type { SelectOption } from '@pipeline/components/PipelineSteps/Steps/StepsTypes'
+import type { NodeRiskCount } from 'services/cv'
 
 export const MetricType = {
   ANOMALOUS: 'Anomalous',
@@ -37,3 +39,21 @@ export const DEFAULT_PAGINATION_VALUEE = {
   totalPages: 0,
   totalItems: 0
 }
+
+export const DEFAULT_NODE_RISK_COUNTS = [
+  {
+    risk: RiskValues.UNHEALTHY as NodeRiskCount['risk'],
+    count: 0,
+    displayName: 'Unhealthy'
+  },
+  {
+    risk: RiskValues.WARNING as NodeRiskCount['risk'],
+    count: 0,
+    displayName: 'Warning'
+  },
+  {
+    risk: RiskValues.HEALTHY as NodeRiskCount['risk'],
+    count: 0,
+    displayName: 'Healthy'
+  }
+]

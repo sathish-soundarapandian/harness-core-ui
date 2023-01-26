@@ -42,7 +42,7 @@ import {
 import type { ExecutionQueryParams } from '@pipeline/utils/executionUtils'
 import { VerificationType } from '@cv/components/HealthSourceDropDown/HealthSourceDropDown.constants'
 import noDataImage from '@cv/assets/noData.svg'
-import { POLLING_INTERVAL, PAGE_SIZE, DEFAULT_PAGINATION_VALUEE, DATA_OPTIONS } from './DeploymentMetrics.constants'
+import { POLLING_INTERVAL, PAGE_SIZE, DATA_OPTIONS } from './DeploymentMetrics.constants'
 import { RefreshViewForNewData } from '../RefreshViewForNewDataButton/RefreshForNewData'
 import type { DeploymentNodeAnalysisResult } from '../DeploymentProgressAndNodes/components/DeploymentNodes/DeploymentNodes.constants'
 import {
@@ -62,7 +62,8 @@ import {
   getShouldShowError,
   isErrorOrLoading,
   isStepRunningOrWaiting,
-  generateHealthSourcesOptionsData
+  generateHealthSourcesOptionsData,
+  getPaginationInfo
 } from './DeploymentMetrics.utils'
 import MetricsAccordionPanelSummary from './components/DeploymentAccordionPanel/MetricsAccordionPanelSummary'
 import { HealthSourceMultiSelectDropDown } from '../HealthSourcesMultiSelectDropdown/HealthSourceMultiSelectDropDown'
@@ -123,6 +124,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
       arrayFormat: 'repeat'
     }
   })
+  const paginationInfo = getPaginationInfo(data)
 
   const {
     data: transactionNames,
@@ -215,7 +217,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     if (isErrorOrLoading(error, loading)) {
       return
     }
-    const updatedProps = transformMetricData(data)
+    const updatedProps = transformMetricData(selectedDataFormat, data)
 
     if (shouldUpdateView) {
       setUpdateViewInfo({
@@ -242,16 +244,6 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     }))
     setUpdateViewInfo(oldInfo => ({ ...oldInfo, shouldUpdateView: true, showSpinner: true }))
   }, [anomalousMetricsFilterChecked])
-
-  const { pageIndex, pageItemCount, pageSize, totalItems, totalPages } = data || {}
-  const paginationInfo =
-    {
-      pageIndex,
-      pageItemCount,
-      pageSize,
-      totalPages,
-      totalItems
-    } || DEFAULT_PAGINATION_VALUEE
 
   useEffect(() => {
     const healthSourceQueryParams = selectedHealthSources.map(item => item.value) as string[]
@@ -328,28 +320,17 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
           ref={accordionRef}
         >
           {currentViewData?.map(analysisRow => {
-            const {
-              transactionName,
-              metricName,
-              healthSourceType,
-              controlData,
-              testData,
-              normalisedControlData,
-              normalisedTestData
-            } = analysisRow || {}
-            //TODO - check later
-            const controlDataInfo = selectedDataFormat?.value === 'normalised' ? normalisedControlData : controlData
-            const testDataInfo = selectedDataFormat?.value === 'normalised' ? normalisedTestData : testData
-            const updatedAnalysisRow = { ...analysisRow, controlDataInfo, testDataInfo }
+            const { transactionName, metricName, healthSource } = analysisRow || {}
+            const { type } = healthSource || {}
             return (
               <Accordion.Panel
-                key={`${transactionName}-${metricName}-${healthSourceType}`}
-                id={`${transactionName}-${metricName}-${healthSourceType}`}
+                key={`${transactionName}-${metricName}-${type}`}
+                id={`${transactionName}-${metricName}-${type}`}
                 summary={<MetricsAccordionPanelSummary analysisRow={analysisRow} />}
                 details={
                   <DeploymentMetricsAnalysisRow
-                    key={`${transactionName}-${metricName}-${healthSourceType}`}
-                    {...updatedAnalysisRow}
+                    key={`${transactionName}-${metricName}-${type}`}
+                    {...analysisRow}
                     selectedDataFormat={selectedDataFormat}
                     className={css.analysisRow}
                   />
@@ -434,7 +415,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
                 setUpdateViewInfo(prevState => ({
                   ...prevState,
                   hasNewData: false,
-                  currentViewData: transformMetricData(data)
+                  currentViewData: transformMetricData(selectedDataFormat, data)
                 }))
               }}
             />

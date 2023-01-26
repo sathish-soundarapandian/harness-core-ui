@@ -79,12 +79,13 @@
 }
 
 :global(.metricsGraph_tooltip.highcharts-tooltip) {
-  background: var(--white) !important;
-  width: 100%;
-  min-height: 105%;
+  background: var(--primary-9-dark) !important;
+  width: 25%;
+  min-height: 80%;
   border: 1px solid var(--grey-200);
   border-radius: 10px;
   box-shadow: var(--elevation-3);
+  padding-bottom: var(--spacing-xxlarge) !important;
 }
 :global(.metricsGraph_tooltip.highcharts-tooltip > span) {
   padding-top: var(--spacing-xsmall);
@@ -108,10 +109,6 @@
 
 :global(.metricsGraph_tooltip.highcharts-tooltip path) {
   display: none !important;
-}
-
-:global(.metricsGraph_tooltip.highcharts-tooltip *) {
-  box-sizing: border-box;
 }
 
 .showDetailsText {
