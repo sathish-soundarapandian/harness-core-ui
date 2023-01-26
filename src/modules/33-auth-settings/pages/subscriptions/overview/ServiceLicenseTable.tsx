@@ -15,6 +15,7 @@ import moment from 'moment'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import OrgDropdown from '../../../../45-projects-orgs/components/orgDropdown/orgDropdown'
 import ProjDropdown from '../../../../45-projects-orgs/components/orgDropdown/ProjDropdown'
+import ServiceDropdown from '../../../../45-projects-orgs/components/orgDropdown/ServiceDropdown'
 import { String, useStrings, StringKeys } from 'framework/strings'
 import {
   PageActiveServiceDTO,
@@ -142,37 +143,11 @@ export function ServiceLicenseTable({
       }
     ] as unknown as Column<LicenseUsageDTO>[]
   }, [currentOrder, currentSort])
-  const { accountId } = useParams<AccountPathProps>()
   const [selectedOrg, setSelectedOrg] = useState<string | undefined>()
   const [selectedProj, setSelectedProj] = useState<string | undefined>()
+  const [selectedService, setSelectedService] = useState<string | undefined>()
   const activeServiceText = `${totalElements}`
-  const [searchTerm, setSearchTerm] = useState<string>()
   const timeValue = moment(content[0]?.timestamp).format('DD-MM-YYYY h:mm:ss')
-  const { data: projectListData, loading: projLoading } = useGetProjectList({
-    queryParams: {
-      accountIdentifier: accountId
-    }
-  })
-
-  // const { data: orgsData, loading: orgLoading } = useGetProjectAggregateDTOList({
-  //   queryParams: {
-  //     accountIdentifier: accountId,
-  //     orgIdentifier: selectedOrg,
-  //     searchTerm,
-  //     pageIndex: 0,
-  //     pageSize: 50
-  //   },
-  //   debounce: 300
-  // })
-
-  const allOrgsSelectOption: SelectOption = useMemo(
-    () => ({
-      label: getString('all'),
-      value: OrgFilter.ALL
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
 
   return (
     <Card className={pageCss.outterCard}>
@@ -216,11 +191,11 @@ export function ServiceLicenseTable({
               setSelectedProj(proj.value as string)
             }}
           />
-          <ProjDropdown
+          <ServiceDropdown
             value={selectedProj}
             className={pageCss.orgDropdown}
-            onChange={proj => {
-              setSelectedProj(proj.value as string)
+            onChange={service => {
+              setSelectedService(service.value as string)
             }}
           />
           <Text
@@ -229,7 +204,7 @@ export function ServiceLicenseTable({
             color={Color.PRIMARY_7}
             lineClamp={1}
             onClick={() => {
-              updateFilters(selectedOrg, selectedProj)
+              updateFilters(selectedOrg || '', selectedProj || '', selectedService || '')
             }}
           >
             Fetch
