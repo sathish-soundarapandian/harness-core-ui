@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Tickets Page matches snapshot 1`] = `
+exports[`Ticket Settings Page matches snapshot 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main container StyledProps--margin-xlarge StyledProps--padding-xlarge"
