@@ -238,8 +238,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     setQueryParams(oldQueryParams => ({
       ...oldQueryParams,
       page: INITIAL_PAGE_NUMBER,
-      anomalousMetricsOnly: anomalousMetricsFilterChecked,
-      anomalousNodesOnly: anomalousMetricsFilterChecked
+      anomalousMetricsOnly: anomalousMetricsFilterChecked
     }))
     setUpdateViewInfo(oldInfo => ({ ...oldInfo, shouldUpdateView: true, showSpinner: true }))
   }, [anomalousMetricsFilterChecked])
@@ -439,7 +438,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
       </Container>
       <Pagination
         className={css.metricsPagination}
-        limit={paginationInfo.limit as number}
+        pageSize={paginationInfo.limit as number}
         pageCount={paginationInfo.totalPages as number}
         itemCount={paginationInfo.totalItems as number}
         pageIndex={paginationInfo.pageIndex}

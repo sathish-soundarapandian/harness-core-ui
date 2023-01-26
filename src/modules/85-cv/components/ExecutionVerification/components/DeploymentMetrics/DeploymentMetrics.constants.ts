@@ -42,17 +42,17 @@ export const DEFAULT_PAGINATION_VALUEE = {
 
 export const DEFAULT_NODE_RISK_COUNTS = [
   {
-    risk: RiskValues.UNHEALTHY as NodeRiskCount['risk'],
+    risk: RiskValues.UNHEALTHY,
     count: 0,
     displayName: 'Unhealthy'
   },
   {
-    risk: RiskValues.WARNING as NodeRiskCount['risk'],
+    risk: RiskValues.WARNING,
     count: 0,
     displayName: 'Warning'
   },
   {
-    risk: RiskValues.HEALTHY as NodeRiskCount['risk'],
+    risk: RiskValues.HEALTHY,
     count: 0,
     displayName: 'Healthy'
   }

@@ -14,6 +14,7 @@ import type {
   HealthSourceDTO,
   HealthSourceV2,
   HostData,
+  NodeRiskCountDTO,
   PageMetricsAnalysis,
   RestResponseSetHealthSourceDTO
 } from 'services/cv'
@@ -49,11 +50,11 @@ export function transformMetricData(
     const normalisedControlPoints: HostControlTestData[] = []
     const normalisedTestPoints: HostTestData[] = []
 
-    const nodeRiskCountDTO = {
+    let nodeRiskCountDTO = {
       totalNodeCount: testDataNodes.length,
       anomalousNodeCount: 0,
       nodeRiskCounts: DEFAULT_NODE_RISK_COUNTS
-    }
+    } as NodeRiskCountDTO
 
     for (const hostInfo of testDataNodes) {
       const {
@@ -136,17 +137,7 @@ export function transformMetricData(
         initialXvalue: normalisedTestDataInitialXValue
       })
 
-      switch (testAnalysisResult) {
-        case RiskValues.HEALTHY:
-          nodeRiskCountDTO.nodeRiskCounts[2].count++
-          break
-        case RiskValues.WARNING:
-          nodeRiskCountDTO.nodeRiskCounts[1].count++
-          break
-        case RiskValues.UNHEALTHY:
-          nodeRiskCountDTO.nodeRiskCounts[0].count++
-          nodeRiskCountDTO.anomalousNodeCount++
-      }
+      nodeRiskCountDTO = getNodeRiskCountDTO(testAnalysisResult, nodeRiskCountDTO)
     }
 
     graphData.push({
@@ -166,6 +157,44 @@ export function transformMetricData(
   }
 
   return graphData
+}
+
+export function getNodeRiskCountDTO(
+  testAnalysisResult: string | undefined,
+  nodeRiskCountDTO: NodeRiskCountDTO
+): NodeRiskCountDTO {
+  switch (testAnalysisResult) {
+    case RiskValues.HEALTHY:
+      nodeRiskCountDTO = getUpdatedNodeRiskCountDTO(nodeRiskCountDTO, RiskValues.HEALTHY)
+      break
+    case RiskValues.WARNING:
+      nodeRiskCountDTO = getUpdatedNodeRiskCountDTO(nodeRiskCountDTO, RiskValues.WARNING)
+      break
+    case RiskValues.UNHEALTHY:
+      nodeRiskCountDTO = getUpdatedNodeRiskCountDTO(nodeRiskCountDTO, RiskValues.UNHEALTHY)
+      nodeRiskCountDTO = {
+        ...nodeRiskCountDTO,
+        anomalousNodeCount: (nodeRiskCountDTO?.anomalousNodeCount || 0) + 1
+      }
+  }
+  return nodeRiskCountDTO
+}
+
+export function getUpdatedNodeRiskCountDTO(nodeRiskCountDTO: NodeRiskCountDTO, status: RiskValues): NodeRiskCountDTO {
+  nodeRiskCountDTO = {
+    ...nodeRiskCountDTO,
+    nodeRiskCounts: nodeRiskCountDTO?.nodeRiskCounts?.map(el => {
+      if (el.risk === status) {
+        return {
+          ...el,
+          count: (el?.count || 0) + 1
+        }
+      } else {
+        return el
+      }
+    })
+  }
+  return nodeRiskCountDTO
 }
 
 export function getErrorMessage(errorObj?: any): string | undefined {
