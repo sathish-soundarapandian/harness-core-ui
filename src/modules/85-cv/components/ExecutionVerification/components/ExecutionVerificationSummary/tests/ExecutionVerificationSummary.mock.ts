@@ -5,99 +5,56 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { RiskValues } from '@cv/utils/CommonUtils'
-
 export const SampleResponse = {
-  resource: {
-    serviceName: 'manager',
-    serviceIdentifier: 'manager',
-    envName: 'prod',
-    envIdentifier: 'prod',
-    deploymentTag: 'build#test1',
-    deploymentVerificationJobInstanceSummary: {
-      progressPercentage: 30,
-      remainingTimeMs: 303800,
-      startTime: 1625262360000,
-      durationMs: 600000,
-      risk: RiskValues.NEED_ATTENTION,
-      environmentName: 'prod',
-      jobName: 'canaryCV',
-      verificationJobInstanceId: 'UQBmFeCcQEWTNGWkpTbsOA',
-      activityId: 'k2SuXAUJQ2Syk72DZzoVlg',
-      activityStartTime: 1625262333000,
-      status: 'FAILED',
-      additionalInfo: {
-        primary: [
-          {
-            hostName: 'manager-6f8b584cbf-kqq9h',
-            risk: RiskValues.NO_DATA,
-            anomalousMetricsCount: 0,
-            anomalousLogClustersCount: 0
-          },
-          {
-            hostName: 'manager-6f8b584cbf-sj6lt',
-            risk: RiskValues.NO_ANALYSIS,
-            anomalousMetricsCount: 0,
-            anomalousLogClustersCount: 0
-          },
-          {
-            hostName: 'manager-6f8b584cbf-s4gck',
-            risk: RiskValues.UNHEALTHY,
-            anomalousMetricsCount: 0,
-            anomalousLogClustersCount: 0
-          },
-          {
-            hostName: 'manager-6f8b584cbf-qqwpw',
-            risk: RiskValues.HEALTHY,
-            anomalousMetricsCount: 0,
-            anomalousLogClustersCount: 0
-          },
-          {
-            hostName: 'manager-6f8b584cbf-jrl2x',
-            risk: RiskValues.NEED_ATTENTION,
-            anomalousMetricsCount: 0,
-            anomalousLogClustersCount: 0
-          },
-          {
-            hostName: 'manager-6f8b584cbf-kzq2h',
-            risk: RiskValues.NO_ANALYSIS,
-            anomalousMetricsCount: 0,
-            anomalousLogClustersCount: 0
-          },
-          {
-            hostName: 'manager-6f8b584cbf-sskjh',
-            risk: RiskValues.NO_ANALYSIS,
-            anomalousMetricsCount: 0,
-            anomalousLogClustersCount: 0
-          },
-          {
-            hostName: 'manager-6f8b584cbf-sskjh',
-            risk: RiskValues.OBSERVE,
-            anomalousMetricsCount: 0,
-            anomalousLogClustersCount: 0
-          }
-        ],
-        canary: [
-          {
-            hostName: 'manager-6f8b584cbf-2vg8h',
-            risk: RiskValues.HEALTHY,
-            anomalousMetricsCount: 2,
-            anomalousLogClustersCount: 0
-          }
-        ],
-        primaryInstancesLabel: 'primary',
-        canaryInstancesLabel: 'canary',
-        trafficSplitPercentage: null,
-        type: 'CANARY'
-      },
-      timeSeriesAnalysisSummary: {
-        totalNumMetrics: 89,
-        numAnomMetrics: 49
-      },
-      logsAnalysisSummary: {
-        totalClusterCount: 0,
-        anomalousClusterCount: 0
+  spec: {
+    analysedServiceIdentifier: 'sumo_service_v2',
+    analysedEnvIdentifier: 'sumo_env_v2',
+    monitoredServiceType: 'DEFAULT',
+    monitoredServiceIdentifier: 'KQE5GbbKTD6w39T6_jwUog',
+    analysisType: 'BLUE_GREEN',
+    sensitivity: 'HIGH',
+    durationInMinutes: 5,
+    isFailOnNoAnalysis: false
+  },
+  appliedDeploymentAnalysisType: 'ROLLING',
+  verificationStatus: 'VERIFICATION_PASSED',
+  verificationProgressPercentage: 100,
+  verificationStartTimestamp: 1674145324888,
+  testNodes: {
+    nodeType: 'POST_DEPLOYMENT',
+    nodes: [
+      {
+        type: 'DEPLOYMENT_NODE',
+        nodeIdentifier: 'Ansuman Satapathy.3c061712-021c-4dcb-a6aa-159fb7c46f02',
+        verificationResult: 'PASSED',
+        failedMetrics: 0,
+        failedLogClusters: 0
       }
-    }
+    ]
+  },
+  controlNodes: {
+    nodeType: 'PRE_DEPLOYMENT',
+    nodes: [
+      {
+        type: 'DEPLOYMENT_NODE',
+        nodeIdentifier: 'Ansuman Satapathy.3c061712-021c-4dcb-a6aa-159fb7c46f02'
+      }
+    ]
+  },
+  metricsAnalysis: {
+    healthy: 1,
+    warning: 0,
+    unhealthy: 0,
+    noAnalysis: 0
+  },
+  logClusters: {
+    knownClustersCount: 0,
+    unknownClustersCount: 0,
+    unexpectedFrequencyClustersCount: 0
+  },
+  errorClusters: {
+    knownClustersCount: 0,
+    unknownClustersCount: 0,
+    unexpectedFrequencyClustersCount: 0
   }
 }

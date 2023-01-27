@@ -127,7 +127,7 @@ export const getRiskLabelStringId = (
     case RiskValues.OBSERVE:
       return 'cv.monitoredServices.serviceHealth.serviceDependencies.states.observe'
     case RiskValues.WARNING:
-      return 'cv.monitoredServices.serviceHealth.serviceDependencies.states.warning'
+      return 'common.warning'
     case RiskValues.NEED_ATTENTION:
       return 'cv.monitoredServices.serviceHealth.serviceDependencies.states.needsAttention'
     case RiskValues.UNHEALTHY:

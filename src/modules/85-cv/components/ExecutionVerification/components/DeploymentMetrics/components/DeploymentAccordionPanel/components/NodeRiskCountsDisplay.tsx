@@ -10,7 +10,8 @@ import cx from 'classnames'
 import { Container, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { RiskValues } from '@cv/utils/CommonUtils'
-import type { NodeCountDisplayProps } from './NodesCount.types'
+import type { NodeRiskCount } from 'services/cv'
+import type { NodeCountDisplayProps, NodeDetail } from './NodesCount.types'
 import css from './NodesCount.module.scss'
 
 const NodeRiskCountsDisplay: React.FC<NodeCountDisplayProps> = props => {
@@ -22,7 +23,7 @@ const NodeRiskCountsDisplay: React.FC<NodeCountDisplayProps> = props => {
 
   return (
     <Layout.Horizontal style={{ flexWrap: 'wrap' }}>
-      {nodeDetails?.map(node => {
+      {nodeDetails?.map((node: NodeDetail | NodeRiskCount) => {
         const { risk, count } = node
 
         return (

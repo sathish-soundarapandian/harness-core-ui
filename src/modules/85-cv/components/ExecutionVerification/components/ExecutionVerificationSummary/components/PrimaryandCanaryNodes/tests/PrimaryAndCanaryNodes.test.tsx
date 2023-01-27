@@ -37,8 +37,8 @@ describe('Unit tests for PrimaryAndCanaryNodes', () => {
           primaryNodes={[
             { risk: RiskValues.HEALTHY, hostName: 'someName', anomalousLogClustersCount: 2, anomalousMetricsCount: 3 }
           ]}
-          primaryNodeLabel="before"
-          canaryNodeLabel="after"
+          primaryNodeLabel="PRE_DEPLOYMENT"
+          canaryNodeLabel="POST_DEPLOYMENT"
           canaryNodes={[
             {
               risk: RiskValues.NEED_ATTENTION,

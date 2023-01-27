@@ -35,7 +35,7 @@ describe('Unit tests for VerifyExection', () => {
     jest.resetAllMocks()
   })
   test('Ensure content is rendered correctly based on api response', async () => {
-    jest.spyOn(cvService, 'useGetVerifyStepDeploymentActivitySummary').mockReturnValue({
+    jest.spyOn(cvService, 'useGetVerificationOverviewForVerifyStepExecutionId').mockReturnValue({
       data: SampleResponse
     } as any)
     const { container, getByText } = render(
@@ -47,10 +47,7 @@ describe('Unit tests for VerifyExection', () => {
     await waitFor(() => expect(getByText('pipeline.verification.metricsInViolation')).not.toBeNull())
 
     const nodeHealths = container.querySelectorAll('[class~="nodeHealth"]')
-    expect(nodeHealths.length).toBe(
-      SampleResponse.resource.deploymentVerificationJobInstanceSummary.additionalInfo.primary.length +
-        SampleResponse.resource.deploymentVerificationJobInstanceSummary.additionalInfo.canary.length
-    )
+    expect(nodeHealths.length).toBe(2)
     let redCount = 0,
       greenCount = 0,
       greyCount = 0,
@@ -69,15 +66,15 @@ describe('Unit tests for VerifyExection', () => {
       }
     })
 
-    expect(greyCount).toBe(4)
-    expect(redCount).toBe(1)
-    expect(greenCount).toBe(2)
-    expect(yellowCount).toBe(1)
+    expect(greyCount).toBe(1)
+    expect(redCount).toBe(0)
+    expect(greenCount).toBe(1)
+    expect(yellowCount).toBe(0)
   })
 
   test('Ensure that loading indicator is displayed when api is loading', async () => {
     const refetchFn = jest.fn()
-    jest.spyOn(cvService, 'useGetVerifyStepDeploymentActivitySummary').mockReturnValue({
+    jest.spyOn(cvService, 'useGetVerificationOverviewForVerifyStepExecutionId').mockReturnValue({
       loading: true,
       refetch: refetchFn as unknown
     } as any)
@@ -92,7 +89,7 @@ describe('Unit tests for VerifyExection', () => {
 
   test('Ensure that error is displayed when api errors out', async () => {
     const refetchFn = jest.fn()
-    jest.spyOn(cvService, 'useGetVerifyStepDeploymentActivitySummary').mockReturnValue({
+    jest.spyOn(cvService, 'useGetVerificationOverviewForVerifyStepExecutionId').mockReturnValue({
       error: { data: { message: 'mockError' } },
       refetch: refetchFn as unknown
     } as any)
@@ -109,7 +106,7 @@ describe('Unit tests for VerifyExection', () => {
 
   test('Ensure that when activity id is not there empty statee is rendered', async () => {
     const refetchFn = jest.fn()
-    jest.spyOn(cvService, 'useGetVerifyStepDeploymentActivitySummary').mockReturnValue({
+    jest.spyOn(cvService, 'useGetVerificationOverviewForVerifyStepExecutionId').mockReturnValue({
       refetch: refetchFn as unknown
     } as any)
     const { container } = render(
@@ -123,7 +120,7 @@ describe('Unit tests for VerifyExection', () => {
 
   test('Ensure that when there is a failure message in the step, it is displayed', async () => {
     const refetchFn = jest.fn()
-    jest.spyOn(cvService, 'useGetVerifyStepDeploymentActivitySummary').mockReturnValue({
+    jest.spyOn(cvService, 'useGetVerificationOverviewForVerifyStepExecutionId').mockReturnValue({
       refetch: refetchFn as unknown
     } as any)
     const { rerender, container, getByText } = render(
@@ -146,7 +143,7 @@ describe('Unit tests for VerifyExection', () => {
 
   test('Ensure that manual intervention is displayed when the status is waiting', async () => {
     const refetchFn = jest.fn()
-    jest.spyOn(cvService, 'useGetVerifyStepDeploymentActivitySummary').mockReturnValue({
+    jest.spyOn(cvService, 'useGetVerificationOverviewForVerifyStepExecutionId').mockReturnValue({
       refetch: refetchFn as unknown
     } as any)
     const { container } = render(

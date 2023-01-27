@@ -5,11 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { transactionMetricInfoSummary, transformMetricsExpectedResult } from './DeploymentMetrics.mock'
+import { transformMetricsExpectedResult } from './DeploymentMetrics.mock'
 import { transformMetricData } from '../DeploymentMetrics.utils'
+import { InputData } from '../components/DeploymentMetricsAnalysisRow/tests/DeploymentMetricsAnalysisRow.mocks'
 
 describe('Unit tests for DeploymentMetrics utils', () => {
-  test('Ensure transformMetricData works correctly for -1 values', async () => {
-    expect(transformMetricData(transactionMetricInfoSummary)).toEqual(transformMetricsExpectedResult)
+  test('Ensure transformMetricData works correctly', async () => {
+    const selectedDataFormat = { label: 'Raw', value: 'raw' }
+    const metricData = {
+      content: InputData
+    }
+    expect(transformMetricData(selectedDataFormat, metricData)).toEqual(transformMetricsExpectedResult)
   })
 })
