@@ -294,20 +294,26 @@ export default function DeployServiceEntityWidget({
 
     // add the new service to selection
     /* istanbul ignore else */
+
+    const scopedServiceRef = getScopedValueFromDTO({
+      projectIdentifier,
+      orgIdentifier,
+      identifier: newServiceInfo.identifier
+    })
     if (formikRef.current) {
       const { values, setValues } = formikRef.current
       if (values.services) {
         setValues(
           produce(values, draft => {
             if (Array.isArray(draft.services)) {
-              draft.services.push({ label: newServiceInfo.name, value: newServiceInfo.identifier })
+              draft.services.push({ label: newServiceInfo.name, value: scopedServiceRef })
             }
           })
         )
       } else {
         setValues(
           produce(values, draft => {
-            draft.service = newServiceInfo.identifier
+            draft.service = scopedServiceRef
           })
         )
       }

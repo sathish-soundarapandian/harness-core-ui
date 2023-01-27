@@ -14,6 +14,7 @@ import { AllowedTypes, ConfirmationDialog, Layout, ModalDialog, useToggleOpen } 
 
 import { useStrings } from 'framework/strings'
 
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import type {
   DeployEnvironmentEntityCustomStepProps,
   DeployEnvironmentEntityFormState,
@@ -67,7 +68,7 @@ export default function EnvironmentEntitiesList({
 
   const handleDeleteConfirmation = (confirmed: boolean): void => {
     if (environmentToDelete && confirmed) {
-      onRemoveEnvironmentFromList(environmentToDelete.environment.identifier)
+      onRemoveEnvironmentFromList(getScopedValueFromDTO(environmentToDelete.environment))
     }
     setEnvironmentToDelete(null)
     closeDeleteConfirmation()

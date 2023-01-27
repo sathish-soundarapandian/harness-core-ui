@@ -440,6 +440,7 @@ export default function DeployInfrastructure({
           stageDeploymentType={deploymentType as ServiceDeploymentType}
           stageCustomDeploymentData={customDeploymentRef}
           getTemplate={getTemplate}
+          scope={getScopeFromValue(environmentIdentifier)}
         />
       </ModalDialog>
     </>

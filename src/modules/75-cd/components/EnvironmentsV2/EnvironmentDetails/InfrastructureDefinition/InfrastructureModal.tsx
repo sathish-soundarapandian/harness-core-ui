@@ -45,7 +45,6 @@ import type { PipelineInfoConfig, StageElementConfig, TemplateLinkConfig } from 
 import {
   getIdentifierFromValue,
   getScopeBasedProjectPathParams,
-  getScopeFromDTO,
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
@@ -113,11 +112,13 @@ export default function InfrastructureModal({
   environmentIdentifier,
   stageDeploymentType,
   stageCustomDeploymentData,
-  getTemplate
+  getTemplate,
+  scope
 }: {
   hideModal: () => void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   refetch: any
+  scope: Scope
   selectedInfrastructure?: string
   environmentIdentifier: string
   stageDeploymentType?: ServiceDeploymentType
@@ -196,6 +197,7 @@ export default function InfrastructureModal({
             getTemplate={getTemplate}
             stageCustomDeploymentData={stageCustomDeploymentData}
             selectedInfrastructure={selectedInfrastructure}
+            scope={scope}
           />
         </DeployStageErrorProvider>
       </PipelineVariablesContextProvider>
@@ -209,6 +211,7 @@ function BootstrapDeployInfraDefinition({
   infrastructureDefinition,
   environmentIdentifier,
   isReadOnly = false,
+  scope,
   stageDeploymentType,
   stageCustomDeploymentData,
   selectedInfrastructure,
@@ -219,6 +222,7 @@ function BootstrapDeployInfraDefinition({
   infrastructureDefinition?: InfrastructureDefinitionConfig
   environmentIdentifier: string
   isReadOnly: boolean
+  scope: Scope
   stageDeploymentType?: ServiceDeploymentType
   stageCustomDeploymentData?: TemplateLinkConfig
   selectedInfrastructure?: string
@@ -356,7 +360,7 @@ function BootstrapDeployInfraDefinition({
       projectIdentifier,
       orgIdentifier,
       accountIdentifier: accountId,
-      scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
+      scope: scope
     }
   })
 
@@ -641,8 +645,6 @@ function BootstrapDeployInfraDefinition({
   )
 
   const refreshYAMLBuilder = React.useMemo(() => JSON.stringify({ ...stage, isYamlEditable }), [stage, isYamlEditable])
-
-  const scope = getScopeFromValue(environmentIdentifier)
 
   return (
     <>

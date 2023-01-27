@@ -26,6 +26,7 @@ import {
   SelectOption,
   useToggleOpen
 } from '@harness/uicore'
+import { useParams } from 'react-router-dom'
 import type { EnvironmentYaml, NGEnvironmentInfoConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
@@ -49,6 +50,7 @@ import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import EnvironmentEntitiesList from '../EnvironmentEntitiesList/EnvironmentEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -116,6 +118,7 @@ export default function DeployEnvironment({
     useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { refetchPipelineVariable } = usePipelineVariables()
   const uniquePathForEnvironments = React.useRef(`_pseudo_field_${uuid()}`)
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
@@ -299,9 +302,15 @@ export default function DeployEnvironment({
     prependEnvironmentToEnvironmentList(newEnvironmentInfo)
     closeAddNewModal()
 
+    const scopedEnvRef = getScopedValueFromDTO({
+      projectIdentifier,
+      orgIdentifier,
+      identifier: newEnvironmentInfo.identifier
+    })
+
     const newFormValues = produce(values, draft => {
       if (draft.environments && Array.isArray(draft.environments)) {
-        draft.environments.push({ label: newEnvironmentInfo.name, value: newEnvironmentInfo.identifier })
+        draft.environments.push({ label: newEnvironmentInfo.name, value: scopedEnvRef })
         if (gitOpsEnabled && draft.clusters) {
           if (draft.infrastructures) {
             delete draft.infrastructures
@@ -313,7 +322,7 @@ export default function DeployEnvironment({
         }
         set(draft, uniquePathForEnvironments.current, draft.environments)
       } else {
-        draft.environment = newEnvironmentInfo.identifier
+        draft.environment = scopedEnvRef
         if (gitOpsEnabled) {
           draft.cluster = ''
         } else {

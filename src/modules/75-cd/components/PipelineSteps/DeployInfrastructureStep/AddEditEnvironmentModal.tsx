@@ -120,8 +120,8 @@ export default function AddEditEnvironmentModal({
           description: defaultTo(description, ''),
           tags: defaultTo(tags, {}),
           type: defaultTo(type, ''),
-          orgIdentifier: defaultTo(data.environment?.orgIdentifier, defaultTo(orgIdentifier, '')),
-          projectIdentifier: defaultTo(data.environment?.projectIdentifier, defaultTo(projectIdentifier, '')),
+          orgIdentifier: isEdit ? data.environment?.orgIdentifier : orgIdentifier,
+          projectIdentifier: isEdit ? data.environment?.projectIdentifier : projectIdentifier,
           variables,
           overrides
         } as NGEnvironmentInfoConfig

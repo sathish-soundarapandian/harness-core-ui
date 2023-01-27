@@ -22,6 +22,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import InfrastructureList from './InfrastructureList/InfrastructureList'
 import InfrastructureModal from './InfrastructureModal'
 
@@ -108,6 +109,7 @@ export default function InfrastructureDefinition(): JSX.Element {
             environmentIdentifier={environmentIdentifier}
             selectedInfrastructure={selectedInfrastructure}
             getTemplate={getTemplate}
+            scope={getScopeFromDTO({ accountId, orgIdentifier, projectIdentifier })}
           />
         </ModalDialog>
       </Container>
