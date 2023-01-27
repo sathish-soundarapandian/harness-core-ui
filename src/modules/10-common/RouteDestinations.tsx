@@ -11,6 +11,8 @@ import { ModalProvider } from '@harness/use-modal'
 import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, withAccountId } from '@common/utils/routeUtils'
+// eslint-disable-next-line no-restricted-imports
+import TicketSettings from '@sto/pages/TicketSettings/TicketSettings'
 
 import SessionToken from 'framework/utils/SessionToken'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -104,5 +106,8 @@ export default (
         <WelcomePage />
       </ModalProvider>
     </Route>
+    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toTicketSettings({ ...accountPathProps })} exact>
+      <TicketSettings />
+    </RouteWithLayout>
   </>
 )

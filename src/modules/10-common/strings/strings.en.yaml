@@ -1345,7 +1345,7 @@ jira:
   selectConnector: 'Select Jira Connector'
 tickets:
   selectConnector: '[Select] Ticket Provider Connector'
-  selectProjectName: 'Select Project Name'
+  selectProjectName: '[Select] Project Name'
   connector: 'Ticket Provider Connector'
   defaultProjectName: 'Default Project Name'
   tickets: 'Tickets'

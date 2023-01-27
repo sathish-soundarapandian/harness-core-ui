@@ -5,33 +5,45 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
-import { Container, FormInput, Layout, Text } from '@harness/uicore'
+import { Checkbox, Container, Layout, Text, TextInput } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
-import { useQueryParams } from '@common/hooks'
-import type {
-  AccountPathProps,
-  GitQueryParams,
-  PipelinePathProps,
-  PipelineType
-} from '@common/interfaces/RouteInterfaces'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { JiraProjectSelectOption } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/types'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import { FormMultiTypeCheckboxField } from '@common/components'
+import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { Setting } from 'services/ticket-service/ticketServiceSchemas'
+import { useSettingsGetSetting, useSettingsSaveSetting } from 'services/ticket-service/ticketServiceComponents'
+import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './TicketSettings.module.scss'
 
+type TicketSettings = {
+  connector?: ConnectorSelectedValue | string
+  projectKey?: string
+}
 const TicketSettings: React.FC = () => {
   const { getString } = useStrings()
-  const { expressions } = useVariablesExpression()
-  const { accountId, projectIdentifier, orgIdentifier } =
+  const { accountId, projectIdentifier, orgIdentifier, module } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
-  const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const [projectOptions] = useState<JiraProjectSelectOption[]>([])
+
+  const { mutate } = useSettingsSaveSetting()
+
+  const [ticketSettings, setTicketSettings] = useState<TicketSettings | undefined>(undefined)
+
+  const { data } = useSettingsGetSetting<Setting>({
+    queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier, module: module || 'sto' }
+  })
+
+  useEffect(() => {
+    if (data && !ticketSettings) {
+      setTicketSettings({
+        connector: data?.connectorId,
+        projectKey: data?.additional?.projectKey
+      })
+    }
+  }, [data, ticketSettings, setTicketSettings])
 
   return (
     <Container margin="xlarge" padding="xlarge" className={css.container}>
@@ -41,24 +53,19 @@ const TicketSettings: React.FC = () => {
       <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'right' }} margin={{ bottom: 'large' }}>
         <Text className={css.minWidth}>{getString('common.tickets.connector')}</Text>
         <div className={cx(stepCss.formGroup, stepCss.lg)}>
-          <FormMultiTypeConnectorField
-            name="connector"
+          <ConnectorReferenceField
+            name="ticketConnector"
             label={''}
             width={'100%'}
             className={css.connector}
-            connectorLabelClass={css.connectorLabel}
             placeholder={getString('common.tickets.selectConnector')}
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
-            multiTypeProps={{ expressions }}
             type="Jira"
-            enableConfigureOptions={false}
-            selected=""
-            disabled={false}
-            gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-            onChange={() => {
-              updateTicketSettings()
+            selected={ticketSettings?.connector}
+            onChange={value => {
+              updateTicketSettings({ connector: value.identifier })
             }}
           />
         </div>
@@ -67,54 +74,47 @@ const TicketSettings: React.FC = () => {
       <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'right' }} margin={{ bottom: 'large' }}>
         <Text className={css.minWidth}>{getString('common.tickets.defaultProjectName')}</Text>
         <div className={cx(stepCss.formGroup, stepCss.lg)}>
-          <FormInput.MultiTypeInput
-            selectItems={projectOptions}
-            label={''}
+          <TextInput
+            value={ticketSettings?.projectKey}
             name="defaultProjectName"
             placeholder={getString('common.tickets.selectProjectName')}
-            disabled={false}
-            isOptional={false}
-            multiTypeInputProps={{
-              onChange: () => {
-                updateTicketSettings()
-              }
+            onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
+              updateTicketSettings({ projectKey: ev.target.value })
             }}
           />
         </div>
       </Layout.Horizontal>
 
-      <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'right' }} margin={{ bottom: 'large' }}>
-        <Text className={css.minWidth}>{getString('common.tickets.ticketComment')}</Text>
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
-          <FormMultiTypeCheckboxField
-            disabled={true}
-            name={''}
-            label={''}
-            setToFalseWhenEmpty={true}
-            onChange={() => {
-              updateTicketSettings()
-            }}
-          />
-        </div>
+      <Layout.Horizontal margin={{ bottom: 'large' }}>
+        <Checkbox disabled={true} name={'ticketComment'} label={getString('common.tickets.ticketComment')} />
       </Layout.Horizontal>
-      <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'right' }} margin={{ bottom: 'large' }}>
-        <Text className={css.minWidth}>{getString('common.tickets.ticketExemption')}</Text>
-        <div className={cx(stepCss.formGroup, stepCss.lg)}>
-          <FormMultiTypeCheckboxField
-            disabled={true}
-            name={''}
-            label={''}
-            setToFalseWhenEmpty={true}
-            onChange={() => {
-              updateTicketSettings()
-            }}
-          />
-        </div>
+
+      <Layout.Horizontal margin={{ bottom: 'large' }}>
+        <Checkbox disabled={true} name={'ticketExemption'} label={getString('common.tickets.ticketExemption')} />
       </Layout.Horizontal>
     </Container>
   )
 
-  function updateTicketSettings(): void {
+  function updateTicketSettings(settings: Partial<TicketSettings>): void {
+    const newSettings = { ...ticketSettings, ...settings }
+    setTicketSettings(newSettings)
+    if (newSettings.connector && newSettings.projectKey) {
+      const connectorId =
+        typeof newSettings.connector === 'string' ? newSettings.connector : newSettings.connector.value
+
+      mutate(
+        {
+          queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier },
+          body: {
+            additional: { projectKey: newSettings.projectKey },
+            connectorId,
+            module,
+            service: 'Jira'
+          }
+        },
+        {}
+      )
+    }
     return
   }
 }

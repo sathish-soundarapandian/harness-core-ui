@@ -135,6 +135,10 @@ module.exports = {
     pathRewrite: { '^/sto(/v2)?': '' },
     target: process.env.STO_UI_URL || 'http://localhost:3002'
   },
+  '/ticket-service/api': {
+    pathRewrite: { '^/ticket-service': '' },
+    target: process.env.TICKET_SERVICE_API_URL || 'http://localhost:4444'
+  },
   '/gitops': {
     pathRewrite: { '^/gitops': '' },
     target: process.env.GITOPS_URL || 'https://localhost:8183'
