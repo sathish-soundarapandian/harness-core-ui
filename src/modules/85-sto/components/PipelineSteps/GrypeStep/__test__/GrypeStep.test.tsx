@@ -106,7 +106,8 @@ describe('Grype Step', () => {
           image: {
             type: 'docker_v2',
             name: RUNTIME_INPUT_VALUE,
-            access_token: '<+secrets.getValue("your_garype_token_secret")>'
+            access_token: RUNTIME_INPUT_VALUE,
+            tag: RUNTIME_INPUT_VALUE
           },
           advanced: {
             args: {
@@ -174,7 +175,8 @@ describe('Grype Step', () => {
             domain: 'domain',
             access_id: 'access_id',
             access_token: '<+secrets.getValue("your_garype_token_secret")>',
-            region: 'region'
+            region: 'region',
+            tag: 'image tag'
           },
           advanced: {
             log: {
@@ -244,7 +246,8 @@ describe('Grype Step', () => {
           image: {
             type: 'docker_v2',
             name: RUNTIME_INPUT_VALUE,
-            access_token: RUNTIME_INPUT_VALUE
+            access_token: RUNTIME_INPUT_VALUE,
+            tag: RUNTIME_INPUT_VALUE
           },
           advanced: {
             log: {
@@ -281,7 +284,10 @@ describe('Grype Step', () => {
           config: RUNTIME_INPUT_VALUE,
           mode: RUNTIME_INPUT_VALUE,
           image: {
-            access_token: RUNTIME_INPUT_VALUE
+            type: 'docker_v2',
+            access_token: RUNTIME_INPUT_VALUE,
+            tag: RUNTIME_INPUT_VALUE,
+            name: RUNTIME_INPUT_VALUE
           },
           advanced: {
             log: {

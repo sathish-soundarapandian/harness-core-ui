@@ -17,6 +17,7 @@ import { SonarqubeStep } from './SonarqubeStep/SonarqubeStep'
 import { ZapStep } from './ZapStep/ZapStep'
 import { PrismaCloudStep } from './PrismaCloudStep/PrismaCloudStep'
 import { CheckmarxStep } from './CheckmarxStep/CheckmarxStep'
+import { MendStep } from './MendStep/MendStep'
 
 factory.registerStep(new ZeroNorthStep())
 factory.registerStep(new AquatrivyStep())
@@ -28,3 +29,4 @@ factory.registerStep(new SonarqubeStep())
 factory.registerStep(new ZapStep())
 factory.registerStep(new PrismaCloudStep())
 factory.registerStep(new CheckmarxStep())
+factory.registerStep(new MendStep())

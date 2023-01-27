@@ -167,7 +167,8 @@ export enum StepType {
   AsgRollingRollback = 'AsgRollingRollback',
   AsgRollingDeploy = 'AsgRollingDeploy',
   PrismaCloud = 'PrismaCloud',
-  Checkmarx = 'Checkmarx'
+  Checkmarx = 'Checkmarx',
+  Mend = 'Mend'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

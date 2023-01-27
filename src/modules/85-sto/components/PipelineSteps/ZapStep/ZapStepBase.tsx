@@ -28,10 +28,20 @@ import {
   SecurityImageFields,
   SecurityIngestionFields,
   SecurityInstanceFields,
-  SecurityScanFields,
   SecurityTargetFields
 } from '../SecurityFields'
-import { dividerBottomMargin, INGESTION_SCAN_MODE, INSTANCE_TARGET_TYPE, ORCHESTRATION_SCAN_MODE } from '../constants'
+import {
+  dividerBottomMargin,
+  INGESTION_SCAN_MODE,
+  INSTANCE_TARGET_TYPE,
+  logLevelOptions,
+  ORCHESTRATION_SCAN_MODE,
+  severityOptions,
+  ZAP_ATTACK_CONFIG,
+  ZAP_DEFAULT_CONFIG,
+  ZAP_QUICK_CONFIG,
+  ZAP_STANDARD_CONFIG
+} from '../constants'
 import SecurityField from '../SecurityField'
 
 export const ZapStepBase = (
@@ -54,6 +64,7 @@ export const ZapStepBase = (
     { imagePullPolicyOptions: getImagePullPolicyOptions(getString) }
   )
 
+  const scanModeSelectItems = [ORCHESTRATION_SCAN_MODE, INGESTION_SCAN_MODE]
   return (
     <Formik
       initialValues={valuesInCorrectFormat}
@@ -102,13 +113,30 @@ export const ZapStepBase = (
               formik={formik}
             />
 
-            <SecurityScanFields
-              allowableTypes={allowableTypes}
-              formik={formik}
-              stepViewType={stepViewType}
-              scanConfigReadonly
-              scanModeSelectItems={[ORCHESTRATION_SCAN_MODE, INGESTION_SCAN_MODE]}
-            />
+            <>
+              <SecurityField
+                stepViewType={stepViewType}
+                allowableTypes={allowableTypes}
+                formik={formik}
+                enableFields={{
+                  'spec.mode': {
+                    label: 'sto.stepField.mode',
+                    fieldType: 'dropdown',
+                    inputProps: {
+                      disabled: scanModeSelectItems.length === 1
+                    },
+                    selectItems: scanModeSelectItems
+                  },
+                  'spec.config': {
+                    label: 'sto.stepField.config',
+                    fieldType: 'dropdown',
+                    selectItems: [ZAP_DEFAULT_CONFIG, ZAP_STANDARD_CONFIG, ZAP_ATTACK_CONFIG, ZAP_QUICK_CONFIG]
+                  }
+                }}
+              />
+
+              <Divider style={{ marginBottom: dividerBottomMargin }} />
+            </>
 
             <SecurityTargetFields
               allowableTypes={allowableTypes}
@@ -130,13 +158,17 @@ export const ZapStepBase = (
                   allowableTypes={allowableTypes}
                   formik={formik}
                   enableFields={{
+                    header: {
+                      label: 'sto.stepField.tool.fieldsHeading'
+                    },
                     'spec.tool.context': {
                       label: 'sto.stepField.tool.context',
                       optional: true
                     },
                     'spec.tool.port': {
-                      label: 'sto.stepField.tool.port',
-                      optional: true
+                      label: 'common.smtp.port',
+                      optional: true,
+                      inputProps: { placeholder: '8981' }
                     }
                   }}
                 />
@@ -144,7 +176,31 @@ export const ZapStepBase = (
               </>
             )}
 
+            <>
+              <SecurityField
+                stepViewType={stepViewType}
+                allowableTypes={allowableTypes}
+                formik={formik}
+                enableFields={{
+                  'spec.advanced.log.level': {
+                    optional: true,
+                    fieldType: 'dropdown',
+                    label: 'sto.stepField.advanced.logLevel',
+                    selectItems: logLevelOptions(getString)
+                  },
+                  'spec.advanced.fail_on_severity': {
+                    optional: true,
+                    fieldType: 'dropdown',
+                    label: 'sto.stepField.advanced.failOnSeverity',
+                    selectItems: severityOptions(getString)
+                  }
+                }}
+              />
+              <Divider style={{ marginBottom: dividerBottomMargin }} />
+            </>
+
             <AdditionalFields
+              showAdvancedFields={false}
               readonly={readonly}
               currentStage={currentStage}
               stepViewType={stepViewType}

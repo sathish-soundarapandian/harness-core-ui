@@ -8405,6 +8405,7 @@ export interface StringsMap {
   'sto.stepDescription.Fortify': string
   'sto.stepDescription.FortifyOnDemand': string
   'sto.stepDescription.Grype': string
+  'sto.stepDescription.Mend': string
   'sto.stepDescription.Owasp': string
   'sto.stepDescription.PrismaCloud': string
   'sto.stepDescription.ScoutSuite': string
@@ -8422,36 +8423,23 @@ export interface StringsMap {
   'sto.stepField.advanced.passthrough': string
   'sto.stepField.advanced.serializer': string
   'sto.stepField.authAccessId': string
-  'sto.stepField.authDomain': string
   'sto.stepField.authSsl': string
-  'sto.stepField.authToken': string
-  'sto.stepField.authType': string
   'sto.stepField.authVersion': string
   'sto.stepField.config': string
   'sto.stepField.container.containerAccessToken': string
   'sto.stepField.container.containerRegion': string
-  'sto.stepField.image.accessId': string
-  'sto.stepField.image.domain': string
-  'sto.stepField.image.region': string
-  'sto.stepField.image.token': string
-  'sto.stepField.image.type': string
+  'sto.stepField.image.fieldsHeading': string
   'sto.stepField.ingestion.file': string
-  'sto.stepField.instance.domain': string
-  'sto.stepField.instance.path': string
-  'sto.stepField.instance.port': string
-  'sto.stepField.instance.protocol': string
   'sto.stepField.mode': string
   'sto.stepField.optionLabels.logLevel.debug': string
-  'sto.stepField.target.name': string
-  'sto.stepField.target.type': string
   'sto.stepField.target.variant': string
-  'sto.stepField.target.workspace': string
   'sto.stepField.tool.context': string
-  'sto.stepField.tool.imageName': string
+  'sto.stepField.tool.exclude': string
+  'sto.stepField.tool.fieldsHeading': string
   'sto.stepField.tool.javaBinaries': string
   'sto.stepField.tool.javaLibraries': string
-  'sto.stepField.tool.port': string
-  'sto.stepField.tool.projectName': string
+  'sto.stepField.tool.productLookupType': string
+  'sto.stepField.tool.projectToken': string
   'sto.stepField.tool.projectVersion': string
   'sto.stepField.tool.teamName': string
   'sto.stepField.toolInclude': string

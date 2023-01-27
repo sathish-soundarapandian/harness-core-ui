@@ -1,7 +1,7 @@
 /*
  * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
- * that can be found in the licenses directory at the root of this instance, also available at
+ * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
@@ -12,34 +12,34 @@ import type { StringKeys } from 'framework/strings'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
-import { ZapStep, ZapStepData } from '../ZapStep'
+import { MendStep, MendStepData } from '../MendStep'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
-describe('Zap Step', () => {
+describe('Mend Step', () => {
   beforeAll(() => {
-    factory.registerStep(new ZapStep())
+    factory.registerStep(new MendStep())
   })
 
   describe('Edit View', () => {
     test('should render properly', () => {
       const { container } = render(
-        <TestStepWidget initialValues={{}} type={StepType.Zap} stepViewType={StepViewType.Edit} />
+        <TestStepWidget initialValues={{}} type={StepType.Mend} stepViewType={StepViewType.Edit} />
       )
 
       expect(container).toMatchSnapshot()
     })
 
-    test('renders runtime inputs - Ingestion Instance', async () => {
+    test('renders runtime inputs - Ingestion Repository', async () => {
       const initialValues = {
-        identifier: 'My_Zap_Step',
-        name: 'My Zap Step',
+        identifier: 'My_Mend_Step',
+        name: 'My Mend Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
           privileged: RUNTIME_INPUT_VALUE,
           target: {
-            type: 'instance',
+            type: 'repository',
             name: RUNTIME_INPUT_VALUE,
             variant: RUNTIME_INPUT_VALUE
           },
@@ -49,17 +49,10 @@ describe('Zap Step', () => {
           mode: 'ingestion',
           config: 'default',
           settings: RUNTIME_INPUT_VALUE,
-          instance: {
-            domain: 'auth domain',
-            protocol: 'http',
-            path: 'true',
-            port: 8080
-          },
           advanced: {
             fail_on_severity: RUNTIME_INPUT_VALUE,
             log: {
-              level: RUNTIME_INPUT_VALUE,
-              serializer: RUNTIME_INPUT_VALUE
+              level: RUNTIME_INPUT_VALUE
             }
           },
           // Right now we do not support Image Pull Policy but will do in the future
@@ -78,7 +71,7 @@ describe('Zap Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.Zap}
+          type={StepType.Mend}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -92,40 +85,35 @@ describe('Zap Step', () => {
       expect(onUpdate).toHaveBeenCalledWith(initialValues)
     })
 
-    test('renders runtime inputs - Orchestration instance', async () => {
+    test('renders runtime inputs - Orchestration Repository', async () => {
       const initialValues = {
-        identifier: 'My_Zap_Step',
-        name: 'My Zap Step',
+        identifier: 'My_Mend_Step',
+        name: 'My Mend Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
           privileged: RUNTIME_INPUT_VALUE,
           target: {
-            type: 'instance',
+            type: 'repository',
             name: RUNTIME_INPUT_VALUE,
             variant: RUNTIME_INPUT_VALUE,
             workspace: RUNTIME_INPUT_VALUE
           },
-          instance: {
+          auth: {
             domain: RUNTIME_INPUT_VALUE,
-            protocol: RUNTIME_INPUT_VALUE,
-            path: RUNTIME_INPUT_VALUE,
-            port: RUNTIME_INPUT_VALUE
+            access_token: RUNTIME_INPUT_VALUE,
+            ssl: RUNTIME_INPUT_VALUE
           },
           mode: 'orchestration',
           config: 'default',
           settings: RUNTIME_INPUT_VALUE,
-          tool: {
-            port: RUNTIME_INPUT_VALUE
-          },
           advanced: {
             args: {
               cli: RUNTIME_INPUT_VALUE
             },
             fail_on_severity: RUNTIME_INPUT_VALUE,
             log: {
-              level: RUNTIME_INPUT_VALUE,
-              serializer: RUNTIME_INPUT_VALUE
+              level: RUNTIME_INPUT_VALUE
             }
           },
           // Right now we do not support Image Pull Policy but will do in the future
@@ -144,7 +132,7 @@ describe('Zap Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.Zap}
+          type={StepType.Mend}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -160,23 +148,22 @@ describe('Zap Step', () => {
 
     test('edit mode works', async () => {
       const initialValues = {
-        identifier: 'My_Zap_Stp',
-        name: 'My Zap Step',
+        identifier: 'My_Mend_Stp',
+        name: 'My Mend Step',
         description: 'Description',
         timeout: '10s',
         spec: {
           privileged: true,
           target: {
-            type: 'instance',
-            name: 'Zap Test',
+            type: 'repository',
+            name: 'Mend Test',
             variant: 'variant',
             workspace: '~/workspace'
           },
-          instance: {
+          auth: {
             domain: 'auth domain',
-            protocol: 'https',
-            path: true,
-            port: 8080
+            access_token: 'token',
+            ssl: true
           },
           config: 'default',
           mode: 'orchestration',
@@ -184,14 +171,9 @@ describe('Zap Step', () => {
             setting_1: 'settings test value 1',
             setting_2: 'settings test value 1'
           },
-          tool: {
-            context: 'tool context',
-            port: 'tool port'
-          },
           advanced: {
             log: {
-              level: 'debug',
-              serializer: 'simple_onprem'
+              level: 'debug'
             },
             args: {
               cli: 'additional cli args'
@@ -212,7 +194,7 @@ describe('Zap Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={initialValues}
-          type={StepType.Zap}
+          type={StepType.Mend}
           stepViewType={StepViewType.Edit}
           onUpdate={onUpdate}
           ref={ref}
@@ -230,7 +212,7 @@ describe('Zap Step', () => {
   describe('InputSet View', () => {
     test('should render properly', () => {
       const { container } = render(
-        <TestStepWidget initialValues={{}} type={StepType.Zap} stepViewType={StepViewType.InputSet} />
+        <TestStepWidget initialValues={{}} type={StepType.Mend} stepViewType={StepViewType.InputSet} />
       )
 
       expect(container).toMatchSnapshot()
@@ -238,31 +220,26 @@ describe('Zap Step', () => {
 
     test('should render all fields', async () => {
       const template = {
-        type: StepType.Zap,
-        identifier: 'My_Zap_Step',
+        type: StepType.Mend,
+        identifier: 'My_Mend_Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
           privileged: RUNTIME_INPUT_VALUE,
           settings: RUNTIME_INPUT_VALUE,
           target: {
-            type: 'instance',
+            type: 'repository',
             name: RUNTIME_INPUT_VALUE,
             variant: RUNTIME_INPUT_VALUE,
             workspace: RUNTIME_INPUT_VALUE
           },
-          instance: {
+          auth: {
             domain: RUNTIME_INPUT_VALUE,
-            protocol: RUNTIME_INPUT_VALUE,
-            path: RUNTIME_INPUT_VALUE,
-            port: RUNTIME_INPUT_VALUE
+            access_token: RUNTIME_INPUT_VALUE,
+            ssl: RUNTIME_INPUT_VALUE
           },
           config: RUNTIME_INPUT_VALUE,
           mode: RUNTIME_INPUT_VALUE,
-          tool: {
-            context: RUNTIME_INPUT_VALUE,
-            port: RUNTIME_INPUT_VALUE
-          },
           advanced: {
             log: {
               level: RUNTIME_INPUT_VALUE,
@@ -281,32 +258,27 @@ describe('Zap Step', () => {
       }
 
       const allValues = {
-        type: StepType.Zap,
+        type: StepType.Mend,
         name: 'Test A',
-        identifier: 'My_Zap_Step',
+        identifier: 'My_Mend_Step',
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
           privileged: RUNTIME_INPUT_VALUE,
           settings: RUNTIME_INPUT_VALUE,
           target: {
-            type: 'instance',
+            type: 'repository',
             name: RUNTIME_INPUT_VALUE,
             variant: RUNTIME_INPUT_VALUE,
             workspace: RUNTIME_INPUT_VALUE
           },
-          instance: {
+          auth: {
             domain: RUNTIME_INPUT_VALUE,
-            protocol: RUNTIME_INPUT_VALUE,
-            path: RUNTIME_INPUT_VALUE,
-            port: RUNTIME_INPUT_VALUE
+            access_token: RUNTIME_INPUT_VALUE,
+            ssl: RUNTIME_INPUT_VALUE
           },
           config: RUNTIME_INPUT_VALUE,
           mode: RUNTIME_INPUT_VALUE,
-          tool: {
-            context: RUNTIME_INPUT_VALUE,
-            port: RUNTIME_INPUT_VALUE
-          },
           advanced: {
             log: {
               level: RUNTIME_INPUT_VALUE,
@@ -329,7 +301,7 @@ describe('Zap Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={{}}
-          type={StepType.Zap}
+          type={StepType.Mend}
           template={template}
           allValues={allValues}
           stepViewType={StepViewType.InputSet}
@@ -342,18 +314,17 @@ describe('Zap Step', () => {
 
     test('should not render any fields', async () => {
       const template = {
-        type: StepType.Zap,
-        identifier: 'My_Zap_Step'
+        type: StepType.Mend,
+        identifier: 'My_Mend_Step'
       }
 
       const allValues = {
-        type: StepType.Zap,
-        identifier: 'My_Zap_Step',
-        name: 'My Zap Step',
+        type: StepType.Mend,
+        identifier: 'My_Mend_Step',
+        name: 'My Mend Step',
         description: 'Description',
         timeout: '10s',
         spec: {
-          mode: 'orchestration',
           privileged: false,
           settings: {
             key1: 'value1',
@@ -376,7 +347,7 @@ describe('Zap Step', () => {
       const { container } = render(
         <TestStepWidget
           initialValues={{}}
-          type={StepType.Zap}
+          type={StepType.Mend}
           template={template}
           allValues={allValues}
           stepViewType={StepViewType.InputSet}
@@ -395,7 +366,7 @@ describe('Zap Step', () => {
           initialValues={{
             identifier: 'Test_A',
             name: 'Test A',
-            type: StepType.Zap,
+            type: StepType.Mend,
             description: 'Description',
             timeout: '10s',
             spec: {
@@ -474,9 +445,9 @@ describe('Zap Step', () => {
               }
             },
             variablesData: {
-              type: StepType.Zap,
+              type: StepType.Mend,
               __uuid: 'step-identifier',
-              identifier: 'Zap',
+              identifier: 'Mend',
               name: 'step-name',
               description: 'step-description',
               timeout: 'step-timeout',
@@ -494,7 +465,7 @@ describe('Zap Step', () => {
               }
             }
           }}
-          type={StepType.Zap}
+          type={StepType.Mend}
           stepViewType={StepViewType.InputVariable}
         />
       )
@@ -504,28 +475,18 @@ describe('Zap Step', () => {
   })
 
   test('validates input set correctly', () => {
-    const data: ZapStepData = {
+    const data: MendStepData = {
       identifier: 'id',
       name: 'name',
       description: 'desc',
-      type: StepType.Zap,
+      type: StepType.Mend,
       timeout: '1h',
       spec: {
         target: {
-          type: 'instance',
+          type: 'repository',
           name: 'target name',
           variant: 'target variant',
           workspace: 'target workspace'
-        },
-        tool: {
-          context: 'tool context',
-          port: 8010
-        },
-        instance: {
-          domain: 'auth domain',
-          protocol: 'https',
-          path: 'true',
-          port: 8080
         },
         advanced: {
           include_raw: false
@@ -535,7 +496,7 @@ describe('Zap Step', () => {
         privileged: true,
         settings: {
           policy_type: 'orchestratedScan',
-          scan_type: 'instance',
+          scan_type: 'repository',
           product_name: 'x',
           product_config_name: 'y'
         },
@@ -550,7 +511,7 @@ describe('Zap Step', () => {
       }
     }
 
-    const result = new ZapStep().validateInputSet({
+    const result = new MendStep().validateInputSet({
       data,
       template: data,
       getString: (key: StringKeys, _vars?: Record<string, any>) => key as string,

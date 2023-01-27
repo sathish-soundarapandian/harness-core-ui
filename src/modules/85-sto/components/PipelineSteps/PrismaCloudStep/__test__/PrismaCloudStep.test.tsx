@@ -93,7 +93,7 @@ describe('PrismaCloud Step', () => {
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
-          privileged: RUNTIME_INPUT_VALUE,
+          privileged: true,
           target: {
             type: 'container',
             name: RUNTIME_INPUT_VALUE,
@@ -109,7 +109,9 @@ describe('PrismaCloud Step', () => {
             type: RUNTIME_INPUT_VALUE,
             domain: RUNTIME_INPUT_VALUE,
             access_token: RUNTIME_INPUT_VALUE,
-            name: RUNTIME_INPUT_VALUE
+            name: RUNTIME_INPUT_VALUE,
+            tag: RUNTIME_INPUT_VALUE,
+            access_id: RUNTIME_INPUT_VALUE
           },
           mode: 'orchestration',
           config: 'default',
@@ -172,7 +174,9 @@ describe('PrismaCloud Step', () => {
             type: 'docker_v2',
             domain: 'image domain',
             access_token: 'image access_token',
-            name: 'image name'
+            name: 'image name',
+            tag: 'tag',
+            access_id: 'access id'
           },
           auth: {
             domain: 'auth domain',

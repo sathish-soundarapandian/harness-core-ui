@@ -44,6 +44,7 @@ type Image = {
   type: 'local_image' | 'docker_v2' | 'jfrog_artifactory' | 'aws_ecr'
   name: string
   domain: string
+  tag: string
   access_id?: string
   access_token: string
   region?: string
@@ -71,11 +72,15 @@ type Tool = {
     libraries?: string
     binaries?: string
   }
+  product_token?: string
+  product_name?: string
+  project_token?: string
+  product_lookup_type?: 'byTokens' | 'byNames' | 'appendToProductByToken' | 'appendToProductByName'
 }
 
 type Instance = {
   domain?: string
-  protocol?: string
+  protocol?: 'https' | 'http'
   port?: number
   path?: string
 }

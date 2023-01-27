@@ -50,7 +50,7 @@ export class ZapStep extends PipelineStep<ZapStepData> {
 
   protected defaultValues: ZapStepData = {
     identifier: '',
-    type: StepType.Zap as string,
+    type: 'StepType.Zap' as string,
     spec: {
       mode: 'orchestration',
       config: 'default',
@@ -58,10 +58,10 @@ export class ZapStep extends PipelineStep<ZapStepData> {
         type: 'instance',
         name: '',
         variant: '',
-        workspace: '/harness'
+        workspace: ''
       },
-      tool: {
-        port: 8981
+      instance: {
+        protocol: 'https'
       },
       advanced: {
         log: {
@@ -107,32 +107,29 @@ export class ZapStep extends PipelineStep<ZapStepData> {
       allowableTypes
     } = props
 
-    switch (stepViewType) {
-      case StepViewType.InputSet:
-      case StepViewType.DeploymentForm:
-        return (
-          <ZapStepInputSet
-            initialValues={initialValues}
-            /* istanbul ignore next */
-            template={inputSetData?.template}
-            /* istanbul ignore next */
-            path={inputSetData?.path || ''}
-            readonly={!!inputSetData?.readonly}
-            stepViewType={stepViewType}
-            onUpdate={onUpdate}
-            onChange={onChange}
-            allowableTypes={allowableTypes}
-          />
-        )
-
-      case StepViewType.InputVariable:
-        return (
-          <ZapStepVariables
-            {...(customStepProps as ZapStepVariablesProps)}
-            initialValues={initialValues}
-            onUpdate={onUpdate}
-          />
-        )
+    if (this.isTemplatizedView(stepViewType)) {
+      return (
+        <ZapStepInputSet
+          initialValues={initialValues}
+          /* istanbul ignore next */
+          template={inputSetData?.template}
+          /* istanbul ignore next */
+          path={inputSetData?.path || ''}
+          readonly={!!inputSetData?.readonly}
+          stepViewType={stepViewType}
+          onUpdate={onUpdate}
+          onChange={onChange}
+          allowableTypes={allowableTypes}
+        />
+      )
+    } else if (stepViewType === StepViewType.InputVariable) {
+      return (
+        <ZapStepVariables
+          {...(customStepProps as ZapStepVariablesProps)}
+          initialValues={initialValues}
+          onUpdate={onUpdate}
+        />
+      )
     }
 
     return (

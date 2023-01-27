@@ -150,6 +150,9 @@ export const SonarqubeStepBase = (
                   allowableTypes={allowableTypes}
                   formik={formik}
                   enableFields={{
+                    header: {
+                      label: 'sto.stepField.tool.fieldsHeading'
+                    },
                     'spec.tool.include': {
                       label: 'sto.stepField.toolInclude',
                       optional: true

@@ -15,42 +15,42 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
-import { SonarqubeStepBaseWithRef } from './SonarqubeStepBase'
-import { SonarqubeStepInputSet } from './SonarqubeStepInputSet'
-import { SonarqubeStepVariables, SonarqubeStepVariablesProps } from './SonarqubeStepVariables'
-import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SonarqubeStepFunctionConfigs'
+import { MendStepBaseWithRef } from './MendStepBase'
+import { MendStepInputSet } from './MendStepInputSet'
+import { MendStepVariables, MendStepVariablesProps } from './MendStepVariables'
+import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './MendStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
 
-export type SonarqubeStepData = SecurityStepData<SecurityStepSpec>
-export interface SonarqubeStepProps {
-  initialValues: SonarqubeStepData
-  template?: SonarqubeStepData
+export type MendStepData = SecurityStepData<SecurityStepSpec>
+export interface MendStepProps {
+  initialValues: MendStepData
+  template?: MendStepData
   path?: string
   isNewStep?: boolean
   readonly?: boolean
   stepViewType: StepViewType
-  onUpdate?: (data: SonarqubeStepData) => void
-  onChange?: (data: SonarqubeStepData) => void
+  onUpdate?: (data: MendStepData) => void
+  onChange?: (data: MendStepData) => void
   allowableTypes: AllowedTypes
   formik?: any
 }
 
-export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
+export class MendStep extends PipelineStep<MendStepData> {
   constructor() {
     super()
     this._hasStepVariables = true
     this._hasDelegateSelectionVisible = true
   }
 
-  protected type = StepType.Sonarqube
-  protected stepName = 'Configure Sonarqube'
-  protected stepIcon: IconName = 'SonarQube'
-  protected stepDescription: keyof StringsMap = 'sto.stepDescription.Sonarqube'
+  protected type = StepType.Mend
+  protected stepName = 'Configure Mend'
+  protected stepIcon: IconName = 'mend'
+  protected stepDescription: keyof StringsMap = 'sto.stepDescription.Mend'
   protected stepPaletteVisible = false
 
-  protected defaultValues: SonarqubeStepData = {
+  protected defaultValues: MendStepData = {
     identifier: '',
-    type: StepType.Sonarqube as string,
+    type: StepType.Mend as string,
     spec: {
       mode: 'orchestration',
       config: 'default',
@@ -65,6 +65,9 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
         access_token: '',
         ssl: true
       },
+      tool: {
+        product_lookup_type: 'appendToProductByToken'
+      },
       advanced: {
         log: {
           level: 'info'
@@ -77,7 +80,7 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
   }
 
   /* istanbul ignore next */
-  processFormData(data: SonarqubeStepData): SonarqubeStepData {
+  processFormData(data: MendStepData): MendStepData {
     return getFormValuesInCorrectFormat(data, transformValuesFieldsConfig(data))
   }
 
@@ -86,7 +89,7 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<SonarqubeStepData>): FormikErrors<SonarqubeStepData> {
+  }: ValidateInputSetProps<MendStepData>): FormikErrors<MendStepData> {
     if (getString) {
       return validateInputSet(data, template, getInputSetViewValidateFieldsConfig(data), { getString }, viewType)
     }
@@ -94,7 +97,7 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
     return {}
   }
 
-  renderStep(props: StepProps<SonarqubeStepData>): JSX.Element {
+  renderStep(props: StepProps<MendStepData>): JSX.Element {
     const {
       initialValues,
       onUpdate,
@@ -110,7 +113,7 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <SonarqubeStepInputSet
+        <MendStepInputSet
           initialValues={initialValues}
           template={inputSetData?.template}
           path={inputSetData?.path || ''}
@@ -123,8 +126,8 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
       )
     } else if (stepViewType === StepViewType.InputVariable) {
       return (
-        <SonarqubeStepVariables
-          {...(customStepProps as SonarqubeStepVariablesProps)}
+        <MendStepVariables
+          {...(customStepProps as MendStepVariablesProps)}
           initialValues={initialValues}
           onUpdate={onUpdate}
         />
@@ -132,7 +135,7 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
     }
 
     return (
-      <SonarqubeStepBaseWithRef
+      <MendStepBaseWithRef
         initialValues={initialValues}
         allowableTypes={allowableTypes}
         onChange={onChange}

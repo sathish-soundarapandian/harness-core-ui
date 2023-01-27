@@ -32,9 +32,6 @@ import {
   SecurityTargetFields
 } from '../SecurityFields'
 import {
-  API_VERSION_4_1_0,
-  API_VERSION_4_2_0,
-  API_VERSION_5_0_2,
   CONTAINER_TARGET_TYPE,
   dividerBottomMargin,
   EXTRACTION_SCAN_MODE,
@@ -105,6 +102,12 @@ export const BlackduckStepBase = (
           formik.setFieldValue('spec.target.type', 'repository')
         }
 
+        if (formik.values.spec.privileged !== true && formik.values.spec.mode === 'orchestration') {
+          formik.setFieldValue('spec.privileged', true)
+        } else if (formik.values.spec.privileged === true && formik.values.spec.mode !== 'orchestration') {
+          formik.setFieldValue('spec.privileged', false)
+        }
+
         return (
           <FormikForm>
             <CIStep
@@ -142,7 +145,8 @@ export const BlackduckStepBase = (
                 ssl: true,
                 domain: true,
                 access_id: true,
-                type: true
+                type: true,
+                version: true
               }}
               allowableTypes={allowableTypes}
               formik={formik}
@@ -156,14 +160,11 @@ export const BlackduckStepBase = (
                   allowableTypes={allowableTypes}
                   formik={formik}
                   enableFields={{
-                    'spec.auth.version': {
-                      label: 'sto.stepField.authVersion',
-                      fieldType: 'dropdown',
-                      optional: false,
-                      selectItems: [API_VERSION_5_0_2, API_VERSION_4_2_0, API_VERSION_4_1_0]
+                    header: {
+                      label: 'sto.stepField.tool.fieldsHeading'
                     },
                     'spec.tool.project_name': {
-                      label: 'sto.stepField.tool.projectName',
+                      label: 'projectCard.projectName',
                       optional: false
                     },
                     'spec.tool.project_version': {

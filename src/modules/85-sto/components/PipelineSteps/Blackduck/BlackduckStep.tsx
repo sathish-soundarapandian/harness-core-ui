@@ -59,13 +59,13 @@ export class BlackduckStep extends PipelineStep<BlackduckStepData> {
         type: 'repository',
         name: '',
         variant: '',
-        workspace: '/harness'
+        workspace: ''
       },
       auth: {
         domain: '',
         type: API_KEY_AUTH_TYPE.value,
         access_id: '',
-        access_token: '<+secrets.getValue("your_token_secret")>',
+        access_token: '',
         version: API_VERSION_5_0_2.value,
         ssl: true
       },
@@ -113,32 +113,29 @@ export class BlackduckStep extends PipelineStep<BlackduckStepData> {
       allowableTypes
     } = props
 
-    switch (stepViewType) {
-      case StepViewType.InputSet:
-      case StepViewType.DeploymentForm:
-        return (
-          <BlackduckStepInputSet
-            initialValues={initialValues}
-            /* istanbul ignore next */
-            template={inputSetData?.template}
-            /* istanbul ignore next */
-            path={inputSetData?.path || ''}
-            readonly={!!inputSetData?.readonly}
-            stepViewType={stepViewType}
-            onUpdate={onUpdate}
-            onChange={onChange}
-            allowableTypes={allowableTypes}
-          />
-        )
-
-      case StepViewType.InputVariable:
-        return (
-          <BlackduckStepVariables
-            {...(customStepProps as BlackduckStepVariablesProps)}
-            initialValues={initialValues}
-            onUpdate={onUpdate}
-          />
-        )
+    if (this.isTemplatizedView(stepViewType)) {
+      return (
+        <BlackduckStepInputSet
+          initialValues={initialValues}
+          /* istanbul ignore next */
+          template={inputSetData?.template}
+          /* istanbul ignore next */
+          path={inputSetData?.path || ''}
+          readonly={!!inputSetData?.readonly}
+          stepViewType={stepViewType}
+          onUpdate={onUpdate}
+          onChange={onChange}
+          allowableTypes={allowableTypes}
+        />
+      )
+    } else if (stepViewType === StepViewType.InputVariable) {
+      return (
+        <BlackduckStepVariables
+          {...(customStepProps as BlackduckStepVariablesProps)}
+          initialValues={initialValues}
+          onUpdate={onUpdate}
+        />
+      )
     }
 
     return (

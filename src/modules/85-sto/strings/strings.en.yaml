@@ -18,44 +18,31 @@ stepDescription:
   WhiteSource: Use WhiteSource to test for vulnerabilities.
   Zap: Use Zap to test for vulnerabilities.
   PrismaCloud: Use Prisma Cloud to test for vulnerabilities.
+  Mend: Use Mend to test for vulnerabilities.
 stepField:
   mode: Scan Mode
   config: Scan Configuration
   target:
-    type: Target Type
-    name: Target Name
-    variant: Target Variant
-    workspace: Target Workspace
-  authToken: Auth Token
-  authDomain: Auth Domain
-  authAccessId: Auth Access Id
+    variant: Variant
+  image:
+    fieldsHeading: Container Image
+  authAccessId: Access Id
   authSsl: Enforce SSL
-  authVersion: Auth API Version
-  authType: Authentication type
+  authVersion: API Version
   toolInclude: Include
   tool:
+    fieldsHeading: Scan Tool
     javaLibraries: Java Libraries
     javaBinaries: Java Binaries
-    context: Tool Context Name
-    port: Tool Port
-    imageName: Tool Image Name
-    teamName: Tool Team Name
-    projectName: Tool Project Name
-    projectVersion: Tool Project Version
-  image:
-    type: Image Type
-    domain: Image Domain
-    region: Image Region
-    accessId: Image Access Id
-    token: Image Access Token
+    context: Context Name
+    teamName: Team Name
+    projectVersion: Project Version
+    projectToken: Project Token
+    productLookupType: Lookup Type
+    exclude: Exclude
   container:
     containerAccessToken: Container Access Token
     containerRegion: Container Region
-  instance:
-    domain: Instance Domain
-    protocol: Instance Protocol
-    port: Instance Port
-    path: Instance Path
   advanced:
     logLevel: Log Level
     serializer: Log Serializer

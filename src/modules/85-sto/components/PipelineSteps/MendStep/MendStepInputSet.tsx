@@ -16,11 +16,12 @@ import {
   CIStepOptionalConfigProps
 } from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
-import type { BlackduckStepProps } from './BlackduckStep'
+import type { MendStepProps } from './MendStep'
+import { getInputSetFieldName } from '../constants'
 import { InputSetFields } from '../SecurityFields'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export const BlackduckStepInputSetBasic: React.FC<BlackduckStepProps> = ({
+export const MendStepInputSetBasic: React.FC<MendStepProps> = ({
   template,
   path,
   readonly,
@@ -32,7 +33,7 @@ export const BlackduckStepInputSetBasic: React.FC<BlackduckStepProps> = ({
 
   const enableFields: CIStepOptionalConfigProps['enableFields'] = {
     ...(shouldRenderRunTimeInputView(template?.spec?.settings) && {
-      'spec.settings': {}
+      [getInputSetFieldName(prefix, 'spec.settings')]: {}
     })
   }
 
@@ -77,5 +78,5 @@ export const BlackduckStepInputSetBasic: React.FC<BlackduckStepProps> = ({
   )
 }
 
-const BlackduckStepInputSet = connect(BlackduckStepInputSetBasic)
-export { BlackduckStepInputSet }
+const MendStepInputSet = connect(MendStepInputSetBasic)
+export { MendStepInputSet }

@@ -38,7 +38,7 @@ const toolFieldsTransformConfig = (data: SonarqubeStepData) =>
       ]
     : []
 
-const toolFieldsValidationConfig = (data: SonarqubeStepData) =>
+const toolFieldsValidationConfig = (data: SonarqubeStepData): InputSetViewValidateFieldsConfig[] =>
   data.spec.mode === 'orchestration'
     ? [
         {
@@ -73,13 +73,13 @@ const extraAuthFieldsTransformConfig = (data: SonarqubeStepData) =>
       ]
     : []
 
-const extraAuthFieldsValidationConfig = (data: SonarqubeStepData) =>
+const extraAuthFieldsValidationConfig = (data: SonarqubeStepData): InputSetViewValidateFieldsConfig[] =>
   data.spec.mode !== 'ingestion'
     ? [
         {
           name: 'spec.auth.domain',
           type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.authDomain'
+          label: 'secrets.winRmAuthFormFields.domain'
         },
         {
           name: 'spec.auth.ssl',

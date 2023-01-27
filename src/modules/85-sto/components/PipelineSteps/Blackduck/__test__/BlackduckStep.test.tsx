@@ -93,7 +93,7 @@ describe('Blackduck Step', () => {
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
-          privileged: RUNTIME_INPUT_VALUE,
+          privileged: true,
           target: {
             type: 'repository',
             name: RUNTIME_INPUT_VALUE,
@@ -158,7 +158,7 @@ describe('Blackduck Step', () => {
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
-          privileged: RUNTIME_INPUT_VALUE,
+          privileged: true,
           target: {
             type: 'container',
             name: RUNTIME_INPUT_VALUE,
@@ -166,8 +166,12 @@ describe('Blackduck Step', () => {
             workspace: RUNTIME_INPUT_VALUE
           },
           image: {
-            type: 'local_image',
-            name: RUNTIME_INPUT_VALUE
+            type: 'docker_v2',
+            domain: RUNTIME_INPUT_VALUE,
+            access_token: RUNTIME_INPUT_VALUE,
+            name: RUNTIME_INPUT_VALUE,
+            tag: RUNTIME_INPUT_VALUE,
+            access_id: RUNTIME_INPUT_VALUE
           },
           auth: {
             domain: RUNTIME_INPUT_VALUE,

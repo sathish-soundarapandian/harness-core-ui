@@ -30,13 +30,13 @@ const toolFieldsTransformConfig = (data: PrismaCloudStepData) =>
       ]
     : []
 
-const toolFieldsValidationConfig = (data: PrismaCloudStepData) =>
+const toolFieldsValidationConfig = (data: PrismaCloudStepData): InputSetViewValidateFieldsConfig[] =>
   data.spec.mode === 'extraction'
     ? [
         {
           name: 'spec.tool.image_name',
           type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.tool.imageName',
+          label: 'imageNameLabel',
           isRequired: true
         }
       ]
@@ -55,7 +55,7 @@ const extraAuthFieldsTransformConfig = (data: PrismaCloudStepData) =>
         }
       ]
     : []
-const extraAuthFieldsValidationConfig = (data: PrismaCloudStepData) =>
+const extraAuthFieldsValidationConfig = (data: PrismaCloudStepData): InputSetViewValidateFieldsConfig[] =>
   data.spec.mode === 'orchestration'
     ? [
         {
