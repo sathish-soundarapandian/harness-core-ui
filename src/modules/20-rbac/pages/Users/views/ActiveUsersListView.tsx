@@ -374,6 +374,7 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const [page, setPage] = useState(0)
   const isCommunity = useGetCommunity()
+  const [pageSize, setPageSize] = useState<number>(10)
 
   const { data, loading, error, refetch } = useMutateAsGet(useGetAggregatedUsers, {
     body: {},
@@ -382,7 +383,7 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
       orgIdentifier,
       projectIdentifier,
       pageIndex: page,
-      pageSize: 10,
+      pageSize: pageSize,
       searchTerm: searchTerm
     },
     debounce: 300
@@ -487,10 +488,14 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
         name="ActiveUsersListView"
         pagination={{
           itemCount: data?.data?.totalItems || 0,
-          pageSize: data?.data?.pageSize || 10,
+          pageSize: data?.data?.pageSize || pageSize,
           pageCount: data?.data?.totalPages || 0,
           pageIndex: data?.data?.pageIndex || 0,
-          gotoPage: (pageNumber: number) => setPage(pageNumber)
+          gotoPage: (pageNumber: number) => setPage(pageNumber),
+          pageSizeOptions: [10, 25, 50, 100],
+          onPageSizeChange: newSize => {
+            setPageSize(newSize)
+          }
         }}
         onRowClick={user => {
           history.push(
