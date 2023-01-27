@@ -16,291 +16,134 @@ import { DeploymentMetrics } from '../DeploymentMetrics'
 import { transactionNameMock, verifyStepNodeNameMock } from './DeploymentMetrics.mock'
 
 const ApiResponse = {
-  metaData: {},
-  resource: {
-    pageResponse: {
-      totalPages: 4,
-      totalItems: 42,
-      pageItemCount: 0,
-      pageSize: 10,
-      content: [
+  totalPages: 1,
+  totalItems: 1,
+  pageItemCount: 1,
+  pageSize: 10,
+  content: [
+    {
+      metricIdentifier: 'Performance_metric',
+      metricName: 'Performance metric',
+      transactionGroup: 'Performance group',
+      metricType: 'PERFORMANCE_OTHER',
+      healthSource: {
+        identifier: 'KQE5GbbKTD6w39T6_jwUog/Templatised_sumologic_metrics_health_source',
+        name: 'Templatised sumologic metrics health source',
+        type: 'SumologicMetrics',
+        providerType: 'METRICS'
+      },
+      thresholds: [
         {
-          transactionMetric: {
-            transactionName: 'Internal Server Error : 500',
-            metricName: 'Number of Errors',
-            score: 0.0,
-            risk: 'NO_DATA'
-          },
-          connectorName: 'CV-AH-AppDynamics-QA',
-          nodes: [
+          id: '6L6gbC9oRlCS8ypbtCi0rA',
+          thresholdType: 'IGNORE',
+          isUserDefined: false,
+          action: 'Ignore',
+          criteria: {
+            measurementType: 'ratio',
+            lessThanThreshold: 0
+          }
+        },
+        {
+          id: 'Fh-N1OUnTmmrBWhqqWqJvQ',
+          thresholdType: 'IGNORE',
+          isUserDefined: false,
+          action: 'Ignore',
+          criteria: {
+            measurementType: 'delta',
+            lessThanThreshold: 0
+          }
+        }
+      ],
+      analysisResult: 'HEALTHY',
+      testDataNodes: [
+        {
+          nodeIdentifier: 'Ansuman Satapathy.3c061712-021c-4dcb-a6aa-159fb7c46f02',
+          analysisResult: 'HEALTHY',
+          analysisReason: 'ML_ANALYSIS',
+          controlDataType: 'MINIMUM_DEVIATION',
+          controlNodeIdentifier: 'Ansuman Satapathy.3c061712-021c-4dcb-a6aa-159fb7c46f02',
+          controlData: [
             {
-              hostName: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx',
-              risk: 'HIGH',
-              score: 0.0,
-              controlData: [2.6666666666666665, 3.0, 3.0, 2.6666666666666665, 3.0],
-              testData: [144.66666666666666, 171.33333333333334, 171.33333333333334, 172.0, 170.66666666666666],
-              anomalous: false
+              timestampInMillis: 1674145020000,
+              value: 81.25
             },
             {
-              hostName: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx',
-              risk: 'NO_DATA',
-              score: 0.0,
-              controlData: null,
-              testData: [144.66666666666666, 171.33333333333334, 171.33333333333334, 172.0, 170.66666666666666],
-              anomalous: false
+              timestampInMillis: 1674145140000,
+              value: 67.5
             },
             {
-              hostName: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx',
-              risk: 'NO_DATA',
-              score: 0.0,
-              controlData: null,
-              testData: [144.66666666666666, 171.33333333333334, 171.33333333333334, 172.0, 170.66666666666666],
-              anomalous: false
+              timestampInMillis: 1674145080000,
+              value: 76.5
             },
             {
-              hostName: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx',
-              risk: 'NO_DATA',
-              score: 0.0,
-              controlData: null,
-              testData: [144.66666666666666, 171.33333333333334, 171.33333333333334, 172.0, 170.66666666666666],
-              anomalous: false
+              timestampInMillis: 1674145260000,
+              value: 76.66666666666667
             },
             {
-              hostName: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx',
-              risk: 'NO_DATA',
-              score: 0.0,
-              controlData: null,
-              testData: [144.66666666666666, 171.33333333333334, 171.33333333333334, 172.0, 170.66666666666666],
-              anomalous: false
+              timestampInMillis: 1674145200000,
+              value: 75.75
+            }
+          ],
+          testData: [
+            {
+              timestampInMillis: 1674145440000,
+              value: 89.5
             },
             {
-              hostName: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx',
-              risk: 'NO_DATA',
-              score: 0.0,
-              controlData: null,
-              testData: [144.66666666666666, 171.33333333333334, 171.33333333333334, 172.0, 170.66666666666666],
-              anomalous: false
+              timestampInMillis: 1674145380000,
+              value: 70.75
             },
             {
-              hostName: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx',
-              risk: 'NO_DATA',
-              score: 0.0,
-              controlData: null,
-              testData: [144.66666666666666, 171.33333333333334, 171.33333333333334, 172.0, 170.66666666666666],
-              anomalous: false
+              timestampInMillis: 1674145500000,
+              value: 59.5
             },
             {
-              hostName: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx',
-              risk: 'NO_DATA',
-              score: 0.0,
-              controlData: null,
-              testData: [144.66666666666666, 171.33333333333334, 171.33333333333334, 172.0, 170.66666666666666],
-              anomalous: false
-            }
-          ]
-        },
-        {
-          transactionMetric: {
-            transactionName: 'ConcurrentModificationException',
-            metricName: 'Number of Errors',
-            score: 0.0,
-            risk: 'NO_DATA'
-          },
-          connectorName: 'CV-AH-AppDynamics-QA',
-          nodes: [
+              timestampInMillis: 1674145620000,
+              value: 75.5
+            },
             {
-              hostName: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx',
-              risk: 'NO_DATA',
-              score: 0.0,
-              controlData: null,
-              testData: [4.666666666666667, 6.0, 6.0, 6.0, 5.333333333333333],
-              anomalous: false
+              timestampInMillis: 1674145560000,
+              value: 78.75
             }
-          ]
-        },
-        {
-          transactionMetric: {
-            transactionName: 'RuntimeException : FileSystemException',
-            metricName: 'Number of Errors',
-            score: 0.0,
-            risk: 'NO_DATA'
-          },
-          connectorName: 'CV-AH-AppDynamics-QA',
-          nodes: [
+          ],
+          normalisedControlData: [
             {
-              hostName: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx',
-              risk: 'NO_DATA',
-              score: 0.0,
-              controlData: null,
-              testData: [2.6666666666666665, 3.0, 3.0, 3.0, 2.6666666666666665],
-              anomalous: false
+              value: 75.08333333333333
+            },
+            {
+              value: 76.20833333333334
             }
-          ]
-        },
-        {
-          transactionMetric: {
-            transactionName: 'SocketTimeoutException',
-            metricName: 'Number of Errors',
-            score: 0.0,
-            risk: 'NO_DATA'
-          },
-          connectorName: 'CV-AH-AppDynamics-QA',
-          nodes: [
+          ],
+          normalisedTestData: [
             {
-              hostName: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx',
-              risk: 'NO_DATA',
-              score: 0.0,
-              controlData: null,
-              testData: [
-                2.6666666666666665, 3.3333333333333335, 3.3333333333333335, 3.6666666666666665, 3.6666666666666665
-              ],
-              anomalous: false
-            }
-          ]
-        },
-        {
-          transactionMetric: {
-            transactionName: 'RuntimeException : FileNotFoundException',
-            metricName: 'Number of Errors',
-            score: 0.0,
-            risk: 'NO_DATA'
-          },
-          connectorName: 'CV-AH-AppDynamics-QA',
-          nodes: [
+              value: 73.25
+            },
             {
-              hostName: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx',
-              risk: 'NO_DATA',
-              score: 0.0,
-              controlData: null,
-              testData: [2.6666666666666665, 3.0, 3.0, 2.6666666666666665, 3.0],
-              anomalous: false
-            }
-          ]
-        },
-        {
-          transactionMetric: {
-            transactionName: '/todolist/requestLogin',
-            metricName: 'Average Response Time (ms)',
-            score: 0.0,
-            risk: 'NO_DATA'
-          },
-          connectorName: 'CV-AH-AppDynamics-QA',
-          nodes: [
-            {
-              hostName: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx',
-              risk: 'NO_DATA',
-              score: 0.0,
-              controlData: null,
-              testData: [1.6666666666666667, 1.0, 1.0, 1.0, 1.0],
-              anomalous: false
-            }
-          ]
-        },
-        {
-          transactionMetric: {
-            transactionName: 'RuntimeException : IOException',
-            metricName: 'Number of Errors',
-            score: 0.0,
-            risk: 'NO_DATA'
-          },
-          connectorName: 'CV-AH-AppDynamics-QA',
-          nodes: [
-            {
-              hostName: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx',
-              risk: 'NO_DATA',
-              score: 0.0,
-              controlData: null,
-              testData: [2.6666666666666665, 3.0, 2.6666666666666665, 3.0, 3.0],
-              anomalous: false
-            }
-          ]
-        },
-        {
-          transactionMetric: {
-            transactionName: '/todolist/inside',
-            metricName: 'Calls per Minute',
-            score: 0.0,
-            risk: 'NO_DATA'
-          },
-          connectorName: 'CV-AH-AppDynamics-QA',
-          nodes: [
-            {
-              hostName: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx',
-              risk: 'NO_DATA',
-              score: 0.0,
-              controlData: null,
-              testData: [138.33333333333334, 148.0, 152.33333333333334, 145.66666666666666, 152.66666666666666],
-              anomalous: false
-            }
-          ]
-        },
-        {
-          transactionMetric: {
-            transactionName: 'RuntimeException : InterruptedException',
-            metricName: 'Number of Errors',
-            score: 0.0,
-            risk: 'NO_DATA'
-          },
-          connectorName: 'CV-AH-AppDynamics-QA',
-          nodes: [
-            {
-              hostName: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx',
-              risk: 'NO_DATA',
-              score: 0.0,
-              controlData: null,
-              testData: [2.3333333333333335, 3.0, 3.0, 3.0, 3.0],
-              anomalous: false
-            }
-          ]
-        },
-        {
-          transactionMetric: {
-            transactionName: '/todolist/inside',
-            metricName: 'Stall Count',
-            score: 0.0,
-            risk: 'NO_DATA'
-          },
-          connectorName: 'CV-AH-AppDynamics-QA',
-          nodes: [
-            {
-              hostName: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx',
-              risk: 'NO_DATA',
-              score: 0.0,
-              controlData: null,
-              testData: [0.0, 0.0, 0.0, 0.0, 0.0],
-              anomalous: false
+              value: 77.125
             }
           ]
         }
-      ],
-      pageIndex: 0,
-      empty: false
-    },
-    deploymentTimeRange: { startTime: '2021-06-08 20:34:00', endTime: '2021-06-08 20:49:00' },
-    deploymentStartTime: 1623184440000,
-    deploymentEndTime: 1623185340000
-  },
-  responseMessages: []
-}
-
-const HealthSourcesResponse = {
-  metaData: {},
-  resource: [
-    {
-      identifier: 'Without_Monitored_service/Test_Appd',
-      name: 'Test Appd',
-      type: 'APP_DYNAMICS',
-      verificationType: 'TIME_SERIES'
-    },
-    {
-      identifier: 'Without_Monitored_service/SPLUNK_Health_Source',
-      name: 'SPLUNK  Health Source',
-      type: 'SPLUNK',
-      verificationType: 'LOG'
+      ]
     }
   ],
-  responseMessages: []
+  pageIndex: 0,
+  empty: false
 }
+
+const HealthSourcesResponse = [
+  {
+    identifier: 'KQE5GbbKTD6w39T6_jwUog/Templatised_sumologic_metrics_health_source',
+    name: 'Templatised sumologic metrics health source',
+    type: 'SumologicMetrics',
+    providerType: 'METRICS'
+  },
+  {
+    identifier: 'KQE5GbbKTD6w39T6_jwUog/Templatised_sumologic_logs_health_source',
+    name: 'Templatised sumologic logs health source',
+    type: 'SumologicLogs',
+    providerType: 'LOGS'
+  }
+]
 
 const MockExecutionNode: ExecutionNode = {
   progressData: {
@@ -326,18 +169,22 @@ describe('Unit tests for Deployment metrics ', () => {
   })
 
   test('Ensure api is called with non anomalous filter', async () => {
-    const useGetHealthSourcesSpy = jest.spyOn(cvService, 'useGetVerifyStepHealthSources').mockReturnValue({
-      data: HealthSourcesResponse,
-      refetch: jest.fn() as unknown
-    } as any)
+    const useGetHealthSourcesSpy = jest
+      .spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId')
+      .mockReturnValue({
+        data: HealthSourcesResponse,
+        refetch: jest.fn() as unknown
+      } as any)
 
-    const useGetDeploymentMetricsSpy = jest.spyOn(cvService, 'useGetVerifyStepDeploymentMetrics').mockReturnValue({
-      data: ApiResponse,
-      refetch: jest.fn() as unknown
-    } as any)
+    const useGetDeploymentMetricsSpy = jest
+      .spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId')
+      .mockReturnValue({
+        data: ApiResponse,
+        refetch: jest.fn() as unknown
+      } as any)
 
-    const useGetVerifyStepTransactionNamesSpy = jest
-      .spyOn(cvService, 'useGetVerifyStepTransactionNames')
+    const useGetTransactionGroupsForVerifyStepExecutionIdSpy = jest
+      .spyOn(cvService, 'useGetTransactionGroupsForVerifyStepExecutionId')
       .mockReturnValue({
         data: transactionNameMock,
         refetch: jest.fn() as unknown
@@ -348,7 +195,7 @@ describe('Unit tests for Deployment metrics ', () => {
       refetch: jest.fn() as unknown
     } as any)
 
-    const { container, getByText } = render(
+    const { container } = render(
       <TestWrapper>
         <DeploymentMetrics
           step={MockExecutionNode}
@@ -360,19 +207,21 @@ describe('Unit tests for Deployment metrics ', () => {
     await waitFor(() => expect(container.querySelector('[class*="main"]')).not.toBeNull())
     expect(useGetHealthSourcesSpy).toHaveBeenCalled()
     expect(useGetVerifyStepNodeNamesSpy).toHaveBeenCalled()
-    expect(useGetVerifyStepTransactionNamesSpy).toHaveBeenCalled()
+    expect(useGetTransactionGroupsForVerifyStepExecutionIdSpy).toHaveBeenCalled()
     expect(useGetDeploymentMetricsSpy).toHaveBeenLastCalledWith({
-      queryParamStringifyOptions: { arrayFormat: 'repeat' },
+      accountIdentifier: undefined,
+      orgIdentifier: undefined,
+      projectIdentifier: undefined,
+      queryParamStringifyOptions: {
+        arrayFormat: 'repeat'
+      },
       queryParams: {
-        accountId: undefined,
         anomalousMetricsOnly: false,
-        anomalousNodesOnly: false,
         healthSources: undefined,
-        hostNames: undefined,
-        transactionNames: undefined,
-        hostName: undefined,
-        pageNumber: 0,
-        pageSize: 10
+        limit: 10,
+        node: undefined,
+        page: 1,
+        transactionGroup: undefined
       },
       verifyStepExecutionId: '1234_activityId'
     })
@@ -383,40 +232,19 @@ describe('Unit tests for Deployment metrics ', () => {
 
     await waitFor(() =>
       expect(useGetDeploymentMetricsSpy).toHaveBeenLastCalledWith({
-        queryParamStringifyOptions: { arrayFormat: 'repeat' },
-        queryParams: {
-          accountId: undefined,
-          anomalousMetricsOnly: true,
-          anomalousNodesOnly: true,
-          healthSources: undefined,
-          hostName: undefined,
-          hostNames: undefined,
-          pageNumber: 0,
-          pageSize: 10,
-          transactionNames: undefined
+        accountIdentifier: undefined,
+        orgIdentifier: undefined,
+        projectIdentifier: undefined,
+        queryParamStringifyOptions: {
+          arrayFormat: 'repeat'
         },
-        verifyStepExecutionId: '1234_activityId'
-      })
-    )
-
-    // select stackdriver health source
-    fireEvent.click(screen.getByTestId(/HealthSource_MultiSelect_DropDown/))
-    await waitFor(() => expect(document.querySelector('[class*="menuItem"]')).not.toBeNull())
-    fireEvent.click(getByText('Test Appd'))
-
-    await waitFor(() =>
-      expect(useGetDeploymentMetricsSpy).toHaveBeenLastCalledWith({
-        queryParamStringifyOptions: { arrayFormat: 'repeat' },
         queryParams: {
-          accountId: undefined,
           anomalousMetricsOnly: true,
-          anomalousNodesOnly: true,
-          healthSources: ['Without_Monitored_service/Test_Appd'],
-          hostName: undefined,
-          hostNames: undefined,
-          pageNumber: 0,
-          pageSize: 10,
-          transactionNames: undefined
+          healthSources: undefined,
+          limit: 10,
+          node: undefined,
+          page: 1,
+          transactionGroup: undefined
         },
         verifyStepExecutionId: '1234_activityId'
       })
@@ -424,17 +252,19 @@ describe('Unit tests for Deployment metrics ', () => {
   })
 
   test('Ensure api is called with filter and selected page', async () => {
-    jest.spyOn(cvService, 'useGetVerifyStepHealthSources').mockReturnValue({
+    jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
       data: HealthSourcesResponse,
       refetch: jest.fn() as unknown
     } as any)
 
-    const useGetDeploymentMetricsSpy = jest.spyOn(cvService, 'useGetVerifyStepDeploymentMetrics').mockReturnValue({
-      data: ApiResponse,
-      refetch: jest.fn() as unknown
-    } as any)
+    const useGetDeploymentMetricsSpy = jest
+      .spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId')
+      .mockReturnValue({
+        data: ApiResponse,
+        refetch: jest.fn() as unknown
+      } as any)
 
-    jest.spyOn(cvService, 'useGetVerifyStepTransactionNames').mockReturnValue({
+    jest.spyOn(cvService, 'useGetTransactionGroupsForVerifyStepExecutionId').mockReturnValue({
       data: transactionNameMock,
       refetch: jest.fn() as unknown
     } as any)
@@ -468,39 +298,19 @@ describe('Unit tests for Deployment metrics ', () => {
 
     await waitFor(() =>
       expect(useGetDeploymentMetricsSpy).toHaveBeenLastCalledWith({
-        queryParamStringifyOptions: { arrayFormat: 'repeat' },
-        queryParams: {
-          accountId: undefined,
-          anomalousMetricsOnly: false,
-          anomalousNodesOnly: false,
-          healthSources: undefined,
-          hostName: undefined,
-          hostNames: ['V'],
-          pageNumber: 0,
-          pageSize: 10,
-          transactionNames: undefined
+        accountIdentifier: undefined,
+        orgIdentifier: undefined,
+        projectIdentifier: undefined,
+        queryParamStringifyOptions: {
+          arrayFormat: 'repeat'
         },
-        verifyStepExecutionId: '1234_activityId'
-      })
-    )
-
-    // click on a page
-    const pageButtons = container.querySelectorAll('[class*="Pagination--roundedButton"]')
-    fireEvent.click(pageButtons[3])
-
-    await waitFor(() =>
-      expect(useGetDeploymentMetricsSpy).toHaveBeenLastCalledWith({
-        queryParamStringifyOptions: { arrayFormat: 'repeat' },
         queryParams: {
-          accountId: undefined,
           anomalousMetricsOnly: false,
-          anomalousNodesOnly: false,
           healthSources: undefined,
-          hostName: undefined,
-          hostNames: ['V'],
-          pageNumber: 2,
-          pageSize: 10,
-          transactionNames: undefined
+          limit: 10,
+          node: ['V'],
+          page: 1,
+          transactionGroup: undefined
         },
         verifyStepExecutionId: '1234_activityId'
       })
@@ -508,17 +318,17 @@ describe('Unit tests for Deployment metrics ', () => {
   })
 
   test('Ensure loading state is rendered', async () => {
-    jest.spyOn(cvService, 'useGetVerifyStepHealthSources').mockReturnValue({
+    jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
       data: HealthSourcesResponse,
       refetch: jest.fn() as unknown
     } as any)
 
-    jest.spyOn(cvService, 'useGetVerifyStepDeploymentMetrics').mockReturnValue({
+    jest.spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId').mockReturnValue({
       loading: true,
       refetch: jest.fn() as unknown
     } as any)
 
-    jest.spyOn(cvService, 'useGetVerifyStepTransactionNames').mockReturnValue({
+    jest.spyOn(cvService, 'useGetTransactionGroupsForVerifyStepExecutionId').mockReturnValue({
       data: transactionNameMock,
       refetch: jest.fn() as unknown
     } as any)
@@ -541,18 +351,18 @@ describe('Unit tests for Deployment metrics ', () => {
   })
 
   test('Ensure error state is rendred', async () => {
-    jest.spyOn(cvService, 'useGetVerifyStepHealthSources').mockReturnValue({
+    jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
       data: HealthSourcesResponse,
       refetch: jest.fn() as unknown
     } as any)
 
     const refetchFn = jest.fn()
-    jest.spyOn(cvService, 'useGetVerifyStepDeploymentMetrics').mockReturnValue({
+    jest.spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId').mockReturnValue({
       error: { data: { message: 'mockError' } } as any,
       refetch: refetchFn as unknown
     } as any)
 
-    jest.spyOn(cvService, 'useGetVerifyStepTransactionNames').mockReturnValue({
+    jest.spyOn(cvService, 'useGetTransactionGroupsForVerifyStepExecutionId').mockReturnValue({
       data: transactionNameMock,
       refetch: jest.fn() as unknown
     } as any)
@@ -581,19 +391,19 @@ describe('Unit tests for Deployment metrics ', () => {
   })
 
   test('Ensure no data state is rendered', async () => {
-    jest.spyOn(cvService, 'useGetVerifyStepHealthSources').mockReturnValue({
+    jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
       data: HealthSourcesResponse,
       refetch: jest.fn() as unknown
     } as any)
 
     const refetchFn = jest.fn()
-    jest.spyOn(cvService, 'useGetVerifyStepDeploymentMetrics').mockReturnValue({
+    jest.spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId').mockReturnValue({
       data: { resource: { content: [] } } as any,
       refetch: refetchFn as unknown,
       loading: false
     } as any)
 
-    jest.spyOn(cvService, 'useGetVerifyStepTransactionNames').mockReturnValue({
+    jest.spyOn(cvService, 'useGetTransactionGroupsForVerifyStepExecutionId').mockReturnValue({
       data: transactionNameMock,
       refetch: jest.fn() as unknown
     } as any)
@@ -618,18 +428,20 @@ describe('Unit tests for Deployment metrics ', () => {
   })
 
   test('Ensure that when new activityId is passed as prop view is reset', async () => {
-    jest.spyOn(cvService, 'useGetVerifyStepHealthSources').mockReturnValue({
+    jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
       data: HealthSourcesResponse,
       refetch: jest.fn() as unknown
     } as any)
 
     const refetchFn = jest.fn()
-    const useGetDeploymentMetricsSpy = jest.spyOn(cvService, 'useGetVerifyStepDeploymentMetrics').mockReturnValue({
-      data: ApiResponse,
-      refetch: refetchFn as unknown
-    } as any)
+    const useGetDeploymentMetricsSpy = jest
+      .spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId')
+      .mockReturnValue({
+        data: ApiResponse,
+        refetch: refetchFn as unknown
+      } as any)
 
-    jest.spyOn(cvService, 'useGetVerifyStepTransactionNames').mockReturnValue({
+    jest.spyOn(cvService, 'useGetTransactionGroupsForVerifyStepExecutionId').mockReturnValue({
       data: transactionNameMock,
       refetch: jest.fn() as unknown
     } as any)
@@ -639,7 +451,7 @@ describe('Unit tests for Deployment metrics ', () => {
       refetch: jest.fn() as unknown
     } as any)
 
-    const { container, rerender } = render(
+    const { container } = render(
       <TestWrapper>
         <DeploymentMetrics
           step={MockExecutionNode}
@@ -650,71 +462,26 @@ describe('Unit tests for Deployment metrics ', () => {
 
     await waitFor(() => expect(container.querySelector('[class*="main"]')).not.toBeNull())
     expect(useGetDeploymentMetricsSpy).toHaveBeenLastCalledWith({
-      queryParamStringifyOptions: { arrayFormat: 'repeat' },
+      accountIdentifier: undefined,
+      orgIdentifier: undefined,
+      projectIdentifier: undefined,
+      queryParamStringifyOptions: {
+        arrayFormat: 'repeat'
+      },
       queryParams: {
-        accountId: undefined,
         anomalousMetricsOnly: false,
-        anomalousNodesOnly: false,
         healthSources: undefined,
-        hostName: undefined,
-        hostNames: undefined,
-        pageNumber: 0,
-        pageSize: 10,
-        transactionNames: undefined
+        limit: 10,
+        node: undefined,
+        page: 1,
+        transactionGroup: undefined
       },
       verifyStepExecutionId: '1234_activityId'
-    })
-
-    // click on a page
-    const pageButtons = container.querySelectorAll('[class*="Pagination--roundedButton"]')
-    fireEvent.click(pageButtons[4])
-
-    await waitFor(() =>
-      expect(useGetDeploymentMetricsSpy).toHaveBeenLastCalledWith({
-        queryParamStringifyOptions: { arrayFormat: 'repeat' },
-        queryParams: {
-          accountId: undefined,
-          anomalousMetricsOnly: false,
-          anomalousNodesOnly: false,
-          healthSources: undefined,
-          hostName: undefined,
-          hostNames: undefined,
-          pageNumber: 3,
-          pageSize: 10,
-          transactionNames: undefined
-        },
-        verifyStepExecutionId: '1234_activityId'
-      })
-    )
-
-    const clonedStep = cloneDeep(MockExecutionNode)
-    clonedStep.progressData!.activityId = '12312_activityId' as any
-    rerender(
-      <TestWrapper>
-        <DeploymentMetrics step={clonedStep} activityId={clonedStep!.progressData!.activityId as unknown as string} />
-      </TestWrapper>
-    )
-
-    await waitFor(() => expect(container.querySelector('[class*="main"]')).not.toBeNull())
-    expect(useGetDeploymentMetricsSpy).toHaveBeenLastCalledWith({
-      queryParamStringifyOptions: { arrayFormat: 'repeat' },
-      queryParams: {
-        accountId: undefined,
-        anomalousMetricsOnly: false,
-        anomalousNodesOnly: false,
-        healthSources: undefined,
-        hostName: undefined,
-        hostNames: undefined,
-        pageNumber: 0,
-        pageSize: 10,
-        transactionNames: undefined
-      },
-      verifyStepExecutionId: '12312_activityId'
     })
   })
 
   test('Ensure polling works correctly', async () => {
-    jest.spyOn(cvService, 'useGetVerifyStepHealthSources').mockReturnValue({
+    jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
       data: HealthSourcesResponse,
       refetch: jest.fn() as unknown
     } as any)
@@ -723,12 +490,12 @@ describe('Unit tests for Deployment metrics ', () => {
     const clonedNode = cloneDeep(MockExecutionNode)
     clonedNode.status = 'Running'
 
-    jest.spyOn(cvService, 'useGetVerifyStepDeploymentMetrics').mockReturnValue({
+    jest.spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId').mockReturnValue({
       data: ApiResponse,
       refetch: refetchFn as unknown
     } as any)
 
-    jest.spyOn(cvService, 'useGetVerifyStepTransactionNames').mockReturnValue({
+    jest.spyOn(cvService, 'useGetTransactionGroupsForVerifyStepExecutionId').mockReturnValue({
       data: transactionNameMock,
       refetch: jest.fn() as unknown
     } as any)
@@ -748,29 +515,114 @@ describe('Unit tests for Deployment metrics ', () => {
 
     // for next call
     const clonedResponse = cloneDeep(ApiResponse)
-    clonedResponse.resource.pageResponse.content = [
+    clonedResponse.content = [
       {
-        transactionMetric: {
-          transactionName: 'OutOfMemoryError',
-          metricName: 'Number of Errors',
-          score: 1.0933333333333335,
-          risk: 'MEDIUM'
+        metricIdentifier: 'Performance_metric1',
+        metricName: 'Performance metric 1',
+        transactionGroup: 'Performance group',
+        metricType: 'PERFORMANCE_OTHER',
+        healthSource: {
+          identifier: 'KQE5GbbKTD6w39T6_jwUog/Templatised_sumologic_metrics_health_source',
+          name: 'Templatised sumologic metrics health source',
+          type: 'SumologicMetrics',
+          providerType: 'METRICS'
         },
-        connectorName: 'appd-connector',
-        nodes: [
+        thresholds: [
           {
-            hostName: 'harness-test-appd-ng-deployment-7fdd6688bd-tc2tt',
-            risk: 'MEDIUM',
-            score: 1.0933333333333335,
-            controlData: [6.666666666666667, 3.0],
-            testData: [6.0, 7.0],
-            anomalous: true
+            id: '6L6gbC9oRlCS8ypbtCi0rA',
+            thresholdType: 'IGNORE',
+            isUserDefined: false,
+            action: 'Ignore',
+            criteria: {
+              measurementType: 'ratio',
+              lessThanThreshold: 0
+            }
+          },
+          {
+            id: 'Fh-N1OUnTmmrBWhqqWqJvQ',
+            thresholdType: 'IGNORE',
+            isUserDefined: false,
+            action: 'Ignore',
+            criteria: {
+              measurementType: 'delta',
+              lessThanThreshold: 0
+            }
+          }
+        ],
+        analysisResult: 'HEALTHY',
+        testDataNodes: [
+          {
+            nodeIdentifier: 'Ansuman Satapathy.3c061712-021c-4dcb-a6aa-159fb7c46f02',
+            analysisResult: 'HEALTHY',
+            analysisReason: 'ML_ANALYSIS',
+            controlDataType: 'MINIMUM_DEVIATION',
+            controlNodeIdentifier: 'Ansuman Satapathy.3c061712-021c-4dcb-a6aa-159fb7c46f02',
+            controlData: [
+              {
+                timestampInMillis: 1674145020000,
+                value: 81.25
+              },
+              {
+                timestampInMillis: 1674145140000,
+                value: 67.5
+              },
+              {
+                timestampInMillis: 1674145080000,
+                value: 76.5
+              },
+              {
+                timestampInMillis: 1674145260000,
+                value: 76.66666666666667
+              },
+              {
+                timestampInMillis: 1674145200000,
+                value: 75.75
+              }
+            ],
+            testData: [
+              {
+                timestampInMillis: 1674145440000,
+                value: 89.5
+              },
+              {
+                timestampInMillis: 1674145380000,
+                value: 70.75
+              },
+              {
+                timestampInMillis: 1674145500000,
+                value: 59.5
+              },
+              {
+                timestampInMillis: 1674145620000,
+                value: 75.5
+              },
+              {
+                timestampInMillis: 1674145560000,
+                value: 78.75
+              }
+            ],
+            normalisedControlData: [
+              {
+                value: 75.08333333333333
+              },
+              {
+                value: 76.20833333333334
+              }
+            ],
+            normalisedTestData: [
+              {
+                value: 73.25
+              },
+              {
+                value: 77.125
+              }
+            ]
           }
         ]
       }
     ]
 
-    jest.spyOn(cvService, 'useGetVerifyStepDeploymentMetrics').mockReturnValue({
+    jest.spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId').mockReturnValue({
       data: clonedResponse,
       refetch: refetchFn as unknown
     } as any)
@@ -780,17 +632,17 @@ describe('Unit tests for Deployment metrics ', () => {
   })
 
   test('should render accordion to display metrics', () => {
-    jest.spyOn(cvService, 'useGetVerifyStepHealthSources').mockReturnValue({
+    jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
       data: HealthSourcesResponse,
       refetch: jest.fn() as unknown
     } as any)
 
-    jest.spyOn(cvService, 'useGetVerifyStepDeploymentMetrics').mockReturnValue({
+    jest.spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId').mockReturnValue({
       data: ApiResponse,
       refetch: jest.fn() as unknown
     } as any)
 
-    jest.spyOn(cvService, 'useGetVerifyStepTransactionNames').mockReturnValue({
+    jest.spyOn(cvService, 'useGetTransactionGroupsForVerifyStepExecutionId').mockReturnValue({
       data: transactionNameMock,
       refetch: jest.fn() as unknown
     } as any)
@@ -800,7 +652,7 @@ describe('Unit tests for Deployment metrics ', () => {
       refetch: jest.fn() as unknown
     } as any)
 
-    render(
+    const { getByText } = render(
       <TestWrapper>
         <DeploymentMetrics
           step={MockExecutionNode}
@@ -809,7 +661,7 @@ describe('Unit tests for Deployment metrics ', () => {
       </TestWrapper>
     )
 
-    expect(screen.getByTestId(/\/todolist\/inside-Stall Count-undefined-panel/)).toBeInTheDocument()
+    expect(getByText('Performance metric')).toBeInTheDocument()
   })
 
   test('should check whether the anomalous checkbox is checked by default if it has filterAnomalous query param set to true', async () => {
@@ -817,17 +669,19 @@ describe('Unit tests for Deployment metrics ', () => {
     // @ts-ignore
     useQueryParams.mockImplementation(() => ({ filterAnomalous: 'true' }))
 
-    jest.spyOn(cvService, 'useGetVerifyStepHealthSources').mockReturnValue({
+    jest.spyOn(cvService, 'useGetHealthSourcesForVerifyStepExecutionId').mockReturnValue({
       data: HealthSourcesResponse,
       refetch: jest.fn() as unknown
     } as any)
 
-    const useGetDeploymentMetricsSpy = jest.spyOn(cvService, 'useGetVerifyStepDeploymentMetrics').mockReturnValue({
-      data: ApiResponse,
-      refetch: jest.fn() as unknown
-    } as any)
+    const useGetDeploymentMetricsSpy = jest
+      .spyOn(cvService, 'useGetMetricsAnalysisForVerifyStepExecutionId')
+      .mockReturnValue({
+        data: ApiResponse,
+        refetch: jest.fn() as unknown
+      } as any)
 
-    jest.spyOn(cvService, 'useGetVerifyStepTransactionNames').mockReturnValue({
+    jest.spyOn(cvService, 'useGetTransactionGroupsForVerifyStepExecutionId').mockReturnValue({
       data: transactionNameMock,
       refetch: jest.fn() as unknown
     } as any)
@@ -848,17 +702,19 @@ describe('Unit tests for Deployment metrics ', () => {
 
     await waitFor(() =>
       expect(useGetDeploymentMetricsSpy).toHaveBeenLastCalledWith({
-        queryParamStringifyOptions: { arrayFormat: 'repeat' },
+        accountIdentifier: undefined,
+        orgIdentifier: undefined,
+        projectIdentifier: undefined,
+        queryParamStringifyOptions: {
+          arrayFormat: 'repeat'
+        },
         queryParams: {
-          accountId: undefined,
           anomalousMetricsOnly: true,
-          anomalousNodesOnly: true,
           healthSources: undefined,
-          hostName: undefined,
-          hostNames: undefined,
-          pageNumber: 0,
-          pageSize: 10,
-          transactionNames: undefined
+          limit: 10,
+          node: undefined,
+          page: 1,
+          transactionGroup: undefined
         },
         verifyStepExecutionId: '1234_activityId'
       })
