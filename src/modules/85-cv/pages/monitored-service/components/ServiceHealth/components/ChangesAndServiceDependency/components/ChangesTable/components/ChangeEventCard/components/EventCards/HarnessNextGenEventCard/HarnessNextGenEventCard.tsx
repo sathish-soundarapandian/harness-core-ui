@@ -27,7 +27,6 @@ import { TWO_HOURS_IN_MILLISECONDS } from '../../../ChangeEventCard.constant'
 import { durationAsString } from '../../DeploymentTimeDuration/DeploymentTimeDuration.utils'
 import ChangeTitleWithRedirectButton from '../../ChangeTitleWithRedirectButton/ChangeTitleWithRedirectButton'
 import css from '../../../ChangeEventCard.module.scss'
-import type { ChangeSourceTypes } from '@cv/components/ChangeTimeline/ChangeTimeline.constants'
 
 export default function HarnessNextGenEventCard({ data }: { data: ChangeEventDTO }): JSX.Element {
   const { getString } = useStrings()
