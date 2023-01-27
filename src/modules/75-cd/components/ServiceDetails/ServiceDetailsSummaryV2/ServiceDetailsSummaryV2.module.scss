@@ -1,0 +1,150 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.envCards {
+  min-width: 240px;
+  height: 173px;
+  margin: var(--spacing-6) !important;
+  padding: var(--spacing-5) !important;
+
+  .envCardTitle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    > span[data-icon='infrastructure'] {
+      color: var(--grey-600);
+      padding-right: 6px;
+    }
+
+    > p {
+      width: 240px;
+    }
+  }
+}
+
+.cursor {
+  cursor: pointer;
+}
+.titleStyle {
+  padding: var(--spacing-large) var(--spacing-large) 0;
+  padding-right: var(--spacing-10);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.environmentType {
+  display: inline-flex !important;
+  justify-content: center;
+  align-items: center;
+  height: 18px;
+  padding: var(--spacing-2) var(--spacing-3) !important;
+  background-color: var(--teal-50) !important;
+  color: var(--teal-700) !important;
+  font-weight: bold !important;
+  letter-spacing: 0.2px;
+  line-height: var(--font-size-normal) !important;
+  white-space: nowrap !important;
+  border: none;
+  border-radius: var(--spacing-10);
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+
+  &.production {
+    background-color: var(--purple-50) !important;
+    color: var(--purple-700) !important;
+  }
+}
+
+.instanceCountStyle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 10px !important;
+  margin-bottom: var(--spacing-5) !important;
+  p {
+    padding-left: var(--spacing-3) !important;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.slideStyle {
+  padding-left: var(--spacing-9);
+  padding-right: 18px !important;
+}
+
+.paddingLeft12 {
+  padding-left: var(--spacing-4);
+}
+
+.cardGrid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+
+  :nth-child(1) {
+    margin-left: var(--layout-spacing) !important;
+  }
+}
+
+.prevButton {
+  position: absolute;
+  left: 0px;
+  z-index: 1;
+  top: 90px;
+}
+
+.nextButton {
+  position: absolute;
+  right: 0px;
+  z-index: 1;
+  top: 90px;
+}
+
+.pillToggle {
+  height: 18px;
+  margin-left: var(--spacing-7);
+  background-color: var(--grey-100);
+  border: 1px solid var(--grey-400) !important;
+
+  > div[class*='PillToggle--item'] {
+    color: var(--grey-400);
+  }
+
+  > div[class*='selected'] {
+    background-color: var(--primary-1);
+    color: var(--primary-7);
+    border: 1px solid var(--primary-7);
+    height: 18px;
+    margin-left: -1px;
+    margin-right: -1px;
+  }
+
+  :global(.PillToggle--item) {
+    width: 100px !important;
+    text-transform: uppercase;
+  }
+}
+
+.envCardViewEmptyState {
+  height: 250px;
+  box-shadow: var(--elevation-2);
+  border-radius: var(--spacing-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: var(--grey-0) !important;
+  margin: var(--spacing-6) !important;
+
+  p {
+    margin-top: var(--spacing-7) !important;
+  }
+}

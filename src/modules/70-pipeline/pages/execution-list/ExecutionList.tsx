@@ -6,7 +6,7 @@
  */
 
 import React, { useRef, useState } from 'react'
-import { Container, ExpandingSearchInputHandle, PageSpinner, Text } from '@harness/uicore'
+import { Container, ExpandingSearchInputHandle, Icon, PageSpinner, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { matchPath, useLocation, useParams } from 'react-router-dom'
 import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
@@ -151,6 +151,16 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
 
   const { globalFreezes } = useGlobalFreezeBanner()
 
+  function LoadingComponent(): JSX.Element {
+    return isExecutionPage ? (
+      <PageSpinner />
+    ) : (
+      <Container flex={{ justifyContent: 'center', alignItems: 'center' }} height={500}>
+        <Icon name="spinner" color={Color.BLUE_500} size={30} />
+      </Container>
+    )
+  }
+
   return (
     <>
       <Page.Body error={(error?.data as Error)?.message || error?.message} retryOnError={fetchExecutions}>
@@ -180,7 +190,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
 
         <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
         {showSpinner ? (
-          <PageSpinner />
+          <LoadingComponent />
         ) : executionList && hasExecutions ? (
           <>
             <div className={css.tableTitle}>
