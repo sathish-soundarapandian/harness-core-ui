@@ -50052,6 +50052,60 @@ export const getServiceNowIssueCreateMetadataPromise = (
     props,
     signal
   )
+export interface V1Time {
+  /**
+   * Non-negative fractions of a second at nanosecond resolution. Negative
+   * second values with fractions must still have non-negative nanos values
+   * that count forward in time. Must be from 0 to 999,999,999
+   * inclusive. This field may be limited in precision depending on context.
+   */
+  nanos?: number
+  /**
+   * Represents seconds of UTC time since Unix epoch
+   * 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
+   * 9999-12-31T23:59:59Z inclusive.
+   */
+  seconds?: string
+}
+
+export interface CommonsConnectionState {
+  attemptedAt?: V1Time
+  message?: string
+  status?: string
+}
+
+export interface RepositoriesRepository {
+  connectionState?: CommonsConnectionState
+  connectionType?: string
+  /**
+   * EnableLFS specifies whether git-lfs support should be enabled for this repo. Only valid for Git repositories.
+   */
+  enableLfs?: boolean
+  enableOCI?: boolean
+  githubAppEnterpriseBaseUrl?: string
+  githubAppID?: string
+  githubAppInstallationID?: string
+  githubAppPrivateKey?: string
+  inheritedCreds?: boolean
+  insecure?: boolean
+  insecureIgnoreHostKey?: boolean
+  name?: string
+  password?: string
+  project?: string
+  proxy?: string
+  repo?: string
+  /**
+   * SSHPrivateKey contains the PEM data for authenticating at the repo server. Only used with Git repos.
+   */
+  sshPrivateKey?: string
+  tlsClientCertData?: string
+  tlsClientCertKey?: string
+  /**
+   * Type specifies the type of the repo. Can be either "git" or "helm. "git" is assumed if empty or absent.
+   */
+  type?: string
+  username?: string
+}
 
 export interface GetServiceNowTemplateMetadataQueryParams {
   connectorRef: string
@@ -50077,6 +50131,138 @@ export type GetServiceNowTemplateMetadataProps = Omit<
   GetProps<ResponseListServiceNowTemplate, Failure | Error, GetServiceNowTemplateMetadataQueryParams, void>,
   'path'
 >
+
+export interface ProtobufAny {
+  /**
+   * A URL/resource name that uniquely identifies the type of the serialized
+   * protocol buffer message. This string must contain at least
+   * one "/" character. The last segment of the URL's path must represent
+   * the fully qualified name of the type (as in
+   * `path/google.protobuf.Duration`). The name should be in a canonical form
+   * (e.g., leading "." is not accepted).
+   *
+   * In practice, teams usually precompile into the binary all types that they
+   * expect it to use in the context of Any. However, for URLs which use the
+   * scheme `http`, `https`, or no scheme, one can optionally set up a type
+   * server that maps type URLs to message definitions as follows:
+   *
+   * * If no scheme is provided, `https` is assumed.
+   * * An HTTP GET on the URL must yield a [google.protobuf.Type][]
+   *   value in binary format, or produce an error.
+   * * Applications are allowed to cache lookup results based on the
+   *   URL, or have them precompiled into a binary to avoid any
+   *   lookup. Therefore, binary compatibility needs to be preserved
+   *   on changes to types. (Use versioned type names to manage
+   *   breaking changes.)
+   *
+   * Note: this functionality is not currently available in the official
+   * protobuf release, and it is not used for type URLs beginning with
+   * type.googleapis.com.
+   *
+   * Schemes other than `http`, `https` (or the empty scheme) might be
+   * used with implementation specific semantics.
+   */
+  type_url?: string
+  /**
+   * Must be a valid serialized protocol buffer of the above specified type.
+   */
+  value?: string
+}
+
+export interface GatewayruntimeError {
+  code?: number
+  details?: ProtobufAny[]
+  error?: string
+  message?: string
+}
+export interface Servicev1Repository {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier?: string
+  createdAt?: string
+  identifier?: string
+  lastModifiedAt?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  repository?: RepositoriesRepository
+  repositoryCredentialsId?: string
+  stale?: boolean
+}
+
+export interface AgentRepositoryServiceCreateRepositoryQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  identifier?: string
+  repoCredsId?: string
+}
+
+export interface RepositoriesRepoCreateRequest {
+  credsOnly?: boolean
+  repo?: RepositoriesRepository
+  upsert?: boolean
+}
+
+export interface AgentRepositoryServiceCreateRepositoryPathParams {
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier: string
+}
+
+export type UseAgentRepositoryServiceCreateRepositoryProps = Omit<
+  UseMutateProps<
+    Servicev1Repository,
+    GatewayruntimeError,
+    AgentRepositoryServiceCreateRepositoryQueryParams,
+    RepositoriesRepoCreateRequest,
+    AgentRepositoryServiceCreateRepositoryPathParams
+  >,
+  'path' | 'verb'
+> &
+  AgentRepositoryServiceCreateRepositoryPathParams
+
+/**
+ * CreateRepository creates a new repository configuration
+ *
+ * CreateRepository creates a new repository configuration.
+ */
+export const useAgentRepositoryServiceCreateRepository = ({
+  agentIdentifier,
+  ...props
+}: UseAgentRepositoryServiceCreateRepositoryProps) =>
+  useMutate<
+    Servicev1Repository,
+    GatewayruntimeError,
+    AgentRepositoryServiceCreateRepositoryQueryParams,
+    RepositoriesRepoCreateRequest,
+    AgentRepositoryServiceCreateRepositoryPathParams
+  >(
+    'POST',
+    (paramsInPath: AgentRepositoryServiceCreateRepositoryPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentifier}/repositories`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier }, ...props }
+  )
 
 /**
  * Get ServiceNow template metadata

@@ -552,8 +552,15 @@ instanceWarmupPlaceholder: Instance Warmup
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Dry Run Apply the service manifests and leverage the dry run yaml as output for subsequent steps
 getStartedWithCD:
+  annonymous: annonymous
+  usernameAndPassword: Username & Password
   clickForOtherDeploymentTypes: Click here for other deployment types
   createCluster: Create a cluster if needed
+  failedToAuthenticate: Failed to authenticate to {{target}}
+  successfullyAuthenticated: Successfully authenticated to {{target}}
+  failedSourceText: Still failed to authenticate despite having entered the correct credentials? Here’s what you can try to do..
+  checkAnnonymously: Connect Annonymously
+  checkAuthSettings: Check to ensure there’s sufficient access/authorization settings in your git repo.
   awsRegionHelperText: replace REGION with your AWS region, for example us-west-1
   azureAKSHelperText: replace myResourceGroup with your AKS resource group
   googleGKEHelperText: replace ZONE with your GCP region, for example us-central1-c
@@ -565,6 +572,7 @@ getStartedWithCD:
   gitopsOnboardingDeployStep: You are all set!
   runDelegateSubtitle: You can install the Delegate in your target environment.
   haveGitRepo: Do you have a git repo you can connect to?
+  selectAuthType: How would you like to authenticate?
   doesntHaveGitRepo: No, connect to sample source
   delegateInstalled: Delegate installed successfully
   selectDeploymentType: Select deployment type

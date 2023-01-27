@@ -405,7 +405,17 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
     [
       DeployProvisiongWizardStepId.Configure,
       {
-        stepRender: <ConfigureGitops ref={delegateSelectorRef} />,
+        stepRender: (
+          <ConfigureGitops
+            ref={delegateSelectorRef}
+            prevStepData={{
+              name: 'testRepo1',
+              agent: 'meenaaccagent',
+              identifier: 'testRepo1',
+              scope: 'account'
+            }}
+          />
+        ),
         onClickBack: () => {
           setSelectedSectionId(DeployProvisiongWizardStepId.Connect)
           setCurrentWizardStepId(DeployProvisiongWizardStepId.Connect)

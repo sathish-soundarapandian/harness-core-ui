@@ -29,6 +29,7 @@ declare const styles: {
   readonly footer: string
   readonly hover: string
   readonly iconPadding: string
+  readonly inputWidth: string
   readonly kubernetes: string
   readonly marginBottomClass: string
   readonly marginTop: string

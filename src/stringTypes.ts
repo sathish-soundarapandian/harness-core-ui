@@ -5063,6 +5063,7 @@ export interface StringsMap {
   'cd.gcloudClusterCreate': string
   'cd.gcloudClusterList': string
   'cd.getStartedWithCD.allSet': string
+  'cd.getStartedWithCD.annonymous': string
   'cd.getStartedWithCD.applicationController': string
   'cd.getStartedWithCD.artifactLocation': string
   'cd.getStartedWithCD.artifactManifest': string
@@ -5073,6 +5074,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.awsRegionHelperText': string
   'cd.getStartedWithCD.azureAKSHelperText': string
   'cd.getStartedWithCD.azureK8s': string
+  'cd.getStartedWithCD.checkAnnonymously': string
+  'cd.getStartedWithCD.checkAuthSettings': string
   'cd.getStartedWithCD.checkDelegateInstalled': string
   'cd.getStartedWithCD.clickForOtherDeploymentTypes': string
   'cd.getStartedWithCD.closeOnboarding.subtitle': string
@@ -5097,6 +5100,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.entityCreationTitle': string
   'cd.getStartedWithCD.envName': string
   'cd.getStartedWithCD.environmentDetails': string
+  'cd.getStartedWithCD.failedSourceText': string
+  'cd.getStartedWithCD.failedToAuthenticate': string
   'cd.getStartedWithCD.gitOpsAgent': string
   'cd.getStartedWithCD.gitopsOnboardingAgentStep': string
   'cd.getStartedWithCD.gitopsOnboardingConfigureStep': string
@@ -5134,6 +5139,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.runDelegateSubtitle': string
   'cd.getStartedWithCD.selectArtifactRepo': string
   'cd.getStartedWithCD.selectAuthMethod': string
+  'cd.getStartedWithCD.selectAuthType': string
   'cd.getStartedWithCD.selectDeploymentType': string
   'cd.getStartedWithCD.serverless': string
   'cd.getStartedWithCD.serviceConfiguration': string
@@ -5143,7 +5149,9 @@ export interface StringsMap {
   'cd.getStartedWithCD.setupDelegate': string
   'cd.getStartedWithCD.setupaNewDelegate': string
   'cd.getStartedWithCD.successFull': string
+  'cd.getStartedWithCD.successfullyAuthenticated': string
   'cd.getStartedWithCD.testConnection': string
+  'cd.getStartedWithCD.usernameAndPassword': string
   'cd.getStartedWithCD.viewDelegateDetails': string
   'cd.getStartedWithCD.workloadDeploy': string
   'cd.gitFetchTypeRequired': string

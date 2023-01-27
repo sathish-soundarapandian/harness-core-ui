@@ -47,6 +47,11 @@ export interface PipelineRefPayload {
   deploymentType: string
 }
 
+export enum Scope {
+  PROJECT = 'project',
+  ORG = 'org',
+  ACCOUNT = 'account'
+}
 export interface DelegateSuccessHandler {
   delegateCreated: boolean
   delegateInstalled?: boolean
@@ -186,6 +191,7 @@ export const newRepositoryData = {
 }
 export interface RepositoriesRepository {
   connectionType?: string
+  authType?: string
   /**
    * EnableLFS specifies whether git-lfs support should be enabled for this repo. Only valid for Git repositories.
    */
@@ -448,6 +454,10 @@ const OAuthConnectorPayload: ConnectorRequestBody = {
       type: 'Account'
     }
   }
+}
+
+export function getFullAgentWithScope(agent: string, scope?: Scope): string {
+  return scope === Scope.PROJECT || !scope ? agent : `${scope}.${agent}`
 }
 
 export const getOAuthConnectorPayload = ({
