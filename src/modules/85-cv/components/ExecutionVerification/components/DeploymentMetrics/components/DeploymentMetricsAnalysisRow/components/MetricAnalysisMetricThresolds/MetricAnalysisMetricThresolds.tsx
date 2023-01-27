@@ -1,13 +1,12 @@
-import { Layout, TableV2, Text } from '@harness/uicore'
+import { Container, Layout, TableV2, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import React, { useMemo } from 'react'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { isNumber } from 'lodash-es'
 import type { MetricThresholdCriteriaV2, MetricThresholdV2 } from 'services/cv'
 import { CRITERIA_MAPPING, getActionText, THRESHOLD_TYPE_MAPPING } from './MetricAnalysisMetricThresolds.constants'
-import css from './MetricAnalysisMetricThresholds.module.scss'
 
-interface MetricAnalysisMetricThresoldsProps {
+export interface MetricAnalysisMetricThresoldsProps {
   thresholds?: MetricThresholdV2[]
 }
 
@@ -118,11 +117,8 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
   }
 
   return (
-    <TableV2<MetricThresholdV2>
-      // TODO check why css is not reflecting
-      className={css.metricsAnalysisMetricThresold}
-      columns={columns}
-      data={thresholds as MetricThresholdV2[]}
-    />
+    <Container data-testid="metric-analysis-metric-threshold">
+      <TableV2<MetricThresholdV2> columns={columns} data={thresholds as MetricThresholdV2[]} />
+    </Container>
   )
 }
