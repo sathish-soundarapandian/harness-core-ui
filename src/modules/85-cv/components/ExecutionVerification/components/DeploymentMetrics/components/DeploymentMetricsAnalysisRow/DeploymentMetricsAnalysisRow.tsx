@@ -126,22 +126,24 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
           </Button>
         </Container>
       )}
-      <Accordion allowMultiOpen>
-        <Accordion.Panel
-          key={`${transactionName}-${metricName}-${type}`}
-          id={`${transactionName}-${metricName}-${type}`}
-          summary={
-            <Text
-              font={{ variation: FontVariation.TABLE_HEADERS }}
-              className={css.showDetailsText}
-              margin={{ right: 'small' }}
-            >
-              Show details
-            </Text>
-          }
-          details={<MetricAnalysisMetricThresolds thresholds={thresholds} />}
-        />
-      </Accordion>
+      {Array.isArray(thresholds) && thresholds.length ? (
+        <Accordion allowMultiOpen>
+          <Accordion.Panel
+            key={`${transactionName}-${metricName}-${type}`}
+            id={`${transactionName}-${metricName}-${type}`}
+            summary={
+              <Text
+                font={{ variation: FontVariation.TABLE_HEADERS }}
+                className={css.showDetailsText}
+                margin={{ right: 'small' }}
+              >
+                Show details
+              </Text>
+            }
+            details={<MetricAnalysisMetricThresolds thresholds={thresholds} />}
+          />
+        </Accordion>
+      ) : null}
     </Container>
   )
 }

@@ -6,7 +6,7 @@ export const THRESHOLD_TYPE_MAPPING: MappingType = {
 export const CRITERIA_MAPPING: MappingType = {
   RATIO: 'Percentage Deviation',
   DELTA: 'Delta',
-  ABSOLUTE: 'Absolute'
+  'ABSOLUTE-VALUE': 'Absolute'
 }
 
 export const getActionText = (action: string, actionableCount?: number): string => {

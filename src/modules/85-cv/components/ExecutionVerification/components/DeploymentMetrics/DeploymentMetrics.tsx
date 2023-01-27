@@ -251,7 +251,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     setQueryParams(prevQueryParams => ({
       ...prevQueryParams,
       page: INITIAL_PAGE_NUMBER,
-      healthSources: getQueryParamFromFilters(healthSourceQueryParams),
+      healthSource: getQueryParamFromFilters(healthSourceQueryParams),
       transactionGroup: getQueryParamFromFilters(transactionNameParams),
       node: getQueryParamFromFilters(nodeNameParams)
     }))

@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { NodeRiskCount } from 'services/cv'
 import type { DeploymentMetricsAnalysisRowProps } from '../DeploymentMetricsAnalysisRow'
 
 export const InputData: DeploymentMetricsAnalysisRowProps[] = [
@@ -80,7 +81,7 @@ export const InputData: DeploymentMetricsAnalysisRowProps[] = [
           displayName: 'Unhealthy'
         },
         {
-          risk: 'WARNING',
+          risk: 'WARNING' as NodeRiskCount['risk'],
           count: 0,
           displayName: 'Warning'
         },

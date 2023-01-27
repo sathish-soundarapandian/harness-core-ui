@@ -10818,18 +10818,32 @@
             "type": "string"
           },
           {
-            "name": "offset",
+            "name": "pageNumber",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "integer",
+            "default": 0,
             "format": "int32"
           },
           {
             "name": "pageSize",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "integer",
+            "default": 10,
             "format": "int32"
+          },
+          {
+            "name": "monitoredServiceIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {
@@ -10869,18 +10883,32 @@
             "type": "string"
           },
           {
-            "name": "offset",
+            "name": "pageNumber",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "integer",
+            "default": 0,
             "format": "int32"
           },
           {
             "name": "pageSize",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "integer",
+            "default": 10,
             "format": "int32"
+          },
+          {
+            "name": "monitoredServiceIdentifier",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {
@@ -10888,6 +10916,55 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/ResponsePageDowntimeHistoryView"
+            }
+          }
+        }
+      }
+    },
+    "/account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/{identifier}/flag": {
+      "put": {
+        "tags": ["Downtime"],
+        "summary": "Enables disables downtime",
+        "description": "",
+        "operationId": "enablesDisablesDowntime",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "accountIdentifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "orgIdentifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "projectIdentifier",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "enable",
+            "in": "query",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RestResponseDowntimeResponse"
             }
           }
         }
@@ -15112,11 +15189,11 @@
           "type": "integer",
           "format": "int64"
         },
-        "startTime": {
+        "endTime": {
           "type": "integer",
           "format": "int64"
         },
-        "endTime": {
+        "startTime": {
           "type": "integer",
           "format": "int64"
         },
@@ -15736,7 +15813,7 @@
         },
         "comparisonType": {
           "type": "string",
-          "enum": ["RATIO", "DELTA", "ABSOLUTE"]
+          "enum": ["ratio", "delta", "absolute-value"]
         },
         "action": {
           "type": "string",
@@ -17083,17 +17160,17 @@
           "type": "integer",
           "format": "int64"
         },
-        "negative": {
-          "type": "boolean"
-        },
-        "zero": {
-          "type": "boolean"
-        },
         "units": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/TemporalUnit"
           }
+        },
+        "negative": {
+          "type": "boolean"
+        },
+        "zero": {
+          "type": "boolean"
         },
         "nano": {
           "type": "integer",
@@ -17474,7 +17551,7 @@
         },
         "measurementType": {
           "type": "string",
-          "enum": ["RATIO", "DELTA", "ABSOLUTE"]
+          "enum": ["ratio", "delta", "absolute-value"]
         },
         "greaterThanThreshold": {
           "type": "number",
@@ -17816,7 +17893,7 @@
       "properties": {
         "type": {
           "type": "string",
-          "enum": ["RATIO", "DELTA", "ABSOLUTE"]
+          "enum": ["ratio", "delta", "absolute-value"]
         },
         "action": {
           "type": "string",
@@ -18146,7 +18223,46 @@
     "JsonNode": {
       "type": "object"
     },
-    "ResponseJsonNode": {
+    "PartialSchemaDTO": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "$ref": "#/definitions/JsonNode"
+        },
+        "nodeType": {
+          "type": "string"
+        },
+        "nodeName": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "skipStageSchema": {
+          "type": "boolean"
+        },
+        "moduleType": {
+          "type": "string",
+          "enum": [
+            "CD",
+            "CI",
+            "CV",
+            "CF",
+            "CE",
+            "STO",
+            "CHAOS",
+            "SRM",
+            "CODE",
+            "CORE",
+            "PMS",
+            "TEMPLATESERVICE",
+            "GOVERNANCE",
+            "IACM"
+          ]
+        }
+      }
+    },
+    "ResponseListPartialSchemaDTO": {
       "type": "object",
       "properties": {
         "status": {
@@ -18154,7 +18270,28 @@
           "enum": ["SUCCESS", "FAILURE", "ERROR"]
         },
         "data": {
-          "$ref": "#/definitions/JsonNode"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PartialSchemaDTO"
+          }
+        },
+        "metaData": {
+          "type": "object"
+        },
+        "correlationId": {
+          "type": "string"
+        }
+      }
+    },
+    "ResponseYamlSchemaDetailsWrapper": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
+          "$ref": "#/definitions/YamlSchemaDetailsWrapper"
         },
         "metaData": {
           "type": "object"
@@ -18271,75 +18408,15 @@
         }
       }
     },
-    "PartialSchemaDTO": {
+    "ResponseJsonNode": {
       "type": "object",
       "properties": {
-        "schema": {
+        "status": {
+          "type": "string",
+          "enum": ["SUCCESS", "FAILURE", "ERROR"]
+        },
+        "data": {
           "$ref": "#/definitions/JsonNode"
-        },
-        "nodeType": {
-          "type": "string"
-        },
-        "nodeName": {
-          "type": "string"
-        },
-        "namespace": {
-          "type": "string"
-        },
-        "skipStageSchema": {
-          "type": "boolean"
-        },
-        "moduleType": {
-          "type": "string",
-          "enum": [
-            "CD",
-            "CI",
-            "CV",
-            "CF",
-            "CE",
-            "STO",
-            "CHAOS",
-            "SRM",
-            "CODE",
-            "CORE",
-            "PMS",
-            "TEMPLATESERVICE",
-            "GOVERNANCE",
-            "IACM"
-          ]
-        }
-      }
-    },
-    "ResponseListPartialSchemaDTO": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PartialSchemaDTO"
-          }
-        },
-        "metaData": {
-          "type": "object"
-        },
-        "correlationId": {
-          "type": "string"
-        }
-      }
-    },
-    "ResponseYamlSchemaDetailsWrapper": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string",
-          "enum": ["SUCCESS", "FAILURE", "ERROR"]
-        },
-        "data": {
-          "$ref": "#/definitions/YamlSchemaDetailsWrapper"
         },
         "metaData": {
           "type": "object"
@@ -24115,7 +24192,8 @@
             "GcpSecretManager",
             "AzureArtifacts",
             "Tas",
-            "Spot"
+            "Spot",
+            "TerraformCloud"
           ]
         },
         "spec": {
@@ -26138,6 +26216,68 @@
         }
       }
     },
+    "TerraformCloudConnector": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/ConnectorConfigDTO"
+        },
+        {
+          "type": "object",
+          "required": ["credential", "terraformCloudUrl"],
+          "properties": {
+            "terraformCloudUrl": {
+              "type": "string"
+            },
+            "credential": {
+              "$ref": "#/definitions/TerraformCloudCredential"
+            },
+            "delegateSelectors": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "executeOnDelegate": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "TerraformCloudCredential": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["ApiToken"]
+        },
+        "spec": {
+          "$ref": "#/definitions/TerraformCloudCredentialSpec"
+        }
+      }
+    },
+    "TerraformCloudCredentialSpec": {
+      "type": "object"
+    },
+    "TerraformCloudTokenCredentials": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/TerraformCloudCredentialSpec"
+        },
+        {
+          "type": "object",
+          "required": ["apiToken"],
+          "properties": {
+            "apiToken": {
+              "type": "string",
+              "readOnly": true
+            }
+          }
+        }
+      ]
+    },
     "VaultConnectorDTO": {
       "allOf": [
         {
@@ -27534,7 +27674,7 @@
     },
     "DowntimeDTO": {
       "type": "object",
-      "required": ["category", "entityRefs", "identifier", "name", "scope", "spec"],
+      "required": ["category", "entityRefs", "identifier", "name", "orgIdentifier", "projectIdentifier", "spec"],
       "properties": {
         "orgIdentifier": {
           "type": "string"
@@ -27627,7 +27767,7 @@
     },
     "DowntimeSpec": {
       "type": "object",
-      "required": ["timezone"],
+      "required": ["startTime", "timezone"],
       "discriminator": "type",
       "properties": {
         "timezone": {
@@ -27728,6 +27868,7 @@
         },
         {
           "type": "object",
+          "required": ["downtimeDuration", "downtimeRecurrence", "recurrenceEndTime"],
           "properties": {
             "recurrenceEndTime": {
               "type": "integer",
@@ -27764,7 +27905,15 @@
       }
     },
     "AffectedEntity": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "serviceRef": {
+          "type": "string"
+        },
+        "envRef": {
+          "type": "string"
+        }
+      }
     },
     "DowntimeListView": {
       "type": "object",
@@ -27800,11 +27949,23 @@
         },
         "lastModified": {
           "$ref": "#/definitions/LastModified"
+        },
+        "spec": {
+          "$ref": "#/definitions/DowntimeSpecDTO"
         }
       }
     },
     "LastModified": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "lastModifiedBy": {
+          "type": "string"
+        },
+        "lastModifiedAt": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
     },
     "PageDowntimeListView": {
       "type": "object",
@@ -27877,21 +28038,16 @@
             "$ref": "#/definitions/AffectedEntity"
           }
         },
-        "description": {
-          "type": "string"
-        },
         "duration": {
           "$ref": "#/definitions/DowntimeDuration"
         },
-        "status": {
-          "type": "string",
-          "enum": ["Active", "Scheduled"]
-        },
         "startTime": {
-          "type": "string"
+          "type": "integer",
+          "format": "int64"
         },
         "endTime": {
-          "type": "string"
+          "type": "integer",
+          "format": "int64"
         }
       }
     },

@@ -43,14 +43,16 @@ const MetricsAccordionPanelSummary: React.FC<MetricsAccordionPanelSummaryProps> 
         <Icon name={getIconBySourceType(type as string)} margin={{ right: 'small' }} size={16} />
         {name}
       </Text>
+
       <Text
         font={{ variation: FontVariation.TABLE_HEADERS }}
         color={getRiskColorValue(risk, false)}
         style={{ borderColor: getRiskColorValue(risk, false) }}
-        className={css.metricRisk}
+        className={risk ? css.metricRisk : ''}
       >
         {risk}
       </Text>
+
       <Container>
         <NodeCount nodeRiskCount={nodeRiskCount} />
       </Container>

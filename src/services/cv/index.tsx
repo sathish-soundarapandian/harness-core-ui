@@ -21,7 +21,8 @@ export interface AdditionalInfo {
 }
 
 export interface AffectedEntity {
-  [key: string]: any
+  envRef?: string
+  serviceRef?: string
 }
 
 export type AnalysedDeploymentNode = AbstractAnalysedNode & {
@@ -830,6 +831,7 @@ export interface ConnectorInfoDTO {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'TerraformCloud'
 }
 
 export interface ControlClusterSummary {
@@ -1213,9 +1215,9 @@ export interface DowntimeDTO {
   entityRefs: EntityDetails[]
   identifier: string
   name: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  scope: 'Project' | 'Entity'
+  orgIdentifier: string
+  projectIdentifier: string
+  scope?: 'Project' | 'Entity'
   spec: DowntimeSpecDTO
   tags?: {
     [key: string]: string
@@ -1230,13 +1232,11 @@ export interface DowntimeDuration {
 export interface DowntimeHistoryView {
   affectedEntities?: AffectedEntity[]
   category?: 'ScheduledMaintenance' | 'Deployment' | 'Other'
-  description?: string
   duration?: DowntimeDuration
-  endTime?: string
+  endTime?: number
   identifier?: string
   name?: string
-  startTime?: string
-  status?: 'Active' | 'Scheduled'
+  startTime?: number
 }
 
 export interface DowntimeListView {
@@ -1248,6 +1248,7 @@ export interface DowntimeListView {
   identifier?: string
   lastModified?: LastModified
   name?: string
+  spec?: DowntimeSpecDTO
   status?: 'Active' | 'Scheduled'
 }
 
@@ -1263,7 +1264,7 @@ export interface DowntimeResponse {
 }
 
 export interface DowntimeSpec {
-  startTime?: number
+  startTime: number
   timezone: string
 }
 
@@ -2799,7 +2800,8 @@ export type KubernetesUserNamePasswordDTO = KubernetesAuthCredentialDTO & {
 }
 
 export interface LastModified {
-  [key: string]: any
+  lastModifiedAt?: number
+  lastModifiedBy?: string
 }
 
 export interface LearningEngineTask {
@@ -3236,7 +3238,7 @@ export interface MetricThresholdCriteriaV2 {
   actionableCount?: number
   greaterThanThreshold?: number
   lessThanThreshold?: number
-  measurementType?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
+  measurementType?: 'ratio' | 'delta' | 'absolute-value'
 }
 
 export interface MetricThresholdSpec {
@@ -4020,9 +4022,9 @@ export type RatioSLIMetricSpec = SLIMetricSpec & {
 }
 
 export type RecurringDowntimeSpec = DowntimeSpec & {
-  downtimeDuration?: DowntimeDuration
-  downtimeRecurrence?: DowntimeRecurrence
-  recurrenceEndTime?: number
+  downtimeDuration: DowntimeDuration
+  downtimeRecurrence: DowntimeRecurrence
+  recurrenceEndTime: number
 }
 
 export interface ReferenceDTO {
@@ -5915,6 +5917,26 @@ export interface TemporalUnit {
   timeBased?: boolean
 }
 
+export type TerraformCloudConnector = ConnectorConfigDTO & {
+  credential: TerraformCloudCredential
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+  terraformCloudUrl: string
+}
+
+export interface TerraformCloudCredential {
+  spec?: TerraformCloudCredentialSpec
+  type: 'ApiToken'
+}
+
+export interface TerraformCloudCredentialSpec {
+  [key: string]: any
+}
+
+export type TerraformCloudTokenCredentials = TerraformCloudCredentialSpec & {
+  apiToken: string
+}
+
 export type ThresholdSLIMetricSpec = SLIMetricSpec & {
   metric1: string
   thresholdType: '>' | '<' | '>=' | '<='
@@ -6063,7 +6085,7 @@ export interface TimeSeriesMetricDataDTO {
 export interface TimeSeriesMetricDefinition {
   action?: 'FAIL_IMMEDIATELY' | 'FAIL_AFTER_OCCURRENCES' | 'FAIL_AFTER_CONSECUTIVE_OCCURRENCES' | 'IGNORE'
   actionType?: 'IGNORE' | 'FAIL'
-  comparisonType?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
+  comparisonType?: 'ratio' | 'delta' | 'absolute-value'
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   id?: string
   metricGroupName?: string
@@ -6177,7 +6199,7 @@ export interface TimeSeriesThresholdCriteria {
   criteria?: string
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   occurrenceCount?: number
-  type?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
+  type?: 'ratio' | 'delta' | 'absolute-value'
 }
 
 export interface TimeSeriesThresholdDTO {

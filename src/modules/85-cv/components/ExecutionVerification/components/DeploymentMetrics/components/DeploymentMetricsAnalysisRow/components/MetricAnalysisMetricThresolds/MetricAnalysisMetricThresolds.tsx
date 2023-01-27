@@ -112,10 +112,6 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
     [thresholds]
   )
 
-  if (!(Array.isArray(thresholds) && thresholds.length)) {
-    return <></>
-  }
-
   return (
     <Container data-testid="metric-analysis-metric-threshold">
       <TableV2<MetricThresholdV2> columns={columns} data={thresholds as MetricThresholdV2[]} />
