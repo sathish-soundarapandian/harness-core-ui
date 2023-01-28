@@ -36,7 +36,7 @@ import EmptyContentImg from './EmptyContent.svg'
 
 import css from './Environments.module.scss'
 
-export function Environments() {
+export function Environments(): React.ReactElement {
   const [view, setView] = useState(Views.LIST)
 
   const { getString } = useStrings()
@@ -118,6 +118,7 @@ export function Environments() {
             resource: {
               resourceType: ResourceType.ENVIRONMENT
             },
+            resourceScope: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
             attributeFilter: {
               attributeName: 'type',
               attributeValues: ['Production', 'PreProduction']

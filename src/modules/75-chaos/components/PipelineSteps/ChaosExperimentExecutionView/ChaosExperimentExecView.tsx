@@ -20,7 +20,7 @@ import {
 } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { Strategy, strategyIconMap, stringsMap, StrategyType } from '@pipeline/utils/FailureStrategyUtils'
-
+import { Duration } from '@common/exports'
 import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/StrategySelection/StrategyConfig'
@@ -28,7 +28,7 @@ import { StepMode } from '@pipeline/utils/stepUtils'
 import { isExecutionWaitingForIntervention } from '@pipeline/utils/statusHelpers'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 import routes from '@common/RouteDefinitions'
-import type { ChaosStepExecutionProps } from '@chaos/interfaces/Chaos.types'
+import type { ChaosCustomMicroFrontendProps, ChaosStepExecutionProps } from '@chaos/interfaces/Chaos.types'
 
 import css from './ChaosExperimentExecView.module.scss'
 
@@ -133,7 +133,7 @@ export default function ChaosExperimentExecView(props: StepDetailProps): React.R
 
   return (
     <Container padding="medium">
-      <ChildAppMounter<ChaosStepExecutionProps>
+      <ChildAppMounter<ChaosStepExecutionProps & ChaosCustomMicroFrontendProps>
         ChildApp={ChaosStepExecution}
         notifyID={step.executableResponses?.[0]?.async?.callbackIds?.[0] ?? ''}
         expectedResilienceScore={step.stepParameters?.spec?.expectedResilienceScore ?? 50}
@@ -156,6 +156,9 @@ export default function ChaosExperimentExecView(props: StepDetailProps): React.R
             })
           )
         }
+        customComponents={{
+          Duration
+        }}
         status={step.status as string}
         isManualInterruption={isManualInterruption}
       />

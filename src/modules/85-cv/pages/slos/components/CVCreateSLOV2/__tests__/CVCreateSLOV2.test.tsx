@@ -14,7 +14,17 @@ import routes from '@common/RouteDefinitions'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import { userJourneyResponse } from '@cv/pages/slos/__tests__/CVSLOsListingPage.mock'
 import CVCreateSLOV2 from '../CVCreateSLOV2'
-import { calendarMonthly, calendarWeekly, calendarQuarterly, SLODetailsData } from './CVCreateSLOV2.mock'
+import {
+  calendarMonthly,
+  calendarWeekly,
+  calendarQuarterly,
+  SLODetailsData,
+  simpleSLOData,
+  metricListResponse,
+  healthSourceListResponse,
+  monitoredServicelist,
+  notificationMock
+} from './CVCreateSLOV2.mock'
 import { getSLOTarget } from '../CVCreateSLOV2.utils'
 
 jest.useFakeTimers()
@@ -32,6 +42,27 @@ const testPathParams = {
   identifier: 'new_slov2'
 }
 
+jest.mock('@cv/hooks/IndexedDBHook/IndexedDBHook', () => ({
+  useIndexedDBHook: jest.fn().mockReturnValue({
+    isInitializingDB: false,
+    dbInstance: {
+      put: jest.fn(),
+      get: jest.fn().mockReturnValue(undefined)
+    }
+  }),
+  CVObjectStoreNames: {}
+}))
+
+jest.mock('@connectors/components/ConnectorReferenceField/FormConnectorReferenceField', () => ({
+  FormConnectorReferenceField: function MockComp(props: any) {
+    return (
+      <div>
+        <button className="updateValue" onClick={() => props.formik.setFieldValue('spec', { connectorRef: 'kube' })} />
+      </div>
+    )
+  }
+}))
+
 jest.mock('@common/hooks', () => ({
   ...(jest.requireActual('@common/hooks') as any),
   useMutateAsGet: jest.fn().mockImplementation(() => {
@@ -40,6 +71,18 @@ jest.mock('@common/hooks', () => ({
 }))
 
 jest.mock('services/cv', () => ({
+  useGetSloMetrics: jest.fn().mockImplementation(() => ({ refetch: jest.fn(), data: metricListResponse })),
+  useCreateDefaultMonitoredService: jest.fn().mockImplementation(() => ({
+    error: null,
+    loading: false,
+    mutate: jest.fn().mockImplementation(() => {
+      return {
+        metaData: {},
+        resource: {},
+        responseMessages: []
+      }
+    })
+  })),
   useSaveSLOV2Data: jest.fn().mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
   useUpdateSLOV2Data: jest
     .fn()
@@ -62,9 +105,19 @@ jest.mock('services/cv', () => ({
   useUpdateNotificationRuleData: jest
     .fn()
     .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() })),
-  useGetNotificationRuleData: jest
+  useGetNotificationRuleData: jest.fn().mockImplementation(() => ({
+    data: notificationMock, //{ data: { ...notificationMock.data } },
+    loading: false,
+    error: null,
+    refetch: jest.fn()
+  })),
+  useGetAllMonitoredServicesWithTimeSeriesHealthSources: jest
     .fn()
-    .mockImplementation(() => ({ data: {}, loading: false, error: null, refetch: jest.fn() }))
+    .mockImplementation(() => ({ loading: false, data: monitoredServicelist, error: null, refetch: jest.fn() })),
+  useGetSliGraph: jest.fn().mockImplementation(() => ({ loading: false, data: {}, error: null })),
+  useGetMonitoredService: jest
+    .fn()
+    .mockImplementation(() => ({ loading: false, error: null, data: healthSourceListResponse, refetch: jest.fn() }))
 }))
 
 describe('CVCreateSloV2', () => {
@@ -73,16 +126,45 @@ describe('CVCreateSloV2', () => {
   })
 
   test('CVCreateSLOV2 when isComposite is false', async () => {
-    const { container } = render(
+    jest
+      .spyOn(cvServices, 'useGetAllMonitoredServicesWithTimeSeriesHealthSources')
+      .mockImplementation(() => ({ data: null, loading: true, error: null, refetch: jest.fn() } as any))
+    const { container, getByText } = render(
       <TestWrapper
         path="/account/:accountId/cv/dashboard/orgs/:orgIdentifier/projects/:projectIdentifier/slos"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <CVCreateSLOV2 isComposite={false} />
+        <CVCreateSLOV2 />
       </TestWrapper>
     )
+    act(() => {
+      userEvent.click(getByText('next'))
+    })
+    await waitFor(() => expect(screen.getAllByText('cv.slos.validations.nameValidation').length).toEqual(2))
+    await waitFor(() => expect(screen.getAllByText('cv.slos.validations.userJourneyRequired').length).toEqual(2))
+    await waitFor(() =>
+      expect(screen.getAllByText('connectors.cdng.validations.monitoringServiceRequired').length).toEqual(2)
+    )
+    expect(
+      container.querySelector('[data-testid="steptitle_Define_SLO_Identification"] [icon="error"]')
+    ).toBeInTheDocument()
     expect(container).toMatchSnapshot()
+
+    // Save should validate all Steps
+    act(() => {
+      userEvent.click(screen.getByText('save'))
+    })
+    act(() => {
+      userEvent.click(container.querySelector('[data-testid="steptitle_Configure_Service_Level_Indicatiors"]')!)
+    })
+    act(() => {
+      userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO"]')!)
+    })
+    act(() => {
+      userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+    })
   })
+
   test('Cancel without adding any values', async () => {
     const { container, getByText } = render(
       <TestWrapper>
@@ -626,5 +708,138 @@ describe('CVCreateSloV2', () => {
   test('should validate getSLOTarget with empty periodType', () => {
     expect(getSLOTarget({} as any)).toEqual({})
     expect(getSLOTarget({ periodType: 'Calender' } as any)).toEqual({})
+  })
+})
+
+describe('Simple SLO V2', () => {
+  test('Switch to Ratio basaed', async () => {
+    jest
+      .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
+      .mockImplementation(() => ({ data: simpleSLOData, loading: false, error: null, refetch: jest.fn() } as any))
+    const { container } = render(
+      <TestWrapper
+        path="/account/:accountId/cv/dashboard/orgs/:orgIdentifier/projects/:projectIdentifier/slos"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <CVCreateSLOV2 isComposite={false} />
+      </TestWrapper>
+    )
+
+    act(() => {
+      userEvent.click(screen.getByText('next'))
+    })
+
+    act(() => {
+      userEvent.click(container.querySelector('[value="Ratio"]')!)
+    })
+
+    act(() => {
+      userEvent.click(container.querySelector('[name="goodRequestMetric"]')!)
+    })
+    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
+    act(() => {
+      userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0]!)
+    })
+
+    act(() => {
+      userEvent.click(container.querySelector('[name="validRequestMetric"]')!)
+    })
+    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(4))
+    act(() => {
+      userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0]!)
+    })
+  })
+  test('Edit simple slo v2', async () => {
+    jest
+      .spyOn(cvServices, 'useGetServiceLevelObjectiveV2')
+      .mockImplementation(() => ({ data: simpleSLOData, loading: false, error: null, refetch: jest.fn() } as any))
+    const { container, getByText } = render(
+      <TestWrapper
+        path="/account/:accountId/cv/dashboard/orgs/:orgIdentifier/projects/:projectIdentifier/slos"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <CVCreateSLOV2 isComposite={false} />
+      </TestWrapper>
+    )
+
+    expect(container.querySelector('input[ name="name"')).toHaveValue('SLO1')
+
+    act(() => {
+      userEvent.click(screen.getByText('next'))
+    })
+    expect(getByText('service_appd_env_appd')).toBeInTheDocument()
+    expect(getByText('cv.slos.slis.HealthSource')).toBeInTheDocument()
+    expect(getByText('cv.healthSource.newHealthSource')).toBeInTheDocument()
+
+    act(() => {
+      userEvent.click(getByText('cv.slos.slis.type.latency'))
+    })
+
+    act(() => {
+      userEvent.click(container.querySelector('[name="healthSourceRef"]')!)
+    })
+    await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(2))
+    act(() => {
+      userEvent.click(document.querySelectorAll('[class*="bp3-menu"] li')[0]!)
+    })
+
+    act(() => {
+      userEvent.click(getByText('cv.healthSource.newHealthSource'))
+    })
+    const healthSourceDrawer: HTMLElement | null = document.querySelector('.health-source-right-drawer')
+    expect(healthSourceDrawer).toBeTruthy()
+    fireEvent.click(document.querySelector('[data-icon="cross"]')!)
+
+    act(() => {
+      userEvent.click(getByText('cv.newMetric'))
+    })
+    const metricDrawer: HTMLElement | null = document.querySelector('.health-source-right-drawer')
+    expect(metricDrawer).toBeTruthy()
+    fireEvent.click(document.querySelector('[data-icon="cross"]')!)
+
+    act(() => {
+      userEvent.click(container.querySelector('[data-testid="steptitle_Set_SLO"]')!)
+    })
+    act(() => {
+      userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+    })
+    act(() => {
+      userEvent.click(getByText('cancel'))
+    })
+  })
+
+  test('check failure of useGetAllMonitoredServicesWithTimeSeriesHealthSources', () => {
+    jest
+      .spyOn(cvServices, 'useGetAllMonitoredServicesWithTimeSeriesHealthSources')
+      .mockImplementation(
+        () => ({ data: null, loading: false, error: { data: { message: 'api error' } }, refetch: jest.fn() } as any)
+      )
+    render(
+      <TestWrapper
+        path="/account/:accountId/cv/dashboard/orgs/:orgIdentifier/projects/:projectIdentifier/slos"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <CVCreateSLOV2 isComposite={false} />
+      </TestWrapper>
+    )
+    expect(screen.getAllByText('api error')).toHaveLength(2)
+  })
+
+  test('Cancel without adding any values', async () => {
+    const { container, getByText } = render(
+      <TestWrapper>
+        <CVCreateSLOV2 />
+      </TestWrapper>
+    )
+    act(() => {
+      userEvent.click(getByText('save'))
+    })
+    expect(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')).toBeInTheDocument()
+    act(() => {
+      userEvent.click(container.querySelector('[data-testid="steptitle_Error_Budget_Policy"]')!)
+    })
+    act(() => {
+      userEvent.click(getByText('cancel'))
+    })
   })
 })

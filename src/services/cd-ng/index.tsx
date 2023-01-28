@@ -1897,7 +1897,6 @@ export interface CDPipelineModuleInfo {
 
 export interface CDStageMetaDataDTO {
   environmentRef?: string
-  serviceEnvRefList?: ServiceEnvRef[]
   serviceRef?: string
 }
 
@@ -14656,11 +14655,6 @@ export interface ServiceDetailsInfoDTO {
 
 export interface ServiceDetailsInfoDTOV2 {
   serviceDeploymentDetailsList?: ServiceDetailsDTOV2[]
-}
-
-export interface ServiceEnvRef {
-  environmentRef?: string
-  serviceRef?: string
 }
 
 export interface ServiceExecutionSummary {

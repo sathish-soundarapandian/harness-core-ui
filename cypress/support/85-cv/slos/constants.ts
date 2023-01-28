@@ -34,7 +34,7 @@ export const listMonitoredServicesForNewerProject = `/cv/api/monitored-service/a
 export const getSLOMetrics = `/cv/api/monitored-service/cvng_prod/health-source/${healthSource}/slo-metrics?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getSliGraph = `/cv/api/monitored-service/cvng_prod/sli/onboarding-graph?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getAccountLevelOnboardingGraph = `/cv/api/slo/v2/composite-slo/onboarding-graph?*`
-export const getServiceLevelObjective = `/cv/api/slo/SLO1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
+export const getServiceLevelObjective = `/cv/api/slo/v2/SLO1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getServiceLevelObjectiveV2 = `cv/api/slo/v2/Composite_SLO_1?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1`
 export const getSLODetails = `/cv/api/slo-dashboard/widget/SLO1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getServiceLevelObjectiveForNewerProject = `/cv/api/slo/SLO1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}`
@@ -49,7 +49,7 @@ export const getSLORiskCountWithRolling = `/cv/api/slo-dashboard/risk-count?rout
 export const getSLORiskCountWithAvailability = `/cv/api/slo-dashboard/risk-count?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&sliTypes=Availability`
 export const getSLORiskCountWithLatency = `/cv/api/slo-dashboard/risk-count?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}&sliTypes=Latency`
 export const getMonitoredService = `/cv/api/monitored-service/cvng_prod?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
-export const deleteSLOData = `/cv/api/slo/SLO1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
+export const deleteSLOData = `/cv/api/slo/v2/SLO1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const saveSLO = `/cv/api/slo?routingId=${accountId}&accountId=${accountId}`
 export const saveMonitoredServiceCall = `/cv/api/monitored-service?routingId=${accountId}&accountId=${accountId}`
 export const updateSLO = `/cv/api/slo/SLO1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
@@ -73,6 +73,7 @@ export const createNotification = `/cv/api/notification-rule?routingId=${account
 export const getServicesCall = `/ng/api/services?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getEnvironmentsCall = `/ng/api/environments?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const createSloV2 = `/cv/api/slo/v2?*`
+
 export const listSLOsCallResponse = {
   status: 'SUCCESS',
   data: { totalPages: 0, totalItems: 0, pageItemCount: 0, pageSize: 4, content: [], pageIndex: 0, empty: false },

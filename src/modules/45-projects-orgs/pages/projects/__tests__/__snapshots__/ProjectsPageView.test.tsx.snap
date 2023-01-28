@@ -109,7 +109,7 @@ exports[`Project Page List Create Project and Close 1`] = `
         </span>
       </button>
       <div
-        class="bp3-popover-wrapper DropDown--main orgDropdown"
+        class="bp3-popover-wrapper DropDown--main"
       >
         <div
           class="bp3-popover-target"
@@ -3909,7 +3909,7 @@ exports[`Project Page List Toggle between grid and list view 1`] = `
         </span>
       </button>
       <div
-        class="bp3-popover-wrapper DropDown--main orgDropdown"
+        class="bp3-popover-wrapper DropDown--main"
       >
         <div
           class="bp3-popover-target"
@@ -7709,7 +7709,7 @@ exports[`Project Page List Toggle between grid and list view 2`] = `
         </span>
       </button>
       <div
-        class="bp3-popover-wrapper DropDown--main orgDropdown"
+        class="bp3-popover-wrapper DropDown--main"
       >
         <div
           class="bp3-popover-target"
@@ -11509,7 +11509,7 @@ exports[`Project Page List Whole Modal Test 1`] = `
         </span>
       </button>
       <div
-        class="bp3-popover-wrapper DropDown--main orgDropdown"
+        class="bp3-popover-wrapper DropDown--main"
       >
         <div
           class="bp3-popover-target"

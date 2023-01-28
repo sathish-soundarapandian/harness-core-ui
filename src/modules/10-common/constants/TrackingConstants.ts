@@ -114,7 +114,46 @@ export enum DelegateActions {
   SaveCreateToken = 'Save Create Token',
   CloseCreateToken = 'Close Create Token',
   ReviewScriptContinue = 'Review Script Continue',
-  ReviewScriptBack = 'Review Script Back'
+  ReviewScriptBack = 'Review Script Back',
+  DelegateCommandLineKubernetes = 'Delegate Command Line Kubernetes',
+  DelegateCommandLineKubernetesManifest = 'Delegate Command Line Kubernetes Manifest',
+  DelegateCommandLineKubernetesManifestCommandCopy1 = 'Delegate Command Line Kubernetes Manifest curl -LO https://raw.githubusercontent.com/harness/delegate-kubernetes-manifest/main/harness-delegate.yaml copy',
+
+  DelegateCommandLineKubernetesManifestCommandCopy2 = 'Delegate Command Line Kubernetes Manifest command from backend copy',
+  DelegateCommandLineHelm = 'Delegate Command Line Helm',
+  DelegateCommandLineHelmCommandCopy1 = 'Delegate Command Line Helm first command helm repo add harness-delegate https://app.harness.io/storage/harness-download/delegate-helm-chart/',
+  DelegateCommandLineTroubleShoot = 'Delegate Command Line TroubleShoot',
+  DelegateCommandLineTroubleShootRetryConnection = 'Delegate Command Line TroubleShoot retry connection',
+  DelegateCommandLineDone = 'Delegate Command Line Done',
+  DelegateCommandLineHelmCommandCopy2 = 'Delegate Command Line Helm second command helm repo update',
+  DelegateCommandLineHelmCommandCopy3 = 'Delegate Command Line Helm third command copy',
+
+  DelegateCommandLineHelmCommandCopy4 = 'Delegate Command Line Helm command from backend  copy',
+  DelegateCommandLineTerraform = 'Delegate Command Line Terraform',
+  DelegateCommandLineTerraformCommandCopy1 = 'Delegate Command Line Terraform terraform apply copy',
+  DelegateCommandLineTerraformCommandCopy2 = 'Delegate Command Line Terraform terraform init copy',
+  DelegateCommandLineTerraformCommandCopy3 = 'Delegate Command Line Terraform command from backend  copy',
+  DelegateCommandLineTerraformDownloadCommand3 = 'Delegate Command Line Terraform command from backend download',
+  DelegateCommandLineTroubleShootProblemSolved = 'Delegate CommandLine TroubleShoot Problem Solved',
+  DelegateCommandLineTroubleShootProblemNotSolved = 'Delegate CommandLine TroubleShoot Problem Not Solved',
+  DelegateCommandLineTroubleShootProblemFeedBackSaved = 'Delegate CommandLine TroubleShoot FeedBack Saved',
+
+  DelegateCommandLineDocker = 'Delegate Command Line Docker',
+  DelegateCommandLineDockerCommandCopy = 'Delegate Command Line Docker Command Copy',
+  DelegateCommandLineTroubleShootCopyCommonCommand1 = 'Delegate CommandLine TroubleShoot Copy Common Command kubectl describe pods -n <namespace>',
+  DelegateCommandLineTroubleShootCopyCommonCommand2 = 'Delegate CommandLine TroubleShoot Copy Common Command kubectl logs -f <harnessDelegateName> -n <namespace>',
+  DelegateCommandLineTroubleShootCopyCommonCommand3 = 'Delegate CommandLine TroubleShoot Copy Common Command kubectl describe <pod_name> -n <namespace>',
+  DelegateCommandLineTroubleShootDockerCopyCommonCommand1 = 'Delegate CommandLine TroubleShoot Docker Copy Common Command docker container ls -a',
+  DelegateCommandLineTroubleShootDockerCopyCommonCommand2 = 'Delegate CommandLine TroubleShoot Docker Copy Common Command docker container logs <delegatename> -f',
+  DelegateCommandLineTroubleShootDockerCopyCommonCommand3 = 'Delegate CommandLine TroubleShoot Docker Copy Common Command docker container stop <delegatename>',
+  DelegateCommandLineTroubleShootDockerCopyCommonCommand4 = 'Delegate CommandLine TroubleShoot Docker Copy Common Command docker container start <delegatename>',
+  DelegateCommandLineTroubleShootDockerCopyCommonCommand5 = 'Delegate CommandLine TroubleShoot Docker Copy Common Command docker container rm [container id]',
+  DelegateCommandLineTroubleShootHelmCopyCommonCommand1 = 'Delegate CommandLine TroubleShoot Helm Copy Common Command helm',
+  DelegateCommandLineTroubleShootHelmCopyCommonCommand2 = 'Delegate CommandLine TroubleShoot Helm Copy Common Command helm version',
+  DelegateCommandLineTroubleShootTerraformCopyCommonCommand1 = 'Delegate CommandLine TroubleShoot Terraform Copy Common Command terraform -version',
+  SwitchedToOldDelegateCreationModal = 'switchedToOldDelegateCreationModal',
+  DelegateCommandLineCreationOpened = 'Delegate CommandLine Creation Opened',
+  DelegateCommandLineCreationClosed = 'Delegate CommandLine Creation Closed'
 }
 
 export enum StepActions {

@@ -42,6 +42,8 @@ import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ArtifactConfigDrawer.module.scss'
 
@@ -108,6 +110,7 @@ function ArtifactSourceTemplateDetails(
   const { type: artifactSourceType } = artifactSourceTemplate.templateInputs || {}
   const artifactSource = artifactSourceType && artifactSourceBaseFactory.getArtifactSource(artifactSourceType)
 
+  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const queryParams = useParams<ProjectPathProps>()
   const { projectIdentifier, orgIdentifier, accountId } = queryParams
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
@@ -156,7 +159,8 @@ function ArtifactSourceTemplateDetails(
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: artifactSourceTemplate.versionLabel || '',
       ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
-    }
+    },
+    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
   })
 
   const templateInputs = React.useMemo(

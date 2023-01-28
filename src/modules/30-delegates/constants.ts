@@ -14,6 +14,7 @@ export const DelegateTypes = {
 
 export const POLL_INTERVAL = 2 /* sec */ * 1000 /* ms */
 export const TIME_OUT = 5 * 60 * 1000
+export const DELEGATE_COMMAND_LINE_TIME_OUT = 3 * 60 * 1000
 
 export enum DelegateStatus {
   ENABLED = 'ENABLED',
@@ -63,4 +64,30 @@ export const DelegateSize = {
 
 export const isHelmDelegateEnabled = (isEnabled = false): boolean => {
   return isEnabled
+}
+
+export enum DelegateCommandLineTypes {
+  KUBERNETES = 'KUBERNETES',
+  DOCKER = 'DOCKER'
+}
+export enum DelegateCommonProblemTypes {
+  HELM_CHART = 'HELM_CHART',
+  KUBERNETES_MANIFEST = 'KUBERNETES_MANIFEST',
+  TERRAFORM = 'TERRAFORM',
+  DOCKER = 'DOCKER'
+}
+export enum KubernetesType {
+  HELM_CHART = 'HELM_CHART',
+  KUBERNETES_MANIFEST = 'KUBERNETES_MANIFEST',
+  TERRAFORM = 'TERRAFORM'
+}
+export enum CommandType {
+  DOCKER = 'DOCKER',
+  HELM = 'HELM',
+  TERRAFORM = 'TERRAFORM'
+}
+export enum DelegateDefaultName {
+  DOCKER = 'docker-delegate',
+  HELM = 'helm-delegate',
+  TERRAFORM = 'terraform-delegate'
 }

@@ -2,8 +2,11 @@ secrets: Secrets
 home: Home
 welcome: Welcome
 help: Help
+copied: 'Copied'
+clear: Clear
 dashboards: Dashboards
 setup: Setup
+HelmChartLabel: Helm Chart
 agent: Agent
 agents: Agents
 gitopsAgents: Gitops Agents
@@ -1202,6 +1205,13 @@ licensesConsumed: 'LICENSES CONSUMED'
 downloadCSV: 'Download CSV'
 whatIsActiveService: What is an Active Service?
 noActiveServiceData: No active Service Record found
+delegateFailed: Delegate Failed to connect to Harness
+harnessURL: 'https://app.harness.io'
+
+learnMoreDelegate: Learn more about Delegates, watch Video
+delegateFailText1Part1: Harness Delegate failed to connect to our Harness SaaS. Please make sure the infrastructure the delegate is installed on can reach
+delegateFailText2: The Delegate failed to come up on the cluster, please check to see if the pods are healthy or are already scheduled on the cluster.
+delegateSuccess: Great! You have successfully installed the Delegate.
 tabOrgs: 'Organizations: {{name}}'
 tabProjects: 'Projects: {{name}}'
 notification: Notification

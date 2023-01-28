@@ -21,7 +21,8 @@ jest.mock('@cf/hooks/useFeatureFlagTelemetry', () => ({
 }))
 
 jest.mock('@common/hooks/useQueryParams', () => ({
-  useQueryParams: () => jest.fn()
+  useQueryParams: () => jest.fn(),
+  queryParamDecodeAll: jest.fn()
 }))
 
 jest.mock('@common/hooks/useTelemetry', () => ({

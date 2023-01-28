@@ -236,7 +236,7 @@ export const manifestTypeIcons: Record<ManifestTypes, IconName> = {
 export const manifestTypeLabels: Record<ManifestTypes, StringKeys> = {
   K8sManifest: 'pipeline.manifestTypeLabels.K8sManifest',
   Values: 'pipeline.manifestTypeLabels.ValuesYaml',
-  HelmChart: 'pipeline.manifestTypeLabels.HelmChartLabel',
+  HelmChart: 'common.HelmChartLabel',
   Kustomize: 'pipeline.manifestTypeLabels.KustomizeLabel',
   OpenshiftTemplate: 'pipeline.manifestTypeLabels.OpenshiftTemplate',
   OpenshiftParam: 'pipeline.manifestTypeLabels.OpenshiftParam',

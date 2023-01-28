@@ -49,6 +49,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isOnPrem } from '@common/utils/utils'
 import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import EntityUsage from '@common/pages/entityUsage/EntityUsage'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
 import { sanitize } from '@common/utils/JSONUtils'
@@ -259,6 +260,7 @@ export default function EnvironmentDetails(): React.ReactElement {
                             data={data}
                             isEdit
                             context={PipelineContextType.Standalone}
+                            scope={getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })}
                           />
                         )
                       },

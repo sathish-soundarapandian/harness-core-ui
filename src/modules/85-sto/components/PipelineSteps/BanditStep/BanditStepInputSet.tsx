@@ -16,10 +16,8 @@ import {
   CIStepOptionalConfigProps
 } from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
-import { useStrings } from 'framework/strings'
 import type { BanditStepProps } from './BanditStep'
-import SecurityField from '../SecurityField'
-import { inputSetFields } from '../constants'
+import { InputSetFields } from '../SecurityFields'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const BanditStepInputSetBasic: React.FC<BanditStepProps> = ({
@@ -31,7 +29,6 @@ export const BanditStepInputSetBasic: React.FC<BanditStepProps> = ({
   formik
 }) => {
   const prefix = isEmpty(path) ? '' : `${path}.`
-  const { getString } = useStrings()
   const enableFields: CIStepOptionalConfigProps['enableFields'] = {
     ...(shouldRenderRunTimeInputView(template?.spec?.settings) && {
       'spec.settings': {}
@@ -51,11 +48,12 @@ export const BanditStepInputSetBasic: React.FC<BanditStepProps> = ({
         }}
         path={path || ''}
       />
-      <SecurityField
+      <InputSetFields
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
-        enableFields={inputSetFields(getString, prefix, template)}
+        prefix={prefix}
+        template={template}
       />
       <CIStepOptionalConfig
         readonly={readonly}

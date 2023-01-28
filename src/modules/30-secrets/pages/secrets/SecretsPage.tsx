@@ -42,6 +42,8 @@ import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/Ent
 import { useCreateWinRmCredModal } from '@secrets/modals/CreateWinRmCredModal/useCreateWinRmCredModal'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import SecretsList from './views/SecretsListView/SecretsList'
 
 import SecretEmptyState from './secrets-empty-state.png'
@@ -66,7 +68,8 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
   const history = useHistory()
   const { getString } = useStrings()
   const [searchTerm, setSearchTerm] = useState<string | undefined>()
-  const [page, setPage] = useState(0)
+  const { page: pageIndex, size: pageSize } = useQueryParams<CommonPaginationQueryParams>()
+  const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams>()
   const [openPopOver, setOpenPopOver] = useState<boolean>(false)
   const [emptyStateOpenPopOver, setEmptyStateOpenPopOver] = useState<boolean>(false)
   useDocumentTitle(getString('common.secrets'))
@@ -80,8 +83,8 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
     queryParams: {
       accountIdentifier: accountId,
       searchTerm,
-      pageIndex: page,
-      pageSize: 10,
+      pageIndex: pageIndex ?? 0,
+      pageSize: pageSize ?? 10,
       orgIdentifier,
       projectIdentifier
     },
@@ -220,7 +223,7 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
             alwaysExpanded
             onChange={text => {
               setSearchTerm(text.trim())
-              setPage(0)
+              updateQueryParams({ page: 0 })
             }}
             width={250}
           />
@@ -255,11 +258,7 @@ const SecretsPage: React.FC<SecretsPageProps> = ({ mock }) => {
             />
           </div>
         ) : !secretsResponse?.data?.empty ? (
-          <SecretsList
-            secrets={secretsResponse?.data}
-            refetch={refetch}
-            gotoPage={/* istanbul ignore next */ pageNumber => setPage(pageNumber)}
-          />
+          <SecretsList secrets={secretsResponse?.data} refetch={refetch} />
         ) : (
           <Container flex={{ align: 'center-center' }} padding="xxlarge">
             No Data

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -177,6 +177,7 @@ export interface APMSetupTestNodeData {
     | 'AWS_LAMBDA_VERIFICATION'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
     | 'COLLECT_REMAINING_INSTANCES'
+    | 'ENV_ROLLBACK_STATE'
   toTime?: number
   workflowId?: string
 }
@@ -264,6 +265,8 @@ export interface Account {
   forImport?: boolean
   globalDelegateAccount?: boolean
   harnessSupportAccessAllowed?: boolean
+  immutableDelegateEnabled?: boolean
+  importantDelegateTaskLimit?: number
   lastUpdatedAt: number
   lastUpdatedBy?: EmbeddedUser
   licenseId?: string
@@ -272,11 +275,13 @@ export interface Account {
   migratedToClusterUrl?: string
   nextGenEnabled?: boolean
   oauthEnabled?: boolean
+  optionalDelegateTaskLimit?: number
   povAccount?: boolean
   productLed?: boolean
   ringName?: string
   serviceAccountConfig?: ServiceAccountConfig
   serviceGuardLimit?: number
+  smpAccount?: boolean
   subdomainUrl?: string
   techStacks?: TechStack[]
   trialSignupOptions?: TrialSignupOptions
@@ -424,6 +429,7 @@ export interface AccountPermissionSummary {
     | 'MANAGE_CUSTOM_DASHBOARDS'
     | 'CREATE_CUSTOM_DASHBOARDS'
     | 'MANAGE_RESTRICTED_ACCESS'
+    | 'HIDE_NEXTGEN_BUTTON'
   )[]
 }
 
@@ -476,6 +482,7 @@ export interface AccountPermissions {
     | 'MANAGE_CUSTOM_DASHBOARDS'
     | 'CREATE_CUSTOM_DASHBOARDS'
     | 'MANAGE_RESTRICTED_ACCESS'
+    | 'HIDE_NEXTGEN_BUTTON'
   )[]
 }
 
@@ -636,7 +643,7 @@ export type AddOperation = PatchOperation & {
 
 export interface AdditionalMetadata {
   values?: {
-    [key: string]: { [key: string]: any }
+    [key: string]: string
   }
 }
 
@@ -837,6 +844,36 @@ export type AllProdEnvFilter = EnvironmentFilter & {}
 
 export type AllUserGroupFilter = UserGroupFilter & {}
 
+export interface Any {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: Any
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  parserForType?: ParserAny
+  serializedSize?: number
+  typeUrl?: string
+  typeUrlBytes?: ByteString
+  unknownFields?: UnknownFieldSet
+  value?: ByteString
+}
+
+export interface AnyOrBuilder {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: Message
+  descriptorForType?: Descriptor
+  initializationErrorString?: string
+  initialized?: boolean
+  typeUrl?: string
+  typeUrlBytes?: ByteString
+  unknownFields?: UnknownFieldSet
+  value?: ByteString
+}
+
 export interface ApiKeyAuditDetails {
   apiKeyId?: string
   apiKeyName?: string
@@ -940,8 +977,8 @@ export interface AppPermission {
     | 'EXECUTE_WORKFLOW'
     | 'EXECUTE_PIPELINE'
     | 'EXECUTE_WORKFLOW_ROLLBACK'
-    | 'DEFAULT'
     | 'ABORT_WORKFLOW'
+    | 'DEFAULT'
   )[]
   appFilter?: AppFilter
   entityFilter?: Filter
@@ -993,6 +1030,7 @@ export interface AppPermission {
     | 'MANAGE_CUSTOM_DASHBOARDS'
     | 'CREATE_CUSTOM_DASHBOARDS'
     | 'MANAGE_RESTRICTED_ACCESS'
+    | 'HIDE_NEXTGEN_BUTTON'
 }
 
 export interface AppPermissionSummaryForUI {
@@ -1013,8 +1051,8 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_WORKFLOW'
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
-      | 'DEFAULT'
       | 'ABORT_WORKFLOW'
+      | 'DEFAULT'
     )[]
   }
   envPermissions?: {
@@ -1028,8 +1066,8 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_WORKFLOW'
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
-      | 'DEFAULT'
       | 'ABORT_WORKFLOW'
+      | 'DEFAULT'
     )[]
   }
   envPipelineDeployPermissions?: {
@@ -1046,8 +1084,8 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_WORKFLOW'
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
-      | 'DEFAULT'
       | 'ABORT_WORKFLOW'
+      | 'DEFAULT'
     )[]
   }
   provisionerPermissions?: {
@@ -1061,8 +1099,8 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_WORKFLOW'
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
-      | 'DEFAULT'
       | 'ABORT_WORKFLOW'
+      | 'DEFAULT'
     )[]
   }
   servicePermissions?: {
@@ -1076,8 +1114,8 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_WORKFLOW'
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
-      | 'DEFAULT'
       | 'ABORT_WORKFLOW'
+      | 'DEFAULT'
     )[]
   }
   templatePermissions?: {
@@ -1091,8 +1129,8 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_WORKFLOW'
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
-      | 'DEFAULT'
       | 'ABORT_WORKFLOW'
+      | 'DEFAULT'
     )[]
   }
   workflowPermissions?: {
@@ -1106,8 +1144,8 @@ export interface AppPermissionSummaryForUI {
       | 'EXECUTE_WORKFLOW'
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
-      | 'DEFAULT'
       | 'ABORT_WORKFLOW'
+      | 'DEFAULT'
     )[]
   }
 }
@@ -1276,6 +1314,7 @@ export interface AppdynamicsSetupTestNodeData {
     | 'AWS_LAMBDA_VERIFICATION'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
     | 'COLLECT_REMAINING_INSTANCES'
+    | 'ENV_ROLLBACK_STATE'
   tierId?: number
   toTime?: number
   workflowId?: string
@@ -1301,6 +1340,7 @@ export interface Application {
     [key: string]: string
   }
   description?: string
+  disableTriggers?: boolean
   environments?: Environment[]
   isManualTriggerAuthorized?: boolean
   keywords?: string[]
@@ -2561,7 +2601,12 @@ export interface Budget {
   actualCost?: number
   alertThresholds?: AlertThreshold[]
   budgetAmount?: number
+  budgetHistory?: {
+    [key: string]: BudgetCostData
+  }
+  budgetMonthlyBreakdown?: BudgetMonthlyBreakdown
   createdAt?: number
+  disableCurrencyWarning?: boolean
   emailAddresses?: string[]
   endTime?: number
   forecastCost?: number
@@ -2571,12 +2616,31 @@ export interface Budget {
   name?: string
   ngBudget?: boolean
   notifyOnSlack?: boolean
+  parentBudgetGroupId?: string
   period?: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'QUARTERLY' | 'YEARLY'
   scope?: BudgetScope
   startTime?: number
   type?: 'SPECIFIED_AMOUNT' | 'PREVIOUS_MONTH_SPEND' | 'PREVIOUS_PERIOD_SPEND'
   userGroupIds?: string[]
   uuid?: string
+}
+
+export interface BudgetCostData {
+  actualCost?: number
+  budgetVariance?: number
+  budgetVariancePercentage?: number
+  budgeted?: number
+  endTime?: number
+  forecastCost?: number
+  time?: number
+}
+
+export interface BudgetMonthlyBreakdown {
+  actualMonthlyCost?: number[]
+  budgetBreakdown?: 'YEARLY' | 'MONTHLY'
+  budgetMonthlyAmount?: ValueDataPoint[]
+  forecastMonthlyCost?: number[]
+  yearlyLastPeriodCost?: number[]
 }
 
 export interface BudgetScope {
@@ -2751,6 +2815,7 @@ export interface BugsnagSetupTestData {
     | 'AWS_LAMBDA_VERIFICATION'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
     | 'COLLECT_REMAINING_INSTANCES'
+    | 'ENV_ROLLBACK_STATE'
   toTime?: number
   workflowId?: string
 }
@@ -2821,13 +2886,13 @@ export type CEAwsConnector = ConnectorConfigDTO & {
   awsAccountId?: string
   crossAccountAccess: CrossAccountAccess
   curAttributes?: AwsCurAttributes
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
   isAWSGovCloudAccount?: boolean
 }
 
 export type CEAzureConnector = ConnectorConfigDTO & {
   billingExportSpec?: BillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
   subscriptionId: string
   tenantId: string
 }
@@ -2858,7 +2923,7 @@ export interface CEDelegateStatus {
 
 export type CEKubernetesClusterConfig = ConnectorConfigDTO & {
   connectorRef: string
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
 }
 
 export type CEModuleLicenseDTO = ModuleLicenseDTO & {
@@ -2918,6 +2983,7 @@ export type CFModuleLicenseDTO = ModuleLicenseDTO & {
 }
 
 export type CIModuleLicenseDTO = ModuleLicenseDTO & {
+  hostingCredits?: number
   numberOfCommitters?: number
 }
 
@@ -3132,6 +3198,7 @@ export interface CVConfiguration {
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'ENV_ROLLBACK_STATE'
   uuid: string
   workflowConfig?: boolean
 }
@@ -3199,7 +3266,9 @@ export interface CVFeedbackRecord {
   uuid?: string
 }
 
-export type CVModuleLicenseDTO = ModuleLicenseDTO & {}
+export type CVModuleLicenseDTO = ModuleLicenseDTO & {
+  numberOfServices?: number
+}
 
 export interface CVNGPerpetualTaskDTO {
   accountId?: string
@@ -3279,7 +3348,33 @@ export interface CgEventRule {
   workflowRule?: WorkflowRule
 }
 
+export interface CgInstanceSyncResponse {
+  accountId?: string
+  accountIdBytes?: ByteString
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: CgInstanceSyncResponse
+  descriptorForType?: Descriptor
+  errorMessage?: string
+  errorMessageBytes?: ByteString
+  executionStatus?: string
+  executionStatusBytes?: ByteString
+  initializationErrorString?: string
+  initialized?: boolean
+  instanceDataCount?: number
+  instanceDataList?: InstanceSyncData[]
+  instanceDataOrBuilderList?: InstanceSyncDataOrBuilder[]
+  parserForType?: ParserCgInstanceSyncResponse
+  perpetualTaskId?: string
+  perpetualTaskIdBytes?: ByteString
+  serializedSize?: number
+  unknownFields?: UnknownFieldSet
+}
+
 export interface CgServiceUsage {
+  appId?: string
+  appName?: string
   instanceCount?: number
   licensesUsed?: number
   name?: string
@@ -3520,6 +3615,7 @@ export interface CloudWatchSetupTestNodeData {
     | 'AWS_LAMBDA_VERIFICATION'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
     | 'COLLECT_REMAINING_INSTANCES'
+    | 'ENV_ROLLBACK_STATE'
   toTime?: number
   workflowId?: string
 }
@@ -4063,6 +4159,7 @@ export interface ConnectorInfoDTO {
     | 'ElasticSearch'
     | 'GcpSecretManager'
     | 'AzureArtifacts'
+    | 'Tas'
     | 'Spot'
 }
 
@@ -4370,6 +4467,7 @@ export interface ContinuousVerificationExecutionMetaData {
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'ENV_ROLLBACK_STATE'
   uuid: string
   workflowExecutionId?: string
   workflowId?: string
@@ -4629,6 +4727,7 @@ export interface CustomLogSetupTestNodeData {
     | 'AWS_LAMBDA_VERIFICATION'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
     | 'COLLECT_REMAINING_INSTANCES'
+    | 'ENV_ROLLBACK_STATE'
   toTime?: number
   workflowId?: string
 }
@@ -4816,6 +4915,8 @@ export interface DataCollectionRequest {
     | 'CLOUDWATCH_METRIC_DATA_REQUEST'
     | 'CLOUDWATCH_METRICS_METADATA_REQUEST'
     | 'AWS_GENERIC_DATA_COLLECTION_REQUEST'
+    | 'SUMOLOGIC_METRIC_SAMPLE_DATA'
+    | 'SUMOLOGIC_LOG_SAMPLE_DATA'
 }
 
 export interface DataDogSetupTestNodeData {
@@ -4991,6 +5092,7 @@ export interface DataDogSetupTestNodeData {
     | 'AWS_LAMBDA_VERIFICATION'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
     | 'COLLECT_REMAINING_INSTANCES'
+    | 'ENV_ROLLBACK_STATE'
   toTime?: number
   workflowId?: string
 }
@@ -5029,6 +5131,7 @@ export interface Delegate {
   ceEnabled?: boolean
   createdAt?: number
   currentlyExecutingDelegateTasks?: string[]
+  delegateCapacity?: DelegateCapacity
   delegateDisconnectDetectorNextIteration?: number
   delegateGroupId?: string
   delegateGroupName?: string
@@ -5052,13 +5155,13 @@ export interface Delegate {
   location?: string
   mtls?: boolean
   ng?: boolean
+  numberOfTaskAssigned?: number
   owner?: DelegateEntityOwner
   polllingModeEnabled?: boolean
   profileError?: boolean
   profileExecutedAt?: number
   profileResult?: string
   proxy?: boolean
-  sampleDelegate?: boolean
   sequenceNum?: string
   sizeDetails?: DelegateSizeDetails
   status?: 'ENABLED' | 'WAITING_FOR_APPROVAL' | 'DISABLED' | 'DELETED'
@@ -5106,6 +5209,10 @@ export interface DelegateCallbackTokenOrBuilder {
   unknownFields?: UnknownFieldSet
 }
 
+export interface DelegateCapacity {
+  maximumNumberOfBuilds?: number
+}
+
 export interface DelegateConfiguration {
   action?: 'SELF_DESTRUCT'
   delegateVersions?: string[]
@@ -5145,6 +5252,10 @@ export interface DelegateDTO {
   tags?: string[]
 }
 
+export interface DelegateDeleteResponse {
+  responseMsg?: string
+}
+
 export interface DelegateDownloadRequest {
   clusterPermissionType?: 'CLUSTER_ADMIN' | 'CLUSTER_VIEWER' | 'NAMESPACE_ADMIN'
   customClusterNamespace?: string
@@ -5162,6 +5273,15 @@ export interface DelegateDownloadResponse {
 
 export interface DelegateEntityOwner {
   identifier?: string
+}
+
+export interface DelegateFeedbackDTO {
+  accountId?: string
+  delegateName?: string
+  delegateType?: string
+  feedback?: string
+  orgId?: string
+  projectId?: string
 }
 
 export interface DelegateFile {
@@ -5220,6 +5340,7 @@ export interface DelegateFilterProperties {
     | 'CCMRecommendation'
     | 'Anomaly'
     | 'Environment'
+    | 'RuleExecution'
   hostName?: string
   status?: 'CONNECTED' | 'DISCONNECTED' | 'ENABLED' | 'WAITING_FOR_APPROVAL' | 'DISABLED' | 'DELETED'
   tags?: {
@@ -5252,6 +5373,11 @@ export interface DelegateGroupDTO {
   orgIdentifier?: string
   projectIdentifier?: string
   tags?: string[]
+}
+
+export interface DelegateGroupDeleteResponse {
+  errorMsg?: string
+  statusSuccess?: boolean
 }
 
 export interface DelegateGroupDetails {
@@ -5363,7 +5489,6 @@ export interface DelegateParams {
   pollingModeEnabled?: boolean
   projectIdentifier?: string
   proxy?: boolean
-  sampleDelegate?: boolean
   sequenceNum?: string
   sessionIdentifier?: string
   supportedTaskTypes?: string[]
@@ -5538,8 +5663,14 @@ export interface DelegateScope {
     | 'SERVERLESS_NG'
     | 'COMMAND_TASK_NG'
     | 'ECS'
+    | 'ASG'
     | 'AZURE_NG_ARM_BLUEPRINT'
     | 'SHELL_SCRIPT_PROVISION_NG'
+    | 'CUSTOM_DEPLOYMENT_NG'
+    | 'ELASTIGROUP'
+    | 'GITOPS'
+    | 'TAS'
+    | 'CONTAINER_PMS'
   )[]
   uuid: string
   valid?: boolean
@@ -5636,6 +5767,7 @@ export interface DelegateTaskEvent {
   accountId?: string
   delegateTaskId?: string
   sync?: boolean
+  taskType?: string
 }
 
 export interface DelegateTaskEventsResponse {
@@ -5668,6 +5800,7 @@ export interface DelegateTaskPackage {
     [key: string]: SecretDetail
   }
   secrets?: string[]
+  taskDataV2?: TaskDataV2
 }
 
 export interface DelegateTaskPackageV2 {
@@ -5952,6 +6085,7 @@ export interface DelegateTaskPackageV2 {
     | 'AMAZON_S3_ARTIFACT_TASK_NG'
     | 'GITHUB_PACKAGES_TASK_NG'
     | 'AZURE_ARTIFACT_TASK_NG'
+    | 'AMI_ARTIFACT_TASK_NG'
     | 'AWS_ROUTE53_TASK'
     | 'SHELL_SCRIPT_APPROVAL'
     | 'CUSTOM_GET_BUILDS'
@@ -6040,6 +6174,58 @@ export interface DelegateTaskPackageV2 {
     | 'ECS_GIT_FETCH_RUN_TASK_NG'
     | 'TRIGGER_AUTHENTICATION_TASK'
     | 'SPOT_TASK_NG'
+    | 'FETCH_INSTANCE_SCRIPT_TASK_NG'
+    | 'AZURE_WEB_APP_TASK_NG_V2'
+    | 'HELM_FETCH_CHART_VERSIONS_TASK_NG'
+    | 'TERRAFORM_TASK_NG_V2'
+    | 'ELASTIGROUP_SETUP_COMMAND_TASK_NG'
+    | 'ELASTIGROUP_STARTUP_SCRIPT_FETCH_RUN_TASK_NG'
+    | 'TERRAFORM_SECRET_CLEANUP_TASK_NG'
+    | 'TERRAGRUNT_PLAN_TASK_NG'
+    | 'TERRAGRUNT_APPLY_TASK_NG'
+    | 'TERRAGRUNT_DESTROY_TASK_NG'
+    | 'TERRAGRUNT_ROLLBACK_TASK_NG'
+    | 'GITOPS_FETCH_APP_TASK'
+    | 'VAULT_TOKEN_LOOKUP'
+    | 'NG_VAULT_TOKEN_LOOKUP'
+    | 'VALIDATE_TAS_CONNECTOR_TASK_NG'
+    | 'ECS_S3_FETCH_TASK_NG'
+    | 'SERVERLESS_S3_FETCH_TASK_NG'
+    | 'CONTAINER_INITIALIZATION'
+    | 'AWS_ASG_CANARY_DEPLOY_TASK_NG'
+    | 'ELASTIGROUP_DEPLOY'
+    | 'ELASTIGROUP_PARAMETERS_FETCH_RUN_TASK_NG'
+    | 'ELASTIGROUP_BG_STAGE_SETUP_COMMAND_TASK_NG'
+    | 'ELASTIGROUP_SWAP_ROUTE_COMMAND_TASK_NG'
+    | 'ELASTIGROUP_ROLLBACK'
+    | 'ELASTIGROUP_PRE_FETCH_TASK_NG'
+    | 'CONTAINER_LE_STATUS'
+    | 'CONTAINER_CLEANUP'
+    | 'CONTAINER_EXECUTE_STEP'
+    | 'AWS_ASG_CANARY_DELETE_TASK_NG'
+    | 'TAS_APP_RESIZE'
+    | 'TAS_ROLLBACK'
+    | 'TAS_SWAP_ROUTES'
+    | 'TANZU_COMMAND'
+    | 'TAS_BASIC_SETUP'
+    | 'TAS_BG_SETUP'
+    | 'TAS_SWAP_ROLLBACK'
+    | 'TAS_DATA_FETCH'
+    | 'ECS_RUN_TASK_ARN'
+    | 'AWS_ASG_ROLLING_DEPLOY_TASK_NG'
+    | 'AWS_ASG_PREPARE_ROLLBACK_DATA_TASK_NG'
+    | 'AWS_ASG_ROLLING_ROLLBACK_TASK_NG'
+    | 'TERRAFORM_PROVISION_TASK_V2'
+    | 'TERRAFORM_INPUT_VARIABLES_OBTAIN_TASK_V2'
+    | 'TERRAFORM_FETCH_TARGETS_TASK_V2'
+    | 'TAS_ROLLING_DEPLOY'
+    | 'TAS_ROLLING_ROLLBACK'
+    | 'K8S_DRY_RUN_MANIFEST_TASK_NG'
+    | 'COMMAND_TASK_NG_WITH_AZURE_ARTIFACT'
+    | 'AWS_ASG_BLUE_GREEN_SWAP_SERVICE_TASK_NG'
+    | 'AWS_ASG_BLUE_GREEN_PREPARE_ROLLBACK_DATA_TASK_NG'
+    | 'AWS_ASG_BLUE_GREEN_DEPLOY_TASK_NG'
+    | 'AWS_ASG_BLUE_GREEN_ROLLBACK_TASK_NG'
 }
 
 export interface DelegateTaskResponse {
@@ -6314,6 +6500,7 @@ export interface DelegateTaskResponse {
     | 'AMAZON_S3_ARTIFACT_TASK_NG'
     | 'GITHUB_PACKAGES_TASK_NG'
     | 'AZURE_ARTIFACT_TASK_NG'
+    | 'AMI_ARTIFACT_TASK_NG'
     | 'AWS_ROUTE53_TASK'
     | 'SHELL_SCRIPT_APPROVAL'
     | 'CUSTOM_GET_BUILDS'
@@ -6402,6 +6589,58 @@ export interface DelegateTaskResponse {
     | 'ECS_GIT_FETCH_RUN_TASK_NG'
     | 'TRIGGER_AUTHENTICATION_TASK'
     | 'SPOT_TASK_NG'
+    | 'FETCH_INSTANCE_SCRIPT_TASK_NG'
+    | 'AZURE_WEB_APP_TASK_NG_V2'
+    | 'HELM_FETCH_CHART_VERSIONS_TASK_NG'
+    | 'TERRAFORM_TASK_NG_V2'
+    | 'ELASTIGROUP_SETUP_COMMAND_TASK_NG'
+    | 'ELASTIGROUP_STARTUP_SCRIPT_FETCH_RUN_TASK_NG'
+    | 'TERRAFORM_SECRET_CLEANUP_TASK_NG'
+    | 'TERRAGRUNT_PLAN_TASK_NG'
+    | 'TERRAGRUNT_APPLY_TASK_NG'
+    | 'TERRAGRUNT_DESTROY_TASK_NG'
+    | 'TERRAGRUNT_ROLLBACK_TASK_NG'
+    | 'GITOPS_FETCH_APP_TASK'
+    | 'VAULT_TOKEN_LOOKUP'
+    | 'NG_VAULT_TOKEN_LOOKUP'
+    | 'VALIDATE_TAS_CONNECTOR_TASK_NG'
+    | 'ECS_S3_FETCH_TASK_NG'
+    | 'SERVERLESS_S3_FETCH_TASK_NG'
+    | 'CONTAINER_INITIALIZATION'
+    | 'AWS_ASG_CANARY_DEPLOY_TASK_NG'
+    | 'ELASTIGROUP_DEPLOY'
+    | 'ELASTIGROUP_PARAMETERS_FETCH_RUN_TASK_NG'
+    | 'ELASTIGROUP_BG_STAGE_SETUP_COMMAND_TASK_NG'
+    | 'ELASTIGROUP_SWAP_ROUTE_COMMAND_TASK_NG'
+    | 'ELASTIGROUP_ROLLBACK'
+    | 'ELASTIGROUP_PRE_FETCH_TASK_NG'
+    | 'CONTAINER_LE_STATUS'
+    | 'CONTAINER_CLEANUP'
+    | 'CONTAINER_EXECUTE_STEP'
+    | 'AWS_ASG_CANARY_DELETE_TASK_NG'
+    | 'TAS_APP_RESIZE'
+    | 'TAS_ROLLBACK'
+    | 'TAS_SWAP_ROUTES'
+    | 'TANZU_COMMAND'
+    | 'TAS_BASIC_SETUP'
+    | 'TAS_BG_SETUP'
+    | 'TAS_SWAP_ROLLBACK'
+    | 'TAS_DATA_FETCH'
+    | 'ECS_RUN_TASK_ARN'
+    | 'AWS_ASG_ROLLING_DEPLOY_TASK_NG'
+    | 'AWS_ASG_PREPARE_ROLLBACK_DATA_TASK_NG'
+    | 'AWS_ASG_ROLLING_ROLLBACK_TASK_NG'
+    | 'TERRAFORM_PROVISION_TASK_V2'
+    | 'TERRAFORM_INPUT_VARIABLES_OBTAIN_TASK_V2'
+    | 'TERRAFORM_FETCH_TARGETS_TASK_V2'
+    | 'TAS_ROLLING_DEPLOY'
+    | 'TAS_ROLLING_ROLLBACK'
+    | 'K8S_DRY_RUN_MANIFEST_TASK_NG'
+    | 'COMMAND_TASK_NG_WITH_AZURE_ARTIFACT'
+    | 'AWS_ASG_BLUE_GREEN_SWAP_SERVICE_TASK_NG'
+    | 'AWS_ASG_BLUE_GREEN_PREPARE_ROLLBACK_DATA_TASK_NG'
+    | 'AWS_ASG_BLUE_GREEN_DEPLOY_TASK_NG'
+    | 'AWS_ASG_BLUE_GREEN_ROLLBACK_TASK_NG'
 }
 
 export interface DelegateTaskResponseV2 {
@@ -6675,6 +6914,7 @@ export interface DelegateTaskResponseV2 {
     | 'AMAZON_S3_ARTIFACT_TASK_NG'
     | 'GITHUB_PACKAGES_TASK_NG'
     | 'AZURE_ARTIFACT_TASK_NG'
+    | 'AMI_ARTIFACT_TASK_NG'
     | 'AWS_ROUTE53_TASK'
     | 'SHELL_SCRIPT_APPROVAL'
     | 'CUSTOM_GET_BUILDS'
@@ -6763,6 +7003,58 @@ export interface DelegateTaskResponseV2 {
     | 'ECS_GIT_FETCH_RUN_TASK_NG'
     | 'TRIGGER_AUTHENTICATION_TASK'
     | 'SPOT_TASK_NG'
+    | 'FETCH_INSTANCE_SCRIPT_TASK_NG'
+    | 'AZURE_WEB_APP_TASK_NG_V2'
+    | 'HELM_FETCH_CHART_VERSIONS_TASK_NG'
+    | 'TERRAFORM_TASK_NG_V2'
+    | 'ELASTIGROUP_SETUP_COMMAND_TASK_NG'
+    | 'ELASTIGROUP_STARTUP_SCRIPT_FETCH_RUN_TASK_NG'
+    | 'TERRAFORM_SECRET_CLEANUP_TASK_NG'
+    | 'TERRAGRUNT_PLAN_TASK_NG'
+    | 'TERRAGRUNT_APPLY_TASK_NG'
+    | 'TERRAGRUNT_DESTROY_TASK_NG'
+    | 'TERRAGRUNT_ROLLBACK_TASK_NG'
+    | 'GITOPS_FETCH_APP_TASK'
+    | 'VAULT_TOKEN_LOOKUP'
+    | 'NG_VAULT_TOKEN_LOOKUP'
+    | 'VALIDATE_TAS_CONNECTOR_TASK_NG'
+    | 'ECS_S3_FETCH_TASK_NG'
+    | 'SERVERLESS_S3_FETCH_TASK_NG'
+    | 'CONTAINER_INITIALIZATION'
+    | 'AWS_ASG_CANARY_DEPLOY_TASK_NG'
+    | 'ELASTIGROUP_DEPLOY'
+    | 'ELASTIGROUP_PARAMETERS_FETCH_RUN_TASK_NG'
+    | 'ELASTIGROUP_BG_STAGE_SETUP_COMMAND_TASK_NG'
+    | 'ELASTIGROUP_SWAP_ROUTE_COMMAND_TASK_NG'
+    | 'ELASTIGROUP_ROLLBACK'
+    | 'ELASTIGROUP_PRE_FETCH_TASK_NG'
+    | 'CONTAINER_LE_STATUS'
+    | 'CONTAINER_CLEANUP'
+    | 'CONTAINER_EXECUTE_STEP'
+    | 'AWS_ASG_CANARY_DELETE_TASK_NG'
+    | 'TAS_APP_RESIZE'
+    | 'TAS_ROLLBACK'
+    | 'TAS_SWAP_ROUTES'
+    | 'TANZU_COMMAND'
+    | 'TAS_BASIC_SETUP'
+    | 'TAS_BG_SETUP'
+    | 'TAS_SWAP_ROLLBACK'
+    | 'TAS_DATA_FETCH'
+    | 'ECS_RUN_TASK_ARN'
+    | 'AWS_ASG_ROLLING_DEPLOY_TASK_NG'
+    | 'AWS_ASG_PREPARE_ROLLBACK_DATA_TASK_NG'
+    | 'AWS_ASG_ROLLING_ROLLBACK_TASK_NG'
+    | 'TERRAFORM_PROVISION_TASK_V2'
+    | 'TERRAFORM_INPUT_VARIABLES_OBTAIN_TASK_V2'
+    | 'TERRAFORM_FETCH_TARGETS_TASK_V2'
+    | 'TAS_ROLLING_DEPLOY'
+    | 'TAS_ROLLING_ROLLBACK'
+    | 'K8S_DRY_RUN_MANIFEST_TASK_NG'
+    | 'COMMAND_TASK_NG_WITH_AZURE_ARTIFACT'
+    | 'AWS_ASG_BLUE_GREEN_SWAP_SERVICE_TASK_NG'
+    | 'AWS_ASG_BLUE_GREEN_PREPARE_ROLLBACK_DATA_TASK_NG'
+    | 'AWS_ASG_BLUE_GREEN_DEPLOY_TASK_NG'
+    | 'AWS_ASG_BLUE_GREEN_ROLLBACK_TASK_NG'
 }
 
 export interface DelegateTokenDetails {
@@ -7106,6 +7398,7 @@ export interface DynaTraceSetupTestNodeData {
     | 'AWS_LAMBDA_VERIFICATION'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
     | 'COLLECT_REMAINING_INSTANCES'
+    | 'ENV_ROLLBACK_STATE'
   toTime?: number
   workflowId?: string
 }
@@ -7403,6 +7696,7 @@ export interface ElkSetupTestNodeData {
     | 'AWS_LAMBDA_VERIFICATION'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
     | 'COLLECT_REMAINING_INSTANCES'
+    | 'ENV_ROLLBACK_STATE'
   timeStampField?: string
   timeStampFieldFormat?: string
   toTime?: number
@@ -8215,8 +8509,8 @@ export interface EnvironmentRole {
       | 'EXECUTE_WORKFLOW'
       | 'EXECUTE_PIPELINE'
       | 'EXECUTE_WORKFLOW_ROLLBACK'
-      | 'DEFAULT'
       | 'ABORT_WORKFLOW'
+      | 'DEFAULT'
   }
 }
 
@@ -8370,6 +8664,7 @@ export interface ExecutionInterrupt {
     | 'CONTINUE_PIPELINE_STAGE'
     | 'ROLLBACK_ON_APPROVAL'
     | 'ROLLBACK_PROVISIONER_AFTER_PHASES_ON_APPROVAL'
+    | 'ROLLBACK_PREVIOUS_STAGES_ON_PIPELINE'
   executionUuid: string
   lastUpdatedAt: number
   lastUpdatedBy?: EmbeddedUser
@@ -8543,6 +8838,7 @@ export interface ExpAnalysisInfo {
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'ENV_ROLLBACK_STATE'
   workflowExecutionId?: string
 }
 
@@ -8760,6 +9056,7 @@ export interface ExperimentalMetricRecord {
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'ENV_ROLLBACK_STATE'
   workflowExecutionId?: string
 }
 
@@ -8814,6 +9111,7 @@ export interface FailureStrategy {
     | 'CONTINUE_PIPELINE_STAGE'
     | 'ROLLBACK_ON_APPROVAL'
     | 'ROLLBACK_PROVISIONER_AFTER_PHASES_ON_APPROVAL'
+    | 'ROLLBACK_PREVIOUS_STAGES_ON_PIPELINE'
   executionScope?: 'WORKFLOW' | 'WORKFLOW_PHASE'
   failureCriteria?: FailureCriteria
   failureTypes: (
@@ -8827,6 +9125,7 @@ export interface FailureStrategy {
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
     | 'INPUT_TIMEOUT_FAILURE'
+    | 'APPROVAL_REJECTION'
   )[]
   manualInterventionTimeout?: number
   repairActionCode?:
@@ -9074,7 +9373,7 @@ export interface GcpBillingExportSpec {
 
 export type GcpCloudCostConnector = ConnectorConfigDTO & {
   billingExportSpec?: GcpBillingExportSpec
-  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY')[]
+  featuresEnabled?: ('BILLING' | 'OPTIMIZATION' | 'VISIBILITY' | 'GOVERNANCE' | 'COMMITMENT_ORCHESTRATOR')[]
   projectId: string
   serviceAccountEmail: string
 }
@@ -10221,8 +10520,8 @@ export interface ImmutablePairResourceTypeAction {
     | 'EXECUTE_WORKFLOW'
     | 'EXECUTE_PIPELINE'
     | 'EXECUTE_WORKFLOW_ROLLBACK'
-    | 'DEFAULT'
     | 'ABORT_WORKFLOW'
+    | 'DEFAULT'
   value?:
     | 'ALL'
     | 'CREATE'
@@ -10233,8 +10532,8 @@ export interface ImmutablePairResourceTypeAction {
     | 'EXECUTE_WORKFLOW'
     | 'EXECUTE_PIPELINE'
     | 'EXECUTE_WORKFLOW_ROLLBACK'
-    | 'DEFAULT'
     | 'ABORT_WORKFLOW'
+    | 'DEFAULT'
 }
 
 export interface ImportStatus {
@@ -10709,6 +11008,7 @@ export interface InstanaSetupTestNodeData {
     | 'AWS_LAMBDA_VERIFICATION'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
     | 'COLLECT_REMAINING_INSTANCES'
+    | 'ENV_ROLLBACK_STATE'
   tagFilters?: InstanaTagFilter[]
   toTime?: number
   workflowId?: string
@@ -11140,6 +11440,7 @@ export interface InstanceExecutionHistory {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -11207,6 +11508,12 @@ export interface InstanceExecutionHistory {
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   executionInterruptType?:
     | 'ABORT'
     | 'ABORT_ALL'
@@ -11230,6 +11537,7 @@ export interface InstanceExecutionHistory {
     | 'CONTINUE_PIPELINE_STAGE'
     | 'ROLLBACK_ON_APPROVAL'
     | 'ROLLBACK_PROVISIONER_AFTER_PHASES_ON_APPROVAL'
+    | 'ROLLBACK_PREVIOUS_STAGES_ON_PIPELINE'
   intanceCount?: number
   message?: string
   stateName?: string
@@ -11395,6 +11703,50 @@ export interface InstanceSummaryStatsByService {
   prodCount?: number
   serviceSummary?: ServiceSummary
   totalCount?: number
+}
+
+export interface InstanceSyncData {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: InstanceSyncData
+  descriptorForType?: Descriptor
+  errorMessage?: string
+  errorMessageBytes?: ByteString
+  executionStatus?: string
+  executionStatusBytes?: ByteString
+  initializationErrorString?: string
+  initialized?: boolean
+  instanceCount?: number
+  parserForType?: ParserInstanceSyncData
+  releaseDetails?: Any
+  releaseDetailsOrBuilder?: AnyOrBuilder
+  serializedSize?: number
+  taskDetailsId?: string
+  taskDetailsIdBytes?: ByteString
+  taskResponse?: ByteString
+  unknownFields?: UnknownFieldSet
+}
+
+export interface InstanceSyncDataOrBuilder {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: Message
+  descriptorForType?: Descriptor
+  errorMessage?: string
+  errorMessageBytes?: ByteString
+  executionStatus?: string
+  executionStatusBytes?: ByteString
+  initializationErrorString?: string
+  initialized?: boolean
+  instanceCount?: number
+  releaseDetails?: Any
+  releaseDetailsOrBuilder?: AnyOrBuilder
+  taskDetailsId?: string
+  taskDetailsIdBytes?: ByteString
+  taskResponse?: ByteString
+  unknownFields?: UnknownFieldSet
 }
 
 export interface InstanceTimeline {
@@ -11576,6 +11928,7 @@ export interface JiraTaskParameters {
   status?: string
   summary?: string
   updateIssueIds?: string[]
+  useNewMeta?: boolean
   userQuery?: string
   userQueryOffset?: string
 }
@@ -12174,6 +12527,7 @@ export interface LogMLAnalysisSummary {
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'ENV_ROLLBACK_STATE'
   testClusters?: LogMLClusterSummary[]
   timeDuration?: number
   unknownClusters?: LogMLClusterSummary[]
@@ -12402,6 +12756,7 @@ export interface LogMLFeedbackRecord {
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'ENV_ROLLBACK_STATE'
   supervisedLabel?: string
   uuid: string
   workflowExecutionId?: string
@@ -12649,6 +13004,7 @@ export interface LogsCVConfiguration {
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'ENV_ROLLBACK_STATE'
   uuid: string
   workflowConfig?: boolean
 }
@@ -12832,7 +13188,21 @@ export interface ModuleLicenseDTO {
   id?: string
   lastModifiedAt?: number
   licenseType?: 'TRIAL' | 'PAID'
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'SRM'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+    | 'IACM'
   premiumSupport?: boolean
   selfService?: boolean
   startTime?: number
@@ -13100,6 +13470,7 @@ export interface NewRelicMetricAnalysisRecord {
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'ENV_ROLLBACK_STATE'
   uuid: string
   workflowExecutionId?: string
 }
@@ -13284,6 +13655,7 @@ export interface NewRelicSetupTestNodeData {
     | 'AWS_LAMBDA_VERIFICATION'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
     | 'COLLECT_REMAINING_INSTANCES'
+    | 'ENV_ROLLBACK_STATE'
   toTime?: number
   workflowId?: string
 }
@@ -13437,6 +13809,8 @@ export interface Notification {
     | 'JOIN_ACCOUNT_REQUEST'
     | 'SERVICE_GUARD_SETUP'
     | 'DEPLOYMENT_EVENT'
+    | 'DEPLOYMENT_STEP_EVENT'
+    | 'EXECUTION_INTERRUPT'
     | 'INSTANCE_EVENT'
     | 'CUSTOM'
     | 'TECH_STACK'
@@ -13777,6 +14151,14 @@ export interface ParserAccountId {
   [key: string]: any
 }
 
+export interface ParserAny {
+  [key: string]: any
+}
+
+export interface ParserCgInstanceSyncResponse {
+  [key: string]: any
+}
+
 export interface ParserDelegateCallbackToken {
   [key: string]: any
 }
@@ -13801,6 +14183,10 @@ export interface ParserHeartbeatRequest {
   [key: string]: any
 }
 
+export interface ParserInstanceSyncData {
+  [key: string]: any
+}
+
 export interface ParserMessage {
   [key: string]: any
 }
@@ -13822,6 +14208,10 @@ export interface ParserNamePart {
 }
 
 export interface ParserOneofOptions {
+  [key: string]: any
+}
+
+export interface ParserPerpetualTaskFailureRequest {
   [key: string]: any
 }
 
@@ -13976,8 +14366,8 @@ export interface Permission {
     | 'EXECUTE_WORKFLOW'
     | 'EXECUTE_PIPELINE'
     | 'EXECUTE_WORKFLOW_ROLLBACK'
-    | 'DEFAULT'
     | 'ABORT_WORKFLOW'
+    | 'DEFAULT'
   appId?: string
   envId?: string
   environmentType?: 'PROD' | 'NON_PROD' | 'ALL'
@@ -14029,6 +14419,7 @@ export interface Permission {
     | 'MANAGE_CUSTOM_DASHBOARDS'
     | 'CREATE_CUSTOM_DASHBOARDS'
     | 'MANAGE_RESTRICTED_ACCESS'
+    | 'HIDE_NEXTGEN_BUTTON'
   resourceType?:
     | 'APPLICATION'
     | 'SERVICE'
@@ -14076,6 +14467,23 @@ export interface PerpetualTaskClientContext {
   }
   executionBundle?: string[]
   lastContextUpdated?: number
+}
+
+export interface PerpetualTaskFailureRequest {
+  allFields?: {
+    [key: string]: { [key: string]: any }
+  }
+  defaultInstanceForType?: PerpetualTaskFailureRequest
+  descriptorForType?: Descriptor
+  exceptionMessage?: string
+  exceptionMessageBytes?: ByteString
+  id?: string
+  idBytes?: ByteString
+  initializationErrorString?: string
+  initialized?: boolean
+  parserForType?: ParserPerpetualTaskFailureRequest
+  serializedSize?: number
+  unknownFields?: UnknownFieldSet
 }
 
 export interface PerpetualTaskRecord {
@@ -14279,6 +14687,7 @@ export interface Pipeline {
   name: string
   pipelineStages?: PipelineStage[]
   pipelineVariables?: Variable[]
+  rollbackPreviousStages?: boolean
   sample?: boolean
   services?: Service[]
   stateEtaMap?: {
@@ -14674,14 +15083,10 @@ export interface PrometheusSetupTestNodeData {
     | 'AWS_LAMBDA_VERIFICATION'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
     | 'COLLECT_REMAINING_INSTANCES'
+    | 'ENV_ROLLBACK_STATE'
   timeSeriesToAnalyze?: TimeSeries[]
   toTime?: number
   workflowId?: string
-}
-
-export interface ProvisionStep {
-  done?: boolean
-  step?: string
 }
 
 export interface PublicUser {
@@ -15147,6 +15552,7 @@ export interface ResponseMessage {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -15214,6 +15620,12 @@ export interface ResponseMessage {
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
     | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -15226,6 +15638,7 @@ export interface ResponseMessage {
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
     | 'INPUT_TIMEOUT_FAILURE'
+    | 'APPROVAL_REJECTION'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -15645,6 +16058,14 @@ export interface RestResponseDelegateDTO {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseDelegateDeleteResponse {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: DelegateDeleteResponse
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseDelegateDownloadResponse {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -15666,6 +16087,14 @@ export interface RestResponseDelegateGroup {
     [key: string]: { [key: string]: any }
   }
   resource?: DelegateGroup
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseDelegateGroupDeleteResponse {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: DelegateGroupDeleteResponse
   responseMessages?: ResponseMessage[]
 }
 
@@ -16937,14 +17366,6 @@ export interface RestResponseListPipelineStageGroupedInfo {
   responseMessages?: ResponseMessage[]
 }
 
-export interface RestResponseListProvisionStep {
-  metaData?: {
-    [key: string]: { [key: string]: any }
-  }
-  resource?: ProvisionStep[]
-  responseMessages?: ResponseMessage[]
-}
-
 export interface RestResponseListResourceConstraintUsage {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -18068,6 +18489,14 @@ export interface RestResponseSMPEncLicenseDTO {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseSMPValidationResultDTO {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: SMPValidationResultDTO
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseSSOConfig {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -18319,6 +18748,14 @@ export interface RestResponseString {
     [key: string]: { [key: string]: any }
   }
   resource?: string
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseSupportedDelegateVersion {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: SupportedDelegateVersion
   responseMessages?: ResponseMessage[]
 }
 
@@ -18757,13 +19194,34 @@ export interface RuntimeInputsConfig {
   userGroupIds?: string[]
 }
 
+export interface SMPDecLicenseDTO {
+  accountIdentifier?: string
+  accountName?: string
+  accountOptional?: boolean
+  companyName?: string
+  libraryVersion?: string
+  licenseVersion?: string
+  moduleLicenses?: ModuleLicenseDTO[]
+}
+
 export interface SMPEncLicenseDTO {
+  decrypt?: boolean
   encryptedLicense?: string
 }
 
 export interface SMPLicenseRequestDTO {
   accountOptional?: boolean
   customerAccountId?: string
+}
+
+export interface SMPValidationResultDTO {
+  is_valid?: boolean
+  license?: SMPDecLicenseDTO
+  message?: string
+}
+
+export type SRMModuleLicenseDTO = ModuleLicenseDTO & {
+  numberOfServices?: number
 }
 
 export interface SSHVaultConfig {
@@ -19564,10 +20022,34 @@ export interface ServiceInstanceStatistics {
   type?: 'DEPLOYMENT' | 'SERVICE_INSTANCE_STATISTICS'
 }
 
+export type ServiceNowADFSDTO = ServiceNowAuthCredentialsDTO & {
+  adfsUrl: string
+  certificateRef: string
+  clientIdRef: string
+  privateKeyRef: string
+  resourceIdRef: string
+}
+
+export interface ServiceNowAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface ServiceNowAuthenticationDTO {
+  spec: ServiceNowAuthCredentialsDTO
+  type: 'UsernamePassword' | 'AdfsClientCredentialsWithCertificate'
+}
+
 export type ServiceNowConnector = ConnectorConfigDTO & {
+  auth: ServiceNowAuthenticationDTO
   delegateSelectors?: string[]
-  passwordRef: string
+  passwordRef?: string
   serviceNowUrl: string
+  username?: string
+  usernameRef?: string
+}
+
+export type ServiceNowUserNamePasswordDTO = ServiceNowAuthCredentialsDTO & {
+  passwordRef: string
   username?: string
   usernameRef?: string
 }
@@ -20054,6 +20536,7 @@ export interface SmtpConfig {
   host?: string
   password?: string[]
   port?: number
+  startTLS?: boolean
   type?: string
   useSSL?: boolean
   username?: string
@@ -20245,6 +20728,7 @@ export interface SplunkSetupTestNodeData {
     | 'AWS_LAMBDA_VERIFICATION'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
     | 'COLLECT_REMAINING_INSTANCES'
+    | 'ENV_ROLLBACK_STATE'
   toTime?: number
   workflowId?: string
 }
@@ -20264,17 +20748,17 @@ export type SpotConnector = ConnectorConfigDTO & {
 
 export interface SpotCredential {
   spec?: SpotCredentialSpec
-  type: 'ManualConfig'
+  type: 'PermanentTokenConfig'
 }
 
 export interface SpotCredentialSpec {
   [key: string]: any
 }
 
-export type SpotManualConfigSpec = SpotCredentialSpec & {
-  accountId?: string
-  accountIdRef?: string
+export type SpotPermanentTokenConfigSpec = SpotCredentialSpec & {
   apiTokenRef: string
+  spotAccountId?: string
+  spotAccountIdRef?: string
 }
 
 export interface SpotinstElastigroupRunningCountData {
@@ -20477,6 +20961,7 @@ export interface StackDriverSetupTestNodeData {
     | 'AWS_LAMBDA_VERIFICATION'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
     | 'COLLECT_REMAINING_INSTANCES'
+    | 'ENV_ROLLBACK_STATE'
   toTime?: number
   workflowId?: string
 }
@@ -20587,6 +21072,7 @@ export interface StateExecutionInstance {
     | 'CONTINUE_PIPELINE_STAGE'
     | 'ROLLBACK_ON_APPROVAL'
     | 'ROLLBACK_PROVISIONER_AFTER_PHASES_ON_APPROVAL'
+    | 'ROLLBACK_PREVIOUS_STAGES_ON_PIPELINE'
   actionOnTimeout?:
     | 'MANUAL_INTERVENTION'
     | 'ROLLBACK_WORKFLOW'
@@ -20621,6 +21107,7 @@ export interface StateExecutionInstance {
   isOnDemandRollback?: boolean
   lastUpdatedAt?: number
   loopedStateParams?: LoopParams
+  manualInterventionCandidate?: boolean
   nextInstanceId?: string
   notifyElements?: ContextElement[]
   notifyId?: string
@@ -20953,8 +21440,14 @@ export interface SumoLogicSetupTestNodedata {
     | 'AWS_LAMBDA_VERIFICATION'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
     | 'COLLECT_REMAINING_INSTANCES'
+    | 'ENV_ROLLBACK_STATE'
   toTime?: number
   workflowId?: string
+}
+
+export interface SupportedDelegateVersion {
+  latestSupportedMinimalVersion?: string
+  latestSupportedVersion?: string
 }
 
 export interface SwitchAccountRequest {
@@ -21011,7 +21504,43 @@ export interface TagFilterCondition {
   values?: string[]
 }
 
+export type TasConnector = ConnectorConfigDTO & {
+  credential: TasCredential
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+}
+
+export interface TasCredential {
+  spec?: TasCredentialSpec
+  type: 'ManualConfig'
+}
+
+export interface TasCredentialSpec {
+  [key: string]: any
+}
+
+export type TasManualDetails = TasCredentialSpec & {
+  endpointUrl: string
+  passwordRef: string
+  username?: string
+  usernameRef?: string
+}
+
 export interface TaskData {
+  async?: boolean
+  data?: string[]
+  expressionFunctorToken?: number
+  expressions?: {
+    [key: string]: string
+  }
+  parameters?: { [key: string]: any }[]
+  parked?: boolean
+  serializationFormat?: 'KRYO' | 'JSON'
+  taskType: string
+  timeout?: number
+}
+
+export interface TaskDataV2 {
   async?: boolean
   data?: string[]
   expressionFunctorToken?: number
@@ -21188,8 +21717,14 @@ export interface TaskSelectorMap {
     | 'SERVERLESS_NG'
     | 'COMMAND_TASK_NG'
     | 'ECS'
+    | 'ASG'
     | 'AZURE_NG_ARM_BLUEPRINT'
     | 'SHELL_SCRIPT_PROVISION_NG'
+    | 'CUSTOM_DEPLOYMENT_NG'
+    | 'ELASTIGROUP'
+    | 'GITOPS'
+    | 'TAS'
+    | 'CONTAINER_PMS'
   uuid: string
 }
 
@@ -21329,16 +21864,19 @@ export interface TemporalUnit {
 }
 
 export type TerraformInfrastructureProvisioner = InfrastructureProvisioner & {
+  awsConfigId?: string
   backendConfigs?: NameValuePair[]
   commitId?: string
   environmentVariables?: NameValuePair[]
   kmsId?: string
   normalizedPath?: string
-  path: string
+  path?: string
   repoName?: string
+  s3URI?: string
   skipRefreshBeforeApplyingPlan?: boolean
   sourceRepoBranch?: string
   sourceRepoSettingId?: string
+  sourceType?: 'S3' | 'GIT' | 'UNKNOWN'
   templatized?: boolean
   workspaces?: string[]
 }
@@ -21637,6 +22175,7 @@ export interface TimeSeriesMLTransactionThresholds {
     | 'K8S_APPLY'
     | 'CUSTOM_DEPLOYMENT_FETCH_INSTANCES'
     | 'ARTIFACT_COLLECT_LOOP_STATE'
+    | 'ENV_ROLLBACK_STATE'
   thresholdType?: 'ACCEPTABLE' | 'ANOMALOUS'
   thresholds?: TimeSeriesMetricDefinition
   transactionName?: string
@@ -22037,6 +22576,11 @@ export interface UuidAware {
 export interface ValidationResult {
   errorMessage?: string
   valid?: boolean
+}
+
+export interface ValueDataPoint {
+  time?: number
+  value?: number
 }
 
 export interface Variable {
@@ -22552,6 +23096,7 @@ export interface WorkflowExecution {
   deployedCloudProviders?: string[]
   deployedEnvironments?: EnvSummary[]
   deployedServices?: string[]
+  deployment?: boolean
   deploymentTriggerId?: string
   duration?: number
   endTs?: number
@@ -22583,6 +23128,8 @@ export interface WorkflowExecution {
   pipelineExecutionId?: string
   pipelineResumeId?: string
   pipelineSummary?: PipelineSummary
+  rejectedByFreezeWindowIds?: string[]
+  rejectedByFreezeWindowNames?: string[]
   releaseNo?: string
   rollbackArtifacts?: Artifact[]
   rollbackDuration?: number
@@ -23176,6 +23723,10 @@ export type ScimUserRequestBody = ScimUser
 
 export type SecretTextRequestBody = SecretText
 
+export type SendTaskProgressRequestRequestBody = SendTaskProgressRequest
+
+export type SendTaskStatusRequestRequestBody = SendTaskStatusRequest
+
 export type ServiceRequestBody = Service
 
 export type ServiceCommandRequestBody = ServiceCommand
@@ -23228,13 +23779,13 @@ export type YamlPayloadRequestBody = YamlPayload
 
 export type GcpSignUpRequestBody = void
 
+export type GetDelegatePropertiesBodyRequestBody = string[]
+
 export type ImportAccountDataRequestBody = void
 
-export type ProcessPollingResultNgBodyRequestBody = string[]
+export type SaveGcpSecretsManagerConfigRequestBody = void
 
 export type SaveGcpSecretsManagerConfig1RequestBody = void
-
-export type SaveGlobalKmsConfigRequestBody = void
 
 export interface SaveMessageComparisonListBodyRequestBody {
   [key: string]: string
@@ -23377,6 +23928,48 @@ export const listAwsRegionsPromise = (
   getUsingFetch<RestResponseListNameValuePair, unknown, ListAwsRegionsQueryParams, void>(
     getConfig('api'),
     `/awshelper/aws-regions`,
+    props,
+    signal
+  )
+
+export interface AddFeedbackQueryParams {
+  accountId?: string
+}
+
+export type AddFeedbackProps = Omit<
+  MutateProps<RestResponseBoolean, unknown, AddFeedbackQueryParams, DelegateFeedbackDTO, void>,
+  'path' | 'verb'
+>
+
+export const AddFeedback = (props: AddFeedbackProps) => (
+  <Mutate<RestResponseBoolean, unknown, AddFeedbackQueryParams, DelegateFeedbackDTO, void>
+    verb="POST"
+    path={`/delegate-feedbacks`}
+    base={getConfig('api')}
+    {...props}
+  />
+)
+
+export type UseAddFeedbackProps = Omit<
+  UseMutateProps<RestResponseBoolean, unknown, AddFeedbackQueryParams, DelegateFeedbackDTO, void>,
+  'path' | 'verb'
+>
+
+export const useAddFeedback = (props: UseAddFeedbackProps) =>
+  useMutate<RestResponseBoolean, unknown, AddFeedbackQueryParams, DelegateFeedbackDTO, void>(
+    'POST',
+    `/delegate-feedbacks`,
+    { base: getConfig('api'), ...props }
+  )
+
+export const addFeedbackPromise = (
+  props: MutateUsingFetchProps<RestResponseBoolean, unknown, AddFeedbackQueryParams, DelegateFeedbackDTO, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseBoolean, unknown, AddFeedbackQueryParams, DelegateFeedbackDTO, void>(
+    'POST',
+    getConfig('api'),
+    `/delegate-feedbacks`,
     props,
     signal
   )
@@ -24399,6 +24992,48 @@ export const deleteDelegateGroupPromise = (
     signal
   )
 
+export interface GetInstallationCommandQueryParams {
+  accountId?: string
+  orgId?: string
+  projectId?: string
+  commandType?: string
+}
+
+export type GetInstallationCommandProps = Omit<
+  GetProps<RestResponseMapStringString, unknown, GetInstallationCommandQueryParams, void>,
+  'path'
+>
+
+export const GetInstallationCommand = (props: GetInstallationCommandProps) => (
+  <Get<RestResponseMapStringString, unknown, GetInstallationCommandQueryParams, void>
+    path={`/setup/delegates/installation-command`}
+    base={getConfig('api')}
+    {...props}
+  />
+)
+
+export type UseGetInstallationCommandProps = Omit<
+  UseGetProps<RestResponseMapStringString, unknown, GetInstallationCommandQueryParams, void>,
+  'path'
+>
+
+export const useGetInstallationCommand = (props: UseGetInstallationCommandProps) =>
+  useGet<RestResponseMapStringString, unknown, GetInstallationCommandQueryParams, void>(
+    `/setup/delegates/installation-command`,
+    { base: getConfig('api'), ...props }
+  )
+
+export const getInstallationCommandPromise = (
+  props: GetUsingFetchProps<RestResponseMapStringString, unknown, GetInstallationCommandQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseMapStringString, unknown, GetInstallationCommandQueryParams, void>(
+    getConfig('api'),
+    `/setup/delegates/installation-command`,
+    props,
+    signal
+  )
+
 export interface GetKubernetesDelegateNamesQueryParams {
   accountId?: string
 }
@@ -25159,12 +25794,12 @@ export interface DeleteDelegateQueryParams {
 }
 
 export type DeleteDelegateProps = Omit<
-  MutateProps<RestResponseVoid, unknown, DeleteDelegateQueryParams, string, void>,
+  MutateProps<RestResponseDelegateDeleteResponse, unknown, DeleteDelegateQueryParams, string, void>,
   'path' | 'verb'
 >
 
 export const DeleteDelegate = (props: DeleteDelegateProps) => (
-  <Mutate<RestResponseVoid, unknown, DeleteDelegateQueryParams, string, void>
+  <Mutate<RestResponseDelegateDeleteResponse, unknown, DeleteDelegateQueryParams, string, void>
     verb="DELETE"
     path={`/setup/delegates`}
     base={getConfig('api')}
@@ -25173,21 +25808,22 @@ export const DeleteDelegate = (props: DeleteDelegateProps) => (
 )
 
 export type UseDeleteDelegateProps = Omit<
-  UseMutateProps<RestResponseVoid, unknown, DeleteDelegateQueryParams, string, void>,
+  UseMutateProps<RestResponseDelegateDeleteResponse, unknown, DeleteDelegateQueryParams, string, void>,
   'path' | 'verb'
 >
 
 export const useDeleteDelegate = (props: UseDeleteDelegateProps) =>
-  useMutate<RestResponseVoid, unknown, DeleteDelegateQueryParams, string, void>('DELETE', `/setup/delegates`, {
-    base: getConfig('api'),
-    ...props
-  })
+  useMutate<RestResponseDelegateDeleteResponse, unknown, DeleteDelegateQueryParams, string, void>(
+    'DELETE',
+    `/setup/delegates`,
+    { base: getConfig('api'), ...props }
+  )
 
 export const deleteDelegatePromise = (
-  props: MutateUsingFetchProps<RestResponseVoid, unknown, DeleteDelegateQueryParams, string, void>,
+  props: MutateUsingFetchProps<RestResponseDelegateDeleteResponse, unknown, DeleteDelegateQueryParams, string, void>,
   signal?: RequestInit['signal']
 ) =>
-  mutateUsingFetch<RestResponseVoid, unknown, DeleteDelegateQueryParams, string, void>(
+  mutateUsingFetch<RestResponseDelegateDeleteResponse, unknown, DeleteDelegateQueryParams, string, void>(
     'DELETE',
     getConfig('api'),
     `/setup/delegates`,
@@ -25525,47 +26161,6 @@ export const getUserPromise = (
   signal?: RequestInit['signal']
 ) => getUsingFetch<RestResponseUser, unknown, void, void>(getConfig('api'), `/users/user`, props, signal)
 
-export interface GetUserAccountsQueryParams {
-  pageIndex?: number
-  pageSize?: number
-  searchTerm?: string
-}
-
-export type GetUserAccountsProps = Omit<
-  GetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
-  'path'
->
-
-export const GetUserAccounts = (props: GetUserAccountsProps) => (
-  <Get<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>
-    path={`/users/userAccounts`}
-    base={getConfig('api')}
-    {...props}
-  />
-)
-
-export type UseGetUserAccountsProps = Omit<
-  UseGetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
-  'path'
->
-
-export const useGetUserAccounts = (props: UseGetUserAccountsProps) =>
-  useGet<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(`/users/userAccounts`, {
-    base: getConfig('api'),
-    ...props
-  })
-
-export const getUserAccountsPromise = (
-  props: GetUsingFetchProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(
-    getConfig('api'),
-    `/users/userAccounts`,
-    props,
-    signal
-  )
-
 export interface Logout1PathParams {
   userId: string
 }
@@ -25606,6 +26201,46 @@ export const logout1Promise = (
     'POST',
     getConfig('api'),
     `/users/${userId}/logout`,
+    props,
+    signal
+  )
+export interface GetUserAccountsQueryParams {
+  pageIndex?: number
+  pageSize?: number
+  searchTerm?: string
+}
+
+export type GetUserAccountsProps = Omit<
+  GetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  'path'
+>
+
+export const GetUserAccounts = (props: GetUserAccountsProps) => (
+  <Get<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>
+    path={`/users/userAccounts`}
+    base={getConfig('api')}
+    {...props}
+  />
+)
+
+export type UseGetUserAccountsProps = Omit<
+  UseGetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  'path'
+>
+
+export const useGetUserAccounts = (props: UseGetUserAccountsProps) =>
+  useGet<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(`/users/userAccounts`, {
+    base: getConfig('api'),
+    ...props
+  })
+
+export const getUserAccountsPromise = (
+  props: GetUsingFetchProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(
+    getConfig('api'),
+    `/users/userAccounts`,
     props,
     signal
   )

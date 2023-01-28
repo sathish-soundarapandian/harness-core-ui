@@ -38,12 +38,14 @@ import sloReviewChange from '@cv/assets/sloReviewChange.svg'
 import {
   createSLOV2RequestPayload,
   getIsUserUpdatedSLOData,
+  getSimpleSLOV2FormValidationSchema,
   getSLOV2FormValidationSchema,
   getSLOV2InitialFormData
 } from './CVCreateSLOV2.utils'
 import { CreateCompositeSloForm } from './components/CreateCompositeSloForm/CreateCompositeSloForm'
 import type { SLOV2Form } from './CVCreateSLOV2.types'
 import { SLOType } from './CVCreateSLOV2.constants'
+import CreateSimpleSLOForm from './components/CreateSimpleSloForm/CreateSimpleSloForm'
 import css from './components/CreateCompositeSloForm/CreateCompositeSloForm.module.scss'
 
 const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element => {
@@ -204,6 +206,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
   ]
   // TODO: Update with swagger
   const sloType = isComposite ? SLOType.COMPOSITE : SLOType.SIMPLE
+  const validationSchema = isComposite ? getSLOV2FormValidationSchema : getSimpleSLOV2FormValidationSchema
   return (
     <Container margin={{ bottom: 'large' }}>
       {!identifier && (
@@ -230,7 +233,7 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
         onSubmit={values => {
           handleSLOV2Submit(values)
         }}
-        validationSchema={getSLOV2FormValidationSchema(getString)}
+        validationSchema={validationSchema(getString)}
         enableReinitialize
       >
         {() =>
@@ -244,8 +247,14 @@ const CVCreateSLOV2 = ({ isComposite }: { isComposite?: boolean }): JSX.Element 
               loadingSaveButton={createSLOLoading || updateSLOLoading}
             />
           ) : (
-            // TODO: Add simple slo here
-            <></>
+            <CreateSimpleSLOForm
+              loading={SLODataLoading}
+              error={getErrorMessage(SLODataError)}
+              retryOnError={refetchSLOData}
+              handleRedirect={handleRedirect}
+              runValidationOnMount={Boolean(identifier)}
+              loadingSaveButton={createSLOLoading || updateSLOLoading}
+            />
           )
         }
       </Formik>

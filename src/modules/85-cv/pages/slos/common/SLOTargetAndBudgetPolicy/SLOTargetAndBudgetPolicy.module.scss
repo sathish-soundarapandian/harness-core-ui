@@ -7,7 +7,6 @@
 
 .sloTargetAndPolicyContainer {
   margin-top: var(--spacing-small) !important;
-  width: 60% !important;
 
   .nameTagsDescription,
   .dropdown {
@@ -37,4 +36,12 @@
 
 .dateRangePicker {
   padding-top: var(--spacing-medium);
+}
+
+.sloTarget {
+  width: 120px;
+}
+
+.errorBudget {
+  border: none !important;
 }

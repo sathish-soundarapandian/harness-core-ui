@@ -38,9 +38,9 @@ import {
 import { useStrings } from 'framework/strings'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
-import { PrincipalType } from '@rbac/utils/utils'
+import { PrincipalType, rbacQueryParamOptions } from '@rbac/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { useMutateAsGet } from '@common/hooks'
+import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { PipelineType, ProjectPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -49,9 +49,11 @@ import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/Manage
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import OpenInNewTab from '@rbac/components/MenuItem/OpenInNewTab'
 import RbacButton from '@rbac/components/Button/Button'
-import { getUserName, setPageNumber, useGetCommunity } from '@common/utils/utils'
+import { getUserName, useGetCommunity } from '@common/utils/utils'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import css from './UserListView.module.scss'
 
 interface ActiveUserListViewProps {
@@ -372,7 +374,7 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
   const { getString } = useStrings()
   const history = useHistory()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
-  const [page, setPage] = useState(0)
+  const { page, size } = useQueryParams(rbacQueryParamOptions)
   const isCommunity = useGetCommunity()
 
   const { data, loading, error, refetch } = useMutateAsGet(useGetAggregatedUsers, {
@@ -382,23 +384,17 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
       orgIdentifier,
       projectIdentifier,
       pageIndex: page,
-      pageSize: 10,
+      pageSize: size,
       searchTerm: searchTerm
     },
     debounce: 300
   })
 
-  useEffect(() => {
-    setPageNumber({ setPage, page, pageItemsCount: data?.data?.pageItemCount })
-  }, [data?.data])
+  usePreviousPageWhenEmpty({ page: data?.data?.pageIndex, pageItemCount: data?.data?.pageItemCount })
 
   const { openRoleAssignmentModal: addRole } = useRoleAssignmentModal({
     onSuccess: refetch
   })
-
-  useEffect(() => {
-    if (searchTerm) setPage(0)
-  }, [searchTerm])
 
   useEffect(() => {
     if (shouldReload) {
@@ -447,6 +443,13 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
 
   const { getRBACErrorMessage } = useRBACError()
 
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: data?.data?.totalItems || 0,
+    pageSize: data?.data?.pageSize || 10,
+    pageCount: data?.data?.totalPages || 0,
+    pageIndex: data?.data?.pageIndex || 0
+  })
+
   return (
     <Page.Body
       loading={loading}
@@ -485,13 +488,7 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
         columns={columns}
         data={data?.data?.content || []}
         name="ActiveUsersListView"
-        pagination={{
-          itemCount: data?.data?.totalItems || 0,
-          pageSize: data?.data?.pageSize || 10,
-          pageCount: data?.data?.totalPages || 0,
-          pageIndex: data?.data?.pageIndex || 0,
-          gotoPage: (pageNumber: number) => setPage(pageNumber)
-        }}
+        pagination={paginationProps}
         onRowClick={user => {
           history.push(
             routes.toUserDetails({

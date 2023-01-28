@@ -19,6 +19,7 @@ import { useStrings } from 'framework/strings'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import type { PermissionRequest } from '@rbac/hooks/usePermission'
 
 import { EnvironmentType } from '@common/constants/EnvironmentType'
 
@@ -124,6 +125,18 @@ export function EnvironmentMenu({
     setMenuOpen(false)
   }
 
+  const resourceAndScope: Pick<PermissionRequest, 'resource' | 'resourceScope'> = {
+    resource: {
+      resourceType: ResourceType.ENVIRONMENT,
+      resourceIdentifier: environment.identifier
+    },
+    resourceScope: {
+      accountIdentifier: environment.accountId,
+      orgIdentifier: environment.orgIdentifier,
+      projectIdentifier: environment.projectIdentifier
+    }
+  }
+
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }}>
       <Popover isOpen={menuOpen} onInteraction={setMenuOpen} className={Classes.DARK} position={Position.LEFT}>
@@ -144,9 +157,7 @@ export function EnvironmentMenu({
             text={getString('edit')}
             onClick={handleEdit}
             permission={{
-              resource: {
-                resourceType: ResourceType.ENVIRONMENT
-              },
+              ...resourceAndScope,
               permission: PermissionIdentifier.EDIT_ENVIRONMENT
             }}
           />
@@ -155,9 +166,7 @@ export function EnvironmentMenu({
             text={getString('delete')}
             onClick={handleDelete}
             permission={{
-              resource: {
-                resourceType: ResourceType.ENVIRONMENT
-              },
+              ...resourceAndScope,
               permission: PermissionIdentifier.DELETE_ENVIRONMENT
             }}
           />

@@ -25,6 +25,8 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { TemplateUsage } from '@templates-library/utils/templatesUtils'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
 import { MONITORED_SERVICE_TYPE, monitoredServiceTypes } from './SelectMonitoredServiceType.constants'
 import VerifyStepMonitoredServiceInputTemplates from './components/VerifyStepMonitoredServiceInputTemplates/VerifyStepMonitoredServiceInputTemplates'
@@ -53,6 +55,7 @@ export default function SelectMonitoredServiceType(props: SelectMonitoredService
   const { getString } = useStrings()
   const { getTemplate } = useTemplateSelector()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelineType<ProjectPathProps>>()
+  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const {
     type,
     spec: { versionLabel = '', monitoredServiceTemplateRef = '' }
@@ -85,6 +88,7 @@ export default function SelectMonitoredServiceType(props: SelectMonitoredService
   } = useGetTemplateInputSetYaml({
     templateIdentifier: '',
     queryParams,
+    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
     lazy: true
   })
 

@@ -30,6 +30,7 @@ import { TagsPopover } from '@common/components'
 import { hasCIStage } from '@pipeline/utils/stageHelpers'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RetryHistory from '@pipeline/components/RetryPipeline/RetryHistory/RetryHistory'
+import { PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED } from '@pipeline/utils/constants'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
@@ -207,7 +208,11 @@ export function ExecutionHeader(): React.ReactElement {
             canExecute={canExecute}
             canRetry={pipelineExecutionSummary.canRetry}
             modules={pipelineExecutionSummary.modules}
-            onReRunInDebugMode={hasCI ? () => openRunPipelineModal() : undefined}
+            onReRunInDebugMode={
+              hasCI && PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED.includes(accountId)
+                ? () => openRunPipelineModal()
+                : undefined
+            }
           />
         </div>
       </div>

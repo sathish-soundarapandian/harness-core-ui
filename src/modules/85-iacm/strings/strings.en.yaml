@@ -3,7 +3,6 @@ createStack: Create Resource Stack
 navTitle: Infra as Code Management
 stageTitle: Infastructure as Code Management
 stageDescription: Description of IACM stage placeholder
-terraform: Terraform
 terragrunt: Terragrunt
 pulumi: Pulumi
 cdk: CDK

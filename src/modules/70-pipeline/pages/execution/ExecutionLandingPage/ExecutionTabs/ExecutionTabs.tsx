@@ -34,7 +34,8 @@ const TAB_ID_MAP = {
   POLICY_EVALUATIONS: 'policy_evaluations',
   STO_SECURITY: 'sto_security',
   ERROR_TRACKING: 'error_tracking',
-  RESILIENCE: 'resilience'
+  RESILIENCE: 'resilience',
+  IACM: 'iacm'
 }
 
 interface ExecutionTabsProps {
@@ -58,6 +59,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const isSecurityEnabled = licenseInformation['STO']?.status === 'ACTIVE'
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
   const isChaosEnabled = useFeatureFlag(FeatureFlag.CHAOS_ENABLED)
+  const isIACMEnabled = useFeatureFlag(FeatureFlag.IACM_ENABLED)
   const canUsePolicyEngine = useAnyEnterpriseLicense()
 
   const routeParams = { ...accountPathProps, ...executionPathProps, ...pipelineModuleParams }
@@ -140,6 +142,12 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
     if (isResilienceView) {
       return setSelectedTabId(TAB_ID_MAP.RESILIENCE)
+    }
+    const isIACMView = !!matchPath(location.pathname, {
+      path: routes.toIACMPipelineResources(routeParams)
+    })
+    if (isIACMView) {
+      return setSelectedTabId(TAB_ID_MAP.IACM)
     }
     // Defaults to Pipelines Tab
     return setSelectedTabId(TAB_ID_MAP.PIPELINE)
@@ -283,6 +291,22 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
         >
           <Icon name="chaos-main" size={16} />
           <span>{getString('pipeline.resilienceTab.title')}</span>
+        </NavLink>
+      )
+    })
+  }
+
+  if (isIACMEnabled) {
+    tabList.push({
+      id: TAB_ID_MAP.IACM,
+      title: (
+        <NavLink
+          to={routes.toIACMPipelineResources(params) + location.search}
+          className={css.tabLink}
+          activeClassName={css.activeLink}
+        >
+          <Icon name="iacm" size={16} />
+          <span>{getString('resources')}</span>
         </NavLink>
       )
     })

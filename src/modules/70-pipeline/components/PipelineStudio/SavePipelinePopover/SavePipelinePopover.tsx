@@ -482,7 +482,7 @@ function SavePipelinePopover(
 
   if (loading) {
     return (
-      <Container padding={'medium'}>
+      <Container padding={{ left: 'medium', right: 'medium' }}>
         <Spinner size={Spinner.SIZE_SMALL} />
       </Container>
     )

@@ -10,19 +10,14 @@ import { useHistory, useParams } from 'react-router-dom'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { ExecutionList } from '@pipeline/pages/execution-list/ExecutionList'
-import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 
 export default function IACMPipelineDeploymentList(): React.ReactElement {
   const { pipelineIdentifier, orgIdentifier, projectIdentifier, accountId } =
     useParams<PipelineType<PipelinePathProps>>()
+  const { branch, repoIdentifier, connectorRef, repoName, storeType } = useParams<GitQueryParams>()
   const { module } = useModuleInfo()
-  const [branch, ,] = useQueryParamsState<GitQueryParams['branch']>('branch', '')
-  const [repoIdentifier, ,] = useQueryParamsState<GitQueryParams['repoIdentifier']>('repoIdentifier', '')
-  const [connectorRef, ,] = useQueryParamsState<GitQueryParams['connectorRef']>('connectorRef', '')
-  const [repoName, ,] = useQueryParamsState<GitQueryParams['repoName']>('repoName', '')
-  const [storeType, ,] = useQueryParamsState<GitQueryParams['storeType']>('storeType', undefined)
 
   const history = useHistory()
   /* istanbul ignore next */

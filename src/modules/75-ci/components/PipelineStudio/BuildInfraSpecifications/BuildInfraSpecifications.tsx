@@ -2217,6 +2217,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                     setFieldValue('buildInfraType', infraType)
                     setBuildInfraType(infraType)
                   }}
+                  staticItems
                 />
                 {renderInfo(buildInfraType)}
               </>
@@ -2333,7 +2334,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                               os
                             })
                           }}
-                          expandAllByDefault
+                          staticItems
                         />
                         {renderInfo(buildInfraType)}
                       </Card>

@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { FormikProps } from 'formik'
 import type {
   ServiceLevelObjectiveV2DTO,
   SimpleServiceLevelObjectiveSpec,
@@ -14,8 +15,12 @@ import type {
   WeeklyCalendarSpec,
   CalenderSLOTargetSpec,
   SLOHealthListView,
-  ProjectParams
+  ProjectParams,
+  ServiceLevelIndicatorDTO,
+  ServiceLevelIndicatorSpec,
+  RatioSLIMetricSpec
 } from 'services/cv'
+import type { SLOTargetChartWithAPIGetSliGraphProps } from '../SLOTargetChart/SLOTargetChart.types'
 
 export const enum SLOV2FormFields {
   NAME = 'name',
@@ -41,7 +46,8 @@ export const enum SLOV2FormFields {
   SERVICE_LEVEL_OBJECTIVES_DETAILS = 'serviceLevelObjectivesDetails',
   SLO_TARGET_PERCENTAGE = 'SLOTargetPercentage',
   NOTIFICATION_RULE_REFS = 'notificationRuleRefs',
-  TYPE = 'type'
+  TYPE = 'type',
+  SERVICE_LEVEL_INDICATOR_TYPE = 'serviceLevelIndicatorType'
 }
 
 export interface SLOObjective extends Partial<SLOHealthListView> {
@@ -70,11 +76,47 @@ export interface SLOV2Form {
   [SLOV2FormFields.SLO_TARGET_PERCENTAGE]: SLOTargetDTO['sloTargetPercentage']
   [SLOV2FormFields.NOTIFICATION_RULE_REFS]: ServiceLevelObjectiveV2DTO['notificationRuleRefs']
   [SLOV2FormFields.SERVICE_LEVEL_OBJECTIVES_DETAILS]?: SLOObjective[]
+  [SLOV2FormFields.SERVICE_LEVEL_INDICATOR_TYPE]?: SimpleServiceLevelObjectiveSpec['serviceLevelIndicatorType']
+  [SLOV2FormFields.SLI_MISSING_DATA_TYPE]?: ServiceLevelIndicatorDTO['sliMissingDataType']
+  [SLOV2FormFields.SLI_METRIC_TYPE]?: ServiceLevelIndicatorSpec['type']
+  [SLOV2FormFields.EVENT_TYPE]?: RatioSLIMetricSpec['eventType']
+  [SLOV2FormFields.GOOD_REQUEST_METRIC]?: RatioSLIMetricSpec['metric1']
+  [SLOV2FormFields.VALID_REQUEST_METRIC]?: RatioSLIMetricSpec['metric2']
+  [SLOV2FormFields.OBJECTIVE_VALUE]?: RatioSLIMetricSpec['thresholdValue']
+  [SLOV2FormFields.OBJECTIVE_COMPARATOR]?: RatioSLIMetricSpec['thresholdType']
 }
 
 export interface GetSLOIdentifierWithOrgAndProjectProps {
   sloIdentifier?: string
   projectParams?: ProjectParams
+}
+
+export enum SLITypes {
+  AVAILABILITY = 'Availability',
+  LATENCY = 'Latency'
+}
+
+export enum SLIMetricTypes {
+  THRESHOLD = 'Threshold',
+  RATIO = 'Ratio'
+}
+
+export enum SLIEventTypes {
+  GOOD = 'Good',
+  BAD = 'Bad'
+}
+
+export enum Comparators {
+  LESS = '<',
+  GREATER = '>',
+  LESS_EQUAL = '<=',
+  GREATER_EQUAL = '>='
+}
+
+export enum SLIMissingDataTypes {
+  GOOD = 'Good',
+  BAD = 'Bad',
+  IGNORE = 'Ignore'
 }
 
 export enum PeriodTypes {
@@ -86,4 +128,42 @@ export enum PeriodLengthTypes {
   WEEKLY = 'Weekly',
   MONTHLY = 'Monthly',
   QUARTERLY = 'Quarterly'
+}
+
+export enum Days {
+  MONDAY = 'Mon',
+  TUESDAY = 'Tue',
+  WEDNESDAY = 'Wed',
+  THURSDAY = 'Thu',
+  FRIDAY = 'Fri',
+  SATURDAY = 'Sat',
+  SUNDAY = 'Sun'
+}
+
+export interface SLIProps
+  extends Omit<SLOTargetChartWithAPIGetSliGraphProps, 'serviceLevelIndicator' | 'monitoredServiceIdentifier'> {
+  formikProps: FormikProps<SLOV2Form>
+}
+
+export interface GetMetricRequestValuesBySLIMetricTypeProps {
+  sliMetricType?: string
+  validRequestMetric?: string
+  goodRequestMetric?: string
+}
+
+export interface GetMetricFormValueBySLIMetricTypeProps {
+  sliMetricType?: string
+  metric1?: string
+  metric2?: string
+}
+
+export interface SLOTargetAndBudgetPolicyProps
+  extends Omit<SLOTargetChartWithAPIGetSliGraphProps, 'serviceLevelIndicator' | 'monitoredServiceIdentifier'> {
+  formikProps: FormikProps<SLOV2Form>
+}
+export interface ErrorBudgetInterface {
+  periodType: SLOV2Form['periodType']
+  periodLength: SLOV2Form['periodLength']
+  periodLengthType: SLOV2Form['periodLengthType']
+  SLOTargetPercentage: SLOV2Form['SLOTargetPercentage']
 }

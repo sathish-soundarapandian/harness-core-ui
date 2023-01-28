@@ -21,22 +21,22 @@ const instanceFieldsTransformConfig = [
   {
     name: 'spec.instance.domain',
     type: TransformValuesTypes.Text,
-    label: 'sto.stepField.instance.domain'
+    label: 'secrets.winRmAuthFormFields.domain'
   },
   {
     name: 'spec.instance.protocol',
     type: TransformValuesTypes.Text,
-    label: 'sto.stepField.instance.protocol'
+    label: 'ce.common.protocol'
   },
   {
     name: 'spec.instance.port',
     type: TransformValuesTypes.Text,
-    label: 'sto.stepField.instance.port'
+    label: 'common.smtp.port'
   },
   {
     name: 'spec.instance.path',
     type: TransformValuesTypes.Text,
-    label: 'sto.stepField.instance.path'
+    label: 'common.path'
   }
 ]
 
@@ -44,24 +44,24 @@ const instanceFieldsValidationConfig: InputSetViewValidateFieldsConfig[] = [
   {
     name: 'spec.instance.domain',
     type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.instance.domain',
+    label: 'secrets.winRmAuthFormFields.domain',
     isRequired: true
   },
   {
     name: 'spec.instance.protocol',
     type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.instance.protocol',
+    label: 'ce.common.protocol',
     isRequired: true
   },
   {
     name: 'spec.instance.port',
     type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.instance.port'
+    label: 'common.smtp.port'
   },
   {
     name: 'spec.instance.path',
     type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.instance.path'
+    label: 'common.path'
   }
 ]
 

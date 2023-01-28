@@ -25,6 +25,7 @@ import RbacFactory from '@rbac/factories/RbacFactory'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getSelectedScopeLabel } from '@rbac/pages/ResourceGroupDetails/utils'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import type { ResourceType } from '@rbac/interfaces/ResourceType'
 import ResourceGroupColumnMenu from './ResourceGroupColumnMenu'
 import css from './ResourceGroupList.module.scss'
@@ -33,7 +34,6 @@ interface ResourceGroupListViewProps {
   data?: PageResourceGroupResponse
   reload?: () => Promise<void>
   openResourceGroupModal: () => void
-  goToPage: (pageNumber: number) => void
 }
 
 export const RenderColumnDetails: Renderer<CellProps<ResourceGroupV2Response>> = ({ row }) => {
@@ -136,7 +136,7 @@ const RenderColumnSummary: Renderer<CellProps<ResourceGroupV2Response>> = ({ row
   )
 }
 const ResourceGroupListView: React.FC<ResourceGroupListViewProps> = props => {
-  const { data, reload, openResourceGroupModal, goToPage } = props
+  const { data, reload, openResourceGroupModal } = props
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const listData: ResourceGroupV2Response[] = data?.content || []
   const { getString } = useStrings()
@@ -191,6 +191,14 @@ const ResourceGroupListView: React.FC<ResourceGroupListViewProps> = props => {
     ],
     [props.data]
   )
+
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: data?.totalItems || 0,
+    pageSize: data?.pageSize || 10,
+    pageCount: data?.totalPages || -1,
+    pageIndex: data?.pageIndex || 0
+  })
+
   return listData.length ? (
     <TableV2<ResourceGroupV2Response>
       className={css.tablePadding}
@@ -201,13 +209,7 @@ const ResourceGroupListView: React.FC<ResourceGroupListViewProps> = props => {
           openResourceSelector(get(rowDetails, 'resourceGroup.identifier', ''))
         }
       }}
-      pagination={{
-        itemCount: data?.totalItems || 0,
-        pageSize: data?.pageSize || 10,
-        pageCount: data?.totalPages || -1,
-        pageIndex: data?.pageIndex || 0,
-        gotoPage: goToPage
-      }}
+      pagination={paginationProps}
     />
   ) : (
     <NoDataCard icon="resources-icon" message={getString('rbac.resourceGroup.noResourceGroup')}></NoDataCard>

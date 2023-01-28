@@ -7,7 +7,7 @@
 
 import React from 'react'
 import type { Column } from 'react-table'
-import { Text, TableV2, Icon, Layout } from '@harness/uicore'
+import { Text, TableV2, Icon, Layout, PaginationProps } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
@@ -15,6 +15,7 @@ import { useStrings } from 'framework/strings'
 import type { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import routes from '@common/RouteDefinitions'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import type { PipelineListPagePathParams, SortBy } from '../types'
 import {
   CodeSourceCell,
@@ -37,6 +38,7 @@ export interface PipelineListColumnActions {
 export interface PipelineListTableProps extends PipelineListColumnActions {
   data: PagePMSPipelineSummaryResponse
   gotoPage: (pageNumber: number) => void
+  onPageSizeChange?: PaginationProps['onPageSizeChange']
   setSortBy: (sortBy: string[]) => void
   sortBy: string[]
   minimal?: boolean
@@ -45,6 +47,7 @@ export interface PipelineListTableProps extends PipelineListColumnActions {
 export function PipelineListTable({
   data,
   gotoPage,
+  onPageSizeChange,
   onDeletePipeline,
   onClonePipeline,
   refetchList,
@@ -135,18 +138,21 @@ export function PipelineListTable({
     ].filter(Boolean) as unknown as Column<PMSPipelineSummaryResponse>[]
   }, [currentOrder, currentSort, minimal])
 
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: totalElements,
+    pageSize: size,
+    pageCount: totalPages,
+    pageIndex: number,
+    gotoPage,
+    onPageSizeChange
+  })
+
   return (
     <TableV2
       className={cx(css.table, minimal && css.minimal)}
       columns={columns}
       data={content}
-      pagination={{
-        itemCount: totalElements,
-        pageSize: size,
-        pageCount: totalPages,
-        pageIndex: number,
-        gotoPage
-      }}
+      pagination={paginationProps}
       sortable
       getRowClassName={() => css.tableRow}
       onRowClick={rowDetails => history.push(routes.toPipelineStudio(getRouteProps(pathParams, rowDetails)))}

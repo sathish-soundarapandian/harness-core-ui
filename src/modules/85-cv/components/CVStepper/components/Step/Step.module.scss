@@ -31,3 +31,7 @@
 .stepMargin {
   padding: var(--spacing-small) var(--spacing-xlarge) var(--spacing-xlarge) var(--spacing-large) !important;
 }
+
+.stepSubtitle {
+  padding: 0 calc(var(--spacing-medium) + var(--spacing-tiny)) !important;
+}

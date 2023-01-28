@@ -46,8 +46,8 @@ import {
   SLOFilterState,
   SLOTargetChartWithChangeTimelineProps
 } from './CVSLOsListingPage.types'
-import { getUserJourneyOptions } from './components/CVCreateSLO/CVCreateSLO.utils'
-import { getMonitoredServicesOptions } from './components/CVCreateSLO/components/CreateSLOForm/components/SLI/SLI.utils'
+import { getMonitoredServicesOptions } from './common/SLI/SLI.utils'
+import { getUserJourneyOptions } from './components/CVCreateSLOV2/CVCreateSLOV2.utils'
 
 export const getUserJourneys = (userJourneyResponse?: UserJourneyResponse[]): UserJourneyDTO[] => {
   return userJourneyResponse?.map(response => response.userJourney) ?? []

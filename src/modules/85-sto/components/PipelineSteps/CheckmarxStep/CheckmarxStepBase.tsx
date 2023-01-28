@@ -145,6 +145,9 @@ export const CheckmarxStepBase = (
                   allowableTypes={allowableTypes}
                   formik={formik}
                   enableFields={{
+                    header: {
+                      label: 'sto.stepField.tool.fieldsHeading'
+                    },
                     'spec.tool.team_name': {
                       label: 'sto.stepField.tool.teamName',
                       optional: true

@@ -21,6 +21,11 @@ jest.mock('services/portal', () => ({
 }))
 
 jest.mock('services/cd-ng', () => ({
+  useIsImmutableDelegateEnabled: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn()
+    }
+  }),
   useListDelegateConfigsNgV2WithFilter: jest.fn().mockImplementation(args => {
     mockGetCallFunction(args)
     return {

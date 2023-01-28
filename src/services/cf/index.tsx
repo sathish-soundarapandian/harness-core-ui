@@ -39,6 +39,11 @@ export interface ApiKey {
 }
 
 /**
+ * The type of key depending on the SDK that is being used.
+ */
+export type ApiKeyRequestType = 'Server' | 'Client'
+
+/**
  * A list of API Keys
  */
 export type ApiKeys = Pagination & {
@@ -413,6 +418,8 @@ export interface FeatureEvaluation {
 export interface FeatureEvaluations {
   evaluations?: FeatureEvaluation[]
 }
+
+export type FeatureFlagRequestKind = 'boolean' | 'int' | 'string' | 'json'
 
 /**
  * Feature flags yaml for a project
@@ -1211,12 +1218,12 @@ export interface WeightedVariation {
   weight: number
 }
 
-export type APIKeyRequestRequestBody = {
+export interface APIKeyRequestRequestBody {
   description?: string
   expiredAt?: number
   identifier: string
   name: string
-  type: 'Server' | 'Client'
+  type: ApiKeyRequestType
 }
 
 export interface APIKeyUpdateRequestRequestBody {
@@ -1233,14 +1240,14 @@ export interface EnvironmentRequestRequestBody {
   tags?: Tag[]
 }
 
-export type FeatureFlagRequestRequestBody = {
+export interface FeatureFlagRequestRequestBody {
   archived?: boolean
   defaultOffVariation: string
   defaultOnVariation: string
   description?: string
   gitDetails?: GitDetails
   identifier: string
-  kind: 'boolean' | 'int' | 'string' | 'json'
+  kind: FeatureFlagRequestKind
   name: string
   owner?: string
   permanent: boolean
@@ -3162,7 +3169,47 @@ export interface GetFeatureMetricsQueryParams {
   /**
    * Unique feature identifiers
    */
-  featureIDs: string[]
+  featureIDs?: string[]
+  /**
+   * PageNumber
+   */
+  pageNumber?: number
+  /**
+   * PageSize
+   */
+  pageSize?: number
+  /**
+   * SortOrder
+   */
+  sortOrder?: 'ASCENDING' | 'DESCENDING'
+  /**
+   * SortByField
+   */
+  sortByField?: 'name' | 'identifier' | 'archived' | 'kind' | 'modifiedAt'
+  /**
+   * Name of the field
+   */
+  name?: string
+  /**
+   * Identifier of the field
+   */
+  identifier?: string
+  /**
+   * Status of the feature flag
+   */
+  archived?: boolean
+  /**
+   * Filter for flags based on their status (active,never-requested,recently-accessed,potentially-stale)
+   */
+  status?: string
+  /**
+   * Filter for flags based on their lifetime (permanent/temporary)
+   */
+  lifetime?: string
+  /**
+   * Filter for flags based on if they are enabled or disabled
+   */
+  enabled?: boolean
 }
 
 export type GetFeatureMetricsProps = Omit<
@@ -3581,6 +3628,10 @@ export interface GetFeatureFlagQueryParams {
    * Environment
    */
   environmentIdentifier?: string
+  /**
+   * Parameter to indicate if metrics data is requested in response
+   */
+  metrics?: boolean
 }
 
 export interface GetFeatureFlagPathParams {

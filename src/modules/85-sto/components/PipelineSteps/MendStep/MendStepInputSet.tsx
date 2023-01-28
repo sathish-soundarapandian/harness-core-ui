@@ -16,10 +16,9 @@ import {
   CIStepOptionalConfigProps
 } from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
-import { useStrings } from 'framework/strings'
 import type { MendStepProps } from './MendStep'
-import { getInputSetFieldName, inputSetFields } from '../constants'
-import SecurityField from '../SecurityField'
+import { getInputSetFieldName } from '../constants'
+import { InputSetFields } from '../SecurityFields'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const MendStepInputSetBasic: React.FC<MendStepProps> = ({
@@ -31,7 +30,6 @@ export const MendStepInputSetBasic: React.FC<MendStepProps> = ({
   formik
 }) => {
   const prefix = isEmpty(path) ? '' : `${path}.`
-  const { getString } = useStrings()
 
   const enableFields: CIStepOptionalConfigProps['enableFields'] = {
     ...(shouldRenderRunTimeInputView(template?.spec?.settings) && {
@@ -52,11 +50,12 @@ export const MendStepInputSetBasic: React.FC<MendStepProps> = ({
         }}
         path={path || ''}
       />
-      <SecurityField
+      <InputSetFields
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
-        enableFields={inputSetFields(getString, prefix, template)}
+        prefix={prefix}
+        template={template}
       />
       <CIStepOptionalConfig
         readonly={readonly}

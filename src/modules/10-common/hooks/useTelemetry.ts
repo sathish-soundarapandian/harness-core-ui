@@ -14,6 +14,10 @@ import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useShouldIntegrateHotJar } from '3rd-party/hotjarUtil'
 import { useTelemetryInstance } from './useTelemetryInstance'
 
+export interface TelemetryEvent {
+  eventName: string
+  properties: Record<string, unknown>
+}
 type TrackEvent = (eventName: string, properties: Record<string, unknown>) => void
 type TrackPage = (name: string, properties: Record<string, string>) => void
 type IdentifyUser = (email: string | undefined) => void

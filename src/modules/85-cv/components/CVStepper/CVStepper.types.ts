@@ -8,6 +8,7 @@
 export interface StepDetailsInterface {
   id: string
   title: string
+  subTitle?: string
   panel: React.ReactElement
   preview?: React.ReactElement
   isOptional?: boolean

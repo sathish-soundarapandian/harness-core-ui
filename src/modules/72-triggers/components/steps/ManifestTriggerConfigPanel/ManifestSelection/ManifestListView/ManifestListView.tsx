@@ -288,7 +288,7 @@ export default function ManifestListView({
             <section>
               <div className={css.rowItem}>
                 <section className={css.manifestList}>
-                  <div>{getString('pipeline.manifestTypeLabels.HelmChartLabel')}</div>
+                  <div>{getString('common.HelmChartLabel')}</div>
                   <ConnectorField
                     manifestStore={store?.type as ManifestStores}
                     connectorRef={connectorRef}

@@ -158,12 +158,15 @@ export const ZapStepBase = (
                   allowableTypes={allowableTypes}
                   formik={formik}
                   enableFields={{
+                    header: {
+                      label: 'sto.stepField.tool.fieldsHeading'
+                    },
                     'spec.tool.context': {
                       label: 'sto.stepField.tool.context',
                       optional: true
                     },
                     'spec.tool.port': {
-                      label: 'sto.stepField.tool.port',
+                      label: 'common.smtp.port',
                       optional: true,
                       inputProps: { placeholder: '8981' }
                     }

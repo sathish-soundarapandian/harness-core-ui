@@ -5,8 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import React, { useEffect, useState } from 'react'
-import { identity } from 'lodash-es'
+import React from 'react'
 import {
   ButtonVariation,
   Container,
@@ -24,42 +23,60 @@ import RoleCard from '@rbac/components/RoleCard/RoleCard'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useRoleModal } from '@rbac/modals/RoleModal/useRoleModal'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import routes from '@common/RouteDefinitions'
-import { setPageNumber } from '@common/utils/utils'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { isAccountBasicRole } from '@rbac/utils/utils'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
+import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import css from '../Roles.module.scss'
+
+const DEFAULT_ROLES_PAGE_SIZE = 12
+const ROLES_PAGE_SIZE_OPTIONS = [12, 24, 48, 96]
+const rolesQueryParamOptions = {
+  decoder: queryParamDecodeAll(),
+  processQueryParams<Rest>(
+    params: CommonPaginationQueryParams & Rest
+  ): RequiredPick<CommonPaginationQueryParams, 'page' | 'size'> & Rest {
+    return {
+      ...params,
+      page: params.page ?? 0,
+      size: params.size ?? DEFAULT_ROLES_PAGE_SIZE
+    }
+  }
+}
 
 const RolesList: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
   const history = useHistory()
   useDocumentTitle(getString('roles'))
-  const [page, setPage] = useState(0)
-  const [searchTerm, setSearchTerm] = useQueryParamsState<string | undefined>('search', '', {
-    serializer: identity,
-    deserializer: identity
-  })
+
+  const {
+    search: searchTerm,
+    size: pageSize,
+    page: pageIndex
+  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(rolesQueryParamOptions)
+  const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams & { search?: string }>()
+
   const { data, loading, error, refetch } = useGetRoleList({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
-      pageIndex: page,
-      pageSize: 12,
-      searchTerm: searchTerm
+      pageIndex,
+      pageSize,
+      searchTerm
     },
     debounce: 300
   })
 
-  useEffect(() => {
-    setPageNumber({ setPage, page, pageItemsCount: data?.data?.pageItemCount })
-  }, [data?.data])
+  usePreviousPageWhenEmpty({ pageItemCount: data?.data?.pageItemCount, page: data?.data?.pageIndex })
 
   const { openRoleModal } = useRoleModal({
     onSuccess: role => {
@@ -107,6 +124,13 @@ const RolesList: React.FC = () => {
 
   const { getRBACErrorMessage } = useRBACError()
 
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: data?.data?.totalItems || 0,
+    pageSize: data?.data?.pageSize || DEFAULT_ROLES_PAGE_SIZE,
+    pageCount: data?.data?.totalPages || 0,
+    pageIndex: data?.data?.pageIndex || 0,
+    pageSizeOptions: ROLES_PAGE_SIZE_OPTIONS
+  })
   return (
     <>
       <PageHeader
@@ -118,8 +142,7 @@ const RolesList: React.FC = () => {
               alwaysExpanded
               placeholder={getString('common.searchPlaceholder')}
               onChange={text => {
-                setSearchTerm(text.trim())
-                setPage(0)
+                updateQueryParams({ search: text.trim(), page: 0 })
               }}
               width={250}
             />
@@ -159,13 +182,7 @@ const RolesList: React.FC = () => {
           )}
         </div>
         <Container className={css.pagination}>
-          <Pagination
-            itemCount={data?.data?.totalItems || 0}
-            pageSize={data?.data?.pageSize || 10}
-            pageCount={data?.data?.totalPages || 0}
-            pageIndex={data?.data?.pageIndex || 0}
-            gotoPage={(pageNumber: number) => setPage(pageNumber)}
-          />
+          <Pagination {...paginationProps} />
         </Container>
       </PageBody>
     </>

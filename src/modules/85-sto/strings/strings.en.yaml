@@ -23,45 +23,26 @@ stepField:
   mode: Scan Mode
   config: Scan Configuration
   target:
-    type: Target Type
-    name: Target Name
-    variant: Target Variant
-    workspace: Target Workspace
-  authToken: Auth Token
-  authDomain: Auth Domain
-  authAccessId: Auth Access Id
+    variant: Variant
+  image:
+    fieldsHeading: Container Image
+  authAccessId: Access Id
   authSsl: Enforce SSL
-  authVersion: Auth API Version
-  authType: Auth type
+  authVersion: API Version
   toolInclude: Include
   tool:
+    fieldsHeading: Scan Tool
     javaLibraries: Java Libraries
     javaBinaries: Java Binaries
-    context: Tool Context Name
-    port: Tool Port
-    imageName: Tool Image Name
+    context: Context Name
     teamName: Team Name
     projectVersion: Project Version
-    productToken: Product Token
-    productName: Product Name
     projectToken: Project Token
-    productLookupType: Product Lookup Type
+    productLookupType: Lookup Type
     exclude: Exclude
-  image:
-    type: Image Type
-    domain: Image Domain
-    region: Image Region
-    accessId: Image Access Id
-    token: Image Access Token
-    tag: Image Tag
   container:
     containerAccessToken: Container Access Token
     containerRegion: Container Region
-  instance:
-    domain: Instance Domain
-    protocol: Instance Protocol
-    port: Instance Port
-    path: Instance Path
   advanced:
     logLevel: Log Level
     serializer: Log Serializer

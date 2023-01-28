@@ -1,0 +1,4 @@
+#For More Info: https://github.com/zricethezav/gitleaks/blob/master/.gitleaksignore
+
+#CommitID:FilePath:TypeOfSecret:LineNumber
+7dc4b3530cc52059d8715375f9309f6c6254a89:src/modules/30-delegates/pages/delegates/delegateCommandLineCreation/DelegateCommandLineCreation.ts:delegateToken:36

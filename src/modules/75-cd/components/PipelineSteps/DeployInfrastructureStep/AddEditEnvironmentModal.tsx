@@ -37,6 +37,7 @@ import { useToaster } from '@common/exports'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference.types'
 
 import EnvironmentConfiguration from '@cd/components/EnvironmentsV2/EnvironmentDetails/EnvironmentConfiguration/EnvironmentConfiguration'
 
@@ -105,11 +106,17 @@ export default function AddEditEnvironmentModal({
     inputRef.current?.focus()
   }, [])
 
-  const { name, identifier, description, tags, type, variables, overrides } = get(
-    data,
-    'environment',
-    {} as NGEnvironmentInfoConfig
-  )
+  const {
+    name,
+    identifier,
+    description,
+    tags,
+    type,
+    variables,
+    overrides,
+    orgIdentifier: envOrgIdentifier,
+    projectIdentifier: envProjectIdentifier
+  } = get(data, 'environment', {} as NGEnvironmentInfoConfig)
 
   return (
     <Formik<NGEnvironmentInfoConfig>
@@ -120,8 +127,8 @@ export default function AddEditEnvironmentModal({
           description: defaultTo(description, ''),
           tags: defaultTo(tags, {}),
           type: defaultTo(type, ''),
-          orgIdentifier: isEdit ? data.environment?.orgIdentifier : orgIdentifier,
-          projectIdentifier: isEdit ? data.environment?.projectIdentifier : projectIdentifier,
+          orgIdentifier: isEdit ? envOrgIdentifier : orgIdentifier,
+          projectIdentifier: isEdit ? envProjectIdentifier : projectIdentifier,
           variables,
           overrides
         } as NGEnvironmentInfoConfig
@@ -157,6 +164,15 @@ export default function AddEditEnvironmentModal({
                   isModified={false}
                   data={{ data: data }}
                   isEdit={isEdit}
+                  scope={getScopeFromDTO(
+                    isEdit
+                      ? {
+                          accountIdentifier: accountId,
+                          orgIdentifier: envOrgIdentifier,
+                          projectIdentifier: envProjectIdentifier
+                        }
+                      : { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+                  )}
                 />
               </Container>
             </FormikForm>

@@ -367,6 +367,11 @@ exports[`Mend Step Edit View edit mode works 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -374,7 +379,7 @@ exports[`Mend Step Edit View edit mode works 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -477,7 +482,7 @@ exports[`Mend Step Edit View edit mode works 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -620,7 +625,7 @@ exports[`Mend Step Edit View edit mode works 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.target.workspace
+                pipelineSteps.workspace
               </p>
                
               <p
@@ -695,6 +700,11 @@ exports[`Mend Step Edit View edit mode works 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          authentication
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -702,7 +712,7 @@ exports[`Mend Step Edit View edit mode works 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.authDomain
+              secrets.winRmAuthFormFields.domain
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -912,7 +922,7 @@ exports[`Mend Step Edit View edit mode works 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.authToken
+              token
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -979,6 +989,11 @@ exports[`Mend Step Edit View edit mode works 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          sto.stepField.tool.fieldsHeading
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -2352,6 +2367,11 @@ exports[`Mend Step Edit View renders runtime inputs - Ingestion Repository 1`] =
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -2359,7 +2379,7 @@ exports[`Mend Step Edit View renders runtime inputs - Ingestion Repository 1`] =
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -2462,7 +2482,7 @@ exports[`Mend Step Edit View renders runtime inputs - Ingestion Repository 1`] =
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -3622,6 +3642,11 @@ exports[`Mend Step Edit View renders runtime inputs - Orchestration Repository 1
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -3629,7 +3654,7 @@ exports[`Mend Step Edit View renders runtime inputs - Orchestration Repository 1
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -3732,7 +3757,7 @@ exports[`Mend Step Edit View renders runtime inputs - Orchestration Repository 1
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -3955,7 +3980,7 @@ exports[`Mend Step Edit View renders runtime inputs - Orchestration Repository 1
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.target.workspace
+                pipelineSteps.workspace
               </p>
                
               <p
@@ -4069,6 +4094,11 @@ exports[`Mend Step Edit View renders runtime inputs - Orchestration Repository 1
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          authentication
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -4076,7 +4106,7 @@ exports[`Mend Step Edit View renders runtime inputs - Orchestration Repository 1
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.authDomain
+              secrets.winRmAuthFormFields.domain
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -4339,7 +4369,7 @@ exports[`Mend Step Edit View renders runtime inputs - Orchestration Repository 1
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.authToken
+              token
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -4445,6 +4475,11 @@ exports[`Mend Step Edit View renders runtime inputs - Orchestration Repository 1
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          sto.stepField.tool.fieldsHeading
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -5613,6 +5648,11 @@ exports[`Mend Step Edit View should render properly 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -5620,7 +5660,7 @@ exports[`Mend Step Edit View should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -5723,7 +5763,7 @@ exports[`Mend Step Edit View should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -5866,7 +5906,7 @@ exports[`Mend Step Edit View should render properly 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.target.workspace
+                pipelineSteps.workspace
               </p>
                
               <p
@@ -5941,6 +5981,11 @@ exports[`Mend Step Edit View should render properly 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          authentication
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -5948,7 +5993,7 @@ exports[`Mend Step Edit View should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.authDomain
+              secrets.winRmAuthFormFields.domain
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -6158,7 +6203,7 @@ exports[`Mend Step Edit View should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.authToken
+              token
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -6225,6 +6270,11 @@ exports[`Mend Step Edit View should render properly 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          sto.stepField.tool.fieldsHeading
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -7208,6 +7258,11 @@ exports[`Mend Step InputSet View should render all fields 1`] = `
             </div>
           </div>
         </div>
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -7215,7 +7270,7 @@ exports[`Mend Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -7355,7 +7410,7 @@ exports[`Mend Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.workspace
+              pipelineSteps.workspace
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -7418,6 +7473,11 @@ exports[`Mend Step InputSet View should render all fields 1`] = `
             </div>
           </div>
         </div>
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          authentication
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -7425,7 +7485,7 @@ exports[`Mend Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.authToken
+              token
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -7495,7 +7555,7 @@ exports[`Mend Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.authDomain
+              secrets.winRmAuthFormFields.domain
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -7735,7 +7795,7 @@ exports[`Mend Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.instance.protocol
+              ce.common.protocol
             </p>
             <div
               style="display: flex; align-items: center;"

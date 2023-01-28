@@ -80,8 +80,6 @@ export interface InputSet {
   inputSet: InputSetDTO
 }
 
-export type PartiallyRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
-
 export interface ECSRollingDeployStepInitialValues extends StepElementConfig {
   sameAsAlreadyRunningInstances?: boolean | string
   forceNewDeployment?: boolean | string

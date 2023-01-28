@@ -186,7 +186,7 @@ function _PipelineListPage(): React.ReactElement {
       <Page.Header
         title={
           <div className="ng-tooltip-native">
-            <h2 data-tooltip-id="pipelinesPageHeading"> {getString('pipelines')}</h2>
+            <h2 data-tooltip-id="pipelinesPageHeading">{getString('pipelines')}</h2>
             <HarnessDocTooltip tooltipId="pipelinesPageHeading" useStandAlone={true} />
           </div>
         }
@@ -274,6 +274,7 @@ function _PipelineListPage(): React.ReactElement {
             </div>
             <PipelineListTable
               gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
+              onPageSizeChange={newSize => updateQueryParams({ size: newSize, page: 0 })}
               data={pipelinesQuery.data.data}
               onDeletePipeline={onDeletePipeline}
               onClonePipeline={onClonePipeline}

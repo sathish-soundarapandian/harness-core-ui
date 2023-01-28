@@ -8,7 +8,7 @@
 import React from 'react'
 import { Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import css from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.module.scss'
+import css from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.module.scss'
 
 const SLOTargetContextualHelpText = (): JSX.Element => {
   const { getString } = useStrings()

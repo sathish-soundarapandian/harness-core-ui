@@ -35,7 +35,7 @@ const enableTIUI = process.env.ENABLE_TI_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
 const enableCODE = process.env.ENABLE_CODE === 'true'
 const enableFFUI = process.env.ENABLE_FF_UI !== 'false'
-const enableIACM = process.env.ENABLE_IACM === 'true'
+const enableIACM = process.env.ENABLE_IACM !== 'false'
 
 console.log('Common build flags')
 console.table({
@@ -247,7 +247,7 @@ if (!enableTIUI) {
 if (!enableChaosUI) {
   // render a mock app when Chaos MF is disabled
   config.resolve.alias['chaos/MicroFrontendApp'] = ChildAppError
-  config.resolve.alias['chaos/PipelineExperimentSelect'] = ChildAppError
+  config.resolve.alias['chaos/SelectPipelineExperiment'] = ChildAppError
   config.resolve.alias['chaos/ExperimentPreview'] = ChildAppError
   config.resolve.alias['chaos/ChaosStepExecution'] = ChildAppError
   config.resolve.alias['chaos/ResilienceViewContent'] = ChildAppError

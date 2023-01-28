@@ -48,77 +48,6 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra Render AWS 
                         class="Thumbnail--squareCardContainer"
                       >
                         <div
-                          class="bp3-card bp3-elevation-0 Card--card Thumbnail--squareCard Card--selected"
-                        >
-                          <span
-                            class="Card--corner"
-                          >
-                            <span
-                              class="Card--badge"
-                            />
-                            <span
-                              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
-                              data-icon="main-tick"
-                            >
-                              <svg
-                                height="10"
-                                viewBox="0 0 11 8"
-                                width="10"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M9.219.894c.356-.38.982-.413 1.398-.072.391.32.457.857.167 1.236l-.06.07-5.138 5.486c-.362.386-.993.41-1.403.068l-.07-.064-3.2-3.214A.88.88 0 01.95 3.098a1.045 1.045 0 011.328-.003l.074.067 2.443 2.454L9.22.894z"
-                                  fill="currentColor"
-                                />
-                              </svg>
-                            </span>
-                          </span>
-                          <span
-                            class="bp3-icon StyledProps--main"
-                            data-icon="service-vm"
-                          >
-                            <svg
-                              fill="none"
-                              height="26"
-                              viewBox="0 0 32 33"
-                              width="26"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M19.923 24.662v-6.97l2.346 3.845 1.926-6.355v7.044"
-                                stroke="#4F5162"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                              <path
-                                d="M27.464 10.319V22.98a1 1 0 01-.497.864l-10.99 6.395m11.487-19.921L16.602 3.857a1 1 0 00-1.018-.003L4.591 10.319m22.873 0L15.977 17.07m0 13.168L5.085 23.846a1 1 0 01-.494-.862V10.319m11.386 19.92V17.072M4.591 10.32l11.386 6.752"
-                                stroke="#4F5162"
-                                stroke-linejoin="round"
-                              />
-                              <path
-                                d="M8.725 16.235l.962 7.373 2.802-5.273"
-                                stroke="#4F5162"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                              />
-                            </svg>
-                          </span>
-                        </div>
-                        <p
-                          class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
-                        >
-                          ci.buildInfra.vMs
-                        </p>
-                        <input
-                          name="buildInfraType"
-                          type="checkbox"
-                          value="VM"
-                        />
-                      </label>
-                      <label
-                        class="Thumbnail--squareCardContainer"
-                      >
-                        <div
                           class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
                           tabindex="0"
                         >
@@ -207,37 +136,77 @@ exports[`BuildInfraSpecifications snapshot tests for AWS Build Infra Render AWS 
                           value="Docker"
                         />
                       </label>
-                      <button
-                        aria-label="Close"
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
-                        data-testid="thumbnail-select-cancel"
-                        type="button"
+                      <label
+                        class="Thumbnail--squareCardContainer"
                       >
-                        <span
-                          class="bp3-icon bp3-icon-cross StyledProps--main StyledProps--padding-right-xsmall"
-                          icon="cross"
+                        <div
+                          class="bp3-card bp3-elevation-0 Card--card Thumbnail--squareCard Card--selected"
                         >
-                          <svg
-                            data-icon="cross"
-                            height="12"
-                            viewBox="0 0 16 16"
-                            width="12"
+                          <span
+                            class="Card--corner"
                           >
-                            <desc>
-                              cross
-                            </desc>
-                            <path
-                              d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                              fill-rule="evenodd"
+                            <span
+                              class="Card--badge"
                             />
-                          </svg>
-                        </span>
-                        <span
-                          class="bp3-button-text"
+                            <span
+                              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-white"
+                              data-icon="main-tick"
+                            >
+                              <svg
+                                height="10"
+                                viewBox="0 0 11 8"
+                                width="10"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M9.219.894c.356-.38.982-.413 1.398-.072.391.32.457.857.167 1.236l-.06.07-5.138 5.486c-.362.386-.993.41-1.403.068l-.07-.064-3.2-3.214A.88.88 0 01.95 3.098a1.045 1.045 0 011.328-.003l.074.067 2.443 2.454L9.22.894z"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="service-vm"
+                          >
+                            <svg
+                              fill="none"
+                              height="26"
+                              viewBox="0 0 32 33"
+                              width="26"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M19.923 24.662v-6.97l2.346 3.845 1.926-6.355v7.044"
+                                stroke="#4F5162"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                              <path
+                                d="M27.464 10.319V22.98a1 1 0 01-.497.864l-10.99 6.395m11.487-19.921L16.602 3.857a1 1 0 00-1.018-.003L4.591 10.319m22.873 0L15.977 17.07m0 13.168L5.085 23.846a1 1 0 01-.494-.862V10.319m11.386 19.92V17.072M4.591 10.32l11.386 6.752"
+                                stroke="#4F5162"
+                                stroke-linejoin="round"
+                              />
+                              <path
+                                d="M8.725 16.235l.962 7.373 2.802-5.273"
+                                stroke="#4F5162"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                        <p
+                          class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
                         >
-                          Close
-                        </span>
-                      </button>
+                          ci.buildInfra.vMs
+                        </p>
+                        <input
+                          name="buildInfraType"
+                          type="checkbox"
+                          value="VM"
+                        />
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -1115,37 +1084,6 @@ exports[`BuildInfraSpecifications snapshot tests for Advanced Panel K8s Build In
                           value="VM"
                         />
                       </label>
-                      <button
-                        aria-label="Close"
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
-                        data-testid="thumbnail-select-cancel"
-                        type="button"
-                      >
-                        <span
-                          class="bp3-icon bp3-icon-cross StyledProps--main StyledProps--padding-right-xsmall"
-                          icon="cross"
-                        >
-                          <svg
-                            data-icon="cross"
-                            height="12"
-                            viewBox="0 0 16 16"
-                            width="12"
-                          >
-                            <desc>
-                              cross
-                            </desc>
-                            <path
-                              d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                        <span
-                          class="bp3-button-text"
-                        >
-                          Close
-                        </span>
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -4977,43 +4915,106 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra Renders wit
                           value="KubernetesDirect"
                         />
                       </label>
-                      <button
-                        aria-label="Change"
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
-                        data-testid="thumbnail-select-change"
-                        type="button"
+                      <label
+                        class="Thumbnail--squareCardContainer"
                       >
-                        <span
-                          class="bp3-icon StyledProps--main StyledProps--padding-right-xsmall"
-                          data-icon="Edit"
+                        <div
+                          class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+                          tabindex="0"
                         >
-                          <svg
-                            height="12"
-                            viewBox="0 0 16 16"
-                            width="12"
-                            xmlns="http://www.w3.org/2000/svg"
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="docker-step"
                           >
-                            <path
-                              clip-rule="evenodd"
-                              d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
-                              fill="currentColor"
-                              fill-rule="evenodd"
-                            />
-                            <path
-                              clip-rule="evenodd"
-                              d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
-                              fill="currentColor"
-                              fill-rule="evenodd"
-                              opacity="0.3"
-                            />
-                          </svg>
-                        </span>
-                        <span
-                          class="bp3-button-text"
+                            <svg
+                              fill="none"
+                              height="26"
+                              viewBox="0 0 28 28"
+                              width="26"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <g
+                                clip-path="url(#docker-step_svg__a)"
+                              >
+                                <path
+                                  d="M27.422 11.21c-.63-.437-2.075-.6-3.205-.382-.131-1.094-.736-2.05-1.787-2.898l-.604-.438-.42.629c-.525.82-.788 1.969-.71 3.062.027.383.158 1.067.552 1.668-.367.219-1.13.492-2.128.492H.126l-.052.22c-.184 1.093-.184 4.51 1.97 7.135 1.629 1.997 4.046 3.008 7.225 3.008 6.883 0 11.98-3.308 14.37-9.296.946.027 2.969 0 3.993-2.051a22.8 22.8 0 00.263-.574l.105-.219-.578-.355zM15.311 3.5h-2.89v2.734h2.89V3.5zm0 3.281h-2.89v2.734h2.89V6.781zm-3.415 0h-2.89v2.734h2.89V6.781zm-3.415 0H5.59v2.734h2.89V6.781zm-3.416 3.281h-2.89v2.735h2.89v-2.735zm3.416 0H5.59v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735z"
+                                  fill="#2396ED"
+                                />
+                              </g>
+                              <defs>
+                                <clippath
+                                  id="docker-step_svg__a"
+                                >
+                                  <path
+                                    d="M0 0h28v20.234H0z"
+                                    fill="#fff"
+                                    transform="translate(0 3.5)"
+                                  />
+                                </clippath>
+                              </defs>
+                            </svg>
+                          </span>
+                        </div>
+                        <p
+                          class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
                         >
-                          Change
-                        </span>
-                      </button>
+                          common.local
+                        </p>
+                        <input
+                          name="buildInfraType"
+                          type="checkbox"
+                          value="Docker"
+                        />
+                      </label>
+                      <label
+                        class="Thumbnail--squareCardContainer"
+                      >
+                        <div
+                          class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
+                          tabindex="0"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="service-vm"
+                          >
+                            <svg
+                              fill="none"
+                              height="26"
+                              viewBox="0 0 32 33"
+                              width="26"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M19.923 24.662v-6.97l2.346 3.845 1.926-6.355v7.044"
+                                stroke="#4F5162"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                              <path
+                                d="M27.464 10.319V22.98a1 1 0 01-.497.864l-10.99 6.395m11.487-19.921L16.602 3.857a1 1 0 00-1.018-.003L4.591 10.319m22.873 0L15.977 17.07m0 13.168L5.085 23.846a1 1 0 01-.494-.862V10.319m11.386 19.92V17.072M4.591 10.32l11.386 6.752"
+                                stroke="#4F5162"
+                                stroke-linejoin="round"
+                              />
+                              <path
+                                d="M8.725 16.235l.962 7.373 2.802-5.273"
+                                stroke="#4F5162"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                        <p
+                          class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
+                        >
+                          ci.buildInfra.vMs
+                        </p>
+                        <input
+                          name="buildInfraType"
+                          type="checkbox"
+                          value="VM"
+                        />
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -5624,37 +5625,6 @@ exports[`BuildInfraSpecifications snapshot tests for K8s Build Infra able to sel
                           value="VM"
                         />
                       </label>
-                      <button
-                        aria-label="Close"
-                        class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ThumbnailSelect--changeButton StyledProps--intent-primary Button--without-shadow Button--withLeftIcon"
-                        data-testid="thumbnail-select-cancel"
-                        type="button"
-                      >
-                        <span
-                          class="bp3-icon bp3-icon-cross StyledProps--main StyledProps--padding-right-xsmall"
-                          icon="cross"
-                        >
-                          <svg
-                            data-icon="cross"
-                            height="12"
-                            viewBox="0 0 16 16"
-                            width="12"
-                          >
-                            <desc>
-                              cross
-                            </desc>
-                            <path
-                              d="M9.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42L6.59 8 3.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
-                        </span>
-                        <span
-                          class="bp3-button-text"
-                        >
-                          Close
-                        </span>
-                      </button>
                     </div>
                   </div>
                 </div>

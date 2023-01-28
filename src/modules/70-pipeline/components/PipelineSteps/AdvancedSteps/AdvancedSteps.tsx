@@ -7,7 +7,8 @@
 
 import React from 'react'
 import type { FormikProps } from 'formik'
-import { Formik, FormikForm, Accordion, AccordionHandle } from '@harness/uicore'
+import { Formik, FormikForm, Accordion, AccordionHandle, RUNTIME_INPUT_VALUE, Container, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import { debounce, defaultTo, isEmpty, noop } from 'lodash-es'
 
@@ -23,7 +24,7 @@ import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
 import { getIsFailureStrategyDisabled } from '@pipeline/utils/CIUtils'
 import type { StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
-import type { TemplateStepNode } from 'services/pipeline-ng'
+import type { PmsAbstractStepNode, PolicyConfig, TemplateStepNode } from 'services/pipeline-ng'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import DelegateSelectorPanel from './DelegateSelectorPanel/DelegateSelectorPanel'
@@ -33,10 +34,12 @@ import { getFailureStrategiesValidationSchema } from './FailureStrategyPanel/val
 import type { StepType } from '../PipelineStepInterface'
 import ConditionalExecutionPanel from './ConditionalExecutionPanel/ConditionalExecutionPanel'
 import CommandFlagsPanel from './CommandFlagsPanel/CommandFlagsPanel'
+import MultiTypePolicySetSelector from '../Common/PolicySets/MultiTypePolicySetSelector/MultiTypePolicySetSelector'
 import css from './AdvancedSteps.module.scss'
 
 export type FormValues = Pick<Values, 'delegateSelectors' | 'when' | 'strategy' | 'commandFlags'> & {
   failureStrategies?: AllFailureStrategyConfig[]
+  policySets?: PolicyConfig['policySets'] | typeof RUNTIME_INPUT_VALUE
 }
 
 export interface AdvancedStepsProps extends Omit<StepCommandsProps, 'onUseTemplate' | 'onRemoveTemplate'> {
@@ -68,6 +71,10 @@ export default function AdvancedSteps(props: AdvancedStepsProps, formikRef: Step
     (step as StepElementConfig)?.spec?.delegateSelectors ||
     (step as StepGroupElementConfig)?.delegateSelectors
 
+  const policySets =
+    ((step as TemplateStepNode)?.template?.templateInputs as PmsAbstractStepNode)?.enforce?.policySets ||
+    (step as PmsAbstractStepNode)?.enforce?.policySets
+
   const when = ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.when || (step as Step)?.when
 
   const strategy = (step as any)?.strategy
@@ -78,6 +85,7 @@ export default function AdvancedSteps(props: AdvancedStepsProps, formikRef: Step
         failureStrategies: defaultTo(failureStrategies, []) as AllFailureStrategyConfig[],
         delegateSelectors: defaultTo(delegateSelectors, []),
         commandFlags: defaultTo((step as StepElementConfig)?.spec?.commandFlags, []),
+        policySets: defaultTo(policySets, []),
         when,
         strategy
       }}
@@ -134,6 +142,10 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
       }
       if (!isEmpty(formikProps.errors?.commandFlags) && accordionRef.current) {
         accordionRef.current.open(AdvancedPanels.CommandFlags)
+      }
+
+      if (!isEmpty(formikProps.errors?.policySets) && accordionRef.current) {
+        accordionRef.current.open(AdvancedPanels.PolicyEnforcement)
       }
     }
   }, [formikProps.isSubmitting, formikProps.errors])
@@ -213,6 +225,24 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
               id={AdvancedPanels.CommandFlags}
               summary={getString('pipeline.stepDescription.AdvancedCommandFlags')}
               details={<CommandFlagsPanel formik={formikProps} step={step} deploymentType={deploymentType} />}
+            />
+          ) : null}
+          {!hiddenPanels.includes(AdvancedPanels.PolicyEnforcement) ? (
+            <Accordion.Panel
+              id={AdvancedPanels.PolicyEnforcement}
+              summary={getString('pipeline.policyEnforcement.title')}
+              details={
+                <Container>
+                  <Text color={Color.GREY_700} font={{ size: 'small' }} margin={{ bottom: 'medium' }}>
+                    {getString('pipeline.policyEnforcement.description')}
+                  </Text>
+                  <MultiTypePolicySetSelector<FormValues['policySets']>
+                    name={'policySets'}
+                    label={getString('common.policy.policysets')}
+                    disabled={isReadonly}
+                  />
+                </Container>
+              }
             />
           ) : null}
         </Accordion>

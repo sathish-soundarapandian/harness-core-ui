@@ -75,8 +75,10 @@ export const getModuleToDefaultURLMap = (accountId: string, module: Module): { [
   cv: routes.toCVHome({
     accountId
   }),
-  chaos: routes.toModuleHome({
+  chaos: routes.toProjectOverview({
     accountId,
+    projectIdentifier: DEFAULT_PROJECT_ID,
+    orgIdentifier: DEFAULT_ORG,
     module
   })
 })

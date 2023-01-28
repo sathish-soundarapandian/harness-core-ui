@@ -14,6 +14,8 @@ import { AllowedTypes, ConfirmationDialog, Layout, ModalDialog, useToggleOpen } 
 import { useStrings } from 'framework/strings'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
 
+import type { ButtonProps } from '@rbac/components/Button/Button'
+
 import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 
 import InfrastructureModal from '@cd/components/EnvironmentsV2/EnvironmentDetails/InfrastructureDefinition/InfrastructureModal'
@@ -33,6 +35,7 @@ export interface InfrastructureEntitiesListProps
   environmentIdentifier: string
   onInfrastructureEntityUpdate: () => void
   onRemoveInfrastructureFromList: (id: string) => void
+  environmentPermission?: ButtonProps['permission']
 }
 
 export default function InfrastructureEntitiesList({
@@ -43,7 +46,8 @@ export default function InfrastructureEntitiesList({
   onInfrastructureEntityUpdate,
   onRemoveInfrastructureFromList,
   environmentIdentifier,
-  customDeploymentRef
+  customDeploymentRef,
+  environmentPermission
 }: InfrastructureEntitiesListProps): React.ReactElement {
   const { getString } = useStrings()
   const { getTemplate } = useTemplateSelector()
@@ -99,6 +103,7 @@ export default function InfrastructureEntitiesList({
               allowableTypes={allowableTypes}
               readonly={readonly}
               environmentIdentifier={environmentIdentifier}
+              environmentPermission={environmentPermission}
             />
           )
         })}

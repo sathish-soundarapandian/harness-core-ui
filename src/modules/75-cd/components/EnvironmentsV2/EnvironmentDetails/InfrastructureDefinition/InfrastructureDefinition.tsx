@@ -76,7 +76,13 @@ export default function InfrastructureDefinition(): JSX.Element {
               variation={ButtonVariation.LINK}
               permission={{
                 resource: {
-                  resourceType: ResourceType.ENVIRONMENT
+                  resourceType: ResourceType.ENVIRONMENT,
+                  resourceIdentifier: environmentIdentifier
+                },
+                resourceScope: {
+                  accountIdentifier: accountId,
+                  orgIdentifier,
+                  projectIdentifier
                 },
                 permission: PermissionIdentifier.EDIT_ENVIRONMENT
               }}

@@ -24,6 +24,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectListView.module.scss'
 
@@ -32,7 +33,6 @@ interface ProjectListViewProps {
   showEditProject?: (project: Project) => void
   collaborators?: (project: Project) => void
   reloadPage: () => Promise<void>
-  gotoPage: (index: number) => void
 }
 
 type CustomColumn<T extends Record<string, any>> = Column<T> & {
@@ -233,7 +233,7 @@ const RenderColumnMenu: Renderer<CellProps<ProjectAggregateDTO>> = ({ row, colum
 }
 
 const ProjectListView: React.FC<ProjectListViewProps> = props => {
-  const { data, showEditProject, collaborators, gotoPage, reloadPage } = props
+  const { data, showEditProject, collaborators, reloadPage } = props
   const history = useHistory()
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
@@ -294,6 +294,14 @@ const ProjectListView: React.FC<ProjectListViewProps> = props => {
     ],
     [reloadPage, showEditProject, collaborators]
   )
+
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: data?.data?.totalItems || 0,
+    pageSize: data?.data?.pageSize || 10,
+    pageCount: data?.data?.totalPages || 0,
+    pageIndex: data?.data?.pageIndex || 0
+  })
+
   return (
     <TableV2<ProjectAggregateDTO>
       className={css.table}
@@ -309,13 +317,7 @@ const ProjectListView: React.FC<ProjectListViewProps> = props => {
           })
         )
       }}
-      pagination={{
-        itemCount: data?.data?.totalItems || 0,
-        pageSize: data?.data?.pageSize || 10,
-        pageCount: data?.data?.totalPages || 0,
-        pageIndex: data?.data?.pageIndex || 0,
-        gotoPage: gotoPage
-      }}
+      pagination={paginationProps}
     />
   )
 }

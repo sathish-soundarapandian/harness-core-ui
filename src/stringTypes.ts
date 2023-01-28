@@ -13,6 +13,7 @@ export interface StringsMap {
   'common.180days': string
   'common.30days': string
   'common.90days': string
+  'common.HelmChartLabel': string
   'common.ID': string
   'common.My': string
   'common.OFF': string
@@ -138,6 +139,7 @@ export interface StringsMap {
   'common.changesUnsaved': string
   'common.channel': string
   'common.city': string
+  'common.clear': string
   'common.clearSelection': string
   'common.clickToExpand': string
   'common.clickToKnowMore': string
@@ -194,6 +196,7 @@ export interface StringsMap {
   'common.connectivityErrors': string
   'common.contactSupport': string
   'common.contentRequired': string
+  'common.copied': string
   'common.copy': string
   'common.copyFqn': string
   'common.copyVariableName': string
@@ -220,7 +223,11 @@ export interface StringsMap {
   'common.defaultExperience': string
   'common.defaultSettings': string
   'common.defineDelegateSelector': string
+  'common.delegateFailText1Part1': string
+  'common.delegateFailText2': string
+  'common.delegateFailed': string
   'common.delegateForTask': string
+  'common.delegateSuccess': string
   'common.delegateTokenLabel': string
   'common.delete': string
   'common.deleteEnvironment.title': string
@@ -464,6 +471,7 @@ export interface StringsMap {
   'common.harnessNextGeneration': string
   'common.harnessNextGenerationDescription': string
   'common.harnessPlatform': string
+  'common.harnessURL': string
   'common.headerAccountEdition': string
   'common.headerAccountName': string
   'common.headerCompanyName': string
@@ -509,6 +517,7 @@ export interface StringsMap {
   'common.latest': string
   'common.launchFirstGen': string
   'common.learnMore': string
+  'common.learnMoreDelegate': string
   'common.leaveThisPage': string
   'common.letsGetYouStarted': string
   'common.levelUp': string
@@ -1505,6 +1514,67 @@ export interface StringsMap {
   'governance.permissions.governancePolicies': string
   'governance.permissions.governancePolicySets': string
   'delegates.GBRam': string
+  'delegates.commandLineCreation.clickDoneAndCheckLater': string
+  'delegates.commandLineCreation.commandsKubernetesHeading': string
+  'delegates.commandLineCreation.delegateFixed': string
+  'delegates.commandLineCreation.delegateNotFixed': string
+  'delegates.commandLineCreation.didDelegateComeUp': string
+  'delegates.commandLineCreation.dockerTroubleShooting1': string
+  'delegates.commandLineCreation.dockerTroubleShooting2': string
+  'delegates.commandLineCreation.dockerTroubleShooting3': string
+  'delegates.commandLineCreation.dockerTroubleShooting4': string
+  'delegates.commandLineCreation.dockerTroubleShooting5': string
+  'delegates.commandLineCreation.dockerTroubleShooting6': string
+  'delegates.commandLineCreation.enterYourResponse': string
+  'delegates.commandLineCreation.feedBackNotSaved': string
+  'delegates.commandLineCreation.feedBackSaved': string
+  'delegates.commandLineCreation.firstComandHeadingKubernetes': string
+  'delegates.commandLineCreation.firstComandKubernetesFirstLine': string
+  'delegates.commandLineCreation.firstCommandHeadingDocker': string
+  'delegates.commandLineCreation.firstCommandHeadingHelm': string
+  'delegates.commandLineCreation.firstCommandHeadingTerraform': string
+  'delegates.commandLineCreation.firstCommandHelmFirstLine': string
+  'delegates.commandLineCreation.firstCommandHelmSecondLine': string
+  'delegates.commandLineCreation.firstCommandTerraFormFirstLine': string
+  'delegates.commandLineCreation.forAdvancedConfig': string
+  'delegates.commandLineCreation.foruthCommandHeading': string
+  'delegates.commandLineCreation.harenssDelegates': string
+  'delegates.commandLineCreation.helmTroubleShooting1': string
+  'delegates.commandLineCreation.helmTroubleShooting2': string
+  'delegates.commandLineCreation.helmTroubleShooting3': string
+  'delegates.commandLineCreation.helmTroubleShooting4': string
+  'delegates.commandLineCreation.helmTroubleShooting5': string
+  'delegates.commandLineCreation.helmTroubleShooting6': string
+  'delegates.commandLineCreation.helmTroubleShooting7': string
+  'delegates.commandLineCreation.helmTroubleShootingInfoCommand': string
+  'delegates.commandLineCreation.infoText': string
+  'delegates.commandLineCreation.installDelegate': string
+  'delegates.commandLineCreation.installDelegateSubText': string
+  'delegates.commandLineCreation.installYourDelegate': string
+  'delegates.commandLineCreation.kubernetesFirstDirectionPartOne': string
+  'delegates.commandLineCreation.kubernetesFirstDirectionPartTwo': string
+  'delegates.commandLineCreation.kubernetesFourthDirectionPartOne': string
+  'delegates.commandLineCreation.kubernetesFourthDirectionPartThree': string
+  'delegates.commandLineCreation.kubernetesManifest': string
+  'delegates.commandLineCreation.kubernetesSecondDirectionPartOne': string
+  'delegates.commandLineCreation.kubernetesSecondDirectionPartTwo': string
+  'delegates.commandLineCreation.kubernetesThirdDirectionPartOne': string
+  'delegates.commandLineCreation.kubernetesThirdDirectionPartTwo': string
+  'delegates.commandLineCreation.learnWatch': string
+  'delegates.commandLineCreation.oldWayToCreateDelegate': string
+  'delegates.commandLineCreation.retryConnections': string
+  'delegates.commandLineCreation.secondCommandHeadingHelm': string
+  'delegates.commandLineCreation.secondCommandHeadingTerraform': string
+  'delegates.commandLineCreation.secondCommandTerraFormFirstLine': string
+  'delegates.commandLineCreation.selectyourDelegate': string
+  'delegates.commandLineCreation.terraForm': string
+  'delegates.commandLineCreation.terraformTroubleShooting1': string
+  'delegates.commandLineCreation.terraformTroubleShooting2': string
+  'delegates.commandLineCreation.terraformTroubleShooting3': string
+  'delegates.commandLineCreation.terraformTroubleShooting4': string
+  'delegates.commandLineCreation.thirdCommandHeadingTerraform': string
+  'delegates.commandLineCreation.verifyDelegateConnection': string
+  'delegates.commandLineCreation.verifyInfo': string
   'delegates.configNameRequired': string
   'delegates.createDelegate': string
   'delegates.delGroupStatus.DISABLED': string
@@ -1623,6 +1693,7 @@ export interface StringsMap {
   'delegates.successVerification.installHelmChartLabel': string
   'delegates.successVerification.updateHelmRepoLabel': string
   'delegates.successfullyUpdatedConfig': string
+  'delegates.tokens.copytoken': string
   'delegates.tokens.createdBySystem': string
   'delegates.tokens.delegateTokens': string
   'delegates.tokens.delegateTokensTitle': string
@@ -1637,6 +1708,7 @@ export interface StringsMap {
   'delegates.tokens.revoked': string
   'delegates.tokens.showRevoked': string
   'delegates.tokens.tokenBySearchNameNotExisting': string
+  'delegates.tokens.tokenCopied': string
   'delegates.tokens.tokenNameNotUnique': string
   'delegates.tokens.tokenNameRequired': string
   'delegates.tokens.tokenNotUsedByDelegates': string
@@ -4046,7 +4118,6 @@ export interface StringsMap {
   'pipeline.manifestTypeLabels.EcsScalingPolicyDefinition': string
   'pipeline.manifestTypeLabels.EcsServiceDefinition': string
   'pipeline.manifestTypeLabels.EcsTaskDefinition': string
-  'pipeline.manifestTypeLabels.HelmChartLabel': string
   'pipeline.manifestTypeLabels.HelmRepoOverride': string
   'pipeline.manifestTypeLabels.K8sManifest': string
   'pipeline.manifestTypeLabels.KustomizeLabel': string
@@ -4170,6 +4241,8 @@ export interface StringsMap {
   'pipeline.pipelineTimeoutHelpText': string
   'pipeline.pipelineTimeoutSettings': string
   'pipeline.piplineDiffTitle': string
+  'pipeline.policyEnforcement.description': string
+  'pipeline.policyEnforcement.title': string
   'pipeline.policyEvaluations.emptyPolicySet': string
   'pipeline.policyEvaluations.evaluatedTime': string
   'pipeline.policyEvaluations.evaluations': string
@@ -5012,10 +5085,7 @@ export interface StringsMap {
   'cd.dashboard.subHeading': string
   'cd.delegateConnectionWait': string
   'cd.delegateFailText1': string
-  'cd.delegateFailText2': string
-  'cd.delegateFailed': string
   'cd.delegateInstallCommand': string
-  'cd.delegateSuccess': string
   'cd.delegateWarning': string
   'cd.deleteSourceBranch': string
   'cd.deletedGitOpsServerSuccessfully': string
@@ -5207,7 +5277,6 @@ export interface StringsMap {
   'cd.launchArgo': string
   'cd.learnMore': string
   'cd.learnMoreAboutHarnessAdapter': string
-  'cd.learnMoreDelegate': string
   'cd.loadBalancerConfig': string
   'cd.loadingDelegate': string
   'cd.logoOfName': string
@@ -6245,7 +6314,6 @@ export interface StringsMap {
   'ce.common.and': string
   'ce.common.budget': string
   'ce.common.containerService': string
-  'ce.common.copied': string
   'ce.common.database': string
   'ce.common.detailsCtaLabel': string
   'ce.common.disabled': string
@@ -6999,6 +7067,7 @@ export interface StringsMap {
   'cf.homepage.learnMore': string
   'cf.homepage.slogan': string
   'cf.learnMore': string
+  'cf.loading': string
   'cf.messages.flagCreated': string
   'cf.messages.flagDeleted': string
   'cf.messages.flagUpdated': string
@@ -7496,6 +7565,8 @@ export interface StringsMap {
   'cv.SLOPerformanceTrend': string
   'cv.SLOTarget': string
   'cv.SLOWithName': string
+  'cv.ThresholdSLIValueGoodIf': string
+  'cv.ThresholdValidrequests': string
   'cv.aMaximumOfThreeSLOCanBeComparedWithTheServiceHealth': string
   'cv.abbreviatedCategories.errors': string
   'cv.abbreviatedCategories.infrastructure': string
@@ -8235,6 +8306,7 @@ export interface StringsMap {
   'cv.overall': string
   'cv.overviewPage.recentChangeVerifications': string
   'cv.perHeatMapCell': string
+  'cv.percentageValidrequests': string
   'cv.periodLength': string
   'cv.periodLengthDays': string
   'cv.periodLengthIsRequired': string
@@ -8296,15 +8368,19 @@ export interface StringsMap {
   'cv.showingLogsFor': string
   'cv.sliMissingDataTypeIsRequired': string
   'cv.sloAnalysisTakingLong': string
+  'cv.sloCreateInfo': string
   'cv.sloDowntime.info': string
   'cv.sloDowntime.label': string
   'cv.sloDowntime.noData': string
+  'cv.sloGraphInitialState': string
   'cv.sloGraphUserHint': string
   'cv.sloRecalculationInProgress': string
   'cv.slos.backToSLI': string
   'cv.slos.burnRate': string
   'cv.slos.completeTitle': string
+  'cv.slos.configureSLI': string
   'cv.slos.configureSLIQueries': string
+  'cv.slos.configureSLISubtitle': string
   'cv.slos.confirmDeleteSLO': string
   'cv.slos.contextualHelp.sli.availabilityDescription': string
   'cv.slos.contextualHelp.sli.healthSource': string
@@ -8328,25 +8404,37 @@ export interface StringsMap {
   'cv.slos.createCompositeSLO': string
   'cv.slos.createMonitoredService': string
   'cv.slos.createSLO': string
+  'cv.slos.defineSLOSubttitle': string
   'cv.slos.deleteSLO': string
+  'cv.slos.errorBudgetPolicySubtitle': string
+  'cv.slos.evaluationMethod': string
+  'cv.slos.evaluationMethodSubtitle': string
+  'cv.slos.goodRequestMetric': string
   'cv.slos.healthSource': string
   'cv.slos.healthSourceForSLI': string
   'cv.slos.latencySLI': string
   'cv.slos.monitoredService': string
+  'cv.slos.monitoredServiceSubTitle': string
   'cv.slos.monitoredServiceText': string
   'cv.slos.noDataMS': string
   'cv.slos.noMatchingData': string
   'cv.slos.noMatchingDataForSearch': string
   'cv.slos.noSLOsStateMessage': string
   'cv.slos.pickMetricsSLI': string
+  'cv.slos.requestType': string
   'cv.slos.reviewChanges': string
   'cv.slos.searchSLO': string
   'cv.slos.selectHealthsource': string
   'cv.slos.selectMonitoredService': string
   'cv.slos.selectMonitoredServiceForSlo': string
+  'cv.slos.setSLOSubtitle': string
   'cv.slos.sli': string
   'cv.slos.sliType': string
   'cv.slos.sliTypeChooseMetric': string
+  'cv.slos.sliTypeSubtitle': string
+  'cv.slos.slis.HealthSource': string
+  'cv.slos.slis.HealthSourceSubTitle': string
+  'cv.slos.slis.SLIChartTitle': string
   'cv.slos.slis.metricOptions.ratioBased': string
   'cv.slos.slis.metricOptions.thresholdBased': string
   'cv.slos.slis.ratioMetricType.badRequestsMetrics': string
@@ -8377,6 +8465,8 @@ export interface StringsMap {
   'cv.slos.userJourney': string
   'cv.slos.userJourneyCreated': string
   'cv.slos.userJourneyPlaceholder': string
+  'cv.slos.userJourneySubTitle': string
+  'cv.slos.validRequestMetric': string
   'cv.slos.validations.healthSourceRequired': string
   'cv.slos.validations.nameValidation': string
   'cv.slos.validations.specialCharacters': string
@@ -8450,7 +8540,6 @@ export interface StringsMap {
   'iacm.stacks': string
   'iacm.stageDescription': string
   'iacm.stageTitle': string
-  'iacm.terraform': string
   'iacm.terragrunt': string
   'sto.Critical': string
   'sto.Info': string
@@ -8491,40 +8580,22 @@ export interface StringsMap {
   'sto.stepField.advanced.passthrough': string
   'sto.stepField.advanced.serializer': string
   'sto.stepField.authAccessId': string
-  'sto.stepField.authDomain': string
   'sto.stepField.authSsl': string
-  'sto.stepField.authToken': string
-  'sto.stepField.authType': string
   'sto.stepField.authVersion': string
   'sto.stepField.config': string
   'sto.stepField.container.containerAccessToken': string
   'sto.stepField.container.containerRegion': string
-  'sto.stepField.image.accessId': string
-  'sto.stepField.image.domain': string
-  'sto.stepField.image.region': string
-  'sto.stepField.image.tag': string
-  'sto.stepField.image.token': string
-  'sto.stepField.image.type': string
+  'sto.stepField.image.fieldsHeading': string
   'sto.stepField.ingestion.file': string
-  'sto.stepField.instance.domain': string
-  'sto.stepField.instance.path': string
-  'sto.stepField.instance.port': string
-  'sto.stepField.instance.protocol': string
   'sto.stepField.mode': string
   'sto.stepField.optionLabels.logLevel.debug': string
-  'sto.stepField.target.name': string
-  'sto.stepField.target.type': string
   'sto.stepField.target.variant': string
-  'sto.stepField.target.workspace': string
   'sto.stepField.tool.context': string
   'sto.stepField.tool.exclude': string
-  'sto.stepField.tool.imageName': string
+  'sto.stepField.tool.fieldsHeading': string
   'sto.stepField.tool.javaBinaries': string
   'sto.stepField.tool.javaLibraries': string
-  'sto.stepField.tool.port': string
   'sto.stepField.tool.productLookupType': string
-  'sto.stepField.tool.productName': string
-  'sto.stepField.tool.productToken': string
   'sto.stepField.tool.projectToken': string
   'sto.stepField.tool.projectVersion': string
   'sto.stepField.tool.teamName': string

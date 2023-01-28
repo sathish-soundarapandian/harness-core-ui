@@ -27,9 +27,6 @@ import {
   ApprovalMock
 } from '@pipeline/components/execution/StepDetails/views/HarnessApprovalView/useHarnessApproval'
 import { ManualInterventionTab } from '@pipeline/components/execution/StepDetails/tabs/ManualInterventionTab/ManualInterventionTab'
-import { StepMode } from '@pipeline/utils/stepUtils'
-import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/StrategySelection/StrategyConfig'
-import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { ExecutionInputs } from '@pipeline/components/execution/StepDetails/tabs/ExecutionInputs/ExecutionInputs'
 
@@ -58,9 +55,6 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
   const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
   const shouldShowExecutionInputs = !!step.executionInputConfigured
   const isManualInterruption = isExecutionWaitingForIntervention(step.status)
-  const failureStrategies = allowedStrategiesAsPerStep(stageType)[StepMode.STEP].filter(
-    st => st !== Strategy.ManualIntervention
-  )
 
   useEffect(() => {
     if (!manuallySelected.current) {
@@ -185,13 +179,7 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
           id={ApprovalStepTab.MANUAL_INTERVENTION}
           key={ApprovalStepTab.MANUAL_INTERVENTION}
           title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
-          panel={
-            <ManualInterventionTab
-              step={step}
-              allowedStrategies={failureStrategies}
-              executionMetadata={executionMetadata}
-            />
-          }
+          panel={<ManualInterventionTab step={step} stageType={stageType} executionMetadata={executionMetadata} />}
         />
       )}
       {activeTab === ApprovalStepTab.APPROVAL && (

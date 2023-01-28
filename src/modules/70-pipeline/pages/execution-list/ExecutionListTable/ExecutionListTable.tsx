@@ -20,6 +20,7 @@ import { useStrings } from 'framework/strings'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import {
   DurationCell,
   ExecutionCell,
@@ -128,18 +129,19 @@ function ExecutionListTable({
 
   const renderRowSubComponent = React.useCallback(({ row }) => <ExecutionStageList row={row} />, [])
 
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: totalElements,
+    pageSize: size,
+    pageCount: totalPages,
+    pageIndex: number
+  })
+
   return (
     <TableV2<PipelineExecutionSummary>
       className={css.table}
       columns={columns}
       data={content}
-      pagination={{
-        itemCount: totalElements,
-        pageSize: size,
-        pageCount: totalPages,
-        pageIndex: number,
-        gotoPage: page => updateQueryParams({ page })
-      }}
+      pagination={paginationProps}
       sortable
       renderRowSubComponent={renderRowSubComponent}
       onRowClick={rowDetails => history.push(getExecutionPipelineViewLink(rowDetails, pathParams, queryParams))}

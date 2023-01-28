@@ -27,13 +27,16 @@ import { useStrings } from 'framework/strings'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useMutateAsGet } from '@common/hooks'
+import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
-import { setPageNumber, useGetCommunity } from '@common/utils/utils'
+import { useGetCommunity } from '@common/utils/utils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { rbacQueryParamOptions } from '@rbac/utils/utils'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import css from './UserListView.module.scss'
 
 interface PendingUserListViewProps {
@@ -195,7 +198,7 @@ const RenderColumnMenu: Renderer<CellProps<Invite>> = ({ row, column }) => {
 const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, shouldReload }) => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const [page, setPage] = useState(0)
+  const { page, size } = useQueryParams(rbacQueryParamOptions)
   const isCommunity = useGetCommunity()
 
   const { data, loading, error, refetch } = useMutateAsGet(useGetPendingUsersAggregated, {
@@ -205,19 +208,13 @@ const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, s
       orgIdentifier,
       projectIdentifier,
       pageIndex: page,
-      pageSize: 10,
+      pageSize: size,
       searchTerm: searchTerm
     },
     debounce: 300
   })
 
-  useEffect(() => {
-    setPageNumber({ setPage, page, pageItemsCount: data?.data?.pageItemCount })
-  }, [data?.data])
-
-  useEffect(() => {
-    if (searchTerm) setPage(0)
-  }, [searchTerm])
+  usePreviousPageWhenEmpty({ page: data?.data?.pageIndex, pageItemCount: data?.data?.pageItemCount })
 
   const { openRoleAssignmentModal } = useRoleAssignmentModal({
     onSuccess: refetch
@@ -273,6 +270,13 @@ const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, s
     [openRoleAssignmentModal, refetch]
   )
 
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: data?.data?.totalItems || 0,
+    pageSize: data?.data?.pageSize || 10,
+    pageCount: data?.data?.totalPages || 0,
+    pageIndex: data?.data?.pageIndex || 0
+  })
+
   return (
     <Page.Body
       loading={loading}
@@ -311,13 +315,7 @@ const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, s
         columns={columns}
         name="PendingUsersListView"
         data={data?.data?.content || []}
-        pagination={{
-          itemCount: data?.data?.totalItems || 0,
-          pageSize: data?.data?.pageSize || 10,
-          pageCount: data?.data?.totalPages || 0,
-          pageIndex: data?.data?.pageIndex || 0,
-          gotoPage: (pageNumber: number) => setPage(pageNumber)
-        }}
+        pagination={paginationProps}
       />
     </Page.Body>
   )

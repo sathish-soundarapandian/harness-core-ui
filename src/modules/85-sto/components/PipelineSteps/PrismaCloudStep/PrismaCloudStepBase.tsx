@@ -153,8 +153,11 @@ export const PrismaCloudStepBase = (
                   allowableTypes={allowableTypes}
                   formik={formik}
                   enableFields={{
+                    header: {
+                      label: 'sto.stepField.tool.fieldsHeading'
+                    },
                     'spec.tool.image_name': {
-                      label: 'sto.stepField.tool.imageName'
+                      label: 'imageNameLabel'
                     }
                   }}
                 />

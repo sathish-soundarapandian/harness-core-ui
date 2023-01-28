@@ -681,7 +681,6 @@ validation:
   specifyFilter: Specify the filter condition
 welcomeMessage: Welcome to Harness
 welcomeToHarnessCD: Welcome to Harness Continuous Delivery!
-learnMoreDelegate: Learn more about Delegates
 runDelegate: How do you want to install the Delegate?
 installDelegate: Install Delegate
 instructionsDelegate: Install the Delegate
@@ -690,10 +689,8 @@ installCluster: Install on your Cluster
 checkCluster: Set up and connect to your target cluster.
 delegateInstallCommand: 'Install the Delegate with the following command:'
 delegateConnectionWait: Wait for the Delegate to register
-delegateFailed: Delegate Failed to connect to Harness
 delegateFailText1: Harness Delegate Failed to connect to our Harness SaaS. Please make sure the infrastructure the delegate is installed on can reach https://app.harness.io
-delegateFailText2: The Delegate failed to come up on the cluster, please check to see if the pods are healthy or could be scheduled on the cluster
-delegateSuccess: Great! You have successfully installed the Delegate.
+
 pipelineCreation: Please proceed to creating your first pipeline
 instructionsCluster: Set up and connect to your target cluster
 googleK8sService: Google K8s Service

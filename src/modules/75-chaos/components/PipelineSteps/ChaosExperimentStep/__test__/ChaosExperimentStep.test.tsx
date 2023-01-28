@@ -13,7 +13,7 @@ import { TestWrapper, UseGetReturnData } from '@common/utils/testUtils'
 import type { ResponseConnectorResponse } from 'services/cd-ng'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { ChaosExperimentStep } from '../ChaosExperimentStep'
-import { MemoizedExperimentPreview, MemoizedPipelineExperimentSelect } from '../ChaosExperimentStepBase'
+import { MemoizedExperimentPreview, MemoizedSelectPipelineExperiment } from '../ChaosExperimentStepBase'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
@@ -84,7 +84,7 @@ describe('ChaosExperiment Step', () => {
       }
       const onUpdate = jest.fn()
       const ref = React.createRef<StepFormikRef<unknown>>()
-      const { container, getByText, getByTestId } = render(
+      const { container, getByText } = render(
         <TestStepWidget
           initialValues={initialValues}
           type={StepType.ChaosExperiment}
@@ -102,16 +102,6 @@ describe('ChaosExperiment Step', () => {
 
       expect(container).toMatchSnapshot()
 
-      act(() => {
-        fireEvent.click(getByTestId('chaosExperimentReferenceField'))
-      })
-      expect(container).toMatchSnapshot()
-
-      act(() => {
-        fireEvent.click(getByTestId('experimentReferenceFieldCloseBtn'))
-      })
-
-      expect(container).toMatchSnapshot()
       await act(() => ref.current?.submitForm()!)
 
       expect(onUpdate).toHaveBeenCalledWith({
@@ -148,14 +138,18 @@ describe('ChaosExperiment Step', () => {
     })
   })
 
-  describe('<MemoizedPipelineExperimentSelect /> tests', () => {
-    test('Should render MemoizedPipelineExperimentSelect', () => {
+  describe('<MemoizedSelectPipelineExperiment /> tests', () => {
+    test('Should render MemoizedSelectPipelineExperiment', () => {
       const mockOnSelect = jest.fn()
       const mockGoToNewExperiment = jest.fn()
 
       const { container } = render(
         <TestWrapper>
-          <MemoizedPipelineExperimentSelect onSelect={mockOnSelect} goToNewExperiment={mockGoToNewExperiment} />
+          <MemoizedSelectPipelineExperiment
+            selectedExperimentID="experimentID1"
+            onSelect={mockOnSelect}
+            goToNewExperiment={mockGoToNewExperiment}
+          />
         </TestWrapper>
       )
 

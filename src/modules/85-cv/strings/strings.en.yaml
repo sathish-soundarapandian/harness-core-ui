@@ -816,7 +816,15 @@ slos:
   title: SLOs
   subTitle: Review the status and error budget of all your defined service level objectives
   completeTitle: Service Level Objectives (SLOs)
+  defineSLOSubttitle: Select the Monitored Service for which you want to define the SLO
+  configureSLI: Configure Service Level Indicatiors (SLIs)
+  configureSLISubtitle: Calculate your SLI by defining which aspect of your service you wish to measure for performance.
+  setSLOSubtitle: Set a time period for compliance and a target for “good service”
+  errorBudgetPolicySubtitle: Notifications are sent to channels as soon as conditions meet a threshold specified by the rule.
   monitoredService: MONITORED SERVICE
+  monitoredServiceSubTitle: Monitored Service is a service and environment combination that monitors any changes, such as deployments, infrastructure changes and any health trend deviations using logs and metrics obtained from APM and Logging tools.
+  evaluationMethod: Evaluation method
+  evaluationMethodSubtitle: The evaluation method will determine how your events are measured
   status: STATUS
   target: TARGET
   burnRate: BURN RATE/DAY
@@ -841,11 +849,13 @@ slos:
   totalServices: Total SLOs
   userJourneyPlaceholder: Select or create user journey
   userJourneyCreated: User journey created successfully
+  userJourneySubTitle: A user journey is a visualization of a user's interaction with a service to achieve a specific goal over time and across different channels.
   selectMonitoredService: Select Monitored Service
   selectMonitoredServiceForSlo: Select monitored service on which to define SLO
   selectHealthsource: Select Health Source
   healthSourceForSLI: Health Source for SLI
   sliType: SLI Type
+  sliTypeSubtitle: Measures how available your service was to users or valid requests served successfully
   sliTypeChooseMetric: SLI Type - Choose a metric
   latencySLI: Latency SLI measures the proportion of requests that were faster than some threshold.
   pickMetricsSLI: Pick metrics powering the SLI
@@ -855,6 +865,9 @@ slos:
   sloEditWarningMessage: It may take a few minutes to recalculate the Error Budget. Are you sure you want to proceed?
   noSLOsStateMessage: Service level objectives (SLOs) are used to describe and measure service level performance and reliability for any service/microservice applications.
   searchSLO: Search by SLO name
+  requestType: RequestType
+  goodRequestMetric: Good request metric
+  validRequestMetric: Valid request metric
   validations:
     nameValidation: SLO name is required
     userJourneyRequired: User journey is required
@@ -868,6 +881,9 @@ slos:
     setSLOTarget: Set the SLO time window and target
     complianceTimePeriodTitle: Compliance time period for evaluating SLO
   slis:
+    HealthSource: Health Source to manage the service level
+    HealthSourceSubTitle: It uses logs and metrics to track changes in the Service's health trend
+    SLIChartTitle: SLI based on the objective value
     type:
       availability: Availability
       latency: Latency
@@ -944,7 +960,9 @@ SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on
 createdOn: Created on
+sloCreateInfo: To create SLO, you’ll need at least one Monitored Service, Health Source and a Metric.
 SLOPerformanceTrend: SLO Performance Trend
+sloGraphInitialState: You'll see a preview here once the queries are generated
 sloGraphUserHint: To view anomalies, metrics and logs for a specific time window, click the time slot on the timeline. To expand or contract the time window, simply drag the handles.
 sloRecalculationInProgress: SLO recalculation in progress
 errorBudgetRecalculationInProgress: Error Budget recalculation in progress
@@ -960,7 +978,10 @@ SLOTarget: SLO Target
 SLIMetricRatio: SLI - Latency (Metric1 / Metric2 X 100)
 SLIRequestRatio: SLI = (Good requests/ Valid requests) X 100
 objectiveValue: Objective Value
-SLIValueIsGoodIf: SLI value is good if
+SLIValueIsGoodIf: Good requests must be
+percentageValidrequests: % of valid requests
+ThresholdSLIValueGoodIf: SLI value is good if the availability is
+ThresholdValidrequests: the objective value
 thanObjectiveValue: than objective value
 toObjectiveValue: to objective value
 considerMissingMetricDataAs: Consider missing metric data as

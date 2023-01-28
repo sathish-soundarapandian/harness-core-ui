@@ -97,7 +97,7 @@ const extraAuthFieldsValidationConfig = (data: BlackduckStepData): InputSetViewV
         {
           name: 'spec.auth.domain',
           type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.authDomain',
+          label: 'secrets.winRmAuthFormFields.domain',
           isRequired: true
         },
         {
@@ -108,7 +108,7 @@ const extraAuthFieldsValidationConfig = (data: BlackduckStepData): InputSetViewV
         {
           name: 'spec.auth.type',
           type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.authType',
+          label: 'typeLabel',
           isRequired: true
         },
         {

@@ -284,6 +284,7 @@ function FormContent({
                 '',
                 !(getMultiTypeFromValue(formik.values.spec.jobName) === MultiTypeInputType.RUNTIME)
               )
+              setJobDetails([])
             }
             lastOpenedJob.current = null
           }}

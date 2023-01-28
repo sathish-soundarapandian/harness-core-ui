@@ -404,7 +404,6 @@ manifestType:
 manifestTypeLabels:
   K8sManifest: K8s Manifest
   ValuesYaml: Values YAML
-  HelmChartLabel: Helm Chart
   KustomizeLabel: Kustomize
   OpenshiftTemplate: OpenShift Template
   OpenshiftParam: OpenShift Param
@@ -509,6 +508,9 @@ loopingStrategy:
   parallelism:
     label: Parallelism
     helperText: If parallelism is set to N > 1, then N independent executors will be set up and each will run that stage/step in parallel.
+policyEnforcement:
+  title: Policy Enforcement
+  description: The following Policies will be evaluated after the Step is complete.
 selectOrCreatePipeline:
   pipelineNameRequired: Please select a pipeline
   setupHeader: Create or Select a Pipeline

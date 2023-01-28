@@ -30,7 +30,9 @@ import { useToaster } from '@common/exports'
 import {
   DeleteFeatureFlagQueryParams,
   Feature,
+  FeatureMetric,
   GetAllFeaturesQueryParams,
+  getFeatureMetricsPromise,
   GitSyncErrorResponse,
   useDeleteFeatureFlag,
   useGetAllFeatures
@@ -146,7 +148,7 @@ export const RenderColumnFlag: React.FC<RenderColumnFlagProps> = ({
 
       setStatus(!status)
       refetchFlags()
-    } catch (error) {
+    } catch (error: any) {
       if (error.status === GIT_SYNC_ERROR_CODE) {
         gitSync.handleError(error.data as GitSyncErrorResponse)
       } else {
@@ -419,6 +421,7 @@ const FeatureFlagsPage: React.FC = () => {
   const [pageNumber, setPageNumber] = useState(0)
   const [searchTerm, setSearchTerm] = useState('')
   const [flagFilter, setFlagFilter] = useState<Optional<FilterProps>>({})
+  const enableMetricsEndpoint = useFeatureFlag(FeatureFlag.FFM_6610_ENABLE_METRICS_ENDPOINT)
 
   const queryParams = useMemo<GetAllFeaturesQueryParams>(() => {
     return {
@@ -428,7 +431,7 @@ const FeatureFlagsPage: React.FC = () => {
       orgIdentifier,
       pageSize: CF_DEFAULT_PAGE_SIZE,
       pageNumber,
-      metrics: true,
+      metrics: !enableMetricsEndpoint,
       flagCounts: true,
       name: searchTerm,
       [flagFilter.queryProps?.key]: flagFilter.queryProps?.value
@@ -441,7 +444,8 @@ const FeatureFlagsPage: React.FC = () => {
     pageNumber,
     searchTerm,
     flagFilter.queryProps?.key,
-    flagFilter.queryProps?.value
+    flagFilter.queryProps?.value,
+    enableMetricsEndpoint
   ])
 
   const {
@@ -452,6 +456,39 @@ const FeatureFlagsPage: React.FC = () => {
   } = useGetAllFeatures({
     queryParams
   })
+
+  const [featureMetrics, setFeatureMetrics] = useState<FeatureMetric[]>()
+  useEffect(() => {
+    const loadMetrics = async (): Promise<void> => {
+      if (enableMetricsEndpoint) {
+        const metrics = await getFeatureMetricsPromise({
+          queryParams: {
+            accountIdentifier,
+            environmentIdentifier,
+            orgIdentifier,
+            projectIdentifier,
+            pageSize: CF_DEFAULT_PAGE_SIZE,
+            pageNumber,
+            [flagFilter.queryProps?.key]: flagFilter.queryProps?.value
+          }
+        })
+
+        setFeatureMetrics(metrics as FeatureMetric[])
+      }
+    }
+
+    loadMetrics()
+  }, [
+    accountIdentifier,
+    enableMetricsEndpoint,
+    environmentIdentifier,
+    flagFilter.queryProps?.key,
+    flagFilter.queryProps?.value,
+    orgIdentifier,
+    pageNumber,
+    projectIdentifier
+  ])
+
   const {
     EnvironmentSelect,
     loading: envsLoading,
@@ -510,11 +547,23 @@ const FeatureFlagsPage: React.FC = () => {
         accessor: 'status',
         width: '21%',
         Cell: function StatusCell(cell: Cell<Feature>) {
+          const metrics = enableMetricsEndpoint
+            ? featureMetrics?.find(metric => metric.identifier === cell.row.original.identifier)
+            : cell.row.original
+
           return (
-            <FlagStatus
-              status={cell.row.original.status?.status as FeatureFlagStatus}
-              lastAccess={cell.row.original.status?.lastAccess as unknown as number}
-            />
+            <>
+              {metrics ? (
+                <FlagStatus
+                  status={metrics?.status?.status as FeatureFlagStatus}
+                  lastAccess={metrics?.status?.lastAccess as unknown as number}
+                />
+              ) : (
+                <Text icon="spinner" iconProps={{ size: 14 }}>
+                  {getString('cf.loading')}
+                </Text>
+              )}
+            </>
           )
         }
       },
@@ -523,7 +572,21 @@ const FeatureFlagsPage: React.FC = () => {
         accessor: row => row.results,
         width: '12%',
         Cell: function ResultCell(cell: Cell<Feature>) {
-          return <FlagResult feature={cell.row.original} />
+          const metrics = enableMetricsEndpoint
+            ? featureMetrics?.find(metric => metric.identifier === cell.row.original.identifier)
+            : cell.row.original
+
+          return (
+            <>
+              {metrics ? (
+                <FlagResult feature={cell.row.original} metrics={metrics?.results} />
+              ) : (
+                <Text icon="spinner" iconProps={{ size: 14 }}>
+                  {getString('cf.loading')}
+                </Text>
+              )}
+            </>
+          )
         }
       },
       {
@@ -544,7 +607,7 @@ const FeatureFlagsPage: React.FC = () => {
         refetch
       }
     ],
-    [gitSync.isAutoCommitEnabled, gitSync.isGitSyncEnabled, features]
+    [gitSync.isAutoCommitEnabled, gitSync.isGitSyncEnabled, features, featureMetrics]
   )
 
   const onSearchInputChanged = useCallback(

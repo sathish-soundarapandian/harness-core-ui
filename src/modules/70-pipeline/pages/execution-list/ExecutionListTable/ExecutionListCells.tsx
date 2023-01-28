@@ -29,7 +29,7 @@ import { TimePopoverWithLocal } from '@pipeline/components/ExecutionCard/TimePop
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
-import { AUTO_TRIGGERS } from '@pipeline/utils/constants'
+import { PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED, AUTO_TRIGGERS } from '@pipeline/utils/constants'
 import { hasCIStage } from '@pipeline/utils/stageHelpers'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { mapTriggerTypeToIconAndExecutionText, mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
@@ -370,7 +370,11 @@ export const MenuCell: CellType = ({ row, column }) => {
         canEdit={canEdit}
         onViewCompiledYaml={() => onViewCompiledYaml(data)}
         onCompareExecutions={() => addToCompare(data)}
-        onReRunInDebugMode={hasCI ? () => openRunPipelineModal() : undefined}
+        onReRunInDebugMode={
+          hasCI && PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED.includes(accountId)
+            ? () => openRunPipelineModal()
+            : undefined
+        }
         source={source}
         canExecute={canExecute}
         canRetry={data.canRetry}

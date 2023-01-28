@@ -49,7 +49,8 @@ module.exports = {
     '!src/modules/25-governance/**', // 25-governance will be moved to a separate micro-frontend repository shortly
     '!src/modules/75-cd/factory/**',
     '!src/modules/75-cf/pages/FFUIApp/FFUIApp.tsx',
-    '!src/framework/tooltip/TooltipContext.tsx'
+    '!src/framework/tooltip/TooltipContext.tsx',
+    '!src/modules/70-pipeline/pages/execution/ExecutionIACMResourcesView/ExecutionIACMResourcesView.tsx'
   ],
   coverageReporters: ['lcov', 'json-summary', 'json'],
   transform: {

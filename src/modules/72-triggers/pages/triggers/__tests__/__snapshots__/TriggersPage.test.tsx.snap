@@ -2951,7 +2951,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                   >
                     <section
                       class="step"
-                      data-cy="manifestsText_pipeline.manifestTypeLabels.HelmChartLabel"
+                      data-cy="manifestsText_common.HelmChartLabel"
                     >
                       <div
                         class="bp3-card bp3-elevation-0 Card--card"
@@ -2979,7 +2979,7 @@ exports[`TriggersPage Triggers tests Renders/snapshots Initial Render - New Trig
                       <section
                         class="stepName"
                       >
-                        pipeline.manifestTypeLabels.HelmChartLabel
+                        common.HelmChartLabel
                       </section>
                     </section>
                   </section>

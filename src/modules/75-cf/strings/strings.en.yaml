@@ -78,6 +78,7 @@ editDetails:
 boolean: Boolean
 multivariate: Multivariate
 noResultMatch: No results match your search criteria
+loading: 'Loading ...'
 homepage:
   slogan: '{{ $.common.purpose.cf.descriptionOnly }}'
   learnMore: Learn more about Feature Flags

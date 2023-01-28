@@ -6,21 +6,20 @@
  */
 
 import React, { useState } from 'react'
-import { identity } from 'lodash-es'
 import { Button, ButtonVariation, ExpandingSearchInput, Layout } from '@harness/uicore'
 import cx from 'classnames'
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
-import { useQueryParams } from '@common/hooks'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import ActiveUserListView from './views/ActiveUsersListView'
 import PendingUserListView from './views/PendingUsersListView'
 import css from './UsersPage.module.scss'
@@ -33,11 +32,8 @@ const UsersPage: React.FC = () => {
   const { getString } = useStrings()
   useDocumentTitle(getString('users'))
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
-  const [searchParam, setSearchParam] = useQueryParamsState<string | undefined>('search', '', {
-    serializer: identity,
-    deserializer: identity
-  })
-  const { view } = useQueryParams<{ view: string }>()
+  const { view, search: searchParam } = useQueryParams<{ view: string; search: string }>()
+  const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams & { search: string }>()
   const [reload, setReload] = useState<boolean>()
   const history = useHistory()
 
@@ -81,19 +77,24 @@ const UsersPage: React.FC = () => {
               minimal
               className={cx({ [css.selectedTabs]: view != Views.PENDING })}
               intent={view === Views.PENDING ? 'none' : 'primary'}
-              onClick={() => history.push(routes.toUsers({ accountId, orgIdentifier, projectIdentifier, module }))}
+              onClick={() => {
+                history.push({
+                  pathname: routes.toUsers({ accountId, orgIdentifier, projectIdentifier, module }),
+                  ...(searchParam && { search: `search=${searchParam}` })
+                })
+              }}
             />
             <Button
               text={getString('rbac.pendingUsers')}
               minimal
               className={cx({ [css.selectedTabs]: view === Views.PENDING })}
               intent={view === Views.PENDING ? 'primary' : 'none'}
-              onClick={() =>
+              onClick={() => {
                 history.push({
                   pathname: routes.toUsers({ accountId, orgIdentifier, projectIdentifier, module }),
-                  search: `view=${Views.PENDING}`
+                  search: searchParam ? `view=${Views.PENDING}&search=${searchParam}` : `view=${Views.PENDING}`
                 })
-              }
+              }}
             />
           </Layout.Horizontal>
         }
@@ -104,7 +105,7 @@ const UsersPage: React.FC = () => {
               alwaysExpanded
               placeholder={getString('rbac.usersPage.search')}
               onChange={text => {
-                setSearchParam(text.trim())
+                updateQueryParams({ page: 0, search: text.trim() })
               }}
               width={250}
             />

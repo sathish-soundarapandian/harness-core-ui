@@ -130,9 +130,9 @@ describe('Default Settings Page', () => {
     })
     expect(container).toMatchSnapshot()
     await waitFor(() => expect(valueChanged).toEqual('9'))
-    const overrides = getAllByText('defaultSettings.allowOverrides')
+    const overrides = container.querySelector('input[type="checkbox"]') as HTMLInputElement
     act(() => {
-      fireEvent.click(overrides[0])
+      fireEvent.click(overrides)
     })
     expect(container).toMatchSnapshot()
   })

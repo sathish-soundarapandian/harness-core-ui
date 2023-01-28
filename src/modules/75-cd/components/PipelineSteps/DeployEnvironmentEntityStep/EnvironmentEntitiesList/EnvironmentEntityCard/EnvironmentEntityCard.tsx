@@ -28,7 +28,7 @@ import type { NGEnvironmentInfoConfig } from 'services/cd-ng'
 
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import RbacButton from '@rbac/components/Button/Button'
+import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
 
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -119,6 +119,19 @@ export function EnvironmentEntityCard({
     setShowInputs(show => !show)
   }
 
+  const environmentPermission: ButtonProps['permission'] = {
+    resource: {
+      resourceType: ResourceType.ENVIRONMENT,
+      resourceIdentifier: identifier
+    },
+    resourceScope: {
+      accountIdentifier: accountId,
+      orgIdentifier: environment.orgIdentifier,
+      projectIdentifier: environment.projectIdentifier
+    },
+    permission: PermissionIdentifier.EDIT_ENVIRONMENT
+  }
+
   return (
     <Card className={css.card}>
       <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
@@ -146,18 +159,7 @@ export function EnvironmentEntityCard({
             data-testid={`edit-environment-${identifier}`}
             disabled={readonly}
             onClick={() => onEditClick({ environment, environmentInputs })}
-            permission={{
-              resource: {
-                resourceType: ResourceType.ENVIRONMENT,
-                resourceIdentifier: identifier
-              },
-              resourceScope: {
-                accountIdentifier: accountId,
-                orgIdentifier: environment.orgIdentifier,
-                projectIdentifier: environment.projectIdentifier
-              },
-              permission: PermissionIdentifier.EDIT_ENVIRONMENT
-            }}
+            permission={environmentPermission}
           />
           <Button
             variation={ButtonVariation.ICON}
@@ -238,6 +240,7 @@ export function EnvironmentEntityCard({
                       isMultiInfrastructure
                       deploymentType={deploymentType}
                       customDeploymentRef={customDeploymentRef}
+                      environmentPermission={environmentPermission}
                     />
                   )}
                 </>

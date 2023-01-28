@@ -16,7 +16,7 @@ import type { UserMetadataDTO } from 'services/cd-ng'
 const PR_ENV_HOST_NAME = 'pr.harness.io'
 
 interface SetPageNumberProps {
-  setPage: (value: React.SetStateAction<number>) => void
+  setPage: (value: number) => void
   pageItemsCount?: number
   page: number
 }

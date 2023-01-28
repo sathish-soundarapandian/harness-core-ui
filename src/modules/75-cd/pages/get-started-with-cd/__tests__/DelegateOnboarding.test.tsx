@@ -179,7 +179,7 @@ describe.skip('Test the initial flow for docker delegate Creation', () => {
     downloadYAMLBtn.click()
     expect(global.URL.createObjectURL).toBeCalled()
     jest.runAllTimers()
-    await waitFor(() => expect(getByText('cd.delegateFailText1')).toBeInTheDocument())
+    await waitFor(() => expect(getByText('common.delegateFailText1')).toBeInTheDocument())
     const troubleShootBtn = getByText('delegates.delegateNotInstalled.tabs.commonProblems.troubleshoot') as HTMLElement
     troubleShootBtn.click()
     await waitFor(() =>

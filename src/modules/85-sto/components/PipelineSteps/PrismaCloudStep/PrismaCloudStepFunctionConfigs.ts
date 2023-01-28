@@ -36,7 +36,7 @@ const toolFieldsValidationConfig = (data: PrismaCloudStepData): InputSetViewVali
         {
           name: 'spec.tool.image_name',
           type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.tool.imageName',
+          label: 'imageNameLabel',
           isRequired: true
         }
       ]

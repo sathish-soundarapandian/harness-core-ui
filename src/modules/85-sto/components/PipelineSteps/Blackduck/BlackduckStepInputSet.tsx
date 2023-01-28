@@ -16,10 +16,8 @@ import {
   CIStepOptionalConfigProps
 } from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
-import { useStrings } from 'framework/strings'
 import type { BlackduckStepProps } from './BlackduckStep'
-import SecurityField from '../SecurityField'
-import { inputSetFields } from '../constants'
+import { InputSetFields } from '../SecurityFields'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const BlackduckStepInputSetBasic: React.FC<BlackduckStepProps> = ({
@@ -31,7 +29,6 @@ export const BlackduckStepInputSetBasic: React.FC<BlackduckStepProps> = ({
   formik
 }) => {
   const prefix = isEmpty(path) ? '' : `${path}.`
-  const { getString } = useStrings()
 
   const enableFields: CIStepOptionalConfigProps['enableFields'] = {
     ...(shouldRenderRunTimeInputView(template?.spec?.settings) && {
@@ -52,11 +49,12 @@ export const BlackduckStepInputSetBasic: React.FC<BlackduckStepProps> = ({
         }}
         path={path || ''}
       />
-      <SecurityField
+      <InputSetFields
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
-        enableFields={inputSetFields(getString, prefix, template)}
+        prefix={prefix}
+        template={template}
       />
       <CIStepOptionalConfig
         readonly={readonly}

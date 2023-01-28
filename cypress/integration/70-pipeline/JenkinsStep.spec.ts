@@ -131,6 +131,7 @@ describe('Connectors list', () => {
     cy.wait(1000)
     cy.get('.MultiTypeInput--btn').eq(1).click()
     cy.contains('span', 'Runtime input').click()
+    cy.wait(100)
     cy.get('.MultiTypeInput--btn').eq(2).click()
     cy.contains('span', 'Runtime input').click()
 
@@ -150,7 +151,7 @@ describe('Connectors list', () => {
     cy.contains('span', 'Run').click()
     cy.wait(1000)
     cy.get('button[data-testid="cr-field-stages[0].stage.spec.execution.steps[0].step.spec.connectorRef"]').click()
-    cy.contains('p', 'testConnector').click()
+    cy.contains('p', 'testConnector2').click()
     cy.contains('span', 'Apply Selected').click()
     cy.get('input[name="stages[0].stage.spec.execution.steps[0].step.spec.jobName"]').click()
     cy.contains('div', 'alex-pipeline-test').click()

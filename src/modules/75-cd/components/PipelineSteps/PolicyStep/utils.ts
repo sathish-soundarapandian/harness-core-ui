@@ -6,11 +6,8 @@
  */
 
 import * as Yup from 'yup'
-import { compact, get, isEmpty } from 'lodash-es'
+import { compact, isEmpty } from 'lodash-es'
 import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-
-export const getErrorMessage = (error: any): string =>
-  get(error, 'data.error', get(error, 'data.message', /* istanbul ignore next */ error?.message))
 
 export function getPolicySetValidationSchema({
   minimumErrorMessage,
@@ -18,7 +15,7 @@ export function getPolicySetValidationSchema({
 }: {
   minimumErrorMessage: string
   invalidErrorMessage: string
-}) {
+}): Yup.MixedSchema<unknown> {
   return Yup.mixed().test({
     test(value: string | string[]): boolean | Yup.ValidationError {
       if (Array.isArray(value)) {

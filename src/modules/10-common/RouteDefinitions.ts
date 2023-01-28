@@ -1902,6 +1902,10 @@ const routes = {
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
       `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/getting-started`
   ),
+  toSTOProjectTicketSummary: withAccountId(
+    ({ orgIdentifier, projectIdentifier, ticketId }: ProjectPathProps & { ticketId: string }) =>
+      `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/ticket-summary/${ticketId}`
+  ),
   /********************************************************************************************************************/
   toOldCustomDashboard: withAccountId(() => '/home/dashboards*'),
   toCustomDashboard: withAccountId(() => '/dashboards'),
@@ -1986,6 +1990,17 @@ const routes = {
   toIACMPipelines: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines`
+  ),
+  toIACMPipelineResources: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      executionIdentifier,
+      source
+    }: PipelineType<ExecutionPathProps>) => {
+      return `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/resources`
+    }
   )
 }
 

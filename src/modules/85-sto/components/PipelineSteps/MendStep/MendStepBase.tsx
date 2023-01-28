@@ -203,34 +203,29 @@ export const MendStepBase = (
               stepViewType={stepViewType}
               authDomainPlaceHolder="https://saas.whitesourcesoftware.com/"
             />
-
-            <SecurityField
-              stepViewType={stepViewType}
-              allowableTypes={allowableTypes}
-              formik={formik}
-              enableFields={{
-                'spec.tool.product_lookup_type': {
-                  label: 'sto.stepField.tool.productLookupType',
-                  fieldType: 'dropdown',
-                  // selectItems: getProductLookupType(),
-                  selectItems:
-                    formik.values.spec.mode === 'orchestration' ? orchestrationLookupTypes : extractionLookupTypes,
-                  hide: formik.values.spec.mode === 'ingestion'
-                }
-              }}
-            />
             <>
               <SecurityField
                 stepViewType={stepViewType}
                 allowableTypes={allowableTypes}
                 formik={formik}
                 enableFields={{
+                  header: {
+                    label: 'sto.stepField.tool.fieldsHeading',
+                    hide: formik.values.spec.mode === 'ingestion'
+                  },
+                  'spec.tool.product_lookup_type': {
+                    label: 'sto.stepField.tool.productLookupType',
+                    fieldType: 'dropdown',
+                    selectItems:
+                      formik.values.spec.mode === 'orchestration' ? orchestrationLookupTypes : extractionLookupTypes,
+                    hide: formik.values.spec.mode === 'ingestion'
+                  },
                   'spec.tool.product_token': {
-                    label: 'sto.stepField.tool.productToken',
+                    label: 'token',
                     hide: !show_product_token_field
                   },
                   'spec.tool.product_name': {
-                    label: 'sto.stepField.tool.productName',
+                    label: 'name',
                     hide: !show_product_name_field
                   },
                   'spec.tool.project_token': {

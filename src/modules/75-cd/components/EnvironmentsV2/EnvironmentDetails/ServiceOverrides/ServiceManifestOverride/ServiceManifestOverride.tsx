@@ -57,7 +57,7 @@ import {
   buildOCIHelmPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useQueryParams } from '@common/hooks'
-import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { EnvironmentPathProps, GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import StepHelmAuth from '@connectors/components/CreateConnector/HelmRepoConnector/StepHelmRepoAuth'
 import HelmRepoOverrideManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/HelmRepoOverrideManifest/HelmRepoOverrideManifest'
 import {
@@ -109,7 +109,9 @@ function ServiceManifestOverride({
   const [connectorView, setConnectorView] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
   const [manifestIndex, setEditIndex] = useState(0)
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier, environmentIdentifier } = useParams<
+    ProjectPathProps & EnvironmentPathProps
+  >()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
   const { CDS_TAS_NG } = useFeatureFlags()
@@ -441,7 +443,13 @@ function ServiceManifestOverride({
     className: css.addOverrideBtn,
     permission: {
       resource: {
-        resourceType: ResourceType.ENVIRONMENT
+        resourceType: ResourceType.ENVIRONMENT,
+        resourceIdentifier: environmentIdentifier
+      },
+      resourceScope: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier
       },
       permission: PermissionIdentifier.EDIT_ENVIRONMENT
     },

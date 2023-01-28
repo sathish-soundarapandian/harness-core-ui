@@ -9,7 +9,7 @@ import { DelegateType, DelegateInstallerDetails } from './DelegateSetupStep.type
 
 export const delegateInstaller: DelegateInstallerDetails[] = [
   {
-    text: 'pipeline.manifestTypeLabels.HelmChartLabel',
+    text: 'common.HelmChartLabel',
     value: DelegateType.HELM_CHART,
     icon: 'service-helm'
   },

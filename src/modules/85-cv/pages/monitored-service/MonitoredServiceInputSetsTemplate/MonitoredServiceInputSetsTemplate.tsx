@@ -34,6 +34,8 @@ import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResult
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import DetailsBreadcrumb from '@cv/pages/monitored-service/views/DetailsBreadcrumb'
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import ServiceEnvironmentInputSet from './components/ServiceEnvironmentInputSet/ServiceEnvironmentInputSet'
 import HealthSourceInputset from './components/HealthSourceInputset/HealthSourceInputset'
 import MonitoredServiceInputsetVariables from './components/MonitoredServiceInputsetVariables/MonitoredServiceInputsetVariables'
@@ -62,6 +64,7 @@ export default function MonitoredServiceInputSetsTemplate({
   const history = useHistory()
   const { showSuccess, showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const pathParams = {
     accountId,
     orgIdentifier,
@@ -83,7 +86,8 @@ export default function MonitoredServiceInputSetsTemplate({
       ...getQueryParamsForTemplateInputSetYaml(templateRefData),
       versionLabel: defaultTo(templateRefData?.versionLabel, ''),
       getDefaultFromOtherRepo: true
-    }
+    },
+    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
   })
 
   const {

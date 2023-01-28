@@ -406,6 +406,11 @@ exports[`Zap Step Edit View edit mode works 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -413,7 +418,7 @@ exports[`Zap Step Edit View edit mode works 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -510,7 +515,7 @@ exports[`Zap Step Edit View edit mode works 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -653,7 +658,7 @@ exports[`Zap Step Edit View edit mode works 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.target.workspace
+                pipelineSteps.workspace
               </p>
                
               <p
@@ -728,6 +733,11 @@ exports[`Zap Step Edit View edit mode works 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          ce.co.gatewayReview.instance
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -735,7 +745,7 @@ exports[`Zap Step Edit View edit mode works 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.instance.domain
+              secrets.winRmAuthFormFields.domain
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -806,7 +816,7 @@ exports[`Zap Step Edit View edit mode works 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.instance.protocol
+              ce.common.protocol
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -912,7 +922,7 @@ exports[`Zap Step Edit View edit mode works 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.instance.port
+                common.smtp.port
               </p>
                
               <p
@@ -994,7 +1004,7 @@ exports[`Zap Step Edit View edit mode works 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.instance.path
+                common.path
               </p>
                
               <p
@@ -1068,6 +1078,11 @@ exports[`Zap Step Edit View edit mode works 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          sto.stepField.tool.fieldsHeading
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -1159,7 +1174,7 @@ exports[`Zap Step Edit View edit mode works 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.tool.port
+                common.smtp.port
               </p>
                
               <p
@@ -2297,6 +2312,11 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -2304,7 +2324,7 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -2401,7 +2421,7 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -2730,6 +2750,11 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          ce.co.gatewayReview.instance
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -2737,7 +2762,7 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.instance.domain
+              secrets.winRmAuthFormFields.domain
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -2808,7 +2833,7 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.instance.protocol
+              ce.common.protocol
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -2914,7 +2939,7 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.instance.port
+                common.smtp.port
               </p>
                
               <p
@@ -2996,7 +3021,7 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.instance.path
+                common.path
               </p>
                
               <p
@@ -3937,6 +3962,11 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -3944,7 +3974,7 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -4041,7 +4071,7 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -4264,7 +4294,7 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.target.workspace
+                pipelineSteps.workspace
               </p>
                
               <p
@@ -4378,6 +4408,11 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          ce.co.gatewayReview.instance
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -4385,7 +4420,7 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.instance.domain
+              secrets.winRmAuthFormFields.domain
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -4495,7 +4530,7 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.instance.protocol
+              ce.common.protocol
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -4608,7 +4643,7 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.instance.port
+                common.smtp.port
               </p>
                
               <p
@@ -4729,7 +4764,7 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.instance.path
+                common.path
               </p>
                
               <p
@@ -4843,6 +4878,11 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          sto.stepField.tool.fieldsHeading
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -4934,7 +4974,7 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.tool.port
+                common.smtp.port
               </p>
                
               <p
@@ -5866,6 +5906,11 @@ exports[`Zap Step Edit View should render properly 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -5873,7 +5918,7 @@ exports[`Zap Step Edit View should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -5970,7 +6015,7 @@ exports[`Zap Step Edit View should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -6113,7 +6158,7 @@ exports[`Zap Step Edit View should render properly 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.target.workspace
+                pipelineSteps.workspace
               </p>
                
               <p
@@ -6188,6 +6233,11 @@ exports[`Zap Step Edit View should render properly 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          ce.co.gatewayReview.instance
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -6195,7 +6245,7 @@ exports[`Zap Step Edit View should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.instance.domain
+              secrets.winRmAuthFormFields.domain
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -6266,7 +6316,7 @@ exports[`Zap Step Edit View should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.instance.protocol
+              ce.common.protocol
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -6372,7 +6422,7 @@ exports[`Zap Step Edit View should render properly 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.instance.port
+                common.smtp.port
               </p>
                
               <p
@@ -6454,7 +6504,7 @@ exports[`Zap Step Edit View should render properly 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.instance.path
+                common.path
               </p>
                
               <p
@@ -6528,6 +6578,11 @@ exports[`Zap Step Edit View should render properly 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          sto.stepField.tool.fieldsHeading
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -6619,7 +6674,7 @@ exports[`Zap Step Edit View should render properly 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.tool.port
+                common.smtp.port
               </p>
                
               <p
@@ -7328,6 +7383,11 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
             </div>
           </div>
         </div>
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -7335,7 +7395,7 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -7475,7 +7535,7 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.workspace
+              pipelineSteps.workspace
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -7538,6 +7598,11 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
             </div>
           </div>
         </div>
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          ce.co.gatewayReview.instance
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -7545,7 +7610,7 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.instance.domain
+              secrets.winRmAuthFormFields.domain
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -7615,7 +7680,7 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.instance.protocol
+              ce.common.protocol
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -7685,7 +7750,7 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.instance.port
+              common.smtp.port
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -7755,7 +7820,7 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.instance.path
+              common.path
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -7818,6 +7883,11 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
             </div>
           </div>
         </div>
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          sto.stepField.tool.fieldsHeading
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -7895,7 +7965,7 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.tool.port
+              common.smtp.port
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -8068,7 +8138,7 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.instance.protocol
+              ce.common.protocol
             </p>
             <div
               style="display: flex; align-items: center;"

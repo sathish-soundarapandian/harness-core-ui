@@ -367,6 +367,11 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -374,7 +379,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -471,7 +476,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -607,6 +612,11 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          sto.stepField.image.fieldsHeading
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -614,7 +624,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.image.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -720,7 +730,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.domain
+                secrets.winRmAuthFormFields.domain
               </p>
                
               <p
@@ -799,7 +809,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              imageNameLabel
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -870,7 +880,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.image.tag
+              tagLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -944,7 +954,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.accessId
+                sto.stepField.authAccessId
               </p>
                
               <p
@@ -1026,7 +1036,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.token
+                common.getStarted.accessTokenLabel
               </p>
                
               <p
@@ -1130,7 +1140,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.region
+                regionLabel
               </p>
                
               <p
@@ -1202,9 +1212,6 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="bp3-divider"
-        />
         <div
           class="bp3-divider"
         />
@@ -2313,6 +2320,11 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Ingestion Container 1
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -2320,7 +2332,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Ingestion Container 1
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -2417,7 +2429,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Ingestion Container 1
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -3534,6 +3546,11 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -3541,7 +3558,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -3638,7 +3655,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -3854,6 +3871,11 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          sto.stepField.image.fieldsHeading
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -3861,7 +3883,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.image.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -3967,7 +3989,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.domain
+                secrets.winRmAuthFormFields.domain
               </p>
                
               <p
@@ -4085,7 +4107,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              imageNameLabel
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -4195,7 +4217,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.image.tag
+              tagLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -4308,7 +4330,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.accessId
+                sto.stepField.authAccessId
               </p>
                
               <p
@@ -4390,7 +4412,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.token
+                common.getStarted.accessTokenLabel
               </p>
                
               <p
@@ -4484,9 +4506,6 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
             </div>
           </div>
         </div>
-        <div
-          class="bp3-divider"
-        />
         <div
           class="bp3-divider"
         />
@@ -5390,6 +5409,11 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -5397,7 +5421,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -5494,7 +5518,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -5630,6 +5654,11 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          sto.stepField.image.fieldsHeading
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -5637,7 +5666,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.image.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -5743,7 +5772,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.domain
+                secrets.winRmAuthFormFields.domain
               </p>
                
               <p
@@ -5822,7 +5851,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              imageNameLabel
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -5893,7 +5922,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.image.tag
+              tagLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -5967,7 +5996,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.accessId
+                sto.stepField.authAccessId
               </p>
                
               <p
@@ -6049,7 +6078,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.token
+                common.getStarted.accessTokenLabel
               </p>
                
               <p
@@ -6121,9 +6150,6 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="bp3-divider"
-        />
         <div
           class="bp3-divider"
         />
@@ -6842,6 +6868,11 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
             </div>
           </div>
         </div>
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -6849,7 +6880,7 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -6989,7 +7020,7 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.workspace
+              pipelineSteps.workspace
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -7052,6 +7083,11 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
             </div>
           </div>
         </div>
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          imageLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -7129,7 +7165,7 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.image.domain
+              secrets.winRmAuthFormFields.domain
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -7199,7 +7235,7 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.image.token
+              common.getStarted.accessTokenLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -7269,7 +7305,7 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.image.tag
+              tagLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -7442,7 +7478,7 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.instance.protocol
+              ce.common.protocol
             </p>
             <div
               style="display: flex; align-items: center;"

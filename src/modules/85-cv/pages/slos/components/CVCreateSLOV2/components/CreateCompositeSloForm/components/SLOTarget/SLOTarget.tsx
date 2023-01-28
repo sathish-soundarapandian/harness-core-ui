@@ -16,7 +16,7 @@ import { ErrorBudgetCard } from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/
 import { SLOTargetChart } from '@cv/pages/slos/components/SLOTargetChart/SLOTargetChart'
 import { KeyValuePair } from '@cv/pages/slos/CVSLODetailsPage/DetailsPanel/views/ServiceDetails'
 import { getCustomOptionsForSLOTargetChart } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
-import { CalenderValuePreview } from '../CreatePreview/CreatePreview'
+import { CalenderValuePreview } from '@cv/pages/slos/common/CreatePreview/CreatePreview'
 
 interface SLOTargetProps {
   formikProps: FormikContextType<SLOV2Form>
@@ -57,7 +57,7 @@ const SLOTarget = ({ formikProps, dataPoints }: SLOTargetProps): JSX.Element => 
           }}
         />
       </Container>
-      <Layout.Horizontal spacing="xxxlarge" flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+      <Layout.Horizontal spacing="large" flex={{ alignItems: 'baseline', justifyContent: 'flex-start' }}>
         <Container width={500}>
           <SLOTargetChart
             bottomLabel={

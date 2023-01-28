@@ -936,7 +936,8 @@ function RunPipelineFormBasic({
                           disabled={
                             blockedStagesSelected ||
                             (getErrorsList(formErrors).errorCount > 0 && runClicked) ||
-                            loadingShouldDisableDeployment
+                            loadingShouldDisableDeployment ||
+                            loadingInputSets
                           }
                         />
                         <div className={css.secondaryButton}>

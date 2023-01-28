@@ -5,8 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect } from 'react'
-import { identity } from 'lodash-es'
+import React from 'react'
 import { Layout, ExpandingSearchInput, ButtonVariation, PageHeader, PageBody } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -15,41 +14,42 @@ import { useGetResourceGroupListV2 } from 'services/resourcegroups'
 import ResourceGroupListView from '@rbac/components/ResourceGroupList/ResourceGroupListView'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import routes from '@common/RouteDefinitions'
-import { setPageNumber } from '@common/utils/utils'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
+import { rbacQueryParamOptions } from '@rbac/utils/utils'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 
 const ResourceGroupsList: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
   const history = useHistory()
   useDocumentTitle(getString('resourceGroups'))
-  const [searchTerm, setSearchTerm] = useQueryParamsState<string | undefined>('search', '', {
-    serializer: identity,
-    deserializer: identity
-  })
-  const [page, setPage] = useState(0)
+  const {
+    search: searchTerm,
+    page: pageIndex,
+    size: pageSize
+  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(rbacQueryParamOptions)
+  const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams & { search?: string }>()
 
   const { data, loading, error, refetch } = useGetResourceGroupListV2({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      pageIndex: page,
-      pageSize: 10,
-      searchTerm: searchTerm
+      pageIndex,
+      pageSize,
+      searchTerm
     },
     debounce: 300
   })
 
-  useEffect(() => {
-    setPageNumber({ setPage, page, pageItemsCount: data?.data?.pageItemCount })
-  }, [data?.data])
+  usePreviousPageWhenEmpty({ page: data?.data?.pageIndex, pageItemCount: data?.data?.pageItemCount })
 
   const { openResourceGroupModal } = useResourceGroupModal({
     onSuccess: resourceGroup => {
@@ -103,9 +103,8 @@ const ResourceGroupsList: React.FC = () => {
               defaultValue={searchTerm}
               alwaysExpanded
               placeholder={getString('common.searchPlaceholder')}
-              onChange={e => {
-                setSearchTerm(e.trim())
-                setPage(0)
+              onChange={text => {
+                updateQueryParams({ page: 0, search: text.trim() })
               }}
               width={250}
             />
@@ -113,12 +112,7 @@ const ResourceGroupsList: React.FC = () => {
         }
       />
       <PageBody loading={loading} retryOnError={() => refetch()} error={error ? getRBACErrorMessage(error) : ''}>
-        <ResourceGroupListView
-          data={data?.data}
-          reload={refetch}
-          openResourceGroupModal={openResourceGroupModal}
-          goToPage={(pageNumber: number) => setPage(pageNumber)}
-        />
+        <ResourceGroupListView data={data?.data} reload={refetch} openResourceGroupModal={openResourceGroupModal} />
       </PageBody>
     </>
   )

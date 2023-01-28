@@ -32,9 +32,7 @@ import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMu
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
 import { isValueRuntimeInput } from '@common/utils/utils'
 
-import RbacButton from '@rbac/components/Button/Button'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
 
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineUtils'
@@ -66,6 +64,7 @@ interface DeployInfrastructureProps
   environmentIdentifier: string
   isMultiInfrastructure?: boolean
   lazyInfrastructure?: boolean
+  environmentPermission?: ButtonProps['permission']
 }
 
 export function getAllFixedInfrastructures(
@@ -100,7 +99,8 @@ export default function DeployInfrastructure({
   isMultiInfrastructure,
   deploymentType,
   customDeploymentRef,
-  lazyInfrastructure
+  lazyInfrastructure,
+  environmentPermission
 }: DeployInfrastructureProps): JSX.Element {
   const { values, setFieldValue, setValues } = useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
@@ -399,12 +399,7 @@ export default function DeployInfrastructure({
             variation={ButtonVariation.LINK}
             disabled={readonly}
             onClick={openAddNewModal}
-            permission={{
-              resource: {
-                resourceType: ResourceType.ENVIRONMENT
-              },
-              permission: PermissionIdentifier.EDIT_ENVIRONMENT
-            }}
+            permission={environmentPermission}
             text={getString('common.plusNewName', { name: getString('infrastructureText') })}
           />
         )}
@@ -419,6 +414,7 @@ export default function DeployInfrastructure({
           onRemoveInfrastructureFromList={onRemoveInfrastructureFromList}
           environmentIdentifier={environmentIdentifier}
           customDeploymentRef={customDeploymentRef}
+          environmentPermission={environmentPermission}
         />
       )}
 

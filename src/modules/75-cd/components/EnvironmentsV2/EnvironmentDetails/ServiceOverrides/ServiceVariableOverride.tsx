@@ -6,6 +6,7 @@
  */
 
 import React, { useCallback, useMemo, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import {
   Button,
   ButtonSize,
@@ -22,6 +23,7 @@ import type { IDialogProps } from '@blueprintjs/core'
 import { defaultTo, isEmpty } from 'lodash-es'
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import { useStrings } from 'framework/strings'
+import type { EnvironmentPathProps, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -64,7 +66,9 @@ function ServiceVariableOverride({
 }: ServiceVariableOverrideProps): React.ReactElement {
   const { getString } = useStrings()
   const [variableIndex, setEditIndex] = useState(0)
-
+  const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
+    PipelinePathProps & EnvironmentPathProps
+  >()
   const getVariableOptions = (): VariableOptionsProps[] => {
     if (!isEmpty(selectedService)) {
       const serviceSelected = serviceList.find(
@@ -219,7 +223,13 @@ function ServiceVariableOverride({
         className={css.addOverrideBtn}
         permission={{
           resource: {
-            resourceType: ResourceType.ENVIRONMENT
+            resourceType: ResourceType.ENVIRONMENT,
+            resourceIdentifier: environmentIdentifier
+          },
+          resourceScope: {
+            accountIdentifier: accountId,
+            orgIdentifier,
+            projectIdentifier
           },
           permission: PermissionIdentifier.EDIT_ENVIRONMENT
         }}

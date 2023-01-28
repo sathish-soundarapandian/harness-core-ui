@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { Formik, FormikForm } from '@harness/uicore'
-import { Divider } from '@blueprintjs/core'
 import type { FormikProps } from 'formik'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
@@ -30,8 +29,7 @@ import {
   SecurityScanFields,
   SecurityTargetFields
 } from '../SecurityFields'
-import { INGESTION_SCAN_MODE, ORCHESTRATION_SCAN_MODE, CONTAINER_TARGET_TYPE, dividerBottomMargin } from '../constants'
-import SecurityField from '../SecurityField'
+import { INGESTION_SCAN_MODE, ORCHESTRATION_SCAN_MODE, CONTAINER_TARGET_TYPE } from '../constants'
 
 export const AquatrivyStepBase = (
   { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, allowableTypes, onChange }: AquatrivyStepProps,
@@ -127,18 +125,6 @@ export const AquatrivyStepBase = (
             <SecurityImageFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
 
             <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
-
-            {formik.values.spec.mode === 'orchestration' && (
-              <>
-                <SecurityField
-                  stepViewType={stepViewType}
-                  allowableTypes={allowableTypes}
-                  formik={formik}
-                  enableFields={{}}
-                />
-                <Divider style={{ marginBottom: dividerBottomMargin }} />
-              </>
-            )}
 
             <AdditionalFields
               readonly={readonly}

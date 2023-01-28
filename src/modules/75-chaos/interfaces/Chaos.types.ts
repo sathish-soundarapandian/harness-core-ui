@@ -13,24 +13,20 @@ import type { NavigationCheckProps } from '@common/components/NavigationCheck/Na
 import type { DurationProps } from '@common/exports'
 
 export interface ChaosCustomMicroFrontendProps {
-  customComponents: {
+  customComponents?: {
     ConnectorReferenceField?: React.ComponentType<ConnectorReferenceFieldProps>
     OverviewChartsWithToggle?: React.ComponentType<OverviewChartsWithToggleProps>
     Duration?: React.ComponentType<DurationProps>
     NavigationCheck?: React.ComponentType<NavigationCheckProps>
   }
-  customFunctions: {
+  customFunctions?: {
     validateYAMLWithSchema?: (yamlString: string, schema: Record<string, any>) => Promise<Diagnostic[]>
   }
 }
 
-export interface ChaosExperiment {
-  id: string
-  name: string
-}
-
-export interface PipelineExperimentSelectProps {
-  onSelect: (experiment: ChaosExperiment) => void
+export interface SelectPipelineExperimentProps {
+  selectedExperimentID: string
+  onSelect: (experimentID: string) => void
   goToNewExperiment: (query?: string) => void
 }
 

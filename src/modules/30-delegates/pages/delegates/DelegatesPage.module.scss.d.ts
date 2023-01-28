@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly activity: string
+  readonly almostFullScreenCloseBtn: string
   readonly connectivity: string
   readonly content: string
   readonly delegateContainer: string

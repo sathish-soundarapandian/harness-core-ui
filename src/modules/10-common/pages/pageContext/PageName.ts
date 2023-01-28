@@ -50,6 +50,7 @@ export enum PAGE_NAME {
   TriggersWizardPage = 'TriggersWizardPage',
   ExecutionPipelineView = 'ExecutionPipelineView',
   ExecutionPolicyEvaluationsView = 'ExecutionPolicyEvaluationsView',
+  ExecutionIACMPipelineResources = 'ExecutionIACMPipelineResources',
   ExecutionSecurityView = 'ExecutionSecurityView',
   ExecutionInputsView = 'ExecutionInputsView',
   ExecutionArtifactsView = 'ExecutionArtifactsView',

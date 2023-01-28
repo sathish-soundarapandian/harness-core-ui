@@ -16,10 +16,8 @@ import {
   CIStepOptionalConfigProps
 } from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
-import { useStrings } from 'framework/strings'
 import type { SnykStepProps } from './SnykStep'
-import SecurityField from '../SecurityField'
-import { inputSetFields } from '../constants'
+import { InputSetFields } from '../SecurityFields'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export const SnykStepInputSetBasic: React.FC<SnykStepProps> = ({
@@ -31,7 +29,6 @@ export const SnykStepInputSetBasic: React.FC<SnykStepProps> = ({
   formik
 }) => {
   const prefix = isEmpty(path) ? '' : `${path}.`
-  const { getString } = useStrings()
 
   const enableFields: CIStepOptionalConfigProps['enableFields'] = {
     ...(shouldRenderRunTimeInputView(template?.spec?.settings) && {
@@ -52,11 +49,12 @@ export const SnykStepInputSetBasic: React.FC<SnykStepProps> = ({
         }}
         path={path || ''}
       />
-      <SecurityField
+      <InputSetFields
         stepViewType={stepViewType}
         allowableTypes={allowableTypes}
         formik={formik}
-        enableFields={inputSetFields(getString, prefix, template)}
+        prefix={prefix}
+        template={template}
       />
       <CIStepOptionalConfig
         readonly={readonly}

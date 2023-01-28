@@ -333,6 +333,15 @@ const RouteDestinations: React.FC = () => {
         <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ UserLabel }} />
       </RouteWithLayout>
 
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={STOSideNavProps}
+        path={[routes.toSTOProjectTicketSummary({ ...accountPathProps, ...projectPathProps, ticketId: ':ticketId' })]}
+      >
+        <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ UserLabel }} />
+      </RouteWithLayout>
+
       <Route path="/account/:accountId/:module(sto)">
         <PipelineRouteDestinations
           pipelineStudioComponent={PipelineStudio}

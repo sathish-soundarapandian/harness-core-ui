@@ -72,6 +72,7 @@ import { ServiceNowCreateUpdateView } from '@pipeline/components/execution/StepD
 import { ModuleName } from 'framework/types/ModuleName'
 import { ServiceNowImportSetView } from '@pipeline/components/execution/StepDetails/views/ServiceNowImportSetView/ServiceNowImportSetView'
 import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
+import ExecutionIACMResourcesView from '@pipeline/pages/execution/ExecutionIACMResourcesView/ExecutionIACMResourcesView'
 import PipelineResourceRenderer from './components/RbacResourceModals/PipelineResourceRenderer/PipelineResourceRenderer'
 import { JiraCreateUpdateView } from './components/execution/StepDetails/views/JiraCreateUpdateView/JiraCreateUpdateView'
 import ExecutionErrorTrackingView from './pages/execution/ExecutionErrorTrackingView/ExecutionErrorTrackingView'
@@ -728,6 +729,22 @@ export function PipelineRouteDestinations({
         path={routes.toPipelineDetail({ ...accountPathProps, ...pipelinePathProps, ...moduleParams })}
       >
         <RedirectToPipelineDetailHome />
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        layout={MinimalLayout}
+        path={routes.toIACMPipelineResources({
+          ...accountPathProps,
+          ...executionPathProps,
+          ...moduleParams
+        })}
+        pageName={PAGE_NAME.ExecutionIACMPipelineResources}
+      >
+        <ExecutionLandingPage>
+          <ExecutionIACMResourcesView />
+        </ExecutionLandingPage>
       </RouteWithLayout>
     </>
   )

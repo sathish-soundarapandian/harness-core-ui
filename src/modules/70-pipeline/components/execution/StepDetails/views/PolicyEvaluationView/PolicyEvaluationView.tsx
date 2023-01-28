@@ -16,10 +16,7 @@ import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types
 import { PolicyEvaluationTab } from '@pipeline/components/execution/StepDetails/tabs/PolicyEvaluationTab/PolicyEvaluationTab'
 import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
 import { ManualInterventionTab } from '@pipeline/components/execution/StepDetails/tabs/ManualInterventionTab/ManualInterventionTab'
-import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
-import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/StrategySelection/StrategyConfig'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { StepMode } from '@pipeline/utils/stepUtils'
 
 import css from '../DefaultView/DefaultView.module.scss'
 
@@ -36,9 +33,6 @@ export function PolicyEvaluationView(props: StepDetailProps): React.ReactElement
   const [activeTab, setActiveTab] = React.useState(StepDetailTab.STEP_DETAILS)
   const manuallySelected = React.useRef(false)
   const isManualInterruption = isExecutionWaitingForIntervention(step.status)
-  const failureStrategies = allowedStrategiesAsPerStep(stageType)[StepMode.STEP].filter(
-    st => st !== Strategy.ManualIntervention
-  )
 
   React.useEffect(() => {
     // istanbul ignore else
@@ -83,13 +77,7 @@ export function PolicyEvaluationView(props: StepDetailProps): React.ReactElement
           <Tab
             id={StepDetailTab.MANUAL_INTERVENTION}
             title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
-            panel={
-              <ManualInterventionTab
-                step={step}
-                allowedStrategies={failureStrategies}
-                executionMetadata={executionMetadata}
-              />
-            }
+            panel={<ManualInterventionTab step={step} stageType={stageType} executionMetadata={executionMetadata} />}
           />
         ) : null}
       </Tabs>

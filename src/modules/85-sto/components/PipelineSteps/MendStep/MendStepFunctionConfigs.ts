@@ -79,7 +79,7 @@ const toolFieldsValidationConfig = (data: MendStepData): InputSetViewValidateFie
     {
       name: 'spec.tool.product_token',
       type: ValidationFieldTypes.Text,
-      label: 'sto.stepField.tool.productToken',
+      label: 'token',
       isRequired:
         data.spec.tool?.product_lookup_type === 'byTokens' ||
         data.spec.tool?.product_lookup_type === 'appendToProductByToken'
@@ -87,7 +87,7 @@ const toolFieldsValidationConfig = (data: MendStepData): InputSetViewValidateFie
     {
       name: 'spec.tool.product_name',
       type: ValidationFieldTypes.Text,
-      label: 'sto.stepField.tool.productName',
+      label: 'name',
       isRequired:
         data.spec.tool?.product_lookup_type === 'byNames' ||
         data.spec.tool?.product_lookup_type === 'appendToProductByName'
@@ -115,7 +115,7 @@ const extraAuthFieldsValidationConfig = (data: MendStepData): InputSetViewValida
         {
           name: 'spec.auth.domain',
           type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.authDomain'
+          label: 'secrets.winRmAuthFormFields.domain'
         },
         {
           name: 'spec.auth.ssl',

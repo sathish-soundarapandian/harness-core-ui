@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { Classes, Menu, Position } from '@blueprintjs/core'
@@ -15,9 +16,12 @@ import { Intent, Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { InfrastructureResponse, InfrastructureResponseDTO } from 'services/cd-ng'
 
+import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import type { PermissionRequest } from '@rbac/hooks/usePermission'
 
 import css from '../InfrastructureDefinition.module.scss'
 
@@ -85,6 +89,9 @@ export function InfrastructureMenu({
 }): React.ReactElement {
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
+  const { accountId, projectIdentifier, orgIdentifier, environmentIdentifier } = useParams<
+    ProjectPathProps & EnvironmentPathProps
+  >()
 
   const { openDialog } = useConfirmationDialog({
     titleText: getString('cd.infrastructure.delete'),
@@ -113,6 +120,18 @@ export function InfrastructureMenu({
     openDialog()
   }
 
+  const resourceAndScope: Pick<PermissionRequest, 'resource' | 'resourceScope'> = {
+    resource: {
+      resourceType: ResourceType.ENVIRONMENT,
+      resourceIdentifier: environmentIdentifier
+    },
+    resourceScope: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    }
+  }
+
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }}>
       <Popover isOpen={menuOpen} onInteraction={setMenuOpen} className={Classes.DARK} position={Position.LEFT}>
@@ -133,9 +152,7 @@ export function InfrastructureMenu({
             text={getString('edit')}
             onClick={handleEdit}
             permission={{
-              resource: {
-                resourceType: ResourceType.ENVIRONMENT
-              },
+              ...resourceAndScope,
               permission: PermissionIdentifier.EDIT_ENVIRONMENT
             }}
           />
@@ -144,9 +161,7 @@ export function InfrastructureMenu({
             text={getString('delete')}
             onClick={handleDelete}
             permission={{
-              resource: {
-                resourceType: ResourceType.ENVIRONMENT
-              },
+              ...resourceAndScope,
               permission: PermissionIdentifier.DELETE_ENVIRONMENT
             }}
           />

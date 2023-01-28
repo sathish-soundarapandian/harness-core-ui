@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { useCallback } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
 import qs from 'qs'
 import type { IStringifyOptions } from 'qs'
@@ -22,20 +22,30 @@ export function useUpdateQueryParams<T = Record<string, string>>(): UseUpdateQue
   const { push, replace } = useHistory()
   const queryParams = useQueryParams<T>()
 
+  // queryParams, pathname are stored in refs so that
+  // updateQueryParams/replaceQueryParams can be memoized without changing too often
+  const ref = useRef({ queryParams, pathname })
+  useEffect(() => {
+    ref.current = {
+      queryParams,
+      pathname
+    }
+  }, [queryParams, pathname])
+
   return {
     updateQueryParams: useCallback(
       (values: T, options?: IStringifyOptions, replaceHistory?: boolean): void => {
-        const path = `${pathname}?${qs.stringify({ ...queryParams, ...values }, options)}`
+        const path = `${ref.current.pathname}?${qs.stringify({ ...ref.current.queryParams, ...values }, options)}`
         replaceHistory ? replace(path) : push(path)
       },
-      [pathname, push, queryParams, replace]
+      [push, replace]
     ),
     replaceQueryParams: useCallback(
       (values: T, options?: IStringifyOptions, replaceHistory?: boolean): void => {
-        const path = `${pathname}?${qs.stringify(values, options)}`
+        const path = `${ref.current.pathname}?${qs.stringify(values, options)}`
         replaceHistory ? replace(path) : push(path)
       },
-      [pathname, push, replace]
+      [push, replace]
     )
   }
 }

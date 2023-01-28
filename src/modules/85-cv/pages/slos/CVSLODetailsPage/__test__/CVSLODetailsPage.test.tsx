@@ -19,10 +19,10 @@ import {
   responseSLODashboardDetail2
 } from './CVSLODetailsPage.mock'
 
-jest.mock('@cv/pages/slos/components/CVCreateSLO/CVCreateSLO', () => ({
+jest.mock('@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2', () => ({
   __esModule: true,
-  default: function CVCreateSLO() {
-    return <div>MOCKED - CVCreateSLO</div>
+  default: function CVCreateSLOV2() {
+    return <div>MOCKED - CVCreateSLOV2</div>
   }
 }))
 

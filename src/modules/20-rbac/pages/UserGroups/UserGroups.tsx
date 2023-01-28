@@ -5,10 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect } from 'react'
-import { identity } from 'lodash-es'
+import React from 'react'
 import { ButtonSize, ButtonVariation, ExpandingSearchInput, Layout, PageHeader } from '@harness/uicore'
-
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
@@ -18,13 +16,14 @@ import UserGroupsListView from '@rbac/pages/UserGroups/views/UserGroupsListView'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PrincipalType } from '@rbac/utils/utils'
+import { PrincipalType, rbacQueryParamOptions } from '@rbac/utils/utils'
 import ManagePrincipalButton from '@rbac/components/ManagePrincipalButton/ManagePrincipalButton'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { setPageNumber } from '@common/utils/utils'
 import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/EntityReference'
+import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import UserGroupEmptyState from './user-group-empty-state.png'
 import css from './UserGroups.module.scss'
 
@@ -41,27 +40,27 @@ const UserGroupsPage: React.FC = () => {
   })
   const { getString } = useStrings()
   useDocumentTitle(getString('common.userGroups'))
-  const [page, setPage] = useState(0)
-  const [searchTerm, setsearchTerm] = useQueryParamsState<string | undefined>('search', '', {
-    serializer: identity,
-    deserializer: identity
-  })
+
+  const {
+    search: searchTerm,
+    page: pageIndex,
+    size: pageSize
+  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(rbacQueryParamOptions)
+  const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams & { search?: string }>()
   const { data, loading, error, refetch } = useGetUserGroupAggregateList({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      pageIndex: page,
-      pageSize: 10,
-      searchTerm: searchTerm,
+      pageIndex,
+      pageSize,
+      searchTerm,
       filterType: 'INCLUDE_INHERITED_GROUPS'
     },
     debounce: 300
   })
 
-  useEffect(() => {
-    setPageNumber({ setPage, page, pageItemsCount: data?.data?.pageItemCount })
-  }, [data?.data])
+  usePreviousPageWhenEmpty({ pageItemCount: data?.data?.pageItemCount, page: data?.data?.pageIndex })
 
   const { openUserGroupModal } = useUserGroupModal({
     onSuccess: () => refetch()
@@ -119,8 +118,7 @@ const UserGroupsPage: React.FC = () => {
                 alwaysExpanded
                 placeholder={getString('rbac.userGroupPage.search')}
                 onChange={text => {
-                  setsearchTerm(text.trim())
-                  setPage(0)
+                  updateQueryParams({ page: 0, search: text.trim() })
                 }}
                 width={250}
               />
@@ -148,7 +146,6 @@ const UserGroupsPage: React.FC = () => {
         <UserGroupsListView
           data={data}
           openRoleAssignmentModal={openRoleAssignmentModal}
-          gotoPage={(pageNumber: number) => setPage(pageNumber)}
           reload={refetch}
           openUserGroupModal={openUserGroupModal}
         />

@@ -42,7 +42,7 @@ const ComponentWrapper: React.FC<CVSLOsListingPageProps> = ({ monitoredService }
 describe('CVSLOsListingPage', () => {
   let useGetAllJourneys: jest.SpyInstance
   let useGetSLODashboardWidgets: jest.SpyInstance
-  let useDeleteSLOData: jest.SpyInstance
+  let useDeleteSLOV2Data: jest.SpyInstance
   let refetchUserJourneys: jest.Mock
   let refetchDashboardWidgets: jest.Mock
 
@@ -88,8 +88,8 @@ describe('CVSLOsListingPage', () => {
       refetch: jest.fn()
     } as any)
 
-    useDeleteSLOData = jest
-      .spyOn(cvServices, 'useDeleteSLOData')
+    useDeleteSLOV2Data = jest
+      .spyOn(cvServices, 'useDeleteSLOV2Data')
       .mockReturnValue({ mutate: jest.fn(), loading: false, error: null } as any)
 
     jest.spyOn(cvServices, 'useResetErrorBudget').mockReturnValue({ mutate: jest.fn(), loading: false } as any)
@@ -181,7 +181,7 @@ describe('CVSLOsListingPage', () => {
       error: null,
       refetch: jest.fn()
     })
-    useDeleteSLOData.mockReturnValue({ mutate: jest.fn(), loading: true, error: null })
+    useDeleteSLOV2Data.mockReturnValue({ mutate: jest.fn(), loading: true, error: null })
     useGetSLODashboardWidgets.mockReturnValue({
       data: dashboardWidgetsResponse,
       loading: false,
@@ -344,7 +344,7 @@ describe('CVSLOsListingPage', () => {
       error: null,
       refetch: jest.fn()
     })
-    useDeleteSLOData.mockReturnValue({ mutate: deleteMutate, loading: false, error: null })
+    useDeleteSLOV2Data.mockReturnValue({ mutate: deleteMutate, loading: false, error: null })
     useGetSLODashboardWidgets.mockReturnValue({
       data: dashboardWidgetsResponse,
       loading: false,

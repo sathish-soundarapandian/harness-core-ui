@@ -680,7 +680,7 @@ exports[`Rule details page tests should render successfully 1`] = `
                           class="bp3-popover-target"
                         >
                           <button
-                            aria-label="ce.common.copied"
+                            aria-label="common.copied"
                             class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main copyBtn Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                             tabindex="0"
                             type="button"
@@ -1648,7 +1648,7 @@ exports[`Rule details page tests should render successfully 2`] = `
                           class="bp3-popover-target"
                         >
                           <button
-                            aria-label="ce.common.copied"
+                            aria-label="common.copied"
                             class="bp3-button bp3-minimal bp3-small Button--button StyledProps--font StyledProps--main copyBtn Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
                             tabindex="0"
                             type="button"

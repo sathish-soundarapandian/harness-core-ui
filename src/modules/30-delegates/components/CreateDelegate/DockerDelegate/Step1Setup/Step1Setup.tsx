@@ -31,7 +31,7 @@ interface DelegateSetupStepProps {
 }
 
 //this regex is retrieved from kubernetes
-const delegateNameRegex = /^[a-z]([-a-z0-9]*[a-z])?(\.[a-z0-9]([-a-z0-9]*[a-z])?)*$/g
+export const delegateNameRegex = /^[a-z]([-a-z0-9]*[a-z])?(\.[a-z0-9]([-a-z0-9]*[a-z])?)*$/g
 
 const formatTokenOptions = (data: any): Array<SelectOption> => {
   const tokens: Array<DelegateTokenDetails> = data?.resource

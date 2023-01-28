@@ -36,6 +36,8 @@ import type { ProjectSelectOption } from '@audit-trail/components/FilterDrawer/F
 import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
 import type { ResourceSelectorValue } from '@rbac/pages/ResourceGroupDetails/utils'
 import type { AttributeFilter } from 'services/resourcegroups'
+import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
+import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 
 export const DEFAULT_RG = '_all_resources_including_child_scopes'
 export const PROJECT_DEFAULT_RG = '_all_project_level_resources'
@@ -504,5 +506,18 @@ export const getDefaultSelectedFilter = (scope: Scope): ScopeFilterItems => {
       return ScopeFilterItems.PROJECT_ONLY
     default:
       return ScopeFilterItems.ALL
+  }
+}
+
+export const rbacQueryParamOptions = {
+  decoder: queryParamDecodeAll(),
+  processQueryParams<Rest>(
+    params: CommonPaginationQueryParams & Rest
+  ): RequiredPick<CommonPaginationQueryParams, 'page' | 'size'> & Rest {
+    return {
+      ...params,
+      page: params.page ?? 0,
+      size: params.size ?? 10
+    }
   }
 }

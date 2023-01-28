@@ -80,7 +80,7 @@ const extraAuthFieldsValidationConfig = (data: CheckmarxStepData): InputSetViewV
         {
           name: 'spec.auth.domain',
           type: ValidationFieldTypes.Text,
-          label: 'sto.stepField.authDomain',
+          label: 'secrets.winRmAuthFormFields.domain',
           isRequired: true
         },
         {

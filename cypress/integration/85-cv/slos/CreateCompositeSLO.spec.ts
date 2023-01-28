@@ -156,7 +156,7 @@ describe('Create Composite SLO', () => {
       'have.value',
       getServiceLevelObjectiveV2Response.resource.serviceLevelObjectiveV2.sloTarget.sloTargetPercentage.toFixed(0)
     )
-    cy.findByText('173')
+    cy.findByText('173 mins')
 
     cy.contains('span', 'Next').click({ force: true })
 

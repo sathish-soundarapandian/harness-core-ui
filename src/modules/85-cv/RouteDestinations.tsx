@@ -51,7 +51,6 @@ import CVTrialHomePage from './pages/home/CVTrialHomePage'
 import { editParams } from './utils/routeUtils'
 import CVSLOsListingPage from './pages/slos/CVSLOsListingPage'
 import CVSLODetailsPage from './pages/slos/CVSLODetailsPage/CVSLODetailsPage'
-import CVCreateSLO from './pages/slos/components/CVCreateSLO/CVCreateSLO'
 import { MonitoredServiceProvider } from './pages/monitored-service/MonitoredServiceContext'
 import MonitoredServiceInputSetsTemplate from './pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate'
 import { CVCodeErrors } from './pages/code-errors/CVCodeErrors'
@@ -407,7 +406,7 @@ export default (
       sidebarProps={CVSideNavProps}
       path={routes.toCVCreateSLOs({ ...accountPathProps, ...projectPathProps, ...cvModuleParams })}
     >
-      <CVCreateSLO />
+      <CVCreateSLOV2 />
     </RouteWithLayout>
 
     <RouteWithLayout

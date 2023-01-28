@@ -8,6 +8,7 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import cx from 'classnames'
 import { Container, Card, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { HelpPanel, HelpPanelType } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
 import type { StepPropsInterface, StepStatusType } from './Step.types'
@@ -83,6 +84,11 @@ const Step = ({
         onClick={onTitleClick}
         isOptional={isOptional}
       />
+      {step.subTitle && (
+        <Container className={cx(css.alignContainerRight, css.borderLeft, css.stepSubtitle)}>
+          <Text font={{ variation: FontVariation.FORM_LABEL }}>{step.subTitle}</Text>
+        </Container>
+      )}
       <Container
         data-testid={`step_container_${id}`}
         className={cx(css.alignContainerRight, {

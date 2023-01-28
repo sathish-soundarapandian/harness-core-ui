@@ -160,6 +160,9 @@ export const BlackduckStepBase = (
                   allowableTypes={allowableTypes}
                   formik={formik}
                   enableFields={{
+                    header: {
+                      label: 'sto.stepField.tool.fieldsHeading'
+                    },
                     'spec.tool.project_name': {
                       label: 'projectCard.projectName',
                       optional: false

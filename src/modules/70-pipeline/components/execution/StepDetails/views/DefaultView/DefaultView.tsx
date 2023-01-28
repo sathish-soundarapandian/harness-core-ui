@@ -16,10 +16,7 @@ import { ExecutionInputs } from '@pipeline/components/execution/StepDetails/tabs
 import { StepDetailsTab } from '@pipeline/components/execution/StepDetails/tabs/StepDetailsTab/StepDetailsTab'
 import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
 import { ManualInterventionTab } from '@pipeline/components/execution/StepDetails/tabs/ManualInterventionTab/ManualInterventionTab'
-import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
-import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/StrategySelection/StrategyConfig'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { StepMode } from '@pipeline/utils/stepUtils'
 
 import css from './DefaultView.module.scss'
 
@@ -41,9 +38,6 @@ export function DefaultView(props: StepDetailProps): React.ReactElement {
   const shouldShowInputOutput =
     ((step?.stepType ?? '') as string) !== 'liteEngineTask' && !isStageExecutionInputConfigured
   const isManualInterruption = isExecutionWaitingForIntervention(step.status)
-  const failureStrategies = allowedStrategiesAsPerStep(stageType)[StepMode.STEP].filter(
-    st => st !== Strategy.ManualIntervention
-  )
 
   React.useEffect(() => {
     if (!manuallySelected.current) {
@@ -116,13 +110,7 @@ export function DefaultView(props: StepDetailProps): React.ReactElement {
           <Tab
             id={StepDetailTab.MANUAL_INTERVENTION}
             title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
-            panel={
-              <ManualInterventionTab
-                step={step}
-                allowedStrategies={failureStrategies}
-                executionMetadata={executionMetadata}
-              />
-            }
+            panel={<ManualInterventionTab step={step} stageType={stageType} executionMetadata={executionMetadata} />}
           />
         ) : null}
       </Tabs>

@@ -18,6 +18,7 @@ import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/Step
 import type { BuildStageElementConfig, StageElementWrapper } from '@pipeline/utils/pipelineTypes'
 import type { SecurityStepData, SecurityStepSpec } from './types'
 import SecurityField from './SecurityField'
+
 import {
   API_KEY_AUTH_TYPE,
   API_VERSION_4_1_0,
@@ -26,6 +27,14 @@ import {
   AWS_ECR_CONTAINER_TYPE,
   dividerBottomMargin,
   DOCKER_V2_CONTAINER_TYPE,
+  inputSetAdvancedFields,
+  inputSetAuthFields,
+  inputSetImageFields,
+  inputSetIngestionFields,
+  inputSetInstanceFields,
+  inputSetScanFields,
+  inputSetTargetFields,
+  inputSetToolFields,
   instanceProtocolSelectItems,
   JFROG_ARTIFACTORY_CONTAINER_TYPE,
   LOCAL_IMAGE_CONTAINER_TYPE,
@@ -84,7 +93,6 @@ export function SecurityScanFields(props: ISecurityScanFields) {
 
 export function SecurityTargetFields(props: ISecurityTargetFields) {
   const { allowableTypes, formik, stepViewType, targetTypeSelectItems } = props
-
   return (
     <>
       <SecurityField
@@ -92,21 +100,24 @@ export function SecurityTargetFields(props: ISecurityTargetFields) {
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<ISecurityTargetFields>}
         enableFields={{
+          header: {
+            label: 'pipelineSteps.targetLabel'
+          },
           'spec.target.type': {
             fieldType: 'dropdown',
-            label: 'sto.stepField.target.type',
+            label: 'typeLabel',
             selectItems: targetTypeSelectItems,
             inputProps: { disabled: targetTypeSelectItems.length === 1 }
           },
           'spec.target.name': {
-            label: 'sto.stepField.target.name'
+            label: 'name'
           },
           'spec.target.variant': {
             label: 'sto.stepField.target.variant'
           },
           'spec.target.workspace': {
             optional: true,
-            label: 'sto.stepField.target.workspace',
+            label: 'pipelineSteps.workspace',
             hide: formik.values.spec.target.type === 'container' || formik.values.spec.mode === 'ingestion',
             inputProps: { placeholder: '/harness' }
           }
@@ -194,8 +205,11 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
         enableFields={{
+          header: {
+            label: 'authentication'
+          },
           'spec.auth.domain': {
-            label: 'sto.stepField.authDomain',
+            label: 'secrets.winRmAuthFormFields.domain',
             hide: !showFields?.domain,
             inputProps: { placeholder: authDomainPlaceHolder }
           },
@@ -214,7 +228,7 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
             selectItems: [API_VERSION_5_0_2, API_VERSION_4_2_0, API_VERSION_4_1_0]
           },
           'spec.auth.type': {
-            label: 'sto.stepField.authType',
+            label: 'typeLabel',
             hide: !showFields?.type,
             fieldType: 'dropdown',
             selectItems: [API_KEY_AUTH_TYPE, USER_PASSWORD_AUTH_TYPE]
@@ -225,7 +239,7 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
             inputProps: { placeholder: '<+secrets.getValue("project.access_id")>' }
           },
           'spec.auth.access_token': {
-            label: 'sto.stepField.authToken',
+            label: 'token',
             inputProps: { placeholder: '<+secrets.getValue("project.access_token")>' }
           }
         }}
@@ -249,8 +263,11 @@ export function SecurityImageFields(props: SecurityFieldsProps<SecurityStepData<
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
         enableFields={{
+          header: {
+            label: 'sto.stepField.image.fieldsHeading'
+          },
           'spec.image.type': {
-            label: 'sto.stepField.image.type',
+            label: 'typeLabel',
 
             fieldType: 'dropdown',
             selectItems: [
@@ -261,32 +278,32 @@ export function SecurityImageFields(props: SecurityFieldsProps<SecurityStepData<
             ]
           },
           'spec.image.domain': {
-            label: 'sto.stepField.image.domain',
+            label: 'secrets.winRmAuthFormFields.domain',
             optional: true,
             inputProps: { placeholder: 'docker.io' }
           },
           'spec.image.name': {
-            label: 'imageNameLabel',
+            label: 'name',
             inputProps: { placeholder: 'harness/todolist-sample' }
           },
           'spec.image.tag': {
-            label: 'sto.stepField.image.tag',
+            label: 'tagLabel',
             inputProps: { placeholder: 'latest' }
           },
           'spec.image.access_id': {
-            label: 'sto.stepField.image.accessId',
+            label: 'sto.stepField.authAccessId',
             optional: true,
             hide: hideNonLocalImageFields,
             inputProps: { placeholder: '<+secrets.getValue("project.access_id")>' }
           },
           'spec.image.access_token': {
-            label: 'sto.stepField.image.token',
+            label: 'common.getStarted.accessTokenLabel',
             hide: hideNonLocalImageFields,
             optional: true,
             inputProps: { placeholder: '<+secrets.getValue("project.access_token")>' }
           },
           'spec.image.region': {
-            label: 'sto.stepField.image.region',
+            label: 'regionLabel',
             optional: true,
             hide: formik.values.spec.image?.type !== 'aws_ecr',
             inputProps: { placeholder: 'us-east-1' }
@@ -370,27 +387,135 @@ export function SecurityInstanceFields(props: SecurityFieldsProps<SecurityStepDa
         allowableTypes={allowableTypes}
         formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
         enableFields={{
+          header: {
+            label: 'ce.co.gatewayReview.instance'
+          },
           'spec.instance.domain': {
-            label: 'sto.stepField.instance.domain',
+            label: 'secrets.winRmAuthFormFields.domain',
             inputProps: { placeholder: 'app.harness.io' }
           },
           'spec.instance.protocol': {
-            label: 'sto.stepField.instance.protocol',
+            label: 'ce.common.protocol',
             fieldType: 'dropdown',
             selectItems: instanceProtocolSelectItems
           },
           'spec.instance.port': {
-            label: 'sto.stepField.instance.port',
+            label: 'common.smtp.port',
             optional: true,
             inputProps: { placeholder: '443' }
           },
           'spec.instance.path': {
-            label: 'sto.stepField.instance.path',
+            label: 'common.path',
             optional: true
           }
         }}
       />
       <Divider style={{ marginBottom: dividerBottomMargin }} />
+    </>
+  )
+}
+
+type InputSetFieldsProps<T> = {
+  prefix: string
+  template?: SecurityStepData<SecurityStepSpec>
+  stepViewType: StepViewType
+  allowableTypes: AllowedTypes
+  formik: FormikProps<T>
+}
+export function InputSetFields(props: InputSetFieldsProps<SecurityStepData<SecurityStepSpec>>) {
+  const { allowableTypes, formik, stepViewType, template, prefix } = props
+  const { getString } = useStrings()
+  return (
+    <>
+      <SecurityField
+        stepViewType={stepViewType}
+        allowableTypes={allowableTypes}
+        formik={formik}
+        enableFields={inputSetScanFields(prefix, template)}
+      />
+
+      <SecurityField
+        stepViewType={stepViewType}
+        allowableTypes={allowableTypes}
+        formik={formik}
+        enableFields={{
+          header: {
+            label: 'pipelineSteps.targetLabel',
+            hide: !template?.spec?.target
+          },
+          ...inputSetTargetFields(prefix, template)
+        }}
+      />
+
+      <SecurityField
+        stepViewType={stepViewType}
+        allowableTypes={allowableTypes}
+        formik={formik}
+        enableFields={{
+          ...inputSetIngestionFields(prefix, template)
+        }}
+      />
+
+      <SecurityField
+        stepViewType={stepViewType}
+        allowableTypes={allowableTypes}
+        formik={formik}
+        enableFields={{
+          header: {
+            label: 'imageLabel',
+            hide: !template?.spec?.image
+          },
+          ...inputSetImageFields(prefix, template)
+        }}
+      />
+
+      <SecurityField
+        stepViewType={stepViewType}
+        allowableTypes={allowableTypes}
+        formik={formik}
+        enableFields={{
+          header: {
+            label: 'ce.co.gatewayReview.instance',
+            hide: !template?.spec?.instance
+          },
+          ...inputSetInstanceFields(prefix, template)
+        }}
+      />
+
+      <SecurityField
+        stepViewType={stepViewType}
+        allowableTypes={allowableTypes}
+        formik={formik}
+        enableFields={{
+          header: {
+            label: 'sto.stepField.tool.fieldsHeading',
+            hide: !template?.spec?.tool
+          },
+          ...inputSetToolFields(prefix, template)
+        }}
+      />
+
+      <SecurityField
+        stepViewType={stepViewType}
+        allowableTypes={allowableTypes}
+        formik={formik}
+        enableFields={{
+          header: {
+            label: 'authentication',
+            hide: !template?.spec?.auth
+          },
+          ...inputSetAuthFields(prefix, template)
+        }}
+      />
+
+      <SecurityField
+        stepViewType={stepViewType}
+        allowableTypes={allowableTypes}
+        formik={formik}
+        enableFields={{
+          ...inputSetAdvancedFields(getString, prefix, template)
+        }}
+      />
     </>
   )
 }

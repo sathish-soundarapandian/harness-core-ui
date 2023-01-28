@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import {
   Layout,
   SelectOption,
@@ -20,12 +20,11 @@ import {
   ButtonSize
 } from '@harness/uicore'
 
-import { useQueryParams } from '@common/hooks'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useGetOrganizationList, useGetProjectAggregateDTOList } from 'services/cd-ng'
 import type { Project } from 'services/cd-ng'
 import { useProjectModal } from '@projects-orgs/modals/ProjectModal/useProjectModal'
 import { useCollaboratorModal } from '@projects-orgs/modals/ProjectModal/useCollaboratorModal'
-import routes from '@common/RouteDefinitions'
 import { useStrings } from 'framework/strings'
 import { useToaster } from '@common/components'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -34,6 +33,7 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { projectsPageQueryParamOptions, ProjectsPageQueryParams } from '@projects-orgs/utils/utils'
 import ProjectsListView from './views/ProjectListView/ProjectListView'
 import ProjectsGridView from './views/ProjectGridView/ProjectGridView'
 import ProjectsEmptyState from './projects-empty-state.png'
@@ -43,32 +43,30 @@ enum OrgFilter {
   ALL = '$$ALL$$'
 }
 
-interface ProjectsPageQueryParams {
-  verify?: boolean
-  orgIdentifier?: string
-}
-
 const ProjectsListPage: React.FC = () => {
+  const { getString } = useStrings()
+  useDocumentTitle(getString('projectsText'))
   const { accountId } = useParams<AccountPathProps>()
+  const {
+    verify,
+    orgIdentifier: orgIdentifierQuery,
+    page: pageIndex,
+    size: pageSize
+  } = useQueryParams<ProjectsPageQueryParams>(projectsPageQueryParamOptions)
+
   const {
     preference: orgFilterPreference,
     setPreference: setOrgFilterPreference,
     clearPreference: clearOrgFilterPreference
   } = usePreferenceStore<string>(PreferenceScope.USER, 'orgFilterOnProjectListing')
-  const { verify, orgIdentifier: orgIdentifierQuery } = useQueryParams<ProjectsPageQueryParams>()
-  const { getString } = useStrings()
-  const orgFilter = orgIdentifierQuery || orgFilterPreference
-  useDocumentTitle(getString('projectsText'))
-
-  const { preference: savedProjectView, setPreference: setSavedProjectView } = usePreferenceStore<Views | undefined>(
+  const { preference: view = Views.GRID, setPreference: setView } = usePreferenceStore<Views | undefined>(
     PreferenceScope.MACHINE,
     'projectsViewType'
   )
-  const initialSelectedView = savedProjectView || Views.GRID
-  const [view, setView] = useState(initialSelectedView)
   const [searchParam, setSearchParam] = useState<string>()
-  const [page, setPage] = useState(0)
-  const history = useHistory()
+  const { updateQueryParams } = useUpdateQueryParams<ProjectsPageQueryParams>()
+  const orgFilter = orgIdentifierQuery || orgFilterPreference
+
   const allOrgsSelectOption: SelectOption = useMemo(
     () => ({
       label: getString('all'),
@@ -107,20 +105,17 @@ const ProjectsListPage: React.FC = () => {
     ]
   }, [orgsData?.data?.content, allOrgsSelectOption])
 
-  React.useEffect(() => {
-    setPage(0)
-  }, [searchParam, orgFilter])
-
   const { data, loading, refetch, error } = useGetProjectAggregateDTOList({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier: orgFilter,
       searchTerm: searchParam,
-      pageIndex: page,
-      pageSize: 100
+      pageIndex,
+      pageSize
     },
     debounce: 300
   })
+
   const projectCreateSuccessHandler = (): void => {
     refetch()
   }
@@ -143,11 +138,6 @@ const ProjectsListPage: React.FC = () => {
     openCollaboratorModal({ projectIdentifier: project.identifier, orgIdentifier: project.orgIdentifier || 'default' })
   }
 
-  const setProjectView = (viewType: Views): void => {
-    setView(viewType)
-    setSavedProjectView(viewType)
-  }
-
   return (
     <Container className={css.projectsPage} height="inherit">
       <Page.Header breadcrumbs={<NGBreadcrumbs />} title={getString('projectsText')} />
@@ -167,19 +157,16 @@ const ProjectsListPage: React.FC = () => {
           <DropDown
             disabled={loading}
             filterable={false}
-            className={css.orgDropdown}
             items={organizations}
             value={orgFilter || OrgFilter.ALL}
             onChange={item => {
               if (item.value === OrgFilter.ALL) {
                 clearOrgFilterPreference()
+                updateQueryParams({ orgIdentifier: undefined, page: 0 })
               } else {
                 setOrgFilterPreference(item.value as string)
+                updateQueryParams({ orgIdentifier: item.value as string, page: 0 })
               }
-              history.push({
-                pathname: routes.toProjects({ accountId }),
-                search: item.value !== OrgFilter.ALL ? `?orgIdentifier=${item.value.toString()}` : undefined
-              })
             }}
             getCustomLabel={item => getString('common.tabOrgs', { name: item.label })}
           />
@@ -188,11 +175,12 @@ const ProjectsListPage: React.FC = () => {
             alwaysExpanded
             onChange={text => {
               setSearchParam(text.trim())
+              updateQueryParams({ page: 0 })
             }}
             width={300}
             className={css.expandSearch}
           />
-          <GridListToggle initialSelectedView={initialSelectedView} onViewToggle={setProjectView} />
+          <GridListToggle initialSelectedView={view} onViewToggle={setView} />
         </Layout.Horizontal>
       ) : null}
       <Page.Body
@@ -235,7 +223,6 @@ const ProjectsListPage: React.FC = () => {
             showEditProject={showEditProject}
             collaborators={showCollaborators}
             reloadPage={refetch}
-            gotoPage={(pageNumber: number) => setPage(pageNumber)}
           />
         ) : null}
         {view === Views.LIST ? (
@@ -244,7 +231,6 @@ const ProjectsListPage: React.FC = () => {
             showEditProject={showEditProject}
             collaborators={showCollaborators}
             reloadPage={refetch}
-            gotoPage={(pageNumber: number) => setPage(pageNumber)}
           />
         ) : null}
       </Page.Body>

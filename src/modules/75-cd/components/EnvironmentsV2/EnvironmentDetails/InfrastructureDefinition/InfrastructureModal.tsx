@@ -54,7 +54,7 @@ import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interf
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 
-import RbacButton from '@rbac/components/Button/Button'
+import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -172,7 +172,12 @@ export default function InfrastructureModal({
     {
       resource: {
         resourceType: ResourceType.ENVIRONMENT,
-        resourceIdentifier: identifier
+        resourceIdentifier: environmentIdentifier
+      },
+      resourceScope: {
+        accountIdentifier: accountId,
+        ...(scope !== Scope.ACCOUNT && { orgIdentifier }),
+        ...(scope === Scope.PROJECT && { projectIdentifier })
       },
       permissions: [PermissionIdentifier.EDIT_ENVIRONMENT]
     },
@@ -304,6 +309,19 @@ function BootstrapDeployInfraDefinition({
     },
     lazy: !shouldFetchCustomDeploymentTemplate
   })
+
+  const environmentEditPermissions: ButtonProps['permission'] = {
+    resource: {
+      resourceType: ResourceType.ENVIRONMENT,
+      resourceIdentifier: environmentIdentifier
+    },
+    resourceScope: {
+      accountIdentifier: accountId,
+      ...(scope !== Scope.ACCOUNT && { orgIdentifier }),
+      ...(scope === Scope.PROJECT && { projectIdentifier })
+    },
+    permission: PermissionIdentifier.EDIT_ENVIRONMENT
+  }
 
   React.useEffect(() => {
     if (customDeploymentTemplateResponse?.data) {
@@ -747,12 +765,7 @@ function BootstrapDeployInfraDefinition({
                 <div className={css.buttonWrapper}>
                   <Tag>{getString('common.readOnly')}</Tag>
                   <RbacButton
-                    permission={{
-                      resource: {
-                        resourceType: ResourceType.ENVIRONMENT
-                      },
-                      permission: PermissionIdentifier.EDIT_ENVIRONMENT
-                    }}
+                    permission={environmentEditPermissions}
                     variation={ButtonVariation.SECONDARY}
                     text={getString('common.editYaml')}
                     onClick={handleEditMode}
@@ -803,12 +816,7 @@ function BootstrapDeployInfraDefinition({
           }}
           disabled={isSavingInfrastructure}
           loading={isSavingInfrastructure}
-          permission={{
-            resource: {
-              resourceType: ResourceType.ENVIRONMENT
-            },
-            permission: PermissionIdentifier.EDIT_ENVIRONMENT
-          }}
+          permission={environmentEditPermissions}
         />
         <Button
           text={getString('cancel')}

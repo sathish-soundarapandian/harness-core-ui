@@ -9,6 +9,7 @@ import React from 'react'
 import { Container, Layout, Pagination } from '@harness/uicore'
 import type { Project, ProjectAggregateDTO, ResponsePageProjectAggregateDTO } from 'services/cd-ng'
 import ProjectCard from '@projects-orgs/components/ProjectCard/ProjectCard'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import css from './ProjectGridView.module.scss'
 
 interface ProjectGridViewProps {
@@ -16,11 +17,17 @@ interface ProjectGridViewProps {
   showEditProject?: (project: Project) => void
   collaborators?: (project: Project) => void
   reloadPage: () => Promise<void>
-  gotoPage: (index: number) => void
 }
 
 const ProjectGridView: React.FC<ProjectGridViewProps> = props => {
-  const { data, showEditProject, collaborators, reloadPage, gotoPage } = props
+  const { data, showEditProject, collaborators, reloadPage } = props
+
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: data?.data?.totalItems || 0,
+    pageSize: data?.data?.pageSize || 10,
+    pageCount: data?.data?.totalPages || 0,
+    pageIndex: data?.data?.pageIndex || 0
+  })
 
   return (
     <>
@@ -43,13 +50,7 @@ const ProjectGridView: React.FC<ProjectGridViewProps> = props => {
         />
       </Container>
       <Container className={css.pagination}>
-        <Pagination
-          itemCount={data?.data?.totalItems || 0}
-          pageSize={data?.data?.pageSize || 10}
-          pageCount={data?.data?.totalPages || 0}
-          pageIndex={data?.data?.pageIndex || 0}
-          gotoPage={gotoPage}
-        />
+        <Pagination {...paginationProps} />
       </Container>
     </>
   )
