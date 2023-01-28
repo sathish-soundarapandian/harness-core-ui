@@ -15,13 +15,18 @@ import type { MetricsAnalysis, NodeRiskCountDTO } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import { getRiskColorValue, getSecondaryRiskColorValue } from '@cv/utils/CommonUtils'
 import { chartsConfig } from './DeeploymentMetricsChartConfig'
-import { filterRenderCharts, transformControlAndTestDataToHighChartsSeries } from './DeploymentMetricsAnalysisRow.utils'
+import {
+  filterRenderCharts,
+  getControlDataType,
+  transformControlAndTestDataToHighChartsSeries
+} from './DeploymentMetricsAnalysisRow.utils'
 import type { DeploymentMetricsAnalysisRowChartSeries } from './DeploymentMetricsAnalysisRow.types'
 import {
   widthPercentagePerGraph,
   HostTestData,
   HostControlTestData,
-  getAnalysisReason
+  getAnalysisReason,
+  MINIMUM_DEVIATION
 } from './DeploymentMetricsAnalysisRow.constants'
 import MetricAnalysisMetricThresolds from './components/MetricAnalysisMetricThresolds/MetricAnalysisMetricThresolds'
 import css from './DeploymentMetricsAnalysisRow.module.scss'
@@ -100,6 +105,11 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
                   tooltip={controlData?.[index]?.name as string}
                   font={{ variation: FontVariation.SMALL }}
                 >{`${getString('pipeline.verification.controlHost')}: ${controlData?.[index]?.name}`}</Text>
+                {controlData?.[index]?.controlDataType === MINIMUM_DEVIATION ? (
+                  <Text font={{ variation: FontVariation.SMALL }} padding={{ left: 'small' }}>
+                    {`(${getControlDataType(controlData?.[index]?.controlDataType, getString)})`}
+                  </Text>
+                ) : null}
               </Container>
               <Container className={css.metricInfo}>
                 <Text

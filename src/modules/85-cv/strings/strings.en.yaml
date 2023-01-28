@@ -806,6 +806,8 @@ metricsAnalysis:
     noControlData: No control data to compare against.
     noTestData: No data to be analysed.
   showDetails: Show details
+  controlDataType:
+    minDeviation: Host with minimum deviation
   metricThresholds:
     thresholdType: THRESHOLD TYPE
     criteria: CRITERIA

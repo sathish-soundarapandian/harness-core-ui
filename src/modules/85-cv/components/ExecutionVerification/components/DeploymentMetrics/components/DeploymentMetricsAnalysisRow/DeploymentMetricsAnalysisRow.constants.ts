@@ -20,6 +20,7 @@ export type HostControlTestData = Omit<HostTestData, 'risk' | 'name'> & {
   risk?: HostData['risk']
   name?: string | null
   initialXvalue: number
+  controlDataType?: AnalysedDeploymentTestDataNode['controlDataType']
 }
 
 export const getAnalysisReason = (reason: string, getString: UseStringsReturn['getString']): string => {
@@ -37,4 +38,5 @@ export const getAnalysisReason = (reason: string, getString: UseStringsReturn['g
   }
 }
 
+export const MINIMUM_DEVIATION = 'MINIMUM_DEVIATION'
 export const widthPercentagePerGraph = 1

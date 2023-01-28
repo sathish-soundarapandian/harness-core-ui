@@ -7795,6 +7795,7 @@ export interface StringsMap {
   'cv.metricsAnalysis.analysisReason.mlAnalysis': string
   'cv.metricsAnalysis.analysisReason.noControlData': string
   'cv.metricsAnalysis.analysisReason.noTestData': string
+  'cv.metricsAnalysis.controlDataType.minDeviation': string
   'cv.metricsAnalysis.metricThresholds.criteria': string
   'cv.metricsAnalysis.metricThresholds.thresholdType': string
   'cv.metricsAnalysis.metricThresholds.value': string

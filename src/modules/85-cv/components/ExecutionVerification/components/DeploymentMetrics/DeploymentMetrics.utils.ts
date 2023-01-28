@@ -69,18 +69,27 @@ export function transformMetricData(
         analysisResult: testAnalysisResult,
         analysisReason,
         controlNodeIdentifier,
+        controlDataType,
         normalisedControlData,
         normalisedTestData
       } = hostInfo || {}
 
       // Generating points for control host
-      generatePointsForNodes(controlData, controlPoints, testAnalysisResult, analysisReason, controlNodeIdentifier)
+      generatePointsForNodes(
+        controlData,
+        controlPoints,
+        testAnalysisResult,
+        analysisReason,
+        controlNodeIdentifier,
+        controlDataType
+      )
       generatePointsForNodes(
         normalisedControlData,
         normalisedControlPoints,
         testAnalysisResult,
         analysisReason,
-        controlNodeIdentifier
+        controlNodeIdentifier,
+        controlDataType
       )
 
       // generating points for testHost
@@ -118,7 +127,8 @@ function generatePointsForNodes(
   points: HostTestData[] | HostControlTestData[],
   analysisResult: string | undefined,
   analysisReason: AnalysedDeploymentTestDataNode['analysisReason'],
-  nodeIdentifier: string | undefined
+  nodeIdentifier: string | undefined,
+  controlDataType?: AnalysedDeploymentTestDataNode['controlDataType']
 ): void {
   const hostData: Highcharts.SeriesLineOptions['data'] = []
   const sortedTestData = inputTestData
@@ -134,7 +144,8 @@ function generatePointsForNodes(
     risk: analysisResult as HostData['risk'],
     analysisReason,
     name: nodeIdentifier as string,
-    initialXvalue: testDataInitialXValue
+    initialXvalue: testDataInitialXValue,
+    ...(controlDataType && { controlDataType })
   })
 }
 

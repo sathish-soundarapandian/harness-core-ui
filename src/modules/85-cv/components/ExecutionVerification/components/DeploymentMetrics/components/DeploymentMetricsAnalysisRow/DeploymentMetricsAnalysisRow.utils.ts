@@ -6,7 +6,9 @@
  */
 
 import { getRiskColorValue } from '@cv/utils/CommonUtils'
-import type { HostControlTestData, HostTestData } from './DeploymentMetricsAnalysisRow.constants'
+import type { UseStringsReturn } from 'framework/strings'
+import type { AnalysedDeploymentTestDataNode } from 'services/cv'
+import { HostControlTestData, HostTestData, MINIMUM_DEVIATION } from './DeploymentMetricsAnalysisRow.constants'
 import type { DeploymentMetricsAnalysisRowChartSeries } from './DeploymentMetricsAnalysisRow.types'
 
 export function transformControlAndTestDataToHighChartsSeries(
@@ -69,4 +71,15 @@ export function filterRenderCharts(
   }
 
   return charts.slice(0, 6 * offset)
+}
+
+export function getControlDataType(
+  controlDataType: AnalysedDeploymentTestDataNode['controlDataType'],
+  getString: UseStringsReturn['getString']
+): string {
+  if (controlDataType === MINIMUM_DEVIATION) {
+    return getString('cv.metricsAnalysis.controlDataType.minDeviation')
+  } else {
+    return ''
+  }
 }
