@@ -46,6 +46,7 @@ import { initConfigurationsForm } from '@cv/pages/health-source/connectors/Commo
 import { getSourceTypeForConnector } from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import type { HealthSource } from 'services/cv'
 import { V2_HEALTHSOURCES } from '@cv/components/PipelineSteps/ContinousVerification/constants'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { ConnectorRefFieldName, HEALTHSOURCE_LIST } from './DefineHealthSource.constant'
 import {
   getFeatureOption,
@@ -151,7 +152,9 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
           orgIdentifier={orgIdentifier}
           width={400}
           type={
-            currentHealthSource ? getSourceTypeForConnector(currentHealthSource) : healthSourceTypeMapping(sourceType)
+            (currentHealthSource
+              ? getSourceTypeForConnector(currentHealthSource)
+              : healthSourceTypeMapping(sourceType)) as ConnectorInfoDTO['type']
           }
           multiTypeProps={{ expressions, allowableTypes: AllMultiTypeInputTypesForStep }}
           onChange={(value: any) => {

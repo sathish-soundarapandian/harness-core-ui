@@ -129,7 +129,7 @@ export const getNestedEmptyFieldsWithPath = (
   return getNestedByCondition(spec, list, basePath, value => isEmpty(value as string))
 }
 
-export const healthSourceTypeMapping = (type: ConnectorInfoDTO['type']): ConnectorInfoDTO['type'] => {
+export const healthSourceTypeMapping = (type: HealthSourceTypes): ConnectorInfoDTO['type'] => {
   switch (type) {
     case HealthSourceTypes.DatadogLog as ConnectorInfoDTO['type']:
     case HealthSourceTypes.DatadogMetrics as ConnectorInfoDTO['type']:
@@ -140,7 +140,7 @@ export const healthSourceTypeMapping = (type: ConnectorInfoDTO['type']): Connect
     case HealthSourceTypes.Elk as ConnectorInfoDTO['type']:
       return Connectors.ELK
     default:
-      return type
+      return type as ConnectorInfoDTO['type']
   }
 }
 

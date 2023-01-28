@@ -29,6 +29,7 @@ import {
   showQueriesText
 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import type { UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { CONNECTOR_REF, IDENTIFIER, INDEXES, NAME } from './MonitoredServiceInputTemplatesHealthSources.constants'
 
 interface MonitoredServiceInputTemplatesHealthSourcesProps {
@@ -85,7 +86,7 @@ export default function MonitoredServiceInputTemplatesHealthSources(
                       disabled={!getSourceTypeForConnector(healthSource)}
                       setRefValue
                       multiTypeProps={{ allowableTypes, expressions }}
-                      type={getSourceTypeForConnector(healthSource)}
+                      type={getSourceTypeForConnector(healthSource) as ConnectorInfoDTO['type']}
                       enableConfigureOptions={false}
                     />
                   )

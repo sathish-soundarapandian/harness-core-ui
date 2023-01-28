@@ -7,7 +7,7 @@ import type { MetricThresholdCriteriaV2, MetricThresholdV2 } from 'services/cv'
 import { CRITERIA_MAPPING, getActionText, THRESHOLD_TYPE_MAPPING } from './MetricAnalysisMetricThresolds.constants'
 
 export interface MetricAnalysisMetricThresoldsProps {
-  thresholds?: MetricThresholdV2[]
+  thresholds: MetricThresholdV2[]
 }
 
 export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetricThresoldsProps): JSX.Element {

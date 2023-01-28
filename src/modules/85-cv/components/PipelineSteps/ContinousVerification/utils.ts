@@ -344,7 +344,7 @@ export function getSourceTypeForConnector(healthSource: HealthSource): Connector
   return (
     isHealthSourceVersionV2(healthSource)
       ? getConnectorTypeName(healthSource?.type as HealthSourceTypes)
-      : healthSourceTypeMapping(healthSource?.type as ConnectorInfoDTO['type'])
+      : healthSourceTypeMapping(healthSource?.type as HealthSourceTypes)
   ) as ConnectorInfoDTO['type']
 }
 

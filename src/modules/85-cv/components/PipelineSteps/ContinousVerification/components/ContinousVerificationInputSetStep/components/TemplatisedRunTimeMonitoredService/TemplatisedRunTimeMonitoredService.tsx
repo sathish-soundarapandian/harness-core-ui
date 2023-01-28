@@ -32,6 +32,7 @@ import {
   showQueriesText
 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import type { UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { getMultiTypeInputProps } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields.utils'
 import { getRunTimeInputsFromHealthSource } from './TemplatisedRunTimeMonitoredService.utils'
 import {
@@ -120,7 +121,7 @@ export default function TemplatisedRunTimeMonitoredService(
                       disabled={!getSourceTypeForConnector(healthSource)}
                       setRefValue
                       multiTypeProps={{ allowableTypes, expressions }}
-                      type={getSourceTypeForConnector(healthSource)}
+                      type={getSourceTypeForConnector(healthSource) as ConnectorInfoDTO['type']}
                       enableConfigureOptions={false}
                     />
                   )
