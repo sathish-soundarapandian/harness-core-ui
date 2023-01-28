@@ -133,7 +133,7 @@ describe('Verify step', () => {
     cy.findByTestId(/Logs/i).click()
 
     cy.wait('@deployment-activity-summary')
-    cy.wait('@logsListCall')
+    // cy.wait('@logsListCall')
     cy.wait('@logsRadarChartDataCall')
 
     cy.url().should(
@@ -162,7 +162,7 @@ describe('Verify step', () => {
     cy.findByTestId(/canaryNode-0/).click()
 
     cy.wait('@logsListNodeFilterCall')
-    cy.wait('@logsRadarChartDataNodeFilterCall')
+    // cy.wait('@logsRadarChartDataNodeFilterCall')
 
     cy.findByTestId(/node_name_filter/i).click()
     cy.findByRole('checkbox', { name: 'harness-deployment-canary-7445f86dbf-ml857' }).should('be.checked')

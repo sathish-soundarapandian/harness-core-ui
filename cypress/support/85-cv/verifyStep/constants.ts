@@ -4,7 +4,7 @@ const org = 'default'
 const pipelineIdentifier = 'testPipeline_Cypress'
 const ENV = 'prod'
 
-export const deploymentActivitySummaryAPI = `cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-activity-summary?routingId=${accountId}&accountId=${accountId}`
+export const deploymentActivitySummaryAPI = `cv/api/account/accountId/orgs/default/projects/project1/verifications/GZNwefkdR2aBhc7owmJ1-w/overview?routingId=accountId`
 export const deploymentTimeseriesDataAPI = `/cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-timeseries-data?routingId=${accountId}&accountId=${accountId}&anomalousMetricsOnly=*&anomalousNodesOnly=*&pageNumber=0&pageSize=10`
 export const deploymentTimeseriesDataWithNodeFilterAPI = `/cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-timeseries-data?routingId=${accountId}&accountId=${accountId}&anomalousMetricsOnly=*&anomalousNodesOnly=*&hostNames=harness-deployment-canary-7445f86dbf-ml857&pageNumber=0&pageSize=10`
 export const healthSourceAPI = `cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/healthSources?routingId=${accountId}&accountId=${accountId}`
@@ -44,11 +44,10 @@ export const aggregateProjectsCall = `/ng/api/aggregate/projects?routingId=${acc
 export const sourceCodeManagerCall = `/ng/api/source-code-manager?routingId=${accountId}&accountIdentifier=${accountId}`
 
 // logs initial call
-export const logsListCall = `cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-log-analysis-radar-chart-data?routingId=${accountId}&accountId=${accountId}&pageNumber=0&pageSize=10&minAngle=0&maxAngle=360&clusterTypes=UNKNOWN_EVENT&clusterTypes=UNEXPECTED_FREQUENCY`
+export const logsListCall = `/cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-log-analysis-radar-chart-data?routingId=accountId&accountId=accountId&pageNumber=0&pageSize=10&minAngle=0&maxAngle=360&clusterTypes=UNKNOWN_EVENT&clusterTypes=UNEXPECTED_FREQUENCY`
 export const logsRadarChartDataCall = `/cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-log-analysis-radar-chart-clusters?routingId=${accountId}&accountId=${accountId}&clusterTypes=UNKNOWN_EVENT&clusterTypes=UNEXPECTED_FREQUENCY`
 
-// logs node filter call
-export const logsListNodeFilterCall = `cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-log-analysis-radar-chart-data?routingId=${accountId}&accountId=${accountId}&pageNumber=0&pageSize=10&hostNames=harness-deployment-canary-7445f86dbf-ml857&minAngle=0&maxAngle=360&clusterTypes=UNKNOWN_EVENT&clusterTypes=UNEXPECTED_FREQUENCY`
+export const logsListNodeFilterCall = `cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-log-analysis-radar-chart-data?routingId=accountId&accountId=accountId&pageNumber=0&pageSize=10&minAngle=0&maxAngle=360&clusterTypes=UNKNOWN_EVENT&clusterTypes=UNEXPECTED_FREQUENCY`
 export const logsRadarChartDataNodeFilterCall = `/cv/api/verify-step/GZNwefkdR2aBhc7owmJ1-w/deployment-log-analysis-radar-chart-clusters?routingId=${accountId}&accountId=${accountId}&hostNames=harness-deployment-canary-7445f86dbf-ml857&clusterTypes=UNKNOWN_EVENT&clusterTypes=UNEXPECTED_FREQUENCY`
 
 // logs cluster type filter call

@@ -1,66 +1,35 @@
 {
-  "metaData": {},
-  "resource": {
-    "serviceName": "appd",
-    "serviceIdentifier": "appd",
-    "envName": "prod",
-    "envIdentifier": "prod",
-    "deploymentTag": null,
-    "deploymentVerificationJobInstanceSummary": {
-      "progressPercentage": 100,
-      "remainingTimeMs": 0,
-      "startTime": 1643284380000,
-      "durationMs": 300000,
-      "risk": "UNHEALTHY",
-      "environmentName": "prod",
-      "jobName": null,
-      "verificationJobInstanceId": "GZNwefkdR2aBhc7owmJ1-w",
-      "activityId": "GZNwefkdR2aBhc7owmJ1-w",
-      "activityStartTime": 1643285299275,
-      "status": "VERIFICATION_FAILED",
-      "additionalInfo": {
-        "primary": [
-          {
-            "hostName": "harness-deployment-5f67d57589-gp4pd",
-            "risk": "NO_ANALYSIS",
-            "anomalousMetricsCount": 0,
-            "anomalousLogClustersCount": 0
-          },
-          {
-            "hostName": "harness-deployment-7445f86dbf-h8blt",
-            "risk": "NO_ANALYSIS",
-            "anomalousMetricsCount": 0,
-            "anomalousLogClustersCount": 0
-          },
-          {
-            "hostName": "harness-deployment-5f67d57589-4jc4c",
-            "risk": "NO_ANALYSIS",
-            "anomalousMetricsCount": 0,
-            "anomalousLogClustersCount": 0
-          }
-        ],
-        "canary": [
-          {
-            "hostName": "harness-deployment-canary-7445f86dbf-ml857",
-            "risk": "UNHEALTHY",
-            "anomalousMetricsCount": 3,
-            "anomalousLogClustersCount": 0
-          },
-          {
-            "hostName": "harness-deployment-canary-56b5cc7c5b-9rpq7",
-            "risk": "HEALTHY",
-            "anomalousMetricsCount": 1,
-            "anomalousLogClustersCount": 0
-          }
-        ],
-        "primaryInstancesLabel": "primary",
-        "canaryInstancesLabel": "canary",
-        "trafficSplitPercentage": null,
-        "type": "CANARY"
-      },
-      "timeSeriesAnalysisSummary": { "totalNumMetrics": 10, "numAnomMetrics": 3 },
-      "logsAnalysisSummary": { "totalClusterCount": 0, "anomalousClusterCount": 0 }
-    }
+  "spec": {
+    "analysedServiceIdentifier": "sumo_service_v2",
+    "analysedEnvIdentifier": "sumo_env_v2",
+    "monitoredServiceType": "DEFAULT",
+    "monitoredServiceIdentifier": "KQE5GbbKTD6w39T6_jwUog",
+    "analysisType": "BLUE_GREEN",
+    "sensitivity": "HIGH",
+    "durationInMinutes": 5,
+    "isFailOnNoAnalysis": false
   },
-  "responseMessages": []
+  "appliedDeploymentAnalysisType": "ROLLING",
+  "verificationStatus": "VERIFICATION_PASSED",
+  "verificationProgressPercentage": 100,
+  "verificationStartTimestamp": 1674145324888,
+  "testNodes": {
+    "nodeType": "POST_DEPLOYMENT",
+    "nodes": [
+      {
+        "type": "DEPLOYMENT_NODE",
+        "nodeIdentifier": "Ansuman Satapathy.3c061712-021c-4dcb-a6aa-159fb7c46f02",
+        "verificationResult": "PASSED",
+        "failedMetrics": 0,
+        "failedLogClusters": 0
+      }
+    ]
+  },
+  "controlNodes": {
+    "nodeType": "PRE_DEPLOYMENT",
+    "nodes": [{ "type": "DEPLOYMENT_NODE", "nodeIdentifier": "Ansuman Satapathy.3c061712-021c-4dcb-a6aa-159fb7c46f02" }]
+  },
+  "metricsAnalysis": { "healthy": 1, "warning": 0, "unhealthy": 0, "noAnalysis": 0 },
+  "logClusters": { "knownClustersCount": 0, "unknownClustersCount": 0, "unexpectedFrequencyClustersCount": 0 },
+  "errorClusters": { "knownClustersCount": 0, "unknownClustersCount": 0, "unexpectedFrequencyClustersCount": 0 }
 }
