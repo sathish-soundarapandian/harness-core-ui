@@ -810,7 +810,6 @@ metricsAnalysis:
     thresholdType: THRESHOLD TYPE
     criteria: CRITERIA
     value: VALUE
-    action: ACTION
 slos:
   title: SLOs
   subTitle: Review the status and error budget of all your defined service level objectives

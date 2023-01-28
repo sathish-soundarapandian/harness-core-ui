@@ -29,12 +29,13 @@ const WrapperComponent = (props: MetricAnalysisMetricThresoldsProps): JSX.Elemen
 describe('MetricAnalysisMetricThresolds', () => {
   test('should render threshold table if the data is present', () => {
     const props = { ...mockedThresholds }
+
     const { getByText, queryByTestId } = render(<WrapperComponent {...props} />)
     // expect values are present
     expect(getByText('cv.metricsAnalysis.metricThresholds.thresholdType')).toBeInTheDocument()
     expect(getByText('cv.metricsAnalysis.metricThresholds.criteria')).toBeInTheDocument()
     expect(getByText('cv.metricsAnalysis.metricThresholds.value')).toBeInTheDocument()
-    expect(getByText('cv.metricsAnalysis.metricThresholds.action')).toBeInTheDocument()
+    expect(getByText('cf.auditLogs.action')).toBeInTheDocument()
     expect(queryByTestId('metric-analysis-metric-threshold')).toBeInTheDocument()
   })
 })

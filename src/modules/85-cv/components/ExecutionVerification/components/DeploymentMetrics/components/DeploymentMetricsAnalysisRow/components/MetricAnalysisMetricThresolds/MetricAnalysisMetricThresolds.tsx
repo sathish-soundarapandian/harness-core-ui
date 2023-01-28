@@ -16,7 +16,7 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
   const { thresholds } = props
   const RenderThresholdType: Renderer<CellProps<MetricThresholdV2>> = ({ row }) => {
     const data = row.original
-    const { thresholdType, isUserDefined } = data || {}
+    const { thresholdType, isUserDefined } = data
 
     if (thresholdType) {
       return (
@@ -36,7 +36,7 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
 
   const RenderCriteria: Renderer<CellProps<MetricThresholdV2>> = ({ row }) => {
     const data = row.original
-    const { criteria } = data || {}
+    const { criteria } = data
 
     if (criteria?.measurementType) {
       return (
@@ -49,7 +49,7 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
 
   const RenderValue: Renderer<CellProps<MetricThresholdV2>> = ({ row }) => {
     const data = row.original
-    const { criteria } = data || {}
+    const { criteria } = data
     const { greaterThanThreshold, lessThanThreshold } = (criteria || {}) as MetricThresholdCriteriaV2
     if (isNumber(greaterThanThreshold) || isNumber(lessThanThreshold)) {
       return (
@@ -71,7 +71,7 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
 
   const RenderAction: Renderer<CellProps<MetricThresholdV2>> = ({ row }) => {
     const data = row.original
-    const { action, criteria } = data || {}
+    const { action, criteria } = data
 
     if (action) {
       return (
@@ -103,7 +103,7 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
         Cell: RenderValue
       },
       {
-        Header: getString('cv.metricsAnalysis.metricThresholds.action'),
+        Header: getString('cf.auditLogs.action'),
         accessor: 'action',
         width: '25%',
         Cell: RenderAction
