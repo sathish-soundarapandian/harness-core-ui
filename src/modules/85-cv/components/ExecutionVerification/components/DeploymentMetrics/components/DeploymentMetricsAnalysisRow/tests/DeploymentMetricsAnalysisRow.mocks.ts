@@ -200,6 +200,7 @@ export const controlDataMock = {
 
 export const expectedChartConfigData = {
   chart: {
+    backgroundColor: '#f8f8fe',
     height: 120,
     type: 'spline',
     width: 312.5806451612903
