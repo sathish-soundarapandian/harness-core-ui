@@ -71,7 +71,8 @@ export function transformMetricData(
         controlNodeIdentifier,
         controlDataType,
         normalisedControlData,
-        normalisedTestData
+        normalisedTestData,
+        appliedThresholds
       } = hostInfo || {}
 
       // Generating points for control host

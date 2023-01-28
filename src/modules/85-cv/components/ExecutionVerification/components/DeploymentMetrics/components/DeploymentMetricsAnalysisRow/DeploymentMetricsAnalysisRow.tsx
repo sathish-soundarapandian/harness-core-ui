@@ -11,7 +11,7 @@ import Highcharts from 'highcharts'
 import cx from 'classnames'
 import { Container, Button, ButtonVariation, Accordion, Text, SelectOption } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import type { MetricsAnalysis, NodeRiskCountDTO } from 'services/cv'
+import type { AnalysedDeploymentTestDataNode, MetricsAnalysis, NodeRiskCountDTO } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import { getRiskColorValue, getSecondaryRiskColorValue } from '@cv/utils/CommonUtils'
 import { chartsConfig } from './DeeploymentMetricsChartConfig'
@@ -43,10 +43,20 @@ export interface DeploymentMetricsAnalysisRowProps {
   selectedDataFormat: SelectOption
   healthSource: MetricsAnalysis['healthSource']
   deeplinkURL?: string
+  appliedThresholds?: AnalysedDeploymentTestDataNode['appliedThresholds']
 }
 
 export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRowProps): JSX.Element {
-  const { controlData = [], testData = [], className, metricName, transactionName, thresholds, healthSource } = props
+  const {
+    controlData = [],
+    testData = [],
+    className,
+    metricName,
+    transactionName,
+    thresholds,
+    healthSource,
+    appliedThresholds
+  } = props
   const { getString } = useStrings()
   const graphContainerRef = useRef<HTMLDivElement>(null)
   const [graphWidth, setGraphWidth] = useState(0)
@@ -121,7 +131,7 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
                 >
                   {testData?.[index]?.risk}
                 </Text>
-                <Text font={{ variation: FontVariation.BODY2_SEMI }}>
+                <Text className={css.analysisReason}>
                   {getAnalysisReason(testData?.[index]?.analysisReason as string, getString)}
                 </Text>
               </Container>
@@ -142,15 +152,11 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
             key={`${transactionName}-${metricName}-${type}`}
             id={`${transactionName}-${metricName}-${type}`}
             summary={
-              <Text
-                font={{ variation: FontVariation.TABLE_HEADERS }}
-                className={css.showDetailsText}
-                margin={{ right: 'small' }}
-              >
+              <Text className={css.showDetailsText} margin={{ right: 'small' }}>
                 {getString('cv.metricsAnalysis.showDetails')}
               </Text>
             }
-            details={<MetricAnalysisMetricThresolds thresholds={thresholds} />}
+            details={<MetricAnalysisMetricThresolds thresholds={thresholds} appliedThresholds={appliedThresholds} />}
           />
         </Accordion>
       ) : null}

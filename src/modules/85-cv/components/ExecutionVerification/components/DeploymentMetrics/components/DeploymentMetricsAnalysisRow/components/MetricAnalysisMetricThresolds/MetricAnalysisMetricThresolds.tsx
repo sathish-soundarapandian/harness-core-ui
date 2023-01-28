@@ -1,19 +1,21 @@
 import { Container, Layout, TableV2, Text } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import React, { useMemo } from 'react'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { isNumber } from 'lodash-es'
 import type { MetricThresholdCriteriaV2, MetricThresholdV2 } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import { CRITERIA_MAPPING, getActionText, THRESHOLD_TYPE_MAPPING } from './MetricAnalysisMetricThresolds.constants'
+import css from './MetricAnalysisMetricThresholds.module.scss'
 
 export interface MetricAnalysisMetricThresoldsProps {
   thresholds: MetricThresholdV2[]
+  appliedThresholds?: string[]
 }
 
 export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetricThresoldsProps): JSX.Element {
   const { getString } = useStrings()
-  const { thresholds } = props
+  const { thresholds, appliedThresholds } = props
   const RenderThresholdType: Renderer<CellProps<MetricThresholdV2>> = ({ row }) => {
     const data = row.original
     const { thresholdType, isUserDefined } = data
@@ -21,11 +23,11 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
     if (thresholdType) {
       return (
         <Layout.Horizontal>
-          <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1} padding={{ right: 'small' }}>
+          <Text className={css.label} lineClamp={1} padding={{ right: 'small' }}>
             {THRESHOLD_TYPE_MAPPING[thresholdType?.toLocaleUpperCase()]}
           </Text>
           {isUserDefined ? (
-            <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1}>
+            <Text className={css.label} lineClamp={1}>
               {'(System)'}
             </Text>
           ) : null}
@@ -40,7 +42,7 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
 
     if (criteria?.measurementType) {
       return (
-        <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1} padding={{ right: 'small' }}>
+        <Text className={css.label} lineClamp={1} padding={{ right: 'small' }}>
           {CRITERIA_MAPPING[criteria?.measurementType?.toLocaleUpperCase()]}
         </Text>
       )
@@ -55,12 +57,12 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
       return (
         <Layout.Horizontal>
           {isNumber(lessThanThreshold) ? (
-            <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1} padding={{ right: 'small' }}>
+            <Text className={css.label} lineClamp={1} padding={{ right: 'small' }}>
               {`< ${lessThanThreshold}`}
             </Text>
           ) : null}
           {isNumber(greaterThanThreshold) ? (
-            <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1} padding={{ right: 'small' }}>
+            <Text className={css.label} lineClamp={1} padding={{ right: 'small' }}>
               {isNumber(lessThanThreshold) ? ` - > ${greaterThanThreshold}` : `   > ${greaterThanThreshold}`}
             </Text>
           ) : null}
@@ -75,9 +77,31 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
 
     if (action) {
       return (
-        <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1}>
+        <Text className={css.label} lineClamp={1}>
           {getActionText(action?.toLocaleUpperCase(), criteria?.actionableCount)}
         </Text>
+      )
+    } else return <></>
+  }
+
+  const RenderAppliedThresholds: Renderer<CellProps<MetricThresholdV2>> = ({ row }) => {
+    const data = row.original
+    const { id } = data
+
+    if (Array.isArray(appliedThresholds) && appliedThresholds.length && appliedThresholds.some(el => el === id)) {
+      return (
+        <Container width={'fit-content'}>
+          <Text
+            font={{ variation: FontVariation.TINY_SEMI }}
+            flex={{ justifyContent: 'center' }}
+            color={Color.PRIMARY_7}
+            background={Color.PRIMARY_2}
+            border={{ radius: 4 }}
+            padding={{ top: 'xsmall', bottom: 'xsmall', left: 'small', right: 'small' }}
+          >
+            {getString('cv.metricsAnalysis.metricThresholds.applied')}
+          </Text>
+        </Container>
       )
     } else return <></>
   }
@@ -87,26 +111,32 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
       {
         Header: getString('cv.metricsAnalysis.metricThresholds.thresholdType'),
         accessor: 'thresholdType',
-        width: '25%',
+        width: '22.5%',
         Cell: RenderThresholdType
       },
       {
         Header: getString('cv.metricsAnalysis.metricThresholds.criteria'),
         accessor: row => row?.criteria?.measurementType,
-        width: '25%',
+        width: '22.5%',
         Cell: RenderCriteria
       },
       {
         Header: getString('cv.metricsAnalysis.metricThresholds.value'),
         accessor: row => row?.criteria,
-        width: '25%',
+        width: '22.5%',
         Cell: RenderValue
       },
       {
         Header: getString('cf.auditLogs.action'),
         accessor: 'action',
-        width: '25%',
+        width: '22.5%',
         Cell: RenderAction
+      },
+      {
+        Header: '',
+        accessor: 'id',
+        width: '10%',
+        Cell: RenderAppliedThresholds
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps

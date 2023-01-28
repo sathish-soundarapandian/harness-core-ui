@@ -113,6 +113,16 @@
 
 .showDetailsText {
   color: var(--primary-7) !important;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.analysisReason {
+  font-weight: 400 !important;
+  font-size: 12px !important;
+  line-height: 18px !important;
+  color: var(--grey-800) !important;
 }
 
 .metricInfo {
@@ -126,4 +136,11 @@
   border: 1px solid;
   border-radius: 1px;
   margin-right: var(--spacing-small) !important;
+}
+
+.metricPanelLabels {
+  font-weight: 400 !important;
+  font-size: 12px !important;
+  line-height: 18px !important;
+  color: var(--black) !important;
 }

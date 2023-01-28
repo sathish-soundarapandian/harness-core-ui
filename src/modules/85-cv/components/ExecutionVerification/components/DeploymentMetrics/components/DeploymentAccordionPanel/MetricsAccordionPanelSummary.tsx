@@ -32,14 +32,14 @@ const MetricsAccordionPanelSummary: React.FC<MetricsAccordionPanelSummaryProps> 
           </a>
         </Container>
       ) : (
-        <Text font={{ variation: FontVariation.BODY2_SEMI }} tooltip={metricName} margin={{ left: 'small' }}>
+        <Text className={css.metricPanelLabels} tooltip={metricName} margin={{ left: 'small' }}>
           {metricName}
         </Text>
       )}
-      <Text font={{ variation: FontVariation.BODY2_SEMI }} tooltip={transactionName}>
+      <Text className={css.metricPanelLabels} tooltip={transactionName}>
         {transactionName}
       </Text>
-      <Text lineClamp={1} tooltip={name} font={{ variation: FontVariation.BODY2_SEMI }}>
+      <Text lineClamp={1} tooltip={name} className={css.metricPanelLabels}>
         <Icon name={getIconBySourceType(type as string)} margin={{ right: 'small' }} size={16} />
         {name}
       </Text>

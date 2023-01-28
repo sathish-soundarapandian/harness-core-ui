@@ -7,6 +7,6 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly metricsAnalysisMetricThresold: string
+  readonly label: string
 }
 export default styles
