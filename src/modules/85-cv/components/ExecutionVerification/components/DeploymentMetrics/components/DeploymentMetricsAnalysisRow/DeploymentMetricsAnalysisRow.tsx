@@ -94,7 +94,7 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
                 highcharts={Highcharts}
                 options={chartsConfig(series, graphWidth, testData?.[index], controlData?.[index], getString)}
               />
-              <Container className={css.metricInfo} padding={{ bottom: 'small' }}>
+              <Container className={css.metricInfo} padding={{ bottom: 'small', left: 'small' }}>
                 <Container
                   className={css.node}
                   background={getRiskColorValue(testData?.[index]?.risk, false)}
@@ -121,7 +121,7 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
                   </Text>
                 ) : null}
               </Container>
-              <Container className={css.metricInfo}>
+              <Container className={css.metricInfo} padding={{ left: 'small' }}>
                 <Text
                   font={{ variation: FontVariation.TABLE_HEADERS }}
                   color={getRiskColorValue(testData?.[index]?.risk, false)}
@@ -152,7 +152,7 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
             key={`${transactionName}-${metricName}-${type}`}
             id={`${transactionName}-${metricName}-${type}`}
             summary={
-              <Text className={css.showDetailsText} margin={{ right: 'small' }}>
+              <Text className={css.showDetailsText} padding={{ left: 'small' }} margin={{ right: 'small' }}>
                 {getString('cv.metricsAnalysis.showDetails')}
               </Text>
             }

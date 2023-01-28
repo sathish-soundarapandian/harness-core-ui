@@ -22,7 +22,8 @@ export function chartsConfig(
     chart: {
       height: 120,
       width,
-      type: 'spline'
+      type: 'spline',
+      backgroundColor: '#f8f8fe'
     },
     credits: undefined,
     title: {

@@ -144,7 +144,7 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
   )
 
   return (
-    <Container data-testid="metric-analysis-metric-threshold">
+    <Container data-testid="metric-analysis-metric-threshold" className={css.main}>
       <TableV2<MetricThresholdV2> columns={columns} data={thresholds as MetricThresholdV2[]} />
     </Container>
   )
