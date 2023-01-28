@@ -11,14 +11,18 @@ import type { GetDataError } from 'restful-react'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import type {
   AnalysedDeploymentNode,
+  AnalysedDeploymentTestDataNode,
   HealthSourceDTO,
   HealthSourceV2,
   HostData,
+  MetricValueV2,
   NodeRiskCountDTO,
   PageMetricsAnalysis,
   RestResponseSetHealthSourceDTO
 } from 'services/cv'
 import { RiskValues } from '@cv/utils/CommonUtils'
+import { METRICS } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import { VerificationType } from '@cv/components/HealthSourceDropDown/HealthSourceDropDown.constants'
 import type {
   HostControlTestData,
   HostTestData
@@ -33,7 +37,6 @@ export function transformMetricData(
   if (!(Array.isArray(metricData?.content) && metricData?.content.length)) {
     return []
   }
-
   const metricInfo = { ...metricData }
   const graphData: DeploymentMetricsAnalysisRowProps[] = []
   for (const analysisData of metricInfo.content || []) {
@@ -69,75 +72,26 @@ export function transformMetricData(
         normalisedControlData,
         normalisedTestData
       } = hostInfo || {}
-      const hostControlData: Highcharts.SeriesLineOptions['data'] = []
-      const hostTestData: Highcharts.SeriesLineOptions['data'] = []
-      const hostNormalisedControlData: Highcharts.SeriesLineOptions['data'] = []
-      const hostNormalisedTestData: Highcharts.SeriesLineOptions['data'] = []
 
-      const sortedControlData = controlData
-        ?.slice()
-        ?.sort((a, b) => (a?.timestampInMillis || 0) - (b?.timestampInMillis || 0))
-      const sortedTestData = testData
-        ?.slice()
-        ?.sort((a, b) => (a?.timestampInMillis || 0) - (b?.timestampInMillis || 0))
-      const sortedNormalisedControlData = normalisedControlData
-        ?.slice()
-        ?.sort((a, b) => (a?.timestampInMillis || 0) - (b?.timestampInMillis || 0))
-      const sortedNormalisedTestData = normalisedTestData
-        ?.slice()
-        ?.sort((a, b) => (a?.timestampInMillis || 0) - (b?.timestampInMillis || 0))
-
-      const controlDataInitialXValue = sortedControlData?.[0]?.timestampInMillis || 0
-      const testDataInitialXValue = sortedTestData?.[0]?.timestampInMillis || 0
-      const normalisedControlDataInitialXValue = sortedNormalisedControlData?.[0]?.timestampInMillis || 0
-      const normalisedTestDataInitialXValue = sortedNormalisedTestData?.[0]?.timestampInMillis || 0
-
-      sortedControlData?.forEach(({ timestampInMillis, value }) => {
-        hostControlData.push({ x: (timestampInMillis || 0) - controlDataInitialXValue, y: value === -1 ? null : value })
-      })
-
-      sortedTestData?.forEach(({ timestampInMillis, value }) => {
-        hostTestData.push({ x: (timestampInMillis || 0) - testDataInitialXValue, y: value === -1 ? null : value })
-      })
-
-      sortedNormalisedControlData?.forEach(({ timestampInMillis, value }) => {
-        hostNormalisedControlData.push({
-          x: (timestampInMillis || 0) - normalisedControlDataInitialXValue,
-          y: value === -1 ? null : value
-        })
-      })
-
-      sortedNormalisedTestData?.forEach(({ timestampInMillis, value }) => {
-        hostNormalisedTestData.push({
-          x: (timestampInMillis || 0) - normalisedTestDataInitialXValue,
-          y: value === -1 ? null : value
-        })
-      })
-
-      controlPoints.push({
-        points: [...hostControlData],
-        name: nodeIdentifier,
-        initialXvalue: controlDataInitialXValue
-      })
-      testPoints.push({
-        points: [...hostTestData],
-        risk: analysisResult as HostData['risk'],
+      // Generating points for control host
+      generatePointsForNodes(controlData, controlPoints, testAnalysisResult, analysisReason, controlNodeIdentifier)
+      generatePointsForNodes(
+        normalisedControlData,
+        normalisedControlPoints,
+        testAnalysisResult,
         analysisReason,
-        name: controlNodeIdentifier as string,
-        initialXvalue: testDataInitialXValue
-      })
-      normalisedControlPoints.push({
-        points: [...hostNormalisedControlData],
-        name: nodeIdentifier,
-        initialXvalue: normalisedControlDataInitialXValue
-      })
-      normalisedTestPoints.push({
-        points: [...hostNormalisedTestData],
-        risk: analysisResult as HostData['risk'],
-        name: controlNodeIdentifier as string,
+        controlNodeIdentifier
+      )
+
+      // generating points for testHost
+      generatePointsForNodes(testData, testPoints, testAnalysisResult, analysisReason, nodeIdentifier)
+      generatePointsForNodes(
+        normalisedTestData,
+        normalisedTestPoints,
+        testAnalysisResult,
         analysisReason,
-        initialXvalue: normalisedTestDataInitialXValue
-      })
+        nodeIdentifier
+      )
 
       nodeRiskCountDTO = getNodeRiskCountDTO(testAnalysisResult, nodeRiskCountDTO)
     }
@@ -157,6 +111,31 @@ export function transformMetricData(
   }
 
   return graphData
+}
+
+function generatePointsForNodes(
+  inputTestData: MetricValueV2[] | undefined,
+  points: HostTestData[] | HostControlTestData[],
+  analysisResult: string | undefined,
+  analysisReason: AnalysedDeploymentTestDataNode['analysisReason'],
+  nodeIdentifier: string | undefined
+): void {
+  const hostData: Highcharts.SeriesLineOptions['data'] = []
+  const sortedTestData = inputTestData
+    ?.slice()
+    ?.sort((a, b) => (a?.timestampInMillis || 0) - (b?.timestampInMillis || 0))
+  const testDataInitialXValue = sortedTestData?.[0]?.timestampInMillis || 0
+  sortedTestData?.forEach(({ timestampInMillis, value }) => {
+    hostData.push({ x: (timestampInMillis || 0) - testDataInitialXValue, y: value === -1 ? null : value })
+  })
+
+  points.push({
+    points: [...hostData],
+    risk: analysisResult as HostData['risk'],
+    analysisReason,
+    name: nodeIdentifier as string,
+    initialXvalue: testDataInitialXValue
+  })
 }
 
 export function getNodeRiskCountDTO(
@@ -282,7 +261,7 @@ export function generateHealthSourcesOptionsData(
       identifier,
       name,
       type: type as HealthSourceDTO['type'],
-      verificationType: providerType === 'METRICS' ? 'TIME_SERIES' : 'LOG'
+      verificationType: providerType === METRICS ? VerificationType.TIME_SERIES : VerificationType.LOG
     })
   })
 

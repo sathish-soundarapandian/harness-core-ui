@@ -31,10 +31,10 @@ describe('MetricAnalysisMetricThresolds', () => {
     const props = { ...mockedThresholds }
     const { getByText, queryByTestId } = render(<WrapperComponent {...props} />)
     // expect values are present
-    expect(getByText('THRESHOLD TYPE')).toBeInTheDocument()
-    expect(getByText('CRITERIA')).toBeInTheDocument()
-    expect(getByText('VALUE')).toBeInTheDocument()
-    expect(getByText('ACTION')).toBeInTheDocument()
+    expect(getByText('cv.metricsAnalysis.metricThresholds.thresholdType')).toBeInTheDocument()
+    expect(getByText('cv.metricsAnalysis.metricThresholds.criteria')).toBeInTheDocument()
+    expect(getByText('cv.metricsAnalysis.metricThresholds.value')).toBeInTheDocument()
+    expect(getByText('cv.metricsAnalysis.metricThresholds.action')).toBeInTheDocument()
     expect(queryByTestId('metric-analysis-metric-threshold')).toBeInTheDocument()
   })
 })

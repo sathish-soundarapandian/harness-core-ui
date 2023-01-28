@@ -7791,6 +7791,15 @@ export interface StringsMap {
   'cv.metricThresholds.validations.percentageValidation': string
   'cv.metricVerificationModal.modalTitle': string
   'cv.metricVerificationModal.viewCalls': string
+  'cv.metricsAnalysis.analysisReason.customFailFastThreshold': string
+  'cv.metricsAnalysis.analysisReason.mlAnalysis': string
+  'cv.metricsAnalysis.analysisReason.noControlData': string
+  'cv.metricsAnalysis.analysisReason.noTestData': string
+  'cv.metricsAnalysis.metricThresholds.action': string
+  'cv.metricsAnalysis.metricThresholds.criteria': string
+  'cv.metricsAnalysis.metricThresholds.thresholdType': string
+  'cv.metricsAnalysis.metricThresholds.value': string
+  'cv.metricsAnalysis.showDetails': string
   'cv.minValueN': string
   'cv.mins': string
   'cv.minutes': string

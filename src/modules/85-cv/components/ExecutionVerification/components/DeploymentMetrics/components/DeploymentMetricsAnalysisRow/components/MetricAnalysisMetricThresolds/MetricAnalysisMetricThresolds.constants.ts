@@ -24,10 +24,6 @@ export const getActionText = (action: string, actionableCount?: number): string 
   }
 }
 
-export const ACTION_MAPPING: MappingType = {
-  // 'Ignore' | 'FailImmediately' | 'FailAfterOccurrence' | 'FailAfterConsecutiveOccurrence'
-}
-
 export interface MappingType {
   [key: string]: string
 }

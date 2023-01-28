@@ -4,6 +4,7 @@ import React, { useMemo } from 'react'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { isNumber } from 'lodash-es'
 import type { MetricThresholdCriteriaV2, MetricThresholdV2 } from 'services/cv'
+import { useStrings } from 'framework/strings'
 import { CRITERIA_MAPPING, getActionText, THRESHOLD_TYPE_MAPPING } from './MetricAnalysisMetricThresolds.constants'
 
 export interface MetricAnalysisMetricThresoldsProps {
@@ -11,8 +12,8 @@ export interface MetricAnalysisMetricThresoldsProps {
 }
 
 export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetricThresoldsProps): JSX.Element {
+  const { getString } = useStrings()
   const { thresholds } = props
-
   const RenderThresholdType: Renderer<CellProps<MetricThresholdV2>> = ({ row }) => {
     const data = row.original
     const { thresholdType, isUserDefined } = data || {}
@@ -84,25 +85,25 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
   const columns: Column<MetricThresholdV2>[] = useMemo(
     () => [
       {
-        Header: 'THRESHOLD TYPE',
+        Header: getString('cv.metricsAnalysis.metricThresholds.thresholdType'),
         accessor: 'thresholdType',
         width: '25%',
         Cell: RenderThresholdType
       },
       {
-        Header: 'CRITERIA',
+        Header: getString('cv.metricsAnalysis.metricThresholds.criteria'),
         accessor: row => row?.criteria?.measurementType,
         width: '25%',
         Cell: RenderCriteria
       },
       {
-        Header: 'VALUE',
+        Header: getString('cv.metricsAnalysis.metricThresholds.value'),
         accessor: row => row?.criteria,
         width: '25%',
         Cell: RenderValue
       },
       {
-        Header: 'ACTION',
+        Header: getString('cv.metricsAnalysis.metricThresholds.action'),
         accessor: 'action',
         width: '25%',
         Cell: RenderAction

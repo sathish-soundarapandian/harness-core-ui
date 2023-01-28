@@ -799,6 +799,18 @@ healthSource:
 templates:
   healthSourceDetails: Health Source Details
 sensitivityValidation: Sensitivity should be high, medium or low
+metricsAnalysis:
+  analysisReason:
+    customFailFastThreshold: Failed because a fail-fast threshold was breached
+    mlAnalysis: Passed/failed by the Harness ML analysis
+    noControlData: No control data to compare against.
+    noTestData: No data to be analysed.
+  showDetails: Show details
+  metricThresholds:
+    thresholdType: THRESHOLD TYPE
+    criteria: CRITERIA
+    value: VALUE
+    action: ACTION
 slos:
   title: SLOs
   subTitle: Review the status and error budget of all your defined service level objectives

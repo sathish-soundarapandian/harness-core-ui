@@ -6,6 +6,7 @@
  */
 
 import type { AnalysedDeploymentTestDataNode, HostData } from 'services/cv'
+import type { UseStringsReturn } from 'framework/strings'
 
 export type HostTestData = {
   risk: HostData['risk']
@@ -21,11 +22,19 @@ export type HostControlTestData = Omit<HostTestData, 'risk' | 'name'> & {
   initialXvalue: number
 }
 
-export const ANALYSIS_REASON_MAPPING: { [key: string]: string } = {
-  CUSTOM_FAIL_FAST_THRESHOLD: 'Failed because a fail-fast threshold was breached',
-  ML_ANALYSIS: 'Passed/failed by the Harness ML analysis',
-  NO_CONTROL_DATA: 'No control data to compare against.',
-  NO_TEST_DATA: ' No data to be analysed.'
+export const getAnalysisReason = (reason: string, getString: UseStringsReturn['getString']): string => {
+  switch (reason) {
+    case 'CUSTOM_FAIL_FAST_THRESHOLD':
+      return getString('cv.metricsAnalysis.analysisReason.customFailFastThreshold')
+    case 'ML_ANALYSIS':
+      return getString('cv.metricsAnalysis.analysisReason.mlAnalysis')
+    case 'NO_CONTROL_DATA':
+      return getString('cv.metricsAnalysis.analysisReason.noControlData')
+    case 'NO_TEST_DATA':
+      return getString('cv.metricsAnalysis.analysisReason.noTestData')
+    default:
+      return ''
+  }
 }
 
 export const widthPercentagePerGraph = 1

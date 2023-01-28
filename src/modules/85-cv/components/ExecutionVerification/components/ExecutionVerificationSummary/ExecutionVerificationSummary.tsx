@@ -23,6 +23,7 @@ import { getActivityId } from '../../ExecutionVerificationView.utils'
 import { ManualInterventionVerifyStep } from '../ManualInterventionVerifyStep/ManualInterventionVerifyStep'
 import InterruptedHistory from '../InterruptedHistory/InterruptedHistory'
 import { SummaryOfDeployedNodes } from './components/SummaryOfDeployedNodes/SummaryOfDeployedNodes'
+import { getTotalClustersData, getTotalMetrics } from './ExecutionVerificationSummary.utils'
 import css from './ExecutionVerificationSummary.module.scss'
 
 const POLLING_INTERVAL = 15000
@@ -131,21 +132,11 @@ export function ExecutionVerificationSummary(props: VerifyExecutionProps): JSX.E
       {displayAnalysisCount && (
         <SummaryOfDeployedNodes
           metricsInViolation={metricsAnalysis?.unhealthy || 0}
-          totalMetrics={
-            (metricsAnalysis?.unhealthy || 0) + (metricsAnalysis?.healthy || 0) + (metricsAnalysis?.noAnalysis || 0)
-          }
+          totalMetrics={getTotalMetrics(metricsAnalysis)}
           logClustersInViolation={logClusters?.unknownClustersCount || 0}
-          totalLogClusters={
-            (logClusters?.unknownClustersCount || 0) +
-            (logClusters?.unknownClustersCount || 0) +
-            (logClusters?.unexpectedFrequencyClustersCount || 0)
-          }
+          totalLogClusters={getTotalClustersData(logClusters)}
           errorClustersInViolation={errorClusters?.unknownClustersCount || 0}
-          totalErrorClusters={
-            (errorClusters?.unknownClustersCount || 0) +
-            (errorClusters?.unknownClustersCount || 0) +
-            (errorClusters?.unexpectedFrequencyClustersCount || 0)
-          }
+          totalErrorClusters={getTotalClustersData(errorClusters)}
         />
       )}
     </Container>

@@ -21,7 +21,7 @@ import {
   widthPercentagePerGraph,
   HostTestData,
   HostControlTestData,
-  ANALYSIS_REASON_MAPPING
+  getAnalysisReason
 } from './DeploymentMetricsAnalysisRow.constants'
 import MetricAnalysisMetricThresolds from './components/MetricAnalysisMetricThresolds/MetricAnalysisMetricThresolds'
 import css from './DeploymentMetricsAnalysisRow.module.scss'
@@ -42,6 +42,7 @@ export interface DeploymentMetricsAnalysisRowProps {
 
 export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRowProps): JSX.Element {
   const { controlData = [], testData = [], className, metricName, transactionName, thresholds, healthSource } = props
+  const { getString } = useStrings()
   const graphContainerRef = useRef<HTMLDivElement>(null)
   const [graphWidth, setGraphWidth] = useState(0)
   const { type } = healthSource || {}
@@ -52,7 +53,6 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
 
   const [chartsOffset, setChartsOffset] = useState(1)
   const filteredCharts = filterRenderCharts(charts, chartsOffset)
-  const { getString } = useStrings()
 
   const handleLoadMore = useCallback(() => {
     setChartsOffset(currentOffset => {
@@ -89,7 +89,7 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
                   font={{ variation: FontVariation.SMALL }}
                   margin={{ right: 'large' }}
                 >
-                  {`Test host: ${testData?.[index]?.name}`}
+                  {`${getString('pipeline.verification.testHost')}: ${testData?.[index]?.name}`}
                 </Text>
                 <Container
                   style={{ borderColor: Color.PRIMARY_7 }}
@@ -99,7 +99,7 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
                 <Text
                   tooltip={controlData?.[index]?.name as string}
                   font={{ variation: FontVariation.SMALL }}
-                >{`Control host: ${controlData?.[index]?.name}`}</Text>
+                >{`${getString('pipeline.verification.controlHost')}: ${controlData?.[index]?.name}`}</Text>
               </Container>
               <Container className={css.metricInfo}>
                 <Text
@@ -112,7 +112,7 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
                   {testData?.[index]?.risk}
                 </Text>
                 <Text font={{ variation: FontVariation.BODY2_SEMI }}>
-                  {ANALYSIS_REASON_MAPPING[testData?.[index]?.analysisReason as string]}
+                  {getAnalysisReason(testData?.[index]?.analysisReason as string, getString)}
                 </Text>
               </Container>
             </>
@@ -137,7 +137,7 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
                 className={css.showDetailsText}
                 margin={{ right: 'small' }}
               >
-                Show details
+                {getString('cv.metricsAnalysis.showDetails')}
               </Text>
             }
             details={<MetricAnalysisMetricThresolds thresholds={thresholds} />}
