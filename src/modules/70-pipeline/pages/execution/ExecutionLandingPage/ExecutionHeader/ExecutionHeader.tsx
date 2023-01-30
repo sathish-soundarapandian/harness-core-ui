@@ -26,21 +26,17 @@ import { StoreType } from '@common/constants/GitSyncTypes'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { TagsPopover } from '@common/components'
-
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { hasCIStage } from '@pipeline/utils/stageHelpers'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RetryHistory from '@pipeline/components/RetryPipeline/RetryHistory/RetryHistory'
-import { PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED } from '@pipeline/utils/constants'
+import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { useQueryParams } from '@common/hooks'
 import css from './ExecutionHeader.module.scss'
 
-export interface ExecutionHeaderProps {
-  onRunPipelineInDebugMode: () => void
-}
-
-export function ExecutionHeader({ onRunPipelineInDebugMode }: ExecutionHeaderProps): React.ReactElement {
+export function ExecutionHeader(): React.ReactElement {
   const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module, source } =
     useParams<PipelineType<ExecutionPathProps>>()
   const {
@@ -51,9 +47,14 @@ export function ExecutionHeader({ onRunPipelineInDebugMode }: ExecutionHeaderPro
     storeType: storeTypeQueryParam
   } = useQueryParams<GitQueryParams>()
   const { refetch, pipelineExecutionDetail, isPipelineInvalid } = useExecutionContext()
-  const { supportingGitSimplification } = useAppStore()
+  const {
+    supportingGitSimplification,
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF
+  } = useAppStore()
   const { getString } = useStrings()
   const { pipelineExecutionSummary = {} } = pipelineExecutionDetail || {}
+  const { CI_REMOTE_DEBUG } = useFeatureFlags()
   const [canEdit, canExecute] = usePermission(
     {
       resourceScope: {
@@ -88,6 +89,17 @@ export function ExecutionHeader({ onRunPipelineInDebugMode }: ExecutionHeaderPro
   const connectorRef = pipelineExecutionSummary?.connectorRef ?? connectorRefQueryParam
   const branch = pipelineExecutionSummary?.gitDetails?.branch ?? branchQueryParam
   const storeType = (pipelineExecutionSummary?.storeType as StoreType) ?? storeTypeQueryParam
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const { openRunPipelineModal } = useRunPipelineModal({
+    pipelineIdentifier,
+    executionId: executionIdentifier,
+    repoIdentifier: isGitSyncEnabled ? repoIdentifier : repoName,
+    branch,
+    connectorRef,
+    storeType,
+    stagesExecuted: pipelineExecutionSummary?.stagesExecuted,
+    isDebugMode: hasCI
+  })
 
   return (
     <header className={css.header}>
@@ -192,11 +204,7 @@ export function ExecutionHeader({ onRunPipelineInDebugMode }: ExecutionHeaderPro
             canExecute={canExecute}
             canRetry={pipelineExecutionSummary.canRetry}
             modules={pipelineExecutionSummary.modules}
-            onReRunInDebugMode={
-              hasCI && PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED.includes(accountId)
-                ? () => onRunPipelineInDebugMode()
-                : undefined
-            }
+            onReRunInDebugMode={hasCI && CI_REMOTE_DEBUG ? () => openRunPipelineModal() : undefined}
           />
         </div>
       </div>
