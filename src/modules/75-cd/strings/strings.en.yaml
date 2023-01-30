@@ -544,6 +544,11 @@ instanceWarmupPlaceholder: Instance Warmup
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Dry Run Apply the service manifests and leverage the dry run yaml as output for subsequent steps
 getStartedWithCD:
+  clickForOtherDeploymentTypes: Click here for other deployment types
+  createCluster: Create a cluster if needed
+  awsRegionHelperText: replace REGION with your AWS region, for example us-west-1
+  azureAKSHelperText: replace myResourceGroup with your AKS resource group
+  googleGKEHelperText: replace ZONE with your GCP region, for example us-central1-c
   onboardingTitle: Start your deployments journey with Harness CD
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
   runDelegateSubtitle: You can install the Delegate in your target environment.
@@ -667,10 +672,13 @@ kubectlCommand: gcloud components install kubectl
 oauthPlugin: Install Google auth plugin to the cluster
 oauthPluginCmd: gcloud components install gke-gcloud-auth-plugin
 clusterVerify: Verify the connection to the cluster
+gcloudClusterCreate: gcloud container clusters create mycluster --machine-type n1-standard-2 --num-nodes 2 --zone ZONE
+gcloudClusterList: gcloud container clusters list
 gcloudClusterCmd: gcloud container clusters get-credentials CLUSTER_NAME
 kubectlNamespace: kubectl get namespaces
 pluginVersion: gke-gcloud-auth-plugin --version
 awsCli: Make sure the aws cli and eksctl and are installed
+awsClusterCreate: eksctl create cluster --name mycluster --version 1.18 --region REGION --nodegroup-name standard-workers --node-type t3.xlarge --nodes 2 --nodes-min 1 --nodes-max 3 --node-ami auto
 amazonElasticCmd: eksctl utils write-kubeconfig --cluster=delegate
 azureCli: Make sure the Azure CLI is installed
 azureCliCmd: az aks install-cli
