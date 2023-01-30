@@ -176,7 +176,8 @@ function DeployEnvironment({
           if (parsedEnvironmentYaml.environmentInputs) {
             if (
               getMultiTypeFromValue(get(values, 'environment.environmentInputs')) === MultiTypeInputType.RUNTIME ||
-              hasEnvChanged
+              hasEnvChanged ||
+              isNil(get(values, 'environment.environmentInputs'))
             ) {
               set(values, 'environment.environmentInputs', {
                 ...clearRuntimeInput(parsedEnvironmentYaml.environmentInputs)
@@ -189,7 +190,8 @@ function DeployEnvironment({
           if (parsedServiceOverridesYaml.serviceOverrideInputs) {
             if (
               getMultiTypeFromValue(get(values, 'environment.serviceOverrideInputs')) === MultiTypeInputType.RUNTIME ||
-              hasEnvChanged
+              hasEnvChanged ||
+              isNil(get(values, 'environment.serviceOverrideInputs'))
             ) {
               set(values, 'environment.serviceOverrideInputs', {
                 ...clearRuntimeInput(parsedServiceOverridesYaml.serviceOverrideInputs)
@@ -209,6 +211,7 @@ function DeployEnvironment({
               get(formik?.values, 'infrastructureRef') === '') &&
               set(values, `environment.infrastructureDefinitions`, '')
           }
+
           formik?.setValues({
             ...values,
             isEnvInputLoaded: isEnvInputLoaded
