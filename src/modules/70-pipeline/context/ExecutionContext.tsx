@@ -30,11 +30,6 @@ export interface ExecutionContextParams {
   setLogsToken: (token: string) => void
   refetch?: (() => Promise<void>) | undefined
   addNewNodeToMap(id: string, node: ExecutionNode): void
-  setSelectedStepId: (step: string) => void
-  setSelectedStageId: (stage: string) => void
-  setSelectedStageExecutionId: (stage: string) => void
-  setSelectedCollapsedNodeId: (collapsedNode: string) => void
-  setIsPipelineInvalid?: (flag: boolean) => void
 }
 
 export const ExecutionContext = createContext<ExecutionContextParams>({
@@ -55,12 +50,7 @@ export const ExecutionContext = createContext<ExecutionContextParams>({
   logsToken: '',
   setLogsToken: () => void 0,
   refetch: undefined,
-  addNewNodeToMap: () => void 0,
-  setSelectedStepId: () => void 0,
-  setSelectedStageId: () => void 0,
-  setSelectedStageExecutionId: () => void 0,
-  setSelectedCollapsedNodeId: () => void 0,
-  setIsPipelineInvalid: () => void 0
+  addNewNodeToMap: () => void 0
 })
 
 export default ExecutionContext

@@ -53,11 +53,7 @@ const execContextValues: ExecutionContextParams = {
   logsToken: '',
   setLogsToken: jest.fn(),
   refetch: undefined,
-  addNewNodeToMap: jest.fn(),
-  setSelectedStepId: jest.fn(),
-  setSelectedStageId: jest.fn(),
-  setSelectedStageExecutionId: jest.fn(),
-  setSelectedCollapsedNodeId: jest.fn()
+  addNewNodeToMap: jest.fn()
 }
 
 jest.mock('services/logs', () => ({
