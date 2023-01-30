@@ -48,6 +48,8 @@ import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResult
 import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { StepForm } from '@pipeline/components/PipelineInputSetForm/StepInputSetForm'
 import { StepGroupForm } from '@pipeline/components/PipelineInputSetForm/StepGroupInputSetForm'
 import css from './TemplateInputs.module.scss'
@@ -78,6 +80,7 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
+  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const allowableTypes = [
     MultiTypeInputType.FIXED,
     MultiTypeInputType.EXPRESSION,
@@ -104,7 +107,8 @@ export const TemplateInputs: React.FC<TemplateInputsProps> = ({ template, storeM
       projectIdentifier: template.projectIdentifier,
       versionLabel: defaultTo(template.versionLabel, ''),
       ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier: repo, branch })
-    }
+    },
+    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
   })
 
   React.useEffect(() => {
