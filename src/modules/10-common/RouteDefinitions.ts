@@ -1465,6 +1465,15 @@ const routes = {
     ({ orgIdentifier, projectIdentifier, segmentIdentifier }: ProjectPathProps & SegmentPathProps) =>
       `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/target-management/target-groups/${segmentIdentifier}`
   ),
+    toCFSegmentDetailsWithEnv: withAccountId(
+        ({
+             orgIdentifier,
+             projectIdentifier,
+             segmentIdentifier,
+             environmentIdentifier
+         }: ProjectPathProps & SegmentPathProps & EnvironmentPathProps) =>
+            `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/target-management/target-groups/${segmentIdentifier}?activeEnvironment=${environmentIdentifier}`
+    ),
   toCFTargetDetails: withAccountId(
     ({ orgIdentifier, projectIdentifier, targetIdentifier }: ProjectPathProps & TargetPathProps) =>
       `/cf/orgs/${orgIdentifier}/projects/${projectIdentifier}/target-management/targets/${targetIdentifier}`

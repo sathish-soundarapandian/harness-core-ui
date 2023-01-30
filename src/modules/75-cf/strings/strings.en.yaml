@@ -26,6 +26,10 @@ messages:
   targetDeleted: Target deleted.
   segmentCreated: Target group created.
   segmentDeleted: Target group deleted.
+auditTrail:
+  label: "CF"
+  ffResourceLabel: "Feature Flag"
+  tgResourceLabel: "Target Group"
 rbac:
   category: '{{ $.common.purpose.cf.continuous }}'
   featureflag:

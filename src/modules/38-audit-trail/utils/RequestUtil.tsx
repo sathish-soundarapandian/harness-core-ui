@@ -118,6 +118,18 @@ export const moduleInfoMap: Record<AuditEventDTO['module'], ModuleInfo> = {
   CHAOS: {
     moduleLabel: 'common.module.chaos',
     icon: { name: 'chaos-main' }
+  },
+  SRM: {
+    moduleLabel: 'common.module.chaos',
+    icon: { name: 'chaos-main' }
+  },
+  CODE: {
+    moduleLabel: 'common.module.chaos',
+    icon: { name: 'chaos-main' }
+  },
+  IACM: {
+    moduleLabel: 'common.module.chaos',
+    icon: { name: 'chaos-main' }
   }
 }
 

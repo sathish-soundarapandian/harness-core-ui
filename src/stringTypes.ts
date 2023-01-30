@@ -6916,6 +6916,9 @@ export interface StringsMap {
   'cf.auditLogs.updateMessageSegment': string
   'cf.auditLogs.user': string
   'cf.auditLogs.viewEventSummary': string
+  'cf.auditTrail.ffResourceLabel': string
+  'cf.auditTrail.label': string
+  'cf.auditTrail.tgResourceLabel': string
   'cf.boolean': string
   'cf.cfTrialHomePage.dontCode.description': string
   'cf.cfTrialHomePage.dontCode.inviteDeveloper': string
