@@ -6,8 +6,7 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react'
-
-import cx from 'classnames'
+import { Link, useParams } from 'react-router-dom'
 import {
   Text,
   Layout,
@@ -27,12 +26,13 @@ import produce from 'immer'
 import * as Yup from 'yup'
 import { HelpPanel } from '@harness/help-panel'
 import { useStrings } from 'framework/strings'
-import { DeploymentTypeItem, getNgSupportedDeploymentTypes } from '@cd/utils/deploymentUtils'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { deploymentIconMap, DeploymentTypeItem } from '@cd/utils/deploymentUtils'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { getServiceDeploymentTypeSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import type { ServiceDefinition } from 'services/cd-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { deploymentTypes } from '../DeployProvisioningWizard/Constants'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
@@ -62,9 +62,8 @@ const SelectDeploymentTypeRef = (
 ): React.ReactElement => {
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { disableNextBtn, enableNextBtn, onSuccess } = props
-
-  const { SSH_NG, NG_SVC_ENV_REDESIGN } = useFeatureFlags()
 
   const {
     state: { service: serviceData },
@@ -80,17 +79,14 @@ const SelectDeploymentTypeRef = (
   const formikRef = useRef<FormikContextType<SelectDeploymentTypeInterface>>()
 
   // Supported in NG - Only K8 enabled for onboarding phase 1
-  const ngSupportedDeploymentTypes = React.useMemo((): DeploymentTypeItem[] => {
-    const supportedDeploymentTypes = getNgSupportedDeploymentTypes({
-      SSH_NG,
-      NG_SVC_ENV_REDESIGN
-    })
-
-    return supportedDeploymentTypes.map(deploymentType => ({
-      ...deploymentType,
-      disabled: Boolean(deploymentType.value !== ServiceDeploymentType.Kubernetes)
-    }))
-  }, [SSH_NG, NG_SVC_ENV_REDESIGN])
+  const ngSupportedDeploymentTypes = [
+    {
+      label: 'pipeline.serviceDeploymentTypes.kubernetes',
+      icon: deploymentIconMap[ServiceDeploymentType.Kubernetes],
+      value: ServiceDeploymentType.Kubernetes,
+      disabled: false
+    }
+  ]
 
   useEffect(() => {
     if (formikRef?.current?.values?.selectedDeploymentType) {
@@ -130,7 +126,6 @@ const SelectDeploymentTypeRef = (
           {getString('cd.getStartedWithCD.selectDeploymentType')}
           <HarnessDocTooltip tooltipId="cdOnboardingDeploymentType" useStandAlone={true} />
         </Text>
-        <Container className={css.borderBottom} />
         <Formik<SelectDeploymentTypeInterface>
           initialValues={{
             selectedDeploymentType: defaultTo(
@@ -152,15 +147,15 @@ const SelectDeploymentTypeRef = (
                   <Container padding={{ bottom: 'xxlarge' }}>
                     <Container padding={{ top: 'xxlarge', bottom: 'xxlarge' }}>
                       <CardSelect
-                        data={ngSupportedDeploymentTypes}
+                        data={ngSupportedDeploymentTypes as DeploymentTypeItem[]}
                         cornerSelected={true}
                         className={css.icons}
                         cardClassName={css.serviceDeploymentTypeCard}
                         renderItem={(item: DeploymentTypeItem) => (
                           <>
                             <Layout.Vertical flex>
-                              <Icon name={item.icon} size={30} flex className={css.serviceDeploymentTypeIcon} />
-                              <Text font={{ variation: FontVariation.BODY2 }} className={css.text1}>
+                              <Icon name={item.icon} size={48} flex className={css.serviceDeploymentTypeIcon} />
+                              <Text font={{ variation: FontVariation.CARD_TITLE }} className={css.text1}>
                                 {getString(item.label)}
                               </Text>
                             </Layout.Vertical>
@@ -183,8 +178,12 @@ const SelectDeploymentTypeRef = (
                           })}
                         />
                       ) : null}
-                      <Container className={cx({ [css.borderBottom]: selectedDeploymentType })} />
                     </Container>
+                    <Link to={routes.toPipelines({ orgIdentifier, projectIdentifier, accountId, module: 'cd' })}>
+                      <Text color={Color.PRIMARY_7} font={{ variation: FontVariation.BODY2 }} margin={{ top: 'huge' }}>
+                        {getString('cd.getStartedWithCD.clickForOtherDeploymentTypes')}
+                      </Text>
+                    </Link>
                   </Container>
                 </Layout.Horizontal>
               </FormikForm>

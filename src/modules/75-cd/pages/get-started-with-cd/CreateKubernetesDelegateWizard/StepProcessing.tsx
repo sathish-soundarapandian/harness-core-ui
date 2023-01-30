@@ -36,6 +36,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
   const { getString } = useStrings()
   const [showSuccess, setShowSuccess] = useState(false)
   const [showError, setShowError] = useState(false)
+  const [isTroubleShootVisible, setTroubleShootVisible] = React.useState(false)
   const [isHeartBeatVerified, setVerifyHeartBeat] = useState(false)
   const [counter, setCounter] = useState(0)
   const { trackEvent } = useTelemetry()
@@ -54,7 +55,6 @@ const StepProcessing: FC<StepDelegateData> = props => {
     },
     debounce: 200
   })
-  const [isTroubleShootVisible, setTroubleShootVisible] = React.useState(false)
 
   const showToastWarning = (): void => {
     /* istanbul ignore else */ if (!isHeartBeatVerified) {
@@ -125,8 +125,11 @@ const StepProcessing: FC<StepDelegateData> = props => {
                 <Button
                   variation={ButtonVariation.SECONDARY}
                   onClick={() => {
-                    verifyHeartbeat()
                     setShowError(false)
+                    setShowSuccess(false)
+                    setTroubleShootVisible(false)
+                    setCounter(0)
+                    verifyHeartbeat()
                   }}
                 >
                   {`${getString('retry')} ${getString('connection')}`}

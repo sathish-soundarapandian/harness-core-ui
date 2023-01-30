@@ -5,6 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
+import type { ManifestStores } from '@pipeline/components/ManifestSelection/ManifestInterface'
+import type { InfrastructureRequestDTO } from 'services/cd-ng'
+import { DrawerMode } from '../CDOnboardingUtils'
 export const delegateSizeResponse = {
   metaData: {},
   resource: [
@@ -323,3 +327,42 @@ services:
       - PROXY_MANAGER=true
       - INIT_SCRIPT=echo "Docker delegate init script executed."
 `
+
+export const contextValues = {
+  state: {
+    service: {
+      name: 'sample_service',
+      identifier: 'sample_service',
+      data: {
+        repoValues: {
+          name: 'testRepo',
+          namespace: 'harness'
+        },
+        artifactType: '',
+        workloadType: '',
+        gitValues: {},
+        gitConnectionStatus: TestStatus.SUCCESS,
+        gitopsEnabled: false,
+        manifestStoreType: 'Harness' as ManifestStores
+      }
+    },
+    environment: {
+      name: 'sample_environment',
+      identifier: 'sample_environment',
+      type: 'PreProduction' as 'PreProduction' | 'Production'
+    },
+    infrastructure: {
+      name: 'sample_infrastructure',
+      identifier: 'sample_infrastructure',
+      type: 'KubernetesDirect' as InfrastructureRequestDTO['type'],
+      infrastructureDefinition: {}
+    }
+  },
+  drawerData: { fileContent: undefined, mode: DrawerMode.Preview },
+  saveServiceData: jest.fn(),
+  saveEnvironmentData: jest.fn(),
+  saveInfrastructureData: jest.fn(),
+  setDrawerData: jest.fn(),
+  saveDelegateData: jest.fn(),
+  saveRepositoryData: jest.fn()
+}

@@ -271,6 +271,7 @@ export enum CIOnboardingActions {
 
 export enum CDOnboardingActions {
   GetStartedClicked = 'Clicked on Get Started for CD',
+  ExitCDOnboarding = 'Exited CD Get Started',
   StartOnboardingDelegateCreation = 'Start onboarding Delegate creation',
   SetupOnboardingDelegate = 'Setup onboarding Delegate',
   SaveCreateOnboardingDelegate = 'Save create onboarding Delegate',

@@ -20,6 +20,14 @@ export const AmazonElasticK8sService = (): JSX.Element => {
       </li>
       <li>
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
+          {`${getString('cd.getStartedWithCD.createCluster')} ( ${getString(
+            'cd.getStartedWithCD.awsRegionHelperText'
+          )}):`}
+        </Text>
+        <CommandWithCopyField label={'cd.awsClusterCreate'} />
+      </li>
+      <li>
+        <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
           {getString('cd.clusterVerify')}
         </Text>
         <CommandWithCopyField label={'cd.amazonElasticCmd'} />

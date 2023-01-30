@@ -333,7 +333,8 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   }
 
   const closeCDWizard = (): void => {
-    history.push(routes.toPipelines({ accountId, orgIdentifier, projectIdentifier, module: 'cd' }))
+    trackEvent(CDOnboardingActions.ExitCDOnboarding, {})
+    history.push(routes.toGetStartedWithCD({ accountId, orgIdentifier, projectIdentifier, module: 'cd' }))
   }
 
   const WizardSteps: Map<DeployProvisiongWizardStepId, WizardStep> = new Map([
