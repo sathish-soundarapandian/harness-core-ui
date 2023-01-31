@@ -1983,6 +1983,7 @@ const routes = {
 
   /*********************** IACM */
   toIACM: withAccountId(() => `/iacm`),
+  toIACMOverview: withAccountId(() => `/iacm/overview`),
   toIACMMicroFrontend: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/`

@@ -69,16 +69,15 @@ const RedirectToIACMProject = (): React.ReactElement => {
   if (selectedProject) {
     return (
       <Redirect
-        to={routes.toProjectOverview({
+        to={routes.toIACMStacks({
           accountId,
           orgIdentifier: selectedProject.orgIdentifier || '',
-          projectIdentifier: selectedProject.identifier,
-          module: 'iacm'
+          projectIdentifier: selectedProject.identifier
         })}
       />
     )
   } else {
-    return <Redirect to={routes.toIACMMicroFrontend({ accountId })} />
+    return <Redirect to={routes.toIACMOverview({ accountId })} />
   }
 }
 
