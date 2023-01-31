@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { PageError, Tag, PageSpinner } from '@harness/uicore'
-import { defaultTo, get, merge } from 'lodash-es'
+import { defaultTo, get, isEmpty, merge } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { parse } from '@common/utils/YamlHelperMethods'
 import type { PipelineInfoConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
@@ -22,6 +22,9 @@ import {
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetTemplate } from 'services/template-ng'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { StoreType } from '@common/constants/GitSyncTypes'
 import { BaseReactComponentProps, DiagramFactory, NodeType } from '@pipeline/components/PipelineDiagram/DiagramFactory'
 import { getPipelineGraphData } from '@pipeline/components/PipelineDiagram/PipelineGraph/PipelineGraphUtils'
 import PipelineStageNode from '@pipeline/components/PipelineDiagram/Nodes/DefaultNode/PipelineStageNode/PipelineStageNode'
@@ -44,6 +47,7 @@ export function TemplatePipelineCanvas(): React.ReactElement {
   const templateScope = getScopeFromValue(defaultTo(pipeline.template?.templateRef, ''))
   const queryParams = useParams<ProjectPathProps>()
   const { supportingTemplatesGitx } = useAppStore()
+  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
 
   const diagram = new DiagramFactory('graph')
   const CDPipelineStudioNew = diagram.render()
@@ -82,11 +86,16 @@ export function TemplatePipelineCanvas(): React.ReactElement {
         repoIdentifier: gitDetails.repoIdentifier,
         branch: gitDetails.branch
       })
-    }
+    },
+    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
+    lazy: storeMetadata?.storeType === StoreType.REMOTE && isEmpty(storeMetadata?.connectorRef)
   })
 
   React.useEffect(() => {
     const templateRefs = findAllByKey('templateRef', resolvedPipeline)
+    if (storeMetadata?.storeType === StoreType.REMOTE && isEmpty(storeMetadata?.connectorRef)) {
+      return
+    }
     getTemplateTypesByRef(
       {
         accountIdentifier: queryParams.accountId,
@@ -99,13 +108,15 @@ export function TemplatePipelineCanvas(): React.ReactElement {
       },
       templateRefs,
       storeMetadata,
-      supportingTemplatesGitx
+      supportingTemplatesGitx,
+      isGitCacheEnabled,
+      true
     ).then(resp => {
       setTemplateTypes(merge(templateTypes, resp.templateTypes))
       setTemplateIcons({ ...merge(templateIcons, resp.templateIcons) })
       setTemplateServiceData(merge(templateServiceData, resp.templateServiceData))
     })
-  }, [JSON.stringify(resolvedPipeline)])
+  }, [JSON.stringify(resolvedPipeline), storeMetadata])
 
   React.useEffect(() => {
     if (pipelineTemplateResponse?.data?.yaml) {
