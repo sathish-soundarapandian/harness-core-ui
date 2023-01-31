@@ -7,6 +7,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { debounce } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import { Checkbox, Container, Layout, Text, TextInput } from '@harness/uicore'
 import cx from 'classnames'
@@ -29,6 +30,27 @@ const TicketSettings: React.FC = () => {
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
 
   const { mutate } = useSettingsSaveSetting()
+
+  const delayedMutate = React.useRef(
+    debounce((newSettings: TicketSettings) => {
+      if (newSettings.connector && newSettings.projectKey) {
+        const connectorId =
+          typeof newSettings.connector === 'string' ? newSettings.connector : newSettings.connector.value
+        mutate(
+          {
+            queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier },
+            body: {
+              additional: { projectKey: newSettings.projectKey },
+              connectorId,
+              module,
+              service: 'Jira'
+            }
+          },
+          {}
+        )
+      }
+    }, 1000)
+  ).current
 
   const [ticketSettings, setTicketSettings] = useState<TicketSettings | undefined>(undefined)
 
@@ -98,23 +120,7 @@ const TicketSettings: React.FC = () => {
   function updateTicketSettings(settings: Partial<TicketSettings>): void {
     const newSettings = { ...ticketSettings, ...settings }
     setTicketSettings(newSettings)
-    if (newSettings.connector && newSettings.projectKey) {
-      const connectorId =
-        typeof newSettings.connector === 'string' ? newSettings.connector : newSettings.connector.value
-
-      mutate(
-        {
-          queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier },
-          body: {
-            additional: { projectKey: newSettings.projectKey },
-            connectorId,
-            module,
-            service: 'Jira'
-          }
-        },
-        {}
-      )
-    }
+    delayedMutate(newSettings)
     return
   }
 }
