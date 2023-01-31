@@ -5992,6 +5992,7 @@ export interface StringsMap {
   'ce.co.autoStoppingRule.setupAccess.selectLbHelpText': string
   'ce.co.breadCrumb.rules': string
   'ce.co.cloudProviders.aws': string
+  'ce.co.clusterOrchestratorLabel': string
   'ce.co.createAsRule': string
   'ce.co.deleteRuleSuccessMessage': string
   'ce.co.dnsSetup.autoURL': string

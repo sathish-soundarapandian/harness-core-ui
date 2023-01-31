@@ -790,7 +790,12 @@ const CERoutes: React.FC = () => {
         routes.toCEGovernanceEnforcements({ ...accountPathProps }),
         routes.toCEGovernanceEvaluations({ ...accountPathProps }),
         routes.toCEGovernanceRuleEditor({ ...accountPathProps, ruleId: ':ruleId' }),
-        routes.toCECurrencyPreferences({ ...accountPathProps })
+        routes.toCECurrencyPreferences({ ...accountPathProps }),
+        routes.toClusterOrchestrator({ ...accountPathProps }),
+        routes.toClusterDetailsPage({ ...accountPathProps, id: ':id' }),
+        routes.toClusterWorkloadsDetailsPage({ ...accountPathProps, id: ':id' }),
+        routes.toClusterNodepoolDetailsPage({ ...accountPathProps, id: ':id' }),
+        routes.toComputeGroupsSetup({ ...accountPathProps, id: ':id' })
       ]
     : []
 

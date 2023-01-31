@@ -134,7 +134,8 @@ const SideNavItems = () => {
   const {
     CCM_ENABLE_CLOUD_ASSET_GOVERNANCE_UI,
     CCM_COMMORCH: showCO,
-    CCM_CURRENCY_PREFERENCES: currencyPreferencesEnabled
+    CCM_CURRENCY_PREFERENCES: currencyPreferencesEnabled,
+    CCM_CLUSTER_ORCH
   } = useFeatureFlags()
 
   return (
@@ -208,6 +209,17 @@ const SideNavItems = () => {
             to={routes.toCEGovernance({ accountId })}
             onClick={() => {
               trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, { feature_name: featureNames.GOVERNANCE })
+            }}
+          />
+        )}
+        {CCM_CLUSTER_ORCH && (
+          <SidebarLink
+            label={getString('ce.co.clusterOrchestratorLabel')}
+            to={routes.toClusterOrchestrator({ accountId })}
+            onClick={() => {
+              trackEvent(USER_JOURNEY_EVENTS.CCM_FEATURE_NAVIGATION, {
+                feature_name: featureNames.CLUSTER_ORCHESTRATOR_FEATURE
+              })
             }}
           />
         )}

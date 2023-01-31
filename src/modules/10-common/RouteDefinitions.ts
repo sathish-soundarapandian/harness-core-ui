@@ -1877,6 +1877,11 @@ const routes = {
   toCEGovernanceRuleEditor: withAccountId(
     ({ ruleId }: { ruleId: string }) => `/ce/governance/rules/${ruleId}/rule-editor/`
   ),
+  toClusterOrchestrator: withAccountId(() => '/ce/compute-groups'),
+  toClusterDetailsPage: withAccountId(({ id }: { id: string }) => `/ce/compute-groups/${id}/overview`),
+  toClusterWorkloadsDetailsPage: withAccountId(({ id }: { id: string }) => `/ce/compute-groups/${id}/workloads`),
+  toClusterNodepoolDetailsPage: withAccountId(({ id }: { id: string }) => `/ce/compute-groups/${id}/nodepool`),
+  toComputeGroupsSetup: withAccountId(({ id }: { id: string }) => `/ce/compute-groups/setup/steps/${id}`),
   toCECurrencyPreferences: withAccountId(() => `/ce/currency-preferences`),
   toCCMMFE: withAccountId(() => `/ce/new`),
   /********************************************************************************************************************/
