@@ -5316,6 +5316,7 @@ export interface StringsMap {
   'cd.hostFilters': string
   'cd.hosts': string
   'cd.ignoreReleaseHistFailStatus': string
+  'cd.infra': string
   'cd.infrastructure.createNew': string
   'cd.infrastructure.created': string
   'cd.infrastructure.delete': string
@@ -5386,11 +5387,13 @@ export interface StringsMap {
   'cd.oauthPlugin': string
   'cd.oauthPluginCmd': string
   'cd.oldService': string
+  'cd.openExecution': string
   'cd.overrideType': string
   'cd.overrideValue': string
   'cd.overrideYaml': string
   'cd.pathCannotBeEmpty': string
   'cd.pipelineCreation': string
+  'cd.pipelineId': string
   'cd.pipelineSteps.environmentTab.allClustersSelected': string
   'cd.pipelineSteps.environmentTab.allInfrastructures': string
   'cd.pipelineSteps.environmentTab.clusterIsRequired': string

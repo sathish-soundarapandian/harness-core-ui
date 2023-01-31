@@ -69,7 +69,7 @@
   margin-top: 10px !important;
   margin-bottom: var(--spacing-5) !important;
   p {
-    padding-left: var(--spacing-3) !important;
+    padding-left: 6px !important;
     &:hover {
       text-decoration: underline;
     }
@@ -146,5 +146,191 @@
 
   p {
     margin-top: var(--spacing-7) !important;
+  }
+}
+
+.dialogBase {
+  min-width: 1350px;
+  min-height: 900px;
+  padding: 0 !important;
+}
+
+.dialogWrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr 5px;
+}
+
+.detailSummaryView {
+  min-height: 900px;
+  padding: var(--spacing-7) !important;
+  z-index: 1;
+  box-shadow: 0px 0px 1px rgb(40 41 61 / 4%), 0px var(--spacing-1) var(--spacing-2) rgb(96 97 112 / 16%);
+}
+
+.searchIconStyle {
+  height: var(--spacing-8);
+  & > input:focus {
+    width: 200px !important;
+  }
+}
+
+.fullViewTableStyle {
+  width: 100%;
+  padding-top: var(--spacing-4);
+  max-height: 730px;
+
+  div[class*='TableV2--body'] {
+    overflow: auto;
+    max-height: 670px;
+    padding-top: var(--spacing-3);
+
+    p {
+      font-size: var(--font-size-small);
+    }
+
+    div[role='row'] {
+      box-shadow: none;
+      padding: 0;
+      padding: 6px var(--spacing-5) 6px 0;
+      margin: 0 0 var(--spacing-2) 0;
+    }
+    > :nth-child(odd) {
+      background: rgba(243, 243, 250, 0.7);
+    }
+
+    div[class*='TableV2--cells'] {
+      height: var(--spacing-7);
+
+      div[class*='TableV2--cell']:nth-child(2) {
+        span[class*='bp3-popover'] {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  div[class*='TableV2--header'] {
+    padding-left: var(--spacing-1);
+    padding-top: var(--spacing-4);
+    border-bottom: 1px solid var(--grey-200);
+    padding-bottom: var(--spacing-3);
+
+    p {
+      font-size: var(--font-size-small) !important;
+      color: var(--grey-600) !important;
+    }
+  }
+}
+
+.envColumnStyle {
+  font-size: var(--font-size-small) !important;
+  color: var(--grey-800) !important;
+  margin-right: var(--spacing-3) !important;
+  padding-left: var(--spacing-1) !important;
+}
+
+.overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.separatorStyle {
+  margin-top: 14px;
+  border-top: 1px solid var(--grey-200);
+}
+
+.instanceDetailView {
+  min-height: 900px;
+  background-color: var(--primary-bg) !important;
+  padding: var(--spacing-9) 18px var(--spacing-8) var(--spacing-7) !important;
+
+  .instanceDetailTitle {
+    font-weight: 600 !important;
+    font-size: var(--font-size-normal);
+    color: var(--grey-1000) !important;
+  }
+}
+
+.instanceViewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: var(--spacing-4) !important;
+}
+
+.pipelineExecCardStyle {
+  width: 120px;
+  height: 62px;
+  padding: var(--spacing-4) !important;
+  margin-bottom: var(--spacing-3);
+  cursor: pointer;
+}
+
+.pipelineIdTitle {
+  p {
+    font-weight: 600 !important;
+    font-size: 13px !important;
+    line-height: 16px !important;
+  }
+  margin-bottom: var(--spacing-3) !important;
+}
+
+.collapse {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: var(--spacing-4);
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.08), 0px 0.5px 2px rgba(96, 97, 112, 0.16);
+  border-radius: var(--spacing-2);
+  background-color: var(--grey-0);
+  border-top: none;
+  margin-bottom: var(--spacing-3);
+}
+
+.instanceDetail {
+  display: grid !important;
+  grid-template-columns: 22% 78%;
+  margin-top: var(--spacing-7) !important;
+}
+
+.activeInstanceStyle {
+  &:not(:first-child) {
+    padding-top: var(--spacing-medium) !important;
+  }
+  &:not(:last-child) {
+    padding-bottom: var(--spacing-medium) !important;
+    border-bottom: 1px solid var(--grey-100);
+  }
+}
+
+.sectionValue {
+  word-break: break-all;
+}
+
+.selected {
+  border: 1px solid var(--primary-7) !important;
+  background: var(--primary-1) !important;
+}
+
+.overflowScroll {
+  overflow: scroll;
+  max-height: 630px;
+}
+
+.openExecBtn {
+  --border: 1px solid var(--primary-7) !important;
+  margin-bottom: var(--spacing-5) !important;
+  width: 150px;
+}
+
+.marginBottom12 {
+  margin-bottom: var(--spacing-4) !important;
+}
+
+.collapseHeader {
+  :global(.bp3-icon) {
+    color: var(--grey-700) !important;
+    margin-right: 9px;
   }
 }

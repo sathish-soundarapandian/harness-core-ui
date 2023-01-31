@@ -858,3 +858,6 @@ trendMessage:
   invalidTrend: 'No trend data in the previous time interval'
 envChanges: 'Environment Changes'
 valuesYamlValidation: 'Values.yaml file path cannot be empty'
+infra: infra
+pipelineId: 'Pipeline ID: '
+openExecution: 'Open Execution'

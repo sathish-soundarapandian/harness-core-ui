@@ -23,7 +23,7 @@ import {
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
-import { capitalize, defaultTo, isUndefined, noop } from 'lodash-es'
+import { capitalize, defaultTo, isUndefined } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
@@ -34,6 +34,7 @@ import {
   useGetEnvironmentInstanceDetails
 } from 'services/cd-ng'
 import { EnvCardViewEmptyState } from './ServiceDetailEmptyStates'
+import ServiceDetailsDialog from './ServiceDetailsDialog'
 
 import css from './ServiceDetailsSummaryV2.module.scss'
 
@@ -49,7 +50,7 @@ enum CardView {
 interface EnvCardProps {
   envId: string
   envName?: string
-  environmentType: 'PreProduction' | 'Production'
+  environmentType?: 'PreProduction' | 'Production'
   artifactDeploymentDetail: ArtifactDeploymentDetail
   count?: number
 }
@@ -66,7 +67,9 @@ const EnvCard = (
   env: EnvCardProps | undefined,
   selectedEnv: string | undefined,
   setSelectedEnv: React.Dispatch<React.SetStateAction<string | undefined>>,
-  setEnvId: React.Dispatch<React.SetStateAction<string | undefined>>
+  setEnvId: React.Dispatch<React.SetStateAction<string | undefined>>,
+  setIsDetailsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  setEnv: React.Dispatch<React.SetStateAction<string>>
 ): JSX.Element => {
   const { getString } = useStrings()
   const envName = env?.envName
@@ -100,16 +103,18 @@ const EnvCard = (
         </Text>
         <Icon name="success-tick" />
       </div>
-      <Text
-        className={cx(css.environmentType, {
-          [css.production]: env?.environmentType === EnvironmentType.PRODUCTION
-        })}
-        font={{ size: 'small' }}
-      >
-        {getString(
-          env?.environmentType === EnvironmentType.PRODUCTION ? 'cd.serviceDashboard.prod' : 'cd.preProductionType'
-        )}
-      </Text>
+      {env?.environmentType && (
+        <Text
+          className={cx(css.environmentType, {
+            [css.production]: env?.environmentType === EnvironmentType.PRODUCTION
+          })}
+          font={{ size: 'small' }}
+        >
+          {getString(
+            env?.environmentType === EnvironmentType.PRODUCTION ? 'cd.serviceDashboard.prod' : 'cd.preProductionType'
+          )}
+        </Text>
+      )}
       {env?.artifactDeploymentDetail.lastDeployedAt && (
         <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
           {getString('pipeline.lastDeployed')} <ReactTimeago date={env.artifactDeploymentDetail.lastDeployedAt} />
@@ -117,9 +122,13 @@ const EnvCard = (
       )}
       {env?.count && (
         <div className={css.instanceCountStyle}>
-          <Icon name="service" color={Color.GREY_600} />
+          <Icon name="instances" color={Color.GREY_600} />
           <Text
-            onClick={noop} //todo
+            onClick={e => {
+              e.stopPropagation()
+              setEnv(env.envId)
+              setIsDetailsDialogOpen(true)
+            }}
             color={Color.PRIMARY_7}
             font={{ variation: FontVariation.TINY_SEMI }}
           >
@@ -143,6 +152,8 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const [activeSlide, setActiveSlide] = useState<number>(1)
   const [cardView, setCardView] = useState(CardView.ENV)
+  const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState<boolean>(false)
+  const [env, setEnv] = useState<string>('')
 
   const queryParams: GetEnvironmentInstanceDetailsQueryParams = {
     accountIdentifier: accountId,
@@ -179,8 +190,13 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
             icon="panel-table"
             iconProps={{ size: 13 }}
             text={getString('cd.environmentDetailPage.viewInTable')}
-            disabled={false} //todo
+            onClick={() => {
+              setEnv('')
+              setIsDetailsDialogOpen(true)
+            }}
+            disabled={resData.length === 0}
           />
+          <ServiceDetailsDialog isOpen={isDetailsDialogOpen} setIsOpen={setIsDetailsDialogOpen} envFilter={env} />
           <PillToggle
             selectedView={cardView}
             options={[
@@ -243,11 +259,11 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
           {renderCards.map((item, idx) => {
             return (
               <Layout.Horizontal key={idx} className={css.cardGrid}>
-                {item[0] && EnvCard(item[0], selectedEnv, setSelectedEnv, setEnvId)}
-                {item[1] && EnvCard(item[1], selectedEnv, setSelectedEnv, setEnvId)}
-                {item[2] && EnvCard(item[2], selectedEnv, setSelectedEnv, setEnvId)}
-                {item[3] && EnvCard(item[3], selectedEnv, setSelectedEnv, setEnvId)}
-                {item[4] && EnvCard(item[4], selectedEnv, setSelectedEnv, setEnvId)}
+                {item[0] && EnvCard(item[0], selectedEnv, setSelectedEnv, setEnvId, setIsDetailsDialogOpen, setEnv)}
+                {item[1] && EnvCard(item[1], selectedEnv, setSelectedEnv, setEnvId, setIsDetailsDialogOpen, setEnv)}
+                {item[2] && EnvCard(item[2], selectedEnv, setSelectedEnv, setEnvId, setIsDetailsDialogOpen, setEnv)}
+                {item[3] && EnvCard(item[3], selectedEnv, setSelectedEnv, setEnvId, setIsDetailsDialogOpen, setEnv)}
+                {item[4] && EnvCard(item[4], selectedEnv, setSelectedEnv, setEnvId, setIsDetailsDialogOpen, setEnv)}
               </Layout.Horizontal>
             )
           })}
