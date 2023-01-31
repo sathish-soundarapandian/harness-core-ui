@@ -557,7 +557,7 @@ execution:
     downloadLogs: Download logs
     viewCompiledYaml: View Compiled YAML
     compareExecutions: Compare Pipeline Executions
-    reRunInDebugMode: Re-run in debug mode
+    reRunInDebugMode: Re-run in Debug Mode
   layouts:
     bottom: Align to bottom
     right: Align to right
