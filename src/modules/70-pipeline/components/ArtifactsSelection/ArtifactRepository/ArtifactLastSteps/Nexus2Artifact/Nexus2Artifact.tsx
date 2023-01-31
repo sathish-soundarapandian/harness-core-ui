@@ -91,20 +91,33 @@ export function Nexus2Artifact({
     repositoryFormat: Yup.string()
       .trim()
       .required(getString('pipeline.artifactsSelection.validation.repositoryFormat')),
-    spec: Yup.object().shape({
-      artifactId: Yup.string().when('repositoryFormat', {
+
+    spec: Yup.object()
+      .when('repositoryFormat', {
         is: RepositoryFormatTypes.Maven,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactId'))
-      }),
-      groupId: Yup.string().when('repositoryFormat', {
-        is: RepositoryFormatTypes.Maven,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.groupId'))
-      }),
-      packageName: Yup.string().when('repositoryFormat', {
-        is: RepositoryFormatTypes.NPM || RepositoryFormatTypes.NuGet,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.packageName'))
+        then: Yup.object().shape({
+          artifactId: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactId')),
+          groupId: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.groupId'))
+        })
       })
-    })
+      .when('repositoryFormat', {
+        is: RepositoryFormatTypes.NPM,
+        then: Yup.object().shape({
+          packageName: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.packageName'))
+        })
+      })
+      .when('repositoryFormat', {
+        is: RepositoryFormatTypes.NuGet,
+        then: Yup.object().shape({
+          packageName: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.packageName'))
+        })
+      })
+      .when('repositoryFormat', {
+        is: RepositoryFormatTypes.Raw,
+        then: Yup.object().shape({
+          packageName: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.packageName'))
+        })
+      })
   }
 
   const primarySchema = Yup.object().shape(schemaObject)
