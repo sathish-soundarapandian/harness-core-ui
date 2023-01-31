@@ -12,22 +12,26 @@ import { Container, Heading, Layout, Text, Utils } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { ContainerProps } from '@harness/uicore/dist/components/Container/Container'
 import { useStrings } from 'framework/strings'
-import type { Feature } from 'services/cf'
+import type { Feature, Results } from 'services/cf'
 import { VariationWithIcon } from '@cf/components/VariationWithIcon/VariationWithIcon'
 import { formatNumber } from '@cf/utils/CFUtils'
 import css from './FeatureFlagsPage.module.scss'
 
 export interface FlagResultProps extends ContainerProps {
   feature: Feature
+  metrics: Results[] | undefined
+  metricsCount?: number
 }
 
-export const FlagResult: React.FC<FlagResultProps> = ({ feature, style, ...props }) => {
+export const FlagResult: React.FC<FlagResultProps> = ({ feature, metrics, style, ...props }) => {
   const { getString } = useStrings()
-  const results = feature.results
-  const metricsCount = results?.map(({ count }) => count).reduce((sum = 0, count = 0) => sum + count, 0) || 0
-  const singleVariationDistribution = results?.length === 1
-  const tooltip = metricsCount ? <FlagResultTooltip feature={feature} /> : undefined
-  const hasMoreThanTwoResults = (results?.length as number) > 2
+
+  const metricsCount = metrics?.map(({ count }) => count).reduce((sum = 0, count = 0) => sum + count, 0) || 0
+  const singleVariationDistribution = metrics?.length === 1
+  const tooltip = metricsCount ? (
+    <FlagResultTooltip feature={feature} metrics={metrics} metricsCount={metricsCount} />
+  ) : undefined
+  const hasMoreThanTwoResults = (metrics?.length as number) > 2
 
   return (
     <Container style={{ display: 'inline-block', ...style }} {...props}>
@@ -98,11 +102,10 @@ export const FlagResult: React.FC<FlagResultProps> = ({ feature, style, ...props
   )
 }
 
-const FlagResultTooltip: React.FC<FlagResultProps> = ({ feature }) => {
+const FlagResultTooltip: React.FC<FlagResultProps> = ({ feature, metrics, metricsCount }) => {
   const { getString } = useStrings()
-  const results = feature.results
-  const len = results?.length || 1
-  const metricsCount = results?.map(({ count }) => count).reduce((sum = 0, count = 0) => sum + count, 0) || 0
+
+  const len = metrics?.length || 1
   const height = len > 2 ? 204 : 126 + len * 26
 
   return (
@@ -120,7 +123,7 @@ const FlagResultTooltip: React.FC<FlagResultProps> = ({ feature }) => {
           margin={{ left: 'xsmall' }}
           color={Color.WHITE}
         >
-          ({new Intl.NumberFormat().format(metricsCount)})
+          {metricsCount}
         </Text>
       </Heading>
       <Container>
@@ -140,17 +143,17 @@ const FlagResultTooltip: React.FC<FlagResultProps> = ({ feature }) => {
             </tr>
           </thead>
           <tbody>
-            {results?.map(result => {
+            {metrics?.map(metric => {
               const index = feature.variations.findIndex(
-                variation => variation.identifier === result.variationIdentifier
+                variation => variation.identifier === metric.variationIdentifier
               )
 
               return (
-                <tr key={result.variationIdentifier}>
+                <tr key={metric.variationIdentifier}>
                   <td>
                     {index === -1 ? (
                       <Text color={Color.WHITE} style={{ fontSize: '11px' }}>
-                        {result.variationName}
+                        {metric.variationName}
                       </Text>
                     ) : (
                       <Layout.Horizontal spacing="xsmall" style={{ alignItems: 'center' }}>
@@ -164,7 +167,7 @@ const FlagResultTooltip: React.FC<FlagResultProps> = ({ feature }) => {
                   </td>
                   <td>
                     <Text color={Color.WHITE} style={{ fontSize: '11px' }}>
-                      {new Intl.NumberFormat().format(result.count as number)}
+                      {new Intl.NumberFormat().format(metric.count as number)}
                     </Text>
                   </td>
                 </tr>

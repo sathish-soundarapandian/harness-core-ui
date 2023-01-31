@@ -287,6 +287,7 @@ export const featureNames = {
   ANOMALIES_FEATURE: 'Anomalies',
   RECOMMENDATIONS_FEATURE: 'Recommendations',
   COMMITMENT_ORCHESTRATOR_FEATURE: 'Commitment Orchestrator',
+  CLUSTER_ORCHESTRATOR_FEATURE: 'Cluster Orchestrator',
   AUTOSTOPPING_FEATURE: 'Autostopping Rules',
   BI_DASHBOARD_FEATURE: 'BI Dashboard',
   AUTOSTROPPING_FEATURE: 'Auto Stopping',

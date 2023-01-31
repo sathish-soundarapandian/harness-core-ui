@@ -1227,6 +1227,9 @@ export function PipelineProvider({
   }, [queryParamStateSelection.stepId, queryParamStateSelection.stageId, queryParamStateSelection.sectionId])
 
   React.useEffect(() => {
+    if (state.storeMetadata?.storeType === StoreType.REMOTE && isEmpty(state.storeMetadata?.connectorRef)) {
+      return
+    }
     const templateRefs = findAllByKey('templateRef', state.pipeline).filter(templateRef =>
       isEmpty(get(state.templateTypes, templateRef))
     )
@@ -1240,7 +1243,9 @@ export function PipelineProvider({
       },
       templateRefs,
       state.storeMetadata,
-      supportingTemplatesGitx
+      supportingTemplatesGitx,
+      isPipelineGitCacheEnabled,
+      true
     ).then(({ templateTypes, templateServiceData, templateIcons }) => {
       setTemplateTypes(merge(state.templateTypes, templateTypes))
       setTemplateIcons({ ...merge(state.templateIcons, templateIcons) })
@@ -1266,7 +1271,7 @@ export function PipelineProvider({
         merge(state.resolvedCustomDeploymentDetailsByRef, resolvedCustomDeploymentDetailsByRef)
       )
     })
-  }, [state.pipeline])
+  }, [state.pipeline, state.storeMetadata])
 
   const getStageFromPipeline = React.useCallback(
     <T extends StageElementConfig = StageElementConfig>(

@@ -5992,6 +5992,7 @@ export interface StringsMap {
   'ce.co.autoStoppingRule.setupAccess.selectLbHelpText': string
   'ce.co.breadCrumb.rules': string
   'ce.co.cloudProviders.aws': string
+  'ce.co.clusterOrchestratorLabel': string
   'ce.co.createAsRule': string
   'ce.co.deleteRuleSuccessMessage': string
   'ce.co.dnsSetup.autoURL': string
@@ -6954,6 +6955,7 @@ export interface StringsMap {
   'cf.homepage.learnMore': string
   'cf.homepage.slogan': string
   'cf.learnMore': string
+  'cf.loading': string
   'cf.messages.flagCreated': string
   'cf.messages.flagDeleted': string
   'cf.messages.flagUpdated': string

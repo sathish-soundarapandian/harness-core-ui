@@ -60,6 +60,9 @@ describe('FeatureFlagsPage', () => {
     mockImport('services/cf', {
       useGetAllFeatures: () => ({ data: mockFeatureFlags, refetch: jest.fn() })
     })
+    mockImport('services/cf', {
+      getFeatureMetricsPromise: () => Promise.resolve(undefined)
+    })
 
     mockEnvs()
 
