@@ -41,6 +41,8 @@ import type { PipelineSelectionState } from '@pipeline/components/PipelineStudio
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { EntityGitDetails } from 'services/template-ng'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 
 export interface TemplatePipelineProviderProps {
@@ -79,6 +81,7 @@ export function TemplatePipelineProvider({
     dispatch(PipelineContextActions.updateSchemaErrorsFlag({ schemaErrors: flag }))
   }, [])
   const { supportingTemplatesGitx } = useAppStore()
+  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const getStageFromPipeline = React.useCallback(
     <T extends StageElementConfig = StageElementConfig>(
       stageId: string,
@@ -160,7 +163,9 @@ export function TemplatePipelineProvider({
         },
         templateRefs,
         storeMetadata,
-        supportingTemplatesGitx
+        supportingTemplatesGitx,
+        isGitCacheEnabled,
+        true
       )
       dispatch(
         PipelineContextActions.setTemplateTypes({
