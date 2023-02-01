@@ -48,7 +48,10 @@ export const moduleToLabelMap: Record<AuditEventDTO['module'], StringKeys> = {
   PMS: 'common.module.pms',
   TEMPLATESERVICE: 'common.module.templateService',
   STO: 'common.module.sto',
-  GOVERNANCE: 'common.module.governance'
+  GOVERNANCE: 'common.module.governance',
+  SRM: 'common.module.srm',
+  CODE: 'common.module.code',
+  IACM: 'common.module.iacm'
 }
 
 export const getModuleNameFromAuditModule = (auditModule: AuditEventDTO['module']): Module | undefined => {
@@ -74,7 +77,7 @@ interface ModuleInfo {
   icon: IconProps
 }
 
-export const moduleInfoMap: Record<AuditEventDTO['module'], ModuleInfo> = {
+export const moduleInfoMap: Record<Exclude<AuditEventDTO['module'], 'IACM' | 'SRM' | 'CODE'>, ModuleInfo> = {
   CD: {
     moduleLabel: 'common.purpose.cd.continuous',
     icon: { name: 'cd' }
@@ -119,18 +122,6 @@ export const moduleInfoMap: Record<AuditEventDTO['module'], ModuleInfo> = {
     moduleLabel: 'common.module.chaos',
     icon: { name: 'chaos-main' }
   },
-  SRM: {
-    moduleLabel: 'common.module.chaos',
-    icon: { name: 'chaos-main' }
-  },
-  CODE: {
-    moduleLabel: 'common.module.chaos',
-    icon: { name: 'chaos-main' }
-  },
-  IACM: {
-    moduleLabel: 'common.module.chaos',
-    icon: { name: 'chaos-main' }
-  }
 }
 
 export type ShowEventFilterType = Exclude<AuditFilterProperties['staticFilter'], undefined>

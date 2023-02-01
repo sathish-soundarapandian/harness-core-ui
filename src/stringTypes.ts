@@ -550,10 +550,13 @@ export interface StringsMap {
   'common.module.cf': string
   'common.module.chaos': string
   'common.module.ci': string
+  'common.module.code': string
   'common.module.core': string
   'common.module.cv': string
   'common.module.governance': string
+  'common.module.iacm': string
   'common.module.pms': string
+  'common.module.srm': string
   'common.module.sto': string
   'common.module.templateService': string
   'common.moduleConfig.autoSaved': string

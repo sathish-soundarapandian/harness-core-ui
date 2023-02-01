@@ -67,10 +67,9 @@ import FeatureFlagsLandingPage from './pages/feature-flags/FeatureFlagsLandingPa
 import { FFGitSyncProvider } from './contexts/ff-git-sync-context/FFGitSyncContext'
 import ConfigurePath from './pages/onboarding/ConfigurePath'
 import FFUIApp from './pages/FFUIApp/FFUIApp'
-import AuditTrailFactory, {ResourceScope} from '@audit-trail/factories/AuditTrailFactory'
-import type {AuditEventData, ResourceDTO} from 'services/audit'
-import type {Module} from "@common/interfaces/RouteInterfaces";
-
+import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
+import type { AuditEventData, ResourceDTO } from 'services/audit'
+import type { Module } from '@common/interfaces/RouteInterfaces'
 
 featureFactory.registerFeaturesByModule('cf', {
   features: [FeatureIdentifier.MAUS],
@@ -122,41 +121,45 @@ const licenseRedirectData: LicenseRedirectProps = {
   expiredTrialRedirect: RedirectToSubscriptionsFactory(ModuleName.CF)
 }
 
-AuditTrailFactory.registerResourceHandler(ResourceType.FEATURE_FLAG, {
-    moduleIcon: {
-        name: 'nav-cf'
-    },
-    moduleLabel: 'cf.auditTrail.label',
-    resourceLabel: 'cf.auditTrail.ffResourceLabel',
-    resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
-        const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+AuditTrailFactory.registerResourceHandler('FEATURE_FLAG', {
+  moduleIcon: {
+    name: 'nav-cf'
+  },
+  moduleLabel: 'cf.auditTrail.label',
+  resourceLabel: 'cf.auditTrail.ffResourceLabel',
+  resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope) => {
+    const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
 
-        return routes.toCFFeatureFlagsDetail({
-            orgIdentifier: orgIdentifier as string,
-            projectIdentifier: projectIdentifier as string,
-            featureFlagIdentifier: resource.identifier,
-            accountId: accountIdentifier
-        })
-    }
+    return routes.toCFFeatureFlagsDetail({
+      orgIdentifier: orgIdentifier as string,
+      projectIdentifier: projectIdentifier as string,
+      featureFlagIdentifier: resource.identifier,
+      accountId: accountIdentifier
+    })
+  }
 })
 
-AuditTrailFactory.registerResourceHandler(ResourceType.TARGET_GROUP, {
-    moduleIcon: {
-        name: 'nav-cf'
-    },
-    moduleLabel: 'cf.auditTrail.label',
-    resourceLabel: 'cf.auditTrail.tgResourceLabel',
-    resourceUrl: (resource: ResourceDTO, resourceScope: ResourceScope, _module?: Module,
-    auditEventData?: AuditEventData) => {
-        const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
-        return routes.toCFSegmentDetailsWithEnv({
-            accountId: accountIdentifier,
-            orgIdentifier: orgIdentifier as string,
-            projectIdentifier: projectIdentifier as string,
-            segmentIdentifier: resource.identifier,
-            environmentIdentifier: (auditEventData as any)?.environment,
-        })
-    }
+AuditTrailFactory.registerResourceHandler('TARGET_GROUP', {
+  moduleIcon: {
+    name: 'nav-cf'
+  },
+  moduleLabel: 'cf.auditTrail.label',
+  resourceLabel: 'cf.auditTrail.tgResourceLabel',
+  resourceUrl: (
+    resource: ResourceDTO,
+    resourceScope: ResourceScope,
+    _module?: Module,
+    auditEventData?: AuditEventData
+  ) => {
+    const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    return routes.toCFSegmentDetailsWithEnv({
+      accountId: accountIdentifier,
+      orgIdentifier: orgIdentifier as string,
+      projectIdentifier: projectIdentifier as string,
+      segmentIdentifier: resource.identifier,
+      environmentIdentifier: (auditEventData as any)?.environment
+    })
+  }
 })
 
 RbacFactory.registerResourceCategory(ResourceCategory.FEATUREFLAG_FUNCTIONS, {

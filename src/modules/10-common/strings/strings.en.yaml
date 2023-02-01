@@ -789,6 +789,9 @@ module:
   templateService: TEMPLATESERVICE
   sto: STO
   governance: POLICY ENGINE
+  srm: SRM
+  code: CODE
+  iacm: IACM
 templateServiceLabel: Template Service
 customPricing: for Custom Pricing
 specified: Specified
