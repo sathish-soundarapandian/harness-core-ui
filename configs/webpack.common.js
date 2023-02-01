@@ -35,7 +35,7 @@ const enableTIUI = process.env.ENABLE_TI_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
 const enableCODE = process.env.ENABLE_CODE === 'true'
 const enableFFUI = process.env.ENABLE_FF_UI !== 'false'
-const enableIACM = process.env.ENABLE_IACM === 'true'
+const enableIACM = process.env.ENABLE_IACM !== 'false'
 
 console.log('Common build flags')
 console.table({
