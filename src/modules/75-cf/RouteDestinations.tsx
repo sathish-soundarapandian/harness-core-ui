@@ -67,7 +67,7 @@ import FeatureFlagsLandingPage from './pages/feature-flags/FeatureFlagsLandingPa
 import { FFGitSyncProvider } from './contexts/ff-git-sync-context/FFGitSyncContext'
 import ConfigurePath from './pages/onboarding/ConfigurePath'
 import FFUIApp from './pages/FFUIApp/FFUIApp'
-import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
+import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import type { AuditEventData, ResourceDTO } from 'services/audit'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 

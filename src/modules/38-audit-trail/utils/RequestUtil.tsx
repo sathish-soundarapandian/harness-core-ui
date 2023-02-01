@@ -77,7 +77,7 @@ interface ModuleInfo {
   icon: IconProps
 }
 
-export const moduleInfoMap: Record<Exclude<AuditEventDTO['module'], 'IACM' | 'SRM' | 'CODE'>, ModuleInfo> = {
+export const moduleInfoMap: Record<AuditEventDTO['module'], ModuleInfo> = {
   CD: {
     moduleLabel: 'common.purpose.cd.continuous',
     icon: { name: 'cd' }
@@ -122,6 +122,18 @@ export const moduleInfoMap: Record<Exclude<AuditEventDTO['module'], 'IACM' | 'SR
     moduleLabel: 'common.module.chaos',
     icon: { name: 'chaos-main' }
   },
+  IACM: {
+    moduleLabel: 'common.module.iacm',
+    icon: { name: 'iacm' }
+  },
+  CODE: {
+    moduleLabel: 'common.module.code',
+    icon: { name: 'code' }
+  },
+  SRM: {
+    moduleLabel: 'common.module.srm',
+    icon: { name: 'srm-with-dark-text' }
+  }
 }
 
 export type ShowEventFilterType = Exclude<AuditFilterProperties['staticFilter'], undefined>
