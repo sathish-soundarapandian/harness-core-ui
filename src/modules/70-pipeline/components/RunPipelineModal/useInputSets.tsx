@@ -5,9 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import type { GetDataError } from 'restful-react'
-import { defaultTo, get, isUndefined, memoize, remove } from 'lodash-es'
+import { defaultTo, get, isEmpty, isUndefined, memoize, remove } from 'lodash-es'
 
 import { parse } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
@@ -42,8 +42,6 @@ export interface UseInputSetsProps {
   rerunInputSetYaml?: string
   selectedStageData: StageSelectionData
   resolvedPipeline?: PipelineInfoConfig
-  executionInputSetTemplateYaml: string
-  executionView?: boolean
   executionIdentifier?: string
   setSelectedInputSets: Dispatch<SetStateAction<InputSetValue[] | undefined>>
 }
@@ -55,12 +53,13 @@ export interface UseInputSetsReturn {
   loading: boolean
   hasInputSets: boolean
   hasRuntimeInputs: boolean
-  canApplyInputSet: boolean
   modules?: string[]
   error: GetDataError<Failure | Error> | null
   refetch(): Promise<void> | undefined
   invalidInputSetReferences: string[]
   onReconcile: (identifier: string) => void
+  shouldValidateForm?: boolean
+  setShouldValidateForm?: (validate: boolean) => void
 }
 
 export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
@@ -76,13 +75,23 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     pipelineIdentifier,
     selectedStageData,
     resolvedPipeline,
-    executionInputSetTemplateYaml,
-    executionView,
     executionIdentifier,
     setSelectedInputSets
   } = props
 
-  const shouldFetchInputSets = !rerunInputSetYaml && Array.isArray(inputSetSelected) && inputSetSelected.length > 0
+  // inputSetTemplate is the actual template used for reference
+  const [inputSetTemplate, setInputSetTemplate] = useState({} as Pipeline)
+  // isTemplateMergeComplete state is used to indicate successful merging of template w/wo input sets
+  const [isTemplateMergeComplete, setIsTemplateMergeComplete] = useState(true)
+  // hasRuntimeInputs indicates if there are any runtime. This can be removed and inputSetTemplate can be used for reference
+  const [hasRuntimeInputs, setHasRuntimeInputs] = useState(false)
+  // shouldValidateForm is used to validate the form when the input set is applied
+  const [shouldValidateForm, setShouldValidateForm] = useState(false)
+
+  // inputSet is the final return data of the hook
+  const [inputSet, setInputSet] = useState({ pipeline: {} } as Pipeline)
+
+  const [invalidInputSetReferences, setInvalidInputSetReferences] = useState<Array<string>>([])
 
   const {
     data: inputSetYamlResponse,
@@ -103,8 +112,10 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
     },
-    lazy: executionInputSetTemplateYaml || executionView || !selectedStageData.selectedStageItems.length
+    lazy: !selectedStageData.selectedStageItems.length
   })
+
+  const shouldFetchInputSets = !rerunInputSetYaml && Array.isArray(inputSetSelected) && inputSetSelected.length > 0
 
   // Reason for sending repoIdentifier and pipelineRepoID both as same values
   // input sets are only saved in same repo and same branch that of pipeline's or default branch of other repos
@@ -134,13 +145,33 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     }
   })
 
-  const [canApplyInputSet, setCanApplyInputSet] = useState(false)
-  const [invalidInputSetReferences, setInvalidInputSetReferences] = useState<Array<string>>([])
-  const hasRuntimeInputs = !!inputSetYamlResponse?.data?.inputSetTemplateYaml
+  useEffect(() => {
+    if (!loadingTemplate && !loadingInputSetsData) {
+      let newInputSetTemplate = {} as Pipeline
+
+      if (inputSetYamlResponse?.data?.inputSetTemplateYaml) {
+        const parsedRunPipelineYaml = memoizedParse<Pipeline>(inputSetYamlResponse.data.inputSetTemplateYaml).pipeline
+        newInputSetTemplate = { pipeline: parsedRunPipelineYaml }
+      }
+
+      setInputSetTemplate(newInputSetTemplate)
+
+      const doRuntimeValuesExist = !isEmpty(newInputSetTemplate)
+      setHasRuntimeInputs(doRuntimeValuesExist)
+      // this state is set to true only if there exists runtimeInput
+      setIsTemplateMergeComplete(!doRuntimeValuesExist)
+    }
+  }, [
+    loadingTemplate,
+    loadingInputSetsData,
+    inputSetYamlResponse?.data?.inputSetTemplateYaml,
+    inputSetData?.data?.pipelineYaml
+  ])
 
   useEffect(() => {
     if (inputSetData?.data?.errorResponse) {
       setSelectedInputSets([])
+      setIsTemplateMergeComplete(true)
     }
     setInvalidInputSetReferences(get(inputSetData?.data, 'inputSetErrorWrapper.invalidInputSetReferences', []))
   }, [inputSetData?.data, inputSetData?.data?.errorResponse])
@@ -150,85 +181,74 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     setInvalidInputSetReferences(invalidInputSetReferences)
   }
 
-  const inputSet = useMemo((): Pipeline => {
-    const shouldUseDefaultValues = isUndefined(executionIdentifier)
-    const parsedRunPipelineYaml = clearRuntimeInput(
-      memoizedParse<Pipeline>(inputSetYamlResponse?.data?.inputSetTemplateYaml || 'pipeline: {}').pipeline
-    ) as PipelineInfoConfig
-
-    if (rerunInputSetYaml) {
-      const templatePipeline = executionView
-        ? clearRuntimeInput(memoizedParse<Pipeline>(executionInputSetTemplateYaml))
-        : { pipeline: parsedRunPipelineYaml }
-      const inputSetPortion = memoizedParse<Pipeline>(rerunInputSetYaml)
-
-      return mergeTemplateWithInputSetData({
-        templatePipeline,
-        inputSetPortion,
-        allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
-        shouldUseDefaultValues
-      })
+  useEffect(() => {
+    if (isTemplateMergeComplete) {
+      return
     }
 
-    if (hasRuntimeInputs) {
-      if (shouldFetchInputSets && inputSetData?.data?.pipelineYaml) {
-        setCanApplyInputSet(true)
-        const parsedInputSets = clearRuntimeInput(memoizedParse<Pipeline>(inputSetData.data.pipelineYaml).pipeline)
+    const shouldUseDefaultValues = isUndefined(executionIdentifier)
 
-        return mergeTemplateWithInputSetData({
-          templatePipeline: { pipeline: parsedRunPipelineYaml },
-          inputSetPortion: { pipeline: parsedInputSets },
+    // This merges the template and sets the final return data in state
+    if (rerunInputSetYaml) {
+      const inputSetPortion = memoizedParse<Pipeline>(rerunInputSetYaml)
+
+      setInputSet(
+        mergeTemplateWithInputSetData({
+          templatePipeline: clearRuntimeInput(inputSetTemplate),
+          inputSetPortion,
           allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
           shouldUseDefaultValues
         })
+      )
+    } else if (hasRuntimeInputs) {
+      if (shouldFetchInputSets && inputSetData?.data?.pipelineYaml) {
+        const parsedInputSets = clearRuntimeInput(memoizedParse<Pipeline>(inputSetData.data.pipelineYaml).pipeline)
+
+        setInputSet(
+          mergeTemplateWithInputSetData({
+            templatePipeline: clearRuntimeInput(inputSetTemplate),
+            inputSetPortion: { pipeline: parsedInputSets },
+            allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
+            shouldUseDefaultValues
+          })
+        )
+        setShouldValidateForm(true)
+      } else {
+        setInputSet(
+          mergeTemplateWithInputSetData({
+            templatePipeline: clearRuntimeInput(inputSetTemplate),
+            inputSetPortion: clearRuntimeInput(inputSetTemplate),
+            allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
+            shouldUseDefaultValues
+          })
+        )
       }
-
-      return mergeTemplateWithInputSetData({
-        templatePipeline: { pipeline: parsedRunPipelineYaml },
-        inputSetPortion: { pipeline: parsedRunPipelineYaml },
-        allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
-        shouldUseDefaultValues
-      })
     }
-
-    return { pipeline: {} as PipelineInfoConfig }
+    setIsTemplateMergeComplete(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    inputSetData?.data?.pipelineYaml,
-    inputSetYamlResponse?.data?.inputSetTemplateYaml,
-    rerunInputSetYaml,
     shouldFetchInputSets,
     resolvedPipeline,
     executionIdentifier,
+    inputSetTemplate,
+    rerunInputSetYaml,
     hasRuntimeInputs,
-    executionInputSetTemplateYaml,
-    executionView
+    isTemplateMergeComplete,
+    inputSetData
   ])
-
-  const inputSetTemplate = useMemo((): Pipeline => {
-    if (executionView) {
-      return memoizedParse(executionInputSetTemplateYaml)
-    }
-
-    if (inputSetYamlResponse?.data?.inputSetTemplateYaml) {
-      const parsedRunPipelineYaml = memoizedParse<Pipeline>(inputSetYamlResponse.data.inputSetTemplateYaml).pipeline
-
-      return { pipeline: parsedRunPipelineYaml }
-    }
-
-    return {} as Pipeline
-  }, [inputSetYamlResponse?.data?.inputSetTemplateYaml, executionInputSetTemplateYaml, executionView])
 
   return {
     inputSet,
     inputSetTemplate,
-    loading: loadingTemplate || loadingInputSetsData,
+    loading: loadingTemplate || loadingInputSetsData || !isTemplateMergeComplete,
     error: templateError || inputSetError,
     hasRuntimeInputs,
     hasInputSets: !!inputSetYamlResponse?.data?.hasInputSets,
-    canApplyInputSet,
     inputSetYamlResponse,
     refetch,
     invalidInputSetReferences,
-    onReconcile
+    onReconcile,
+    shouldValidateForm,
+    setShouldValidateForm
   }
 }
