@@ -139,23 +139,10 @@ describe('Nexus Artifact tests', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('render ui - when repository format type is Raw', () => {
-    const formValues = {
-      ...initialValues,
-      repositoryFormat: RepositoryFormatTypes.Raw
-    }
-    const { container } = render(
-      <TestWrapper>
-        <Nexus2Artifact key={'key'} initialValues={formValues} {...props} />
-      </TestWrapper>
-    )
-    expect(container).toMatchSnapshot()
-  })
-
   test('when click submit - should throw validation error', async () => {
     const formValues = {
       ...initialValues,
-      repositoryFormat: RepositoryFormatTypes.Raw
+      repositoryFormat: RepositoryFormatTypes.Maven
     }
     const { container } = render(
       <TestWrapper>
