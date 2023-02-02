@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState ,useEffect} from 'react'
 import type { Column } from 'react-table'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
@@ -162,11 +162,27 @@ export function ServiceLicenseTable({
   const activeServiceText = `${totalElements}`
   const timeValue = moment(content[0]?.timestamp).format('DD-MM-YYYY h:mm:ss')
   const { accountId } = useParams<AccountPathProps>()
-  const { data: dataInCsv } = useDownloadActiveServiceCSVReport({
+  const [initialContent, setInitialContent] = useState<string>('')
+  const { data: dataInCsv, refetch } = useDownloadActiveServiceCSVReport({
     queryParams: {
       accountIdentifier: accountId
-    }
+    },
+    lazy: true
   })
+  useEffect(() => {
+    if (dataInCsv) {
+      ;(dataInCsv as unknown as Response)
+        .clone()
+        .text()
+        .then((content: string) => {
+          setInitialContent(content)
+        })
+    }
+  }, [dataInCsv])
+
+  useEffect(() => {
+    refetch()
+  }, [refetch])
   console.log(dataInCsv, 'hello')
   return (
     <Card className={pageCss.outterCard}>
@@ -186,7 +202,7 @@ export function ServiceLicenseTable({
           </Layout.Vertical>
           <div>
             {' '}
-            <a href={`data:text/csv;charset=utf-8,${escape(dataInCsv || '')}`} download="filename.csv">
+            <a href={`data:text/csv;charset=utf-8,${escape(initialContent || '')}`} download="filename.csv">
               {'Export CSV'}
             </a>
           </div>
