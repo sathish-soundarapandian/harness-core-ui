@@ -35,7 +35,7 @@ module.exports = ({
   enableIACM
 }) => {
   const remotes = {}
-
+  remotes.new_module_ui = 'new_module_ui@https://localhost:8183/remoteEntry.js'
   if (enableGitOpsUI) {
     // use of single quotes within function call is required to make this work
     remotes.gitopsui = "gitopsui@[window.getApiBaseUrl('gitops/remoteEntry.js')]"

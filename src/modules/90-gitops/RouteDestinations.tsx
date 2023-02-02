@@ -26,7 +26,7 @@ import DeployServiceWidget from '@cd/components/PipelineSteps/DeployServiceStep/
 import { getLinkForAccountResources } from '@common/utils/BreadcrumbUtils'
 
 // eslint-disable-next-line import/no-unresolved
-const GitOpsServersList = React.lazy(() => import('gitopsui/MicroFrontendApp'))
+const GitOpsServersList = React.lazy(() => import('new_module_ui/MicroFrontendApp'))
 
 const CDSideNavProps: SidebarContext = {
   navComponent: CDSideNav,
