@@ -75,7 +75,14 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.Deploy } = props
   const {
     saveApplicationData,
-    state: { service: serviceData, infrastructure, environment, repository: repositoryData, cluster: clusterData }
+    state: {
+      service: serviceData,
+      infrastructure,
+      environment,
+      repository: repositoryData,
+      cluster: clusterData,
+      agent: agentData
+    }
   } = useCDOnboardingContext()
 
   const { getString } = useStrings()
@@ -122,7 +129,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
     }
   })
 
-  const fullAgentName = getFullAgentWithScope('meenaaccagent', Scope.ACCOUNT)
+  const fullAgentName = getFullAgentWithScope(defaultTo(agentData?.identifier, ''), Scope.ACCOUNT)
   const { mutate: createApplication } = useAgentApplicationServiceCreate({
     agentIdentifier: fullAgentName,
     queryParams: {
@@ -435,7 +442,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
             enableNextBtn={() => setDisableBtn(false)}
             ref={delegateSelectorRef}
             prevStepData={{
-              agent: 'meenaaccagent',
+              agent: agentData?.identifier,
               scope: 'account'
             }}
           />
@@ -450,7 +457,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           const payload = getAppPayload({
             repositoryData,
             clusterData,
-            name: 'testapp'
+            name: 'hostedapp'
           })
           const data: any = {
             ...payload,
