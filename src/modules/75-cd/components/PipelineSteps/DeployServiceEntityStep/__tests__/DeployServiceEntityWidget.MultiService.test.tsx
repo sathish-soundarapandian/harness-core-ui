@@ -23,7 +23,7 @@ const allowableTypes: AllowedTypesWithRunTime[] = [
   MultiTypeInputType.RUNTIME
 ]
 
-const defaultFeatureFlagValues = { MULTI_SERVICE_INFRA: true, NG_SVC_ENV_REDESIGN: true }
+const defaultFeatureFlagValues = { NG_SVC_ENV_REDESIGN: true }
 const initialValues = { services: { values: [{ serviceRef: 'svc_1' }, { serviceRef: 'svc_2' }] } }
 
 jest.mock('services/cd-ng', () => ({

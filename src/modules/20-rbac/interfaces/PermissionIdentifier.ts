@@ -161,6 +161,9 @@ export enum PermissionIdentifier {
   VIEW_STO_EXEMPTION = 'sto_exemption_view',
   CREATE_STO_EXEMPTION = 'sto_exemption_create',
   APPROVE_STO_EXEMPTION = 'sto_exemption_approve',
+  VIEW_STO_TICKET = 'sto_ticket_view',
+  EDIT_STO_TICKET = 'sto_ticket_edit',
+  DELETE_STO_TICKET = 'sto_ticket_delete',
 
   // Default Settings
   VIEW_CORE_SETTING = 'core_setting_view',
@@ -190,5 +193,10 @@ export enum PermissionIdentifier {
   // Billing Permissions
   EDIT_LICENSE = 'core_license_edit',
   DELETE_LICENSE = 'core_license_delete',
-  VIEW_LICENSE = 'core_license_view'
+  VIEW_LICENSE = 'core_license_view',
+
+  // IACM Permissions
+  IAC_VIEW_STACK = 'iac_stack_view',
+  IAC_EDIT_STACK = 'iac_stack_edit',
+  IAC_DELETE_STACK = 'iac_stack_delete'
 }

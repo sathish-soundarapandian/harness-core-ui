@@ -14,8 +14,8 @@ import {
   serviceLevelIndicator,
   testWrapperProps,
   errorMessage
-} from '@cv/pages/slos/components/CVCreateSLO/__tests__/CVCreateSLO.mock'
-import { SLIMetricEnum } from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLI/SLI.constants'
+} from '@cv/pages/slos/components/CVCreateSLOV2/__tests__/CVCreateSLOV2.mock'
+import { SLIMetricEnum } from '@cv/pages/slos/common/SLI/SLI.constants'
 import SLOTargetChartWrapper from '../SLOTargetChart'
 import { getDataPointsWithMinMaxXLimit } from '../SLOTargetChart.utils'
 

@@ -18,6 +18,7 @@ declare const styles: {
   readonly ff: string
   readonly iacm: string
   readonly srm: string
+  readonly sscs: string
   readonly sto: string
 }
 export default styles

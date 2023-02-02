@@ -16,6 +16,7 @@ import {
   VisualYamlSelectedView as SelectedView,
   IconName
 } from '@harness/uicore'
+
 import { useHistory } from 'react-router-dom'
 import cx from 'classnames'
 import { isEqual, noop } from 'lodash-es'
@@ -138,17 +139,19 @@ const Wizard: React.FC<WizardProps> = ({
   const elementsRef: { current: RefObject<HTMLSpanElement>[] } = useRef(wizardMap.panels?.map(() => createRef()))
   const [submittedForm, setSubmittedForm] = React.useState<boolean>(false)
 
-  const handleTabChange = (data: string): void => {
-    const tabsIndex = tabsMap.findIndex(tab => tab === data)
-    setSelectedTabId(data)
-    setSelectedTabIndex(tabsIndex)
-    setNewTouchedPanel({
-      upcomingTabIndex: tabsIndex,
-      selectedTabIndex,
-      touchedPanels,
-      setTouchedPanels,
-      includeSkippedIndexes: true
-    })
+  const handleTabChange = (data: string, formikProps: any): void => {
+    if (formikProps.isValid) {
+      const tabsIndex = tabsMap.findIndex(tab => tab === data)
+      setSelectedTabId(data)
+      setSelectedTabIndex(tabsIndex)
+      setNewTouchedPanel({
+        upcomingTabIndex: tabsIndex,
+        selectedTabIndex,
+        touchedPanels,
+        setTouchedPanels,
+        includeSkippedIndexes: true
+      })
+    }
   }
   const history = useHistory()
   const { showError, clear } = useToaster()
@@ -239,7 +242,11 @@ const Wizard: React.FC<WizardProps> = ({
                   //     schema={schema}
                   //   />
                   // )
-                  <Tabs id="Wizard" onChange={handleTabChange} selectedTabId={selectedTabId}>
+                  <Tabs
+                    id="Wizard"
+                    onChange={(data: string) => handleTabChange(data, formikProps)}
+                    selectedTabId={selectedTabId}
+                  >
                     {wizardMap.panels.map((_panel, panelIndex) => {
                       const { id, tabTitle, tabTitleComponent, requiredFields = [], checkValidPanel } = _panel
                       return (

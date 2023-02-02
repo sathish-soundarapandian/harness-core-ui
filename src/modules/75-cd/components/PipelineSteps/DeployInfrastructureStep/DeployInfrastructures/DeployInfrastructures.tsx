@@ -56,6 +56,7 @@ import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { isEditInfrastructure } from '../utils'
 
 import css from './DeployInfrastructures.module.scss'
@@ -346,6 +347,7 @@ function DeployInfrastructures({
           }
           stageCustomDeploymentData={(stage?.stage?.spec as DeploymentStageConfig)?.customDeploymentRef}
           getTemplate={getTemplate}
+          scope={getScopeFromValue(environmentIdentifier)}
         />
       </ModalDialog>
     ),

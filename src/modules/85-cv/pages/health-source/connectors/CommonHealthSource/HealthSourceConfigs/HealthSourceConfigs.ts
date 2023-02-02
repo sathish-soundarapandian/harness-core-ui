@@ -45,7 +45,7 @@ export const healthSourcesConfig: HealthSourcesConfig = {
   },
   [HealthSourceTypes.SumologicLogs]: {
     addQuery: {
-      label: 'Log',
+      label: 'Query',
       enableDefaultGroupName: true
     },
     customMetrics: {
@@ -63,7 +63,7 @@ export const healthSourcesConfig: HealthSourcesConfig = {
       },
       queryAndRecords: {
         enabled: true,
-        titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQuerySubDescription'
+        titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQueryDescriptionMetrics'
       },
       assign: {
         enabled: false,

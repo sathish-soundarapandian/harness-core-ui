@@ -9,8 +9,7 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { StepProps, ModalErrorHandlerBinding } from '@harness/uicore'
 import { pick } from 'lodash-es'
-import type { Organization } from 'services/cd-ng'
-import { usePostOrganization } from 'services/cd-ng'
+import { usePostOrganization, Organization } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useToaster, PageSpinner } from '@common/components'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -24,12 +23,13 @@ const CreateOrganization: React.FC<StepProps<Organization> & OrgModalData> = pro
   const { accountId } = useParams<AccountPathProps>()
   const { showSuccess } = useToaster()
   const { getString } = useStrings()
+  const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
+
   const { mutate: createOrganization, loading: saving } = usePostOrganization({
     queryParams: {
       accountIdentifier: accountId
     }
   })
-  const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
 
   const onComplete = async (values: Organization): Promise<void> => {
     const dataToSubmit: Organization = pick<Organization, keyof Organization>(values, [

@@ -21,7 +21,19 @@ describe('MultiTypeDeploymentSummary', () => {
       <TestWrapper
         pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', applicationId: 'applicationId' }}
       >
-        <MultiTypeDeploymentSummary stage={GITOPS_STAGE} onToggleClick={jest.fn()} isStagesExpanded={true} />
+        <MultiTypeDeploymentSummary
+          stage={GITOPS_STAGE}
+          onToggleClick={jest.fn()}
+          isStagesExpanded={true}
+          pipelineIdentifier={'-1'}
+          link
+          executionIdentifier={'-1'}
+          source={'deployments'}
+          connectorRef={'dummy'}
+          repoName={'dummy'}
+          branch={'dummy'}
+          storeType={'INLINE'}
+        />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -31,7 +43,19 @@ describe('MultiTypeDeploymentSummary', () => {
       <TestWrapper
         pathParams={{ projectIdentifier, orgIdentifier, accountId, module: 'cd', applicationId: 'applicationId' }}
       >
-        <MultiTypeDeploymentSummary stage={ENVIRONMENT_GROUP_STAGE} onToggleClick={jest.fn()} isStagesExpanded={true} />
+        <MultiTypeDeploymentSummary
+          stage={ENVIRONMENT_GROUP_STAGE}
+          onToggleClick={jest.fn()}
+          isStagesExpanded={true}
+          pipelineIdentifier={'-1'}
+          link
+          executionIdentifier={'-1'}
+          source={'deployments'}
+          connectorRef={'dummy'}
+          repoName={'dummy'}
+          branch={'dummy'}
+          storeType={'INLINE'}
+        />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()

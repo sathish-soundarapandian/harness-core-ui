@@ -21,7 +21,8 @@ export interface AdditionalInfo {
 }
 
 export interface AffectedEntity {
-  [key: string]: any
+  envRef?: string
+  serviceRef?: string
 }
 
 export type AnalysedDeploymentNode = AbstractAnalysedNode & {
@@ -33,20 +34,15 @@ export type AnalysedDeploymentNode = AbstractAnalysedNode & {
 }
 
 export interface AnalysedDeploymentTestDataNode {
-  analysisReason?:
-    | 'CUSTOM_FAIL_FAST_THRESHOLD'
-    | 'CUSTOM_IGNORE_THRESHOLD'
-    | 'DEFAULT_FAIL_FAST_THRESHOLD'
-    | 'DEFAULT_IGNORE_THRESHOLD'
-    | 'ML_ANALYSIS'
-    | 'NO_CONTROL_DATA'
-    | 'NO_TEST_DATA'
+  analysisReason?: 'CUSTOM_FAIL_FAST_THRESHOLD' | 'ML_ANALYSIS' | 'NO_CONTROL_DATA' | 'NO_TEST_DATA'
   analysisResult?: 'HEALTHY' | 'NO_ANALYSIS' | 'UNHEALTHY' | 'WARNING'
   appliedThresholds?: string[]
   controlData?: MetricValueV2[]
   controlDataType?: 'AVERAGE' | 'MINIMUM_DEVIATION'
   controlNodeIdentifier?: string
   nodeIdentifier?: string
+  normalisedControlData?: MetricValueV2[]
+  normalisedTestData?: MetricValueV2[]
   testData?: MetricValueV2[]
 }
 
@@ -639,9 +635,21 @@ export interface ChangeEventDTO {
   projectIdentifier: string
   serviceIdentifier?: string
   serviceName?: string
-  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF'
+  type?:
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
 }
 
+/**
+ * This is the change Source entity defined in Harness
+ */
 export interface ChangeEventMetadata {
   [key: string]: any
 }
@@ -662,9 +670,21 @@ export interface ChangeSourceDTO {
   identifier?: string
   name?: string
   spec: ChangeSourceSpec
-  type?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF'
+  type?:
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
 }
 
+/**
+ * This is the change Source entity defined in Harness
+ */
 export interface ChangeSourceSpec {
   [key: string]: any
 }
@@ -811,6 +831,7 @@ export interface ConnectorInfoDTO {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'TerraformCloud'
 }
 
 export interface ControlClusterSummary {
@@ -826,6 +847,51 @@ export interface CountServiceDTO {
 export interface CrossAccountAccess {
   crossAccountRoleArn: string
   externalId?: string
+}
+
+export interface CustomChangeEvent {
+  changeEventDetailsLink?: string
+  description?: string
+  externalLinkToEntity?: string
+}
+
+export type CustomChangeEventMetadata = ChangeEventMetadata & {
+  customChangeEvent?: CustomChangeEvent
+  endTime?: number
+  startTime?: number
+  type?:
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
+  user?: string
+}
+
+export type CustomChangeSourceSpec = ChangeSourceSpec & {
+  name?: string
+  type?: 'Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag'
+  webhookCurlCommand?: string
+  webhookUrl?: string
+}
+
+export interface CustomChangeWebhookEventDetail {
+  changeEventDetailsLink?: string
+  description: string
+  externalLinkToEntity?: string
+  name: string
+}
+
+export interface CustomChangeWebhookPayload {
+  endTime: number
+  eventDetail: CustomChangeWebhookEventDetail
+  eventIdentifier?: string
+  startTime: number
+  user: string
 }
 
 export type CustomHealthConnectorDTO = ConnectorConfigDTO & {
@@ -1051,7 +1117,16 @@ export interface DeepLink {
 
 export interface DemoChangeEventDTO {
   changeSourceIdentifier?: string
-  changeSourceType?: 'HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF'
+  changeSourceType?:
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
   monitoredServiceIdentifier?: string
 }
 
@@ -1140,9 +1215,9 @@ export interface DowntimeDTO {
   entityRefs: EntityDetails[]
   identifier: string
   name: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  scope: 'Project' | 'Entity'
+  orgIdentifier: string
+  projectIdentifier: string
+  scope?: 'Project' | 'Entity'
   spec: DowntimeSpecDTO
   tags?: {
     [key: string]: string
@@ -1157,13 +1232,11 @@ export interface DowntimeDuration {
 export interface DowntimeHistoryView {
   affectedEntities?: AffectedEntity[]
   category?: 'ScheduledMaintenance' | 'Deployment' | 'Other'
-  description?: string
   duration?: DowntimeDuration
-  endTime?: string
+  endTime?: number
   identifier?: string
   name?: string
-  startTime?: string
-  status?: 'Active' | 'Scheduled'
+  startTime?: number
 }
 
 export interface DowntimeListView {
@@ -1175,6 +1248,7 @@ export interface DowntimeListView {
   identifier?: string
   lastModified?: LastModified
   name?: string
+  spec?: DowntimeSpecDTO
   status?: 'Active' | 'Scheduled'
 }
 
@@ -1190,7 +1264,7 @@ export interface DowntimeResponse {
 }
 
 export interface DowntimeSpec {
-  startTime?: number
+  startTime: number
   timezone: string
 }
 
@@ -1609,6 +1683,7 @@ export interface Error {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -1655,6 +1730,7 @@ export interface Error {
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2036,6 +2112,7 @@ export interface Failure {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -2082,6 +2159,7 @@ export interface Failure {
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2481,29 +2559,28 @@ export interface HealthSourceSummary {
 }
 
 export interface HealthSourceV2 {
-  healthSourceIdentifier?: string
-  healthSourceName?: string
-  providerName?:
-    | 'APP_DYNAMICS'
-    | 'SPLUNK'
-    | 'SPLUNK_METRIC'
-    | 'STACKDRIVER'
-    | 'STACKDRIVER_LOG'
-    | 'KUBERNETES'
-    | 'NEW_RELIC'
-    | 'PROMETHEUS'
-    | 'DATADOG_METRICS'
-    | 'DATADOG_LOG'
-    | 'ERROR_TRACKING'
-    | 'DYNATRACE'
-    | 'CUSTOM_HEALTH_METRIC'
-    | 'CUSTOM_HEALTH_LOG'
-    | 'ELASTICSEARCH'
-    | 'CLOUDWATCH_METRICS'
-    | 'AWS_PROMETHEUS'
-    | 'SUMOLOGIC_METRICS'
-    | 'SUMOLOGIC_LOG'
+  identifier?: string
+  name?: string
   providerType?: 'ERRORS' | 'LOGS' | 'METRICS'
+  type?:
+    | 'AppDynamics'
+    | 'NewRelic'
+    | 'StackdriverLog'
+    | 'Stackdriver'
+    | 'Prometheus'
+    | 'Splunk'
+    | 'DatadogMetrics'
+    | 'DatadogLog'
+    | 'Dynatrace'
+    | 'ErrorTracking'
+    | 'CustomHealthMetric'
+    | 'CustomHealthLog'
+    | 'SplunkMetric'
+    | 'ElasticSearch'
+    | 'CloudWatchMetrics'
+    | 'AwsPrometheus'
+    | 'SumologicMetrics'
+    | 'SumologicLogs'
 }
 
 export interface HistoricalTrend {
@@ -2601,6 +2678,10 @@ export type InternalChangeEventMetaData = ChangeEventMetadata & {
     | 'PAGER_DUTY'
     | 'HARNESS_CD_CURRENT_GEN'
     | 'FEATURE_FLAG'
+    | 'CUSTOM_DEPLOY'
+    | 'CUSTOM_INCIDENT'
+    | 'CUSTOM_INFRA'
+    | 'CUSTOM_FF'
   eventEndTime?: number
   eventStartTime?: number
   internalChangeEvent?: InternalChangeEvent
@@ -2721,7 +2802,8 @@ export type KubernetesUserNamePasswordDTO = KubernetesAuthCredentialDTO & {
 }
 
 export interface LastModified {
-  [key: string]: any
+  lastModifiedAt?: number
+  lastModifiedBy?: string
 }
 
 export interface LearningEngineTask {
@@ -2874,17 +2956,17 @@ export interface LogAnalysisRadarChartClusterDTO {
 }
 
 export interface LogAnalysisRadarChartListDTO {
-  averageFrequencyData?: TimestampFrequencyCount[]
+  averageControlFrequencyData?: TimestampFrequencyCount[]
   baseline?: LogAnalysisRadarChartListDTO
   clusterId?: string
   clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
-  frequencyData?: number[]
   hasControlData?: boolean
-  hostFrequencyData?: HostFrequencyData[]
   label?: number
   message?: string
   risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
+  testHostFrequencyData?: HostFrequencyData[]
+  totalTestFrequencyData?: TimestampFrequencyCount[]
 }
 
 export interface LogAnalysisRadarChartListWithCountDTO {
@@ -3158,7 +3240,7 @@ export interface MetricThresholdCriteriaV2 {
   actionableCount?: number
   greaterThanThreshold?: number
   lessThanThreshold?: number
-  measurementType?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
+  measurementType?: 'ratio' | 'delta' | 'absolute-value'
 }
 
 export interface MetricThresholdSpec {
@@ -3170,7 +3252,7 @@ export interface MetricThresholdV2 {
   criteria?: MetricThresholdCriteriaV2
   id?: string
   isUserDefined?: boolean
-  thresholdType?: 'IgnoreThreshold' | 'FailImmediately'
+  thresholdType?: 'FAIL_FAST' | 'IGNORE'
 }
 
 export interface MetricValidationResponse {
@@ -3180,13 +3262,14 @@ export interface MetricValidationResponse {
 }
 
 export interface MetricValueV2 {
-  timestamp?: number
+  timestampInMillis?: number
   value?: number
 }
 
 export interface MetricsAnalysis {
   analysisResult?: 'HEALTHY' | 'NO_ANALYSIS' | 'UNHEALTHY' | 'WARNING'
-  healthSourceIdentifier?: string
+  deeplinkURL?: string
+  healthSource?: HealthSourceV2
   metricIdentifier?: string
   metricName?: string
   metricType?: 'ERROR' | 'INFRASTRUCTURE' | 'PERFORMANCE_THROUGHPUT' | 'PERFORMANCE_OTHER' | 'PERFORMANCE_RESPONSE_TIME'
@@ -3941,9 +4024,9 @@ export type RatioSLIMetricSpec = SLIMetricSpec & {
 }
 
 export type RecurringDowntimeSpec = DowntimeSpec & {
-  downtimeDuration?: DowntimeDuration
-  downtimeRecurrence?: DowntimeRecurrence
-  recurrenceEndTime?: number
+  downtimeDuration: DowntimeDuration
+  downtimeRecurrence: DowntimeRecurrence
+  recurrenceEndTime: number
 }
 
 export interface ReferenceDTO {
@@ -4436,6 +4519,7 @@ export interface ResponseMessage {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -4482,6 +4566,7 @@ export interface ResponseMessage {
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4495,6 +4580,7 @@ export interface ResponseMessage {
     | 'POLICY_EVALUATION_FAILURE'
     | 'INPUT_TIMEOUT_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'DELEGATE_RESTART'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -5507,7 +5593,17 @@ export interface ServiceDependencyGraphDTO {
 }
 
 export interface ServiceDependencyMetadata {
-  supportedChangeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  supportedChangeSourceTypes?: (
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
+  )[]
   type?: 'KUBERNETES'
 }
 
@@ -5824,6 +5920,26 @@ export interface TemporalUnit {
   timeBased?: boolean
 }
 
+export type TerraformCloudConnector = ConnectorConfigDTO & {
+  credential: TerraformCloudCredential
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+  terraformCloudUrl: string
+}
+
+export interface TerraformCloudCredential {
+  spec?: TerraformCloudCredentialSpec
+  type: 'ApiToken'
+}
+
+export interface TerraformCloudCredentialSpec {
+  [key: string]: any
+}
+
+export type TerraformCloudTokenCredentials = TerraformCloudCredentialSpec & {
+  apiToken: string
+}
+
 export type ThresholdSLIMetricSpec = SLIMetricSpec & {
   metric1: string
   thresholdType: '>' | '<' | '>=' | '<='
@@ -5972,7 +6088,7 @@ export interface TimeSeriesMetricDataDTO {
 export interface TimeSeriesMetricDefinition {
   action?: 'FAIL_IMMEDIATELY' | 'FAIL_AFTER_OCCURRENCES' | 'FAIL_AFTER_CONSECUTIVE_OCCURRENCES' | 'IGNORE'
   actionType?: 'IGNORE' | 'FAIL'
-  comparisonType?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
+  comparisonType?: 'ratio' | 'delta' | 'absolute-value'
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   id?: string
   metricGroupName?: string
@@ -6086,7 +6202,7 @@ export interface TimeSeriesThresholdCriteria {
   criteria?: string
   deviationType?: 'HIGHER_IS_RISKY' | 'LOWER_IS_RISKY' | 'BOTH_ARE_RISKY'
   occurrenceCount?: number
-  type?: 'RATIO' | 'DELTA' | 'ABSOLUTE'
+  type?: 'ratio' | 'delta' | 'absolute-value'
 }
 
 export interface TimeSeriesThresholdDTO {
@@ -6276,9 +6392,15 @@ export interface VerificationOverview {
 }
 
 export interface VerificationSpec {
+  analysedEnvIdentifier?: string
+  analysedServiceIdentifier?: string
   analysisType?: 'TEST' | 'CANARY' | 'BLUE_GREEN' | 'ROLLING' | 'AUTO'
   durationInMinutes?: number
   isFailOnNoAnalysis?: boolean
+  monitoredServiceIdentifier?: string
+  monitoredServiceTemplateIdentifier?: string
+  monitoredServiceTemplateVersionLabel?: string
+  monitoredServiceType?: 'DEFAULT' | 'CONFIGURED' | 'TEMPLATE'
   sensitivity?: 'LOW' | 'MEDIUM' | 'HIGH'
 }
 
@@ -6393,7 +6515,17 @@ export interface ChangeEventListForAccountQueryParams {
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: (
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
+  )[]
   searchText?: string
   startTime: number
   endTime: number
@@ -6487,7 +6619,17 @@ export interface ChangeEventTimelineForAccountQueryParams {
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: (
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
+  )[]
   searchText?: string
   startTime: number
   endTime: number
@@ -6582,7 +6724,17 @@ export interface ChangeEventListQueryParams {
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: (
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
+  )[]
   searchText?: string
   startTime: number
   endTime: number
@@ -6670,7 +6822,17 @@ export interface ChangeEventTimelineQueryParams {
   monitoredServiceIdentifiers?: string[]
   scopedMonitoredServiceIdentifiers?: string[]
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: (
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
+  )[]
   searchText?: string
   startTime: number
   endTime: number
@@ -6827,6 +6989,467 @@ export const getChangeEventDetailPromise = (
   getUsingFetch<RestResponseChangeEventDTO, unknown, void, GetChangeEventDetailPathParams>(
     getConfig('cv/api'),
     `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/change-event/${activityId}`,
+    props,
+    signal
+  )
+
+export interface SaveDowntimePathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type SaveDowntimeProps = Omit<
+  MutateProps<RestResponseDowntimeResponse, unknown, void, DowntimeDTORequestBody, SaveDowntimePathParams>,
+  'path' | 'verb'
+> &
+  SaveDowntimePathParams
+
+/**
+ * saves downtime
+ */
+export const SaveDowntime = ({ accountIdentifier, orgIdentifier, projectIdentifier, ...props }: SaveDowntimeProps) => (
+  <Mutate<RestResponseDowntimeResponse, unknown, void, DowntimeDTORequestBody, SaveDowntimePathParams>
+    verb="POST"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseSaveDowntimeProps = Omit<
+  UseMutateProps<RestResponseDowntimeResponse, unknown, void, DowntimeDTORequestBody, SaveDowntimePathParams>,
+  'path' | 'verb'
+> &
+  SaveDowntimePathParams
+
+/**
+ * saves downtime
+ */
+export const useSaveDowntime = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseSaveDowntimeProps) =>
+  useMutate<RestResponseDowntimeResponse, unknown, void, DowntimeDTORequestBody, SaveDowntimePathParams>(
+    'POST',
+    (paramsInPath: SaveDowntimePathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/downtime`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * saves downtime
+ */
+export const saveDowntimePromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseDowntimeResponse,
+    unknown,
+    void,
+    DowntimeDTORequestBody,
+    SaveDowntimePathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseDowntimeResponse, unknown, void, DowntimeDTORequestBody, SaveDowntimePathParams>(
+    'POST',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime`,
+    props,
+    signal
+  )
+
+export interface GetHistoryQueryParams {
+  pageNumber?: number
+  pageSize?: number
+  monitoredServiceIdentifier?: string
+  filter?: string
+}
+
+export interface GetHistoryPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetHistoryProps = Omit<
+  GetProps<ResponsePageDowntimeHistoryView, unknown, GetHistoryQueryParams, GetHistoryPathParams>,
+  'path'
+> &
+  GetHistoryPathParams
+
+/**
+ * Get downtime history data
+ */
+export const GetHistory = ({ accountIdentifier, orgIdentifier, projectIdentifier, ...props }: GetHistoryProps) => (
+  <Get<ResponsePageDowntimeHistoryView, unknown, GetHistoryQueryParams, GetHistoryPathParams>
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/history`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetHistoryProps = Omit<
+  UseGetProps<ResponsePageDowntimeHistoryView, unknown, GetHistoryQueryParams, GetHistoryPathParams>,
+  'path'
+> &
+  GetHistoryPathParams
+
+/**
+ * Get downtime history data
+ */
+export const useGetHistory = ({ accountIdentifier, orgIdentifier, projectIdentifier, ...props }: UseGetHistoryProps) =>
+  useGet<ResponsePageDowntimeHistoryView, unknown, GetHistoryQueryParams, GetHistoryPathParams>(
+    (paramsInPath: GetHistoryPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/downtime/history`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * Get downtime history data
+ */
+export const getHistoryPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: GetUsingFetchProps<ResponsePageDowntimeHistoryView, unknown, GetHistoryQueryParams, GetHistoryPathParams> & {
+    accountIdentifier: string
+    orgIdentifier: string
+    projectIdentifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageDowntimeHistoryView, unknown, GetHistoryQueryParams, GetHistoryPathParams>(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/history`,
+    props,
+    signal
+  )
+
+export interface DeleteDowntimeDataPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type DeleteDowntimeDataProps = Omit<
+  MutateProps<RestResponseBoolean, unknown, void, string, DeleteDowntimeDataPathParams>,
+  'path' | 'verb'
+> &
+  DeleteDowntimeDataPathParams
+
+/**
+ * delete downtime data
+ */
+export const DeleteDowntimeData = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: DeleteDowntimeDataProps) => (
+  <Mutate<RestResponseBoolean, unknown, void, string, DeleteDowntimeDataPathParams>
+    verb="DELETE"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/identifier`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseDeleteDowntimeDataProps = Omit<
+  UseMutateProps<RestResponseBoolean, unknown, void, string, DeleteDowntimeDataPathParams>,
+  'path' | 'verb'
+> &
+  DeleteDowntimeDataPathParams
+
+/**
+ * delete downtime data
+ */
+export const useDeleteDowntimeData = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseDeleteDowntimeDataProps) =>
+  useMutate<RestResponseBoolean, unknown, void, string, DeleteDowntimeDataPathParams>(
+    'DELETE',
+    (paramsInPath: DeleteDowntimeDataPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/downtime/identifier`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * delete downtime data
+ */
+export const deleteDowntimeDataPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: MutateUsingFetchProps<RestResponseBoolean, unknown, void, string, DeleteDowntimeDataPathParams> & {
+    accountIdentifier: string
+    orgIdentifier: string
+    projectIdentifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseBoolean, unknown, void, string, DeleteDowntimeDataPathParams>(
+    'DELETE',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/identifier`,
+    props,
+    signal
+  )
+
+export interface GetDowntimePathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  identifier: string
+}
+
+export type GetDowntimeProps = Omit<
+  GetProps<RestResponseDowntimeResponse, unknown, void, GetDowntimePathParams>,
+  'path'
+> &
+  GetDowntimePathParams
+
+/**
+ * get downtime data
+ */
+export const GetDowntime = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: GetDowntimeProps) => (
+  <Get<RestResponseDowntimeResponse, unknown, void, GetDowntimePathParams>
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/identifier/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetDowntimeProps = Omit<
+  UseGetProps<RestResponseDowntimeResponse, unknown, void, GetDowntimePathParams>,
+  'path'
+> &
+  GetDowntimePathParams
+
+/**
+ * get downtime data
+ */
+export const useGetDowntime = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: UseGetDowntimeProps) =>
+  useGet<RestResponseDowntimeResponse, unknown, void, GetDowntimePathParams>(
+    (paramsInPath: GetDowntimePathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/downtime/identifier/${paramsInPath.identifier}`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, identifier },
+      ...props
+    }
+  )
+
+/**
+ * get downtime data
+ */
+export const getDowntimePromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    identifier,
+    ...props
+  }: GetUsingFetchProps<RestResponseDowntimeResponse, unknown, void, GetDowntimePathParams> & {
+    accountIdentifier: string
+    orgIdentifier: string
+    projectIdentifier: string
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponseDowntimeResponse, unknown, void, GetDowntimePathParams>(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/identifier/${identifier}`,
+    props,
+    signal
+  )
+
+export interface UpdateDowntimeDataPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  identifier: string
+}
+
+export type UpdateDowntimeDataProps = Omit<
+  MutateProps<RestResponseDowntimeResponse, unknown, void, DowntimeDTORequestBody, UpdateDowntimeDataPathParams>,
+  'path' | 'verb'
+> &
+  UpdateDowntimeDataPathParams
+
+/**
+ * update downtime data
+ */
+export const UpdateDowntimeData = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: UpdateDowntimeDataProps) => (
+  <Mutate<RestResponseDowntimeResponse, unknown, void, DowntimeDTORequestBody, UpdateDowntimeDataPathParams>
+    verb="PUT"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/identifier/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateDowntimeDataProps = Omit<
+  UseMutateProps<RestResponseDowntimeResponse, unknown, void, DowntimeDTORequestBody, UpdateDowntimeDataPathParams>,
+  'path' | 'verb'
+> &
+  UpdateDowntimeDataPathParams
+
+/**
+ * update downtime data
+ */
+export const useUpdateDowntimeData = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: UseUpdateDowntimeDataProps) =>
+  useMutate<RestResponseDowntimeResponse, unknown, void, DowntimeDTORequestBody, UpdateDowntimeDataPathParams>(
+    'PUT',
+    (paramsInPath: UpdateDowntimeDataPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/downtime/identifier/${paramsInPath.identifier}`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, identifier },
+      ...props
+    }
+  )
+
+/**
+ * update downtime data
+ */
+export const updateDowntimeDataPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseDowntimeResponse,
+    unknown,
+    void,
+    DowntimeDTORequestBody,
+    UpdateDowntimeDataPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string; identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<RestResponseDowntimeResponse, unknown, void, DowntimeDTORequestBody, UpdateDowntimeDataPathParams>(
+    'PUT',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/identifier/${identifier}`,
+    props,
+    signal
+  )
+
+export interface ListDowntimesQueryParams {
+  pageNumber?: number
+  pageSize?: number
+  monitoredServiceIdentifier?: string
+  filter?: string
+}
+
+export interface ListDowntimesPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type ListDowntimesProps = Omit<
+  GetProps<ResponsePageDowntimeListView, unknown, ListDowntimesQueryParams, ListDowntimesPathParams>,
+  'path'
+> &
+  ListDowntimesPathParams
+
+/**
+ * list downtime data
+ */
+export const ListDowntimes = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: ListDowntimesProps) => (
+  <Get<ResponsePageDowntimeListView, unknown, ListDowntimesQueryParams, ListDowntimesPathParams>
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/list`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseListDowntimesProps = Omit<
+  UseGetProps<ResponsePageDowntimeListView, unknown, ListDowntimesQueryParams, ListDowntimesPathParams>,
+  'path'
+> &
+  ListDowntimesPathParams
+
+/**
+ * list downtime data
+ */
+export const useListDowntimes = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseListDowntimesProps) =>
+  useGet<ResponsePageDowntimeListView, unknown, ListDowntimesQueryParams, ListDowntimesPathParams>(
+    (paramsInPath: ListDowntimesPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/downtime/list`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * list downtime data
+ */
+export const listDowntimesPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: GetUsingFetchProps<ResponsePageDowntimeListView, unknown, ListDowntimesQueryParams, ListDowntimesPathParams> & {
+    accountIdentifier: string
+    orgIdentifier: string
+    projectIdentifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePageDowntimeListView, unknown, ListDowntimesQueryParams, ListDowntimesPathParams>(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/list`,
     props,
     signal
   )
@@ -7136,6 +7759,365 @@ export const getSampleRawRecordPromise = (
     'POST',
     getConfig('cv/api'),
     `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/records`,
+    props,
+    signal
+  )
+
+export interface GetMetricsAnalysisForVerifyStepExecutionIdQueryParams {
+  anomalousMetricsOnly?: boolean
+  healthSource?: string[]
+  transactionGroup?: string[]
+  node?: string[]
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+}
+
+export interface GetMetricsAnalysisForVerifyStepExecutionIdPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  verifyStepExecutionId: string
+}
+
+export type GetMetricsAnalysisForVerifyStepExecutionIdProps = Omit<
+  GetProps<
+    PageMetricsAnalysis,
+    unknown,
+    GetMetricsAnalysisForVerifyStepExecutionIdQueryParams,
+    GetMetricsAnalysisForVerifyStepExecutionIdPathParams
+  >,
+  'path'
+> &
+  GetMetricsAnalysisForVerifyStepExecutionIdPathParams
+
+/**
+ * get metrics analysis for given verifyStepExecutionId
+ */
+export const GetMetricsAnalysisForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: GetMetricsAnalysisForVerifyStepExecutionIdProps) => (
+  <Get<
+    PageMetricsAnalysis,
+    unknown,
+    GetMetricsAnalysisForVerifyStepExecutionIdQueryParams,
+    GetMetricsAnalysisForVerifyStepExecutionIdPathParams
+  >
+    path={`/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/analysis/metrics`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetMetricsAnalysisForVerifyStepExecutionIdProps = Omit<
+  UseGetProps<
+    PageMetricsAnalysis,
+    unknown,
+    GetMetricsAnalysisForVerifyStepExecutionIdQueryParams,
+    GetMetricsAnalysisForVerifyStepExecutionIdPathParams
+  >,
+  'path'
+> &
+  GetMetricsAnalysisForVerifyStepExecutionIdPathParams
+
+/**
+ * get metrics analysis for given verifyStepExecutionId
+ */
+export const useGetMetricsAnalysisForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: UseGetMetricsAnalysisForVerifyStepExecutionIdProps) =>
+  useGet<
+    PageMetricsAnalysis,
+    unknown,
+    GetMetricsAnalysisForVerifyStepExecutionIdQueryParams,
+    GetMetricsAnalysisForVerifyStepExecutionIdPathParams
+  >(
+    (paramsInPath: GetMetricsAnalysisForVerifyStepExecutionIdPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/orgs/${paramsInPath.orgIdentifier}/projects/${paramsInPath.projectIdentifier}/verifications/${paramsInPath.verifyStepExecutionId}/analysis/metrics`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, verifyStepExecutionId },
+      ...props
+    }
+  )
+
+/**
+ * get metrics analysis for given verifyStepExecutionId
+ */
+export const getMetricsAnalysisForVerifyStepExecutionIdPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    verifyStepExecutionId,
+    ...props
+  }: GetUsingFetchProps<
+    PageMetricsAnalysis,
+    unknown,
+    GetMetricsAnalysisForVerifyStepExecutionIdQueryParams,
+    GetMetricsAnalysisForVerifyStepExecutionIdPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string; verifyStepExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    PageMetricsAnalysis,
+    unknown,
+    GetMetricsAnalysisForVerifyStepExecutionIdQueryParams,
+    GetMetricsAnalysisForVerifyStepExecutionIdPathParams
+  >(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/analysis/metrics`,
+    props,
+    signal
+  )
+
+export interface GetHealthSourcesForVerifyStepExecutionIdPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  verifyStepExecutionId: string
+}
+
+export type GetHealthSourcesForVerifyStepExecutionIdProps = Omit<
+  GetProps<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams>,
+  'path'
+> &
+  GetHealthSourcesForVerifyStepExecutionIdPathParams
+
+/**
+ * get all the health sources
+ */
+export const GetHealthSourcesForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: GetHealthSourcesForVerifyStepExecutionIdProps) => (
+  <Get<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams>
+    path={`/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/health-sources`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetHealthSourcesForVerifyStepExecutionIdProps = Omit<
+  UseGetProps<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams>,
+  'path'
+> &
+  GetHealthSourcesForVerifyStepExecutionIdPathParams
+
+/**
+ * get all the health sources
+ */
+export const useGetHealthSourcesForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: UseGetHealthSourcesForVerifyStepExecutionIdProps) =>
+  useGet<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams>(
+    (paramsInPath: GetHealthSourcesForVerifyStepExecutionIdPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/orgs/${paramsInPath.orgIdentifier}/projects/${paramsInPath.projectIdentifier}/verifications/${paramsInPath.verifyStepExecutionId}/health-sources`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, verifyStepExecutionId },
+      ...props
+    }
+  )
+
+/**
+ * get all the health sources
+ */
+export const getHealthSourcesForVerifyStepExecutionIdPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    verifyStepExecutionId,
+    ...props
+  }: GetUsingFetchProps<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams> & {
+    accountIdentifier: string
+    orgIdentifier: string
+    projectIdentifier: string
+    verifyStepExecutionId: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<HealthSourceV2[], unknown, void, GetHealthSourcesForVerifyStepExecutionIdPathParams>(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/health-sources`,
+    props,
+    signal
+  )
+
+export interface GetVerificationOverviewForVerifyStepExecutionIdPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  verifyStepExecutionId: string
+}
+
+export type GetVerificationOverviewForVerifyStepExecutionIdProps = Omit<
+  GetProps<VerificationOverview, unknown, void, GetVerificationOverviewForVerifyStepExecutionIdPathParams>,
+  'path'
+> &
+  GetVerificationOverviewForVerifyStepExecutionIdPathParams
+
+/**
+ * get verification overview for given verifyStepExecutionId
+ */
+export const GetVerificationOverviewForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: GetVerificationOverviewForVerifyStepExecutionIdProps) => (
+  <Get<VerificationOverview, unknown, void, GetVerificationOverviewForVerifyStepExecutionIdPathParams>
+    path={`/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/overview`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetVerificationOverviewForVerifyStepExecutionIdProps = Omit<
+  UseGetProps<VerificationOverview, unknown, void, GetVerificationOverviewForVerifyStepExecutionIdPathParams>,
+  'path'
+> &
+  GetVerificationOverviewForVerifyStepExecutionIdPathParams
+
+/**
+ * get verification overview for given verifyStepExecutionId
+ */
+export const useGetVerificationOverviewForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: UseGetVerificationOverviewForVerifyStepExecutionIdProps) =>
+  useGet<VerificationOverview, unknown, void, GetVerificationOverviewForVerifyStepExecutionIdPathParams>(
+    (paramsInPath: GetVerificationOverviewForVerifyStepExecutionIdPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/orgs/${paramsInPath.orgIdentifier}/projects/${paramsInPath.projectIdentifier}/verifications/${paramsInPath.verifyStepExecutionId}/overview`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, verifyStepExecutionId },
+      ...props
+    }
+  )
+
+/**
+ * get verification overview for given verifyStepExecutionId
+ */
+export const getVerificationOverviewForVerifyStepExecutionIdPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    verifyStepExecutionId,
+    ...props
+  }: GetUsingFetchProps<
+    VerificationOverview,
+    unknown,
+    void,
+    GetVerificationOverviewForVerifyStepExecutionIdPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string; verifyStepExecutionId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<VerificationOverview, unknown, void, GetVerificationOverviewForVerifyStepExecutionIdPathParams>(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/overview`,
+    props,
+    signal
+  )
+
+export interface GetTransactionGroupsForVerifyStepExecutionIdPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  verifyStepExecutionId: string
+}
+
+export type GetTransactionGroupsForVerifyStepExecutionIdProps = Omit<
+  GetProps<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams>,
+  'path'
+> &
+  GetTransactionGroupsForVerifyStepExecutionIdPathParams
+
+/**
+ * get all the transaction groups
+ */
+export const GetTransactionGroupsForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: GetTransactionGroupsForVerifyStepExecutionIdProps) => (
+  <Get<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams>
+    path={`/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/transaction-groups`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetTransactionGroupsForVerifyStepExecutionIdProps = Omit<
+  UseGetProps<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams>,
+  'path'
+> &
+  GetTransactionGroupsForVerifyStepExecutionIdPathParams
+
+/**
+ * get all the transaction groups
+ */
+export const useGetTransactionGroupsForVerifyStepExecutionId = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  verifyStepExecutionId,
+  ...props
+}: UseGetTransactionGroupsForVerifyStepExecutionIdProps) =>
+  useGet<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams>(
+    (paramsInPath: GetTransactionGroupsForVerifyStepExecutionIdPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/orgs/${paramsInPath.orgIdentifier}/projects/${paramsInPath.projectIdentifier}/verifications/${paramsInPath.verifyStepExecutionId}/transaction-groups`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, verifyStepExecutionId },
+      ...props
+    }
+  )
+
+/**
+ * get all the transaction groups
+ */
+export const getTransactionGroupsForVerifyStepExecutionIdPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    verifyStepExecutionId,
+    ...props
+  }: GetUsingFetchProps<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams> & {
+    accountIdentifier: string
+    orgIdentifier: string
+    projectIdentifier: string
+    verifyStepExecutionId: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<string[], unknown, void, GetTransactionGroupsForVerifyStepExecutionIdPathParams>(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/orgs/${orgIdentifier}/projects/${projectIdentifier}/verifications/${verifyStepExecutionId}/transaction-groups`,
     props,
     signal
   )
@@ -7776,7 +8758,17 @@ export interface GetMonitoredServiceChangeEventSummaryQueryParams {
   monitoredServiceIdentifiers?: string[]
   isMonitoredServiceIdentifierScoped?: boolean
   changeCategories?: ('Deployment' | 'Infrastructure' | 'Alert' | 'FeatureFlag')[]
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: (
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
+  )[]
   startTime: number
   endTime: number
 }
@@ -7835,7 +8827,17 @@ export interface GetMonitoredServiceChangeTimelineQueryParams {
   orgIdentifier: string
   projectIdentifier: string
   monitoredServiceIdentifier?: string
-  changeSourceTypes?: ('HarnessCDNextGen' | 'PagerDuty' | 'K8sCluster' | 'HarnessCD' | 'HarnessFF')[]
+  changeSourceTypes?: (
+    | 'HarnessCDNextGen'
+    | 'PagerDuty'
+    | 'K8sCluster'
+    | 'HarnessCD'
+    | 'HarnessFF'
+    | 'CustomDeploy'
+    | 'CustomIncident'
+    | 'CustomInfrastructure'
+    | 'CustomFF'
+  )[]
   searchText?: string
   duration: 'FOUR_HOURS' | 'TWENTY_FOUR_HOURS' | 'THREE_DAYS' | 'SEVEN_DAYS' | 'THIRTY_DAYS'
   endTime: number

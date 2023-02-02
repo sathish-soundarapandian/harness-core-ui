@@ -47,6 +47,7 @@ import {
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import { RightDrawer } from '../ConfigureService/ManifestRepoTypes/RightDrawer/RightDrawer'
 import DelegateDetailsCard from './DelegateDetailsCard'
+import InfoContainer from '../InfoContainer/InfoContainer'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 import moduleCss from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
@@ -287,6 +288,7 @@ const DelegateSelectorWizardRef = (
             set(draft, 'environmentEntities.infrastructure', INFRASTRUCTURE_ID)
             set(draft, 'environmentEntities.namespace', NAMESPACE)
             set(draft, 'delegateYAMLResponse', yamlResponse)
+            set(draft, 'delegateIdentifier', StringUtils.getIdentifierFromName(delegateName.current as string))
           })
           saveInfrastructureData(updatedContextInfra)
           saveDelegateData(updatedContextDelegate)
@@ -373,9 +375,7 @@ const DelegateSelectorWizardRef = (
               {getString('cd.getStartedWithCD.connectHarnessEnv')}
               <HarnessDocTooltip tooltipId="cdOnboardingEnvironment" useStandAlone={true} />
             </Text>
-            <Text font="normal" className={css.marginBottomClass}>
-              {getString('cd.getStartedWithCD.delegateDescription')}
-            </Text>
+            <InfoContainer label="cd.getStartedWithCD.delegateDescription" />
             <div className={css.borderBottomClass} />
             <Text
               font={{ variation: FontVariation.H4, weight: 'semi-bold' }}

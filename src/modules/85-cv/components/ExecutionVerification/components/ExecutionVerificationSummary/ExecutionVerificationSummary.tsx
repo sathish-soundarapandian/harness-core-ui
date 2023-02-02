@@ -10,35 +10,38 @@ import { Container, Icon, Text, PageError } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Color } from '@harness/design-system'
-import { useGetVerifyStepDeploymentActivitySummary } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/StrategySelection/StrategyConfig'
 import { StepMode } from '@pipeline/utils/stepUtils'
 import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
 import { StageType } from '@pipeline/utils/stageHelpers'
-import { SummaryOfDeployedNodes } from './components/SummaryOfDeployedNodes/SummaryOfDeployedNodes'
+import { useGetVerificationOverviewForVerifyStepExecutionId } from 'services/cv'
 import { getErrorMessage } from '../DeploymentMetrics/DeploymentMetrics.utils'
 import { DeploymentProgressAndNodes } from '../DeploymentProgressAndNodes/DeploymentProgressAndNodes'
 import type { VerifyExecutionProps } from './ExecutionVerificationSummary.types'
 import { getActivityId } from '../../ExecutionVerificationView.utils'
 import { ManualInterventionVerifyStep } from '../ManualInterventionVerifyStep/ManualInterventionVerifyStep'
 import InterruptedHistory from '../InterruptedHistory/InterruptedHistory'
+import { SummaryOfDeployedNodes } from './components/SummaryOfDeployedNodes/SummaryOfDeployedNodes'
+import { getTotalClustersData, getTotalMetrics } from './ExecutionVerificationSummary.utils'
 import css from './ExecutionVerificationSummary.module.scss'
 
 const POLLING_INTERVAL = 15000
 
 export function ExecutionVerificationSummary(props: VerifyExecutionProps): JSX.Element {
   const { step, displayAnalysisCount = true, className, onSelectNode, stageType, isConsoleView } = props
-  const { accountId } = useParams<ProjectPathProps>()
+  const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [pollingIntervalId, setPollingIntervalId] = useState(-1)
   const [showSpinner, setShowSpinner] = useState(true)
   const activityId = useMemo(() => getActivityId(step), [step])
-  const { data, error, refetch } = useGetVerifyStepDeploymentActivitySummary({
-    queryParams: { accountId },
+  const { data, error, refetch } = useGetVerificationOverviewForVerifyStepExecutionId({
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
     verifyStepExecutionId: activityId,
     lazy: true
   })
-  const { deploymentVerificationJobInstanceSummary = {} } = data?.resource || {}
+  const { errorClusters = {}, logClusters = {}, metricsAnalysis = {} } = data || {}
   const failureStrategies = allowedStrategiesAsPerStep(stageType || StageType.DEPLOY)[StepMode.STEP].filter(
     st => st !== Strategy.ManualIntervention
   )
@@ -121,23 +124,19 @@ export function ExecutionVerificationSummary(props: VerifyExecutionProps): JSX.E
         </>
       )}
       <DeploymentProgressAndNodes
-        deploymentSummary={deploymentVerificationJobInstanceSummary}
+        data={data}
         className={css.details}
         onSelectNode={onSelectNode}
         isConsoleView={isConsoleView}
       />
       {displayAnalysisCount && (
         <SummaryOfDeployedNodes
-          metricsInViolation={deploymentVerificationJobInstanceSummary?.timeSeriesAnalysisSummary?.numAnomMetrics || 0}
-          totalMetrics={deploymentVerificationJobInstanceSummary?.timeSeriesAnalysisSummary?.totalNumMetrics || 0}
-          logClustersInViolation={
-            deploymentVerificationJobInstanceSummary?.logsAnalysisSummary?.anomalousClusterCount || 0
-          }
-          totalLogClusters={deploymentVerificationJobInstanceSummary?.logsAnalysisSummary?.totalClusterCount || 0}
-          errorClustersInViolation={
-            deploymentVerificationJobInstanceSummary?.errorAnalysisSummary?.anomalousClusterCount || 0
-          }
-          totalErrorClusters={deploymentVerificationJobInstanceSummary?.errorAnalysisSummary?.totalClusterCount || 0}
+          metricsInViolation={metricsAnalysis?.unhealthy || 0}
+          totalMetrics={getTotalMetrics(metricsAnalysis)}
+          logClustersInViolation={logClusters?.unknownClustersCount || 0}
+          totalLogClusters={getTotalClustersData(logClusters)}
+          errorClustersInViolation={errorClusters?.unknownClustersCount || 0}
+          totalErrorClusters={getTotalClustersData(errorClusters)}
         />
       )}
     </Container>

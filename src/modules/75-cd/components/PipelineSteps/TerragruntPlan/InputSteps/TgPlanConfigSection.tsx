@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
@@ -15,12 +15,13 @@ import { Color } from '@harness/design-system'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
-import { isValueRuntimeInput } from '@common/utils/utils'
-import { Connectors } from '@connectors/constants'
+import { isMultiTypeFixed, isValueRuntimeInput } from '@common/utils/utils'
+import type { GitConfigDTO, Scope } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { shouldDisplayRepositoryName } from '../../K8sServiceSpec/ManifestSource/ManifestSourceUtils'
 import type { TerragruntPlanProps } from '../../Common/Terragrunt/TerragruntInterface'
 import { getPath } from '../../Common/ConfigFileStore/ConfigFileStoreHelper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -28,13 +29,14 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 function ConfigSectionRef(props: TerragruntPlanProps & { formik?: any }): React.ReactElement {
   const { getString } = useStrings()
 
-  const { inputSetData, readonly, initialValues, path, allowableTypes, stepViewType, isBackendConfig } = props
+  const { inputSetData, readonly, initialValues, path, allowableTypes, stepViewType, isBackendConfig, formik } = props
   const template = inputSetData?.template
   const configPath = getPath(false, true, isBackendConfig)
   const configSpec = get(template, `${configPath}.store`)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { expressions } = useVariablesExpression()
+  const [showRepoName, setShowRepoName] = useState(true)
 
   return (
     <>
@@ -60,34 +62,47 @@ function ConfigSectionRef(props: TerragruntPlanProps & { formik?: any }): React.
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             width={388}
-            type={[Connectors.GIT, Connectors.GITHUB, Connectors.GITLAB, Connectors.BITBUCKET]}
+            type={configSpec?.type}
             name={`${path}.${configPath}.store.spec.connectorRef`}
             label={getString('connector')}
             placeholder={getString('select')}
             disabled={readonly}
             setRefValue
+            onChange={(selected, _itemType, multiType) => {
+              const item = selected as unknown as { record?: GitConfigDTO; scope: Scope }
+              if (isMultiTypeFixed(multiType)) {
+                if (shouldDisplayRepositoryName(item)) {
+                  setShowRepoName(true)
+                } else {
+                  setShowRepoName(false)
+                  formik?.setFieldValue(`${path}.${configPath}.store.spec.repoName`, '')
+                }
+              }
+            }}
             gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
           />
         </div>
       )}
-      {isValueRuntimeInput(configSpec?.spec?.repoName) && (
-        <TextFieldInputSetView
-          label={getString('pipelineSteps.repoName')}
-          name={`${path}.${configPath}.store.spec.repoName`}
-          placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
-          disabled={readonly}
-          multiTextInputProps={{
-            expressions,
-            allowableTypes
-          }}
-          configureOptionsProps={{
-            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-          }}
-          template={template}
-          fieldPath={`${configPath}.store.spec.repoName`}
-          className={cx(stepCss.formGroup, stepCss.md)}
-        />
-      )}
+
+      {(isValueRuntimeInput(configSpec?.spec?.repoName) || isValueRuntimeInput(configSpec?.spec?.connectorRef)) &&
+        showRepoName && (
+          <TextFieldInputSetView
+            label={getString('pipelineSteps.repoName')}
+            name={`${path}.${configPath}.store.spec.repoName`}
+            placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
+            disabled={readonly}
+            multiTextInputProps={{
+              expressions,
+              allowableTypes
+            }}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            template={template}
+            fieldPath={`${configPath}.store.spec.repoName`}
+            className={cx(stepCss.formGroup, stepCss.md)}
+          />
+        )}
 
       {isValueRuntimeInput(configSpec?.spec?.branch) && (
         <TextFieldInputSetView

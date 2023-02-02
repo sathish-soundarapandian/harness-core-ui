@@ -19,7 +19,7 @@ import type {
 
 import { initGroupedCreatedMetrics } from '../../common/CommonCustomMetric/CommonCustomMetric.utils'
 import CommonHealthSourceProvider from './components/CustomMetricForm/components/CommonHealthSourceContext/CommonHealthSourceContext'
-import { DEFAULT_HEALTH_SOURCE_QUERY } from './CommonHealthSource.constants'
+import { CommonConfigurationsFormFieldNames, DEFAULT_HEALTH_SOURCE_QUERY } from './CommonHealthSource.constants'
 import { cleanUpMappedMetrics } from './components/CustomMetricForm/CustomMetricFormContainer.utils'
 import CustomMetricFormContainer from './components/CustomMetricForm/CustomMetricFormContainer'
 import MetricThresholdContainer from './components/MetricThresholds/MetricThresholdContainer'
@@ -98,8 +98,14 @@ export default function CommonHealthSource({
               metricName: deletedMetricName
             })
 
-            formik.setFieldValue('ignoreThresholds', updatedMetricThresholds.ignoreThresholds)
-            formik.setFieldValue('failFastThresholds', updatedMetricThresholds.failFastThresholds)
+            formik.setFieldValue(
+              CommonConfigurationsFormFieldNames.IGNORE_THRESHOLDS,
+              updatedMetricThresholds.ignoreThresholds
+            )
+            formik.setFieldValue(
+              CommonConfigurationsFormFieldNames.FAILFAST_THRESHOLDS,
+              updatedMetricThresholds.failFastThresholds
+            )
           }
         }
 
@@ -147,7 +153,7 @@ export default function CommonHealthSource({
                   isMetricThresholdEnabled={isMetricThresholdEnabled}
                 />
               </FormikForm>
-              <Container height={200} />
+              <Container height={120} />
             </CommonHealthSourceProvider>
             <DrawerFooter
               isSubmit

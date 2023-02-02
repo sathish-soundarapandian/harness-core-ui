@@ -16,8 +16,8 @@ import type { TestWrapperProps } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { projectPathProps } from '@common/utils/routeUtils'
 import { RiskValues } from '@cv/utils/CommonUtils'
-import { SLIMetricEnum } from '../components/CVCreateSLO/components/CreateSLOForm/components/SLI/SLI.constants'
-import { PeriodTypes, SLITypes } from '../components/CVCreateSLO/CVCreateSLO.types'
+import { SLIMetricEnum } from '../common/SLI/SLI.constants'
+import { PeriodTypes, SLITypes } from '../components/CVCreateSLOV2/CVCreateSLOV2.types'
 
 export const errorMessage = 'TEST ERROR MESSAGE'
 

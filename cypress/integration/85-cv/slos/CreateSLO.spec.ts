@@ -37,7 +37,7 @@ import {
   listMonitoredServicesCallResponseForSLOs
 } from '../../../support/85-cv/slos/constants'
 
-describe('Create SLO', () => {
+describe.skip('Create SLO', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from

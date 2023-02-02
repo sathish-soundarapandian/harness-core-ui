@@ -38,7 +38,7 @@ const toolFieldsTransformConfig = (data: SonarqubeStepData) =>
       ]
     : []
 
-const toolFieldsValidationConfig = (data: SonarqubeStepData) =>
+const toolFieldsValidationConfig = (data: SonarqubeStepData): InputSetViewValidateFieldsConfig[] =>
   data.spec.mode === 'orchestration'
     ? [
         {
@@ -59,10 +59,41 @@ const toolFieldsValidationConfig = (data: SonarqubeStepData) =>
       ]
     : []
 
+const extraAuthFieldsTransformConfig = (data: SonarqubeStepData) =>
+  data.spec.mode !== 'ingestion'
+    ? [
+        {
+          name: 'spec.auth.domain',
+          type: TransformValuesTypes.Text
+        },
+        {
+          name: 'spec.auth.ssl',
+          type: TransformValuesTypes.Boolean
+        }
+      ]
+    : []
+
+const extraAuthFieldsValidationConfig = (data: SonarqubeStepData): InputSetViewValidateFieldsConfig[] =>
+  data.spec.mode !== 'ingestion'
+    ? [
+        {
+          name: 'spec.auth.domain',
+          type: ValidationFieldTypes.Text,
+          label: 'secrets.winRmAuthFormFields.domain'
+        },
+        {
+          name: 'spec.auth.ssl',
+          type: ValidationFieldTypes.Text,
+          label: 'sto.stepField.authSsl'
+        }
+      ]
+    : []
+
 export const transformValuesFieldsConfig = (data: SonarqubeStepData): Field[] => {
   const transformValuesFieldsConfigValues = [
     ...commonFieldsTransformConfig(data),
     ...authFieldsTransformConfig(data),
+    ...extraAuthFieldsTransformConfig(data),
     ...toolFieldsTransformConfig(data)
   ]
 
@@ -82,6 +113,7 @@ export const editViewValidateFieldsConfig = (data: SonarqubeStepData) => {
   const editViewValidationConfig = [
     ...commonFieldsValidationConfig,
     ...authFieldsValidationConfig(data),
+    ...extraAuthFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...imageFieldsValidationConfig(data),
     ...additionalFieldsValidationConfigEitView,
@@ -95,6 +127,7 @@ export function getInputSetViewValidateFieldsConfig(data: SonarqubeStepData): In
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
     ...commonFieldsValidationConfig,
     ...authFieldsValidationConfig(data),
+    ...extraAuthFieldsValidationConfig(data),
     ...ingestionFieldValidationConfig(data),
     ...imageFieldsValidationConfig(data),
     ...additionalFieldsValidationConfigInputSet,

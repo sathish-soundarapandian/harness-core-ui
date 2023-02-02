@@ -9,7 +9,11 @@ import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '
 import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import type { EnvironmentYamlV2, FilterYaml } from 'services/cd-ng'
 import { isValueRuntimeInput } from '@common/utils/utils'
-import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityFormState } from '../types'
+import type {
+  DeployEnvironmentEntityConfig,
+  DeployEnvironmentEntityCustomStepProps,
+  DeployEnvironmentEntityFormState
+} from '../types'
 
 export function processFiltersFormValues(
   filters?: DeployEnvironmentEntityFormState['environmentGroupFilters']
@@ -19,8 +23,9 @@ export function processFiltersFormValues(
 
 export function processSingleEnvironmentFormValues(
   data: DeployEnvironmentEntityFormState,
-  gitOpsEnabled: boolean
+  customStepProps: DeployEnvironmentEntityCustomStepProps
 ): DeployEnvironmentEntityConfig {
+  const { gitOpsEnabled, serviceIdentifiers } = customStepProps
   if (!isNil(data.environment)) {
     // ! Do not merge this with the other returns even if they look similar. It makes it confusing to read
     if (getMultiTypeFromValue(data.environment) === MultiTypeInputType.RUNTIME) {
@@ -41,6 +46,9 @@ export function processSingleEnvironmentFormValues(
           environmentRef: data.environment,
           ...(!!data.environmentInputs?.[data.environment] && {
             environmentInputs: data.environmentInputs[data.environment]
+          }),
+          ...(!!data.serviceOverrideInputs?.[data.environment]?.[serviceIdentifiers?.[0] as string] && {
+            serviceOverrideInputs: data.serviceOverrideInputs?.[data.environment]?.[serviceIdentifiers?.[0] as string]
           }),
           deployToAll: false,
           ...(!isEmpty(data.provisioner) && { provisioner: data.provisioner }),
@@ -127,8 +135,10 @@ export function processSingleEnvironmentGitOpsFormValues(
 
 export function getEnvironmentsFormValuesFromFormState(
   data: DeployEnvironmentEntityFormState,
-  gitOpsEnabled: boolean
+  customStepProps: DeployEnvironmentEntityCustomStepProps
 ): EnvironmentYamlV2[] {
+  const { gitOpsEnabled } = customStepProps
+
   return Array.isArray(data.environments)
     ? data.environments?.map(environment => {
         const environmentsFormState: EnvironmentYamlV2 = {
@@ -197,11 +207,11 @@ export function getEnvironmentsFormValuesFromFormState(
 
 export function processMultiEnvironmentFormValues(
   data: DeployEnvironmentEntityFormState,
-  gitOpsEnabled: boolean
+  customStepProps: DeployEnvironmentEntityCustomStepProps
 ): DeployEnvironmentEntityConfig {
   const filters = processFiltersFormValues(data?.environmentFilters?.runtime)
   const fixedEnvfilters = processFiltersFormValues(data?.environmentFilters?.fixedScenario)
-  const environmentValues = getEnvironmentsFormValuesFromFormState(data, gitOpsEnabled)
+  const environmentValues = getEnvironmentsFormValuesFromFormState(data, customStepProps)
 
   if (fixedEnvfilters.length) {
     return {
@@ -239,7 +249,7 @@ export function processMultiEnvironmentFormValues(
 
 export function processEnvironmentGroupFormValues(
   data: DeployEnvironmentEntityFormState,
-  gitOpsEnabled: boolean
+  customStepProps: DeployEnvironmentEntityCustomStepProps
 ): DeployEnvironmentEntityConfig {
   if (!isNil(data.environmentGroup)) {
     const filters = processFiltersFormValues(data?.environmentGroupFilters)
@@ -281,7 +291,7 @@ export function processEnvironmentGroupFormValues(
                 // this an off condition that is used to handle deployToAll in environment groups
                 ...(deployToAll === true && { environments: RUNTIME_INPUT_VALUE as any }),
                 ...(!isEmpty(data.environments) && {
-                  environments: getEnvironmentsFormValuesFromFormState(data, gitOpsEnabled)
+                  environments: getEnvironmentsFormValuesFromFormState(data, customStepProps)
                 })
               }),
           ...(environmentFilters.length && { filters: environmentFilters })

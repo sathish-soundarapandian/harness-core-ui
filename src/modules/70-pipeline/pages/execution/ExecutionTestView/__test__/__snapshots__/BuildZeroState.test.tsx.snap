@@ -27,10 +27,13 @@ exports[`BuildZeroState snapshot test should render loading state properly 1`] =
           stroke="#000"
           stroke-width="0.3"
         />
-        <path
-          d="M19.047 5.715h3.81v3.81h-3.81zM26.666 5.715h3.81v3.81h-3.81zM34.285 5.715h3.81v3.81h-3.81zM19.047 13.332h47.618v3.81H19.047zM19.047 20.953h11.428v3.81H19.047zM19.047 28.574h7.619v3.81h-7.62z"
+        <g
           fill="#9293ab"
-        />
+        >
+          <path
+            d="M19.047 5.715h3.81v3.81h-3.81zM26.666 5.715h3.81v3.81h-3.81zM34.285 5.715h3.81v3.81h-3.81zM19.047 13.332h47.618v3.81H19.047zM19.047 20.953h11.428v3.81H19.047zM19.047 28.574h7.619v3.81h-7.62z"
+          />
+        </g>
         <g
           fill="#b0b1c4"
         >

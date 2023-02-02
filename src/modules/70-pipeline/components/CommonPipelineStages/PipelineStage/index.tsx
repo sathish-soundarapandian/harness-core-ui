@@ -31,6 +31,7 @@ const getStageEditorImplementation = (isEnabled: boolean, _getString: UseStrings
     hoverIcon="chained-pipeline-hover"
     isDisabled={!isEnabled}
     isApproval={false}
+    isComingSoon={!isEnabled} // for pipeline & stage templates
   />
 )
 

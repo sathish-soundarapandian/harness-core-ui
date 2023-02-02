@@ -97,6 +97,7 @@ function FormComponent({
   const feedValue = defaultTo(getGenuineValue(formik.values.feed), '')
   const packageValue = defaultTo(getGenuineValue(formik.values.package), '')
   const packageTypeValue = defaultTo(getGenuineValue(formik.values.packageType), '')
+
   const getConnectorRefQueryData = (): string => {
     return defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
   }
@@ -317,6 +318,21 @@ function FormComponent({
                       org: 'automation-cdc'
                     }
                   })
+                },
+                onChange: (e: any) => {
+                  formik.setValues({
+                    ...formik.values,
+                    feed:
+                      getMultiTypeFromValue(formik?.values?.feed) === MultiTypeInputType.FIXED
+                        ? ''
+                        : formik?.values?.feed,
+                    package:
+                      getMultiTypeFromValue(formik?.values?.feed) === MultiTypeInputType.FIXED
+                        ? ''
+                        : formik?.values?.package
+                  })
+
+                  formik.setFieldValue('project', e?.value)
                 }
               }}
             />
@@ -375,6 +391,21 @@ function FormComponent({
                     project: projectValue
                   }
                 })
+              },
+              onChange: (e: any) => {
+                formik.setValues({
+                  ...formik.values,
+                  version:
+                    getMultiTypeFromValue(formik?.values?.version) === MultiTypeInputType.FIXED
+                      ? ''
+                      : formik?.values?.version,
+                  package:
+                    getMultiTypeFromValue(formik?.values?.package) === MultiTypeInputType.FIXED
+                      ? ''
+                      : formik?.values?.package
+                })
+
+                formik.setFieldValue('feed', e?.value)
               }
             }}
           />
@@ -393,7 +424,18 @@ function FormComponent({
           )}
         </div>
         <div className={css.imagePathContainer}>
-          <FormInput.Select name="packageType" label={getString('pipeline.packageType')} items={packageTypeOptions} />
+          <FormInput.Select
+            name="packageType"
+            label={getString('pipeline.packageType')}
+            items={packageTypeOptions}
+            onChange={e => {
+              formik.setFieldValue('packageType', e.value)
+
+              if (getMultiTypeFromValue(formik.values.package) === MultiTypeInputType.FIXED) {
+                formik.setFieldValue('package', '')
+              }
+            }}
+          />
         </div>
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
@@ -581,11 +623,12 @@ export function AzureArtifacts(
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const getInitialValues = (): AzureArtifactsInitialValues => {
-    return getArtifactFormData(
+    const vals = getArtifactFormData(
       initialValues,
       selectedArtifact as ArtifactType,
       isIdentifierAllowed
     ) as AzureArtifactsInitialValues
+    return vals
   }
 
   const handleValidate = (formData: AzureArtifactsInitialValues) => {

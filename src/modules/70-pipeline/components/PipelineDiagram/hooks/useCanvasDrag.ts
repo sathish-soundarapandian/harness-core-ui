@@ -24,14 +24,19 @@ export type UseCanvasDrag = (props: {
 export const useCanvasDrag: UseCanvasDrag = ({ isDragging, setDragging, position, setPosition }) => {
   const canvasRef = useRef<HTMLElement | null>(null)
   const elementRef = useRef<HTMLElement | null>(null)
+  const diff = useRef<Position>({ x: 0, y: 0 })
 
   const onMouseDown = useCallback(
     (event: MouseEvent) => {
       if (event.button !== 0 || event.target !== event.currentTarget) return
       event.preventDefault()
       setDragging(true)
+      diff.current = {
+        x: event.pageX - position.x,
+        y: event.pageY - position.y
+      }
     },
-    [setDragging]
+    [setDragging, position]
   )
 
   const setCanvasRef = useCallback(
@@ -51,6 +56,7 @@ export const useCanvasDrag: UseCanvasDrag = ({ isDragging, setDragging, position
     if (!isDragging) return
 
     let lastPosition = position
+
     const applyTransform = (): void => {
       if (!elementRef.current) {
         return
@@ -58,13 +64,14 @@ export const useCanvasDrag: UseCanvasDrag = ({ isDragging, setDragging, position
       const { x, y } = lastPosition
       elementRef.current.style.transform = `translate(${x}px, ${y}px)`
     }
+
     const onMouseMove = rafThrottle((event: MouseEvent) => {
       event.preventDefault()
-      const { movementX, movementY } = event
-      const { x, y } = lastPosition
-      lastPosition = { x: x + movementX, y: y + movementY }
+      const { pageX, pageY } = event
+      lastPosition = { x: pageX - diff.current.x, y: pageY - diff.current.y }
       applyTransform()
     })
+
     const onMouseUp = (e: MouseEvent): void => {
       onMouseMove(e)
       unstable_batchedUpdates(() => {
@@ -72,14 +79,17 @@ export const useCanvasDrag: UseCanvasDrag = ({ isDragging, setDragging, position
         setPosition(lastPosition)
       })
     }
+
     const onBlur = (): void => {
       lastPosition = position
       applyTransform()
       setDragging(false)
     }
+
     document.addEventListener('mousemove', onMouseMove)
     document.addEventListener('mouseup', onMouseUp)
     window.addEventListener('blur', onBlur)
+
     return () => {
       onMouseMove.cancel()
       document.removeEventListener('mousemove', onMouseMove)

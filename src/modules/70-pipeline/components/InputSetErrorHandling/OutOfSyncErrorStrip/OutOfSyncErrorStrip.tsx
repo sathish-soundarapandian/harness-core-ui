@@ -11,16 +11,14 @@ import {
   ButtonVariation,
   Container,
   Dialog,
-  Layout,
-  Text,
   useConfirmationDialog,
   useToaster,
   Button
 } from '@harness/uicore'
-import { Color, FontVariation, Intent } from '@harness/design-system'
+import { Intent } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { useHistory, useParams } from 'react-router-dom'
-import { defaultTo, get, isNil, pick } from 'lodash-es'
+import { defaultTo, get, isEmpty, isNil, pick } from 'lodash-es'
 import type { InputSetDTO } from '@pipeline/utils/types'
 import { ReconcileDialog } from '@pipeline/components/InputSetErrorHandling/ReconcileDialog/ReconcileDialog'
 import {
@@ -42,6 +40,7 @@ import routes from '@common/RouteDefinitions'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { OverlayInputSetDTO } from '@pipeline/components/OverlayInputSetForm/OverlayInputSetForm'
+import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useSaveInputSetOrOverlayInpSet } from '../utils'
 import css from './OutOfSyncErrorStrip.module.scss'
 
@@ -61,6 +60,7 @@ interface OutOfSyncErrorStripProps {
   onReconcile?: (identifier: string) => void
   fromInputSetListView?: boolean
   refetchInputSets?: () => void
+  closeReconcileMenu?: () => void
 }
 
 export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.ReactElement {
@@ -78,7 +78,8 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
     fromInputSetForm,
     onReconcile,
     fromInputSetListView,
-    refetchInputSets
+    refetchInputSets,
+    closeReconcileMenu
   } = props
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
@@ -243,6 +244,7 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
               )
 
               closeDeleteInputSetModal()
+              closeReconcileMenu?.()
               !onlyReconcileButton && (!isOverlayInputSet ? goToInputSetList() : hideForm?.())
 
               if (get(response, 'status') === 'SUCCESS') {
@@ -289,15 +291,24 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
         )}
       </Container>
     ),
+    onCloseDialog: () => {
+      closeReconcileMenu?.()
+    },
     intent: Intent.DANGER,
     showCloseButton: true,
     canEscapeKeyClose: false,
     canOutsideClickClose: false
   })
 
+  const handleReconcileClick = (): void => {
+    refetchYamlDiff()
+    showSuccess(getString('pipeline.outOfSyncErrorStrip.reconcileStarted'))
+  }
+
   const [showReconcileDialog, hideReconcileDialog] = useModalHook(() => {
     const onClose = (): void => {
       hideReconcileDialog()
+      closeReconcileMenu?.()
     }
 
     return (
@@ -320,7 +331,11 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
   }, [yamlDiffResponse, updateInputSetLoading, updateOverlayInputSetLoading, handleSubmit])
 
   useEffect(() => {
-    if (
+    if (error && isEmpty(inputSet.identifier)) {
+      // User click reconcile button while creating input-set / overlay-input-set
+      showError(getRBACErrorMessage(error))
+      closeReconcileMenu?.()
+    } else if (
       (!get(yamlDiffResponse, 'data.inputSetEmpty') &&
         get(yamlDiffResponse, 'data.oldYAML') &&
         get(yamlDiffResponse, 'data.newYAML')) ||
@@ -331,7 +346,7 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
       hideReconcileDialog() // If the error object becomes empty after clicking the retry button, the reconcile dialogue should be closed
       openDeleteInputSetModal()
     }
-  }, [yamlDiffResponse])
+  }, [yamlDiffResponse, error])
 
   return (
     <>
@@ -348,28 +363,26 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
           className={fromInputSetListView ? css.reconcileButtonListView : css.reconcileButton}
         />
       ) : (
-        <Container className={css.mainContainer}>
-          <Layout.Horizontal spacing={'medium'} flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
-            <Text
-              font={{ variation: FontVariation.SMALL_BOLD }}
-              color={Color.RED_600}
-              margin={{ right: 'medium' }}
-              icon="warning-sign"
-              intent={Intent.DANGER}
-            >
-              {getString('pipeline.inputSetErrorStrip.errorInfo', {
-                type: isOverlayInputSet ? 'Overlay Input Set' : 'Input Set'
-              })}
-            </Text>
-            <Button
-              text={getString('pipeline.outOfSyncErrorStrip.reconcile')}
-              variation={ButtonVariation.SECONDARY}
-              size={ButtonSize.SMALL}
-              onClick={() => refetchYamlDiff()}
-              loading={loading}
-            />
-          </Layout.Horizontal>
-        </Container>
+        <RbacMenuItem
+          icon="refresh"
+          text={getString('pipeline.outOfSyncErrorStrip.reconcile')}
+          onClick={e => {
+            if (fromInputSetForm || isOverlayInputSet) e.stopPropagation()
+            handleReconcileClick()
+          }}
+          permission={{
+            resourceScope: {
+              accountIdentifier: accountId,
+              orgIdentifier,
+              projectIdentifier
+            },
+            resource: {
+              resourceType: ResourceType.PIPELINE,
+              resourceIdentifier: pipelineIdentifier
+            },
+            permission: PermissionIdentifier.EDIT_PIPELINE
+          }}
+        />
       )}
     </>
   )

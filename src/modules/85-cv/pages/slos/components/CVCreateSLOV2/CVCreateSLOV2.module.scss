@@ -1,0 +1,119 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.pageBody {
+  padding: var(--spacing-xlarge) !important;
+}
+
+.createSloTabsContainer {
+  :global {
+    .bp3-tab-list {
+      background-color: var(--white);
+      padding: var(--spacing-none) var(--spacing-xlarge);
+      align-items: center;
+      border-bottom: 1px solid var(--grey-200);
+    }
+
+    .bp3-tab-panel {
+      margin-top: 0 !important;
+    }
+  }
+}
+
+.dialog {
+  width: 700px;
+}
+
+// SLI
+
+.cardSli {
+  width: 100%;
+  margin-bottom: var(--spacing-xxlarge);
+
+  .selectPrimary {
+    width: 450px;
+  }
+}
+
+// PickMetric
+
+.cardPickMetric {
+  width: 100%;
+
+  .eventType {
+    input {
+      width: 100px;
+    }
+  }
+
+  .metricSelect {
+    width: 350px;
+  }
+
+  .objectiveValue {
+    width: 120px;
+  }
+
+  .comparatorOptions {
+    width: 120px;
+  }
+
+  div.graphContainer {
+    margin-left: 0px !important;
+  }
+}
+
+// SLOTargetAndBudgetPolicy
+
+.card {
+  min-width: 100%;
+
+  .sloTarget {
+    width: 120px;
+  }
+}
+
+.radioGroup {
+  label {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    grid-gap: var(--spacing-2) var(--spacing-3);
+    align-items: center;
+    font-size: var(--font-size-normal) !important;
+    margin-bottom: var(--spacing-small) !important;
+
+    p:nth-of-type(2) {
+      grid-column: 2;
+    }
+  }
+}
+
+.contextualHelp {
+  p:not(.title) {
+    color: var(--grey-400) !important;
+    font: {
+      weight: light !important;
+    }
+  }
+
+  .title {
+    color: var(--grey-500) !important;
+    font: {
+      weight: bold !important;
+    }
+    margin-bottom: var(--spacing-xsmall);
+  }
+}
+
+.addMetricButton {
+  margin-top: 23px !important;
+}
+
+.noShadow {
+  padding: 0 !important;
+  box-shadow: none !important;
+}

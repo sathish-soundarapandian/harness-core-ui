@@ -10,7 +10,7 @@ import { string, array, object, ObjectSchema } from 'yup'
 import { parse } from 'yaml'
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { ConnectorResponse, ManifestConfigWrapper } from 'services/cd-ng'
-import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
+import { NameIdentifierSchema } from '@common/utils/Validation'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import type {
@@ -353,10 +353,12 @@ export const getValidationSchema = (
   isGitWebhookPollingEnabled?: boolean,
   isGithubWebhookAuthenticationEnabled?: boolean
 ): ObjectSchema<Record<string, any> | undefined> => {
+  const TriggerNameIdentifierSchema = NameIdentifierSchema(getString, {
+    nameRequiredErrorMsg: getString('triggers.validation.triggerName')
+  })
+
   if (triggerType === TriggerTypes.WEBHOOK) {
-    return object().shape({
-      name: NameSchema(getString, { requiredErrorMsg: getString('triggers.validation.triggerName') }),
-      identifier: IdentifierSchema(getString),
+    return TriggerNameIdentifierSchema.shape({
       event: string().test(
         getString('triggers.validation.event'),
         getString('triggers.validation.event'),
@@ -531,15 +533,7 @@ export const getValidationSchema = (
       triggerType === TriggerTypes.MANIFEST
         ? getString('manifestsText')
         : getString('pipeline.artifactTriggerConfigPanel.artifact')
-    return object().shape({
-      name: string().trim().required(getString('triggers.validation.triggerName')),
-      identifier: string().when('name', {
-        is: val => val?.length,
-        then: string()
-          .required(getString('validation.identifierRequired'))
-          .matches(regexIdentifier, getString('validation.validIdRegex'))
-          .notOneOf(illegalIdentifiers)
-      }),
+    return TriggerNameIdentifierSchema.shape({
       selectedArtifact: object().test(
         getString('triggers.validation.selectedArtifact', {
           artifact: artifactOrManifestText
@@ -611,15 +605,7 @@ export const getValidationSchema = (
     })
   } else {
     // Scheduled
-    return object().shape({
-      name: string().trim().required(getString('triggers.validation.triggerName')),
-      identifier: string().when('name', {
-        is: val => val?.length,
-        then: string()
-          .required(getString('validation.identifierRequired'))
-          .matches(regexIdentifier, getString('validation.validIdRegex'))
-          .notOneOf(illegalIdentifiers)
-      }),
+    return TriggerNameIdentifierSchema.shape({
       expression: string().test(
         getString('triggers.validation.cronExpression'),
         getString('triggers.validation.cronExpression'),

@@ -24,7 +24,6 @@ import cx from 'classnames'
 import { useHistory } from 'react-router-dom'
 import { isEmpty, defaultTo, keyBy, omitBy } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
-import type { GetDataError } from 'restful-react'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   PipelineConfig,
@@ -37,7 +36,7 @@ import {
   useRunStagesWithRuntimeInputYaml,
   useRerunStagesWithRuntimeInputYaml,
   useGetStagesExecutionList,
-  Failure
+  useDebugPipelineExecuteWithInputSetYaml
 } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
 import routes from '@common/RouteDefinitions'
@@ -110,12 +109,11 @@ export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & G
   onClose?: () => void
   executionView?: boolean
   mockData?: ResponseJsonNode
-  executionInputSetTemplateYaml?: string
-  executionInputSetTemplateYamlError?: GetDataError<Failure | Error> | null
   stagesExecuted?: string[]
   executionIdentifier?: string
   source: ExecutionPathProps['source']
   storeMetadata?: StoreMetadata
+  isDebugMode?: boolean
 }
 
 const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
@@ -143,12 +141,12 @@ function RunPipelineFormBasic({
   repoIdentifier,
   connectorRef,
   storeType,
-  executionInputSetTemplateYaml = '',
-  executionInputSetTemplateYamlError,
   stagesExecuted,
-  executionIdentifier
+  executionIdentifier,
+  isDebugMode
 }: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
   const isNgDeploymentFreezeEnabled = useFeatureFlag(FeatureFlag.NG_DEPLOYMENT_FREEZE)
+  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const [skipPreFlightCheck, setSkipPreFlightCheck] = useState<boolean>(false)
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [notifyOnlyMe, setNotifyOnlyMe] = useState<boolean>(false)
@@ -176,7 +174,6 @@ function RunPipelineFormBasic({
   const { setPipeline: updatePipelineInVaribalesContext, setSelectedInputSetsContext } = usePipelineVariables()
   const [existingProvide, setExistingProvide] = useState<'existing' | 'provide'>('existing')
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
-  const [isInputSetApplied, setIsInputSetApplied] = useState(true)
   const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
 
   const [canSaveInputSet, canEditYaml] = usePermission(
@@ -232,7 +229,8 @@ function RunPipelineFormBasic({
       getTemplatesResolvedPipeline: true,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoIdentifier
-    }
+    },
+    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
   })
 
   const pipeline: PipelineInfoConfig | undefined = React.useMemo(
@@ -259,11 +257,12 @@ function RunPipelineFormBasic({
     hasInputSets,
     loading: loadingInputSets,
     error: inputSetsError,
-    canApplyInputSet,
     refetch: getTemplateFromPipeline,
     hasRuntimeInputs,
     invalidInputSetReferences,
-    onReconcile
+    onReconcile,
+    shouldValidateForm,
+    setShouldValidateForm
   } = useInputSets({
     accountId,
     projectIdentifier,
@@ -277,8 +276,6 @@ function RunPipelineFormBasic({
     executionIdentifier,
     inputSetSelected: selectedInputSets,
     resolvedPipeline: resolvedMergedPipeline,
-    executionInputSetTemplateYaml,
-    executionView,
     setSelectedInputSets
   })
 
@@ -319,7 +316,9 @@ function RunPipelineFormBasic({
 
   const pipelineExecutionId = executionIdentifier ?? executionId
   const isRerunPipeline = !isEmpty(pipelineExecutionId)
-  const formTitleText = isRerunPipeline
+  const formTitleText = isDebugMode
+    ? getString('pipeline.execution.actions.reRunInDebugMode')
+    : isRerunPipeline
     ? getString('pipeline.execution.actions.rerunPipeline')
     : getString('runPipeline')
 
@@ -355,6 +354,22 @@ function RunPipelineFormBasic({
     },
     identifier: pipelineIdentifier,
     originalExecutionId: defaultTo(pipelineExecutionId, '')
+  })
+
+  const { mutate: runPipelineInDebugMode, loading: reRunDebugModeLoading } = useDebugPipelineExecuteWithInputSetYaml({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      moduleType: module || ''
+    },
+    identifier: pipelineIdentifier,
+    originalExecutionId: defaultTo(pipelineExecutionId, ''),
+    requestOptions: {
+      headers: {
+        'content-type': 'application/yaml'
+      }
+    }
   })
 
   const { data: stageExecutionData } = useGetStagesExecutionList({
@@ -409,10 +424,6 @@ function RunPipelineFormBasic({
     }
     return executionStages
   }, [stageExecutionData?.data])
-
-  useDeepCompareEffect(() => {
-    setIsInputSetApplied(false)
-  }, [selectedInputSets])
 
   useEffect(() => {
     setSelectedInputSets(inputSetSelected)
@@ -486,7 +497,8 @@ function RunPipelineFormBasic({
     )
   }, [notifyOnlyMe])
 
-  const isExecutingPipeline = runPipelineLoading || reRunPipelineLoading || runStagesLoading || reRunStagesLoading
+  const isExecutingPipeline =
+    runPipelineLoading || reRunPipelineLoading || runStagesLoading || reRunStagesLoading || reRunDebugModeLoading
 
   const handleRunPipeline = useCallback(
     async (valuesPipeline?: PipelineInfoConfig, forceSkipFlightCheck = false) => {
@@ -512,19 +524,21 @@ function RunPipelineFormBasic({
           ? ''
           : yamlStringify({ pipeline: omitBy(valuesPipelineRef.current, (_val, key) => key.startsWith('_')) })
 
-        if (!isRerunPipeline) {
+        if (isDebugMode) {
+          response = await runPipelineInDebugMode(finalYaml as any)
+        } else if (isRerunPipeline) {
           response = selectedStageData.allStagesSelected
-            ? await runPipeline(finalYaml as any)
-            : await runStage({
-                runtimeInputYaml: finalYaml,
+            ? await reRunPipeline(finalYaml as any)
+            : await reRunStages({
+                runtimeInputYaml: finalYaml as any,
                 stageIdentifiers: stageIdentifiers,
                 expressionValues
               })
         } else {
           response = selectedStageData.allStagesSelected
-            ? await reRunPipeline(finalYaml as any)
-            : await reRunStages({
-                runtimeInputYaml: finalYaml as any,
+            ? await runPipeline(finalYaml as any)
+            : await runStage({
+                runtimeInputYaml: finalYaml,
                 stageIdentifiers: stageIdentifiers,
                 expressionValues
               })
@@ -631,16 +645,13 @@ function RunPipelineFormBasic({
     return areDependentStagesSelected
   }, [selectedStageData])
 
-  useDeepCompareEffect(() => {
-    if (inputSet?.pipeline && formikRef.current) {
-      formikRef.current.setValues(inputSet.pipeline)
-
-      if (canApplyInputSet) {
-        formikRef.current.validateForm(inputSet.pipeline)
-      }
+  useEffect(() => {
+    if (shouldValidateForm) {
+      formikRef.current?.validateForm(inputSet.pipeline)
+      setShouldValidateForm?.(false)
     }
-    setIsInputSetApplied(true)
-  }, [inputSet, canApplyInputSet])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shouldValidateForm, inputSet])
 
   const updateExpressionValue = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (!e.target) {
@@ -706,7 +717,7 @@ function RunPipelineFormBasic({
   }
 
   const shouldShowPageSpinner = (): boolean => {
-    return loadingPipeline || loadingResolvedChildPipeline
+    return loadingPipeline || loadingResolvedChildPipeline || loadingInputSets
   }
 
   const formRefDom = React.useRef<HTMLElement | undefined>()
@@ -761,13 +772,6 @@ function RunPipelineFormBasic({
             formikRef.current = formik
             valuesPipelineRef.current = values
 
-            // The values are updated in next tick.
-            // Due to this, some fields do not work properly.
-            // We need to delay the render in such scenario
-            if (hasRuntimeInputs && isEmpty(values)) {
-              return <PageSpinner />
-            }
-
             return (
               <OverlaySpinner show={isExecutingPipeline}>
                 <Layout.Vertical
@@ -813,7 +817,6 @@ function RunPipelineFormBasic({
                       pipelineIdentifier={pipelineIdentifier}
                       executionIdentifier={pipelineExecutionId}
                       template={defaultTo(inputSetTemplate?.pipeline, {} as PipelineInfoConfig)}
-                      templateError={executionInputSetTemplateYamlError}
                       pipeline={pipeline}
                       currentPipeline={{ pipeline: values }}
                       getTemplateError={inputSetsError}
@@ -826,7 +829,6 @@ function RunPipelineFormBasic({
                       pipelineResponse={pipelineResponse}
                       invalidInputSetReferences={invalidInputSetReferences}
                       loadingInputSets={loadingInputSets}
-                      isInputSetApplied={isInputSetApplied}
                       onReconcile={onReconcile}
                       reRunInputSetYaml={inputSetYAML}
                     />
@@ -910,7 +912,8 @@ function RunPipelineFormBasic({
                           disabled={
                             blockedStagesSelected ||
                             (getErrorsList(formErrors).errorCount > 0 && runClicked) ||
-                            loadingShouldDisableDeployment
+                            loadingShouldDisableDeployment ||
+                            loadingInputSets
                           }
                         />
                         <div className={css.secondaryButton}>

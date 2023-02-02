@@ -109,7 +109,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the NEW artifact 1`] = `
                     class="Tooltip--acenter"
                     data-tooltip-id="imagePath_spec.project"
                   >
-                    projectLabel
+                    pipelineSteps.projectIDLabel
                   </span>
                    
                   <span
@@ -129,7 +129,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the NEW artifact 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.project"
-                        placeholder="pipeline.artifactsSelection.projectPlaceholder"
+                        placeholder="pipeline.artifactsSelection.projectIDPlaceholder"
                         type="text"
                         value=""
                       />
@@ -770,7 +770,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as regex 
                     class="Tooltip--acenter"
                     data-tooltip-id="imagePath_spec.project"
                   >
-                    projectLabel
+                    pipelineSteps.projectIDLabel
                   </span>
                    
                   <span
@@ -790,7 +790,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as regex 
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.project"
-                        placeholder="pipeline.artifactsSelection.projectPlaceholder"
+                        placeholder="pipeline.artifactsSelection.projectIDPlaceholder"
                         type="text"
                         value="testProject"
                       />
@@ -1415,7 +1415,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as value 
                     class="Tooltip--acenter"
                     data-tooltip-id="imagePath_spec.project"
                   >
-                    projectLabel
+                    pipelineSteps.projectIDLabel
                   </span>
                    
                   <span
@@ -1435,7 +1435,7 @@ exports[`GoogleArtifactRegistry tests renders fine for the versionType as value 
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.project"
-                        placeholder="pipeline.artifactsSelection.projectPlaceholder"
+                        placeholder="pipeline.artifactsSelection.projectIDPlaceholder"
                         type="text"
                         value="testProject"
                       />

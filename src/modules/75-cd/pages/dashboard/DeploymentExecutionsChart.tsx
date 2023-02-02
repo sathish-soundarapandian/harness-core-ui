@@ -14,13 +14,11 @@ import moment from 'moment'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getTooltip } from '@pipeline/utils/DashboardUtils'
-import { useGetDeploymentExecution } from 'services/cd-ng'
 import NoDeployments from '@pipeline/components/Dashboards/images/NoDeployments.svg'
 
 import { useErrorHandler } from '@pipeline/components/Dashboards/shared'
 import { OverviewChartsWithToggle } from '@common/components/OverviewChartsWithToggle/OverviewChartsWithToggle'
 import routes from '@common/RouteDefinitions'
-import { getFormattedTimeRange } from '@cd/pages/dashboard/dashboardUtils'
 import styles from './CDDashboardPage.module.scss'
 
 const ONE_DAY_IN_MS = 86400000
@@ -28,19 +26,7 @@ const ONE_DAY_IN_MS = 86400000
 export default function DeploymentExecutionsChart(props: any) {
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const history = useHistory()
-  const { range, title } = props
-
-  const [startT, endT] = getFormattedTimeRange(range)
-
-  const { data, error } = useGetDeploymentExecution({
-    queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier,
-      startTime: startT,
-      endTime: endT
-    }
-  })
+  const { title, data, error } = props
 
   useErrorHandler(error)
   const chartData = useMemo(() => {
@@ -48,7 +34,7 @@ export default function DeploymentExecutionsChart(props: any) {
       const successData: number[] = []
       const failureData: number[] = []
       const custom: any = []
-      data.data.executionDeploymentList.forEach(val => {
+      data.data.executionDeploymentList.forEach((val: any) => {
         successData.push(defaultTo(val.deployments?.success, 0))
         failureData.push(defaultTo(val.deployments?.failure, 0))
         custom.push(val)

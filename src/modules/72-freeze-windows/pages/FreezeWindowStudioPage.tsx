@@ -78,7 +78,6 @@ const _FreezeWindowStudioPage = (): React.ReactElement => {
             path: routes.toFreezeWindowStudio(PATH_PARAMS[freezeWindowLevel]),
             exact: true
           })
-
           return (!matchDefault?.isExact && isUpdated) || false
         }}
         textProps={{

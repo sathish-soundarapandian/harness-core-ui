@@ -20,7 +20,8 @@ export enum ModuleName {
   COMMON = 'COMMON',
   FRAMEWORK = 'FRAMEWORK',
   TEMPLATES = 'TEMPLATES',
-  IACM = 'IACM'
+  IACM = 'IACM',
+  SSCS = 'SSCS'
 }
 
 export const moduleToModuleNameMapping: Record<Module, ModuleName> = {
@@ -32,7 +33,8 @@ export const moduleToModuleNameMapping: Record<Module, ModuleName> = {
   code: ModuleName.CODE,
   sto: ModuleName.STO,
   chaos: ModuleName.CHAOS,
-  iacm: ModuleName.IACM
+  iacm: ModuleName.IACM,
+  sscs: ModuleName.SSCS
 }
 
-export type Module = 'ci' | 'cd' | 'cf' | 'cv' | 'ce' | 'sto' | 'chaos' | 'code' | 'iacm'
+export type Module = 'ci' | 'cd' | 'cf' | 'cv' | 'ce' | 'sto' | 'chaos' | 'code' | 'iacm' | 'sscs'

@@ -24,7 +24,7 @@ describe('Unit tests for LogAnalysis utils', () => {
     expect(getClusterTypes(getString)).toEqual([
       { label: 'auditTrail.allEvents', value: '' },
       { label: 'cv.known', value: ErrorTrackingEvents.KNOWN },
-      { label: 'cv.unknown', value: ErrorTrackingEvents.UNKNOWN },
+      { label: 'cd.getStartedWithCD.healthStatus.unknown', value: ErrorTrackingEvents.UNKNOWN },
       { label: 'cv.unexpected', value: ErrorTrackingEvents.UNEXPECTED }
     ])
   })

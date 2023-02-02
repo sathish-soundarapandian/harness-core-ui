@@ -214,7 +214,7 @@ jira:
   jiraUrl: 'Jira URL'
 serviceNow:
   serviceNowUrl: 'ServiceNow URL'
-  adfs: AdfsClientCredentialsWithCertificate
+  adfs: ADFS Client Credentials with Certificate
   adfsUrl: ADFS URL
   resourceID: Resource ID
   clientID: Client ID
@@ -316,7 +316,6 @@ azure:
     certificate: '{{ $.common.certificate }}'
 GCS:
   name: GCS
-  fullName: Google Cloud Storage
 S3: S3
 docker:
   dockerRegistryURL: 'Docker Registry URL'
@@ -412,7 +411,7 @@ customHealth:
   valueRequired: Value is required.
   keyRequired: Key is required.
 cdng:
-  continousVerificationType: Continous Verification Type
+  continousVerificationType: Continuous Verification Type
   monitoredServiceType: Monitored Service Type
   verificationTypeHeading: Select a type that matches your deployment strategy.
   artifactTag: Artifact Tag

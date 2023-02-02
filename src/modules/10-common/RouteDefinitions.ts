@@ -797,6 +797,25 @@ const routes = {
       }
     }
   ),
+  toPipelineStudioV1: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      accountId: _accountId,
+      module,
+      ...rest
+    }: PipelineType<PipelinePathProps> & PipelineStudioQueryParams & RunPipelineQueryParams) => {
+      const queryString = qs.stringify(rest, { skipNulls: true })
+      const basePath = module || 'home'
+
+      if (queryString.length > 0) {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/pipeline-studio-v1/?${queryString}`
+      } else {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/pipeline-studio-v1`
+      }
+    }
+  ),
   toPipelines: withAccountId(({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) => {
     return module
       ? `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines`
@@ -881,7 +900,7 @@ const routes = {
           projectIdentifier,
           module
         },
-        path: 'environment',
+        path: 'environments',
         accountRoutePlacement
       })
     }
@@ -899,7 +918,7 @@ const routes = {
           projectIdentifier,
           module
         },
-        path: 'environment-group',
+        path: 'environments/groups',
         accountRoutePlacement
       })
     }
@@ -923,7 +942,7 @@ const routes = {
           projectIdentifier,
           module
         },
-        path: `environment/${environmentIdentifier}/details`,
+        path: `environments/${environmentIdentifier}/details`,
         accountRoutePlacement
       })
 
@@ -949,7 +968,7 @@ const routes = {
           projectIdentifier,
           module
         },
-        path: `environment-group/${environmentGroupIdentifier}/details`,
+        path: `environments/groups/${environmentGroupIdentifier}/details`,
         accountRoutePlacement
       })
 
@@ -1557,7 +1576,12 @@ const routes = {
       `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/tokens`
   ),
 
-  toCVCodeErrorsAgentsControl: withAccountId(
+  toCVCodeErrorsCriticalEvents: withAccountId(
+    ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
+      `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et/criticalevents`
+  ),
+
+  toCVCodeErrorsSettings: withAccountId(
     ({ projectIdentifier, orgIdentifier }: ProjectPathProps) =>
       `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/et`
   ),
@@ -1605,6 +1629,27 @@ const routes = {
   toAccountCVCreateCompositeSLOs: withAccountId(({ module = 'cv' }: { module?: string }) => {
     return `/${module}/slos/create/composite`
   }),
+  toCVSLODowntime: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
+      const path = `resources/slo-downtime`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
+  toCVCreateSLODowntime: withAccountId(({ orgIdentifier, projectIdentifier }: ProjectPathProps) => {
+    return `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/create/downtime`
+  }),
+  toCVEditSLODowntime: withAccountId(
+    ({ orgIdentifier, projectIdentifier, identifier }: Partial<ProjectPathProps & { identifier: string }>) => {
+      return `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/slos/edit/downtime/${identifier}`
+    }
+  ),
   toCVAddMonitoringServicesSetup: withAccountId(
     ({ projectIdentifier, orgIdentifier }: Partial<ProjectPathProps & { identifier: string }>) =>
       `/cv/orgs/${orgIdentifier}/projects/${projectIdentifier}/monitoringservices/setup`
@@ -1859,6 +1904,11 @@ const routes = {
   toCEGovernanceRuleEditor: withAccountId(
     ({ ruleId }: { ruleId: string }) => `/ce/governance/rules/${ruleId}/rule-editor/`
   ),
+  toClusterOrchestrator: withAccountId(() => '/ce/compute-groups'),
+  toClusterDetailsPage: withAccountId(({ id }: { id: string }) => `/ce/compute-groups/${id}/overview`),
+  toClusterWorkloadsDetailsPage: withAccountId(({ id }: { id: string }) => `/ce/compute-groups/${id}/workloads`),
+  toClusterNodepoolDetailsPage: withAccountId(({ id }: { id: string }) => `/ce/compute-groups/${id}/nodepool`),
+  toComputeGroupsSetup: withAccountId(({ id }: { id: string }) => `/ce/compute-groups/setup/steps/${id}`),
   toCECurrencyPreferences: withAccountId(() => `/ce/currency-preferences`),
   toCCMMFE: withAccountId(() => `/ce/new`),
   /********************************************************************************************************************/
@@ -1883,6 +1933,10 @@ const routes = {
   toSTOProjectGettingStarted: withAccountId(
     ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
       `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/getting-started`
+  ),
+  toSTOProjectTicketSummary: withAccountId(
+    ({ orgIdentifier, projectIdentifier, issueId }: ProjectPathProps & { issueId: string }) =>
+      `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/ticket-summary/${issueId}`
   ),
   /********************************************************************************************************************/
   toOldCustomDashboard: withAccountId(() => '/home/dashboards*'),
@@ -1953,6 +2007,7 @@ const routes = {
 
   /*********************** IACM */
   toIACM: withAccountId(() => `/iacm`),
+  toIACMOverview: withAccountId(() => `/iacm/overview`),
   toIACMMicroFrontend: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
@@ -1960,7 +2015,43 @@ const routes = {
   toIACMStacks: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/stacks`
-  )
+  ),
+  toIACMSetup: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/`
+  ),
+  toIACMPipelines: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
+      `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines`
+  ),
+  toIACMPipelineResources: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      executionIdentifier,
+      source
+    }: PipelineType<ExecutionPathProps>) => {
+      return `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/resources`
+    }
+  ),
+  // SSCS
+  toSSCS: withAccountId(() => '/sscs'),
+  toSSCSOverview: withAccountId(() => '/sscs/overview'),
+  toAllowDenyList: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
+      const path = `allow-deny-list`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
+  toSSCSGettingStarted: withAccountId(() => '/sscs/getting-started')
 }
 
 export default routes

@@ -20,6 +20,7 @@
   width: 100% !important;
   padding: var(--spacing-medium) !important;
   padding-top: 0 !important;
+  padding-bottom: var(--spacing-none) !important;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -32,7 +33,7 @@
   }
 
   .filters {
-    margin-bottom: var(--spacing-medium) !important;
+    margin-bottom: var(--spacing-small) !important;
     display: flex;
     align-items: center;
     > * {
@@ -165,6 +166,15 @@
   .metricsPagination {
     padding-bottom: 0 !important;
   }
+
+  :global {
+    .Accordion--panel:first-child {
+      padding-top: var(--spacing-medium) !important;
+    }
+    .Accordion--panel:last-child {
+      padding-bottom: var(--spacing-medium) !important;
+    }
+  }
 }
 
 .maxDropDownWidth {
@@ -179,6 +189,7 @@
 
   div[class*='Accordion--details'] {
     padding-top: var(--spacing-large) !important;
+    padding-bottom: var(--spacing-none) !important;
   }
 }
 
@@ -193,12 +204,6 @@
 
     .metricName {
       margin-left: var(--spacing-small);
-    }
-    p {
-      font-size: 12px !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      white-space: nowrap !important;
     }
   }
 
@@ -231,4 +236,12 @@
       font-weight: 500 !important;
     }
   }
+}
+
+.anomolousCheckbox {
+  padding-bottom: var(--spacing-small) !important;
+}
+
+.clearButton {
+  align-self: flex-end;
 }

@@ -63,9 +63,18 @@ export const getUsingFetch = <
     window.dispatchEvent(responseEvent) // this will be captured in App.tsx to handle 401 and token refresh
 
     const contentType = res.headers.get('content-type') || ''
+
     if (contentType.toLowerCase().indexOf('application/json') > -1) {
+      if (res.status === 401) {
+        return res.json().then(json => Promise.reject(json))
+      }
       return res.json()
     }
+
+    if (res.status === 401) {
+      return res.text().then(text => Promise.reject(text))
+    }
+
     return res.text()
   })
 }

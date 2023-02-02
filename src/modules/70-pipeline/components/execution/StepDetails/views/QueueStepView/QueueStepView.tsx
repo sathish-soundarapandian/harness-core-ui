@@ -16,6 +16,7 @@ import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/
 import { QueuedExecutionsTab } from '@pipeline/components/execution/StepDetails/tabs/QueuedExecutionsTab/QueuedExecutionsTab'
 import { ExecutionInputs } from '@pipeline/components/execution/StepDetails/tabs/ExecutionInputs/ExecutionInputs'
 import { isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
+import { PolicyEvaluationContent } from '../../common/ExecutionContent/PolicyEvaluationContent/PolicyEvaluationContent'
 import tabCss from '@pipeline/components/execution/StepDetails/views/DefaultView/DefaultView.module.scss'
 
 enum StepDetailTab {
@@ -23,7 +24,8 @@ enum StepDetailTab {
   INPUT = 'INPUT',
   OUTPUT = 'OUTPUT',
   QUEUED_EXECUTIONS = 'QUEUED_EXECUTIONS',
-  STEP_EXECUTION_INPUTS = 'STEP_EXECUTION_INPUTS'
+  STEP_EXECUTION_INPUTS = 'STEP_EXECUTION_INPUTS',
+  POLICY_ENFORCEMENT = 'POLICY_ENFORCEMENT'
 }
 
 export interface QueueStepViewProps extends StepDetailProps {
@@ -36,6 +38,7 @@ export function QueueStepView(props: QueueStepViewProps): React.ReactElement | n
   const manuallySelected = React.useRef(false)
   const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
   const shouldShowExecutionInputs = !!step.executionInputConfigured
+  const shouldShowPolicyEnforcement = !!step?.outcomes?.policyOutput?.policySetDetails
   const [activeTab, setActiveTab] = React.useState(StepDetailTab.QUEUED_EXECUTIONS)
 
   React.useEffect(() => {
@@ -90,6 +93,19 @@ export function QueueStepView(props: QueueStepViewProps): React.ReactElement | n
             />
           }
         />
+        {shouldShowPolicyEnforcement ? (
+          <Tab
+            id={StepDetailTab.POLICY_ENFORCEMENT}
+            title={getString('pipeline.policyEnforcement.title')}
+            panel={
+              <PolicyEvaluationContent
+                step={step}
+                executionMetadata={executionMetadata}
+                policySetOutputPath={'outcomes.policyOutput'}
+              />
+            }
+          />
+        ) : null}
       </Tabs>
     </div>
   )

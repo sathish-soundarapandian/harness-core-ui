@@ -7,7 +7,6 @@
 
 import React, { useCallback, useEffect, useMemo } from 'react'
 import {
-  Card,
   Container,
   SelectOption,
   useToaster,
@@ -17,8 +16,10 @@ import {
   Dialog,
   Formik,
   Text,
+  Layout,
   MultiSelectOption
 } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
 import cx from 'classnames'
@@ -31,19 +32,18 @@ import { useGetAllJourneys, useSaveUserJourney } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { LIST_USER_JOURNEYS_OFFSET, LIST_USER_JOURNEYS_PAGESIZE } from '@cv/pages/slos/CVSLOsListingPage.constants'
-import { SLONameProps, SLOFormFields } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
-import { getUserJourneyOptions } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.utils'
+import { SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import CreateMonitoredServiceFromSLO from './components/CreateMonitoredServiceFromSLO/CreateMonitoredServiceFromSLO'
-import type { ServiceAndEnv } from './SLOName.types'
+import type { ServiceAndEnv, SLONameProps } from './SLOName.types'
 import { initialFormData } from './components/CreateMonitoredServiceFromSLO/CreateMonitoredServiceFromSLO.constants'
 import { createServiceProps, getActiveUserJourney } from './SLOName.utils'
-import css from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.module.scss'
+import { getUserJourneyOptions } from '../../components/CVCreateSLOV2/CVCreateSLOV2.utils'
+import css from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.module.scss'
 
 const SLOName = <T,>({
-  children,
   formikProps,
   identifier,
   monitoredServicesLoading = false,
@@ -162,72 +162,85 @@ const SLOName = <T,>({
           className={css.selectPrimary}
           identifierProps={{
             inputLabel: getString('cv.slos.sloName'),
-            inputName: SLOFormFields.NAME,
+            inputName: SLOV2FormFields.NAME,
             isIdentifierEditable: !identifier
           }}
         />
       </Container>
       {fetchingMonitoredServices && (
-        <Container flex={{ justifyContent: 'flex-start' }}>
-          <Container width={350}>
-            <FormInput.Select
-              name={SLOFormFields.MONITORED_SERVICE_REF}
-              label={getString('connectors.cdng.monitoredService.label')}
-              placeholder={
-                monitoredServicesLoading ? getString('loading') : getString('cv.slos.selectMonitoredService')
-              }
-              items={monitoredServicesOptions}
-              onChange={() => {
-                formikProps.setFieldValue(SLOFormFields.HEALTH_SOURCE_REF, undefined)
-                formikProps.setFieldValue(SLOFormFields.VALID_REQUEST_METRIC, undefined)
-                formikProps.setFieldValue(SLOFormFields.GOOD_REQUEST_METRIC, undefined)
+        <>
+          <Layout.Vertical spacing="small" margin={{ bottom: 'small', top: 'xlarge' }} width="900px">
+            <Text color={Color.PRIMARY_10} font={{ size: 'normal', weight: 'semi-bold' }}>
+              {getString('connectors.cdng.monitoredService.label')}
+            </Text>
+            <Text font={{ size: 'normal', weight: 'light' }}>{getString('cv.slos.monitoredServiceSubTitle')}</Text>
+          </Layout.Vertical>
+          <Layout.Horizontal spacing="medium" margin={{ bottom: 'medium' }}>
+            {Boolean(monitoredServicesOptions.length) && (
+              <Container width={350}>
+                <FormInput.Select
+                  tooltipProps={{ dataTooltipId: 'SLO_form_monitoredServiceRef' }}
+                  name={SLOV2FormFields.MONITORED_SERVICE_REF}
+                  placeholder={
+                    monitoredServicesLoading ? getString('loading') : getString('cv.slos.selectMonitoredService')
+                  }
+                  items={monitoredServicesOptions}
+                  onChange={() => {
+                    formikProps.setFieldValue(SLOV2FormFields.HEALTH_SOURCE_REF, undefined)
+                    formikProps.setFieldValue(SLOV2FormFields.VALID_REQUEST_METRIC, undefined)
+                    formikProps.setFieldValue(SLOV2FormFields.GOOD_REQUEST_METRIC, undefined)
+                  }}
+                />
+              </Container>
+            )}
+            <RbacButton
+              icon="plus"
+              text={getString('cv.monitoredServices.newMonitoredServices')}
+              variation={ButtonVariation.SECONDARY}
+              onClick={showModal}
+              permission={{
+                permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
+                resource: {
+                  resourceType: ResourceType.MONITOREDSERVICE,
+                  resourceIdentifier: projectIdentifier
+                }
               }}
             />
-          </Container>
-          <RbacButton
-            icon="plus"
-            text={getString('cv.monitoredServices.newMonitoredServices')}
-            variation={ButtonVariation.LINK}
-            onClick={showModal}
-            permission={{
-              permission: PermissionIdentifier.EDIT_MONITORED_SERVICE,
-              resource: {
-                resourceType: ResourceType.MONITOREDSERVICE,
-                resourceIdentifier: projectIdentifier
-              }
-            }}
-          />
-        </Container>
+          </Layout.Horizontal>
+        </>
       )}
-      <Container width={350}>
-        <HarnessServiceAsFormField
-          key={key}
-          customRenderProps={{
-            name: SLOFormFields.USER_JOURNEY_REF,
-            label: TEXT_USER_JOURNEY
-          }}
-          isMultiSelectField={isMultiSelect}
-          serviceProps={createServiceProps({
-            onChange: formikProps.setFieldValue,
-            getString,
-            isMultiSelect: Boolean(isMultiSelect),
-            activeUserJourney,
-            userJourneysLoading,
-            userJourneyOptions,
-            handleCreateUserJourney
-          })}
-          customLoading={saveUserJourneyLoading}
-        />
-      </Container>
+      <Layout.Vertical spacing="small" margin={{ bottom: 'small' }} width="900px">
+        <Text color={Color.PRIMARY_10} font={{ size: 'normal', weight: 'semi-bold' }}>
+          {TEXT_USER_JOURNEY}
+        </Text>
+        <Text font={{ size: 'normal', weight: 'light' }}>{getString('cv.slos.userJourneySubTitle')}</Text>
+      </Layout.Vertical>
+      <Layout.Horizontal spacing="medium" margin={{ bottom: 'medium' }}>
+        <Container width={350}>
+          <HarnessServiceAsFormField
+            key={key}
+            customRenderProps={{
+              name: SLOV2FormFields.USER_JOURNEY_REF
+            }}
+            isMultiSelectField={isMultiSelect}
+            serviceProps={createServiceProps({
+              onChange: formikProps.setFieldValue,
+              getString,
+              isMultiSelect: Boolean(isMultiSelect),
+              activeUserJourney,
+              userJourneysLoading,
+              userJourneyOptions,
+              handleCreateUserJourney
+            })}
+            customLoading={saveUserJourneyLoading}
+          />
+          {/* ToDo: Add Add-UserJourney Button here */}
+        </Container>
+      </Layout.Horizontal>
     </>
   )
 
-  return (
-    <>
-      {fetchingMonitoredServices ? <Card className={css.card}>{content}</Card> : content}
-      {children}
-    </>
-  )
+  return <>{content}</>
 }
 
 export default SLOName

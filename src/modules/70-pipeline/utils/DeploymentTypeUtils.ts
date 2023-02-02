@@ -46,7 +46,7 @@ export const executionStrategyTypes: Record<ServiceDefinition['type'], StringKey
   NativeHelm: 'pipeline.nativeHelm',
   Ssh: 'SSH',
   WinRm: 'pipeline.serviceDeploymentTypes.winrm',
-  ServerlessAwsLambda: 'pipeline.serviceDeploymentTypes.serverlessAwsType',
+  ServerlessAwsLambda: 'pipeline.serviceDeploymentTypes.serverlessAwsLambda',
   AzureWebApp: 'pipeline.serviceDeploymentTypes.azureWebApp',
   CustomDeployment: 'pipeline.serviceDeploymentTypes.customDeploy',
   Elastigroup: 'pipeline.serviceDeploymentTypes.spotElastigroup',

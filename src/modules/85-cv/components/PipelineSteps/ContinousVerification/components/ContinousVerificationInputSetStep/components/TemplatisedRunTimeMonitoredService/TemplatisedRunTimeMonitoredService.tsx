@@ -28,9 +28,11 @@ import {
   enrichHealthSourceWithVersionForHealthsourceType,
   getMetricDefinitionData,
   getSourceTypeForConnector,
-  setCommaSeperatedList
+  setCommaSeperatedList,
+  showQueriesText
 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import type { UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { getMultiTypeInputProps } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields.utils'
 import { getRunTimeInputsFromHealthSource } from './TemplatisedRunTimeMonitoredService.utils'
 import {
@@ -98,7 +100,7 @@ export default function TemplatisedRunTimeMonitoredService(
 
         return (
           <Card key={`${healthSource?.name}.${index}`} className={css.card}>
-            <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: 'medium' }}>
+            <Text font={'normal'} color={Color.BLACK} padding={{ bottom: 'medium' }}>
               {/* TODO - healthsource name should also be persisted in templateData */}
               {getString('cv.healthSource.nameLabel')}: {healthSource?.name || healthSource?.identifier}
             </Text>
@@ -119,7 +121,7 @@ export default function TemplatisedRunTimeMonitoredService(
                       disabled={!getSourceTypeForConnector(healthSource)}
                       setRefValue
                       multiTypeProps={{ allowableTypes, expressions }}
-                      type={getSourceTypeForConnector(healthSource)}
+                      type={getSourceTypeForConnector(healthSource) as ConnectorInfoDTO['type']}
                       enableConfigureOptions={false}
                     />
                   )
@@ -148,8 +150,11 @@ export default function TemplatisedRunTimeMonitoredService(
                   const runtimeItems = getNestedRuntimeInputs(item, [], `${metricDefinitionInptsetFormPath}.${idx}`)
                   return (
                     <>
-                      <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: 'medium' }}>
-                        {getString('cv.monitoringSources.metricLabel')}: {item?.metricName}
+                      <Text font={'normal'} color={Color.BLACK} padding={{ bottom: 'medium' }}>
+                        {showQueriesText(healthSource)
+                          ? getString('cv.query')
+                          : getString('cv.monitoringSources.metricLabel')}
+                        : {item?.metricName || item?.identifier}
                       </Text>
                       {runtimeItems.map(input => {
                         if (input.name === INDEXES) {

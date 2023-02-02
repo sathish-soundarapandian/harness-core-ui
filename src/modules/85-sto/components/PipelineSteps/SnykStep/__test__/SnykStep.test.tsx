@@ -101,9 +101,7 @@ describe('Snyk Step', () => {
             workspace: RUNTIME_INPUT_VALUE
           },
           auth: {
-            domain: RUNTIME_INPUT_VALUE,
-            access_token: RUNTIME_INPUT_VALUE,
-            ssl: RUNTIME_INPUT_VALUE
+            access_token: RUNTIME_INPUT_VALUE
           },
           mode: 'orchestration',
           config: 'default',
@@ -163,9 +161,7 @@ describe('Snyk Step', () => {
             workspace: '~/workspace'
           },
           auth: {
-            domain: 'auth domain',
-            access_token: 'token',
-            ssl: true
+            access_token: 'token'
           },
           config: 'default',
           mode: 'orchestration',

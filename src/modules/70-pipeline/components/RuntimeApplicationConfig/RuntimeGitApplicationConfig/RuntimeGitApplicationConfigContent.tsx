@@ -49,9 +49,9 @@ function RuntimeGitApplicationConfigContent({
 
   React.useEffect(() => {
     if (shouldDisplayRepositoryName(connector)) {
-      setShowRepoName(false)
-    } else {
       setShowRepoName(true)
+    } else {
+      setShowRepoName(false)
     }
   }, [connector])
 
@@ -82,9 +82,9 @@ function RuntimeGitApplicationConfigContent({
                   const item = selected as unknown as { record?: GitConfigDTO; scope: Scope }
                   if (multiType === MultiTypeInputType.FIXED) {
                     if (shouldDisplayRepositoryName(item)) {
-                      setShowRepoName(false)
-                    } else {
                       setShowRepoName(true)
+                    } else {
+                      setShowRepoName(false)
                     }
                   }
                 }

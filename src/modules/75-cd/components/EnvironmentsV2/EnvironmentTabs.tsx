@@ -41,7 +41,8 @@ export default function EnvironmentTabs(): React.ReactElement {
           orgIdentifier,
           projectIdentifier,
           module
-        })
+        }),
+        exact: true
       }
     ]
 

@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { Container, Dialog, PageHeader, PageSpinner } from '@harness/uicore'
+import { Button, Container, Dialog, Layout, PageHeader, PageSpinner } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { get } from 'lodash-es'
 import moment from 'moment'
@@ -25,7 +25,10 @@ import {
   ServiceDeploymentInfo,
   useGetWorkloadsV2,
   WorkloadDeploymentInfoV2,
-  WorkloadDeploymentInfo
+  WorkloadDeploymentInfo,
+  useGetDeploymentExecution,
+  useGetDeploymentHealth,
+  useGetDeploymentHealthV2
 } from 'services/cd-ng'
 import type { CIBuildCommit, CIWebhookInfoDTO } from 'services/ci'
 import { PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
@@ -197,7 +200,8 @@ export const CDDashboardPage: React.FC = () => {
   const {
     data: workloadsData,
     loading: loadingWorkloads,
-    error: workloadsError
+    error: workloadsError,
+    refetch: refetchWorkloads
   } = useGetWorkloads({
     queryParams: {
       accountIdentifier: accountId,
@@ -212,7 +216,8 @@ export const CDDashboardPage: React.FC = () => {
   const {
     data: workloadsDataV2,
     loading: loadingWorkloadsV2,
-    error: workloadsErrorV2
+    error: workloadsErrorV2,
+    refetch: refetchWorkloadsV2
   } = useGetWorkloadsV2({
     queryParams: {
       accountIdentifier: accountId,
@@ -225,9 +230,9 @@ export const CDDashboardPage: React.FC = () => {
   })
 
   //workloads data based on FF
-  const [workloadCardLoading, workloadCardData, workloadCardError] = CDC_DASHBOARD_ENHANCEMENT_NG
-    ? [loadingWorkloadsV2, workloadsDataV2, workloadsErrorV2]
-    : [loadingWorkloads, workloadsData, workloadsError]
+  const [workloadCardLoading, workloadCardData, workloadCardError, workloadCardRefetch] = CDC_DASHBOARD_ENHANCEMENT_NG
+    ? [loadingWorkloadsV2, workloadsDataV2, workloadsErrorV2, refetchWorkloadsV2]
+    : [loadingWorkloads, workloadsData, workloadsError, refetchWorkloads]
 
   useErrorHandler(error)
   useErrorHandler(workloadCardError)
@@ -239,6 +244,59 @@ export const CDDashboardPage: React.FC = () => {
 
   const [showOverviewDialog, setShowOverviewDialog] = useState(!pipelineExecutionSummary?.content?.length)
 
+  //Deployment Executions Chart properties
+  const [startT, endT] = getFormattedTimeRange(resultTimeRange)
+  const {
+    data: dataDeploymentExecution,
+    error: errorDeploymentExecution,
+    refetch: refetchDeploymentExecution,
+    loading: deploymentExecutionLoading
+  } = useGetDeploymentExecution({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      startTime: startT,
+      endTime: endT
+    }
+  })
+  //Deployments Health Cards properties
+  const {
+    data: healthData,
+    loading: healthDataLoading,
+    error: healthDataError,
+    refetch: refetchDeploymentHealth
+  } = useGetDeploymentHealth({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      startTime,
+      endTime
+    },
+    lazy: CDC_DASHBOARD_ENHANCEMENT_NG
+  })
+
+  const {
+    data: healthDataV2,
+    loading: healthDataLoadingV2,
+    error: healthDataErrorV2,
+    refetch: refetchDeploymentHealthV2
+  } = useGetDeploymentHealthV2({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      startTime,
+      endTime
+    },
+    lazy: !CDC_DASHBOARD_ENHANCEMENT_NG
+  })
+
+  const [dataHealth, loadingHealth, errorHealth, refetchHealth] = CDC_DASHBOARD_ENHANCEMENT_NG
+    ? [healthDataV2, healthDataLoadingV2, healthDataErrorV2, refetchDeploymentHealthV2]
+    : [healthData, healthDataLoading, healthDataError, refetchDeploymentHealth]
+
   useEffect(() => {
     setShowOverviewDialog(!pipelineExecutionSummary?.content?.length)
   }, [pipelineExecutionSummary])
@@ -249,6 +307,13 @@ export const CDDashboardPage: React.FC = () => {
         <PageSpinner />
       </div>
     )
+  }
+
+  const refreshCdDashboardPage = () => {
+    refetchHealth()
+    refetchDeploymentExecution()
+    workloadCardRefetch()
+    refetch()
   }
 
   return (
@@ -267,12 +332,28 @@ export const CDDashboardPage: React.FC = () => {
           <NoDataOverviewPage onHide={() => setShowOverviewDialog(false)} />
         ) : (
           <DeploymentsTimeRangeContext.Provider value={{ timeRange: resultTimeRange, setTimeRange }}>
+            <Layout.Horizontal className={styles.refreshButton}>
+              <Button
+                intent="primary"
+                icon="refresh"
+                onClick={refreshCdDashboardPage}
+                minimal
+                tooltipProps={{ isDark: true }}
+                tooltip={getString('common.refresh')}
+                disabled={loadingHealth || deploymentExecutionLoading || workloadCardLoading || loading}
+              />
+            </Layout.Horizontal>
             <Container className={styles.page} padding="large">
-              <DeploymentsHealthCards range={resultTimeRange} setRange={setTimeRange} title="Deployments Health" />
+              <DeploymentsHealthCards
+                data={dataHealth}
+                loading={loadingHealth}
+                error={errorHealth}
+                title="Deployments Health"
+              />
               <Container className={styles.executionsWrapper}>
                 <DeploymentExecutionsChart
-                  range={resultTimeRange}
-                  setRange={setTimeRange}
+                  data={dataDeploymentExecution}
+                  error={errorDeploymentExecution}
                   title={getString('executionsText')}
                 />
               </Container>

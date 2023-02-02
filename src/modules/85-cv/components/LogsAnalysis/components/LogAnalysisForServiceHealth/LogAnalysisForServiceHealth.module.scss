@@ -1,0 +1,85 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+.logsTab {
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(500px, 1fr) 1fr;
+  overflow: hidden !important;
+  overflow-y: auto !important;
+
+  .tableContent {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    overflow-y: hidden;
+    min-height: 300px;
+    .logAnalysisRow {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .clusterChart {
+    position: relative;
+    min-height: 170px;
+  }
+
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 170px;
+  }
+
+  .noData {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 170px !important;
+    padding-top: var(--spacing-huge) !important;
+  }
+
+  .filters {
+    display: flex;
+  }
+
+  .logsAnalysisFilters {
+    max-width: 250px;
+    padding: var(--spacing-medium);
+  }
+
+  .clusterTypeFilter {
+    max-width: 250px;
+    padding: var(--spacing-medium) var(--spacing-none);
+  }
+
+  &.logsTab-serviceScreen {
+    display: block !important;
+  }
+}
+
+.radarChartTypeIndicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: var(--spacing-xsmall);
+}
+
+.noData {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.logCountsDetail {
+  margin-bottom: var(--spacing-small);
+  flex-wrap: wrap;
+}

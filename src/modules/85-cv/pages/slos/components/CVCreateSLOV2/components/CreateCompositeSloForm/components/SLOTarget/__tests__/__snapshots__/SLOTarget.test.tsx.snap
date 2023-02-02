@@ -82,7 +82,7 @@ exports[`Valiate SLOTarget should render SLOTarget 1`] = `
     </div>
   </div>
   <div
-    class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+    class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-flex-start"
   >
     <div
       class="StyledProps--font StyledProps--main"
@@ -419,23 +419,19 @@ exports[`Valiate SLOTarget should render SLOTarget 1`] = `
       </div>
     </div>
     <div
-      class="StyledProps--font StyledProps--main errorBudget StyledProps--background-grey100 StyledProps--padding-medium"
-      style="height: 180px;"
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main errorBudget StyledProps--background-primary1 StyledProps--margin-top-large StyledProps--padding-medium StyledProps--border"
+      style="width: 200px;"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-grey600"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey600"
       >
         cv.errorBudget
       </p>
-      <h1
-        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--inline StyledProps--font-variation-display2"
-        level="1"
+      <span
+        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-help"
       >
         0
-      </h1>
-      <span
-        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-sub-section"
-      >
+         
         cv.mins
       </span>
     </div>
@@ -553,7 +549,7 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 1`] = `
     </div>
   </div>
   <div
-    class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+    class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-flex-start"
   >
     <div
       class="StyledProps--font StyledProps--main"
@@ -890,23 +886,19 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 1`] = `
       </div>
     </div>
     <div
-      class="StyledProps--font StyledProps--main errorBudget StyledProps--background-grey100 StyledProps--padding-medium"
-      style="height: 180px;"
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main errorBudget StyledProps--background-primary1 StyledProps--margin-top-large StyledProps--padding-medium StyledProps--border"
+      style="width: 200px;"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-grey600"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey600"
       >
         cv.errorBudget
       </p>
-      <h1
-        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--inline StyledProps--font-variation-display2"
-        level="1"
+      <span
+        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-help"
       >
         12960
-      </h1>
-      <span
-        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-sub-section"
-      >
+         
         cv.mins
       </span>
     </div>
@@ -1024,7 +1016,7 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 2`] = `
     </div>
   </div>
   <div
-    class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+    class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-flex-start"
   >
     <div
       class="StyledProps--font StyledProps--main"
@@ -1361,23 +1353,19 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 2`] = `
       </div>
     </div>
     <div
-      class="StyledProps--font StyledProps--main errorBudget StyledProps--background-grey100 StyledProps--padding-medium"
-      style="height: 180px;"
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main errorBudget StyledProps--background-primary1 StyledProps--margin-top-large StyledProps--padding-medium StyledProps--border"
+      style="width: 200px;"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-grey600"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey600"
       >
         cv.errorBudget
       </p>
-      <h1
-        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--inline StyledProps--font-variation-display2"
-        level="1"
+      <span
+        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-help"
       >
         101
-      </h1>
-      <span
-        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-sub-section"
-      >
+         
         cv.mins
       </span>
     </div>
@@ -1481,7 +1469,7 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 3`] = `
     </div>
   </div>
   <div
-    class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+    class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-flex-start"
   >
     <div
       class="StyledProps--font StyledProps--main"
@@ -1818,23 +1806,19 @@ exports[`Valiate SLOTarget should render SLOTarget for calendar 3`] = `
       </div>
     </div>
     <div
-      class="StyledProps--font StyledProps--main errorBudget StyledProps--background-grey100 StyledProps--padding-medium"
-      style="height: 180px;"
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main errorBudget StyledProps--background-primary1 StyledProps--margin-top-large StyledProps--padding-medium StyledProps--border"
+      style="width: 200px;"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-grey600"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey600"
       >
         cv.errorBudget
       </p>
-      <h1
-        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--inline StyledProps--font-variation-display2"
-        level="1"
+      <span
+        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-help"
       >
         15552
-      </h1>
-      <span
-        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-sub-section"
-      >
+         
         cv.mins
       </span>
     </div>
@@ -1938,7 +1922,7 @@ exports[`Valiate SLOTarget should render SLOTarget for rolling 1`] = `
     </div>
   </div>
   <div
-    class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+    class="Layout--horizontal Layout--layout-spacing-large StyledProps--main StyledProps--flex StyledProps--flex-alignItems-baseline StyledProps--flex-justifyContent-flex-start"
   >
     <div
       class="StyledProps--font StyledProps--main"
@@ -2275,23 +2259,19 @@ exports[`Valiate SLOTarget should render SLOTarget for rolling 1`] = `
       </div>
     </div>
     <div
-      class="StyledProps--font StyledProps--main errorBudget StyledProps--background-grey100 StyledProps--padding-medium"
-      style="height: 180px;"
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main errorBudget StyledProps--background-primary1 StyledProps--margin-top-large StyledProps--padding-medium StyledProps--border"
+      style="width: 200px;"
     >
       <p
-        class="StyledProps--font StyledProps--main StyledProps--font-variation-body2 StyledProps--color StyledProps--color-grey600"
+        class="StyledProps--font StyledProps--main StyledProps--font-variation-form-label StyledProps--color StyledProps--color-grey600"
       >
         cv.errorBudget
       </p>
-      <h1
-        class="StyledProps--font StyledProps--font-h1 StyledProps--main StyledProps--inline StyledProps--font-variation-display2"
-        level="1"
+      <span
+        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-help"
       >
         4320
-      </h1>
-      <span
-        class="StyledProps--font StyledProps--main StyledProps--inline StyledProps--font-variation-form-sub-section"
-      >
+         
         cv.mins
       </span>
     </div>

@@ -25,7 +25,8 @@ import type { FormikErrors, FormikProps } from 'formik'
 import { get, merge } from 'lodash-es'
 import cx from 'classnames'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
-import { getImagePullPolicyOptions, getShellOptions } from '@common/utils/ContainerRunStepUtils'
+import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
+import { getCIRunTestsStepShellOptions } from '@ci/utils/CIShellOptionsUtils'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
@@ -456,7 +457,7 @@ export const RunTestsStepBase = (
           buildToolOptions,
           languageOptions: getLanguageOptions(getString),
           imagePullPolicyOptions: getImagePullPolicyOptions(getString),
-          shellOptions: getShellOptions(getString),
+          shellOptions: getCIRunTestsStepShellOptions(getString),
           buildEnvironmentOptions: getBuildEnvironmentOptions(getString),
           frameworkVersionOptions: getFrameworkVersionOptions(getString)
         }

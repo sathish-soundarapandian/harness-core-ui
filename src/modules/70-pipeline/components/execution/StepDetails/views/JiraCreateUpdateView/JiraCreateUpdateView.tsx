@@ -17,6 +17,7 @@ import { ExecutionInputs } from '@pipeline/components/execution/StepDetails/tabs
 import { isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
 
 import { StepDetailsTab } from '../../tabs/StepDetailsTab/StepDetailsTab'
+import { PolicyEvaluationContent } from '../../common/ExecutionContent/PolicyEvaluationContent/PolicyEvaluationContent'
 import tabCss from '../DefaultView/DefaultView.module.scss'
 
 export const REFRESH_APPROVAL = 'REFRESH_APPROVAL'
@@ -25,7 +26,8 @@ enum ApprovalStepTab {
   STEP_DETAILS = 'STEP_DETAILS',
   INPUT = 'INPUT',
   OUTPUT = 'OUTPUT',
-  STEP_EXECUTION_INPUTS = 'STEP_EXECUTION_INPUTS'
+  STEP_EXECUTION_INPUTS = 'STEP_EXECUTION_INPUTS',
+  POLICY_ENFORCEMENT = 'POLICY_ENFORCEMENT'
 }
 
 export interface JiraCreateUpdateViewProps extends StepDetailProps {
@@ -40,6 +42,7 @@ export function JiraCreateUpdateView(props: JiraCreateUpdateViewProps): React.Re
   const [activeTab, setActiveTab] = React.useState(ApprovalStepTab.STEP_DETAILS)
   const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
   const shouldShowExecutionInputs = !!step.executionInputConfigured
+  const shouldShowPolicyEnforcement = !!step?.outcomes?.policyOutput?.policySetDetails
   const labels = []
   if (!isEmpty(issue.url)) {
     labels.push({
@@ -102,6 +105,19 @@ export function JiraCreateUpdateView(props: JiraCreateUpdateViewProps): React.Re
           />
         }
       />
+      {shouldShowPolicyEnforcement ? (
+        <Tabs.Tab
+          id={ApprovalStepTab.POLICY_ENFORCEMENT}
+          title={getString('pipeline.policyEnforcement.title')}
+          panel={
+            <PolicyEvaluationContent
+              step={step}
+              executionMetadata={executionMetadata}
+              policySetOutputPath={'outcomes.policyOutput'}
+            />
+          }
+        />
+      ) : null}
     </Tabs>
   )
 }

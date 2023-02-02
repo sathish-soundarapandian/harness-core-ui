@@ -17,7 +17,7 @@
     },
     "paths": {
       "@common/*": ["modules/10-common/*"],
-      "@audit-trail/*": ["modules/18-audit-trail/*"],
+      "@audit-trail/*": ["modules/38-audit-trail/*"],
       "@rbac/*": ["modules/20-rbac/*"],
       "@default-settings/*": ["modules/23-default-settings/*"],
       "@governance/*": ["modules/25-governance/*"],
@@ -43,6 +43,7 @@
       "@cv/*": ["modules/85-cv/*"],
       "@ce/*": ["modules/75-ce/*"],
       "@sto/*": ["modules/85-sto/*"],
+      "@sscs/*": ["modules/75-sscs/*"],
       "@gitops/*": ["modules/90-gitops/*"],
       "@wings-software/*": ["../node_modules/@harness/*"]
     }

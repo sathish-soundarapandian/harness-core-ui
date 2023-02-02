@@ -62,7 +62,6 @@ describe('Project List', () => {
           showEditProject={showEditProject}
           collaborators={collaborators}
           reloadPage={jest.fn()}
-          gotoPage={jest.fn()}
         />
       </TestWrapper>
     )

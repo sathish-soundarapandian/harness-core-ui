@@ -10,6 +10,7 @@ declare const styles: {
   readonly activeNode: string
   readonly folder: string
   readonly mainNode: string
+  readonly navItemName: string
   readonly nodeCollapseActive: string
   readonly nodeCollapseContainer: string
   readonly nodeCollapseItem: string

@@ -125,7 +125,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   const { branch, repoName, connectorRef } = useQueryParams<GitQueryParams & RunPipelineQueryParams>()
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier } = params
   const { isYamlEditable } = pipelineView
-  const isPipelineGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
+  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const [showBanner, setShowbanner] = React.useState<boolean>(false)
   const [shouldShowOutOfSyncError, setShouldShowOutOfSyncError] = React.useState(false)
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
@@ -261,14 +261,9 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     setShouldShowOutOfSyncError(true)
   }
 
-  // Need to show reload option only when we are showing a cached response and it is not valid
+  // Need to show reload option only when we are showing a cached response
   function showReloadFromGitoption(): boolean {
-    return Boolean(
-      isPipelineRemote &&
-        isPipelineGitCacheEnabled &&
-        pipelineCacheResponse &&
-        pipelineCacheResponse?.cacheState !== 'VALID_CACHE'
-    )
+    return Boolean(isPipelineRemote && isGitCacheEnabled && pipelineCacheResponse)
   }
 
   function handleReloadFromGitClick(): void {
@@ -423,7 +418,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                     readOnly: pipelineIdentifier === DefaultNewPipelineId
                   }}
                 />
-                {isPipelineGitCacheEnabled && !isEmpty(pipelineCacheResponse) && !remoteFetchError && (
+                {isGitCacheEnabled && !isEmpty(pipelineCacheResponse) && !remoteFetchError && (
                   <PipelineCachedCopy
                     ref={pipelineCachedCopyRef}
                     reloadContent={getString('common.pipeline')}

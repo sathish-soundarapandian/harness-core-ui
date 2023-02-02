@@ -27,7 +27,6 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 
 import { useQueryParams } from '@common/hooks'
-import { StageType } from '@pipeline/utils/stageHelpers'
 import { ExecutionStage, ExecutionStageProps } from './ExecutionStage'
 import { MultiTypeDeploymentSummary } from './MultiTypeDeploymentSummary'
 
@@ -74,6 +73,14 @@ export function ExecutionStageWrapper(props: ExecutionStageProps): React.ReactEl
               stage={stage}
               onToggleClick={toggleStages}
               isStagesExpanded={isStagesExpanded}
+              pipelineIdentifier={pipelineIdentifier}
+              executionIdentifier={executionIdentifier}
+              source={source}
+              connectorRef={connectorRef}
+              repoName={repoName}
+              branch={branch}
+              storeType={storeType}
+              link={!!stage.stageNodeId}
             />
           ) : (
             <ExecutionStage
@@ -88,6 +95,7 @@ export function ExecutionStageWrapper(props: ExecutionStageProps): React.ReactEl
               repoName={repoName}
               branch={branch}
               storeType={storeType}
+              link={!!stage.stageNodeId}
             />
           )}
           {isStagesExpanded
@@ -105,7 +113,7 @@ export function ExecutionStageWrapper(props: ExecutionStageProps): React.ReactEl
                   repoName={repoName}
                   branch={branch}
                   storeType={storeType}
-                  link
+                  link={!!loopStage.stageNodeId}
                 />
               ))
             : null}
@@ -127,7 +135,7 @@ export function ExecutionStageWrapper(props: ExecutionStageProps): React.ReactEl
           repoName={repoName}
           branch={branch}
           storeType={storeType}
-          link={stage.type === StageType.PIPELINE}
+          link
         />
       )}
 
@@ -143,7 +151,7 @@ export function ExecutionStageWrapper(props: ExecutionStageProps): React.ReactEl
           repoName={repoName}
           branch={branch}
           storeType={storeType}
-          link={stage.type === StageType.PIPELINE}
+          link
         />
       ))}
     </Fragment>

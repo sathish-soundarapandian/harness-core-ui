@@ -17,6 +17,7 @@ export const deploymentIconMap: Record<string, IconName> = {
   [ServiceDeploymentType.AzureWebApp]: 'azurewebapp',
   [ServiceDeploymentType.ECS]: 'service-amazon-ecs',
   [ServiceDeploymentType.Kubernetes]: 'service-kubernetes',
+  [ServiceDeploymentType.KubernetesGitops]: 'kubernetes-gitops',
   [ServiceDeploymentType.NativeHelm]: 'service-helm',
   [ServiceDeploymentType.Pdc]: 'pdc',
   [ServiceDeploymentType.ServerlessAwsLambda]: 'service-serverless-aws',
@@ -30,7 +31,8 @@ export const deploymentIconMap: Record<string, IconName> = {
   [ServiceDeploymentType.TAS]: 'tas',
   [ServiceDeploymentType.CustomDeployment]: 'CustomDeployment',
   [ServiceDeploymentType.Elastigroup]: 'elastigroup',
-  [ServiceDeploymentType.Asg]: 'aws-asg'
+  [ServiceDeploymentType.Asg]: 'aws-asg',
+  [ServiceDeploymentType.GoogleCloudFunctions]: 'service-google-functions'
 }
 
 export interface DeploymentTypeItem {
@@ -47,11 +49,12 @@ export interface GetNgSupportedDeploymentTypesProps {
   NG_SVC_ENV_REDESIGN?: boolean
   SPOT_ELASTIGROUP_NG?: boolean
   CDS_TAS_NG?: boolean
-  ASG_NG?: boolean
+  CDS_ASG_NG?: boolean
+  CDS_GOOGLE_CLOUD_FUNCTION?: boolean
 }
 
 export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
-  const { SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, ASG_NG } = props
+  const { SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, CDS_ASG_NG, CDS_GOOGLE_CLOUD_FUNCTION } = props
 
   const baseTypes: DeploymentTypeItem[] = [
     {
@@ -71,6 +74,13 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
     }
   ]
 
+  if (CDS_GOOGLE_CLOUD_FUNCTION) {
+    baseTypes.push({
+      label: 'pipeline.serviceDeploymentTypes.googleCloudFunctions',
+      icon: deploymentIconMap[ServiceDeploymentType.GoogleCloudFunctions],
+      value: ServiceDeploymentType.GoogleCloudFunctions
+    })
+  }
   if (SSH_NG) {
     baseTypes.push({
       label: 'pipeline.serviceDeploymentTypes.ssh',
@@ -111,7 +121,7 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
       value: ServiceDeploymentType.TAS
     })
   }
-  if (ASG_NG) {
+  if (CDS_ASG_NG) {
     baseTypes.push({
       label: 'pipeline.serviceDeploymentTypes.asg',
       icon: deploymentIconMap[ServiceDeploymentType.Asg],

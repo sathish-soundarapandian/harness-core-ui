@@ -16,9 +16,9 @@ import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useLogContentHook } from '@cv/hooks/useLogContentHook/useLogContentHook'
 import { LogTypes } from '@cv/hooks/useLogContentHook/useLogContentHook.types'
+import type { AnalysedDeploymentNode } from 'services/cv'
 import { DeploymentMetrics } from './components/DeploymentMetrics/DeploymentMetrics'
 import { ExecutionVerificationSummary } from './components/ExecutionVerificationSummary/ExecutionVerificationSummary'
-import type { DeploymentNodeAnalysisResult } from './components/DeploymentProgressAndNodes/components/DeploymentNodes/DeploymentNodes.constants'
 import LogAnalysisContainer from './components/LogAnalysisContainer/LogAnalysisView.container'
 import { getActivityId, getDefaultTabId } from './ExecutionVerificationView.utils'
 import { ManualInterventionVerifyStep } from './components/ManualInterventionVerifyStep/ManualInterventionVerifyStep'
@@ -32,7 +32,7 @@ interface ExecutionVerificationViewProps {
 export function ExecutionVerificationView(props: ExecutionVerificationViewProps): JSX.Element {
   const { step } = props
   const { getString } = useStrings()
-  const [selectedNode, setSelectedNode] = useState<DeploymentNodeAnalysisResult | undefined>()
+  const [selectedNode, setSelectedNode] = useState<AnalysedDeploymentNode | undefined>()
   const activityId = useMemo(() => getActivityId(step), [step])
   const { type } = useQueryParams<{ type?: string }>()
   const defaultTabId = useMemo(() => getDefaultTabId(getString, type), [type])
@@ -78,7 +78,7 @@ export function ExecutionVerificationView(props: ExecutionVerificationViewProps)
                 onSelectNode={setSelectedNode}
                 isConsoleView
               />
-              <LogAnalysisContainer step={step} hostName={selectedNode?.hostName} />
+              <LogAnalysisContainer step={step} hostName={selectedNode?.nodeIdentifier} />
             </Layout.Horizontal>
           }
           panelClassName={css.mainTabPanelLogs}

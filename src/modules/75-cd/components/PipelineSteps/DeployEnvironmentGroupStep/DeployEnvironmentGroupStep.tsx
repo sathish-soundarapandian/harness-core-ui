@@ -29,10 +29,16 @@ export class DeployEnvironmentGroupStep extends Step<DeployEnvironmentEntityConf
   }
 
   renderStep(props: StepProps<DeployEnvironmentEntityConfig>): JSX.Element {
-    const { allowableTypes, inputSetData, stepViewType } = props
+    const { allowableTypes, inputSetData, stepViewType, customStepProps } = props
 
     if (isTemplatizedView(stepViewType)) {
-      return <DeployEnvironmentGroupInputStep inputSetData={inputSetData} allowableTypes={allowableTypes} />
+      return (
+        <DeployEnvironmentGroupInputStep
+          inputSetData={inputSetData}
+          allowableTypes={allowableTypes}
+          gitOpsEnabled={(customStepProps as any)?.gitOpsEnabled}
+        />
+      )
     }
 
     return <React.Fragment />

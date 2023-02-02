@@ -161,7 +161,7 @@ export default function DeployServiceEntityWidget({
   const [allServices, setAllServices] = useState(
     setupModeType === setupMode.DIFFERENT ? getAllFixedServices(initialValues) : ['']
   )
-  const { MULTI_SERVICE_INFRA, CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+  const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
   const {
     state: {
       selectionState: { selectedStageId }
@@ -294,20 +294,26 @@ export default function DeployServiceEntityWidget({
 
     // add the new service to selection
     /* istanbul ignore else */
+
+    const scopedServiceRef = getScopedValueFromDTO({
+      projectIdentifier,
+      orgIdentifier,
+      identifier: newServiceInfo.identifier
+    })
     if (formikRef.current) {
       const { values, setValues } = formikRef.current
       if (values.services) {
         setValues(
           produce(values, draft => {
             if (Array.isArray(draft.services)) {
-              draft.services.push({ label: newServiceInfo.name, value: newServiceInfo.identifier })
+              draft.services.push({ label: newServiceInfo.name, value: scopedServiceRef })
             }
           })
         )
       } else {
         setValues(
           produce(values, draft => {
-            draft.service = newServiceInfo.identifier
+            draft.service = scopedServiceRef
           })
         )
       }
@@ -622,15 +628,13 @@ export default function DeployServiceEntityWidget({
                           />
                         ) : null}
                       </Layout.Horizontal>
-                      {MULTI_SERVICE_INFRA ? (
-                        <Toggle
-                          className={css.serviceActionWrapper}
-                          checked={isMultiSvc}
-                          onToggle={getMultiSvcToggleHandler(values)}
-                          label={getString('cd.pipelineSteps.serviceTab.multiServicesText')}
-                          tooltipId={'multiServiceToggle'}
-                        />
-                      ) : null}
+                      <Toggle
+                        className={css.serviceActionWrapper}
+                        checked={isMultiSvc}
+                        onToggle={getMultiSvcToggleHandler(values)}
+                        label={getString('cd.pipelineSteps.serviceTab.multiServicesText')}
+                        tooltipId={'multiServiceToggle'}
+                      />
                     </Layout.Horizontal>
 
                     {isMultiSvc ? (

@@ -16,7 +16,7 @@ import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/Steps
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
 import { SonarqubeStepBaseWithRef } from './SonarqubeStepBase'
-import { SonarqubeStepInputSet } from './SonarqubeStepInputSet'
+import { SecurityStepInputSet } from '../SecurityStepInputSet'
 import { SonarqubeStepVariables, SonarqubeStepVariablesProps } from './SonarqubeStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SonarqubeStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
@@ -58,11 +58,11 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
         type: 'repository',
         name: '',
         variant: '',
-        workspace: '/harness'
+        workspace: ''
       },
       auth: {
         domain: '',
-        access_token: '<+secrets.getValue("your_sonarqube_token_secret")>',
+        access_token: '',
         ssl: true
       },
       advanced: {
@@ -108,30 +108,27 @@ export class SonarqubeStep extends PipelineStep<SonarqubeStepData> {
       allowableTypes
     } = props
 
-    switch (stepViewType) {
-      case StepViewType.InputSet:
-      case StepViewType.DeploymentForm:
-        return (
-          <SonarqubeStepInputSet
-            initialValues={initialValues}
-            template={inputSetData?.template}
-            path={inputSetData?.path || ''}
-            readonly={!!inputSetData?.readonly}
-            stepViewType={stepViewType}
-            onUpdate={onUpdate}
-            onChange={onChange}
-            allowableTypes={allowableTypes}
-          />
-        )
-
-      case StepViewType.InputVariable:
-        return (
-          <SonarqubeStepVariables
-            {...(customStepProps as SonarqubeStepVariablesProps)}
-            initialValues={initialValues}
-            onUpdate={onUpdate}
-          />
-        )
+    if (this.isTemplatizedView(stepViewType)) {
+      return (
+        <SecurityStepInputSet
+          initialValues={initialValues}
+          template={inputSetData?.template}
+          path={inputSetData?.path || ''}
+          readonly={!!inputSetData?.readonly}
+          stepViewType={stepViewType}
+          onUpdate={onUpdate}
+          onChange={onChange}
+          allowableTypes={allowableTypes}
+        />
+      )
+    } else if (stepViewType === StepViewType.InputVariable) {
+      return (
+        <SonarqubeStepVariables
+          {...(customStepProps as SonarqubeStepVariablesProps)}
+          initialValues={initialValues}
+          onUpdate={onUpdate}
+        />
+      )
     }
 
     return (

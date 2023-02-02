@@ -57,6 +57,10 @@ describe('<TemplateStepWidgetWithRef /> tests', () => {
                 spec: {
                   requestBody: '<+input>',
                   url: '<+input>'
+                },
+                delegateSelectors: '<+input>',
+                enforce: {
+                  policySets: '<+input>'
                 }
               } as JsonNode
             }

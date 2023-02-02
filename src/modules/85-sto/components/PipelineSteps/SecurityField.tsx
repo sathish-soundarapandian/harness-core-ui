@@ -18,6 +18,7 @@ import type { StringsMap } from 'stringTypes'
 import { renderOptionalWrapper } from '@ci/components/PipelineSteps/CIStep/StepUtils'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import SectionHeader from './SectionHeader'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface SelectItems extends SelectOption {
@@ -103,6 +104,8 @@ function SecurityField<T>(props: SecurityFieldProps<T>) {
           } = fieldProps
 
           if (hide) return null
+
+          if (fieldName === 'header') return <SectionHeader text={label} />
 
           if (fieldType === 'dropdown') {
             return (

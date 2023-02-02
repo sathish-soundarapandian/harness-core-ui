@@ -13,5 +13,6 @@ declare const styles: {
   readonly card: string
   readonly stepContainer: string
   readonly stepMargin: string
+  readonly stepSubtitle: string
 }
 export default styles

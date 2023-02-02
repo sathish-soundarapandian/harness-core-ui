@@ -16,7 +16,7 @@ import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/Steps
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
 import { BanditStepBaseWithRef } from './BanditStepBase'
-import { BanditStepInputSet } from './BanditStepInputSet'
+import { SecurityStepInputSet } from '../SecurityStepInputSet'
 import { BanditStepVariables, BanditStepVariablesProps } from './BanditStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './BanditStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
@@ -58,7 +58,7 @@ export class BanditStep extends PipelineStep<BanditStepData> {
         type: 'repository',
         name: '',
         variant: '',
-        workspace: '/harness'
+        workspace: ''
       },
       advanced: {
         log: {
@@ -100,30 +100,27 @@ export class BanditStep extends PipelineStep<BanditStepData> {
       allowableTypes
     } = props
 
-    switch (stepViewType) {
-      case StepViewType.InputSet:
-      case StepViewType.DeploymentForm:
-        return (
-          <BanditStepInputSet
-            initialValues={initialValues}
-            template={inputSetData?.template}
-            path={inputSetData?.path || ''}
-            readonly={!!inputSetData?.readonly}
-            stepViewType={stepViewType}
-            onUpdate={onUpdate}
-            onChange={onChange}
-            allowableTypes={allowableTypes}
-          />
-        )
-
-      case StepViewType.InputVariable:
-        return (
-          <BanditStepVariables
-            {...(customStepProps as BanditStepVariablesProps)}
-            initialValues={initialValues}
-            onUpdate={onUpdate}
-          />
-        )
+    if (this.isTemplatizedView(stepViewType)) {
+      return (
+        <SecurityStepInputSet
+          initialValues={initialValues}
+          template={inputSetData?.template}
+          path={inputSetData?.path || ''}
+          readonly={!!inputSetData?.readonly}
+          stepViewType={stepViewType}
+          onUpdate={onUpdate}
+          onChange={onChange}
+          allowableTypes={allowableTypes}
+        />
+      )
+    } else if (stepViewType === StepViewType.InputVariable) {
+      return (
+        <BanditStepVariables
+          {...(customStepProps as BanditStepVariablesProps)}
+          initialValues={initialValues}
+          onUpdate={onUpdate}
+        />
+      )
     }
 
     return (

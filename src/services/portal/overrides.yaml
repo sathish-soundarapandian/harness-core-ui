@@ -48,6 +48,7 @@ allowpaths:
   - '/setup/delegates/validate-kubernetes-yaml.post'
   - '/setup/delegates/v3/validate-kubernetes-yaml.post'
   - '/setup/delegates/generate-kubernetes-yaml.post'
+  - '/setup/delegates/installation-command.get'
   - '/setup/delegates/v3/generate-kubernetes-yaml.post'
   - '/setup/delegates/v3/ng/generate-kubernetes-yaml'
   - '/delegates-verification/heartbeat'
@@ -57,6 +58,7 @@ allowpaths:
   - '/awshelper/aws-regions'
   - '/sso/ldap/iterations'
   - '/users/userAccounts'
+  - '/delegate-feedbacks'
 operationIdOverrides:
   /setup/delegates.get: getDelegates
   /setup/delegates/status.get: getDelegatesStatus
@@ -100,6 +102,7 @@ operationIdOverrides:
   /setup/delegates/validate-kubernetes-yaml.post: validateKubernetesYaml
   /setup/delegates/v3/validate-kubernetes-yaml.post: validateKubernetesYamlV3
   /setup/delegates/generate-kubernetes-yaml.post: generateKubernetesYaml
+  /delegate-feedbacks: postFeedBackDelegate
   /setup/delegates/v3/generate-kubernetes-yaml.post: generateKubernetesYamlV3
   /setup/delegates/v3/ng/generate-kubernetes-yaml: generateKubernetesYamlUsingNgToken
   /delegates-verification/heartbeat: verifyDelegateHeartBeat
@@ -109,3 +112,4 @@ operationIdOverrides:
   /awshelper/aws-regions: getAwsRegions
   /sso/ldap/iterations: getCronExpressionIterations
   /users/userAccounts: getUserAccounts
+  /setup/delegates/installation-command.get: getInstallationCommand

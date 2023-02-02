@@ -13,6 +13,7 @@ import { useHandleManualInterventionInterrupt } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
 import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import { ManualInterventionTab } from '../ManualInterventionTab'
 import data from './data.json'
 import executionMetadata from './executionMetadata.json'
@@ -58,6 +59,7 @@ describe('<ManualInterventionTab /> tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
         <ManualInterventionTab
           step={data as any}
+          stageType={StageType.DEPLOY}
           allowedStrategies={AllStrategies}
           executionMetadata={executionMetadata}
         />
@@ -72,6 +74,7 @@ describe('<ManualInterventionTab /> tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
         <ManualInterventionTab
           step={data as any}
+          stageType={StageType.DEPLOY}
           allowedStrategies={AllStrategies}
           executionMetadata={executionMetadata}
         />
@@ -105,6 +108,7 @@ describe('<ManualInterventionTab /> tests', () => {
       <TestWrapper path={TEST_PATH} pathParams={pathParams}>
         <ManualInterventionTab
           step={data as any}
+          stageType={StageType.DEPLOY}
           allowedStrategies={AllStrategies}
           executionMetadata={executionMetadata}
         />

@@ -31,7 +31,7 @@ export default function EnvironmentsInputSetForm({
   allowableTypes
 }: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier'>): React.ReactElement {
   const { getString } = useStrings()
-  const { NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled, MULTI_SERVICE_INFRA: isMultiSvcInfraEnabled } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled } = useFeatureFlags()
 
   return (
     <>
@@ -45,7 +45,7 @@ export default function EnvironmentsInputSetForm({
         stageIdentifier={stageIdentifier}
       />
 
-      {isSvcEnvEntityEnabled && isMultiSvcInfraEnabled && deploymentStageTemplate.environments && (
+      {isSvcEnvEntityEnabled && deploymentStageTemplate.environments && (
         <div id={`Stage.${stageIdentifier}.Environments`} className={cx(css.accordionSummary)}>
           <div className={css.inputheader}>{getString('environments')}</div>
           <div className={css.nestedAccordions}>

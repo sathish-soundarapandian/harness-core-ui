@@ -185,7 +185,7 @@ describe('rule details tab', () => {
     const { container, getByText } = renderComponent()
 
     act(() => {
-      fireEvent.click(getByText('ce.common.expand'))
+      fireEvent.click(getByText('common.expand'))
       expect(container.querySelector('table[role="table"]')).toBeDefined()
     })
   })

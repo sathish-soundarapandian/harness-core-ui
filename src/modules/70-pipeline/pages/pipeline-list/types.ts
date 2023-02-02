@@ -6,7 +6,6 @@
  */
 
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
-import type { PartiallyRequired } from '@pipeline/utils/types'
 import type { GetPipelineListQueryParams, PipelineFilterProperties } from 'services/pipeline-ng'
 
 export type PipelineListPagePathParams = PipelineType<{
@@ -26,7 +25,4 @@ export interface SortBy {
   order: 'ASC' | 'DESC'
 }
 
-export type ProcessedPipelineListPageQueryParams = PartiallyRequired<
-  PipelineListPageQueryParams,
-  'page' | 'size' | 'sort'
->
+export type ProcessedPipelineListPageQueryParams = RequiredPick<PipelineListPageQueryParams, 'page' | 'size' | 'sort'>

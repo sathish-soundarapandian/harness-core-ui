@@ -96,17 +96,8 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
 
-  const queryParams = {
-    accountIdentifier: accountId,
-    projectIdentifier,
-    orgIdentifier,
-    repoIdentifier,
-    branch,
-    imagePath: getFinalQueryParamValue(imagePathValue),
-    connectorRef: getFinalQueryParamValue(connectorRefValue),
-    pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
-    serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
-    fqnPath: getFqnPath(
+  const getFqnPathForEntity = (entityName: string): string =>
+    getFqnPath(
       path as string,
       !!isPropagatedStage,
       stageIdentifier,
@@ -116,8 +107,20 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
           : artifactPath,
         ''
       ),
-      'tag'
+      entityName
     )
+  const tagFqnPath = getFqnPathForEntity('tag')
+  const digestFqnPath = getFqnPathForEntity('digest')
+  const queryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier,
+    orgIdentifier,
+    repoIdentifier,
+    branch,
+    imagePath: getFinalQueryParamValue(imagePathValue),
+    connectorRef: getFinalQueryParamValue(connectorRefValue),
+    pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
+    serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
   }
 
   const pipelineRuntimeYaml = getYamlData(formik?.values, stepViewType as StepViewType, path as string)
@@ -155,7 +158,10 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
       }
     },
 
-    queryParams,
+    queryParams: {
+      ...queryParams,
+      fqnPath: tagFqnPath
+    },
     lazy: true
   })
 
@@ -174,7 +180,10 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
         'content-type': 'application/json'
       }
     },
-    queryParams,
+    queryParams: {
+      ...queryParams,
+      fqnPath: digestFqnPath
+    },
     lazy: true
   })
 

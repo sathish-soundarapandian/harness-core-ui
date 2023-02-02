@@ -22,6 +22,7 @@ import { CommonQueryViewer } from '@cv/components/CommonQueryViewer/CommonQueryV
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { getIsLogsTableVisible } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.utils'
 import type { CommonCustomMetricFormikInterface } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
+import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import CommonChart from '../../CommonChart/CommonChart'
 import type { CommonCustomMetricFormContainerProps } from './CommonCustomMetricFormContainer.types'
 import LogsTableContainer from '../../LogsTable/LogsTableContainer'
@@ -35,9 +36,9 @@ import { HEALTHSOURCE_TYPE_TO_PROVIDER_MAPPING } from './CommonCustomMetricFormC
 import AssignQuery from '../../Assign/AssignQuery'
 
 export default function CommonCustomMetricFormContainer(props: CommonCustomMetricFormContainerProps): JSX.Element {
-  const { values } = useFormikContext<CommonCustomMetricFormikInterface>()
+  const { values, setFieldValue } = useFormikContext<CommonCustomMetricFormikInterface>()
   const { sourceData } = useContext(SetupSourceTabsContext)
-  const { product } = sourceData || {}
+  const { product, sourceType } = sourceData || {}
   const { connectorIdentifier, isConnectorRuntimeOrExpression, healthSourceConfig } = props
   const { getString } = useStrings()
   const [records, setRecords] = useState<Record<string, any>[]>([])
@@ -46,7 +47,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   const { isQueryRuntimeOrExpression } = useCommonHealthSource()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const chartConfig = healthSourceConfig?.customMetrics?.metricsChart
-  const providerType = HEALTHSOURCE_TYPE_TO_PROVIDER_MAPPING[product?.value]
+  const providerType = HEALTHSOURCE_TYPE_TO_PROVIDER_MAPPING[product?.value || sourceType]
   const query = useMemo(() => (values?.query?.length ? values.query : ''), [values])
   const isLogsTableVisible = getIsLogsTableVisible(healthSourceConfig)
   const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
@@ -97,9 +98,11 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
     if (query) {
       setIsQueryExecuted(true)
       const fetchRecordsRequestBody = getRecordsRequestBody(connectorIdentifier, providerType, query)
-      const recordsData = await queryHealthSource(fetchRecordsRequestBody)
-      if (recordsData?.resource?.rawRecords) {
-        setRecords(recordsData?.resource?.rawRecords as Record<string, any>[])
+      const recordsInfo = await queryHealthSource(fetchRecordsRequestBody)
+      const recordsData = recordsInfo?.resource?.rawRecords || []
+      if (recordsData.length) {
+        setRecords(recordsData as Record<string, any>[])
+        setFieldValue(CustomMetricFormFieldNames.RECORD_COUNT, recordsData.length)
         if (shouldAutoBuildChart(chartConfig)) {
           handleBuildChart()
         }
@@ -127,11 +130,12 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
             'cv.monitoringSources.commonHealthSource.querySectionSecondaryTitle'
         )}
       />
-      {shouldShowChartComponent(chartConfig, isQueryRuntimeOrExpression) ? (
+      {shouldShowChartComponent(chartConfig, isQueryRuntimeOrExpression, isConnectorRuntimeOrExpression) ? (
         <CommonChart
           timeSeriesDataLoading={timeSeriesDataLoading}
           timeseriesDataError={timeseriesDataError}
           healthSourceTimeSeriesData={healthSourceTimeSeriesData}
+          isQueryExecuted={isQueryExecuted}
         />
       ) : null}
       {isLogsTableVisible && (

@@ -21,6 +21,7 @@ import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
 import { UserLabel } from '@common/components'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { MinimalLayout } from '@common/layouts'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
@@ -40,7 +41,7 @@ import RbacFactory from '@rbac/factories/RbacFactory'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String as LocaleString } from 'framework/strings'
 import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestinations'
-import AuditTrailFactory from '@audit-trail/factories/AuditTrailFactory'
+import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import {
   getActiveUsageNumber,
   getPercentageNumber,
@@ -219,6 +220,17 @@ RbacFactory.registerResourceTypeHandler(ResourceType.STO_ISSUE, {
     [PermissionIdentifier.VIEW_STO_ISSUE]: <LocaleString stringID="rbac.permissionLabels.view" />
   }
 })
+RbacFactory.registerResourceTypeHandler(ResourceType.TICKET, {
+  icon: 'sto-color-filled',
+  label: 'sto.tickets',
+  labelSingular: 'common.singularLabels.ticket',
+  category: ResourceCategory.STO,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_STO_TICKET]: <LocaleString stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.EDIT_STO_TICKET]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.DELETE_STO_TICKET]: <LocaleString stringID="rbac.permissionLabels.delete" />
+  }
+})
 
 // Audit Trail
 
@@ -318,6 +330,16 @@ const RouteDestinations: React.FC = () => {
           routes.toSTOGettingStarted({ ...accountPathProps }),
           routes.toSTOProjectGettingStarted({ ...accountPathProps, ...projectPathProps })
         ]}
+      >
+        <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ UserLabel }} />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={STOSideNavProps}
+        layout={MinimalLayout}
+        path={[routes.toSTOProjectTicketSummary({ ...accountPathProps, ...projectPathProps, issueId: ':issueId' })]}
       >
         <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ UserLabel }} />
       </RouteWithLayout>

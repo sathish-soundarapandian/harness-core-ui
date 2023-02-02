@@ -11,7 +11,7 @@ git checkout $BRANCH
 #git add package.json
 export VERSION_FILE="package.json"
 # get branch name (0.2.0 -> 0.2.x)
-export VERSION=$(cat package.json | grep version | cut -d: -f2 | cut -d\" -f2 | cut -d. -f1,2).x
+export VERSION=$(cat package.json | grep version | cut -d: -f2 | cut -d\" -f2 | cut -d. -f1,2).0
 echo $VERSION
 
 SPLIT_VERSION=`echo "$VERSION" | awk -F'.' '{print $2}'`

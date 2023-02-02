@@ -16,11 +16,16 @@ import css from './ResourceScopeForm.module.scss'
 
 interface ProjectSelectionRendererProps {
   projects: string[]
+  orgIdentifier: string
   onDelete: (item: string) => void
 }
 
-const AccountProjectSelectionRenderer: React.FC<ProjectSelectionRendererProps> = ({ projects, onDelete }) => {
-  const { accountId, orgIdentifier } = useParams<ResourceGroupDetailsPathProps & ModulePathParams>()
+const AccountProjectSelectionRenderer: React.FC<ProjectSelectionRendererProps> = ({
+  projects,
+  onDelete,
+  orgIdentifier
+}) => {
+  const { accountId } = useParams<ResourceGroupDetailsPathProps & ModulePathParams>()
   const { getString } = useStrings()
 
   const { data, loading } = useGetProjectList({

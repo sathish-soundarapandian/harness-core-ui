@@ -5,36 +5,117 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { SelectOption } from '@harness/uicore'
-import type { FormikProps } from 'formik'
-import moment from 'moment'
+import { Utils, SelectOption } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
-import type { SLOForm } from '../../components/CVCreateSLO/components/CreateSLOForm/CreateSLO.types'
-import { dateFormatSLOTarget, PeriodTypeEnum } from './SLOTargetAndBudgetPolicy.constants'
+import {
+  Days,
+  ErrorBudgetInterface,
+  PeriodLengthTypes,
+  PeriodTypes,
+  SLOV2Form
+} from '../../components/CVCreateSLOV2/CVCreateSLOV2.types'
 
 export const getPeriodTypeOptions = (getString: UseStringsReturn['getString']): SelectOption[] => {
   return [
-    { label: getString('cv.slos.sloTargetAndBudget.periodTypeOptions.rolling'), value: PeriodTypeEnum.ROLLING },
-    { label: getString('cv.slos.sloTargetAndBudget.periodTypeOptions.calendar'), value: PeriodTypeEnum.CALENDAR }
+    { label: getString('cv.slos.sloTargetAndBudget.periodTypeOptions.rolling'), value: PeriodTypes.ROLLING },
+    { label: getString('cv.slos.sloTargetAndBudget.periodTypeOptions.calendar'), value: PeriodTypes.CALENDAR }
   ]
 }
 
-export const getPeriodLengthOptions = (): SelectOption[] => {
-  const periodLengthOptions = []
-  for (let i = 1; i <= 30; i++) {
-    periodLengthOptions.push({ label: `${i}`, value: `${i}d` })
+export const getPeriodLengthOptions = (getString: UseStringsReturn['getString']): SelectOption[] => {
+  return [
+    {
+      label: getString('triggers.schedulePanel.weeklyTabTitle'),
+      value: PeriodLengthTypes.WEEKLY
+    },
+    {
+      label: getString('common.monthly'),
+      value: PeriodLengthTypes.MONTHLY
+    },
+    {
+      label: getString('cv.quarterly'),
+      value: PeriodLengthTypes.QUARTERLY
+    }
+  ]
+}
+
+export const getWindowEndOptionsForWeek = (getString: UseStringsReturn['getString']): SelectOption[] => {
+  return [
+    { label: getString('cv.monday'), value: Days.MONDAY },
+    { label: getString('cv.tuesday'), value: Days.TUESDAY },
+    { label: getString('cv.wednesday'), value: Days.WEDNESDAY },
+    { label: getString('cv.thursday'), value: Days.THURSDAY },
+    { label: getString('cv.friday'), value: Days.FRIDAY },
+    { label: getString('cv.saturday'), value: Days.SATURDAY },
+    { label: getString('cv.sunday'), value: Days.SUNDAY }
+  ]
+}
+
+export const getPeriodLengthOptionsForRolling = (): SelectOption[] => {
+  return Array(31)
+    .fill(0)
+    .map((_, i) => ({ label: `${i + 1}`, value: `${i + 1}d` }))
+}
+
+export const getWindowEndOptionsForMonth = (): SelectOption[] => {
+  return Array(31)
+    .fill(0)
+    .map((_, i) => ({ label: `${i + 1}`, value: `${i + 1}` }))
+}
+
+export const getErrorBudget = (values: ErrorBudgetInterface): number => {
+  const { periodType, periodLength = '', periodLengthType, SLOTargetPercentage } = values
+
+  if (Number.isNaN(SLOTargetPercentage) || SLOTargetPercentage < 0 || SLOTargetPercentage > 100) {
+    return 0
   }
-  return periodLengthOptions
+
+  const minutesPerDay = 60 * 24
+  let totalMinutes = 0
+
+  if (periodType === PeriodTypes.ROLLING && Number.parseInt(periodLength)) {
+    totalMinutes = Number.parseInt(periodLength) * minutesPerDay
+  } else if (periodLengthType === PeriodLengthTypes.WEEKLY) {
+    totalMinutes = 7 * minutesPerDay
+  } else if (periodLengthType === PeriodLengthTypes.MONTHLY) {
+    totalMinutes = 30 * minutesPerDay
+  } else if (periodLengthType === PeriodLengthTypes.QUARTERLY) {
+    totalMinutes = 90 * minutesPerDay
+  }
+
+  return Math.round(((100 - SLOTargetPercentage) / 100) * totalMinutes)
 }
 
-export const getDefaultDateRange = (formikProps: FormikProps<SLOForm>): [Date | undefined, Date | undefined] => {
-  const { startDate, endDate } = formikProps?.values?.target?.spec ?? {}
-  return [startDate ? moment(startDate).toDate() : undefined, endDate ? moment(endDate).toDate() : undefined]
-}
+export const getCustomOptionsForSLOTargetChart = (
+  SLOTargetPercentage: SLOV2Form['SLOTargetPercentage']
+): Highcharts.Options => {
+  const labelColor = Utils.getRealCSSColor(Color.PRIMARY_7)
 
-export function getUpdatedTarget(range: [Date | undefined, Date | undefined], values: SLOForm): SLOForm['target'] {
-  const startDate = moment(range[0]).format(dateFormatSLOTarget)
-  const endDate = moment(range[1]).format(dateFormatSLOTarget)
-  const updatedTarget = { ...values?.target, spec: { ...values?.target?.spec, startDate, endDate } }
-  return updatedTarget
+  return {
+    chart: { height: 200 },
+    yAxis: {
+      min: 0,
+      max: 100,
+      tickInterval: 25,
+      plotLines: [
+        {
+          value: Number((Number(SLOTargetPercentage) || 0).toFixed(2)),
+          color: Utils.getRealCSSColor(Color.PRIMARY_7),
+          width: 2,
+          zIndex: 4,
+          label: {
+            useHTML: true,
+            formatter: function () {
+              return `
+                <div style="background-color:${labelColor};padding:4px 6px;border-radius:4px" >
+                  <span style="color:white" >${Number((Number(SLOTargetPercentage) || 0).toFixed(2))}%</span>
+                </div>
+              `
+            }
+          }
+        }
+      ]
+    }
+  }
 }

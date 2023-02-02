@@ -27,12 +27,10 @@ import {
   ApprovalMock
 } from '@pipeline/components/execution/StepDetails/views/HarnessApprovalView/useHarnessApproval'
 import { ManualInterventionTab } from '@pipeline/components/execution/StepDetails/tabs/ManualInterventionTab/ManualInterventionTab'
-import { StepMode } from '@pipeline/utils/stepUtils'
-import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/StrategySelection/StrategyConfig'
-import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { ExecutionInputs } from '@pipeline/components/execution/StepDetails/tabs/ExecutionInputs/ExecutionInputs'
 
+import { PolicyEvaluationContent } from '../../common/ExecutionContent/PolicyEvaluationContent/PolicyEvaluationContent'
 import tabCss from '../DefaultView/DefaultView.module.scss'
 
 export interface HarnessApprovalViewProps extends StepDetailProps {
@@ -46,7 +44,8 @@ enum ApprovalStepTab {
   INPUT = 'INPUT',
   OUTPUT = 'OUTPUT',
   MANUAL_INTERVENTION = 'MANUAL_INTERVENTION',
-  STEP_EXECUTION_INPUTS = 'STEP_EXECUTION_INPUTS'
+  STEP_EXECUTION_INPUTS = 'STEP_EXECUTION_INPUTS',
+  POLICY_ENFORCEMENT = 'POLICY_ENFORCEMENT'
 }
 
 export function HarnessApprovalView(props: HarnessApprovalViewProps): React.ReactElement {
@@ -57,10 +56,8 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
   const isWaitingOnApproval = isExecutionWaitingForApproval(step.status)
   const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
   const shouldShowExecutionInputs = !!step.executionInputConfigured
+  const shouldShowPolicyEnforcement = !!step?.outcomes?.policyOutput?.policySetDetails
   const isManualInterruption = isExecutionWaitingForIntervention(step.status)
-  const failureStrategies = allowedStrategiesAsPerStep(stageType)[StepMode.STEP].filter(
-    st => st !== Strategy.ManualIntervention
-  )
 
   useEffect(() => {
     if (!manuallySelected.current) {
@@ -185,11 +182,19 @@ export function HarnessApprovalView(props: HarnessApprovalViewProps): React.Reac
           id={ApprovalStepTab.MANUAL_INTERVENTION}
           key={ApprovalStepTab.MANUAL_INTERVENTION}
           title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
+          panel={<ManualInterventionTab step={step} stageType={stageType} executionMetadata={executionMetadata} />}
+        />
+      )}
+      {shouldShowPolicyEnforcement && (
+        <Tabs.Tab
+          id={ApprovalStepTab.POLICY_ENFORCEMENT}
+          key={ApprovalStepTab.POLICY_ENFORCEMENT}
+          title={getString('pipeline.policyEnforcement.title')}
           panel={
-            <ManualInterventionTab
+            <PolicyEvaluationContent
               step={step}
-              allowedStrategies={failureStrategies}
               executionMetadata={executionMetadata}
+              policySetOutputPath={'outcomes.policyOutput'}
             />
           }
         />

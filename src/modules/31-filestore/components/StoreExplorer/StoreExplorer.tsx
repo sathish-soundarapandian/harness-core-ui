@@ -30,7 +30,12 @@ export default function StoreExplorer({ fileStore }: StoreExplorerProps): React.
 
   return (
     <Layout.Vertical style={{ height: isModalView ? 'calc(50vh - 70px)' : '100%' }}>
-      <Container background={Color.GREY_0} padding={{ top: 'medium', left: 'medium' }} className={css.explorer}>
+      <Container
+        background={Color.GREY_0}
+        padding={{ top: 'medium', left: 'medium' }}
+        className={css.explorer}
+        id="fs-navbar"
+      >
         <Container flex={{ justifyContent: 'space-between' }}>
           {NewButton}
           <NodeSortMenu />

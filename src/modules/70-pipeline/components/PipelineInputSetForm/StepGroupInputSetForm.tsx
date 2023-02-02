@@ -3,6 +3,8 @@ import type { AllowedTypes } from '@harness/uicore'
 import { Layout } from '@harness/uicore'
 import { connect } from 'formik'
 import type { DeploymentStageConfig, StepGroupElementConfig } from 'services/cd-ng'
+import { useStrings } from 'framework/strings'
+import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { StepViewType } from '../AbstractSteps/Step'
 import { ExecutionWrapperInputSetForm } from './ExecutionWrapperInputSetForm'
 import type { StageInputSetFormProps } from './StageInputSetForm'
@@ -23,9 +25,19 @@ export function StepGroupFormSetInternal(props: {
   }
 }): JSX.Element {
   const { template, allValues, values, path, formik, readonly, viewType, allowableTypes, customStepProps } = props
+  const { getString } = useStrings()
 
   return (
     <Layout.Vertical spacing="medium" padding={{ top: 'medium' }}>
+      {template?.delegateSelectors && (
+        <MultiTypeDelegateSelector
+          inputProps={{ readonly }}
+          allowableTypes={allowableTypes}
+          label={getString('delegate.DelegateSelector')}
+          name={`${path}.delegateSelectors`}
+          disabled={readonly}
+        />
+      )}
       <ExecutionWrapperInputSetForm
         stepsTemplate={template?.steps}
         formik={formik}

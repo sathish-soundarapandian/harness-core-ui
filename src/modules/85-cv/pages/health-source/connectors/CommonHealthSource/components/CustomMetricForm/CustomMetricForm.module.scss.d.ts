@@ -8,5 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly customMetricContainer: string
+  readonly noData: string
+  readonly noDataImage: string
 }
 export default styles

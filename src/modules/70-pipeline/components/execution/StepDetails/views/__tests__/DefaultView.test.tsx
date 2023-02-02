@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 
+import userEvent from '@testing-library/user-event'
 import type { ResponseMessage } from 'services/pipeline-ng'
 
 import { TestWrapper } from '@common/utils/testUtils'
@@ -15,7 +16,7 @@ import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 import { getDefaultReducerState } from '@pipeline/components/LogsContent/LogsState/utils'
 import type { UseActionCreatorReturn } from '@pipeline/components/LogsContent/LogsState/actions'
 import { DefaultView } from '../DefaultView/DefaultView'
-import { executionMetadata } from './mock'
+import { executionMetadata, policyOutputDetails } from './mock'
 
 const actions: UseActionCreatorReturn = {
   createSections: jest.fn(),
@@ -36,13 +37,29 @@ jest.mock('@pipeline/components/LogsContent/useLogsContent.tsx', () => ({
     actions
   }))
 }))
+
+const checkPolicyEnforcementTab = async (): Promise<HTMLElement> => {
+  const policyEnforcementTab = await screen.findByRole('tab', {
+    name: 'pipeline.policyEnforcement.title'
+  })
+  userEvent.click(policyEnforcementTab)
+  const tabpanel = screen.getByRole('tabpanel', {
+    name: 'pipeline.policyEnforcement.title'
+  })
+  const policyEvaluationText = await within(tabpanel).findByText('pipeline.policyEvaluations.title')
+
+  expect(policyEvaluationText).toBeInTheDocument()
+  return tabpanel
+}
+
 describe('Default View Test', () => {
-  test('renders snapshot', () => {
+  test('renders snapshot', async () => {
     const { container } = render(
       <TestWrapper>
         <DefaultView
           step={{
-            status: ExecutionStatusEnum.InterventionWaiting
+            status: ExecutionStatusEnum.InterventionWaiting,
+            outcomes: policyOutputDetails
           }}
           executionMetadata={executionMetadata}
         />
@@ -50,6 +67,8 @@ describe('Default View Test', () => {
     )
 
     expect(container).toMatchSnapshot()
+    const policyEnforcementTabPanel = await checkPolicyEnforcementTab()
+    expect(policyEnforcementTabPanel).toMatchSnapshot('Policy Enforcement Tab - Default View')
   })
 
   test('failure responses', () => {

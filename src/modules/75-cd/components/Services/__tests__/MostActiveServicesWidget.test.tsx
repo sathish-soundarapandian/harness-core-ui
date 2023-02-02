@@ -8,7 +8,7 @@
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { MostActiveServicesWidget } from '@cd/components/Services/MostActiveServicesWidget/MostActiveServicesWidget'
+import { MostActiveServicesWidgetRef } from '@cd/components/Services/MostActiveServicesWidget/MostActiveServicesWidget'
 import * as cdngServices from 'services/cd-ng'
 import { mostActiveServiceInfo } from '@cd/mock'
 
@@ -43,7 +43,7 @@ describe('MostActiveServicesWidget', () => {
         path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <MostActiveServicesWidget title={title} />
+        <MostActiveServicesWidgetRef title={title} />
       </TestWrapper>
     )
     expect(container).toMatchSnapshot()
@@ -58,7 +58,7 @@ describe('MostActiveServicesWidget', () => {
         path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <MostActiveServicesWidget title={title} />
+        <MostActiveServicesWidgetRef title={title} />
       </TestWrapper>
     )
     expect(getLoader(container)).toBeTruthy()
@@ -73,7 +73,7 @@ describe('MostActiveServicesWidget', () => {
         path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <MostActiveServicesWidget title={title} />
+        <MostActiveServicesWidgetRef title={title} />
       </TestWrapper>
     )
     expect(getLoader(container)).toBeTruthy()
@@ -91,7 +91,7 @@ describe('MostActiveServicesWidget', () => {
         path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <MostActiveServicesWidget title={title} />
+        <MostActiveServicesWidgetRef title={title} />
       </TestWrapper>
     )
     expect(getLoader(container)).toBeFalsy()
@@ -109,7 +109,7 @@ describe('MostActiveServicesWidget', () => {
         path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <MostActiveServicesWidget title={title} />
+        <MostActiveServicesWidgetRef title={title} />
       </TestWrapper>
     )
     expect(getLoader(container)).toBeFalsy()
@@ -131,7 +131,7 @@ describe('MostActiveServicesWidget', () => {
         path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
         pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
       >
-        <MostActiveServicesWidget title={title} />
+        <MostActiveServicesWidgetRef title={title} />
       </TestWrapper>
     )
 

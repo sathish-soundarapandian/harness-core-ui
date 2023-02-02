@@ -462,6 +462,56 @@ export class CustomDeploymentServiceSpec extends Step<ServiceSpec> {
     }
   }
 
+  validateConfigFields({ data, template, isRequired, errors, getString }: ValidateInputSetFieldArgs): void {
+    data?.configFiles?.forEach((configFile, index) => {
+      const currentFileTemplate = get(template, `configFiles[${index}].configFile.spec.store.spec`, '')
+      if (
+        isEmpty(configFile?.configFile?.spec?.store?.spec?.files) &&
+        isRequired &&
+        getMultiTypeFromValue(currentFileTemplate?.files) === MultiTypeInputType.RUNTIME
+      ) {
+        set(
+          errors,
+          `configFiles[${index}].configFile.spec.store.spec.files[0]`,
+          getString?.('fieldRequired', { field: 'File' })
+        )
+      }
+      if (!isEmpty(configFile?.configFile?.spec?.store?.spec?.files)) {
+        configFile?.configFile?.spec?.store?.spec?.files?.forEach((value: string, fileIndex: number) => {
+          if (!value) {
+            set(
+              errors,
+              `configFiles[${index}].configFile.spec.store.spec.files[${fileIndex}]`,
+              getString?.('fieldRequired', { field: 'File' })
+            )
+          }
+        })
+      }
+      if (
+        isEmpty(configFile?.configFile?.spec?.store?.spec?.secretFiles) &&
+        isRequired &&
+        getMultiTypeFromValue(currentFileTemplate?.secretFiles) === MultiTypeInputType.RUNTIME
+      ) {
+        set(
+          errors,
+          `configFiles[${index}].configFile.spec.store.spec.secretFiles[0]`,
+          getString?.('fieldRequired', { field: 'File' })
+        )
+      }
+      if (!isEmpty(configFile?.configFile?.spec?.store?.spec?.secretFiles)) {
+        configFile?.configFile?.spec?.store?.spec?.secretFiles?.forEach((value: string, secretFileIndex: number) => {
+          if (!value) {
+            set(
+              errors,
+              `configFiles[${index}].configFile.spec.store.spec.secretFiles[${secretFileIndex}]`,
+              getString?.('fieldRequired', { field: 'File' })
+            )
+          }
+        })
+      }
+    })
+  }
+
   validateInputSet({
     data,
     template,
@@ -486,6 +536,15 @@ export class CustomDeploymentServiceSpec extends Step<ServiceSpec> {
       template,
       getString,
       isRequired,
+      errors
+    })
+
+    // Config Fields Validation
+    this.validateConfigFields({
+      data,
+      template,
+      isRequired,
+      getString,
       errors
     })
 

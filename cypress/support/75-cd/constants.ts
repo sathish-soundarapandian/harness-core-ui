@@ -1,4 +1,4 @@
-import { addHashInCypressURLBasedOnBrowserRouter } from "../../utils/windowLocation"
+import { addHashInCypressURLBasedOnBrowserRouter } from '../../utils/windowLocation'
 
 export const accountIdentifier = 'accountId'
 export const orgIdentifier = 'default'
@@ -24,7 +24,7 @@ export const listAllReposByConnector = `/ng/api/scm/list-all-repos-by-connector?
 export const trialConnectorCall = `/ng/api/trial-signup/create-scm-connector?routingId=accountId&accountIdentifier=${accountIdentifier}`
 
 // BROWSER ROUTES
-export const environmentGroupRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountIdentifier}/${module1}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment-group`
-export const environmentRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment`
-export const environmentConfigurationRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/environment/${environmentIdentifier}/details?sectionId=CONFIGURATION`
+export const environmentGroupRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountIdentifier}/${module1}/orgs/${orgIdentifier}/projects/${projectIdentifier}/environments/groups`
+export const environmentRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/environments`
+export const environmentConfigurationRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/environments/${environmentIdentifier}/details?sectionId=CONFIGURATION`
 export const projectDashboardRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountIdentifier}/cd/orgs/${orgIdentifier}/projects/${projectIdentifier}/dashboard`

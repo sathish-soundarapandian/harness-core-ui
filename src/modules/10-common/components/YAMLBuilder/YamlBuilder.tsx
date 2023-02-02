@@ -75,7 +75,8 @@ import {
   SHIFT_EVENT_KEY_CODE,
   navigationKeysMap,
   allowedKeysInEditModeMap,
-  MAX_ERR_MSSG_LENGTH
+  MAX_ERR_MSSG_LENGTH,
+  allowedKeysInReadOnlyModeMap
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -147,7 +148,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   setUpEditor(theme)
   const params = useParams()
   const [currentYaml, setCurrentYaml] = useState<string>(defaultTo(existingYaml, ''))
-  const [currentJSON, setCurrentJSON] = useState<object>()
   const [initialSelectionRemoved, setInitialSelectionRemoved] = useState<boolean>(
     !defaultTo(existingYaml, existingJSON)
   )
@@ -180,7 +180,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         getLatestYaml: () => yamlRef.current,
         setLatestYaml: (json: Record<string, any>) => {
           attempt(verifyIncomingJSON, json)
-          setCurrentJSON(json)
         },
         getYAMLValidationErrorMap: () => yamlValidationErrorsRef.current
       } as YamlBuilderHandlerBinding),
@@ -228,16 +227,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   /* #region Bootstrap editor with schema */
 
   useEffect(() => {
-    //for optimization, restrict setting value to editor if previous and current json inputs are the same.
-    //except when editor is reset/cleared, by setting empty json object as input
-    if (
-      every([existingJSON, isEmpty(existingJSON), isEmpty(currentJSON)]) ||
-      JSON.stringify(existingJSON) !== JSON.stringify(currentJSON)
-    ) {
-      attempt(verifyIncomingJSON, existingJSON)
-      setCurrentJSON(existingJSON)
-    }
-  }, [existingJSON])
+    verifyIncomingJSON(existingJSON)
+  }, [JSON.stringify(existingJSON)])
 
   useEffect(() => {
     if (existingYaml) {
@@ -477,22 +468,27 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       })
 
   const handleEditorKeyDownEvent = (event: IKeyboardEvent, editor: any): void => {
+    const { keyCode, code, ctrlKey, metaKey, shiftKey } = event
+    const isMetaOrControlKeyPressed = [CONTROL_EVENT_KEY_CODE, META_EVENT_KEY_CODE, SHIFT_EVENT_KEY_CODE].includes(
+      keyCode
+    )
+    const navigationKeysPressed = navigationKeysMap.includes(code)
     if (isHarnessManaged) {
       showHarnessManagedError()
     } else if (props.isReadOnlyMode && isEditModeSupported) {
-      const { keyCode, code, ctrlKey, metaKey, shiftKey } = event
-      const isMetaOrControlKeyPressed = [CONTROL_EVENT_KEY_CODE, META_EVENT_KEY_CODE, SHIFT_EVENT_KEY_CODE].includes(
-        keyCode
-      )
       const isMetaOrControlKeyPressedForCopyPaste =
         (ctrlKey || metaKey || shiftKey) && allowedKeysInEditModeMap.includes(code)
-      const navigationKeysPressed = navigationKeysMap.includes(code)
       if (!(isMetaOrControlKeyPressed || isMetaOrControlKeyPressedForCopyPaste || navigationKeysPressed)) {
         // this is to avoid showing warning dialog if user just wants to copy paste
         openDialog()
       }
     } else if (props.isReadOnlyMode && !isEditModeSupported && !hideErrorMesageOnReadOnlyMode) {
-      showNoPermissionError()
+      const isMetaOrControlKeyPressedForCopy =
+        (ctrlKey || metaKey || shiftKey) && allowedKeysInReadOnlyModeMap.includes(code)
+      if (!(isMetaOrControlKeyPressed || isMetaOrControlKeyPressedForCopy || navigationKeysPressed)) {
+        // this is to avoid showing warning dialog if user just wants to copy paste
+        showNoPermissionError()
+      }
     }
     try {
       const { shiftKey, code, ctrlKey, metaKey } = event

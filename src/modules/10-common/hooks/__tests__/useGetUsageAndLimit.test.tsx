@@ -17,6 +17,7 @@ import { useGetLicenseUsage } from 'services/cf'
 import { useGetUsage } from 'services/ci'
 import { useGetCCMLicenseUsage } from 'services/ce'
 import { ModuleName } from 'framework/types/ModuleName'
+import { useUsageReportUsage as useGetSTOUsage } from 'services/sto/stoComponents'
 import { useGetUsageAndLimit } from '../useGetUsageAndLimit'
 
 jest.mock('services/cd-ng')
@@ -89,6 +90,26 @@ useGetCCMLicenseUsageMock.mockImplementation(() => {
       data: {
         activeSpend: {
           count: 29,
+          displayName: 'Last 30 Days'
+        }
+      },
+      status: 'SUCCESS'
+    }
+  }
+})
+
+jest.mock('services/sto/stoComponents')
+const useGetSTOUsageMock = useGetSTOUsage as jest.MockedFunction<any>
+useGetSTOUsageMock.mockImplementation(() => {
+  return {
+    data: {
+      data: {
+        activeDevelopers: {
+          count: 42,
+          displayName: 'Last 30 Days'
+        },
+        activeScans: {
+          count: 24,
           displayName: 'Last 30 Days'
         }
       },

@@ -18,7 +18,8 @@ export const shouldAllowOnlyOneFilePath = (selectedManifest: ManifestTypes): boo
     ManifestDataType.TasManifest,
     ManifestDataType.TasAutoScaler,
     ManifestDataType.AsgLaunchTemplate,
-    ManifestDataType.AsgConfiguration
+    ManifestDataType.AsgConfiguration,
+    ManifestDataType.GoogleCloudFunctionDefinition
   ].includes(selectedManifest)
 }
 

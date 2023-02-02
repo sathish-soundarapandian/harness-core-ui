@@ -83,6 +83,10 @@ import type { CustomDeploymentInfrastructureSpec } from '@cd/components/Pipeline
 import type { ElastigroupInfrastructureSpec } from '@cd/components/PipelineSteps/ElastigroupInfraSpec/ElastigroupInfraSpec'
 import type { TASInfrastructureSpec } from '@cd/components/PipelineSteps/TASInfrastructureStep/TASInfrastructureStep'
 import type { AsgInfraSpec } from '@cd/components/PipelineSteps/AsgInfraSpec/AsgInfraSpec'
+import type {
+  GoogleCloudFunctionInfrastructure,
+  GoogleCloudFunctionInfraSpec
+} from '@cd/components/PipelineSteps/GoogleCloudFunction/GoogleCloudFunctionInfraSpec/GoogleCloudFunctionInfraSpec'
 import {
   cleanUpEmptyProvisioner,
   getInfraDefinitionDetailsHeaderTooltipId,
@@ -94,6 +98,7 @@ import {
   isAzureWebAppInfrastructureType,
   isCustomDeploymentInfrastructureType,
   isElastigroupInfrastructureType,
+  isPDCDeploymentInfrastructureType,
   isServerlessInfrastructureType,
   isTASInfrastructureType
 } from '../deployInfraHelper'
@@ -118,7 +123,8 @@ export const deploymentTypeInfraTypeMap: Record<string, InfraDeploymentType> = {
   Asg: InfraDeploymentType.Asg,
   CustomDeployment: InfraDeploymentType.CustomDeployment,
   Elastigroup: InfraDeploymentType.Elastigroup,
-  TAS: InfraDeploymentType.TAS
+  TAS: InfraDeploymentType.TAS,
+  GoogleCloudFunctions: InfraDeploymentType.GoogleCloudFunctions
 }
 
 type InfraTypes =
@@ -134,6 +140,7 @@ type InfraTypes =
   | ElastigroupInfrastructure
   | TanzuApplicationServiceInfrastructure
   | AsgInfrastructure
+  | GoogleCloudFunctionInfrastructure
 
 export default function DeployInfraDefinition(props: React.PropsWithChildren<unknown>): JSX.Element {
   const [initialInfrastructureDefinitionValues, setInitialInfrastructureDefinitionValues] =
@@ -579,7 +586,10 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   hostFilter: value.hostFilter,
                   hosts: value.hosts,
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments,
-                  delegateSelectors: value.delegateSelectors
+                  delegateSelectors: value.delegateSelectors,
+                  hostAttributes: value.hostAttributes,
+                  hostObjectArray: value.hostObjectArray,
+                  dynamicallyProvisioned: value.dynamicallyProvisioned
                 },
                 InfraDeploymentType.PDC
               )
@@ -756,6 +766,30 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
           />
         )
       }
+      case InfraDeploymentType.GoogleCloudFunctions: {
+        return (
+          <StepWidget<GoogleCloudFunctionInfraSpec>
+            factory={factory}
+            key={stage.stage.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as GoogleCloudFunctionInfraSpec}
+            type={StepType.GoogleCloudFunctionsInfra}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  project: value.project,
+                  region: value.region,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.GoogleCloudFunctions
+              )
+            }
+          />
+        )
+      }
       default: {
         return <div>{getString('cd.steps.common.undefinedType')}</div>
       }
@@ -891,6 +925,7 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
       {selectedInfrastructureType && (
         <>
           {(isAzureWebAppDeploymentType(selectedInfrastructureType) ||
+            isPDCDeploymentInfrastructureType(selectedInfrastructureType) ||
             isCustomDeploymentInfrastructureType(selectedInfrastructureType)) &&
           isSvcEnvEnabled ? (
             <></>

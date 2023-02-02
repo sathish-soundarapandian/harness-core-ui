@@ -6,7 +6,7 @@
  */
 
 import React, { useState } from 'react'
-import { defaultTo, isEmpty } from 'lodash-es'
+import { defaultTo, get, isEmpty } from 'lodash-es'
 import { Link } from 'react-router-dom'
 
 import { Collapse, Container, Layout, Text } from '@harness/uicore'
@@ -39,20 +39,23 @@ export interface EvaluatedPolicy {
 
 export function PolicyEvaluationContent({
   step,
-  executionMetadata
+  executionMetadata,
+  policySetOutputPath
 }: {
   step: ExecutionNode
   executionMetadata: ExecutionGraph['executionMetadata']
-}) {
+  policySetOutputPath: string
+}): React.ReactElement {
   const { getString } = useStrings()
   const [evaluationCounts, setEvaluationCounts] = useState<EvaluationCounts>({
     error: 0,
     warning: 0,
     pass: 0
   })
+  const policySetOutput = get(step, policySetOutputPath)
 
-  const policyStepEvaluationId = defaultTo(/* istanbul ignore next */ step?.outcomes?.output?.evaluationId, '')
-  const policySetDetails = defaultTo(/* istanbul ignore next */ step?.outcomes?.output?.policySetDetails, {})
+  const policyStepEvaluationId = defaultTo(/* istanbul ignore next */ policySetOutput?.evaluationId, '')
+  const policySetDetails = defaultTo(/* istanbul ignore next */ policySetOutput?.policySetDetails, {})
   const policySetIds = Object.keys(policySetDetails)
 
   useDeepCompareEffect(() => {

@@ -64,7 +64,9 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     serviceResponse: serviceData,
     setIsDeploymentTypeDisabled
   } = useServiceContext()
-  const [selectedTabId, setSelectedTabId] = useState(tab ?? ServiceTabs.SUMMARY)
+  const [selectedTabId, setSelectedTabId] = useState(
+    tab === ServiceTabs.SUMMARY && projectIdentifier ? ServiceTabs.SUMMARY : tab
+  )
   const { showSuccess, showError, clear } = useToaster()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
 
@@ -197,7 +199,9 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     return (
       <Container padding={{ left: 'xlarge', right: 'xlarge' }} className={css.tabsContainer}>
         <Tabs id="serviceDetailsTab" selectedTabId={selectedTabId} onChange={handleTabChange}>
-          <Tab id={ServiceTabs.SUMMARY} title={getString('summary')} panel={props.summaryPanel} />
+          {projectIdentifier && (
+            <Tab id={ServiceTabs.SUMMARY} title={getString('summary')} panel={props.summaryPanel} />
+          )}
 
           <Tab
             id={ServiceTabs.Configuration}
@@ -242,7 +246,7 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
   return (
     <Container padding={{ left: 'xlarge', right: 'xlarge' }} className={css.tabsContainer}>
       <Tabs id="serviceDetailsTab" selectedTabId={selectedTabId} onChange={handleTabChange}>
-        <Tab id={ServiceTabs.SUMMARY} title={getString('summary')} panel={props.summaryPanel} />
+        {projectIdentifier && <Tab id={ServiceTabs.SUMMARY} title={getString('summary')} panel={props.summaryPanel} />}
         <Tab id={ServiceTabs.REFERENCED_BY} title={getString('referencedBy')} panel={props.refercedByPanel} />
       </Tabs>
     </Container>

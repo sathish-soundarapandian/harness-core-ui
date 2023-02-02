@@ -45,7 +45,6 @@ import type { PipelineInfoConfig, StageElementConfig, TemplateLinkConfig } from 
 import {
   getIdentifierFromValue,
   getScopeBasedProjectPathParams,
-  getScopeFromDTO,
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
@@ -55,7 +54,7 @@ import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interf
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 
-import RbacButton from '@rbac/components/Button/Button'
+import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -113,11 +112,13 @@ export default function InfrastructureModal({
   environmentIdentifier,
   stageDeploymentType,
   stageCustomDeploymentData,
-  getTemplate
+  getTemplate,
+  scope
 }: {
   hideModal: () => void
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   refetch: any
+  scope: Scope
   selectedInfrastructure?: string
   environmentIdentifier: string
   stageDeploymentType?: ServiceDeploymentType
@@ -171,7 +172,12 @@ export default function InfrastructureModal({
     {
       resource: {
         resourceType: ResourceType.ENVIRONMENT,
-        resourceIdentifier: identifier
+        resourceIdentifier: environmentIdentifier
+      },
+      resourceScope: {
+        accountIdentifier: accountId,
+        ...(scope !== Scope.ACCOUNT && { orgIdentifier }),
+        ...(scope === Scope.PROJECT && { projectIdentifier })
       },
       permissions: [PermissionIdentifier.EDIT_ENVIRONMENT]
     },
@@ -196,6 +202,7 @@ export default function InfrastructureModal({
             getTemplate={getTemplate}
             stageCustomDeploymentData={stageCustomDeploymentData}
             selectedInfrastructure={selectedInfrastructure}
+            scope={scope}
           />
         </DeployStageErrorProvider>
       </PipelineVariablesContextProvider>
@@ -209,6 +216,7 @@ function BootstrapDeployInfraDefinition({
   infrastructureDefinition,
   environmentIdentifier,
   isReadOnly = false,
+  scope,
   stageDeploymentType,
   stageCustomDeploymentData,
   selectedInfrastructure,
@@ -219,6 +227,7 @@ function BootstrapDeployInfraDefinition({
   infrastructureDefinition?: InfrastructureDefinitionConfig
   environmentIdentifier: string
   isReadOnly: boolean
+  scope: Scope
   stageDeploymentType?: ServiceDeploymentType
   stageCustomDeploymentData?: TemplateLinkConfig
   selectedInfrastructure?: string
@@ -301,6 +310,19 @@ function BootstrapDeployInfraDefinition({
     lazy: !shouldFetchCustomDeploymentTemplate
   })
 
+  const environmentEditPermissions: ButtonProps['permission'] = {
+    resource: {
+      resourceType: ResourceType.ENVIRONMENT,
+      resourceIdentifier: environmentIdentifier
+    },
+    resourceScope: {
+      accountIdentifier: accountId,
+      ...(scope !== Scope.ACCOUNT && { orgIdentifier }),
+      ...(scope === Scope.PROJECT && { projectIdentifier })
+    },
+    permission: PermissionIdentifier.EDIT_ENVIRONMENT
+  }
+
   React.useEffect(() => {
     if (customDeploymentTemplateResponse?.data) {
       const customDeploymentTemplate = customDeploymentTemplateResponse?.data
@@ -356,7 +378,7 @@ function BootstrapDeployInfraDefinition({
       projectIdentifier,
       orgIdentifier,
       accountIdentifier: accountId,
-      scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
+      scope: scope
     }
   })
 
@@ -642,8 +664,6 @@ function BootstrapDeployInfraDefinition({
 
   const refreshYAMLBuilder = React.useMemo(() => JSON.stringify({ ...stage, isYamlEditable }), [stage, isYamlEditable])
 
-  const scope = getScopeFromValue(environmentIdentifier)
-
   return (
     <>
       <Layout.Vertical
@@ -745,12 +765,7 @@ function BootstrapDeployInfraDefinition({
                 <div className={css.buttonWrapper}>
                   <Tag>{getString('common.readOnly')}</Tag>
                   <RbacButton
-                    permission={{
-                      resource: {
-                        resourceType: ResourceType.ENVIRONMENT
-                      },
-                      permission: PermissionIdentifier.EDIT_ENVIRONMENT
-                    }}
+                    permission={environmentEditPermissions}
                     variation={ButtonVariation.SECONDARY}
                     text={getString('common.editYaml')}
                     onClick={handleEditMode}
@@ -801,12 +816,7 @@ function BootstrapDeployInfraDefinition({
           }}
           disabled={isSavingInfrastructure}
           loading={isSavingInfrastructure}
-          permission={{
-            resource: {
-              resourceType: ResourceType.ENVIRONMENT
-            },
-            permission: PermissionIdentifier.EDIT_ENVIRONMENT
-          }}
+          permission={environmentEditPermissions}
         />
         <Button
           text={getString('cancel')}

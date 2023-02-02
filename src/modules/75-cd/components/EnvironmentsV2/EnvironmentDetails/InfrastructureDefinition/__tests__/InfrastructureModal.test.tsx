@@ -16,6 +16,7 @@ import { environmentPathProps, projectPathProps } from '@common/utils/routeUtils
 import { TestWrapper } from '@common/utils/testUtils'
 
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import InfrastructureModal from '../InfrastructureModal'
 
 import yamlSchema from './__mocks__/infrastructureYamlSchema.json'
@@ -77,7 +78,12 @@ describe('Infrastructure Modal Test', () => {
           SSH_NG: true
         }}
       >
-        <InfrastructureModal environmentIdentifier="test_env" hideModal={jest.fn()} refetch={jest.fn()} />
+        <InfrastructureModal
+          environmentIdentifier="test_env"
+          hideModal={jest.fn()}
+          refetch={jest.fn()}
+          scope={Scope.PROJECT}
+        />
       </TestWrapper>
     )
 
@@ -137,6 +143,7 @@ describe('Infrastructure Modal Test', () => {
           hideModal={jest.fn()}
           refetch={jest.fn()}
           selectedInfrastructure={`infrastructureDefinition:\n  name: "K8s Direct"\n  identifier: "K8s_Direct_Id"\n  orgIdentifier: "default"\n  projectIdentifier: "Ashwin_svc_env"\n  environmentRef: "Env_Infra"\n  description: ""\n  tags: {}\n  allowSimultaneousDeployments: false\n  deploymentType: "Kubernetes"\n  type: "KubernetesDirect"\n  spec:\n    connectorRef: "account.qastresstarget"\n    namespace: "test"\n    releaseName: "release-<+INFRA_KEY>"\n`}
+          scope={Scope.PROJECT}
         />
       </TestWrapper>
     )
@@ -183,6 +190,7 @@ describe('Infrastructure Modal Test', () => {
           hideModal={jest.fn()}
           refetch={jest.fn()}
           stageDeploymentType={ServiceDeploymentType['Kubernetes']}
+          scope={Scope.PROJECT}
         />
       </TestWrapper>
     )

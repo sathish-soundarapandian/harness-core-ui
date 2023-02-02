@@ -65,7 +65,7 @@ export const ProvisioningStatusPill: React.FC<ProvisioningStatusProps> = props =
       return (
         <Button
           variation={ButtonVariation.PRIMARY}
-          text={getString('ci.getStartedWithCI.startProvisioning')}
+          text={getString('common.gitops.startProvisioning')}
           size={ButtonSize.SMALL}
           onClick={onStartProvisioning}
         />

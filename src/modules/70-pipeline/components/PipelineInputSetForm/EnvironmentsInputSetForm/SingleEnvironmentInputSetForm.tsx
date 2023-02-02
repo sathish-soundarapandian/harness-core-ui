@@ -77,7 +77,7 @@ export default function SingleEnvironmentInputSetForm({
             }}
             onUpdate={values => {
               if (deploymentStageInputSet?.environment) {
-                formik?.setValues(set(formik?.values, `${path}.environment`, values.environment))
+                formik?.setFieldValue(`${path}.environment`, values.environment)
               }
             }}
           />

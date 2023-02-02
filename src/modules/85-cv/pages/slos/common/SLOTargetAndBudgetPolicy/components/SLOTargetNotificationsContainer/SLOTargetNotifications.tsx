@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import type { GetDataError } from 'restful-react'
 import NotificationsContainer from '@cv/components/Notifications/NotificationsContainer'
 import { SRMNotificationType } from '@cv/components/Notifications/NotificationsContainer.types'
-import { SLOFormFields } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
+import { SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import {
   getUpdatedNotifications,
   getUpdatedNotificationsRuleRefs,
@@ -49,7 +49,7 @@ export default function SLOTargetNotifications(props: SLOTargetNotificationsProp
       )
       const updatedNotificationRuleRefs = getUpdatedNotificationsRuleRefs(updatedNotificationsInTable)
       setNotificationsInTable(updatedNotificationsInTable)
-      setFieldValue(SLOFormFields.NOTIFICATION_RULE_REFS, updatedNotificationRuleRefs)
+      setFieldValue(SLOV2FormFields.NOTIFICATION_RULE_REFS, updatedNotificationRuleRefs)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [notificationsInTable]
@@ -58,7 +58,7 @@ export default function SLOTargetNotifications(props: SLOTargetNotificationsProp
   const handleDeleteNotification = useCallback((updatedNotifications: NotificationRuleResponse[]) => {
     const updatedNotificationRuleRefs = getUpdatedNotificationsRuleRefs(updatedNotifications)
     setNotificationsInTable(updatedNotifications)
-    setFieldValue(SLOFormFields.NOTIFICATION_RULE_REFS, updatedNotificationRuleRefs)
+    setFieldValue(SLOV2FormFields.NOTIFICATION_RULE_REFS, updatedNotificationRuleRefs)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -70,7 +70,7 @@ export default function SLOTargetNotifications(props: SLOTargetNotificationsProp
       )
       const updatedNotificationRuleRefs = getUpdatedNotificationsRuleRefs(updatedNotificationsInTable)
       setNotificationsInTable(updatedNotificationsInTable)
-      setFieldValue(SLOFormFields.NOTIFICATION_RULE_REFS, updatedNotificationRuleRefs)
+      setFieldValue(SLOV2FormFields.NOTIFICATION_RULE_REFS, updatedNotificationRuleRefs)
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [notificationsInTable]

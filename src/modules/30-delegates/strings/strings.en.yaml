@@ -131,6 +131,8 @@ tokens:
   delegateTokens: 'Delegate Tokens'
   revoke: 'Revoke'
   moreInfo: 'More info'
+  copytoken: 'Copy token'
+  tokenCopied: Token copied to clipboard
   showRevoked: 'Show Revoked Tokens'
   tokenNameRequired: 'Token name is required.'
   tokenNameNotUnique: 'Token with that name already exists.'
@@ -151,3 +153,66 @@ successfullyUpdatedConfig: 'Successfully Updated Delegate Configuration'
 configNameRequired: 'Delegate Configuration name is Required.'
 instanceStatus: 'Instance Status'
 runAsRoot: 'Run delegate with root access'
+commandLineCreation:
+  installDelegate: Install a Delegate
+  terraForm: Terraform
+  kubernetesManifest: Kubernetes Manifest
+  installYourDelegate: Install your Delegate
+  harenssDelegates: Harness Delegates
+  selectyourDelegate: Select where you want to install your Delegate
+  oldWayToCreateDelegate: Switch back to old delegate install experience
+
+  infoText: Harness Delegate is a service that can run in local network or VPC to connect artifact servers, infrastructure, collaboration, verification and other providers, with the Harness Manager. Harness provides different types of Delegates to give you flexibility in how you manage deployments. You can either deploy a kubernetes based delegate or a docker based delegate
+  installDelegateSubText: Delegates are worker processes that run on your infrastructure to execute tasks on behalf of the Harness platform.
+  firstCommandHeadingHelm: Add Harness helm chart repo to your local helm registry
+  firstCommandHelmFirstLine: helm repo add harness-delegate https://app.harness.io/storage/harness-download/delegate-helm-chart/
+  firstCommandHelmSecondLine: helm repo update
+  secondCommandHeadingHelm: Now we are ready to install the delegate
+  firstComandHeadingKubernetes: Copy the Kubernetes YAML file where you want to install the delegate
+  firstComandKubernetesFirstLine: curl -LO https://raw.githubusercontent.com/harness/delegate-kubernetes-manifest/main/harness-delegate.yaml
+  commandsKubernetesHeading: Update your file by replacing the palceholders with your actual values
+  kubernetesFirstDirectionPartOne: '"PUT_YOUR_DELEGATE_NAME"'
+  kubernetesFirstDirectionPartTwo: with the desired delegate name
+  kubernetesSecondDirectionPartOne: '"PUT_YOUR_ACCOUNT_ID"'
+  kubernetesSecondDirectionPartTwo: with your Account Id
+  kubernetesThirdDirectionPartOne: '"PUT_YOUR_MANAGER_ENDPOINT"'
+  kubernetesThirdDirectionPartTwo: with your cluster url
+  kubernetesFourthDirectionPartOne: '"PUT_YOUR_DELEGATE_TOKEN"'
+  kubernetesFourthDirectionPartThree: 'your delegate token'
+  firstCommandHeadingDocker: Run the following command to install
+  firstCommandHeadingTerraform: Create the main.tf file where you want to install the delegate
+  secondCommandHeadingTerraform: Initialize Terraform
+  thirdCommandHeadingTerraform: Run the command to install the delegate
+  foruthCommandHeading: Apply terraform
+  firstCommandTerraFormFirstLine: terraform apply
+  secondCommandTerraFormFirstLine: terraform init
+  verifyDelegateConnection: Verify Delegate connection to Harness Manager
+  enterYourResponse: Enter your response
+  learnWatch: Learn more or watch video link
+  forAdvancedConfig: For Advanced configuration options, refer to documentation
+  verifyInfo: Verify once you have completed the steps above to make sure its installed properly
+  didDelegateComeUp: Did the Delegate come up?
+  delegateFixed: Can you describe how the issue was fixed
+  delegateNotFixed: Can you describe what the issue was
+  helmTroubleShooting1: Verify helm is installed correctly
+  helmTroubleShooting2: helm
+  helmTroubleShooting3: helm version
+  helmTroubleShootingInfoCommand: 'If you encounter "Error: rendered manifests contain a resource that already exists..." Delete the existing namespace and retry the helm upgrade command to deploy the delegate.'
+  helmTroubleShooting4: To further troubleshoot helm installation refer
+  helmTroubleShooting5: Helm troubleshooting guide
+  helmTroubleShooting6: If the pod is not up,check the Delegate Logs
+  helmTroubleShooting7: If the Delegate pod is in a CrashLoopBackOff state, that means Kubernetes Cluster Resources are not available. Check the Kubernetes Cluster Resources (CPU, Memory).
+  dockerTroubleShooting1: docker container logs <delegatename> -f
+  dockerTroubleShooting2: Restart the delegate container
+  dockerTroubleShooting3: docker container stop <delegatename>
+  dockerTroubleShooting4: docker container start <delegatename>
+  dockerTroubleShooting5: If there is not enough resources (CPU, Memory), remove the older containers
+  dockerTroubleShooting6: docker container rm [container id]
+  terraformTroubleShooting1: Verify terraform is installed correctly
+  terraformTroubleShooting2: terraform -version
+  terraformTroubleShooting3: To further troubleshoot terraform installation refer
+  terraformTroubleShooting4: terraform troubleshooting guide
+  clickDoneAndCheckLater: Checking if the delegate is installed. It might take 1-2 minutes for the installation. Click Done and check back later.
+  feedBackSaved: Feedback Saved
+  feedBackNotSaved: Error in saving feedback
+  retryConnections: Retry Connection

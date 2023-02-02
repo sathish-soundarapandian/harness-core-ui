@@ -1,9 +1,10 @@
 stepDescription:
   ZeroNorth: Run a security tool to test for vulnerabilities.
   Bandit: Use Bandit to test for vulnerabilities.
-  Blackduckhub: Use Black Duck Hub to test for vulnerabilities.
+  Blackduck: Use Black Duck to test for vulnerabilities.
   Brakeman: Use Brakeman to test for vulnerabilities.
   Burp: Use Burp to test for vulnerabilities.
+  Grype: Use Anchore Grype to test for vulnerabilities.
   Snyk: Use Snyk to test for vulnerabilities.
   Sonarqube: Use Sonarqube to test for vulnerabilities.
   AquaTrivy: Use Aqua Trivy to test for vulnerabilities.
@@ -16,37 +17,33 @@ stepDescription:
   Veracode: Use Veracode to test for vulnerabilities.
   WhiteSource: Use WhiteSource to test for vulnerabilities.
   Zap: Use Zap to test for vulnerabilities.
+  PrismaCloud: Use Prisma Cloud to test for vulnerabilities.
+  Mend: Use Mend to test for vulnerabilities.
 stepField:
   mode: Scan Mode
   config: Scan Configuration
   target:
-    type: Target Type
-    name: Target Name
-    variant: Target Variant
-    workspace: Target Workspace
-  authToken: Auth Token
-  authDomain: Auth Domain
+    variant: Variant
+  image:
+    fieldsHeading: Container Image
+  authAccessId: Access Id
   authSsl: Enforce SSL
+  authVersion: API Version
   toolInclude: Include
   tool:
+    fieldsHeading: Scan Tool
     javaLibraries: Java Libraries
     javaBinaries: Java Binaries
-    context: Tool Context Name
-    port: Tool Port
-  image:
-    type: Image Type
-    domain: Image Domain
-    region: Image Region
-    accessId: Image Access Id
-    token: Image Access Token
+    context: Context Name
+    teamName: Team Name
+    projectVersion: Project Version
+    projectToken: Project Token
+    productToken: Product Token
+    productLookupType: Lookup Type
+    exclude: Exclude
   container:
     containerAccessToken: Container Access Token
     containerRegion: Container Region
-  instance:
-    domain: Instance Domain
-    protocol: Instance Protocol
-    port: Instance Port
-    path: Instance Path
   advanced:
     logLevel: Log Level
     serializer: Log Serializer
@@ -67,6 +64,7 @@ targets:
 issues: Issues
 scans: Scans
 exemptions: Exemptions
+tickets: Tickets
 noSecurityResults: No Security Results Processed
 failedToGetIssueCounts: Failed to get issue counts
 noSecurityIssues: No Security Issues

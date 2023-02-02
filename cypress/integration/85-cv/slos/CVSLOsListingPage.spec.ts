@@ -26,7 +26,6 @@ import {
   errorBudgetResetHistoryResponse,
   getChangeEventTimeline,
   changeEventTimelineResponse,
-  updatedListSLOsCallResponseCalenderType,
   listMonitoredServicesForSLOs,
   listMonitoredServicesCallResponseForSLOs
 } from '../../../support/85-cv/slos/constants'

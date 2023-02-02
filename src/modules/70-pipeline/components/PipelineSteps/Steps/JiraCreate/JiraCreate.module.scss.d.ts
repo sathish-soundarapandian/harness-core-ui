@@ -13,6 +13,7 @@ declare const styles: {
   readonly connector: string
   readonly connectorLabel: string
   readonly deploymentViewFieldWidth: string
+  readonly descriptionDeploymentViewWidth: string
   readonly descriptionField: string
   readonly fetching: string
   readonly fieldsPopover: string

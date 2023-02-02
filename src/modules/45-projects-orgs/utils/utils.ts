@@ -14,6 +14,7 @@ import { ModuleName } from 'framework/types/ModuleName'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import type { TimeRangeFilterType } from '@common/types'
 import { getDiffInDays } from '@common/utils/momentUtils'
+import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 
 interface RoleOption extends SelectOption {
   managed: boolean
@@ -170,4 +171,22 @@ export const getGroupByFromTimeRange = (timeRange: TimeRangeFilterType): GROUP_B
   }
 
   return GROUP_BY.MONTH
+}
+
+export interface ProjectsPageQueryParams {
+  verify?: boolean
+  orgIdentifier?: string
+  page?: number
+  size?: number
+}
+
+export const projectsPageQueryParamOptions = {
+  decoder: queryParamDecodeAll(),
+  processQueryParams(params: ProjectsPageQueryParams): ProjectsPageQueryParams {
+    return {
+      ...params,
+      page: params.page ?? 0,
+      size: params.size ?? 100
+    }
+  }
 }

@@ -19,8 +19,14 @@ import type { ExecutorInfoDTO, PipelineStageInfo } from 'services/pipeline-ng'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { UserLabel } from '@common/components/UserLabel/UserLabel'
 
-import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type {
+  ExecutionPathProps,
+  GitQueryParams,
+  PipelinePathProps,
+  PipelineType
+} from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
+import { useQueryParams } from '@common/hooks'
 import css from './ExecutionMetadata.module.scss'
 
 // stage executed name limit, exceeding this we will show a popover
@@ -28,7 +34,15 @@ const LIMIT = 3
 
 function ExecutionMetadataTrigger(): React.ReactElement {
   const { getString } = useStrings()
-  const { accountId, module, source = 'executions' } = useParams<PipelineType<ExecutionPathProps>>()
+  const {
+    accountId,
+    module,
+    projectIdentifier,
+    orgIdentifier,
+    pipelineIdentifier,
+    source = 'executions'
+  } = useParams<PipelineType<ExecutionPathProps & PipelinePathProps>>()
+  const { branch, repoIdentifier, connectorRef, repoName, storeType } = useQueryParams<GitQueryParams>()
 
   const { pipelineExecutionDetail } = useExecutionContext()
   const { pipelineExecutionSummary } = pipelineExecutionDetail || {}
@@ -38,21 +52,41 @@ function ExecutionMetadataTrigger(): React.ReactElement {
     'parentStageInfo',
     {} as PipelineStageInfo
   )
-  const type = pipelineExecutionSummary?.executionTriggerInfo?.triggerType as ExecutorInfoDTO['triggerType']
+  const triggerType = pipelineExecutionSummary?.executionTriggerInfo?.triggerType as ExecutorInfoDTO['triggerType']
+  const triggerIdentifier = pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.identifier
 
-  if (type === 'WEBHOOK' || type === 'WEBHOOK_CUSTOM' || type === 'SCHEDULER_CRON') {
+  const triggersWizardPageLinkUrl = routes.toTriggersWizardPage({
+    accountId,
+    orgIdentifier,
+    projectIdentifier,
+    pipelineIdentifier,
+    triggerIdentifier,
+    triggerType,
+    module,
+    repoIdentifier,
+    branch,
+    connectorRef,
+    repoName,
+    storeType
+  })
+
+  if (triggerType === 'WEBHOOK' || triggerType === 'WEBHOOK_CUSTOM' || triggerType === 'SCHEDULER_CRON') {
     return (
       <div className={css.trigger}>
         <Icon
           size={14}
-          name={type === 'SCHEDULER_CRON' ? 'stopwatch' : 'trigger-execution'}
+          name={triggerType === 'SCHEDULER_CRON' ? 'stopwatch' : 'trigger-execution'}
           margin={{ right: 'small' }}
         />
-        <Text font={{ size: 'small' }} color="primary6" margin={{ right: 'xsmall' }}>
-          {pipelineExecutionSummary?.executionTriggerInfo?.triggeredBy?.identifier}
-        </Text>
+        {triggerType && triggerIdentifier ? (
+          <Link to={triggersWizardPageLinkUrl}>{triggerIdentifier}</Link>
+        ) : (
+          <Text font={{ size: 'small' }} margin={{ right: 'xsmall' }}>
+            {triggerIdentifier}
+          </Text>
+        )}
         <Text font={{ size: 'small' }} color="grey500">
-          ({getString(mapTriggerTypeToStringID(type))})
+          ({getString(mapTriggerTypeToStringID(triggerType))})
         </Text>
       </div>
     )

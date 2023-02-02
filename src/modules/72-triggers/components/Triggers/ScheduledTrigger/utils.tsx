@@ -5,13 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { object, ObjectSchema, string } from 'yup'
+import { ObjectSchema, string } from 'yup'
 import { isEmpty } from 'lodash-es'
 import { illegalIdentifiers, regexIdentifier } from '@common/utils/StringUtils'
 import { isCronValid } from '@triggers/components/steps/SchedulePanel/components/utils'
 import type { StringKeys, UseStringsReturn } from 'framework/strings'
 import type { NGTriggerSourceV2, PipelineInfoConfig } from 'services/pipeline-ng'
 import type { PanelInterface } from '@triggers/components/TabWizard/TabWizard'
+import { NameIdentifierSchema } from '@common/utils/Validation'
 import type { ScheduleType, TriggerBaseType } from '../TriggerInterface'
 
 export interface ScheduledInitialValuesInterface {
@@ -125,15 +126,9 @@ export const getPanels = (getString: UseStringsReturn['getString']): PanelInterf
 export const getValidationSchema = (
   getString: (key: StringKeys, params?: any) => string
 ): ObjectSchema<Record<string, any> | undefined> => {
-  return object().shape({
-    name: string().trim().required(getString('triggers.validation.triggerName')),
-    identifier: string().when('name', {
-      is: val => val?.length,
-      then: string()
-        .required(getString('validation.identifierRequired'))
-        .matches(regexIdentifier, getString('validation.validIdRegex'))
-        .notOneOf(illegalIdentifiers)
-    }),
+  return NameIdentifierSchema(getString, {
+    nameRequiredErrorMsg: getString('triggers.validation.triggerName')
+  }).shape({
     expression: string().test(
       getString('triggers.validation.cronExpression'),
       getString('triggers.validation.cronExpression'),

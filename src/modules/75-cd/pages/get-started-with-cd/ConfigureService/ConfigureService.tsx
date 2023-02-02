@@ -643,4 +643,4 @@ const ConfigureServiceRef = (
   )
 }
 
-export const ConfigureService = React.forwardRef(ConfigureServiceRef)
+export const Configure = React.forwardRef(ConfigureServiceRef)

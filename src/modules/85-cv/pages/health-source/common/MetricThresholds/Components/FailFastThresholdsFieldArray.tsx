@@ -216,7 +216,7 @@ export default function FailFastThresholdsFieldArray<T>({
                     disabled={data?.spec?.action === FailFastActionValues.FailImmediately}
                     placeholder={data.spec.action === FailFastActionValues.FailImmediately ? getString('na') : ''}
                     key={data?.spec?.action}
-                    className={css.metricThresholdContentInput}
+                    className={cx(css.metricThresholdContentInput, css.metricThresholdContentInputCount)}
                     inputGroup={{ type: 'number', min: 0 }}
                     name={`failFastThresholds.${index}.spec.spec.${FieldName.METRIC_THRESHOLD_COUNT}`}
                   />

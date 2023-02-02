@@ -28,12 +28,6 @@
 }
 
 .overviewNoExecutions {
-  :global {
-    .bp3-overlay-backdrop,
-    .bp3-overlay {
-      left: 270px;
-    }
-  }
   z-index: 2 !important;
 
   div[data-testid='modaldialog-body'] {

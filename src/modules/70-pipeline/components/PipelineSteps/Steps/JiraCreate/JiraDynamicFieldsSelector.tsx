@@ -150,7 +150,7 @@ function SelectFieldList(props: JiraDynamicFieldsSelectorContentInterface) {
             setIssueTypeValue({ label: '', value: '', key: '' } as JiraProjectSelectOption)
           }}
           inputProps={{
-            placeholder: getString('pipeline.jiraCreateStep.selectProject')
+            placeholder: getString('common.selectProject')
           }}
         />
       </div>

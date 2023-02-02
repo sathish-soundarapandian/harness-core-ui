@@ -12,7 +12,7 @@ import type { PanelInterface } from '@triggers/components/TabWizard/TabWizard'
 import type { UseStringsReturn } from 'framework/strings'
 import type { GetActionsListQueryParams, NGTriggerSourceV2, PipelineInfoConfig } from 'services/pipeline-ng'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
-import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
+import { NameIdentifierSchema } from '@common/utils/Validation'
 import { connectorUrlType } from '@connectors/constants'
 import type { AddConditionInterface } from '@triggers/components/AddConditionsSection/AddConditionsSection'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
@@ -242,9 +242,9 @@ export const getValidationSchema = (
   isGitWebhookPollingEnabled = false,
   isGithubWebhookAuthenticationEnabled = false
 ): ObjectSchema<Record<string, any> | undefined> => {
-  return object().shape({
-    name: NameSchema(getString, { requiredErrorMsg: getString('triggers.validation.triggerName') }),
-    identifier: IdentifierSchema(getString),
+  return NameIdentifierSchema(getString, {
+    nameRequiredErrorMsg: getString('triggers.validation.triggerName')
+  }).shape({
     ...(isGithubWebhookAuthenticationEnabled && {
       encryptedWebhookSecretIdentifier: string().test(
         getString('triggers.validation.configureSecret'),

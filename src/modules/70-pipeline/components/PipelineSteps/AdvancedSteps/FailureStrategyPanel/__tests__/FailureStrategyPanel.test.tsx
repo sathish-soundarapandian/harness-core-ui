@@ -140,7 +140,7 @@ describe('<FailureStrategyPanel /> tests', () => {
     `)
   })
 
-  test('when AllErrors is selected, select is disabled', async () => {
+  test('when AllErrors is selected, select and add are disabled', async () => {
     const { container, findByTestId } = render(
       <Basic
         data={{
@@ -182,7 +182,10 @@ describe('<FailureStrategyPanel /> tests', () => {
     `)
 
     const panel = await findByTestId('failure-strategy-panel')
-    expect(panel.querySelector('.failureSelect')).toMatchSnapshot()
+    const add2 = await findByTestId('add-failure-strategy')
+
+    expect(panel.querySelector('.bp3-input')?.classList.contains('bp3-disabled')).toBe(true)
+    expect(add2.classList.contains('bp3-disabled')).toBe(true)
   })
 
   test('removing error type works', async () => {
@@ -234,19 +237,17 @@ describe('<FailureStrategyPanel /> tests', () => {
     })
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip('"Add" button is disabled, if the tab has errors', async () => {
+  test('"Add" button is disabled, if the tab has errors', async () => {
     const { findByTestId, findByText } = render(<Basic data={{ failureStrategies: [{} as any] }} mode={Modes.STAGE} />)
 
     const tab1 = await findByTestId('failure-strategy-step-0')
 
     userEvent.click(tab1)
 
-    const add = await findByTestId('add-failure-strategy')
-
     await findByText('pipeline.failureStrategies.validation.errorsRequired')
+
+    const add = await findByTestId('add-failure-strategy')
     await waitFor(() => expect(add.classList.contains('bp3-disabled')).toBe(true))
-    expect(add.hasAttribute('disabled')).toBe(true)
   })
 
   test('"Add" button is disabled, when all possible errors are selected', async () => {
@@ -315,7 +316,7 @@ describe('<FailureStrategyPanel /> tests', () => {
         data={{
           failureStrategies: times(NUM, () => ({
             onFailure: {
-              errors: [ErrorType.AllErrors],
+              errors: [ErrorType.Authentication],
               action: {
                 type: Strategy.Abort
               } as AbortFailureActionConfig
@@ -387,11 +388,15 @@ describe('<FailureStrategyPanel /> tests', () => {
 
     const change = await findAllByTestId('thumbnail-select-change')
 
-    userEvent.click(change[0])
+    act(() => {
+      userEvent.click(change[0])
+    })
 
     const retry = queryFieldAndStrategy('failureStrategies[0].onFailure.action.type', Strategy.Retry)!
 
-    userEvent.click(retry)
+    act(() => {
+      userEvent.click(retry)
+    })
 
     expect(code.innerHTML).toMatchInlineSnapshot(`
       "failureStrategies:
@@ -404,6 +409,8 @@ describe('<FailureStrategyPanel /> tests', () => {
     `)
 
     const data = parse(code.innerHTML)
-    expect(get(data, 'failureStrategies[0].onFailure.action.spec')).toBeUndefined()
+    await waitFor(() => {
+      expect(get(data, 'failureStrategies[0].onFailure.action.spec')).toBeUndefined()
+    })
   })
 })

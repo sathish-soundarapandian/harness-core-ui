@@ -13,7 +13,6 @@ declare const styles: {
   readonly header: string
   readonly headerLayout: string
   readonly imageClassName: string
-  readonly orgDropdown: string
   readonly orgSelect: string
   readonly projectsPage: string
   readonly selected: string

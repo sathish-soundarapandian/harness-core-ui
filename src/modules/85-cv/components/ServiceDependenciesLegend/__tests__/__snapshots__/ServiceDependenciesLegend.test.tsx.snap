@@ -63,7 +63,7 @@ exports[`ServiceDependenciesLegend Tests should render ServiceDependenciesLegend
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny StyledProps--color StyledProps--color-grey700"
         >
-          cv.monitoredServices.serviceHealth.serviceDependencies.states.healthy
+          cd.getStartedWithCD.healthStatus.healthy
         </p>
       </div>
       <div
@@ -206,7 +206,7 @@ exports[`ServiceDependenciesLegend Tests should render ServiceDependenciesLegend
         <p
           class="StyledProps--font StyledProps--main StyledProps--font-variation-tiny StyledProps--color StyledProps--color-grey700"
         >
-          cv.monitoredServices.serviceHealth.serviceDependencies.states.healthy
+          cd.getStartedWithCD.healthStatus.healthy
         </p>
       </div>
       <div

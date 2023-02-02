@@ -6,13 +6,11 @@
  */
 
 import React, { useMemo } from 'react'
-import { useParams } from 'react-router-dom'
-import moment from 'moment'
+
 import { Color } from '@harness/design-system'
 import { Card, Container, Layout, Text } from '@harness/uicore'
-import { GetServicesGrowthTrendQueryParams, useGetServicesGrowthTrend } from 'services/cd-ng'
+import type { ResponseTimeValuePairListDTOInteger } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SparklineChart } from '@common/components/SparklineChart/SparklineChart'
 import { TrendPopover } from '@cd/components/TrendPopover/TrendPopover'
 import { PieChart } from '@cd/components/PieChart/PieChart'
@@ -24,25 +22,12 @@ export interface ServiceInstanceWidgetProps {
   serviceInstancesCount: number
   prodCount: number
   nonProdCount: number
+  serviceGrowthTrendData: ResponseTimeValuePairListDTOInteger | null
 }
 
 export const ServiceInstancesWidget: React.FC<ServiceInstanceWidgetProps> = props => {
-  const { serviceCount, serviceInstancesCount, prodCount, nonProdCount } = props
+  const { serviceCount, serviceInstancesCount, prodCount, nonProdCount, serviceGrowthTrendData: data } = props
   const { getString } = useStrings()
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & ModulePathParams>()
-
-  const queryParams: GetServicesGrowthTrendQueryParams = useMemo(
-    () => ({
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      startTime: moment().utc().startOf('day').subtract(6, 'months').toDate().getTime(),
-      endTime: moment().utc().endOf('day').toDate().getTime(),
-      timeGroupByType: 'DAY'
-    }),
-    [accountId, orgIdentifier, projectIdentifier]
-  )
-  const { data } = useGetServicesGrowthTrend({ queryParams })
 
   const trendData: number[] = useMemo(() => {
     const timeValuePairList = data?.data?.timeValuePairList || []

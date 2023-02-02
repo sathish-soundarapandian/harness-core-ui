@@ -20,7 +20,7 @@ describe('Show milliseconds results', () => {
         showMilliSeconds={true}
       />
     )
-    expect(getByText('1s 952ms')).not.toBeNull()
+    expect(getByText('1s 952ms')).toBeInTheDocument()
   })
 })
 
@@ -35,7 +35,7 @@ describe('Show zero second results', () => {
         showZeroSecondsResult={true}
       />
     )
-    expect(getByText('0s')).not.toBeNull()
+    expect(getByText('0s')).toBeInTheDocument()
   })
 
   test('No delta shows 0s text', () => {
@@ -48,34 +48,22 @@ describe('Show zero second results', () => {
         showZeroSecondsResult={true}
       />
     )
-    expect(getByText('0s')).not.toBeNull()
+    expect(getByText('0s')).toBeInTheDocument()
   })
 })
 
 describe('Show milliseconds when less than second', () => {
   test('Greater than one second shows seconds', () => {
     const { getByText } = render(
-      <Duration
-        icon={undefined}
-        durationText=" "
-        startTime={1631139247012}
-        endTime={1631139248964}
-        showMsLessThanOneSecond={true}
-      />
+      <Duration icon={undefined} durationText=" " startTime={1631139247012} endTime={1631139248964} />
     )
 
-    expect(getByText('2s')).not.toBeNull()
+    expect(getByText('2s')).toBeInTheDocument()
   })
 
   test('No delta does not show any text', () => {
     const { container } = render(
-      <Duration
-        icon={undefined}
-        durationText=" "
-        startTime={1631139247012}
-        endTime={1631139247012}
-        showMsLessThanOneSecond={true}
-      />
+      <Duration icon={undefined} durationText=" " startTime={1631139247012} endTime={1631139247012} />
     )
 
     const span = container.querySelector('[class*="inline"]')
@@ -84,14 +72,8 @@ describe('Show milliseconds when less than second', () => {
 
   test('Less than one second shows ms', () => {
     const { getByText } = render(
-      <Duration
-        icon={undefined}
-        durationText=" "
-        startTime={1631139247012}
-        endTime={1631139247098}
-        showMsLessThanOneSecond={true}
-      />
+      <Duration icon={undefined} durationText=" " startTime={1631139247012} endTime={1631139247098} />
     )
-    expect(getByText('86ms')).not.toBeNull()
+    expect(getByText('86ms')).toBeInTheDocument()
   })
 })

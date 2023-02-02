@@ -491,6 +491,19 @@ exports[`Default View Test renders snapshot 1`] = `
         >
           pipeline.failureStrategies.strategiesLabel.ManualIntervention
         </div>
+        <div
+          aria-controls="bp3-tab-panel_step-details_POLICY_ENFORCEMENT"
+          aria-disabled="false"
+          aria-expanded="false"
+          aria-selected="false"
+          class="bp3-tab"
+          data-tab-id="POLICY_ENFORCEMENT"
+          id="bp3-tab-title_step-details_POLICY_ENFORCEMENT"
+          role="tab"
+          tabindex="0"
+        >
+          pipeline.policyEnforcement.title
+        </div>
       </div>
       <div
         aria-hidden="false"
@@ -546,44 +559,6 @@ exports[`Default View Test renders snapshot 1`] = `
                 name="StageRollback"
                 type="checkbox"
                 value="StageRollback"
-              />
-            </label>
-            <label
-              class="Thumbnail--squareCardContainer thumbnail"
-            >
-              <div
-                class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
-                tabindex="0"
-              >
-                <span
-                  class="bp3-icon bp3-icon-repeat StyledProps--main"
-                  icon="repeat"
-                >
-                  <svg
-                    data-icon="repeat"
-                    height="26"
-                    viewBox="0 0 20 20"
-                    width="26"
-                  >
-                    <desc>
-                      repeat
-                    </desc>
-                    <path
-                      d="M14 6c0 .55.45 1 1 1h4c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1v2.05C16.18 1.6 13.29 0 10 0 4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10c0-.55-.45-1-1-1s-1 .45-1 1c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8c2.53 0 4.77 1.17 6.24 3H15c-.55 0-1 .45-1 1z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-              </div>
-              <p
-                class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
-              >
-                pipeline.failureStrategies.strategiesLabel.PipelineRollback
-              </p>
-              <input
-                name="PipelineRollback"
-                type="checkbox"
-                value="PipelineRollback"
               />
             </label>
             <label
@@ -700,10 +675,6 @@ exports[`Default View Test renders snapshot 1`] = `
                 value="MarkAsSuccess"
               />
             </label>
-          </div>
-          <div
-            class="actionRow"
-          >
             <label
               class="Thumbnail--squareCardContainer thumbnail"
             >
@@ -742,6 +713,10 @@ exports[`Default View Test renders snapshot 1`] = `
                 value="Abort"
               />
             </label>
+          </div>
+          <div
+            class="actionRow"
+          >
             <label
               class="Thumbnail--squareCardContainer thumbnail"
             >
@@ -778,6 +753,153 @@ exports[`Default View Test renders snapshot 1`] = `
                 value="ProceedWithDefaultValues"
               />
             </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Default View Test renders snapshot: Policy Enforcement Tab - Default View 1`] = `
+<div
+  aria-hidden="false"
+  aria-labelledby="bp3-tab-title_step-details_POLICY_ENFORCEMENT"
+  class="bp3-tab-panel"
+  id="bp3-tab-panel_step-details_POLICY_ENFORCEMENT"
+  role="tabpanel"
+>
+  <div
+    class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-top StyledProps--padding-medium"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--margin-left-small StyledProps--margin-right-large"
+      >
+        pipeline.policyEvaluations.title
+      </p>
+      <p
+        class="StyledProps--font StyledProps--main StyledProps--margin-right-small"
+        style="display: flex; align-items: center;"
+      >
+        <span
+          class="bp3-icon bp3-icon-tick-circle StyledProps--main Text--icon StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-green800"
+          icon="tick-circle"
+        >
+          <svg
+            data-icon="tick-circle"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+          >
+            <desc>
+              tick-circle
+            </desc>
+            <path
+              d="M8 16c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm4-11c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0012 5z"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        1
+      </p>
+    </div>
+    <div
+      class="Layout--vertical StyledProps--main StyledProps--padding-top-medium StyledProps--padding-bottom-medium"
+    >
+      <div
+        class="StyledProps--font StyledProps--main"
+      >
+        <div
+          class="Collapse--main collapse"
+        >
+          <div
+            class="StyledProps--font StyledProps--main CollapseHeader--main Collapse--header"
+          >
+            <div
+              class="StyledProps--font StyledProps--main CollapseHeader--leftSection"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-primary7 StyledProps--padding-right-small"
+                data-icon="main-chevron-down"
+              >
+                <svg
+                  height="10"
+                  viewBox="0 0 14 8"
+                  width="10"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
+                    fill="#4d5969"
+                  />
+                </svg>
+              </span>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--padding-right-small"
+                  style="--text-line-clamp: 1; width: 300px;"
+                >
+                  <a
+                    href="/account/acc/home/orgs/org/projects/project/setup/governance/policy-sets/alwayspass"
+                  >
+                    pipeline.policyEvaluations.policySetName
+                  </a>
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                  style="width: 100px;"
+                >
+                  projectLabel
+                </p>
+                <div
+                  class="status success"
+                >
+                  <span
+                    class="bp3-icon bp3-icon-tick-circle StyledProps--main icon"
+                    icon="tick-circle"
+                  >
+                    <svg
+                      data-icon="tick-circle"
+                      height="9"
+                      viewBox="0 0 16 16"
+                      width="9"
+                    >
+                      <desc>
+                        tick-circle
+                      </desc>
+                      <path
+                        d="M8 16c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm4-11c-.28 0-.53.11-.71.29L7 9.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42l3 3c.18.18.43.29.71.29s.53-.11.71-.29l5-5A1.003 1.003 0 0012 5z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  <span>
+                    pipeline.executionStatus.Success
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="StyledProps--font StyledProps--main"
+            />
+          </div>
+          <div
+            class="Collapse--collapse"
+          >
+            <div
+              class="bp3-collapse"
+            >
+              <div
+                aria-hidden="false"
+                class="bp3-collapse-body"
+                style="transform: translateY(-undefinedpx);"
+              />
+            </div>
           </div>
         </div>
       </div>

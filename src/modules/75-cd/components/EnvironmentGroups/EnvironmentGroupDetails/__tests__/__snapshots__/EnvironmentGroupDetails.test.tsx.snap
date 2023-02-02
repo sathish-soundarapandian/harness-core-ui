@@ -89,7 +89,7 @@ exports[`Environment Group Details Page loads configuration and update of name a
             >
               <a
                 class="Breadcrumbs--breadcrumb"
-                href="/account/dummy/cd/orgs/dummy/projects/dummy/environment-group"
+                href="/account/dummy/cd/orgs/dummy/projects/dummy/environments/groups"
               >
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"

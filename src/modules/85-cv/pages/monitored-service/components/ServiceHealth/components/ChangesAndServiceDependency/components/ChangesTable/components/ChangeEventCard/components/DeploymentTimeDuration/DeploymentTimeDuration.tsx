@@ -11,6 +11,7 @@ import { Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
+import type { ChangeEventDTO } from 'services/cv'
 import { durationAsString } from './DeploymentTimeDuration.utils'
 import { TIME_FORMAT } from './DeploymentTimeDuration.constant'
 
@@ -21,7 +22,7 @@ export default function DeploymentTimeDuration({
 }: {
   startTime: number
   endTime: number
-  type?: keyof typeof ChangeSourceTypes
+  type?: ChangeEventDTO['type']
 }) {
   const { getString } = useStrings()
   const durationString = durationAsString(startTime, endTime)

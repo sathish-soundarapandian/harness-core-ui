@@ -99,16 +99,20 @@ export class ServiceNowApproval extends PipelineStep<ServiceNowApprovalData> {
             projectIdentifier,
             connectorRef: obj?.spec?.connectorRef
           }
-        }).then(response => {
-          return defaultTo(
-            response?.data?.map(ticketType => ({
-              label: ticketType.name,
-              insertText: ticketType.key,
-              kind: CompletionItemKind.Field
-            })),
-            []
-          )
         })
+          .then(response => {
+            return defaultTo(
+              response?.data?.map(ticketType => ({
+                label: ticketType.name,
+                insertText: ticketType.key,
+                kind: CompletionItemKind.Field
+              })),
+              []
+            )
+          })
+          .catch(err => {
+            return err?.message
+          })
       }
     }
 
@@ -142,16 +146,20 @@ export class ServiceNowApproval extends PipelineStep<ServiceNowApprovalData> {
             includeAllConnectorsAvailableAtScope: true
           },
           body: { types: ['ServiceNow'], filterType: 'Connector' }
-        }).then(response => {
-          return defaultTo(
-            response?.data?.content?.map(connector => ({
-              label: getConnectorName(connector),
-              insertText: getConnectorValue(connector),
-              kind: CompletionItemKind.Field
-            })),
-            []
-          )
         })
+          .then(response => {
+            return defaultTo(
+              response?.data?.content?.map(connector => ({
+                label: getConnectorName(connector),
+                insertText: getConnectorValue(connector),
+                kind: CompletionItemKind.Field
+              })),
+              []
+            )
+          })
+          .catch(err => {
+            return err?.message
+          })
       }
     }
 

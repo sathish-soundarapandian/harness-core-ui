@@ -1,0 +1,44 @@
+.main {
+  --gitops-health-status-bg: var(--primary-2);
+  --gitops-health-status-color: var(--primary-7);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 0 var(--spacing-3);
+  color: var(--gitops-health-status-color);
+  background-color: var(--gitops-health-status-bg);
+  font-weight: bold;
+  text-transform: uppercase;
+
+  :global(.bp3-icon) {
+    --intent-color: var(--gitops-health-status-color);
+  }
+
+  &[data-size='medium'] {
+    height: 20px;
+    font-size: var(--font-size-xsmall);
+    column-gap: 4px;
+  }
+
+  &[data-size='large'] {
+    height: 26px;
+    font-size: var(--font-size-xsmall);
+    column-gap: 6px;
+  }
+
+  &[data-status='connected'] {
+    --gitops-health-status-bg: var(--green-200);
+    --gitops-health-status-color: var(--green-800);
+  }
+
+  &[data-status='disconnected'] {
+    --gitops-health-status-bg: var(--red-50);
+    --gitops-health-status-color: var(--red-800);
+  }
+
+  &[data-status='unknown'] {
+    --gitops-health-status-bg: var(--primary-2);
+    --gitops-health-status-color: var(--primary-7);
+  }
+}

@@ -17,11 +17,16 @@ import type {
 import type { ExecutionNode } from 'services/pipeline-ng'
 import type { MinMaxAngleState } from './LogAnalysisView.container.types'
 
+export interface LogAnalysisMessageFrequency {
+  hostName: string
+  data: SeriesColumnOptions[]
+}
+
 export type LogAnalysisRowData = {
   clusterType: LogData['tag']
   message: string
   count: number
-  messageFrequency: SeriesColumnOptions[]
+  messageFrequency: LogAnalysisMessageFrequency[]
   riskStatus: LogData['riskStatus']
   clusterId?: string
 }

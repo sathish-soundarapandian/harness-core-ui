@@ -18,18 +18,23 @@ import {
   ExecutionGraph
 } from 'services/pipeline-ng'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { StrategyType, strategyIconMap, stringsMap } from '@pipeline/utils/FailureStrategyUtils'
+import { StrategyType, strategyIconMap, stringsMap, Strategy } from '@pipeline/utils/FailureStrategyUtils'
+import type { StageType } from '@pipeline/utils/stageHelpers'
+import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/StrategySelection/StrategyConfig'
+import { StepMode } from '@pipeline/utils/stepUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import css from './ManualInterventionTab.module.scss'
 
 export interface ManualInterventionTabProps {
   step: ExecutionNode
-  allowedStrategies: StrategyType[]
+  stageType: StageType
+  allowedStrategies?: StrategyType[]
   executionMetadata: ExecutionGraph['executionMetadata']
 }
 
 export function ManualInterventionTab(props: ManualInterventionTabProps): React.ReactElement {
-  const { allowedStrategies, step, executionMetadata } = props
+  const { allowedStrategies: allowedStrategiesFromProps, step, executionMetadata, stageType } = props
   const { orgIdentifier, projectIdentifier, planExecutionId, accountId } = defaultTo(executionMetadata, {})
   const {
     mutate: handleInterrupt,
@@ -42,6 +47,12 @@ export function ManualInterventionTab(props: ManualInterventionTabProps): React.
   const { showError } = useToaster()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
+  const { PIPELINE_ROLLBACK } = useFeatureFlags()
+  const allowedStrategies =
+    allowedStrategiesFromProps ||
+    allowedStrategiesAsPerStep(stageType)
+      [StepMode.STEP].filter(st => st !== Strategy.ManualIntervention)
+      .filter(st => PIPELINE_ROLLBACK || st !== Strategy.PipelineRollback) // filter out PipelineRollback unless FF is true
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
     const interruptType = e.target.value as HandleManualInterventionInterruptQueryParams['interruptType']

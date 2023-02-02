@@ -5,16 +5,26 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { SelectOption } from '@harness/uicore'
+import type { MetricDashboardItem } from '@cv/components/MetricDashboardWidgetNav/MetricDashboardWidgetNav.type'
+import type { CommonHealthSourceConfigurations } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import type { UseStringsReturn } from 'framework/strings'
+import type { ConnectorConfigureOptionsProps } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 
-export interface DefineHealthSourceFormInterface {
+export interface DefineHealthSourceFormInterface extends CommonHealthSourceConfigurations {
   healthSourceIdentifier: string
+  healthSourceName: string
   healthSourceList: any[]
+  identifier: string
+  product: SelectOption
   dataSourceType?: string
   sourceType?: string
-  connectorRef?: string
+  connectorRef: string | ConnectorConfigureOptionsProps
   region?: string
   workspaceId?: string
+  serviceRef: string
+  environmentRef: string
+  selectedDashboards?: Map<string, MetricDashboardItem>
 }
 
 export interface ConnectorDisableFunctionProps {

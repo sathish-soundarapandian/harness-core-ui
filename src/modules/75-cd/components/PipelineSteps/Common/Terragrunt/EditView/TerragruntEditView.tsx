@@ -21,8 +21,7 @@ import {
   StepWizard,
   ButtonVariation,
   Icon,
-  AllowedTypes,
-  FormError
+  AllowedTypes
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
@@ -93,24 +92,6 @@ export default function TerragruntEditView(
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
-  const regularValidationSchema = Yup.object().shape({
-    ...getNameAndIdentifierSchema(getString, stepViewType),
-    timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
-    spec: Yup.object().shape({
-      provisionerIdentifier: Yup.lazy((value): Yup.Schema<unknown> => {
-        if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
-          return IdentifierSchemaWithOutName(getString, {
-            requiredErrorMsg: getString('common.validation.provisionerIdentifierIsRequired'),
-            regexErrorMsg: getString('common.validation.provisionerIdentifierPatternIsNotValid')
-          })
-        }
-        return Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired'))
-      }),
-      configuration: Yup.object().shape({
-        type: Yup.string().required(getString('pipelineSteps.configurationTypeRequired'))
-      })
-    })
-  })
   let configurationTypes: SelectOption[]
 
   if (stepType === StepType.TerragruntApply) {
@@ -125,6 +106,33 @@ export default function TerragruntEditView(
       { label: getString('pipelineSteps.configTypes.fromApply'), value: ConfigurationTypes.InheritFromApply }
     ]
   }
+
+  const regularValidationSchema = Yup.object().shape({
+    ...getNameAndIdentifierSchema(getString, stepViewType),
+    timeout: getDurationValidationSchema({ minimum: '10s' }).required(getString('validation.timeout10SecMinimum')),
+    spec: Yup.object().shape({
+      provisionerIdentifier: Yup.lazy((value): Yup.Schema<unknown> => {
+        if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+          return IdentifierSchemaWithOutName(getString, {
+            requiredErrorMsg: getString('common.validation.provisionerIdentifierIsRequired'),
+            regexErrorMsg: getString('common.validation.provisionerIdentifierPatternIsNotValid')
+          })
+        }
+        return Yup.string().required(getString('common.validation.provisionerIdentifierIsRequired'))
+      }),
+      configuration: Yup.object().shape({
+        type: Yup.string().required(getString('pipelineSteps.configurationTypeRequired')),
+        spec: Yup.object().when('type', {
+          is: value => value === ConfigurationTypes.Inline,
+          then: Yup.object().shape({
+            moduleConfig: Yup.object().shape({
+              path: Yup.string().required(getString('fieldRequired', { field: getString('common.path') }))
+            })
+          })
+        })
+      })
+    })
+  })
 
   const [isEditMode, setIsEditMode] = React.useState(false)
   const [showModal, setShowModal] = React.useState(false)
@@ -580,13 +588,6 @@ export default function TerragruntEditView(
                         />
                       )}
                     </div>
-                    {values?.spec?.configuration?.type === ConfigurationTypes.Inline &&
-                    !formik.values?.spec?.configuration?.spec?.moduleConfig?.path ? (
-                      <FormError
-                        name="spec.configuration.spec.moduleConfig.path"
-                        errorMessage={getString('fieldRequired', { field: getString('common.path') })}
-                      />
-                    ) : null}
                   </Layout.Vertical>
 
                   <Accordion className={stepCss.accordion}>

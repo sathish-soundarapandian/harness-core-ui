@@ -129,6 +129,7 @@ const OrgSelectionRenderer: React.FC<OrgSelectionRendererProps> = ({
       )}
       {projectSelection === SelectionType.SPECIFIED && projects.length ? (
         <AccountProjectSelectionRenderer
+          orgIdentifier={orgIdentifier}
           projects={projects}
           onDelete={project => {
             onProjectChange(projects.filter(id => id !== project))

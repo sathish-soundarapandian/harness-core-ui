@@ -23,8 +23,6 @@ import SubscriptionDetailsCard from './SubscriptionDetailsCard'
 import SubscriptionUsageCard from './SubscriptionUsageCard'
 import { ServiceLicenseTable } from './ServiceLicenseTable'
 import type { TrialInformation } from '../SubscriptionsPage'
-
-type PartiallyRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
 interface SubscriptionOverviewProps {
   accountName?: string
   licenseData?: ModuleLicenseDTO
@@ -35,10 +33,7 @@ interface SubscriptionOverviewProps {
 const DEFAULT_ACTIVE_SERVICE_LIST_TABLE_SORT = ['serviceInstances', 'DESC']
 const DEFAULT_PAGE_INDEX = 0
 const DEFAULT_PAGE_SIZE = 20
-type ProcessedActiveServiceListPageQueryParams = PartiallyRequired<
-  LisCDActiveServicesQueryParams,
-  'page' | 'size' | 'sort'
->
+type ProcessedActiveServiceListPageQueryParams = RequiredPick<LisCDActiveServicesQueryParams, 'page' | 'size' | 'sort'>
 const queryParamOptions = {
   parseArrays: true,
   decoder: queryParamDecodeAll(),

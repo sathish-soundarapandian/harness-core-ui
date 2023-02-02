@@ -8,7 +8,7 @@
 /* eslint-disable no-console */
 import React, { useEffect, useLayoutEffect, useState, useRef, useMemo, useCallback } from 'react'
 import classNames from 'classnames'
-import Draggable, { DraggableData, DraggableEvent } from 'react-draggable'
+import Draggable, { DraggableData, DraggableEvent, DraggableEventHandler } from 'react-draggable'
 import { v4 as uuid } from 'uuid'
 import {
   CANVAS_CLICK_EVENT,
@@ -171,13 +171,23 @@ function PipelineGraph({
     )
     setDelayRender(true)
   }
-  const onDrag = (_e: DraggableEvent, dragData: DraggableData): void => {
+
+  const onStart: DraggableEventHandler = _e => {
+    setDragging(true)
+  }
+
+  const onStop = (_e: DraggableEvent, dragData: DraggableData): void => {
     if (position.x === dragData.x && position.y == dragData.y) {
       return
     }
     setPosition({ x: dragData.x, y: dragData.y })
     setDragging(false)
     redrawSVGLinks()
+  }
+
+  const onDrag = (e: DraggableEvent): void => {
+    e.stopPropagation()
+    e.preventDefault()
   }
 
   const resetGraphState = (): void => {
@@ -218,7 +228,7 @@ function PipelineGraph({
       }}
     >
       <div id="draggable-parent" className={css.draggableParent} ref={draggableParentRefCallback}>
-        <Draggable position={position} onStart={() => setDragging(true)} onStop={onDrag} offsetParent={document.body}>
+        <Draggable position={position} onStart={onStart} onStop={onStop} onDrag={onDrag} offsetParent={document.body}>
           <div
             id="overlay"
             onClick={() => {

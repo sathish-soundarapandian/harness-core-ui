@@ -40,17 +40,11 @@ export const isAllowedGithubPackageRegistryDeploymentTypes = (deploymentType: Se
   )
 }
 
-export const isAllowedAzureArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
-  return (
-    deploymentType === ServiceDeploymentType.Kubernetes || deploymentType === ServiceDeploymentType.CustomDeployment
-  )
-}
+export const isAllowedAzureArtifactDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean =>
+  deploymentType === ServiceDeploymentType.CustomDeployment
 
-export const isAllowedAMIDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean => {
-  return (
-    deploymentType === ServiceDeploymentType.Kubernetes || deploymentType === ServiceDeploymentType.CustomDeployment
-  )
-}
+export const isAllowedAMIDeploymentTypes = (deploymentType: ServiceDefinition['type']): boolean =>
+  deploymentType === ServiceDeploymentType.CustomDeployment
 
 export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isReadOnly: boolean): boolean => {
   return (
@@ -62,14 +56,24 @@ export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isRe
       deploymentType === ServiceDeploymentType.Elastigroup ||
       deploymentType === ServiceDeploymentType.CustomDeployment ||
       deploymentType === ServiceDeploymentType.TAS ||
-      deploymentType === ServiceDeploymentType.Asg
+      deploymentType === ServiceDeploymentType.Asg ||
+      deploymentType === ServiceDeploymentType.GoogleCloudFunctions
     )
   )
 }
+
+export const shouldAllowOnlyOneArtifact = (deploymentType: ServiceDefinition['type']): boolean => {
+  return deploymentType === ServiceDeploymentType.GoogleCloudFunctions
+}
+
 export const isPrimaryAdditionAllowed = (
   primaryArtifact: ArtifactSource[] | PrimaryArtifact,
-  isMultiArtifactSource?: boolean
+  isMultiArtifactSource?: boolean,
+  allowOnlyOneArtifactAddition = false
 ): boolean => {
+  if (!isEmpty(primaryArtifact) && allowOnlyOneArtifactAddition) {
+    return false
+  }
   if (isMultiArtifactSource) {
     return true
   }
@@ -90,7 +94,9 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   GoogleArtifactRegistry: 'service-gar',
   GithubPackageRegistry: 'service-github-package',
   AzureArtifacts: 'service-azure-artifacts',
-  AmazonMachineImage: 'service-ami'
+  AmazonMachineImage: 'service-ami',
+  GoogleCloudStorage: 'artifact-google-cloud-storage',
+  GoogleCloudSource: 'artifact-google-cloud-source-repo'
 }
 
 export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
@@ -107,7 +113,9 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   GoogleArtifactRegistry: 'pipeline.artifactsSelection.googleArtifactRegistryTitle',
   GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle',
   AzureArtifacts: 'connectors.title.azureArtifacts',
-  AmazonMachineImage: 'pipeline.artifactsSelection.AmazonMachineImageTitle'
+  AmazonMachineImage: 'pipeline.artifactsSelection.AmazonMachineImageTitle',
+  GoogleCloudStorage: 'common.artifacts.googleCloudStorage.title',
+  GoogleCloudSource: 'common.artifacts.googleCloudSourceRepositories.title'
 }
 
 export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
@@ -124,7 +132,9 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   GoogleArtifactRegistry: 'GoogleArtifactRegistry',
   GithubPackageRegistry: 'GithubPackageRegistry',
   AmazonMachineImage: 'AmazonMachineImage',
-  AzureArtifacts: 'AzureArtifacts'
+  AzureArtifacts: 'AzureArtifacts',
+  GoogleCloudStorage: 'GoogleCloudStorage',
+  GoogleCloudSource: 'GoogleCloudSource'
 }
 
 export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = {
@@ -140,7 +150,9 @@ export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = 
   GoogleArtifactRegistry: Connectors.GCP,
   GithubPackageRegistry: Connectors.GITHUB,
   AzureArtifacts: Connectors.AZURE_ARTIFACTS,
-  AmazonMachineImage: Connectors.AWS
+  AmazonMachineImage: Connectors.AWS,
+  GoogleCloudStorage: Connectors.GCP,
+  GoogleCloudSource: Connectors.GCP
 }
 
 export const ArtifactConnectorLabelMap: Record<string, string> = {
@@ -156,7 +168,9 @@ export const ArtifactConnectorLabelMap: Record<string, string> = {
   GoogleArtifactRegistry: 'GCP',
   GithubPackageRegistry: 'Github',
   AzureArtifacts: 'Azure Artifacts',
-  AmazonMachineImage: 'AWS'
+  AmazonMachineImage: 'AWS',
+  GoogleCloudStorage: 'GCP',
+  GoogleCloudSource: 'GCP'
 }
 
 export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<ArtifactType>> = {
@@ -244,7 +258,7 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Acr,
     ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry
   ],
-  GoogleCloudFunctions: []
+  GoogleCloudFunctions: [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage]
 }
 
 export const tagOptions: IOptionProps[] = [

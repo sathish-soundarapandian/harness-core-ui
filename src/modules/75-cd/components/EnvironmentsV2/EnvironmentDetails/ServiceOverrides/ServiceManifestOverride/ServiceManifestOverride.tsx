@@ -57,8 +57,9 @@ import {
   buildOCIHelmPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useQueryParams } from '@common/hooks'
-import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { EnvironmentPathProps, GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import StepHelmAuth from '@connectors/components/CreateConnector/HelmRepoConnector/StepHelmRepoAuth'
+import HelmRepoOverrideManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/HelmRepoOverrideManifest/HelmRepoOverrideManifest'
 import {
   OverrideManifestTypes,
   OverrideManifestStores,
@@ -108,7 +109,9 @@ function ServiceManifestOverride({
   const [connectorView, setConnectorView] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
   const [manifestIndex, setEditIndex] = useState(0)
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier, environmentIdentifier } = useParams<
+    ProjectPathProps & EnvironmentPathProps
+  >()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
 
   const { CDS_TAS_NG } = useFeatureFlags()
@@ -140,20 +143,44 @@ function ServiceManifestOverride({
     setManifestStore(store || '')
   }
 
+  const getInitValues = (manifest: ManifestConfigWrapper) => {
+    if (!manifest) return null
+    else
+      switch (manifest?.manifest?.type) {
+        case OverrideManifests.HelmRepoOverride:
+          return get(manifest, 'manifest.spec')
+        default:
+          return get(manifest, 'manifest.spec.store.spec')
+      }
+  }
+  const getStore = (manifest: ManifestConfigWrapper) => {
+    switch (manifest?.manifest?.type) {
+      case OverrideManifests.HelmRepoOverride:
+        return manifest?.manifest?.spec?.type
+      default:
+        return manifest?.manifest?.spec?.store?.type
+    }
+  }
+  const getConnectorRef = (manifest: ManifestConfigWrapper) => {
+    switch (manifest?.manifest?.type) {
+      case OverrideManifests.HelmRepoOverride:
+        return manifest?.manifest?.spec?.connectorRef
+      default:
+        return getConnectorPath(manifest?.manifest?.spec?.store?.type, manifest?.manifest)
+    }
+  }
   const getInitialValues = (): {
     store: OverrideManifestStoresTypes | string
     selectedManifest: OverrideManifestTypes | null
     connectorRef: string | undefined
   } => {
-    const initValues = get(manifestOverrides[manifestIndex], 'manifest.spec.store.spec', null)
+    const initValues = getInitValues(manifestOverrides[manifestIndex])
+
     if (initValues) {
       const values = {
         ...initValues,
-        store: manifestOverrides[manifestIndex]?.manifest?.spec?.store?.type,
-        connectorRef: getConnectorPath(
-          manifestOverrides[manifestIndex]?.manifest?.spec?.store?.type,
-          manifestOverrides[manifestIndex].manifest
-        ),
+        store: getStore(manifestOverrides[manifestIndex]),
+        connectorRef: getConnectorRef(manifestOverrides[manifestIndex]),
         selectedManifest: get(manifestOverrides[manifestIndex], 'manifest.type', null)
       }
       return values
@@ -168,7 +195,7 @@ function ServiceManifestOverride({
     const initValues = get(manifestOverrides[manifestIndex], 'manifest', null)
     if (
       (initValues?.type && initValues?.type !== selectedManifest) ||
-      get(initValues, 'spec.store.type') !== manifestStore
+      (get(initValues, 'spec.store.type') !== manifestStore && get(initValues, 'spec.type') !== manifestStore)
     ) {
       return null as unknown as ManifestConfig
     }
@@ -246,6 +273,9 @@ function ServiceManifestOverride({
 
       case selectedManifest === OverrideManifests.TasManifest:
         manifestDetailStep = <TasManifest {...lastStepProps()} />
+        break
+      case selectedManifest === OverrideManifests.HelmRepoOverride:
+        manifestDetailStep = <HelmRepoOverrideManifest {...lastStepProps()} />
         break
       default:
         manifestDetailStep = <CommonManifestDetails {...lastStepProps()} />
@@ -399,6 +429,7 @@ function ServiceManifestOverride({
             }}
             isReadonly={isReadonly}
             listOfDisabledManifestTypes={getListOfDisabledManifestTypes(manifestOverrides)}
+            existingManifestOverrides={manifestOverrides}
           />
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />
@@ -412,7 +443,13 @@ function ServiceManifestOverride({
     className: css.addOverrideBtn,
     permission: {
       resource: {
-        resourceType: ResourceType.ENVIRONMENT
+        resourceType: ResourceType.ENVIRONMENT,
+        resourceIdentifier: environmentIdentifier
+      },
+      resourceScope: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier
       },
       permission: PermissionIdentifier.EDIT_ENVIRONMENT
     },

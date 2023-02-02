@@ -11,6 +11,7 @@ declare const styles: {
   readonly children: string
   readonly expired: string
   readonly featuresBanner: string
+  readonly flex: string
   readonly info: string
   readonly infoIcon: string
   readonly issueIcon: string

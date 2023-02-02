@@ -404,7 +404,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     }
   }, [canFetchFilePaths, refetchFilePaths, fixedConnectorValue, fixedRegionValue, fixedBucketValue])
 
-  const isFieldDisabled = (fieldName: string, isBucket = false, isFilePath = false): boolean => {
+  const isFieldDisabled = (fieldName: string): boolean => {
     /* instanbul ignore else */
     if (
       readonly ||
@@ -417,20 +417,6 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
       )
     ) {
       return true
-    }
-
-    if (isBucket) {
-      return (
-        getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME || fixedConnectorValue?.length === 0
-      )
-    }
-    if (isFilePath) {
-      return (
-        getMultiTypeFromValue(fixedConnectorValue) === MultiTypeInputType.RUNTIME ||
-        fixedConnectorValue?.length === 0 ||
-        getMultiTypeFromValue(fixedBucketValue) === MultiTypeInputType.RUNTIME ||
-        fixedBucketValue?.length === 0
-      )
     }
 
     return false
@@ -492,7 +478,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               setRefValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.connectorRef`)}
               multiTypeProps={{
-                allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED],
+                allowableTypes,
                 expressions
               }}
               onChange={(selected, _typeValue) => {
@@ -538,10 +524,11 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
                 selectProps: {
                   items: regions,
                   noResults: (
-                    <Text lineClamp={1} width={500} height={100}>
+                    <Text lineClamp={1} width={400} height={35}>
                       {getRBACErrorMessage(errorRegions as RBACError) || getString('pipeline.noRegions')}
                     </Text>
-                  )
+                  ),
+                  allowCreatingNewItems: true
                 }
               }}
               label={getString('optionalField', { name: getString('regionLabel') })}
@@ -557,7 +544,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               label={getString('pipeline.manifestType.bucketName')}
               placeholder={loading ? getString('loading') : getString('pipeline.manifestType.bucketPlaceHolder')}
               name={`${path}.artifacts.${artifactPath}.spec.bucketName`}
-              disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.bucketName`, true, false)}
+              disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.bucketName`)}
               helperText={getBucketNameHelperText()}
               useValue
               multiTypeInputProps={{
@@ -570,14 +557,13 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
                 },
                 selectProps: {
                   noResults: (
-                    <Text lineClamp={1} width={500} padding="small">
+                    <Text lineClamp={1} width={400} padding="small">
                       {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBucketsFound')}
                     </Text>
                   ),
                   itemRenderer: itemRenderer,
                   items: getBuckets(),
-                  allowCreatingNewItems: true,
-                  addClearBtn: true
+                  allowCreatingNewItems: true
                 },
                 onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                   if (
@@ -602,7 +588,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
               label={getString('common.git.filePath')}
               placeholder={loading ? getString('loading') : getString('pipeline.manifestType.pathPlaceholder')}
               name={`${path}.artifacts.${artifactPath}.spec.filePath`}
-              disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.filePath`, false, true)}
+              disabled={!fromTrigger && isFieldDisabled(`artifacts.${artifactPath}.spec.filePath`)}
               helperText={getFilePathHelperText()}
               useValue
               multiTypeInputProps={{
@@ -610,14 +596,13 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
                 allowableTypes,
                 selectProps: {
                   noResults: (
-                    <Text lineClamp={1} width={500} padding="small">
+                    <Text lineClamp={1} width={400} padding="small">
                       {getRBACErrorMessage(filePathError as RBACError) || getString('pipeline.noFilePathsFound')}
                     </Text>
                   ),
                   itemRenderer: itemRenderer,
                   items: getFilePaths(),
-                  allowCreatingNewItems: true,
-                  addClearBtn: true
+                  allowCreatingNewItems: true
                 },
                 onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                   if (

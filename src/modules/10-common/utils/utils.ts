@@ -16,7 +16,7 @@ import type { UserMetadataDTO } from 'services/cd-ng'
 const PR_ENV_HOST_NAME = 'pr.harness.io'
 
 interface SetPageNumberProps {
-  setPage: (value: React.SetStateAction<number>) => void
+  setPage: (value: number) => void
   pageItemsCount?: number
   page: number
 }
@@ -148,6 +148,11 @@ export function isValueRuntimeInput(
 
 export function isMultiTypeExpression(type: MultiTypeInputType): boolean {
   return type === MultiTypeInputType.EXPRESSION
+}
+
+export function getLastURLPathParam(URL: string): string {
+  const splitArray = URL.split('/')
+  return splitArray.length > 0 ? splitArray[splitArray.length - 1]?.split('-')?.join('') : ''
 }
 
 export function isValueExpression(

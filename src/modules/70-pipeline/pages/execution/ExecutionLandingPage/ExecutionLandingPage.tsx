@@ -19,7 +19,7 @@ import {
   GraphLayoutNode,
   ResponsePipelineExecutionDetail,
   useGetExecutionDetailV2,
-  useDebugPipelineExecuteWithInputSetYaml
+  useGetPipelineSummary
 } from 'services/pipeline-ng'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import { ExecutionStatus, isExecutionComplete } from '@pipeline/utils/statusHelpers'
@@ -48,9 +48,6 @@ import { hasCIStage, hasOverviewDetail, hasServiceDetail } from '@pipeline/utils
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
-import { useToaster } from '@common/exports'
-import { useTelemetry } from '@common/hooks/useTelemetry'
-import { PipelineActions } from '@common/constants/TrackingConstants'
 import ExecutionTabs from './ExecutionTabs/ExecutionTabs'
 import ExecutionMetadata from './ExecutionMetadata/ExecutionMetadata'
 import { ExecutionPipelineVariables } from './ExecutionPipelineVariables'
@@ -248,6 +245,16 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     debounce: 500
   })
 
+  const { data: pipeline, loading: loadingPipeline } = useGetPipelineSummary({
+    pipelineIdentifier,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      getMetadataOnly: true
+    }
+  })
+
   const HAS_CI = hasCIStage(data?.data?.pipelineExecutionSummary)
   const IS_SERVICEDETAIL = hasServiceDetail(data?.data?.pipelineExecutionSummary)
   const IS_OVERVIEWPAGE = hasOverviewDetail(data?.data?.pipelineExecutionSummary)
@@ -275,48 +282,6 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
       }
     }
   })
-
-  const { showSuccess, showWarning } = useToaster()
-  const { trackEvent } = useTelemetry()
-  const { mutate: runPipelineInDebugMode, loading: pipelineDebugExecutionLoading } =
-    useDebugPipelineExecuteWithInputSetYaml({
-      queryParams: {
-        accountIdentifier: accountId,
-        projectIdentifier,
-        orgIdentifier,
-        moduleType: module || ''
-      },
-      identifier: pipelineIdentifier ?? '',
-      originalExecutionId: executionIdentifier ?? '',
-      requestOptions: {
-        headers: {
-          'content-type': 'application/yaml'
-        }
-      }
-    })
-
-  const handleRunPipelineInDebugMode = useCallback(async () => {
-    try {
-      const response = await runPipelineInDebugMode()
-      if (response.status === 'SUCCESS') {
-        showSuccess(getString('runPipelineForm.pipelineRunSuccessFully'))
-        history.push({
-          pathname: routes.toExecutionPipelineView({
-            orgIdentifier,
-            pipelineIdentifier,
-            projectIdentifier,
-            executionIdentifier: response?.data?.planExecution?.uuid ?? '',
-            accountId,
-            module,
-            source
-          })
-        })
-        trackEvent(PipelineActions.StartedExecution, { module })
-      }
-    } catch (err: any) {
-      showWarning(getRBACErrorMessage(err) ?? getString('runPipelineForm.runPipelineFailed'))
-    }
-  }, [runPipelineInDebugMode, orgIdentifier, pipelineIdentifier, projectIdentifier, history, showWarning])
 
   useEffect(() => {
     if (data?.data?.pipelineExecutionSummary?.modules?.includes(ModuleName.CI.toLowerCase())) {
@@ -556,14 +521,14 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         projectIdentifier={projectIdentifier}
         planExecutionId={executionIdentifier}
       >
-        {(!data && loading) || reportSummaryLoading || pipelineDebugExecutionLoading ? <PageSpinner /> : null}
+        {(!data && loading) || reportSummaryLoading || loadingPipeline ? <PageSpinner /> : null}
         {error ? (
           <PageError message={getRBACErrorMessage(error) as string} />
         ) : (
           <main className={css.main}>
             <div className={css.lhs}>
               <header className={css.header}>
-                <ExecutionHeader onRunPipelineInDebugMode={handleRunPipelineInDebugMode} />
+                <ExecutionHeader pipelineMetadata={pipeline} />
                 <ExecutionMetadata />
               </header>
               <ExecutionTabs savedExecutionView={savedExecutionView} setSavedExecutionView={setSavedExecutionView} />

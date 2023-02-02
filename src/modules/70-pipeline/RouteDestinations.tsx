@@ -66,18 +66,20 @@ import { CustomApprovalView } from '@pipeline/components/execution/StepDetails/v
 import { PolicyEvaluationView } from '@pipeline/components/execution/StepDetails/views/PolicyEvaluationView/PolicyEvaluationView'
 import { QueueStepView } from '@pipeline/components/execution/StepDetails/views/QueueStepView/QueueStepView'
 import type { ResourceDTO } from 'services/audit'
-import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
+import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import routes from '@common/RouteDefinitions'
 import { ServiceNowCreateUpdateView } from '@pipeline/components/execution/StepDetails/views/ServiceNowCreateUpdateView/ServiceNowCreateUpdateView'
 import { ModuleName } from 'framework/types/ModuleName'
 import { ServiceNowImportSetView } from '@pipeline/components/execution/StepDetails/views/ServiceNowImportSetView/ServiceNowImportSetView'
 import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
+import ExecutionIACMResourcesView from '@pipeline/pages/execution/ExecutionIACMResourcesView/ExecutionIACMResourcesView'
 import PipelineResourceRenderer from './components/RbacResourceModals/PipelineResourceRenderer/PipelineResourceRenderer'
 import { JiraCreateUpdateView } from './components/execution/StepDetails/views/JiraCreateUpdateView/JiraCreateUpdateView'
 import ExecutionErrorTrackingView from './pages/execution/ExecutionErrorTrackingView/ExecutionErrorTrackingView'
 import { ExecutionListPage } from './pages/execution-list-page/ExecutionListPage'
 import EnvironmentResourceRenderer from './components/RbacResourceTables/EnvironmentAttributeRenderer/EnvironmentResourceRenderer'
 import EnvironmentAttributeRenderer from './components/RbacResourceTables/EnvironmentAttributeRenderer/EnvironmentAttributeRenderer'
+import { BuildCommits } from './pages/execution/ExecutionLandingPage/Commits/BuildCommits'
 /**
  * Register RBAC resources
  */
@@ -286,6 +288,7 @@ interface PipelineRouteDestinationsProps {
   moduleParams: ModulePathParams
   licenseRedirectData?: LicenseRedirectProps
   sidebarProps?: SidebarContext
+  pipelineStudioComponentV1?: React.FC
 }
 
 export function PipelineRouteDestinations({
@@ -295,7 +298,8 @@ export function PipelineRouteDestinations({
   pipelineDeploymentListPageName,
   moduleParams,
   licenseRedirectData,
-  sidebarProps
+  sidebarProps,
+  pipelineStudioComponentV1: PipelineStudioV1
 }: PipelineRouteDestinationsProps) {
   return (
     <>
@@ -309,6 +313,15 @@ export function PipelineRouteDestinations({
         <PipelineDetails>
           <PipelineStudio />
         </PipelineDetails>
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        path={routes.toPipelineStudioV1({ ...accountPathProps, ...pipelinePathProps, ...moduleParams })}
+        pageName={pipelineStudioPageName}
+      >
+        <PipelineDetails>{PipelineStudioV1 ? <PipelineStudioV1 /> : <></>}</PipelineDetails>
       </RouteWithLayout>
       <RouteWithLayout
         exact
@@ -648,6 +661,21 @@ export function PipelineRouteDestinations({
       <RouteWithLayout
         exact
         licenseRedirectData={licenseRedirectData}
+        sidebarProps={ProjectDetailsSideNavProps}
+        layout={MinimalLayout}
+        path={routes.toExecutionCommitsView({
+          ...accountPathProps,
+          ...executionPathProps
+        })}
+        pageName={PAGE_NAME.BuildCommits}
+      >
+        <ExecutionLandingPage>
+          <BuildCommits />
+        </ExecutionLandingPage>
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
         sidebarProps={sidebarProps}
         layout={MinimalLayout}
         path={routes.toResilienceView({
@@ -712,6 +740,22 @@ export function PipelineRouteDestinations({
         path={routes.toPipelineDetail({ ...accountPathProps, ...pipelinePathProps, ...moduleParams })}
       >
         <RedirectToPipelineDetailHome />
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        layout={MinimalLayout}
+        path={routes.toIACMPipelineResources({
+          ...accountPathProps,
+          ...executionPathProps,
+          ...moduleParams
+        })}
+        pageName={PAGE_NAME.ExecutionIACMPipelineResources}
+      >
+        <ExecutionLandingPage>
+          <ExecutionIACMResourcesView />
+        </ExecutionLandingPage>
       </RouteWithLayout>
     </>
   )

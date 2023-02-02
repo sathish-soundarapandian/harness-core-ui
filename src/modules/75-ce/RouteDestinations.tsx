@@ -31,7 +31,7 @@ import { BannerType } from '@common/layouts/Constants'
 import { FEATURE_USAGE_WARNING_LIMIT } from '@common/layouts/FeatureBanner'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
+import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
@@ -72,6 +72,8 @@ import CloudIntegrationPage from './pages/cloud-integration/CloudIntegrationPage
 import ServiceDetailsPage from './pages/service-details/ServiceDetailsPage'
 import AnomaliesFilter from './components/AnomaliesFilter/AnomaliesFilter'
 import GatewayListFilters from './components/COGatewayList/GatewayListFilters'
+import PerspectiveResourceModalBody from './components/ResourceGroupModals/PerspectiveResourceModalBody'
+import PerspectiveResourceRenderer from './components/ResourceGroupModals/PerspectiveResourceRenderer'
 
 RbacFactory.registerResourceCategory(ResourceCategory.CLOUD_COSTS, {
   icon: 'ccm-solid',
@@ -107,7 +109,9 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CCM_PERSPECTIVE_FOLDERS, {
     [PermissionIdentifier.VIEW_CCM_PERSPECTIVE_FOLDERS]: <LocaleString stringID="rbac.permissionLabels.view" />,
     [PermissionIdentifier.EDIT_CCM_PERSPECTIVE_FOLDERS]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
     [PermissionIdentifier.DELETE_CCM_PERSPECTIVE_FOLDERS]: <LocaleString stringID="delete" />
-  }
+  },
+  addResourceModalBody: props => <PerspectiveResourceModalBody {...props} />,
+  staticResourceRenderer: props => <PerspectiveResourceRenderer {...props} />
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.CCM_BUDGETS, {
@@ -790,7 +794,12 @@ const CERoutes: React.FC = () => {
         routes.toCEGovernanceEnforcements({ ...accountPathProps }),
         routes.toCEGovernanceEvaluations({ ...accountPathProps }),
         routes.toCEGovernanceRuleEditor({ ...accountPathProps, ruleId: ':ruleId' }),
-        routes.toCECurrencyPreferences({ ...accountPathProps })
+        routes.toCECurrencyPreferences({ ...accountPathProps }),
+        routes.toClusterOrchestrator({ ...accountPathProps }),
+        routes.toClusterDetailsPage({ ...accountPathProps, id: ':id' }),
+        routes.toClusterWorkloadsDetailsPage({ ...accountPathProps, id: ':id' }),
+        routes.toClusterNodepoolDetailsPage({ ...accountPathProps, id: ':id' }),
+        routes.toComputeGroupsSetup({ ...accountPathProps, id: ':id' })
       ]
     : []
 

@@ -6,7 +6,7 @@
  */
 
 import React, { ReactNode } from 'react'
-import type { IconName, ModalErrorHandlerBinding, SelectOption } from '@harness/uicore'
+import type { IconName, ModalErrorHandlerBinding, MultiSelectOption, SelectOption } from '@harness/uicore'
 import { defaultTo, pick } from 'lodash-es'
 import type { StringsMap } from 'stringTypes'
 import type {
@@ -32,10 +32,11 @@ import type { FeatureRequest } from 'framework/featureStore/featureStoreUtil'
 import type { PermissionsRequest } from '@rbac/hooks/usePermission'
 import { FeatureWarningTooltip } from '@common/components/FeatureWarning/FeatureWarningWithTooltip'
 import type { UseStringsReturn } from 'framework/strings'
-import type { ProjectSelectOption } from '@audit-trail/components/FilterDrawer/FilterDrawer'
 import type { RbacMenuItemProps } from '@rbac/components/MenuItem/MenuItem'
 import type { ResourceSelectorValue } from '@rbac/pages/ResourceGroupDetails/utils'
 import type { AttributeFilter } from 'services/resourcegroups'
+import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
+import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 
 export const DEFAULT_RG = '_all_resources_including_child_scopes'
 export const PROJECT_DEFAULT_RG = '_all_project_level_resources'
@@ -45,6 +46,10 @@ export enum AuthenticationMechanisms {
   OAUTH = 'OAUTH',
   LDAP = 'LDAP',
   USER_PASSWORD = 'USER_PASSWORD'
+}
+
+export interface ProjectSelectOption extends MultiSelectOption {
+  orgIdentifier: string
 }
 
 export enum PrincipalType {
@@ -504,5 +509,18 @@ export const getDefaultSelectedFilter = (scope: Scope): ScopeFilterItems => {
       return ScopeFilterItems.PROJECT_ONLY
     default:
       return ScopeFilterItems.ALL
+  }
+}
+
+export const rbacQueryParamOptions = {
+  decoder: queryParamDecodeAll(),
+  processQueryParams<Rest>(
+    params: CommonPaginationQueryParams & Rest
+  ): RequiredPick<CommonPaginationQueryParams, 'page' | 'size'> & Rest {
+    return {
+      ...params,
+      page: params.page ?? 0,
+      size: params.size ?? 10
+    }
   }
 }

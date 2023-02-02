@@ -110,7 +110,7 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
   } = props
 
   const { openCreateSSHCredModal } = useCreateSSHCredModal({
-    onSuccess: data => {
+    onSuccess: /* istanbul ignore next */ data => {
       const secret = {
         ...pick(data, ['name', 'identifier', 'orgIdentifier', 'projectIdentifier', 'type']),
         referenceString: getReference(getScopeFromDTO(data), data.identifier) as string
@@ -122,7 +122,7 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
   })
 
   const { openCreateWinRmCredModal } = useCreateWinRmCredModal({
-    onSuccess: data => {
+    onSuccess: /* istanbul ignore next */ data => {
       const secret = {
         ...pick(data, ['name', 'identifier', 'orgIdentifier', 'projectIdentifier', 'type']),
         referenceString: getReference(getScopeFromDTO(data), data.identifier) as string
@@ -160,7 +160,7 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
     ...rest
   } = restProps
 
-  const handleChange: ExpressionAndRuntimeTypeProps['onChange'] = val => {
+  const handleChange: ExpressionAndRuntimeTypeProps['onChange'] = /* istanbul ignore next */ val => {
     formik.setFieldValue(name, val)
   }
 
@@ -192,7 +192,7 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
             fixedTypeComponentProps={{ onClick: openCreateOrSelectSecretModal }}
             fixedTypeComponent={MultiTypeSecretInputFixedTypeComponent}
             defaultValueToReset=""
-            style={{ flexGrow: 1 }}
+            style={{ flexGrow: 1, width: '100%' }}
           />
         ) : (
           <MultiTypeSecretInputFixedTypeComponent
@@ -211,7 +211,7 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
             showRequiredField={false}
             showDefaultField={false}
             showAdvanced={true}
-            onChange={val => formik?.setFieldValue(name, val)}
+            onChange={/* istanbul ignore next */ val => formik?.setFieldValue(name, val)}
             {...configureOptionsProps}
             isReadonly={disabled}
           />

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Accordion, AccordionHandle } from '@harness/uicore'
+import { Accordion, AccordionHandle, Icon } from '@harness/uicore'
 import { Divider, Spinner } from '@blueprintjs/core'
 import { defaultTo, isEmpty } from 'lodash-es'
 
@@ -15,10 +15,10 @@ import { processExecutionData } from '@pipeline/utils/executionUtils'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
-import { isExecutionNotStarted, isExecutionSkipped } from '@pipeline/utils/statusHelpers'
+import { isExecutionNotStarted, isExecutionSkipped, isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
 import { StatusHeatMap } from '@pipeline/components/StatusHeatMap/StatusHeatMap'
 import { String as TemplateString } from 'framework/strings'
-import type { GraphLayoutNode } from 'services/pipeline-ng'
+import type { ExecutionNode, GraphLayoutNode } from 'services/pipeline-ng'
 import { StepsTree } from '../StepsTree/StepsTree'
 import { StatusIcon } from '../StepsTree/StatusIcon'
 
@@ -26,7 +26,11 @@ import css from './StageSelection.module.scss'
 
 const SCROLL_OFFSET = 250
 
-export function StageSelection(): React.ReactElement {
+export interface StageSelectionProps {
+  openExecutionTimeInputsForStep(node?: ExecutionNode): void
+}
+
+export function StageSelection(props: StageSelectionProps): React.ReactElement {
   const {
     childPipelineStagesMap,
     allStagesMap,
@@ -39,7 +43,7 @@ export function StageSelection(): React.ReactElement {
     queryParams,
     loading
   } = useExecutionContext()
-
+  const { openExecutionTimeInputsForStep } = props
   const accordionRef = React.useRef<AccordionHandle | null>(null)
   const childAccordionRef = React.useRef<AccordionHandle | null>(null)
   const containerRef = React.useRef<HTMLDivElement | null>(null)
@@ -51,6 +55,15 @@ export function StageSelection(): React.ReactElement {
 
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<ExecutionPageQueryParams>()
 
+  const handleExecInputClick = React.useCallback(
+    (node?: ExecutionNode) => {
+      return (e: React.SyntheticEvent) => {
+        e.stopPropagation()
+        openExecutionTimeInputsForStep(node)
+      }
+    },
+    [openExecutionTimeInputsForStep]
+  )
   React.useEffect(() => {
     let timer: number
 
@@ -197,6 +210,8 @@ export function StageSelection(): React.ReactElement {
         {stageEntries.map(([identifier, stage]) => {
           const newIdentifier = stage?.strategyMetadata ? [stage.nodeUuid, stage.nodeExecutionId].join('|') : identifier
           const isChainedPipelineStage = stage.nodeType === 'Pipeline'
+          const shouldShowExecutionInputs =
+            !!stage?.executionInputConfigured && isExecutionWaitingForInput(stage.status) && !!selectedStageId
           const shouldShowTree =
             ((!isChainedPipelineStage &&
               !isEmpty(selectedStageExecutionId) &&
@@ -212,9 +227,19 @@ export function StageSelection(): React.ReactElement {
               id={newIdentifier}
               disabled={isExecutionSkipped(stage.status) || isExecutionNotStarted(stage.status)}
               summary={
-                <div>
-                  <StatusIcon className={css.icon} status={stage.status as ExecutionStatus} />
-                  <span>{stage.name}</span>
+                <div className={css.stageName}>
+                  <div>
+                    <StatusIcon className={css.icon} status={stage.status as ExecutionStatus} />
+                    <span>{stage.name}</span>
+                  </div>
+                  {shouldShowExecutionInputs ? (
+                    <button
+                      className={css.inputWaiting}
+                      onClick={handleExecInputClick(allNodeMap[defaultTo(stage.nodeExecutionId, '')])}
+                    >
+                      <Icon name="runtime-input" size={12} />
+                    </button>
+                  ) : null}
                 </div>
               }
               details={
@@ -242,9 +267,11 @@ export function StageSelection(): React.ReactElement {
                             id={newChildIdentifier}
                             disabled={isExecutionSkipped(childStage.status) || isExecutionNotStarted(childStage.status)}
                             summary={
-                              <div>
-                                <StatusIcon className={css.icon} status={childStage.status as ExecutionStatus} />
-                                <span>{childStage.name}</span>
+                              <div className={css.stageName}>
+                                <div>
+                                  <StatusIcon className={css.icon} status={childStage.status as ExecutionStatus} />
+                                  <span>{childStage.name}</span>
+                                </div>
                               </div>
                             }
                             details={
@@ -258,6 +285,7 @@ export function StageSelection(): React.ReactElement {
                                     onStepSelect={handleStepSelect}
                                     retryStep={queryParams.retryStep}
                                     isRoot
+                                    openExecutionTimeInputsForStep={openExecutionTimeInputsForStep}
                                   />
                                 </>
                               ) : (
@@ -281,6 +309,7 @@ export function StageSelection(): React.ReactElement {
                       onStepSelect={handleStepSelect}
                       retryStep={queryParams.retryStep}
                       isRoot
+                      openExecutionTimeInputsForStep={openExecutionTimeInputsForStep}
                     />
                   </>
                 ) : (

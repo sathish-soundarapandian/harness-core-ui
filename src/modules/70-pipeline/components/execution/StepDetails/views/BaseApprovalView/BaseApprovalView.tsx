@@ -20,6 +20,7 @@ import { PipelineDetailsTab } from '@pipeline/components/execution/StepDetails/t
 import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
 import { ExecutionInputs } from '@pipeline/components/execution/StepDetails/tabs/ExecutionInputs/ExecutionInputs'
 
+import { PolicyEvaluationContent } from '../../common/ExecutionContent/PolicyEvaluationContent/PolicyEvaluationContent'
 import tabCss from '../DefaultView/DefaultView.module.scss'
 
 export const REFRESH_APPROVAL = 'REFRESH_APPROVAL'
@@ -29,7 +30,8 @@ enum ApprovalStepTab {
   PIPELINE_DETAILS = 'PIPELINE_DETAILS',
   INPUT = 'INPUT',
   OUTPUT = 'OUTPUT',
-  STEP_EXECUTION_INPUTS = 'STEP_EXECUTION_INPUTS'
+  STEP_EXECUTION_INPUTS = 'STEP_EXECUTION_INPUTS',
+  POLICY_ENFORCEMENT = 'POLICY_ENFORCEMENT'
 }
 
 export interface StepExecutionTimeInfo {
@@ -62,6 +64,7 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
   const isStepExecutionFailed = isExecutionFailed(step.status)
   const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
   const shouldShowExecutionInputs = !!step.executionInputConfigured
+  const shouldShowPolicyEnforcement = !!step?.outcomes?.policyOutput?.policySetDetails
   const { message, responseMessages } = step.failureInfo || {}
 
   const failureErrorMessage = React.useMemo(() => {
@@ -183,6 +186,19 @@ export function BaseApprovalView(props: BaseApprovalViewProps): React.ReactEleme
           />
         }
       />
+      {shouldShowPolicyEnforcement ? (
+        <Tabs.Tab
+          id={ApprovalStepTab.POLICY_ENFORCEMENT}
+          title={getString('pipeline.policyEnforcement.title')}
+          panel={
+            <PolicyEvaluationContent
+              step={step}
+              executionMetadata={executionMetadata}
+              policySetOutputPath={'outcomes.policyOutput'}
+            />
+          }
+        />
+      ) : null}
       <Tabs.Expander />
       <Button
         minimal

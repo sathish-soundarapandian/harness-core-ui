@@ -123,7 +123,13 @@ export default function InfrastructureList({
             variation={ButtonVariation.PRIMARY}
             permission={{
               resource: {
-                resourceType: ResourceType.ENVIRONMENT
+                resourceType: ResourceType.ENVIRONMENT,
+                resourceIdentifier: environmentIdentifier
+              },
+              resourceScope: {
+                accountIdentifier: accountId,
+                orgIdentifier,
+                projectIdentifier
               },
               permission: PermissionIdentifier.EDIT_ENVIRONMENT
             }}

@@ -132,7 +132,13 @@ export function ExecutionListFilterForm<
   }
 
   const getDeploymentTypeOptions = (): React.ReactElement => {
-    const { environments, services, deploymentType } = initialValues as DeploymentTypeContext
+    const {
+      environments,
+      services,
+      deploymentType: deploymentTypeSelectOptions
+    } = initialValues as DeploymentTypeContext
+    const deploymentTypeValue = formikProps?.values?.deploymentType
+
     // const infrastructureTypeLabel = { label: getString('kubernetesDirectText'), value: 'Kubernetes Direct' }
     return (
       <>
@@ -141,11 +147,18 @@ export function ExecutionListFilterForm<
         </span>
 
         <FormInput.Select
-          items={deploymentType || []}
+          items={deploymentTypeSelectOptions || []}
           name="deploymentType"
           label={getString('deploymentTypeText')}
           placeholder={getString('pipeline.filters.deploymentTypePlaceholder')}
           key="deploymentType"
+          value={
+            deploymentTypeValue
+              ? deploymentTypeSelectOptions?.find(
+                  (option: SelectOption) => option.value === deploymentTypeValue[0].value
+                )
+              : NO_SELECTION
+          }
         />
         {/* <FormInput.Select
           items={[infrastructureTypeLabel]}

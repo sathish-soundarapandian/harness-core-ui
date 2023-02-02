@@ -13,7 +13,8 @@ import type {
   StepPalleteModuleInfo,
   StageElementConfig,
   StageElementWrapperConfig,
-  StepElementConfig
+  StepElementConfig,
+  PmsAbstractStepNode
 } from 'services/pipeline-ng'
 import {
   StepOrStepGroupOrTemplateStepData,
@@ -113,6 +114,9 @@ export function getStepPaletteModuleInfosFromStage(
       break
     case ServiceDeploymentType.Asg:
       category = 'AutoScalingGroup'
+      break
+    default:
+      category = deploymentType
   }
   switch (stageType) {
     case StageType.BUILD:
@@ -228,7 +232,7 @@ export function getStepDataFromValues(
   item: Partial<Values>,
   initialValues: StepOrStepGroupOrTemplateStepData
 ): StepElementConfig {
-  const processNode = produce(initialValues as StepElementConfig, node => {
+  const processNode = produce(initialValues as StepElementConfig & PmsAbstractStepNode, node => {
     if (item.tab !== TabTypes.Advanced) {
       if ((item as StepElementConfig).description) {
         node.description = (item as StepElementConfig).description
@@ -256,6 +260,11 @@ export function getStepDataFromValues(
         node.strategy = item.strategy
       } else if (node.strategy) {
         delete node.strategy
+      }
+      if (!isEmpty(item?.policySets)) {
+        set(node, 'enforce.policySets', item.policySets)
+      } else if (node.enforce?.policySets) {
+        delete node.enforce
       }
     }
     // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.

@@ -151,7 +151,7 @@ describe('ManifestSelection tests', () => {
     const changeText = await findByText(container, 'Change')
     fireEvent.click(changeText)
 
-    const HelmmanifestType = await findByText(container, 'pipeline.manifestTypeLabels.HelmChartLabel')
+    const HelmmanifestType = await findByText(container, 'common.HelmChartLabel')
     expect(HelmmanifestType).toBeDefined()
     fireEvent.click(HelmmanifestType)
 
@@ -218,7 +218,7 @@ describe('ManifestSelection tests', () => {
     const changeText = await findByText(container, 'Change')
     fireEvent.click(changeText)
 
-    const HelmmanifestType = await findByText(container, 'pipeline.manifestTypeLabels.HelmChartLabel')
+    const HelmmanifestType = await findByText(container, 'common.HelmChartLabel')
     expect(HelmmanifestType).toBeDefined()
     fireEvent.click(HelmmanifestType)
 

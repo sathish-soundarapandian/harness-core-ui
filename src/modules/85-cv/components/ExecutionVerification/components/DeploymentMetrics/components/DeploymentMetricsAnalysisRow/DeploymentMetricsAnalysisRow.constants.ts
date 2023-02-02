@@ -5,13 +5,39 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { HostData } from 'services/cv'
+import type { AnalysedDeploymentTestDataNode, HostData } from 'services/cv'
+import type { UseStringsReturn } from 'framework/strings'
 
-export type HostTestData = { risk: HostData['risk']; points: Highcharts.SeriesLineOptions['data']; name: string }
+export type HostTestData = {
+  risk: HostData['risk']
+  points: Highcharts.SeriesLineOptions['data']
+  name: string
+  analysisReason?: AnalysedDeploymentTestDataNode['analysisReason']
+  appliedThresholds?: AnalysedDeploymentTestDataNode['appliedThresholds']
+  initialXvalue: number
+}
 
 export type HostControlTestData = Omit<HostTestData, 'risk' | 'name'> & {
   risk?: HostData['risk']
   name?: string | null
+  initialXvalue: number
+  controlDataType?: AnalysedDeploymentTestDataNode['controlDataType']
 }
 
+export const getAnalysisReason = (reason: string, getString: UseStringsReturn['getString']): string => {
+  switch (reason) {
+    case 'CUSTOM_FAIL_FAST_THRESHOLD':
+      return getString('cv.metricsAnalysis.analysisReason.customFailFastThreshold')
+    case 'ML_ANALYSIS':
+      return getString('cv.metricsAnalysis.analysisReason.mlAnalysis')
+    case 'NO_CONTROL_DATA':
+      return getString('cv.metricsAnalysis.analysisReason.noControlData')
+    case 'NO_TEST_DATA':
+      return getString('cv.metricsAnalysis.analysisReason.noTestData')
+    default:
+      return ''
+  }
+}
+
+export const MINIMUM_DEVIATION = 'MINIMUM_DEVIATION'
 export const widthPercentagePerGraph = 1

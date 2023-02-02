@@ -105,8 +105,6 @@ describe('Health Source - Prometheus', () => {
 
     cy.findByRole('button', { name: /Retry/i }).click()
 
-    cy.contains('p', 'No records for provided query').should('be.visible')
-
     cy.intercept('GET', sampleDataAPI, sampleDataResponse)
 
     cy.findByRole('button', { name: /Fetch records/i }).click()

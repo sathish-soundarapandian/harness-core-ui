@@ -20,6 +20,7 @@ export const resetForm = (
   if (parent === 'connectorRef') {
     if (updateJobName) {
       formik.setFieldValue(`${prefix}spec.jobName`, '')
+      formik.setFieldValue(`${prefix}spec.jobParameter`, [])
     }
   }
   if (parent === 'jobName') {

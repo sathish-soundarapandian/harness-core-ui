@@ -34,13 +34,11 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import {
-  useDeleteSLOData,
   useGetAllJourneys,
   useGetServiceLevelObjectivesRiskCount,
   RiskCount,
   useGetSLOHealthListView,
   useGetSLOAssociatedMonitoredServices,
-  SLOHealthListView,
   useDeleteSLOV2Data
 } from 'services/cv'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
@@ -150,11 +148,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
     refetch: refetchUserJourneys
   } = useGetAllJourneys(getUserJourneyParams(pathParams))
 
-  const { mutate: deleteSLO, loading: deleteSLOLoading } = useDeleteSLOData({
-    queryParams: pathParams
-  })
-
-  const { mutate: deleteSLOV2, loading: deleteSLOV2Loading } = useDeleteSLOV2Data({
+  const { mutate: deleteSLO, loading: deleteSLOLoading } = useDeleteSLOV2Data({
     queryParams: pathParams
   })
 
@@ -178,9 +172,9 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         })
   }
 
-  const onDelete = async (identifier: string, name: string, sloType?: SLOHealthListView['sloType']): Promise<void> => {
+  const onDelete = async (identifier: string, name: string): Promise<void> => {
     try {
-      sloType === SLOType.COMPOSITE ? await deleteSLOV2(identifier) : await deleteSLO(identifier)
+      await deleteSLO(identifier)
       if (getIsSetPreviousPage(pageIndex, pageItemCount)) {
         setPageNumber(prevPageNumber => prevPageNumber - 1)
       } else {
@@ -532,7 +526,7 @@ const CVSLOsListingPage: React.FC<CVSLOsListingPageProps> = ({ monitoredService 
         loading={getIsSLODashboardAPIsLoading(
           userJourneysLoading,
           dashboardWidgetsLoading,
-          deleteSLOLoading || deleteSLOV2Loading,
+          deleteSLOLoading,
           monitoredServicesLoading,
           riskCountLoading
         )}

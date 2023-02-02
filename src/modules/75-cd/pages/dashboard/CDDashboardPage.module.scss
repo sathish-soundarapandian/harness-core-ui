@@ -36,7 +36,7 @@ $header-height: 80px;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: auto 1fr;
   grid-gap: var(--spacing-xxlarge);
-
+  padding-top: 0 !important;
   .executionsWrapper {
     grid-column: 2/4;
   }
@@ -234,4 +234,9 @@ $header-height: 80px;
 .ctn {
   display: flex;
   justify-content: space-between;
+}
+.refreshButton {
+  justify-content: flex-end;
+  margin-right: var(--spacing-4) !important;
+  margin-top: var(--spacing-1) !important;
 }

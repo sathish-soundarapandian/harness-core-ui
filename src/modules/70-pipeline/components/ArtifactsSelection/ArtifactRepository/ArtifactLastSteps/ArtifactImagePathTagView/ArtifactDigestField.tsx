@@ -31,7 +31,9 @@ import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/Artif
 import css from '../../ArtifactConnector.module.scss'
 
 const onTagInputFocus = (e: React.FocusEvent<HTMLInputElement>, fetchDigest: () => void): void => {
+  /* istanbul ignore next */
   if (e?.target?.type !== 'text' || (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)) {
+    /* istanbul ignore next */
     return
   }
   fetchDigest()
@@ -58,6 +60,13 @@ export function NoDigestResults({
   )
 }
 
+const getItems = (isFetching: boolean, label: string, items: SelectOption[]): SelectOption[] => {
+  if (isFetching) {
+    return [{ label: `${label}...`, value: `${label}...` }]
+  }
+  return items
+}
+
 interface ArtifactDigestFieldProps {
   formik: FormikValues
   isBuildDetailsLoading: boolean
@@ -80,8 +89,6 @@ function ArtifactDigestField({
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const loadingPlaceholderText = getString('pipeline.artifactsSelection.loadingDigest')
-  const digestDefaultValue = [{ label: loadingPlaceholderText, value: loadingPlaceholderText }]
-  const [digestItems, setDigestItems] = React.useState<any>(digestDefaultValue)
   const { data, loading, refetch, error } = useMutateAsGet(useGetLastSuccessfulBuildForDocker, {
     queryParams: {
       imagePath: formik?.values?.imagePath,
@@ -101,34 +108,22 @@ function ArtifactDigestField({
     }
   })
 
-  React.useEffect(() => {
-    if (data && !loading) {
-      /* istanbul ignore next */
-      const options = []
-      if (data && data?.data && data?.data?.metadata && data?.data?.metadata?.SHA) {
-        options.push({ label: data.data.metadata.SHA, value: data.data.metadata.SHA })
+  const digestItems: SelectOption[] = React.useMemo(() => {
+    const options = []
+    if (loading) {
+      options.push({ label: loadingPlaceholderText, value: loadingPlaceholderText })
+    } else {
+      if (get(data, 'data.metadata.SHA', '')) {
+        /* istanbul ignore next */
+        options.push({ label: get(data, 'data.metadata.SHA', ''), value: get(data, 'data.metadata.SHA', '') })
       }
-      if (data && data?.data && data?.data?.metadata && data?.data?.metadata?.SHAV2) {
-        options.push({ label: data.data.metadata.SHAV2, value: data.data.metadata.SHAV2 })
+      if (get(data, 'data.metadata.SHAV2', '')) {
+        /* istanbul ignore next */
+        options.push({ label: get(data, 'data.metadata.SHAV2', ''), value: get(data, 'data.metadata.SHAV2', '') })
       }
-      setDigestItems(options)
-    } else if (loading) {
-      /* istanbul ignore next */
-      setDigestItems(digestDefaultValue)
     }
-  }, [data, loading])
-
-  React.useEffect(() => {
-    if (error) {
-      setDigestItems([])
-    }
-  }, [error])
-
-  React.useEffect(() => {
-    if (formik?.values?.digest) {
-      refetch()
-    }
-  }, [formik?.values?.digest])
+    return options
+  }, [data?.data, loading])
 
   const itemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={isBuildDetailsLoading} />
@@ -138,7 +133,7 @@ function ArtifactDigestField({
     <>
       <div className={css.imagePathContainer}>
         <FormInput.MultiTypeInput
-          selectItems={digestItems}
+          selectItems={getItems(loading, getString('pipeline.artifactsSelection.loadingDigest'), digestItems)}
           multiTypeInputProps={{
             expressions,
             allowableTypes,

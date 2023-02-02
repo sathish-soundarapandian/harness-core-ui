@@ -10,13 +10,14 @@ import { Icon, Layout, TableV2, Text } from '@harness/uicore'
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import { getIconBySourceType } from '@cv/pages/health-source/HealthSourceTable/HealthSourceTable.utils'
 import { isHealthSourceVersionV2 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
+import { HealthSourceProducts } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import css from './HealthSourceInputsetTable.module.scss'
 
 export default function HealthSourceInputsetTable({ healthSources }: any): JSX.Element {
   const tableData =
     healthSources?.map((healthSource: any) => {
       const { name, spec, type } = healthSource
-      const feature = isHealthSourceVersionV2(healthSource) ? type : spec?.feature
+      const feature = isHealthSourceVersionV2(healthSource) ? HealthSourceProducts[type]?.label : spec?.feature
       return {
         healthSource: name,
         connector: spec?.connectorRef,

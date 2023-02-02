@@ -9,6 +9,7 @@ import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
+import type { DefineHealthSourceFormInterface } from '@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.types'
 import CommonHealthSourceContainer, { CommonHealthSourceContainerProps } from '../CommonHealthSource.container'
 import { createHealthSourceConfigurationsData, createHealthSourcePayload } from '../CommonHealthSource.utils'
 
@@ -53,7 +54,7 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
       },
       healthSourceName: 'a',
       healthSourceIdentifier: 'a'
-    },
+    } as unknown as DefineHealthSourceFormInterface,
     healthSourceConfig: healthSourceConfig,
     isTemplate: false,
     expressions: [],

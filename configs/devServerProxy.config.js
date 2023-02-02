@@ -157,5 +157,9 @@ module.exports = {
   '/iacm': {
     pathRewrite: { '^/iacm': '' },
     target: process.env.IAC_UI_URL || 'https://localhost:8185'
+  },
+  '/sscs': {
+    pathRewrite: { '^/sscs': '' },
+    target: process.env.SSCS_UI_URL || 'https://localhost:8186'
   }
 }

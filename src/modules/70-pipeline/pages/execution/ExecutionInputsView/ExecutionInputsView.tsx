@@ -7,7 +7,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { getErrorInfoFromErrorObject, Layout, PageError, Text } from '@harness/uicore'
+import { getErrorInfoFromErrorObject, Layout, PageError, Tag, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
@@ -71,16 +71,19 @@ export default function ExecutionInputsView(): React.ReactElement {
           {getString('pipeline.inputSets.noRuntimeInputsWhileExecution')}
         </Text>
       ) : (
-        <Layout.Vertical padding="xlarge">
-          <YamlBuilderMemo
-            {...yamlBuilderProps}
-            existingYaml={inputSetYaml}
-            height="72vh"
-            width="100%"
-            isReadOnlyMode={true}
-            isEditModeSupported={false}
-          />
-        </Layout.Vertical>
+        <>
+          <Layout.Vertical padding="xlarge">
+            <YamlBuilderMemo
+              {...yamlBuilderProps}
+              existingYaml={inputSetYaml}
+              height="72vh"
+              width="100%"
+              isReadOnlyMode={true}
+              isEditModeSupported={false}
+            />
+          </Layout.Vertical>
+          <Tag className={css.buttonsWrapper}>{getString('common.readOnly')}</Tag>
+        </>
       )}
     </div>
   )

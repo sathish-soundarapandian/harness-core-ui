@@ -8,7 +8,6 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly action: string
-  readonly centerElement: string
   readonly chart: string
   readonly chartContainer: string
   readonly formQueryBox: string
@@ -22,6 +21,7 @@ declare const styles: {
   readonly queryIcons: string
   readonly queryViewDialog: string
   readonly recordContainer: string
+  readonly recordsContainer: string
   readonly stackTracePanelClassName: string
   readonly tooManyRecords: string
 }

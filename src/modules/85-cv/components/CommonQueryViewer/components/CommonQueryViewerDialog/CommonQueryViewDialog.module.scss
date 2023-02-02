@@ -14,14 +14,16 @@
 }
 .dialogRecords {
   min-height: 80vh !important;
+  background-color: var(--white) !important;
 }
 
 .queryPanel {
-  min-width: 49%;
+  width: 49%;
 }
 
 .queryViewDialog {
   padding: var(--spacing-large) !important;
+  background-color: var(--primary-bg);
   .chartContainer {
     height: 580px !important;
   }

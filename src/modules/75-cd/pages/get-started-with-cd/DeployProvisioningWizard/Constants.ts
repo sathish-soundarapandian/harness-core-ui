@@ -27,6 +27,7 @@ export interface WizardStep {
   onClickNext?: () => void
   onClickBack?: () => void
   stepFooterLabel?: keyof StringsMap
+  showFooter?: boolean
 }
 
 export enum ProvisioningStatus {
@@ -38,9 +39,9 @@ export enum ProvisioningStatus {
 
 export enum DeployProvisiongWizardStepId {
   SelectDeploymentType = 'SELECT_DEPLOYMENT_TYPE',
-  DelegateSelector = 'ENVIRONMENT_DELEGATE_SELECTOR',
-  ConfigureService = 'CONFIGURE_SERVICE',
-  RunPipeline = 'RUN_PIPELINE'
+  Connect = 'CONNECT',
+  Configure = 'CONFIGURE',
+  Deploy = 'DEPLOY'
 }
 
 export enum StepStatus {

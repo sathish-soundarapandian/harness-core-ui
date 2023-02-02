@@ -15,7 +15,7 @@ import { AccessPoint, Opts, Resource, Service, ServiceDep, useRouteDetails, useS
 import { useStrings } from 'framework/strings'
 import { InstanceStatusIndicatorV2 } from '@ce/common/InstanceStatusIndicator/InstanceStatusIndicator'
 import { Utils } from '@ce/common/Utils'
-import CopyButton from '@ce/common/CopyButton'
+import CopyButton from '@common/utils/CopyButton'
 import { allProviders, ceConnectorTypes, GatewayKindType } from '@ce/constants'
 import { ConnectorInfoDTO, useGetConnector } from 'services/cd-ng'
 import { useBooleanStatus } from '@common/hooks'
@@ -108,7 +108,7 @@ const ManagedVms: React.FC<{ resources: Resource[] }> = ({ resources }) => {
               color={Color.PRIMARY_7}
               onClick={toggle}
             >
-              {state ? getString('ce.common.collapse') : getString('ce.common.expand')}
+              {state ? getString('common.collapse') : getString('common.expand')}
             </Text>
           </Container>
         )}

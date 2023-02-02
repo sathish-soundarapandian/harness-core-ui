@@ -49,14 +49,23 @@ function StartupScriptWizardStepTwo({
   handleSubmit,
   prevStepData,
   previousStep,
+  singleAvailableStore,
   isReadonly = false
 }: StepProps<ConnectorConfigDTO> & StartupScriptWizardStepTwoProps): React.ReactElement {
   const { getString } = useStrings()
 
-  const gitConnectionType: string = prevStepData?.selectedStore === Connectors.GIT ? 'connectionType' : 'type'
+  const modifiedPrevStepData =
+    !prevStepData && singleAvailableStore
+      ? {
+          selectedStore: singleAvailableStore,
+          connectorRef: singleAvailableStore
+        }
+      : prevStepData
+
+  const gitConnectionType: string = modifiedPrevStepData?.selectedStore === Connectors.GIT ? 'connectionType' : 'type'
   const connectionType =
-    prevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
-    prevStepData?.urlType === GitRepoName.Repo
+    modifiedPrevStepData?.connectorRef?.connector?.spec?.[gitConnectionType] === GitRepoName.Repo ||
+    modifiedPrevStepData?.urlType === GitRepoName.Repo
       ? GitRepoName.Repo
       : GitRepoName.Account
 
@@ -114,14 +123,14 @@ function StartupScriptWizardStepTwo({
     handleSubmit(startupCommand)
   }
 
-  if (prevStepData?.selectedStore === 'Harness') {
+  if (modifiedPrevStepData?.selectedStore === 'Harness') {
     return (
       <HarnessOption
         initialValues={initialValues?.store?.type === 'Harness' ? initialValues?.store : undefined}
         stepName={stepName}
         handleSubmit={handleSubmit}
         formName="startupScriptDetails"
-        prevStepData={prevStepData}
+        prevStepData={modifiedPrevStepData}
         previousStep={previousStep}
         expressions={expressions}
       />
@@ -162,14 +171,14 @@ function StartupScriptWizardStepTwo({
         })}
         onSubmit={formData => {
           submitFormData({
-            ...prevStepData,
+            ...modifiedPrevStepData,
             ...formData,
-            connectorRef: prevStepData?.connectorRef
-              ? getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED
-                ? prevStepData?.connectorRef
-                : prevStepData?.connectorRef?.value
-              : /* istanbul ignore next */ prevStepData?.identifier
-              ? prevStepData?.identifier
+            connectorRef: modifiedPrevStepData?.connectorRef
+              ? getMultiTypeFromValue(modifiedPrevStepData?.connectorRef) !== MultiTypeInputType.FIXED
+                ? modifiedPrevStepData?.connectorRef
+                : modifiedPrevStepData?.connectorRef?.value
+              : /* istanbul ignore next */ modifiedPrevStepData?.identifier
+              ? modifiedPrevStepData?.identifier
               : ''
           })
         }}
@@ -291,7 +300,7 @@ function StartupScriptWizardStepTwo({
                     variation={ButtonVariation.SECONDARY}
                     text={getString('back')}
                     icon="chevron-left"
-                    onClick={() => previousStep?.(prevStepData)}
+                    onClick={() => previousStep?.(modifiedPrevStepData)}
                   />
                   <Button
                     variation={ButtonVariation.PRIMARY}

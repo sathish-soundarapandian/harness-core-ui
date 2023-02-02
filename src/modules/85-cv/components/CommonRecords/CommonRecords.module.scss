@@ -57,18 +57,11 @@
     }
   }
 
-  .centerElement {
-    display: flex;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-
   .noQueryChart {
     white-space: nowrap !important;
   }
-  .chartContainer {
+
+  .recordsContainer {
     position: relative;
     height: 354px !important;
     width: 100% !important;
@@ -80,6 +73,10 @@
       padding: var(--spacing-large) 15px !important;
       padding-right: 25px !important;
       background-color: var(--white);
+    }
+
+    :global(.NoDataCard--buttonContainer) {
+      padding: 0 !important;
     }
   }
 }
@@ -112,6 +109,16 @@
 .stackTracePanelClassName {
   height: auto;
   min-height: 800px;
+}
+
+.noDataContainer {
+  width: 100% !important;
+  height: 70px !important;
+  border-radius: var(--spacing-xsmall) !important;
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.04), 0px 2px 4px rgba(96, 97, 112, 0.16);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .noDataContainer > div:first-child {

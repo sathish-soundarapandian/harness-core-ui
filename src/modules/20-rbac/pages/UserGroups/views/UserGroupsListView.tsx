@@ -52,11 +52,11 @@ import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import OpenInNewTab from '@rbac/components/MenuItem/OpenInNewTab'
 import RbacAvatarGroup from '@rbac/components/RbacAvatarGroup/RbacAvatarGroup'
 import { getUserName, useGetCommunity } from '@common/utils/utils'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import css from './UserGroupsListView.module.scss'
 
 interface UserGroupsListViewProps {
   data: ResponsePageUserGroupAggregateDTO | null
-  gotoPage: (index: number) => void
   reload: () => Promise<void>
   openRoleAssignmentModal: (
     type?: PrincipalType,
@@ -403,7 +403,7 @@ const RenderColumnMenu: Renderer<CellProps<UserGroupAggregateDTO>> = ({ row, col
 }
 
 const UserGroupsListView: React.FC<UserGroupsListViewProps> = props => {
-  const { data, gotoPage, reload, openRoleAssignmentModal, openUserGroupModal } = props
+  const { data, reload, openRoleAssignmentModal, openUserGroupModal } = props
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
   const isCommunity = useGetCommunity()
@@ -465,13 +465,12 @@ const UserGroupsListView: React.FC<UserGroupsListViewProps> = props => {
           search: `?parentScope=${getPrincipalScopeFromDTO(userGroup.userGroupDTO)}`
         })
       }}
-      pagination={{
+      pagination={useDefaultPaginationProps({
         itemCount: data?.data?.totalItems || 0,
         pageSize: data?.data?.pageSize || 10,
         pageCount: data?.data?.totalPages || 0,
-        pageIndex: data?.data?.pageIndex || 0,
-        gotoPage: gotoPage
-      }}
+        pageIndex: data?.data?.pageIndex || 0
+      })}
     />
   )
 }

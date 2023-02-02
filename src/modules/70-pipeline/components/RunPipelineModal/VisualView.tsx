@@ -55,7 +55,6 @@ export interface VisualViewProps {
   pipelineResponse: ResponsePMSPipelineResponseDTO | null
   invalidInputSetReferences: string[]
   loadingInputSets: boolean
-  isInputSetApplied: boolean
   onReconcile: (identifier: string) => void
   reRunInputSetYaml?: string
 }
@@ -83,7 +82,6 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     pipelineResponse,
     invalidInputSetReferences,
     loadingInputSets,
-    isInputSetApplied,
     onReconcile,
     reRunInputSetYaml
   } = props
@@ -111,11 +109,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
   }
 
   const showPipelineInputSetForm = (): boolean => {
-    return (
-      !!(existingProvide === 'provide' || selectedInputSets?.length || executionView) &&
-      !loadingInputSets &&
-      isInputSetApplied
-    )
+    return !!(existingProvide === 'provide' || selectedInputSets?.length || executionView) && !loadingInputSets
   }
 
   const showVoidPipelineInputSetForm = (): boolean => {

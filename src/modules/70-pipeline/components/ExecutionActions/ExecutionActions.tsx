@@ -406,13 +406,11 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
             <MenuItem text={getString(abortText)} onClick={openAbortDialog} disabled={!canAbort} />
             <MenuItem text={getString(pauseText)} onClick={pausePipeline} disabled={!canPause} />
             <MenuItem text={getString(resumeText)} onClick={resumePipeline} disabled={!canResume} />
+            {onViewCompiledYaml ? (
+              <MenuItem text={getString('pipeline.execution.actions.viewCompiledYaml')} onClick={onViewCompiledYaml} />
+            ) : null}
             {isExecutionListView && (
               <>
-                <MenuItem
-                  text={getString('pipeline.execution.actions.viewCompiledYaml')}
-                  onClick={onViewCompiledYaml}
-                  hidden={!!onViewCompiledYaml}
-                />
                 <MenuItem
                   text={getString('pipeline.execution.actions.compareExecutions')}
                   onClick={onCompareExecutions}

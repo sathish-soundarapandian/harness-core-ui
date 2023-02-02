@@ -169,6 +169,16 @@ const TEST_INPUT_SET_FORM_PATH = routes.toInputSetForm({
   ...pipelineModuleParams
 })
 
+const clickOnReconcileButton = async (): Promise<void> => {
+  const reconcileMenuOption = await screen.findByRole('button', {
+    name: /input set menu actions/i
+  })
+  userEvent.click(reconcileMenuOption)
+  const reconcileBtn = await screen.findByText('pipeline.outOfSyncErrorStrip.reconcile')
+  userEvent.click(reconcileBtn)
+  expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+}
+
 const renderComponent = (): RenderResult => {
   return render(
     <TestWrapper
@@ -255,9 +265,13 @@ const renderGitSimpComponent = (): RenderResult => {
 }
 
 describe('Inline Input Set Error Exp', () => {
-  test('should open yaml view and render out of sync error strip ', async () => {
+  test('should render input set menu action button', async () => {
     const { container } = renderComponent()
-    expect(screen.getByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })).toBeDefined()
+    expect(
+      screen.getByRole('button', {
+        name: /input set menu actions/i
+      })
+    ).toBeDefined()
     expect(container).toMatchSnapshot()
   })
 
@@ -275,9 +289,7 @@ describe('Inline Input Set Error Exp', () => {
     })
     renderComponent()
 
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
     const reconcileDialog = findDialogContainer() as HTMLElement
     await waitFor(() => expect(reconcileDialog).toBeFalsy())
@@ -287,9 +299,7 @@ describe('Inline Input Set Error Exp', () => {
     jest.spyOn(pipelineng, 'useYamlDiffForInputSet').mockImplementation((): any => GetInputSetYamlDiffInline)
     renderComponent()
 
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
     const reconcileDialog = findDialogContainer() as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
@@ -312,9 +322,7 @@ describe('Inline Input Set Error Exp', () => {
     })
     renderComponent()
 
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
     const deleteInputSetModal = findDialogContainer() as HTMLElement
     await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidInputSetDesc1')
@@ -327,9 +335,7 @@ describe('Inline Input Set Error Exp', () => {
 
   test('should navigate to input set list view on clicking go back to input set list button', async () => {
     const { getByTestId } = renderComponent()
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
     const deleteInputSetModal = findDialogContainer() as HTMLElement
     await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidInputSetDesc1')
@@ -355,9 +361,7 @@ describe('Inline Input Set Error Exp', () => {
     })
     renderComponent()
 
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
     const deleteInputSetModal = findDialogContainer() as HTMLElement
     await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidInputSetDesc1')
@@ -384,9 +388,7 @@ describe('Inline Input Set Error Exp', () => {
     })
     renderComponent()
 
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
     const deleteInputSetModal = findDialogContainer() as HTMLElement
     await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidInputSetDesc1')
@@ -408,9 +410,7 @@ describe('Inline Input Set Error Exp', () => {
     })
     renderComponent()
 
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
     const reconcileDialog = findDialogContainer() as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
@@ -426,9 +426,7 @@ describe('Inline Input Set Error Exp', () => {
     })
     renderComponent()
 
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
     const reconcileDialog = findDialogContainer() as HTMLElement
     const retryBtn = await screen.findByRole('button', { name: /retry/i })
@@ -447,9 +445,7 @@ describe('Inline Input Set Error Exp', () => {
     })
     renderComponent()
 
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
     const reconcileDialog = findDialogContainer() as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
@@ -476,9 +472,13 @@ describe('Old Git Sync Input Set Error Exp', () => {
     }))
   })
 
-  test('should open yaml view and render out of sync error strip ', async () => {
-    const { container } = renderGitSyncComponent()
-    expect(screen.getByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })).toBeDefined()
+  test('should render input set menu action button', async () => {
+    const { container } = renderComponent()
+    expect(
+      screen.getByRole('button', {
+        name: /input set menu actions/i
+      })
+    ).toBeDefined()
     expect(container).toMatchSnapshot()
   })
 
@@ -489,9 +489,7 @@ describe('Old Git Sync Input Set Error Exp', () => {
     })
     renderGitSyncComponent()
 
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
     const reconcileDialog = findDialogContainer() as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
@@ -523,9 +521,7 @@ describe('Old Git Sync Input Set Error Exp', () => {
     })
     renderGitSyncComponent()
 
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
     const deleteInputSetModal = findDialogContainer() as HTMLElement
     await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidInputSetDesc1')
@@ -537,9 +533,7 @@ describe('Old Git Sync Input Set Error Exp', () => {
 
   test('should navigate to input set list view on clicking go back to input set list button', async () => {
     const { getByTestId } = renderGitSyncComponent()
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
     const deleteInputSetModal = findDialogContainer() as HTMLElement
     await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidInputSetDesc1')
@@ -573,9 +567,13 @@ describe('Remote Git Sync Input Set Error Exp', () => {
     }))
   })
 
-  test('should open yaml view and render out of sync error strip ', async () => {
-    const { container } = renderGitSimpComponent()
-    expect(screen.getByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })).toBeDefined()
+  test('should render input set menu action button', async () => {
+    const { container } = renderComponent()
+    expect(
+      screen.getByRole('button', {
+        name: /input set menu actions/i
+      })
+    ).toBeDefined()
     expect(container).toMatchSnapshot()
   })
 
@@ -583,9 +581,7 @@ describe('Remote Git Sync Input Set Error Exp', () => {
     jest.spyOn(pipelineng, 'useYamlDiffForInputSet').mockImplementation((): any => GetInputSetYamlDiffRemote)
     renderGitSimpComponent()
 
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
     const reconcileDialog = findDialogContainer() as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
@@ -616,9 +612,7 @@ describe('Remote Git Sync Input Set Error Exp', () => {
     })
     renderGitSimpComponent()
 
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
     const deleteInputSetModal = findDialogContainer() as HTMLElement
     await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidInputSetDesc1')
@@ -629,9 +623,7 @@ describe('Remote Git Sync Input Set Error Exp', () => {
   })
   test('should navigate to input set list view on clicking go back to input set list button', async () => {
     const { getByTestId } = renderGitSimpComponent()
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
     const deleteInputSetModal = findDialogContainer() as HTMLElement
     await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidInputSetDesc1')

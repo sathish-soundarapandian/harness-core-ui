@@ -28,7 +28,7 @@ describe('Render Select Delegate Type Nested Form', () => {
     )
 
     act(() => {
-      fireEvent.click(getByText('pipeline.manifestTypeLabels.HelmChartLabel'))
+      fireEvent.click(getByText('common.HelmChartLabel'))
     })
 
     expect(container).toMatchSnapshot()

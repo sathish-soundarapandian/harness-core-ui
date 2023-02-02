@@ -50,6 +50,7 @@ export enum PAGE_NAME {
   TriggersWizardPage = 'TriggersWizardPage',
   ExecutionPipelineView = 'ExecutionPipelineView',
   ExecutionPolicyEvaluationsView = 'ExecutionPolicyEvaluationsView',
+  ExecutionIACMPipelineResources = 'ExecutionIACMPipelineResources',
   ExecutionSecurityView = 'ExecutionSecurityView',
   ExecutionInputsView = 'ExecutionInputsView',
   ExecutionArtifactsView = 'ExecutionArtifactsView',
@@ -141,5 +142,7 @@ export enum PAGE_NAME {
   CODECommits = 'CODECommits',
   CODEBranches = 'CODEBranches',
   ExecutionList = 'ExecutionList',
-  CFConfigurePath = 'CFConfigurePath'
+  CFConfigurePath = 'CFConfigurePath',
+  SSCSHomePage = 'SSCSHomePage',
+  SSCSOverviewPage = 'SSCSOverviewPage'
 }

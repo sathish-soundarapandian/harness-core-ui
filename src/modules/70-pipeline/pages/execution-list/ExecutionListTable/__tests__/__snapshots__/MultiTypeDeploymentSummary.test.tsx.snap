@@ -38,11 +38,12 @@ exports[`MultiTypeDeploymentSummary render environmentGroup in getEnvironmentsTe
         </svg>
       </span>
     </button>
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey900"
+    <a
+      class="stageLink"
+      href="/account/undefined/home/orgs/undefined/projects/undefined/pipelines/-1/deployments/-1/pipeline?connectorRef=dummy&branch=dummy&repoName=dummy&storeType=INLINE&stage=CKzYPtriSYCntiwJj8PrOw"
     >
       Stage
-    </p>
+    </a>
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-size-small"
     >
@@ -150,11 +151,12 @@ exports[`MultiTypeDeploymentSummary render service, env and gitops applications 
         </svg>
       </span>
     </button>
-    <p
-      class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey900"
+    <a
+      class="stageLink"
+      href="/account/undefined/home/orgs/undefined/projects/undefined/pipelines/-1/deployments/-1/pipeline?connectorRef=dummy&branch=dummy&repoName=dummy&storeType=INLINE&stage=CKzYPtriSYCntiwJj8PrOw"
     >
       Stage
-    </p>
+    </a>
     <p
       class="StyledProps--font StyledProps--main StyledProps--font-size-small"
     >

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -37,6 +37,11 @@ export interface ApiKey {
    */
   type: 'server' | 'client'
 }
+
+/**
+ * The type of key depending on the SDK that is being used.
+ */
+export type ApiKeyRequestType = 'Server' | 'Client'
 
 /**
  * A list of API Keys
@@ -413,6 +418,8 @@ export interface FeatureEvaluation {
 export interface FeatureEvaluations {
   evaluations?: FeatureEvaluation[]
 }
+
+export type FeatureFlagRequestKind = 'boolean' | 'int' | 'string' | 'json'
 
 /**
  * Feature flags yaml for a project
@@ -1211,12 +1218,12 @@ export interface WeightedVariation {
   weight: number
 }
 
-export type APIKeyRequestRequestBody = {
+export interface APIKeyRequestRequestBody {
   description?: string
   expiredAt?: number
   identifier: string
   name: string
-  type: 'Server' | 'Client'
+  type: ApiKeyRequestType
 }
 
 export interface APIKeyUpdateRequestRequestBody {
@@ -1233,14 +1240,14 @@ export interface EnvironmentRequestRequestBody {
   tags?: Tag[]
 }
 
-export type FeatureFlagRequestRequestBody = {
+export interface FeatureFlagRequestRequestBody {
   archived?: boolean
   defaultOffVariation: string
   defaultOnVariation: string
   description?: string
   gitDetails?: GitDetails
   identifier: string
-  kind: 'boolean' | 'int' | 'string' | 'json'
+  kind: FeatureFlagRequestKind
   name: string
   owner?: string
   permanent: boolean
@@ -2849,6 +2856,10 @@ export interface GetAllFeaturesQueryParams {
    * Returns counts for the different types of flags e.g num active, potentially-stale, recently-accessed etc
    */
   flagCounts?: boolean
+  /**
+   * Returns summary info on flags if set to true
+   */
+  summary?: boolean
 }
 
 export type GetAllFeaturesProps = Omit<
@@ -3162,7 +3173,47 @@ export interface GetFeatureMetricsQueryParams {
   /**
    * Unique feature identifiers
    */
-  featureIDs: string[]
+  featureIDs?: string[]
+  /**
+   * PageNumber
+   */
+  pageNumber?: number
+  /**
+   * PageSize
+   */
+  pageSize?: number
+  /**
+   * SortOrder
+   */
+  sortOrder?: 'ASCENDING' | 'DESCENDING'
+  /**
+   * SortByField
+   */
+  sortByField?: 'name' | 'identifier' | 'archived' | 'kind' | 'modifiedAt'
+  /**
+   * Name of the field
+   */
+  name?: string
+  /**
+   * Identifier of the field
+   */
+  identifier?: string
+  /**
+   * Status of the feature flag
+   */
+  archived?: boolean
+  /**
+   * Filter for flags based on their status (active,never-requested,recently-accessed,potentially-stale)
+   */
+  status?: string
+  /**
+   * Filter for flags based on their lifetime (permanent/temporary)
+   */
+  lifetime?: string
+  /**
+   * Filter for flags based on if they are enabled or disabled
+   */
+  enabled?: boolean
 }
 
 export type GetFeatureMetricsProps = Omit<
@@ -3581,6 +3632,10 @@ export interface GetFeatureFlagQueryParams {
    * Environment
    */
   environmentIdentifier?: string
+  /**
+   * Parameter to indicate if metrics data is requested in response
+   */
+  metrics?: boolean
 }
 
 export interface GetFeatureFlagPathParams {

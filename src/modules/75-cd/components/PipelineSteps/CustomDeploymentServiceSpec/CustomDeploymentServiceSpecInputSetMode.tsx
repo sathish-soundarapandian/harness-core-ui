@@ -10,8 +10,10 @@ import { connect } from 'formik'
 import { Layout, AllowedTypes } from '@harness/uicore'
 import cx from 'classnames'
 
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ServiceSpec } from 'services/cd-ng'
+import configFileSourceBaseFactory from '@cd/factory/ConfigFileSourceFactory/ConfigFileSourceBaseFactory'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
@@ -23,7 +25,8 @@ import artifactSourceBaseFactory from '@cd/factory/ArtifactSourceFactory/Artifac
 import { KubernetesArtifacts } from '@cd/components/PipelineSteps/K8sServiceSpec/KubernetesArtifacts/KubernetesArtifacts'
 import type { CustomDeploymentServiceStep } from './CustomDeploymentServiceSpecInterface'
 import PrimaryArtifactRef from '../K8sServiceSpec/PrimaryArtifact/PrimaryArtifactRef'
-import css from './CustomDeploymentServiceSpec.module.scss'
+import { ConfigFiles } from '../SshServiceSpec/SshConfigFiles/ConfigFiles'
+import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 export interface CustomDeploymentInputSetProps {
   initialValues: CustomDeploymentServiceStep
@@ -83,6 +86,16 @@ const CustomDeploymentServiceSpecInputSetModeFormikForm = (
           artifactSourceBaseFactory={artifactSourceBaseFactory}
           stageIdentifier={stageIdentifier}
           template={template as ServiceSpec}
+          {...commonProps}
+        />
+      )}
+
+      {!!template?.configFiles?.length && (
+        <ConfigFiles
+          configFiles={defaultTo(allValues?.configFiles, initialValues?.configFiles)}
+          configFileSourceBaseFactory={configFileSourceBaseFactory}
+          stageIdentifier={stageIdentifier}
+          template={template}
           {...commonProps}
         />
       )}

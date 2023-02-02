@@ -13,6 +13,7 @@ rules:
             - '!microfrontends/ChildAppMounter'
         - group:
             - modules/35-user-profile/*
+            - modules/38-audit-trail/*
             - modules/40-gitsync/*
             - modules/45-dashboards/*
             - modules/45-projects-orgs/*
@@ -26,11 +27,13 @@ rules:
             - modules/75-cf/*
             - modules/75-chaos/*
             - modules/75-ci/*
+            - modules/75-sscs/*
             - modules/85-cv/*
             - modules/85-iacm/*
             - modules/85-sto/*
             - modules/90-gitops/*
             - '@user-profile/*'
+            - '@audit-trail/*'
             - '@gitsync/*'
             - '@dashboards/*'
             - '@projects-orgs/*'
@@ -44,6 +47,7 @@ rules:
             - '@cf/*'
             - '@chaos/*'
             - '@ci/*'
+            - '@sscs/*'
             - '@cv/*'
             - '@iacm/*'
             - '@sto/*'

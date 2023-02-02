@@ -20,6 +20,7 @@ import { useStrings } from 'framework/strings'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import {
   DurationCell,
   ExecutionCell,
@@ -39,7 +40,6 @@ import css from './ExecutionListTable.module.scss'
 export interface ExecutionListColumnActions {
   onViewCompiledYaml: (pipelineExecutionSummary: PipelineExecutionSummary) => void
   isPipelineInvalid?: boolean
-  setLoadingForDebugMode?: (loading: boolean) => void
 }
 
 export interface ExecutionListTableProps extends ExecutionListColumnActions {
@@ -49,8 +49,7 @@ export interface ExecutionListTableProps extends ExecutionListColumnActions {
 function ExecutionListTable({
   executionList,
   isPipelineInvalid,
-  onViewCompiledYaml,
-  setLoadingForDebugMode
+  onViewCompiledYaml
 }: ExecutionListTableProps): React.ReactElement {
   const history = useHistory()
   const { updateQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
@@ -123,26 +122,26 @@ function ExecutionListTable({
         Cell: MenuCell,
         isPipelineInvalid,
         onViewCompiledYaml,
-        setLoadingForDebugMode,
         disableSortBy: true
       }
     ]
-  }, [isCompareMode, isPipelineInvalid, onViewCompiledYaml, currentOrder, currentSort, setLoadingForDebugMode])
+  }, [isCompareMode, isPipelineInvalid, onViewCompiledYaml, currentOrder, currentSort])
 
   const renderRowSubComponent = React.useCallback(({ row }) => <ExecutionStageList row={row} />, [])
+
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: totalElements,
+    pageSize: size,
+    pageCount: totalPages,
+    pageIndex: number
+  })
 
   return (
     <TableV2<PipelineExecutionSummary>
       className={css.table}
       columns={columns}
       data={content}
-      pagination={{
-        itemCount: totalElements,
-        pageSize: size,
-        pageCount: totalPages,
-        pageIndex: number,
-        gotoPage: page => updateQueryParams({ page })
-      }}
+      pagination={paginationProps}
       sortable
       renderRowSubComponent={renderRowSubComponent}
       onRowClick={rowDetails => history.push(getExecutionPipelineViewLink(rowDetails, pathParams, queryParams))}

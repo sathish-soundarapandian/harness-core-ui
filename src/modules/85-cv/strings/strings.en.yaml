@@ -1,6 +1,7 @@
 continuous: '{{$.common.purpose.cv.serviceReliability}}'
 srmTitle: SRM
 methodLabel: Method Label
+count: count
 request: '{{ $.common.request }}'
 response: Response
 responseBody: Response Body
@@ -31,8 +32,15 @@ sampleEvent: Sample Event
 messageFrequency: Message Frequency
 trend: Trend
 known: Known
-unknown: Unknown
 unexpected: Unexpected
+knownEvents: Known events
+baselineEvents: Baseline events
+unknownEvents: Unknown events
+unexpectedEvents: Unexpected events
+knownEvent: Known event
+baselineEvent: Baseline event
+unknownEvent: Unknown event
+unexpectedEvent: Unexpected event
 unexpectedFrequency: Unexpected Frequency
 copyURL: Copy URL
 urlCopied: URL Copied
@@ -219,17 +227,19 @@ monitoringSources:
     addGroupName: Add group Name
     runQuery: Run Query
     confirmDeleteMetric: 'Are you sure you want to delete metric {{name}}'
-    submitQueryToSeeRecords: Run query to see records ...
+    submitQueryToSeeRecords: Enter your query
     searchMetric: Search ...
     defineQuery: Define Query
     defineQueryDescriptionMetrics: Queries can only be defined for a single timeseries.
     defineQuerySubDescription: Learn how to find the query to monitor your data source with Harness.
     querySectionSecondaryTitle: Query Section
+    noQueries: 'There are no {{name}}'
     records:
       fetchingRecords: Fetching records ...
-      runQueryToSeeRecords: Please run the query to see the records.
+      runQueryToSeeRecords: Run query to fetch the records
     metricsChart:
       fetchingCharts: Fetching charts data ...
+      runQueryToFetchResults: Run query to fetch the results
     logsTable:
       title: Field Mapping
       subTitle: Choose the data to display the logs from the fields below
@@ -242,7 +252,7 @@ monitoringSources:
       validationMessage: '{{fieldName}} is required'
       fetchLogDataButtonDisableMessage: Records are not available
     assign:
-      subHeader: Select services to which the metric and custom metric will be applied.
+      subHeader: Select services to which the custom metric will be applied.
       riskProfileSubHeader: Harness will verify and rate your events based on your selected risk category and deviation.
       continuousVerification:
         title: Continuous Verification (Applied to the pipelines in the Continuous Deployment)
@@ -489,7 +499,7 @@ monitoringSources:
     newGCOLogsMessage: New GCO Logs Message
     records: Records
     submitQueryToSeeRecords: Submit query to see records from Stackdriver Logs
-    noRecordsForQuery: No records for provided query
+    noRecordsForQuery: No records found for the provided query
     gcoLogsQuery: GCO Logs Query
     addQueryTooltip: Fill all required fields before adding a new query
     serviceInstance: Identify Service Instance
@@ -597,7 +607,6 @@ monitoredServices:
         unhealthy: Unhealthy
         needsAttention: Needs attention
         observe: Observe
-        healthy: Healthy
         exhausted: Exhausted
   monitoredServiceTabs:
     serviceHealth: Service Health
@@ -716,6 +725,7 @@ healthSource:
     selectConnector: Select {{sourceType}} Connector
     customMetrics: Custom Metrics (optional)
     customMetricsWithoutOptional: Custom Metrics
+    customQueries: Custom Queries
     customMetricsTooltip: Add custom metrics
     buildChart: Build Chart
     CloudWatch:
@@ -787,11 +797,33 @@ healthSource:
 templates:
   healthSourceDetails: Health Source Details
 sensitivityValidation: Sensitivity should be high, medium or low
+metricsAnalysis:
+  analysisReason:
+    customFailFastThreshold: Failed because a fail-fast threshold was breached
+    mlAnalysis: Passed/failed by the Harness ML analysis
+    noControlData: No control data to compare against.
+    noTestData: No data to be analysed.
+  showDetails: Show details
+  controlDataType:
+    minDeviation: Host with minimum deviation
+  metricThresholds:
+    thresholdType: THRESHOLD TYPE
+    criteria: CRITERIA
+    value: VALUE
+    applied: APPLIED
 slos:
   title: SLOs
   subTitle: Review the status and error budget of all your defined service level objectives
   completeTitle: Service Level Objectives (SLOs)
+  defineSLOSubttitle: Select the Monitored Service for which you want to define the SLO
+  configureSLI: Configure Service Level Indicatiors (SLIs)
+  configureSLISubtitle: Calculate your SLI by defining which aspect of your service you wish to measure for performance.
+  setSLOSubtitle: Set a time period for compliance and a target for “good service”
+  errorBudgetPolicySubtitle: Notifications are sent to channels as soon as conditions meet a threshold specified by the rule.
   monitoredService: MONITORED SERVICE
+  monitoredServiceSubTitle: Monitored Service is a service and environment combination that monitors any changes, such as deployments, infrastructure changes and any health trend deviations using logs and metrics obtained from APM and Logging tools.
+  evaluationMethod: Evaluation method
+  evaluationMethodSubtitle: The evaluation method will determine how your events are measured
   status: STATUS
   target: TARGET
   burnRate: BURN RATE/DAY
@@ -816,11 +848,13 @@ slos:
   totalServices: Total SLOs
   userJourneyPlaceholder: Select or create user journey
   userJourneyCreated: User journey created successfully
+  userJourneySubTitle: A user journey is a visualization of a user's interaction with a service to achieve a specific goal over time and across different channels.
   selectMonitoredService: Select Monitored Service
   selectMonitoredServiceForSlo: Select monitored service on which to define SLO
   selectHealthsource: Select Health Source
   healthSourceForSLI: Health Source for SLI
   sliType: SLI Type
+  sliTypeSubtitle: Measures how available your service was to users or valid requests served successfully
   sliTypeChooseMetric: SLI Type - Choose a metric
   latencySLI: Latency SLI measures the proportion of requests that were faster than some threshold.
   pickMetricsSLI: Pick metrics powering the SLI
@@ -830,6 +864,12 @@ slos:
   sloEditWarningMessage: It may take a few minutes to recalculate the Error Budget. Are you sure you want to proceed?
   noSLOsStateMessage: Service level objectives (SLOs) are used to describe and measure service level performance and reliability for any service/microservice applications.
   searchSLO: Search by SLO name
+  requestType: RequestType
+  goodRequestMetric: Good request metric
+  validRequestMetric: Valid request metric
+  sloFormula:
+    title: How we do the SLI calculation?
+    subHeader: The SLI equation is the number of good requests divided by the total number of valid requests, multiplied by 100 to keep it a uniform percentage.
   validations:
     nameValidation: SLO name is required
     userJourneyRequired: User journey is required
@@ -843,6 +883,9 @@ slos:
     setSLOTarget: Set the SLO time window and target
     complianceTimePeriodTitle: Compliance time period for evaluating SLO
   slis:
+    HealthSource: Health Source to manage the service level
+    HealthSourceSubTitle: It uses logs and metrics to track changes in the Service's health trend
+    SLIChartTitle: SLI based on the objective value
     type:
       availability: Availability
       latency: Latency
@@ -906,16 +949,37 @@ CompositeSLO:
   compositeSloUpdated: Composite SLO updated successfully
   SLIMetricRatio: SLI = (SLO1*weightage1 + SLO2*weightage2... + SLON*weightageN)/n*100
   AddSLOValidation:
-    minMaxSLOCount: Should have minimun 2 SLOs and maximum 20 SLO's
+    minMaxSLOCount: Should have minimum 2 SLOs and maximum 20 SLO's
     totalSLOWeight: Total SLO weight should be equal to 100
-    minSLOCount: Should have minimun 2 SLOs
+    minSLOCount: Should have minimum 2 SLOs
     maxSLOCount: Should have maximum 20 SLOs
     weightMinMax: SLO weight should be between 0.01 to 99.99
+sloDowntime:
+  label: Downtime
+  downtimeName: Downtime Name
+  category: Category
+  noData: No SLO downtime configured
+  addDowntime: Add a SLO Downtime
+  info: During downtime, SLO status and error budget calculations will be excluded for that specific time period.
+  scheduledMaintenance: Scheduled Maintenance
+  selectCategory: Select downtime category
+  repeatEvery: Repeat every
+  repeatEndsOn: Repeat ends on
+  durationText: from start time
+  validations:
+    nameValidation: SLO Downtime is required
+    categoryValidation: Category is required
+  steps:
+    identification: Define SLO downtime identification
+    downtimeWindow: Select the SLO downtime window
+    monitoredServices: Apply to monitored services
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on
 createdOn: Created on
+sloCreateInfo: To create SLO, you’ll need at least one Monitored Service, Health Source and a Metric.
 SLOPerformanceTrend: SLO Performance Trend
+sloGraphInitialState: You'll see a preview here once the queries are generated
 sloGraphUserHint: To view anomalies, metrics and logs for a specific time window, click the time slot on the timeline. To expand or contract the time window, simply drag the handles.
 sloRecalculationInProgress: SLO recalculation in progress
 errorBudgetRecalculationInProgress: Error Budget recalculation in progress
@@ -931,7 +995,10 @@ SLOTarget: SLO Target
 SLIMetricRatio: SLI - Latency (Metric1 / Metric2 X 100)
 SLIRequestRatio: SLI = (Good requests/ Valid requests) X 100
 objectiveValue: Objective Value
-SLIValueIsGoodIf: SLI value is good if
+SLIValueIsGoodIf: Good requests must be
+percentageValidrequests: % of valid requests
+ThresholdSLIValueGoodIf: SLI value is good if the availability is
+ThresholdValidrequests: the objective value
 thanObjectiveValue: than objective value
 toObjectiveValue: to objective value
 considerMissingMetricDataAs: Consider missing metric data as
@@ -978,6 +1045,8 @@ updatedErrorBudget: Updated Error Budget
 remainingErrorBudget: Remaining Error Budget
 updatedRemainingErrorBudget: Updated remaining Error Budget
 minutes: minutes
+weeks: weeks
+months: months
 noPreviousErrorBudgetResetHistoryAvailable: No previous Error Budget reset history available
 dateAndTime: Date/Time
 increaseInMinutes: 'Increase (minutes)'
@@ -1044,7 +1113,9 @@ logs:
   eventPriorityUpdate: This event was marked with priority
   notARisk: Not a Risk
   reportedBy: Reported by
+  totalCount: Total Count
   radarChartInfo: Each point in the graph above represents a log message. The region inside innermost circle represents logs from baseline/control nodes. The region between outermost circle and second circle is used for unknown logs seen in canary nodes while  the region between second circle and innermost circle is used for logs with unexpected frequency. The points that are related (logs observed in both canary and baseline nodes) will be shown on the same radii.The circle is divided into several sectors with each sector having several log messages. Use the slider to narrow down to the specific sector.
+  baselineLegendTooltip: Average of the event counts across all of the control hosts
 externalAPICalls: External API Calls
 somethingWentWrongWhileParsingTheData: Something went wrong while parsing the data
 fetchingDataFrom: Fetching data from
@@ -1065,11 +1136,11 @@ metricThresholds:
   noThresholdsMessage: No thresholds created yet
   metricPacksDeletePromptContent: Unchecking the metric pack will also remove the corresponding metric thresholds settings. This action cannot be undone.
   customMetricsDeletePromptContent: Deleting the custom metric will also remove the corresponding metric thresholds settings. This action cannot be undone.
-codeErrors: Code Errors
-codeErrorsHeading: Review code errors related to your project
-codeErrorsAgents: '{{projectName}} Code Error Agents'
-codeErrorsAgentsHeading: Agents running on your machines connected to Code Errors.
-codeErrorsAgentsTokens: '{{projectName}} Code Error Tokens'
+codeErrors:
+  title: Code Errors
+  agents: '{{ $.common.agents }}'
+  agentTokens: '{{ $.common.tokens }}'
+  criticalEvents: 'Critical Events'
 CVStepper:
   StepError: Required fields are missing or incorrect data
 licenseBanner:

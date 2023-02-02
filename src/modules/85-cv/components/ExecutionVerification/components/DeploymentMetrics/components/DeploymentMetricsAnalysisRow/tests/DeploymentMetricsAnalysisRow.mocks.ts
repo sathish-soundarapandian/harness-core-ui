@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { RiskValues } from '@cv/utils/CommonUtils'
+import type { NodeRiskCount } from 'services/cv'
 import type { DeploymentMetricsAnalysisRowProps } from '../DeploymentMetricsAnalysisRow'
 
 export const InputData: DeploymentMetricsAnalysisRowProps[] = [
@@ -13,285 +13,118 @@ export const InputData: DeploymentMetricsAnalysisRowProps[] = [
     controlData: [
       {
         points: [
-          { x: 1623184440000, y: 2.6666666666666665 },
-          { x: 1623184568571, y: 3 },
-          { x: 1623184697142, y: 3 },
-          { x: 1623184825713, y: 2.6666666666666665 },
-          { x: 1623184954284, y: 3 }
-        ]
-      },
-      { points: [] },
-      { points: [] },
-      { points: [] },
-      { points: [] },
-      { points: [] },
-      { points: [] },
-      { points: [] }
+          {
+            x: 0,
+            y: 81.25
+          },
+          {
+            x: 60000,
+            y: 76.5
+          },
+          {
+            x: 120000,
+            y: 67.5
+          },
+          {
+            x: 180000,
+            y: 75.75
+          },
+          {
+            x: 240000,
+            y: 76.66666666666667
+          }
+        ],
+        name: 'Ansuman Satapathy.3c061712-021c-4dcb-a6aa-159fb7c46f02',
+        initialXvalue: 1674145020000
+      }
     ],
     testData: [
       {
         points: [
-          { x: 1623184440000, y: 144.66666666666666 },
-          { x: 1623184568571, y: 171.33333333333334 },
-          { x: 1623184697142, y: 171.33333333333334 },
-          { x: 1623184825713, y: 172 },
-          { x: 1623184954284, y: 170.66666666666666 }
+          {
+            x: 0,
+            y: 70.75
+          },
+          {
+            x: 60000,
+            y: 89.5
+          },
+          {
+            x: 120000,
+            y: 59.5
+          },
+          {
+            x: 180000,
+            y: 78.75
+          },
+          {
+            x: 240000,
+            y: 75.5
+          }
         ],
-        risk: RiskValues.UNHEALTHY,
-        name: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx'
-      },
+        risk: 'HEALTHY',
+        analysisReason: 'ML_ANALYSIS',
+        name: 'Ansuman Satapathy.3c061712-021c-4dcb-a6aa-159fb7c46f02',
+        initialXvalue: 1674145380000
+      }
+    ],
+    transactionName: 'Performance group',
+    metricName: 'Performance metric',
+    risk: 'HEALTHY',
+    nodeRiskCount: {
+      totalNodeCount: 1,
+      anomalousNodeCount: 0,
+      nodeRiskCounts: [
+        {
+          risk: 'UNHEALTHY',
+          count: 0,
+          displayName: 'Unhealthy'
+        },
+        {
+          risk: 'WARNING' as NodeRiskCount['risk'],
+          count: 0,
+          displayName: 'Warning'
+        },
+        {
+          risk: 'HEALTHY',
+          count: 1,
+          displayName: 'Healthy'
+        }
+      ]
+    },
+    thresholds: [
       {
-        points: [
-          { x: 1623184440000, y: 144.66666666666666 },
-          { x: 1623184568571, y: 171.33333333333334 },
-          { x: 1623184697142, y: 171.33333333333334 },
-          { x: 1623184825713, y: 172 },
-          { x: 1623184954284, y: 170.66666666666666 }
-        ],
-        risk: RiskValues.NO_DATA,
-        name: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx'
-      },
-      {
-        points: [
-          { x: 1623184440000, y: 144.66666666666666 },
-          { x: 1623184568571, y: 171.33333333333334 },
-          { x: 1623184697142, y: 171.33333333333334 },
-          { x: 1623184825713, y: 172 },
-          { x: 1623184954284, y: 170.66666666666666 }
-        ],
-        risk: RiskValues.HEALTHY,
-        name: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx'
-      },
-      {
-        points: [
-          { x: 1623184440000, y: 144.66666666666666 },
-          { x: 1623184568571, y: 171.33333333333334 },
-          { x: 1623184697142, y: 171.33333333333334 },
-          { x: 1623184825713, y: 172 },
-          { x: 1623184954284, y: 170.66666666666666 }
-        ],
-        risk: RiskValues.NEED_ATTENTION,
-        name: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx'
-      },
-      {
-        points: [
-          { x: 1623184440000, y: 144.66666666666666 },
-          { x: 1623184568571, y: 171.33333333333334 },
-          { x: 1623184697142, y: 171.33333333333334 },
-          { x: 1623184825713, y: 172 },
-          { x: 1623184954284, y: 170.66666666666666 }
-        ],
-        risk: RiskValues.OBSERVE,
-        name: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx'
-      },
-      {
-        points: [
-          { x: 1623184440000, y: 144.66666666666666 },
-          { x: 1623184568571, y: 171.33333333333334 },
-          { x: 1623184697142, y: 171.33333333333334 },
-          { x: 1623184825713, y: 172 },
-          { x: 1623184954284, y: 170.66666666666666 }
-        ],
-        risk: RiskValues.NO_DATA,
-        name: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx'
-      },
-      {
-        points: [
-          { x: 1623184440000, y: 144.66666666666666 },
-          { x: 1623184568571, y: 171.33333333333334 },
-          { x: 1623184697142, y: 171.33333333333334 },
-          { x: 1623184825713, y: 172 },
-          { x: 1623184954284, y: 170.66666666666666 }
-        ],
-        risk: RiskValues.HEALTHY,
-        name: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx'
+        id: '6L6gbC9oRlCS8ypbtCi0rA',
+        thresholdType: 'IGNORE',
+        isUserDefined: false,
+        action: 'Ignore',
+        criteria: {
+          measurementType: 'ratio',
+          lessThanThreshold: 0
+        }
       },
       {
-        points: [
-          { x: 1623184440000, y: 144.66666666666666 },
-          { x: 1623184568571, y: 171.33333333333334 },
-          { x: 1623184697142, y: 171.33333333333334 },
-          { x: 1623184825713, y: 172 },
-          { x: 1623184954284, y: 170.66666666666666 }
-        ],
-        risk: RiskValues.NEED_ATTENTION,
-        name: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx'
+        id: 'Fh-N1OUnTmmrBWhqqWqJvQ',
+        thresholdType: 'IGNORE',
+        isUserDefined: false,
+        action: 'Ignore',
+        criteria: {
+          measurementType: 'delta',
+          lessThanThreshold: 0
+        }
       }
     ],
-    transactionName: 'Internal Server Error : 500',
-    metricName: 'Number of Errors',
-    healthSourceType: 'APP_DYNAMICS'
-  },
-  {
-    controlData: [{ points: [] }],
-    testData: [
-      {
-        points: [
-          { x: 1623184440000, y: 4.666666666666667 },
-          { x: 1623185340000, y: 6 },
-          { x: 1623186240000, y: 6 },
-          { x: 1623187140000, y: 6 },
-          { x: 1623188040000, y: 5.333333333333333 }
-        ],
-        risk: RiskValues.NO_DATA,
-        name: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx'
-      }
-    ],
-    transactionName: 'ConcurrentModificationException',
-    metricName: 'Number of Errors',
-    healthSourceType: 'APP_DYNAMICS'
-  },
-  {
-    controlData: [{ points: [] }],
-    testData: [
-      {
-        points: [
-          { x: 1623184440000, y: 2.6666666666666665 },
-          { x: 1623185340000, y: 3 },
-          { x: 1623186240000, y: 3 },
-          { x: 1623187140000, y: 3 },
-          { x: 1623188040000, y: 2.6666666666666665 }
-        ],
-        risk: RiskValues.NO_DATA,
-        name: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx'
-      }
-    ],
-    transactionName: 'RuntimeException : FileSystemException',
-    metricName: 'Number of Errors',
-    healthSourceType: 'APP_DYNAMICS'
-  },
-  {
-    controlData: [{ points: [] }],
-    testData: [
-      {
-        points: [
-          { x: 1623184440000, y: 2.6666666666666665 },
-          { x: 1623185340000, y: 3.3333333333333335 },
-          { x: 1623186240000, y: 3.3333333333333335 },
-          { x: 1623187140000, y: 3.6666666666666665 },
-          { x: 1623188040000, y: 3.6666666666666665 }
-        ],
-        risk: RiskValues.NO_DATA,
-        name: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx'
-      }
-    ],
-    transactionName: 'SocketTimeoutException',
-    metricName: 'Number of Errors',
-    healthSourceType: 'APP_DYNAMICS'
-  },
-  {
-    controlData: [{ points: [] }],
-    testData: [
-      {
-        points: [
-          { x: 1623184440000, y: 2.6666666666666665 },
-          { x: 1623185340000, y: 3 },
-          { x: 1623186240000, y: 3 },
-          { x: 1623187140000, y: 2.6666666666666665 },
-          { x: 1623188040000, y: 3 }
-        ],
-        risk: RiskValues.NO_DATA,
-        name: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx'
-      }
-    ],
-    transactionName: 'RuntimeException : FileNotFoundException',
-    metricName: 'Number of Errors',
-    healthSourceType: 'APP_DYNAMICS'
-  },
-  {
-    controlData: [{ points: [] }],
-    testData: [
-      {
-        points: [
-          { x: 1623184440000, y: 1.6666666666666667 },
-          { x: 1623185340000, y: 1 },
-          { x: 1623186240000, y: 1 },
-          { x: 1623187140000, y: 1 },
-          { x: 1623188040000, y: 1 }
-        ],
-        risk: RiskValues.NO_DATA,
-        name: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx'
-      }
-    ],
-    transactionName: '/todolist/requestLogin',
-    metricName: 'Average Response Time (ms)',
-    healthSourceType: 'APP_DYNAMICS'
-  },
-  {
-    controlData: [{ points: [] }],
-    testData: [
-      {
-        points: [
-          { x: 1623184440000, y: 2.6666666666666665 },
-          { x: 1623185340000, y: 3 },
-          { x: 1623186240000, y: 2.6666666666666665 },
-          { x: 1623187140000, y: 3 },
-          { x: 1623188040000, y: 3 }
-        ],
-        risk: RiskValues.NO_DATA,
-        name: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx'
-      }
-    ],
-    transactionName: 'RuntimeException : IOException',
-    metricName: 'Number of Errors',
-    healthSourceType: 'APP_DYNAMICS'
-  },
-  {
-    controlData: [{ points: [] }],
-    testData: [
-      {
-        points: [
-          { x: 1623184440000, y: 138.33333333333334 },
-          { x: 1623185340000, y: 148 },
-          { x: 1623186240000, y: 152.33333333333334 },
-          { x: 1623187140000, y: 145.66666666666666 },
-          { x: 1623188040000, y: 152.66666666666666 }
-        ],
-        risk: RiskValues.NO_DATA,
-        name: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx'
-      }
-    ],
-    transactionName: '/todolist/inside',
-    metricName: 'Calls per Minute',
-    healthSourceType: 'APP_DYNAMICS'
-  },
-  {
-    controlData: [{ points: [] }],
-    testData: [
-      {
-        points: [
-          { x: 1623184440000, y: 2.3333333333333335 },
-          { x: 1623185340000, y: 3 },
-          { x: 1623186240000, y: 3 },
-          { x: 1623187140000, y: 3 },
-          { x: 1623188040000, y: 3 }
-        ],
-        risk: RiskValues.NO_DATA,
-        name: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx'
-      }
-    ],
-    transactionName: 'RuntimeException : InterruptedException',
-    metricName: 'Number of Errors',
-    healthSourceType: 'APP_DYNAMICS'
-  },
-  {
-    controlData: [{ points: [] }],
-    testData: [
-      {
-        points: [
-          { x: 1623184440000, y: 0 },
-          { x: 1623185340000, y: 0 },
-          { x: 1623186240000, y: 0 },
-          { x: 1623187140000, y: 0 },
-          { x: 1623188040000, y: 0 }
-        ],
-        risk: RiskValues.NO_DATA,
-        name: 'harness-test-appd-ng-demo-deployment-canary-84dfb494bf-7w5sx'
-      }
-    ],
-    transactionName: '/todolist/inside',
-    metricName: 'Stall Count',
-    healthSourceType: 'APP_DYNAMICS'
+    healthSource: {
+      identifier: 'KQE5GbbKTD6w39T6_jwUog/Templatised_sumologic_metrics_health_source',
+      name: 'Templatised sumologic metrics health source',
+      type: 'SumologicMetrics',
+      providerType: 'METRICS'
+    },
+    selectedDataFormat: {
+      label: 'Raw',
+      value: 'raw'
+    },
+    className: 'DeploymentMetrics-module_analysisRow_L4fk2S'
   }
 ]
 
@@ -366,11 +199,27 @@ export const controlDataMock = {
 }
 
 export const expectedChartConfigData = {
-  chart: { height: 120, type: 'spline', width: 312.5806451612903 },
+  chart: {
+    backgroundColor: '#f8f8fe',
+    height: 120,
+    type: 'spline',
+    width: 312.5806451612903
+  },
   credits: undefined,
-  legend: { enabled: false },
+  legend: {
+    enabled: false
+  },
   plotOptions: {
-    series: { lineWidth: 3, states: { inactive: { opacity: 1 } }, stickyTracking: false, turboThreshold: 50000 }
+    series: {
+      lineWidth: 3,
+      states: {
+        inactive: {
+          opacity: 1
+        }
+      },
+      stickyTracking: false,
+      turboThreshold: 50000
+    }
   },
   series: [
     {
@@ -418,25 +267,29 @@ export const expectedChartConfigData = {
     }
   ],
   subtitle: undefined,
-  title: { text: '' },
+  title: {
+    text: ''
+  },
   tooltip: {
-    backgroundColor: 'white',
-    borderColor: 'grey200',
-    borderRadius: 10,
     className: 'metricsGraph_tooltip',
-    crosshairs: true,
     formatter: expect.any(Function),
-    positioner: expect.any(Function),
     outside: false,
-    shape: 'square',
     shared: true,
-    shadow: { color: 'rgba(96, 97, 112, 0.56)' },
     useHTML: true
   },
   xAxis: {
-    labels: { enabled: false },
-    tickLength: 0,
-    title: { align: 'low', text: 'harness-deployment-canary-56b5cc7c5b-9rpq7' }
+    labels: {
+      enabled: false
+    },
+    tickLength: 0
   },
-  yAxis: { gridLineWidth: 0, labels: { enabled: false }, title: { text: '' } }
+  yAxis: {
+    gridLineWidth: 0,
+    labels: {
+      enabled: false
+    },
+    title: {
+      text: ''
+    }
+  }
 }

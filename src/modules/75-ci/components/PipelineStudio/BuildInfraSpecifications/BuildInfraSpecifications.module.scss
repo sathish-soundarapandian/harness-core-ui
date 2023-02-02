@@ -85,7 +85,6 @@
 }
 
 .card {
-  width: 305px;
   // TODO: Replace color once it is available in UIKit
   background: var(--grey-50);
   // TODO: Replace color once it is available in UIKit
@@ -222,4 +221,22 @@
 
 .addButton {
   padding-left: 0 !important;
+}
+
+.infoWrap {
+  display: inline-flex;
+  background: var(--grey-100);
+  border-radius: 4px;
+  padding: 10px 20px;
+  gap: 10px;
+}
+
+.infoIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.infoIcon path {
+  fill: var(--primary-7);
 }

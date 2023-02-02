@@ -51,6 +51,7 @@ import { TemplateRouteDestinations } from '@templates-library/RouteDestinations'
 import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
 import { VariableRouteDestinations } from '@variables/RouteDestinations'
 import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
+import PipelineStudioV1 from '@pipeline/v1/components/PipelineStudioV1/PipelineStudioV1'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import featureFactory from 'framework/featureStore/FeaturesFactory'
@@ -206,18 +207,18 @@ const CIDashboardPageOrRedirect = (): React.ReactElement => {
   }
 }
 
-const CISideNavProps: SidebarContext = {
+export const CISideNavProps: SidebarContext = {
   navComponent: CISideNav,
   subtitle: 'CONTINUOUS',
   title: 'Integration',
   icon: 'ci-main'
 }
 
-const moduleParams: ModulePathParams = {
+export const moduleParams: ModulePathParams = {
   module: ':module(ci)'
 }
 
-const licenseRedirectData: LicenseRedirectProps = {
+export const licenseRedirectData: LicenseRedirectProps = {
   licenseStateName: LICENSE_STATE_NAMES.CI_LICENSE_STATE,
   startTrialRedirect: RedirectToModuleTrialHomeFactory(ModuleName.CI),
   expiredTrialRedirect: RedirectToSubscriptionsFactory(ModuleName.CI)
@@ -327,7 +328,8 @@ export default (
         pipelineDeploymentListPageName: PAGE_NAME.CIPipelineDeploymentList,
         moduleParams,
         licenseRedirectData,
-        sidebarProps: CISideNavProps
+        sidebarProps: CISideNavProps,
+        pipelineStudioComponentV1: PipelineStudioV1
       })?.props.children
     }
 

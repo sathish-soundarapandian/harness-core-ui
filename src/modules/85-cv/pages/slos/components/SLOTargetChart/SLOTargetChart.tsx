@@ -8,14 +8,16 @@
 import React, { useMemo, useEffect } from 'react'
 import { merge } from 'lodash-es'
 import type Highcharts from 'highcharts'
-import { Container, Icon, PageError, Text } from '@harness/uicore'
-import { FontVariation, Color } from '@harness/design-system'
+import { Container, Icon, Text, PageError, NoDataCard, Layout } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { TimeSeriesAreaChart } from '@common/components'
-import { SLIMetricTypes } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
+import NoChartDataImage from '@cv/assets/noChartData.svg'
+import { SLIMetricTypes } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { getDefaultChartOptions } from './SLOTargetChart.utils'
-import { convertServiceLevelIndicatorToSLIFormData } from '../CVCreateSLO/CVCreateSLO.utils'
 import type { SLOTargetChartProps, SLOTargetChartWithAPIGetSliGraphProps } from './SLOTargetChart.types'
+import { convertServiceLevelIndicatorToSLIFormData } from '../CVCreateSLOV2/CVCreateSLOV2.utils'
+import css from './SLOTargetChart.module.scss'
 
 export const SLOTargetChart: React.FC<SLOTargetChartProps> = ({
   topLabel,
@@ -109,11 +111,11 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = p
   } = convertServiceLevelIndicatorToSLIFormData(serviceLevelIndicator)
 
   const emptyState = (
-    <Container flex={{ justifyContent: 'center' }} height="100%">
-      <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
-        {getString('cv.pleaseFillTheRequiredFieldsToSeeTheSLIData')}
-      </Text>
-    </Container>
+    <NoDataCard
+      image={NoChartDataImage}
+      containerClassName={css.noData}
+      message={getString('cv.pleaseFillTheRequiredFieldsToSeeTheSLIData')}
+    />
   )
 
   if (
@@ -132,7 +134,14 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = p
       }
     }
 
-    return <SLOTargetChartWithAPIGetSliGraph {...props} />
+    return (
+      <Layout.Vertical spacing="small">
+        <Text color={Color.PRIMARY_10} font={{ size: 'normal', weight: 'semi-bold' }} margin={{ bottom: 'small' }}>
+          {getString('cv.slos.slis.SLIChartTitle')}
+        </Text>
+        <SLOTargetChartWithAPIGetSliGraph {...props} />
+      </Layout.Vertical>
+    )
   }
 
   return emptyState

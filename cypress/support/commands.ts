@@ -192,6 +192,7 @@ Cypress.Commands.add('selectRuntimeInputForInfrastructure', () => {
 })
 
 Cypress.Commands.add('visitPipelinesList', () => {
+  cy.intercept('GET', '/v1/orgs?limit=100', { fixture: 'ng/api/orgApi' })
   cy.visitPageAssertion('[class^=SideNav-module_main]')
   cy.contains('p', 'Projects').click()
   cy.visitPageAssertion('.PageBody--pageBody')

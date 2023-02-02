@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Validate CommonCommonMetricLineChart should render with Data 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main noDataContainer"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--padding-top-small StyledProps--padding-left-medium StyledProps--color StyledProps--color-black"
+    >
+      cv.monitoringSources.commonHealthSource.metricsChart.runQueryToFetchResults
+    </p>
+  </div>
+</div>
+`;
+
+exports[`Validate CommonCommonMetricLineChart should render with error state 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main main"
+    data-testid="loading"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--padding-bottom-medium StyledProps--font-variation-form-message-danger"
+      data-testid="error"
+    >
+      mockError
+    </p>
+  </div>
+</div>
+`;
+
+exports[`Validate CommonCommonMetricLineChart should render with loading state 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main main loadingContainer"
+    data-testid="loading"
+  >
+    <span
+      class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey600"
+      data-icon="spinner"
+    >
+      <svg
+        fill="none"
+        height="32"
+        viewBox="0 0 36 36"
+        width="32"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
+          stroke="currentColor"
+          stroke-dasharray="75,100"
+          stroke-linecap="round"
+          stroke-width="2.8"
+          style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
+        />
+      </svg>
+    </span>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--padding-top-small StyledProps--padding-left-medium"
+    >
+      cv.monitoringSources.commonHealthSource.metricsChart.fetchingCharts
+    </p>
+  </div>
+</div>
+`;

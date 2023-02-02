@@ -1,0 +1,70 @@
+.main {
+  --gitops-health-status-bg: var(--grey-200);
+  --gitops-health-status-color: var(--grey-800);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 0 var(--spacing-3);
+  color: var(--gitops-health-status-color);
+  background-color: var(--gitops-health-status-bg);
+  font-weight: bold;
+  text-transform: uppercase;
+
+  &.iconOnly {
+    background-color: unset !important;
+  }
+
+  :global(.bp3-icon) {
+    --intent-color: var(--gitops-health-status-color);
+  }
+
+  &[data-size='medium'] {
+    height: 20px;
+    font-size: var(--font-size-xsmall);
+    column-gap: 4px;
+    line-height: 24px;
+  }
+
+  &[data-size='large'] {
+    height: 26px;
+    font-size: var(--font-size-xsmall);
+    column-gap: 6px;
+    line-height: 30px;
+  }
+
+  &[data-status='degraded'] {
+    --gitops-health-status-bg: var(--red-200);
+    --gitops-health-status-color: var(--red-800);
+  }
+
+  &[data-status='unhealthy'] {
+    --gitops-health-status-bg: var(--red-200);
+    --gitops-health-status-color: var(--red-800);
+  }
+
+  &[data-status='healthy'] {
+    --gitops-health-status-bg: var(--green-200);
+    --gitops-health-status-color: var(--green-800);
+  }
+
+  &[data-status='missing'] {
+    --gitops-health-status-bg: var(--yellow-200);
+    --gitops-health-status-color: var(--orange-600);
+  }
+
+  &[data-status='progressing'] {
+    --gitops-health-status-bg: var(--primary-2);
+    --gitops-health-status-color: var(--primary-7);
+  }
+
+  &[data-status='suspended'] {
+    --gitops-health-status-bg: var(--orange-50);
+    --gitops-health-status-color: var(--orange-800);
+  }
+
+  &[data-status='unknown'] {
+    --gitops-health-status-bg: var(--grey-100) !important;
+    --gitops-health-status-color: var(--grey-600) !important;
+  }
+}

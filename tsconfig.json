@@ -26,7 +26,7 @@
     "noUnusedParameters": true,
     "paths": {
       "@common/*": ["modules/10-common/*"],
-      "@audit-trail/*": ["modules/18-audit-trail/*"],
+      "@audit-trail/*": ["modules/38-audit-trail/*"],
       "@rbac/*": ["modules/20-rbac/*"],
       "@default-settings/*": ["modules/23-default-settings/*"],
       "@governance/*": ["modules/25-governance/*"],
@@ -54,7 +54,8 @@
       "@sto/*": ["modules/85-sto/*"],
       "@ce/*": ["modules/75-ce/*"],
       "@gitops/*": ["modules/90-gitops/*"],
-      "@iacm/*": ["modules/85-iacm/*"]
+      "@iacm/*": ["modules/85-iacm/*"],
+      "@sscs/*": ["modules/75-sscs/*"]
     }
   },
   "types": ["cypress"],

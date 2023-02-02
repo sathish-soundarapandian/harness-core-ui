@@ -115,38 +115,42 @@ export function Nexus3Artifact({
       is: val => val === 'value',
       then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.tag'))
     }),
-    repository: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
     repositoryFormat: Yup.string().required(getString('pipeline.artifactsSelection.validation.repositoryFormat')),
-    spec: Yup.object().shape({
-      artifactId: Yup.string().when('repositoryFormat', {
-        is: val => val === RepositoryFormatTypes.Maven,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactId'))
-      }),
-      groupId: Yup.string().when('repositoryFormat', {
-        is: val => val === RepositoryFormatTypes.Maven,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.groupId'))
-      }),
-      group: Yup.string().when('repositoryFormat', {
-        is: val => val === RepositoryFormatTypes.Raw,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.group'))
-      }),
-      packageName: Yup.string().when('repositoryFormat', {
-        is: RepositoryFormatTypes.NPM || RepositoryFormatTypes.NuGet,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.packageName'))
-      }),
-      repositoryUrl: Yup.string().when('repositoryFormat', {
-        is: RepositoryFormatTypes.Docker,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.repositoryUrl'))
-      }),
-      repositoryPort: Yup.string().when('repositoryFormat', {
-        is: RepositoryFormatTypes.Docker,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.repositoryPort'))
-      }),
-      artifactPath: Yup.string().when('repositoryFormat', {
-        is: RepositoryFormatTypes.Docker,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactPath'))
+    repository: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+    spec: Yup.object()
+      .when('repositoryFormat', {
+        is: RepositoryFormatTypes.Maven,
+        then: Yup.object().shape({
+          artifactId: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactId')),
+          groupId: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.groupId'))
+        })
       })
-    })
+      .when('repositoryFormat', {
+        is: RepositoryFormatTypes.Raw,
+        then: Yup.object().shape({
+          group: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.group'))
+        })
+      })
+      .when('repositoryFormat', {
+        is: val => val === RepositoryFormatTypes.NPM || val === RepositoryFormatTypes.NuGet,
+        then: Yup.object().shape({
+          packageName: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.packageName'))
+        })
+      })
+      .when('repositoryFormat', {
+        is: RepositoryFormatTypes.Docker,
+        then: Yup.object().shape({
+          artifactPath: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactPath')),
+          repositoryUrl: Yup.string().when('repositoryPortorRepositoryURL', {
+            is: RepositoryPortOrServer.RepositoryUrl,
+            then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.repositoryUrl'))
+          }),
+          repositoryPort: Yup.string().when('repositoryPortorRepositoryURL', {
+            is: RepositoryPortOrServer.RepositoryPort,
+            then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.repositoryPort'))
+          })
+        })
+      })
   }
 
   const primarySchema = Yup.object().shape(schemaObject)

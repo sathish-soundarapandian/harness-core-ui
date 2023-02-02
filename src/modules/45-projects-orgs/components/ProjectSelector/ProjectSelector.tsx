@@ -21,7 +21,8 @@ import {
   NoDataCard,
   GridListToggle,
   Views,
-  TableV2
+  TableV2,
+  SelectOption
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { Column } from 'react-table'
@@ -38,6 +39,7 @@ import ProjectCard from '@projects-orgs/components/ProjectCard/ProjectCard'
 import { PageSpinner } from '@common/components'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import pointerImage from './pointer.svg'
+import OrgDropdown from '../OrgDropdown/OrgDropdown'
 import css from './ProjectSelector.module.scss'
 
 export interface ProjectSelectorProps {
@@ -47,6 +49,7 @@ export interface ProjectSelectorProps {
 
 const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
   const { accountId } = useParams<AccountPathProps>()
+  const [selectedOrg, setSelectedOrg] = useState<SelectOption | undefined>()
   const history = useHistory()
   const { selectedProject } = useAppStore()
   const [page, setPage] = useState(0)
@@ -61,6 +64,7 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
   const { data, loading } = useGetProjectAggregateDTOList({
     queryParams: {
       accountIdentifier: accountId,
+      orgIdentifier: selectedOrg?.value as string,
       searchTerm,
       pageIndex: page,
       pageSize: 50
@@ -151,6 +155,13 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
             onChange={text => {
               setSearchTerm(text.trim())
               setPage(0)
+            }}
+          />
+          <OrgDropdown
+            value={selectedOrg}
+            className={css.orgDropdown}
+            onChange={org => {
+              setSelectedOrg(org)
             }}
           />
           <GridListToggle

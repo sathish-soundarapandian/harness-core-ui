@@ -1,0 +1,32 @@
+supplementaryDetails: Supplementary Details
+eventSource: Event Source
+http: 'HTTP {{method}} (Client IP: {{clientIP}})'
+actions:
+  upserted: Upserted
+  restored: Restored
+  invited: Invited
+  invite_resent: Invite Resent
+  invite_revoked: Invite Revoked
+  added_collaborator: Added Collaborator
+  removed_collaborator: Removed Collaborator
+  added_membership: Added Membership
+  removed_membership: Removed Membership
+  create_token: Token Created
+  revoke_token: Token Revoked
+  force_deleted: Force Deleted
+  login: Login
+  login2fa: Login Two Factor Authentication
+  unsuccessfullLogin: Unsuccessful Login
+emptyStateMessageTitle: No records were found to match your search
+emptyStateMessage: Please try to modify your search criteria.
+externalDataText: Export data to external applications via our
+auditLogAPI: Audit Log API
+Platform: Platform
+eventSummary: Event Summary
+yamlDifference: YAML Difference
+noYamlDifference: There is no YAML difference associated with this event.
+resourceNameLabel: Resource Name
+delegateGroups: Delegate Groups
+excludeLoginEvents: Exclude Login Events
+excludeSystemEvents: Exclude System Events
+allEvents: All Events

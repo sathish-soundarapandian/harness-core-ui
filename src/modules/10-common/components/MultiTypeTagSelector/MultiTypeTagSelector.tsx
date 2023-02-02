@@ -78,6 +78,8 @@ const MultiTypeTagSelector = ({
         formik.setFieldValue(`${name}.${tagOption.key}`, tagOption.value)
       })
       setSelectedTags(initialTagOptions)
+    } else if (get(formik.values, name, '') === '') {
+      formik.setFieldValue(`${name}`, {})
     }
   }, [])
 

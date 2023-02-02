@@ -87,10 +87,10 @@ export const abortPipelineCall = `pipeline/api/pipeline/execute/interrupt/${exec
 export const serverlessLambdaYamlSnippet = `/ng/api/pipelines/configuration/strategies/yaml-snippets?routingId=${accountId}&accountIdentifier=${accountId}&serviceDefinitionType=${serverlessLambdaServiceDefinitionType}&strategyType=${strategyType}`
 export const servicesV2 = `/ng/api/servicesV2?routingId=${accountId}&accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const postServiceCall = `ng/api/servicesV2?routingId=${accountId}&accountIdentifier=${accountId}`
-export const jobDetailsCall = `/ng/api/artifacts/jenkins/jobs?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorName}`
+export const jobDetailsCall = `/ng/api/artifacts/jenkins/jobs?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${anotherConnectorName}`
 export const jobDetailsCallAfterConnectorChange = `/ng/api/artifacts/jenkins/jobs?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${anotherConnectorName}`
-export const jobDetailsForParentJob = `/ng/api/artifacts/jenkins/jobs?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorName}&parentJobName=${parentJob}`
-export const jobParametersList = `/ng/api/artifacts/jenkins/job/AutomationQA/details?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${connectorName}`
+export const jobDetailsForParentJob = `/ng/api/artifacts/jenkins/jobs?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${anotherConnectorName}&parentJobName=${parentJob}`
+export const jobParametersList = `/ng/api/artifacts/jenkins/job/AutomationQA/details?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&connectorRef=${anotherConnectorName}`
 export const pipelineDetailsAPIRoute = `/pipeline/api/pipelines/PipelineTest?accountIdentifier=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectId}`
 export const templatesListCall = `/template/api/templates/list?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&templateListType=LastUpdated&searchTerm=&page=0&sort=lastUpdatedAt%2CDESC&size=20`
 export const templateMetadataCall = `/template/api/templates/list-metadata?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&templateListType=LastUpdated&searchTerm=&page=0&sort=lastUpdatedAt%2CDESC&size=20`
@@ -119,7 +119,7 @@ export const executionHistoryRoute = `${addHashInCypressURLBasedOnBrowserRouter(
 export const pipelineStudioRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/pipeline-studio/?stageId=j&sectionId=SERVICE`
 export const newPipelineRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/${projectId}/pipelines/-1/pipeline-studio/`
 export const inputSetsRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/${projectId}/pipelines/${pipelineIdentifier}/input-sets`
-export const environmentRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/environment`
+export const environmentRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/environments`
 export const servicesRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/services`
 export const pipelinesRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines`
 export const triggersRoute = `${addHashInCypressURLBasedOnBrowserRouter()}account/${accountId}/cd/orgs/${orgIdentifier}/projects/${projectId}/pipelines/${pipelineIdentifier}/triggers`
@@ -133,7 +133,7 @@ export const servicesCallRunPipeline =
 export const servicesYaml =
   '/ng/api/servicesV2/servicesYamlMetadata?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
 export const environmentsCallRunPipeline =
-  '/ng/api/environmentsV2/listV2?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
+  '/ng/api/environmentsV2/list/access?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
 export const connectorsCall =
   '/ng/api/connectors?accountIdentifier=accountId&type=K8sCluster&searchTerm=&projectIdentifier=project1&orgIdentifier=default'
 export interface ValidObject {

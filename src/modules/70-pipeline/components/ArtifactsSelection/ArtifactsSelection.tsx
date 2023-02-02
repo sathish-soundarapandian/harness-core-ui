@@ -53,7 +53,9 @@ import type {
   CustomArtifactSource,
   GithubPackageRegistryInitialValuesType,
   Nexus2InitialValuesType,
-  AzureArtifactsInitialValues
+  AzureArtifactsInitialValues,
+  GoogleCloudStorageInitialValuesType,
+  GoogleCloudSourceRepositoriesInitialValuesType
 } from './ArtifactInterface'
 import {
   ENABLED_ARTIFACT_TYPES,
@@ -65,7 +67,8 @@ import {
   isSidecarAllowed,
   isAllowedGithubPackageRegistryDeploymentTypes,
   isAllowedAzureArtifactDeploymentTypes,
-  isAllowedAMIDeploymentTypes
+  isAllowedAMIDeploymentTypes,
+  shouldAllowOnlyOneArtifact
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { showConnectorStep } from './ArtifactUtils'
@@ -458,7 +461,9 @@ export default function ArtifactsSelection({
       CustomArtifactSource &
       GithubPackageRegistryInitialValuesType &
       Nexus2InitialValuesType &
-      AzureArtifactsInitialValues
+      AzureArtifactsInitialValues &
+      GoogleCloudStorageInitialValuesType &
+      GoogleCloudSourceRepositoriesInitialValuesType
   > => {
     return {
       key: getString('connectors.stepFourName'),
@@ -584,6 +589,7 @@ export default function ArtifactsSelection({
       refetchConnectors={refetchConnectorList}
       isReadonly={readonly}
       isSidecarAllowed={isSidecarAllowed(deploymentType, readonly)}
+      allowOnlyOneArtifactAddition={shouldAllowOnlyOneArtifact(deploymentType)}
     />
   )
 }

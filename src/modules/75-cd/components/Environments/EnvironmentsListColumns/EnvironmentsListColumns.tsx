@@ -6,13 +6,16 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Layout, TagsPopover, Text, Container, Checkbox } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { defaultTo, isEmpty } from 'lodash-es'
 import { useConfirmAction } from '@common/hooks/useConfirmAction'
+import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import type { EnvironmentResponseDTO } from 'services/cd-ng'
+import type { PermissionRequest } from '@rbac/hooks/usePermission'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -92,6 +95,7 @@ export const EnvironmentTypes = withEnvironment(({ environment }) => {
 
 export const EnvironmentMenu = withActions(({ environment, actions }) => {
   const { getString } = useStrings()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const identifier = environment.identifier as string
   const deleteEnvironment = useConfirmAction({
     title: getString('cd.environmentDelete'),
@@ -104,6 +108,11 @@ export const EnvironmentMenu = withActions(({ environment, actions }) => {
       actions.onDelete?.(identifier)
     }
   })
+
+  const resourceAndScope: Pick<PermissionRequest, 'resource' | 'resourceScope'> = {
+    resource: { resourceType: ResourceType.ENVIRONMENT, resourceIdentifier: identifier },
+    resourceScope: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+  }
 
   return (
     <Layout.Horizontal style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
@@ -119,7 +128,7 @@ export const EnvironmentMenu = withActions(({ environment, actions }) => {
               text: getString('edit'),
               onClick: () => actions.onEdit?.(identifier),
               permission: {
-                resource: { resourceType: ResourceType.ENVIRONMENT },
+                ...resourceAndScope,
                 permission: PermissionIdentifier.EDIT_ENVIRONMENT
               }
             },
@@ -128,7 +137,7 @@ export const EnvironmentMenu = withActions(({ environment, actions }) => {
               text: getString('delete'),
               onClick: deleteEnvironment,
               permission: {
-                resource: { resourceType: ResourceType.ENVIRONMENT },
+                ...resourceAndScope,
                 permission: PermissionIdentifier.DELETE_ENVIRONMENT
               }
             }

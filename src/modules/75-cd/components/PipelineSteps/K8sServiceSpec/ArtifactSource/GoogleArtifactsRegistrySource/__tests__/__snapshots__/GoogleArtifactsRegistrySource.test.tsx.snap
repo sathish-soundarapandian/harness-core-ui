@@ -243,7 +243,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                 class="Tooltip--acenter"
                 data-tooltip-id="GoogleArtifactRegistry_pipeline.stages[0].stage.spec.seviceConfig.serviceDefinition.spec.artifacts.primary.spec.project"
               >
-                projectLabel
+                pipelineSteps.projectIDLabel
               </span>
                
               <span
@@ -264,7 +264,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                     autocomplete="off"
                     class="bp3-input"
                     name="pipeline.stages[0].stage.spec.seviceConfig.serviceDefinition.spec.artifacts.primary.spec.project"
-                    placeholder="pipeline.artifactsSelection.projectPlaceholder"
+                    placeholder="pipeline.artifactsSelection.projectIDPlaceholder"
                     type="text"
                     value=""
                   />
@@ -741,7 +741,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                 class="Tooltip--acenter"
                 data-tooltip-id="GoogleArtifactRegistry_pipeline.stages[0].stage.spec.seviceConfig.serviceDefinition.spec.artifacts.primary.spec.project"
               >
-                projectLabel
+                pipelineSteps.projectIDLabel
               </span>
                
               <span
@@ -762,7 +762,7 @@ exports[`GoogleArtifactRegistrySource tests renders fine for all Runtime values 
                     autocomplete="off"
                     class="bp3-input"
                     name="pipeline.stages[0].stage.spec.seviceConfig.serviceDefinition.spec.artifacts.primary.spec.project"
-                    placeholder="pipeline.artifactsSelection.projectPlaceholder"
+                    placeholder="pipeline.artifactsSelection.projectIDPlaceholder"
                     type="text"
                     value=""
                   />

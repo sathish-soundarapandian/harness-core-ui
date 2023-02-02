@@ -291,44 +291,6 @@ exports[`<FailureStrategyPanel /> tests adding a new strategy works 1`] = `
                 tabindex="0"
               >
                 <span
-                  class="bp3-icon bp3-icon-repeat StyledProps--main"
-                  icon="repeat"
-                >
-                  <svg
-                    data-icon="repeat"
-                    height="26"
-                    viewBox="0 0 20 20"
-                    width="26"
-                  >
-                    <desc>
-                      repeat
-                    </desc>
-                    <path
-                      d="M14 6c0 .55.45 1 1 1h4c.55 0 1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1v2.05C16.18 1.6 13.29 0 10 0 4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10c0-.55-.45-1-1-1s-1 .45-1 1c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8c2.53 0 4.77 1.17 6.24 3H15c-.55 0-1 .45-1 1z"
-                      fill-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-              </div>
-              <p
-                class="StyledProps--font StyledProps--main Thumbnail--label StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey600 StyledProps--margin-top-small"
-              >
-                pipeline.failureStrategies.strategiesLabel.PipelineRollback
-              </p>
-              <input
-                name="failureStrategies[0].onFailure.action.type"
-                type="checkbox"
-                value="PipelineRollback"
-              />
-            </label>
-            <label
-              class="Thumbnail--squareCardContainer thumbnail"
-            >
-              <div
-                class="bp3-card bp3-interactive bp3-elevation-0 Card--card Thumbnail--squareCard Card--interactive"
-                tabindex="0"
-              >
-                <span
                   class="bp3-icon bp3-icon-delete StyledProps--main"
                   icon="delete"
                 >
@@ -873,71 +835,6 @@ exports[`<FailureStrategyPanel /> tests removing a strategy works 1`] = `
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`<FailureStrategyPanel /> tests when AllErrors is selected, select is disabled 3`] = `
-<div
-  class="bp3-form-group failureSelect"
->
-  <label
-    class="bp3-label"
-    for="failureStrategies[0].onFailure.errors"
-  >
-    pipeline.failureStrategies.onFailureOfType
-     
-    <span
-      class="bp3-text-muted"
-    />
-  </label>
-  <div
-    class="bp3-form-content"
-  >
-    <div
-      class="selectWrapper"
-    >
-      <div
-        class="bp3-popover-wrapper errorSelect bp3-fill"
-      >
-        <div
-          class="bp3-popover-target"
-        >
-          <div
-            class=""
-          >
-            <div
-              class="bp3-input bp3-tag-input bp3-disabled bp3-fill bp3-multi-select"
-            >
-              <div
-                class="bp3-tag-input-values"
-              >
-                <input
-                  class="bp3-input-ghost bp3-multi-select-tag-input-input"
-                  disabled=""
-                  name="failureStrategies[0].onFailure.errors"
-                  placeholder="pipeline.failureTypetext"
-                  value=""
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <label
-        class="bp3-control bp3-checkbox"
-      >
-        <input
-          name="failureStrategies[0].onFailure.errors"
-          type="checkbox"
-          value="AllErrors"
-        />
-        <span
-          class="bp3-control-indicator"
-        />
-        common.allErrors
-      </label>
     </div>
   </div>
 </div>

@@ -27,6 +27,7 @@ import {
   getScopeBasedProjectPathParams,
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
+import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { TemplateStepNode } from 'services/pipeline-ng'
 import { validateStep, validateSteps } from '@pipeline/components/PipelineStudio/StepUtil'
 import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
@@ -34,6 +35,8 @@ import { useQueryParams } from '@common/hooks'
 import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { StepForm } from '@pipeline/components/PipelineInputSetForm/StepInputSetForm'
 import { ExecutionWrapperInputSetForm } from '@pipeline/components/PipelineInputSetForm/ExecutionWrapperInputSetForm'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -63,6 +66,7 @@ function TemplateStepWidget(
   const { getString } = useStrings()
   const queryParams = useParams<ProjectPathProps>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
+  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const stepTemplateRef = getIdentifierFromValue(initialValues.template.templateRef)
   const stepTemplateVersionLabel = defaultTo(initialValues.template.versionLabel, '')
   const scope = getScopeFromValue(initialValues.template.templateRef)
@@ -71,6 +75,8 @@ function TemplateStepWidget(
   const [allValues, setAllValues] = React.useState<StepElementConfig>()
   const [templateInputs, setTemplateInputs] = React.useState<StepElementConfig>()
   const selectedStage = (customStepProps as any)?.selectedStage
+
+  const { orgIdentifier, projectIdentifier } = queryParams
 
   const {
     data: stepTemplateResponse,
@@ -83,7 +89,8 @@ function TemplateStepWidget(
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: stepTemplateVersionLabel,
       ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
-    }
+    },
+    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
   })
 
   React.useEffect(() => {
@@ -103,7 +110,8 @@ function TemplateStepWidget(
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: stepTemplateVersionLabel,
       ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
-    }
+    },
+    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
   })
 
   const updateFormValues = (newTemplateInputs?: StepElementConfig) => {
@@ -245,6 +253,13 @@ function TemplateStepWidget(
                     <Heading level={5} color={Color.BLACK}>
                       {getString('pipeline.templateInputs')}
                     </Heading>
+                    {!isEmpty((templateInputs as StepGroupElementConfig)?.delegateSelectors) ? (
+                      <MultiTypeDelegateSelector
+                        name={`${TEMPLATE_INPUT_PATH}.delegateSelectors`}
+                        inputProps={{ readonly, orgIdentifier, projectIdentifier }}
+                        allowableTypes={allowableTypes}
+                      />
+                    ) : null}
                     {!isEmpty((templateInputs as StepGroupElementConfig)?.steps) ? (
                       <>
                         <ExecutionWrapperInputSetForm

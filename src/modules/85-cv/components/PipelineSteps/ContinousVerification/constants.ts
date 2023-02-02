@@ -123,4 +123,8 @@ export const defaultMonitoredServiceSpec = {
 
 export const monitoredServiceRefPath = 'spec.monitoredService.spec.monitoredServiceRef'
 
-export const V2_HEALTHSOURCES = [HealthSourceTypes.SumologicLogs, HealthSourceTypes.SumologicMetrics]
+export const V2_HEALTHSOURCES = [
+  HealthSourceTypes.SumoLogic,
+  HealthSourceTypes.SumologicLogs,
+  HealthSourceTypes.SumologicMetrics
+]

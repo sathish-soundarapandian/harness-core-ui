@@ -18,6 +18,10 @@ import { EnvironmentGroupResponse, useDeleteEnvironmentGroup } from 'services/cd
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
+import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import {
   EditOrDeleteCell,
   EnvironmentGroupName,
@@ -40,6 +44,8 @@ export default function EnvironmentGroupsList({ environmentGroups, refetch }: En
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
   const [expandedSets, setExpandedSets] = useState<Set<string>>(new Set())
+  const isForceDeletedAllowed = useFeatureFlag(FeatureFlag.CDS_FORCE_DELETE_ENTITIES)
+  const [curGroupId, setCurGroupId] = useState('')
 
   const onEdit = (environmentGroupIdentifier: string) => {
     history.push(
@@ -54,23 +60,39 @@ export default function EnvironmentGroupsList({ environmentGroups, refetch }: En
     )
   }
 
-  const { mutate: deleteEnvironmentGroup } = useDeleteEnvironmentGroup({
-    queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier
-    }
-  })
+  const { mutate: deleteEnvironmentGroup } = useDeleteEnvironmentGroup({})
 
-  const onDelete = async (identifier: string) => {
+  const onDelete = async (identifier: string, forceDelete?: boolean) => {
     try {
-      await deleteEnvironmentGroup(identifier, { headers: { 'content-type': 'application/json' } })
+      await deleteEnvironmentGroup(identifier, {
+        headers: { 'content-type': 'application/json' },
+        queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier, forceDelete: forceDelete }
+      })
       showSuccess(getString('common.environmentGroup.deleted', { identifier }))
       refetch()
     } catch (e: any) {
-      showError(getErrorInfoFromErrorObject(e))
+      if (isForceDeletedAllowed && e?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+        setCurGroupId(identifier)
+        openReferenceErrorDialog()
+      } else {
+        showError(getErrorInfoFromErrorObject(e))
+      }
     }
   }
+
+  const redirectToReferencedBy = (): void => {
+    closeDialog()
+  }
+
+  const { openDialog: openReferenceErrorDialog, closeDialog } = useEntityDeleteErrorHandlerDialog({
+    entity: {
+      type: ResourceType.ENVIRONMENT_GROUP,
+      name: curGroupId
+    },
+    hideReferencedByButton: true,
+    redirectToReferencedBy: redirectToReferencedBy,
+    forceDeleteCallback: isForceDeletedAllowed ? () => onDelete(curGroupId, true) : undefined
+  })
 
   return (
     <>

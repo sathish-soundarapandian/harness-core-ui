@@ -84,13 +84,13 @@ exports[`Environments V2 test snapshot test with list view and after sort 1`] = 
         <a
           aria-current="page"
           class="TabNavigation--tags TabNavigation--small TabNavigation--active"
-          href="/account/dummy/dummy/orgs/dummy/projects/dummy/environment"
+          href="/account/dummy/dummy/orgs/dummy/projects/dummy/environments"
         >
           environment
         </a>
         <a
           class="TabNavigation--tags TabNavigation--small"
-          href="/account/dummy/dummy/orgs/dummy/projects/dummy/environment-group"
+          href="/account/dummy/dummy/orgs/dummy/projects/dummy/environments/groups"
         >
           common.environmentGroups.label
         </a>

@@ -20,7 +20,7 @@ import {
   useGetAllMonitoredServicesWithTimeSeriesHealthSources,
   useGetMonitoredService
 } from 'services/cv'
-import { getMonitoredServiceOptions } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.utils'
+import { getMonitoredServiceOptions } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import { useStrings } from 'framework/strings'
 import type { ContinousVerificationData } from '@cv/components/PipelineSteps/ContinousVerification/types'

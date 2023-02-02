@@ -62,15 +62,19 @@ export class DeployServiceStep extends Step<DeployServiceData> {
             orgIdentifier,
             projectIdentifier
           }
-        }).then(response => {
-          const data =
-            response?.data?.content?.map(service => ({
-              label: service.service?.name || '',
-              insertText: service.service?.identifier || '',
-              kind: CompletionItemKind.Field
-            })) || []
-          return data
         })
+          .then(response => {
+            const data =
+              response?.data?.content?.map(service => ({
+                label: service.service?.name || '',
+                insertText: service.service?.identifier || '',
+                kind: CompletionItemKind.Field
+              })) || []
+            return data
+          })
+          .catch(err => {
+            return err?.message
+          })
       }
     }
 

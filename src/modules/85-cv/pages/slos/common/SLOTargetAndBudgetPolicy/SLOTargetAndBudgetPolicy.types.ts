@@ -5,14 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { FormikProps } from 'formik'
-import type { SLOForm } from '../../components/CVCreateSLO/components/CreateSLOForm/CreateSLO.types'
-
-export interface SLOTargetAndBudgetPolicyProps {
-  formikProps: FormikProps<SLOForm>
-  children: JSX.Element
-}
-
 export interface NotificationToToggle {
   identifier: string
   enabled: boolean

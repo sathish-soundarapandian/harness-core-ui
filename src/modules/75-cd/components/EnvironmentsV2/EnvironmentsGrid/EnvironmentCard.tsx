@@ -17,6 +17,7 @@ import type { EnvironmentResponse } from 'services/cd-ng'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import type { PermissionRequest } from '@rbac/hooks/usePermission'
 
 import { EnvironmentName, EnvironmentTypes, LastUpdatedBy } from '../EnvironmentsList/EnvironmentsListColumns'
 
@@ -51,6 +52,18 @@ export function EnvironmentCard({ response, onEdit, onDelete, onClick }: Environ
     openDialog()
   }
 
+  const resourceAndScope: Pick<PermissionRequest, 'resource' | 'resourceScope'> = {
+    resource: {
+      resourceType: ResourceType.ENVIRONMENT,
+      resourceIdentifier: response.environment?.identifier
+    },
+    resourceScope: {
+      accountIdentifier: response.environment?.accountId,
+      orgIdentifier: response.environment?.orgIdentifier,
+      projectIdentifier: response.environment?.projectIdentifier
+    }
+  }
+
   return (
     <Card
       className={css.environmentCard}
@@ -68,21 +81,14 @@ export function EnvironmentCard({ response, onEdit, onDelete, onClick }: Environ
                   e.stopPropagation()
                   onEdit(get(response, 'environment.identifier', ''))
                 }}
-                permission={{
-                  resource: {
-                    resourceType: ResourceType.ENVIRONMENT
-                  },
-                  permission: PermissionIdentifier.EDIT_ENVIRONMENT
-                }}
+                permission={{ ...resourceAndScope, permission: PermissionIdentifier.EDIT_ENVIRONMENT }}
               />
               <RbacMenuItem
                 icon="trash"
                 text={getString('delete')}
                 onClick={handleDelete}
                 permission={{
-                  resource: {
-                    resourceType: ResourceType.ENVIRONMENT
-                  },
+                  ...resourceAndScope,
                   permission: PermissionIdentifier.DELETE_ENVIRONMENT
                 }}
               />

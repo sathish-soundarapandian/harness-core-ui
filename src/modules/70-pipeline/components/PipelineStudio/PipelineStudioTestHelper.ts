@@ -11,5 +11,6 @@ export const mockTemplatesInputYaml: ResponseString = {
   status: 'SUCCESS',
   data:
     'type: "HarnessApproval"\ntimeout: "<+input>"' +
-    '\nspec:\n  approvalMessage: "<+input>"\n  approvers:\n    userGroups: "<+input>"\n    minimumCount: "<+input>"\n'
+    '\nspec:\n  approvalMessage: "<+input>"\n  approvers:\n    userGroups: "<+input>"\n    minimumCount: "<+input>"' +
+    '\nenforce:\n  policySets: "<+input>"\ndelegateSelectors: "<+input>"\n'
 }

@@ -207,31 +207,35 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
             <div
               class=""
             >
-              <div>
-                <span
-                  class="bp3-icon StyledProps--main statusIcon running icon"
-                  data-icon="spinner"
-                >
-                  <svg
-                    fill="none"
-                    height="16"
-                    viewBox="0 0 36 36"
-                    width="16"
-                    xmlns="http://www.w3.org/2000/svg"
+              <div
+                class="stageName"
+              >
+                <div>
+                  <span
+                    class="bp3-icon StyledProps--main statusIcon running icon"
+                    data-icon="spinner"
                   >
-                    <path
-                      d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
-                      stroke="currentColor"
-                      stroke-dasharray="75,100"
-                      stroke-linecap="round"
-                      stroke-width="2.8"
-                      style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
-                    />
-                  </svg>
-                </span>
-                <span>
-                  Google1
-                </span>
+                    <svg
+                      fill="none"
+                      height="16"
+                      viewBox="0 0 36 36"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
+                        stroke="currentColor"
+                        stroke-dasharray="75,100"
+                        stroke-linecap="round"
+                        stroke-width="2.8"
+                        style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
+                      />
+                    </svg>
+                  </span>
+                  <span>
+                    Google1
+                  </span>
+                </div>
               </div>
             </div>
             <div
@@ -437,31 +441,35 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
             <div
               class=""
             >
-              <div>
-                <span
-                  class="bp3-icon StyledProps--main statusIcon running icon"
-                  data-icon="spinner"
-                >
-                  <svg
-                    fill="none"
-                    height="16"
-                    viewBox="0 0 36 36"
-                    width="16"
-                    xmlns="http://www.w3.org/2000/svg"
+              <div
+                class="stageName"
+              >
+                <div>
+                  <span
+                    class="bp3-icon StyledProps--main statusIcon running icon"
+                    data-icon="spinner"
                   >
-                    <path
-                      d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
-                      stroke="currentColor"
-                      stroke-dasharray="75,100"
-                      stroke-linecap="round"
-                      stroke-width="2.8"
-                      style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
-                    />
-                  </svg>
-                </span>
-                <span>
-                  Google2
-                </span>
+                    <svg
+                      fill="none"
+                      height="16"
+                      viewBox="0 0 36 36"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M18 2.084a15.915 15.915 0 010 31.831 15.915 15.915 0 010-31.83"
+                        stroke="currentColor"
+                        stroke-dasharray="75,100"
+                        stroke-linecap="round"
+                        stroke-width="2.8"
+                        style="animation: 1s linear infinite spinner-rotation; transform-origin: 50% 50%; transform-box: fill-box;"
+                      />
+                    </svg>
+                  </span>
+                  <span>
+                    Google2
+                  </span>
+                </div>
               </div>
             </div>
             <div
@@ -491,23 +499,27 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
             <div
               class=""
             >
-              <div>
-                <span
-                  class="bp3-icon StyledProps--main statusIcon notstarted icon"
-                  data-icon="pending"
-                >
-                  <svg
-                    height="16"
-                    viewBox="0 0 9 9"
-                    width="16"
-                    xmlns="http://www.w3.org/2000/svg"
+              <div
+                class="stageName"
+              >
+                <div>
+                  <span
+                    class="bp3-icon StyledProps--main statusIcon notstarted icon"
+                    data-icon="pending"
                   >
-                    <path
-                      d="M8.206 2.709a.404.404 0 01-.215.057.443.443 0 01-.343-.186c-.13-.215-.287-.402-.445-.588a.39.39 0 01.015-.559.39.39 0 01.558.014c.201.215.387.459.545.717a.38.38 0 01-.115.545zM5.987 7.868A3.705 3.705 0 007.45 6.72a.392.392 0 01.56-.071.392.392 0 01.07.559 4.62 4.62 0 01-1.776 1.404c-.058.029-.1.029-.158.029a.402.402 0 01-.373-.244.411.411 0 01.215-.53zM8.078 5.403c.13-.473.143-.974.086-1.447a.39.39 0 01.344-.445.39.39 0 01.444.344 4.317 4.317 0 01-.1 1.763.396.396 0 01-.387.301c-.029 0-.072 0-.1-.014a.42.42 0 01-.287-.502zM5.748.858A.387.387 0 116.491.64a.387.387 0 01-.743.217zM4.525 0a.4.4 0 110 .803A3.706 3.706 0 00.827 4.5c0 .387.057.774.186 1.16a.391.391 0 01-.258.502c-.043.015-.086.015-.129.015-.172 0-.33-.1-.372-.273A4.305 4.305 0 01.024 4.5c0-2.48 2.021-4.5 4.5-4.5zM1.802 6.994a3.724 3.724 0 002.723 1.204.4.4 0 110 .802 4.494 4.494 0 01-3.311-1.462.39.39 0 01.029-.559c.157-.157.4-.143.559.015z"
-                    />
-                  </svg>
-                </span>
-                <span />
+                    <svg
+                      height="16"
+                      viewBox="0 0 9 9"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M8.206 2.709a.404.404 0 01-.215.057.443.443 0 01-.343-.186c-.13-.215-.287-.402-.445-.588a.39.39 0 01.015-.559.39.39 0 01.558.014c.201.215.387.459.545.717a.38.38 0 01-.115.545zM5.987 7.868A3.705 3.705 0 007.45 6.72a.392.392 0 01.56-.071.392.392 0 01.07.559 4.62 4.62 0 01-1.776 1.404c-.058.029-.1.029-.158.029a.402.402 0 01-.373-.244.411.411 0 01.215-.53zM8.078 5.403c.13-.473.143-.974.086-1.447a.39.39 0 01.344-.445.39.39 0 01.444.344 4.317 4.317 0 01-.1 1.763.396.396 0 01-.387.301c-.029 0-.072 0-.1-.014a.42.42 0 01-.287-.502zM5.748.858A.387.387 0 116.491.64a.387.387 0 01-.743.217zM4.525 0a.4.4 0 110 .803A3.706 3.706 0 00.827 4.5c0 .387.057.774.186 1.16a.391.391 0 01-.258.502c-.043.015-.086.015-.129.015-.172 0-.33-.1-.372-.273A4.305 4.305 0 01.024 4.5c0-2.48 2.021-4.5 4.5-4.5zM1.802 6.994a3.724 3.724 0 002.723 1.204.4.4 0 110 .802 4.494 4.494 0 01-3.311-1.462.39.39 0 01.029-.559c.157-.157.4-.143.559.015z"
+                      />
+                    </svg>
+                  </span>
+                  <span />
+                </div>
               </div>
             </div>
             <div
@@ -537,23 +549,27 @@ exports[`<ExecutionLogView /> tests snapshot test 1`] = `
             <div
               class=""
             >
-              <div>
-                <span
-                  class="bp3-icon StyledProps--main statusIcon notstarted icon"
-                  data-icon="pending"
-                >
-                  <svg
-                    height="16"
-                    viewBox="0 0 9 9"
-                    width="16"
-                    xmlns="http://www.w3.org/2000/svg"
+              <div
+                class="stageName"
+              >
+                <div>
+                  <span
+                    class="bp3-icon StyledProps--main statusIcon notstarted icon"
+                    data-icon="pending"
                   >
-                    <path
-                      d="M8.206 2.709a.404.404 0 01-.215.057.443.443 0 01-.343-.186c-.13-.215-.287-.402-.445-.588a.39.39 0 01.015-.559.39.39 0 01.558.014c.201.215.387.459.545.717a.38.38 0 01-.115.545zM5.987 7.868A3.705 3.705 0 007.45 6.72a.392.392 0 01.56-.071.392.392 0 01.07.559 4.62 4.62 0 01-1.776 1.404c-.058.029-.1.029-.158.029a.402.402 0 01-.373-.244.411.411 0 01.215-.53zM8.078 5.403c.13-.473.143-.974.086-1.447a.39.39 0 01.344-.445.39.39 0 01.444.344 4.317 4.317 0 01-.1 1.763.396.396 0 01-.387.301c-.029 0-.072 0-.1-.014a.42.42 0 01-.287-.502zM5.748.858A.387.387 0 116.491.64a.387.387 0 01-.743.217zM4.525 0a.4.4 0 110 .803A3.706 3.706 0 00.827 4.5c0 .387.057.774.186 1.16a.391.391 0 01-.258.502c-.043.015-.086.015-.129.015-.172 0-.33-.1-.372-.273A4.305 4.305 0 01.024 4.5c0-2.48 2.021-4.5 4.5-4.5zM1.802 6.994a3.724 3.724 0 002.723 1.204.4.4 0 110 .802 4.494 4.494 0 01-3.311-1.462.39.39 0 01.029-.559c.157-.157.4-.143.559.015z"
-                    />
-                  </svg>
-                </span>
-                <span />
+                    <svg
+                      height="16"
+                      viewBox="0 0 9 9"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M8.206 2.709a.404.404 0 01-.215.057.443.443 0 01-.343-.186c-.13-.215-.287-.402-.445-.588a.39.39 0 01.015-.559.39.39 0 01.558.014c.201.215.387.459.545.717a.38.38 0 01-.115.545zM5.987 7.868A3.705 3.705 0 007.45 6.72a.392.392 0 01.56-.071.392.392 0 01.07.559 4.62 4.62 0 01-1.776 1.404c-.058.029-.1.029-.158.029a.402.402 0 01-.373-.244.411.411 0 01.215-.53zM8.078 5.403c.13-.473.143-.974.086-1.447a.39.39 0 01.344-.445.39.39 0 01.444.344 4.317 4.317 0 01-.1 1.763.396.396 0 01-.387.301c-.029 0-.072 0-.1-.014a.42.42 0 01-.287-.502zM5.748.858A.387.387 0 116.491.64a.387.387 0 01-.743.217zM4.525 0a.4.4 0 110 .803A3.706 3.706 0 00.827 4.5c0 .387.057.774.186 1.16a.391.391 0 01-.258.502c-.043.015-.086.015-.129.015-.172 0-.33-.1-.372-.273A4.305 4.305 0 01.024 4.5c0-2.48 2.021-4.5 4.5-4.5zM1.802 6.994a3.724 3.724 0 002.723 1.204.4.4 0 110 .802 4.494 4.494 0 01-3.311-1.462.39.39 0 01.029-.559c.157-.157.4-.143.559.015z"
+                      />
+                    </svg>
+                  </span>
+                  <span />
+                </div>
               </div>
             </div>
             <div

@@ -18,7 +18,6 @@ import {
 } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
-import LogAnalysis from '@cv/components/ExecutionVerification/components/LogAnalysisContainer/LogAnalysis'
 import noDataImage from '@cv/assets/noData.svg'
 import type { ClusterTypesServiceScreen, LogAnalysisContentProps } from './LogAnalysis.types'
 import type { MinMaxAngleState } from '../ExecutionVerification/components/LogAnalysisContainer/LogAnalysisView.container.types'
@@ -26,8 +25,10 @@ import { getClusterTypes } from '../ExecutionVerification/components/LogAnalysis
 import type { EventTypeFullName } from '../ExecutionVerification/components/LogAnalysisContainer/LogAnalysis.constants'
 import LogFilters from './components/LogFilters/LogFilters'
 import { RadarChartAngleLimits } from '../ExecutionVerification/components/LogAnalysisContainer/LogAnalysisView.container.constants'
+import LogAnalysisForServiceHealth from './components/LogAnalysisForServiceHealth/LogAnalysisForServiceHealth'
 import css from './LogAnalysis.module.scss'
 
+// ⭐️ Service health logs screen
 export const LogAnalysisContent: React.FC<LogAnalysisContentProps> = ({
   monitoredServiceIdentifier,
   startTime,
@@ -207,7 +208,7 @@ export const LogAnalysisContent: React.FC<LogAnalysisContentProps> = ({
 
     return (
       <>
-        <LogAnalysis
+        <LogAnalysisForServiceHealth
           data={logsData}
           clusterChartData={clusterChartData}
           filteredAngle={minMaxAngle}

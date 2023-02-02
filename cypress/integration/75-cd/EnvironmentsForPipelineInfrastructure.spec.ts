@@ -39,7 +39,7 @@ describe('Environment for Pipeline', () => {
 
   it('Environment Addition & YAML/visual parity', () => {
     cy.wait(500)
-    cy.contains('h2', 'No Environments Available').should('be.visible')
+    cy.contains('h2', 'You have no Environments').should('be.visible')
     cy.contains('span', 'New Environment').should('be.visible')
     cy.contains('span', 'New Environment').click()
     cy.wait(1000)

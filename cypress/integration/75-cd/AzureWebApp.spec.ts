@@ -4,7 +4,8 @@ import {
   postServiceCall,
   cdFailureStrategiesYaml,
   azureStrategiesYamlSnippets,
-  featureFlagsCall
+  featureFlagsCall,
+  servicesYaml
 } from '../../support/70-pipeline/constants'
 import { environmentFetchCall, environmentSaveCall } from '../../support/75-cd/constants'
 
@@ -51,6 +52,7 @@ describe('Azure web app end to end test', () => {
     cy.intercept('POST', environmentSaveCall, {
       fixture: 'ng/api/environmentsV2.post.json'
     }).as('environmentCreationCall')
+    cy.intercept('POST', servicesYaml, { fixture: 'ng/api/servicesV2/serviceYamlAzureWebApp' }).as('serviceYaml')
     cy.intercept('GET', azureStrategiesYamlSnippets, { fixture: 'ng/api/pipelines/kubernetesYamlSnippet' }).as(
       'azureYamlSnippet'
     )
@@ -81,6 +83,7 @@ describe('Azure web app end to end test', () => {
     cy.wait('@servicesV2Call')
     cy.contains('span', 'Add Service').should('be.visible').click()
     cy.get('input[name="name"]').should('be.visible').type('testService').should('have.value', 'testService')
+    cy.wait(1000)
 
     // adding a startup command
     cy.contains('span', 'Add Startup Command').should('be.visible').click()
@@ -125,7 +128,7 @@ describe('Azure web app end to end test', () => {
 
     // creating a new infrastructure
     cy.wait(500)
-    cy.get('label[for="infrastructureRef"] + div[class="bp3-form-content"] span[data-icon="fixed-input"]')
+    cy.get('label[for="infrastructure"] + div[class="bp3-form-content"] span[data-icon="fixed-input"]')
       .should('be.visible')
       .click()
     cy.get('span[class="MultiTypeInput--menuItemLabel"]').contains('Runtime input').click()

@@ -125,7 +125,7 @@ function WrapperComponent(props: { initialValues: any }): JSX.Element {
         {formikProps => {
           return (
             <FormikForm>
-              <SchedulePanel {...defaultTriggerConfigDefaultProps} formikProps={formikProps} />
+              <SchedulePanel {...defaultTriggerConfigDefaultProps} formikProps={formikProps} isFixedUTCTime />
               <Button text="Submit" className="submitButton" type="submit" />
             </FormikForm>
           )

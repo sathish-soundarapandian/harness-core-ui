@@ -12,24 +12,21 @@ import { Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { getRiskColorValue } from '@cv/utils/CommonUtils'
+import type { AbstractAnalysedNode } from 'services/cv'
 import { HexagonCoordinates, drawGrid, getHexagonSubPartSize } from './DeploymentNodes.utils'
-import {
-  DeploymentNodeAnalysisResult,
-  DeploymentNodeSubPartSize,
-  DefaultNodeSubPartSize
-} from './DeploymentNodes.constants'
+import { DeploymentNodeSubPartSize, DefaultNodeSubPartSize } from './DeploymentNodes.constants'
 import css from './DeploymentNodes.module.scss'
 
 export interface DeploymentNodesProps {
   className?: string
-  nodes: DeploymentNodeAnalysisResult[]
-  onClick?: (node: DeploymentNodeAnalysisResult) => void
-  selectedNode?: DeploymentNodeAnalysisResult
+  nodes: AbstractAnalysedNode[]
+  onClick?: (node: AbstractAnalysedNode) => void
+  selectedNode?: AbstractAnalysedNode
   nodeType?: string
 }
 
 interface NodeHealthPopoverProps {
-  analysisResult: DeploymentNodeAnalysisResult
+  analysisResult: AbstractAnalysedNode
 }
 
 function NodeHealthPopover(props: NodeHealthPopoverProps): JSX.Element {
@@ -40,16 +37,16 @@ function NodeHealthPopover(props: NodeHealthPopoverProps): JSX.Element {
       <Container
         className={cx(css.nodeHealth, css.popoverNodeHealth)}
         height={10}
-        style={{ backgroundColor: getRiskColorValue(analysisResult?.risk) }}
+        style={{ backgroundColor: getRiskColorValue(analysisResult?.verificationResult) }}
       />
       <Container>
         <Text color={Color.BLACK} font={{ weight: 'bold' }}>
-          {analysisResult?.hostName}
+          {analysisResult?.nodeIdentifier}
         </Text>
-        <Text color={Color.BLACK_100}>{`${analysisResult?.anomalousMetricsCount} ${getString(
+        <Text color={Color.BLACK_100}>{`${analysisResult?.failedMetrics ?? 0} ${getString(
           'pipeline.verification.metricsInViolation'
         )}`}</Text>
-        <Text color={Color.BLACK_100}>{`${analysisResult?.anomalousLogClustersCount} ${getString(
+        <Text color={Color.BLACK_100}>{`${analysisResult?.failedLogClusters ?? 0} ${getString(
           'pipeline.verification.logClustersInViolation'
         )}`}</Text>
       </Container>
@@ -62,7 +59,7 @@ export function DeploymentNodes(props: DeploymentNodesProps): JSX.Element {
   const ref = useRef<HTMLDivElement>(null)
   const [coordinates, setCoordinates] = useState<HexagonCoordinates[]>([])
   const [hexagonPartSizes, setHexagonPartSizes] = useState<DeploymentNodeSubPartSize>(DefaultNodeSubPartSize)
-  const [displayTooltip, setDisplayTooltip] = useState<DeploymentNodeAnalysisResult | undefined>()
+  const [displayTooltip, setDisplayTooltip] = useState<AbstractAnalysedNode | undefined>()
 
   useLayoutEffect(() => {
     if (!ref?.current) return
@@ -80,7 +77,7 @@ export function DeploymentNodes(props: DeploymentNodesProps): JSX.Element {
       <Container className={cx(css.main, className)}>
         <Container className={css.hexagonList} ref={ref}>
           {coordinates.map((coordinate, index) => {
-            const nodeHealthColor = getRiskColorValue(nodes[index]?.risk)
+            const nodeHealthColor = getRiskColorValue(nodes[index]?.verificationResult)
             return (
               <Container
                 key={index}

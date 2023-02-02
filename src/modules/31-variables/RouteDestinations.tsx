@@ -15,7 +15,7 @@ import routes from '@common/RouteDefinitions'
 import { accountPathProps, projectPathProps, variablePathProps } from '@common/utils/routeUtils'
 
 import { AccountSideNavProps } from '@common/RouteDestinations'
-import AuditTrailFactory from '@audit-trail/factories/AuditTrailFactory'
+import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'

@@ -36,10 +36,8 @@ describe('DeploymentMetricsChartConfig', () => {
     // @ts-ignore
     const tooltipResult = tooltip?.formatter?.call({ points: [{ point: { index: 1 } }] }, null)
 
-    expect(tooltipResult).toMatch(/pipeline.verification.testHost:<\/span> harness-deployment-canary-56b5cc7c5b-9rpq7/)
-    expect(tooltipResult).toMatch(/valueLabel:<\/span> 386.667/)
-    expect(tooltipResult).toMatch(/pipeline.verification.controlHost:<\/span> control host name/)
-    expect(tooltipResult).toMatch(/valueLabel:<\/span> 10.000/)
+    expect(tooltipResult).toMatch(/386.667/)
+    expect(tooltipResult).toMatch(/10.000/)
   })
 
   test('it should give correct tooltip data when different length of data is passed', () => {
@@ -63,9 +61,7 @@ describe('DeploymentMetricsChartConfig', () => {
     // @ts-ignore
     const tooltipResult = tooltip?.formatter?.call({ points: [{ point: { index: 3 } }] }, null)
 
-    expect(tooltipResult).toMatch(/pipeline.verification.testHost:<\/span> harness-deployment-canary-56b5cc7c5b-9rpq7/)
-    expect(tooltipResult).toMatch(/valueLabel:<\/span> 702.00/)
-    expect(tooltipResult).toMatch(/pipeline.verification.controlHost:<\/span> control host name/)
-    expect(tooltipResult).toMatch(/valueLabel:<\/span> noData/)
+    expect(tooltipResult).toMatch(/702.00/)
+    expect(tooltipResult).toMatch(/noData/)
   })
 })

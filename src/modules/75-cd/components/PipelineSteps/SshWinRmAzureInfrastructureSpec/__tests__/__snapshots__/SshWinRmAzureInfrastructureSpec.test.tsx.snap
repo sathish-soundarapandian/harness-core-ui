@@ -508,7 +508,7 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="flex-grow: 1;"
+                      style="flex-grow: 1; width: 100%;"
                     >
                       <button
                         class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
@@ -1202,7 +1202,7 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="flex-grow: 1;"
+                      style="flex-grow: 1; width: 100%;"
                     >
                       <button
                         class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
@@ -1883,7 +1883,7 @@ exports[`Test Azure Infrastructure Spec behavior Should call onUpdate if valid v
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="flex-grow: 1;"
+                style="flex-grow: 1; width: 100%;"
               >
                 <button
                   class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
@@ -2452,7 +2452,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view for inp
             >
               <div
                 class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                style="flex-grow: 1;"
+                style="flex-grow: 1; width: 100%;"
               >
                 <button
                   class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
@@ -2915,7 +2915,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with em
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="flex-grow: 1;"
+                      style="flex-grow: 1; width: 100%;"
                     >
                       <button
                         class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
@@ -3508,7 +3508,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with ru
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                      style="flex-grow: 1;"
+                      style="flex-grow: 1; width: 100%;"
                     >
                       <div
                         class="TextInput--main MultiTypeInput--input"
@@ -4178,7 +4178,7 @@ exports[`Test Azure Infrastructure Spec snapshot Should render edit view with va
                   >
                     <div
                       class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                      style="flex-grow: 1;"
+                      style="flex-grow: 1; width: 100%;"
                     >
                       <button
                         class="bp3-button Button--button StyledProps--font StyledProps--main value Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"

@@ -175,13 +175,17 @@ export class AzureWebAppInfrastructureSpec extends PipelineStep<AzureWebAppInfra
             projectIdentifier,
             connectorRef: obj.spec?.connectorRef
           }
-        }).then(response => {
-          const values: CompletionItemInterface[] = []
-          defaultTo(response?.data?.subscriptions, []).map(sub =>
-            values.push({ label: sub.subscriptionId, insertText: sub.subscriptionId, kind: CompletionItemKind.Field })
-          )
-          return values
         })
+          .then(response => {
+            const values: CompletionItemInterface[] = []
+            defaultTo(response?.data?.subscriptions, []).map(sub =>
+              values.push({ label: sub.subscriptionId, insertText: sub.subscriptionId, kind: CompletionItemKind.Field })
+            )
+            return values
+          })
+          .catch(err => {
+            return err?.message
+          })
       }
     }
 
@@ -223,14 +227,18 @@ export class AzureWebAppInfrastructureSpec extends PipelineStep<AzureWebAppInfra
             connectorRef: obj.spec?.connectorRef
           },
           subscriptionId: obj.spec?.subscriptionId
-        }).then(
-          response =>
-            response?.data?.resourceGroups?.map(rg => ({
-              label: rg.resourceGroup,
-              insertText: rg.resourceGroup,
-              kind: CompletionItemKind.Field
-            })) || /* istanbul ignore next */ []
-        )
+        })
+          .then(
+            response =>
+              response?.data?.resourceGroups?.map(rg => ({
+                label: rg.resourceGroup,
+                insertText: rg.resourceGroup,
+                kind: CompletionItemKind.Field
+              })) || /* istanbul ignore next */ []
+          )
+          .catch(err => {
+            return err?.message
+          })
       }
     }
 

@@ -390,7 +390,7 @@ function FormContent({
           label={getString('pipeline.jiraApprovalStep.connectorRef')}
           className={css.connector}
           connectorLabelClass={css.connectorLabel}
-          width={390}
+          width={372}
           placeholder={getString('connectors.selectConnector')}
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
@@ -444,7 +444,7 @@ function FormContent({
                 ? getString('pipeline.jiraApprovalStep.fetchingProjectsPlaceholder')
                 : projectsFetchError?.message
                 ? projectsFetchError?.message
-                : getString('pipeline.jiraCreateStep.selectProject')
+                : getString('common.selectProject')
             }
             disabled={isApprovalStepFieldDisabled(readonly, fetchingProjects)}
             multiTypeInputProps={{

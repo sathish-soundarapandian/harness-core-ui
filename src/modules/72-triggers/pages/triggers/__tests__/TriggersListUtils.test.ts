@@ -98,7 +98,7 @@ const artifactTriggerCategoryItems = [
 
 const manifestTriggerCategoryItems = [
   {
-    itemLabel: 'pipeline.manifestTypeLabels.HelmChartLabel',
+    itemLabel: 'common.HelmChartLabel',
     value: 'HelmChart',
     iconName: 'service-helm'
   }

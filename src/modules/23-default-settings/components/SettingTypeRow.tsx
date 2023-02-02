@@ -64,6 +64,32 @@ const getLowestAvailableScope = (allowedScopes: SettingDTO['allowedScopes'] | un
 }
 
 type SettingChangedViaType = 'RESTORE' | 'UPDATE' | undefined
+
+export const SettingTypeRowHeader: React.FC = () => {
+  const { getString } = useStrings()
+  return (
+    <Layout.Horizontal padding={{ top: 'small', bottom: 'small' }} className={css.settingRowHeader}>
+      <Container flex={{ alignItems: 'center' }} className={css.rowHeaderLabel}>
+        <Text font={{ variation: FontVariation.BODY2 }}>{getString('name')}</Text>
+      </Container>
+      <Container flex={{ alignItems: 'center' }} className={css.typeRenderer}>
+        <Text font={{ variation: FontVariation.BODY2 }}>{getString('valueLabel')}</Text>
+      </Container>
+
+      <Container flex={{ alignItems: 'center' }} className={css.settingRestoreRow}>
+        <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} width="100%" spacing="large">
+          <Text font={{ variation: FontVariation.BODY2 }}>
+            <span className={css.emptyCheckBoxSpace} />
+          </Text>
+        </Layout.Horizontal>
+      </Container>
+      <Container flex={{ alignItems: 'center' }} className={css.settingOverride}>
+        <Text font={{ variation: FontVariation.BODY2 }}>{getString('defaultSettings.allowOverrides')}</Text>
+      </Container>
+    </Layout.Horizontal>
+  )
+}
+
 const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
   settingTypeHandler,
   onSettingChange,
@@ -99,70 +125,83 @@ const SettingTypeRow: React.FC<SettingTypeRowProps> = ({
     updateSettingChangedVia('UPDATE')
   }
   return (
-    <Layout.Horizontal>
-      <Container flex={{ alignItems: 'center' }} className={css.settingLabelContainer}>
-        <Container flex={{ alignItems: 'center' }} className={cx(isSubCategory && css.subCategoryLabel)}>
-          <Text
-            font={{ variation: FontVariation.BODY2 }}
-            tooltipProps={{ dataTooltipId: `defaultSettingsForm_${settingType}` }}
+    <Layout.Vertical>
+      <Layout.Horizontal padding={isSubCategory ? { top: 'none', bottom: 'none' } : { top: 'small', bottom: 'small' }}>
+        <Container flex={{ alignItems: 'center' }} className={css.settingLabelContainer}>
+          <Container
+            flex={{ alignItems: 'center' }}
+            className={cx(isSubCategory && css.subCategoryLabel)}
+            padding={!isSubCategory ? { top: 'none', bottom: 'none' } : { top: 'medium', bottom: 'medium' }}
           >
-            {getString(label)}
-          </Text>
+            <Text
+              font={{ variation: FontVariation.BODY2 }}
+              tooltipProps={{ dataTooltipId: `defaultSettingsForm_${settingType}` }}
+            >
+              {getString(label)}
+            </Text>
+          </Container>
         </Container>
-      </Container>
-      <Container flex={{ alignItems: 'center' }} className={css.typeRenderer}>
-        {settingRenderer({
-          identifier: settingType,
-          onSettingSelectionChange: onSettingChangeLocal,
-          onRestore: onRestoreLocal,
-          settingValue: settingValue || undefined,
-          categoryAllSettings: allSettings,
-          setFieldValue,
-          errorMessage
-        })}
-      </Container>
+        <Container flex={{ alignItems: 'center' }} className={css.typeRenderer}>
+          {settingRenderer({
+            identifier: settingType,
+            onSettingSelectionChange: onSettingChangeLocal,
+            onRestore: onRestoreLocal,
+            settingValue: settingValue || undefined,
+            categoryAllSettings: allSettings,
+            setFieldValue,
+            errorMessage
+          })}
+        </Container>
 
-      <Container flex={{ alignItems: 'center' }} className={css.settingOverrideRestore}>
-        <Layout.Horizontal flex={{ alignItems: 'center' }} spacing="large">
+        <Container flex={{ alignItems: 'center' }} className={css.settingRestoreRow}>
+          <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} width="100%" spacing="large">
+            {(settingChangedVia !== 'UPDATE' && settingValue?.settingSource !== currentScope) ||
+            !settingValue?.isSettingEditable ? (
+              <Text
+                icon="info"
+                color={Color.BLUE_600}
+                iconProps={{ color: Color.BLUE_600 }}
+                padding={{ left: 'small' }}
+              >
+                {settingValue?.settingSource !== 'DEFAULT'
+                  ? getString('defaultSettings.inheritedFrom', {
+                      source: getString(getSettingSourceLabel(settingValue?.settingSource) as keyof StringsMap)
+                    })
+                  : getString('common.configureOptions.defaultValue')}
+              </Text>
+            ) : (
+              settingChangedVia !== 'RESTORE' && (
+                <Button
+                  className={css.settingRestore}
+                  size={ButtonSize.SMALL}
+                  tooltipProps={{ dataTooltipId: 'defaultSettingsFormRestoreToDefault' }}
+                  icon="reset"
+                  iconProps={{ color: Color.BLUE_700 }}
+                  onClick={onRestoreLocal}
+                  text={getString('defaultSettings.restoreToDefault')}
+                  variation={ButtonVariation.LINK}
+                />
+              )
+            )}
+          </Layout.Horizontal>
+        </Container>
+        <Container flex={{ alignItems: 'center' }} className={css.settingOverride}>
           {getLowestAvailableScope(settingValue?.allowedScopes) ==
             getCurrentScope({ projectIdentifier, orgIdentifier, accountId }) || !settingValue?.isSettingEditable ? (
             <span className={css.emptyCheckBoxSpace} />
           ) : (
             <Checkbox
               data-tooltip-id={'defaultSettingsFormOverrideAllow'}
-              label={getString('defaultSettings.allowOverrides')}
               checked={allowOverride}
               onChange={(event: React.FormEvent<HTMLInputElement>) => {
                 onAllowOverride(event.currentTarget.checked)
               }}
             />
           )}
-          {(settingChangedVia !== 'UPDATE' && settingValue?.settingSource !== currentScope) ||
-          !settingValue?.isSettingEditable ? (
-            <Text icon="info" color={Color.BLUE_600} iconProps={{ color: Color.BLUE_600 }} padding={{ left: 'small' }}>
-              {settingValue?.settingSource !== 'DEFAULT'
-                ? getString('defaultSettings.inheritedFrom', {
-                    source: getString(getSettingSourceLabel(settingValue?.settingSource) as keyof StringsMap)
-                  })
-                : getString('common.configureOptions.defaultValue')}
-            </Text>
-          ) : (
-            settingChangedVia !== 'RESTORE' && (
-              <Button
-                className={css.settingRestore}
-                size={ButtonSize.SMALL}
-                tooltipProps={{ dataTooltipId: 'defaultSettingsFormRestoreToDefault' }}
-                icon="reset"
-                iconProps={{ color: Color.BLUE_700 }}
-                onClick={onRestoreLocal}
-                text={getString('defaultSettings.restoreToDefault')}
-                variation={ButtonVariation.LINK}
-              />
-            )
-          )}
-        </Layout.Horizontal>
-      </Container>
-    </Layout.Horizontal>
+        </Container>
+      </Layout.Horizontal>
+      <hr className={cx(isSubCategory ? css.rowBorderLineForSubCategory : css.rowBorderLine)} />
+    </Layout.Vertical>
   )
 }
 export default SettingTypeRow

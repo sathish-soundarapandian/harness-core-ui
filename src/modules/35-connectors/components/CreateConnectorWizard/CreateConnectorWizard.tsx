@@ -111,7 +111,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     onSuccess: onSuccessWithEventTracking
   }
 
-  const { CVNG_ENABLED, PL_ENABLE_GOOGLE_SECRET_MANAGER_IN_NG, SPOT_ELASTIGROUP_NG, CDS_TAS_NG } = useFeatureFlags()
+  const { CVNG_ENABLED, SPOT_ELASTIGROUP_NG, CDS_TAS_NG } = useFeatureFlags()
 
   useTrackEvent(ConnectorActions.StartCreateConnector, {
     category: Category.CONNECTOR,
@@ -201,7 +201,7 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
     case Connectors.CUSTOM_SECRET_MANAGER:
       return <CreateCustomSMConnector {...commonProps} />
     case Connectors.GcpSecretManager:
-      return PL_ENABLE_GOOGLE_SECRET_MANAGER_IN_NG ? <CreateGCPSecretManager {...commonProps} /> : null
+      return <CreateGCPSecretManager {...commonProps} />
     case Connectors.SPOT:
       return SPOT_ELASTIGROUP_NG ? <SpotConnector {...commonProps} /> : null
     case Connectors.AZURE_ARTIFACTS:

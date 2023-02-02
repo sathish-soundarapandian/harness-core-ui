@@ -4,6 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
+/* istanbul ignore file */
 
 import React from 'react'
 import { Redirect, useLocation, useParams } from 'react-router-dom'
@@ -23,20 +24,25 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import IACMSideNav from '@iacm/components/IACMSideNav'
 import routes from '@common/RouteDefinitions'
 import { getStyles } from '@iacm/utils'
-import IACMResourceStackWizard from '@iacm/components/IACMResourceStackWizard'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import ExecutionGraph from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
+import RbacButton from '@rbac/components/Button/Button'
+import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
+import { usePermission } from '@rbac/hooks/usePermission'
+import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 
 const customComponents: IACMCustomMicroFrontendProps['customComponents'] = {
   ApprovalStageOverview,
   ApprovalStageExecution,
   ApprovalAdvancedSpecifications,
   SaveTemplateButton,
-  IACMResourceStackWizard,
   MultiTypeConnectorField,
   MultiTypeFieldSelector,
-  ExecutionGraph
+  ExecutionGraph,
+  RbacOptionsMenuButton,
+  RbacButton,
+  RbacMenuItem
 }
 
 const customFunctions: IACMCustomMicroFrontendProps['customFunctions'] = {
@@ -49,7 +55,8 @@ const customFunctions: IACMCustomMicroFrontendProps['customFunctions'] = {
 const customHooks: IACMCustomMicroFrontendProps['customHooks'] = {
   usePipelineContext,
   useLocation,
-  useVariablesExpression
+  useVariablesExpression,
+  usePermission
 }
 
 const IACMSideNavProps: SidebarContext = {
@@ -65,16 +72,15 @@ const RedirectToIACMProject = (): React.ReactElement => {
   if (selectedProject) {
     return (
       <Redirect
-        to={routes.toProjectOverview({
+        to={routes.toIACMStacks({
           accountId,
           orgIdentifier: selectedProject.orgIdentifier || '',
-          projectIdentifier: selectedProject.identifier,
-          module: 'iacm'
+          projectIdentifier: selectedProject.identifier
         })}
       />
     )
   } else {
-    return <Redirect to={routes.toIACMMicroFrontend({ accountId })} />
+    return <Redirect to={routes.toIACMOverview({ accountId })} />
   }
 }
 

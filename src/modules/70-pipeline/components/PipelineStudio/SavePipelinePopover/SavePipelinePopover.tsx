@@ -60,6 +60,7 @@ import type { Pipeline } from '@pipeline/utils/types'
 import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateErrors'
 import { sanitize } from '@common/utils/JSONUtils'
 import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHandling/utils'
+import { hasChainedPipelineStage } from '@pipeline/utils/stageHelpers'
 import usePipelineErrors from '../PipelineCanvas/PipelineErrors/usePipelineErrors'
 import css from './SavePipelinePopover.module.scss'
 
@@ -154,6 +155,8 @@ function SavePipelinePopover(
   const isTemplatesEnabled = templatesFeatureEnabled && canEdit && !pipeline?.template
 
   const isSaveDisabled = isReadonly || !isUpdated || isIntermittentLoading
+
+  const _hasChainedPipelineStage = React.useMemo(() => hasChainedPipelineStage(pipeline?.stages), [pipeline?.stages])
 
   const { save } = useSaveAsTemplate({
     data: pipeline,
@@ -461,7 +464,7 @@ function SavePipelinePopover(
     ? getString('common.viewAndExecutePermissions')
     : getString('common.readonlyPermissions')
 
-  const tooltip = isSaveDisabled ? (
+  const tooltip = isReadonly ? (
     <div className={css.readonlyAccessTag}>
       <Icon name="eye-open" size={16} />
       <span className={css.readonlyAccessText}>{permissionText}</span>
@@ -482,7 +485,7 @@ function SavePipelinePopover(
 
   if (loading) {
     return (
-      <Container padding={'medium'}>
+      <Container padding={{ left: 'medium', right: 'medium' }}>
         <Spinner size={Spinner.SIZE_SMALL} />
       </Container>
     )
@@ -514,7 +517,11 @@ function SavePipelinePopover(
       onClick={saveAndPublish}
       tooltip={tooltip}
     >
-      <SplitButtonOption onClick={save} disabled={isIntermittentLoading} text={getString('common.saveAsTemplate')} />
+      <SplitButtonOption
+        onClick={save}
+        disabled={isIntermittentLoading || _hasChainedPipelineStage}
+        text={getString('common.saveAsTemplate')}
+      />
     </SplitButton>
   )
 }

@@ -1,0 +1,83 @@
+{
+  "pipeline": {
+    "name": "pip",
+    "identifier": "pip",
+    "projectIdentifier": "Fardeen",
+    "orgIdentifier": "default",
+    "tags": {},
+    "stages": [
+      {
+        "stage": {
+          "name": "custom",
+          "identifier": "custom",
+          "description": "",
+          "type": "Custom",
+          "spec": {
+            "execution": {
+              "steps": [
+                {
+                  "step": {
+                    "type": "ShellScript",
+                    "name": "Shell Script_1",
+                    "identifier": "ShellScript_1",
+                    "spec": {
+                      "shell": "Bash",
+                      "onDelegate": true,
+                      "source": {
+                        "type": "Inline",
+                        "spec": {
+                          "script": "exit 0"
+                        }
+                      },
+                      "environmentVariables": [],
+                      "outputVariables": []
+                    },
+                    "timeout": "10m"
+                  }
+                }
+              ]
+            }
+          },
+          "tags": {},
+          "when": {
+            "pipelineStatus": "Success",
+            "condition": "<+pipeline.name == \"pip\" && <+pipeline.identifier> == \"pip\""
+          }
+        }
+      },
+      {
+        "stage": {
+          "name": "parStage",
+          "identifier": "parStage",
+          "description": "",
+          "type": "Pipeline",
+          "spec": {
+            "org": "default",
+            "pipeline": "Child_Pipeline_1",
+            "project": "Fardeen",
+            "inputs": {
+              "identifier": "Child_Pipeline_1",
+              "template": {
+                "templateInputs": {
+                  "properties": {
+                    "ci": {
+                      "codebase": {
+                        "build": "<+input>"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "outputs": [
+              {
+                "name": "output",
+                "value": "val"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

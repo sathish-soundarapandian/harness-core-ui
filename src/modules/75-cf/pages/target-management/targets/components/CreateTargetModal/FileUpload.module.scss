@@ -21,4 +21,5 @@
 .uploadResults {
   border: 1px solid var(--grey-200);
   border-radius: var(--spacing-xsmall);
+  overflow: auto;
 }

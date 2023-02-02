@@ -12,18 +12,20 @@ declare const styles: {
   readonly clusterInputWrapper: string
   readonly connectorRef: string
   readonly connectorRuntime: string
-  readonly credRefWidth: string
   readonly formRow: string
   readonly hostSelect: string
   readonly hostsControls: string
   readonly hostsTextArea: string
   readonly inputWidth: string
+  readonly inputWrapper: string
   readonly lastRow: string
   readonly marginTop: string
+  readonly noMarginTop: string
+  readonly panel: string
+  readonly pdcInfraContainer: string
   readonly previewHostsButton: string
   readonly previewHostsLabel: string
   readonly runtimeWidth: string
-  readonly showPreviewBtn: string
   readonly simultaneousDeployment: string
   readonly specifyFilterRadioGroup: string
   readonly specifyHostsRadioGroup: string

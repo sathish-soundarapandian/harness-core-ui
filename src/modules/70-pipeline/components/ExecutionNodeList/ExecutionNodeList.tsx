@@ -33,8 +33,8 @@ export function ExecutionNodeList(): JSX.Element | null {
   return (
     <div className={css.main}>
       <div className={css.header}>
-        {node?.status && <ExecutionStatusIcon status={node.status as ExecutionStatus} size={20} />}
-        <Text lineClamp={1} font={{ variation: FontVariation.FORM_SUB_SECTION }}>
+        {node.status && <ExecutionStatusIcon status={node.status as ExecutionStatus} size={20} />}
+        <Text data-testid="collapsed-step-name" lineClamp={1} font={{ variation: FontVariation.FORM_SUB_SECTION }}>
           {getString('common.stepName', { name: node.name })}
         </Text>
         <div className={css.actions}>

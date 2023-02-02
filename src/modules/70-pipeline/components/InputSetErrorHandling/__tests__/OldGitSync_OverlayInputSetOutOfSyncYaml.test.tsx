@@ -164,6 +164,16 @@ const TEST_INPUT_SET_FORM_PATH = routes.toInputSetForm({
   ...pipelineModuleParams
 })
 
+const clickOnReconcileButton = async (): Promise<void> => {
+  const reconcileMenuOption = await screen.findByRole('button', {
+    name: /overlay input set menu actions/i
+  })
+  userEvent.click(reconcileMenuOption)
+  const reconcileBtn = await screen.findByText('pipeline.outOfSyncErrorStrip.reconcile')
+  userEvent.click(reconcileBtn)
+  expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+}
+
 const renderGitSyncComponent = (): RenderResult => {
   return render(
     <GitSyncTestWrapper
@@ -201,9 +211,13 @@ describe('Old Git Sync Input Set Error Exp', () => {
     }))
   })
 
-  test('should open yaml view and render out of sync error strip ', async () => {
+  test('should render input set menu action button', async () => {
     renderGitSyncComponent()
-    expect(screen.getByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })).toBeDefined()
+    expect(
+      screen.getByRole('button', {
+        name: /overlay input set menu actions/i
+      })
+    ).toBeDefined()
   })
 
   test('should open reconcile dialog on clicking reconcile button, when loading state is false & input set is not empty', async () => {
@@ -211,11 +225,9 @@ describe('Old Git Sync Input Set Error Exp', () => {
     renderGitSyncComponent()
     jest.runOnlyPendingTimers()
 
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
-    const reconcileDialog = document.getElementsByClassName('bp3-portal')[1] as HTMLElement
+    const reconcileDialog = document.getElementsByClassName('bp3-portal')[2] as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
     const removeInvalidFieldBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
     expect(reconcileDialog).toMatchSnapshot('Reconcile Dialog - Old Git Sync')
@@ -223,7 +235,7 @@ describe('Old Git Sync Input Set Error Exp', () => {
     userEvent.click(removeInvalidFieldBtn)
     let gitSaveBtn: HTMLElement
     await waitFor(async () => {
-      const portalDiv = document.getElementsByClassName('bp3-portal')[1] as HTMLElement
+      const portalDiv = document.getElementsByClassName('bp3-portal')[2] as HTMLElement
       const savePipelinesToGitHeader = await screen.findByText('common.git.saveResourceLabel')
       expect(savePipelinesToGitHeader).toBeInTheDocument()
       const gitSave = await findByTextBody(portalDiv, 'save')
@@ -247,11 +259,9 @@ describe('Old Git Sync Input Set Error Exp', () => {
     renderGitSyncComponent()
     jest.runOnlyPendingTimers()
 
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
-    const reconcileDialog = document.getElementsByClassName('bp3-portal')[1] as HTMLElement
+    const reconcileDialog = document.getElementsByClassName('bp3-portal')[2] as HTMLElement
     await findByTextBody(reconcileDialog, 'pipeline.inputSetErrorStrip.reconcileDialogTitle')
     const removeInvalidFieldBtn = screen.getByRole('button', { name: 'pipeline.inputSets.removeInvalidFields' })
     userEvent.click(removeInvalidFieldBtn)
@@ -271,11 +281,9 @@ describe('Old Git Sync Input Set Error Exp', () => {
     renderGitSyncComponent()
     jest.runOnlyPendingTimers()
 
-    const reconcileBtn = await screen.findByRole('button', { name: 'pipeline.outOfSyncErrorStrip.reconcile' })
-    userEvent.click(reconcileBtn)
-    expect(pipelineng.useYamlDiffForInputSet).toHaveBeenCalled()
+    await clickOnReconcileButton()
 
-    const deleteInputSetModal = document.getElementsByClassName('bp3-portal')[1] as HTMLElement
+    const deleteInputSetModal = document.getElementsByClassName('bp3-portal')[2] as HTMLElement
     await findByTextBody(deleteInputSetModal, 'pipeline.inputSets.invalidOverlayISDesc1')
     const deleteOverlayISBtn = await screen.findByRole('button', { name: 'pipeline.inputSets.deleteOverlayIS' })
     expect(deleteInputSetModal).toMatchSnapshot('Delete Overlay Input Set Modal - OLd Git Sync')

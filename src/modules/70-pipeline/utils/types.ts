@@ -80,8 +80,6 @@ export interface InputSet {
   inputSet: InputSetDTO
 }
 
-export type PartiallyRequired<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
-
 export interface ECSRollingDeployStepInitialValues extends StepElementConfig {
   sameAsAlreadyRunningInstances?: boolean | string
   forceNewDeployment?: boolean | string
@@ -92,4 +90,16 @@ export type TemplateIcons = { [K: string]: string | undefined | TemplateIcons }
 export type TriggerTypeIconAndExecutionText = {
   iconName: IconName
   getText: (startTs?: number, triggeredBy?: string) => string
+}
+
+export interface CloudFunctionExecutionStepInitialValues extends StepElementConfig {
+  spec: {
+    updateFieldMask: string
+  }
+}
+
+export interface CloudFunctionTrafficShiftExecutionStepInitialValues extends StepElementConfig {
+  spec: {
+    trafficPercent: number
+  }
 }

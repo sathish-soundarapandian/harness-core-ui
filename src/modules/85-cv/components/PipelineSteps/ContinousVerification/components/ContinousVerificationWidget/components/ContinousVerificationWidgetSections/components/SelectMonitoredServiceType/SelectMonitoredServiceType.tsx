@@ -25,7 +25,11 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { TemplateUsage } from '@templates-library/utils/templatesUtils'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { TemplateBar } from '@pipeline/components/PipelineStudio/TemplateBar/TemplateBar'
+import { getScopeBasedProjectPathParams } from '@common/components/EntityReference/EntityReference'
+import type { Scope } from '@common/interfaces/SecretsInterface'
 import { MONITORED_SERVICE_TYPE, monitoredServiceTypes } from './SelectMonitoredServiceType.constants'
 import VerifyStepMonitoredServiceInputTemplates from './components/VerifyStepMonitoredServiceInputTemplates/VerifyStepMonitoredServiceInputTemplates'
 import {
@@ -53,6 +57,7 @@ export default function SelectMonitoredServiceType(props: SelectMonitoredService
   const { getString } = useStrings()
   const { getTemplate } = useTemplateSelector()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<PipelineType<ProjectPathProps>>()
+  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const {
     type,
     spec: { versionLabel = '', monitoredServiceTemplateRef = '' }
@@ -85,15 +90,27 @@ export default function SelectMonitoredServiceType(props: SelectMonitoredService
   } = useGetTemplateInputSetYaml({
     templateIdentifier: '',
     queryParams,
+    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
     lazy: true
   })
 
   const onUseTemplate = async (): Promise<void> => {
     const { template } = await getTemplate({ templateType: 'MonitoredService', allowedUsages: [TemplateUsage.USE] })
-    const { versionLabel: latestVersionLabel = '', identifier = '' } = template || {}
+    const { versionLabel: latestVersionLabel = '', identifier = '', templateScope } = template || {}
     if (latestVersionLabel && identifier) {
       await fetchTemplateInputSet({
-        queryParams: { ...queryParams, versionLabel: latestVersionLabel },
+        queryParams: {
+          ...queryParams,
+          ...getScopeBasedProjectPathParams(
+            {
+              accountId: queryParams.accountIdentifier,
+              projectIdentifier: queryParams.projectIdentifier,
+              orgIdentifier: queryParams.orgIdentifier
+            },
+            templateScope as Scope
+          ),
+          versionLabel: latestVersionLabel
+        },
         pathParams: { templateIdentifier: identifier }
       })
     }
@@ -180,12 +197,12 @@ export default function SelectMonitoredServiceType(props: SelectMonitoredService
             </Container>
             {showTemplateButton &&
             type === MONITORED_SERVICE_TYPE.TEMPLATE &&
-            templateData?.identifier &&
-            templateData?.versionLabel ? (
+            monitoredServiceTemplateRef &&
+            versionLabel ? (
               <TemplateBar
                 templateLinkConfig={{
-                  templateRef: templateData.identifier as string,
-                  versionLabel: templateData.versionLabel
+                  templateRef: monitoredServiceTemplateRef as string,
+                  versionLabel
                 }}
                 onOpenTemplateSelector={onUseTemplate}
               />

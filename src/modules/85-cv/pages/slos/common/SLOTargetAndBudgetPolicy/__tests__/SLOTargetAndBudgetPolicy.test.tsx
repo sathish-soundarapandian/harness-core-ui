@@ -10,18 +10,15 @@ import { render, screen } from '@testing-library/react'
 import { Formik } from 'formik'
 import { FormikForm } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
-import {
-  initialFormData,
-  serviceLevelObjective
-} from '@cv/pages/slos/components/CVCreateSLO/__tests__/CVCreateSLO.mock'
+import { initialFormData } from '@cv/pages/slos/components/CVCreateSLOV2/__tests__/CVCreateSLOV2.mock'
 import type { StringKeys } from 'framework/strings'
+import { PeriodLengthTypes, PeriodTypes } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import {
   getPeriodTypeOptions,
   getWindowEndOptionsForMonth,
   getErrorBudget,
   getPeriodLengthOptionsForRolling
-} from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.utils'
-import { PeriodLengthTypes, PeriodTypes } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
+} from '../SLOTargetAndBudgetPolicy.utils'
 import SLOTargetAndBudgetPolicy from '../SLOTargetAndBudgetPolicy'
 
 jest.mock('@cv/pages/slos/components/SLOTargetChart/SLOTargetChart', () => ({
@@ -108,9 +105,14 @@ describe('Test SLOTargetAndBudgetPolicy component', () => {
   })
 
   test('verify getErrorBudget', () => {
-    const { periodType, periodLength, periodLengthType, SLOTargetPercentage } = serviceLevelObjective
+    const { periodType, periodLength, periodLengthType, SLOTargetPercentage } = {
+      periodType: 'Rolling' as any,
+      periodLength: '7',
+      periodLengthType: '' as any,
+      SLOTargetPercentage: 90
+    }
     const errorBudgetParams = { periodType, periodLength, periodLengthType, SLOTargetPercentage }
-    expect(getErrorBudget({ ...errorBudgetParams })).toEqual(43200)
+    expect(getErrorBudget({ ...errorBudgetParams })).toEqual(1008)
     expect(getErrorBudget({ ...errorBudgetParams, SLOTargetPercentage: NaN })).toEqual(0)
     expect(getErrorBudget({ ...errorBudgetParams, SLOTargetPercentage: -1 })).toEqual(0)
     expect(getErrorBudget({ ...errorBudgetParams, SLOTargetPercentage: 101 })).toEqual(0)
@@ -121,20 +123,20 @@ describe('Test SLOTargetAndBudgetPolicy component', () => {
         periodType: PeriodTypes.CALENDAR,
         periodLengthType: PeriodLengthTypes.WEEKLY
       })
-    ).toEqual(10080)
+    ).toEqual(1008)
     expect(
       getErrorBudget({
         ...errorBudgetParams,
         periodType: PeriodTypes.CALENDAR,
         periodLengthType: PeriodLengthTypes.MONTHLY
       })
-    ).toEqual(43200)
+    ).toEqual(4320)
     expect(
       getErrorBudget({
         ...errorBudgetParams,
         periodType: PeriodTypes.CALENDAR,
         periodLengthType: PeriodLengthTypes.QUARTERLY
       })
-    ).toEqual(129600)
+    ).toEqual(12960)
   })
 })

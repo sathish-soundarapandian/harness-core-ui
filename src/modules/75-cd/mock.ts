@@ -112,6 +112,7 @@ export const serviceDetails = {
 
 export const serviceInstances = {
   serviceCount: 10,
+  serviceGrowthTrendData: {},
   serviceInstancesCount: 20,
   prodCount: 10,
   nonProdCount: 10

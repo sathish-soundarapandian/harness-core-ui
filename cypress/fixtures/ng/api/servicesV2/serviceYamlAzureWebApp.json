@@ -1,0 +1,15 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "serviceV2YamlMetadataList": [
+      {
+        "serviceIdentifier": "testService",
+        "serviceYaml": "service:\n  name: testService\n  identifier: testService\n  serviceDefinition:\n    type: AzureWebApp\n    spec:\n      startupCommand:\n        store:\n          type: Git\n          spec:\n            connectorRef: NewGitTestConn1\n            gitFetchType: Branch\n            paths:\n              - path-1\n            branch: branch-1\n  gitOpsEnabled: false\n",
+        "orgIdentifier": "default",
+        "projectIdentifier": "default"
+      }
+    ]
+  },
+  "metaData": null,
+  "correlationId": "49aeb88d-c4fe-40d1-81d0-c3179e09dfd8"
+}

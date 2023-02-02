@@ -12,13 +12,14 @@ export function shouldAutoBuildChart(
 
 export function shouldShowChartComponent(
   chartConfig: { enabled: boolean; chartVisibilityMode: CHART_VISIBILITY_ENUM } | undefined,
-  isQueryRuntimeOrExpression?: boolean
+  isQueryRuntimeOrExpression?: boolean,
+  isConnectorRuntimeOrExpression?: boolean
   // records: Record<string, any>[],
   // fetchingSampleRecordLoading: boolean,
   // query: string
 ): boolean {
   // return !!(query && chartConfig?.enabled && records && records?.length && !fetchingSampleRecordLoading)
-  return Boolean(chartConfig?.enabled && !isQueryRuntimeOrExpression)
+  return Boolean(chartConfig?.enabled && !(isQueryRuntimeOrExpression || isConnectorRuntimeOrExpression))
 }
 
 export function getRecordsRequestBody(

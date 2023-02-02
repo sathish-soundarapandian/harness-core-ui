@@ -31,6 +31,7 @@ import { setAllowedValuesOptions } from '../JiraApproval/helper'
 import { processMultiSelectTypeInputRuntimeValues } from './helper'
 import type { JiraFieldNGWithValue, JiraCreateData } from './types'
 import { JiraUserMultiTypeInput } from './JiraUserMultiTypeInput'
+import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './JiraCreate.module.scss'
 
 export interface JiraFieldsRendererProps {
@@ -98,6 +99,8 @@ function GetMappedFieldComponent({
     ? [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED]
     : [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
 
+  const className = props.deploymentMode ? css.deploymentViewFieldWidth : cx(stepCss.formGroup, stepCss.lg)
+
   useEffect(() => {
     const selectedFieldName = get(props.formik?.values, `${props.fieldPrefix}spec.fields[${index}].name`)
     /* if we have issue type as runtime then required fields are added on UI in runtime form
@@ -115,7 +118,7 @@ function GetMappedFieldComponent({
         disabled={isApprovalStepFieldDisabled(props.readonly)}
         name={formikFieldPath}
         placeholder={selectedField.name}
-        className={css.md}
+        className={className}
         multiTextInputProps={{
           allowableTypes: allowableTypes,
           expressions
@@ -130,11 +133,11 @@ function GetMappedFieldComponent({
         <div className={css.btnPosition}>
           <Label style={{ color: Color.GREY_900 }}>{selectedField?.name}</Label>
           <MultiSelectTypeInput
-            width={390}
+            width={400}
             disabled={isApprovalStepFieldDisabled(props.readonly)}
             name={formikFieldPath}
             placeholder={selectedField.name}
-            className={cx(css.multiSelect, css.md, {
+            className={cx(css.multiSelect, stepCss.md, {
               [css.formError]: !isNil(get(props.formik?.errors, formikFieldPath))
             })}
             multiSelectProps={{
@@ -183,7 +186,7 @@ function GetMappedFieldComponent({
         name={formikFieldPath}
         placeholder={selectedField.name}
         disabled={isApprovalStepFieldDisabled(props.readonly)}
-        className={cx(css.multiSelect, css.md)}
+        className={className}
         multiTypeInputProps={{
           expressions,
           allowableTypes: allowableTypes
@@ -199,6 +202,7 @@ function GetMappedFieldComponent({
         expressions={expressions}
         formikFieldPath={formikFieldPath}
         index={index}
+        className={className}
       />
     )
   } else if (selectedField.name === 'Description') {
@@ -213,7 +217,7 @@ function GetMappedFieldComponent({
         }
       >
         <FormMultiTypeTextAreaField
-          className={css.descriptionField}
+          className={cx(css.descriptionField, { [css.descriptionDeploymentViewWidth]: props.deploymentMode })}
           label={selectedField.name}
           disabled={isApprovalStepFieldDisabled(props.readonly)}
           name={formikFieldPath}

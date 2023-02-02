@@ -300,3 +300,26 @@ export const executionMetadata: ExecutionGraph['executionMetadata'] = {
   projectIdentifier: 'project',
   planExecutionId: 'execution'
 }
+
+export const policyOutputDetails = {
+  policyOutput: {
+    evaluationId: '225214',
+    status: 'pass',
+    policySetDetails: {
+      alwayspass: {
+        status: 'pass',
+        identifier: 'alwayspass',
+        name: 'alwayspass',
+        policyDetails: {
+          alwayspass: {
+            identifier: 'alwayspass',
+            name: 'alwayspass',
+            status: 'pass',
+            denyMessages: '[]',
+            error: ''
+          }
+        }
+      }
+    }
+  } as any
+}

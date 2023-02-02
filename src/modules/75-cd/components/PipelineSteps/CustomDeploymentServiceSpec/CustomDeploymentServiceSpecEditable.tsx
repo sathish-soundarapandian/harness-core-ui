@@ -12,7 +12,10 @@ import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/W
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import { getSelectedDeploymentType, getVariablesHeaderTooltipId } from '@pipeline/utils/stageHelpers'
 import { useStrings } from 'framework/strings'
-import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
+import {
+  DeployTabs,
+  isNewServiceEnvEntity
+} from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { getArtifactsHeaderTooltipId } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
@@ -20,9 +23,11 @@ import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useServiceContext } from '@cd/context/ServiceContext'
 import { FeatureFlag } from '@common/featureFlags'
+import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
+import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { isMultiArtifactSourceEnabled, setupMode } from '../PipelineStepsUtil'
 import type { CustomDeploymentServiceInputFormProps } from './CustomDeploymentServiceSpecInterface'
-import css from './CustomDeploymentServiceSpec.module.scss'
+import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 const CustomDeploymentServiceSpecEditable: React.FC<CustomDeploymentServiceInputFormProps> = ({
   initialValues: { stageIndex = 0, setupModeType, deploymentType, isReadonlyServiceMode = false },
@@ -42,7 +47,7 @@ const CustomDeploymentServiceSpecEditable: React.FC<CustomDeploymentServiceInput
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId || '')
   const selectedDeploymentType = deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating)
   const { isServiceEntityPage } = useServiceContext()
-
+  const isNewService = isNewServiceEnvEntity(!!isSvcEnvEnabled, stage?.stage as DeploymentStageElementConfig)
   const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
     !!isSvcEnvEnabled,
     stage?.stage as DeploymentStageElementConfig,
@@ -80,6 +85,26 @@ const CustomDeploymentServiceSpecEditable: React.FC<CustomDeploymentServiceInput
               />
             )}
           </Card>
+          {(isNewService || isServiceEntityPage) && ( //Config files are only available for creation or readonly mode for service V2
+            <Card className={css.sectionCard} id={getString('pipelineSteps.configFiles')}>
+              <div
+                className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
+                data-tooltip-id={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
+              >
+                {getString('pipelineSteps.configFiles')}
+                <HarnessDocTooltip
+                  tooltipId={getConfigFilesHeaderTooltipId(selectedDeploymentType)}
+                  useStandAlone={true}
+                />
+              </div>
+              <ConfigFilesSelection
+                isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                isPropagating={isPropagating}
+                deploymentType={selectedDeploymentType}
+                readonly={!!readonly}
+              />
+            </Card>
+          )}
         </>
       )}
 

@@ -16,6 +16,7 @@ import {
   SelectOption,
   shouldShowError
 } from '@harness/uicore'
+import SplitPane from 'react-split-pane'
 import { useHistory } from 'react-router-dom'
 import { debounce, pick } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
@@ -132,6 +133,15 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
   } = useContext(FileStoreContext)
   const { accountIdentifier: accountId, orgIdentifier, projectIdentifier } = queryParams
   const history = useHistory()
+
+  const [splitPaneSize, setSplitPaneSize] = React.useState(400)
+  const setSplitPaneSizeDeb = React.useRef(debounce(setSplitPaneSize, 400))
+  const handleStageResize = (size: number): void => {
+    setSplitPaneSizeDeb.current(size)
+  }
+  const resizerStyle = navigator.userAgent.match(/firefox/i)
+    ? { display: 'flow-root list-item' }
+    : { display: 'inline-table' }
 
   React.useEffect(() => {
     if (isModalView) {
@@ -602,8 +612,20 @@ export const FileStore: React.FC<FileStoreProps> = ({ onNodeChange }: FileStoreP
               />
             ) : (
               <Layout.Horizontal style={{ height: isModalView ? 530 : '100%' }}>
-                <StoreExplorer fileStore={fileStore} />
-                <StoreView />
+                <SplitPane
+                  size={splitPaneSize}
+                  split="vertical"
+                  minSize={312}
+                  maxSize={600}
+                  style={{ overflow: 'auto' }}
+                  pane2Style={{ overflow: 'initial', zIndex: 2 }}
+                  resizerStyle={resizerStyle}
+                  onChange={handleStageResize}
+                >
+                  <StoreExplorer fileStore={fileStore} />
+                  <StoreView />
+                </SplitPane>
+
                 <NavigationCheck
                   when={!!tempNodes[0] || !!unsavedNodes[0]}
                   navigate={newPath => {

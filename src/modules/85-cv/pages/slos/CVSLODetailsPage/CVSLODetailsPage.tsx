@@ -16,7 +16,6 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { getErrorMessage, getSearchString } from '@cv/utils/CommonUtils'
-import CVCreateSLO from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO'
 import HeaderTitle from './views/HeaderTitle'
 import HeaderToolbar from './views/HeaderToolbar'
 import DetailsPanel from './DetailsPanel/DetailsPanel'
@@ -166,7 +165,7 @@ const CVSLODetailsPage: React.FC = () => {
                     when: () => !sloDashboardWidget && !isCompositeSLO
                   }}
                 >
-                  {isCompositeSLO ? <CVCreateSLOV2 isComposite /> : <CVCreateSLO />}
+                  {isCompositeSLO ? <CVCreateSLOV2 isComposite /> : <CVCreateSLOV2 />}
                 </Page.Body>
               )
             }

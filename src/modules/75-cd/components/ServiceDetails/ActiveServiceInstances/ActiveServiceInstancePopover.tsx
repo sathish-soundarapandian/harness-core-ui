@@ -14,6 +14,7 @@ import { Color } from '@harness/design-system'
 import { Spinner } from '@blueprintjs/core'
 import { capitalize, defaultTo } from 'lodash-es'
 import {
+  InstanceInfoDTO,
   AzureWebAppInstanceInfoDTO,
   CustomDeploymentInstanceInfoDTO,
   EcsInstanceInfoDTO,
@@ -37,6 +38,23 @@ import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import css from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstances.module.scss'
 
 export type InstanceData = Record<string, Record<string, InstanceDetailsDTO[]>>
+
+/**
+ * @TODO Use this type from cd-ng service file.
+ * Currently BE is not synced with latest BE develop and hence types issues are getting created.
+ * So, did not update cd-ng services and created local type here
+ */
+type GoogleFunctionInstanceInfoDTO = InstanceInfoDTO & {
+  functionName: string
+  infraStructureKey?: string
+  memorySize?: string
+  project: string
+  region: string
+  revision: string
+  runTime?: string
+  source?: string
+  updatedTime?: number
+}
 
 export interface ActiveServiceInstancePopoverProps {
   buildId?: string
@@ -254,6 +272,37 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
             value: (instanceData.instanceInfoDTO as EcsInstanceInfoDTO)?.taskArn || ''
           }
         ]
+      case ServiceDeploymentType.GoogleCloudFunctions: {
+        const instanceInfo = instanceData.instanceInfoDTO as GoogleFunctionInstanceInfoDTO
+        const functionNameArr = instanceInfo?.functionName.split('/')
+        const fuctionName = functionNameArr[functionNameArr.length - 1]
+        return [
+          {
+            label: getString('cd.serviceDashboard.revision'),
+            value: defaultTo(instanceInfo?.revision, '')
+          },
+          {
+            label: getString('cd.serviceDashboard.functionName'),
+            value: defaultTo(fuctionName, '')
+          },
+          {
+            label: getString('cd.serviceDashboard.source'),
+            value: defaultTo(instanceInfo?.source, '')
+          },
+          {
+            label: getString('cd.serviceDashboard.runTime'),
+            value: defaultTo(instanceInfo?.runTime, '')
+          },
+          {
+            label: getString('cd.serviceDashboard.updatedTime'),
+            value: defaultTo(instanceInfo?.updatedTime, '')
+          },
+          {
+            label: getString('cd.serviceDashboard.memorySize'),
+            value: defaultTo(instanceInfo?.memorySize, '')
+          }
+        ]
+      }
       case ServiceDeploymentType.Elastigroup:
         return [
           ...defaultInstanceInfoData,

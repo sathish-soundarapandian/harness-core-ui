@@ -193,10 +193,10 @@ describe('Unit tests for LogAnalysisContainer', () => {
     render(<WrapperComponent {...initialProps} />)
 
     expect((screen.getByTestId('cv.known') as HTMLInputElement).checked).toBe(true)
-    expect((screen.getByTestId('cv.unknown') as HTMLInputElement).checked).toBe(true)
+    expect((screen.getByTestId('cd.getStartedWithCD.healthStatus.unknown') as HTMLInputElement).checked).toBe(true)
     expect((screen.getByTestId('cv.unexpectedFrequency') as HTMLInputElement).checked).toBe(true)
 
-    expect(screen.getByTestId('LogAnalysis_totalClusters')).toHaveTextContent('3')
+    expect(screen.getByTestId('LogAnalysis_totalClusters')).toHaveTextContent('1')
 
     fireEvent.click(screen.getByTestId('cv.known'))
 
@@ -231,7 +231,7 @@ describe('Unit tests for LogAnalysisContainer', () => {
     render(<WrapperComponent {...initialProps} />)
 
     expect((screen.getByTestId('cv.known') as HTMLInputElement).checked).toBe(true)
-    expect((screen.getByTestId('cv.unknown') as HTMLInputElement).checked).toBe(true)
+    expect((screen.getByTestId('cd.getStartedWithCD.healthStatus.unknown') as HTMLInputElement).checked).toBe(true)
     expect((screen.getByTestId('cv.unexpectedFrequency') as HTMLInputElement).checked).toBe(true)
 
     expect(screen.queryByTestId('LogAnalysis_totalClusters')).not.toBeInTheDocument()

@@ -6,8 +6,10 @@
  */
 
 import React from 'react'
-import { render, waitFor, screen, RenderResult, within } from '@testing-library/react'
+import { render, waitFor, screen, RenderResult, within, getByTestId } from '@testing-library/react'
+import { act } from 'react-dom/test-utils'
 import userEvent from '@testing-library/user-event'
+import mockImport from 'framework/utils/mockImport'
 import gitSyncListResponse from '@common/utils/__tests__/mocks/gitSyncRepoListMock.json'
 import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
@@ -397,6 +399,37 @@ describe('CI Pipeline List Page', () => {
         triggerIdentifier: 'preqaeverymonday'
       } as any)
     )
+  })
+
+  test('Verify navigation to Pipeline Studio V1 route works with CI_YAML_VERSIONING FF enabled', async () => {
+    const useGetPipelineListMock = useGetPipelineList as jest.MockedFunction<any>
+    const mutateListOfPipelines = jest.fn().mockResolvedValue(pipelines)
+    useGetPipelineListMock.mockReturnValue({
+      mutate: mutateListOfPipelines,
+      loading: false,
+      cancel: jest.fn()
+    })
+
+    mockImport('@common/hooks/useFeatureFlag', {
+      useFeatureFlags: () => ({ CI_YAML_VERSIONING: true })
+    })
+
+    renderPipelinesListPage('ci')
+    const rows = await screen.findAllByRole('row')
+    const pipelineRow = rows[1]
+    await act(async () => {
+      userEvent.click(pipelineRow)
+      await waitFor(() => getByTestId(document.body, 'location'))
+      expect(
+        getByTestId(document.body, 'location').innerHTML.endsWith(
+          routes.toPipelineStudioV1({
+            ...getModuleParams('ci'),
+            pipelineIdentifier: 'Sonar_Develop',
+            storeType: 'INLINE'
+          } as any)
+        )
+      ).toBeTruthy()
+    })
   })
 })
 

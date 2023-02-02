@@ -38,6 +38,7 @@ export interface MultiTypeMapProps {
   name: string
   multiTypeFieldSelectorProps: Omit<MultiTypeFieldSelectorProps, 'name' | 'defaultValueToReset' | 'children'>
   valueMultiTextInputProps?: Omit<MultiTextInputProps, 'name'>
+  disableValueTypeSelection?: boolean
   enableConfigureOptions?: boolean
   configureOptionsProps?: MultiTypeMapConfigureOptionsProps
   formik?: FormikContextType<any>
@@ -56,6 +57,7 @@ export const MultiTypeMap = (props: MultiTypeMapProps): React.ReactElement => {
     name,
     multiTypeFieldSelectorProps,
     valueMultiTextInputProps = {},
+    disableValueTypeSelection,
     enableConfigureOptions = true,
     configureOptionsProps,
     cardStyle,
@@ -123,16 +125,24 @@ export const MultiTypeMap = (props: MultiTypeMapProps): React.ReactElement => {
                           </Text>
                         )}
                         <div className={cx(css.group, css.withoutAligning, css.withoutSpacing)}>
-                          <FormInput.MultiTextInput
-                            label=""
-                            name={`${name}[${index}].value`}
-                            multiTextInputProps={{
-                              allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
-                              ...valueMultiTextInputProps
-                            }}
-                            disabled={disabled}
-                            placeholder={keyValuePlaceholders?.[1]}
-                          />
+                          {disableValueTypeSelection ? (
+                            <FormInput.Text
+                              name={`${name}[${index}].value`}
+                              disabled={disabled}
+                              placeholder={keyValuePlaceholders?.[1]}
+                            />
+                          ) : (
+                            <FormInput.MultiTextInput
+                              label=""
+                              name={`${name}[${index}].value`}
+                              multiTextInputProps={{
+                                allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION],
+                                ...valueMultiTextInputProps
+                              }}
+                              disabled={disabled}
+                              placeholder={keyValuePlaceholders?.[1]}
+                            />
+                          )}
                           <Button
                             icon="main-trash"
                             iconProps={{ size: 20 }}

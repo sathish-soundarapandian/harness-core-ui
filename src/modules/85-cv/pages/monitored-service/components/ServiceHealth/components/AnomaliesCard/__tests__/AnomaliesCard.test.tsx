@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
-import { useGetAnomaliesSummary } from 'services/cv'
+import { RiskData, useGetAnomaliesSummary } from 'services/cv'
 import { RiskValues } from '@cv/utils/CommonUtils'
 import { ChangeSourceTypes } from '@cv/components/ChangeTimeline/ChangeTimeline.constants'
 import AnomaliesCard from '../AnomaliesCard'
@@ -36,7 +36,7 @@ describe('Unit tests for AnomaliesCard', () => {
   const initialProps = {
     lowestHealthScoreBarForTimeRange: {
       healthScore: 100,
-      riskStatus: RiskValues.HEALTHY
+      riskStatus: RiskValues.HEALTHY as RiskData['riskStatus']
     },
     timeFormat: 'hours',
     timeRange: {

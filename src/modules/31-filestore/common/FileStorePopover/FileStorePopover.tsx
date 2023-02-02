@@ -19,6 +19,7 @@ import {
 
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import RbacButton from '@rbac/components/Button/Button'
+import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useUnsavedConfirmation } from '@filestore/common/useUnsavedConfirmation/useUnsavedConfirmation'
@@ -44,6 +45,15 @@ const FileStoreActionPopover = (props: FileStoreActionPopoverProps): React.React
   const { items = [], icon, className, portalClassName, btnText = '' } = props
   const [menuOpen, setMenuOpen] = useState(false)
   const { tempNodes, unsavedNodes } = React.useContext(FileStoreContext)
+  const rbacResourcePermission = {
+    resource: {
+      resourceType: ResourceType.FILE
+    }
+  }
+  const [canEdit] = usePermission({
+    ...rbacResourcePermission,
+    permissions: [PermissionIdentifier.EDIT_FILE]
+  })
   const { handleUnsavedConfirmation } = useUnsavedConfirmation({
     callback: () => setMenuOpen(true)
   })
@@ -54,6 +64,7 @@ const FileStoreActionPopover = (props: FileStoreActionPopoverProps): React.React
       className={cx(css.main, className)}
       portalClassName={cx(css.popover, portalClassName)}
       minimal={true}
+      disabled={!canEdit}
       usePortal={false}
       onInteraction={nextOpenState => {
         setMenuOpen(nextOpenState)

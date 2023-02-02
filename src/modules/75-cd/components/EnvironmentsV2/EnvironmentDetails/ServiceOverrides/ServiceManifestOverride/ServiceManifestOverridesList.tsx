@@ -16,6 +16,7 @@ import { getManifestLocation } from '@pipeline/components/ManifestSelection/Mani
 import {
   ManifestIcons,
   ManifestLabels,
+  OverrideManifests,
   OverrideManifestStoresTypes,
   OverrideManifestTypes
 } from './ServiceManifestOverrideUtils'
@@ -67,9 +68,18 @@ function ServiceManifestOverridesList({
                   </div>
                   <div>{getString(ManifestLabels[manifest?.type as OverrideManifestTypes])}</div>
                   <Text inline width={150} className={css.type} color={Color.BLACK} lineClamp={1}>
-                    {manifest?.spec?.store.type}
+                    {manifest?.type !== OverrideManifests.HelmRepoOverride
+                      ? manifest?.spec?.store.type
+                      : manifest?.spec?.type}
                   </Text>
 
+                  {manifest?.type === OverrideManifests.HelmRepoOverride && (
+                    <span>
+                      <Text width={200} lineClamp={1}>
+                        {getString('pipeline.manifestType.helmRepoOverride.locationText')}
+                      </Text>
+                    </span>
+                  )}
                   {!isEmpty(manifestLocation) && (
                     <span>
                       <Text lineClamp={1} width={200}>

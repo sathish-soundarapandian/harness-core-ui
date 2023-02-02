@@ -26,7 +26,7 @@ export interface ModuleListCardProps {
 export const getModuleLink = ({ accountId, orgIdentifier, projectIdentifier, module }: ModuleListCardProps): string => {
   switch (module) {
     case ModuleName.CD:
-      return routes.toProjectOverview({
+      return routes.toDeployments({
         projectIdentifier,
         orgIdentifier,
         accountId,

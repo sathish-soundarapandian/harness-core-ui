@@ -34,12 +34,6 @@ describe('Artifact Source Template creation and assertion', () => {
             name: 'NG_SVC_ENV_REDESIGN',
             enabled: true,
             lastUpdatedAt: 0
-          },
-          {
-            uuid: null,
-            name: 'ARTIFACT_SOURCE_TEMPLATE',
-            enabled: true,
-            lastUpdatedAt: 0
           }
         ]
       }).as('enableFeatureFlag')

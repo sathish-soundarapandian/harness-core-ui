@@ -7,9 +7,9 @@
 
 .main {
   width: 100% !important;
-
-  .transactionMetric {
-  }
+  border: 1px solid #effbff;
+  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.08), 0px 0.5px 2px rgba(96, 97, 112, 0.16);
+  border-radius: var(--spacing-xsmall);
 
   .scrollArrow {
     flex-basis: 20px;
@@ -79,12 +79,13 @@
 }
 
 :global(.metricsGraph_tooltip.highcharts-tooltip) {
-  background: var(--white) !important;
-  width: 100%;
-  min-height: 105%;
+  background: var(--primary-9-dark) !important;
+  width: 25%;
+  min-height: 80%;
   border: 1px solid var(--grey-200);
   border-radius: 10px;
   box-shadow: var(--elevation-3);
+  padding-bottom: var(--spacing-xxlarge) !important;
 }
 :global(.metricsGraph_tooltip.highcharts-tooltip > span) {
   padding-top: var(--spacing-xsmall);
@@ -110,6 +111,40 @@
   display: none !important;
 }
 
-:global(.metricsGraph_tooltip.highcharts-tooltip *) {
-  box-sizing: border-box;
+.showDetailsText {
+  color: var(--primary-7) !important;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.analysisReason {
+  font-weight: 400 !important;
+  font-size: 12px !important;
+  line-height: 18px !important;
+  color: var(--grey-800) !important;
+}
+
+.metricInfo {
+  display: flex !important;
+  align-items: center;
+}
+
+.node {
+  width: 8px;
+  height: 8px;
+  border: 1px solid;
+  border-radius: 1px;
+  margin-right: var(--spacing-small) !important;
+}
+
+.metricPanelLabels {
+  font-weight: 400 !important;
+  font-size: 12px !important;
+  line-height: 18px !important;
+  color: var(--black) !important;
+}
+
+.metricDetails {
+  background: #f8f8fe !important;
 }

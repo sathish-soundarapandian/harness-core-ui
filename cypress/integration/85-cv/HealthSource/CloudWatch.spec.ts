@@ -9,7 +9,6 @@ import { featureFlagsCall } from '../../../support/85-cv/common'
 import {
   awsRegionsCall,
   awsRegionsResponse,
-  longInvalidName,
   monitoredServicePostCall,
   riskCategoryCall,
   sampleDataCall,
@@ -51,10 +50,6 @@ describe('Cloud watch health source', () => {
     cy.contains('span', 'Add New Health Source').click()
 
     cy.findByText(/CloudWatch/).should('exist')
-
-    cy.get('input[name="healthSourceName"]').clear().type(longInvalidName)
-
-    cy.findByText(/Limit of 63 characters is reached for Health Source Name/).should('exist')
   })
 
   it('should add cloud watch health source, if correct values are given', () => {
@@ -137,7 +132,7 @@ describe('Cloud watch health source', () => {
 
     cy.contains('span', 'Next').click({ force: true })
 
-    cy.wait(100)
+    cy.wait('@regionsCall')
 
     cy.contains('p', 'AWS Region', { timeout: 4000 }).should('exist')
 

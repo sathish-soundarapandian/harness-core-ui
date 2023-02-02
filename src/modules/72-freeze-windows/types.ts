@@ -6,7 +6,6 @@
  */
 
 import type { SelectOption } from '@harness/uicore'
-import type { PartiallyRequired } from '@pipeline/utils/types'
 import type { FreezeFilterPropertiesDTO, GetFreezeListQueryParams, FreezeResponse } from 'services/cd-ng'
 import type { NotificationRules } from 'services/pipeline-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -87,7 +86,7 @@ type OptionalFreezeListUrlQueryParams = Pick<GetFreezeListQueryParams, 'page' | 
     endTime?: number
   }
 
-export type FreezeListUrlQueryParams = PartiallyRequired<OptionalFreezeListUrlQueryParams, 'page' | 'size' | 'sort'>
+export type FreezeListUrlQueryParams = RequiredPick<OptionalFreezeListUrlQueryParams, 'page' | 'size' | 'sort'>
 
 export interface SortBy {
   sort: 'lastUpdatedAt' | 'name'

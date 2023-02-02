@@ -50,28 +50,28 @@ describe('Unit tests for Deployment Nodes', () => {
     expect(container.querySelectorAll('[class~="hexagon"]').length).toBe(7)
     expect(
       container.querySelectorAll(`[data-node-health-color="${getRiskColorValue(RiskValues.HEALTHY)}"]`).length
-    ).toBe(1)
+    ).toBe(0)
     expect(
       container.querySelectorAll(`[data-node-health-color="${getRiskColorValue(RiskValues.UNHEALTHY)}"]`).length
-    ).toBe(1)
+    ).toBe(0)
     expect(
       container.querySelectorAll(`[data-node-health-color="${getRiskColorValue(RiskValues.NEED_ATTENTION)}"]`).length
-    ).toBe(1)
+    ).toBe(0)
     expect(
       container.querySelectorAll(`[data-node-health-color="${getRiskColorValue(RiskValues.OBSERVE)}"]`).length
-    ).toBe(1)
+    ).toBe(0)
     expect(
       container.querySelectorAll(`[data-node-health-color="${getRiskColorValue(RiskValues.NO_ANALYSIS)}"]`).length
-    ).toBe(3)
+    ).toBe(7)
     expect(
       container.querySelectorAll(`[data-node-health-color="${getRiskColorValue(RiskValues.NO_DATA)}"]`).length
-    ).toBe(3)
+    ).toBe(7)
 
     // make sure popover has right contents
     fireEvent.mouseOver(container.querySelector('[class*="hexagonContainer"]')!)
     await waitFor(() => expect(document.body.querySelector('[class*="nodeHealthPopoverContent"]')).not.toBeNull())
-    expect(getByText('2 pipeline.verification.metricsInViolation')).not.toBeNull()
-    expect(getByText('4 pipeline.verification.logClustersInViolation')).not.toBeNull()
+    expect(getByText('0 pipeline.verification.metricsInViolation')).not.toBeNull()
+    expect(getByText('0 pipeline.verification.logClustersInViolation')).not.toBeNull()
     expect(document.body.querySelector('[class*="nodeHealthPopoverContent"] [class*="nodeHealth"]')).not.toBeNull()
   })
 })

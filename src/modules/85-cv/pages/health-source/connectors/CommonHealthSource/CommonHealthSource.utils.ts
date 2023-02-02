@@ -6,7 +6,7 @@
  */
 
 import type { FormikErrors, FormikProps } from 'formik'
-import { cloneDeep, set } from 'lodash-es'
+import { cloneDeep, isNumber, set } from 'lodash-es'
 import { RUNTIME_INPUT_VALUE, getMultiTypeFromValue, MultiTypeInputType, SelectOption } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 import type { HealthSource, NextGenHealthSourceSpec, QueryRecordsRequest } from 'services/cv'
@@ -253,10 +253,14 @@ export const handleValidateCustomMetricForm = ({
 
   const isLogsTableEnabled = customMetricsConfig?.logsTable?.enabled
   let errors: FormikErrors<CommonCustomMetricFormikInterface> = {}
-  const { query = '' } = formData
+  const { query = '', recordCount } = formData
 
   if (!query) {
     set(errors, CustomMetricFormFieldNames.QUERY, getString('fieldRequired', { field: 'Query' }))
+  }
+
+  if (query && isNumber(recordCount) && recordCount > 1) {
+    set(errors, CustomMetricFormFieldNames.QUERY, getString('cv.monitoringSources.prometheus.validation.recordCount'))
   }
 
   if (isAssignComponentEnabled) {
@@ -376,7 +380,7 @@ export function checkIfCurrentCustomMetricFormIsValid(
 export const createHealthSourcePayload = (
   defineHealthSourcedata: {
     product: SelectOption
-    sourceType: string
+    sourceType?: string
     healthSourceIdentifier: string
     healthSourceName: string
     connectorRef: string
@@ -395,7 +399,7 @@ export const createHealthSourcePayload = (
     name: healthSourceName,
     version: V2 as HealthSource['version'],
     spec: {
-      connectorRef: ((connectorRef as any)?.connector?.identifier ?? connectorRef) as string,
+      connectorRef,
       queryDefinitions: [] as NextGenHealthSourceSpec['queryDefinitions']
     }
   }

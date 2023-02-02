@@ -23882,7 +23882,7 @@ exports[`BuildTests snapshot test should render TI+Reports UI 1`] = `
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M8 0h4v3.333h-1.333v-2H8V0zM4 0v1.333H1.333v2H0V0h4zm4 12v-1.333h2.667v-2H12V12H8zm-4 0H0V8.667h1.333v2H4V12z"
+                      d="M8 0h4v3.333h-1.333v-2H8zM4 0v1.333H1.333v2H0V0zm4 12v-1.333h2.667v-2H12V12zm-4 0H0V8.667h1.333v2H4z"
                     />
                   </svg>
                 </span>

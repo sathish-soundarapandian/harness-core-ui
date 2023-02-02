@@ -6,14 +6,16 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 
+import userEvent from '@testing-library/user-event'
 import type { ResponseWaitStepExecutionDetailsDto } from 'services/pipeline-ng'
 import { TestWrapper, UseGetMockData } from '@common/utils/testUtils'
 import { ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
 
 import { WaitStepView } from '../WaitStepView/WaitStepView'
-import { executionMetadata } from './mock'
+import { executionMetadata, policyOutputDetails } from './mock'
+
 let mockDate: jest.SpyInstance<unknown> | undefined
 let mocktime: jest.SpyInstance<unknown> | undefined
 
@@ -32,7 +34,7 @@ const step = (status: any) => ({
   name: 'Wait',
   identifier: 'wait',
   baseFqn: 'pipeline.stages.test1.spec.execution.steps.wait',
-  outcomes: {},
+  outcomes: policyOutputDetails,
   stepParameters: {
     identifier: ['abc'],
     name: ['Wait'],
@@ -117,8 +119,22 @@ jest.mock('services/pipeline-ng', () => ({
   useHandleManualInterventionInterrupt: jest.fn(() => ({ mutate }))
 }))
 
+const checkPolicyEnforcementTab = async (): Promise<HTMLElement> => {
+  const policyEnforcementTab = await screen.findByRole('tab', {
+    name: 'pipeline.policyEnforcement.title'
+  })
+  userEvent.click(policyEnforcementTab)
+  const tabpanel = screen.getByRole('tabpanel', {
+    name: 'pipeline.policyEnforcement.title'
+  })
+  const policyEvaluationText = await within(tabpanel).findByText('pipeline.policyEvaluations.title')
+
+  expect(policyEvaluationText).toBeInTheDocument()
+  return tabpanel
+}
+
 describe('Wait Step View Test', () => {
-  test('renders snapshot', () => {
+  test('renders snapshot', async () => {
     const data = step(ExecutionStatusEnum.Success)
     const { container } = render(
       <TestWrapper>
@@ -127,6 +143,8 @@ describe('Wait Step View Test', () => {
     )
 
     expect(container).toMatchSnapshot()
+    const policyEnforcementTabPanel = await checkPolicyEnforcementTab()
+    expect(policyEnforcementTabPanel).toMatchSnapshot('Policy Enforcement Tab - Wait Step View')
   })
 
   test('renders snapshot for manual intervention', () => {

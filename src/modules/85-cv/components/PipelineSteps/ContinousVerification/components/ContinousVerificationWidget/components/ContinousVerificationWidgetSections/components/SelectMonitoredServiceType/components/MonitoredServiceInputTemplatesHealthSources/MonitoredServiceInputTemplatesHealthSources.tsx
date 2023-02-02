@@ -29,13 +29,8 @@ import {
   showQueriesText
 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import type { UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
-import {
-  CONNECTOR_REF,
-  IDENTIFIER,
-  INDEXES,
-  NAME,
-  spacingMedium
-} from './MonitoredServiceInputTemplatesHealthSources.constants'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
+import { CONNECTOR_REF, IDENTIFIER, INDEXES, NAME } from './MonitoredServiceInputTemplatesHealthSources.constants'
 
 interface MonitoredServiceInputTemplatesHealthSourcesProps {
   templateIdentifier: string
@@ -70,7 +65,7 @@ export default function MonitoredServiceInputTemplatesHealthSources(
 
         return (
           <Card key={`${healthSource?.name}.${index}`}>
-            <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: spacingMedium }}>
+            <Text font={'normal'} color={Color.BLACK} padding={{ bottom: 'medium' }}>
               {/* TODO - healthsource name should also be persisted in templateData */}
               {getString('cv.healthSource.nameLabel')}: {healthSource?.name || healthSource?.identifier}
             </Text>
@@ -91,7 +86,7 @@ export default function MonitoredServiceInputTemplatesHealthSources(
                       disabled={!getSourceTypeForConnector(healthSource)}
                       setRefValue
                       multiTypeProps={{ allowableTypes, expressions }}
-                      type={getSourceTypeForConnector(healthSource)}
+                      type={getSourceTypeForConnector(healthSource) as ConnectorInfoDTO['type']}
                       enableConfigureOptions={false}
                     />
                   )
@@ -118,11 +113,11 @@ export default function MonitoredServiceInputTemplatesHealthSources(
                   const metricDefinitionFields = getNestedFields(item, [], `${metricDefinitionInptsetFormPath}.${idx}`)
                   return (
                     <>
-                      <Text font={'normal'} color={Color.BLACK} style={{ paddingBottom: spacingMedium }}>
+                      <Text font={'normal'} color={Color.BLACK} padding={{ bottom: 'medium' }}>
                         {showQueriesText(healthSource)
-                          ? getString('cv.queries')
+                          ? getString('cv.query')
                           : getString('cv.monitoringSources.metricLabel')}
-                        : {item?.metricName}
+                        : {item?.metricName || item?.identifier}
                       </Text>
                       {metricDefinitionFields.map(input => {
                         if (input.name === INDEXES) {

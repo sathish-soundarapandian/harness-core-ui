@@ -61,6 +61,7 @@ const EditOrganization: React.FC<StepProps<Organization> & EditModalData> = prop
       'identifier',
       'tags'
     ])
+
     try {
       await editOrganization(
         { organization: dataToSubmit },
@@ -90,7 +91,7 @@ const EditOrganization: React.FC<StepProps<Organization> & EditModalData> = prop
         setModalErrorHandler={setModalErrorHandler}
         onComplete={onComplete}
       />
-      {loading ? <PageSpinner /> : null}
+      {saving ? <PageSpinner /> : null}
     </>
   )
 }

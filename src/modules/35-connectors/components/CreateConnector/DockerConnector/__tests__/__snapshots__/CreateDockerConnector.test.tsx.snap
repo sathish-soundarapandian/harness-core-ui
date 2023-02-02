@@ -519,72 +519,6 @@ exports[`Create Docker Connector  Wizard Should render form 2`] = `
             style="width: 64%;"
           >
             <div
-              class="bp3-form-group bp3-intent-danger"
-            >
-              <label
-                class="bp3-label"
-                for="dockerRegistryUrl"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="dockerAuthForm_dockerRegistryUrl"
-                >
-                  connectors.docker.dockerRegistryURL
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="bp3-input-group bp3-intent-danger"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="dockerRegistryUrl"
-                    placeholder="UrlLabel"
-                    type="text"
-                    value=""
-                  />
-                </div>
-                <div
-                  class="bp3-form-helper-text"
-                >
-                  <div
-                    class="FormError--errorDiv"
-                    data-name="dockerRegistryUrl"
-                  >
-                    <span
-                      class="bp3-icon StyledProps--main FormError--errorTextIcon StyledProps--intent-danger"
-                      data-icon="circle-cross"
-                    >
-                      <svg
-                        height="12"
-                        viewBox="0 0 13 13"
-                        width="12"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          clip-rule="evenodd"
-                          d="M.167 6.501a6.333 6.333 0 1012.666 0 6.333 6.333 0 00-12.666 0zm4.071-3.003l2.26 2.263 2.264-2.263c.495-.495 1.236.248.741.743L7.24 6.504l2.254 2.258c.495.495-.247 1.238-.742.743L6.497 7.246 4.238 9.505c-.495.495-1.236-.249-.741-.744l2.258-2.258-2.259-2.262c-.494-.495.248-1.238.742-.743z"
-                          fill-rule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                    <span
-                      class="FormError--error"
-                    >
-                      validation.dockerRegistryUrl
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
               class="Text--withDocsTooltip"
               data-tooltip-id="dockerConnectorProviderType"
             >
@@ -664,6 +598,72 @@ exports[`Create Docker Connector  Wizard Should render form 2`] = `
                       />
                       connectors.docker.other
                     </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bp3-form-group bp3-intent-danger"
+            >
+              <label
+                class="bp3-label"
+                for="dockerRegistryUrl"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="dockerAuthForm_dockerRegistryUrl"
+                >
+                  connectors.docker.dockerRegistryURL
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-input-group bp3-intent-danger"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    name="dockerRegistryUrl"
+                    placeholder="UrlLabel"
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <div
+                  class="bp3-form-helper-text"
+                >
+                  <div
+                    class="FormError--errorDiv"
+                    data-name="dockerRegistryUrl"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main FormError--errorTextIcon StyledProps--intent-danger"
+                      data-icon="circle-cross"
+                    >
+                      <svg
+                        height="12"
+                        viewBox="0 0 13 13"
+                        width="12"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M.167 6.501a6.333 6.333 0 1012.666 0 6.333 6.333 0 00-12.666 0zm4.071-3.003l2.26 2.263 2.264-2.263c.495-.495 1.236.248.741.743L7.24 6.504l2.254 2.258c.495.495-.247 1.238-.742.743L6.497 7.246 4.238 9.505c-.495.495-1.236-.249-.741-.744l2.258-2.258-2.259-2.262c-.494-.495.248-1.238.742-.743z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                    <span
+                      class="FormError--error"
+                    >
+                      validation.dockerRegistryUrl
+                    </span>
                   </div>
                 </div>
               </div>
@@ -1509,41 +1509,6 @@ exports[`Create Docker Connector  Wizard Should render form for editing provider
             style="width: 64%;"
           >
             <div
-              class="bp3-form-group"
-            >
-              <label
-                class="bp3-label"
-                for="dockerRegistryUrl"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="dockerAuthForm_dockerRegistryUrl"
-                >
-                  connectors.docker.dockerRegistryURL
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="bp3-input-group"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="dockerRegistryUrl"
-                    placeholder="UrlLabel"
-                    type="text"
-                    value="url-v3"
-                  />
-                </div>
-              </div>
-            </div>
-            <div
               class="Text--withDocsTooltip"
               data-tooltip-id="dockerConnectorProviderType"
             >
@@ -1624,6 +1589,41 @@ exports[`Create Docker Connector  Wizard Should render form for editing provider
                       connectors.docker.other
                     </label>
                   </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bp3-form-group"
+            >
+              <label
+                class="bp3-label"
+                for="dockerRegistryUrl"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="dockerAuthForm_dockerRegistryUrl"
+                >
+                  connectors.docker.dockerRegistryURL
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-input-group"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    name="dockerRegistryUrl"
+                    placeholder="UrlLabel"
+                    type="text"
+                    value="url-v3"
+                  />
                 </div>
               </div>
             </div>
@@ -2460,41 +2460,6 @@ exports[`Create Docker Connector  Wizard Should render form for editing provider
             style="width: 64%;"
           >
             <div
-              class="bp3-form-group"
-            >
-              <label
-                class="bp3-label"
-                for="dockerRegistryUrl"
-              >
-                <span
-                  class="Tooltip--acenter"
-                  data-tooltip-id="dockerAuthForm_dockerRegistryUrl"
-                >
-                  connectors.docker.dockerRegistryURL
-                </span>
-                 
-                <span
-                  class="bp3-text-muted"
-                />
-              </label>
-              <div
-                class="bp3-form-content"
-              >
-                <div
-                  class="bp3-input-group"
-                >
-                  <input
-                    autocomplete="off"
-                    class="bp3-input"
-                    name="dockerRegistryUrl"
-                    placeholder="UrlLabel"
-                    type="text"
-                    value="url-v3"
-                  />
-                </div>
-              </div>
-            </div>
-            <div
               class="Text--withDocsTooltip"
               data-tooltip-id="dockerConnectorProviderType"
             >
@@ -2575,6 +2540,41 @@ exports[`Create Docker Connector  Wizard Should render form for editing provider
                       connectors.docker.other
                     </label>
                   </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bp3-form-group"
+            >
+              <label
+                class="bp3-label"
+                for="dockerRegistryUrl"
+              >
+                <span
+                  class="Tooltip--acenter"
+                  data-tooltip-id="dockerAuthForm_dockerRegistryUrl"
+                >
+                  connectors.docker.dockerRegistryURL
+                </span>
+                 
+                <span
+                  class="bp3-text-muted"
+                />
+              </label>
+              <div
+                class="bp3-form-content"
+              >
+                <div
+                  class="bp3-input-group"
+                >
+                  <input
+                    autocomplete="off"
+                    class="bp3-input"
+                    name="dockerRegistryUrl"
+                    placeholder="UrlLabel"
+                    type="text"
+                    value="url-v3"
+                  />
                 </div>
               </div>
             </div>

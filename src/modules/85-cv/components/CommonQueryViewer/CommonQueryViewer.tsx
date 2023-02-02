@@ -107,7 +107,7 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
         />
       )}
       {/* {isQueryExecuted ? ( */}
-      {!isQueryRuntimeOrExpression ? (
+      {!(isQueryRuntimeOrExpression || isConnectorRuntimeOrExpression) ? (
         <CommonRecords
           fetchRecords={handleFetchRecords}
           loading={loading}

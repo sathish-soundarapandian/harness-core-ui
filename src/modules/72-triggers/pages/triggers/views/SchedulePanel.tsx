@@ -15,6 +15,7 @@ import css from './SchedulePanel.module.scss'
 interface SchedulePanelPropsInterface {
   formikProps?: any
   isEdit?: boolean
+  isFixedUTCTime?: boolean
 }
 
 const SchedulePanel: React.FC<SchedulePanelPropsInterface> = ({
@@ -23,15 +24,21 @@ const SchedulePanel: React.FC<SchedulePanelPropsInterface> = ({
     values
   },
   formikProps,
-  isEdit = false
+  isEdit = false,
+  isFixedUTCTime = false
 }): JSX.Element => {
   const { getString } = useStrings()
+  const currentDate = isFixedUTCTime ? new Date('2023-01-10T10:00:00') : new Date()
 
   return (
     <Layout.Vertical className={cx(css.schedulePanelContainer)} spacing="large" padding="xxlarge">
       <Text className={css.formContentTitle} inline={true}>
         {getString('common.schedule')}
         <HarnessDocTooltip tooltipId="schedulePanel" useStandAlone={true} />
+        <Text>
+          {getString('triggers.schedulePanel.currentUTCTime')} {currentDate.getUTCHours()}:
+          {String(currentDate.getUTCMinutes()).padStart(2, '0')}
+        </Text>
       </Text>
       <Layout.Vertical className={css.formContent}>
         <Tabs

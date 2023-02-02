@@ -428,7 +428,7 @@ exports[`Create DelegateSetup Step render data 1`] = `
                               <p
                                 class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-align-center StyledProps--flex StyledProps--flex-justifyContent-center"
                               >
-                                pipeline.manifestTypeLabels.HelmChartLabel
+                                common.HelmChartLabel
                               </p>
                             </div>
                           </div>

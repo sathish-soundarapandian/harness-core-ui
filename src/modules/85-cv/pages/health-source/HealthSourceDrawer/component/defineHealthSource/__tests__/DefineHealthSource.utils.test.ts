@@ -1,5 +1,6 @@
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
 import { AWSDataSourceType } from '../DefineHealthSource.constant'
+import type { DefineHealthSourceFormInterface } from '../DefineHealthSource.types'
 import {
   formValidation,
   getConnectorPlaceholderText,
@@ -32,7 +33,11 @@ describe('DefineHealthSource.utils.test', () => {
   test('formValidation should return correct error, if dataSourceType is not provided and it is enabled and prometheus type is selected', () => {
     const result = formValidation({
       getString: a => a,
-      values: { sourceType: 'Prometheus', healthSourceIdentifier: '322', healthSourceList: [] },
+      values: {
+        sourceType: 'Prometheus',
+        healthSourceIdentifier: '322',
+        healthSourceList: []
+      } as unknown as DefineHealthSourceFormInterface,
       isEdit: false
     })
     expect(result).toEqual({ dataSourceType: 'cv.healthSource.dataSourceTypeValidation' })
@@ -83,42 +88,42 @@ describe('DefineHealthSource.utils.test', () => {
   })
 
   test('should show Product change confirmation dialog when product is changed and health source is configured', () => {
-    const isSumoLogicEnabled = true
+    const isV2HealthSource = true
     const currentProduct = { label: 'Logs', value: 'Logs' }
     const updatedProduct = { label: 'metrics', value: 'metrics' }
     const isHealthSourceConfigured = true
     expect(
-      shouldShowProductChangeConfirmation(isSumoLogicEnabled, currentProduct, updatedProduct, isHealthSourceConfigured)
+      shouldShowProductChangeConfirmation(isV2HealthSource, currentProduct, updatedProduct, isHealthSourceConfigured)
     ).toEqual(true)
   })
 
   test('should not show Product change confirmation dialog when product is not changed and health source is configured', () => {
-    const isSumoLogicEnabled = true
+    const isV2HealthSource = true
     const currentProduct = { label: 'Logs', value: 'Logs' }
     const updatedProduct = { label: 'Logs', value: 'Logs' }
     const isHealthSourceConfigured = true
     expect(
-      shouldShowProductChangeConfirmation(isSumoLogicEnabled, currentProduct, updatedProduct, isHealthSourceConfigured)
+      shouldShowProductChangeConfirmation(isV2HealthSource, currentProduct, updatedProduct, isHealthSourceConfigured)
     ).toEqual(false)
   })
 
   test('should not show Product change confirmation dialog when product is changed and health source is not configured', () => {
-    const isSumoLogicEnabled = true
+    const isV2HealthSource = true
     const currentProduct = { label: 'Logs', value: 'Logs' }
     const updatedProduct = { label: 'metrics', value: 'metrics' }
     const isHealthSourceConfigured = false
     expect(
-      shouldShowProductChangeConfirmation(isSumoLogicEnabled, currentProduct, updatedProduct, isHealthSourceConfigured)
+      shouldShowProductChangeConfirmation(isV2HealthSource, currentProduct, updatedProduct, isHealthSourceConfigured)
     ).toEqual(false)
   })
 
-  test('should not show Product change confirmation dialog when sumologic feature flag is not enabled', () => {
-    const isSumoLogicEnabled = true
+  test('should not show Product change confirmation dialog when health source is not of type v2', () => {
+    const isV2HealthSource = false
     const currentProduct = { label: 'Logs', value: 'Logs' }
     const updatedProduct = { label: 'metrics', value: 'metrics' }
     const isHealthSourceConfigured = true
     expect(
-      shouldShowProductChangeConfirmation(isSumoLogicEnabled, currentProduct, updatedProduct, isHealthSourceConfigured)
-    ).toEqual(true)
+      shouldShowProductChangeConfirmation(isV2HealthSource, currentProduct, updatedProduct, isHealthSourceConfigured)
+    ).toEqual(false)
   })
 })

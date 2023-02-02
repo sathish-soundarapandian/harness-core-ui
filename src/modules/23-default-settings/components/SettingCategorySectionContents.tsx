@@ -14,7 +14,7 @@ import DefaultSettingsFactory from '@default-settings/factories/DefaultSettingsF
 import type { SettingDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
-import SettingTypeRow from './SettingTypeRow'
+import SettingTypeRow, { SettingTypeRowHeader } from './SettingTypeRow'
 import css from './SettingsCategorySection.module.scss'
 interface SettingCategorySectionContentsProps {
   settingCategory: SettingCategory
@@ -83,22 +83,25 @@ const SettingCategorySectionContents: React.FC<SettingCategorySectionContentsPro
   }
   return (
     <>
-      {settingDisplayOrder.reduce((settingsArray: (JSX.Element | null)[], settingOrAGroup) => {
-        if (groupNamesSet.has(settingOrAGroup as SettingGroups)) {
-          const groupHandler = DefaultSettingsFactory.getGroupHandler(settingOrAGroup as SettingGroups)
-          if (groupHandler && groupHandler.groupName) {
-            settingsArray.push(<GroupHeader groupName={groupHandler.groupName} />)
-            const groupSettingList = DefaultSettingsFactory.getGroupSettingsDisplayOrderList(
-              settingOrAGroup as SettingGroups
-            )
-            settingsArray = settingsArray.concat(getSettingTypeRowsJSXElements(groupSettingList, true))
+      {settingDisplayOrder.reduce(
+        (settingsArray: (JSX.Element | null)[], settingOrAGroup) => {
+          if (groupNamesSet.has(settingOrAGroup as SettingGroups)) {
+            const groupHandler = DefaultSettingsFactory.getGroupHandler(settingOrAGroup as SettingGroups)
+            if (groupHandler && groupHandler.groupName) {
+              settingsArray.push(<GroupHeader groupName={groupHandler.groupName} />)
+              const groupSettingList = DefaultSettingsFactory.getGroupSettingsDisplayOrderList(
+                settingOrAGroup as SettingGroups
+              )
+              settingsArray = settingsArray.concat(getSettingTypeRowsJSXElements(groupSettingList, true))
+            }
+          } else if (settingsSet.has(settingOrAGroup as SettingType)) {
+            settingsArray = settingsArray.concat(getSettingTypeRowsJSXElements([settingOrAGroup as SettingType]))
           }
-        } else if (settingsSet.has(settingOrAGroup as SettingType)) {
-          settingsArray = settingsArray.concat(getSettingTypeRowsJSXElements([settingOrAGroup as SettingType]))
-        }
 
-        return settingsArray
-      }, [])}
+          return settingsArray
+        },
+        [<SettingTypeRowHeader key={`${settingCategory}HeaderRow`} />]
+      )}
     </>
   )
 }

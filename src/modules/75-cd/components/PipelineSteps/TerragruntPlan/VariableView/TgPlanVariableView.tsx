@@ -41,8 +41,8 @@ export function TerragruntPlanVariableStep(props: TerragruntPlanVariableStepProp
         <>
           <Text className={css.stepTitle}>{getString('pipelineSteps.backendConfig')}</Text>
           <VariablesListTable
-            data={get(variablesData.spec.configuration, 'backendConfig.spec')}
-            originalData={get(variablesData.spec.configuration, 'backendConfig.spec')}
+            data={get(variablesData.spec, 'configuration.backendConfig.spec')}
+            originalData={get(initialValues.spec, 'configuration.backendConfig.spec')}
             metadataMap={metadataMap}
             className={pipelineVariableCss.variablePaddingL4}
           />

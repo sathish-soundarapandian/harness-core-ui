@@ -24,7 +24,8 @@ describe('RouteDestinations', () => {
     FFM_1827: false,
     NG_SETTINGS: false,
     FFM_3959_FF_MFE_Environment_Detail: false,
-    FFM_5256_FF_MFE_Environment_Listing: false
+    FFM_5256_FF_MFE_Environment_Listing: false,
+    FFM_6665_FF_MFE_Target_Detail: false
   }
 
   const renderRoutes = (flagOverrides: Partial<Record<FeatureFlag, boolean>> = {}): ReactElement[] => {
@@ -97,6 +98,18 @@ describe('RouteDestinations', () => {
     const routes = renderRoutes({ FFM_5951_FF_MFE_Targets_Listing: true })
 
     expect(routesHavePageName(routes, 'TargetsPage')).toBeFalsy()
+  })
+
+  test('it should render the NGUI version of the Target Detail page when FFM_6665_FF_MFE_Target_Detail is false', async () => {
+    const routes = renderRoutes({ FFM_6665_FF_MFE_Target_Detail: false, FFM_1827: true })
+
+    expect(routesHavePageName(routes, 'TargetDetailPage')).toBeTruthy()
+  })
+
+  test('it should not render the NGUI version of the Target Detail page when FFM_6665_FF_MFE_Target_Detail is true', async () => {
+    const routes = renderRoutes({ FFM_6665_FF_MFE_Target_Detail: true, FFM_1827: false })
+
+    expect(routesHavePageName(routes, 'TargetDetailPage')).toBeFalsy()
   })
 })
 

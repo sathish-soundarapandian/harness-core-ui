@@ -19,7 +19,8 @@ import {
   FormInput,
   MultiSelectOption,
   PageError,
-  shouldShowError
+  shouldShowError,
+  getErrorInfoFromErrorObject
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 
@@ -43,7 +44,13 @@ import {
   useGetDelegateGroupsNGV2WithFilter,
   DelegateGroupDetails
 } from 'services/portal'
-import { usePostFilter, useUpdateFilter, useDeleteFilter, useGetFilterList } from 'services/cd-ng'
+import {
+  usePostFilter,
+  useUpdateFilter,
+  useDeleteFilter,
+  useGetFilterList,
+  useIsImmutableDelegateEnabled
+} from 'services/cd-ng'
 import type { FilterDTO, ResponsePageFilterDTO, Failure, DelegateFilterProperties } from 'services/cd-ng'
 import useCreateDelegateModal from '@delegates/modals/DelegateModal/useCreateDelegateModal'
 import DelegateInstallationError from '@delegates/components/CreateDelegate/components/DelegateInstallationError/DelegateInstallationError'
@@ -53,11 +60,13 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import useCreateDelegateViaCommandsModal from '@delegates/pages/delegates/delegateCommandLineCreation/components/useCreateDelegateViaCommandsModal'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { Category, DelegateActions } from '@common/constants/TrackingConstants'
 import { getDelegateStatusSelectOptions } from './utils/DelegateHelper'
 import DelegateListingItem from './DelegateListingItem'
 
 import css from './DelegatesPage.module.scss'
-
 const POLLING_INTERVAL = 10000
 
 interface DelegatesListProps {
@@ -79,7 +88,7 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
   const [isRefreshingFilters, setIsRefreshingFilters] = useState<boolean>(false)
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false)
   const filterRef = React.useRef<FilterRef<FilterDTO> | null>(null)
-
+  const { trackEvent } = useTelemetry()
   const [troubleshoterOpen, setOpenTroubleshoter] = useState<
     { isConnected: boolean | undefined; delegateType: string | undefined } | undefined
   >(undefined)
@@ -99,6 +108,21 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
   )
   const { mutate: fetchDelegates, loading: isFetchingDelegates } = useGetDelegateGroupsNGV2WithFilter({ queryParams })
   const { openDelegateModal } = useCreateDelegateModal()
+  const { openDelegateModalWithCommands } = useCreateDelegateViaCommandsModal({
+    oldDelegateCreation: openDelegateModal
+  })
+  const {
+    data: useImmutableDelegate,
+    error: useImmutableDelegateError,
+    loading: useImmutableDelegateLoading
+  } = useIsImmutableDelegateEnabled({
+    accountIdentifier: accountId
+  })
+  useEffect(() => {
+    if (useImmutableDelegateError) {
+      showError(getErrorInfoFromErrorObject(useImmutableDelegateError))
+    }
+  }, [useImmutableDelegateError])
 
   useEffect(() => {
     setShowDelegateLoader(true)
@@ -325,7 +349,7 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
     const { delegateName, delegateGroupIdentifier, delegateType, description, hostName, status, delegateTags } =
       (appliedFilter?.filterProperties as any) || {}
     const { name = '', filterVisibility } = appliedFilter || {}
-    return isFetchingFilters ? (
+    return isFetchingFilters || useImmutableDelegateLoading ? (
       <PageSpinner />
     ) : (
       <Filter<DelegateFilterProperties, FilterDTO>
@@ -455,7 +479,16 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
       text={hideHeader ? getString('delegates.createDelegate') : getString('delegates.newDelegate')}
       icon="plus"
       permission={permissionRequestNewDelegate}
-      onClick={() => openDelegateModal()}
+      onClick={() => {
+        if (useImmutableDelegate?.data) {
+          trackEvent(DelegateActions.DelegateCommandLineCreationOpened, {
+            category: Category.DELEGATE
+          })
+          openDelegateModalWithCommands()
+        } else {
+          openDelegateModal()
+        }
+      }}
       id="newDelegateBtn"
       data-testid="newDelegateButton"
     />

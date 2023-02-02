@@ -117,7 +117,7 @@ jest.mock('@pipeline/factories/ArtifactTriggerInputFactory', () => ({
 function WrapperComponent(): JSX.Element {
   return (
     <TestWrapper pathParams={params} defaultAppStoreValues={defaultAppStoreValues}>
-      <TriggersWizardPage />
+      <TriggersWizardPage isFixedUTCTimeSchedulePanel />
     </TestWrapper>
   )
 }

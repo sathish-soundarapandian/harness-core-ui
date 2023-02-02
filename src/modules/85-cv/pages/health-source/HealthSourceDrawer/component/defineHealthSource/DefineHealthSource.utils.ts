@@ -264,12 +264,12 @@ export const getFeatureOption = (
     case Connectors.SUMOLOGIC:
       return [
         {
-          value: HealthSourceProducts.SUMOLOGIC_METRICS.value,
-          label: HealthSourceProducts.SUMOLOGIC_METRICS.label
+          value: HealthSourceProducts[HealthSourceTypes.SumologicMetrics].value,
+          label: HealthSourceProducts[HealthSourceTypes.SumologicMetrics].label
         },
         {
-          value: HealthSourceProducts.SUMOLOGIC_LOG.value,
-          label: HealthSourceProducts.SUMOLOGIC_LOG.label
+          value: HealthSourceProducts[HealthSourceTypes.SumologicLogs].value,
+          label: HealthSourceProducts[HealthSourceTypes.SumologicLogs].label
         }
       ]
     default:
@@ -414,13 +414,13 @@ export function canShowDataInfoSelector(sourceType?: string, dataSourceType?: st
 }
 
 export function shouldShowProductChangeConfirmation(
-  isSumoLogicEnabled: boolean,
+  isV2HealthSource: boolean,
   currentProduct: SelectOption,
   updatedProduct: SelectOption,
   isHealthSourceConfigured: boolean
 ): boolean {
   return (
-    isSumoLogicEnabled &&
+    isV2HealthSource &&
     !isEmpty(currentProduct) &&
     currentProduct?.value !== updatedProduct?.value &&
     isHealthSourceConfigured

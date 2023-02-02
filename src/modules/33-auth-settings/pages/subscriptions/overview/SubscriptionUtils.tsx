@@ -20,7 +20,7 @@ import type {
   CIModuleLicenseDTO,
   STOModuleLicenseDTO,
   ModuleLicenseDTO,
-  CHAOSModuleLicenseDTO
+  ChaosModuleLicenseDTO
 } from 'services/cd-ng'
 import css from './SubscriptionDetailsCard.module.scss'
 
@@ -243,7 +243,7 @@ function getLicenseCountByModule({
       )
     }
     case ModuleName.CHAOS: {
-      const chaosModuleLicenseDTO = licenseData as CHAOSModuleLicenseDTO
+      const chaosModuleLicenseDTO = licenseData as ChaosModuleLicenseDTO
       const totalChaosExperimentRuns = chaosModuleLicenseDTO?.totalChaosExperimentRuns?.toLocaleString()
       const totalChaosInfrastructures = chaosModuleLicenseDTO?.totalChaosInfrastructures?.toLocaleString()
       return (

@@ -43,11 +43,11 @@ import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErr
 import routes from '@common/RouteDefinitions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { SettingType } from '@default-settings/interfaces/SettingType.types'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import css from './SecretsList.module.scss'
 
 interface SecretsListProps {
   secrets?: PageSecretResponseWrapper
-  gotoPage: (pageNumber: number) => void
   refetch?: () => void
 }
 
@@ -318,7 +318,7 @@ export const RenderColumnAction: Renderer<CellProps<SecretResponseWrapper>> = ({
     />
   )
 }
-const SecretsList: React.FC<SecretsListProps> = ({ secrets, refetch, gotoPage }) => {
+const SecretsList: React.FC<SecretsListProps> = ({ secrets, refetch }) => {
   const history = useHistory()
   const { showError } = useToaster()
   const { accountId } = useParams<ProjectPathProps>()
@@ -387,6 +387,13 @@ const SecretsList: React.FC<SecretsListProps> = ({ secrets, refetch, gotoPage })
     [refetch, forceDeleteSettings]
   )
 
+  const paginationProps = useDefaultPaginationProps({
+    itemCount: secrets?.totalItems || 0,
+    pageSize: secrets?.pageSize || 10,
+    pageCount: secrets?.totalPages || -1,
+    pageIndex: secrets?.pageIndex || 0
+  })
+
   return (
     <TableV2<SecretResponseWrapper>
       className={css.table}
@@ -396,13 +403,7 @@ const SecretsList: React.FC<SecretsListProps> = ({ secrets, refetch, gotoPage })
       onRowClick={secret => {
         history.push(`${pathname}/${secret.secret?.identifier}`)
       }}
-      pagination={{
-        itemCount: secrets?.totalItems || 0,
-        pageSize: secrets?.pageSize || 10,
-        pageCount: secrets?.totalPages || -1,
-        pageIndex: secrets?.pageIndex || 0,
-        gotoPage
-      }}
+      pagination={paginationProps}
     />
   )
 }

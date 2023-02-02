@@ -15,7 +15,19 @@ jest.mock('services/cd-ng', () => ({
   useGetProjectAggregateDTOList: jest.fn().mockImplementation(() => {
     return { data: projects, refetch: jest.fn(), error: null }
   }),
-  useDeleteProject: jest.fn().mockImplementation(() => ({ mutate: jest.fn() }))
+  useDeleteProject: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+  getOrganizationListPromise: jest.fn().mockImplementation(() => {
+    return Promise.resolve({
+      data: {
+        content: [
+          {
+            label: 'org1',
+            value: 'org1'
+          }
+        ]
+      }
+    })
+  })
 }))
 
 describe('Code Sidenav', () => {

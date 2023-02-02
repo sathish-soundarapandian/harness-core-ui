@@ -41,6 +41,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import RbacButton from '@rbac/components/Button/Button'
 import { PrincipalType } from '@rbac/utils/utils'
 import { useGetCommunity } from '@common/utils/utils'
+import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import css from './ServiceAccountsListView.module.scss'
 
 interface ServiceAccountsListViewProps {
@@ -52,7 +53,6 @@ interface ServiceAccountsListViewProps {
     roleBindings?: RoleAssignmentMetadataDTO[]
   ) => void
   openServiceAccountModal: (serviceAccount?: ServiceAccountDTO) => void
-  gotoPage: (index: number) => void
 }
 
 const RenderColumnDetails: Renderer<CellProps<ServiceAccountAggregateDTO>> = ({ row }) => {
@@ -252,8 +252,7 @@ const ServiceAccountsListView: React.FC<ServiceAccountsListViewProps> = ({
   data,
   reload,
   openRoleAssignmentModal,
-  openServiceAccountModal,
-  gotoPage
+  openServiceAccountModal
 }) => {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
@@ -323,13 +322,12 @@ const ServiceAccountsListView: React.FC<ServiceAccountsListViewProps> = ({
         )
       }}
       rowDataTestID={serviceAcc => `row-${serviceAcc.serviceAccount.identifier}`}
-      pagination={{
+      pagination={useDefaultPaginationProps({
         itemCount: data?.totalItems || 0,
         pageSize: data?.pageSize || 10,
         pageCount: data?.totalPages || 0,
-        pageIndex: data?.pageIndex || 0,
-        gotoPage: gotoPage
-      }}
+        pageIndex: data?.pageIndex || 0
+      })}
     />
   )
 }

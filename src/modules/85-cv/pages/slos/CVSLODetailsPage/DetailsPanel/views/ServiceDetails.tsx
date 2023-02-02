@@ -16,7 +16,7 @@ import routes from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { SLOType } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
 import { PeriodTypeEnum } from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy.constants'
-import { SLITypeEnum } from '@cv/pages/slos/components/CVCreateSLO/components/CreateSLOForm/components/SLI/SLI.constants'
+import { SLITypeEnum } from '@cv/pages/slos/common/SLI/SLI.constants'
 import type { KeyValuePairProps, ServiceDetailsProps } from '../DetailsPanel.types'
 import css from '../DetailsPanel.module.scss'
 

@@ -12,7 +12,7 @@ Registration of **resources** requires the following details -
 Example of a resource registration:
 
 ```typescript
-import AuditTrailFactory from '@audit-trail/factories/AuditTrailFactory'
+import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import type { ResourceDTO, ResourceScopeDTO } from 'services/audit'
 
 AuditTrailFactory.registerResourceHandler('CONNECTOR', {

@@ -15,6 +15,7 @@ declare const styles: {
   readonly inputSetForm: string
   readonly inputSetName: string
   readonly optionBtns: string
+  readonly rowBtns: string
   readonly selectedInputSetsContainer: string
 }
 export default styles

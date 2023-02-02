@@ -17,6 +17,11 @@
       padding: var(--spacing-small);
     }
   }
+  .navItemName {
+    :global(.bp3-popover-wrapper) {
+      width: 100% !important;
+    }
+  }
 }
 
 .folder.StyledProps-main {

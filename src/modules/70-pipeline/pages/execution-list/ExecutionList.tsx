@@ -75,10 +75,9 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
 
   const { module } = useModuleInfo()
   const [viewCompiledYaml, setViewCompiledYaml] = React.useState<PipelineExecutionSummary | undefined>(undefined)
-  const [loadingForDebugMode, setLoadingForDebugMode] = useState(false)
   const location = useLocation()
 
-  const isExecutionHistoryView = !!matchPath(location.pathname, {
+  const isPipelineDeploymentListView = !!matchPath(location.pathname, {
     path: routes.toPipelineDeploymentList({
       orgIdentifier,
       projectIdentifier,
@@ -89,10 +88,6 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
       branch
     })
   })
-
-  const handleSetLoadingForDebugMode = (value: boolean) => {
-    setLoadingForDebugMode(value)
-  }
 
   const isDeploymentsPage = !!matchPath(location.pathname, {
     path: routes.toDeployments({ ...params, module })
@@ -116,11 +111,11 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
       sort: sort.join(','), // TODO: this is temporary until BE supports common format for all. Currently BE supports status in  arrayFormat: 'repeat' and sort in  arrayFormat: 'comma'
       myDeployments,
       status,
-      ...(!isExecutionHistoryView && repoName ? { repoName } : {}),
+      ...(!isPipelineDeploymentListView && repoName && selectedBranch !== defaultBranchSelect ? { repoName } : {}),
       ...(selectedBranch !== defaultBranchSelect ? { branch: selectedBranch } : {}),
       repoIdentifier,
       searchTerm,
-      ...(!isExecutionHistoryView && module ? { module } : {})
+      ...(!isPipelineDeploymentListView && module ? { module } : {})
     },
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
@@ -143,7 +138,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const hasExecutions = executionList?.totalElements && executionList?.totalElements > 0
   const showSubHeader = hasExecutions || isAnyFilterApplied || selectedBranch !== defaultBranchSelect
 
-  const showSpinner = initLoading || (loading && !isPolling) || loadingForDebugMode
+  const showSpinner = initLoading || (loading && !isPolling)
 
   const onChangeRepo = (_repoName: string): void => {
     setSelectedBranch(undefined)
@@ -165,7 +160,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
         {showSubHeader && (
           <ExecutionListSubHeader
             onBranchChange={(value: string) => {
-              setSelectedBranch(value)
+              setSelectedBranch(value || defaultBranchSelect)
             }}
             selectedBranch={selectedBranch}
             showRepoBranchFilter={isDeploymentsPage}
@@ -191,7 +186,6 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
             <MemoisedExecutionListTable
               executionList={executionList}
               onViewCompiledYaml={setViewCompiledYaml}
-              setLoadingForDebugMode={handleSetLoadingForDebugMode}
               {...rest}
             />
           </>

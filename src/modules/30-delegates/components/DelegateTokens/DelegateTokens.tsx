@@ -23,7 +23,10 @@ import {
   Popover,
   ButtonVariation,
   Icon,
-  NoDataCard
+  NoDataCard,
+  Utils,
+  useToaster,
+  getErrorInfoFromErrorObject
 } from '@harness/uicore'
 
 import { PageSpinner } from '@common/components'
@@ -51,7 +54,7 @@ export const DelegateListing: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
   const [showRevoked, setShowRevoked] = useState<boolean>(false)
   const [searchString, setSearchString] = useState<string>('')
-
+  const { showError, showSuccess } = useToaster()
   const [page, setPage] = useState(0)
 
   const {
@@ -95,7 +98,30 @@ export const DelegateListing: React.FC = () => {
   const { openMoreTokenInfoModal } = useMoreTokenInfoModalModal({})
 
   const { openCreateTokenModal } = useCreateTokenModal({ onSuccess: getTokens })
+  const {
+    data: token,
+    refetch: getTokenForCopy,
+    error: singleTokenError
+  } = useGetDelegateTokens({
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier: projectIdentifier
+    },
+    lazy: true
+  })
+  useEffect(() => {
+    if (singleTokenError) {
+      showError(getErrorInfoFromErrorObject(singleTokenError))
+    }
+  }, [singleTokenError])
 
+  useEffect(() => {
+    if (token?.resource?.length && token?.resource[0].value) {
+      showSuccess(getString('delegates.tokens.tokenCopied'))
+      Utils.copy(token?.resource[0].value)
+    }
+  }, [token])
   const RenderColumnName: Renderer<CellProps<DelegateTokenDetails>> = ({ row }) => (
     <span className={`${css.tokenNameColumn} ${css.tokenCellText}`}>
       <Icon name="key" size={28} margin={{ right: 'small' }} />
@@ -156,7 +182,25 @@ export const DelegateListing: React.FC = () => {
             <MenuItem
               icon="edit"
               text={getString('delegates.tokens.moreInfo')}
-              onClick={() => openMoreTokenInfoModal(row.original.name || '')}
+              onClick={(event: React.MouseEvent<HTMLElement>) => {
+                event.stopPropagation()
+                openMoreTokenInfoModal(row.original.name || '')
+              }}
+            />
+            <MenuItem
+              icon="clipboard"
+              text={getString('delegates.tokens.copytoken')}
+              onClick={(event: React.MouseEvent<HTMLElement>) => {
+                event.stopPropagation()
+                getTokenForCopy({
+                  queryParams: {
+                    name: row.original.name,
+                    accountIdentifier: accountId,
+                    orgIdentifier,
+                    projectIdentifier
+                  }
+                })
+              }}
             />
           </Menu>
         </Popover>

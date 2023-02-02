@@ -70,7 +70,7 @@ export function ManifestWizard({
           style={{ alignSelf: 'center', marginLeft: 'var(--spacing-small)', wordBreak: 'normal' }}
           color={Color.WHITE}
         >
-          {getString('pipeline.manifestTypeLabels.HelmChartLabel')}
+          {getString('common.HelmChartLabel')}
         </Text>
       </div>
     )

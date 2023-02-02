@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly orgDropdown: string
   readonly pagination: string
   readonly pickProjectHelp: string
   readonly popover: string

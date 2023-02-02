@@ -12,10 +12,15 @@ declare const styles: {
   readonly emptyCheckBoxSpace: string
   readonly groupHeaderContainer: string
   readonly panelClassName: string
+  readonly rowBorderLine: string
+  readonly rowBorderLineForSubCategory: string
+  readonly rowHeaderLabel: string
   readonly settingCheckBoxContainer: string
   readonly settingLabelContainer: string
-  readonly settingOverrideRestore: string
+  readonly settingOverride: string
   readonly settingRestore: string
+  readonly settingRestoreRow: string
+  readonly settingRowHeader: string
   readonly subCategoryLabel: string
   readonly summaryCard: string
   readonly summarySetting: string

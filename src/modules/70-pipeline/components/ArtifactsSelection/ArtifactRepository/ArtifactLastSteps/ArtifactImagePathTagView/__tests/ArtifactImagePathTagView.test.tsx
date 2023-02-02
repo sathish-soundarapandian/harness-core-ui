@@ -7,7 +7,10 @@
 
 import React from 'react'
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
-import { render } from '@testing-library/react'
+import { findByText, render } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import * as cdng from 'services/cd-ng'
+
 import { TestWrapper } from '@common/utils/testUtils'
 import type {
   ArtifactType,
@@ -37,6 +40,12 @@ const getArtifactImagePathTagViewProps = (isArtifactPath = false): ArtifactImage
     isArtifactPath
   }
 }
+
+const fetchTags = jest.fn().mockReturnValue({
+  data: {
+    message: 'No tags'
+  }
+})
 
 describe('ArtifactImagePathTagView tests', () => {
   test('check if artifactimagetagView renders correctly', () => {
@@ -94,5 +103,145 @@ describe('ArtifactImagePathTagView tests', () => {
       { label: 'abc', value: 'abc' },
       { label: 'xyz', value: 'xyz' }
     ])
+  })
+
+  test('when tagRegex is runtime', () => {
+    const props = getArtifactImagePathTagViewProps(true)
+
+    const formProps = {
+      ...props,
+      formik: {
+        values: {
+          tagType: 'regex',
+          tagRegex: '<+input>'
+        }
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <ArtifactImagePathTagView {...formProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('when tagType is regex', () => {
+    const props = getArtifactImagePathTagViewProps(true)
+
+    const formProps = {
+      ...props,
+      formik: {
+        values: {
+          tagType: 'regex'
+        }
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <ArtifactImagePathTagView {...formProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('when tagType is value', () => {
+    const props = getArtifactImagePathTagViewProps(true)
+
+    const formProps = {
+      ...props,
+      formik: {
+        values: {
+          tagType: 'value'
+        }
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <ArtifactImagePathTagView {...formProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('when tagType is value and tag is runtime input', () => {
+    const props = getArtifactImagePathTagViewProps(true)
+
+    const formProps = {
+      ...props,
+      formik: {
+        values: {
+          tagType: 'value',
+          tag: '<+input>',
+          tagRegex: ''
+        },
+        setFieldValue: jest.fn()
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <ArtifactImagePathTagView {...formProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('when tagType is value and tag is fixed input', () => {
+    const props = getArtifactImagePathTagViewProps(true)
+
+    const formProps = {
+      ...props,
+      formik: {
+        values: {
+          tagType: 'value',
+          tag: 'tag-1.2',
+          tagRegex: ''
+        },
+        setFieldValue: jest.fn()
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <ArtifactImagePathTagView {...formProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
+  })
+
+  test('should make an api call-when artifact tag dropdown is clicked', async () => {
+    jest.spyOn(cdng, 'useGetBuildDetailsForDocker').mockImplementation((): any => {
+      return {
+        loading: true,
+        data: null,
+        refetch: fetchTags
+      }
+    })
+
+    const props = getArtifactImagePathTagViewProps(true)
+
+    const formProps = {
+      ...props,
+      formik: {
+        values: {
+          tagType: 'value'
+        }
+      }
+    }
+    const { container } = render(
+      <TestWrapper>
+        <ArtifactImagePathTagView {...formProps} />
+      </TestWrapper>
+    )
+
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+    expect(container).toMatchSnapshot()
+    const packageDropdwnBtn = container.querySelectorAll('[data-icon="chevron-down"]')[0]
+    userEvent.click(packageDropdwnBtn!)
+
+    const dropdownPortalDiv = portalDivs[0]
+    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
+
+    const noTags = await findByText(selectListMenu as HTMLElement, 'pipelineSteps.deploy.errors.notags')
+    expect(noTags).toBeDefined()
   })
 })

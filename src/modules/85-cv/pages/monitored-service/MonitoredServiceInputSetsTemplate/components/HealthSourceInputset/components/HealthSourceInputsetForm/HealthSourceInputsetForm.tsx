@@ -22,6 +22,7 @@ import {
   getMetricDefinitionData,
   getSourceTypeForConnector
 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import MetricDefinitionInptsetForm from '../MetricDefinitionInptsetForm/MetricDefinitionInptsetForm'
 import css from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.module.scss'
 
@@ -66,7 +67,7 @@ export default function HealthSourceInputsetForm({
               return (
                 <FormConnectorReferenceField
                   width={400}
-                  type={getSourceTypeForConnector(healthSource)}
+                  type={getSourceTypeForConnector(healthSource) as ConnectorInfoDTO['type']}
                   name={input.path}
                   label={
                     <Text color={Color.BLACK} font={'small'} margin={{ bottom: 'small' }}>

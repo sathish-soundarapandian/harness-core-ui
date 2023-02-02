@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import {
   AllowedTypes,
   Container,
@@ -6,9 +13,11 @@ import {
   Icon,
   Label,
   Layout,
-  MultiTypeInputType
+  MultiTypeInputType,
+  Text
 } from '@harness/uicore'
 import { get } from 'lodash-es'
+import { Color } from '@harness/design-system'
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
@@ -16,7 +25,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import type { DeploymentStageConfig, ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
-import type { TemplateStepNode } from 'services/pipeline-ng'
+import type { PipelineInfoConfig, PmsAbstractStepNode, TemplateStepNode } from 'services/pipeline-ng'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import type { StepViewType } from '../AbstractSteps/Step'
 import type { CommandFlags } from '../ManifestSelection/ManifestInterface'
@@ -25,6 +34,7 @@ import { StepWidget } from '../AbstractSteps/StepWidget'
 import type { StepType } from '../PipelineSteps/PipelineStepInterface'
 import { ConditionalExecutionForm, StrategyForm } from './StageAdvancedInputSetForm'
 import factory from '../PipelineSteps/PipelineStepFactory'
+import MultiTypePolicySetSelector from '../PipelineSteps/Common/PolicySets/MultiTypePolicySetSelector/MultiTypePolicySetSelector'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 function StepFormInternal({
@@ -130,6 +140,25 @@ function StepFormInternal({
         </div>
       )}
       {renderCommandFlags('step.spec.commandFlags')}
+      {getMultiTypeFromValue((template?.step as PmsAbstractStepNode)?.enforce?.policySets) ===
+        MultiTypeInputType.RUNTIME && (
+        <Container width={'55%'}>
+          <Text
+            color={Color.GREY_600}
+            font={{ size: 'small', weight: 'bold' }}
+            margin={{ bottom: 'small', top: 'xsmall' }}
+          >
+            {getString('pipeline.policyEnforcement.title')}
+          </Text>
+          <MultiTypePolicySetSelector<PipelineInfoConfig>
+            name={`${path}.enforce.policySets`}
+            label={getString('common.policy.policysets')}
+            expressions={expressions}
+            allowableTypes={allowableTypes}
+            disabled={readonly}
+          />
+        </Container>
+      )}
     </div>
   )
 }

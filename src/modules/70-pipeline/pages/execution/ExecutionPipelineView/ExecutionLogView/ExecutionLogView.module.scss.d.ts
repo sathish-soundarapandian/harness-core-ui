@@ -7,6 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly executionInput: string
+  readonly executionInputDialog: string
   readonly logContent: string
   readonly logsContainer: string
   readonly stageTree: string

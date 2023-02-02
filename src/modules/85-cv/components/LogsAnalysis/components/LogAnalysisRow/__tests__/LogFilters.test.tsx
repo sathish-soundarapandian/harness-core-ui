@@ -50,14 +50,14 @@ describe('LogFilters', () => {
     render(<WrapperComponent />)
 
     expect((screen.getByTestId('cv.known') as HTMLInputElement).checked).toBe(true)
-    expect((screen.getByTestId('cv.unknown') as HTMLInputElement).checked).toBe(true)
+    expect((screen.getByTestId('cd.getStartedWithCD.healthStatus.unknown') as HTMLInputElement).checked).toBe(true)
     expect((screen.getByTestId('cv.unexpectedFrequency') as HTMLInputElement).checked).toBe(true)
 
     fireEvent.click(screen.getByTestId('cv.known'))
 
     expect(onFilterChange).toHaveBeenCalledWith(false, 'KNOWN_EVENT')
 
-    fireEvent.click(screen.getByTestId('cv.unknown'))
+    fireEvent.click(screen.getByTestId('cd.getStartedWithCD.healthStatus.unknown'))
 
     expect(onFilterChange).toHaveBeenNthCalledWith(2, false, 'UNKNOWN_EVENT')
 

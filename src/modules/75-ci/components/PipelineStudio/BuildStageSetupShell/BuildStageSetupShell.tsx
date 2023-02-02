@@ -146,8 +146,13 @@ const BuildStageSetupShell: React.FC<BuildStageSetupShellProps> = ({ moduleIcon 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     (stageData?.spec?.infrastructure as UseFromStageInfraYaml)?.useFromStage,
     poolName,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     (stageData?.spec?.infrastructure as K8sHostedInfraYaml)?.spec,
-    stageData?.spec?.execution?.steps?.length
+    stageData?.spec?.execution?.steps?.length,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    (stageData?.spec?.platform as Platform)?.os,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    (stageData?.spec?.platform as Platform)?.arch
   ])
 
   /* If a stage A propagates it's infra from another stage B and number of stages in a pipeline change due to deletion of propagated stage B, then infra for stage A needs to be reset */

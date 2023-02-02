@@ -8,6 +8,7 @@
 import React, { useState, useEffect, useRef, Dispatch, SetStateAction, useMemo, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { debounce, get, isEmpty, isUndefined, set, omit } from 'lodash-es'
+import produce from 'immer'
 import {
   FormInput,
   MultiTypeInputType,
@@ -396,7 +397,11 @@ function CICodebaseInputSetFormInternal({
               .then((result: ResponseGitBranchesResponseDTO) => {
                 setIsFetchingBranches(false)
                 const branchName = result.data?.defaultBranch?.name || ''
-                formik.setFieldValue(codeBaseInputFieldFormName.branch, branchName)
+                formik?.setValues(
+                  produce(formik?.values, (draft: PipelineInfoConfig) => {
+                    set(set(draft, codeBaseTypePath, codeBaseType), codeBaseInputFieldFormName.branch, branchName)
+                  })
+                )
                 savedValues.current.branch = branchName as string
 
                 if (result.data?.defaultBranch?.name) {
@@ -412,7 +417,7 @@ function CICodebaseInputSetFormInternal({
         }
       }
     },
-    [shouldAllowRepoFetch, originalPipeline]
+    [shouldAllowRepoFetch, originalPipeline, codeBaseType]
   )
 
   useEffect(() => {

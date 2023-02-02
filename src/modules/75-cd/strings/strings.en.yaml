@@ -45,6 +45,7 @@ steps:
     attributesPlaceholder: Specify list of comma separated attributes and values. E.g. hostType:DB, region:west
     specifyHostsOption: Specify hosts
     preconfiguredHostsOption: Select preconfigured hosts from Physical Data Center
+    dynamicProvision: Map Dynamically Provisioned Infrastructure
     pdcConnectorLabel: Physical Datacentar Connector
     includeAllHosts: Include all hosts
     filterHostName: Filter by host name
@@ -54,6 +55,11 @@ steps:
     specificAttributes: Specific Attributes
     specificAttributesOptional: Specific Attributes (Optional)
     hostsOptional: Hosts (Optional)
+    hostDataMapping: Host Data Mapping
+    hostDataMappingEmptyKey: Field cannot have empty key entry
+    hostnameRqrd: A hostname key attribute is required
+    hostObjectPath: Host Object Array Path
+    hostObjectPathPlaceholder: Path value
     previewHosts: Preview Hosts
     noHosts: No hosts provided
     title: Select Hosts
@@ -146,6 +152,12 @@ steps:
     tempRouteMandatory: Temp route is mandatory
     upscaleNewFirstLabel: Add new instances first, then downsize old instances
     downScaleOldFirstLabel: Downsize old instances first, then add new instances
+  googleCloudFunctionCommon:
+    fieldMask: Field Mask
+    fieldMaskPlaceholder: Enter Field Mask
+    trafficPercent: Traffic Percent
+    trafficPercentPlaceholder: Enter Traffic Percent
+
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
@@ -176,7 +188,7 @@ cdSwitchToFirstGen:
 chooseProvisionerText: What type of provisioner do you want to use?
 setUpProvisionerBtnText: Set Up Provisioner
 
-filePathRequired: Atleast one file path is required
+filePathRequired: At least one file path is required
 pathCannotBeEmpty: File Path cannot be empty
 configFilePlaceHolder: 'Specify Config File...'
 backendConfigFilePlaceHolder: 'Specify Backend Config File...'
@@ -233,8 +245,12 @@ pipelineSteps:
     clusterIsRequired: 'Cluster is required'
     multiEnvToggleText: 'Deploy to multiple Environments or {{name}}'
     envGroupToggleText: 'Deploy to Environment Group'
-    viewEnvironmentInputs: View environment inputs
-    hideEnvironmentInputs: Hide environment inputs
+    viewEnvironmentInputs: View Environment inputs
+    hideEnvironmentInputs: Hide Environment inputs
+    viewServiceOverrideInputs: View Service Override inputs
+    hideServiceOverrideInputs: Hide Service Override inputs
+    viewEnvironmentServiceOverrideInputs: View Environment inputs & Service Override inputs
+    hideEnvironmentServiceOverrideInputs: Hide Environment inputs & Service Override inputs
     viewInfrastructureInputs: View infrastructure inputs
     hideInfrastructureInputs: Hide infrastructure inputs
     multiEnvironmentsParallelDeployLabel: Deploy to Environments or Infrastructures in parallel?
@@ -271,6 +287,10 @@ pipelineSteps:
       serviceDefinition: Service Definition
       scalingPolicy: Scaling Policy
       scalableTarget: Scalable Target
+      functionDefinition: Function Definition
+      manifestFirstStepTitle: Copy the template manifest file to create your own
+      googleCloudFunctionDefinitionLearnMore: Learn more about YAML format for Google cloud function creation
+      manifestSecondStepTitle: Link the function file from your Git repository
     newServiceOverride: New configuration overrides
     multiServicesText: Deploy multiple Services
     multiServicesTitleText: Deploy multiple Services?
@@ -350,11 +370,18 @@ serviceDashboard:
   containerList: Container List
   elastigroupId: Elastigroup Id
   ec2InstanceId: EC2 Instance Id
+  revision: revision
+  functionName: functionName
+  source: source
+  runTime: runTime
+  updatedTime: updatedTime
+  memorySize: memorySize
 noEnvironment:
-  title: No Environments Available
+  title: You have no Environments
   message: Create an environment and let’s start configuring the deployment
 gitOps: '{{ $.common.gitOps }}'
 addService: Add Service
+noService: You have no Services
 addEnvironment: Add Environment
 editIdError: 'ID: {{id}} cannot be edited'
 typeError: 'Type should not be empty and contain either "Production" or "PreProduction"'
@@ -531,7 +558,12 @@ manifestId: Manifest Id
 azureWebAppRollbackDescription: Rollback to the last successfully deployed app.
 azureWebAppSwapSlotDescription: Azure Swap environment slot with new instance.
 asgCanaryDeleteStepDescription: Asg Canary Delete
+asgRollingDeployStepDescription: Asg Rolling Deploy
 asgRollingRollbackStepDescription: Asg Rolling Rollback
+asgBlueGreenRollbackStepDescription: Asg Blue Green Rollback
+asgBlueGreenSwapServiceStepDescription: Asg Blue Green Swap Service
+downsizeOldAsg: Downsize old ASG
+asgBlueGreenDeployStepDescription: Asg Blue Green Deploy
 minimumHealthyPercentageMaxLimit: Minimum Healthy Percentage should be less than 100%
 minimumHealthyPercentageMinLimit: Minimum Healthy Percentage should be positive percentage
 instanceWarmupError: Instance Warmup must be a positive number
@@ -541,12 +573,44 @@ minimumHealthyPercentageLabel: Minimum Healthy Percentage (Optional)
 minimumHealthyPercentagePlaceholder: Minimum Healthy Percentage
 instanceWarmupLabel: Instance Warmup (Optional)
 instanceWarmupPlaceholder: Instance Warmup
+loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
-k8sDryRunStepDescription: Dry Run Apply the service manifests and leverage the dry run yaml as output for subsequent steps
+k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  clusterSpec1: 4GB Memory
+  clusterSpec2: 2 CPU
+  clusterSpec3: 1 worker node
+  clusterSpecInfo: This specification is sufficient for you to host a basic hello world application
+  clusterspec: Cluster Specifications
+  managedCluster: Make use of our managed cluster to facilitate your deployment if you’re trying out Harness CD-GitOps for the first time, this will expire after X days! Learn more
+  ipWhitelist: You will be required to Set up IP Whitelisting for Harness to connect to your cluster
+  tryAnotherCreds: Not the right authentication? Switch account here!
+  master: master
+  targetRevision: Target Revision
+  anonymous: anonymous
+  usernameAndPassword: Username & Password
+  clickForOtherDeploymentTypes: Click here for other deployment types
+  createCluster: Create a cluster if needed
+  failedToAuthenticate: Failed to authenticate to
+  clusterCreatedSuccessfully: created successfully
+  successfullyAuthenticated: Successfully authenticated to
+  failedSourceText: Still failed to authenticate despite having entered the correct credentials? Here’s what you can try to do..
+  checkAnnonymously: Connect Annonymously
+  checkAuthSettings: Check to ensure there’s sufficient access/authorization settings in your git repo.
+  awsRegionHelperText: replace REGION with your AWS region, for example us-west-1
+  azureAKSHelperText: replace myResourceGroup with your AKS resource group
+  googleGKEHelperText: replace ZONE with your GCP region, for example us-central1-c
   onboardingTitle: Start your deployments journey with Harness CD
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
+  gitopsOnboardingAgentStep: Connect to Harness by provisioning hosted Agent
+  gitopsOnboardingSource: Where is your source?
+  gitopsOnboardingDestination: Where to deploy to?
+  gitopsOnboardingConfigureStep: Configure the source and destination
+  gitopsOnboardingDeployStep: You are all set!
   runDelegateSubtitle: You can install the Delegate in your target environment.
+  haveGitRepo: Do you have a git repo you can connect to?
+  selectAuthType: How would you like to authenticate?
+  doesntHaveGitRepo: No, connect to sample source
   delegateInstalled: Delegate installed successfully
   selectDeploymentType: Select deployment type
   deployToGitops: Do you want to deploy using GitOps?
@@ -610,6 +674,33 @@ getStartedWithCD:
   installDelegateToTargetEnv: Install a Harness Delegate in your target environment.
   delegateDescription: A Delegate is a service that runs on your infrastructure to execute tasks on behalf of the Harness platform.
   helpAndTroubleshoot: Help & Troubleshoot
+  hostedAgentExplain: What is it?
+  hostedAgentExplainContent: Sample Text
+  hostedAgentInstall: What will be installed
+  hostedAgentInfoTitle: What you need to do
+  gitOpsAgent: GitOps agent
+  repoServer: Repo server
+  redisCache: Redis cache
+  applicationController: Application controller
+  provisioningText: Provisioning these components will take up to 1 minute
+  setupIPWhiteListing: Set up IP Whitelisting for Harness to connect to your cluster
+  agentProvisionedSuccessfully: Your agent has been provisioned successfully
+  agentSetupTimeInfo: This process may take up to 1 minutes to complete. While the agent is being provisioned, please set up IP Whitelisting so Harness can connect to your cluster
+  ensureFullConnectivity: To ensure the full connectivity, please make sure you have set up IP Whitelisting before moving to the next step
+  harnessHosted: Harness hosted
+  selfManaged: Self-managed
+  nameYourCluster: Name your cluster
+  connectionStatus: Connection Status
+  healthStatusLabel: Health Status
+  mappedHarnessProjects: Mapped Harness projects
+  disconnected: Disconnected
+  healthStatus:
+    degraded: Degraded
+    healthy: Healthy
+    missing: Missing
+    progressing: Progressing
+    suspended: Suspended
+    unknown: Unknown
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment
@@ -641,7 +732,6 @@ validation:
   specifyFilter: Specify the filter condition
 welcomeMessage: Welcome to Harness
 welcomeToHarnessCD: Welcome to Harness Continuous Delivery!
-learnMoreDelegate: Learn more about Delegates
 runDelegate: How do you want to install the Delegate?
 installDelegate: Install Delegate
 instructionsDelegate: Install the Delegate
@@ -650,10 +740,8 @@ installCluster: Install on your Cluster
 checkCluster: Set up and connect to your target cluster.
 delegateInstallCommand: 'Install the Delegate with the following command:'
 delegateConnectionWait: Wait for the Delegate to register
-delegateFailed: Delegate Failed to connect to Harness
 delegateFailText1: Harness Delegate Failed to connect to our Harness SaaS. Please make sure the infrastructure the delegate is installed on can reach https://app.harness.io
-delegateFailText2: The Delegate failed to come up on the cluster, please check to see if the pods are healthy or could be scheduled on the cluster
-delegateSuccess: Great! You have successfully installed the Delegate.
+
 pipelineCreation: Please proceed to creating your first pipeline
 instructionsCluster: Set up and connect to your target cluster
 googleK8sService: Google K8s Service
@@ -667,10 +755,13 @@ kubectlCommand: gcloud components install kubectl
 oauthPlugin: Install Google auth plugin to the cluster
 oauthPluginCmd: gcloud components install gke-gcloud-auth-plugin
 clusterVerify: Verify the connection to the cluster
+gcloudClusterCreate: gcloud container clusters create mycluster --machine-type n1-standard-2 --num-nodes 2 --zone ZONE
+gcloudClusterList: gcloud container clusters list
 gcloudClusterCmd: gcloud container clusters get-credentials CLUSTER_NAME
 kubectlNamespace: kubectl get namespaces
 pluginVersion: gke-gcloud-auth-plugin --version
 awsCli: Make sure the aws cli and eksctl and are installed
+awsClusterCreate: eksctl create cluster --name mycluster --version 1.18 --region REGION --nodegroup-name standard-workers --node-type t3.xlarge --nodes 2 --nodes-min 1 --nodes-max 3 --node-ami auto
 amazonElasticCmd: eksctl utils write-kubeconfig --cluster=delegate
 azureCli: Make sure the Azure CLI is installed
 azureCliCmd: az aks install-cli

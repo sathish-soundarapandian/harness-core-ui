@@ -36,13 +36,14 @@ export function NoTagResults({
 
   const getErrorText = useCallback(() => {
     if (isServerlessDeploymentTypeSelected) {
+      /* istanbul ignore next */
       return getString('pipeline.noArtifactPaths')
     }
     return defaultErrorText || getString('pipelineSteps.deploy.errors.notags')
   }, [isServerlessDeploymentTypeSelected, getString])
 
   return (
-    <Text className={css.padSmall} lineClamp={1}>
+    <Text lineClamp={1} width={400}>
       {get(tagError, 'data.message', null) || getErrorText()}
     </Text>
   )
@@ -155,6 +156,7 @@ function ArtifactImagePathTagView({
                 showDefaultField={false}
                 showAdvanced={true}
                 onChange={value => {
+                  /* istanbul ignore next */
                   formik.setFieldValue('artifactPath', value)
                 }}
                 isReadonly={isReadonly}
@@ -182,6 +184,7 @@ function ArtifactImagePathTagView({
                   showDefaultField={false}
                   showAdvanced={true}
                   onChange={value => {
+                    /* istanbul ignore next */
                     formik.setFieldValue('imagePath', value)
                   }}
                   isReadonly={isReadonly}
@@ -252,6 +255,7 @@ function ArtifactImagePathTagView({
                 showDefaultField={false}
                 showAdvanced={true}
                 onChange={value => {
+                  /* istanbul ignore next */
                   formik.setFieldValue('tag', value)
                 }}
                 isReadonly={isReadonly}

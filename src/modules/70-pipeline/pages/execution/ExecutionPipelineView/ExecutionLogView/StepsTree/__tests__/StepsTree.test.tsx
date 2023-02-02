@@ -15,13 +15,29 @@ import data from './data.json'
 import retryData from './retryData.json'
 describe('<StepsTree /> tests', () => {
   test('snapshot test', () => {
-    const { container } = render(<StepsTree nodes={data as any} onStepSelect={jest.fn()} allNodeMap={{}} isRoot />)
+    const { container } = render(
+      <StepsTree
+        openExecutionTimeInputsForStep={jest.fn()}
+        nodes={data as any}
+        onStepSelect={jest.fn()}
+        allNodeMap={{}}
+        isRoot
+      />
+    )
     expect(container).toMatchSnapshot()
   })
 
   test('step selection works', async () => {
     const onStepSelect = jest.fn()
-    const { findByText } = render(<StepsTree nodes={data as any} onStepSelect={onStepSelect} allNodeMap={{}} isRoot />)
+    const { findByText } = render(
+      <StepsTree
+        openExecutionTimeInputsForStep={jest.fn()}
+        nodes={data as any}
+        onStepSelect={onStepSelect}
+        allNodeMap={{}}
+        isRoot
+      />
+    )
 
     const step = await findByText('Step 1')
 
@@ -32,7 +48,15 @@ describe('<StepsTree /> tests', () => {
 
   test('step selection does not work not started steps', async () => {
     const onStepSelect = jest.fn()
-    const { findByText } = render(<StepsTree nodes={data as any} onStepSelect={onStepSelect} allNodeMap={{}} isRoot />)
+    const { findByText } = render(
+      <StepsTree
+        openExecutionTimeInputsForStep={jest.fn()}
+        nodes={data as any}
+        onStepSelect={onStepSelect}
+        allNodeMap={{}}
+        isRoot
+      />
+    )
 
     const step = await findByText('step_4_1_2')
 

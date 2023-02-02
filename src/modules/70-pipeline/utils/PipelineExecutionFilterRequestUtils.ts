@@ -13,6 +13,7 @@ import { EXECUTION_STATUS } from '@pipeline/utils/statusHelpers'
 import type { FilterDataInterface, FilterInterface } from '@common/components/Filter/Constants'
 import { StringUtils } from '@common/exports'
 import type { CIWebhookInfoDTO } from 'services/ci'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 
 export interface DeploymentTypeContext {
   deploymentType?: MultiSelectOption[]
@@ -199,7 +200,11 @@ export const getBuildType = (moduleProperties: {
 
 export const getMultiSelectFormOptions = (values?: any[], entityName?: string): SelectOption[] | undefined => {
   return values?.map(item => {
-    return { label: get(item, `${entityName}.name`) ?? item, value: get(item, `${entityName}.identifier`) ?? item }
+    const entityValue = get(item, `${entityName}`)
+    return {
+      label: entityValue?.name ?? item,
+      value: entityValue ? getScopedValueFromDTO(entityValue) : item
+    }
   })
 }
 

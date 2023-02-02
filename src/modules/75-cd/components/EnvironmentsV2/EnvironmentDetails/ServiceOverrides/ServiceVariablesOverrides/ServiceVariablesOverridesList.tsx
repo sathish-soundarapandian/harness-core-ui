@@ -6,11 +6,13 @@
  */
 
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { isEmpty } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
+import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -23,12 +25,6 @@ interface ServiceVariablesOverridesListProps {
   onServiceVarEdit: (index: number) => void
   onServiceVarDelete: (index: number) => void
 }
-const rbacPermission = {
-  resource: {
-    resourceType: ResourceType.ENVIRONMENT
-  },
-  permission: PermissionIdentifier.EDIT_ENVIRONMENT
-}
 function ServiceVariablesOverridesList({
   variableOverrides,
   isReadonly,
@@ -36,6 +32,23 @@ function ServiceVariablesOverridesList({
   onServiceVarEdit
 }: ServiceVariablesOverridesListProps): React.ReactElement {
   const { getString } = useStrings()
+  const { accountId, projectIdentifier, orgIdentifier, environmentIdentifier } = useParams<
+    ProjectPathProps & EnvironmentPathProps
+  >()
+
+  const rbacPermission = {
+    resource: {
+      resourceType: ResourceType.ENVIRONMENT,
+      resourceIdentifier: environmentIdentifier
+    },
+    resourceScope: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
+    },
+    permission: PermissionIdentifier.EDIT_ENVIRONMENT
+  }
+
   return (
     <Layout.Vertical>
       {!isEmpty(variableOverrides) && (

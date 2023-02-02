@@ -10,16 +10,6 @@ exports[`Sidenav render 1`] = `
     />
     <a
       class="link"
-      href="/account/dummy/cd/orgs/dummy/projects/dummy/dashboard"
-    >
-      <p
-        class="StyledProps--font StyledProps--main text"
-      >
-        Overview
-      </p>
-    </a>
-    <a
-      class="link"
       href="/account/dummy/cd/orgs/dummy/projects/dummy/deployments"
     >
       <p
@@ -50,7 +40,7 @@ exports[`Sidenav render 1`] = `
     </a>
     <a
       class="link"
-      href="/account/dummy/cd/orgs/dummy/projects/dummy/environment"
+      href="/account/dummy/cd/orgs/dummy/projects/dummy/environments"
     >
       <p
         class="StyledProps--font StyledProps--main text"

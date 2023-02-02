@@ -66,7 +66,6 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
-  getConnectorRefFqnPath,
   getDefaultQueryParam,
   getFinalQueryParamValue,
   getFqnPath,
@@ -762,7 +761,7 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
               fieldPath={`artifacts.${artifactPath}.spec.repository`}
               template={template}
               serviceId={isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined}
-              fqnPath={getConnectorRefFqnPath(
+              fqnPath={getFqnPath(
                 path as string,
                 !!isPropagatedStage,
                 stageIdentifier,

@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { UseQueryResult } from '@tanstack/react-query'
 import React from 'react'
 import { render } from '@testing-library/react'
 import { screen } from '@testing-library/dom'
@@ -12,7 +13,8 @@ import routes from '@common/RouteDefinitions'
 import { TestWrapper } from '@common/utils/testUtils'
 import { CardVariant } from '@pipeline/utils/constants'
 import type { PipelineExecutionSummary } from 'services/pipeline-ng'
-import * as stoService from 'services/sto'
+import type { FrontendExecutionIssueCountsError } from 'services/sto/stoComponents'
+import * as stoService from 'services/sto/stoComponents'
 import type { SeverityPillProps } from '@sto/components/SeverityPill/SeverityPill'
 import STOExecutionCardSummary from '@sto/components/STOExecutionCardSummary/STOExecutionCardSummary'
 
@@ -56,12 +58,11 @@ const failedPipelineExecutionSummary = {
 
 describe('STOExecutionCardSummary', () => {
   test('renders correctly', () => {
-    jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
+    jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: { 'execution-id': { critical: 1, high: 2, medium: 3, low: 4, info: 5, unassigned: 0 } },
-      loading: false,
-      response: null,
+      isLoading: false,
       error: null
-    })
+    } as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
 
     const { container } = render(
       <TestWrapper path={testPath} pathParams={testParams}>
@@ -77,12 +78,11 @@ describe('STOExecutionCardSummary', () => {
   })
 
   test('only renders non-zero counts', () => {
-    jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
+    jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: { 'execution-id': { critical: 1, high: 0, medium: 0, low: 0, info: 0, unassigned: 0 } },
-      loading: false,
-      response: null,
+      isLoading: false,
       error: null
-    })
+    } as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
 
     const { queryByTestId } = render(
       <TestWrapper path={testPath} pathParams={testParams}>
@@ -99,21 +99,19 @@ describe('STOExecutionCardSummary', () => {
     expect(queryByTestId('Medium')).toBeNull()
     expect(queryByTestId('Low')).toBeNull()
 
-    jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
+    jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: { 'execution-id': { critical: 0, high: 11, medium: 0, low: 0, info: 0, unassigned: 0 } },
-      loading: false,
-      response: null,
+      isLoading: false,
       error: null
-    })
+    } as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
   })
 
   test("only renders non-zero counts (cont'd)", () => {
-    jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
+    jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: { 'execution-id': { critical: 0, high: 11, medium: 0, low: 0, info: 0, unassigned: 0 } },
-      loading: false,
-      response: null,
+      isLoading: false,
       error: null
-    })
+    } as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
 
     const { queryByTestId } = render(
       <TestWrapper path={testPath} pathParams={testParams}>
@@ -132,12 +130,11 @@ describe('STOExecutionCardSummary', () => {
   })
 
   test('shows loading spinner', () => {
-    jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
+    jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: null,
-      loading: true,
-      response: null,
+      isLoading: true,
       error: null
-    })
+    } as unknown as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
 
     const { container } = render(
       <TestWrapper path={testPath} pathParams={testParams} getString={id => id}>
@@ -153,12 +150,11 @@ describe('STOExecutionCardSummary', () => {
   })
 
   test('shows an error message', () => {
-    jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
+    jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: null,
-      loading: false,
-      response: null,
-      error: { data: 'Error!', message: 'Error!', status: 500 }
-    })
+      isLoading: false,
+      error: { payload: { message: 'Error!', status: 500 } }
+    } as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
 
     render(
       <TestWrapper path={testPath} pathParams={testParams} getString={id => id}>
@@ -174,12 +170,11 @@ describe('STOExecutionCardSummary', () => {
   })
 
   test('shows no security tests message', () => {
-    jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
+    jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: {},
-      loading: false,
-      response: null,
+      isLoading: false,
       error: null
-    })
+    } as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
 
     render(
       <TestWrapper path={testPath} pathParams={testParams} getString={id => id}>
@@ -195,12 +190,11 @@ describe('STOExecutionCardSummary', () => {
   })
 
   test('shows issues on pipeline failure', () => {
-    jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
+    jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: { 'execution-id': { critical: 1, high: 2, medium: 3, low: 4, info: 5, unassigned: 0 } },
-      loading: false,
-      response: null,
+      isLoading: false,
       error: null
-    })
+    } as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
 
     const { container } = render(
       <TestWrapper path={testPath} pathParams={testParams}>
@@ -216,12 +210,11 @@ describe('STOExecutionCardSummary', () => {
   })
 
   test('shows no issues message', () => {
-    jest.spyOn(stoService, 'useIssueCounts').mockReturnValue({
+    jest.spyOn(stoService, 'useFrontendExecutionIssueCounts').mockReturnValue({
       data: { 'execution-id': { critical: 0, high: 0, medium: 0, low: 0, info: 0, unassigned: 0 } },
-      loading: false,
-      response: null,
+      isLoading: false,
       error: null
-    })
+    } as UseQueryResult<unknown, FrontendExecutionIssueCountsError>)
 
     render(
       <TestWrapper path={testPath} pathParams={testParams} getString={id => id}>

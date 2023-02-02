@@ -45,6 +45,8 @@ import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOu
 import { initConfigurationsForm } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import { getSourceTypeForConnector } from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import type { HealthSource } from 'services/cv'
+import { V2_HEALTHSOURCES } from '@cv/components/PipelineSteps/ContinousVerification/constants'
+import type { ConnectorInfoDTO } from 'services/cd-ng'
 import { ConnectorRefFieldName, HEALTHSOURCE_LIST } from './DefineHealthSource.constant'
 import {
   getFeatureOption,
@@ -60,10 +62,11 @@ import {
 } from './DefineHealthSource.utils'
 import PrometheusDataSourceTypeSelector from './components/DataSourceTypeSelector/DataSourceTypeSelector'
 import DataInfoSelector from './components/DataInfoSelector/DataInfoSelector'
+import type { DefineHealthSourceFormInterface } from './DefineHealthSource.types'
 import css from './DefineHealthSource.module.scss'
 
 interface DefineHealthSourceProps {
-  onSubmit?: (values: any) => void
+  onSubmit?: (values: DefineHealthSourceFormInterface) => void
   isTemplate?: boolean
   expressions?: string[]
 }
@@ -149,7 +152,9 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
           orgIdentifier={orgIdentifier}
           width={400}
           type={
-            currentHealthSource ? getSourceTypeForConnector(currentHealthSource) : healthSourceTypeMapping(sourceType)
+            (currentHealthSource
+              ? getSourceTypeForConnector(currentHealthSource)
+              : healthSourceTypeMapping(sourceType)) as ConnectorInfoDTO['type']
           }
           multiTypeProps={{ expressions, allowableTypes: AllMultiTypeInputTypesForStep }}
           onChange={(value: any) => {
@@ -256,7 +261,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
 
   return (
     <BGColorWrapper>
-      <Formik
+      <Formik<DefineHealthSourceFormInterface>
         enableReinitialize
         initialValues={initialValues}
         formName={'defineHealthsource'}
@@ -280,7 +285,7 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
         innerRef={defineHealthSourceFormRef as Ref<FormikProps<any>>}
       >
         {formik => {
-          const featureOption = getFeatureOption(formik?.values?.sourceType, getString, isSplunkMetricEnabled)
+          const featureOption = getFeatureOption(formik?.values?.sourceType as string, getString, isSplunkMetricEnabled)
           return (
             <FormikForm className={css.formFullheight}>
               <CardWithOuterTitle title={getString('cv.healthSource.defineHealthSource')}>
@@ -407,9 +412,12 @@ function DefineHealthSource(props: DefineHealthSourceProps): JSX.Element {
                         const currentProduct = formik?.values?.product
                         const updatedProduct = product
                         const isHealthSourceConfigured = formik?.values?.queryMetricsMap?.size > 0
+                        const isV2HealthSource = V2_HEALTHSOURCES.includes(
+                          formik?.values?.sourceType as HealthSourceTypes
+                        )
                         if (
                           shouldShowProductChangeConfirmation(
-                            isSumoLogicEnabled,
+                            isV2HealthSource,
                             currentProduct,
                             updatedProduct,
                             isHealthSourceConfigured

@@ -16,7 +16,7 @@ import { validateInputSet } from '@pipeline/components/PipelineSteps/Steps/Steps
 import { getFormValuesInCorrectFormat } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import type { StringsMap } from 'stringTypes'
 import { SnykStepBaseWithRef } from './SnykStepBase'
-import { SnykStepInputSet } from './SnykStepInputSet'
+import { SecurityStepInputSet } from '../SecurityStepInputSet'
 import { SnykStepVariables, SnykStepVariablesProps } from './SnykStepVariables'
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SnykStepFunctionConfigs'
 import type { SecurityStepData, SecurityStepSpec } from '../types'
@@ -58,12 +58,10 @@ export class SnykStep extends PipelineStep<SnykStepData> {
         type: 'repository',
         name: '',
         variant: '',
-        workspace: '/harness'
+        workspace: ''
       },
       auth: {
-        domain: '',
-        access_token: '<+secrets.getValue("your_snyk_token_secret")>',
-        ssl: true
+        access_token: ''
       },
       advanced: {
         log: {
@@ -109,32 +107,29 @@ export class SnykStep extends PipelineStep<SnykStepData> {
       allowableTypes
     } = props
 
-    switch (stepViewType) {
-      case StepViewType.InputSet:
-      case StepViewType.DeploymentForm:
-        return (
-          <SnykStepInputSet
-            initialValues={initialValues}
-            /* istanbul ignore next */
-            template={inputSetData?.template}
-            /* istanbul ignore next */
-            path={inputSetData?.path || ''}
-            readonly={!!inputSetData?.readonly}
-            stepViewType={stepViewType}
-            onUpdate={onUpdate}
-            onChange={onChange}
-            allowableTypes={allowableTypes}
-          />
-        )
-
-      case StepViewType.InputVariable:
-        return (
-          <SnykStepVariables
-            {...(customStepProps as SnykStepVariablesProps)}
-            initialValues={initialValues}
-            onUpdate={onUpdate}
-          />
-        )
+    if (this.isTemplatizedView(stepViewType)) {
+      return (
+        <SecurityStepInputSet
+          initialValues={initialValues}
+          /* istanbul ignore next */
+          template={inputSetData?.template}
+          /* istanbul ignore next */
+          path={inputSetData?.path || ''}
+          readonly={!!inputSetData?.readonly}
+          stepViewType={stepViewType}
+          onUpdate={onUpdate}
+          onChange={onChange}
+          allowableTypes={allowableTypes}
+        />
+      )
+    } else if (stepViewType === StepViewType.InputVariable) {
+      return (
+        <SnykStepVariables
+          {...(customStepProps as SnykStepVariablesProps)}
+          initialValues={initialValues}
+          onUpdate={onUpdate}
+        />
+      )
     }
 
     return (

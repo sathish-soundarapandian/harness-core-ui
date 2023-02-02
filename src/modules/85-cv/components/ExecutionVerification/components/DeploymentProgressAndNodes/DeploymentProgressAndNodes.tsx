@@ -9,71 +9,74 @@ import React, { useMemo } from 'react'
 import { Container, Text } from '@harness/uicore'
 import moment from 'moment'
 import cx from 'classnames'
-import type { DeploymentVerificationJobInstanceSummary } from 'services/cv'
+import type { AnalysedNodeOverview, VerificationOverview } from 'services/cv'
 import { useStrings } from 'framework/strings'
-import TestsSummaryView from './components/TestSummaryView/TestsSummaryView'
 import CVProgressBar from './components/CVProgressBar/CVProgressBar'
 import { PrimaryAndCanaryNodes } from '../ExecutionVerificationSummary/components/PrimaryandCanaryNodes/PrimaryAndCanaryNodes'
 import VerificationStatusCard from './components/VerificationStatusCard/VerificationStatusCard'
-import type { DeploymentNodeAnalysisResult } from './components/DeploymentNodes/DeploymentNodes.constants'
 import { DurationView } from './components/DurationView/DurationView'
 import { deploymentTypesToShowNodes } from './DeploymentProgressAndNodes.constants'
+import TestsSummaryView from './components/TestSummaryView/TestsSummaryView'
 import css from './DeploymentProgressAndNodes.module.scss'
 
 export interface DeploymentProgressAndNodesProps {
-  deploymentSummary?: DeploymentVerificationJobInstanceSummary
-  onSelectNode?: (node?: DeploymentNodeAnalysisResult) => void
+  data: VerificationOverview | null
+  onSelectNode?: (node?: AnalysedNodeOverview) => void
   className?: string
   isConsoleView?: boolean
 }
 
 export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProps): JSX.Element {
-  const { deploymentSummary, onSelectNode, className, isConsoleView } = props
+  const { onSelectNode, className, isConsoleView, data } = props
+  const { appliedDeploymentAnalysisType, metricsAnalysis, verificationStartTimestamp } = data || {}
   const { getString } = useStrings()
+
   const deploymentNodesData = useMemo(() => {
-    if (deploymentSummary && deploymentTypesToShowNodes.includes(deploymentSummary.additionalInfo?.type)) {
-      const {
-        primary: before = [],
-        canary: after = [],
-        trafficSplitPercentage,
-        primaryInstancesLabel: labelBefore,
-        canaryInstancesLabel: labelAfter
-      } = deploymentSummary.additionalInfo as any
+    if (data && deploymentTypesToShowNodes.includes(appliedDeploymentAnalysisType as any)) {
+      const { testNodes: after = [], controlNodes: before = [] } = data || {}
+      const labelBefore = (before as AnalysedNodeOverview)?.nodeType
+      const labelAfter = (after as AnalysedNodeOverview)?.nodeType
+
       return {
         before,
         after,
-        percentageBefore: Math.round(trafficSplitPercentage?.preDeploymentPercentage),
-        percentageAfter: Math.round(trafficSplitPercentage?.postDeploymentPercentage),
         labelBefore,
         labelAfter
       }
     }
-  }, [deploymentSummary])
+  }, [appliedDeploymentAnalysisType, data])
+
   const baselineSummaryData = useMemo(() => {
-    if (deploymentSummary && deploymentSummary.additionalInfo && deploymentSummary.additionalInfo.type === 'TEST') {
-      const { baselineDeploymentTag, baselineStartTime, currentDeploymentTag, currentStartTime } =
-        deploymentSummary.additionalInfo as any
+    if (data && data?.appliedDeploymentAnalysisType === 'TEST') {
+      const testNodes = data?.testNodes || []
+      const controlNodes = data?.controlNodes
+
+      const currentTestName = (testNodes as AnalysedNodeOverview)?.nodes?.[0]?.deploymentTag
+      const currentTestDate = (testNodes as AnalysedNodeOverview)?.nodes?.[0]?.testStartTimestamp
+      const baselineTestName = (controlNodes as AnalysedNodeOverview)?.nodes?.[0]?.deploymentTag
+      const baselineTestDate = (controlNodes as AnalysedNodeOverview)?.nodes?.[0]?.testStartTimestamp
+
       return {
-        baselineTestName: baselineDeploymentTag,
-        baselineTestDate: baselineStartTime,
-        currentTestName: currentDeploymentTag,
-        currentTestDate: currentStartTime
+        baselineTestName,
+        baselineTestDate,
+        currentTestName,
+        currentTestDate
       }
     }
-  }, [deploymentSummary])
+  }, [data])
 
-  const renderContent = () => {
-    if (deploymentSummary?.progressPercentage === 0 && deploymentSummary.status === 'IN_PROGRESS') {
+  const renderContent = (): JSX.Element | undefined => {
+    if (data?.verificationProgressPercentage === 0 && data?.verificationStatus === 'IN_PROGRESS') {
       return <Text className={css.waitAFew}>{getString('pipeline.verification.waitForAnalysis')}</Text>
     }
 
     if (deploymentNodesData) {
       return (
         <PrimaryAndCanaryNodes
-          primaryNodes={deploymentNodesData.before || []}
-          canaryNodes={deploymentNodesData.after || []}
-          primaryNodeLabel={deploymentNodesData.labelBefore}
-          canaryNodeLabel={deploymentNodesData.labelAfter}
+          primaryNodes={(deploymentNodesData.before as AnalysedNodeOverview)?.nodes || []}
+          canaryNodes={(deploymentNodesData.after as AnalysedNodeOverview)?.nodes || []}
+          primaryNodeLabel={deploymentNodesData.labelBefore as string}
+          canaryNodeLabel={deploymentNodesData.labelAfter as string}
           onSelectNode={onSelectNode}
           isConsoleView={isConsoleView}
         />
@@ -87,7 +90,7 @@ export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProp
 
   return (
     <Container className={cx(css.main, className)}>
-      {deploymentSummary && (
+      {metricsAnalysis && (
         <Container
           className={cx(css.durationAndStatus, {
             [css.flexLayout]: !isConsoleView
@@ -99,19 +102,19 @@ export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProp
               data-name={getString('pipeline.startedOn')}
               margin={{ top: 'xsmall', bottom: 'xsmall' }}
             >
-              {getString('pipeline.startedOn')}: {moment(deploymentSummary.startTime).format('MMM D, YYYY h:mm A')}
+              {getString('pipeline.startedOn')}: {moment(verificationStartTimestamp).format('MMM D, YYYY h:mm A')}
             </Text>
-            <DurationView durationMs={deploymentSummary?.durationMs} />
+            <DurationView durationMs={(data?.spec?.durationInMinutes ? data?.spec?.durationInMinutes : 0) * 60000} />
           </Container>
-          {deploymentSummary && !isConsoleView && <VerificationStatusCard status={deploymentSummary.status} />}
+          {metricsAnalysis && !isConsoleView && <VerificationStatusCard status={data?.verificationStatus} />}
         </Container>
       )}
       <CVProgressBar
-        value={deploymentSummary?.progressPercentage ?? 0}
-        status={deploymentSummary?.status}
+        value={data?.verificationProgressPercentage ?? 0}
+        status={data?.verificationStatus}
         className={css.progressBar}
       />
-      {deploymentSummary && isConsoleView && <VerificationStatusCard status={deploymentSummary.status} />}
+      {metricsAnalysis && isConsoleView && <VerificationStatusCard status={data?.verificationStatus} />}
       {renderContent()}
     </Container>
   )

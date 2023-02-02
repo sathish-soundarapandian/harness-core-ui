@@ -110,6 +110,7 @@ conditionsPanel:
 triggerOverviewPanel:
   title: 'Trigger Overview'
 schedulePanel:
+  currentUTCTime: '{{$.common.currentUTCTime}}'
   monthlyTabTitle: '{{$.common.monthly}}'
   yearlyTabTitle: '{{$.common.yearly}}'
   hourlyTabTitle: '{{$.common.hourly}}'

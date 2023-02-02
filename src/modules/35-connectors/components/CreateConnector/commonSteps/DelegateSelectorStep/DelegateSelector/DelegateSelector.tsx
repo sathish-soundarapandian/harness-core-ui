@@ -55,7 +55,7 @@ const NullRenderer = () => <></>
 
 interface CustomRadioGroupProps {
   items: (IOptionProps & { checked: boolean; CustomComponent?: React.ReactElement })[]
-  onClick: (mode: DelegateOptions) => void
+  handleClick: (mode: DelegateOptions) => void
 }
 
 const shouldDelegateBeChecked = (delegateSelectors: Array<string>, tags: Array<string> = []) => {
@@ -73,7 +73,7 @@ const shouldDelegateBeChecked = (delegateSelectors: Array<string>, tags: Array<s
 }
 
 const CustomRadioGroup: React.FC<CustomRadioGroupProps> = props => {
-  const { items, onClick } = props
+  const { items, handleClick } = props
   return (
     <Container>
       {items.map((item, index) => {
@@ -90,9 +90,9 @@ const CustomRadioGroup: React.FC<CustomRadioGroupProps> = props => {
               value={item.value}
               color={Color.GREY_800}
               className={css.radio}
-              defaultChecked={item.checked}
+              checked={item.checked}
               disabled={item.disabled}
-              onClick={() => onClick(item.value as DelegateOptions)}
+              onChange={() => handleClick(item.value as DelegateOptions)}
             />
             <HarnessDocTooltip tooltipId={`${item.label?.split(' ').join('')}`} useStandAlone={true} />
             {CustomComponent}
@@ -304,7 +304,7 @@ export const DelegateSelector: React.FC<DelegateSelectorProps> = props => {
     }
   }
 
-  const resetDelegateSelectorsAndUpdateMode = (newMode: DelegateOptions) => {
+  const resetDelegateSelectorsAndUpdateMode = (newMode: DelegateOptions): void => {
     if (mode !== newMode) {
       setDelegateSelectors([])
       setMode(newMode)
@@ -316,7 +316,7 @@ export const DelegateSelector: React.FC<DelegateSelectorProps> = props => {
       <Text color={Color.GREY_800} margin={{ top: 'xlarge', bottom: 'medium' }}>
         {getString('connectors.delegate.configure')}
       </Text>
-      <CustomRadioGroup items={options} onClick={newMode => resetDelegateSelectorsAndUpdateMode(newMode)} />
+      <CustomRadioGroup items={options} handleClick={newMode => resetDelegateSelectorsAndUpdateMode(newMode)} />
       {CustomComponent}
       {mode !== DelegateOptions.DelegateOptionsAny && (
         <>

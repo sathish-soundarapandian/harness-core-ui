@@ -48,6 +48,7 @@ export default function CODESideNav(): React.ReactElement {
 
           {repoName && (
             <SidebarLink
+              data-code-repo-section="files"
               className={css.subNav}
               icon="code-file-light"
               textProps={{
@@ -65,6 +66,7 @@ export default function CODESideNav(): React.ReactElement {
 
           {repoName && (
             <SidebarLink
+              data-code-repo-section="commits"
               className={css.subNav}
               icon="git-commit"
               textProps={{
@@ -82,6 +84,7 @@ export default function CODESideNav(): React.ReactElement {
 
           {repoName && (
             <SidebarLink
+              data-code-repo-section="branches"
               className={css.subNav}
               icon="git-branch"
               textProps={{
@@ -98,6 +101,7 @@ export default function CODESideNav(): React.ReactElement {
 
           {repoName && (
             <SidebarLink
+              data-code-repo-section="pull-requests"
               className={css.subNav}
               icon="git-pull"
               textProps={{
@@ -114,6 +118,7 @@ export default function CODESideNav(): React.ReactElement {
 
           {repoName && (
             <SidebarLink
+              data-code-repo-section="branches"
               className={cx(css.subNav, css.webhooks)}
               icon="code-webhook"
               textProps={{

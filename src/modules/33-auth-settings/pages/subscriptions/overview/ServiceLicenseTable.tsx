@@ -202,7 +202,7 @@ export function ServiceLicenseTable({
             <div className={cx(pageCss.badge, pageCss.runningExecutions)}>
               <Text className={pageCss.badgeText}>{activeServiceText}&nbsp;</Text>
               <String stringID={'common.subscriptions.usage.services'} />
-              <Text>&nbsp;{getString('auditTrail.actions.updated')} -</Text>
+              <Text>&nbsp;{getString('common.updated')} -</Text>
               <Text className={pageCss.badgeText}>{timeValue}</Text>
             </div>
           </Layout.Vertical>

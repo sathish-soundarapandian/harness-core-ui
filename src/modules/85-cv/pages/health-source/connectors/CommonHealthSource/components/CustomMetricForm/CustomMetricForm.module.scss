@@ -1,3 +1,16 @@
 .customMetricContainer {
   padding: 0px !important;
 }
+
+.noData {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  :global(.NoDataCard--buttonContainer) {
+    padding: 0 !important;
+  }
+}
+
+.noDataImage {
+  height: 200px !important;
+}

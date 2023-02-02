@@ -256,7 +256,7 @@ function FormContent(formContentProps: JiraCreateDeploymentModeFormContentInterf
               ? getString('pipeline.jiraApprovalStep.fetchingProjectsPlaceholder')
               : projectsFetchError?.message
               ? projectsFetchError?.message
-              : getString('pipeline.jiraCreateStep.selectProject')
+              : getString('common.selectProject')
           }
           multiTypeInputProps={{
             expressions,

@@ -154,7 +154,7 @@ function TgPlanInputStep(props: TerragruntPlanProps & { formik?: FormikContextTy
                     height={300}
                     disabled={readonly}
                     fullScreenAllowed
-                    fullScreenTitle={getString('tagsLabel')}
+                    fullScreenTitle={getString('cd.backEndConfig')}
                   />
                 )
               }
@@ -166,7 +166,7 @@ function TgPlanInputStep(props: TerragruntPlanProps & { formik?: FormikContextTy
               height={300}
               disabled={readonly}
               fullScreenAllowed
-              fullScreenTitle={getString('tagsLabel')}
+              fullScreenTitle={getString('cd.backEndConfig')}
             />
           </MultiTypeFieldSelector>
         </div>

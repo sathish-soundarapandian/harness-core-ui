@@ -57,6 +57,57 @@ export const AWS_ECR_CONTAINER_TYPE = {
   label: 'AWS ECR'
 }
 
+export const API_KEY_AUTH_TYPE = {
+  value: 'apiKey',
+  label: 'API Key'
+}
+export const USER_PASSWORD_AUTH_TYPE = {
+  value: 'usernamePassword',
+  label: 'Username & Password'
+}
+
+export const API_VERSION_5_0_2 = {
+  value: '5.0.2',
+  label: '5.0.2'
+}
+export const API_VERSION_4_1_0 = {
+  value: '4.1.0',
+  label: '4.1.0'
+}
+
+export const API_VERSION_4_2_0 = {
+  value: '4.2.0',
+  label: '4.2.0'
+}
+
+export const ZAP_STANDARD_CONFIG = {
+  value: 'standard',
+  label: 'Standard'
+}
+export const ZAP_ATTACK_CONFIG = {
+  value: 'attack',
+  label: 'Attack'
+}
+export const ZAP_QUICK_CONFIG = {
+  value: 'quick',
+  label: 'Quick'
+}
+export const ZAP_DEFAULT_CONFIG = {
+  value: 'default',
+  label: 'Default'
+}
+
+export const instanceProtocolSelectItems = [
+  {
+    value: 'https',
+    label: 'https'
+  },
+  {
+    value: 'http',
+    label: 'http'
+  }
+]
+
 export const logLevelOptions = (getString: getStringProp) => [
   {
     label: getString('sto.stepField.optionLabels.logLevel.debug'),
@@ -104,19 +155,11 @@ const specSettings = 'spec.settings'
 const specRunAsUser = 'spec.runAsUser'
 
 export const authFieldsTransformConfig = (data: SecurityStepData<SecurityStepSpec>) =>
-  data.spec.mode === 'orchestration'
+  data.spec.mode !== 'ingestion'
     ? [
         {
           name: 'spec.auth.access_token',
           type: TransformValuesTypes.Text
-        },
-        {
-          name: 'spec.auth.domain',
-          type: TransformValuesTypes.Text
-        },
-        {
-          name: 'spec.auth.ssl',
-          type: TransformValuesTypes.Boolean
         }
       ]
     : []
@@ -163,10 +206,6 @@ export const commonFieldsTransformConfig = (data: SecurityStepData<SecurityStepS
       name: 'spec.advanced.log.serializer',
       type: TransformValuesTypes.Text
     },
-    // { // for future implementation
-    //   name: 'spec.advanced.args.passthrough',
-    //   type: TransformValuesTypes.Text
-    // },
     {
       name: 'spec.advanced.fail_on_severity',
       type: TransformValuesTypes.Text
@@ -205,7 +244,11 @@ export const commonFieldsTransformConfig = (data: SecurityStepData<SecurityStepS
     }
   ]
 
-  if (data.spec.target.type === 'container' && data.spec.image?.type === 'aws_ecr') {
+  if (
+    data.spec.target.type === 'container' &&
+    data.spec.image?.type === 'aws_ecr' &&
+    data.spec.mode === 'orchestration'
+  ) {
     transformValuesFieldsConfigValues.push({
       name: 'spec.image.region',
       type: TransformValuesTypes.Text
@@ -232,6 +275,10 @@ export const commonFieldsTransformConfig = (data: SecurityStepData<SecurityStepS
       },
       {
         name: 'spec.image.access_token',
+        type: TransformValuesTypes.Text
+      },
+      {
+        name: 'spec.image.tag',
         type: TransformValuesTypes.Text
       }
     )
@@ -267,18 +314,8 @@ export const authFieldsValidationConfig = (
   {
     name: 'spec.auth.access_token',
     type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.authToken',
+    label: 'common.getStarted.accessTokenLabel',
     isRequired: data.spec.mode !== 'ingestion'
-  },
-  {
-    name: 'spec.auth.domain',
-    type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.authDomain'
-  },
-  {
-    name: 'spec.auth.ssl',
-    type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.authSsl'
   }
 ]
 
@@ -297,9 +334,21 @@ export const imageFieldsValidationConfig = (
   data: SecurityStepData<SecurityStepSpec>
 ): InputSetViewValidateFieldsConfig[] => [
   {
+    name: 'identifier',
+    type: ValidationFieldTypes.Identifier,
+    label: 'identifier',
+    isRequired: true
+  },
+  {
+    name: 'name',
+    type: ValidationFieldTypes.Name,
+    label: 'pipelineSteps.stepNameLabel',
+    isRequired: true
+  },
+  {
     name: 'spec.image.type',
     type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.image.type',
+    label: 'typeLabel',
     isRequired: data.spec.target?.type === 'container' && data.spec.mode === 'orchestration'
   },
   {
@@ -311,23 +360,29 @@ export const imageFieldsValidationConfig = (
   {
     name: 'spec.image.domain',
     type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.image.domain'
+    label: 'secrets.winRmAuthFormFields.domain'
   },
   {
     name: 'spec.image.access_token',
     type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.image.token'
+    label: 'common.getStarted.accessTokenLabel'
   },
   {
     name: 'spec.image.region',
     type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.image.region',
+    label: 'regionLabel',
     isRequired: data.spec.image?.type === 'aws_ecr'
   },
   {
     name: 'spec.image.access_id',
     type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.image.accessId'
+    label: 'sto.stepField.authAccessId'
+  },
+  {
+    name: 'spec.image.tag',
+    type: ValidationFieldTypes.Text,
+    label: 'tagLabel',
+    isRequired: data.spec.target?.type === 'container' && data.spec.mode === 'orchestration'
   }
 ]
 
@@ -347,13 +402,13 @@ export const commonFieldsValidationConfig: InputSetViewValidateFieldsConfig[] = 
   {
     name: 'spec.target.name',
     type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.target.name',
+    label: 'name',
     isRequired: true
   },
   {
     name: 'spec.target.type',
     type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.target.type',
+    label: 'typeLabel',
     isRequired: true
   },
   {
@@ -365,7 +420,7 @@ export const commonFieldsValidationConfig: InputSetViewValidateFieldsConfig[] = 
   {
     name: 'spec.target.workspace',
     type: ValidationFieldTypes.Text,
-    label: 'sto.stepField.target.workspace'
+    label: 'pipelineSteps.workspace'
   },
   {
     name: 'spec.advanced.log.level',
@@ -382,11 +437,6 @@ export const commonFieldsValidationConfig: InputSetViewValidateFieldsConfig[] = 
     type: ValidationFieldTypes.Text,
     label: 'sto.stepField.advanced.cli'
   },
-  // { // for future implementation
-  //   name: 'spec.advanced.args.passthrough',
-  //   type: ValidationFieldTypes.Text,
-  //   label: 'sto.stepField.advanced.passthrough'
-  // },
   {
     name: 'spec.advanced.fail_on_severity',
     type: ValidationFieldTypes.Text,
@@ -435,7 +485,7 @@ export const additionalFieldsValidationConfigEitView = [
   }
 ]
 
-export const additionalFieldsValidationConfigInputSet = [
+export const additionalFieldsValidationConfigInputSet: InputSetViewValidateFieldsConfig[] = [
   {
     name: 'spec.limitMemory',
     type: ValidationFieldTypes.LimitMemory
@@ -450,8 +500,7 @@ export function getInputSetFieldName(prefix: string, field: string): string {
   return `${prefix}${field}`
 }
 
-export const inputSetFields = (
-  getString: getStringProp,
+export const inputSetScanFields = (
   prefix: string,
   template?: SecurityStepData<SecurityStepSpec>
 ): SecurityFieldProps<SecurityStepSpec>['enableFields'] =>
@@ -463,19 +512,28 @@ export const inputSetFields = (
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.config) && {
-          [getInputSetFieldName(prefix, 'spec.mode')]: {
+          [getInputSetFieldName(prefix, 'spec.config')]: {
             label: 'sto.stepField.config'
           }
-        }),
+        })
+      }
+    : {}
 
+export const inputSetTargetFields = (
+  prefix: string,
+  template?: SecurityStepData<SecurityStepSpec>
+): SecurityFieldProps<SecurityStepSpec>['enableFields'] =>
+  template?.spec
+    ? {
+        // Target fields
         ...(shouldRenderRunTimeInputView(template?.spec.target.name) && {
           [getInputSetFieldName(prefix, 'spec.target.name')]: {
-            label: 'sto.stepField.target.name'
+            label: 'name'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.target.type) && {
           [getInputSetFieldName(prefix, 'spec.target.type')]: {
-            label: 'sto.stepField.target.type'
+            label: 'typeLabel'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.target.variant) && {
@@ -485,16 +543,34 @@ export const inputSetFields = (
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.target.workspace) && {
           [getInputSetFieldName(prefix, 'spec.target.workspace')]: {
-            label: 'sto.stepField.target.workspace'
+            label: 'pipelineSteps.workspace'
           }
-        }),
+        })
+      }
+    : {}
 
+export const inputSetIngestionFields = (
+  prefix: string,
+  template?: SecurityStepData<SecurityStepSpec>
+): SecurityFieldProps<SecurityStepSpec>['enableFields'] =>
+  template?.spec
+    ? {
+        // Ingestion fields
         ...(shouldRenderRunTimeInputView(template?.spec.ingestion?.file) && {
           [getInputSetFieldName(prefix, 'spec.ingestion.file')]: {
             label: 'sto.stepField.ingestion.file'
           }
-        }),
+        })
+      }
+    : {}
 
+export const inputSetImageFields = (
+  prefix: string,
+  template?: SecurityStepData<SecurityStepSpec>
+): SecurityFieldProps<SecurityStepSpec>['enableFields'] =>
+  template?.spec
+    ? {
+        // Image fields
         ...(shouldRenderRunTimeInputView(template?.spec.image?.name) && {
           [getInputSetFieldName(prefix, 'spec.image.name')]: {
             label: 'imageNameLabel'
@@ -502,46 +578,73 @@ export const inputSetFields = (
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.image?.domain) && {
           [getInputSetFieldName(prefix, 'spec.image.domain')]: {
-            label: 'sto.stepField.image.domain'
+            label: 'secrets.winRmAuthFormFields.domain'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.image?.access_token) && {
           [getInputSetFieldName(prefix, 'spec.image.access_token')]: {
-            label: 'sto.stepField.image.token'
+            label: 'common.getStarted.accessTokenLabel'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.image?.access_id) && {
           [getInputSetFieldName(prefix, 'spec.image.access_id')]: {
-            label: 'sto.stepField.image.accessId'
+            label: 'sto.stepField.authAccessId'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.image?.region) && {
           [getInputSetFieldName(prefix, 'spec.image.region')]: {
-            label: 'sto.stepField.image.region'
+            label: 'regionLabel'
           }
         }),
+        ...(shouldRenderRunTimeInputView(template?.spec.image?.type) && {
+          [getInputSetFieldName(prefix, 'spec.image.type')]: {
+            label: 'typeLabel'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.image?.tag) && {
+          [getInputSetFieldName(prefix, 'spec.image.tag')]: {
+            label: 'tagLabel'
+          }
+        })
+      }
+    : {}
 
+export const inputSetInstanceFields = (
+  prefix: string,
+  template?: SecurityStepData<SecurityStepSpec>
+): SecurityFieldProps<SecurityStepSpec>['enableFields'] =>
+  template?.spec
+    ? {
+        // Instance fields
         ...(shouldRenderRunTimeInputView(template?.spec.instance?.domain) && {
           [getInputSetFieldName(prefix, 'spec.instance.domain')]: {
-            label: 'sto.stepField.instance.domain'
+            label: 'secrets.winRmAuthFormFields.domain'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.instance?.protocol) && {
           [getInputSetFieldName(prefix, 'spec.instance.protocol')]: {
-            label: 'sto.stepField.instance.protocol'
+            label: 'ce.common.protocol'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.instance?.port) && {
           [getInputSetFieldName(prefix, 'spec.instance.port')]: {
-            label: 'sto.stepField.instance.port'
+            label: 'common.smtp.port'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.instance?.path) && {
           [getInputSetFieldName(prefix, 'spec.instance.path')]: {
-            label: 'sto.stepField.instance.path'
+            label: 'common.path'
           }
-        }),
+        })
+      }
+    : {}
 
+export const inputSetToolFields = (
+  prefix: string,
+  template?: SecurityStepData<SecurityStepSpec>
+): SecurityFieldProps<SecurityStepSpec>['enableFields'] =>
+  template?.spec
+    ? {
         // Tool fields
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.include) && {
           [getInputSetFieldName(prefix, 'spec.tool.include')]: {
@@ -555,8 +658,7 @@ export const inputSetFields = (
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.java?.binaries) && {
           [getInputSetFieldName(prefix, 'spec.tool.java.binaries')]: {
-            label: 'sto.stepField.tool.javaBinaries',
-            fieldType: 'checkbox'
+            label: 'sto.stepField.tool.javaBinaries'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.context) && {
@@ -566,38 +668,106 @@ export const inputSetFields = (
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.port) && {
           [getInputSetFieldName(prefix, 'spec.tool.port')]: {
-            label: 'sto.stepField.tool.port'
+            label: 'common.smtp.port'
           }
         }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.image_name) && {
+          [getInputSetFieldName(prefix, 'spec.tool.image_name')]: {
+            label: 'imageNameLabel'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.project_name) && {
+          [getInputSetFieldName(prefix, 'spec.tool.project_name')]: {
+            label: 'projectCard.projectName'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.project_version) && {
+          [getInputSetFieldName(prefix, 'spec.tool.project_version')]: {
+            label: 'sto.stepField.tool.projectVersion'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.team_name) && {
+          [getInputSetFieldName(prefix, 'spec.tool.team_name')]: {
+            label: 'sto.stepField.tool.teamName'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.product_token) && {
+          [getInputSetFieldName(prefix, 'spec.tool.product_token')]: {
+            label: 'sto.stepField.tool.productToken'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.product_name) && {
+          [getInputSetFieldName(prefix, 'spec.tool.product_name')]: {
+            label: 'name'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.tool?.project_token) && {
+          [getInputSetFieldName(prefix, 'spec.tool.project_token')]: {
+            label: 'sto.stepField.tool.projectToken'
+          }
+        })
+      }
+    : {}
 
+export const inputSetAuthFields = (
+  prefix: string,
+  template?: SecurityStepData<SecurityStepSpec>
+): SecurityFieldProps<SecurityStepSpec>['enableFields'] =>
+  template?.spec
+    ? {
         // Auth fields
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.access_token) && {
-          [getInputSetFieldName(prefix, 'spec.auth.context')]: {
-            label: 'sto.stepField.authToken'
+          [getInputSetFieldName(prefix, 'spec.auth.access_token')]: {
+            label: 'common.getStarted.accessTokenLabel'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.domain) && {
-          [getInputSetFieldName(prefix, 'spec.auth.port')]: {
-            label: 'sto.stepField.authDomain'
+          [getInputSetFieldName(prefix, 'spec.auth.domain')]: {
+            label: 'secrets.winRmAuthFormFields.domain'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.auth?.access_id) && {
+          [getInputSetFieldName(prefix, 'spec.auth.access_id')]: {
+            label: 'sto.stepField.authAccessId'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.auth?.type) && {
+          [getInputSetFieldName(prefix, 'spec.auth.type')]: {
+            label: 'typeLabel'
+          }
+        }),
+        ...(shouldRenderRunTimeInputView(template?.spec.auth?.version) && {
+          [getInputSetFieldName(prefix, 'spec.auth.version')]: {
+            label: 'sto.stepField.authVersion'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.ssl) && {
-          [getInputSetFieldName(prefix, 'spec.auth.context')]: {
+          [getInputSetFieldName(prefix, 'spec.auth.ssl')]: {
             label: 'sto.stepField.authSsl',
             fieldType: 'checkbox'
           }
-        }),
+        })
+      }
+    : {}
 
+export const inputSetAdvancedFields = (
+  getString: getStringProp,
+  prefix: string,
+  template?: SecurityStepData<SecurityStepSpec>
+): SecurityFieldProps<SecurityStepSpec>['enableFields'] =>
+  template?.spec
+    ? {
         // Advanced fields
-
         ...(shouldRenderRunTimeInputView(template?.spec.advanced?.log?.level) && {
           [getInputSetFieldName(prefix, 'spec.advanced.log.level')]: {
-            label: 'sto.stepField.advanced.logLevel'
+            label: 'sto.stepField.advanced.logLevel',
+            fieldType: 'dropdown',
+            selectItems: logLevelOptions(getString)
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.advanced?.log?.serializer) && {
           [getInputSetFieldName(prefix, 'spec.advanced.log.serializer')]: {
-            label: 'sto.stepField.instance.protocol'
+            label: 'ce.common.protocol'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.advanced?.args?.cli) && {

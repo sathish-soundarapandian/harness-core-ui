@@ -19,7 +19,7 @@ import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerS
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
+import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import type { AuditEventData, ResourceDTO } from 'services/audit'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { GovernanceRemoteComponentMounter } from './GovernanceApp'

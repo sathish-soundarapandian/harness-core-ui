@@ -7,14 +7,16 @@
 
 import React, { useCallback, useContext } from 'react'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
+import type { ConnectorConfigureOptionsProps } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import CommonHealthSource from './CommonHealthSource'
 import { createHealthSourcePayload, createHealthSourceConfigurationsData } from './CommonHealthSource.utils'
 import type { CommonHealthSourceConfigurations, HealthSourceConfig } from './CommonHealthSource.types'
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
+import type { DefineHealthSourceFormInterface } from '../../HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.types'
 
 export interface CommonHealthSourceContainerProps {
-  data: any
-  onSubmit: (formdata: any, updatedHealthSource: UpdatedHealthSource) => Promise<void>
+  data: DefineHealthSourceFormInterface
+  onSubmit: (formdata: DefineHealthSourceFormInterface, updatedHealthSource: UpdatedHealthSource) => Promise<void>
   isTemplate?: boolean
   expressions?: string[]
   healthSourceConfig: HealthSourceConfig
@@ -23,16 +25,18 @@ export interface CommonHealthSourceContainerProps {
 export default function CommonHealthSourceContainer(props: CommonHealthSourceContainerProps): JSX.Element {
   const { data: sourceData, isTemplate, expressions, healthSourceConfig, onSubmit } = props
   const { onPrevious } = useContext(SetupSourceTabsContext)
+  const connectorIdentifier =
+    (sourceData?.connectorRef as ConnectorConfigureOptionsProps)?.value ?? sourceData?.connectorRef
 
   const handleSubmit = useCallback(
     async (configureHealthSourceData: CommonHealthSourceConfigurations) => {
-      const { product, sourceType, identifier, healthSourceName, healthSourceIdentifier, connectorRef } = sourceData
+      const { product, sourceType, identifier, healthSourceName, healthSourceIdentifier } = sourceData || {}
       const defineHealthSourcedata = {
         product,
         sourceType,
         identifier,
         healthSourceName,
-        connectorRef,
+        connectorRef: connectorIdentifier,
         healthSourceIdentifier
       }
       const healthSourcePayload = createHealthSourcePayload(
@@ -56,7 +60,7 @@ export default function CommonHealthSourceContainer(props: CommonHealthSourceCon
       isTemplate={isTemplate}
       expressions={expressions}
       healthSourceConfig={healthSourceConfig}
-      connectorRef={sourceData?.connectorRef}
+      connectorRef={connectorIdentifier}
     />
   )
 }

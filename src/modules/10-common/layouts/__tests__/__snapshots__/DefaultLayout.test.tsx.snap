@@ -10,9 +10,13 @@ exports[`<DefaultLayout /> tests feature banner tests Level up banner 1`] = `
       Main nav
     </div>
     <div
-      class="main"
+      class="main sideNavExpanded"
     >
-      <div />
+      <div>
+        <div>
+          nav component
+        </div>
+      </div>
       <div
         class="StyledProps--font StyledProps--main bottomContainer"
       >
@@ -123,9 +127,13 @@ exports[`<DefaultLayout /> tests feature banner tests Overuse banner 1`] = `
       Main nav
     </div>
     <div
-      class="main"
+      class="main sideNavExpanded"
     >
-      <div />
+      <div>
+        <div>
+          nav component
+        </div>
+      </div>
       <div
         class="StyledProps--font StyledProps--main bottomContainer"
       >
@@ -237,9 +245,13 @@ exports[`<DefaultLayout /> tests feature banner tests features banner is rendere
       Main nav
     </div>
     <div
-      class="main"
+      class="main sideNavExpanded"
     >
-      <div />
+      <div>
+        <div>
+          nav component
+        </div>
+      </div>
       <div
         class="StyledProps--font StyledProps--main bottomContainer"
       >

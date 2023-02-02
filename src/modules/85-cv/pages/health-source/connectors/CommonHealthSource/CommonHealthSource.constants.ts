@@ -2,18 +2,19 @@ import type { QueryRecordsRequest } from 'services/cv'
 import { HealthSourceTypes } from '../../types'
 import type { HealthSourceProductsType } from './CommonHealthSource.types'
 
-export const DEFAULT_HEALTH_SOURCE_QUERY = 'Health Source Query'
-export const METRICS = 'METRICS'
 export const HealthSourceProducts: HealthSourceProductsType = {
-  SUMOLOGIC_METRICS: {
+  [HealthSourceTypes.SumologicMetrics]: {
     label: 'SumoLogic Cloud Metrics',
     value: HealthSourceTypes.SumologicMetrics
   },
-  SUMOLOGIC_LOG: {
+  [HealthSourceTypes.SumologicLogs]: {
     label: 'SumoLogic Cloud Logs',
     value: HealthSourceTypes.SumologicLogs
   }
 }
+
+export const DEFAULT_HEALTH_SOURCE_QUERY = 'Health Source Query'
+export const METRICS = 'METRICS'
 
 export const initConfigurationsForm = {
   queryMetricsMap: new Map(),
@@ -40,7 +41,7 @@ export const CustomMetricFormFieldNames = {
   GROUP_NAME: 'groupName',
 
   QUERY: 'query',
-  IS_QUERY_EXECUTED: 'isQueryExecuted',
+  RECORD_COUNT: 'recordCount',
 
   METRIC_VALUE: 'metricValue',
   TIMESTAMP_LOCATOR: 'timestamp',
@@ -57,7 +58,7 @@ export const CustomMetricFormFieldNames = {
 }
 
 export const CommonConfigurationsFormFieldNames = {
-  CUSTOM_METRICS_MAP: 'queryMetricsMap',
+  QUERY_METRICS_MAP: 'queryMetricsMap',
   SELECTED_METRIC: 'selectedMetric',
   IGNORE_THRESHOLDS: 'ignoreThresholds',
   FAILFAST_THRESHOLDS: 'failFastThresholds'

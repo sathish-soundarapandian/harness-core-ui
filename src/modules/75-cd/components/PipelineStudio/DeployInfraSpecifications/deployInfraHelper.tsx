@@ -21,7 +21,8 @@ import {
   isSSHWinRMDeploymentType,
   ServiceDeploymentType,
   isElastigroupDeploymentType,
-  isTASDeploymentType
+  isTASDeploymentType,
+  isGoogleCloudFuctionsDeploymentType
 } from '@pipeline/utils/stageHelpers'
 
 const DEFAULT_RELEASE_NAME = 'release-<+INFRA_KEY>'
@@ -153,7 +154,16 @@ export const getInfrastructureDefaultValue = (
       }
     }
     case InfraDeploymentType.PDC: {
-      const { connectorRef, credentialsRef, delegateSelectors, hostFilter, hosts } = infrastructure?.spec || {}
+      const {
+        connectorRef,
+        credentialsRef,
+        delegateSelectors,
+        hostFilter,
+        hosts,
+        hostAttributes,
+        hostObjectArray,
+        dynamicallyProvisioned
+      } = infrastructure?.spec || {}
 
       return {
         connectorRef,
@@ -162,7 +172,10 @@ export const getInfrastructureDefaultValue = (
         hosts,
         delegateSelectors,
         hostFilter,
-        serviceType
+        serviceType,
+        hostAttributes,
+        hostObjectArray,
+        dynamicallyProvisioned
       }
     }
     case InfraDeploymentType.SshWinRmAzure: {
@@ -221,6 +234,15 @@ export const getInfrastructureDefaultValue = (
         connectorRef,
         organization,
         space,
+        allowSimultaneousDeployments
+      }
+    }
+    case InfraDeploymentType.GoogleCloudFunctions: {
+      const { connectorRef, project, region } = infrastructure?.spec || {}
+      return {
+        connectorRef,
+        project,
+        region,
         allowSimultaneousDeployments
       }
     }
@@ -333,6 +355,18 @@ export const getInfraGroups = (
       ]
     }
   ]
+  const googleCloudFunctionsInfraGroups: InfrastructureGroup[] = [
+    {
+      groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
+      items: [
+        {
+          label: getString('common.googleCloudPlatform'),
+          icon: 'gcp',
+          value: InfraDeploymentType.GoogleCloudFunctions
+        }
+      ]
+    }
+  ]
 
   const kuberntesInfraGroups: InfrastructureGroup[] = [
     {
@@ -362,6 +396,8 @@ export const getInfraGroups = (
       return customDeploymentInfraGroups
     case isTASDeploymentType(deploymentType):
       return tasInfraGroups
+    case isGoogleCloudFuctionsDeploymentType(deploymentType):
+      return googleCloudFunctionsInfraGroups
     default:
       return kuberntesInfraGroups
   }
@@ -470,6 +506,11 @@ export const isElastigroupInfrastructureType = (infrastructureType?: string): bo
 export const isCustomDeploymentInfrastructureType = (infrastructureType?: string): boolean => {
   return infrastructureType === InfraDeploymentType.CustomDeployment
 }
+
+export const isPDCDeploymentInfrastructureType = (infrastructureType?: string): boolean => {
+  return infrastructureType === InfraDeploymentType.PDC
+}
+
 export const isTASInfrastructureType = (infrastructureType?: string): boolean => {
   return infrastructureType === InfraDeploymentType.TAS
 }

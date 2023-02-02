@@ -1,4 +1,3 @@
-import { contains } from 'cypress/types/jquery'
 import {
   createEnvironmentGroupsCall,
   environmentGroupRoute,
@@ -30,7 +29,7 @@ describe('Environment Groups CRUD', () => {
     cy.visitPageAssertion()
     cy.wait('@environmentGroupsCall', { timeout: 10000 })
 
-    cy.contains('button', 'Create new Environment Group').should('be.visible').click()
+    cy.contains('button', 'New Environment Group').should('be.visible').click()
 
     cy.wait(1000)
 
@@ -66,7 +65,7 @@ describe('Environment Groups CRUD', () => {
 
     cy.location().should(loc => {
       expect(loc.href).contains(
-        `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/project1/environment-group/testEnvGroup/details?sectionId=ENVIRONMENTS`
+        `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/project1/environments/groups/testEnvGroup/details?sectionId=ENVIRONMENTS`
       )
     })
   })
@@ -138,7 +137,7 @@ describe('Environment Groups CRUD', () => {
 
     cy.location().should(loc => {
       expect(loc.href).contains(
-        `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/project1/environment-group/testEnvGroup/details?sectionId=CONFIGURATION`
+        `${addHashInCypressURLBasedOnBrowserRouter()}account/accountId/cd/orgs/default/projects/project1/environments/groups/testEnvGroup/details?sectionId=CONFIGURATION`
       )
     })
 

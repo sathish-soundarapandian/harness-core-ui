@@ -43,9 +43,9 @@ import {
   useGetYamlSchema
 } from 'services/cd-ng'
 import type { EnvironmentPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { NameIdDescriptionTags } from '@common/components'
-import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import type { YamlBuilderHandlerBinding, YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import { CustomVariablesEditableStage } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariablesEditableStage'
 import type { AllNGVariables } from '@pipeline/utils/types'
@@ -53,7 +53,7 @@ import { PipelineContextType } from '@pipeline/components/PipelineStudio/Pipelin
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { usePermission } from '@rbac/hooks/usePermission'
+import { PermissionRequest, usePermission } from '@rbac/hooks/usePermission'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import ApplicationConfigSelection from '@pipeline/components/ApplicationConfig/ApplicationConfigSelection'
 import { ApplicationConfigSelectionTypes } from '@pipeline/components/ApplicationConfig/ApplicationConfig.types'
@@ -75,6 +75,7 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
 
 export interface EnvironmentConfigurationProps {
   formikProps: FormikProps<NGEnvironmentInfoConfig>
+  scope: Scope
   selectedView: SelectedView
   setSelectedView: (view: SelectedView) => void
   yamlHandler?: YamlBuilderHandlerBinding
@@ -114,18 +115,30 @@ export default function EnvironmentConfiguration({
   isModified,
   data,
   isEdit,
-  context
+  context,
+  scope
 }: EnvironmentConfigurationProps): JSX.Element {
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & EnvironmentPathProps>()
   const history = useHistory()
   const { expressions } = useVariablesExpression()
+  const environmentIdentifier = data?.data?.environment?.identifier
+
+  const resourceAndScope: Pick<PermissionRequest, 'resource' | 'resourceScope'> = {
+    resource: {
+      resourceType: ResourceType.ENVIRONMENT,
+      resourceIdentifier: environmentIdentifier
+    },
+    resourceScope: {
+      accountIdentifier: accountId,
+      ...(scope !== Scope.ACCOUNT && { orgIdentifier }),
+      ...(scope === Scope.PROJECT && { projectIdentifier })
+    }
+  }
 
   const [canEdit] = usePermission({
-    resource: {
-      resourceType: ResourceType.ENVIRONMENT
-    },
+    ...resourceAndScope,
     permissions: [PermissionIdentifier.EDIT_ENVIRONMENT]
   })
   const allowableTypes: AllowedTypesWithRunTime[] = [
@@ -151,7 +164,7 @@ export default function EnvironmentConfiguration({
       projectIdentifier,
       orgIdentifier,
       accountIdentifier: accountId,
-      scope: getScopeFromDTO({ accountIdentifier: accountId, orgIdentifier, projectIdentifier })
+      scope
     }
   })
 
@@ -544,9 +557,7 @@ export default function EnvironmentConfiguration({
               <Tag>{getString('common.readOnly')}</Tag>
               <RbacButton
                 permission={{
-                  resource: {
-                    resourceType: ResourceType.ENVIRONMENT
-                  },
+                  ...resourceAndScope,
                   permission: PermissionIdentifier.EDIT_ENVIRONMENT
                 }}
                 variation={ButtonVariation.SECONDARY}

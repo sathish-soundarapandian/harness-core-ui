@@ -1,6 +1,6 @@
 const accountId = 'accountId'
 
-export const longInvalidName = Array.from({ length: 63 }).fill('a').join('')
+export const longInvalidName = Array.from({ length: 64 }).fill('a').join('')
 
 export const awsRegionsCall = `/cv/api/cloudwatch/metrics/regions?routingId=${accountId}`
 export const sampleDataCall = `/cv/api/cloudwatch/metrics/fetch-sample-data?*`

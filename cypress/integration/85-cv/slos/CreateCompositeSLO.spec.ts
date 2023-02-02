@@ -60,7 +60,7 @@ describe('Create Composite SLO', () => {
     cy.contains('p', 'Set SLO Time Window').click()
     cy.contains('span', 'Period Length is required').should('be.visible')
     cy.contains('p', 'Add SLOs').click()
-    cy.contains('p', "Should have minimun 2 SLOs and maximum 20 SLO's").should('be.visible')
+    cy.contains('p', "Should have minimum 2 SLOs and maximum 20 SLO's").should('be.visible')
   })
 
   it('should be able to create SLO by filling all the details.', () => {
@@ -156,7 +156,7 @@ describe('Create Composite SLO', () => {
       'have.value',
       getServiceLevelObjectiveV2Response.resource.serviceLevelObjectiveV2.sloTarget.sloTargetPercentage.toFixed(0)
     )
-    cy.findByText('173')
+    cy.findByText('173 mins')
 
     cy.contains('span', 'Next').click({ force: true })
 

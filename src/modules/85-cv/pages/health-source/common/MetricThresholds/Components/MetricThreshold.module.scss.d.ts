@@ -20,6 +20,7 @@ declare const styles: {
   readonly metricThresholdContentIgnoreTableRow: string
   readonly metricThresholdContentIgnoreTableRowOnlyCustomMetric: string
   readonly metricThresholdContentInput: string
+  readonly metricThresholdContentInputCount: string
   readonly metricThresholdContentInputWrapper: string
   readonly metricThresholdContentSelect: string
   readonly metricThresholdContentTabs: string

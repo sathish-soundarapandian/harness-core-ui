@@ -11,11 +11,11 @@ import NodeRiskCountsDisplay from '../NodeRiskCountsDisplay'
 import { riskCountData } from './NodeRiskCountsDisplay.mock'
 
 describe('NodeRiskCountsDisplay', () => {
-  test('should not render the risks with count value 0', () => {
+  test('should render the risks with count value 0', () => {
     render(<NodeRiskCountsDisplay nodeDetails={riskCountData} />)
 
     const nodes = screen.getAllByTestId(/nodecount_display/)
 
-    expect(nodes).toHaveLength(3)
+    expect(nodes).toHaveLength(4)
   })
 })

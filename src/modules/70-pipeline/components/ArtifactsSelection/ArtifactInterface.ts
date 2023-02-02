@@ -43,6 +43,7 @@ export interface ArtifactListViewProps {
   removeArtifactSource?: (index: number) => void
   isSidecarAllowed?: boolean
   isMultiArtifactSource?: boolean
+  allowOnlyOneArtifactAddition?: boolean
 }
 export interface ArtifactsSelectionProps {
   isPropagating?: boolean
@@ -375,4 +376,48 @@ export interface ACRArtifactType {
   subscriptionId?: SelectOption | string
   registry?: SelectOption | string
   spec?: any
+}
+
+export interface GoogleCloudStorageInitialValuesType {
+  identifier: string
+  project: string
+  bucket: string
+  artifactPath: string
+}
+
+export interface GoogleCloudStorageArtifactProps {
+  key: string
+  name: string
+  expressions: string[]
+  context: number
+  initialValues: GoogleCloudStorageInitialValuesType
+  handleSubmit: (data: ArtifactConfig) => void
+  artifactIdentifiers: string[]
+  isReadonly?: boolean
+  selectedArtifact: ArtifactType | null
+  allowableTypes: AllowedTypes
+  isMultiArtifactSource?: boolean
+  formClassName?: string
+}
+
+export interface GoogleCloudSourceRepositoriesInitialValuesType {
+  identifier: string
+  project: string
+  repository: string
+  sourceDirectory: string
+}
+
+export interface GoogleCloudSourceRepositoriesArtifactProps {
+  key: string
+  name: string
+  expressions: string[]
+  context: number
+  initialValues: GoogleCloudSourceRepositoriesInitialValuesType
+  handleSubmit: (data: ArtifactConfig) => void
+  artifactIdentifiers: string[]
+  isReadonly?: boolean
+  selectedArtifact: ArtifactType | null
+  allowableTypes: AllowedTypes
+  isMultiArtifactSource?: boolean
+  formClassName?: string
 }

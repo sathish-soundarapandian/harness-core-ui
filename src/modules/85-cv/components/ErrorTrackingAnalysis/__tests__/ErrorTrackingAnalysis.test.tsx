@@ -100,7 +100,7 @@ describe('Unit tests for ErrorTrackingAnalysisContainer', () => {
     expect(clusterTypeFilterDropdown).toBeTruthy()
 
     // verify default filter is unknownEvent
-    expect(clusterTypeFilterDropdown.value).toBe('cv.unknown')
+    expect(clusterTypeFilterDropdown.value).toBe('cd.getStartedWithCD.healthStatus.unknown')
 
     // Clicking the filter dropdown
     const selectCaret = container
@@ -124,11 +124,11 @@ describe('Unit tests for ErrorTrackingAnalysisContainer', () => {
     await waitFor(() => expect(getAllByText('Known')).toHaveLength(knownClusterTypeMockedData.length))
 
     // Selecting UnKnown event cluster type
-    const unknownEventTypeSelected = await getByText('cv.unknown')
+    const unknownEventTypeSelected = await getByText('cd.getStartedWithCD.healthStatus.unknown')
     act(() => {
       fireEvent.click(unknownEventTypeSelected)
     })
-    expect(clusterTypeFilterDropdown.value).toBe('cv.unknown')
+    expect(clusterTypeFilterDropdown.value).toBe('cd.getStartedWithCD.healthStatus.unknown')
 
     // Verifying if correct number of records are shown for unKnown event type.
     const unknownClusterTypeMockedData = mockedErrorTrackingAnalysisData.resource.content.filter(
@@ -165,7 +165,7 @@ describe('Unit tests for ErrorTrackingAnalysisContainer', () => {
       'pipeline.verification.logs.filterByClusterType'
     ) as HTMLInputElement
 
-    expect(clusterTypeFilterDropdown.value).toBe('cv.unknown')
+    expect(clusterTypeFilterDropdown.value).toBe('cd.getStartedWithCD.healthStatus.unknown')
     expect(useGetAllLogsClusterDataQueryParams?.clusterTypes).toEqual([ErrorTrackingEvents.UNKNOWN])
     expect(useGetAllLogsDataQueryParams?.clusterTypes).toEqual([ErrorTrackingEvents.UNKNOWN])
 

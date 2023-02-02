@@ -90,3 +90,96 @@
   right: var(--spacing-large);
   top: var(--spacing-large);
 }
+
+/** GitOps **/
+.agentDiagram {
+  margin-top: var(--spacing-xlarge);
+  width: 733px;
+  height: 154px;
+  background: var(--grey-250);
+}
+
+.aboutHarnessAdapterContainer {
+  width: 43%;
+  padding: 0 16px;
+  float: right;
+  height: calc(100% - 40px);
+}
+
+.aboutHarnessAdapterAnswer {
+  font-weight: 600 !important;
+  color: var(--grey-800) !important;
+  font-size: var(--font-size-normal) !important;
+  line-height: 24px !important;
+}
+
+.installedComponent {
+  font-size: var(--form-input-font-size);
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  color: var(--grey-800);
+  padding-bottom: var(--spacing-xsmall);
+}
+
+.provisioningText {
+  color: var(--grey-900);
+  margin-top: var(--spacing-small);
+}
+
+.blueDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--teal-600);
+  margin-right: var(--spacing-small);
+}
+
+.agentFirstSection {
+  display: flex;
+  align-items: center;
+  margin-top: var(--spacing-xlarge);
+}
+
+.agentSecondSection {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-small);
+}
+
+.agentThirdSection {
+  display: flex;
+  align-items: center;
+  margin-top: var(--spacing-large);
+}
+
+.progressItem:after {
+  border-color: var(--primary-7) !important;
+  background-color: var(--primary-7) !important;
+}
+
+.provisioningInfo {
+  height: 32px;
+  margin-top: var(--spacing-xxxlarge);
+  display: flex;
+  font-weight: 500;
+  font-size: var(--form-input-font-size);
+  color: var(--grey-900);
+  align-items: center;
+}
+
+.provisioningSecondaryInfo {
+  margin: var(--spacing-medium) 0 var(--spacing-xxxlarge);
+  font-size: var(--font-size-normal);
+  color: var(--grey-900);
+  min-height: 40px;
+}
+
+.error {
+  color: var(--error);
+}
+
+.agentsLoadingSpinner {
+  justify-content: flex-start;
+  margin-bottom: var(--spacing-medium);
+}

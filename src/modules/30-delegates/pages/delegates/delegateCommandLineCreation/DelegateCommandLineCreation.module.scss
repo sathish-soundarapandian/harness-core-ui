@@ -1,0 +1,61 @@
+.codeBlockDelegate {
+  background-color: var(--primary-1);
+}
+.BtnGroup {
+  display: flex;
+}
+.ulList {
+  margin-top: 0px !important;
+  margin-bottom: 22px !important;
+  li {
+    margin: 10px 0;
+  }
+  li:first-child {
+    margin: 0px 0px 10px 0;
+  }
+}
+.textHeading {
+  margin-bottom: var(--spacing-medium) !important;
+}
+.delegateDetails {
+  overflow-y: auto !important;
+}
+.delegateErrorContainer {
+  background-color: var(--red-50) !important;
+}
+.delegateSuccessContainer {
+  background-color: var(--green-50) !important;
+}
+.delegateNameText {
+  width: 300px !important;
+}
+.mediumBottom {
+  margin-bottom: var(--spacing-medium) !important;
+}
+.codeBlock {
+  white-space: pre-wrap !important;
+}
+.terrformCommandContainer {
+  max-height: 200px !important;
+  min-height: 200px;
+  overflow-y: auto;
+}
+.terrformCommandContainerCenter {
+  display: flex;
+  justify-content: center;
+  min-height: 200px;
+}
+.troubleShootingContainer {
+  border: 1px dashed var(--primary-7);
+}
+
+.newDelegateContainer {
+  position: fixed !important;
+  top: var(--spacing-xxlarge) !important;
+}
+.kubernetesButtons {
+  margin-right: var(--spacing-4) !important;
+}
+.iconPointer {
+  cursor: pointer;
+}

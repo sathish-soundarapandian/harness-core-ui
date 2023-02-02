@@ -1,0 +1,139 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Manifest Details tests initial rendering 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main optionsViewContainer"
+    style="height: inherit;"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
+    >
+      Manifest details
+    </p>
+    <div
+      class="OverlaySpinner--overlaySpinner"
+    >
+      <form
+        action="#"
+        class="FormikForm--main"
+      >
+        <div>
+          <div
+            class="Layout--vertical StyledProps--main manifestForm StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-flex-start"
+          >
+            <div
+              class="manifestStepWidth"
+            >
+              <div
+                class="halfWidth"
+              >
+                <div
+                  class="bp3-form-group"
+                  data-id="identifier-0"
+                >
+                  <label
+                    class="bp3-label"
+                    for="identifier"
+                  >
+                    <span
+                      class="Tooltip--acenter"
+                      data-tooltip-id="manifestDetails_identifier"
+                    >
+                      pipeline.manifestType.manifestIdentifier
+                    </span>
+                     
+                    <span
+                      class="bp3-text-muted"
+                    />
+                  </label>
+                  <div
+                    class="bp3-form-content"
+                  >
+                    <div
+                      class="bp3-input-group"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="identifier"
+                        placeholder="pipeline.manifestType.manifestPlaceholder"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main saveBtn"
+            >
+              <button
+                aria-label="back"
+                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
+                type="button"
+              >
+                <span
+                  class="bp3-icon bp3-icon-chevron-left StyledProps--main StyledProps--padding-right-xsmall"
+                  icon="chevron-left"
+                >
+                  <svg
+                    data-icon="chevron-left"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    width="16"
+                  >
+                    <desc>
+                      chevron-left
+                    </desc>
+                    <path
+                      d="M7.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-4 4C5.11 7.47 5 7.72 5 8c0 .28.11.53.29.71l4 4a1.003 1.003 0 001.42-1.42L7.41 8z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="bp3-button-text"
+                >
+                  back
+                </span>
+              </button>
+              <button
+                aria-label="submit"
+                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+                type="submit"
+              >
+                <span
+                  class="bp3-button-text"
+                >
+                  submit
+                </span>
+                <span
+                  class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                  icon="chevron-right"
+                >
+                  <svg
+                    data-icon="chevron-right"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    width="16"
+                  >
+                    <desc>
+                      chevron-right
+                    </desc>
+                    <path
+                      d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                      fill-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;

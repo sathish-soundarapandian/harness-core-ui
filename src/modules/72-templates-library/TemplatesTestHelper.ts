@@ -273,13 +273,24 @@ export const stepTemplate: ResponseTemplateResponse = {
       '\n            headers: []' +
       '\n            outputVariables: []' +
       '\n            requestBody: <+input>' +
+      '\n        enforce:' +
+      '\n            policySets: <+input>' +
+      '\n        delegateSelectors: <+input>' +
       '\n'
   }
 }
 
 export const stepMockTemplatesInputYaml: ResponseString = {
   status: 'SUCCESS',
-  data: 'type: "Http"' + '\nspec:' + '\n  url: "<+input>"' + '\n  requestBody: "<+input>"' + '\n'
+  data:
+    'type: "Http"' +
+    '\nspec:' +
+    '\n  url: "<+input>"' +
+    '\n  requestBody: "<+input>"' +
+    '\nenforce:' +
+    '\n  policySets: "<+input>"' +
+    '\ndelegateSelectors: "<+input>"' +
+    '\n'
 }
 
 export const mockTemplates: ResponsePageTemplateSummaryResponse = {
@@ -331,6 +342,9 @@ export const mockTemplates: ResponsePageTemplateSummaryResponse = {
           '\n                      - Timeout' +
           '\n                  action:' +
           '\n                      type: MarkAsSuccess' +
+          '\n        enforce:' +
+          '\n            policySets: <+input>' +
+          '\n        delegateSelectors: <+input>' +
           '\n',
         versionLabel: 'v4',
         templateEntityType: 'Step',

@@ -210,16 +210,12 @@ const StepHelmAuthentication: React.FC<StepProps<StepHelmRepoAuthenticationProps
                 >
                   {getString('authentication')}
                 </Text>
-                {isOCIHelm ? (
-                  <Text lineClamp={1}>{getString('usernamePassword')}</Text>
-                ) : (
-                  <FormInput.Select
-                    name="authType"
-                    items={authOptions}
-                    disabled={false}
-                    className={commonStyles.authTypeSelectLarge}
-                  />
-                )}
+                <FormInput.Select
+                  name="authType"
+                  items={authOptions}
+                  disabled={false}
+                  className={commonStyles.authTypeSelectLarge}
+                />
               </Container>
               {formikProps.values.authType === AuthTypes.USER_PASSWORD ? (
                 <>

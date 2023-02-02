@@ -42,6 +42,7 @@
 }
 .text1 {
   padding-top: var(--spacing-xxxlarge) !important;
+  text-align: center;
 }
 
 .formInput {
@@ -60,13 +61,21 @@
 }
 
 .serviceDeploymentTypeCard {
+  height: 120px;
+  width: 120px;
+  margin-right: var(--spacing-large);
+  padding: var(--spacing-large) 0 !important;
+}
+.serviceDeploymentTypeSmallCard {
   height: 80px;
   width: 80px;
   margin-right: var(--spacing-large);
+  padding: var(--spacing-large) 0 !important;
 }
 
 .serviceDeploymentTypeIcon {
-  margin-top: var(--spacing-xsmall) !important;
+  margin-top: var(--spacing-medium) !important;
+  margin-bottom: var(--spacing-xsmall) !important;
 }
 
 .icons {
@@ -311,4 +320,40 @@
   :global(.bp3-button-text) {
     flex: none !important;
   }
+}
+
+.accordianForm {
+  background: var(--primary-bg);
+  border-radius: 8px;
+  padding: 12px 32px 40px;
+  margin-top: 24px !important;
+}
+
+.width50 {
+  width: 50%;
+}
+
+.marginBottom25 {
+  margin-bottom: var(--spacing-xlarge);
+}
+
+.keyTextArea {
+  :global(.bp3-input) {
+    width: 500px;
+    //resize: none;
+    min-height: 140px !important;
+  }
+}
+
+.configureGitopsPanel {
+  padding: 20px 20px 32px;
+  box-shadow: 0px 2px 4px rgb(40 41 61 / 4%), 0px 8px 16px rgb(96 97 112 / 16%);
+  border-radius: 4px;
+  &:last-child {
+    margin-top: var(--spacing-xxxlarge);
+  }
+}
+
+.configureGitopsPanelSummary {
+  justify-content: space-between;
 }

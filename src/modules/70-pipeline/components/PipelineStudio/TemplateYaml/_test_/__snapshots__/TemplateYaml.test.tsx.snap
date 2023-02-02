@@ -29,6 +29,9 @@ spec:
   approvers:
     userGroups: "&lt;+input&gt;"
     minimumCount: "&lt;+input&gt;"
+enforce:
+  policySets: "&lt;+input&gt;"
+delegateSelectors: "&lt;+input&gt;"
 
         </textarea>
       </div>

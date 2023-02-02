@@ -30,7 +30,12 @@
 
 .projectSearch {
   flex: 1;
-  margin-right: var(--spacing-large);
+  margin-right: var(--spacing-small);
+}
+
+.orgDropdown {
+  margin-right: var(--spacing-small);
+  width: 180px;
 }
 
 .projectContainerWrapper {

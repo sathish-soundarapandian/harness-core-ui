@@ -18,8 +18,8 @@ import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
+import MultiTypePolicySetSelector from '@pipeline/components/PipelineSteps/Common/PolicySets/MultiTypePolicySetSelector/MultiTypePolicySetSelector'
 import type { PolicyStepFormData } from './PolicyStepTypes'
-import { MultiTypePolicySetSelector } from './PolicySets/MultiTypePolicySetSelector/MultiTypePolicySetSelector'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -72,7 +72,7 @@ export default function BasePolicyStep(props: {
         />
       </div>
       <div className={cx(stepCss.formGroup, stepCss.alignStart)}>
-        <MultiTypePolicySetSelector
+        <MultiTypePolicySetSelector<PolicyStepFormData>
           name="spec.policySets"
           label={getString('common.policiesSets.policyset')}
           expressions={expressions}

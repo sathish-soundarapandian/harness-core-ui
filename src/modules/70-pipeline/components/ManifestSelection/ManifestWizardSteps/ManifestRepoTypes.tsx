@@ -12,8 +12,10 @@ import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import type { ConnectorConfigDTO } from 'services/cd-ng'
-import { manifestTypeIcons, manifestTypeLabels } from '../Manifesthelper'
+import type { ConnectorConfigDTO, ManifestConfigWrapper } from 'services/cd-ng'
+import { useQueryParams } from '@common/hooks'
+import type { EnvironmentQueryParams } from '@common/interfaces/RouteInterfaces'
+import { allowedOverrideManfests, ManifestDataType, manifestTypeIcons, manifestTypeLabels } from '../Manifesthelper'
 import type { ManifestStepInitData, ManifestTypes } from '../ManifestInterface'
 import css from './ManifestWizardSteps.module.scss'
 import style from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactConnector.module.scss'
@@ -25,6 +27,7 @@ interface ManifestPropType {
   stepName: string
   initialValues: ManifestStepInitData
   listOfDisabledManifestTypes?: ManifestTypes[]
+  manifestOverridesList?: ManifestConfigWrapper[]
 }
 
 export function ManifestRepoTypes({
@@ -35,7 +38,8 @@ export function ManifestRepoTypes({
   prevStepData,
   nextStep,
   initialValues,
-  listOfDisabledManifestTypes
+  listOfDisabledManifestTypes,
+  manifestOverridesList
 }: StepProps<ConnectorConfigDTO> & ManifestPropType): React.ReactElement {
   const [selectedManifestType, setselectedManifestType] = React.useState(selectedManifest)
 
@@ -45,14 +49,42 @@ export function ManifestRepoTypes({
   }
 
   const { getString } = useStrings()
+  const { sectionId } = useQueryParams<EnvironmentQueryParams>()
 
+  const filterManifest = (manifestType: any) => {
+    return manifestOverridesList!.filter(manifest => manifest.manifest?.type === manifestType)
+  }
+
+  const checkDisabled = (manifestType: ManifestTypes) => {
+    if (
+      manifestType === ManifestDataType.HelmRepoOverride &&
+      selectedManifestType !== ManifestDataType.HelmRepoOverride &&
+      filterManifest(ManifestDataType.HelmRepoOverride).length >= allowedOverrideManfests.HelmRepoOverride // specific to Helm Repo Override Manifest - to be updated
+    ) {
+      return true
+    }
+    return defaultTo(listOfDisabledManifestTypes?.includes(manifestType), false)
+  }
+  const getTooltip = (manifestType: ManifestTypes) => {
+    if (manifestType === ManifestDataType.HelmRepoOverride && checkDisabled(manifestType)) {
+      if (sectionId === 'SERVICE_OVERRIDES') {
+        return getString('pipeline.manifestType.helmRepoOverride.allowedLimitForService')
+      } else {
+        // sectionId = CONFIGURATION
+        return getString('pipeline.manifestType.helmRepoOverride.allowedLimitForEnvironment')
+      }
+    }
+    //return undefined
+    return
+  }
   const supportedManifestTypes = useMemo(
     () =>
       manifestTypes?.map(manifest => ({
         label: getString(manifestTypeLabels[manifest]),
         icon: manifestTypeIcons[manifest] as IconName,
         value: manifest,
-        disabled: defaultTo(listOfDisabledManifestTypes?.includes(manifest), false)
+        disabled: checkDisabled(manifest),
+        tooltip: getTooltip(manifest) // specific to Helm Repo Override Manifest
       })),
     [getString, listOfDisabledManifestTypes, manifestTypes]
   )

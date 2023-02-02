@@ -131,9 +131,7 @@ export default function ManifestStore({
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
       <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
-        {`${getString('common.specify')} ${getString('pipeline.manifestTypeLabels.HelmChartLabel')} ${getString(
-          'store'
-        )}`}
+        {`${getString('common.specify')} ${getString('common.HelmChartLabel')} ${getString('store')}`}
       </Text>
 
       <Formik

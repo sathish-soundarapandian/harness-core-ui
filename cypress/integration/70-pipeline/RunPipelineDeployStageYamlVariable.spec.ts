@@ -17,9 +17,8 @@ describe('Checks visual to YAML and visual to variable view parity', () => {
       // failing the test
       return false
     })
-    cy.intercept('GET', cdFailureStrategiesYaml, { fixture: 'pipeline/api/pipelines/failureStrategiesYaml' })
     cy.intercept('GET', servicesCallRunPipeline, { fixture: 'ng/api/servicesV2/serviceYamlVariable' })
-    cy.intercept('POST', environmentsCallRunPipeline, { fixture: 'ng/api/environmentsV2' }).as('environmentCall')
+    cy.intercept('GET', environmentsCallRunPipeline, { fixture: 'ng/api/environmentsV2Access' }).as('environmentCall')
     cy.intercept('GET', connectorsCall, { fixture: 'ng/api/connectors' })
     cy.intercept('POST', pipelineVariablesCall, { fixture: 'pipeline/api/runpipeline/pipelines.variables' })
     cy.intercept('POST', servicesYaml, { fixture: 'ng/api/servicesV2/serviceYamlInput' }).as('serviceYaml')
@@ -75,7 +74,8 @@ describe('Checks visual to YAML and visual to variable view parity', () => {
       cy.contains('span', 'Environment').click({ force: true })
     })
     cy.wait(1000)
-    cy.get('input[name="environment.environmentRef"]').click({ force: true })
+    cy.get('input[name="environment"]').click({ force: true })
+    cy.wait('@environmentCall')
     cy.contains('p', 'testEnv').click({ force: true })
     cy.wait(1000)
     cy.selectRuntimeInputForInfrastructure()

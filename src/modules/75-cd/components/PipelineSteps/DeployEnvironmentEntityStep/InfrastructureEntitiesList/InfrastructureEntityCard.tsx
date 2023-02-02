@@ -25,9 +25,7 @@ import {
 import { useStrings } from 'framework/strings'
 import type { Infrastructure } from 'services/cd-ng'
 
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import RbacButton from '@rbac/components/Button/Button'
+import RbacButton, { ButtonProps } from '@rbac/components/Button/Button'
 
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
@@ -45,6 +43,7 @@ export interface InfrastructureEntityCardProps extends InfrastructureData {
   onEditClick: (infrastructure: InfrastructureData) => void
   onDeleteClick: (infrastructure: InfrastructureData) => void
   environmentIdentifier: string
+  environmentPermission?: ButtonProps['permission']
 }
 
 export function InfrastructureEntityCard({
@@ -54,7 +53,8 @@ export function InfrastructureEntityCard({
   allowableTypes,
   onEditClick,
   onDeleteClick,
-  environmentIdentifier
+  environmentIdentifier,
+  environmentPermission
 }: InfrastructureEntityCardProps): React.ReactElement {
   const { getString } = useStrings()
   const { values } = useFormikContext<DeployEnvironmentEntityFormState>()
@@ -93,13 +93,7 @@ export function InfrastructureEntityCard({
             data-testid={`edit-infrastructure-${identifier}`}
             disabled={readonly}
             onClick={() => onEditClick({ infrastructureDefinition, infrastructureInputs })}
-            permission={{
-              resource: {
-                resourceType: ResourceType.ENVIRONMENT,
-                resourceIdentifier: identifier
-              },
-              permission: PermissionIdentifier.EDIT_ENVIRONMENT
-            }}
+            permission={environmentPermission}
           />
           <Button
             variation={ButtonVariation.ICON}

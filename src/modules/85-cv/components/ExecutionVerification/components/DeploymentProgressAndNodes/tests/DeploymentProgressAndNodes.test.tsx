@@ -6,137 +6,126 @@
  */
 
 import React from 'react'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import { cloneDeep } from 'lodash-es'
 import { Classes } from '@blueprintjs/core'
-import type { AdditionalInfo, DeploymentVerificationJobInstanceSummary } from 'services/cv'
 import { TestWrapper } from '@common/utils/testUtils'
-import { RiskValues } from '@cv/utils/CommonUtils'
 import { DeploymentProgressAndNodes, DeploymentProgressAndNodesProps } from '../DeploymentProgressAndNodes'
 
 const BaselineDeploymentMockData: DeploymentProgressAndNodesProps = {
-  deploymentSummary: {
-    additionalInfo: {
-      baselineDeploymentTag: null,
-      baselineStartTime: 0,
-      currentDeploymentTag: 'build#3',
-      currentStartTime: 1602600600000,
-      type: 'TEST'
-    } as any,
-    durationMs: 600000,
-    environmentName: 'QA',
-    jobName: 'loadtest',
-    progressPercentage: 100,
-    startTime: 1602600600000,
-    status: 'SUCCESS' as DeploymentVerificationJobInstanceSummary['status'],
-    verificationJobInstanceId: 'VS4Ck5okSMeGKiHDKls25w'
-  }
+  data: {
+    spec: {
+      analysedServiceIdentifier: 'sumo_service_v2',
+      analysedEnvIdentifier: 'sumo_env_v2',
+      monitoredServiceType: 'DEFAULT',
+      monitoredServiceIdentifier: 'KQE5GbbKTD6w39T6_jwUog',
+      analysisType: 'BLUE_GREEN',
+      sensitivity: 'HIGH',
+      durationInMinutes: 5,
+      isFailOnNoAnalysis: false
+    },
+    appliedDeploymentAnalysisType: 'ROLLING',
+    verificationStatus: 'VERIFICATION_PASSED',
+    verificationProgressPercentage: 100,
+    verificationStartTimestamp: 1674145324888,
+    testNodes: {
+      nodeType: 'POST_DEPLOYMENT',
+      nodes: [
+        {
+          type: 'DEPLOYMENT_NODE',
+          nodeIdentifier: 'Ansuman Satapathy.3c061712-021c-4dcb-a6aa-159fb7c46f02',
+          verificationResult: 'PASSED',
+          failedMetrics: 0,
+          failedLogClusters: 0
+        }
+      ]
+    },
+    controlNodes: {
+      nodeType: 'PRE_DEPLOYMENT',
+      nodes: [
+        {
+          type: 'DEPLOYMENT_NODE',
+          nodeIdentifier: 'Ansuman Satapathy.3c061712-021c-4dcb-a6aa-159fb7c46f02'
+        }
+      ]
+    },
+    metricsAnalysis: {
+      healthy: 1,
+      warning: 0,
+      unhealthy: 0,
+      noAnalysis: 0
+    },
+    logClusters: {
+      knownClustersCount: 0,
+      unknownClustersCount: 0,
+      unexpectedFrequencyClustersCount: 0
+    },
+    errorClusters: {
+      knownClustersCount: 0,
+      unknownClustersCount: 0,
+      unexpectedFrequencyClustersCount: 0
+    }
+  },
+  className: 'ExecutionVerificationSummary-module_details_xcmdgQ',
+  isConsoleView: true
 }
 
 const CanaryDeploymentMockData: DeploymentProgressAndNodesProps = {
-  deploymentSummary: {
-    additionalInfo: {
-      canary: [
+  data: {
+    spec: {
+      analysedServiceIdentifier: 'sumo_service_v2',
+      analysedEnvIdentifier: 'sumo_env_v2',
+      monitoredServiceType: 'DEFAULT',
+      monitoredServiceIdentifier: 'KQE5GbbKTD6w39T6_jwUog',
+      analysisType: 'BLUE_GREEN',
+      sensitivity: 'HIGH',
+      durationInMinutes: 5,
+      isFailOnNoAnalysis: false
+    },
+    appliedDeploymentAnalysisType: 'CANARY',
+    verificationStatus: 'VERIFICATION_PASSED',
+    verificationProgressPercentage: 100,
+    verificationStartTimestamp: 1674145324888,
+    testNodes: {
+      nodeType: 'POST_DEPLOYMENT',
+      nodes: [
         {
-          hostName: 'harness-test-appd-deployment-68977b7dbf-shkq6',
-          risk: RiskValues.HEALTHY,
-          anomalousMetricsCount: 0,
-          anomalousLogClustersCount: 0
-        },
-        {
-          hostName: 'harness-test-appd-deployment-68977b7dbf-27znb',
-          risk: RiskValues.HEALTHY,
-          anomalousMetricsCount: 0,
-          anomalousLogClustersCount: 0
+          type: 'DEPLOYMENT_NODE',
+          nodeIdentifier: 'Ansuman Satapathy.3c061712-021c-4dcb-a6aa-159fb7c46f02',
+          verificationResult: 'PASSED',
+          failedMetrics: 0,
+          failedLogClusters: 0
         }
-      ],
-      canaryInstancesLabel: 'canary',
-      primaryInstancesLabel: 'primary',
-      primary: [
+      ]
+    },
+    controlNodes: {
+      nodeType: 'PRE_DEPLOYMENT',
+      nodes: [
         {
-          hostName: 'manager-b6b7c4d9b-s228g',
-          risk: RiskValues.NO_DATA,
-          anomalousMetricsCount: 0,
-          anomalousLogClustersCount: 0
-        },
-        {
-          hostName: 'manager-b6b7c4d9b-p2qlw',
-          risk: RiskValues.UNHEALTHY,
-          anomalousMetricsCount: 0,
-          anomalousLogClustersCount: 0
-        },
-        {
-          hostName: 'manager-58d9c944df-ghqpv',
-          risk: null,
-          anomalousMetricsCount: 0,
-          anomalousLogClustersCount: 0
-        },
-        {
-          hostName: 'manager-58d9c944df-9sv75',
-          risk: null,
-          anomalousMetricsCount: 0,
-          anomalousLogClustersCount: 0
-        },
-        {
-          hostName: 'manager-58d9c944df-czh8b',
-          risk: RiskValues.NO_DATA,
-          anomalousMetricsCount: 0,
-          anomalousLogClustersCount: 0
-        },
-        {
-          hostName: 'manager-58d9c944df-pg5wb',
-          risk: null,
-          anomalousMetricsCount: 0,
-          anomalousLogClustersCount: 0
-        },
-        {
-          hostName: 'manager-58d9c944df-6bkpw',
-          risk: null,
-          anomalousMetricsCount: 0,
-          anomalousLogClustersCount: 0
-        },
-        {
-          hostName: 'manager-b6b7c4d9b-7cp2g',
-          risk: RiskValues.UNHEALTHY,
-          anomalousMetricsCount: 0,
-          anomalousLogClustersCount: 0
-        },
-        {
-          hostName: 'manager-b6b7c4d9b-s6zzs',
-          risk: RiskValues.UNHEALTHY,
-          anomalousMetricsCount: 0,
-          anomalousLogClustersCount: 0
-        },
-        {
-          hostName: 'harness-test-appd-deployment-68977b7dbf-shkq6',
-          risk: null,
-          anomalousMetricsCount: 0,
-          anomalousLogClustersCount: 0
-        },
-        {
-          hostName: 'manager-b6b7c4d9b-c8gzk',
-          risk: RiskValues.UNHEALTHY,
-          anomalousMetricsCount: 0,
-          anomalousLogClustersCount: 0
-        },
-        {
-          hostName: 'harness-test-appd-deployment-68977b7dbf-27znb',
-          risk: null,
-          anomalousMetricsCount: 0,
-          anomalousLogClustersCount: 0
+          type: 'DEPLOYMENT_NODE',
+          nodeIdentifier: 'Ansuman Satapathy.3c061712-021c-4dcb-a6aa-159fb7c46f02'
         }
-      ],
-      trafficSplitPercentage: null,
-      type: 'CANARY'
-    } as any,
-    durationMs: 600000,
-    environmentName: 'prod',
-    jobName: 'canary',
-    progressPercentage: 58,
-    startTime: 1602599760000,
-    status: 'ERROR',
-    verificationJobInstanceId: 'kuFEp5yRRDaGgK0i5fiGdg'
-  }
+      ]
+    },
+    metricsAnalysis: {
+      healthy: 1,
+      warning: 0,
+      unhealthy: 0,
+      noAnalysis: 0
+    },
+    logClusters: {
+      knownClustersCount: 0,
+      unknownClustersCount: 0,
+      unexpectedFrequencyClustersCount: 0
+    },
+    errorClusters: {
+      knownClustersCount: 0,
+      unknownClustersCount: 0,
+      unexpectedFrequencyClustersCount: 0
+    }
+  },
+  className: 'ExecutionVerificationSummary-module_details_xcmdgQ',
+  isConsoleView: true
 }
 
 describe('Deployment progress and nodes unit tests', () => {
@@ -159,29 +148,26 @@ describe('Deployment progress and nodes unit tests', () => {
     jest.resetAllMocks()
   })
   test('Ensure baseline info is rendered with green bar', async () => {
-    const { container, getByText } = render(
+    const { container } = render(
       <TestWrapper>
         <DeploymentProgressAndNodes {...BaselineDeploymentMockData} />
       </TestWrapper>
     )
-    await waitFor(() => getByText('pipeline.verification.baselineTest'))
 
     expect(container.querySelector('[class*="bp3-intent-success"]'))
     expect(container.querySelector(`.${Classes.PROGRESS_METER}`)?.getAttribute('style')).toEqual('width: 100%;')
   })
-  test('Ensure production info for a canary deeployment is rendered with red bar', async () => {
-    const { container, getByText } = render(
+  test('Ensure production info for a canary deeployment is rendered with green bar', async () => {
+    const { container } = render(
       <TestWrapper>
         <DeploymentProgressAndNodes {...CanaryDeploymentMockData} />
       </TestWrapper>
     )
-    await waitFor(() => expect(getByText('CANARY')).not.toBeNull())
-    expect(getByText('PRIMARY')).not.toBeNull()
     expect(container.querySelector('[class*="bp3-intent-danger"]'))
-    expect(container.querySelector(`.${Classes.PROGRESS_METER}`)?.getAttribute('style')).toEqual('width: 58%;')
+    expect(container.querySelector(`.${Classes.PROGRESS_METER}`)?.getAttribute('style')).toEqual('width: 100%;')
 
     const deploymentNodes = container.querySelectorAll('[class~="hexagon"]')
-    expect(deploymentNodes.length).toBe(14)
+    expect(deploymentNodes.length).toBe(2)
   })
 
   test('Ensure node selection works', async () => {
@@ -192,14 +178,15 @@ describe('Deployment progress and nodes unit tests', () => {
       </TestWrapper>
     )
 
-    await waitFor(() => expect(getByText('CANARY')).not.toBeNull())
+    await waitFor(() => expect(getByText('AFTER')).not.toBeNull())
     fireEvent.click(container.querySelector('[class*="canaryNodes"] [class~="hexagonContainer"]')!)
     await waitFor(() =>
       expect(onSelectMock).toHaveBeenLastCalledWith({
-        anomalousLogClustersCount: 0,
-        anomalousMetricsCount: 0,
-        hostName: 'harness-test-appd-deployment-68977b7dbf-shkq6',
-        risk: RiskValues.HEALTHY
+        failedLogClusters: 0,
+        failedMetrics: 0,
+        nodeIdentifier: 'Ansuman Satapathy.3c061712-021c-4dcb-a6aa-159fb7c46f02',
+        type: 'DEPLOYMENT_NODE',
+        verificationResult: 'PASSED'
       })
     )
     expect(container.querySelector('[class*="hexagonContainer"] [class*="selected"]')).not.toBeNull()
@@ -218,8 +205,8 @@ describe('Deployment progress and nodes unit tests', () => {
   test('Ensure that correct messaging is displayed when progress is 0', async () => {
     const onSelectMock = jest.fn()
     const clonedMock = cloneDeep(CanaryDeploymentMockData)
-    clonedMock.deploymentSummary!.progressPercentage = 0
-    clonedMock.deploymentSummary!.status = 'IN_PROGRESS'
+    clonedMock.data!.verificationProgressPercentage = 0
+    clonedMock.data!.verificationStatus = 'IN_PROGRESS'
 
     const { getByText } = render(
       <TestWrapper>
@@ -231,25 +218,15 @@ describe('Deployment progress and nodes unit tests', () => {
   })
 
   test('should show nodes for rolling deployment type', () => {
-    const propsWithRollingType = {
-      ...CanaryDeploymentMockData,
-      deploymentSummary: {
-        ...CanaryDeploymentMockData.deploymentSummary,
-        additionalInfo: {
-          ...CanaryDeploymentMockData.deploymentSummary!.additionalInfo,
-          type: 'ROLLING' as AdditionalInfo['type'],
-          canaryInstancesLabel: 'Canary instance label',
-          primaryInstancesLabel: 'Primary instance label'
-        }
-      }
-    }
-    render(
+    const { container, getByText } = render(
       <TestWrapper>
-        <DeploymentProgressAndNodes {...propsWithRollingType} />
+        <DeploymentProgressAndNodes {...CanaryDeploymentMockData} />
       </TestWrapper>
     )
 
-    expect(screen.getByText(/CANARY INSTANCE LABEL/)).toBeInTheDocument()
-    expect(screen.getByText(/PRIMARY INSTANCE LABEL/)).toBeInTheDocument()
+    expect(getByText(/BEFORE/)).toBeInTheDocument()
+    expect(getByText(/AFTER/)).toBeInTheDocument()
+    const deploymentNodes = container.querySelectorAll('[class~="hexagon"]')
+    expect(deploymentNodes.length).toBe(2)
   })
 })

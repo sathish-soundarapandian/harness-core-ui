@@ -5,14 +5,13 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import { ButtonSize, ButtonVariation, ExpandingSearchInput, Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import { Page } from '@common/exports'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import { useStateWithQueryParams } from '@common/hooks/useStateWithQueryParams'
 import { useServiceAccountModal } from '@rbac/modals/ServiceAccountModal/useServiceAccountModal'
 import { useRoleAssignmentModal } from '@rbac/modals/RoleAssignmentModal/useRoleAssignmentModal'
 import { useListAggregatedServiceAccounts } from 'services/cd-ng'
@@ -21,6 +20,10 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
+import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
+import { rbacQueryParamOptions } from '@rbac/utils/utils'
 import ServiceAccountsEmptyState from './service-accounts-empty-state.png'
 import css from './ServiceAccounts.module.scss'
 
@@ -28,20 +31,27 @@ const ServiceAccountsPage: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
   useDocumentTitle(getString('rbac.serviceAccounts.label'))
-  const [searchTerm, setsearchTerm] = useStateWithQueryParams({ key: 'search' })
-  const [page, setPage] = useState(0)
+
+  const {
+    search: searchTerm,
+    page: pageIndex,
+    size: pageSize
+  } = useQueryParams<CommonPaginationQueryParams & { search?: string }>(rbacQueryParamOptions)
+  const { updateQueryParams } = useUpdateQueryParams<CommonPaginationQueryParams & { search?: string }>()
 
   const { data, loading, error, refetch } = useListAggregatedServiceAccounts({
     queryParams: {
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
-      searchTerm: searchTerm,
-      pageIndex: page,
-      pageSize: 10
+      searchTerm,
+      pageIndex,
+      pageSize
     },
     debounce: 300
   })
+
+  usePreviousPageWhenEmpty({ page: data?.data?.pageIndex, pageItemCount: data?.data?.pageItemCount })
 
   const { openServiceAccountModal } = useServiceAccountModal({ onSuccess: () => refetch() })
   const { openRoleAssignmentModal } = useRoleAssignmentModal({ onSuccess: refetch })
@@ -74,7 +84,7 @@ const ServiceAccountsPage: React.FC = () => {
                 alwaysExpanded
                 placeholder={getString('common.searchPlaceholder')}
                 onChange={text => {
-                  setsearchTerm(text.trim())
+                  updateQueryParams({ page: 0, search: text.trim() })
                 }}
                 width={250}
               />
@@ -116,7 +126,6 @@ const ServiceAccountsPage: React.FC = () => {
           reload={refetch}
           openRoleAssignmentModal={openRoleAssignmentModal}
           openServiceAccountModal={openServiceAccountModal}
-          gotoPage={(pageNumber: number) => setPage(pageNumber)}
         />
       </Page.Body>
     </>

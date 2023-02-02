@@ -5,74 +5,208 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { extendMoment } from 'moment-range'
 import { get } from 'lodash-es'
-import type { MultiSelectOption } from '@harness/uicore'
+import type { MultiSelectOption, SelectOption } from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
 import type { ExecutionNode } from 'services/pipeline-ng'
-import type { RestResponseTransactionMetricInfoSummaryPageDTO } from 'services/cv'
+import type {
+  AnalysedDeploymentNode,
+  AnalysedDeploymentTestDataNode,
+  HealthSourceDTO,
+  HealthSourceV2,
+  HostData,
+  MetricValueV2,
+  NodeRiskCountDTO,
+  PageMetricsAnalysis,
+  RestResponseSetHealthSourceDTO
+} from 'services/cv'
+import { RiskValues } from '@cv/utils/CommonUtils'
+import { METRICS } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
+import { VerificationType } from '@cv/components/HealthSourceDropDown/HealthSourceDropDown.constants'
 import type {
   HostControlTestData,
   HostTestData
 } from './components/DeploymentMetricsAnalysisRow/DeploymentMetricsAnalysisRow.constants'
 import type { DeploymentMetricsAnalysisRowProps } from './components/DeploymentMetricsAnalysisRow/DeploymentMetricsAnalysisRow'
-import type { DeploymentNodeAnalysisResult } from '../DeploymentProgressAndNodes/components/DeploymentNodes/DeploymentNodes.constants'
-
-const moment = extendMoment(require('moment')) // eslint-disable-line
+import { DEFAULT_NODE_RISK_COUNTS, DEFAULT_PAGINATION_VALUEE } from './DeploymentMetrics.constants'
 
 export function transformMetricData(
-  metricData?: RestResponseTransactionMetricInfoSummaryPageDTO | null
+  selectedDataFormat: SelectOption,
+  metricData?: PageMetricsAnalysis | null
 ): DeploymentMetricsAnalysisRowProps[] {
-  if (!metricData?.resource || metricData.resource.pageResponse?.empty) {
+  if (!(Array.isArray(metricData?.content) && metricData?.content.length)) {
     return []
   }
-
+  const metricInfo = { ...metricData }
   const graphData: DeploymentMetricsAnalysisRowProps[] = []
+  for (const analysisData of metricInfo.content || []) {
+    const {
+      metricName,
+      transactionGroup,
+      analysisResult,
+      testDataNodes = [],
+      thresholds,
+      healthSource,
+      deeplinkURL
+    } = analysisData || {}
 
-  const range = moment.range(
-    moment(metricData.resource?.deploymentStartTime),
-    moment(metricData.resource?.deploymentEndTime)
-  )
-  const startOfRange = range.start.valueOf()
-
-  for (const analysisData of metricData.resource?.pageResponse?.content || []) {
-    const { nodes, transactionMetric, dataSourceType, connectorName, nodeRiskCountDTO } = analysisData || {}
-    if (!nodes?.length || !transactionMetric?.metricName || !transactionMetric.transactionName) continue
-
-    const increment = Math.floor(range.diff() / Math.max(nodes.length - 1, 1))
     const controlPoints: HostControlTestData[] = []
     const testPoints: HostTestData[] = []
+    const normalisedControlPoints: HostControlTestData[] = []
+    const normalisedTestPoints: HostTestData[] = []
 
-    for (const hostInfo of nodes) {
-      const { controlData, testData, risk, hostName } = hostInfo || {}
-      const hostControlData: Highcharts.SeriesLineOptions['data'] = []
-      const hostTestData: Highcharts.SeriesLineOptions['data'] = []
+    let nodeRiskCountDTO = {
+      totalNodeCount: testDataNodes.length,
+      anomalousNodeCount: 0,
+      nodeRiskCounts: DEFAULT_NODE_RISK_COUNTS
+    } as NodeRiskCountDTO
 
-      controlData?.forEach((dataPoint, index) => {
-        hostControlData.push({ x: startOfRange + index * increment, y: dataPoint === -1 ? null : dataPoint })
+    for (const hostInfo of testDataNodes) {
+      const {
+        controlData,
+        testData,
+        nodeIdentifier,
+        analysisResult: testAnalysisResult,
+        analysisReason,
+        controlNodeIdentifier,
+        controlDataType,
+        normalisedControlData,
+        normalisedTestData,
+        appliedThresholds
+      } = hostInfo || {}
+
+      // Generating points for control host
+      generatePointsForNodes({
+        inputTestData: controlData,
+        points: controlPoints,
+        analysisResult: testAnalysisResult,
+        analysisReason,
+        nodeIdentifier: controlNodeIdentifier,
+        controlDataType
       })
 
-      testData?.forEach((dataPoint, index) => {
-        hostTestData.push({ x: startOfRange + index * increment, y: dataPoint === -1 ? null : dataPoint })
+      generatePointsForNodes({
+        inputTestData: normalisedControlData,
+        points: normalisedControlPoints,
+        analysisResult: testAnalysisResult,
+        analysisReason,
+        nodeIdentifier: controlNodeIdentifier,
+        controlDataType
       })
 
-      controlPoints.push({ points: hostControlData, name: hostInfo.nearestControlHost })
-      testPoints.push({ points: hostTestData, risk, name: hostName || '' })
+      // generating points for testHost
+      generatePointsForNodes({
+        inputTestData: testData,
+        points: testPoints,
+        analysisResult: testAnalysisResult,
+        analysisReason,
+        nodeIdentifier,
+        controlDataType,
+        appliedThresholds
+      })
+      generatePointsForNodes({
+        inputTestData: normalisedTestData,
+        points: normalisedTestPoints,
+        analysisResult: testAnalysisResult,
+        analysisReason,
+        nodeIdentifier,
+        controlDataType,
+        appliedThresholds
+      })
+
+      nodeRiskCountDTO = getNodeRiskCountDTO(testAnalysisResult, nodeRiskCountDTO)
     }
 
     graphData.push({
-      controlData: controlPoints,
-      testData: testPoints,
-      transactionName: transactionMetric.transactionName,
-      metricName: transactionMetric.metricName,
-      healthSourceType: dataSourceType,
-      risk: transactionMetric.risk,
-      connectorName,
-      nodeRiskCount: nodeRiskCountDTO
+      controlData: selectedDataFormat?.value === 'normalised' ? [...normalisedControlPoints] : [...controlPoints],
+      testData: selectedDataFormat?.value === 'normalised' ? [...normalisedTestPoints] : [...testPoints],
+      transactionName: transactionGroup as string,
+      metricName: metricName as string,
+      risk: analysisResult,
+      nodeRiskCount: nodeRiskCountDTO,
+      thresholds,
+      healthSource,
+      deeplinkURL,
+      selectedDataFormat
     })
   }
 
   return graphData
+}
+
+function generatePointsForNodes({
+  inputTestData,
+  points,
+  analysisResult,
+  analysisReason,
+  nodeIdentifier,
+  controlDataType,
+  appliedThresholds
+}: {
+  inputTestData: MetricValueV2[] | undefined
+  points: HostTestData[] | HostControlTestData[]
+  analysisResult: string | undefined
+  analysisReason: AnalysedDeploymentTestDataNode['analysisReason']
+  nodeIdentifier: string | undefined
+  controlDataType?: AnalysedDeploymentTestDataNode['controlDataType']
+  appliedThresholds?: AnalysedDeploymentTestDataNode['appliedThresholds']
+}): void {
+  const hostData: Highcharts.SeriesLineOptions['data'] = []
+  const sortedTestData = inputTestData
+    ?.slice()
+    ?.sort((a, b) => (a?.timestampInMillis || 0) - (b?.timestampInMillis || 0))
+  const testDataInitialXValue = sortedTestData?.[0]?.timestampInMillis || 0
+  sortedTestData?.forEach(({ timestampInMillis, value }) => {
+    hostData.push({ x: (timestampInMillis || 0) - testDataInitialXValue, y: value === -1 ? null : value })
+  })
+
+  points.push({
+    points: [...hostData],
+    risk: analysisResult as HostData['risk'],
+    analysisReason,
+    name: nodeIdentifier as string,
+    initialXvalue: testDataInitialXValue,
+    appliedThresholds,
+    ...(controlDataType && { controlDataType })
+  })
+}
+
+export function getNodeRiskCountDTO(
+  testAnalysisResult: string | undefined,
+  nodeRiskCountDTO: NodeRiskCountDTO
+): NodeRiskCountDTO {
+  switch (testAnalysisResult) {
+    case RiskValues.HEALTHY:
+      nodeRiskCountDTO = getUpdatedNodeRiskCountDTO(nodeRiskCountDTO, RiskValues.HEALTHY)
+      break
+    case RiskValues.WARNING:
+      nodeRiskCountDTO = getUpdatedNodeRiskCountDTO(nodeRiskCountDTO, RiskValues.WARNING)
+      break
+    case RiskValues.UNHEALTHY:
+      nodeRiskCountDTO = getUpdatedNodeRiskCountDTO(nodeRiskCountDTO, RiskValues.UNHEALTHY)
+      nodeRiskCountDTO = {
+        ...nodeRiskCountDTO,
+        anomalousNodeCount: (nodeRiskCountDTO?.anomalousNodeCount || 0) + 1
+      }
+  }
+  return nodeRiskCountDTO
+}
+
+export function getUpdatedNodeRiskCountDTO(nodeRiskCountDTO: NodeRiskCountDTO, status: RiskValues): NodeRiskCountDTO {
+  nodeRiskCountDTO = {
+    ...nodeRiskCountDTO,
+    nodeRiskCounts: nodeRiskCountDTO?.nodeRiskCounts?.map(el => {
+      if (el.risk === status) {
+        return {
+          ...el,
+          count: (el?.count || 0) + 1
+        }
+      } else {
+        return el
+      }
+    })
+  }
+  return nodeRiskCountDTO
 }
 
 export function getErrorMessage(errorObj?: any): string | undefined {
@@ -82,14 +216,14 @@ export function getErrorMessage(errorObj?: any): string | undefined {
 export const getAccordionIds = (data: DeploymentMetricsAnalysisRowProps[]): string[] => {
   if (data.length) {
     return data?.map(
-      analysisRow => `${analysisRow.transactionName}-${analysisRow.metricName}-${analysisRow.healthSourceType}`
+      analysisRow => `${analysisRow?.transactionName}-${analysisRow?.metricName}-${analysisRow?.healthSource?.type}`
     )
   }
   return []
 }
 
 export const getDropdownItems = (
-  filterData?: string[],
+  filterData?: string[] | null,
   isLoading?: boolean,
   error?: GetDataError<unknown> | null
 ): MultiSelectOption[] => {
@@ -103,15 +237,15 @@ export const getDropdownItems = (
   }))
 }
 
-export function getInitialNodeName(selectedNode: DeploymentNodeAnalysisResult | undefined): MultiSelectOption[] {
+export function getInitialNodeName(selectedNode: AnalysedDeploymentNode | undefined): MultiSelectOption[] {
   if (!selectedNode) {
     return []
   }
 
   return [
     {
-      label: selectedNode?.hostName,
-      value: selectedNode?.hostName
+      label: selectedNode?.nodeIdentifier as string,
+      value: selectedNode?.nodeIdentifier as string
     }
   ]
 }
@@ -145,4 +279,43 @@ export function isErrorOrLoading(
 
 export function isStepRunningOrWaiting(status: ExecutionNode['status']): boolean {
   return status === 'Running' || status === 'AsyncWaiting'
+}
+
+export function generateHealthSourcesOptionsData(
+  healthSourcesData: HealthSourceV2[] | null
+): RestResponseSetHealthSourceDTO | null {
+  const healthSourcesOptionsData: { resource: HealthSourceDTO[] } = {
+    resource: []
+  }
+
+  healthSourcesData?.forEach((el: HealthSourceV2) => {
+    const { identifier, name, type, providerType } = el
+    healthSourcesOptionsData.resource.push({
+      identifier,
+      name,
+      type: type as HealthSourceDTO['type'],
+      verificationType: providerType === METRICS ? VerificationType.TIME_SERIES : VerificationType.LOG
+    })
+  })
+
+  return healthSourcesOptionsData
+}
+
+export function getPaginationInfo(data: PageMetricsAnalysis | null): {
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalPages?: number
+  totalItems?: number
+} {
+  const { pageIndex, pageItemCount, pageSize, totalItems, totalPages } = data || {}
+  const paginationInfo =
+    {
+      pageIndex,
+      pageItemCount,
+      pageSize: pageSize,
+      totalPages,
+      totalItems
+    } || DEFAULT_PAGINATION_VALUEE
+  return paginationInfo
 }

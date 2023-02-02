@@ -29,6 +29,13 @@ import mockData from './mock.json'
 import reportSummaryMock from './report-summary-mock.json'
 
 jest.mock('services/pipeline-ng', () => ({
+  useGetPipelineSummary: jest.fn(() => ({
+    refetch: jest.fn(),
+    loading: false,
+    data: {
+      data: { storeType: 'INLINE' }
+    }
+  })),
   useGetExecutionDetailV2: jest.fn(() => ({
     refetch: jest.fn(),
     loading: false,
@@ -57,7 +64,8 @@ jest.mock('services/pipeline-ng', () => ({
         data: {}
       }
     })
-  }))
+  })),
+  useGetExecutionData: jest.fn(() => ({ data: null }))
 }))
 
 jest.mock('services/ti-service', () => ({

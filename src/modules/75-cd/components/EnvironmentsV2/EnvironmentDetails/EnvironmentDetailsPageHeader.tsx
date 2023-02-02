@@ -24,7 +24,13 @@ import { EnvironmentTypes } from '../EnvironmentsList/EnvironmentsListColumns'
 
 import css from './EnvironmentDetails.module.scss'
 
-export function PageHeaderTitle({ name, identifier, description, tags, type }: Partial<EnvironmentResponseDTO>) {
+export function PageHeaderTitle({
+  name,
+  identifier,
+  description,
+  tags,
+  type
+}: Partial<EnvironmentResponseDTO>): React.ReactElement {
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const { getString } = useStrings()
 

@@ -73,13 +73,6 @@ export function TasBGAppSetupWidget(
           }
           return commonValidation.call(this, value, getString('version'))
         }
-      }),
-      tempRoutes: Yup.lazy((value): Yup.Schema<unknown> => {
-        /* istanbul ignore else */
-        if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
-          return Yup.array().min(1, getString('cd.steps.tas.tempRouteMandatory'))
-        }
-        return Yup.string().required(getString('cd.steps.tas.tempRouteMandatory'))
       })
     })
   })

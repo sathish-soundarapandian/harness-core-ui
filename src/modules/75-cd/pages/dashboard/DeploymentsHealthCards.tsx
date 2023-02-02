@@ -12,25 +12,16 @@ import HighchartsReact from 'highcharts-react-official'
 import Highcharts from 'highcharts'
 import cx from 'classnames'
 
-import { useParams } from 'react-router-dom'
 import { Classes } from '@blueprintjs/core'
 import { merge, defaultTo, isEmpty, capitalize } from 'lodash-es'
 import moment from 'moment'
 import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { roundNumber, useErrorHandler } from '@pipeline/components/Dashboards/shared'
-import { useGetDeploymentHealth, DeploymentDateAndCount, useGetDeploymentHealthV2, ChangeRate } from 'services/cd-ng'
+import type { DeploymentDateAndCount, ChangeRate } from 'services/cd-ng'
 import { PieChart, PieChartProps } from '@cd/components/PieChart/PieChart'
 import { numberFormatter } from '@common/utils/utils'
-import {
-  calcTrend,
-  calcTrendCaret,
-  calcTrendColor,
-  getFormattedTimeRange,
-  RateTrend,
-  TrendPopover
-} from './dashboardUtils'
+import { calcTrend, calcTrendCaret, calcTrendColor, RateTrend, TrendPopover } from './dashboardUtils'
 import styles from './CDDashboardPage.module.scss'
 
 export interface HealthCardProps {
@@ -47,6 +38,7 @@ export interface HealthCardProps {
   pieChartProps?: any
   showPieChart?: boolean
   showLineChart?: boolean
+  refetchWidget?: boolean
 }
 
 // sonar recommedation
@@ -55,45 +47,7 @@ const red = 'var(--ci-color-red-500)'
 const grey = 'var(--grey-500)'
 
 export default function DeploymentsHealthCards(props: any) {
-  const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
-  const { range, title } = props
-  const { CDC_DASHBOARD_ENHANCEMENT_NG } = useFeatureFlags()
-
-  const [startTime, endTime] = getFormattedTimeRange(range)
-
-  const {
-    data: healthData,
-    loading: healthDataLoading,
-    error: healthDataError
-  } = useGetDeploymentHealth({
-    queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier,
-      startTime,
-      endTime
-    },
-    lazy: CDC_DASHBOARD_ENHANCEMENT_NG
-  })
-
-  const {
-    data: healthDataV2,
-    loading: healthDataLoadingV2,
-    error: healthDataErrorV2
-  } = useGetDeploymentHealthV2({
-    queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier,
-      startTime,
-      endTime
-    },
-    lazy: !CDC_DASHBOARD_ENHANCEMENT_NG
-  })
-
-  const [data, loading, error] = CDC_DASHBOARD_ENHANCEMENT_NG
-    ? [healthDataV2, healthDataLoadingV2, healthDataErrorV2]
-    : [healthData, healthDataLoading, healthDataError]
+  const { title, data, loading, error } = props
 
   useErrorHandler(error)
   const { getString } = useStrings()
@@ -118,7 +72,7 @@ export default function DeploymentsHealthCards(props: any) {
                 name: 'Deployments',
                 type: 'line',
                 color: 'var(--ci-color-blue-500)',
-                data: countList?.map(val => val?.deployments?.count)
+                data: countList?.map((val: any) => val?.deployments?.count)
               }
             ]
           })
@@ -154,7 +108,7 @@ export default function DeploymentsHealthCards(props: any) {
               name: 'Deployments',
               type: 'line',
               color: 'var(--ci-color-blue-500)',
-              data: data.data.healthDeploymentInfo.success.countList.map(val => val?.deployments?.count)
+              data: data.data.healthDeploymentInfo.success.countList.map((val: any) => val?.deployments?.count)
             }
           ]
         })
@@ -169,7 +123,7 @@ export default function DeploymentsHealthCards(props: any) {
               name: 'Deployments',
               type: 'line',
               color: 'var(--ci-color-blue-500)',
-              data: data.data.healthDeploymentInfo.failure.countList.map(val => val?.deployments?.count)
+              data: data.data.healthDeploymentInfo.failure.countList.map((val: any) => val?.deployments?.count)
             }
           ]
         })
@@ -184,7 +138,7 @@ export default function DeploymentsHealthCards(props: any) {
               name: 'Deployments',
               type: 'line',
               color: 'var(--ci-color-blue-500)',
-              data: data.data.healthDeploymentInfo.active.countList.map(val => val?.deployments?.count)
+              data: data.data.healthDeploymentInfo.active.countList.map((val: any) => val?.deployments?.count)
             }
           ]
         })

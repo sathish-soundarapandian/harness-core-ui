@@ -37,6 +37,7 @@ describe('Policy Evaluation Content', () => {
             outcomes: {}
           }}
           executionMetadata={executionMetadata}
+          policySetOutputPath={'outcomes.output'}
         />
       </TestWrapper>
     )
@@ -58,7 +59,11 @@ describe('Policy Evaluation Content', () => {
           module: 'cd'
         }}
       >
-        <PolicyEvaluationContent step={StepProps as any} executionMetadata={executionMetadata} />
+        <PolicyEvaluationContent
+          step={StepProps as any}
+          executionMetadata={executionMetadata}
+          policySetOutputPath={'outcomes.output'}
+        />
       </TestWrapper>
     )
 

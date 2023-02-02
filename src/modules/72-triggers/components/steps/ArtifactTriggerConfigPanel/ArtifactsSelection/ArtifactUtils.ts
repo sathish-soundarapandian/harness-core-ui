@@ -428,11 +428,11 @@ export const getArtifactLocation = (artifact: PrimaryArtifact | SidecarArtifact)
     return artifact.spec?.filePath ?? artifact.spec?.filePathRegex
   }
   return (
-    artifact.spec?.imagePath ??
-    artifact.spec?.artifactPath ??
-    artifact.spec?.artifactPathFilter ??
-    artifact.spec?.repository ??
-    artifact.spec?.version ??
+    artifact.spec?.imagePath ||
+    artifact.spec?.artifactPath ||
+    artifact.spec?.artifactPathFilter ||
+    artifact.spec?.repository ||
+    artifact.spec?.version ||
     artifact.spec?.versionRegex
   )
 }

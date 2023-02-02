@@ -9,15 +9,12 @@ import React from 'react'
 import type { SideNavProps } from './SideNav/SideNav'
 
 export interface SidebarContext extends SideNavProps {
-  navComponent: React.ComponentType
+  navComponent?: React.ComponentType
 }
 
 const SidebarContext = React.createContext<SidebarContext>({
   title: '',
-  subtitle: '',
-  navComponent: function DefaultNav() {
-    return null
-  }
+  subtitle: ''
 })
 
 export function useSidebar(): SidebarContext {

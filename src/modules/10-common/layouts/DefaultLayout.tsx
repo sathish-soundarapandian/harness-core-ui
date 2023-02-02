@@ -7,6 +7,7 @@
 
 import React, { useEffect } from 'react'
 
+import cx from 'classnames'
 import MainNav from '@common/navigation/MainNav'
 import SideNav from '@common/navigation/SideNav'
 
@@ -17,12 +18,14 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { usePage } from '@common/pages/pageContext/PageProvider'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import FeatureBanner from './FeatureBanner'
 
 import css from './layouts.module.scss'
 
 export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { title, subtitle, icon, navComponent: NavComponent, launchButtonText, launchButtonRedirectUrl } = useSidebar()
+  const { SPG_SIDENAV_COLLAPSE } = useFeatureFlags()
 
   const { pageName } = usePage()
   const { module } = useModuleInfo()
@@ -38,18 +41,21 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
   }, [pageName])
 
   return (
-    <div className={css.main} data-layout="default">
+    <div className={cx(css.main, { [css.flex]: SPG_SIDENAV_COLLAPSE })} data-layout="default">
       <MainNav />
-      <SideNav
-        title={title}
-        subtitle={subtitle}
-        icon={icon}
-        launchButtonText={launchButtonText}
-        launchButtonRedirectUrl={launchButtonRedirectUrl}
-        data-testid="side-nav"
-      >
-        <NavComponent />
-      </SideNav>
+      {NavComponent && (
+        <SideNav
+          title={title}
+          subtitle={subtitle}
+          icon={icon}
+          launchButtonText={launchButtonText}
+          launchButtonRedirectUrl={launchButtonRedirectUrl}
+          data-testid="side-nav"
+        >
+          <NavComponent />
+        </SideNav>
+      )}
+
       <div className={css.rhs}>
         {module && <TrialLicenseBanner />}
         {module && <FeatureBanner />}

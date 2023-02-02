@@ -17,12 +17,13 @@ import {
 } from 'services/cv'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import noDataImage from '@cv/assets/noData.svg'
+import LogAnalysisForServiceHealth from '@cv/components/LogsAnalysis/components/LogAnalysisForServiceHealth/LogAnalysisForServiceHealth'
 import { useQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import LogAnalysis from './LogAnalysis'
 import { pageSize, initialPageNumber, POLLING_INTERVAL, StepStatus, EventTypeFullName } from './LogAnalysis.constants'
 import type { ClusterTypes, LogAnalysisQueryParams, MinMaxAngleState } from './LogAnalysisView.container.types'
-import type { LogAnalysisContainerProps } from './LogAnalysis.types'
+import type { LogAnalysisContainerProps, LogAnalysisProps } from './LogAnalysis.types'
 import { getActivityId } from '../../ExecutionVerificationView.utils'
 import { getClusterTypes, getInitialNodeName } from './LogAnalysis.utils'
 import { getQueryParamForHostname, getQueryParamFromFilters } from '../DeploymentMetrics/DeploymentMetrics.utils'
@@ -31,6 +32,7 @@ import ClusterTypeFiltersForLogs from './components/ClusterTypeFiltersForLogs'
 import css from './LogAnalysisView.container.module.scss'
 import logAnalysisStyles from './LogAnalysis.module.scss'
 
+// ⭐️ Verify step logs screen
 export default function LogAnalysisContainer({
   step,
   hostName,
@@ -262,23 +264,27 @@ export default function LogAnalysisContainer({
       )
     }
 
-    return (
-      <LogAnalysis
-        data={logsData}
-        clusterChartData={clusterChartData}
-        filteredAngle={minMaxAngle}
-        logsLoading={logsLoading}
-        logsError={logsError}
-        refetchLogAnalysis={fetchLogAnalysis}
-        refetchClusterAnalysis={fetchClusterAnalysis}
-        clusterChartError={clusterChartError}
-        clusterChartLoading={clusterChartLoading}
-        goToPage={goToLogsPage}
-        activityId={activityId}
-        isErrorTracking={isErrorTracking}
-        handleAngleChange={handleMinMaxChange}
-      />
-    )
+    const componentProps: LogAnalysisProps = {
+      data: logsData,
+      clusterChartData,
+      filteredAngle: minMaxAngle,
+      logsLoading,
+      logsError,
+      refetchLogAnalysis: fetchLogAnalysis,
+      refetchClusterAnalysis: fetchClusterAnalysis,
+      clusterChartError,
+      clusterChartLoading,
+      goToPage: goToLogsPage,
+      activityId,
+      isErrorTracking,
+      handleAngleChange: handleMinMaxChange
+    }
+
+    if (isErrorTracking) {
+      return <LogAnalysisForServiceHealth {...componentProps} />
+    }
+
+    return <LogAnalysis {...componentProps} />
   }
 
   return (

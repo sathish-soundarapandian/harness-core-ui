@@ -106,7 +106,9 @@ describe('Aquatrivy Step', () => {
           image: {
             type: 'docker_v2',
             name: RUNTIME_INPUT_VALUE,
-            access_token: '<+secrets.getValue("your_aquatrivy_token_secret")>'
+            domain: RUNTIME_INPUT_VALUE,
+            access_token: '<+secrets.getValue("your_aquatrivy_token_secret")>',
+            tag: RUNTIME_INPUT_VALUE
           },
           advanced: {
             args: {
@@ -174,7 +176,8 @@ describe('Aquatrivy Step', () => {
             domain: 'domain',
             access_id: 'access_id',
             access_token: '<+secrets.getValue("your_aquatrivy_token_secret")>',
-            region: 'region'
+            region: 'region',
+            tag: 'image tag'
           },
           advanced: {
             log: {
@@ -244,7 +247,9 @@ describe('Aquatrivy Step', () => {
           image: {
             type: 'docker_v2',
             name: RUNTIME_INPUT_VALUE,
-            access_token: RUNTIME_INPUT_VALUE
+            domain: RUNTIME_INPUT_VALUE,
+            access_token: RUNTIME_INPUT_VALUE,
+            tag: RUNTIME_INPUT_VALUE
           },
           advanced: {
             log: {
@@ -281,7 +286,10 @@ describe('Aquatrivy Step', () => {
           config: RUNTIME_INPUT_VALUE,
           mode: RUNTIME_INPUT_VALUE,
           image: {
-            access_token: RUNTIME_INPUT_VALUE
+            access_token: RUNTIME_INPUT_VALUE,
+            tag: RUNTIME_INPUT_VALUE,
+            name: RUNTIME_INPUT_VALUE,
+            domain: RUNTIME_INPUT_VALUE
           },
           advanced: {
             log: {
@@ -492,6 +500,13 @@ describe('Aquatrivy Step', () => {
           name: 'target name',
           variant: 'target variant',
           workspace: 'target workspace'
+        },
+        image: {
+          domain: 'domain',
+          type: 'docker_v2',
+          name: 'name',
+          access_token: '<+secrets.getValue("your_aquatrivy_token_secret")>',
+          tag: 'tag'
         },
         advanced: {
           include_raw: false

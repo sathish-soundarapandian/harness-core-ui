@@ -29,6 +29,7 @@ declare const styles: {
   readonly listStyles: string
   readonly page: string
   readonly rangeSelectorHeader: string
+  readonly refreshButton: string
   readonly separator: string
   readonly serviceTag: string
   readonly textAndRate: string

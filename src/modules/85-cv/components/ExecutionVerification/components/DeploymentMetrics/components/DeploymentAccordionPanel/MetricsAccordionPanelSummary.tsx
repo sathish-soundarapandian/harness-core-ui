@@ -7,42 +7,52 @@
 
 import React from 'react'
 import { Container, Icon, Text } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { getRiskColorValue } from '@cv/utils/CommonUtils'
-import { useStrings } from 'framework/strings'
+import { getIconBySourceType } from '@cv/pages/health-source/HealthSourceTable/HealthSourceTable.utils'
 import type { MetricsAccordionPanelSummaryProps } from './MetricsAccordionPanelSummary.types'
-import { healthSourceTypeToLogo } from '../DeploymentMetricsAnalysisRow/DeploymentMetricsAnalysisRow.utils'
 import NodeCount from './components/NodesCount'
-import { getRiskDisplayName } from './MetricsAccordionPanelSummary.utils'
 import css from '../DeploymentMetricsAnalysisRow/DeploymentMetricsAnalysisRow.module.scss'
 
 const MetricsAccordionPanelSummary: React.FC<MetricsAccordionPanelSummaryProps> = props => {
   const {
-    analysisRow: { metricName, risk, transactionName, nodeRiskCount, connectorName, healthSourceType }
+    analysisRow: { metricName, risk, transactionName, nodeRiskCount, healthSource, deeplinkURL }
   } = props
-
-  const { getString } = useStrings()
-
-  const riskDisplayName = getRiskDisplayName(risk, getString)
+  const { name, type } = healthSource || {}
 
   return (
     <>
-      <Text tooltip={metricName} margin={{ left: 'small' }}>
-        {metricName}
+      {deeplinkURL ? (
+        <Container padding={{ right: 'small', left: 'small' }}>
+          <a href={deeplinkURL} target="_blank" rel="noreferrer">
+            {metricName}
+            <span>
+              <Icon name="share" size={12} padding={{ left: 'small', bottom: 'xsmall' }} color={Color.PRIMARY_7} />
+            </span>
+          </a>
+        </Container>
+      ) : (
+        <Text className={css.metricPanelLabels} tooltip={metricName} margin={{ left: 'small' }}>
+          {metricName}
+        </Text>
+      )}
+      <Text className={css.metricPanelLabels} tooltip={transactionName}>
+        {transactionName}
       </Text>
-      <Text tooltip={transactionName}>{transactionName}</Text>
-      <Text>
-        <Icon name={healthSourceTypeToLogo(healthSourceType)} margin={{ right: 'small' }} size={16} />
-        {connectorName}
+      <Text lineClamp={1} tooltip={name} className={css.metricPanelLabels} padding={{ right: 'small' }}>
+        <Icon name={getIconBySourceType(type as string)} margin={{ right: 'small' }} size={16} />
+        {name}
       </Text>
+
       <Text
         font={{ variation: FontVariation.TABLE_HEADERS }}
         color={getRiskColorValue(risk, false)}
         style={{ borderColor: getRiskColorValue(risk, false) }}
-        className={css.metricRisk}
+        className={risk ? css.metricRisk : ''}
       >
-        {riskDisplayName}
+        {risk}
       </Text>
+
       <Container>
         <NodeCount nodeRiskCount={nodeRiskCount} />
       </Container>

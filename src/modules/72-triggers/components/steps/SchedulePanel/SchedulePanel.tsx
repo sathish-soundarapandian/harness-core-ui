@@ -37,12 +37,17 @@ const SchedulePanel: React.FC<SchedulePanelPropsInterface> = ({
   isEdit = false
 }): JSX.Element => {
   const { getString } = useStrings()
+  const currentDate = new Date()
 
   return (
     <Layout.Vertical className={cx(css.schedulePanelContainer)} spacing="large" padding="xxlarge">
       <Text className={css.formContentTitle} inline={true}>
         {getString('common.schedule')}
         <HarnessDocTooltip tooltipId="schedulePanel" useStandAlone={true} />
+        <Text>
+          {getString('triggers.schedulePanel.currentUTCTime')} {currentDate.getUTCHours()}:
+          {String(currentDate.getUTCMinutes()).padStart(2, '0')}
+        </Text>
       </Text>
       <Layout.Vertical className={css.formContent}>
         <Tabs

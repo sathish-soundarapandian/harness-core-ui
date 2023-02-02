@@ -90,6 +90,14 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     hasLicense: false,
     homePageUrl: '',
     color: 'green'
+  },
+  SSCS: {
+    shouldVisible: true,
+    icon: 'sscs-main',
+    label: 'common.cdAndGitops',
+    hasLicense: false,
+    homePageUrl: '',
+    color: 'green'
   }
 }
 

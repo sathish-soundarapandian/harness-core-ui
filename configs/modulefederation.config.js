@@ -32,7 +32,8 @@ module.exports = ({
   enableFFUI,
   enableCIUI,
   enableTIUI,
-  enableIACM
+  enableIACM,
+  enableSSCS
 }) => {
   const remotes = {}
 
@@ -83,6 +84,10 @@ module.exports = ({
     remotes.errortracking = 'errortracking@http://localhost:3091/remoteEntry.js'
   } else {
     remotes.errortracking = "errortracking@[window.getApiBaseUrl('et/remoteEntry.js')]"
+  }
+
+  if (enableSSCS) {
+    remotes.sscs = "sscs@[window.getApiBaseUrl('sscs/remoteEntry.js')]"
   }
 
   const shared = {

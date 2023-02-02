@@ -22,6 +22,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacButton from '@rbac/components/Button/Button'
 
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
+import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import InfrastructureList from './InfrastructureList/InfrastructureList'
 import InfrastructureModal from './InfrastructureModal'
 
@@ -75,7 +76,13 @@ export default function InfrastructureDefinition(): JSX.Element {
               variation={ButtonVariation.LINK}
               permission={{
                 resource: {
-                  resourceType: ResourceType.ENVIRONMENT
+                  resourceType: ResourceType.ENVIRONMENT,
+                  resourceIdentifier: environmentIdentifier
+                },
+                resourceScope: {
+                  accountIdentifier: accountId,
+                  orgIdentifier,
+                  projectIdentifier
                 },
                 permission: PermissionIdentifier.EDIT_ENVIRONMENT
               }}
@@ -108,6 +115,7 @@ export default function InfrastructureDefinition(): JSX.Element {
             environmentIdentifier={environmentIdentifier}
             selectedInfrastructure={selectedInfrastructure}
             getTemplate={getTemplate}
+            scope={getScopeFromDTO({ accountId, orgIdentifier, projectIdentifier })}
           />
         </ModalDialog>
       </Container>

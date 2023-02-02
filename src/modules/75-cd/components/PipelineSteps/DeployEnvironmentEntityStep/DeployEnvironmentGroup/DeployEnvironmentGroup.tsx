@@ -91,6 +91,7 @@ export default function DeployEnvironmentGroup({
   initialValues,
   readonly,
   allowableTypes,
+  serviceIdentifiers,
   stageIdentifier,
   deploymentType,
   customDeploymentRef,
@@ -207,26 +208,7 @@ export default function DeployEnvironmentGroup({
         flex={{ alignItems: 'flex-start', justifyContent: 'flex-start' }}
         className={css.inputField}
       >
-        {!CDS_OrgAccountLevelServiceEnvEnvGroup ? (
-          <FormInput.MultiTypeInput
-            tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
-            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
-            name="environmentGroup"
-            useValue
-            disabled={disabled}
-            placeholder={placeHolderForEnvironmentGroup}
-            multiTypeInputProps={{
-              width: 300,
-              selectProps: { items: selectOptions },
-              allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
-              defaultValueToReset: '',
-              onChange: item => {
-                setSelectedEnvironmentGroups(getSelectedEnvironmentGroupsFromOptions([item as SelectOption]))
-              }
-            }}
-            selectItems={selectOptions}
-          />
-        ) : (
+        {CDS_OrgAccountLevelServiceEnvEnvGroup && !gitOpsEnabled ? (
           <MultiTypeEnvironmentGroupField
             tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
             label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
@@ -244,6 +226,25 @@ export default function DeployEnvironmentGroup({
               allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
               defaultValueToReset: ''
             }}
+          />
+        ) : (
+          <FormInput.MultiTypeInput
+            tooltipProps={{ dataTooltipId: 'specifyYourEnvironmentGroup' }}
+            label={getString('cd.pipelineSteps.environmentTab.specifyYourEnvironmentGroup')}
+            name="environmentGroup"
+            useValue
+            disabled={disabled}
+            placeholder={placeHolderForEnvironmentGroup}
+            multiTypeInputProps={{
+              width: 300,
+              selectProps: { items: selectOptions },
+              allowableTypes: getAllowableTypesWithoutExpression(allowableTypes),
+              defaultValueToReset: '',
+              onChange: item => {
+                setSelectedEnvironmentGroups(getSelectedEnvironmentGroupsFromOptions([item as SelectOption]))
+              }
+            }}
+            selectItems={selectOptions}
           />
         )}
         {isFixed && (
@@ -286,6 +287,7 @@ export default function DeployEnvironmentGroup({
             allowableTypes={allowableTypes}
             onEnvironmentGroupEntityUpdate={onEnvironmentGroupEntityUpdate}
             onRemoveEnvironmentGroupFromList={onRemoveEnvironmentGroupFromList}
+            serviceIdentifiers={serviceIdentifiers}
             initialValues={initialValues}
             stageIdentifier={stageIdentifier}
             deploymentType={deploymentType}
@@ -316,6 +318,7 @@ export default function DeployEnvironmentGroup({
                   allowableTypes={allowableTypes}
                   isMultiEnvironment
                   isUnderEnvGroup
+                  serviceIdentifiers={serviceIdentifiers}
                   stageIdentifier={stageIdentifier}
                   deploymentType={deploymentType}
                   customDeploymentRef={customDeploymentRef}

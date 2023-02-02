@@ -63,8 +63,8 @@ function FormComponent(
         <div className={css.jenkinsFieldContainer}>
           <FormInput.MultiTextInput
             name="project"
-            label={getString('projectLabel')}
-            placeholder={getString('pipeline.artifactsSelection.projectPlaceholder')}
+            label={getString('pipelineSteps.projectIDLabel')}
+            placeholder={getString('pipeline.artifactsSelection.projectIDPlaceholder')}
             multiTextInputProps={{
               allowableTypes: [MultiTypeInputType.FIXED]
             }}

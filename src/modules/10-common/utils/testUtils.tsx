@@ -20,7 +20,7 @@ import { LicenseStoreContext, LicenseStoreContextProps } from 'framework/License
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { withAccountId, accountPathProps } from '@common/utils/routeUtils'
 import type { Project } from 'services/cd-ng'
-import { StringsContext } from 'framework/strings'
+import { StringsContext, UseStringsReturn } from 'framework/strings'
 
 import { FeaturesContext, FeaturesContextProps } from 'framework/featureStore/FeaturesContext'
 import type { FeatureDetail, FeatureMetaData } from 'framework/featureStore/featureStoreUtil'
@@ -71,7 +71,7 @@ export interface TestWrapperProps {
   projects?: Project[]
   enableBrowserView?: boolean
   stringsData?: Record<string, string>
-  getString?(key: string): string
+  getString?: UseStringsReturn['getString']
 }
 
 export const prependAccountPath = (path: string): string => withAccountId(() => path)(accountPathProps)

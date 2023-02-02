@@ -6,7 +6,7 @@
  */
 
 import { FormikErrors, yupToFormErrors } from 'formik'
-import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { isEmpty, has, set, isBoolean, get, pick } from 'lodash-es'
 import * as Yup from 'yup'
 import type { K8sDirectInfraYaml } from 'services/ci'
@@ -28,7 +28,7 @@ import {
 import { getStepTypeByDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import { getPrCloneStrategyOptions } from '@pipeline/utils/constants'
 import { CodebaseTypes, isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
-import type { DeployStageConfig, InfraStructureDefinitionYaml } from '@pipeline/utils/DeployStageInterface'
+import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import type { AccountPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import factory from '../PipelineSteps/PipelineStepFactory'
@@ -358,45 +358,6 @@ export const validateStage = ({
       }
     }
 
-    if (stage.type === 'Deployment' && (templateStageConfig as DeployStageConfig)?.environment) {
-      const step = factory.getStep(StepType.DeployInfrastructure)
-      const errorsResponse = step?.validateInputSet({
-        data: stageConfig,
-        template: templateStageConfig as DeployStageConfig,
-        getString,
-        viewType
-      })
-
-      if (!isEmpty(errorsResponse)) {
-        set(errors, 'spec.environment', errorsResponse)
-      }
-
-      const infrastructureDefinitions = (stageConfig as DeployStageConfig).environment?.infrastructureDefinitions
-      if (
-        infrastructureDefinitions &&
-        ((templateStageConfig as DeployStageConfig).environment?.infrastructureDefinitions as unknown as string) !==
-          RUNTIME_INPUT_VALUE
-      ) {
-        infrastructureDefinitions.forEach((infrastructureDefinition: InfraStructureDefinitionYaml, index: number) => {
-          const infrastructureStep = factory.getStep(infrastructureDefinition.inputs?.type as unknown as string)
-          const infrastructureErrorsResponse = infrastructureStep?.validateInputSet({
-            data: infrastructureDefinition.inputs?.spec,
-            template: (templateStageConfig as DeployStageConfig).environment?.infrastructureDefinitions?.[index].inputs
-              ?.spec,
-            getString,
-            viewType
-          })
-
-          if (!isEmpty(infrastructureErrorsResponse)) {
-            set(
-              errors,
-              `spec.environment.infrastructureDefinitions[${index}].inputs.spec`,
-              infrastructureErrorsResponse
-            )
-          }
-        })
-      }
-    }
     if (stage.type === 'Deployment' && (templateStageConfig as DeployStageConfig)?.service) {
       const currentStep = factory.getStep(StepType.DeployServiceEntity)
       const stepErrorsResponse = currentStep?.validateInputSet({
@@ -662,15 +623,11 @@ export const validateCICodebase = ({
       (requiresConnectorRuntimeInputValue && !isEmpty(pipeline?.properties?.ci?.codebase?.connectorRef))) // ci codebase field is hidden until connector is selected
   const shouldValidate = !Object.keys(viewTypeMetadata || {}).includes('isTemplateBuilder')
   const isInputSetForm = viewTypeMetadata?.isInputSet // should not require any values
-  if (
-    shouldValidate &&
-    shouldValidateCICodebase &&
-    !isInputSetForm &&
+  const isCodebaseBuildEmpty =
     has(originalPipeline, 'properties') &&
     has(originalPipeline?.properties, 'ci') &&
-    isEmpty(get(originalPipeline, 'properties.ci.codebase.build')) &&
-    getString
-  ) {
+    isEmpty(get(originalPipeline, 'properties.ci.codebase.build') || get(pipeline, 'properties.ci.codebase.build'))
+  if (shouldValidate && shouldValidateCICodebase && !isInputSetForm && isCodebaseBuildEmpty && getString) {
     set(errors, 'properties.ci.codebase', getString('fieldRequired', { field: getString('ciCodebase') }))
   }
 

@@ -154,7 +154,6 @@ function _FreezeWindowsPage(): React.ReactElement {
       />
       <FreezeWindowListSubHeader ref={searchRef} />
       <GlobalFreezeBanner globalFreezes={globalFreezes} />
-
       <Page.Body
         loading={freezeListLoading}
         error={error?.message}

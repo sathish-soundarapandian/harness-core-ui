@@ -16,7 +16,7 @@ import { getEnvironmentsFormValuesFromFormState, processMultiEnvironmentFormValu
 
 describe('process multi environment initial values', () => {
   test('parallel defaults to true', () => {
-    const output = processMultiEnvironmentInitialValues({}, false)
+    const output = processMultiEnvironmentInitialValues({}, { gitOpsEnabled: false })
     expect(output).toEqual({
       parallel: true,
       category: 'multi'
@@ -32,7 +32,7 @@ describe('process multi environment initial values', () => {
           }
         }
       },
-      false
+      { gitOpsEnabled: false }
     )
     expect(output).toEqual({
       parallel: false,
@@ -85,7 +85,7 @@ describe('get environments form state from initial values', () => {
         }
       ],
       false,
-      false
+      { gitOpsEnabled: false }
     )
 
     expect(output).toEqual({
@@ -146,7 +146,9 @@ describe('get environments form state from initial values', () => {
   })
 
   test('environments as runtime value and GitOps disabled', () => {
-    const output = getEnvironmentsFormStateFromInitialValues(RUNTIME_INPUT_VALUE as any, false, false)
+    const output = getEnvironmentsFormStateFromInitialValues(RUNTIME_INPUT_VALUE as any, false, {
+      gitOpsEnabled: false
+    })
 
     expect(output).toEqual({
       environments: RUNTIME_INPUT_VALUE as any,
@@ -162,7 +164,7 @@ describe('get environments form state from initial values', () => {
      *    envGroupRef: EG_1
      *    deployToAll: true
      *    environments: RUNTIME_INPUT_VALUE */
-    const output = getEnvironmentsFormStateFromInitialValues(RUNTIME_INPUT_VALUE as any, true, false)
+    const output = getEnvironmentsFormStateFromInitialValues(RUNTIME_INPUT_VALUE as any, true, { gitOpsEnabled: false })
 
     expect(output).toEqual({
       environmentInputs: {},
@@ -200,7 +202,7 @@ describe('get environments form state from initial values', () => {
         }
       ],
       false,
-      true
+      { gitOpsEnabled: true }
     )
 
     expect(output).toEqual({
@@ -243,7 +245,7 @@ describe('get environments form state from initial values', () => {
   })
 
   test('environments as runtime value and GitOps enabled', () => {
-    const output = getEnvironmentsFormStateFromInitialValues(RUNTIME_INPUT_VALUE as any, false, true)
+    const output = getEnvironmentsFormStateFromInitialValues(RUNTIME_INPUT_VALUE as any, false, { gitOpsEnabled: true })
 
     expect(output).toEqual({
       environments: RUNTIME_INPUT_VALUE as any,
@@ -258,7 +260,7 @@ describe('get environments form state from initial values', () => {
      *    envGroupRef: EG_1
      *    deployToAll: true
      *    environments: RUNTIME_INPUT_VALUE */
-    const output = getEnvironmentsFormStateFromInitialValues(RUNTIME_INPUT_VALUE as any, true, true)
+    const output = getEnvironmentsFormStateFromInitialValues(RUNTIME_INPUT_VALUE as any, true, { gitOpsEnabled: true })
 
     expect(output).toEqual({
       environmentInputs: {},
@@ -275,7 +277,7 @@ describe('process multi environment form values', () => {
         parallel: false,
         environments: RUNTIME_INPUT_VALUE as any
       },
-      false
+      { gitOpsEnabled: false }
     )
 
     expect(output).toEqual({
@@ -293,7 +295,7 @@ describe('process multi environment form values', () => {
       {
         category: 'multi'
       },
-      false
+      { gitOpsEnabled: false }
     )
 
     expect(output).toEqual({
@@ -364,7 +366,7 @@ describe('get environments form values from form state', () => {
           }
         }
       },
-      false
+      { gitOpsEnabled: false }
     )
 
     expect(output).toEqual([
@@ -454,7 +456,7 @@ describe('get environments form values from form state', () => {
           ]
         }
       },
-      true
+      { gitOpsEnabled: true }
     )
 
     expect(output).toEqual([
@@ -493,7 +495,7 @@ describe('get environments form values from form state', () => {
   })
 
   test('environments are empty and GitOps disabled', () => {
-    const output = getEnvironmentsFormValuesFromFormState({}, false)
+    const output = getEnvironmentsFormValuesFromFormState({}, { gitOpsEnabled: false })
 
     expect(output).toEqual([])
   })

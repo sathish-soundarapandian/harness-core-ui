@@ -15,7 +15,7 @@ export const getClusterTypes = (getString: UseStringsReturn['getString']): Selec
   return [
     // { label: getString('auditTrail.allEvents'), value: '' },
     { label: getString('cv.known'), value: LogEvents.KNOWN },
-    { label: getString('cv.unknown'), value: LogEvents.UNKNOWN },
+    { label: getString('cd.getStartedWithCD.healthStatus.unknown'), value: LogEvents.UNKNOWN },
     { label: getString('cv.unexpected'), value: LogEvents.UNEXPECTED }
   ]
 }

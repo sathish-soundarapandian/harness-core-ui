@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Color } from '@harness/design-system'
+import moment from 'moment'
 import { getRiskColorValue, getSecondaryRiskColorValue } from '@cv/utils/CommonUtils'
 import type { UseStringsReturn } from 'framework/strings'
 import type { HostControlTestData, HostTestData } from './DeploymentMetricsAnalysisRow.constants'
@@ -22,7 +22,8 @@ export function chartsConfig(
     chart: {
       height: 120,
       width,
-      type: 'spline'
+      type: 'spline',
+      backgroundColor: '#f8f8fe'
     },
     credits: undefined,
     title: {
@@ -36,11 +37,6 @@ export function chartsConfig(
 
       labels: {
         enabled: false
-      },
-
-      title: {
-        text: testData?.name,
-        align: 'low'
       }
     },
     yAxis: {
@@ -77,47 +73,40 @@ export function chartsConfig(
         const baseDataDisplayValue = baseDataValue?.toFixed(3) ?? getString('noData')
         const testDataDisplayValue = testDataValue?.toFixed(3) ?? getString('noData')
 
+        // eslint-disable-next-line
+        // @ts-ignore
+        const baseDataTime = controlData?.points[this?.points?.[0]?.point.index]?.x + controlData?.initialXvalue
+        const baseDataTimestamp = baseDataTime ? moment(baseDataTime).format('lll') : getString('noData')
+
+        // eslint-disable-next-line
+        // @ts-ignore
+        const testeDataTime = testData?.points[this?.points?.[0]?.point.index]?.x + testData?.initialXvalue
+        const testDataTimestamp = testeDataTime ? moment(testeDataTime).format('lll') : getString('noData')
+
         return `
+        <div style="margin-bottom: var(--spacing-xsmall); color: var(--grey-350">${baseDataTimestamp}</div>
         <div class="sectionParent" style="margin-top: 4px">
         <div class="riskIndicator" style="border: 1px solid ${getRiskColorValue(
           testData?.risk
         )};background: ${getSecondaryRiskColorValue(testData?.risk)}; margin:0 10px 0 4px"></div>
         <div>
-        <p><span style="color: var(--grey-350)">${getString('pipeline.verification.testHost')}:</span> ${
-          testData?.name || getString('noData')
-        }</p> 
-        <p><span style="color: var(--grey-350)">${getString('valueLabel')}:</span> ${testDataDisplayValue}</p>
+        <p><span style="color: var(--grey-350)">${getString(
+          'pipeline.verification.testData'
+        )}:</span><span style="color: var(--white); margin-left: var(--spacing-small)">${testDataDisplayValue}</span></p>
         </div>
         </div>      
+        <div style="margin-bottom: var(--spacing-xsmall); color: var(--grey-350">${testDataTimestamp}</div>
         <div class="sectionParent"> 
-        <div class="riskIndicator" style="border: 1px solid var(--primary-7);background: var(--primary-2); margin:0 10px 0 4px"></div>
-        <div><p><span style="color: var(--grey-350)">${getString('pipeline.verification.controlHost')}:</span> ${
-          controlData?.name || getString('noData')
-        }</p>
-        <p><span style="color: var(--grey-350)">${getString('valueLabel')}:</span> ${baseDataDisplayValue}</p>
-        </div>
+        <div class="riskIndicator" style="border: 1px solid var(--primary-7);background: var(--primary-2); margin:0 10px 0 4px"></div> 
+        <p><span style="color: var(--grey-350)">${getString(
+          'pipeline.verification.controlData'
+        )}:</span><span style="color: var(--white); margin-left: var(--spacing-small)" >${baseDataDisplayValue}</span></p>
         </div>`
-      },
-      positioner: () => {
-        return {
-          x: 0,
-          y: -115
-        }
       },
       useHTML: true,
       outside: false,
       className: 'metricsGraph_tooltip',
-      backgroundColor: Color.WHITE,
-      borderColor: Color.GREY_200,
-      borderRadius: 10,
-      shadow: {
-        color: 'rgba(96, 97, 112, 0.56)'
-      },
-      shared: true,
-      shape: 'square',
-      // eslint-disable-next-line
-      // @ts-ignore
-      crosshairs: true
+      shared: true
     },
     subtitle: undefined,
     series

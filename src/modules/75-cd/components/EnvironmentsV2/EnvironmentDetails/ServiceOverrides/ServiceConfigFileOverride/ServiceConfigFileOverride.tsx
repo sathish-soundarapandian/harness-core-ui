@@ -6,11 +6,13 @@
  */
 
 import React, { useCallback, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import { AllowedTypes, Button, ButtonSize, ButtonVariation, Layout, StepProps } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Dialog, IDialogProps } from '@blueprintjs/core'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
+import type { EnvironmentPathProps, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import RbacButton from '@rbac/components/Button/Button'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -75,6 +77,9 @@ function ServiceConfigFileOverride({
   const { getString } = useStrings()
   const [fileIndex, setEditIndex] = useState(0)
   const [isEditMode, setIsEditMode] = useState(false)
+  const { accountId, orgIdentifier, projectIdentifier, environmentIdentifier } = useParams<
+    PipelinePathProps & EnvironmentPathProps
+  >()
 
   const getServiceYaml = useCallback((): NGServiceV2InfoConfig => {
     const serviceSelected = serviceList?.find(serviceObj => serviceObj.service?.identifier === selectedService)
@@ -204,7 +209,13 @@ function ServiceConfigFileOverride({
     className: css.addOverrideBtn,
     permission: {
       resource: {
-        resourceType: ResourceType.ENVIRONMENT
+        resourceType: ResourceType.ENVIRONMENT,
+        resourceIdentifier: environmentIdentifier
+      },
+      resourceScope: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier
       },
       permission: PermissionIdentifier.EDIT_ENVIRONMENT
     },

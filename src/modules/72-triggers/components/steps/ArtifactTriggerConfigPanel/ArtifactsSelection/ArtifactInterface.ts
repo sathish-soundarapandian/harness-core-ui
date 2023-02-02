@@ -50,6 +50,7 @@ export type ArtifactType =
   | 'GoogleArtifactRegistry'
   | 'GithubPackageRegistry'
   | 'AzureArtifacts'
+  | 'GoogleCloudStorage'
   | 'AmazonMachineImage'
 export interface OrganizationCreationType {
   type: ArtifactType

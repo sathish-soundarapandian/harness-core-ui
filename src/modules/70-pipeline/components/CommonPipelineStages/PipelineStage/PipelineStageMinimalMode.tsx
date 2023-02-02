@@ -44,7 +44,6 @@ import {
 import { useStrings } from 'framework/strings'
 import type { PipelineListPageQueryParams } from '@pipeline/pages/pipeline-list/types'
 import CDPipelineIllustration from '@pipeline/pages/pipeline-list/images/cd-pipeline-illustration.svg'
-import type { PartiallyRequired } from '@pipeline/utils/types'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -52,7 +51,7 @@ import { PipelineList } from './PipelineList'
 import { EditPipelineStageView } from './EditPipelineStageView'
 import css from './PipelineStageMinimalMode.module.scss'
 
-type PartialPipelineListPageQueryParams = PartiallyRequired<PipelineListPageQueryParams, 'page' | 'size'>
+type PartialPipelineListPageQueryParams = RequiredPick<PipelineListPageQueryParams, 'page' | 'size'>
 const queryParamOptions = {
   parseArrays: true,
   decoder: queryParamDecodeAll(),

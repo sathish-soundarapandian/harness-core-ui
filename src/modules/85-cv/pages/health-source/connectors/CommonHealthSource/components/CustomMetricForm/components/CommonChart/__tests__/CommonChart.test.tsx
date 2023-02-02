@@ -21,22 +21,40 @@ function WrapperComponent(props: CommonChartProps): JSX.Element {
 }
 
 describe('Unit tests for CommonChart', () => {
-  test('Ensure CommonChart component loads correctly when there is no data', async () => {
+  test('Ensure CommonChart component loads correctly when there is no data and query is executed', async () => {
     const props = {
       timeSeriesDataLoading: false,
       timeseriesDataError: null,
-      healthSourceTimeSeriesData: []
+      healthSourceTimeSeriesData: [],
+      isQueryExecuted: true
     }
     const { getByText } = render(<WrapperComponent {...props} />)
     await waitFor(() => expect(getByText('cv.monitoringSources.commonHealthSource.chart')).toBeInTheDocument())
     await waitFor(() => expect(getByText('cv.changeSource.noDataAvaiableForCard')).toBeInTheDocument())
   })
 
-  test('Ensure CommonChart component loads correctly when there is valid data', async () => {
+  test('Ensure CommonChart component loads correctly and displays right message when query is not executed', async () => {
     const props = {
       timeSeriesDataLoading: false,
       timeseriesDataError: null,
-      healthSourceTimeSeriesData: mockedTimeSeriesData
+      healthSourceTimeSeriesData: [],
+      isQueryExecuted: false
+    }
+    const { getByText } = render(<WrapperComponent {...props} />)
+    await waitFor(() => expect(getByText('cv.monitoringSources.commonHealthSource.chart')).toBeInTheDocument())
+    await waitFor(() =>
+      expect(
+        getByText('cv.monitoringSources.commonHealthSource.metricsChart.runQueryToFetchResults')
+      ).toBeInTheDocument()
+    )
+  })
+
+  test('Ensure CommonChart component loads correctly when there is valid data and query is executed', async () => {
+    const props = {
+      timeSeriesDataLoading: false,
+      timeseriesDataError: null,
+      healthSourceTimeSeriesData: mockedTimeSeriesData,
+      isQueryExecuted: true
     }
     const { getByText, queryByText, getByTestId } = render(<WrapperComponent {...props} />)
     await waitFor(() => expect(getByText('cv.monitoringSources.commonHealthSource.chart')).toBeInTheDocument())
@@ -51,7 +69,8 @@ describe('Unit tests for CommonChart', () => {
         message: 'Failed to fetch chart data',
         data: 'Failed'
       },
-      healthSourceTimeSeriesData: mockedTimeSeriesData
+      healthSourceTimeSeriesData: mockedTimeSeriesData,
+      isQueryExecuted: true
     }
     const { getByText, queryByText, queryByTestId } = render(<WrapperComponent {...props} />)
     await waitFor(() => expect(getByText('cv.monitoringSources.commonHealthSource.chart')).toBeInTheDocument())
@@ -64,7 +83,8 @@ describe('Unit tests for CommonChart', () => {
     const props = {
       timeSeriesDataLoading: true,
       timeseriesDataError: null,
-      healthSourceTimeSeriesData: mockedTimeSeriesData
+      healthSourceTimeSeriesData: mockedTimeSeriesData,
+      isQueryExecuted: true
     }
     const { getByText, queryByText, queryByTestId } = render(<WrapperComponent {...props} />)
     await waitFor(() => expect(getByText('cv.monitoringSources.commonHealthSource.chart')).toBeInTheDocument())

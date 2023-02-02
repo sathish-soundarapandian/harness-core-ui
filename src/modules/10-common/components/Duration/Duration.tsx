@@ -12,25 +12,27 @@ import { useStrings } from 'framework/strings'
 
 export interface DurationProps extends Omit<TextProps, 'icon'> {
   startTime?: number
-  endTime?: number // if endTime is nullable, endTime is Date.now() and the duration is re-calculated by an interval
-  durationText?: React.ReactNode // optional text to override the default `Duration: ` prefix: ;
+  /**
+   * if endTime is nullable, endTime is Date.now() and the duration is re-calculated by an interval
+   */
+  endTime?: number
+  /**
+   * optional text to override the default `Duration: ` prefix: ;
+   */
+  durationText?: React.ReactNode
+  /**
+   * If true, will show time with ms
+   */
   showMilliSeconds?: boolean
+  /**
+   * If true, will show 0s instead of ms when duration is less than 1s
+   */
   showZeroSecondsResult?: boolean
-  showMsLessThanOneSecond?: boolean
   icon?: TextProps['icon'] | null
 }
 
 export function Duration(props: DurationProps): React.ReactElement {
-  const {
-    startTime,
-    endTime,
-    durationText,
-    icon,
-    showMilliSeconds,
-    showZeroSecondsResult,
-    showMsLessThanOneSecond,
-    ...textProps
-  } = props
+  const { startTime, endTime, durationText, icon, showMilliSeconds, showZeroSecondsResult, ...textProps } = props
   const [_endTime, setEndTime] = useState(endTime || Date.now())
   const { getString } = useStrings()
 
@@ -52,12 +54,13 @@ export function Duration(props: DurationProps): React.ReactElement {
   }, [endTime])
 
   let delta = startTime ? Math.abs(startTime - _endTime) : 0
+  const showZeroSecondsResultLessThan1ms = !!showZeroSecondsResult && delta < 1000
 
-  if ((!showMilliSeconds && !showMsLessThanOneSecond) || (showMsLessThanOneSecond && delta > 1000)) {
+  if ((!showMilliSeconds && delta >= 1000) || showZeroSecondsResultLessThan1ms) {
     delta = Math.round(delta / 1000) * 1000
   }
 
-  const text = showZeroSecondsResult ? timeToDisplayText(delta) || '0s' : timeToDisplayText(delta)
+  const text = showZeroSecondsResultLessThan1ms ? timeToDisplayText(delta) || '0s' : timeToDisplayText(delta)
 
   return (
     <Text inline icon={isNil(icon) ? undefined : icon || 'hourglass'} {...textProps}>

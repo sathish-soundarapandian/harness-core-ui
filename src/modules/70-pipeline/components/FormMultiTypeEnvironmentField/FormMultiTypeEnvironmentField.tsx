@@ -197,6 +197,7 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
                     resource: {
                       resourceType: ResourceType.ENVIRONMENT
                     },
+                    resourceScope: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
                     permission: PermissionIdentifier.EDIT_ENVIRONMENT
                   }}
                 ></RbacButton>

@@ -74,3 +74,10 @@ export const allowedKeysInEditModeMap = [
   KEY_CODE_FOR_CHAR_A,
   KEY_CODE_FOR_CHAR_F
 ]
+
+export const allowedKeysInReadOnlyModeMap = [
+  ...navigationKeysMap,
+  KEY_CODE_FOR_CHAR_C,
+  KEY_CODE_FOR_CHAR_A,
+  KEY_CODE_FOR_CHAR_F
+]

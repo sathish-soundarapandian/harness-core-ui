@@ -24,7 +24,7 @@ describe('Environment Tabs', () => {
         >
           <a
             class="TabNavigation--tags TabNavigation--small"
-            href="/account/undefined/environment"
+            href="/account/undefined/environments"
           >
             environment
           </a>

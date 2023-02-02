@@ -152,7 +152,6 @@ const getColumnText = ({
         durationText=" "
         startTime={NOW}
         endTime={NOW + ((row.original[col] as number) || 0)}
-        showMsLessThanOneSecond={true}
       />
     )
   } else if (col === TestCaseColumns.NAME) {

@@ -14,19 +14,26 @@ import {
   Dialog,
   getMultiTypeFromValue,
   MultiTypeInputType,
+  NoDataCard,
   SelectOption
 } from '@harness/uicore'
 import { Formik, useFormikContext } from 'formik'
 import { defaultTo } from 'lodash-es'
+import noDataImage from '@cv/assets/noDataNotifications.svg'
 import type { CustomHealthMetricDefinition } from 'services/cv'
 import { SetupSourceTabsContext } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { initializeGroupNames } from '@cv/components/GroupName/GroupName.utils'
 import { useStrings } from 'framework/strings'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
 import CommonCustomMetric from '@cv/pages/health-source/common/CommonCustomMetric/CommonCustomMetric'
-import type { CommonCustomMetricFormikInterface } from '../../CommonHealthSource.types'
+import type { DefineHealthSourceFormInterface } from '@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.types'
+import type {
+  CommonCustomMetricFormikInterface,
+  CommonHealthSourceConfigurations
+} from '../../CommonHealthSource.types'
 import type { AddMetricForm, CustomMetricFormContainerProps } from './CustomMetricForm.types'
 import {
+  checkIfFieldLabelIsMetric,
   cleanUpMappedMetrics,
   getAddMetricInitialValues,
   getHealthSourceConfigDetails,
@@ -56,6 +63,12 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
     connectorIdentifier: connectorRef,
     filterRemovedMetricNameThresholds
   } = props
+  const {
+    sourceData: { existingMetricDetails },
+    sourceData,
+    onPrevious
+  } = useContext(SetupSourceTabsContext)
+  const { updateParentFormik, parentFormValues } = useCommonHealthSource()
 
   const {
     values: formValues,
@@ -64,13 +77,17 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
     setFieldTouched
   } = useFormikContext<CommonCustomMetricFormikInterface>()
   const wrapperRef = useRef(null)
-  useUpdateConfigFormikOnOutsideClick(wrapperRef, mappedMetrics, selectedMetric, formValues)
+  useUpdateConfigFormikOnOutsideClick(
+    wrapperRef,
+    mappedMetrics,
+    selectedMetric,
+    formValues,
+    sourceData,
+    parentFormValues
+  )
   const { enabledDefaultGroupName, fieldLabel, shouldBeAbleToDeleteLastMetric, enabledRecordsAndQuery } =
     getHealthSourceConfigDetails(healthSourceConfig)
-  const {
-    sourceData: { existingMetricDetails }
-  } = useContext(SetupSourceTabsContext)
-  const { updateParentFormik } = useCommonHealthSource()
+
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorRef) !== MultiTypeInputType.FIXED
   const [groupNames, setGroupName] = useState<SelectOption[]>(initializeGroupNames(mappedMetrics, getString))
   const [showCustomMetric, setShowCustomMetric] = useState(
@@ -87,17 +104,14 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
     ref: MutableRefObject<any>,
     mappedMetricsData: Map<string, CommonCustomMetricFormikInterface>,
     selectedMetricName: string,
-    formValuesData: CommonCustomMetricFormikInterface
+    formValuesData: CommonCustomMetricFormikInterface,
+    sourceDataInfo: DefineHealthSourceFormInterface,
+    parentFormValuesInfo: CommonHealthSourceConfigurations
   ): void {
     useEffect(() => {
       //  update Parent formik when clicked outside.
       async function handleClickOutside(event: { target: unknown }): Promise<void> {
-        if (
-          ref.current &&
-          !ref.current.contains(event.target)
-          // && !isEqual(mappedMetricsData.get(selectedMetricName), formValuesData)
-        ) {
-          // This will be executed only when current form value changes.
+        if (ref.current && !ref.current.contains(event.target)) {
           const updatedMappedMetricsData = getUpdatedMappedMetricsData(
             mappedMetricsData,
             selectedMetricName,
@@ -106,6 +120,14 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
           setFieldTouched(CustomMetricFormFieldNames.QUERY)
           await validateForm()
           updateParentFormikWithLatestData(updateParentFormik, updatedMappedMetricsData, selectedMetricName)
+
+          if ((event?.target as Element)?.innerHTML === getString('cv.healthSource.defineHealthSource')) {
+            const updatedParentForm = {
+              ...parentFormValues,
+              [CommonConfigurationsFormFieldNames.QUERY_METRICS_MAP]: updatedMappedMetricsData
+            }
+            onPrevious({ ...sourceDataInfo, ...updatedParentForm })
+          }
         }
       }
       // Bind the event listener
@@ -114,7 +136,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
         // Unbind the event listener on clean up
         document.removeEventListener('mousedown', handleClickOutside)
       }
-    }, [mappedMetricsData, ref, selectedMetricName, formValuesData])
+    }, [mappedMetricsData, ref, selectedMetricName, formValuesData, sourceDataInfo, parentFormValuesInfo])
   }
 
   useEffect(() => {
@@ -174,7 +196,11 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
     <>
       {showCustomMetric ? (
         <CardWithOuterTitle
-          title={getString('cv.healthSource.connectors.customMetricsWithoutOptional')}
+          title={
+            checkIfFieldLabelIsMetric(fieldLabel)
+              ? getString('cv.healthSource.connectors.customMetricsWithoutOptional')
+              : getString('cv.healthSource.connectors.customQueries')
+          }
           dataTooltipId={'customMetricsTitle'}
           cardSectionClassName={css.customMetricContainer}
         >
@@ -209,16 +235,21 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
           </CommonCustomMetric>
         </CardWithOuterTitle>
       ) : (
-        <Button
-          icon="plus"
-          variation={ButtonVariation.SECONDARY}
-          onClick={openModal}
-          margin={{ left: 'medium', bottom: 'small', top: 'medium' }}
-        >
-          {getString('common.addName', {
-            name: fieldLabel
+        <NoDataCard
+          image={noDataImage}
+          imageClassName={css.noDataImage}
+          containerClassName={css.noData}
+          message={getString('cv.monitoringSources.commonHealthSource.noQueries', {
+            name: checkIfFieldLabelIsMetric(fieldLabel) ? 'metrics' : 'queries'
           })}
-        </Button>
+          button={
+            <Button icon="plus" variation={ButtonVariation.SECONDARY} onClick={openModal} margin={{ bottom: 'small' }}>
+              {getString('common.addName', {
+                name: fieldLabel
+              })}
+            </Button>
+          }
+        />
       )}
     </>
   )

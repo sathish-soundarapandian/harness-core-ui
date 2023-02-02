@@ -2976,8 +2976,8 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                                           >
                                             <path
                                               clip-rule="evenodd"
-                                              d="M4 7.755a1 1 0 00-1 1v25a1 1 0 001 1h32a1 1 0 001-1v-25a1 1 0 00-1-1H4zm0 3.77v-2.77h32v2.77H4zm0 1h32v21.23H4v-21.23zm6.755 3.3a.5.5 0 10-.51.86l7.645 4.522-7.643 4.491a.5.5 0 00.506.863l7.644-4.492a1 1 0 00.003-1.723l-7.645-4.521zm11.14 9.93a.5.5 0 000 1H29.5a.5.5 0 100-1h-7.606z"
-                                              fill="#4F5162"
+                                              d="M4 7.755a1 1 0 00-1 1v25a1 1 0 001 1h32a1 1 0 001-1v-25a1 1 0 00-1-1zm0 3.77v-2.77h32v2.77zm0 1h32v21.23H4zm6.755 3.3a.5.5 0 10-.51.86l7.645 4.522-7.643 4.491a.5.5 0 00.506.862l7.644-4.49a1 1 0 00.003-1.724zm11.14 9.93a.5.5 0 000 1H29.5a.5.5 0 100-1z"
+                                              fill="#4f5162"
                                               fill-rule="evenodd"
                                             />
                                           </svg>
@@ -4432,7 +4432,9 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
               >
                 <button
                   aria-label="continue"
-                  class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+                  class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+                  disabled=""
+                  tabindex="-1"
                   type="button"
                 >
                   <span
@@ -5595,7 +5597,9 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Git
               >
                 <button
                   aria-label="continue"
-                  class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+                  class="bp3-button bp3-disabled Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+                  disabled=""
+                  tabindex="-1"
                   type="button"
                 >
                   <span
@@ -6410,6 +6414,15 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Sch
                       class="StyledProps--font StyledProps--main formContentTitle StyledProps--inline"
                     >
                       common.schedule
+                      <p
+                        class="StyledProps--font StyledProps--main"
+                      >
+                        triggers.schedulePanel.currentUTCTime
+                         
+                        10
+                        :
+                        00
+                      </p>
                     </span>
                     <div
                       class="Layout--vertical StyledProps--main formContent"

@@ -30,30 +30,37 @@ import { TagsPopover } from '@common/components'
 import { hasCIStage } from '@pipeline/utils/stageHelpers'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RetryHistory from '@pipeline/components/RetryPipeline/RetryHistory/RetryHistory'
+import { PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED } from '@pipeline/utils/constants'
+import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
+import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
+import type { PipelineExecutionSummary, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import css from './ExecutionHeader.module.scss'
 
 export interface ExecutionHeaderProps {
-  onRunPipelineInDebugMode: () => void
+  pipelineMetadata?: ResponsePMSPipelineSummaryResponse | null
 }
 
-export function ExecutionHeader({ onRunPipelineInDebugMode }: ExecutionHeaderProps): React.ReactElement {
+export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): React.ReactElement {
   const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module, source } =
     useParams<PipelineType<ExecutionPathProps>>()
   const {
     branch: branchQueryParam,
     repoIdentifier: repoIdentifierQueryParam,
     repoName: repoNameQueryParam,
-    connectorRef: connectorRefQueryParam,
-    storeType: storeTypeQueryParam
+    connectorRef: connectorRefQueryParam
   } = useQueryParams<GitQueryParams>()
   const { refetch, pipelineExecutionDetail, isPipelineInvalid } = useExecutionContext()
-  const { supportingGitSimplification } = useAppStore()
+  const {
+    supportingGitSimplification,
+    isGitSyncEnabled: isGitSyncEnabledForProject,
+    gitSyncEnabledOnlyForFF
+  } = useAppStore()
   const { getString } = useStrings()
   const { pipelineExecutionSummary = {} } = pipelineExecutionDetail || {}
-  const [canEdit, canExecute] = usePermission(
+  const [canView, canEdit, canExecute] = usePermission(
     {
       resourceScope: {
         accountIdentifier: accountId,
@@ -64,11 +71,16 @@ export function ExecutionHeader({ onRunPipelineInDebugMode }: ExecutionHeaderPro
         resourceType: ResourceType.PIPELINE,
         resourceIdentifier: pipelineIdentifier as string
       },
-      permissions: [PermissionIdentifier.EDIT_PIPELINE, PermissionIdentifier.EXECUTE_PIPELINE]
+      permissions: [
+        PermissionIdentifier.VIEW_PIPELINE,
+        PermissionIdentifier.EDIT_PIPELINE,
+        PermissionIdentifier.EXECUTE_PIPELINE
+      ]
     },
     [orgIdentifier, projectIdentifier, accountId, pipelineIdentifier]
   )
   const hasCI = hasCIStage(pipelineExecutionSummary)
+  const [viewCompiledYaml, setViewCompiledYaml] = React.useState<PipelineExecutionSummary | undefined>(undefined)
 
   useDocumentTitle([
     `${pipelineExecutionSummary?.status ? pipelineExecutionSummary?.status + ' | ' : ''} ${
@@ -86,7 +98,17 @@ export function ExecutionHeader({ onRunPipelineInDebugMode }: ExecutionHeaderPro
   )
   const connectorRef = pipelineExecutionSummary?.connectorRef ?? connectorRefQueryParam
   const branch = pipelineExecutionSummary?.gitDetails?.branch ?? branchQueryParam
-  const storeType = (pipelineExecutionSummary?.storeType as StoreType) ?? storeTypeQueryParam
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const { openRunPipelineModal } = useRunPipelineModal({
+    pipelineIdentifier,
+    executionId: executionIdentifier,
+    repoIdentifier: isGitSyncEnabled ? repoIdentifier : repoName,
+    branch,
+    connectorRef,
+    storeType: pipelineMetadata?.data?.storeType,
+    stagesExecuted: pipelineExecutionSummary?.stagesExecuted,
+    isDebugMode: hasCI
+  })
 
   return (
     <header className={css.header}>
@@ -116,7 +138,7 @@ export function ExecutionHeader({ onRunPipelineInDebugMode }: ExecutionHeaderPro
                       connectorRef,
                       repoName,
                       branch,
-                      storeType
+                      storeType: pipelineMetadata?.data?.storeType
                     }),
                     label: pipelineExecutionSummary.name || getString('common.pipeline')
                   }
@@ -143,7 +165,7 @@ export function ExecutionHeader({ onRunPipelineInDebugMode }: ExecutionHeaderPro
           />
           {pipelineExecutionSummary.showRetryHistory && (
             <RetryHistory
-              canExecute={canExecute}
+              canView={canView}
               showRetryHistory={pipelineExecutionSummary.showRetryHistory}
               canRetry={pipelineExecutionSummary.canRetry || false}
             />
@@ -160,7 +182,7 @@ export function ExecutionHeader({ onRunPipelineInDebugMode }: ExecutionHeaderPro
               connectorRef,
               repoName,
               branch,
-              storeType
+              storeType: pipelineMetadata?.data?.storeType
             })}
           >
             <Icon name="Edit" size={12} />
@@ -182,7 +204,7 @@ export function ExecutionHeader({ onRunPipelineInDebugMode }: ExecutionHeaderPro
               connectorRef,
               repoName,
               branch,
-              storeType,
+              storeType: pipelineMetadata?.data?.storeType,
               stagesExecuted: pipelineExecutionSummary?.stagesExecuted
             }}
             isPipelineInvalid={isPipelineInvalid}
@@ -191,7 +213,12 @@ export function ExecutionHeader({ onRunPipelineInDebugMode }: ExecutionHeaderPro
             canExecute={canExecute}
             canRetry={pipelineExecutionSummary.canRetry}
             modules={pipelineExecutionSummary.modules}
-            onReRunInDebugMode={hasCI ? () => onRunPipelineInDebugMode() : undefined}
+            onReRunInDebugMode={
+              hasCI && PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED.includes(accountId)
+                ? () => openRunPipelineModal()
+                : undefined
+            }
+            onViewCompiledYaml={() => setViewCompiledYaml(pipelineExecutionSummary)}
           />
         </div>
       </div>
@@ -233,6 +260,7 @@ export function ExecutionHeader({ onRunPipelineInDebugMode }: ExecutionHeaderPro
             </GitSyncStoreProvider>
           )
         ) : null}
+        <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
       </div>
     </header>
   )

@@ -84,7 +84,9 @@ const config = {
   devServer: isCI
     ? undefined
     : {
-        historyApiFallback: true,
+        historyApiFallback: {
+          disableDotRule: true
+        },
         port: 8181,
         client: {
           overlay: !(isCypress || isCypressCoverage)

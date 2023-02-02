@@ -262,8 +262,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
           {isFieldRuntime(`artifacts.${artifactPath}.spec.project`, template) && (
             <FormInput.MultiTextInput
               name={`${path}.artifacts.${artifactPath}.spec.project`}
-              label={getString('projectLabel')}
-              placeholder={getString('pipeline.artifactsSelection.projectPlaceholder')}
+              label={getString('pipelineSteps.projectIDLabel')}
+              placeholder={getString('pipeline.artifactsSelection.projectIDPlaceholder')}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.project`)}
               multiTextInputProps={{
                 width: 391,

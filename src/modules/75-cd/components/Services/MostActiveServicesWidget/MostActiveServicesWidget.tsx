@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useContext, useMemo, useState } from 'react'
+import React, { useCallback, useContext, useImperativeHandle, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Card, Container, LabelPosition, Layout, Text, WeightedStack, PageError } from '@harness/uicore'
@@ -39,7 +39,7 @@ interface MostActiveServicesWidgetData {
   change: number
 }
 
-export interface MostActiveServicesWidget {
+export interface MostActiveServicesWidgetProps {
   environmentTypes?: Record<string, GetWorkloadsQueryParams['environmentType']>
   types?: {
     [key: string]: {
@@ -81,7 +81,13 @@ const getDefaultTypes = (getString: UseStringsReturn['getString']) => {
   }
 }
 
-export const MostActiveServicesWidget: React.FC<MostActiveServicesWidget> = props => {
+export interface MostActiveServicesRef {
+  refetchData: () => void
+}
+export const MostActiveServicesWidget = (
+  props: MostActiveServicesWidgetProps,
+  ref: React.ForwardedRef<MostActiveServicesRef>
+) => {
   const { getString } = useStrings()
 
   const defaultParseByType = useCallback(
@@ -194,6 +200,12 @@ export const MostActiveServicesWidget: React.FC<MostActiveServicesWidget> = prop
     [environmentTypes, selectedEnvironmentType]
   )
 
+  useImperativeHandle(ref, () => ({
+    refetchData() {
+      workloadsRefetch()
+    }
+  }))
+
   //temporarily hiding tickers
 
   /*
@@ -229,7 +241,7 @@ export const MostActiveServicesWidget: React.FC<MostActiveServicesWidget> = prop
 
   const weightedStackData = useMemo(
     () =>
-      data.map(service => ({
+      data.map((service: any) => ({
         label: service.label,
         value: service.value,
         color: service.color
@@ -333,3 +345,5 @@ export const MostActiveServicesWidget: React.FC<MostActiveServicesWidget> = prop
     </MostActiveServicesWidgetContainer>
   )
 }
+
+export const MostActiveServicesWidgetRef = React.forwardRef(MostActiveServicesWidget)

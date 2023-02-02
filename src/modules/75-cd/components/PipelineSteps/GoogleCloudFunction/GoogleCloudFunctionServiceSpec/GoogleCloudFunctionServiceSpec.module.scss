@@ -1,0 +1,62 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+@import '../../Common/GenericServiceSpec/GenericServiceSpec.module.scss';
+
+.manifestStepContainer {
+  display: flex;
+  align-items: center;
+  margin-top: var(--spacing-medium) !important;
+  margin-bottom: var(--spacing-medium) !important;
+  .manifestStepNumberContainer {
+    width: 20px;
+    height: 20px;
+    background: var(--grey-600);
+    -moz-border-radius: 50px;
+    -webkit-border-radius: 50px;
+    border-radius: 50px;
+    color: var(--white);
+    margin-right: var(--spacing-small);
+    font-size: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .manifestStepTitle {
+    display: flex;
+    align-items: center;
+    color: var(--grey-800);
+    font-weight: 600;
+    font-size: var(--font-size-small);
+    line-height: 20px;
+  }
+}
+
+.yamlBuilderContainer {
+  margin-right: 132px !important;
+  margin-bottom: var(--spacing-xxlarge) !important;
+}
+
+.yamlEditorHeader {
+  height: 40px;
+  padding: var(--spacing-small);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 500;
+  font-size: var(--font-size-small);
+  line-height: 20px;
+}
+
+.icon {
+  margin-left: var(--spacing-xsmall) !important;
+  cursor: pointer;
+}
+
+.manifestSecondStepContainer {
+  margin-bottom: 0px !important;
+}

@@ -138,6 +138,10 @@ export function updateParentFormikWithLatestData(
   updatedMappedMetricsData: Map<string, CommonCustomMetricFormikInterface>,
   selectedMetricName: string
 ): void {
-  updateParentFormik(CommonConfigurationsFormFieldNames.CUSTOM_METRICS_MAP, updatedMappedMetricsData)
+  updateParentFormik(CommonConfigurationsFormFieldNames.QUERY_METRICS_MAP, updatedMappedMetricsData)
   updateParentFormik(CommonConfigurationsFormFieldNames.SELECTED_METRIC, selectedMetricName)
+}
+
+export function checkIfFieldLabelIsMetric(fieldLabel: string): boolean {
+  return fieldLabel === 'Metric'
 }

@@ -13,19 +13,18 @@ import type { StepDetailProps } from '@pipeline/factories/ExecutionFactory/types
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { isExecutionWaitingForInput, isExecutionWaitingForIntervention } from '@pipeline/utils/statusHelpers'
 import { InputOutputTab } from '@pipeline/components/execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
-import { allowedStrategiesAsPerStep } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/StrategySelection/StrategyConfig'
-import { StepMode } from '@pipeline/utils/stepUtils'
-import { Strategy } from '@pipeline/utils/FailureStrategyUtils'
 import { useExecutionDetails } from 'services/pipeline-ng'
 import { WaitStepDetailsTab } from '../../tabs/WaitStepDetailsTab/WaitStepDetailsTab'
 import { ManualInterventionTab } from '../../tabs/ManualInterventionTab/ManualInterventionTab'
+import { PolicyEvaluationContent } from '../../common/ExecutionContent/PolicyEvaluationContent/PolicyEvaluationContent'
 import css from '../DefaultView/DefaultView.module.scss'
 
 enum StepDetailTab {
   STEP_DETAILS = 'STEP_DETAILS',
   INPUT = 'INPUT',
   OUTPUT = 'OUTPUT',
-  MANUAL_INTERVENTION = 'MANUAL_INTERVENTION'
+  MANUAL_INTERVENTION = 'MANUAL_INTERVENTION',
+  POLICY_ENFORCEMENT = 'POLICY_ENFORCEMENT'
 }
 
 export function WaitStepView(props: StepDetailProps): React.ReactElement {
@@ -37,9 +36,7 @@ export function WaitStepView(props: StepDetailProps): React.ReactElement {
   const isWaitingOnExecInputs = isExecutionWaitingForInput(step.status)
   const [activeTab, setActiveTab] = React.useState(StepDetailTab.STEP_DETAILS)
   const isManualInterruption = isExecutionWaitingForIntervention(step.status)
-  const failureStrategies = allowedStrategiesAsPerStep(stageType)[StepMode.STEP].filter(
-    st => st !== Strategy.ManualIntervention
-  )
+  const shouldShowPolicyEnforcement = !!step?.outcomes?.policyOutput?.policySetDetails
   const manuallySelected = React.useRef(false)
 
   React.useEffect(() => {
@@ -112,11 +109,18 @@ export function WaitStepView(props: StepDetailProps): React.ReactElement {
           <Tab
             id={StepDetailTab.MANUAL_INTERVENTION}
             title={getString('pipeline.failureStrategies.strategiesLabel.ManualIntervention')}
+            panel={<ManualInterventionTab step={step} stageType={stageType} executionMetadata={executionMetadata} />}
+          />
+        ) : null}
+        {shouldShowPolicyEnforcement ? (
+          <Tab
+            id={StepDetailTab.POLICY_ENFORCEMENT}
+            title={getString('pipeline.policyEnforcement.title')}
             panel={
-              <ManualInterventionTab
+              <PolicyEvaluationContent
                 step={step}
-                allowedStrategies={failureStrategies}
                 executionMetadata={executionMetadata}
+                policySetOutputPath={'outcomes.policyOutput'}
               />
             }
           />

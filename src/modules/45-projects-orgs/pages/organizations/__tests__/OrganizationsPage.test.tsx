@@ -45,15 +45,16 @@ const deleteOrganizationMock = (): Promise<{ status: string }> => {
 }
 jest.mock('services/cd-ng', () => ({
   usePostOrganization: jest.fn().mockImplementation(() => createOrgMockData),
+  usePutOrganization: jest.fn().mockImplementation(args => {
+    editOrg(args)
+    return createOrgMockData
+  }),
   useGetOrganizationList: jest.fn().mockImplementation(args => {
     getOrganizationList(args)
     return { ...orgMockData, refetch: jest.fn(), error: null }
   }),
   useDeleteOrganization: jest.fn().mockImplementation(() => ({ mutate: deleteOrganizationMock })),
-  usePutOrganization: jest.fn().mockImplementation(args => {
-    editOrg(args)
-    return createOrgMockData
-  }),
+
   useGetOrganization: jest.fn().mockImplementation(args => {
     getOrg(args)
     return { ...getOrgMockData, refetch: jest.fn(), error: null, loading: false }

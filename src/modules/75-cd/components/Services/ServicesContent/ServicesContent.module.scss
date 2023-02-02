@@ -11,7 +11,8 @@
 
   .container {
     height: calc(100% - 40px) !important;
-    margin: 20px !important;
+    margin: 20px;
+    margin-top: 0% !important;
     box-sizing: border-box;
   }
 
@@ -26,5 +27,10 @@
       background: var(--grey-200);
       margin: var(--spacing-small) var(--spacing-xxlarge);
     }
+  }
+  .refreshButton {
+    justify-content: flex-end;
+    margin-top: var(--spacing-2);
+    margin-bottom: var(--spacing-2);
   }
 }

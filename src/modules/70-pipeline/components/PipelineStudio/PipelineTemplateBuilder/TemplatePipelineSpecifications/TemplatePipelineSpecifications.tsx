@@ -37,6 +37,8 @@ import { useMutateAsGet } from '@common/hooks'
 import { parse, stringify, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { Pipeline } from '@pipeline/utils/types'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import css from './TemplatePipelineSpecifications.module.scss'
 
 export function TemplatePipelineSpecifications(): JSX.Element {
@@ -48,6 +50,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     setIntermittentLoading
   } = usePipelineContext()
   const queryParams = useParams<ProjectPathProps>()
+  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const templateRef = getIdentifierFromValue(defaultTo(pipeline.template?.templateRef, ''))
   const templateVersionLabel = getIdentifierFromValue(defaultTo(pipeline.template?.versionLabel, ''))
   const templateScope = getScopeFromValue(defaultTo(pipeline.template?.templateRef, ''))
@@ -86,7 +89,8 @@ export function TemplatePipelineSpecifications(): JSX.Element {
         repoIdentifier: gitDetails.repoIdentifier,
         branch: gitDetails.branch
       })
-    }
+    },
+    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
   })
 
   const originalEntityYaml = React.useMemo(() => {
@@ -113,6 +117,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
         branch: gitDetails.branch
       })
     },
+    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
     body: { originalEntityYaml },
     lazy: true
   })

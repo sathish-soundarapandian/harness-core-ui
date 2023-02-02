@@ -10,8 +10,6 @@ import { Layout, Text, Button, ButtonSize, ButtonVariation } from '@harness/uico
 import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { ArtifactSource, PrimaryArtifact } from 'services/cd-ng'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { isPrimaryAdditionAllowed, ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
@@ -65,7 +63,8 @@ function ArtifactListView({
   addNewArtifact,
   isSidecarAllowed,
   isMultiArtifactSource,
-  handleUseArtifactSourceTemplate
+  handleUseArtifactSourceTemplate,
+  allowOnlyOneArtifactAddition = false
 }: ArtifactListViewProps): React.ReactElement {
   const { getString } = useStrings()
   const commonArtifactProps = {
@@ -74,7 +73,6 @@ function ArtifactListView({
     fetchedConnectorResponse,
     editArtifact
   }
-  const areArtifactSourceTemplatesEnabled = useFeatureFlag(FeatureFlag.ARTIFACT_SOURCE_TEMPLATE)
 
   return (
     <Layout.Vertical style={{ width: '100%' }}>
@@ -106,31 +104,32 @@ function ArtifactListView({
                 {...commonArtifactProps}
               />
             )}
-            {!isReadonly && isPrimaryAdditionAllowed(primaryArtifact, isMultiArtifactSource) && (
-              <Layout.Horizontal spacing="medium">
-                <Button
-                  className={css.addArtifact}
-                  id="add-artifact"
-                  size={ButtonSize.SMALL}
-                  icon="plus"
-                  variation={ButtonVariation.LINK}
-                  margin={isMultiArtifactSource && sideCarArtifact?.length && { bottom: 'xxlarge' }}
-                  onClick={() => addNewArtifact(ModalViewFor.PRIMARY)}
-                  text={
-                    isMultiArtifactSource
-                      ? getString('pipeline.artifactsSelection.addArtifactSource')
-                      : getString('pipeline.artifactsSelection.addPrimaryArtifact')
-                  }
-                />
-                {areArtifactSourceTemplatesEnabled && handleUseArtifactSourceTemplate && (
-                  <AddArtifactSourceTemplateSection
-                    handleClick={() => {
-                      handleUseArtifactSourceTemplate(ModalViewFor.PRIMARY)
-                    }}
+            {!isReadonly &&
+              isPrimaryAdditionAllowed(primaryArtifact, isMultiArtifactSource, allowOnlyOneArtifactAddition) && (
+                <Layout.Horizontal spacing="medium">
+                  <Button
+                    className={css.addArtifact}
+                    id="add-artifact"
+                    size={ButtonSize.SMALL}
+                    icon="plus"
+                    variation={ButtonVariation.LINK}
+                    margin={isMultiArtifactSource && sideCarArtifact?.length && { bottom: 'xxlarge' }}
+                    onClick={() => addNewArtifact(ModalViewFor.PRIMARY)}
+                    text={
+                      isMultiArtifactSource
+                        ? getString('pipeline.artifactsSelection.addArtifactSource')
+                        : getString('pipeline.artifactsSelection.addPrimaryArtifact')
+                    }
                   />
-                )}
-              </Layout.Horizontal>
-            )}
+                  {handleUseArtifactSourceTemplate && (
+                    <AddArtifactSourceTemplateSection
+                      handleClick={() => {
+                        handleUseArtifactSourceTemplate(ModalViewFor.PRIMARY)
+                      }}
+                    />
+                  )}
+                </Layout.Horizontal>
+              )}
           </>
           <>
             <SidecarArtifacts
@@ -150,7 +149,7 @@ function ArtifactListView({
                   onClick={() => addNewArtifact(ModalViewFor.SIDECAR)}
                   text={getString('pipeline.artifactsSelection.addSidecar')}
                 />
-                {areArtifactSourceTemplatesEnabled && handleUseArtifactSourceTemplate && (
+                {handleUseArtifactSourceTemplate && (
                   <AddArtifactSourceTemplateSection
                     handleClick={() => {
                       handleUseArtifactSourceTemplate(ModalViewFor.SIDECAR)

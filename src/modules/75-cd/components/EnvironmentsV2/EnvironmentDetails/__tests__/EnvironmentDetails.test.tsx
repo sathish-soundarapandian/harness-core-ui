@@ -9,6 +9,8 @@ import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+import * as cdNgServices from 'services/cd-ng'
+
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { environmentPathProps, modulePathProps, projectPathProps } from '@common/utils/routeUtils'
@@ -16,56 +18,53 @@ import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import EnvironmentDetails from '../EnvironmentDetails'
 
 import mockEnvironmentDetail from './__mocks__/mockEnvironmentDetail.json'
+import mockEnvironmentDetailMismatchedDTOYaml from './__mocks__/mockEnvironmentDetailMismatchedDTOYaml.json'
 
-jest.mock('services/cd-ng', () => ({
-  useGetEnvironmentV2: jest.fn().mockImplementation(() => {
-    return {
-      data: mockEnvironmentDetail,
-      refetch: jest.fn()
-    }
-  }),
-  useGetYamlSchema: jest.fn().mockImplementation(() => {
-    return {
-      data: {
-        name: 'testenv',
-        identifier: 'test-env',
-        lastModifiedAt: ''
-      },
-      refetch: jest.fn()
-    }
-  }),
-  useGetClusterList: jest.fn().mockImplementation(() => {
-    return {
-      data: {
-        data: {
-          content: [
-            {
-              clusterRef: 'test-cluster-a',
-              linkedAt: '123'
-            },
-            {
-              clusterRef: 'test-cluster-b',
-              linkedAt: '2'
-            }
-          ]
+jest.spyOn(cdNgServices, 'useGetYamlSchema').mockReturnValue({
+  data: {
+    name: 'testenv',
+    identifier: 'test-env',
+    lastModifiedAt: ''
+  },
+  refetch: jest.fn()
+} as any)
+
+jest.spyOn(cdNgServices, 'useGetClusterList').mockReturnValue({
+  data: {
+    data: {
+      content: [
+        {
+          clusterRef: 'test-cluster-a',
+          linkedAt: '123'
+        },
+        {
+          clusterRef: 'test-cluster-b',
+          linkedAt: '2'
         }
-      },
-      refetch: jest.fn()
+      ]
     }
-  }),
-  useDeleteCluster: jest.fn().mockResolvedValue({}),
-  useGetConnectorListV2: jest.fn().mockImplementation(() => ({
-    mutate: async () => {
-      return {
-        status: 'SUCCESS',
-        data: {
-          pageItemCount: 0,
-          content: []
-        }
+  },
+  refetch: jest.fn()
+} as any)
+
+jest.spyOn(cdNgServices, 'useDeleteCluster').mockReturnValue({} as any)
+
+jest.spyOn(cdNgServices, 'useGetConnectorListV2').mockReturnValue({
+  mutate: async () => {
+    return {
+      status: 'SUCCESS',
+      data: {
+        pageItemCount: 0,
+        content: []
       }
     }
-  }))
-}))
+  }
+} as any)
+
+jest.spyOn(cdNgServices, 'useGetEnvironmentV2').mockReturnValue({
+  data: mockEnvironmentDetail,
+  refetch: jest.fn()
+} as any)
 
 describe('EnvironmentDetails tests', () => {
   test('initial render', async () => {
@@ -128,5 +127,34 @@ describe('EnvironmentDetails tests', () => {
     userEvent.click(gitOpsTab!)
 
     await waitFor(() => expect(screen.queryByText('test-cluster-a')).toBeVisible())
+  })
+
+  test('page header toolbar renders info from yaml instead of DTO', async () => {
+    jest.spyOn(cdNgServices, 'useGetEnvironmentV2').mockReturnValue({
+      data: mockEnvironmentDetailMismatchedDTOYaml,
+      refetch: jest.fn()
+    } as any)
+
+    render(
+      <TestWrapper
+        path={routes.toEnvironmentDetails({
+          ...projectPathProps,
+          ...modulePathProps,
+          ...environmentPathProps
+        })}
+        pathParams={{
+          accountId: 'dummy',
+          projectIdentifier: 'dummy',
+          orgIdentifier: 'dummy',
+          module: 'cd',
+          environmentIdentifier: 'Env_1',
+          sectionId: 'CONFIGURATION'
+        }}
+      >
+        <EnvironmentDetails />
+      </TestWrapper>
+    )
+
+    await waitFor(() => expect(screen.getAllByText('description should come')).toHaveLength(2))
   })
 })

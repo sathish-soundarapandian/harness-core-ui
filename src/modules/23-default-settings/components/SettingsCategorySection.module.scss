@@ -13,7 +13,7 @@
   background-color: var(--primary-1);
 }
 .detailSettings {
-  padding: 14px var(--spacing-0) 14px 47px !important;
+  padding: 14px 47px 14px 47px !important;
 }
 .panelClassName {
   padding: var(--spacing-0) !important;
@@ -21,8 +21,13 @@
 .emptyCheckBoxSpace {
   width: 113px;
 }
-.settingOverrideRestore {
-  width: 30%;
+.settingRestoreRow {
+  width: 20%;
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+}
+.settingOverride {
+  width: 10%;
   padding-top: 6px !important;
   padding-bottom: 6px !important;
 }
@@ -30,7 +35,7 @@
   justify-self: flex-start;
 }
 .summaryCard {
-  width: 80%;
+  width: 98%;
   padding: var(--spacing-0) !important;
 }
 .defaultSettingRenderer {
@@ -53,10 +58,36 @@
 .groupHeaderContainer {
   padding-top: 10px !important;
   padding-bottom: var(--spacing-3) !important;
+  padding-left: var(--spacing-5) !important;
 }
 .settingLabelContainer {
-  width: 30%;
+  padding-left: var(--spacing-5) !important;
+  width: 38%;
+}
+.rowHeaderLabel {
+  padding-left: var(--spacing-5) !important;
+  width: 38%;
 }
 .settingCheckBoxContainer {
   width: 100% !important;
+}
+.settingRowHeader {
+  background-color: var(--primary-bg) !important;
+}
+.rowBorderLine {
+  height: 1px;
+  border-width: 0;
+  color: var(--grey-100);
+  width: 100%;
+  background-color: var(--grey-100);
+}
+.rowBorderLineForSubCategory {
+  height: 1px;
+  border-width: 0;
+  color: var(--grey-100);
+  width: 99%;
+  margin-left: var(--spacing-medium);
+  margin-bottom: 0px;
+  background-color: var(--grey-100);
+  border-left: 0.5px solid var(--grey-300);
 }

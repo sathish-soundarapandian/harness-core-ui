@@ -23,7 +23,7 @@ import type { EnvironmentMultiSelectOrCreateProps } from '@cv/components/Harness
 import type { EnvironmentSelectOrCreateProps } from '@cv/components/HarnessServiceAndEnvironment/components/EnvironmentSelectOrCreate/EnvironmentSelectOrCreate'
 import { ChangeSourceCategoryName } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import { useStrings } from 'framework/strings'
-import { SLOFormFields } from '@cv/pages/slos/components/CVCreateSLO/CVCreateSLO.types'
+import { SLOV2FormFields } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { useCreateDefaultMonitoredService } from 'services/cv'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
@@ -79,7 +79,7 @@ export default function CreateMonitoredServiceFromSLO(props: CreateMonitoredServ
 
       // selecting the current monitored service
       setFieldForSLOForm(
-        SLOFormFields.MONITORED_SERVICE_REF,
+        SLOV2FormFields.MONITORED_SERVICE_REF,
         createdMonitoredService?.resource?.monitoredService?.identifier
       )
 

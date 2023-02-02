@@ -19,6 +19,7 @@ import { useStrings } from 'framework/strings'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import type { PermissionRequest } from '@rbac/hooks/usePermission'
 
 import { EnvironmentType } from '@common/constants/EnvironmentType'
 
@@ -85,14 +86,14 @@ export function LastUpdatedBy({ lastModifiedAt }: EnvironmentResponse): React.Re
 }
 
 export function EnvironmentMenu({
-  environment: { identifier },
+  environment,
   onEdit,
   onDelete
 }: {
   environment: EnvironmentResponseDTO
   onEdit: (identifier: string) => void
-  onDelete: (identifier: string) => void
-}) {
+  onDelete: (environment: EnvironmentResponseDTO) => void
+}): React.ReactElement {
   const [menuOpen, setMenuOpen] = React.useState(false)
   const { getString } = useStrings()
 
@@ -106,22 +107,34 @@ export function EnvironmentMenu({
     onCloseDialog: async (isConfirmed: boolean) => {
       /* istanbul ignore else */
       if (isConfirmed) {
-        await onDelete(defaultTo(identifier, ''))
+        onDelete(environment)
       }
       setMenuOpen(false)
     }
   })
 
-  const handleEdit = (event: React.MouseEvent) => {
+  const handleEdit = (event: React.MouseEvent): void => {
     event.stopPropagation()
-    onEdit(defaultTo(identifier, ''))
+    onEdit(defaultTo(environment?.identifier, ''))
     setMenuOpen(false)
   }
 
-  const handleDelete = (event: React.MouseEvent) => {
+  const handleDelete = (event: React.MouseEvent): void => {
     event.stopPropagation()
     openDialog()
     setMenuOpen(false)
+  }
+
+  const resourceAndScope: Pick<PermissionRequest, 'resource' | 'resourceScope'> = {
+    resource: {
+      resourceType: ResourceType.ENVIRONMENT,
+      resourceIdentifier: environment.identifier
+    },
+    resourceScope: {
+      accountIdentifier: environment.accountId,
+      orgIdentifier: environment.orgIdentifier,
+      projectIdentifier: environment.projectIdentifier
+    }
   }
 
   return (
@@ -144,9 +157,7 @@ export function EnvironmentMenu({
             text={getString('edit')}
             onClick={handleEdit}
             permission={{
-              resource: {
-                resourceType: ResourceType.ENVIRONMENT
-              },
+              ...resourceAndScope,
               permission: PermissionIdentifier.EDIT_ENVIRONMENT
             }}
           />
@@ -155,9 +166,7 @@ export function EnvironmentMenu({
             text={getString('delete')}
             onClick={handleDelete}
             permission={{
-              resource: {
-                resourceType: ResourceType.ENVIRONMENT
-              },
+              ...resourceAndScope,
               permission: PermissionIdentifier.DELETE_ENVIRONMENT
             }}
           />

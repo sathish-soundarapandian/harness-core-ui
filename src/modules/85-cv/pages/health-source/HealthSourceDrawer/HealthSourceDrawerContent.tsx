@@ -74,7 +74,7 @@ function HealthSourceDrawerContent({
           isTemplate={isTemplate}
           expressions={expressions}
           onSubmit={values => {
-            setSelectedProduct(values.product?.value)
+            setSelectedProduct(values.product?.value as string)
           }}
         />,
         dashboardsScreen,
@@ -93,7 +93,7 @@ function HealthSourceDrawerContent({
         key="defineHealthSource"
         isTemplate={isTemplate}
         expressions={expressions}
-        onSubmit={values => setSelectedProduct(values.product?.value)}
+        onSubmit={values => setSelectedProduct(values.product?.value as string)}
       />,
       <CustomiseHealthSource
         key="customiseHealthSource"

@@ -65,7 +65,36 @@ export function NexusArtifact({
     branch
   }
   const validationSchema = Yup.object().shape({
-    repository: Yup.string().trim().required(getString('common.git.validation.repoRequired'))
+    repositoryFormat: Yup.string().required(getString('pipeline.artifactsSelection.validation.repositoryFormat')),
+    repository: Yup.string().trim().required(getString('common.git.validation.repoRequired')),
+    artifactPath: Yup.string().when('repositoryFormat', {
+      is: RepositoryFormatTypes.Docker,
+      then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactPath'))
+    }),
+    repositoryUrl: Yup.string().when('repositoryPortorRepositoryURL', {
+      is: RepositoryPortOrServer.RepositoryUrl,
+      then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.repositoryUrl'))
+    }),
+    repositoryPort: Yup.string().when('repositoryPortorRepositoryURL', {
+      is: RepositoryPortOrServer.RepositoryPort,
+      then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.repositoryPort'))
+    }),
+    artifactId: Yup.string().when('repositoryFormat', {
+      is: RepositoryFormatTypes.Maven,
+      then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactId'))
+    }),
+    groupId: Yup.string().when('repositoryFormat', {
+      is: RepositoryFormatTypes.Maven,
+      then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.groupId'))
+    }),
+    group: Yup.string().when('repositoryFormat', {
+      is: RepositoryFormatTypes.Raw,
+      then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.group'))
+    }),
+    packageName: Yup.string().when('repositoryFormat', {
+      is: val => val === RepositoryFormatTypes.NPM || val === RepositoryFormatTypes.NuGet,
+      then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.packageName'))
+    })
   })
 
   const connectorRefValue = getConnectorIdValue(prevStepData)
@@ -131,7 +160,7 @@ export function NexusArtifact({
       >
         {({ values }) => (
           <Form>
-            <div className={css.connectorForm}>
+            <div className={css.artifactForm}>
               <div className={css.imagePathContainer}>
                 <FormInput.Select
                   name="repositoryFormat"

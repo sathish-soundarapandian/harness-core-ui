@@ -26,6 +26,7 @@ import {
   SelectOption,
   useToggleOpen
 } from '@harness/uicore'
+import { useParams } from 'react-router-dom'
 import type { EnvironmentYaml, NGEnvironmentInfoConfig } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 
@@ -49,6 +50,7 @@ import { StepWidget } from '@pipeline/components/AbstractSteps/StepWidget'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
+import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import EnvironmentEntitiesList from '../EnvironmentEntitiesList/EnvironmentEntitiesList'
 import type {
   DeployEnvironmentEntityCustomStepProps,
@@ -72,7 +74,6 @@ interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomS
   readonly: boolean
   allowableTypes: AllowedTypes
   isMultiEnvironment: boolean
-  identifiersToLoad?: string[]
   /** env group specific props */
   isUnderEnvGroup?: boolean
   envGroupIdentifier?: string
@@ -105,6 +106,7 @@ export default function DeployEnvironment({
   readonly,
   allowableTypes,
   isMultiEnvironment,
+  serviceIdentifiers,
   envGroupIdentifier,
   isUnderEnvGroup,
   stageIdentifier,
@@ -116,6 +118,7 @@ export default function DeployEnvironment({
     useFormikContext<DeployEnvironmentEntityFormState>()
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
+  const { projectIdentifier, orgIdentifier } = useParams<PipelinePathProps>()
   const { refetchPipelineVariable } = usePipelineVariables()
   const uniquePathForEnvironments = React.useRef(`_pseudo_field_${uuid()}`)
   const { isOpen: isAddNewModalOpen, open: openAddNewModal, close: closeAddNewModal } = useToggleOpen()
@@ -149,7 +152,8 @@ export default function DeployEnvironment({
     prependEnvironmentToEnvironmentList
   } = useGetEnvironmentsData({
     envIdentifiers: selectedEnvironments,
-    envGroupIdentifier
+    envGroupIdentifier,
+    serviceIdentifiers
   })
 
   useEffect(() => {
@@ -211,11 +215,29 @@ export default function DeployEnvironment({
             environmentData => getScopedValueFromDTO(environmentData.environment) === values.environment
           )
 
+          const environmentServiceOverrideInputs: Record<string, any> = {}
+          const existingServiceOverrideInputs = values.serviceOverrideInputs?.[values.environment]
+
+          serviceIdentifiers?.forEach(serviceIdentifier => {
+            const serviceOverrideValueForService = get(
+              existingServiceOverrideInputs,
+              serviceIdentifier,
+              environment?.serviceOverrideInputs[values.environment as string]?.[serviceIdentifier]
+            )
+
+            if (!isNil(serviceOverrideValueForService)) {
+              environmentServiceOverrideInputs[serviceIdentifier] = serviceOverrideValueForService
+            }
+          })
+
           setValues({
             ...values,
             // if environment input is not found, add it, else use the existing one
             environmentInputs: {
               [values.environment]: get(values.environmentInputs, [values.environment], environment?.environmentInputs)
+            },
+            serviceOverrideInputs: {
+              [values.environment]: environmentServiceOverrideInputs
             }
           })
         } else if (Array.isArray(values.environments)) {
@@ -299,9 +321,15 @@ export default function DeployEnvironment({
     prependEnvironmentToEnvironmentList(newEnvironmentInfo)
     closeAddNewModal()
 
+    const scopedEnvRef = getScopedValueFromDTO({
+      projectIdentifier,
+      orgIdentifier,
+      identifier: newEnvironmentInfo.identifier
+    })
+
     const newFormValues = produce(values, draft => {
       if (draft.environments && Array.isArray(draft.environments)) {
-        draft.environments.push({ label: newEnvironmentInfo.name, value: newEnvironmentInfo.identifier })
+        draft.environments.push({ label: newEnvironmentInfo.name, value: scopedEnvRef })
         if (gitOpsEnabled && draft.clusters) {
           if (draft.infrastructures) {
             delete draft.infrastructures
@@ -313,7 +341,7 @@ export default function DeployEnvironment({
         }
         set(draft, uniquePathForEnvironments.current, draft.environments)
       } else {
-        draft.environment = newEnvironmentInfo.identifier
+        draft.environment = scopedEnvRef
         if (gitOpsEnabled) {
           draft.cluster = ''
         } else {
@@ -407,7 +435,7 @@ export default function DeployEnvironment({
         margin={{ bottom: isMultiEnvironment ? 'medium' : 'none' }}
       >
         {isMultiEnvironment ? (
-          CDS_OrgAccountLevelServiceEnvEnvGroup && !isUnderEnvGroup ? (
+          CDS_OrgAccountLevelServiceEnvEnvGroup && !isUnderEnvGroup && !gitOpsEnabled ? (
             /*** This condition is added as entities one step down the entity tree
               will be following the parent scope so no need of the new component here ***/
             <MultiTypeEnvironmentField
@@ -446,25 +474,7 @@ export default function DeployEnvironment({
               }}
             />
           )
-        ) : !CDS_OrgAccountLevelServiceEnvEnvGroup ? (
-          <FormInput.MultiTypeInput
-            {...commonProps}
-            useValue
-            placeholder={placeHolderForEnvironment}
-            multiTypeInputProps={{
-              onTypeChange: setEnvironmentsType,
-              width: 300,
-              selectProps: { items: selectOptions },
-              allowableTypes: gitOpsEnabled ? getAllowableTypesWithoutExpression(allowableTypes) : allowableTypes,
-              defaultValueToReset: '',
-              onChange: item => {
-                setSelectedEnvironments(getSelectedEnvironmentsFromOptions(item as SelectOption))
-              },
-              expressions
-            }}
-            selectItems={selectOptions}
-          />
-        ) : (
+        ) : CDS_OrgAccountLevelServiceEnvEnvGroup && !gitOpsEnabled ? (
           <MultiTypeEnvironmentField
             {...commonProps}
             placeholder={placeHolderForEnvironment}
@@ -484,6 +494,24 @@ export default function DeployEnvironment({
               defaultValueToReset: ''
             }}
           />
+        ) : (
+          <FormInput.MultiTypeInput
+            {...commonProps}
+            useValue
+            placeholder={placeHolderForEnvironment}
+            multiTypeInputProps={{
+              onTypeChange: setEnvironmentsType,
+              width: 300,
+              selectProps: { items: selectOptions },
+              allowableTypes: gitOpsEnabled ? getAllowableTypesWithoutExpression(allowableTypes) : allowableTypes,
+              defaultValueToReset: '',
+              onChange: item => {
+                setSelectedEnvironments(getSelectedEnvironmentsFromOptions(item as SelectOption))
+              },
+              expressions
+            }}
+            selectItems={selectOptions}
+          />
         )}
         {isFixed && !isUnderEnvGroup && (
           <RbacButton
@@ -499,6 +527,7 @@ export default function DeployEnvironment({
               permission: PermissionIdentifier.EDIT_ENVIRONMENT
             }}
             text={getString('common.plusNewName', { name: getString('environment') })}
+            id={'add-new-environment'}
           />
         )}
       </Layout.Horizontal>
@@ -518,6 +547,8 @@ export default function DeployEnvironment({
             allowableTypes={allowableTypes}
             onEnvironmentEntityUpdate={onEnvironmentEntityUpdate}
             onRemoveEnvironmentFromList={onRemoveEnvironmentFromList}
+            // Temporary Condition - Will remove it with multi service service override change
+            serviceIdentifiers={serviceIdentifiers.length === 1 ? serviceIdentifiers : []}
             initialValues={initialValues}
             stageIdentifier={stageIdentifier}
             deploymentType={deploymentType}

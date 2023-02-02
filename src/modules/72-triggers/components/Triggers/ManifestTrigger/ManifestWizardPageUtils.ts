@@ -30,6 +30,7 @@ import type {
   ManifestTriggerSource
 } from '@triggers/components/steps/ManifestTriggerConfigPanel/ManifestSelection/ManifestInterface'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
+import { NameIdentifierSchema } from '@common/utils/Validation'
 
 export const eventTypes = {
   PUSH: 'Push',
@@ -170,15 +171,9 @@ export const getWizardMap = ({
 export const getValidationSchema = (
   getString: (key: StringKeys, params?: any) => string
 ): ObjectSchema<Record<string, any> | undefined> => {
-  return object().shape({
-    name: string().trim().required(getString('triggers.validation.triggerName')),
-    identifier: string().when('name', {
-      is: val => val?.length,
-      then: string()
-        .required(getString('validation.identifierRequired'))
-        .matches(regexIdentifier, getString('validation.validIdRegex'))
-        .notOneOf(illegalIdentifiers)
-    }),
+  return NameIdentifierSchema(getString, {
+    nameRequiredErrorMsg: getString('triggers.validation.triggerName')
+  }).shape({
     versionOperator: string().test(
       getString('triggers.validation.operator'),
       getString('triggers.validation.operator'),

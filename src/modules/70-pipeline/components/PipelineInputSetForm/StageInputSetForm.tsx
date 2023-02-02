@@ -164,7 +164,8 @@ export function StageInputSetFormInternal({
     deploymentStageTemplateInfraKeys.includes(field)
   )
   const namePath = isEmpty(path) ? '' : `${path}.`
-  const { NG_SVC_ENV_REDESIGN, CIE_HOSTED_VMS_MAC, CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
+  const { NG_SVC_ENV_REDESIGN, CIE_HOSTED_VMS_MAC, CIE_HOSTED_VMS_WINDOWS, CDS_OrgAccountLevelServiceEnvEnvGroup } =
+    useFeatureFlags()
 
   const renderMultiTypeInputWithAllowedValues = React.useCallback(
     ({
@@ -472,6 +473,10 @@ export function StageInputSetFormInternal({
     {
       label: getString('pipeline.infraSpecifications.architectureTypes.amd64'),
       value: ArchTypes.Amd64
+    },
+    {
+      label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
+      value: ArchTypes.Arm64
     }
   ]
 
@@ -480,9 +485,11 @@ export function StageInputSetFormInternal({
       label: getString('pipeline.infraSpecifications.osTypes.macos'),
       value: OsTypes.MacOS
     })
-    buildArchSelectOptions.push({
-      label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
-      value: ArchTypes.Arm64
+  }
+  if (CIE_HOSTED_VMS_WINDOWS) {
+    buildInfraSelectOptions.push({
+      label: getString('pipeline.infraSpecifications.osTypes.windows'),
+      value: OsTypes.Windows
     })
   }
 

@@ -1,0 +1,354 @@
+.statusIcon {
+  svg {
+    fill: var(--white) !important;
+  }
+}
+
+.statusText {
+  :global {
+    .bp3-button-text {
+      font-size: 10px !important;
+    }
+
+    .bp3-icon {
+      svg {
+        height: 12px;
+        width: 12px;
+      }
+    }
+  }
+}
+
+.success {
+  background-color: var(--green-200) !important;
+  border: none !important;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  :global(.bp3-icon) {
+    color: var(--green-700);
+
+    svg {
+      height: 12px;
+      width: 12px;
+    }
+  }
+
+  :global(.bp3-text-overflow-ellipsis) {
+    color: var(--green-700);
+  }
+}
+
+.warning {
+  background-color: var(--red-200) !important;
+  border: none !important;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  :global(.bp3-icon) {
+    color: var(--orange-700);
+    margin-right: 4px;
+
+    svg {
+      height: 12px;
+      width: 12px;
+    }
+  }
+
+  :global(.bp3-text-overflow-ellipsis) {
+    color: var(--orange-700);
+  }
+}
+
+.primary {
+  background-color: var(--primary-2) !important;
+  border: none !important;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  :global(.bp3-icon) {
+    color: var(--primary-7);
+    margin-right: 4px;
+
+    svg {
+      height: 12px;
+      width: 12px;
+    }
+  }
+
+  :global(.bp3-text-overflow-ellipsis) {
+    color: var(--primary-7);
+  }
+}
+
+.card {
+  width: 270px;
+  padding: 24px !important;
+  box-shadow: 0 0 1px rgba(40, 41, 61, 0.04), 0 2px 4px rgba(96, 97, 112, 0.16);
+  cursor: pointer;
+  margin: 0 36px 36px 0;
+
+  &.isSelected {
+    border: 1px solid var(--primary-main);
+  }
+
+  .projectInfo {
+    overflow-wrap: anywhere;
+  }
+
+  .projectName {
+    margin: 16px 0 8px 0 !important;
+  }
+
+  .tags {
+    margin-top: var(--spacing-small);
+  }
+
+  .tagsPopover {
+    p {
+      color: var(--grey-600);
+    }
+  }
+
+  .id {
+    font-size: 12px;
+  }
+
+  .iconMore {
+    :global(.bp3-icon) {
+      transform: rotate(90deg) !important;
+      color: var(--grey-450) !important;
+    }
+  }
+
+  .description {
+    padding: var(--spacing-small) 0 0 0 !important;
+    max-height: 40px;
+  }
+
+  .urls {
+    padding: var(--spacing-small) 0 0 0 !important;
+    font-size: 12px;
+
+    .serverUrl,
+    .uiUrl {
+      margin-bottom: 6px;
+    }
+  }
+
+  .status {
+    padding: 16px 0;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+
+    .label {
+      border: 1px solid var(--primary-main);
+      color: var(--primary-main);
+      padding: 8px;
+      margin-right: 16px;
+      display: inline;
+      border-radius: 3px;
+    }
+
+    .serverStatus {
+      padding: 8px;
+      margin-right: 16px;
+      border-radius: 3px;
+      display: inline;
+      font-weight: bold;
+    }
+  }
+
+  .success {
+    color: var(--green-500);
+    border: 1px solid var(--green-500);
+    background: rgba($color: var(--green), $alpha: 0.1);
+  }
+
+  .failure {
+    color: var(--red-500);
+    border: 1px solid var(--red);
+    background: rgba($color: var(--red), $alpha: 0.1);
+  }
+}
+
+.mainTitle {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-small);
+}
+
+.layout {
+  justify-content: flex-end;
+}
+
+.argoLogo {
+  height: 30px;
+}
+
+.launch {
+  margin: 20px 0;
+}
+
+.frameContainer {
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+  height: 100%;
+  background: var(--white);
+}
+
+.frameHeader {
+  height: 40px;
+  position: relative;
+  background: var(--primary-main);
+  color: var(--white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+
+  .closeIcon {
+    position: absolute;
+    right: 0;
+
+    :global(.bp3-icon) {
+      color: var(--white) !important;
+    }
+  }
+
+  .argoLogo {
+    height: 24px;
+    margin-right: 12px;
+  }
+}
+
+.confirmText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.argoFrame {
+  height: calc(100% - 40px);
+}
+
+.applications {
+  padding: 8px 0;
+  margin: 16px 0;
+  border-top: 1px solid rgba(217, 218, 230, 0.6);
+  border-bottom: 1px solid rgba(217, 218, 230, 0.6);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0;
+}
+
+.serverStatusContainer {
+  display: inline;
+}
+
+.gitOpsStatusContainer {
+  margin-top: 12px;
+  // display: flex;
+}
+
+.gitOpsServerStatus {
+  background: var(--primary-main);
+  color: var(--white);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.connectionStatus,
+.healthStatus {
+  margin: 8px 0;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.statusPopOverContainer {
+  padding: 16px !important;
+  color: var(--white) !important;
+}
+
+.verificationStep {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 32px;
+  display: flex;
+  align-items: center;
+
+  .stepDesc {
+    margin-left: 16px;
+  }
+}
+
+.titleStep {
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.paddingLeft {
+  padding-left: 3.75rem !important;
+}
+
+.mappedProjectBadge {
+  --gitops-mapped-project-bg: var(--primary-2);
+  --gitops-mapped-project-color: var(--grey-900);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 0 var(--spacing-3);
+  margin-bottom: var(--spacing-2);
+  margin-right: var(--spacing-3);
+  color: var(--gitops-mapped-project-color);
+  background-color: var(--gitops-mapped-project-bg);
+  height: 20px;
+  font-size: var(--font-size-small);
+  column-gap: 6px;
+  width: fit-content;
+
+  &.groupedProjectsBadge {
+    --gitops-mapped-project-bg: var(--grey-100);
+    --gitops-mapped-project-color: var(--grey-600);
+  }
+}
+
+.healthStatusPadding {
+  padding-left: var(--spacing-small) !important;
+}
+
+.mappedProjectContainer {
+  padding-top: var(--spacing-small) !important;
+  padding-bottom: var(--spacing-small) !important;
+}
+
+.descriptionIcon {
+  padding-left: var(--spacing-medium) !important;
+}
+
+.descriptionTitle {
+  font-weight: 700 !important;
+  font-size: var(--font-size-small) !important;
+  padding-bottom: var(--spacing-small) !important;
+}

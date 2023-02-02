@@ -155,9 +155,7 @@ Array [
     }
   >
     <FFGitSyncProvider>
-       
       <TargetDetailPage />
-       
     </FFGitSyncProvider>
   </RouteWithLayout>,
   <RouteWithLayout

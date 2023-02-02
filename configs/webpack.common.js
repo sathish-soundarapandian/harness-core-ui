@@ -35,7 +35,8 @@ const enableTIUI = process.env.ENABLE_TI_UI === 'true'
 const enableSTO = process.env.ENABLE_STO !== 'false'
 const enableCODE = process.env.ENABLE_CODE === 'true'
 const enableFFUI = process.env.ENABLE_FF_UI !== 'false'
-const enableIACM = process.env.ENABLE_IACM === 'true'
+const enableIACM = process.env.ENABLE_IACM !== 'false'
+const enableSSCS = process.env.ENABLE_SSCS === 'true'
 
 console.log('Common build flags')
 console.table({
@@ -48,7 +49,8 @@ console.table({
   enableSTO,
   enableCODE,
   enableFFUI,
-  enableIACM
+  enableIACM,
+  enableSSCS
 })
 
 const config = {
@@ -206,7 +208,8 @@ const config = {
         enableTIUI,
         enableCODE,
         enableFFUI,
-        enableIACM
+        enableIACM,
+        enableSSCS
       })
     ),
     new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/),
@@ -247,7 +250,7 @@ if (!enableTIUI) {
 if (!enableChaosUI) {
   // render a mock app when Chaos MF is disabled
   config.resolve.alias['chaos/MicroFrontendApp'] = ChildAppError
-  config.resolve.alias['chaos/PipelineExperimentSelect'] = ChildAppError
+  config.resolve.alias['chaos/SelectPipelineExperiment'] = ChildAppError
   config.resolve.alias['chaos/ExperimentPreview'] = ChildAppError
   config.resolve.alias['chaos/ChaosStepExecution'] = ChildAppError
   config.resolve.alias['chaos/ResilienceViewContent'] = ChildAppError
@@ -273,6 +276,10 @@ if (!enableFFUI) {
 if (!enableIACM) {
   config.resolve.alias['iacm/MicroFrontendApp'] = ChildAppError
   config.resolve.alias['iacm/IACMStage'] = ChildAppError
+}
+
+if (!enableSSCS) {
+  config.resolve.alias['sscs/MicroFrontendApp'] = ChildAppError
 }
 
 module.exports = config

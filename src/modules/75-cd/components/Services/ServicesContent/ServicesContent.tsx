@@ -5,23 +5,29 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { Card, Layout } from '@harness/uicore'
+import { Button, Card, Layout } from '@harness/uicore'
+import moment from 'moment'
 import { Page } from '@common/exports'
 import {
   GetServiceDetailsV2QueryParams,
+  GetServicesGrowthTrendQueryParams,
   ServiceDetailsDTO,
   ServiceDetailsDTOV2,
   useGetServiceDetails,
-  useGetServiceDetailsV2
+  useGetServiceDetailsV2,
+  useGetServicesGrowthTrend
 } from 'services/cd-ng'
 import { DeploymentsTimeRangeContext, useServiceStore, Views } from '@cd/components/Services/common'
 import {
   ServiceInstancesWidget,
   ServiceInstanceWidgetProps
 } from '@cd/components/Services/ServiceInstancesWidget/ServiceInstancesWidget'
-import { MostActiveServicesWidget } from '@cd/components/Services/MostActiveServicesWidget/MostActiveServicesWidget'
+import {
+  MostActiveServicesRef,
+  MostActiveServicesWidgetRef
+} from '@cd/components/Services/MostActiveServicesWidget/MostActiveServicesWidget'
 import { DeploymentsWidget } from '@cd/components/Services/DeploymentsWidget/DeploymentsWidget'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ServicesList, ServicesListProps } from '@cd/components/Services/ServicesList/ServicesList'
@@ -77,6 +83,26 @@ export const ServicesContent: React.FC = () => {
     lazy: !CDC_DASHBOARD_ENHANCEMENT_NG
   })
 
+  //Service Growth Trend properties
+  const servicesGrowthTrendQueryParams: GetServicesGrowthTrendQueryParams = useMemo(
+    () => ({
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      startTime: moment().utc().startOf('day').subtract(6, 'months').toDate().getTime(),
+      endTime: moment().utc().endOf('day').toDate().getTime(),
+      timeGroupByType: 'DAY'
+    }),
+    [accountId, orgIdentifier, projectIdentifier]
+  )
+  const {
+    data: servicesGrowthTrendData,
+    refetch: refetchGetServicesGrowthTrend,
+    loading: servicesGrowthTrendLoading
+  } = useGetServicesGrowthTrend({
+    queryParams: servicesGrowthTrendQueryParams
+  })
+
   const [serviceDetailsLoading, serviceDetails, serviceDetailsError, serviceDetailsRefetch] =
     CDC_DASHBOARD_ENHANCEMENT_NG ? [loadingV2, dataV2, errorV2, refetchV2] : [loading, data, error, refetch]
 
@@ -102,6 +128,7 @@ export const ServicesContent: React.FC = () => {
 
   const serviceInstanceProps: ServiceInstanceWidgetProps = {
     serviceCount: serviceDeploymentDetailsList.length,
+    serviceGrowthTrendData: servicesGrowthTrendData,
     ...instanceWidgetData.reduce(
       (count, item) => {
         count['serviceInstancesCount'] += item?.totalInstances || 0
@@ -112,16 +139,35 @@ export const ServicesContent: React.FC = () => {
       { serviceInstancesCount: 0, prodCount: 0, nonProdCount: 0 }
     )
   }
-
+  const refetchMostActiveServicesRef = useRef<MostActiveServicesRef>(null)
+  const refreshServices = () => {
+    serviceDetailsRefetch()
+    refetchGetServicesGrowthTrend()
+    refetchMostActiveServicesRef.current?.refetchData()
+  }
   return (
     <Page.Body className={css.pageBody}>
       <Layout.Vertical className={css.container}>
+        <Layout.Horizontal className={css.refreshButton}>
+          <Button
+            intent="primary"
+            icon="refresh"
+            onClick={refreshServices}
+            minimal
+            tooltipProps={{ isDark: true }}
+            tooltip={getString('common.refresh')}
+            disabled={serviceDetailsLoading || servicesGrowthTrendLoading}
+          />
+        </Layout.Horizontal>
         <DeploymentsTimeRangeContext.Provider value={{ timeRange, setTimeRange }}>
           {view === Views.INSIGHT && (
             <Layout.Horizontal margin={{ bottom: 'large' }}>
               <ServiceInstancesWidget {...serviceInstanceProps} />
               <Card className={css.card}>
-                <MostActiveServicesWidget title={getString('common.mostActiveServices')} />
+                <MostActiveServicesWidgetRef
+                  title={getString('common.mostActiveServices')}
+                  ref={refetchMostActiveServicesRef}
+                />
                 <div className={css.separator} />
                 <DeploymentsWidget />
               </Card>

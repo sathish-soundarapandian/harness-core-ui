@@ -223,12 +223,12 @@ exports[`Jira Approval fetch projects show error if failed to fetch projects 1`]
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  style="width: 390px;"
+                  style="width: 372px;"
                 >
                   <button
                     class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.connectorRef"
-                    style="width: 390px;"
+                    style="width: 372px;"
                     type="button"
                   >
                     <span
@@ -858,12 +858,12 @@ exports[`Jira Approval tests Basic snapshot - deploymentform mode: jira-approval
           >
             <div
               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              style="width: 385px;"
+              style="width: 400px;"
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                 data-testid="cr-field-spec.connectorRef"
-                style="width: 385px;"
+                style="width: 400px;"
                 type="button"
               >
                 <span
@@ -1176,12 +1176,12 @@ exports[`Jira Approval tests Basic snapshot - inputset mode: input set with erro
           >
             <div
               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              style="width: 385px;"
+              style="width: 400px;"
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                 data-testid="cr-field-spec.connectorRef"
-                style="width: 385px;"
+                style="width: 400px;"
                 type="button"
               >
                 <span
@@ -1626,13 +1626,13 @@ exports[`Jira Approval tests Edit stage - readonly: edit stage view readonly 1`]
               >
                 <div
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
-                  style="width: 390px;"
+                  style="width: 372px;"
                 >
                   <button
                     class="bp3-button bp3-disabled bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                     data-testid="cr-field-spec.connectorRef"
                     disabled=""
-                    style="width: 390px;"
+                    style="width: 372px;"
                     tabindex="-1"
                     type="button"
                   >
@@ -2167,12 +2167,12 @@ exports[`Jira Approval tests deploymentform mode - readonly: jira-approval-deplo
           >
             <div
               class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-              style="width: 385px;"
+              style="width: 400px;"
             >
               <button
                 class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main container Button--iconOnly Button--without-shadow Button--withRightIcon"
                 data-testid="cr-field-spec.connectorRef"
-                style="width: 385px;"
+                style="width: 400px;"
                 type="button"
               >
                 <span

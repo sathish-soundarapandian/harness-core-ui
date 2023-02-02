@@ -70,6 +70,7 @@ export default function DeployEnvironmentEntityWidget({
   readonly,
   allowableTypes,
   onUpdate,
+  serviceIdentifiers,
   stageIdentifier,
   deploymentType,
   customDeploymentRef,
@@ -336,6 +337,7 @@ export default function DeployEnvironmentEntityWidget({
                     initialValues={initialValues}
                     readonly={readonly}
                     allowableTypes={allowableTypes}
+                    serviceIdentifiers={serviceIdentifiers}
                     stageIdentifier={stageIdentifier}
                     deploymentType={deploymentType}
                     customDeploymentRef={customDeploymentRef}
@@ -359,6 +361,7 @@ export default function DeployEnvironmentEntityWidget({
                           readonly={readonly}
                           allowableTypes={allowableTypes}
                           isMultiEnvironment
+                          serviceIdentifiers={serviceIdentifiers}
                           stageIdentifier={stageIdentifier}
                           deploymentType={deploymentType}
                           customDeploymentRef={customDeploymentRef}
@@ -379,7 +382,8 @@ export default function DeployEnvironmentEntityWidget({
                     initialValues={initialValues}
                     readonly={readonly}
                     allowableTypes={allowableTypes}
-                    isMultiEnvironment={isMultiEnvironment}
+                    isMultiEnvironment={false}
+                    serviceIdentifiers={serviceIdentifiers}
                     stageIdentifier={stageIdentifier}
                     deploymentType={deploymentType}
                     customDeploymentRef={customDeploymentRef}

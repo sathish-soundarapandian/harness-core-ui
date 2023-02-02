@@ -42,7 +42,11 @@ export function PolicyEvaluationTab(props: ExecutionStepDetailsTabProps): React.
         </div>
       ) : null}
       <StepDetails step={step} executionMetadata={executionMetadata} />
-      <PolicyEvaluationContent step={step} executionMetadata={executionMetadata} />
+      <PolicyEvaluationContent
+        step={step}
+        executionMetadata={executionMetadata}
+        policySetOutputPath={'outcomes.output'}
+      />
     </div>
   )
 }

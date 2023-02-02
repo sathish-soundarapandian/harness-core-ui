@@ -72,13 +72,25 @@ export function ServiceOverrides(): React.ReactElement {
   const { expressions } = useVariablesExpression()
   const rbacPermission = {
     resource: {
-      resourceType: ResourceType.ENVIRONMENT
+      resourceType: ResourceType.ENVIRONMENT,
+      resourceIdentifier: environmentIdentifier
+    },
+    resourceScope: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
     },
     permission: PermissionIdentifier.EDIT_ENVIRONMENT
   }
   const [canEdit] = usePermission({
     resource: {
-      resourceType: ResourceType.ENVIRONMENT
+      resourceType: ResourceType.ENVIRONMENT,
+      resourceIdentifier: environmentIdentifier
+    },
+    resourceScope: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier
     },
     permissions: [PermissionIdentifier.EDIT_ENVIRONMENT]
   })

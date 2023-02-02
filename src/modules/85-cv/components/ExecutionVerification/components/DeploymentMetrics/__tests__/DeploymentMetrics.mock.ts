@@ -230,323 +230,44 @@ export const transactionMetricInfoSummary: RestResponseTransactionMetricInfoSumm
 
 export const transformMetricsExpectedResult = [
   {
-    connectorName: 'new relic',
-    controlData: [
+    controlData: [],
+    deeplinkURL: undefined,
+    healthSource: {
+      identifier: 'KQE5GbbKTD6w39T6_jwUog/Templatised_sumologic_metrics_health_source',
+      name: 'Templatised sumologic metrics health source',
+      providerType: 'METRICS',
+      type: 'SumologicMetrics'
+    },
+    metricName: 'Performance metric',
+    nodeRiskCount: {
+      anomalousNodeCount: 0,
+      nodeRiskCounts: [
+        { count: 0, displayName: 'Unhealthy', risk: 'UNHEALTHY' },
+        { count: 0, displayName: 'Warning', risk: 'WARNING' },
+        { count: 0, displayName: 'Healthy', risk: 'HEALTHY' }
+      ],
+      totalNodeCount: 0
+    },
+    risk: undefined,
+    selectedDataFormat: { label: 'Raw', value: 'raw' },
+    testData: [],
+    thresholds: [
       {
-        name: 'a',
-        points: [
-          { x: 1635868860000, y: 30.666666666666668 },
-          { x: 1635869760000, y: 31.333333333333332 },
-          { x: 1635870660000, y: 27 },
-          { x: 1635871560000, y: 25.666666666666668 },
-          { x: 1635872460000, y: 28 }
-        ]
+        action: 'Ignore',
+        criteria: { lessThanThreshold: 0, measurementType: 'ratio' },
+        id: '6L6gbC9oRlCS8ypbtCi0rA',
+        isUserDefined: false,
+        thresholdType: 'IGNORE'
+      },
+      {
+        action: 'Ignore',
+        criteria: { lessThanThreshold: 0, measurementType: 'delta' },
+        id: 'Fh-N1OUnTmmrBWhqqWqJvQ',
+        isUserDefined: false,
+        thresholdType: 'IGNORE'
       }
     ],
-    healthSourceType: 'NEW_RELIC',
-    metricName: 'Calls per Minute',
-    nodeRiskCount: undefined,
-    risk: 'NO_ANALYSIS',
-    testData: [
-      {
-        name: 'dummypipeline-nr-deployment-canary-fdf55df6-z27gv',
-        points: [
-          { x: 1635868860000, y: 30 },
-          { x: 1635869760000, y: 10 },
-          { x: 1635870660000, y: null },
-          { x: 1635871560000, y: null },
-          { x: 1635872460000, y: null }
-        ],
-        risk: 'NO_ANALYSIS'
-      }
-    ],
-    transactionName: 'WebTransaction/WebServletPath/RequestLogin'
-  },
-  {
-    connectorName: 'new relic',
-    controlData: [
-      {
-        name: undefined,
-        points: [
-          { x: 1635868860000, y: 48.666666666666664 },
-          { x: 1635869760000, y: 48.333333333333336 },
-          { x: 1635870660000, y: 49 },
-          { x: 1635871560000, y: 49.333333333333336 },
-          { x: 1635872460000, y: 47 }
-        ]
-      }
-    ],
-    healthSourceType: 'NEW_RELIC',
-    metricName: 'Calls per Minute',
-    nodeRiskCount: undefined,
-    risk: 'NO_ANALYSIS',
-    testData: [
-      {
-        name: 'dummypipeline-nr-deployment-canary-fdf55df6-z27gv',
-        points: [
-          { x: 1635868860000, y: 49 },
-          { x: 1635869760000, y: 17 },
-          { x: 1635870660000, y: null },
-          { x: 1635871560000, y: null },
-          { x: 1635872460000, y: null }
-        ],
-        risk: 'NO_ANALYSIS'
-      }
-    ],
-    transactionName: 'WebTransaction/Servlet/RequestException'
-  },
-  {
-    connectorName: 'new relic',
-    controlData: [
-      {
-        name: undefined,
-        points: [
-          { x: 1635868860000, y: 48.333333333333336 },
-          { x: 1635869760000, y: 48.666666666666664 },
-          { x: 1635870660000, y: 48.666666666666664 },
-          { x: 1635871560000, y: 49.666666666666664 },
-          { x: 1635872460000, y: 46.5 }
-        ]
-      }
-    ],
-    healthSourceType: 'NEW_RELIC',
-    metricName: 'Calls per Minute',
-    nodeRiskCount: undefined,
-    risk: 'NO_ANALYSIS',
-    testData: [
-      {
-        name: 'dummypipeline-nr-deployment-canary-fdf55df6-z27gv',
-        points: [
-          { x: 1635868860000, y: 50 },
-          { x: 1635869760000, y: 18 },
-          { x: 1635870660000, y: null },
-          { x: 1635871560000, y: null },
-          { x: 1635872460000, y: null }
-        ],
-        risk: 'NO_ANALYSIS'
-      }
-    ],
-    transactionName: 'WebTransaction/Servlet/default'
-  },
-  {
-    connectorName: 'new relic',
-    controlData: [
-      {
-        name: undefined,
-        points: [
-          { x: 1635868860000, y: 54.666666666666664 },
-          { x: 1635869760000, y: 43.333333333333336 },
-          { x: 1635870660000, y: 48.666666666666664 },
-          { x: 1635871560000, y: 46.666666666666664 },
-          { x: 1635872460000, y: 43 }
-        ]
-      }
-    ],
-    healthSourceType: 'NEW_RELIC',
-    metricName: 'Calls per Minute',
-    nodeRiskCount: undefined,
-    risk: 'NO_ANALYSIS',
-    testData: [
-      {
-        name: 'dummypipeline-nr-deployment-canary-fdf55df6-z27gv',
-        points: [
-          { x: 1635868860000, y: 47 },
-          { x: 1635869760000, y: 16 },
-          { x: 1635870660000, y: null },
-          { x: 1635871560000, y: null },
-          { x: 1635872460000, y: null }
-        ],
-        risk: 'NO_ANALYSIS'
-      }
-    ],
-    transactionName: 'WebTransaction/JSP/inside/display.jsp'
-  },
-  {
-    connectorName: 'new relic',
-    controlData: [
-      {
-        name: undefined,
-        points: [
-          { x: 1635868860000, y: 54.666666666666664 },
-          { x: 1635869760000, y: 43.333333333333336 },
-          { x: 1635870660000, y: 48.666666666666664 },
-          { x: 1635871560000, y: 46.666666666666664 },
-          { x: 1635872460000, y: 43 }
-        ]
-      }
-    ],
-    healthSourceType: 'NEW_RELIC',
-    metricName: 'Calls per Minute',
-    nodeRiskCount: undefined,
-    risk: 'NO_ANALYSIS',
-    testData: [
-      {
-        name: 'dummypipeline-nr-deployment-canary-fdf55df6-z27gv',
-        points: [
-          { x: 1635868860000, y: 47 },
-          { x: 1635869760000, y: 16 },
-          { x: 1635870660000, y: null },
-          { x: 1635871560000, y: null },
-          { x: 1635872460000, y: null }
-        ],
-        risk: 'NO_ANALYSIS'
-      }
-    ],
-    transactionName: 'WebTransaction/Servlet/Display'
-  },
-  {
-    connectorName: 'new relic',
-    controlData: [
-      {
-        name: undefined,
-        points: [
-          { x: 1635868860000, y: 0.06666666666666667 },
-          { x: 1635869760000, y: 0.06 },
-          { x: 1635870660000, y: 0.06666666666666667 },
-          { x: 1635871560000, y: 0.06666666666666667 },
-          { x: 1635872460000, y: 0.065 }
-        ]
-      }
-    ],
-    healthSourceType: 'NEW_RELIC',
-    metricName: 'Apdex',
-    nodeRiskCount: undefined,
-    risk: 'HEALTHY',
-    testData: [
-      {
-        name: 'dummypipeline-nr-deployment-canary-fdf55df6-z27gv',
-        points: [
-          { x: 1635868860000, y: 0.06 },
-          { x: 1635869760000, y: 0.06 },
-          { x: 1635870660000, y: null },
-          { x: 1635871560000, y: null },
-          { x: 1635872460000, y: null }
-        ],
-        risk: 'HEALTHY'
-      }
-    ],
-    transactionName: 'WebTransaction/Servlet/RequestException'
-  },
-  {
-    connectorName: 'new relic',
-    controlData: [
-      {
-        name: undefined,
-        points: [
-          { x: 1635868860000, y: 0.3333333333333333 },
-          { x: 1635869760000, y: 0 },
-          { x: 1635870660000, y: 0 },
-          { x: 1635871560000, y: 0 },
-          { x: 1635872460000, y: 0 }
-        ]
-      }
-    ],
-    healthSourceType: 'NEW_RELIC',
-    metricName: 'Apdex',
-    nodeRiskCount: undefined,
-    risk: 'NO_ANALYSIS',
-    testData: [
-      {
-        name: 'harness-pr-cv-nextgen-prod-deployment-5b5f48c558-s94wf',
-        points: [
-          { x: 1635868860000, y: null },
-          { x: 1635869760000, y: 1 },
-          { x: 1635870660000, y: null },
-          { x: 1635871560000, y: null },
-          { x: 1635872460000, y: null }
-        ],
-        risk: 'NO_ANALYSIS'
-      }
-    ],
-    transactionName: 'WebTransaction/JSP/index.jsp'
-  },
-  {
-    connectorName: 'new relic',
-    controlData: [
-      {
-        name: undefined,
-        points: [
-          { x: 1635868860000, y: 1 },
-          { x: 1635869760000, y: 1 },
-          { x: 1635870660000, y: 1 },
-          { x: 1635871560000, y: 1 },
-          { x: 1635872460000, y: 1 }
-        ]
-      }
-    ],
-    healthSourceType: 'NEW_RELIC',
-    metricName: 'Apdex',
-    nodeRiskCount: undefined,
-    risk: 'HEALTHY',
-    testData: [
-      {
-        name: 'dummypipeline-nr-deployment-canary-fdf55df6-z27gv',
-        points: [
-          { x: 1635868860000, y: 1 },
-          { x: 1635869760000, y: 1 },
-          { x: 1635870660000, y: null },
-          { x: 1635871560000, y: null },
-          { x: 1635872460000, y: null }
-        ],
-        risk: 'HEALTHY'
-      }
-    ],
-    transactionName: 'WebTransaction/JSP/inside/display.jsp'
-  },
-  {
-    connectorName: 'new relic',
-    controlData: [{ name: undefined, points: [] }],
-    healthSourceType: 'NEW_RELIC',
-    metricName: 'Apdex',
-    nodeRiskCount: undefined,
-    risk: 'NO_DATA',
-    testData: [
-      {
-        name: 'dummypipeline-nr-deployment-canary-fdf55df6-z27gv',
-        points: [
-          { x: 1635868860000, y: 0 },
-          { x: 1635869760000, y: null },
-          { x: 1635870660000, y: null },
-          { x: 1635871560000, y: null },
-          { x: 1635872460000, y: null }
-        ],
-        risk: 'NO_DATA'
-      }
-    ],
-    transactionName: 'WebTransaction/Custom/load test/107'
-  },
-  {
-    connectorName: 'new relic',
-    controlData: [
-      {
-        name: undefined,
-        points: [
-          { x: 1635868860000, y: 0.6666666666666666 },
-          { x: 1635869760000, y: 0.5 },
-          { x: 1635870660000, y: 0.5 },
-          { x: 1635871560000, y: 0.5 },
-          { x: 1635872460000, y: 0.5 }
-        ]
-      }
-    ],
-    healthSourceType: 'NEW_RELIC',
-    metricName: 'Apdex',
-    nodeRiskCount: undefined,
-    risk: 'HEALTHY',
-    testData: [
-      {
-        name: 'dummypipeline-nr-deployment-canary-fdf55df6-z27gv',
-        points: [
-          { x: 1635868860000, y: 1 },
-          { x: 1635869760000, y: 1 },
-          { x: 1635870660000, y: null },
-          { x: 1635871560000, y: null },
-          { x: 1635872460000, y: null }
-        ],
-        risk: 'HEALTHY'
-      }
-    ],
-    transactionName: 'WebTransaction/Servlet/default'
+    transactionName: undefined
   }
 ]
 

@@ -36,6 +36,7 @@ const StepProcessing: FC<StepDelegateData> = props => {
   const { getString } = useStrings()
   const [showSuccess, setShowSuccess] = useState(false)
   const [showError, setShowError] = useState(false)
+  const [isTroubleShootVisible, setTroubleShootVisible] = React.useState(false)
   const [isHeartBeatVerified, setVerifyHeartBeat] = useState(false)
   const [counter, setCounter] = useState(0)
   const { trackEvent } = useTelemetry()
@@ -54,7 +55,6 @@ const StepProcessing: FC<StepDelegateData> = props => {
     },
     debounce: 200
   })
-  const [isTroubleShootVisible, setTroubleShootVisible] = React.useState(false)
 
   const showToastWarning = (): void => {
     /* istanbul ignore else */ if (!isHeartBeatVerified) {
@@ -114,19 +114,22 @@ const StepProcessing: FC<StepDelegateData> = props => {
           <Layout.Horizontal className={css.textPadding}>
             <Icon name="danger-icon" size={25} className={css.iconPadding} />
             <Text className={css.dangerColor} font={{ variation: FontVariation.H6 }} color={Color.RED_600}>
-              {getString('cd.delegateFailed')}
+              {getString('common.delegateFailed')}
             </Text>
           </Layout.Horizontal>
           <Layout.Horizontal width={'100%'}>
             <Layout.Vertical width={'83%'}>
               <Text className={css.textPadding}>{getString('cd.delegateFailText1')}</Text>
-              <Text className={css.textPadding}>{getString('cd.delegateFailText2')}</Text>
+              <Text className={css.textPadding}>{getString('common.delegateFailText2')}</Text>
               <Layout.Horizontal className={css.textPadding}>
                 <Button
                   variation={ButtonVariation.SECONDARY}
                   onClick={() => {
-                    verifyHeartbeat()
                     setShowError(false)
+                    setShowSuccess(false)
+                    setTroubleShootVisible(false)
+                    setCounter(0)
+                    verifyHeartbeat()
                   }}
                 >
                   {`${getString('retry')} ${getString('connection')}`}

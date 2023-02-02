@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { AllowedTypes } from '@harness/uicore'
+import type { AllowedTypes, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import type {
   StepElementConfig,
@@ -15,7 +15,7 @@ import type {
   StageElementConfig
 } from 'services/cd-ng'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { TemplateStepNode, TemplateLinkConfig, EntityGitDetails } from 'services/pipeline-ng'
+import type { TemplateStepNode, TemplateLinkConfig, EntityGitDetails, PolicyConfig } from 'services/pipeline-ng'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import type { StageElementWrapper } from '@pipeline/utils/pipelineTypes'
@@ -26,7 +26,8 @@ export enum AdvancedPanels {
   DelegateSelectors = 'delegateSelectors',
   ConditionalExecution = 'conditionalExecution',
   LoopingStrategy = 'loopingStrategy',
-  CommandFlags = 'commandFlags'
+  CommandFlags = 'commandFlags',
+  PolicyEnforcement = 'policyEnforcement'
 }
 
 export enum StepCommandsViews {
@@ -83,5 +84,6 @@ export type Values = StepOrStepGroupOrTemplateStepData & {
   template?: TemplateLinkConfig
   strategy?: any
   commandFlags?: any
+  policySets?: PolicyConfig['policySets'] | typeof RUNTIME_INPUT_VALUE
   stageType?: string
 }

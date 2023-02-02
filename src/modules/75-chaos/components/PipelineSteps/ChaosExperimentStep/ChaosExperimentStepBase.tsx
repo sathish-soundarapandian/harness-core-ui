@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { Formik, FormikForm, Container, FormInput, Layout, Button, useToggleOpen, Accordion } from '@harness/uicore'
-import { Drawer, FormGroup, Label } from '@blueprintjs/core'
+import { Formik, FormikForm, FormInput, Layout, Accordion } from '@harness/uicore'
+import { FormGroup, Label } from '@blueprintjs/core'
 import { useHistory, useParams } from 'react-router-dom'
 import { isEqual } from 'lodash-es'
 import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
@@ -20,11 +20,7 @@ import {
 import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import type { BuildStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
-import type {
-  PipelineExperimentSelectProps,
-  ChaosExperiment,
-  ExperimentPreviewProps
-} from '@chaos/interfaces/Chaos.types'
+import type { SelectPipelineExperimentProps, ExperimentPreviewProps } from '@chaos/interfaces/Chaos.types'
 import routes from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { NameIdDescription } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
@@ -35,22 +31,21 @@ import type {
   ChaosExperimentStepDataUI
 } from './ChaosExperimentStep'
 import OptionalConfiguration from './OptionalConfiguration'
-import drawerCss from '@pipeline/components/PipelineStudio/RightDrawer/RightDrawer.module.scss'
 import css from './ChaosExperimentStep.module.scss'
 
 // eslint-disable-next-line import/no-unresolved
-const PipelineExperimentSelect = React.lazy(() => import('chaos/PipelineExperimentSelect'))
+const SelectPipelineExperiment = React.lazy(() => import('chaos/SelectPipelineExperiment'))
 // eslint-disable-next-line import/no-unresolved
 const ExperimentPreview = React.lazy(() => import('chaos/ExperimentPreview'))
 
-export const MemoizedPipelineExperimentSelect = React.memo(function ResilienceViewTabContent(
-  props: PipelineExperimentSelectProps
+export const MemoizedSelectPipelineExperiment = React.memo(function MemoizedSelectPipelineExperiment(
+  props: SelectPipelineExperimentProps
 ) {
-  return <ChildAppMounter<PipelineExperimentSelectProps> ChildApp={PipelineExperimentSelect} {...props} />
+  return <ChildAppMounter<SelectPipelineExperimentProps> ChildApp={SelectPipelineExperiment} {...props} />
 })
 
 export const MemoizedExperimentPreview = React.memo(
-  function ResilienceViewTabContent(props: ExperimentPreviewProps) {
+  function MemoizedExperimentPreview(props: ExperimentPreviewProps) {
     return <ChildAppMounter<ExperimentPreviewProps> ChildApp={ExperimentPreview} {...props} />
   },
   (oldProps, newProps) => isEqual(oldProps.experimentID, newProps.experimentID)
@@ -69,12 +64,6 @@ export const ChaosExperimentStepBase = (
   } = usePipelineContext()
 
   const { getString } = useStrings()
-  const {
-    open: openExperimentDrawer,
-    isOpen: isExperimentDrawerOpen,
-    close: closeExperimentDrawer
-  } = useToggleOpen(false)
-
   const { getStageFromPipeline } = usePipelineContext()
   const { stage: currentStage } = getStageFromPipeline<BuildStageElementConfig>(selectedStageId || '')
 
@@ -137,16 +126,22 @@ export const ChaosExperimentStepBase = (
               <FormGroup>
                 <FormGroup>
                   <Label>{getString('chaos.selectChaosExperiment')}</Label>
-                  <Button
-                    data-testid="chaosExperimentReferenceField"
-                    minimal
-                    onClick={openExperimentDrawer}
-                    id={css.chaosExperimentReferenceField}
-                    rightIcon="chevron-down"
-                    iconProps={{ size: 12 }}
-                  >
-                    {formikProps.values.spec.experimentRef || getString('chaos.selectChaosExperiment')}
-                  </Button>
+                  <MemoizedSelectPipelineExperiment
+                    selectedExperimentID={formikProps.values.spec.experimentRef}
+                    onSelect={experimentID => {
+                      formikProps.setFieldValue('spec.experimentRef', experimentID)
+                    }}
+                    goToNewExperiment={query =>
+                      history.push({
+                        pathname: routes.toNewChaosExperiment({
+                          accountId: accountId,
+                          orgIdentifier: orgIdentifier,
+                          projectIdentifier: projectIdentifier
+                        }),
+                        search: query
+                      })
+                    }
+                  />
                 </FormGroup>
                 <FormInput.Text
                   label={getString('chaos.pipelineStep.expectedResilienceScoreLabel')}
@@ -169,34 +164,6 @@ export const ChaosExperimentStepBase = (
             </Layout.Vertical>
 
             <MemoizedExperimentPreview experimentID={formikProps.values.spec.experimentRef} />
-            <Drawer isOpen={isExperimentDrawerOpen} enforceFocus={true} size="80%">
-              <Button
-                data-testid="experimentReferenceFieldCloseBtn"
-                minimal
-                className={drawerCss.almostFullScreenCloseBtn}
-                icon="cross"
-                withoutBoxShadow
-                onClick={closeExperimentDrawer}
-              />
-              <Container>
-                <MemoizedPipelineExperimentSelect
-                  onSelect={(experiment: ChaosExperiment) => {
-                    formikProps.setFieldValue('spec.experimentRef', experiment.id)
-                    closeExperimentDrawer()
-                  }}
-                  goToNewExperiment={query =>
-                    history.push({
-                      pathname: routes.toNewChaosExperiment({
-                        accountId: accountId,
-                        orgIdentifier: orgIdentifier,
-                        projectIdentifier: projectIdentifier
-                      }),
-                      search: query
-                    })
-                  }
-                />
-              </Container>
-            </Drawer>
           </FormikForm>
         )
       }}

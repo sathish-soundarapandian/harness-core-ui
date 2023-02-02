@@ -27,6 +27,15 @@ jest.mock('@common/hooks/useFeatures', () => ({
   useFeatures: jest.fn(() => ({}))
 }))
 
+jest.mock('@common/navigation/SidebarProvider', () => ({
+  ...jest.requireActual('@common/navigation/SidebarProvider'),
+  useSidebar: () => {
+    return {
+      navComponent: () => <div>nav component</div>
+    }
+  }
+}))
+
 jest.mock('services/cd-ng')
 const useGetLicensesAndSummaryMock = useGetLicensesAndSummary as jest.MockedFunction<any>
 useGetLicensesAndSummaryMock.mockImplementation(() => {

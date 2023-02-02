@@ -102,7 +102,7 @@ exports[`EnvironmentList Should go to edit modal by clicking edit 1`] = `
         >
           <a
             class="TabNavigation--tags TabNavigation--small"
-            href="/account/dummy/home/orgs/dummy/projects/dummy/environment"
+            href="/account/dummy/home/orgs/dummy/projects/dummy/environments"
           >
             environment
           </a>

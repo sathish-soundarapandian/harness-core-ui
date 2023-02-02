@@ -133,7 +133,12 @@ import css from './TriggersWizardPage.module.scss'
 
 type ResponseNGTriggerResponseWithMessage = ResponseNGTriggerResponse & { message?: string }
 
-const TriggersWizardPage: React.FC = (): JSX.Element => {
+interface TriggersWizardPageProps {
+  isFixedUTCTimeSchedulePanel?: boolean
+}
+
+const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
+  const { isFixedUTCTimeSchedulePanel } = props
   const { orgIdentifier, accountId, projectIdentifier, pipelineIdentifier, triggerIdentifier, module } = useParams<
     PipelineType<{
       projectIdentifier: string
@@ -1995,7 +2000,7 @@ const TriggersWizardPage: React.FC = (): JSX.Element => {
         onFormikEffect={onFormikEffect}
       >
         <TriggerOverviewPanel />
-        <SchedulePanel />
+        <SchedulePanel isFixedUTCTime={isFixedUTCTimeSchedulePanel} />
         <WebhookPipelineInputPanel gitAwareForTriggerEnabled={isNewGitSyncRemotePipeline} />
       </Wizard>
     )

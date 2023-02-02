@@ -20,8 +20,8 @@ import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/Time
 
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
-import type { PolicyStepData } from './PolicyStepTypes'
-import { MultiTypePolicySetSelector } from './PolicySets/MultiTypePolicySetSelector/MultiTypePolicySetSelector'
+import MultiTypePolicySetSelector from '@pipeline/components/PipelineSteps/Common/PolicySets/MultiTypePolicySetSelector/MultiTypePolicySetSelector'
+import type { PolicyStepData, PolicyStepFormData } from './PolicyStepTypes'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -59,7 +59,7 @@ export default function PolicyInputSetStep(props: {
       )}
       {getMultiTypeFromValue(/* istanbul ignore next */ template?.spec?.policySets) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.alignStart)}>
-          <MultiTypePolicySetSelector
+          <MultiTypePolicySetSelector<PolicyStepFormData>
             name={`${prefix}spec.policySets`}
             label={getString('common.policiesSets.policyset')}
             expressions={expressions}

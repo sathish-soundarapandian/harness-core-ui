@@ -2,8 +2,11 @@ secrets: Secrets
 home: Home
 welcome: Welcome
 help: Help
+copied: 'Copied'
+clear: Clear
 dashboards: Dashboards
 setup: Setup
+HelmChartLabel: Helm Chart
 agent: Agent
 agents: Agents
 gitopsAgents: Gitops Agents
@@ -22,6 +25,7 @@ gnupgKeys: GnuPG Keys
 featureComingSoon: This feature is coming soon.
 skip: Skip
 sync: Sync
+nextStep: Next Step
 schedule: Schedule
 coverage: Coverage
 selectService: Select Service
@@ -96,6 +100,7 @@ My: My
 ok: OK
 ID: Id
 org: Org
+askUs: ask us
 variables: Variables
 copyVariableName: Copy variable name
 copyFqn: Copy fully qualified name
@@ -242,6 +247,8 @@ ce:
 launchFirstGen: 'Launch {{module}} First Generation'
 startTrial: 'Start 14 day {{module}} Enterprise trial'
 new: new
+gitops:
+  startProvisioning: Start Provisioning
 purpose:
   welcome: 'Hello there, welcome to Harness'
   howToProceed: 'How would you like to proceed?'
@@ -742,6 +749,7 @@ perMonth: /month
 perMonthWithoutSlash: per Month
 perYearWithoutSlash: per year
 perYear: /year
+currentUTCTime: 'Current UTC Time:'
 hourly: Hourly
 daily: Daily
 yearly: Yearly
@@ -911,7 +919,7 @@ resourceCenter:
     title: Product Updates
     whatsnew: 'What’s New'
     earlyAcess: Early Access
-    releaseText: Your Harness account {{accountid}} is hosted on the harness {{clustername}} cluster. Following are the versions of various components running along with links to their release notes.
+    releaseText: Your Harness account {{accountid}} is hosted on the Harness {{clustername}} cluster. Following are the versions of various components running along with links to their release notes.
   ticketmenu:
     title: 'Contact us'
     tickets: 'My tickets'
@@ -981,7 +989,7 @@ environmentGroup:
 environmentGroups:
   label: Environment Groups
   noEnvironmentGroups:
-    label: You have No Environment Groups
+    label: You have no Environment Groups
     message: Create a new Environment Group to start configuring the deployment
 noSearchResultsFound: No results found for '{{searchTerm}}'.
 searchOther: Please search something else.
@@ -1025,7 +1033,7 @@ moduleConfig:
   restoreDefault: Restore Default Settings
 selectModules: Select Modules
 configureModuleList: Configure Module List
-codeErrorsAgents: Code Error Agents
+codeErrorsSettings: Code Error Settings
 cdAndGitops: Continuous Delivery & GitOps
 stoText: Security Testing Orchestration
 
@@ -1050,6 +1058,7 @@ executedBy: Executed By
 updatedBy: Updated By
 headerWithOptionalText: '{{header}} (Optional)'
 selectWorkload: Select Workload
+entitycreatedSuccessfully: '{{entity}} {{name}} created successfully'
 
 # Onboarding
 getStarted:
@@ -1087,11 +1096,13 @@ directly: Directly
 noAvailableTags: No available tags
 loadBalancer: Load Balancer
 environmentInputs: Environment inputs
+serviceOverrideInputs: Service Override inputs
 infrastructures: Infrastructures
 infrastructureInputs: Infrastructure inputs
 environmentPrefix: 'Environment: {{ name }}'
 infrastructurePrefix: 'Infrastructure: {{ name }}'
 schedulePanel:
+  currentUTCTime: '{{$.common.currentUTCTime}}'
   minutesLabel: 'Minutes'
   hourlyTabTitle: '{{$.common.hourly}}'
   dailyTabTitle: '{{$.common.daily}}'
@@ -1149,6 +1160,7 @@ singularLabels:
   testTarget: Test Target
   scan: Scan
   issue: Issue
+  ticket: Ticket
 pipelineExecution: Pipeline Executions
 platformServiceVersions: Platform Service Versions
 executionTab:
@@ -1200,6 +1212,13 @@ licensesConsumed: 'LICENSES CONSUMED'
 downloadCSV: 'Download CSV'
 whatIsActiveService: What is an Active Service?
 noActiveServiceData: No active Service Record found
+delegateFailed: Delegate Failed to connect to Harness
+harnessURL: 'https://app.harness.io'
+
+learnMoreDelegate: Learn more about Delegates, watch Video
+delegateFailText1Part1: Harness Delegate failed to connect to our Harness SaaS. Please make sure the infrastructure the delegate is installed on can reach
+delegateFailText2: The Delegate failed to come up on the cluster, please check to see if the pods are healthy or are already scheduled on the cluster.
+delegateSuccess: Great! You have successfully installed the Delegate.
 tabOrgs: 'Organizations: {{name}}'
 tabProjects: 'Projects: {{name}}'
 notification: Notification
@@ -1207,9 +1226,15 @@ noNotifications: No Notifications
 createFlag: Create a Flag
 learnMore: Learn more
 sloNoData: You don’t have any SLO created yet
+sloDowntimeLabel: SLO Downtime
+occurrence:
+  oneTime: One time
+  recurring: Recurring
+endTime: End time
 connectGitRepo: Connect to Git Repository
 clickToExpand: Click to expand
 configureService: Configure Service
+connect: Connect
 connectEnvironment: Connect to Environment
 moduleOverviewLabel:
   cv: Manage Service Level Objectives
@@ -1293,3 +1318,23 @@ matchType: Match type
 svcEnv2Banner: 'Harness has made a significant update to the services and environments in CD. Services and Environments now have definitions that are associated with the respective object and can be managed independent of the pipeline. This change is a forward looking change that won’t impact your existing pipelines. However, we do plan on reducing our support on the service v1 and environments v1 and plan to deprecate by end of January. We have an automated migration tool to support our users. Please contact <a href= {{support}} target="_blank" rel="noreferrer"> <b>&nbsp;support.harness.io&nbsp;</b> </a> for further questions.'
 svcEnvV2Truncated: 'Harness has made a significant update to the services and environments in CD. Services and Environments now have definitions that are associated with the respective object and can be managed ...'
 ifNotPresent: 'If Not Present'
+collapse: Collapse
+expand: Expand
+selectProject: Select Project
+googleCloudPlatform: Google Cloud Platform
+artifacts:
+  googleCloudStorage:
+    title: Google Cloud Storage
+    bucketPlaceholder: Enter Bucket
+  googleCloudSourceRepositories:
+    title: Google Cloud Source
+    cloudSourceRepository: Cloud Source Repository
+    cloudSourceRepositoryPlaceholder: Select Cloud Source Repository
+    sourceDirectory: Source Directory
+    sourceDirectoryPlaceholder: Enter Source Directory
+updated: Updated
+python: Python
+
+# SSCS module
+sscs: SSCS
+sscsText: Software Supply Chain Security

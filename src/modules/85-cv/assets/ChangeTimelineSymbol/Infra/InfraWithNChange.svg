@@ -1,5 +1,1 @@
-<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect opacity="0.2" width="11.3137" height="11.3137" transform="matrix(-0.707107 0.707107 0.707107 0.707107 8 0)" fill="#3DC7F6"/>
-    <rect opacity="0.3" width="8.47933" height="8.47933" transform="matrix(-0.707107 0.707107 0.707107 0.707107 8 2)" fill="#3DC7F6"/>
-    <rect width="5.43142" height="5.43142" transform="matrix(-0.707107 0.707107 0.707107 0.707107 8 4)" fill="#3DC7F6"/>
-</svg>
+<svg fill="none" height="16" viewBox="0 0 16 16" width="16" xmlns="http://www.w3.org/2000/svg"><g fill="#3dc7f6"><path d="m0 0h11.3137v11.3137h-11.3137z" opacity=".2" transform="matrix(-.707107 .707107 .707107 .707107 8 0)"/><path d="m0 0h8.47933v8.47933h-8.47933z" opacity=".3" transform="matrix(-.707107 .707107 .707107 .707107 8 2)"/><path d="m0 0h5.43142v5.43142h-5.43142z" transform="matrix(-.707107 .707107 .707107 .707107 8 4)"/></g></svg>

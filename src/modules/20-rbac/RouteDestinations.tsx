@@ -48,7 +48,7 @@ import ResourceGroupsResourceModalBody from '@rbac/components/ResourceGroupsRend
 import ResourceGroupsResourceRenderer from '@rbac/components/ResourceGroupsRenderer/ResourceGroupsResourceRenderer'
 import UserGroupsResourceModalBody from '@rbac/components/UserGroupsRenderer/UserGroupsResourceModalBody'
 import UserGroupsResourceRenderer from '@rbac/components/UserGroupsRenderer/UserGroupsResourceRenderer'
-import AuditTrailFactory, { ResourceScope } from '@audit-trail/factories/AuditTrailFactory'
+import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
 import type { ResourceDTO } from 'services/audit'
 
 RbacFactory.registerResourceCategory(ResourceCategory.SHARED_RESOURCES, {

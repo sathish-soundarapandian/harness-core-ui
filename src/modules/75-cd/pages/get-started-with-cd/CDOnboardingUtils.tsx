@@ -8,6 +8,7 @@
 import { set } from 'lodash-es'
 import { customAlphabet } from 'nanoid'
 import type { IconName } from '@harness/icons'
+import type { SelectOption } from '@harness/uicore'
 import { Connectors } from '@connectors/constants'
 import { gitStoreTypes } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { ManifestStores } from '@pipeline/components/ManifestSelection/ManifestInterface'
@@ -36,8 +37,11 @@ import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/
 import type { TextReferenceInterface } from '@secrets/components/TextReference/TextReference'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import type { UseSaveSuccessResponse } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
+import type { Servicev1Application } from 'services/gitops'
 import type { SelectAuthenticationMethodInterface } from './SelectInfrastructure/SelectAuthenticationMethod'
 import type { SelectGitProviderInterface } from './ConfigureService/ManifestRepoTypes/SelectGitProvider'
+import { CREDENTIALS_TYPE } from './ConfigureGitops/AuthTypeForm'
 
 export const DOCUMENT_URL = 'https://www.harness.io/technical-blog/deploy-in-5-minutes-with-a-delegate-first-approach'
 export interface PipelineRefPayload {
@@ -47,6 +51,11 @@ export interface PipelineRefPayload {
   deploymentType: string
 }
 
+export enum Scope {
+  PROJECT = 'project',
+  ORG = 'org',
+  ACCOUNT = 'account'
+}
 export interface DelegateSuccessHandler {
   delegateCreated: boolean
   delegateInstalled?: boolean
@@ -68,6 +77,7 @@ export const SAMPLE_MANIFEST_FOLDER = 'Sample Manifest Onboarding'
 export const DEFAULT_PIPELINE_NAME = 'Sample Pipeline'
 export const EMPTY_STRING = ''
 export const ONBOARDING_PREFIX = 'onboarding'
+export const DEFAULT_SAMPLE_REPO = 'https://github.com/sample-repo-appln'
 
 const DEFAULT_STAGE_ID = 'Stage'
 const DEFAULT_STAGE_TYPE = 'Deployment'
@@ -88,6 +98,20 @@ export interface ServiceData {
   artifactToDeploy?: string
   artifactData?: ArtifactoryGenericFormInterface
   fileNodesData?: FileStoreNodeDTO[]
+}
+
+export interface RepoDataType {
+  accountIdentifier?: string
+  agentIdentifier?: string
+  createdAt?: string
+  hasRepo?: boolean
+  identifier?: string
+  lastModifiedAt?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  repository?: RepositoryInterface
+  repositoryCredentialsId?: string
+  stale?: boolean
 }
 
 export interface ArtifactoryGenericFormInterface {
@@ -146,6 +170,164 @@ export const defaultArtifactConfig = {
     }
   }
 } as ArtifactListConfig
+
+export enum RevisionType {
+  Branch = 'Branch',
+  Tags = 'Tags'
+}
+
+export const revisionTypeArray: SelectOption[] = [
+  {
+    label: RevisionType.Branch,
+    value: RevisionType.Branch
+  },
+  {
+    label: RevisionType.Tags,
+    value: RevisionType.Tags
+  }
+]
+
+export interface RepositoriesRepository {
+  connectionType?: string
+  authType?: string
+  /**
+   * EnableLFS specifies whether git-lfs support should be enabled for this repo. Only valid for Git repositories.
+   */
+  enableLfs?: boolean
+  enableOCI?: boolean
+  githubAppEnterpriseBaseUrl?: string
+  githubAppID?: string
+  githubAppInstallationID?: string
+  githubAppPrivateKey?: string
+  inheritedCreds?: boolean
+  insecure?: boolean
+  insecureIgnoreHostKey?: boolean
+  name?: string
+  password?: string
+  project?: string
+  proxy?: string
+  repo?: string
+  /**
+   * SSHPrivateKey contains the PEM data for authenticating at the repo server. Only used with Git repos.
+   */
+  sshPrivateKey?: string
+  tlsClientCertData?: string
+  tlsClientCertKey?: string
+  /**
+   * Type specifies the type of the repo. Can be either "git" or "helm. "git" is assumed if empty or absent.
+   */
+  type?: string
+  username?: string
+}
+
+export type RepositoryInterface = RepositoriesRepository & {
+  targetRevision?: string
+  revisionType?: RevisionType
+  path?: string
+  identifier?: string
+}
+
+export interface configInterface {
+  password?: string
+  username?: string
+  tlsClientConfig?: { insecure?: boolean; certData?: string; keyData?: string }
+  clusterConnectionType?: string
+  bearerToken?: string
+}
+
+export interface ClusterInterface {
+  bearerToken?: string
+  username?: string
+  password?: string
+  agent?: string
+  scope?: string
+  repo?: string
+  clusterType?: CIBuildInfrastructureType
+  authType?: string
+  clusterResources?: boolean
+  certData?: string
+  keyData?: string
+  config?: configInterface
+  name?: string
+  identifier?: string
+  namespaces?: string[]
+  project?: string
+  server?: string
+  serverVersion?: string
+}
+
+export interface APIError extends Error {
+  data: {
+    message: string
+    error?: string
+  }
+}
+
+export const newRepositoryData = {
+  targetRevision: '',
+  revisionType: RevisionType.Branch,
+  path: '',
+  repo: DEFAULT_SAMPLE_REPO,
+  type: 'git',
+  identifier: ''
+} as RepositoryInterface
+
+export const intialClusterData = {
+  name: '',
+  server: '',
+  authType: CREDENTIALS_TYPE.USERNAME_PASSWORD,
+  repo: '',
+  bearerToken: '',
+  certData: '',
+  keyData: '',
+  tags: {},
+  identifier: '',
+  agent: '',
+  scope: '',
+  clusterType: CIBuildInfrastructureType.Cloud
+} as ClusterInterface
+
+export const initialApplicationData = {
+  accountIdentifier: '',
+  orgIdentifier: '',
+  projectIdentifier: '',
+  agentIdentifier: '',
+  name: '',
+  clusterIdentifier: '',
+  repoIdentifier: '',
+  app: {
+    metadata: {
+      name: '',
+      namespace: '',
+      uid: '',
+      resourceVersion: '',
+      generation: '',
+      creationTimestamp: '',
+      managedFields: []
+    },
+    spec: {
+      source: {
+        repoURL: '',
+        path: '',
+        targetRevision: ''
+      },
+      destination: {
+        server: ''
+      },
+      project: ''
+    },
+    status: {
+      sync: {
+        comparedTo: {
+          source: {},
+          destination: {}
+        }
+      },
+      health: {},
+      summary: {}
+    }
+  }
+} as Servicev1Application
 
 export const newServiceState = {
   name: 'sample_service',
@@ -220,6 +402,7 @@ export interface DelegateDataType {
   delegateInstalled: boolean
   environmentEntities: EnvironmentEntities
   delegateYAMLResponse?: RestResponseDelegateSetupDetails
+  delegateIdentifier?: string
 }
 export const newDelegateState = {
   delegate: {
@@ -233,6 +416,122 @@ export const newDelegateState = {
       namespace: ''
     },
     delegateYAMLResponse: undefined
+  }
+}
+
+export const SUBMIT_HANDLER_MAP_FOR_CLUSTER = {
+  [CREDENTIALS_TYPE.USERNAME_PASSWORD]: (data: ClusterInterface): ClusterInterface | undefined => {
+    const { config, server, name, namespaces, project } = data
+    if (!config?.password || !config?.username || !server) {
+      return
+    }
+    let clusterPayload: ClusterInterface = {
+      config: {
+        password: config?.password,
+        username: config?.username,
+        tlsClientConfig: { insecure: true },
+        clusterConnectionType: 'USERNAME_PASSWORD'
+      },
+      server,
+      name,
+      namespaces,
+      project
+    }
+
+    clusterPayload = { ...clusterPayload }
+    return clusterPayload
+  },
+  [CREDENTIALS_TYPE.CLIENT_KEY_CERTIFICATE]: (data: ClusterInterface): ClusterInterface | undefined => {
+    const { namespaces, server, name, certData, keyData, project } = data
+    if (!certData || !keyData || !server) {
+      return
+    }
+    let clusterPayload: ClusterInterface = {
+      namespaces,
+      project,
+      config: {
+        tlsClientConfig: {
+          certData,
+          keyData
+        },
+        clusterConnectionType: 'CLIENT_KEY_CERTIFICATE'
+      },
+      server,
+      name
+    }
+
+    clusterPayload = { ...clusterPayload }
+    return clusterPayload
+  },
+  [CREDENTIALS_TYPE.SERVICE_ACCOUNT]: (data: ClusterInterface): ClusterInterface | undefined => {
+    const { namespaces, server, name, bearerToken, project } = data
+    if (!bearerToken || !server) {
+      return
+    }
+    let clusterPayload: ClusterInterface = {
+      namespaces,
+      project,
+      config: {
+        bearerToken,
+        tlsClientConfig: { insecure: true },
+        clusterConnectionType: 'SERVICE_ACCOUNT'
+      },
+      server,
+      name
+    }
+    clusterPayload = { ...clusterPayload }
+    return clusterPayload
+  }
+}
+
+export interface PayloadInterface {
+  repositoryData?: RepositoryInterface
+  clusterData?: ClusterInterface
+  name?: string
+}
+
+export const getAppPayload = (props: PayloadInterface) => {
+  const { repositoryData, clusterData, name } = props
+  return {
+    application: {
+      kind: 'Application',
+      apiVersion: 'argoproj.io/v1alpha1',
+      metadata: {
+        annotations: {},
+        labels: {},
+        name
+      },
+      spec: {
+        syncPolicy: {
+          syncOptions: [
+            'PrunePropagationPolicy=undefined',
+            'CreateNamespace=false',
+            'Validate=false',
+            'skipSchemaValidations=false',
+            'autoCreateNamespace=false',
+            'pruneLast=false',
+            'applyOutofSyncOnly=false',
+            'Replace=false',
+            'retry=false'
+          ]
+        },
+        source: {
+          repoURLType: repositoryData?.type,
+          revisionType: repositoryData?.revisionType,
+          targetRevision: repositoryData?.targetRevision,
+          repoURL: repositoryData?.repo,
+          path: repositoryData?.path,
+          kustomize: {
+            images: ['quay.io/dexidp/dex:v2.23.0']
+          },
+          repoId: repositoryData?.identifier
+        },
+        destination: {
+          namespace: clusterData?.namespaces,
+          server: clusterData?.server
+        }
+      }
+    }
   }
 }
 
@@ -379,6 +678,10 @@ const OAuthConnectorPayload: ConnectorRequestBody = {
       type: 'Account'
     }
   }
+}
+
+export function getFullAgentWithScope(agent: string, scope?: Scope): string {
+  return scope === Scope.PROJECT || !scope ? agent : `${scope}.${agent}`
 }
 
 export const getOAuthConnectorPayload = ({

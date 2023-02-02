@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { Button, ButtonSize, ButtonVariation, Icon, Layout, Text, Popover } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -17,9 +17,11 @@ import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'framework/strings/StringsContext'
 import type { Application, Environment } from 'services/cd-ng'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
-import { isMultiSvcOrMultiEnv as getIsMultiSvcOrMultiEnv } from '@pipeline/utils/executionUtils'
+import { isMultiSvcOrMultiEnv as getIsMultiSvcOrMultiEnv, NodeType } from '@pipeline/utils/executionUtils'
 import type { StageType } from '@pipeline/utils/stageHelpers'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ExecutionPathProps, ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import routes from '@common/RouteDefinitions'
+import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 import { stageIconMap } from './ExecutionStage'
 import { linkNode } from './gitopsRenderer'
 import css from './ExecutionListTable.module.scss'
@@ -28,6 +30,14 @@ export interface MultiTypeDeploymentSummaryProps {
   stage: PipelineGraphState
   onToggleClick(): void
   isStagesExpanded: boolean
+  pipelineIdentifier: string
+  executionIdentifier: string
+  source: ExecutionPathProps['source']
+  connectorRef?: string
+  repoName?: string
+  branch?: string
+  storeType?: StoreMetadata['storeType']
+  link?: boolean
 }
 
 export interface GetTextAndTooltipProps {
@@ -166,8 +176,21 @@ function getGitOpsApplicationTextAndTooltip(
 }
 
 export function MultiTypeDeploymentSummary(props: MultiTypeDeploymentSummaryProps): React.ReactElement {
-  const { stage, onToggleClick, isStagesExpanded } = props
+  const {
+    stage,
+    onToggleClick,
+    isStagesExpanded,
+    link,
+    pipelineIdentifier,
+    executionIdentifier,
+    source,
+    connectorRef,
+    repoName,
+    branch,
+    storeType
+  } = props
   const { getString } = useStrings()
+  const selectedNodeId = stage?.data?.nodeType === NodeType.RUNTIME_INPUT ? stage.identifier : stage.id
   const stageIconProps = stageIconMap[stage.type as StageType]
   const subType = get(stage, 'data.moduleInfo.stepParameters.subType')
   const isMultiSvcOrMultiEnv = getIsMultiSvcOrMultiEnv(subType)
@@ -207,9 +230,32 @@ export function MultiTypeDeploymentSummary(props: MultiTypeDeploymentSummaryProp
         iconProps={{ size: 12 }}
         onClick={onToggleClick}
       />
-      <Text font={{ size: 'small' }} color={Color.GREY_900}>
-        {stage.name}
-      </Text>
+      {link ? (
+        <Link
+          className={css.stageLink}
+          to={routes.toExecutionPipelineView({
+            accountId,
+            orgIdentifier,
+            projectIdentifier,
+            pipelineIdentifier,
+            executionIdentifier,
+            module,
+            source,
+            connectorRef,
+            branch,
+            repoName,
+            storeType,
+            stage: stage.stageNodeId ?? selectedNodeId,
+            ...(stage.stageNodeId && { stageExecId: stage.id })
+          })}
+        >
+          {stage.name}
+        </Link>
+      ) : (
+        <Text font={{ size: 'small' }} color={Color.GREY_900} lineClamp={1}>
+          {stage.name}
+        </Text>
+      )}
       <Text font={{ size: 'small' }}>|</Text>
       {stageIconProps ? <Icon size={16} {...stageIconProps} /> : null}
       {isMultiSvcOrMultiEnv ? (

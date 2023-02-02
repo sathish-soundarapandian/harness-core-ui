@@ -26,9 +26,16 @@ export const AzureK8sService = (): JSX.Element => {
       </li>
       <li>
         <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
-          {getString('cd.clusterVerify')}
+          {`${getString('cd.getStartedWithCD.createCluster')} ( ${getString(
+            'cd.getStartedWithCD.azureAKSHelperText'
+          )}):`}
         </Text>
         <CommandWithCopyField label={'cd.azureCmd'} />
+      </li>
+      <li>
+        <Text className={css.listContainerCss} font={{ weight: 'semi-bold' }}>
+          {getString('cd.clusterVerify')}
+        </Text>
         <CommandWithCopyField label={'cd.kubectlNodes'} />
       </li>
     </ol>

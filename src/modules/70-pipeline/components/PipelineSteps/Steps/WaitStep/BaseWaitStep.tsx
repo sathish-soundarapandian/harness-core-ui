@@ -26,7 +26,7 @@ export default function BaseWaitStep(props: {
   stepViewType?: StepViewType
   allowableTypes: AllowedTypes
 }): React.ReactElement {
-  const { isNewStep, readonly, stepViewType } = props
+  const { isNewStep, readonly, stepViewType, allowableTypes } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
@@ -41,7 +41,7 @@ export default function BaseWaitStep(props: {
           />
         </div>
       )}
-      <div className={cx(stepCss.formGroup, stepCss.lg)}>
+      <div className={cx(stepCss.formGroup, stepCss.sm)}>
         <FormMultiTypeDurationField
           name="spec.duration"
           label={getString('pipeline.duration')}
@@ -50,7 +50,8 @@ export default function BaseWaitStep(props: {
           multiTypeDurationProps={{
             enableConfigureOptions: true,
             expressions,
-            disabled: readonly
+            disabled: readonly,
+            allowableTypes
           }}
         />
       </div>

@@ -367,6 +367,11 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -374,7 +379,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -471,7 +476,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -607,6 +612,11 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          sto.stepField.image.fieldsHeading
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -614,7 +624,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.image.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -714,83 +724,13 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-            >
-              imageNameLabel
-            </p>
-            <div
-              style="display: flex; align-items: center;"
-            >
-              <div
-                class="bp3-form-group"
-                data-id="spec.image.name-8"
-                style="margin-bottom: 0px; flex-grow: 1;"
-              >
-                
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  >
-                    <div
-                      class="bp3-input-group MultiTypeInput--input"
-                    >
-                      <input
-                        autocomplete="off"
-                        class="bp3-input"
-                        name="spec.image.name"
-                        type="text"
-                        value="ubuntu:20.04"
-                      />
-                    </div>
-                    <span
-                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <button
-                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                          data-testid="multi-type-button"
-                        >
-                          <span
-                            class="bp3-icon StyledProps--main"
-                            data-icon="fixed-input"
-                          >
-                            <svg
-                              height="12"
-                              viewBox="0 0 9 9"
-                              width="12"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                fill="currentColor"
-                              />
-                            </svg>
-                          </span>
-                        </button>
-                      </span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
-        >
-          <div>
             <div
               class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-baseline"
             >
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.domain
+                secrets.winRmAuthFormFields.domain
               </p>
                
               <p
@@ -805,7 +745,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.image.domain-9"
+                data-id="spec.image.domain-8"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -822,6 +762,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.image.domain"
+                        placeholder="docker.io"
                         type="text"
                         value="domain"
                       />
@@ -865,13 +806,155 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
+            <p
+              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            >
+              name
+            </p>
+            <div
+              style="display: flex; align-items: center;"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="spec.image.name-9"
+                style="margin-bottom: 0px; flex-grow: 1;"
+              >
+                
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  >
+                    <div
+                      class="bp3-input-group MultiTypeInput--input"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.image.name"
+                        placeholder="harness/todolist-sample"
+                        type="text"
+                        value="ubuntu:20.04"
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
+        >
+          <div>
+            <p
+              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            >
+              tagLabel
+            </p>
+            <div
+              style="display: flex; align-items: center;"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="spec.image.tag-10"
+                style="margin-bottom: 0px; flex-grow: 1;"
+              >
+                
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  >
+                    <div
+                      class="bp3-input-group MultiTypeInput--input"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.image.tag"
+                        placeholder="latest"
+                        type="text"
+                        value="image tag"
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
+        >
+          <div>
             <div
               class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-baseline"
             >
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.accessId
+                sto.stepField.authAccessId
               </p>
                
               <p
@@ -886,7 +969,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.image.access_id-10"
+                data-id="spec.image.access_id-11"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -903,6 +986,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.image.access_id"
+                        placeholder="<+secrets.getValue(\\"project.access_id\\")>"
                         type="text"
                         value="access_id"
                       />
@@ -952,7 +1036,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.token
+                common.getStarted.accessTokenLabel
               </p>
                
               <p
@@ -967,7 +1051,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.image.access_token-11"
+                data-id="spec.image.access_token-12"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -1050,28 +1134,17 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <div
-              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-baseline"
+            <p
+              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-              >
-                sto.stepField.image.region
-              </p>
-               
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
-              >
-                common.optionalLabel
-              </p>
-            </div>
+              regionLabel
+            </p>
             <div
               style="display: flex; align-items: center;"
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.image.region-12"
+                data-id="spec.image.region-13"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -1088,6 +1161,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.image.region"
+                        placeholder="us-east-1"
                         type="text"
                         value="region"
                       />
@@ -1155,7 +1229,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.advanced.log.level-13"
+                data-id="spec.advanced.log.level-14"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -1269,7 +1343,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.advanced.args.cli-14"
+                data-id="spec.advanced.args.cli-15"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -1350,7 +1424,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.advanced.fail_on_severity-15"
+                data-id="spec.advanced.fail_on_severity-16"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -1450,7 +1524,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
           >
             <div
               class="bp3-form-group"
-              data-id="spec.settings[0].key-16"
+              data-id="spec.settings[0].key-17"
               style="flex-grow: 1; margin-bottom: 0px;"
             >
               <label
@@ -1535,7 +1609,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
                     </p>
                     <div
                       class="bp3-form-group"
-                      data-id="spec.settings[0].key-17"
+                      data-id="spec.settings[0].key-18"
                     >
                       <div
                         class="bp3-form-content"
@@ -1565,7 +1639,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
                     >
                       <div
                         class="bp3-form-group"
-                        data-id="spec.settings[0].value-18"
+                        data-id="spec.settings[0].value-19"
                       >
                         
                         <div
@@ -1657,7 +1731,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
                   <div>
                     <div
                       class="bp3-form-group"
-                      data-id="spec.settings[1].key-19"
+                      data-id="spec.settings[1].key-20"
                     >
                       <div
                         class="bp3-form-content"
@@ -1682,7 +1756,7 @@ exports[`Aquatrivy Step Edit View edit mode works 1`] = `
                     >
                       <div
                         class="bp3-form-group"
-                        data-id="spec.settings[1].value-20"
+                        data-id="spec.settings[1].value-21"
                       >
                         
                         <div
@@ -2235,6 +2309,11 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Ingestion Container 1
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -2242,7 +2321,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Ingestion Container 1
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -2339,7 +2418,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Ingestion Container 1
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -3456,6 +3535,11 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -3463,7 +3547,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -3560,7 +3644,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -3776,6 +3860,11 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          sto.stepField.image.fieldsHeading
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -3783,7 +3872,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.image.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -3883,17 +3972,138 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
+            <div
+              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-baseline"
+            >
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                secrets.winRmAuthFormFields.domain
+              </p>
+               
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                style="text-transform: capitalize;"
+              >
+                common.optionalLabel
+              </p>
+            </div>
+            <div
+              style="display: flex; align-items: center;"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="spec.image.domain-8"
+                style="margin-bottom: 0px; flex-grow: 1;"
+              >
+                
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                  >
+                    <div
+                      class="TextInput--main MultiTypeInput--input"
+                    >
+                      <div
+                        class="bp3-input-group bp3-disabled"
+                      >
+                        <input
+                          class="bp3-input"
+                          disabled=""
+                          name="spec.image.domain"
+                          placeholder="<+input>"
+                          type="text"
+                          value="<+input>"
+                        />
+                      </div>
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
+                          data-testid="multi-type-button"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="runtime-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 10 7.97"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
+                                fill="current-color"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <span
+                class="bp3-popover-wrapper bp3-dark"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <button
+                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withRightIcon"
+                    id="configureOptions_spec.image.domain"
+                    style="margin-bottom: 12px;"
+                    tabindex="0"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-icon bp3-icon-cog StyledProps--main"
+                      icon="cog"
+                    >
+                      <svg
+                        data-icon="cog"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        width="16"
+                      >
+                        <desc>
+                          cog
+                        </desc>
+                        <path
+                          d="M15.19 6.39h-1.85c-.11-.37-.27-.71-.45-1.04l1.36-1.36c.31-.31.31-.82 0-1.13l-1.13-1.13a.803.803 0 00-1.13 0l-1.36 1.36c-.33-.17-.67-.33-1.04-.44V.79c0-.44-.36-.8-.8-.8h-1.6c-.44 0-.8.36-.8.8v1.86c-.39.12-.75.28-1.1.47l-1.3-1.3c-.3-.3-.79-.3-1.09 0L1.82 2.91c-.3.3-.3.79 0 1.09l1.3 1.3c-.2.34-.36.7-.48 1.09H.79c-.44 0-.8.36-.8.8v1.6c0 .44.36.8.8.8h1.85c.11.37.27.71.45 1.04l-1.36 1.36c-.31.31-.31.82 0 1.13l1.13 1.13c.31.31.82.31 1.13 0l1.36-1.36c.33.18.67.33 1.04.44v1.86c0 .44.36.8.8.8h1.6c.44 0 .8-.36.8-.8v-1.86c.39-.12.75-.28 1.1-.47l1.3 1.3c.3.3.79.3 1.09 0l1.09-1.09c.3-.3.3-.79 0-1.09l-1.3-1.3c.19-.35.36-.71.48-1.1h1.85c.44 0 .8-.36.8-.8v-1.6a.816.816 0 00-.81-.79zm-7.2 4.6c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
+        >
+          <div>
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              imageNameLabel
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.image.name-8"
+                data-id="spec.image.name-9"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -3993,28 +4203,17 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <div
-              class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-baseline"
+            <p
+              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-              >
-                sto.stepField.image.domain
-              </p>
-               
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
-              >
-                common.optionalLabel
-              </p>
-            </div>
+              tagLabel
+            </p>
             <div
               style="display: flex; align-items: center;"
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.image.domain-9"
+                data-id="spec.image.tag-10"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -4022,18 +4221,23 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
                   class="bp3-form-content"
                 >
                   <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
                   >
                     <div
-                      class="bp3-input-group MultiTypeInput--input"
+                      class="TextInput--main MultiTypeInput--input"
                     >
-                      <input
-                        autocomplete="off"
-                        class="bp3-input"
-                        name="spec.image.domain"
-                        type="text"
-                        value=""
-                      />
+                      <div
+                        class="bp3-input-group bp3-disabled"
+                      >
+                        <input
+                          class="bp3-input"
+                          disabled=""
+                          name="spec.image.tag"
+                          placeholder="<+input>"
+                          type="text"
+                          value="<+input>"
+                        />
+                      </div>
                     </div>
                     <span
                       class="bp3-popover-wrapper MultiTypeInput--wrapper"
@@ -4042,22 +4246,22 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
                         class="bp3-popover-target"
                       >
                         <button
-                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          class="MultiTypeInput--btn MultiTypeInput--RUNTIME"
                           data-testid="multi-type-button"
                         >
                           <span
                             class="bp3-icon StyledProps--main"
-                            data-icon="fixed-input"
+                            data-icon="runtime-input"
                           >
                             <svg
                               height="12"
-                              viewBox="0 0 9 9"
+                              viewBox="0 0 10 7.97"
                               width="12"
                               xmlns="http://www.w3.org/2000/svg"
                             >
                               <path
-                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                fill="currentColor"
+                                d="M8.14 4L8 3.72a2.53 2.53 0 01-.12-.3l-.16-.35c-.11-.25-.22-.38-.32-.38s-.28.15-.37.44C7 3.1 7 3.07 7 3a.73.73 0 01.24-.46.66.66 0 01.42-.26c.25 0 .5.35.76 1.05l.07.17.07-.12c.47-.73.86-1.1 1.18-1.1a.71.71 0 01.29.07l-.4.42h-.11c-.24 0-.52.28-.86.83l-.09.16.07.2c.29.79.53 1.18.71 1.18s.31-.12.4-.36q.09.06.09.12t-.27.39a.74.74 0 01-.45.23c-.25 0-.51-.36-.77-1.07l-.12-.25-.1.17c-.44.76-.87 1.14-1.28 1.14a.65.65 0 01-.39-.12L6.84 5a.32.32 0 00.23.1c.25 0 .53-.25.83-.74l.17-.28zm-4-.32L1.7.59h2.47S5 .52 5.35 1a3.28 3.28 0 01.42 1.14h.31L5.94 0H0v.31l3.06 3.74L0 7.62V8h6.08l.38-2.36-.31-.07a2.43 2.43 0 01-.52 1c-.42.48-2 .41-2 .41H1.39z"
+                                fill="current-color"
                               />
                             </svg>
                           </span>
@@ -4067,6 +4271,41 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
                   </div>
                 </div>
               </div>
+              <span
+                class="bp3-popover-wrapper bp3-dark"
+              >
+                <span
+                  class="bp3-popover-target"
+                >
+                  <button
+                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withRightIcon"
+                    id="configureOptions_spec.image.tag"
+                    style="margin-bottom: 12px;"
+                    tabindex="0"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-icon bp3-icon-cog StyledProps--main"
+                      icon="cog"
+                    >
+                      <svg
+                        data-icon="cog"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        width="16"
+                      >
+                        <desc>
+                          cog
+                        </desc>
+                        <path
+                          d="M15.19 6.39h-1.85c-.11-.37-.27-.71-.45-1.04l1.36-1.36c.31-.31.31-.82 0-1.13l-1.13-1.13a.803.803 0 00-1.13 0l-1.36 1.36c-.33-.17-.67-.33-1.04-.44V.79c0-.44-.36-.8-.8-.8h-1.6c-.44 0-.8.36-.8.8v1.86c-.39.12-.75.28-1.1.47l-1.3-1.3c-.3-.3-.79-.3-1.09 0L1.82 2.91c-.3.3-.3.79 0 1.09l1.3 1.3c-.2.34-.36.7-.48 1.09H.79c-.44 0-.8.36-.8.8v1.6c0 .44.36.8.8.8h1.85c.11.37.27.71.45 1.04l-1.36 1.36c-.31.31-.31.82 0 1.13l1.13 1.13c.31.31.82.31 1.13 0l1.36-1.36c.33.18.67.33 1.04.44v1.86c0 .44.36.8.8.8h1.6c.44 0 .8-.36.8-.8v-1.86c.39-.12.75-.28 1.1-.47l1.3 1.3c.3.3.79.3 1.09 0l1.09-1.09c.3-.3.3-.79 0-1.09l-1.3-1.3c.19-.35.36-.71.48-1.1h1.85c.44 0 .8-.36.8-.8v-1.6a.816.816 0 00-.81-.79zm-7.2 4.6c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </span>
+              </span>
             </div>
           </div>
         </div>
@@ -4080,7 +4319,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.accessId
+                sto.stepField.authAccessId
               </p>
                
               <p
@@ -4095,7 +4334,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.image.access_id-10"
+                data-id="spec.image.access_id-11"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -4112,6 +4351,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.image.access_id"
+                        placeholder="<+secrets.getValue(\\"project.access_id\\")>"
                         type="text"
                         value=""
                       />
@@ -4161,7 +4401,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.token
+                common.getStarted.accessTokenLabel
               </p>
                
               <p
@@ -4176,7 +4416,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.image.access_token-11"
+                data-id="spec.image.access_token-12"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -4283,7 +4523,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.advanced.log.level-12"
+                data-id="spec.advanced.log.level-13"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -4404,7 +4644,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.advanced.args.cli-13"
+                data-id="spec.advanced.args.cli-14"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -4525,7 +4765,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.advanced.fail_on_severity-14"
+                data-id="spec.advanced.fail_on_severity-15"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -4632,7 +4872,7 @@ exports[`Aquatrivy Step Edit View renders runtime inputs - Orchestration contain
           >
             <div
               class="bp3-form-group"
-              data-id="spec.settings-15"
+              data-id="spec.settings-16"
               style="flex-grow: 1; margin-bottom: 0px;"
             >
               <label
@@ -5158,6 +5398,11 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -5165,7 +5410,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -5262,7 +5507,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              name
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -5398,6 +5643,11 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
         <div
           class="bp3-divider"
         />
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          sto.stepField.image.fieldsHeading
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -5405,7 +5655,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.image.type
+              typeLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -5438,7 +5688,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
                             placeholder="select"
                             style="padding-right: 0px;"
                             type="text"
-                            value=""
+                            value="Docker v2"
                           />
                           <span
                             class="bp3-input-action"
@@ -5505,83 +5755,13 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-            >
-              imageNameLabel
-            </p>
-            <div
-              style="display: flex; align-items: center;"
-            >
-              <div
-                class="bp3-form-group"
-                data-id="spec.image.name-8"
-                style="margin-bottom: 0px; flex-grow: 1;"
-              >
-                
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
-                  >
-                    <div
-                      class="bp3-input-group MultiTypeInput--input"
-                    >
-                      <input
-                        autocomplete="off"
-                        class="bp3-input"
-                        name="spec.image.name"
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                    <span
-                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
-                    >
-                      <span
-                        class="bp3-popover-target"
-                      >
-                        <button
-                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
-                          data-testid="multi-type-button"
-                        >
-                          <span
-                            class="bp3-icon StyledProps--main"
-                            data-icon="fixed-input"
-                          >
-                            <svg
-                              height="12"
-                              viewBox="0 0 9 9"
-                              width="12"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
-                                fill="currentColor"
-                              />
-                            </svg>
-                          </span>
-                        </button>
-                      </span>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
-        >
-          <div>
             <div
               class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-baseline"
             >
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.domain
+                secrets.winRmAuthFormFields.domain
               </p>
                
               <p
@@ -5596,7 +5776,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.image.domain-9"
+                data-id="spec.image.domain-8"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -5613,6 +5793,149 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.image.domain"
+                        placeholder="docker.io"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
+        >
+          <div>
+            <p
+              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            >
+              name
+            </p>
+            <div
+              style="display: flex; align-items: center;"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="spec.image.name-9"
+                style="margin-bottom: 0px; flex-grow: 1;"
+              >
+                
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  >
+                    <div
+                      class="bp3-input-group MultiTypeInput--input"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.image.name"
+                        placeholder="harness/todolist-sample"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
+        >
+          <div>
+            <p
+              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            >
+              tagLabel
+            </p>
+            <div
+              style="display: flex; align-items: center;"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="spec.image.tag-10"
+                style="margin-bottom: 0px; flex-grow: 1;"
+              >
+                
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  >
+                    <div
+                      class="bp3-input-group MultiTypeInput--input"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.image.tag"
+                        placeholder="latest"
                         type="text"
                         value=""
                       />
@@ -5662,7 +5985,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.accessId
+                sto.stepField.authAccessId
               </p>
                
               <p
@@ -5677,7 +6000,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.image.access_id-10"
+                data-id="spec.image.access_id-11"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -5694,6 +6017,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.image.access_id"
+                        placeholder="<+secrets.getValue(\\"project.access_id\\")>"
                         type="text"
                         value=""
                       />
@@ -5743,7 +6067,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
               <p
                 class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
               >
-                sto.stepField.image.token
+                common.getStarted.accessTokenLabel
               </p>
                
               <p
@@ -5758,7 +6082,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.image.access_token-11"
+                data-id="spec.image.access_token-12"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -5775,6 +6099,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
                         autocomplete="off"
                         class="bp3-input"
                         name="spec.image.access_token"
+                        placeholder="<+secrets.getValue(\\"project.access_token\\")>"
                         type="text"
                         value=""
                       />
@@ -5842,7 +6167,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.advanced.log.level-12"
+                data-id="spec.advanced.log.level-13"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -5956,7 +6281,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.advanced.args.cli-13"
+                data-id="spec.advanced.args.cli-14"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -6037,7 +6362,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.advanced.fail_on_severity-14"
+                data-id="spec.advanced.fail_on_severity-15"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -6137,7 +6462,7 @@ exports[`Aquatrivy Step Edit View should render properly 1`] = `
           >
             <div
               class="bp3-form-group"
-              data-id="spec.settings-15"
+              data-id="spec.settings-16"
               style="flex-grow: 1; margin-bottom: 0px;"
             >
               <label
@@ -6399,7 +6724,7 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.config
+              sto.stepField.mode
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -6469,14 +6794,89 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.name
+              sto.stepField.config
             </p>
             <div
               style="display: flex; align-items: center;"
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.target.name-2"
+                data-id="spec.config-2"
+                style="margin-bottom: 0px; flex-grow: 1;"
+              >
+                
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  >
+                    <div
+                      class="bp3-input-group MultiTypeInput--input"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.config"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          pipelineSteps.targetLabel
+        </p>
+        <div
+          class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
+        >
+          <div>
+            <p
+              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            >
+              name
+            </p>
+            <div
+              style="display: flex; align-items: center;"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="spec.target.name-3"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -6546,7 +6946,7 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.target.variant-3"
+                data-id="spec.target.variant-4"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -6609,14 +7009,14 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.target.workspace
+              pipelineSteps.workspace
             </p>
             <div
               style="display: flex; align-items: center;"
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.target.workspace-4"
+                data-id="spec.target.workspace-5"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -6672,6 +7072,11 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
             </div>
           </div>
         </div>
+        <p
+          class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-black StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+        >
+          imageLabel
+        </p>
         <div
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
@@ -6686,7 +7091,7 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.image.name-5"
+                data-id="spec.image.name-6"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -6749,14 +7154,84 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.image.token
+              secrets.winRmAuthFormFields.domain
             </p>
             <div
               style="display: flex; align-items: center;"
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.image.access_token-6"
+                data-id="spec.image.domain-7"
+                style="margin-bottom: 0px; flex-grow: 1;"
+              >
+                
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  >
+                    <div
+                      class="bp3-input-group MultiTypeInput--input"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="spec.image.domain"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
+        >
+          <div>
+            <p
+              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            >
+              common.getStarted.accessTokenLabel
+            </p>
+            <div
+              style="display: flex; align-items: center;"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="spec.image.access_token-8"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -6819,14 +7294,14 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.advanced.logLevel
+              tagLabel
             </p>
             <div
               style="display: flex; align-items: center;"
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.advanced.log.level-7"
+                data-id="spec.image.tag-9"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -6842,7 +7317,7 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
                       <input
                         autocomplete="off"
                         class="bp3-input"
-                        name="spec.advanced.log.level"
+                        name="spec.image.tag"
                         type="text"
                         value=""
                       />
@@ -6889,14 +7364,117 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              sto.stepField.instance.protocol
+              sto.stepField.advanced.logLevel
             </p>
             <div
               style="display: flex; align-items: center;"
             >
               <div
                 class="bp3-form-group"
-                data-id="spec.advanced.log.serializer-8"
+                data-id="spec.advanced.log.level-10"
+                style="margin-bottom: 0px; flex-grow: 1;"
+              >
+                
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  >
+                    <div
+                      class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+                    >
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="spec.advanced.log.level"
+                            placeholder="select"
+                            style="padding-right: 0px;"
+                            type="text"
+                            value=""
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
+        >
+          <div>
+            <p
+              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            >
+              ce.common.protocol
+            </p>
+            <div
+              style="display: flex; align-items: center;"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="spec.advanced.log.serializer-11"
                 style="margin-bottom: 0px; flex-grow: 1;"
               >
                 
@@ -6962,7 +7540,7 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
           >
             <div
               class="bp3-form-group"
-              data-id="spec.settings-9"
+              data-id="spec.settings-12"
               style="flex-grow: 1; margin-bottom: 0px;"
             >
               <label
@@ -7106,7 +7684,7 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="spec.resources.limits.memory-10"
+                    data-id="spec.resources.limits.memory-13"
                     style="margin-bottom: 0px; flex-grow: 1;"
                   >
                     
@@ -7194,7 +7772,7 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
                 >
                   <div
                     class="bp3-form-group"
-                    data-id="spec.resources.limits.cpu-11"
+                    data-id="spec.resources.limits.cpu-14"
                     style="margin-bottom: 0px; flex-grow: 1;"
                   >
                     
@@ -7257,7 +7835,7 @@ exports[`Aquatrivy Step InputSet View should render all fields 1`] = `
         >
           <div
             class="bp3-form-group removeBpLabelMargin"
-            data-id="timeout-12"
+            data-id="timeout-15"
           >
             <label
               class="bp3-label"

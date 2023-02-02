@@ -10,6 +10,7 @@ declare const styles: {
   readonly card: string
   readonly container: string
   readonly pageBody: string
+  readonly refreshButton: string
   readonly separator: string
 }
 export default styles
