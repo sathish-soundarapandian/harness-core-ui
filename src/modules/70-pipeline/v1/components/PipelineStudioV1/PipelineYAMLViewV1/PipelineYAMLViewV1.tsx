@@ -5,10 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { defaultTo, isEqual, omit } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { ButtonVariation, Checkbox, Tag } from '@harness/uicore'
+import { ButtonVariation, Checkbox, Container, Layout, Tag } from '@harness/uicore'
 import { parse } from '@common/utils/YamlHelperMethods'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
@@ -26,7 +26,7 @@ import { useEnableEditModes } from '@pipeline/components/PipelineStudio/hooks/us
 import { usePipelineSchemaV1 } from '../PipelineSchemaContextV1/PipelineSchemaContextV1'
 import { usePipelineContextV1 } from '../PipelineContextV1/PipelineContextV1'
 
-import css from '@pipeline/components/PipelineStudio/PipelineYamlView/PipelineYamlView.module.scss'
+import css from './PipelineYAMLViewV1.module.scss'
 
 export const POLL_INTERVAL = 1 /* sec */ * 1000 /* ms */
 
@@ -75,6 +75,7 @@ function PipelineYAMLViewV1(): React.ReactElement {
   const { getString } = useStrings()
   const updateEntityValidityDetailsRef = React.useRef<(entityValidityDetails: EntityValidityDetails) => Promise<void>>()
   updateEntityValidityDetailsRef.current = updateEntityValidityDetails
+  const [shouldShowPluginsPanel, setShouldShowPluginsPanel] = useState<boolean>(false)
 
   const remoteFileName = React.useMemo(
     () =>
@@ -158,6 +159,10 @@ function PipelineYAMLViewV1(): React.ReactElement {
     }
   }, [userPreferenceEditMode])
 
+  React.useEffect(() => {
+    setShouldShowPluginsPanel(!(isReadonly || !isYamlEditable))
+  }, [isReadonly, isYamlEditable])
+
   return (
     <div className={css.yamlBuilder}>
       <>
@@ -168,48 +173,54 @@ function PipelineYAMLViewV1(): React.ReactElement {
             isReadOnlyMode={isReadonly || !isYamlEditable}
             bind={setYamlHandler}
             yamlSanityConfig={{ removeEmptyString: false, removeEmptyObject: false, removeEmptyArray: false }}
-            height={'calc(100vh - 200px)'}
-            width="calc(100vw - 400px)"
+            height={'calc(100vh - 150px)'}
+            width={shouldShowPluginsPanel ? '50vw' : 'calc(80vw + 10px)'}
+            onEnableEditMode={enableEditMode}
+            shouldShowPluginsPanel={shouldShowPluginsPanel}
+            toggleResizeButton={() => setShouldShowPluginsPanel((shouldRender: boolean) => !shouldRender)}
             invocationMap={stepsFactory.getInvocationMap()}
             schema={pipelineSchema?.data}
             isEditModeSupported={!isReadonly}
             openDialogProp={onEditButtonClick}
+            renderCustomHeader={() => (
+              <Container className={css.buttonsWrapper} padding={{ top: 'small', bottom: 'small', right: 'xxlarge' }}>
+                {isYamlEditable ? (
+                  <Checkbox
+                    className={css.editModeCheckbox}
+                    onChange={e => setYamlAlwaysEditMode(String((e.target as any).checked))}
+                    checked={userPreferenceEditMode}
+                    large
+                    label={getString('pipeline.alwaysEditModeYAML')}
+                    flex={{ justifyContent: 'flex-end', alignItems: 'center' }}
+                  />
+                ) : (
+                  <Layout.Horizontal spacing="small" flex={{ justifyContent: 'flex-end', alignItems: 'center' }}>
+                    <Tag>{getString('common.readOnly')}</Tag>
+                    <RbacButton
+                      permission={{
+                        resourceScope: {
+                          accountIdentifier: accountId,
+                          orgIdentifier,
+                          projectIdentifier
+                        },
+                        resource: {
+                          resourceType: ResourceType.PIPELINE,
+                          resourceIdentifier: pipeline?.identifier as string
+                        },
+                        permission: PermissionIdentifier.EDIT_PIPELINE
+                      }}
+                      variation={ButtonVariation.SECONDARY}
+                      text={getString('common.editYaml')}
+                      onClick={onEditButtonClick}
+                    />
+                  </Layout.Horizontal>
+                )}
+              </Container>
+            )}
             {...yamlOrJsonProp}
           />
         )}
       </>
-      <div className={css.buttonsWrapper}>
-        {isYamlEditable ? (
-          <Checkbox
-            className={css.editModeCheckbox}
-            onChange={e => setYamlAlwaysEditMode(String((e.target as any).checked))}
-            checked={userPreferenceEditMode}
-            large
-            label={getString('pipeline.alwaysEditModeYAML')}
-          />
-        ) : (
-          <>
-            <Tag>{getString('common.readOnly')}</Tag>
-            <RbacButton
-              permission={{
-                resourceScope: {
-                  accountIdentifier: accountId,
-                  orgIdentifier,
-                  projectIdentifier
-                },
-                resource: {
-                  resourceType: ResourceType.PIPELINE,
-                  resourceIdentifier: pipeline?.identifier as string
-                },
-                permission: PermissionIdentifier.EDIT_PIPELINE
-              }}
-              variation={ButtonVariation.SECONDARY}
-              text={getString('common.editYaml')}
-              onClick={onEditButtonClick}
-            />
-          </>
-        )}
-      </div>
     </div>
   )
 }
