@@ -78,7 +78,7 @@ describe('Background Step', () => {
       await waitFor(() => {
         fireEvent.click(shellOptionsDropdownSelect)
         const menuItemLabels = findPopoverContainer()?.querySelectorAll('[class*="menuItemLabel"]')
-        expect(menuItemLabels?.length).toEqual(4)
+        expect(menuItemLabels?.length).toEqual(5)
         expect(menuItemLabels?.[0].innerHTML).toEqual('common.bash')
         expect(menuItemLabels?.[3].innerHTML).toEqual('common.sh')
       })

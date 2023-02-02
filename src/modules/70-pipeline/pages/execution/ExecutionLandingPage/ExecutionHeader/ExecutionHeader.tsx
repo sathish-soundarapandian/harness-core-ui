@@ -35,19 +35,22 @@ import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRu
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
-import type { PipelineExecutionSummary } from 'services/pipeline-ng'
+import type { PipelineExecutionSummary, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import css from './ExecutionHeader.module.scss'
 
-export function ExecutionHeader(): React.ReactElement {
+export interface ExecutionHeaderProps {
+  pipelineMetadata?: ResponsePMSPipelineSummaryResponse | null
+}
+
+export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): React.ReactElement {
   const { orgIdentifier, projectIdentifier, executionIdentifier, accountId, pipelineIdentifier, module, source } =
     useParams<PipelineType<ExecutionPathProps>>()
   const {
     branch: branchQueryParam,
     repoIdentifier: repoIdentifierQueryParam,
     repoName: repoNameQueryParam,
-    connectorRef: connectorRefQueryParam,
-    storeType: storeTypeQueryParam
+    connectorRef: connectorRefQueryParam
   } = useQueryParams<GitQueryParams>()
   const { refetch, pipelineExecutionDetail, isPipelineInvalid } = useExecutionContext()
   const {
@@ -95,7 +98,6 @@ export function ExecutionHeader(): React.ReactElement {
   )
   const connectorRef = pipelineExecutionSummary?.connectorRef ?? connectorRefQueryParam
   const branch = pipelineExecutionSummary?.gitDetails?.branch ?? branchQueryParam
-  const storeType = (pipelineExecutionSummary?.storeType as StoreType) ?? storeTypeQueryParam
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const { openRunPipelineModal } = useRunPipelineModal({
     pipelineIdentifier,
@@ -103,7 +105,7 @@ export function ExecutionHeader(): React.ReactElement {
     repoIdentifier: isGitSyncEnabled ? repoIdentifier : repoName,
     branch,
     connectorRef,
-    storeType,
+    storeType: pipelineMetadata?.data?.storeType,
     stagesExecuted: pipelineExecutionSummary?.stagesExecuted,
     isDebugMode: hasCI
   })
@@ -136,7 +138,7 @@ export function ExecutionHeader(): React.ReactElement {
                       connectorRef,
                       repoName,
                       branch,
-                      storeType
+                      storeType: pipelineMetadata?.data?.storeType
                     }),
                     label: pipelineExecutionSummary.name || getString('common.pipeline')
                   }
@@ -180,7 +182,7 @@ export function ExecutionHeader(): React.ReactElement {
               connectorRef,
               repoName,
               branch,
-              storeType
+              storeType: pipelineMetadata?.data?.storeType
             })}
           >
             <Icon name="Edit" size={12} />
@@ -202,7 +204,7 @@ export function ExecutionHeader(): React.ReactElement {
               connectorRef,
               repoName,
               branch,
-              storeType,
+              storeType: pipelineMetadata?.data?.storeType,
               stagesExecuted: pipelineExecutionSummary?.stagesExecuted
             }}
             isPipelineInvalid={isPipelineInvalid}

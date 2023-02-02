@@ -6,7 +6,7 @@
  */
 
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { pick } from 'lodash-es'
+import { omitBy, pick, isEmpty } from 'lodash-es'
 import { useMemo } from 'react'
 import { flattenObject, removeNullAndEmpty } from '@common/components/Filter/utils/FilterUtils'
 import { useStrings } from 'framework/strings'
@@ -84,5 +84,5 @@ export const prepareFiltersPayload = (filters: PipelineFilterProperties) => {
     })
   }
 
-  return filters
+  return omitBy(filters, isEmpty)
 }

@@ -52,6 +52,11 @@
   background: var(--sto-background);
   border: 1px solid var(--sto-border);
 }
+.sscsTag {
+  color: var(--sscs-foreground);
+  background: var(--sscs-background);
+  border: 1px solid var(--sscs-border);
+}
 
 .predefinedTags {
   // Continuous Delivery
@@ -88,6 +93,11 @@
   --ce-foreground: #9a0041;
   --ce-border: #ff006a;
   --ce-background: #fff1f7;
+
+  // Software supply chain security
+  --sscs-foreground: #1947ec;
+  --sscs-border: #4791ff;
+  --sscs-background: #ebefff;
 
   margin-top: var(--spacing-4);
   section,

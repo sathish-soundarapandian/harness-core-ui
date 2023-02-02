@@ -16,7 +16,8 @@ import type { StringsMap } from 'stringTypes'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { getImagePullPolicyOptions, getShellOptions } from '@common/utils/ContainerRunStepUtils'
+import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
+import { getCIShellOptions } from '@ci/utils/CIShellOptionsUtils'
 import {} from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import type { InputSetData } from '@pipeline/components/AbstractSteps/Step'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
@@ -152,7 +153,7 @@ function StepCommonFieldsInputSet<T>(props: StepCommonFieldsInputSetProps<T>): J
               placeholder: getString('select'),
               multiTypeInputProps: {
                 expressions,
-                selectProps: { addClearBtn: true, items: getShellOptions(getString) },
+                selectProps: { addClearBtn: true, items: getCIShellOptions(getString) },
                 allowableTypes: AllMultiTypeInputTypesForInputSet
               },
               disabled: readonly

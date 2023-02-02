@@ -1219,7 +1219,7 @@ exports[`Test GatewayDetails renders review screen 2`] = `
                                     >
                                       <path
                                         clip-rule="evenodd"
-                                        d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                                        d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                                         fill-rule="evenodd"
                                       />
                                     </svg>
@@ -1307,7 +1307,7 @@ exports[`Test GatewayDetails renders review screen 2`] = `
                       >
                         <path
                           clip-rule="evenodd"
-                          d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                          d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                           fill-rule="evenodd"
                         />
                       </svg>
@@ -1621,7 +1621,7 @@ exports[`Test GatewayDetails renders review screen 2`] = `
                       >
                         <path
                           clip-rule="evenodd"
-                          d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                          d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                           fill-rule="evenodd"
                         />
                       </svg>
@@ -2183,7 +2183,7 @@ exports[`Test GatewayDetails renders setup access screen 1`] = `
                     >
                       <path
                         clip-rule="evenodd"
-                        d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                        d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                         fill-rule="evenodd"
                       />
                     </svg>
@@ -2577,7 +2577,7 @@ exports[`Test GatewayDetails renders setup access screen and move to previous st
                     >
                       <path
                         clip-rule="evenodd"
-                        d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                        d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                         fill-rule="evenodd"
                       />
                     </svg>
@@ -3077,7 +3077,7 @@ exports[`Test GatewayDetails renders setup access screen and move to previous st
                                     >
                                       <path
                                         clip-rule="evenodd"
-                                        d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                                        d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                                         fill-rule="evenodd"
                                       />
                                     </svg>
@@ -3165,7 +3165,7 @@ exports[`Test GatewayDetails renders setup access screen and move to previous st
                       >
                         <path
                           clip-rule="evenodd"
-                          d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                          d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                           fill-rule="evenodd"
                         />
                       </svg>
@@ -3479,7 +3479,7 @@ exports[`Test GatewayDetails renders setup access screen and move to previous st
                       >
                         <path
                           clip-rule="evenodd"
-                          d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                          d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                           fill-rule="evenodd"
                         />
                       </svg>
@@ -4203,7 +4203,7 @@ exports[`Test GatewayDetails renders without crashing 1`] = `
                                     >
                                       <path
                                         clip-rule="evenodd"
-                                        d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                                        d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                                         fill-rule="evenodd"
                                       />
                                     </svg>
@@ -4291,7 +4291,7 @@ exports[`Test GatewayDetails renders without crashing 1`] = `
                       >
                         <path
                           clip-rule="evenodd"
-                          d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                          d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                           fill-rule="evenodd"
                         />
                       </svg>
@@ -4605,7 +4605,7 @@ exports[`Test GatewayDetails renders without crashing 1`] = `
                       >
                         <path
                           clip-rule="evenodd"
-                          d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                          d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                           fill-rule="evenodd"
                         />
                       </svg>

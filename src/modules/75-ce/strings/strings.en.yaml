@@ -1337,7 +1337,7 @@ k8sQuickCreate:
     header: To provide your cluster with permissions apply the following YAML.
     desc: 'Applying the YAML file will:'
     stepsToApply: 'Step to Apply the YAML:'
-    step1: 1. Create a <a target="_blank" href="https://docs.harness.io/article/h9tkwmkrm7-delegate-installation#harness-delegate-overview">Harness Delegate</a>
+    step1: 1. Create a Harness Delegate
     step2: 2. Assigns the Cluster admin role to the Delegate
     continue: Once applied, clicking on “Continue >” will create a <a target="_blank" href="https://docs.harness.io/article/1gaud2efd4-add-a-kubernetes-cluster-connector">Kubernetes Connector</a>
     eksClusterInfo: For EKS Clusters, ensure that the Metrics server is installed on your Kubernetes cluster where your Harness Kubernetes Delegate will be installed

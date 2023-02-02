@@ -844,7 +844,7 @@ exports[`Sonarqube Step Edit View edit mode works 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              token
+              common.getStarted.accessTokenLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -4143,7 +4143,7 @@ exports[`Sonarqube Step Edit View renders runtime inputs - Orchestration Reposit
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              token
+              common.getStarted.accessTokenLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -5877,7 +5877,7 @@ exports[`Sonarqube Step Edit View should render properly 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              token
+              common.getStarted.accessTokenLabel
             </p>
             <div
               style="display: flex; align-items: center;"
@@ -7137,7 +7137,7 @@ exports[`Sonarqube Step InputSet View should render all fields 1`] = `
             <p
               class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
             >
-              token
+              common.getStarted.accessTokenLabel
             </p>
             <div
               style="display: flex; align-items: center;"

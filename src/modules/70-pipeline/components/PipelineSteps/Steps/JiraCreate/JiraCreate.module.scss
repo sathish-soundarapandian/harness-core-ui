@@ -6,7 +6,7 @@
  */
 
 .md {
-  width: 390px;
+  width: 372px;
 }
 
 .connector {
@@ -15,7 +15,7 @@
 
   :global {
     input[placeholder='<+input>'] {
-      width: 390px !important;
+      width: 372px !important;
     }
   }
 }
@@ -37,13 +37,19 @@
       resize: vertical;
     }
     .bp3-input {
-      width: 390px !important;
-      &:disabled {
-        width: 330px !important;
-      }
+      width: 372px !important;
     }
+
     .MultiTypeInput--btn {
       height: 30px !important;
+    }
+  }
+}
+
+.descriptionDeploymentViewWidth {
+  :global {
+    .bp3-input {
+      width: 400px !important;
     }
   }
 }

@@ -37,8 +37,11 @@ import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/
 import type { TextReferenceInterface } from '@secrets/components/TextReference/TextReference'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import type { UseSaveSuccessResponse } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
+import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
+import type { Servicev1Application } from 'services/gitops'
 import type { SelectAuthenticationMethodInterface } from './SelectInfrastructure/SelectAuthenticationMethod'
 import type { SelectGitProviderInterface } from './ConfigureService/ManifestRepoTypes/SelectGitProvider'
+import { CREDENTIALS_TYPE } from './ConfigureGitops/AuthTypeForm'
 
 export const DOCUMENT_URL = 'https://www.harness.io/technical-blog/deploy-in-5-minutes-with-a-delegate-first-approach'
 export interface PipelineRefPayload {
@@ -221,6 +224,36 @@ export type RepositoryInterface = RepositoriesRepository & {
   targetRevision?: string
   revisionType?: RevisionType
   path?: string
+  identifier?: string
+}
+
+export interface configInterface {
+  password?: string
+  username?: string
+  tlsClientConfig?: { insecure?: boolean; certData?: string; keyData?: string }
+  clusterConnectionType?: string
+  bearerToken?: string
+}
+
+export interface ClusterInterface {
+  bearerToken?: string
+  username?: string
+  password?: string
+  agent?: string
+  scope?: string
+  repo?: string
+  clusterType?: CIBuildInfrastructureType
+  authType?: string
+  clusterResources?: boolean
+  certData?: string
+  keyData?: string
+  config?: configInterface
+  name?: string
+  identifier?: string
+  namespaces?: string[]
+  project?: string
+  server?: string
+  serverVersion?: string
 }
 
 export interface APIError extends Error {
@@ -235,8 +268,66 @@ export const newRepositoryData = {
   revisionType: RevisionType.Branch,
   path: '',
   repo: DEFAULT_SAMPLE_REPO,
-  type: 'git'
+  type: 'git',
+  identifier: ''
 } as RepositoryInterface
+
+export const intialClusterData = {
+  name: '',
+  server: '',
+  authType: CREDENTIALS_TYPE.USERNAME_PASSWORD,
+  repo: '',
+  bearerToken: '',
+  certData: '',
+  keyData: '',
+  tags: {},
+  identifier: '',
+  agent: '',
+  scope: '',
+  clusterType: CIBuildInfrastructureType.Cloud
+} as ClusterInterface
+
+export const initialApplicationData = {
+  accountIdentifier: '',
+  orgIdentifier: '',
+  projectIdentifier: '',
+  agentIdentifier: '',
+  name: '',
+  clusterIdentifier: '',
+  repoIdentifier: '',
+  app: {
+    metadata: {
+      name: '',
+      namespace: '',
+      uid: '',
+      resourceVersion: '',
+      generation: '',
+      creationTimestamp: '',
+      managedFields: []
+    },
+    spec: {
+      source: {
+        repoURL: '',
+        path: '',
+        targetRevision: ''
+      },
+      destination: {
+        server: ''
+      },
+      project: ''
+    },
+    status: {
+      sync: {
+        comparedTo: {
+          source: {},
+          destination: {}
+        }
+      },
+      health: {},
+      summary: {}
+    }
+  }
+} as Servicev1Application
 
 export const newServiceState = {
   name: 'sample_service',
@@ -311,6 +402,7 @@ export interface DelegateDataType {
   delegateInstalled: boolean
   environmentEntities: EnvironmentEntities
   delegateYAMLResponse?: RestResponseDelegateSetupDetails
+  delegateIdentifier?: string
 }
 export const newDelegateState = {
   delegate: {
@@ -324,6 +416,122 @@ export const newDelegateState = {
       namespace: ''
     },
     delegateYAMLResponse: undefined
+  }
+}
+
+export const SUBMIT_HANDLER_MAP_FOR_CLUSTER = {
+  [CREDENTIALS_TYPE.USERNAME_PASSWORD]: (data: ClusterInterface): ClusterInterface | undefined => {
+    const { config, server, name, namespaces, project } = data
+    if (!config?.password || !config?.username || !server) {
+      return
+    }
+    let clusterPayload: ClusterInterface = {
+      config: {
+        password: config?.password,
+        username: config?.username,
+        tlsClientConfig: { insecure: true },
+        clusterConnectionType: 'USERNAME_PASSWORD'
+      },
+      server,
+      name,
+      namespaces,
+      project
+    }
+
+    clusterPayload = { ...clusterPayload }
+    return clusterPayload
+  },
+  [CREDENTIALS_TYPE.CLIENT_KEY_CERTIFICATE]: (data: ClusterInterface): ClusterInterface | undefined => {
+    const { namespaces, server, name, certData, keyData, project } = data
+    if (!certData || !keyData || !server) {
+      return
+    }
+    let clusterPayload: ClusterInterface = {
+      namespaces,
+      project,
+      config: {
+        tlsClientConfig: {
+          certData,
+          keyData
+        },
+        clusterConnectionType: 'CLIENT_KEY_CERTIFICATE'
+      },
+      server,
+      name
+    }
+
+    clusterPayload = { ...clusterPayload }
+    return clusterPayload
+  },
+  [CREDENTIALS_TYPE.SERVICE_ACCOUNT]: (data: ClusterInterface): ClusterInterface | undefined => {
+    const { namespaces, server, name, bearerToken, project } = data
+    if (!bearerToken || !server) {
+      return
+    }
+    let clusterPayload: ClusterInterface = {
+      namespaces,
+      project,
+      config: {
+        bearerToken,
+        tlsClientConfig: { insecure: true },
+        clusterConnectionType: 'SERVICE_ACCOUNT'
+      },
+      server,
+      name
+    }
+    clusterPayload = { ...clusterPayload }
+    return clusterPayload
+  }
+}
+
+export interface PayloadInterface {
+  repositoryData?: RepositoryInterface
+  clusterData?: ClusterInterface
+  name?: string
+}
+
+export const getAppPayload = (props: PayloadInterface) => {
+  const { repositoryData, clusterData, name } = props
+  return {
+    application: {
+      kind: 'Application',
+      apiVersion: 'argoproj.io/v1alpha1',
+      metadata: {
+        annotations: {},
+        labels: {},
+        name
+      },
+      spec: {
+        syncPolicy: {
+          syncOptions: [
+            'PrunePropagationPolicy=undefined',
+            'CreateNamespace=false',
+            'Validate=false',
+            'skipSchemaValidations=false',
+            'autoCreateNamespace=false',
+            'pruneLast=false',
+            'applyOutofSyncOnly=false',
+            'Replace=false',
+            'retry=false'
+          ]
+        },
+        source: {
+          repoURLType: repositoryData?.type,
+          revisionType: repositoryData?.revisionType,
+          targetRevision: repositoryData?.targetRevision,
+          repoURL: repositoryData?.repo,
+          path: repositoryData?.path,
+          kustomize: {
+            images: ['quay.io/dexidp/dex:v2.23.0']
+          },
+          repoId: repositoryData?.identifier
+        },
+        destination: {
+          namespace: clusterData?.namespaces,
+          server: clusterData?.server
+        }
+      }
+    }
   }
 }
 

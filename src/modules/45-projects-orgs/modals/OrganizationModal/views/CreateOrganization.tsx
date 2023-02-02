@@ -9,8 +9,7 @@ import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { StepProps, ModalErrorHandlerBinding } from '@harness/uicore'
 import { pick } from 'lodash-es'
-import { useCreateOrganizationMutation, Organization as OrganizationQuery } from '@harnessio/react-ng-manager-client'
-import type { Organization } from 'services/cd-ng'
+import { usePostOrganization, Organization } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { useToaster, PageSpinner } from '@common/components'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -26,20 +25,28 @@ const CreateOrganization: React.FC<StepProps<Organization> & OrgModalData> = pro
   const { getString } = useStrings()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
 
-  const { mutate: createOrganization, isLoading: loading } = useCreateOrganizationMutation({
+  const { mutate: createOrganization, loading: saving } = usePostOrganization({
     queryParams: {
       accountIdentifier: accountId
     }
   })
 
   const onComplete = async (values: Organization): Promise<void> => {
-    const dataToSubmit: OrganizationQuery = {
-      ...pick(values, ['name', 'identifier', 'description', 'tags'])
-    }
+    const dataToSubmit: Organization = pick<Organization, keyof Organization>(values, [
+      'name',
+      'description',
+      'identifier',
+      'tags'
+    ])
     try {
-      createOrganization({
-        body: { org: dataToSubmit }
-      })
+      await createOrganization(
+        { organization: dataToSubmit },
+        {
+          queryParams: {
+            accountIdentifier: accountId
+          }
+        }
+      )
       nextStep?.(values)
       showSuccess(getString('projectsOrgs.orgCreateSuccess'))
       onSuccess?.(values)
@@ -58,7 +65,7 @@ const CreateOrganization: React.FC<StepProps<Organization> & OrgModalData> = pro
         setModalErrorHandler={setModalErrorHandler}
         onComplete={onComplete}
       />
-      {loading ? <PageSpinner message={getString('projectsOrgs.createOrgLoader')} /> : null}
+      {saving ? <PageSpinner message={getString('projectsOrgs.createOrgLoader')} /> : null}
     </>
   )
 }

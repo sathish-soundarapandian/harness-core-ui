@@ -235,6 +235,7 @@ const UserGroupDetails: React.FC = () => {
             userGroupInherited={userGroupInherited}
             managed={userGroup.harnessManaged}
             linkedSSOType={userGroup.linkedSsoType}
+            isUserGroupManaged={userGroup.externallyManaged}
           />
         </Container>
         <Container width="50%" className={css.detailsContainer}>

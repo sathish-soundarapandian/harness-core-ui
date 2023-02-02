@@ -41,7 +41,7 @@ const CVCreateDowntime = (): JSX.Element => {
     if (identifier) {
       refetch()
     }
-  }, [identifier, refetch])
+  }, [identifier])
 
   return (
     <Container margin={{ bottom: 'large' }}>
@@ -63,6 +63,7 @@ const CVCreateDowntime = (): JSX.Element => {
         <CreateDowntimeForm
           loading={loading}
           error={getErrorMessage(error)}
+          retryOnError={refetch}
           runValidationOnMount={Boolean(identifier)}
           loadingSaveButton={false}
         />

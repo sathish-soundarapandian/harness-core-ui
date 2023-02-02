@@ -1,6 +1,6 @@
 .statusIcon {
   svg {
-    fill: white !important;
+    fill: var(--white) !important;
   }
 }
 
@@ -100,6 +100,10 @@
   cursor: pointer;
   margin: 0 36px 36px 0;
 
+  &.isSelected {
+    border: 1px solid var(--primary-main);
+  }
+
   .projectInfo {
     overflow-wrap: anywhere;
   }
@@ -151,8 +155,8 @@
     align-items: center;
 
     .label {
-      border: 1px solid #0278d5;
-      color: #0278d5;
+      border: 1px solid var(--primary-main);
+      color: var(--primary-main);
       padding: 8px;
       margin-right: 16px;
       display: inline;
@@ -171,13 +175,13 @@
   .success {
     color: var(--green-500);
     border: 1px solid var(--green-500);
-    background: rgba($color: #4dc952, $alpha: 0.1);
+    background: rgba($color: var(--green), $alpha: 0.1);
   }
 
   .failure {
     color: var(--red-500);
-    border: 1px solid red;
-    background: rgba($color: #e43326, $alpha: 0.1);
+    border: 1px solid var(--red);
+    background: rgba($color: var(--red), $alpha: 0.1);
   }
 }
 
@@ -203,14 +207,14 @@
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
   height: 100%;
-  background: white;
+  background: var(--white);
 }
 
 .frameHeader {
   height: 40px;
   position: relative;
-  background: #0278d5;
-  color: white;
+  background: var(--primary-main);
+  color: var(--white);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -222,7 +226,7 @@
     right: 0;
 
     :global(.bp3-icon) {
-      color: white !important;
+      color: var(--white) !important;
     }
   }
 
@@ -264,8 +268,8 @@
 }
 
 .gitOpsServerStatus {
-  background: #0278d5;
-  color: white;
+  background: var(--primary-main);
+  color: var(--white);
   padding: 4px 8px;
   border-radius: 4px;
   font-size: 10px;
@@ -283,7 +287,7 @@
 
 .statusPopOverContainer {
   padding: 16px !important;
-  color: white !important;
+  color: var(--white) !important;
 }
 
 .verificationStep {

@@ -138,10 +138,13 @@ exports[`<ExecutionStepDetails /> tests renders normal step 1`] = `
                     x="0.5"
                     y="0.5"
                   />
-                  <path
-                    d="M9.303 3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-7a1 1 0 01-1-1zM14.303 14.5a.5.5 0 01.5-.5h3a.5.5 0 110 1h-3a.5.5 0 01-.5-.5z"
+                  <g
                     fill="#9ea9b4"
-                  />
+                  >
+                    <path
+                      d="M9.303 3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-7a1 1 0 01-1-1zM14.303 14.5a.5.5 0 01.5-.5h3a.5.5 0 110 1h-3a.5.5 0 01-.5-.5z"
+                    />
+                  </g>
                 </g>
               </svg>
             </span>
@@ -552,10 +555,13 @@ exports[`<ExecutionStepDetails /> tests retried steps does not fetches data for 
                     x="0.5"
                     y="0.5"
                   />
-                  <path
-                    d="M9.303 3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-7a1 1 0 01-1-1zM14.303 14.5a.5.5 0 01.5-.5h3a.5.5 0 110 1h-3a.5.5 0 01-.5-.5z"
+                  <g
                     fill="#9ea9b4"
-                  />
+                  >
+                    <path
+                      d="M9.303 3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-7a1 1 0 01-1-1zM14.303 14.5a.5.5 0 01.5-.5h3a.5.5 0 110 1h-3a.5.5 0 01-.5-.5z"
+                    />
+                  </g>
                 </g>
               </svg>
             </span>
@@ -966,10 +972,13 @@ exports[`<ExecutionStepDetails /> tests retried steps fetches data for retry ste
                     x="0.5"
                     y="0.5"
                   />
-                  <path
-                    d="M9.303 3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-7a1 1 0 01-1-1zM14.303 14.5a.5.5 0 01.5-.5h3a.5.5 0 110 1h-3a.5.5 0 01-.5-.5z"
+                  <g
                     fill="#9ea9b4"
-                  />
+                  >
+                    <path
+                      d="M9.303 3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-7a1 1 0 01-1-1zM14.303 14.5a.5.5 0 01.5-.5h3a.5.5 0 110 1h-3a.5.5 0 01-.5-.5z"
+                    />
+                  </g>
                 </g>
               </svg>
             </span>
@@ -1379,10 +1388,13 @@ exports[`<ExecutionStepDetails /> tests retried steps shows loader while loading
                     x="0.5"
                     y="0.5"
                   />
-                  <path
-                    d="M9.303 3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-7a1 1 0 01-1-1zM14.303 14.5a.5.5 0 01.5-.5h3a.5.5 0 110 1h-3a.5.5 0 01-.5-.5z"
+                  <g
                     fill="#9ea9b4"
-                  />
+                  >
+                    <path
+                      d="M9.303 3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-7a1 1 0 01-1-1zM14.303 14.5a.5.5 0 01.5-.5h3a.5.5 0 110 1h-3a.5.5 0 01-.5-.5z"
+                    />
+                  </g>
                 </g>
               </svg>
             </span>
@@ -1626,10 +1638,13 @@ exports[`<ExecutionStepDetails /> tests retried steps shows step selection 1`] =
                     x="0.5"
                     y="0.5"
                   />
-                  <path
-                    d="M9.303 3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-7a1 1 0 01-1-1zM14.303 14.5a.5.5 0 01.5-.5h3a.5.5 0 110 1h-3a.5.5 0 01-.5-.5z"
+                  <g
                     fill="#9ea9b4"
-                  />
+                  >
+                    <path
+                      d="M9.303 3a1 1 0 011-1h7a1 1 0 011 1v9a1 1 0 01-1 1h-7a1 1 0 01-1-1zM14.303 14.5a.5.5 0 01.5-.5h3a.5.5 0 110 1h-3a.5.5 0 01-.5-.5z"
+                    />
+                  </g>
                 </g>
               </svg>
             </span>

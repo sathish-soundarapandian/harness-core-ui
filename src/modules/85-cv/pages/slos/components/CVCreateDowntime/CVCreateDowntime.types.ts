@@ -5,14 +5,41 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { DowntimeDTO } from 'services/cv'
+import type {
+  DowntimeDTO,
+  OnetimeDowntimeSpec,
+  OnetimeDurationBasedSpec,
+  OnetimeEndTimeBasedSpec,
+  RecurringDowntimeSpec
+} from 'services/cv'
 
 export const enum DowntimeFormFields {
   NAME = 'name',
   IDENTIFIER = 'identifier',
   DESCRIPTION = 'description',
   TAGS = 'tags',
-  CATEGORY = 'category'
+  CATEGORY = 'category',
+  TYPE = 'type',
+  TIMEZONE = 'timezone',
+  START_TIME = 'startTime',
+  END_TIME_MODE = 'endTimeMode',
+  DURATION_VALUE = 'durationValue',
+  DURATION_TYPE = 'durationType',
+  END_TIME = 'endTime',
+  RECURRENCE_VALUE = 'recurrenceValue',
+  RECURRENCE_TYPE = 'recurrenceType',
+  RECURRENCE_END_TIME = 'recurrenceEndTime'
+}
+
+export enum DowntimeCategory {
+  SCHEDULED_MAINTENANCE = 'ScheduledMaintenance',
+  DEPLOYMENT = 'Deployment',
+  OTHER = 'Other'
+}
+
+export enum EndTimeMode {
+  DURATION = 'Duration',
+  END_TIME = 'EndTime'
 }
 
 export interface DowntimeForm {
@@ -21,4 +48,14 @@ export interface DowntimeForm {
   [DowntimeFormFields.DESCRIPTION]?: DowntimeDTO['description']
   [DowntimeFormFields.TAGS]?: { [key: string]: string }
   [DowntimeFormFields.CATEGORY]: DowntimeDTO['category']
+  [DowntimeFormFields.TYPE]: DowntimeDTO['spec']['type']
+  [DowntimeFormFields.TIMEZONE]: DowntimeDTO['spec']['spec']['timezone']
+  [DowntimeFormFields.START_TIME]: DowntimeDTO['spec']['spec']['startTime'] | string
+  [DowntimeFormFields.END_TIME_MODE]?: OnetimeDowntimeSpec['type']
+  [DowntimeFormFields.DURATION_VALUE]?: OnetimeDurationBasedSpec['downtimeDuration']['durationValue']
+  [DowntimeFormFields.DURATION_TYPE]?: OnetimeDurationBasedSpec['downtimeDuration']['durationType']
+  [DowntimeFormFields.END_TIME]?: OnetimeEndTimeBasedSpec['endTime'] | string
+  [DowntimeFormFields.RECURRENCE_VALUE]?: RecurringDowntimeSpec['downtimeRecurrence']['recurrenceValue']
+  [DowntimeFormFields.RECURRENCE_TYPE]?: RecurringDowntimeSpec['downtimeRecurrence']['recurrenceType']
+  [DowntimeFormFields.RECURRENCE_END_TIME]?: RecurringDowntimeSpec['recurrenceEndTime'] | string
 }

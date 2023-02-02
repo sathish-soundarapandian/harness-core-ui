@@ -288,6 +288,7 @@ const DelegateSelectorWizardRef = (
             set(draft, 'environmentEntities.infrastructure', INFRASTRUCTURE_ID)
             set(draft, 'environmentEntities.namespace', NAMESPACE)
             set(draft, 'delegateYAMLResponse', yamlResponse)
+            set(draft, 'delegateIdentifier', StringUtils.getIdentifierFromName(delegateName.current as string))
           })
           saveInfrastructureData(updatedContextInfra)
           saveDelegateData(updatedContextDelegate)

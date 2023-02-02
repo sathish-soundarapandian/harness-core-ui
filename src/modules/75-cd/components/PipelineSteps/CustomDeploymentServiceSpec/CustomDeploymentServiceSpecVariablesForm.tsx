@@ -25,8 +25,7 @@ import type {
   CustomVariableEditableExtraProps
 } from '@pipeline/components/PipelineSteps/Steps/CustomVariables/CustomVariableEditable'
 import type { AllNGVariables } from '@pipeline/utils/types'
-
-import css from './CustomDeploymentServiceSpec.module.scss'
+import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 export interface CustomDeploymentServiceSpecVariablesFormProps {
   initialValues: ServiceSpec

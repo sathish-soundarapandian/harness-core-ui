@@ -63,7 +63,8 @@ function ArtifactListView({
   addNewArtifact,
   isSidecarAllowed,
   isMultiArtifactSource,
-  handleUseArtifactSourceTemplate
+  handleUseArtifactSourceTemplate,
+  allowOnlyOneArtifactAddition = false
 }: ArtifactListViewProps): React.ReactElement {
   const { getString } = useStrings()
   const commonArtifactProps = {
@@ -103,31 +104,32 @@ function ArtifactListView({
                 {...commonArtifactProps}
               />
             )}
-            {!isReadonly && isPrimaryAdditionAllowed(primaryArtifact, isMultiArtifactSource) && (
-              <Layout.Horizontal spacing="medium">
-                <Button
-                  className={css.addArtifact}
-                  id="add-artifact"
-                  size={ButtonSize.SMALL}
-                  icon="plus"
-                  variation={ButtonVariation.LINK}
-                  margin={isMultiArtifactSource && sideCarArtifact?.length && { bottom: 'xxlarge' }}
-                  onClick={() => addNewArtifact(ModalViewFor.PRIMARY)}
-                  text={
-                    isMultiArtifactSource
-                      ? getString('pipeline.artifactsSelection.addArtifactSource')
-                      : getString('pipeline.artifactsSelection.addPrimaryArtifact')
-                  }
-                />
-                {handleUseArtifactSourceTemplate && (
-                  <AddArtifactSourceTemplateSection
-                    handleClick={() => {
-                      handleUseArtifactSourceTemplate(ModalViewFor.PRIMARY)
-                    }}
+            {!isReadonly &&
+              isPrimaryAdditionAllowed(primaryArtifact, isMultiArtifactSource, allowOnlyOneArtifactAddition) && (
+                <Layout.Horizontal spacing="medium">
+                  <Button
+                    className={css.addArtifact}
+                    id="add-artifact"
+                    size={ButtonSize.SMALL}
+                    icon="plus"
+                    variation={ButtonVariation.LINK}
+                    margin={isMultiArtifactSource && sideCarArtifact?.length && { bottom: 'xxlarge' }}
+                    onClick={() => addNewArtifact(ModalViewFor.PRIMARY)}
+                    text={
+                      isMultiArtifactSource
+                        ? getString('pipeline.artifactsSelection.addArtifactSource')
+                        : getString('pipeline.artifactsSelection.addPrimaryArtifact')
+                    }
                   />
-                )}
-              </Layout.Horizontal>
-            )}
+                  {handleUseArtifactSourceTemplate && (
+                    <AddArtifactSourceTemplateSection
+                      handleClick={() => {
+                        handleUseArtifactSourceTemplate(ModalViewFor.PRIMARY)
+                      }}
+                    />
+                  )}
+                </Layout.Horizontal>
+              )}
           </>
           <>
             <SidecarArtifacts

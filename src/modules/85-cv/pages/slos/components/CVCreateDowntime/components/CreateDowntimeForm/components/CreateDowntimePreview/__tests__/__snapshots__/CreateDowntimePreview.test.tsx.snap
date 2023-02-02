@@ -1,101 +1,95 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CreateDowntimePreview should render CreateDowntimePreview with correct values 1`] = `
+exports[`CreateDowntimePreview should render CreateDowntimePreview with correct one time duration based downtime values 1`] = `
 <div>
   <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+    class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
   >
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
-        style="width: 100px;"
-        title="cv.sloDowntime.downtimeName"
+        style="width: 120px;"
+        title="summary"
       >
-        cv.sloDowntime.downtimeName
+        summary
       </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
       >
-        SLO Downtime
-      </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+        >
+          Starting on 2023-08-11 09:47 AM (Asia/Calcutta) for 30 Minutes
+        </p>
+      </div>
     </div>
+  </div>
+</div>
+`;
+
+exports[`CreateDowntimePreview should render CreateDowntimePreview with correct one time end time based downtime values 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+  >
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
-        style="width: 100px;"
-        title="description"
+        style="width: 120px;"
+        title="summary"
       >
-        description
+        summary
       </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
       >
-        Weekly downtime
-      </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+        >
+          Starting on 2023-08-11 09:47 AM (Asia/Calcutta) till 2023-07-30 10:47 PM
+        </p>
+      </div>
     </div>
+  </div>
+</div>
+`;
+
+exports[`CreateDowntimePreview should render CreateDowntimePreview with correct recurring downtime values 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+  >
     <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+      class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
     >
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
-        style="width: 100px;"
-        title="cv.slos.userJourney"
+        style="width: 120px;"
+        title="summary"
       >
-        cv.slos.userJourney
+        summary
       </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+      <div
+        class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main"
       >
-        Deployment
-      </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+        >
+          Starting on 2023-08-11 09:47 AM (UTC) for 30 Minutes
+        </p>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
+        >
+          Repeats after 2 Week until 2025-03-13 06:27 AM
+        </p>
+      </div>
     </div>
   </div>
 </div>
 `;
 
 exports[`CreateDowntimePreview should render CreateDowntimePreview with empty value 1`] = `<div />`;
-
-exports[`CreateDowntimePreview should render CreateDowntimePreview with init value 1`] = `
-<div>
-  <div
-    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
-  >
-    <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-    >
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
-        style="width: 100px;"
-        title="cv.sloDowntime.downtimeName"
-      >
-        cv.sloDowntime.downtimeName
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
-      >
-        
-      </p>
-    </div>
-    <div
-      class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
-    >
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-grey1000"
-        style="width: 100px;"
-        title="cv.slos.userJourney"
-      >
-        cv.slos.userJourney
-      </p>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-weight-light StyledProps--color StyledProps--color-grey1000"
-      >
-        
-      </p>
-    </div>
-  </div>
-</div>
-`;

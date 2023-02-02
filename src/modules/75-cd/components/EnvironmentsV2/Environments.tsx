@@ -25,6 +25,8 @@ import routes from '@common/RouteDefinitions'
 
 import { NewEditEnvironmentModal } from '@cd/components/PipelineSteps/DeployEnvStep/DeployEnvStep'
 
+import EmptyContentImg from '@pipeline/icons/emptyServiceDetail.svg'
+import RbacButton from '@rbac/components/Button/Button'
 import { PageStoreContext } from './PageTemplate/PageContext'
 import PageTemplate from './PageTemplate/PageTemplate'
 import { Sort, SortFields } from './PageTemplate/utils'
@@ -32,7 +34,6 @@ import EnvironmentTabs from './EnvironmentTabs'
 import EnvironmentsList from './EnvironmentsList/EnvironmentsList'
 import EnvironmentsGrid from './EnvironmentsGrid/EnvironmentsGrid'
 import EnvironmentsFilters from './EnvironmentsFilters/EnvironmentsFilters'
-import EmptyContentImg from './EmptyContent.svg'
 
 import css from './Environments.module.scss'
 
@@ -98,6 +99,23 @@ export function Environments(): React.ReactElement {
       : [SortFields.LastUpdatedAt, Sort.DESC]
   }
 
+  const createButtonProps = {
+    text: getString('newEnvironment'),
+    dataTestid: 'add-environment',
+    permission: {
+      permission: PermissionIdentifier.EDIT_ENVIRONMENT,
+      resource: {
+        resourceType: ResourceType.ENVIRONMENT
+      },
+      resourceScope: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
+      attributeFilter: {
+        attributeName: 'type',
+        attributeValues: ['Production', 'PreProduction']
+      }
+    },
+    onClick: showCreateModal
+  }
+
   return (
     <PageStoreContext.Provider
       value={{
@@ -110,30 +128,15 @@ export function Environments(): React.ReactElement {
         title={getString('environments')}
         titleTooltipId="ff_env_heading"
         headerToolbar={<EnvironmentTabs />}
-        createButtonProps={{
-          text: getString('newEnvironment'),
-          dataTestid: 'add-environment',
-          permission: {
-            permission: PermissionIdentifier.EDIT_ENVIRONMENT,
-            resource: {
-              resourceType: ResourceType.ENVIRONMENT
-            },
-            resourceScope: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
-            attributeFilter: {
-              attributeName: 'type',
-              attributeValues: ['Production', 'PreProduction']
-            }
-          },
-          onClick: showCreateModal
-        }}
+        createButtonProps={createButtonProps}
         useGetListHook={useGetEnvironmentListV2}
         emptyContent={
           <>
-            <img src={EmptyContentImg} width={220} height={220} />
-            <Heading className={css.noEnvHeading} level={2}>
+            <img src={EmptyContentImg} width={300} height={150} />
+            <Heading level={2} padding={{ top: 'xxlarge' }} margin={{ bottom: 'large' }}>
               {getString('cd.noEnvironment.title')}
             </Heading>
-            <Text className={css.noEnvText}>{getString('cd.noEnvironment.message')}</Text>
+            <RbacButton intent="primary" icon="plus" font={{ weight: 'bold' }} {...createButtonProps} />
           </>
         }
         ListComponent={EnvironmentsList}

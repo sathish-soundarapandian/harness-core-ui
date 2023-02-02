@@ -81,6 +81,19 @@ const pathParams = {
 }
 
 describe('Retry History Button tests', () => {
+  let mockDate: jest.SpyInstance<unknown> | undefined
+  let mocktime: jest.SpyInstance<unknown> | undefined
+
+  beforeAll(() => {
+    mockDate = jest.spyOn(Date.prototype, 'toLocaleTimeString').mockReturnValue('14:00')
+    mocktime = jest.spyOn(Date.prototype, 'toLocaleDateString').mockReturnValue('2023-02-02')
+  })
+
+  afterAll(() => {
+    mockDate?.mockRestore()
+    mocktime?.mockRestore()
+  })
+
   test('retry history button should be disabled when view pipeline permission is falsy', async () => {
     jest.spyOn(usePermission, 'usePermission').mockImplementation(() => [false, false, false])
     render(

@@ -8,6 +8,7 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly active: string
+  readonly blackDot: string
   readonly bodyClass: string
   readonly borderBottom: string
   readonly borderBottomClass: string
@@ -32,6 +33,7 @@ declare const styles: {
   readonly hover: string
   readonly iconPadding: string
   readonly inputWidth: string
+  readonly installedComponent: string
   readonly kubernetes: string
   readonly marginBottomClass: string
   readonly marginTop: string

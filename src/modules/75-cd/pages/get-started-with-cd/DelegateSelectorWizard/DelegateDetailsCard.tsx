@@ -26,7 +26,8 @@ const DelegateDetailsCard = ({ delegateIdentifier }: { delegateIdentifier: strin
 
   const { data } = useGetDelegateGroupByIdentifier({
     identifier: delegateIdentifier,
-    queryParams: { accountId, orgId: orgIdentifier, projectId: projectIdentifier }
+    queryParams: { accountId, orgId: orgIdentifier, projectId: projectIdentifier },
+    lazy: !delegateIdentifier
   })
 
   const delegate = data?.resource

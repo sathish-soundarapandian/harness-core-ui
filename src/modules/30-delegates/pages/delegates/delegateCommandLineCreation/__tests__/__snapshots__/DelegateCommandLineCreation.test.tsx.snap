@@ -25,7 +25,7 @@ exports[`Delegate Command line creation render UI Docker Delegate 1`] = `
         delegates.commandLineCreation.installDelegateSubText
          
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >
@@ -98,25 +98,22 @@ exports[`Delegate Command line creation render UI Docker Delegate 1`] = `
                 width="16"
                 xmlns="http://www.w3.org/2000/svg"
               >
+                <clippath
+                  id="docker-step_svg__a"
+                >
+                  <path
+                    d="M0 0h28v20.234H0z"
+                    transform="translate(0 3.5)"
+                  />
+                </clippath>
                 <g
                   clip-path="url(#docker-step_svg__a)"
                 >
                   <path
-                    d="M27.422 11.21c-.63-.437-2.075-.6-3.205-.382-.131-1.094-.736-2.05-1.787-2.898l-.604-.438-.42.629c-.525.82-.788 1.969-.71 3.062.027.383.158 1.067.552 1.668-.367.219-1.13.492-2.128.492H.126l-.052.22c-.184 1.093-.184 4.51 1.97 7.135 1.629 1.997 4.046 3.008 7.225 3.008 6.883 0 11.98-3.308 14.37-9.296.946.027 2.969 0 3.993-2.051a22.8 22.8 0 00.263-.574l.105-.219-.578-.355zM15.311 3.5h-2.89v2.734h2.89V3.5zm0 3.281h-2.89v2.734h2.89V6.781zm-3.415 0h-2.89v2.734h2.89V6.781zm-3.415 0H5.59v2.734h2.89V6.781zm-3.416 3.281h-2.89v2.735h2.89v-2.735zm3.416 0H5.59v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735z"
-                    fill="#2396ED"
+                    d="M27.422 11.21c-.63-.437-2.075-.6-3.205-.382-.131-1.094-.736-2.05-1.787-2.898l-.604-.438-.42.629c-.525.82-.788 1.969-.71 3.062.027.383.158 1.067.552 1.668-.367.219-1.13.492-2.128.492H.126l-.052.22c-.184 1.093-.184 4.51 1.97 7.135 1.629 1.997 4.046 3.008 7.225 3.008 6.883 0 11.98-3.308 14.37-9.296.946.027 2.969 0 3.993-2.051a22.8 22.8 0 00.263-.574l.105-.219-.578-.355zM15.311 3.5h-2.89v2.734h2.89zm0 3.281h-2.89v2.734h2.89zm-3.415 0h-2.89v2.734h2.89zm-3.415 0H5.59v2.734h2.89V6.781zm-3.416 3.281h-2.89v2.735h2.89zm3.416 0H5.59v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89zm3.415 0h-2.89v2.735h2.89zm3.415 0h-2.89v2.735h2.89z"
+                    fill="#2396ed"
                   />
                 </g>
-                <defs>
-                  <clippath
-                    id="docker-step_svg__a"
-                  >
-                    <path
-                      d="M0 0h28v20.234H0z"
-                      fill="#fff"
-                      transform="translate(0 3.5)"
-                    />
-                  </clippath>
-                </defs>
               </svg>
             </span>
             <span
@@ -303,7 +300,7 @@ exports[`Delegate Command line creation render UI Docker Delegate 1`] = `
         style="display: flex; align-items: center;"
       >
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >
@@ -358,7 +355,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Manifest 1`]
         delegates.commandLineCreation.installDelegateSubText
          
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >
@@ -431,25 +428,22 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Manifest 1`]
                 width="16"
                 xmlns="http://www.w3.org/2000/svg"
               >
+                <clippath
+                  id="docker-step_svg__a"
+                >
+                  <path
+                    d="M0 0h28v20.234H0z"
+                    transform="translate(0 3.5)"
+                  />
+                </clippath>
                 <g
                   clip-path="url(#docker-step_svg__a)"
                 >
                   <path
-                    d="M27.422 11.21c-.63-.437-2.075-.6-3.205-.382-.131-1.094-.736-2.05-1.787-2.898l-.604-.438-.42.629c-.525.82-.788 1.969-.71 3.062.027.383.158 1.067.552 1.668-.367.219-1.13.492-2.128.492H.126l-.052.22c-.184 1.093-.184 4.51 1.97 7.135 1.629 1.997 4.046 3.008 7.225 3.008 6.883 0 11.98-3.308 14.37-9.296.946.027 2.969 0 3.993-2.051a22.8 22.8 0 00.263-.574l.105-.219-.578-.355zM15.311 3.5h-2.89v2.734h2.89V3.5zm0 3.281h-2.89v2.734h2.89V6.781zm-3.415 0h-2.89v2.734h2.89V6.781zm-3.415 0H5.59v2.734h2.89V6.781zm-3.416 3.281h-2.89v2.735h2.89v-2.735zm3.416 0H5.59v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735z"
-                    fill="#2396ED"
+                    d="M27.422 11.21c-.63-.437-2.075-.6-3.205-.382-.131-1.094-.736-2.05-1.787-2.898l-.604-.438-.42.629c-.525.82-.788 1.969-.71 3.062.027.383.158 1.067.552 1.668-.367.219-1.13.492-2.128.492H.126l-.052.22c-.184 1.093-.184 4.51 1.97 7.135 1.629 1.997 4.046 3.008 7.225 3.008 6.883 0 11.98-3.308 14.37-9.296.946.027 2.969 0 3.993-2.051a22.8 22.8 0 00.263-.574l.105-.219-.578-.355zM15.311 3.5h-2.89v2.734h2.89zm0 3.281h-2.89v2.734h2.89zm-3.415 0h-2.89v2.734h2.89zm-3.415 0H5.59v2.734h2.89V6.781zm-3.416 3.281h-2.89v2.735h2.89zm3.416 0H5.59v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89zm3.415 0h-2.89v2.735h2.89zm3.415 0h-2.89v2.735h2.89z"
+                    fill="#2396ed"
                   />
                 </g>
-                <defs>
-                  <clippath
-                    id="docker-step_svg__a"
-                  >
-                    <path
-                      d="M0 0h28v20.234H0z"
-                      fill="#fff"
-                      transform="translate(0 3.5)"
-                    />
-                  </clippath>
-                </defs>
               </svg>
             </span>
             <span
@@ -662,7 +656,13 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Manifest 1`]
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-primary8"
                 >
-                  delegates.commandLineCreation.kubernetesFourthDirectionPartThree
+                  <a
+                    href="/account/dummy/settings/resources/delegates/tokens"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    delegates.commandLineCreation.kubernetesFourthDirectionPartThree
+                  </a>
                 </p>
               </div>
             </li>
@@ -801,7 +801,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Manifest 1`]
         style="display: flex; align-items: center;"
       >
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >
@@ -856,7 +856,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Terraform 1`
         delegates.commandLineCreation.installDelegateSubText
          
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >
@@ -929,25 +929,22 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Terraform 1`
                 width="16"
                 xmlns="http://www.w3.org/2000/svg"
               >
+                <clippath
+                  id="docker-step_svg__a"
+                >
+                  <path
+                    d="M0 0h28v20.234H0z"
+                    transform="translate(0 3.5)"
+                  />
+                </clippath>
                 <g
                   clip-path="url(#docker-step_svg__a)"
                 >
                   <path
-                    d="M27.422 11.21c-.63-.437-2.075-.6-3.205-.382-.131-1.094-.736-2.05-1.787-2.898l-.604-.438-.42.629c-.525.82-.788 1.969-.71 3.062.027.383.158 1.067.552 1.668-.367.219-1.13.492-2.128.492H.126l-.052.22c-.184 1.093-.184 4.51 1.97 7.135 1.629 1.997 4.046 3.008 7.225 3.008 6.883 0 11.98-3.308 14.37-9.296.946.027 2.969 0 3.993-2.051a22.8 22.8 0 00.263-.574l.105-.219-.578-.355zM15.311 3.5h-2.89v2.734h2.89V3.5zm0 3.281h-2.89v2.734h2.89V6.781zm-3.415 0h-2.89v2.734h2.89V6.781zm-3.415 0H5.59v2.734h2.89V6.781zm-3.416 3.281h-2.89v2.735h2.89v-2.735zm3.416 0H5.59v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735z"
-                    fill="#2396ED"
+                    d="M27.422 11.21c-.63-.437-2.075-.6-3.205-.382-.131-1.094-.736-2.05-1.787-2.898l-.604-.438-.42.629c-.525.82-.788 1.969-.71 3.062.027.383.158 1.067.552 1.668-.367.219-1.13.492-2.128.492H.126l-.052.22c-.184 1.093-.184 4.51 1.97 7.135 1.629 1.997 4.046 3.008 7.225 3.008 6.883 0 11.98-3.308 14.37-9.296.946.027 2.969 0 3.993-2.051a22.8 22.8 0 00.263-.574l.105-.219-.578-.355zM15.311 3.5h-2.89v2.734h2.89zm0 3.281h-2.89v2.734h2.89zm-3.415 0h-2.89v2.734h2.89zm-3.415 0H5.59v2.734h2.89V6.781zm-3.416 3.281h-2.89v2.735h2.89zm3.416 0H5.59v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89zm3.415 0h-2.89v2.735h2.89zm3.415 0h-2.89v2.735h2.89z"
+                    fill="#2396ed"
                   />
                 </g>
-                <defs>
-                  <clippath
-                    id="docker-step_svg__a"
-                  >
-                    <path
-                      d="M0 0h28v20.234H0z"
-                      fill="#fff"
-                      transform="translate(0 3.5)"
-                    />
-                  </clippath>
-                </defs>
               </svg>
             </span>
             <span
@@ -1303,7 +1300,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Terraform 1`
         style="display: flex; align-items: center;"
       >
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >
@@ -1358,7 +1355,7 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
         delegates.commandLineCreation.installDelegateSubText
          
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >
@@ -1431,25 +1428,22 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
                 width="16"
                 xmlns="http://www.w3.org/2000/svg"
               >
+                <clippath
+                  id="docker-step_svg__a"
+                >
+                  <path
+                    d="M0 0h28v20.234H0z"
+                    transform="translate(0 3.5)"
+                  />
+                </clippath>
                 <g
                   clip-path="url(#docker-step_svg__a)"
                 >
                   <path
-                    d="M27.422 11.21c-.63-.437-2.075-.6-3.205-.382-.131-1.094-.736-2.05-1.787-2.898l-.604-.438-.42.629c-.525.82-.788 1.969-.71 3.062.027.383.158 1.067.552 1.668-.367.219-1.13.492-2.128.492H.126l-.052.22c-.184 1.093-.184 4.51 1.97 7.135 1.629 1.997 4.046 3.008 7.225 3.008 6.883 0 11.98-3.308 14.37-9.296.946.027 2.969 0 3.993-2.051a22.8 22.8 0 00.263-.574l.105-.219-.578-.355zM15.311 3.5h-2.89v2.734h2.89V3.5zm0 3.281h-2.89v2.734h2.89V6.781zm-3.415 0h-2.89v2.734h2.89V6.781zm-3.415 0H5.59v2.734h2.89V6.781zm-3.416 3.281h-2.89v2.735h2.89v-2.735zm3.416 0H5.59v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735z"
-                    fill="#2396ED"
+                    d="M27.422 11.21c-.63-.437-2.075-.6-3.205-.382-.131-1.094-.736-2.05-1.787-2.898l-.604-.438-.42.629c-.525.82-.788 1.969-.71 3.062.027.383.158 1.067.552 1.668-.367.219-1.13.492-2.128.492H.126l-.052.22c-.184 1.093-.184 4.51 1.97 7.135 1.629 1.997 4.046 3.008 7.225 3.008 6.883 0 11.98-3.308 14.37-9.296.946.027 2.969 0 3.993-2.051a22.8 22.8 0 00.263-.574l.105-.219-.578-.355zM15.311 3.5h-2.89v2.734h2.89zm0 3.281h-2.89v2.734h2.89zm-3.415 0h-2.89v2.734h2.89zm-3.415 0H5.59v2.734h2.89V6.781zm-3.416 3.281h-2.89v2.735h2.89zm3.416 0H5.59v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89zm3.415 0h-2.89v2.735h2.89zm3.415 0h-2.89v2.735h2.89z"
+                    fill="#2396ed"
                   />
                 </g>
-                <defs>
-                  <clippath
-                    id="docker-step_svg__a"
-                  >
-                    <path
-                      d="M0 0h28v20.234H0z"
-                      fill="#fff"
-                      transform="translate(0 3.5)"
-                    />
-                  </clippath>
-                </defs>
               </svg>
             </span>
             <span
@@ -1780,7 +1774,7 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
         style="display: flex; align-items: center;"
       >
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >
@@ -1835,7 +1829,7 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
         delegates.commandLineCreation.installDelegateSubText
          
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >
@@ -1908,25 +1902,22 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
                 width="16"
                 xmlns="http://www.w3.org/2000/svg"
               >
+                <clippath
+                  id="docker-step_svg__a"
+                >
+                  <path
+                    d="M0 0h28v20.234H0z"
+                    transform="translate(0 3.5)"
+                  />
+                </clippath>
                 <g
                   clip-path="url(#docker-step_svg__a)"
                 >
                   <path
-                    d="M27.422 11.21c-.63-.437-2.075-.6-3.205-.382-.131-1.094-.736-2.05-1.787-2.898l-.604-.438-.42.629c-.525.82-.788 1.969-.71 3.062.027.383.158 1.067.552 1.668-.367.219-1.13.492-2.128.492H.126l-.052.22c-.184 1.093-.184 4.51 1.97 7.135 1.629 1.997 4.046 3.008 7.225 3.008 6.883 0 11.98-3.308 14.37-9.296.946.027 2.969 0 3.993-2.051a22.8 22.8 0 00.263-.574l.105-.219-.578-.355zM15.311 3.5h-2.89v2.734h2.89V3.5zm0 3.281h-2.89v2.734h2.89V6.781zm-3.415 0h-2.89v2.734h2.89V6.781zm-3.415 0H5.59v2.734h2.89V6.781zm-3.416 3.281h-2.89v2.735h2.89v-2.735zm3.416 0H5.59v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89v-2.735z"
-                    fill="#2396ED"
+                    d="M27.422 11.21c-.63-.437-2.075-.6-3.205-.382-.131-1.094-.736-2.05-1.787-2.898l-.604-.438-.42.629c-.525.82-.788 1.969-.71 3.062.027.383.158 1.067.552 1.668-.367.219-1.13.492-2.128.492H.126l-.052.22c-.184 1.093-.184 4.51 1.97 7.135 1.629 1.997 4.046 3.008 7.225 3.008 6.883 0 11.98-3.308 14.37-9.296.946.027 2.969 0 3.993-2.051a22.8 22.8 0 00.263-.574l.105-.219-.578-.355zM15.311 3.5h-2.89v2.734h2.89zm0 3.281h-2.89v2.734h2.89zm-3.415 0h-2.89v2.734h2.89zm-3.415 0H5.59v2.734h2.89V6.781zm-3.416 3.281h-2.89v2.735h2.89zm3.416 0H5.59v2.735h2.89v-2.735zm3.415 0h-2.89v2.735h2.89zm3.415 0h-2.89v2.735h2.89zm3.415 0h-2.89v2.735h2.89z"
+                    fill="#2396ed"
                   />
                 </g>
-                <defs>
-                  <clippath
-                    id="docker-step_svg__a"
-                  >
-                    <path
-                      d="M0 0h28v20.234H0z"
-                      fill="#fff"
-                      transform="translate(0 3.5)"
-                    />
-                  </clippath>
-                </defs>
               </svg>
             </span>
             <span
@@ -2362,7 +2353,7 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
         style="display: flex; align-items: center;"
       >
         <a
-          href="https://developer.harness.io/docs/platform/delegates/delegates-overview/"
+          href="https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview"
           rel="noreferrer"
           target="_blank"
         >

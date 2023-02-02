@@ -70,8 +70,8 @@ export default function CDSideNav(): React.ReactElement {
   const isCommunity = useGetCommunity()
   const { showGetStartedCDTabInMainMenu, setShowGetStartedCDTabInMainMenu } = useSideNavContext()
   const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
-  const isOverviewPage = !!matchPath(location.pathname, {
-    path: routes.toProjectOverview({ ...params, module })
+  const isDeploymentPage = !!matchPath(location.pathname, {
+    path: routes.toDeployments({ ...params, module })
   })
   const {
     data: fetchPipelinesData,
@@ -99,7 +99,7 @@ export default function CDSideNav(): React.ReactElement {
         status === 'SUCCESS' && (data as PagePMSPipelineSummaryResponse)?.totalElements === 0
       setShowGetStartedCDTabInMainMenu(isGettingStartedEnabled)
       if (isGettingStartedEnabled) {
-        isOverviewPage && history.replace(routes.toGetStartedWithCD({ ...params, module }))
+        isDeploymentPage && history.replace(routes.toGetStartedWithCD({ ...params, module }))
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -210,7 +210,7 @@ export default function CDSideNav(): React.ReactElement {
             )
           } else {
             history.push(
-              routes.toProjectOverview({
+              routes.toDeployments({
                 projectIdentifier: data.identifier,
                 orgIdentifier: data.orgIdentifier || /* istanbul ignore next */ '',
                 accountId,
@@ -224,9 +224,6 @@ export default function CDSideNav(): React.ReactElement {
         <React.Fragment>
           {showGetStartedCDTabInMainMenu && CD_ONBOARDING_ENABLED && (
             <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
-          )}
-          {!isCommunity && (!CD_ONBOARDING_ENABLED || !showGetStartedCDTabInMainMenu) && (
-            <SidebarLink label="Overview" to={routes.toProjectOverview({ ...params, module })} />
           )}
           <SidebarLink label="Deployments" to={routes.toDeployments({ ...params, module })} />
           <SidebarLink label="Pipelines" to={routes.toPipelines({ ...params, module })} />

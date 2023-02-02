@@ -23,11 +23,11 @@ import { AsgScalingPolicyManifestSource } from '@cd/components/PipelineSteps/ASG
 import { AsgScheduledGroupUpdateActionManifestSource } from '@cd/components/PipelineSteps/ASGServiceSpec/ManifestSource/AsgScheduledUpdateGroupActionManifestSource/AsgScheduledUpdateGroupActionManifestSource'
 import { ReleaseRepoManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/ReleaseRepoManifestSource/ReleaseRepoManifestSource'
 import { DeploymentRepoManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/DeploymentRepoManifestSource/DeploymentRepoManifestSource'
-
 import { TASManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/TASManifestSource/TASManifestSource'
 import { TASAutoScalerSource } from '@cd/components/PipelineSteps/TasServiceSpec/ManifestSource/TASAutoScalerSource/TASAutoScalerSource'
 import { HelmRepoOverrideManifestSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ManifestSource/HelmRepoOverrideManifestSource/HelmRepoOverrideManifestSource'
 import { TASVarsSource } from '@cd/components/PipelineSteps/TasServiceSpec/ManifestSource/TASVarsSource/TASVarsSource'
+import { GoogleCloudFunctionDefinitionManifestSource } from '@cd/components/PipelineSteps/GoogleCloudFunction/ManifestSource/GoogleCloudFunctionDefinitionManifestSource/GoogleCloudFunctionDefinitionManifestSource'
 import type { ManifestSourceBase } from './ManifestSourceBase'
 
 export class ManifestSourceBaseFactory {
@@ -74,6 +74,7 @@ manifestSourceBaseFactory.registerManifestSource(new DeploymentRepoManifestSourc
 manifestSourceBaseFactory.registerManifestSource(new TASManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new TASAutoScalerSource())
 manifestSourceBaseFactory.registerManifestSource(new TASVarsSource())
+manifestSourceBaseFactory.registerManifestSource(new GoogleCloudFunctionDefinitionManifestSource())
 manifestSourceBaseFactory.registerManifestSource(new HelmRepoOverrideManifestSource())
 
 export default manifestSourceBaseFactory

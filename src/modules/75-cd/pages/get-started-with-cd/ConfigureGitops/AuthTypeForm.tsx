@@ -7,17 +7,20 @@
 
 import React from 'react'
 import classnames from 'classnames'
-import { FormInput } from '@harness/uicore'
+import { FormInput, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
+import { noop } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
-export enum CREDENTIALS_TYPE {
-  USERNAME_PASSWORD = 'username_password',
-  SERVICE_ACCOUNT = 'service_account',
-  CLIENT_KEY_CERTIFICATE = 'clientKeyCertificate'
+export const CREDENTIALS_TYPE: { [key: string]: string } = {
+  USERNAME_PASSWORD: 'username_password',
+  SERVICE_ACCOUNT: 'service_account',
+  CLIENT_KEY_CERTIFICATE: 'clientKeyCertificate'
 }
 
-export const AuthTypeForm = ({ authType }: { authType: CREDENTIALS_TYPE }) => {
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const AuthTypeForm = ({ authType }: { authType: any }) => {
   const { getString } = useStrings()
 
   if (authType === CREDENTIALS_TYPE.USERNAME_PASSWORD) {
@@ -36,6 +39,10 @@ export const AuthTypeForm = ({ authType }: { authType: CREDENTIALS_TYPE }) => {
           className={css.width50}
           name="password"
         />
+        <FormInput.Text isOptional label={getString('common.namespace')} className={css.width50} name="namespace" />
+        <Text style={{ cursor: 'pointer' }} onClick={noop} color={Color.PRIMARY_7}>
+          {getString('cd.getStartedWithCD.tryAnotherCreds')}
+        </Text>
       </>
     )
   }

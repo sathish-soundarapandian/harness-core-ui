@@ -265,9 +265,11 @@ export interface StringsMap {
   'common.editVariableType': string
   'common.editYaml': string
   'common.enableGitSyncPipeline': string
+  'common.endTime': string
   'common.entityReferenceSubTitle': string
   'common.entityReferenceTitle': string
   'common.entityType': string
+  'common.entitycreatedSuccessfully': string
   'common.environmentCreated': string
   'common.environmentGroup.createNew': string
   'common.environmentGroup.created': string
@@ -642,6 +644,8 @@ export interface StringsMap {
   'common.notification': string
   'common.notificationPreferences': string
   'common.oAuthLabel': string
+  'common.occurrence.oneTime': string
+  'common.occurrence.recurring': string
   'common.ok': string
   'common.on': string
   'common.onPremSaaSPlansMsg': string
@@ -783,6 +787,7 @@ export interface StringsMap {
   'common.purpose.sto.tests': string
   'common.purpose.welcome': string
   'common.pwsh': string
+  'common.python': string
   'common.readOnly': string
   'common.readonlyPermissions': string
   'common.recents': string
@@ -985,6 +990,8 @@ export interface StringsMap {
   'common.sourceBranchPlaceholder': string
   'common.specified': string
   'common.specify': string
+  'common.sscs': string
+  'common.sscsText': string
   'common.stable': string
   'common.stage': string
   'common.stageName': string
@@ -4130,6 +4137,7 @@ export interface StringsMap {
   'pipeline.manifestTypeLabels.EcsScalingPolicyDefinition': string
   'pipeline.manifestTypeLabels.EcsServiceDefinition': string
   'pipeline.manifestTypeLabels.EcsTaskDefinition': string
+  'pipeline.manifestTypeLabels.GoogleCloudFunctionDefinition': string
   'pipeline.manifestTypeLabels.HelmRepoOverride': string
   'pipeline.manifestTypeLabels.K8sManifest': string
   'pipeline.manifestTypeLabels.KustomizeLabel': string
@@ -4162,6 +4170,7 @@ export interface StringsMap {
   'pipeline.noArtifactPaths': string
   'pipeline.noBuckets': string
   'pipeline.noBucketsFound': string
+  'pipeline.noCloudSourceRepositoriesFound': string
   'pipeline.noClustersFound': string
   'pipeline.noEnvironmentGroupsFound': string
   'pipeline.noFilePathsFound': string
@@ -4266,6 +4275,7 @@ export interface StringsMap {
   'pipeline.poweredByHarness': string
   'pipeline.previewTemplateLabel': string
   'pipeline.progressPercentage': string
+  'pipeline.projectHelperText': string
   'pipeline.provisionerSteps': string
   'pipeline.queueStep.keyPlaceholder': string
   'pipeline.queueStep.keyRequired': string
@@ -4457,6 +4467,10 @@ export interface StringsMap {
   'pipeline.stepDescription.BitrisePlugin': string
   'pipeline.stepDescription.Container': string
   'pipeline.stepDescription.CustomApproval': string
+  'pipeline.stepDescription.DeployCloudFunction': string
+  'pipeline.stepDescription.DeployCloudFunctionNoTrafficShift': string
+  'pipeline.stepDescription.DeployCloudFunctionRollback': string
+  'pipeline.stepDescription.DeployCloudFunctionTrafficShift': string
   'pipeline.stepDescription.DockerHub': string
   'pipeline.stepDescription.ECR': string
   'pipeline.stepDescription.ECSBlueGreenCreateService': string
@@ -5175,6 +5189,12 @@ export interface StringsMap {
   'cd.getStartedWithCD.clickForOtherDeploymentTypes': string
   'cd.getStartedWithCD.closeOnboarding.subtitle': string
   'cd.getStartedWithCD.closeOnboarding.title': string
+  'cd.getStartedWithCD.clusterCreatedSuccessfully': string
+  'cd.getStartedWithCD.clusterSpec1': string
+  'cd.getStartedWithCD.clusterSpec2': string
+  'cd.getStartedWithCD.clusterSpec3': string
+  'cd.getStartedWithCD.clusterSpecInfo': string
+  'cd.getStartedWithCD.clusterspec': string
   'cd.getStartedWithCD.codeRepos': string
   'cd.getStartedWithCD.configureRepo': string
   'cd.getStartedWithCD.connectHarnessEnv': string
@@ -5232,6 +5252,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.inManifestContent': string
   'cd.getStartedWithCD.infraName': string
   'cd.getStartedWithCD.installDelegateToTargetEnv': string
+  'cd.getStartedWithCD.ipWhitelist': string
+  'cd.getStartedWithCD.managedCluster': string
   'cd.getStartedWithCD.manifestFile': string
   'cd.getStartedWithCD.manifestStorage': string
   'cd.getStartedWithCD.manifestStoreLabel': string
@@ -5342,6 +5364,7 @@ export interface StringsMap {
   'cd.noEnvironment.title': string
   'cd.noGitOpsServerText': string
   'cd.noLinkedClusters': string
+  'cd.noService': string
   'cd.notReachable': string
   'cd.oauthPlugin': string
   'cd.oauthPluginCmd': string
@@ -5413,6 +5436,10 @@ export interface StringsMap {
   'cd.pipelineSteps.serviceTab.deploymentTypeRequired': string
   'cd.pipelineSteps.serviceTab.differentService': string
   'cd.pipelineSteps.serviceTab.hideServiceInputs': string
+  'cd.pipelineSteps.serviceTab.manifest.functionDefinition': string
+  'cd.pipelineSteps.serviceTab.manifest.googleCloudFunctionDefinitionLearnMore': string
+  'cd.pipelineSteps.serviceTab.manifest.manifestFirstStepTitle': string
+  'cd.pipelineSteps.serviceTab.manifest.manifestSecondStepTitle': string
   'cd.pipelineSteps.serviceTab.manifest.scalableTarget': string
   'cd.pipelineSteps.serviceTab.manifest.scalingPolicy': string
   'cd.pipelineSteps.serviceTab.manifest.serviceDefinition': string
@@ -5473,6 +5500,7 @@ export interface StringsMap {
   'cd.serviceDashboard.executionId': string
   'cd.serviceDashboard.frequency': string
   'cd.serviceDashboard.function': string
+  'cd.serviceDashboard.functionName': string
   'cd.serviceDashboard.headers.artifactVersion': string
   'cd.serviceDashboard.headers.clusters': string
   'cd.serviceDashboard.headers.environment': string
@@ -5492,6 +5520,7 @@ export interface StringsMap {
   'cd.serviceDashboard.lastDeployment': string
   'cd.serviceDashboard.lastPipelineExecution': string
   'cd.serviceDashboard.manageServiceLabel': string
+  'cd.serviceDashboard.memorySize': string
   'cd.serviceDashboard.moreDetails': string
   'cd.serviceDashboard.noActiveServiceInstances': string
   'cd.serviceDashboard.noActiveServices': string
@@ -5505,17 +5534,21 @@ export interface StringsMap {
   'cd.serviceDashboard.pod': string
   'cd.serviceDashboard.prod': string
   'cd.serviceDashboard.recentDeployments': string
+  'cd.serviceDashboard.revision': string
+  'cd.serviceDashboard.runTime': string
   'cd.serviceDashboard.runningServiceInstancesLabel': string
   'cd.serviceDashboard.seeMore': string
   'cd.serviceDashboard.serviceInstances': string
   'cd.serviceDashboard.serviceInstancesInLast': string
   'cd.serviceDashboard.servicesInLast': string
+  'cd.serviceDashboard.source': string
   'cd.serviceDashboard.taskArn': string
   'cd.serviceDashboard.taskDefinitionArn': string
   'cd.serviceDashboard.totalDeployments': string
   'cd.serviceDashboard.totalPipelines': string
   'cd.serviceDashboard.totalServices': string
   'cd.serviceDashboard.unitDay': string
+  'cd.serviceDashboard.updatedTime': string
   'cd.serviceDashboard.webApp': string
   'cd.serviceList.noIdentifier': string
   'cd.serviceName': string
@@ -5609,6 +5642,10 @@ export interface StringsMap {
   'cd.steps.elastigroup.infraDetailHeader': string
   'cd.steps.emailStep.ccOptionalLabel': string
   'cd.steps.emailStep.timeout1DayMinimum': string
+  'cd.steps.googleCloudFunctionCommon.fieldMask': string
+  'cd.steps.googleCloudFunctionCommon.fieldMaskPlaceholder': string
+  'cd.steps.googleCloudFunctionCommon.trafficPercent': string
+  'cd.steps.googleCloudFunctionCommon.trafficPercentPlaceholder': string
   'cd.steps.kubernetesGcpStep.stepName': string
   'cd.steps.pdcStep.attributesPlaceholder': string
   'cd.steps.pdcStep.dynamicProvision': string
@@ -7564,6 +7601,7 @@ export interface StringsMap {
   'ci.titleSettings': string
   'ci.usesLabel': string
   'ci.welcome': string
+  'sscs.allowDenyList': string
   'cv.CVStepper.StepError': string
   'cv.CompositeSLO.AddSLO': string
   'cv.CompositeSLO.AddSLOMessage': string
@@ -8269,6 +8307,7 @@ export interface StringsMap {
   'cv.monitoringSources.splunk.submitQueryToSeeRecords': string
   'cv.monitoringSources.totalMappedQueries': string
   'cv.monitoringSources.uniqueIdentifierValidation': string
+  'cv.months': string
   'cv.nDays': string
   'cv.navLinks.activities': string
   'cv.navLinks.adminSideNavLinks.activitySources': string
@@ -8409,14 +8448,20 @@ export interface StringsMap {
   'cv.sloAnalysisTakingLong': string
   'cv.sloCreateInfo': string
   'cv.sloDowntime.addDowntime': string
-  'cv.sloDowntime.downtimeCategory': string
+  'cv.sloDowntime.category': string
   'cv.sloDowntime.downtimeName': string
+  'cv.sloDowntime.durationText': string
   'cv.sloDowntime.info': string
   'cv.sloDowntime.label': string
   'cv.sloDowntime.noData': string
+  'cv.sloDowntime.repeatEndsOn': string
+  'cv.sloDowntime.repeatEvery': string
   'cv.sloDowntime.scheduledMaintenance': string
   'cv.sloDowntime.selectCategory': string
+  'cv.sloDowntime.steps.downtimeWindow': string
   'cv.sloDowntime.steps.identification': string
+  'cv.sloDowntime.steps.monitoredServices': string
+  'cv.sloDowntime.validations.categoryValidation': string
   'cv.sloDowntime.validations.nameValidation': string
   'cv.sloGraphInitialState': string
   'cv.sloGraphUserHint': string
@@ -8554,6 +8599,7 @@ export interface StringsMap {
   'cv.verificationStatus': string
   'cv.verifications': string
   'cv.wednesday': string
+  'cv.weeks': string
   'cv.widowEnds': string
   'cv.windowEndsDay': string
   'cv.windowsEndIsRequired': string
@@ -8643,6 +8689,7 @@ export interface StringsMap {
   'sto.stepField.tool.javaBinaries': string
   'sto.stepField.tool.javaLibraries': string
   'sto.stepField.tool.productLookupType': string
+  'sto.stepField.tool.productToken': string
   'sto.stepField.tool.projectToken': string
   'sto.stepField.tool.projectVersion': string
   'sto.stepField.tool.teamName': string

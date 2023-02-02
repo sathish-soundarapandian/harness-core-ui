@@ -16,4 +16,5 @@ export interface CreateDowntimePreviewProps {
 export interface LabelValueProps {
   label: string
   value: string
+  recurrenceText?: string
 }

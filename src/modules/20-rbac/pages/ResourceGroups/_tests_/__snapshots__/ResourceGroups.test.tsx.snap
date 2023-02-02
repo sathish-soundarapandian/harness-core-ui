@@ -168,7 +168,8 @@ exports[`Resource Groups Page render data 1`] = `
                   style="background-color: rgb(0, 99, 247);"
                 />
                 <div
-                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-left-small"
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-left-small StyledProps--padding-right-small"
+                  style="width: 100%;"
                 >
                   <p
                     class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
@@ -308,7 +309,8 @@ exports[`Resource Groups Page render data 1`] = `
                   style="background-color: rgb(0, 99, 247);"
                 />
                 <div
-                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-left-small"
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-left-small StyledProps--padding-right-small"
+                  style="width: 100%;"
                 >
                   <p
                     class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"
@@ -448,7 +450,8 @@ exports[`Resource Groups Page render data 1`] = `
                   style="background-color: rgb(0, 99, 247);"
                 />
                 <div
-                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-left-small"
+                  class="Layout--vertical Layout--layout-spacing-xsmall StyledProps--main StyledProps--padding-left-small StyledProps--padding-right-small"
+                  style="width: 100%;"
                 >
                   <p
                     class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--color StyledProps--color-black"

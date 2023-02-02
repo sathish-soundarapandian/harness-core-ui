@@ -322,6 +322,23 @@
   margin-bottom: 10px !important;
 }
 
+.blackDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--black);
+  margin-right: var(--spacing-small);
+}
+
+.installedComponent {
+  font-size: var(--form-input-font-size);
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  color: var(--grey-800);
+  padding-bottom: var(--spacing-xsmall);
+}
+
 .marginTopClass {
   margin-top: 30px;
   border-bottom: 1px solid var(--grey-200);

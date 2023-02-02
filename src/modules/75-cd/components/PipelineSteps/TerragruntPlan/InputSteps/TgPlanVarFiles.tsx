@@ -8,9 +8,13 @@
 import React from 'react'
 import cx from 'classnames'
 import { get } from 'lodash-es'
-import { FormInput, getMultiTypeFromValue, Label, MultiTypeInputType, Container, Text } from '@harness/uicore'
+import { Label, Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import { isValueRuntimeInput } from '@common/utils/utils'
+import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
+import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TerraformStoreTypes } from '../../Common/Terraform/TerraformInterfaces'
 import RemoteVarSection from './RemoteVarSection'
@@ -19,7 +23,7 @@ import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export default function TgPlanVarFiles(props: TerragruntPlanProps): React.ReactElement {
   const { getString } = useStrings()
-  const { inputSetData, path, allowableTypes } = props
+  const { inputSetData, path, allowableTypes, stepViewType, readonly } = props
 
   const { expressions } = useVariablesExpression()
 
@@ -37,21 +41,52 @@ export default function TgPlanVarFiles(props: TerragruntPlanProps): React.ReactE
                 <Text font={{ weight: 'bold' }}>{getString('cd.varFile')}:</Text>
                 {identifier}
               </Container>
-              {
-                /* istanbul ignore next */ getMultiTypeFromValue(get(varFile.varFile, 'spec.content')) ===
-                  MultiTypeInputType.RUNTIME && (
-                  <div className={cx(stepCss.formGroup, stepCss.md)}>
-                    <FormInput.MultiTextInput
+              {isValueRuntimeInput(get(varFile.varFile, 'spec.content')) && (
+                <div
+                  className={cx(stepCss.formGroup, stepCss.md)}
+                  // needed to prevent the run pipeline to get triggered on pressing enter within TFMonaco editor
+                  onKeyDown={
+                    /* istanbul ignore next */ e => {
+                      e.stopPropagation()
+                    }
+                  }
+                >
+                  <MultiTypeFieldSelector
+                    name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.content`}
+                    label={getString('pipelineSteps.content')}
+                    defaultValueToReset=""
+                    allowedTypes={allowableTypes}
+                    skipRenderValueInExpressionLabel
+                    disabled={readonly}
+                    configureOptionsProps={{
+                      isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+                    }}
+                    expressionRender={
+                      /* istanbul ignore next */ () => {
+                        return (
+                          <MonacoTextField
+                            name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.content`}
+                            expressions={expressions}
+                            height={200}
+                            disabled={readonly}
+                            fullScreenAllowed
+                            fullScreenTitle={getString('pipelineSteps.content')}
+                          />
+                        )
+                      }
+                    }
+                  >
+                    <MonacoTextField
                       name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.content`}
-                      label={getString('pipelineSteps.content')}
-                      multiTextInputProps={{
-                        expressions,
-                        allowableTypes
-                      }}
+                      expressions={expressions}
+                      height={200}
+                      disabled={readonly}
+                      fullScreenAllowed
+                      fullScreenTitle={getString('pipelineSteps.content')}
                     />
-                  </div>
-                )
-              }
+                  </MultiTypeFieldSelector>
+                </div>
+              )}
             </React.Fragment>
           )
         } else if (type === TerraformStoreTypes.Remote) {

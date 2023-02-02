@@ -77,7 +77,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const [viewCompiledYaml, setViewCompiledYaml] = React.useState<PipelineExecutionSummary | undefined>(undefined)
   const location = useLocation()
 
-  const isExecutionHistoryView = !!matchPath(location.pathname, {
+  const isPipelineDeploymentListView = !!matchPath(location.pathname, {
     path: routes.toPipelineDeploymentList({
       orgIdentifier,
       projectIdentifier,
@@ -111,11 +111,11 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
       sort: sort.join(','), // TODO: this is temporary until BE supports common format for all. Currently BE supports status in  arrayFormat: 'repeat' and sort in  arrayFormat: 'comma'
       myDeployments,
       status,
-      ...(!isExecutionHistoryView && repoName ? { repoName } : {}),
+      ...(!isPipelineDeploymentListView && repoName && selectedBranch !== defaultBranchSelect ? { repoName } : {}),
       ...(selectedBranch !== defaultBranchSelect ? { branch: selectedBranch } : {}),
       repoIdentifier,
       searchTerm,
-      ...(!isExecutionHistoryView && module ? { module } : {})
+      ...(!isPipelineDeploymentListView && module ? { module } : {})
     },
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
@@ -160,7 +160,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
         {showSubHeader && (
           <ExecutionListSubHeader
             onBranchChange={(value: string) => {
-              setSelectedBranch(value)
+              setSelectedBranch(value || defaultBranchSelect)
             }}
             selectedBranch={selectedBranch}
             showRepoBranchFilter={isDeploymentsPage}

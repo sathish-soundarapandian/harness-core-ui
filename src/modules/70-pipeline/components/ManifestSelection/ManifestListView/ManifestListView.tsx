@@ -122,7 +122,7 @@ const getManifestTypeToSelect = (
   if (preSelectedManifestType) {
     return preSelectedManifestType
   }
-  if (availableManifestTypes.length === 1) {
+  if (availableManifestTypes?.length === 1) {
     return availableManifestTypes[0]
   }
   return null

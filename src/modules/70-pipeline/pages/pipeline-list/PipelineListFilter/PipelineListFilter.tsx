@@ -6,7 +6,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { Layout, SelectOption } from '@harness/uicore'
 import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
@@ -47,7 +47,11 @@ import { queryParamOptions } from '../PipelineListUtils'
 
 const UNSAVED_FILTER_IDENTIFIER = StringUtils.getIdentifierFromName(UNSAVED_FILTER)
 
-export function PipelineListFilter(): React.ReactElement {
+interface PipelineListFilterProps {
+  onFilterListUpdate: (filterList: FilterDTO[] | undefined) => void
+}
+
+export function PipelineListFilter({ onFilterListUpdate }: PipelineListFilterProps): React.ReactElement {
   const { getString } = useStrings()
   const filterRef = useRef<FilterRef<FilterDTO> | null>(null)
   const { showError } = useToaster()
@@ -124,6 +128,11 @@ export function PipelineListFilter(): React.ReactElement {
   }, [deploymentTypeResponse])
 
   const filterList = filterListData?.data?.content
+
+  useEffect(() => {
+    onFilterListUpdate(filterList)
+  }, [filterList, onFilterListUpdate])
+
   const isMetaDataLoading = isDeploymentTypesLoading || isEnvironmentsLoading || isServicesLoading
   const isFilterCrudLoading =
     isCreateFilterLoading || isUpdateFilterLoading || isDeleteFilterLoading || isFilterListLoading

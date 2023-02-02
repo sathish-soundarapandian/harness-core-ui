@@ -29,7 +29,7 @@ describe('Environment Groups CRUD', () => {
     cy.visitPageAssertion()
     cy.wait('@environmentGroupsCall', { timeout: 10000 })
 
-    cy.contains('button', 'Create new Environment Group').should('be.visible').click()
+    cy.contains('button', 'New Environment Group').should('be.visible').click()
 
     cy.wait(1000)
 

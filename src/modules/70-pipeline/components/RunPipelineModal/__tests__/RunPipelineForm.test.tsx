@@ -511,10 +511,7 @@ describe('STUDIO MODE', () => {
     await waitFor(() => expect(queryByText('common.errorCount')).toBeFalsy())
 
     // Check Run button to be enabled now
-    await waitFor(() => expect(expect(runButton).not.toBeDisabled()))
-
-    // Save the snapshot - value is present from merge input set API
-    expect(container).toMatchSnapshot('after applying input sets')
+    await waitFor(() => expect(container.querySelector('button[type="submit"]')).not.toBeDisabled())
   })
 
   test('show warning for active deployment freeze', async () => {
@@ -672,13 +669,6 @@ describe('RERUN MODE', () => {
 
 describe('EXECUTION VIEW', () => {
   test('should should have the values prefilled and fields as disabled', async () => {
-    const executionInputSetTemplateYaml = `pipeline:
-  identifier: "First"
-  variables:
-  - name: "checkVariable1"
-    type: "String"
-    value: "<+input>"`
-
     const inputSetYaml = `pipeline:
   identifier: "First"
   variables:
@@ -688,13 +678,7 @@ describe('EXECUTION VIEW', () => {
 
     const { container, queryByText } = render(
       <TestWrapper>
-        <RunPipelineForm
-          {...commonProps}
-          inputSetYAML={inputSetYaml}
-          executionView={true}
-          executionInputSetTemplateYaml={executionInputSetTemplateYaml}
-          source="executions"
-        />
+        <RunPipelineForm {...commonProps} inputSetYAML={inputSetYaml} executionView={true} source="executions" />
       </TestWrapper>
     )
 

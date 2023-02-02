@@ -157,7 +157,8 @@ const CFRoutes: FC = () => {
     FFM_3959_FF_MFE_Environment_Detail,
     FFM_5939_MFE_TARGET_GROUPS_LISTING,
     FFM_5256_FF_MFE_Environment_Listing,
-    FFM_5951_FF_MFE_Targets_Listing
+    FFM_5951_FF_MFE_Targets_Listing,
+    FFM_6665_FF_MFE_Target_Detail
   } = useFeatureFlags()
 
   return (
@@ -249,9 +250,13 @@ const CFRoutes: FC = () => {
           ...targetPathProps
         })}
         exact
-        pageName={FFM_1827 ? PAGE_NAME.TargetDetailPage : PAGE_NAME.LegacyTargetDetailPage}
+        pageName={
+          FFM_1827 || FFM_6665_FF_MFE_Target_Detail ? PAGE_NAME.TargetDetailPage : PAGE_NAME.LegacyTargetDetailPage
+        }
       >
-        <FFGitSyncProvider> {FFM_1827 ? <TargetDetailPage /> : <LegacyTargetDetailPage />} </FFGitSyncProvider>
+        <FFGitSyncProvider>
+          {FFM_6665_FF_MFE_Target_Detail ? <FFUIApp /> : FFM_1827 ? <TargetDetailPage /> : <LegacyTargetDetailPage />}
+        </FFGitSyncProvider>
       </RouteWithLayout>
 
       <RouteWithLayout

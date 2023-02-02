@@ -21,7 +21,8 @@ import {
   isSSHWinRMDeploymentType,
   ServiceDeploymentType,
   isElastigroupDeploymentType,
-  isTASDeploymentType
+  isTASDeploymentType,
+  isGoogleCloudFuctionsDeploymentType
 } from '@pipeline/utils/stageHelpers'
 
 const DEFAULT_RELEASE_NAME = 'release-<+INFRA_KEY>'
@@ -236,6 +237,15 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments
       }
     }
+    case InfraDeploymentType.GoogleCloudFunctions: {
+      const { connectorRef, project, region } = infrastructure?.spec || {}
+      return {
+        connectorRef,
+        project,
+        region,
+        allowSimultaneousDeployments
+      }
+    }
     default: {
       return {}
     }
@@ -345,6 +355,18 @@ export const getInfraGroups = (
       ]
     }
   ]
+  const googleCloudFunctionsInfraGroups: InfrastructureGroup[] = [
+    {
+      groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
+      items: [
+        {
+          label: getString('common.googleCloudPlatform'),
+          icon: 'gcp',
+          value: InfraDeploymentType.GoogleCloudFunctions
+        }
+      ]
+    }
+  ]
 
   const kuberntesInfraGroups: InfrastructureGroup[] = [
     {
@@ -374,6 +396,8 @@ export const getInfraGroups = (
       return customDeploymentInfraGroups
     case isTASDeploymentType(deploymentType):
       return tasInfraGroups
+    case isGoogleCloudFuctionsDeploymentType(deploymentType):
+      return googleCloudFunctionsInfraGroups
     default:
       return kuberntesInfraGroups
   }

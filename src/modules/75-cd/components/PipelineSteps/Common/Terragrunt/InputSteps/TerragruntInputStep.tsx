@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { FormikForm, Label, Text, FormInput, Container } from '@harness/uicore'
+import { FormikForm, Label, Text, Container } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { get } from 'lodash-es'
 import type { FormikContextType } from 'formik'
@@ -117,16 +117,50 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
                 {varFile.varFile?.identifier}
               </Container>
 
-              {isValueRuntimeInput(varFile?.varFile?.spec?.content) && (
-                <div className={cx(stepCss.formGroup, stepCss.md)}>
-                  <FormInput.MultiTextInput
+              {isValueRuntimeInput(get(varFile.varFile, 'spec.content')) && (
+                <div
+                  className={cx(stepCss.formGroup, stepCss.md)}
+                  // needed to prevent the run pipeline to get triggered on pressing enter within TFMonaco editor
+                  onKeyDown={
+                    /* istanbul ignore next */ e => {
+                      e.stopPropagation()
+                    }
+                  }
+                >
+                  <MultiTypeFieldSelector
                     name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.content`}
                     label={getString('pipelineSteps.content')}
-                    multiTextInputProps={{
-                      expressions,
-                      allowableTypes
+                    defaultValueToReset=""
+                    allowedTypes={allowableTypes}
+                    skipRenderValueInExpressionLabel
+                    disabled={readonly}
+                    configureOptionsProps={{
+                      isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
                     }}
-                  />
+                    expressionRender={
+                      /* istanbul ignore next */ () => {
+                        return (
+                          <MonacoTextField
+                            name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.content`}
+                            expressions={expressions}
+                            height={200}
+                            disabled={readonly}
+                            fullScreenAllowed
+                            fullScreenTitle={getString('pipelineSteps.content')}
+                          />
+                        )
+                      }
+                    }
+                  >
+                    <MonacoTextField
+                      name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.content`}
+                      expressions={expressions}
+                      height={200}
+                      disabled={readonly}
+                      fullScreenAllowed
+                      fullScreenTitle={getString('pipelineSteps.content')}
+                    />
+                  </MultiTypeFieldSelector>
                 </div>
               )}
             </React.Fragment>

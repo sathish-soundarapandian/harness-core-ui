@@ -49,7 +49,8 @@ export function StartupScriptWizard<T>({
   newConnectorSteps,
   lastSteps,
   deploymentType,
-  isReadonly
+  isReadonly,
+  singleAvailableStore
 }: StartupScriptWizardStepsProps<T>): React.ReactElement {
   const { getString } = useStrings()
 
@@ -66,6 +67,7 @@ export function StartupScriptWizard<T>({
       iconProps={{
         size: 37
       }}
+      initialStep={singleAvailableStore ? 2 : undefined}
       title={title}
     >
       <StartupScriptWizardStepOne
@@ -80,6 +82,7 @@ export function StartupScriptWizard<T>({
         handleConnectorViewChange={() => handleConnectorViewChange(true)}
         handleStoreChange={handleStoreChangeRef}
         initialValues={initialValues}
+        singleAvailableStore={singleAvailableStore}
       />
       {newConnectorView ? newConnectorSteps : null}
 

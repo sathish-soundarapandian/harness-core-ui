@@ -42,7 +42,7 @@ exports[`ManifestSelection tests can change artifact input type  without crashin
               >
                 <path
                   clip-rule="evenodd"
-                  d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                  d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                   fill-rule="evenodd"
                 />
               </svg>
@@ -249,7 +249,7 @@ exports[`ManifestSelection tests last step data with proper initial values 1`] =
               >
                 <path
                   clip-rule="evenodd"
-                  d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                  d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                   fill-rule="evenodd"
                 />
               </svg>
@@ -535,7 +535,7 @@ exports[`ManifestSelection tests last step data without initial values 1`] = `
               >
                 <path
                   clip-rule="evenodd"
-                  d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                  d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                   fill-rule="evenodd"
                 />
               </svg>
@@ -839,7 +839,7 @@ exports[`ManifestSelection tests new connector view works correctly 1`] = `
               >
                 <path
                   clip-rule="evenodd"
-                  d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                  d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                   fill-rule="evenodd"
                 />
               </svg>
@@ -1289,7 +1289,7 @@ exports[`ManifestSelection tests new connector view works inside select dialog c
               >
                 <path
                   clip-rule="evenodd"
-                  d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                  d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                   fill-rule="evenodd"
                 />
               </svg>
@@ -1721,7 +1721,7 @@ exports[`ManifestSelection tests renders correctly with differnet manifest types
               >
                 <path
                   clip-rule="evenodd"
-                  d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                  d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                   fill-rule="evenodd"
                 />
               </svg>
@@ -1992,7 +1992,7 @@ exports[`ManifestSelection tests renders without crashing 1`] = `
               >
                 <path
                   clip-rule="evenodd"
-                  d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96l-.836.144zm1.846-7.352v1.03h-1.01v-1.03h1.01z"
+                  d="M0 6a6 6 0 1012 0A6 6 0 000 6zm.75 0a5.25 5.25 0 1010.5 0A5.25 5.25 0 00.75 6zm4.206 3.104v.646h2.682v-.646l-.836-.144V4.203H4.956v.65l.836.144V8.96zm1.846-7.352v1.03h-1.01v-1.03z"
                   fill-rule="evenodd"
                 />
               </svg>

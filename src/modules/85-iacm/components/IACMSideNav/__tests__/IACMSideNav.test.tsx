@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { render, RenderResult } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, orgPathProps, pipelineModuleParams, projectPathProps } from '@common/utils/routeUtils'
@@ -48,12 +47,5 @@ describe('Sidenav', () => {
   test('render', () => {
     const { getByText } = renderComponent()
     expect(getByText('iacm.stacks')).toBeVisible()
-  })
-
-  test('should go to dashboard when project is selected', async () => {
-    const { getByTestId } = renderComponent()
-    userEvent.click(getByTestId('projectSelectorId'))
-
-    expect(getByTestId('location')).toHaveTextContent('/account/accountId/iacm/orgs/org/projects/project/dashboard')
   })
 })

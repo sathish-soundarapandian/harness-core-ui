@@ -26,7 +26,7 @@ export default function MetricAnalysisMetricThresolds(props: MetricAnalysisMetri
           <Text className={css.label} lineClamp={1} padding={{ right: 'small' }}>
             {THRESHOLD_TYPE_MAPPING[thresholdType?.toLocaleUpperCase()]}
           </Text>
-          {isUserDefined ? (
+          {!isUserDefined ? (
             <Text className={css.label} lineClamp={1}>
               {'(System)'}
             </Text>

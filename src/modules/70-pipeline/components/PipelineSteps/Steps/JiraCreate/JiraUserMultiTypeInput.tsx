@@ -9,7 +9,6 @@ import React from 'react'
 import { AllowedTypes, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import cx from 'classnames'
 import type {
   AccountPathProps,
   GitQueryParams,
@@ -22,7 +21,6 @@ import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInpu
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type { JiraFieldsRendererProps } from './JiraFieldsRenderer'
 import { getUserValuesOptions } from './helper'
-import css from './JiraCreate.module.scss'
 
 interface JiraUserProps {
   selectedField: any
@@ -30,9 +28,17 @@ interface JiraUserProps {
   expressions: string[]
   formikFieldPath: string
   index?: number
+  className?: string
 }
 
-export function JiraUserMultiTypeInput({ selectedField, props, expressions, formikFieldPath, index }: JiraUserProps) {
+export function JiraUserMultiTypeInput({
+  selectedField,
+  props,
+  expressions,
+  formikFieldPath,
+  index,
+  className
+}: JiraUserProps) {
   const { getString } = useStrings()
   const [searchTerm, setSearchTerm] = React.useState<string>(defaultTo(selectedField.value, ''))
   const { accountId, projectIdentifier, orgIdentifier } =
@@ -69,7 +75,6 @@ export function JiraUserMultiTypeInput({ selectedField, props, expressions, form
       useValue
       placeholder={/* istanbul ignore next */ fetchUsers ? getString('loading') : selectedField.label}
       disabled={isApprovalStepFieldDisabled(props.readonly) || fetchUsers}
-      className={cx(css.multiSelect, css.md)}
       multiTypeInputProps={{
         expressions,
         selectProps: {
@@ -82,6 +87,7 @@ export function JiraUserMultiTypeInput({ selectedField, props, expressions, form
       }}
       fieldPath={`spec.fields[${index}].value`}
       template={props.template}
+      className={className}
     />
   )
 }

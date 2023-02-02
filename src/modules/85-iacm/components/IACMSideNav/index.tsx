@@ -23,28 +23,22 @@ export default function IACMSideNav(): React.ReactElement {
   const { getString } = useStrings()
   const { updateAppStore } = useAppStore()
   const history = useHistory()
-
   return (
     <Layout.Vertical spacing="small">
       <ProjectSelector
         onSelect={data => {
           updateAppStore({ selectedProject: data })
           history.push(
-            routes.toProjectOverview({
+            routes.toIACMStacks({
               projectIdentifier: data.identifier,
-              orgIdentifier: data.orgIdentifier || /* istanbul ignore next */ '',
-              accountId,
-              module: 'iacm'
+              orgIdentifier: data.orgIdentifier,
+              accountId
             })
           )
         }}
       />
-      {!projectIdentifier && (
-        <SidebarLink label={getString('overview')} to={routes.toIACMMicroFrontend({ ...params })} />
-      )}
       {projectIdentifier && orgIdentifier && (
         <>
-          {/* <SidebarLink label={getString('overview')} to={routes.toProjectOverview({ ...params, module: 'iacm' })} /> */}
           <SidebarLink label={getString('iacm.stacks')} to={routes.toIACMStacks({ ...params })} />
           <SidebarLink label={getString('pipelines')} to={routes.toPipelines({ ...params, module: 'iacm' })} />
           <ProjectSetupMenu module="iacm" />

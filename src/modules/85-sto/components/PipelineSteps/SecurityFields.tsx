@@ -239,7 +239,7 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
             inputProps: { placeholder: '<+secrets.getValue("project.access_id")>' }
           },
           'spec.auth.access_token': {
-            label: 'token',
+            label: 'common.getStarted.accessTokenLabel',
             inputProps: { placeholder: '<+secrets.getValue("project.access_token")>' }
           }
         }}

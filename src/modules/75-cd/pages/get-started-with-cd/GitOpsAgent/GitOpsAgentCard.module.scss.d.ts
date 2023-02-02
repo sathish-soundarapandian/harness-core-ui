@@ -27,6 +27,7 @@ declare const styles: {
   readonly healthStatusPadding: string
   readonly iconMore: string
   readonly id: string
+  readonly isSelected: string
   readonly label: string
   readonly launch: string
   readonly layout: string

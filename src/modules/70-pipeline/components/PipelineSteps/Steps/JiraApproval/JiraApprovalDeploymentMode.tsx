@@ -68,7 +68,7 @@ function FormContent(formContentProps: JiraApprovalDeploymentModeProps) {
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}
-          width={385}
+          width={400}
           setRefValue
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTypeProps={{

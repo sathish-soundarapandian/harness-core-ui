@@ -920,7 +920,7 @@ resourceCenter:
     title: Product Updates
     whatsnew: 'What’s New'
     earlyAcess: Early Access
-    releaseText: Your Harness account {{accountid}} is hosted on the harness {{clustername}} cluster. Following are the versions of various components running along with links to their release notes.
+    releaseText: Your Harness account {{accountid}} is hosted on the Harness {{clustername}} cluster. Following are the versions of various components running along with links to their release notes.
   ticketmenu:
     title: 'Contact us'
     tickets: 'My tickets'
@@ -990,7 +990,7 @@ environmentGroup:
 environmentGroups:
   label: Environment Groups
   noEnvironmentGroups:
-    label: You have No Environment Groups
+    label: You have no Environment Groups
     message: Create a new Environment Group to start configuring the deployment
 noSearchResultsFound: No results found for '{{searchTerm}}'.
 searchOther: Please search something else.
@@ -1059,6 +1059,7 @@ executedBy: Executed By
 updatedBy: Updated By
 headerWithOptionalText: '{{header}} (Optional)'
 selectWorkload: Select Workload
+entitycreatedSuccessfully: '{{entity}} {{name}} created successfully'
 
 # Onboarding
 getStarted:
@@ -1224,6 +1225,10 @@ createFlag: Create a Flag
 learnMore: Learn more
 sloNoData: You don’t have any SLO created yet
 sloDowntimeLabel: SLO Downtime
+occurrence:
+  oneTime: One time
+  recurring: Recurring
+endTime: End time
 connectGitRepo: Connect to Git Repository
 clickToExpand: Click to expand
 configureService: Configure Service
@@ -1326,3 +1331,8 @@ artifacts:
     sourceDirectory: Source Directory
     sourceDirectoryPlaceholder: Enter Source Directory
 updated: Updated
+python: Python
+
+# SSCS module
+sscs: SSCS
+sscsText: Software Supply Chain Security

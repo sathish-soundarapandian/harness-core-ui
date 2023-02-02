@@ -243,7 +243,7 @@ function FormContent({
         <FormMultiTypeConnectorField
           name="spec.connectorRef"
           label={getString('pipeline.jiraApprovalStep.connectorRef')}
-          width={390}
+          width={372}
           className={css.connector}
           connectorLabelClass={css.connectorLabel}
           placeholder={getString('select')}
@@ -259,6 +259,8 @@ function FormContent({
             setConnectorValueType(multiType)
             if (value?.record?.identifier !== connectorRefFixedValue) {
               resetForm(formik, 'connectorRef')
+              setFieldList([])
+              setStatusList([])
               if (multiType !== MultiTypeInputType.FIXED) {
                 setProjectOptions([])
                 setProjectMetadata(undefined)
@@ -399,7 +401,8 @@ function FormContent({
           disabled={isApprovalStepFieldDisabled(readonly)}
           multiTextInputProps={{
             expressions,
-            allowableTypes
+            allowableTypes,
+            multitypeInputValue: getMultiTypeFromValue(formik.values.spec.issueKey)
           }}
         />
         {getMultiTypeFromValue(formik.values.spec.issueKey) === MultiTypeInputType.RUNTIME && (

@@ -14,6 +14,7 @@ declare const styles: {
   readonly actualWarning: string
   readonly analysisRow: string
   readonly anomolousCheckbox: string
+  readonly clearButton: string
   readonly content: string
   readonly deploymentMetricsAccordionPanel: string
   readonly deploymentMetricsAccordionSummary: string

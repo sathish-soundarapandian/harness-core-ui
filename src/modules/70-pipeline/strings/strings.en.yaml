@@ -424,6 +424,7 @@ manifestTypeLabels:
   TASManifest: TAS Manifest
   VarsYAML: Vars
   Autoscaler: AutoScaler
+  GoogleCloudFunctionDefinition: Google Cloud Function Definition
   HelmRepoOverride: Helm Repo Override
 manifestToConnectorLabelMap:
   AWSLabel: '{{ $.common.aws }}'
@@ -1074,6 +1075,7 @@ artifactPathDependencyRequired: required to fetch the artifact paths
 artifactOrImagePathDependencyRequired: required to fetch the artifact/image path
 artifactRepositoryDependencyRequired: 'Artifactory Connector is required to fetch repositories. You can make this field Runtime input otherwise.'
 bucketNameHelperText: 'Connector is required to fetch buckets'
+projectHelperText: 'Connector is required to fetch projects'
 filePathHelperText: 'Connector and Bucket Name are required to fetch file paths'
 imagePathHelperText: 'Connector and Region are required to fetch image paths'
 myDeploymentsText: My Deployments
@@ -1086,6 +1088,7 @@ noBucketsFound: No buckets found
 noFilePathsFound: No file paths found
 noClustersFound: No clusters found
 noImagesFound: No images found
+noCloudSourceRepositoriesFound: No cloud source repositories found
 gitRepo: Git Repo
 buildRepo: Build Repo
 failureTypetext: Select Failure Type
@@ -1144,6 +1147,10 @@ stepDescription:
   Policy: Evaluate policy during pipeline execution
   ServerlessLambdaDeploy: Create the Lambda functions defined in this Stage.
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
+  DeployCloudFunction: Deploy a Google Function.
+  DeployCloudFunctionRollback: Deploy the previous successful version of your Google Function as a new version.
+  DeployCloudFunctionNoTrafficShift: Deploy a new Google Function validate it and progressively route traffic and cut it over from the current primary function.
+  DeployCloudFunctionTrafficShift: Deploy a Google Function as a canary and route traffic to it.
   createPR: Create PR
   mergePR: Merge the PR created by the GitOps Update Release Repo step
   updateReleaseRepo: Create the PR with your updated JSON files

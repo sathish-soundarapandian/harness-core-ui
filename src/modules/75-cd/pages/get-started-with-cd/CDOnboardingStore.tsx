@@ -12,6 +12,7 @@ import type { EnvironmentRequestDTO } from 'services/cd-ng'
 import type { GetPipelineQueryParams } from 'services/pipeline-ng'
 
 import type { FileStoreNodeDTO } from '@filestore/components/FileStoreContext/FileStoreContext'
+import type { Servicev1Application, V1Agent } from 'services/gitops'
 import {
   CDOnboardingContextActions,
   CDOnboardingReducer,
@@ -19,6 +20,7 @@ import {
   initialState
 } from './CDOnboardingActions'
 import {
+  ClusterInterface,
   DelegateDataType,
   DrawerMode,
   InfrastructureDataType,
@@ -40,9 +42,12 @@ export interface CDOnboardingContextInterface {
   setDrawerData: (_drawerData: DrawerDataType) => void
   saveServiceData: (data: ServiceDataType) => void
   saveEnvironmentData: (data: EnvironmentRequestDTO) => void
+  saveApplicationData: (data: Servicev1Application) => void
   saveInfrastructureData: (data: InfrastructureDataType) => void
   saveDelegateData: (data: DelegateDataType) => void
   saveRepositoryData: (data: RepositoryInterface) => void
+  saveClusterData: (data: ClusterInterface) => void
+  saveAgentData: (data: V1Agent) => void
 }
 const initialDrawerData = { fileContent: undefined, mode: DrawerMode.Preview }
 
@@ -52,7 +57,10 @@ export const CDOnboardingContext = React.createContext<CDOnboardingContextInterf
   setDrawerData: noop,
   saveServiceData: () => new Promise<void>(() => undefined),
   saveEnvironmentData: () => new Promise<void>(() => undefined),
+  saveApplicationData: () => new Promise<void>(() => undefined),
   saveRepositoryData: () => new Promise<void>(() => undefined),
+  saveClusterData: () => new Promise<void>(() => undefined),
+  saveAgentData: () => new Promise<void>(() => undefined),
   saveInfrastructureData: () => new Promise<void>(() => undefined),
   saveDelegateData: () => new Promise<void>(() => undefined)
 })
@@ -111,11 +119,26 @@ export function CDOnboardingProvider({
     dispatch(CDOnboardingContextActions.UpdateRepository({ repository: data }))
   }, [])
 
+  const saveClusterData = React.useCallback((data: ClusterInterface) => {
+    dispatch(CDOnboardingContextActions.UpdateCluster({ cluster: data }))
+  }, [])
+
+  const saveApplicationData = React.useCallback((data: Servicev1Application) => {
+    dispatch(CDOnboardingContextActions.updateApplication({ cluster: data }))
+  }, [])
+
+  const saveAgentData = React.useCallback((data: V1Agent) => {
+    dispatch(CDOnboardingContextActions.updateAgent({ agent: data }))
+  }, [])
+
   return (
     <CDOnboardingContext.Provider
       value={{
         state,
+        saveClusterData,
         saveRepositoryData,
+        saveApplicationData,
+        saveAgentData,
         saveServiceData,
         saveEnvironmentData,
         saveInfrastructureData,

@@ -24,7 +24,6 @@ import cx from 'classnames'
 import { useHistory } from 'react-router-dom'
 import { isEmpty, defaultTo, keyBy, omitBy } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
-import type { GetDataError } from 'restful-react'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
   PipelineConfig,
@@ -37,7 +36,6 @@ import {
   useRunStagesWithRuntimeInputYaml,
   useRerunStagesWithRuntimeInputYaml,
   useGetStagesExecutionList,
-  Failure,
   useDebugPipelineExecuteWithInputSetYaml
 } from 'services/pipeline-ng'
 import { useToaster } from '@common/exports'
@@ -111,8 +109,6 @@ export interface RunPipelineFormProps extends PipelineType<PipelinePathProps & G
   onClose?: () => void
   executionView?: boolean
   mockData?: ResponseJsonNode
-  executionInputSetTemplateYaml?: string
-  executionInputSetTemplateYamlError?: GetDataError<Failure | Error> | null
   stagesExecuted?: string[]
   executionIdentifier?: string
   source: ExecutionPathProps['source']
@@ -145,8 +141,6 @@ function RunPipelineFormBasic({
   repoIdentifier,
   connectorRef,
   storeType,
-  executionInputSetTemplateYaml = '',
-  executionInputSetTemplateYamlError,
   stagesExecuted,
   executionIdentifier,
   isDebugMode
@@ -180,7 +174,6 @@ function RunPipelineFormBasic({
   const { setPipeline: updatePipelineInVaribalesContext, setSelectedInputSetsContext } = usePipelineVariables()
   const [existingProvide, setExistingProvide] = useState<'existing' | 'provide'>('existing')
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
-  const [isInputSetApplied, setIsInputSetApplied] = useState(true)
   const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
 
   const [canSaveInputSet, canEditYaml] = usePermission(
@@ -264,11 +257,12 @@ function RunPipelineFormBasic({
     hasInputSets,
     loading: loadingInputSets,
     error: inputSetsError,
-    canApplyInputSet,
     refetch: getTemplateFromPipeline,
     hasRuntimeInputs,
     invalidInputSetReferences,
-    onReconcile
+    onReconcile,
+    shouldValidateForm,
+    setShouldValidateForm
   } = useInputSets({
     accountId,
     projectIdentifier,
@@ -282,8 +276,6 @@ function RunPipelineFormBasic({
     executionIdentifier,
     inputSetSelected: selectedInputSets,
     resolvedPipeline: resolvedMergedPipeline,
-    executionInputSetTemplateYaml,
-    executionView,
     setSelectedInputSets
   })
 
@@ -432,10 +424,6 @@ function RunPipelineFormBasic({
     }
     return executionStages
   }, [stageExecutionData?.data])
-
-  useDeepCompareEffect(() => {
-    setIsInputSetApplied(false)
-  }, [selectedInputSets])
 
   useEffect(() => {
     setSelectedInputSets(inputSetSelected)
@@ -657,16 +645,13 @@ function RunPipelineFormBasic({
     return areDependentStagesSelected
   }, [selectedStageData])
 
-  useDeepCompareEffect(() => {
-    if (inputSet?.pipeline && formikRef.current) {
-      formikRef.current.setValues(inputSet.pipeline)
-
-      if (canApplyInputSet) {
-        formikRef.current.validateForm(inputSet.pipeline)
-      }
+  useEffect(() => {
+    if (shouldValidateForm) {
+      formikRef.current?.validateForm(inputSet.pipeline)
+      setShouldValidateForm?.(false)
     }
-    setIsInputSetApplied(true)
-  }, [inputSet, canApplyInputSet])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shouldValidateForm, inputSet])
 
   const updateExpressionValue = (e: React.ChangeEvent<HTMLInputElement>): void => {
     if (!e.target) {
@@ -732,7 +717,7 @@ function RunPipelineFormBasic({
   }
 
   const shouldShowPageSpinner = (): boolean => {
-    return loadingPipeline || loadingResolvedChildPipeline
+    return loadingPipeline || loadingResolvedChildPipeline || loadingInputSets
   }
 
   const formRefDom = React.useRef<HTMLElement | undefined>()
@@ -787,13 +772,6 @@ function RunPipelineFormBasic({
             formikRef.current = formik
             valuesPipelineRef.current = values
 
-            // The values are updated in next tick.
-            // Due to this, some fields do not work properly.
-            // We need to delay the render in such scenario
-            if (hasRuntimeInputs && isEmpty(values)) {
-              return <PageSpinner />
-            }
-
             return (
               <OverlaySpinner show={isExecutingPipeline}>
                 <Layout.Vertical
@@ -839,7 +817,6 @@ function RunPipelineFormBasic({
                       pipelineIdentifier={pipelineIdentifier}
                       executionIdentifier={pipelineExecutionId}
                       template={defaultTo(inputSetTemplate?.pipeline, {} as PipelineInfoConfig)}
-                      templateError={executionInputSetTemplateYamlError}
                       pipeline={pipeline}
                       currentPipeline={{ pipeline: values }}
                       getTemplateError={inputSetsError}
@@ -852,7 +829,6 @@ function RunPipelineFormBasic({
                       pipelineResponse={pipelineResponse}
                       invalidInputSetReferences={invalidInputSetReferences}
                       loadingInputSets={loadingInputSets}
-                      isInputSetApplied={isInputSetApplied}
                       onReconcile={onReconcile}
                       reRunInputSetYaml={inputSetYAML}
                     />

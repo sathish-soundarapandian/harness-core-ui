@@ -949,24 +949,30 @@ CompositeSLO:
   compositeSloUpdated: Composite SLO updated successfully
   SLIMetricRatio: SLI = (SLO1*weightage1 + SLO2*weightage2... + SLON*weightageN)/n*100
   AddSLOValidation:
-    minMaxSLOCount: Should have minimun 2 SLOs and maximum 20 SLO's
+    minMaxSLOCount: Should have minimum 2 SLOs and maximum 20 SLO's
     totalSLOWeight: Total SLO weight should be equal to 100
-    minSLOCount: Should have minimun 2 SLOs
+    minSLOCount: Should have minimum 2 SLOs
     maxSLOCount: Should have maximum 20 SLOs
     weightMinMax: SLO weight should be between 0.01 to 99.99
 sloDowntime:
   label: Downtime
   downtimeName: Downtime Name
-  downtimeCategory: Downtime category
+  category: Category
   noData: No SLO downtime configured
   addDowntime: Add a SLO Downtime
   info: During downtime, SLO status and error budget calculations will be excluded for that specific time period.
   scheduledMaintenance: Scheduled Maintenance
   selectCategory: Select downtime category
+  repeatEvery: Repeat every
+  repeatEndsOn: Repeat ends on
+  durationText: from start time
   validations:
     nameValidation: SLO Downtime is required
+    categoryValidation: Category is required
   steps:
     identification: Define SLO downtime identification
+    downtimeWindow: Select the SLO downtime window
+    monitoredServices: Apply to monitored services
 SLO: SLO
 SLOWithName: 'SLO: {{ name }}'
 lastModifiedOn: Last modified on
@@ -1039,6 +1045,8 @@ updatedErrorBudget: Updated Error Budget
 remainingErrorBudget: Remaining Error Budget
 updatedRemainingErrorBudget: Updated remaining Error Budget
 minutes: minutes
+weeks: weeks
+months: months
 noPreviousErrorBudgetResetHistoryAvailable: No previous Error Budget reset history available
 dateAndTime: Date/Time
 increaseInMinutes: 'Increase (minutes)'

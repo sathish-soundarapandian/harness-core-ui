@@ -6370,6 +6370,7 @@ export const useGetLastPeriodCost = (props: UseGetLastPeriodCostProps) =>
 
 export interface GetFoldersQueryParams {
   accountIdentifier: string
+  folderNamePattern?: string
 }
 
 export type GetFoldersProps = Omit<GetProps<ResponseListCEViewFolder, unknown, GetFoldersQueryParams, void>, 'path'>

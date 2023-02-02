@@ -7,8 +7,10 @@
 
 import { DropDown, SelectOption } from '@harness/uicore'
 import React, { useState } from 'react'
-import { getOrganizations } from '@harnessio/react-ng-manager-client'
+import { useParams } from 'react-router-dom'
+import { getOrganizationListPromise, OrganizationResponse } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 interface OrgDropdownProps {
   onChange: (item: SelectOption) => void
@@ -17,20 +19,29 @@ interface OrgDropdownProps {
 }
 
 const OrgDropdown: React.FC<OrgDropdownProps> = props => {
+  const { accountId } = useParams<AccountPathProps>()
   const [query, setQuery] = useState<string>()
   const { getString } = useStrings()
 
   function orgListPromise(): Promise<SelectOption[]> {
     return new Promise<SelectOption[]>(resolve => {
-      getOrganizations({ queryParams: { search_term: query, limit: 100 } })
+      getOrganizationListPromise({ queryParams: { accountIdentifier: accountId, searchTerm: query, pageSize: 100 } })
         .then(result => {
-          const selectItems = result.reduce<SelectOption[]>((selected, item) => {
-            if (item.org?.name && item.org?.identifier) {
-              return [...selected, { label: item.org.name, value: item.org.identifier }]
-            }
-            return selected
-          }, [])
-          resolve(selectItems || [])
+          let selectItems: Array<SelectOption> = []
+
+          if (result?.data?.content?.length) {
+            selectItems = result?.data?.content?.reduce?.(
+              (selected: Array<SelectOption>, item: OrganizationResponse) => {
+                if (item.organization?.name && item.organization?.identifier) {
+                  return [...selected, { label: item.organization.name, value: item.organization.identifier }]
+                }
+                return selected
+              },
+              []
+            )
+          }
+
+          resolve(selectItems)
         })
         .catch(() => {
           resolve([])

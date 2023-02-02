@@ -8,14 +8,16 @@
 import React from 'react'
 import { Container, Layout, Text, ThumbnailSelect } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
+import { useFormikContext } from 'formik'
 import { NameIdDescriptionTags } from '@common/components'
 import { useStrings } from 'framework/strings'
-import { DowntimeFormFields } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.types'
+import { DowntimeForm, DowntimeFormFields } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.types'
 import { getDowntimeCategoryOptions } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.utils'
-import type { DowntimeNameProps } from './DowntimeName.types'
 
-const DowntimeName = ({ formikProps, identifier }: DowntimeNameProps): JSX.Element => {
+const DowntimeName = ({ identifier }: { identifier?: string }): JSX.Element => {
   const { getString } = useStrings()
+
+  const formikProps = useFormikContext<DowntimeForm>()
 
   return (
     <Layout.Vertical spacing={'huge'}>

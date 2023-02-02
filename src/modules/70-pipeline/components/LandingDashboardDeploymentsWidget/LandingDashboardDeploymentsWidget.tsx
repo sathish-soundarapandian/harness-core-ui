@@ -420,17 +420,19 @@ const renderServiceTooltipRow = (iconName: IconName, label: StringKeys, value?: 
   }
   return (
     <Layout.Horizontal padding={{ top: 'small' }} flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-      <Icon name={iconName} color={Color.GREY_300} margin={{ right: 'xsmall' }} />
+      <Icon name={iconName} size={13} color={Color.GREY_300} margin={{ right: 'xsmall' }} />
       <Layout.Horizontal className={css.serviceTooltipRowLabel}>
-        <Text inline color={Color.GREY_300}>
+        <Text inline color={Color.GREY_300} font={{ variation: FontVariation.SMALL_SEMI }}>
           <String stringID={label} />
         </Text>
-        <Text color={Color.GREY_300} margin={{ right: 'xsmall' }}>
+        <Text color={Color.GREY_300} margin={{ right: 'xsmall' }} font={{ variation: FontVariation.SMALL_SEMI }}>
           :
         </Text>
       </Layout.Horizontal>
 
-      <Text color={Color.WHITE}>{value}</Text>
+      <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL_SEMI }}>
+        {value}
+      </Text>
     </Layout.Horizontal>
   )
 }
@@ -440,7 +442,7 @@ const renderTooltipForServiceLabel = (service: ActiveServiceInfo): JSX.Element =
     <Layout.Vertical padding="medium" spacing="small">
       <Text color={Color.WHITE}>{service?.serviceInfo?.serviceName ?? ''}</Text>
       {renderServiceTooltipRow('nav-project', 'projectLabel', service?.projectInfo?.projectName)}
-      {renderServiceTooltipRow('union', 'common.org', service?.orgInfo?.orgName)}
+      {renderServiceTooltipRow('nav-organization', 'common.org', service?.orgInfo?.orgName)}
     </Layout.Vertical>
   )
 }

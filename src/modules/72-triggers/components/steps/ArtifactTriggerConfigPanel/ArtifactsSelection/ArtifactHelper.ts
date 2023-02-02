@@ -62,6 +62,7 @@ export const ArtifactIconByType: Record<ArtifactType, IconName> = {
   GoogleArtifactRegistry: 'service-gar',
   GithubPackageRegistry: 'service-github-package',
   AzureArtifacts: 'service-azure-artifacts',
+  GoogleCloudStorage: 'artifact-google-cloud-storage',
   AmazonMachineImage: 'service-ami'
 }
 
@@ -78,6 +79,7 @@ export const ArtifactTitleIdByType: Record<ArtifactType, StringKeys> = {
   GoogleArtifactRegistry: 'pipeline.artifactsSelection.googleArtifactRegistryTitle',
   GithubPackageRegistry: 'pipeline.artifactsSelection.githubPackageRegistryTitle',
   AzureArtifacts: 'connectors.title.azureArtifacts',
+  GoogleCloudStorage: 'common.artifacts.googleCloudStorage.title',
   AmazonMachineImage: 'pipeline.artifactsSelection.AmazonMachineImageTitle'
 }
 
@@ -94,6 +96,7 @@ export const ENABLED_ARTIFACT_TYPES: { [key: string]: ArtifactType } = {
   GoogleArtifactRegistry: 'GoogleArtifactRegistry',
   GithubPackageRegistry: 'GithubPackageRegistry',
   AzureArtifacts: 'AzureArtifacts',
+  GoogleCloudStorage: 'GoogleCloudStorage',
   AmazonMachineImage: 'AmazonMachineImage'
 }
 
@@ -109,6 +112,7 @@ export const ArtifactToConnectorMap: Record<string, ConnectorInfoDTO['type']> = 
   GoogleArtifactRegistry: Connectors.GCP,
   GithubPackageRegistry: Connectors.GITHUB,
   AzureArtifacts: Connectors.AZURE_ARTIFACTS,
+  GoogleCloudStoage: Connectors.GCP,
   AmazonMachineImage: Connectors.AWS
 }
 
@@ -124,6 +128,7 @@ export const ArtifactConnectorLabelMap: Record<string, string> = {
   GoogleArtifactRegistry: 'GCP',
   GithubPackageRegistry: 'Github',
   AzureArtifacts: 'Azure Artifacts',
+  GoogleCloudStoage: 'GCP',
   AmazonMachineImage: 'AWS'
 }
 
@@ -201,7 +206,7 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Nexus3Registry,
     ENABLED_ARTIFACT_TYPES.CustomArtifact
   ],
-  GoogleCloudFunctions: []
+  GoogleCloudFunctions: [ENABLED_ARTIFACT_TYPES.GoogleCloudFunctions]
 }
 
 export const tagOptions: IOptionProps[] = [

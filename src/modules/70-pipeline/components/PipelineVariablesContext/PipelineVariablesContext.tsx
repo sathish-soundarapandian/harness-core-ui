@@ -8,7 +8,7 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 
-import { debounce, defaultTo, get, isEmpty, isPlainObject } from 'lodash-es'
+import { debounce, defaultTo, get, isEmpty, isPlainObject, omit } from 'lodash-es'
 import type {
   VariableMergeServiceResponse,
   Failure,
@@ -118,6 +118,7 @@ export function PipelineVariablesContextProvider(
   const [originalPipeline, setOriginalPipeline] = React.useState<PipelineInfoConfig>(
     defaultTo(pipelineFromProps, {} as PipelineInfoConfig)
   )
+
   const [{ variablesPipeline, metadataMap, serviceExpressionPropertiesList }, setPipelineVariablesData] =
     React.useState<VaribalesState>({
       variablesPipeline: { name: '', identifier: '', stages: [] },
@@ -184,14 +185,19 @@ export function PipelineVariablesContextProvider(
     },
     requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
     body: {
-      originalEntityYaml: enablePipelineTemplatesResolution ? yamlStringify(originalPipeline) : ''
+      originalEntityYaml: enablePipelineTemplatesResolution ? yamlStringify({ pipeline: originalPipeline }) : ''
     },
     lazy: !(enablePipelineTemplatesResolution && !isEmpty(originalPipeline))
   })
 
   React.useEffect(() => {
     if (resolvedPipelineResponse?.data?.mergedPipelineYaml) {
-      setResolvedPipeline(yamlParse(resolvedPipelineResponse.data.mergedPipelineYaml))
+      const parsedYaml: any = yamlParse(resolvedPipelineResponse.data.mergedPipelineYaml)
+      if (parsedYaml?.pipeline) {
+        setResolvedPipeline(parsedYaml.pipeline)
+      } else {
+        setResolvedPipeline(parsedYaml)
+      }
     }
   }, [resolvedPipelineResponse])
 
@@ -226,7 +232,11 @@ export function PipelineVariablesContextProvider(
 
   useDeepCompareEffect(() => {
     if (pipelineFromProps) {
-      setOriginalPipeline(pipelineFromProps)
+      setOriginalPipeline({
+        name: pipelineFromProps.name,
+        identifier: pipelineFromProps.identifier,
+        ...omit(pipelineFromProps, ['name', 'identifier'])
+      })
     }
   }, [pipelineFromProps])
 

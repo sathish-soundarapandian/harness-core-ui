@@ -28,11 +28,11 @@ exports[`<ExecutionMetadata.test /> tests Branch type 1`] = `
           />
         </svg>
       </span>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-primary6 StyledProps--margin-right-xsmall"
+      <a
+        href="/account/TEST_ACCOUNT_ID/ci/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/triggers/trigger"
       >
         trigger
-      </p>
+      </a>
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
       >
@@ -73,11 +73,11 @@ exports[`<ExecutionMetadata.test /> tests Pull Request type 1`] = `
           />
         </svg>
       </span>
-      <p
-        class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-primary6 StyledProps--margin-right-xsmall"
+      <a
+        href="/account/TEST_ACCOUNT_ID/ci/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/triggers/trigger"
       >
         trigger
-      </p>
+      </a>
       <p
         class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey500"
       >

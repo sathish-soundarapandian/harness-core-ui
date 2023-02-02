@@ -57,13 +57,17 @@ const renderTooltipForProjectLabel = (
       <Text color={Color.WHITE}>{projectData?.projectInfo?.projectName ?? ''}</Text>
       {projectData?.orgInfo?.orgName ? (
         <Layout.Horizontal padding={{ top: 'small' }} flex={{ alignItems: 'center' }}>
-          <Icon name="union" color={Color.GREY_300} margin={{ right: 'xsmall' }} />
-          <Text inline color={Color.GREY_300}>
+          <Icon name="nav-organization" size={13} color={Color.GREY_300} margin={{ right: 'xsmall' }} />
+          <Text inline color={Color.GREY_300} font={{ variation: FontVariation.SMALL_SEMI }}>
             <String stringID="common.org" />
           </Text>
-          <Text color={Color.GREY_300}>:&nbsp;</Text>
+          <Text color={Color.GREY_300} font={{ variation: FontVariation.SMALL_SEMI }}>
+            :&nbsp;
+          </Text>
 
-          <Text color={Color.WHITE}>{projectData?.orgInfo?.orgName}</Text>
+          <Text color={Color.WHITE} font={{ variation: FontVariation.SMALL_SEMI }}>
+            {projectData?.orgInfo?.orgName}
+          </Text>
         </Layout.Horizontal>
       ) : undefined}
     </Layout.Vertical>

@@ -390,7 +390,7 @@ function FormContent({
           label={getString('pipeline.jiraApprovalStep.connectorRef')}
           className={css.connector}
           connectorLabelClass={css.connectorLabel}
-          width={390}
+          width={372}
           placeholder={getString('connectors.selectConnector')}
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}

@@ -31,7 +31,8 @@ export const deploymentIconMap: Record<string, IconName> = {
   [ServiceDeploymentType.TAS]: 'tas',
   [ServiceDeploymentType.CustomDeployment]: 'CustomDeployment',
   [ServiceDeploymentType.Elastigroup]: 'elastigroup',
-  [ServiceDeploymentType.Asg]: 'aws-asg'
+  [ServiceDeploymentType.Asg]: 'aws-asg',
+  [ServiceDeploymentType.GoogleCloudFunctions]: 'service-google-functions'
 }
 
 export interface DeploymentTypeItem {
@@ -49,10 +50,11 @@ export interface GetNgSupportedDeploymentTypesProps {
   SPOT_ELASTIGROUP_NG?: boolean
   CDS_TAS_NG?: boolean
   CDS_ASG_NG?: boolean
+  CDS_GOOGLE_CLOUD_FUNCTION?: boolean
 }
 
 export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTypesProps): DeploymentTypeItem[] {
-  const { SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, CDS_ASG_NG } = props
+  const { SSH_NG, NG_SVC_ENV_REDESIGN, SPOT_ELASTIGROUP_NG, CDS_TAS_NG, CDS_ASG_NG, CDS_GOOGLE_CLOUD_FUNCTION } = props
 
   const baseTypes: DeploymentTypeItem[] = [
     {
@@ -72,6 +74,13 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
     }
   ]
 
+  if (CDS_GOOGLE_CLOUD_FUNCTION) {
+    baseTypes.push({
+      label: 'pipeline.serviceDeploymentTypes.googleCloudFunctions',
+      icon: deploymentIconMap[ServiceDeploymentType.GoogleCloudFunctions],
+      value: ServiceDeploymentType.GoogleCloudFunctions
+    })
+  }
   if (SSH_NG) {
     baseTypes.push({
       label: 'pipeline.serviceDeploymentTypes.ssh',

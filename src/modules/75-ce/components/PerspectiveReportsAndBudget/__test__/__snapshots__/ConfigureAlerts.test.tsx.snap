@@ -190,8 +190,8 @@ exports[`Test Cases For ConfigureAlerts Should be able to render ConfigureAlerts
                                   >
                                     <path
                                       clip-rule="evenodd"
-                                      d="M.91 0h8.18c.503 0 .91.415.91.926v6.481a.918.918 0 01-.91.926H.91A.918.918 0 010 7.407V.926C0 .415.407 0 .91 0zm0 3.064v4.343H9.09V3.064L5 5.147.91 3.064zm0-1.035L5 4.112 9.091 2.03V.926H.909v1.103z"
-                                      fill="#4F5162"
+                                      d="M.91 0h8.18c.503 0 .91.415.91.926v6.481a.918.918 0 01-.91.926H.91A.918.918 0 010 7.407V.926C0 .415.407 0 .91 0zm0 3.064v4.343H9.09V3.064L5 5.147zm0-1.035L5 4.112 9.091 2.03V.926H.909z"
+                                      fill="#4f5162"
                                       fill-rule="evenodd"
                                     />
                                   </svg>

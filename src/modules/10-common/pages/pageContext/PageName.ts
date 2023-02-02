@@ -142,5 +142,7 @@ export enum PAGE_NAME {
   CODECommits = 'CODECommits',
   CODEBranches = 'CODEBranches',
   ExecutionList = 'ExecutionList',
-  CFConfigurePath = 'CFConfigurePath'
+  CFConfigurePath = 'CFConfigurePath',
+  SSCSHomePage = 'SSCSHomePage',
+  SSCSOverviewPage = 'SSCSOverviewPage'
 }

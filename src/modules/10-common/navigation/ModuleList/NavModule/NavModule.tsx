@@ -36,6 +36,7 @@ const navModuleToClassMap: Record<NavModuleName, string> = {
   [ModuleName.STO]: css.sto,
   [ModuleName.CHAOS]: css.chaos,
   [ModuleName.IACM]: css.iacm,
+  [ModuleName.SSCS]: css.sscs,
   [ModuleName.CODE]: css.default
 }
 

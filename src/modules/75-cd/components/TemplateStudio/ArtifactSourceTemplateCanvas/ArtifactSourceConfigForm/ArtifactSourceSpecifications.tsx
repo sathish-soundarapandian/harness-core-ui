@@ -37,7 +37,9 @@ import type {
   JenkinsArtifactType,
   Nexus2InitialValuesType,
   ArtifactType,
-  AzureArtifactsInitialValues
+  AzureArtifactsInitialValues,
+  GoogleCloudStorageInitialValuesType,
+  GoogleCloudSourceRepositoriesInitialValuesType
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { useArtifactSelectionLastSteps } from '@pipeline/components/ArtifactsSelection/hooks/useArtifactSelectionLastSteps'
 import type { ArtifactConfig, ConnectorConfigDTO, ConnectorInfoDTO } from 'services/cd-ng'
@@ -265,7 +267,9 @@ export function ArtifactSourceSpecifications(props: {
       CustomArtifactSource &
       GithubPackageRegistryInitialValuesType &
       Nexus2InitialValuesType &
-      AzureArtifactsInitialValues
+      AzureArtifactsInitialValues &
+      GoogleCloudStorageInitialValuesType &
+      GoogleCloudSourceRepositoriesInitialValuesType
   > => {
     return {
       key: getString('connectors.stepFourName'),

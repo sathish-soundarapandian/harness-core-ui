@@ -8,12 +8,10 @@
 import React, { useEffect, useState } from 'react'
 import { render } from '@testing-library/react'
 import type { SelectOption } from '@harness/uicore'
-import { getOrganizations } from '@harnessio/react-ng-manager-client'
+import { noop } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
 import { OrgMockData } from '@projects-orgs/pages/projects/__tests__/ProjectPageMock'
 import OrgDropdown from '../OrgDropdown'
-
-jest.mock('@harnessio/react-ng-manager-client')
 
 jest.mock('@harness/uicore', () => {
   return {
@@ -42,18 +40,21 @@ jest.mock('@harness/uicore', () => {
   }
 })
 
+let orgListPromiseMock = jest.fn().mockImplementation(() => {
+  return Promise.resolve(OrgMockData)
+})
+
+jest.mock('services/cd-ng', () => ({
+  getOrganizationListPromise: jest.fn().mockImplementation(() => {
+    return orgListPromiseMock()
+  })
+}))
+
 describe('org dropdown test', () => {
   test('render', () => {
-    ;(getOrganizations as jest.Mock).mockImplementation(() => {
-      return Promise.resolve(OrgMockData)
-    })
     const { container } = render(
       <TestWrapper>
-        <OrgDropdown
-          onChange={() => {
-            // no code
-          }}
-        />
+        <OrgDropdown onChange={noop} />
       </TestWrapper>
     )
 
@@ -61,16 +62,12 @@ describe('org dropdown test', () => {
   })
 
   test('test when data is not defined', () => {
-    ;(getOrganizations as jest.Mock).mockImplementation(() => {
+    orgListPromiseMock = jest.fn().mockImplementation(() => {
       return Promise.resolve(undefined)
     })
     const { queryByText } = render(
       <TestWrapper>
-        <OrgDropdown
-          onChange={() => {
-            // no code
-          }}
-        />
+        <OrgDropdown onChange={noop} />
       </TestWrapper>
     )
     expect(queryByText('orgDropdown')).not.toBeNull()

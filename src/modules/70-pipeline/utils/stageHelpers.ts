@@ -71,7 +71,8 @@ export enum ServiceDeploymentType {
   Elastigroup = 'Elastigroup',
   SshWinRmAws = 'SshWinRmAws',
   SshWinRmAzure = 'SshWinRmAzure',
-  Asg = 'Asg'
+  Asg = 'Asg',
+  GoogleCloudFunctions = 'GoogleCloudFunctions'
 }
 
 export enum RepositoryFormatTypes {
@@ -412,6 +413,11 @@ export const isTasGenericDeploymentType = (deploymentType: string, repo: string 
 
   return false
 }
+
+export const isGoogleCloudFuctionsDeploymentType = (deploymentType: string): boolean => {
+  return deploymentType === ServiceDeploymentType.GoogleCloudFunctions
+}
+
 export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.ServerlessAwsLambda]: 'Amazon Web Services Details',
   [ServiceDeploymentType.ServerlessAzureFunctions]: 'Azure Details',
@@ -423,7 +429,8 @@ export const detailsHeaderName: Record<string, string> = {
   [ServiceDeploymentType.SshWinRmAws]: 'Amazon Web Services Details',
   [ServiceDeploymentType.SshWinRmAzure]: 'Azure Infrastructure details',
   [ServiceDeploymentType.TAS]: 'Tanzu Application Service Infrastructure Details',
-  [ServiceDeploymentType.Asg]: 'AWS Details'
+  [ServiceDeploymentType.Asg]: 'AWS Details',
+  [ServiceDeploymentType.GoogleCloudFunctions]: 'Google Cloud Provider Details'
 }
 
 export const getSelectedDeploymentType = (
@@ -657,7 +664,8 @@ export const infraDefinitionTypeMapping: { [key: string]: string } = {
   ECS: StepType.EcsInfra,
   CustomDeployment: StepType.CustomDeployment,
   TAS: StepType.TasInfra,
-  Asg: StepType.AsgInfraSpec
+  Asg: StepType.AsgInfraSpec,
+  GoogleCloudFunctions: StepType.GoogleCloudFunctionsInfra
 }
 
 export const getStepTypeByDeploymentType = (deploymentType: string): StepType => {
@@ -680,6 +688,8 @@ export const getStepTypeByDeploymentType = (deploymentType: string): StepType =>
       return StepType.TasService
     case ServiceDeploymentType.Asg:
       return StepType.Asg
+    case ServiceDeploymentType.GoogleCloudFunctions:
+      return StepType.GoogleCloudFunctionsService
     default:
       return StepType.K8sServiceSpec
   }
@@ -727,6 +737,16 @@ export const getAllowedRepoOptions = (
     (isAzureWebAppDeploymentType(deploymentType) && azureFlag)
     ? [...k8sRepositoryFormatTypes, ...nexus2RepositoryFormatTypes]
     : k8sRepositoryFormatTypes
+}
+
+export const isFixedNonEmptyValue = (value: string): boolean => {
+  if (getMultiTypeFromValue(value) !== MultiTypeInputType.FIXED) {
+    return false
+  }
+  if (typeof value !== 'number') {
+    return !isEmpty(value)
+  }
+  return value !== undefined
 }
 
 export function hasChainedPipelineStage(stages?: StageElementWrapperConfig[]): boolean {

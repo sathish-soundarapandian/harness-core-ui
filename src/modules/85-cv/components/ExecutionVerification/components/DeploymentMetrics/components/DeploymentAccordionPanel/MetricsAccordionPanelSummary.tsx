@@ -39,7 +39,7 @@ const MetricsAccordionPanelSummary: React.FC<MetricsAccordionPanelSummaryProps> 
       <Text className={css.metricPanelLabels} tooltip={transactionName}>
         {transactionName}
       </Text>
-      <Text lineClamp={1} tooltip={name} className={css.metricPanelLabels}>
+      <Text lineClamp={1} tooltip={name} className={css.metricPanelLabels} padding={{ right: 'small' }}>
         <Icon name={getIconBySourceType(type as string)} margin={{ right: 'small' }} size={16} />
         {name}
       </Text>

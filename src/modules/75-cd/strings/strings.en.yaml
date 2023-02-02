@@ -152,6 +152,12 @@ steps:
     tempRouteMandatory: Temp route is mandatory
     upscaleNewFirstLabel: Add new instances first, then downsize old instances
     downScaleOldFirstLabel: Downsize old instances first, then add new instances
+  googleCloudFunctionCommon:
+    fieldMask: Field Mask
+    fieldMaskPlaceholder: Enter Field Mask
+    trafficPercent: Traffic Percent
+    trafficPercentPlaceholder: Enter Traffic Percent
+
 filePathPlaceholder: 'Enter path within manifest folder'
 resourceCannotBeEmpty: 'Resource cannot be empty'
 manifestPathsCannotBeEmpty: 'Manifest Paths cannot be empty'
@@ -281,6 +287,10 @@ pipelineSteps:
       serviceDefinition: Service Definition
       scalingPolicy: Scaling Policy
       scalableTarget: Scalable Target
+      functionDefinition: Function Definition
+      manifestFirstStepTitle: Copy the template manifest file to create your own
+      googleCloudFunctionDefinitionLearnMore: Learn more about YAML format for Google cloud function creation
+      manifestSecondStepTitle: Link the function file from your Git repository
     newServiceOverride: New configuration overrides
     multiServicesText: Deploy multiple Services
     multiServicesTitleText: Deploy multiple Services?
@@ -360,11 +370,18 @@ serviceDashboard:
   containerList: Container List
   elastigroupId: Elastigroup Id
   ec2InstanceId: EC2 Instance Id
+  revision: revision
+  functionName: functionName
+  source: source
+  runTime: runTime
+  updatedTime: updatedTime
+  memorySize: memorySize
 noEnvironment:
-  title: No Environments Available
+  title: You have no Environments
   message: Create an environment and let’s start configuring the deployment
 gitOps: '{{ $.common.gitOps }}'
 addService: Add Service
+noService: You have no Services
 addEnvironment: Add Environment
 editIdError: 'ID: {{id}} cannot be edited'
 typeError: 'Type should not be empty and contain either "Production" or "PreProduction"'
@@ -560,6 +577,13 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  clusterSpec1: 4GB Memory
+  clusterSpec2: 2 CPU
+  clusterSpec3: 1 worker node
+  clusterSpecInfo: This specification is sufficient for you to host a basic hello world application
+  clusterspec: Cluster Specifications
+  managedCluster: Make use of our managed cluster to facilitate your deployment if you’re trying out Harness CD-GitOps for the first time, this will expire after X days! Learn more
+  ipWhitelist: You will be required to Set up IP Whitelisting for Harness to connect to your cluster
   tryAnotherCreds: Not the right authentication? Switch account here!
   master: master
   targetRevision: Target Revision
@@ -568,6 +592,7 @@ getStartedWithCD:
   clickForOtherDeploymentTypes: Click here for other deployment types
   createCluster: Create a cluster if needed
   failedToAuthenticate: Failed to authenticate to
+  clusterCreatedSuccessfully: created successfully
   successfullyAuthenticated: Successfully authenticated to
   failedSourceText: Still failed to authenticate despite having entered the correct credentials? Here’s what you can try to do..
   checkAnnonymously: Connect Annonymously

@@ -7,6 +7,12 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly cardTitle: string
+  readonly downtimeWindow: string
+  readonly endTime: string
   readonly footer: string
+  readonly picker: string
+  readonly pillToggle: string
+  readonly text: string
 }
 export default styles

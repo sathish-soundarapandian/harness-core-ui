@@ -38,6 +38,7 @@ interface MemberListProps {
   userGroupInherited?: boolean
   managed?: boolean
   linkedSSOType?: string | undefined
+  isUserGroupManaged?: boolean | undefined
 }
 const RenderColumnUser: Renderer<CellProps<UserInfo>> = ({ row }) => {
   const data = row.original
@@ -137,7 +138,7 @@ const RenderColumnMenu: Renderer<CellProps<UserInfo>> = ({ row, column }) => {
           }}
         />
         <Menu>
-          {data.externallyManaged ? (
+          {(column as any).isUserGroupManaged ? (
             <Popover
               position={Position.TOP}
               fill
@@ -184,7 +185,13 @@ const RenderColumnMenu: Renderer<CellProps<UserInfo>> = ({ row, column }) => {
   )
 }
 
-const MemberList: React.FC<MemberListProps> = ({ ssoLinked, userGroupInherited, managed, linkedSSOType }) => {
+const MemberList: React.FC<MemberListProps> = ({
+  ssoLinked,
+  userGroupInherited,
+  managed,
+  linkedSSOType,
+  isUserGroupManaged
+}) => {
   const { getString } = useStrings()
   const [page, setPage] = useState<number>(0)
   const { accountId, orgIdentifier, projectIdentifier, userGroupIdentifier } = useParams<
@@ -230,7 +237,8 @@ const MemberList: React.FC<MemberListProps> = ({ ssoLinked, userGroupInherited, 
         userGroupIdentifier: userGroupIdentifier,
         disableSortBy: true,
         ssoLinked,
-        userGroupInherited
+        userGroupInherited,
+        isUserGroupManaged
       }
     ]
   }, [refetch])

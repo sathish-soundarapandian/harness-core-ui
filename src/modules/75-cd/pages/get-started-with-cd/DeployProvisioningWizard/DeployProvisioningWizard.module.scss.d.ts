@@ -22,6 +22,8 @@ declare const styles: {
   readonly borderBottomClass: string
   readonly bp3DialogHeader: string
   readonly buttonWrapper: string
+  readonly configureGitopsPanel: string
+  readonly configureGitopsPanelSummary: string
   readonly containerPadding: string
   readonly credentialsButton: string
   readonly crossIcon: string

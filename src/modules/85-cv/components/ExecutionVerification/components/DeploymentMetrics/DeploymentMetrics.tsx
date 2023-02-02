@@ -258,6 +258,15 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     setUpdateViewInfo(oldInfo => ({ ...oldInfo, shouldUpdateView: true, showSpinner: true }))
   }, [selectedHealthSources, selectedTransactionName, selectedNodeName])
 
+  const showClearFilters = useMemo(() => {
+    return Boolean(
+      selectedHealthSources.length > 0 ||
+        selectedDataFormat !== DATA_OPTIONS[0] ||
+        selectedTransactionName.length > 0 ||
+        selectedNodeName.length > 0
+    )
+  }, [selectedDataFormat, selectedHealthSources.length, selectedNodeName, selectedTransactionName.length])
+
   const handleHealthSourceChange = useCallback(selectedHealthSourceFitlers => {
     setSelectedHealthSources(selectedHealthSourceFitlers)
   }, [])
@@ -349,6 +358,13 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     )
   }
 
+  const resetFilters = useCallback(() => {
+    setSelectedTransactionName([])
+    setSelectedDataFormat(DATA_OPTIONS[0])
+    setSelectedHealthSources([])
+    setSelectedNodeName(() => getInitialNodeName(selectedNode))
+  }, [selectedNode])
+
   return (
     <Container className={css.main}>
       <Container className={css.filters}>
@@ -385,6 +401,16 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
           items={DATA_OPTIONS}
           onChange={hanldeDataFormatChange}
         />
+        {showClearFilters ? (
+          <Button
+            className={css.clearButton}
+            variation={ButtonVariation.LINK}
+            onClick={resetFilters}
+            data-testid="filter-reset"
+          >
+            {getString('common.filters.clearFilters')}
+          </Button>
+        ) : null}
       </Container>
       <Checkbox
         onChange={updatedAnomalousMetricsFilter}

@@ -179,40 +179,21 @@ export const projectMockDataWithModules = {
   loading: false
 }
 
-// export const OrgMockData = {
-//   data: {
-//     status: 'SUCCESS',
-//     data: {
-//       organization: {
-//         identifier: 'testOrg',
-//         name: 'Org Name',
-//         description: 'Description',
-//         tags: { tag1: '', tag2: 'tag3' }
-//       }
-//     },
-//     metaData: undefined,
-//     correlationId: '9f77f74d-c4ab-44a2-bfea-b4545c6a4a39'
-//   }
-// }
-
-export const OrgMockData = [
-  {
-    org: {
-      identifier: 'testOrg',
-      name: 'Org Name',
-      description: 'Description',
-      tags: { tag1: '', tag2: 'tag3' }
+export const OrgMockData = {
+  data: {
+    status: 'SUCCESS',
+    data: {
+      organization: {
+        identifier: 'testOrg',
+        name: 'Org Name',
+        description: 'Description',
+        tags: { tag1: '', tag2: 'tag3' }
+      }
     },
-    createdAt: null,
-    lastModifiedAt: 1629882239962,
-    harnessManaged: false
-  },
-  {
-    createdAt: null,
-    lastModifiedAt: 1629882239962,
-    harnessManaged: false
+    metaData: undefined,
+    correlationId: '9f77f74d-c4ab-44a2-bfea-b4545c6a4a39'
   }
-]
+}
 
 export const createMockData = {
   mutate: async () => {

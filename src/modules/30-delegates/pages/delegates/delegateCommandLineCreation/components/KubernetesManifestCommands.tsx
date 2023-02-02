@@ -2,13 +2,18 @@ import { Layout, Text, Container } from '@harness/uicore'
 
 import { FontVariation, Color } from '@harness/design-system'
 import React from 'react'
+import { useParams } from 'react-router-dom'
 import CommandBlock from '@common/CommandBlock/CommandBlock'
 
 import { useStrings } from 'framework/strings'
 import { DelegateActions, Category } from '@common/constants/TrackingConstants'
+import routes from '@common/RouteDefinitions'
+import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import css from '../DelegateCommandLineCreation.module.scss'
 const KubernetesManifestCommands = () => {
   const { getString } = useStrings()
+  const params = useParams<PipelineType<ProjectPathProps>>()
+  const { accountId, orgIdentifier, projectIdentifier, module } = params
   return (
     <Layout.Vertical margin={{ bottom: 'xxxlarge' }}>
       <Text font={{ variation: FontVariation.H6 }} margin={{ bottom: 'medium' }}>
@@ -67,7 +72,13 @@ const KubernetesManifestCommands = () => {
             </Text>
             <Text font={{ variation: FontVariation.SMALL }}>{getString('common.with')}</Text>
             <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.PRIMARY_8}>
-              {getString('delegates.commandLineCreation.kubernetesFourthDirectionPartThree')}
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href={routes.toDelegateTokens({ accountId, orgIdentifier, projectIdentifier, module })}
+              >
+                {getString('delegates.commandLineCreation.kubernetesFourthDirectionPartThree')}
+              </a>
             </Text>
           </Layout.Horizontal>
         </li>

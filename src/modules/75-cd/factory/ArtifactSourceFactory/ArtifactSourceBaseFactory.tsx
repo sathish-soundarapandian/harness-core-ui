@@ -16,6 +16,8 @@ import { ECRArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/A
 import { GCRArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/GCRArtifactSource/GCRArtifactSource'
 import { GithubPackageRegistrySource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/GithubPackageRegistrySource/GithubPackageRegistrySource'
 import { GoogleArtifactRegistrySource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/GoogleArtifactsRegistrySource/GoogleArtifactRegistrySource'
+import { GoogleCloudSourceRepositoriesArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/GoogleCloudSourceRepositoriesArtifactSource/GoogleCloudSourceRepositoriesArtifactSource'
+import { GoogleCloudStorageArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/GoogleCloudStorageArtifactSource/GoogleCloudStorageArtifactSource'
 import { JenkinsArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/JenkinsArtifactSource/JenkinsArtifactSource'
 import { Nexus2ArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/Nexus2ArtifactSource/Nexus2ArtifactSource'
 import { Nexus3ArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/NexusArtifactSource/NexusArtifactSource'
@@ -58,5 +60,7 @@ artifactSourceBaseFactory.registerArtifactSource(new AzureArtifactsSource())
 artifactSourceBaseFactory.registerArtifactSource(new GoogleArtifactRegistrySource())
 artifactSourceBaseFactory.registerArtifactSource(new GithubPackageRegistrySource())
 artifactSourceBaseFactory.registerArtifactSource(new AmazonMachineImageSource())
+artifactSourceBaseFactory.registerArtifactSource(new GoogleCloudStorageArtifactSource())
+artifactSourceBaseFactory.registerArtifactSource(new GoogleCloudSourceRepositoriesArtifactSource())
 
 export default artifactSourceBaseFactory

@@ -51,6 +51,7 @@ module.exports = {
           'gitopsui/MicroFrontendApp': false,
           'chaos/MicroFrontendApp': false,
           'sto/App': false,
+          'sscs/MicroFrontendApp': false,
           'governance/App': false,
           'governance/EvaluationView': false,
           'governance/PolicySetWizard': false,

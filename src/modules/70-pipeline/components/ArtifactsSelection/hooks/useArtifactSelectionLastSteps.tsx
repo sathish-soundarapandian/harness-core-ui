@@ -16,7 +16,9 @@ import type {
   JenkinsArtifactType,
   Nexus2InitialValuesType,
   ArtifactType,
-  AzureArtifactsInitialValues
+  AzureArtifactsInitialValues,
+  GoogleCloudStorageInitialValuesType,
+  GoogleCloudSourceRepositoriesInitialValuesType
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { GCRImagePath } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/GCRImagePath/GCRImagePath'
@@ -33,6 +35,8 @@ import { GithubPackageRegistry } from '@pipeline/components/ArtifactsSelection/A
 import { DockerRegistryArtifact } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/DockerRegistryArtifact/DockerRegistryArtifact'
 import { AmazonMachineImage } from '../ArtifactRepository/ArtifactLastSteps/AmazonMachineImage/AmazonMachineImage'
 import { AzureArtifacts } from '../ArtifactRepository/ArtifactLastSteps/AzureArtifacts/AzureArtifacts'
+import { GoogleCloudStorage } from '../ArtifactRepository/ArtifactLastSteps/GoogleCloudStorageArtifact/GoogleCloudStorage'
+import { GoogleCloudSourceRepositories } from '../ArtifactRepository/ArtifactLastSteps/GoogleCloudSourceRepositoriesArtifact/GoogleCloudSourceRepositoriesArtifact'
 
 export type ArtifactLastStepProps = ImagePathProps<
   ImagePathTypes &
@@ -42,7 +46,9 @@ export type ArtifactLastStepProps = ImagePathProps<
     CustomArtifactSource &
     GithubPackageRegistryInitialValuesType &
     Nexus2InitialValuesType &
-    AzureArtifactsInitialValues
+    AzureArtifactsInitialValues &
+    GoogleCloudStorageInitialValuesType &
+    GoogleCloudSourceRepositoriesInitialValuesType
 >
 
 export interface ArtifactSelectionLastStepsParams {
@@ -80,6 +86,10 @@ export function useArtifactSelectionLastSteps(params: ArtifactSelectionLastSteps
       return <GithubPackageRegistry {...artifactLastStepProps} />
     case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
       return <AmazonMachineImage {...artifactLastStepProps} />
+    case ENABLED_ARTIFACT_TYPES.GoogleCloudStorage:
+      return <GoogleCloudStorage {...artifactLastStepProps} />
+    case ENABLED_ARTIFACT_TYPES.GoogleCloudSource:
+      return <GoogleCloudSourceRepositories {...artifactLastStepProps} />
     case ENABLED_ARTIFACT_TYPES.DockerRegistry:
     default:
       return <DockerRegistryArtifact {...artifactLastStepProps} />

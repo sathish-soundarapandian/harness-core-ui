@@ -28,7 +28,8 @@ const StepsMap: Record<string, StepType> = {
   Kubernetes: StepType.K8sServiceSpec,
   ServerlessAwsLambda: StepType.ServerlessAwsLambda,
   AzureWebApp: StepType.AzureWebAppServiceSpec,
-  ECS: StepType.EcsService
+  ECS: StepType.EcsService,
+  GoogleCloudFunctions: StepType.GoogleCloudFunctionsService
 }
 
 export interface ServiceCardProps {

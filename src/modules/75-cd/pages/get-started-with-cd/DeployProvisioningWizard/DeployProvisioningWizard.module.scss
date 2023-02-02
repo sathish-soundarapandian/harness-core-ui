@@ -323,7 +323,7 @@
 }
 
 .accordianForm {
-  background: #fafcff;
+  background: var(--primary-bg);
   border-radius: 8px;
   padding: 12px 32px 40px;
   margin-top: 24px !important;
@@ -343,4 +343,17 @@
     //resize: none;
     min-height: 140px !important;
   }
+}
+
+.configureGitopsPanel {
+  padding: 20px 20px 32px;
+  box-shadow: 0px 2px 4px rgb(40 41 61 / 4%), 0px 8px 16px rgb(96 97 112 / 16%);
+  border-radius: 4px;
+  &:last-child {
+    margin-top: var(--spacing-xxxlarge);
+  }
+}
+
+.configureGitopsPanelSummary {
+  justify-content: space-between;
 }

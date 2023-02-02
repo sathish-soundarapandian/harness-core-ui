@@ -18,7 +18,8 @@ import {
   GovernanceMetadata,
   GraphLayoutNode,
   ResponsePipelineExecutionDetail,
-  useGetExecutionDetailV2
+  useGetExecutionDetailV2,
+  useGetPipelineSummary
 } from 'services/pipeline-ng'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import { ExecutionStatus, isExecutionComplete } from '@pipeline/utils/statusHelpers'
@@ -242,6 +243,16 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
       })
     },
     debounce: 500
+  })
+
+  const { data: pipeline, loading: loadingPipeline } = useGetPipelineSummary({
+    pipelineIdentifier,
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      getMetadataOnly: true
+    }
   })
 
   const HAS_CI = hasCIStage(data?.data?.pipelineExecutionSummary)
@@ -510,14 +521,14 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         projectIdentifier={projectIdentifier}
         planExecutionId={executionIdentifier}
       >
-        {(!data && loading) || reportSummaryLoading ? <PageSpinner /> : null}
+        {(!data && loading) || reportSummaryLoading || loadingPipeline ? <PageSpinner /> : null}
         {error ? (
           <PageError message={getRBACErrorMessage(error) as string} />
         ) : (
           <main className={css.main}>
             <div className={css.lhs}>
               <header className={css.header}>
-                <ExecutionHeader />
+                <ExecutionHeader pipelineMetadata={pipeline} />
                 <ExecutionMetadata />
               </header>
               <ExecutionTabs savedExecutionView={savedExecutionView} setSavedExecutionView={setSavedExecutionView} />

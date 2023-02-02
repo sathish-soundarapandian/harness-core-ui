@@ -9,8 +9,8 @@ if [ "$?" -ne 0 ]
 then
   exit 1
 fi
-VERSION=$(cat package.json | grep version | cut -d: -f2 | cut -d\" -f2)
-echo $VERSION
+#VERSION=$(cat package.json | grep version | cut -d: -f2 | cut -d\" -f2)
+#echo $VERSION
 #KEYS=`git log --pretty=oneline --abbrev-commit | awk "1;/Branching to release\//{exit}" | grep -o -iE '('${PROJECTS}')-[0-9]+' | sort | uniq`
 KEYS=$(git log --pretty=oneline --format="%s" --abbrev-commit ${PREVIOUS_RELEASE_BRANCH}..${CURRENT_RELEASE_BRANCH} | grep -o -iE '('${PROJECTS}')-[0-9]+' | sort | uniq)
 

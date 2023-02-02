@@ -22,21 +22,22 @@ import {
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
-import { set } from 'lodash-es'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { defaultTo, set } from 'lodash-es'
+
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
+import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { useQueryParams } from '@common/hooks'
 import { ArtifactConnectorLabelMap, ArtifactToConnectorMap } from '../ArtifactHelper'
 import type { ArtifactType, InitialArtifactDataType } from '../ArtifactInterface'
-
 import css from './ArtifactConnector.module.scss'
+
 interface ArtifactConnectorProps {
   handleViewChange: () => void
   expressions: string[]
@@ -137,7 +138,7 @@ export function ArtifactConnector(props: StepProps<ConnectorConfigDTO> & Artifac
                   gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                 />
                 {getMultiTypeFromValue(formik.values.connectorId) === MultiTypeInputType.RUNTIME ? (
-                  <ConfigureOptions
+                  <ConnectorConfigureOptions
                     className={css.configureOptions}
                     value={formik.values.connectorId as unknown as string}
                     type={connectorType}
@@ -149,6 +150,15 @@ export function ArtifactConnector(props: StepProps<ConnectorConfigDTO> & Artifac
                       formik.setFieldValue('connectorId', value)
                     }}
                     isReadonly={isReadonly}
+                    connectorReferenceFieldProps={{
+                      accountIdentifier: accountId,
+                      projectIdentifier,
+                      orgIdentifier,
+                      type: connectorType,
+                      label: `${selectedConnectorLabel} ${getString('connector')}`,
+                      disabled: isReadonly,
+                      gitScope: { repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }
+                    }}
                   />
                 ) : (
                   <Button

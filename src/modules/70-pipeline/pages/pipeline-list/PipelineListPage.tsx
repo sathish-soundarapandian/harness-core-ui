@@ -32,6 +32,7 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useStrings } from 'framework/strings'
 import {
+  FilterDTO,
   PMSPipelineSummaryResponse,
   useGetPipelineList,
   useGetRepositoryList,
@@ -41,6 +42,7 @@ import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFil
 import RepoFilter from '@common/components/RepoFilter/RepoFilter'
 import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import DeprecatedCallout from '@gitsync/components/DeprecatedCallout/DeprecatedCallout'
+import { getFilterByIdentifier } from '@pipeline/utils/PipelineExecutionFilterRequestUtils'
 import { CreatePipeline } from './CreatePipeline/CreatePipeline'
 import { PipelineListTable } from './PipelineListTable/PipelineListTable'
 import { getEmptyStateIllustration, queryParamOptions } from './PipelineListUtils'
@@ -65,6 +67,7 @@ function _PipelineListPage(): React.ReactElement {
   const queryParams = useQueryParams<ProcessedPipelineListPageQueryParams>(queryParamOptions)
   const { searchTerm, repoIdentifier, branch, page, size, repoName, filterIdentifier, filters } = queryParams
   const isSavedFilterApplied = getIsSavedFilterApplied(queryParams.filterIdentifier)
+  const [filterList, setFilterList] = useState<FilterDTO[] | undefined>()
 
   const pathParams = useParams<PipelineListPagePathParams>()
   const { projectIdentifier, orgIdentifier, accountId, module } = pathParams
@@ -94,14 +97,14 @@ function _PipelineListPage(): React.ReactElement {
 
   const requestBody = {
     filterType: 'PipelineSetup',
-    ...(repoName ? { repoName } : {}),
-    ...(!isSavedFilterApplied && queryParams.filters ? { ...prepareFiltersPayload(queryParams.filters) } : {})
+    ...(repoName && { repoName }),
+    ...(!isSavedFilterApplied && queryParams.filters && prepareFiltersPayload(queryParams.filters)),
+    ...(isSavedFilterApplied && getFilterByIdentifier(queryParams.filterIdentifier!, filterList)?.filterProperties)
   }
 
   const pipelinesQuery = useMutateAsGet(useGetPipelineList, {
     body: requestBody,
     queryParams: {
-      filterIdentifier: isSavedFilterApplied ? filterIdentifier : undefined,
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
@@ -226,7 +229,7 @@ function _PipelineListPage(): React.ReactElement {
             defaultValue={searchTerm}
             ref={searchRef}
           />
-          <PipelineListFilter />
+          <PipelineListFilter onFilterListUpdate={setFilterList} />
         </div>
       </Page.SubHeader>
 

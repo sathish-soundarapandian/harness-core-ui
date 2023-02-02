@@ -209,6 +209,7 @@ export type ModuleNameMatch =
   | ':module(sto)'
   | ':module(chaos)'
   | ':module(iacm)'
+  | ':module(sscs)'
 
 export type Module = ModuleName | ModuleNameMatch
 

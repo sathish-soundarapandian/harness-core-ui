@@ -200,6 +200,11 @@ declare module 'iacm/IACMPipelineResources' {
   export default ChildApp
 }
 
+declare module 'sscs/MicroFrontendApp' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare type Optional<T, K extends keyof T = keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
 declare type RequiredPick<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>

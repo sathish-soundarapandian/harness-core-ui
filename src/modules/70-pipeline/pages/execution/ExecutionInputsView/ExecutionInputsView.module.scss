@@ -18,3 +18,13 @@
     }
   }
 }
+
+.buttonsWrapper {
+  position: absolute;
+  right: var(--spacing-10);
+  margin-top: var(--spacing-3);
+  top: var(--spacing-xxlarge);
+  display: flex;
+  column-gap: var(--spacing-large);
+  align-items: center;
+}

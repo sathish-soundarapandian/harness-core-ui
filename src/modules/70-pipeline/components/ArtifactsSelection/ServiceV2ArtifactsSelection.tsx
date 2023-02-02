@@ -70,7 +70,9 @@ import type {
   CustomArtifactSource,
   GithubPackageRegistryInitialValuesType,
   Nexus2InitialValuesType,
-  AzureArtifactsInitialValues
+  AzureArtifactsInitialValues,
+  GoogleCloudStorageInitialValuesType,
+  GoogleCloudSourceRepositoriesInitialValuesType
 } from './ArtifactInterface'
 import {
   allowedArtifactTypes,
@@ -82,7 +84,8 @@ import {
   isAllowedCustomArtifactDeploymentTypes,
   isAllowedGithubPackageRegistryDeploymentTypes,
   isSidecarAllowed,
-  ModalViewFor
+  ModalViewFor,
+  shouldAllowOnlyOneArtifact
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { showConnectorStep } from './ArtifactUtils'
@@ -585,7 +588,9 @@ export default function ServiceV2ArtifactsSelection({
       CustomArtifactSource &
       GithubPackageRegistryInitialValuesType &
       Nexus2InitialValuesType &
-      AzureArtifactsInitialValues
+      AzureArtifactsInitialValues &
+      GoogleCloudStorageInitialValuesType &
+      GoogleCloudSourceRepositoriesInitialValuesType
   > => {
     return {
       key: getString('connectors.stepFourName'),
@@ -723,6 +728,7 @@ export default function ServiceV2ArtifactsSelection({
         isReadonly={readonly}
         isSidecarAllowed={isSidecarAllowed(deploymentType, readonly)}
         isMultiArtifactSource
+        allowOnlyOneArtifactAddition={shouldAllowOnlyOneArtifact(deploymentType)}
       />
       <ArtifactConfigDrawer
         onCloseDrawer={handleCloseDrawer}

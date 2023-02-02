@@ -211,7 +211,7 @@ export const MendStepBase = (
                     hide: formik.values.spec.mode === 'ingestion'
                   },
                   'spec.tool.product_token': {
-                    label: 'token',
+                    label: 'sto.stepField.tool.productToken',
                     hide: !show_product_token_field
                   },
                   'spec.tool.product_name': {

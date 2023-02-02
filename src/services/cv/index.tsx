@@ -1730,6 +1730,7 @@ export interface Error {
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2158,6 +2159,7 @@ export interface Failure {
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -4564,6 +4566,7 @@ export interface ResponseMessage {
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'

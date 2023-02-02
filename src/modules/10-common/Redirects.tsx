@@ -11,7 +11,7 @@ import { useQueryParams } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
 import type { AccountPathProps, Module, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import type { ModuleName } from 'framework/types/ModuleName'
+import { ModuleName } from 'framework/types/ModuleName'
 
 export const RedirectToSubscriptionsFactory = (moduleName: ModuleName) => (): React.ReactElement => {
   const { accountId } = useParams<AccountPathProps>() // eslint-disable-line react-hooks/rules-of-hooks
@@ -40,6 +40,18 @@ export const RedirectToProjectFactory =
     const { selectedProject } = useAppStore() // eslint-disable-line react-hooks/rules-of-hooks
 
     if (selectedProject?.modules?.includes(moduleName as any)) {
+      if (moduleName.toUpperCase() === ModuleName.CD) {
+        return (
+          <Redirect
+            to={routes.toDeployments({
+              accountId,
+              module: moduleName.toLowerCase() as Module,
+              orgIdentifier: selectedProject.orgIdentifier || '',
+              projectIdentifier: selectedProject.identifier
+            })}
+          />
+        )
+      }
       return (
         <Redirect
           to={routes.toProjectOverview({

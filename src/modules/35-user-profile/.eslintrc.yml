@@ -27,6 +27,7 @@ rules:
             - modules/75-cf/*
             - modules/75-chaos/*
             - modules/75-ci/*
+            - modules/75-sscs/*
             - modules/85-cv/*
             - modules/85-iacm/*
             - modules/85-sto/*
@@ -46,6 +47,7 @@ rules:
             - '@cf/*'
             - '@chaos/*'
             - '@ci/*'
+            - '@sscs/*'
             - '@cv/*'
             - '@iacm/*'
             - '@sto/*'

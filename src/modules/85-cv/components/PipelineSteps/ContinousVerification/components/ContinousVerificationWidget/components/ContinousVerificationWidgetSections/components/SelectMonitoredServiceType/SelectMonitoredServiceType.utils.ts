@@ -15,6 +15,7 @@ import type {
 } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import type { ResponseString } from 'services/cd-ng'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { getScopedIdentifier } from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import { MONITORED_SERVICE_TYPE } from './SelectMonitoredServiceType.constants'
 import type { ServiceAndEnv } from './SelectMonitoredServiceType.types'
 
@@ -41,13 +42,13 @@ export function getUpdatedSpecs(
 ): ContinousVerificationData['spec'] {
   let newSpecs = { ...formValues.spec }
   const inputSet = templateInputYaml?.data ? parse(templateInputYaml?.data as string) : {}
-  const { versionLabel = '', identifier = '' } = templateData || {}
+  const { versionLabel = '', identifier = '', templateScope = 'project' } = templateData || {}
 
   const updatedMonitoredService = {
     ...formValues.spec.monitoredService,
     spec: {
       ...formValues.spec.monitoredService.spec,
-      monitoredServiceTemplateRef: identifier,
+      monitoredServiceTemplateRef: getScopedIdentifier(templateScope, identifier),
       versionLabel,
       templateInputs: {
         ...inputSet

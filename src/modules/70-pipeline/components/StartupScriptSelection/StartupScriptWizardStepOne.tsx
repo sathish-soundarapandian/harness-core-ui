@@ -18,7 +18,8 @@ import {
   ThumbnailSelect,
   ButtonVariation,
   FormikForm,
-  ButtonSize
+  ButtonSize,
+  Thumbnail
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
@@ -57,14 +58,29 @@ function StartupScriptWizardStepOne({
   expressions,
   allowableTypes,
   prevStepData,
-  nextStep
+  nextStep,
+  singleAvailableStore
 }: StepProps<ConnectorConfigDTO> & StartupScriptPropType): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const { getString } = useStrings()
   const [isLoadingConnectors, setIsLoadingConnectors] = React.useState<boolean>(true)
-  const [selectedStore, setSelectedStore] = useState(prevStepData?.selectedStore ?? initialValues.selectedStore)
+  const [selectedStore, setSelectedStore] = useState(
+    singleAvailableStore ? singleAvailableStore : prevStepData?.selectedStore ?? initialValues.selectedStore
+  )
   const [multitypeInputValue, setMultiTypeValue] = useState<MultiTypeInputType | undefined>(undefined)
+
+  if (singleAvailableStore) {
+    if (
+      getMultiTypeFromValue(initialValues.connectorRef) !== MultiTypeInputType.FIXED &&
+      initialValues.selectedStore !== singleAvailableStore
+    ) {
+      setMultiTypeValue(MultiTypeInputType.FIXED)
+    } else if (multitypeInputValue !== undefined) {
+      setMultiTypeValue(undefined)
+    }
+    handleStoreChange(singleAvailableStore)
+  }
 
   const isHarness = (store?: string): boolean => {
     return store === 'Harness'
@@ -173,15 +189,24 @@ function StartupScriptWizardStepOne({
             >
               <Layout.Vertical>
                 <Layout.Horizontal spacing="large">
-                  <ThumbnailSelect
-                    className={css.thumbnailSelect}
-                    name={'selectedStore'}
-                    items={connectorTypesOptions}
-                    isReadonly={isReadonly}
-                    onChange={storeSelected => {
-                      handleOptionSelection(formik?.values, storeSelected as ConnectorTypes)
-                    }}
-                  />
+                  {singleAvailableStore ? (
+                    <Thumbnail
+                      selected
+                      value={singleAvailableStore}
+                      label={singleAvailableStore}
+                      icon={ConnectorIcons[singleAvailableStore]}
+                    />
+                  ) : (
+                    <ThumbnailSelect
+                      className={css.thumbnailSelect}
+                      name={'selectedStore'}
+                      items={connectorTypesOptions}
+                      isReadonly={isReadonly}
+                      onChange={storeSelected => {
+                        handleOptionSelection(formik?.values, storeSelected as ConnectorTypes)
+                      }}
+                    />
+                  )}
                 </Layout.Horizontal>
 
                 {!isEmpty(formik.values.selectedStore) && !isHarness(formik.values.selectedStore) ? (

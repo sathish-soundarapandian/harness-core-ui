@@ -87,7 +87,7 @@ const toolFieldsValidationConfig = (data: MendStepData): InputSetViewValidateFie
     {
       name: 'spec.tool.product_token',
       type: ValidationFieldTypes.Text,
-      label: 'token',
+      label: 'sto.stepField.tool.productToken',
       isRequired:
         data.spec.tool?.product_lookup_type === 'byTokens' ||
         data.spec.tool?.product_lookup_type === 'appendToProductByToken'

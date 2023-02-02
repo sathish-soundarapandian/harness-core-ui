@@ -110,6 +110,12 @@ import { AsgCanaryDeployStep } from './AsgCanaryDeploy/AsgCanaryDeployStep'
 import { AsgRollingRollbackStep } from './AsgRollingRollbackStep/AsgRollingRollbackStep'
 import { AsgRollingDeploy } from './AsgRollingDeployStep/AsgRollingDeployStep'
 import { ContainerStep } from './ContainerStep/ContainerStep'
+import { GoogleCloudFunctionServiceSpec } from './GoogleCloudFunction/GoogleCloudFunctionServiceSpec/GoogleCloudFunctionServiceSpec'
+import { GoogleCloudFunctionInfraSpec } from './GoogleCloudFunction/GoogleCloudFunctionInfraSpec/GoogleCloudFunctionInfraSpec'
+import { DeployCloudFunctionStep } from './GoogleCloudFunction/DeployCloudFunctionStep/DeployCloudFunctionStep'
+import { DeployCloudFunctionRollbackStep } from './GoogleCloudFunction/DeployCloudFunctionRollbackStep/DeployCloudFunctionRollbackStep'
+import { DeployCloudFunctionNoTrafficShiftStep } from './GoogleCloudFunction/DeployCloudFunctionNoTrafficShiftStep/DeployCloudFunctionNoTrafficShiftStep'
+import { DeployCloudFunctionTrafficShiftStep } from './GoogleCloudFunction/DeployCloudFunctionTrafficShiftStep/DeployCloudFunctionTrafficShiftStep'
 import { TASRollingRollbackStep } from './TasRollingRollbackStep/TasRollingRollbackStep'
 import { TasRollingDeploymentStep } from './TasRollingDeploymentStep/TasRollingDeploymentStep'
 import { K8sDryRunStep } from './K8sDryRunStep/K8sDryRunStep'
@@ -223,6 +229,12 @@ factory.registerStep(new AsgCanaryDeleteStep())
 factory.registerStep(new AsgCanaryDeployStep())
 factory.registerStep(new AsgRollingRollbackStep())
 factory.registerStep(new AsgRollingDeploy())
+factory.registerStep(new GoogleCloudFunctionServiceSpec())
+factory.registerStep(new GoogleCloudFunctionInfraSpec())
+factory.registerStep(new DeployCloudFunctionStep())
+factory.registerStep(new DeployCloudFunctionRollbackStep())
+factory.registerStep(new DeployCloudFunctionNoTrafficShiftStep())
+factory.registerStep(new DeployCloudFunctionTrafficShiftStep())
 factory.registerStep(new AsgSwapService())
 factory.registerStep(new AsgBlueGreenRollbackStep())
 factory.registerStep(new AsgBlueGreenDeployStep())

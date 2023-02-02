@@ -92,6 +92,7 @@ export interface StartupScriptWizardStepsProps<T> {
   handleStoreChange: (store?: T) => void
   connectorTypes: Array<ConnectorTypes>
   deploymentType: ServiceDefinition['type']
+  singleAvailableStore?: ConnectorTypes
 }
 
 export interface StartupScriptWizardStepTwoProps {
@@ -101,6 +102,7 @@ export interface StartupScriptWizardStepTwoProps {
   initialValues: StartupCommandConfiguration
   handleSubmit: (data: StartupCommandConfiguration) => void
   isReadonly?: boolean
+  singleAvailableStore?: ConnectorTypes
 }
 
 export enum GitFetchTypes {
@@ -153,6 +155,7 @@ export interface StartupScriptPropType {
   initialValues: StartupScriptWizardInitData
   handleConnectorViewChange: () => void
   handleStoreChange: (store: ConnectorTypes) => void
+  singleAvailableStore?: ConnectorTypes
 }
 
 export enum fileTypes {

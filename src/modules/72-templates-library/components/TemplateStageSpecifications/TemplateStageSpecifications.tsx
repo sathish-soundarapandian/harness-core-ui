@@ -94,7 +94,8 @@ export const TemplateStageSpecifications = (): JSX.Element => {
       ...getScopeBasedProjectPathParams(queryParams, templateScope),
       versionLabel: templateVersionLabel,
       ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
-    }
+    },
+    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
   })
 
   React.useEffect(() => {

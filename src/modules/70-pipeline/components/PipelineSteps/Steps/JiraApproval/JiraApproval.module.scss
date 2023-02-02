@@ -11,7 +11,7 @@
 
   :global {
     input[placeholder='<+input>'] {
-      width: 390px !important;
+      width: 372px !important;
     }
   }
 }
@@ -21,7 +21,7 @@
 }
 
 .deploymentViewMedium {
-  width: 50%;
+  width: 442px; // 400px (field width) + 42px (configure options button width)
 }
 .marginTop {
   margin-top: -10px !important;

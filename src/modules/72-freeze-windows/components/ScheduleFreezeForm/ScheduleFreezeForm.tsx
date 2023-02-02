@@ -14,7 +14,7 @@ import { ALL_TIME_ZONES } from '@common/utils/dateUtils'
 import { DOES_NOT_REPEAT, getMomentFormat, RECURRENCE } from '@freeze-windows/utils/freezeWindowUtils'
 import type { FreezeWindow } from 'services/cd-ng'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
-import { DateTimePicker, DATE_PARSE_FORMAT } from './DateTimePicker'
+import { DateTimePicker, DATE_PARSE_FORMAT } from '@common/components/DateTimePicker/DateTimePicker'
 import css from './ScheduleFreezeForm.module.scss'
 
 interface ScheduleFreezeFormProps {

@@ -19,12 +19,12 @@ import css from './GitOpsAgentCard.module.scss'
 
 interface GitOpsAgentCardProps {
   agent: V1Agent
-  onDelete?: (agent: V1Agent) => Promise<void>
-  onEdit?: () => Promise<void>
+  selectedAgent?: V1Agent
+  setSelectedAgent: (agent: V1Agent) => void
 }
 
 export const GitOpsAgentCard: React.FC<GitOpsAgentCardProps> = props => {
-  const { agent } = props
+  const { agent, selectedAgent, setSelectedAgent } = props
   const { getString } = useStrings()
 
   let numMappedProjects, firstHarnessProject, firstArgoProject
@@ -36,7 +36,10 @@ export const GitOpsAgentCard: React.FC<GitOpsAgentCardProps> = props => {
     firstHarnessProject = mappedProjects[firstArgoProject].projectIdentifier
   }
   return (
-    <Card className={css.card}>
+    <Card
+      className={cx(css.card, { [css.isSelected]: agent === selectedAgent })}
+      onClick={() => setSelectedAgent(agent)}
+    >
       <Container className={css.projectInfo}>
         <div className={css.mainTitle}>{<Icon name="harness" size={22} />}</div>
 

@@ -7,19 +7,22 @@
 
 import React from 'react'
 import cx from 'classnames'
-
-import { FormInput, getMultiTypeFromValue, Label, MultiTypeInputType, Container, Text } from '@harness/uicore'
+import { get } from 'lodash-es'
+import { Label, Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-
+import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { isValueRuntimeInput } from '@common/utils/utils'
+import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
+import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import { TerraformPlanProps, TerraformStoreTypes } from '../../Common/Terraform/TerraformInterfaces'
 import RemoteVarSection from './RemoteVarSection'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export default function TfVarFile(props: TerraformPlanProps): React.ReactElement {
   const { getString } = useStrings()
-  const { inputSetData, path, allowableTypes } = props
+  const { inputSetData, path, allowableTypes, stepViewType, readonly } = props
 
   const { expressions } = useVariablesExpression()
 
@@ -36,16 +39,50 @@ export default function TfVarFile(props: TerraformPlanProps): React.ReactElement
                 <Text font={{ weight: 'bold' }}>{getString('cd.varFile')}:</Text>
                 {varFile?.varFile?.identifier}
               </Container>
-              {getMultiTypeFromValue(varFile?.varFile?.spec?.content) === MultiTypeInputType.RUNTIME && (
-                <div className={cx(stepCss.formGroup, stepCss.md)}>
-                  <FormInput.MultiTextInput
+              {isValueRuntimeInput(get(varFile.varFile, 'spec.content')) && (
+                <div
+                  className={cx(stepCss.formGroup, stepCss.md)}
+                  // needed to prevent the run pipeline to get triggered on pressing enter within TFMonaco editor
+                  onKeyDown={
+                    /* istanbul ignore next */ e => {
+                      e.stopPropagation()
+                    }
+                  }
+                >
+                  <MultiTypeFieldSelector
                     name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.content`}
                     label={getString('pipelineSteps.content')}
-                    multiTextInputProps={{
-                      expressions,
-                      allowableTypes
+                    defaultValueToReset=""
+                    allowedTypes={allowableTypes}
+                    skipRenderValueInExpressionLabel
+                    disabled={readonly}
+                    configureOptionsProps={{
+                      isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
                     }}
-                  />
+                    expressionRender={
+                      /* istanbul ignore next */ () => {
+                        return (
+                          <MonacoTextField
+                            name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.content`}
+                            expressions={expressions}
+                            height={200}
+                            disabled={readonly}
+                            fullScreenAllowed
+                            fullScreenTitle={getString('pipelineSteps.content')}
+                          />
+                        )
+                      }
+                    }
+                  >
+                    <MonacoTextField
+                      name={`${path}.spec.configuration.varFiles[${index}].varFile.spec.content`}
+                      expressions={expressions}
+                      height={200}
+                      disabled={readonly}
+                      fullScreenAllowed
+                      fullScreenTitle={getString('pipelineSteps.content')}
+                    />
+                  </MultiTypeFieldSelector>
                 </div>
               )}
             </React.Fragment>

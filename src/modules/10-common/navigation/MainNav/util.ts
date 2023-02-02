@@ -16,7 +16,8 @@ import {
   IACNavItem,
   CODENavItem,
   SRMNavItem,
-  STONavItem
+  STONavItem,
+  SSCSNavItem
 } from './ModuleLinks'
 
 export const moduleToNavItemsMap: Record<NavModuleName, () => JSX.Element> = {
@@ -28,7 +29,8 @@ export const moduleToNavItemsMap: Record<NavModuleName, () => JSX.Element> = {
   [ModuleName.CHAOS]: ChaosNavItem,
   [ModuleName.STO]: STONavItem,
   [ModuleName.CODE]: CODENavItem,
-  [ModuleName.IACM]: IACNavItem
+  [ModuleName.IACM]: IACNavItem,
+  [ModuleName.SSCS]: SSCSNavItem
 }
 
 export const filterNavModules = (

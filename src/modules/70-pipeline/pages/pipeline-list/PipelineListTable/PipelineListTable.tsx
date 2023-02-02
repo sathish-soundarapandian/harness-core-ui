@@ -12,9 +12,11 @@ import { Color, FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import type { PagePMSPipelineSummaryResponse, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
 import routes from '@common/RouteDefinitions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import type { PipelineListPagePathParams, SortBy } from '../types'
 import {
@@ -66,6 +68,7 @@ export function PipelineListTable({
     size = DEFAULT_PAGE_SIZE
   } = data
   const [currentSort, currentOrder] = sortBy
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
 
   const columns: Column<PMSPipelineSummaryResponse>[] = React.useMemo(() => {
     const getServerSortProps = (id: string) => {
@@ -155,7 +158,12 @@ export function PipelineListTable({
       pagination={paginationProps}
       sortable
       getRowClassName={() => css.tableRow}
-      onRowClick={rowDetails => history.push(routes.toPipelineStudio(getRouteProps(pathParams, rowDetails)))}
+      onRowClick={rowDetails =>
+        CI_YAML_VERSIONING &&
+        pathParams.module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.valueOf().toLowerCase()
+          ? history.push(routes.toPipelineStudioV1(getRouteProps(pathParams, rowDetails)))
+          : history.push(routes.toPipelineStudio(getRouteProps(pathParams, rowDetails)))
+      }
     />
   )
 }

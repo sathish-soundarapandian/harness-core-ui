@@ -15,6 +15,7 @@ import type { HealthSourceTypes, UpdatedHealthSourceWithAllSpecs } from '@cv/pag
 import { getConnectorTypeName } from '@cv/pages/health-source/HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.utils'
 import type { ConnectorInfoDTO, HealthSource } from 'services/cv'
 import { healthSourceTypeMapping } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import type { ContinousVerificationData, spec, VerifyStepMonitoredService } from './types'
 import {
   VerificationSensitivityOptions,
@@ -355,4 +356,7 @@ export function shouldRenderField(input: { name: string; path: string }): boolea
     input.name !== QUERY_DEFINITIONS &&
     input.name !== NEWRELIC_METRIC_DEFINITIONS
   )
+}
+export function getScopedIdentifier(templateScope: string | undefined, identifier: string): string {
+  return templateScope !== Scope.PROJECT ? `${templateScope}.${identifier}` : identifier
 }

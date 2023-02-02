@@ -8,11 +8,18 @@
 export interface CreateDowntimeFormInterface {
   loading: boolean
   error: any
+  retryOnError: () => void
   runValidationOnMount?: boolean
   loadingSaveButton: boolean
 }
 
 export enum CreateDowntimeSteps {
   DEFINE_DOWNTIME = 'DEFINE_DOWNTIME',
-  SELECT_DOWNTIME_WINDOW = 'SELECT_DOWNTIME_WINDOW'
+  SELECT_DOWNTIME_WINDOW = 'SELECT_DOWNTIME_WINDOW',
+  SELECT_MONITORED_SERVICES = 'SELECT_MONITORED_SERVICES'
+}
+
+export enum DowntimeWindowToggleViews {
+  ONE_TIME = 'Onetime',
+  RECURRING = 'Recurring'
 }

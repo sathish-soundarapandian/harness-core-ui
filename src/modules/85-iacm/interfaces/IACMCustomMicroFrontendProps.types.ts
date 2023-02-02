@@ -22,6 +22,7 @@ import type ExecutionGraph from '@pipeline/components/PipelineStudio/ExecutionGr
 import type RbacButton from '@rbac/components/Button/Button'
 import type RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import type { usePermission } from '@rbac/hooks/usePermission'
+import type RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 
 export interface IACMCustomMicroFrontendProps {
   customHooks: {
@@ -46,5 +47,6 @@ export interface IACMCustomMicroFrontendProps {
     ExecutionGraph: typeof ExecutionGraph
     RbacOptionsMenuButton: typeof RbacOptionsMenuButton
     RbacButton: typeof RbacButton
+    RbacMenuItem: typeof RbacMenuItem
   }
 }

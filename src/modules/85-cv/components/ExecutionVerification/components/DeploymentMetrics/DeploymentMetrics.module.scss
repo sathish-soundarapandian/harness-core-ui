@@ -205,12 +205,6 @@
     .metricName {
       margin-left: var(--spacing-small);
     }
-    p {
-      font-size: 12px !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      white-space: nowrap !important;
-    }
   }
 
   .nodeCount {
@@ -246,4 +240,8 @@
 
 .anomolousCheckbox {
   padding-bottom: var(--spacing-small) !important;
+}
+
+.clearButton {
+  align-self: flex-end;
 }

@@ -5,10 +5,4 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { FormikProps } from 'formik'
-import type { DowntimeForm } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.types'
-
-export interface DowntimeNameProps {
-  formikProps: FormikProps<DowntimeForm>
-  identifier?: string
-}
+export const DATE_PARSE_FORMAT = 'YYYY-MM-DD hh:mm A'

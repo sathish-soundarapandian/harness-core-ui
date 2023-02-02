@@ -314,7 +314,7 @@ export const authFieldsValidationConfig = (
   {
     name: 'spec.auth.access_token',
     type: ValidationFieldTypes.Text,
-    label: 'token',
+    label: 'common.getStarted.accessTokenLabel',
     isRequired: data.spec.mode !== 'ingestion'
   }
 ]
@@ -333,6 +333,18 @@ export const ingestionFieldValidationConfig = (
 export const imageFieldsValidationConfig = (
   data: SecurityStepData<SecurityStepSpec>
 ): InputSetViewValidateFieldsConfig[] => [
+  {
+    name: 'identifier',
+    type: ValidationFieldTypes.Identifier,
+    label: 'identifier',
+    isRequired: true
+  },
+  {
+    name: 'name',
+    type: ValidationFieldTypes.Name,
+    label: 'pipelineSteps.stepNameLabel',
+    isRequired: true
+  },
   {
     name: 'spec.image.type',
     type: ValidationFieldTypes.Text,
@@ -681,7 +693,7 @@ export const inputSetToolFields = (
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.product_token) && {
           [getInputSetFieldName(prefix, 'spec.tool.product_token')]: {
-            label: 'token'
+            label: 'sto.stepField.tool.productToken'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.product_name) && {
@@ -706,7 +718,7 @@ export const inputSetAuthFields = (
         // Auth fields
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.access_token) && {
           [getInputSetFieldName(prefix, 'spec.auth.access_token')]: {
-            label: 'token'
+            label: 'common.getStarted.accessTokenLabel'
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.domain) && {

@@ -11,3 +11,45 @@
   width: 100% !important;
   background: var(--primary-1) !important;
 }
+
+.pillToggle {
+  :global(.PillToggle--item) {
+    width: 100px !important;
+    text-transform: uppercase;
+  }
+}
+
+.downtimeWindow {
+  :global {
+    .RadioButton--radio {
+      display: flex;
+      align-items: baseline;
+      flex-shrink: auto;
+    }
+
+    .bp3-form-content {
+      .RadioButton--radio .bp3-form-group {
+        width: 100%;
+      }
+    }
+  }
+
+  .cardTitle {
+    margin-top: var(--spacing-medium);
+    margin-bottom: var(--spacing-xsmall);
+  }
+
+  .picker {
+    margin-top: var(--spacing-small);
+  }
+
+  .endTime {
+    align-items: center;
+
+    .text {
+      white-space: nowrap;
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+  }
+}

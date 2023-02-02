@@ -197,7 +197,7 @@ exports[`<ExecutionLandingPage /> tests for CI loading state - snapshot test for
               >
                 <a
                   class="Breadcrumbs--breadcrumb"
-                  href="/account/TEST_ACCOUNT_ID/ci/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions"
+                  href="/account/TEST_ACCOUNT_ID/ci/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions?storeType=INLINE"
                 >
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
@@ -254,7 +254,7 @@ exports[`<ExecutionLandingPage /> tests for CI loading state - snapshot test for
               </span>
               <a
                 class="view"
-                href="/account/TEST_ACCOUNT_ID/ci/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+                href="/account/TEST_ACCOUNT_ID/ci/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/?storeType=INLINE"
               >
                 <span
                   class="bp3-icon StyledProps--main"
@@ -815,7 +815,7 @@ exports[`<ExecutionLandingPage /> tests loading state - snapshot test 1`] = `
               >
                 <a
                   class="Breadcrumbs--breadcrumb"
-                  href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions"
+                  href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/executions?storeType=INLINE"
                 >
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
@@ -872,7 +872,7 @@ exports[`<ExecutionLandingPage /> tests loading state - snapshot test 1`] = `
               </span>
               <a
                 class="view"
-                href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/"
+                href="/account/TEST_ACCOUNT_ID/cd/orgs/TEST_ORG/projects/TEST_PROJECT/pipelines/TEST_PIPELINE/pipeline-studio/?storeType=INLINE"
               >
                 <span
                   class="bp3-icon StyledProps--main"

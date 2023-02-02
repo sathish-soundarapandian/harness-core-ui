@@ -47,7 +47,8 @@ interface CommonStatesforAllClicksProps {
   commonProblemsDelegateTypeLocal: DelegateCommonProblemTypes | undefined
 }
 
-const installDelegateLink = 'https://developer.harness.io/docs/platform/delegates/delegates-overview/'
+const installDelegateLink =
+  'https://developer.harness.io/docs/platform/Delegates/get-started-with-delegates/delegates-overview'
 const intsallDelegateLinkTutorial = 'https://developer.harness.io/tutorials/platform/install-delegate'
 
 const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = ({ onDone, oldDelegateCreation }) => {

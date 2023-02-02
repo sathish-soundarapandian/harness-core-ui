@@ -106,6 +106,9 @@ function StartupScriptListView({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
+  const availableConnectors = getDeploymentSpecificConnectorTypes(deploymentType)
+  const singleAvailableStore = availableConnectors.length === 1 ? availableConnectors[0] : undefined
+
   const removeStartupScript = (): void => {
     if (stage) {
       const path = isPropagating
@@ -229,7 +232,7 @@ function StartupScriptListView({
   }
 
   const getLastSteps = useCallback((): React.ReactElement<StepProps<ConnectorConfigDTO>> => {
-    return <StartupScriptWizardStepTwo {...lastStepProps()} />
+    return <StartupScriptWizardStepTwo {...lastStepProps()} singleAvailableStore={singleAvailableStore} />
   }, [startupCommand, connectorType, lastStepProps])
 
   const getNewConnectorSteps = useCallback((): JSX.Element | void => {
@@ -404,6 +407,7 @@ function StartupScriptListView({
             newConnectorSteps={getNewConnectorSteps()}
             lastSteps={getLastSteps()}
             isReadonly={isReadonly}
+            singleAvailableStore={singleAvailableStore}
           />
         </div>
         <Button minimal icon="cross" onClick={onClose} className={css.crossIcon} />

@@ -19,6 +19,7 @@ import {
 import { act } from 'react-dom/test-utils'
 import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import { orgMockData } from '@projects-orgs/pages/organizations/__tests__/OrganizationsMockData'
+import { OrgMockData } from '@projects-orgs/pages/projects/__tests__/ProjectPageMock'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
@@ -26,7 +27,6 @@ import ProjectsListPage from '../ProjectsPage'
 import {
   createMockData,
   invitesMockData,
-  OrgMockData,
   projectMockData,
   projectPageMock,
   response,
@@ -51,6 +51,9 @@ jest.mock('@common/hooks', () => ({
 }))
 
 jest.mock('services/cd-ng', () => ({
+  getOrganizationListPromise: jest.fn().mockImplementation(() => {
+    return Promise.resolve(OrgMockData)
+  }),
   useGetOrganizationList: jest.fn().mockImplementation(() => {
     return { ...orgMockData, refetch: jest.fn(), error: null }
   }),
@@ -101,12 +104,6 @@ jest.mock('services/cd-ng', () => ({
         }
       })
     }
-  })
-}))
-
-jest.mock('@harnessio/react-ng-manager-client', () => ({
-  getOrganizations: jest.fn().mockImplementation(() => {
-    return Promise.resolve({ ...OrgMockData })
   })
 }))
 

@@ -8,6 +8,7 @@
 import { TestStatus } from '@common/components/TestConnectionWidget/TestConnectionWidget'
 import type { ManifestStores } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import type { InfrastructureRequestDTO } from 'services/cd-ng'
+import type { CDOnboardingContextInterface } from '../CDOnboardingStore'
 import { DrawerMode } from '../CDOnboardingUtils'
 export const delegateSizeResponse = {
   metaData: {},
@@ -328,7 +329,7 @@ services:
       - INIT_SCRIPT=echo "Docker delegate init script executed."
 `
 
-export const contextValues = {
+export const contextValues: CDOnboardingContextInterface = {
   state: {
     service: {
       name: 'sample_service',
@@ -356,7 +357,10 @@ export const contextValues = {
       identifier: 'sample_infrastructure',
       type: 'KubernetesDirect' as InfrastructureRequestDTO['type'],
       infrastructureDefinition: {}
-    }
+    },
+    cluster: {},
+    application: {},
+    repository: {}
   },
   drawerData: { fileContent: undefined, mode: DrawerMode.Preview },
   saveServiceData: jest.fn(),
@@ -364,5 +368,8 @@ export const contextValues = {
   saveInfrastructureData: jest.fn(),
   setDrawerData: jest.fn(),
   saveDelegateData: jest.fn(),
-  saveRepositoryData: jest.fn()
+  saveRepositoryData: jest.fn(),
+  saveClusterData: jest.fn(),
+  saveAgentData: jest.fn(),
+  saveApplicationData: jest.fn()
 }

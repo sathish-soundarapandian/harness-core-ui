@@ -288,6 +288,7 @@ interface PipelineRouteDestinationsProps {
   moduleParams: ModulePathParams
   licenseRedirectData?: LicenseRedirectProps
   sidebarProps?: SidebarContext
+  pipelineStudioComponentV1?: React.FC
 }
 
 export function PipelineRouteDestinations({
@@ -297,7 +298,8 @@ export function PipelineRouteDestinations({
   pipelineDeploymentListPageName,
   moduleParams,
   licenseRedirectData,
-  sidebarProps
+  sidebarProps,
+  pipelineStudioComponentV1: PipelineStudioV1
 }: PipelineRouteDestinationsProps) {
   return (
     <>
@@ -311,6 +313,15 @@ export function PipelineRouteDestinations({
         <PipelineDetails>
           <PipelineStudio />
         </PipelineDetails>
+      </RouteWithLayout>
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={sidebarProps}
+        path={routes.toPipelineStudioV1({ ...accountPathProps, ...pipelinePathProps, ...moduleParams })}
+        pageName={pipelineStudioPageName}
+      >
+        <PipelineDetails>{PipelineStudioV1 ? <PipelineStudioV1 /> : <></>}</PipelineDetails>
       </RouteWithLayout>
       <RouteWithLayout
         exact

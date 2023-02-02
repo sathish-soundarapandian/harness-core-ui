@@ -42,7 +42,7 @@ export const RenderColumnDetails: Renderer<CellProps<ResourceGroupV2Response>> =
   return (
     <Layout.Horizontal spacing="small" flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
       <div style={{ backgroundColor: data.color }} className={cx(css.resourceGroupColor)}></div>
-      <Layout.Vertical spacing="xsmall" padding={{ left: 'small' }}>
+      <Layout.Vertical spacing="xsmall" padding={{ left: 'small', right: 'small' }} width={'100%'}>
         <Text color={Color.BLACK} lineClamp={1}>
           {data.name}
         </Text>

@@ -249,11 +249,7 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
     <div className={css.serviceDefinition}>
       {!!selectedDeploymentType && (
         <>
-          <Card
-            className={css.sectionCard}
-            id={getString('cd.pipelineSteps.serviceTab.manifest.taskDefinition')}
-            data-testid={'task-definition-card'}
-          >
+          <Card className={css.sectionCard} data-testid={'task-definition-card'}>
             <div
               className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
               data-tooltip-id={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_taskDefinition`}

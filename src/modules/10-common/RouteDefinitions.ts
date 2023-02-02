@@ -797,6 +797,25 @@ const routes = {
       }
     }
   ),
+  toPipelineStudioV1: withAccountId(
+    ({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      accountId: _accountId,
+      module,
+      ...rest
+    }: PipelineType<PipelinePathProps> & PipelineStudioQueryParams & RunPipelineQueryParams) => {
+      const queryString = qs.stringify(rest, { skipNulls: true })
+      const basePath = module || 'home'
+
+      if (queryString.length > 0) {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/pipeline-studio-v1/?${queryString}`
+      } else {
+        return `/${basePath}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/pipeline-studio-v1`
+      }
+    }
+  ),
   toPipelines: withAccountId(({ orgIdentifier, projectIdentifier, module }: PipelineType<ProjectPathProps>) => {
     return module
       ? `/${module}/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines`
@@ -1988,6 +2007,7 @@ const routes = {
 
   /*********************** IACM */
   toIACM: withAccountId(() => `/iacm`),
+  toIACMOverview: withAccountId(() => `/iacm/overview`),
   toIACMMicroFrontend: withAccountId(
     ({ orgIdentifier, projectIdentifier }: Partial<ProjectPathProps>) =>
       `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/`
@@ -2014,7 +2034,24 @@ const routes = {
     }: PipelineType<ExecutionPathProps>) => {
       return `/iacm/orgs/${orgIdentifier}/projects/${projectIdentifier}/pipelines/${pipelineIdentifier}/${source}/${executionIdentifier}/resources`
     }
-  )
+  ),
+  // SSCS
+  toSSCS: withAccountId(() => '/sscs'),
+  toSSCSOverview: withAccountId(() => '/sscs/overview'),
+  toAllowDenyList: withAccountId(
+    ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
+      const path = `allow-deny-list`
+      return getScopeBasedRoute({
+        scope: {
+          orgIdentifier,
+          projectIdentifier,
+          module
+        },
+        path
+      })
+    }
+  ),
+  toSSCSGettingStarted: withAccountId(() => '/sscs/getting-started')
 }
 
 export default routes

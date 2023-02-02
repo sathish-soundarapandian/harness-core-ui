@@ -14,7 +14,8 @@ import {
   VisualYamlSelectedView as SelectedView,
   Container,
   GridListToggle,
-  useToaster
+  useToaster,
+  Heading
 } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { useModalHook } from '@harness/use-modal'
@@ -36,6 +37,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { Sort, SortFields } from '@common/utils/listUtils'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { SortOption } from '@common/components/SortOption/SortOption'
+import serviceEmptyStateSvg from '@cd/icons/ServiceDetailsEmptyState.svg'
 import ServicesGridView from '../ServicesGridView/ServicesGridView'
 import ServicesListView from '../ServicesListView/ServicesListView'
 import { ServiceTabs } from '../utils/ServiceUtils'
@@ -217,22 +219,50 @@ export const ServicesListPage: React.FC = () => {
           margin={{ left: 'xlarge', right: 'xlarge', top: 'large', bottom: 'large' }}
           className={css.container}
         >
-          {view === Views.GRID ? (
-            <ServicesGridView
-              data={serviceList}
-              loading={loading}
-              onRefresh={() => refetch()}
-              gotoPage={(pageNumber: number) => setPage(pageNumber)}
-              onServiceSelect={async service => goToServiceDetails(service)}
-            />
+          {serviceList && serviceList.data?.content?.length ? (
+            view === Views.GRID ? (
+              <ServicesGridView
+                data={serviceList}
+                loading={loading}
+                onRefresh={() => refetch()}
+                gotoPage={(pageNumber: number) => setPage(pageNumber)}
+                onServiceSelect={async service => goToServiceDetails(service)}
+              />
+            ) : (
+              <ServicesListView
+                data={serviceList}
+                loading={loading}
+                onRefresh={() => refetch()}
+                gotoPage={(pageNumber: number) => setPage(pageNumber)}
+                onServiceSelect={async service => goToServiceDetails(service)}
+              />
+            )
           ) : (
-            <ServicesListView
-              data={serviceList}
-              loading={loading}
-              onRefresh={() => refetch()}
-              gotoPage={(pageNumber: number) => setPage(pageNumber)}
-              onServiceSelect={async service => goToServiceDetails(service)}
-            />
+            <Container flex={{ align: 'center-center' }} height="80vh">
+              <Layout.Vertical flex={{ alignItems: 'center' }}>
+                <img src={serviceEmptyStateSvg} width={300} height={150} />
+                <Heading level={2} padding={{ top: 'xxlarge' }} margin={{ bottom: 'large' }}>
+                  {getString('cd.noService')}
+                </Heading>
+                <RbacButton
+                  intent="primary"
+                  data-testid="add-service"
+                  icon="plus"
+                  iconProps={{ size: 10 }}
+                  text={getString('newService')}
+                  permission={{
+                    permission: PermissionIdentifier.EDIT_SERVICE,
+                    resource: {
+                      resourceType: ResourceType.SERVICE
+                    }
+                  }}
+                  onClick={() => {
+                    showModal()
+                    setMode(SelectedView.VISUAL)
+                  }}
+                />
+              </Layout.Vertical>
+            </Container>
           )}
         </Layout.Vertical>
       </>

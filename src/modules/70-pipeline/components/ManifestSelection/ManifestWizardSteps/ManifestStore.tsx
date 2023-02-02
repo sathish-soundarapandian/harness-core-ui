@@ -24,14 +24,14 @@ import {
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO } from 'services/cd-ng'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
+import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -230,7 +230,7 @@ function ManifestStore({
                       gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
                     />
                     {getMultiTypeFromValue(formik.values.connectorRef) === MultiTypeInputType.RUNTIME ? (
-                      <ConfigureOptions
+                      <ConnectorConfigureOptions
                         className={css.configureOptions}
                         value={formik.values.connectorRef as unknown as string}
                         type={ManifestToConnectorMap[formik.values.store]}
@@ -242,6 +242,17 @@ function ManifestStore({
                           formik.setFieldValue('connectorRef', value)
                         }}
                         isReadonly={isReadonly}
+                        connectorReferenceFieldProps={{
+                          accountIdentifier: accountId,
+                          projectIdentifier,
+                          orgIdentifier,
+                          type: ManifestToConnectorMap[formik.values.store],
+                          label: `${getString(
+                            ManifestToConnectorLabelMap[formik.values.store as ManifestStoreWithoutConnector]
+                          )} ${getString('connector')}`,
+                          disabled: isReadonly,
+                          gitScope: { repo: defaultTo(repoIdentifier, ''), branch, getDefaultFromOtherRepo: true }
+                        }}
                       />
                     ) : (
                       <Button

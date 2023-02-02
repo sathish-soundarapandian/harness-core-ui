@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Layout, Page, Button, ButtonVariation } from '@harness/uicore'
 import { useFormikContext } from 'formik'
@@ -17,13 +17,13 @@ import type { DowntimeForm } from '../../CVCreateDowntime.types'
 import DowntimeName from './components/DowntimeName/DowntimeName'
 import { getErrorMessageByTabId, isFormDataValid } from './CreateDowntimeForm.utils'
 import { CreateDowntimePreview } from './components/CreateDowntimePreview/CreateDowntimePreview'
+import DowntimeWindow from './components/DowntimeWindow/DowntimeWindow'
 import css from './CreateDowntimeForm.module.scss'
 
 export const CreateDowntimeForm = ({
   loading,
   error,
-  // retryOnError,
-  // handleRedirect,
+  retryOnError,
   loadingSaveButton,
   runValidationOnMount
 }: CreateDowntimeFormInterface): JSX.Element => {
@@ -36,39 +36,35 @@ export const CreateDowntimeForm = ({
   )
 
   const [validateAllSteps, setValidateAllSteps] = useState<boolean | undefined>(runValidationOnMount)
-  const sloDowntimePayloadRef = useRef<DowntimeForm | null>()
-  const prevStepDataRef = useRef<DowntimeForm | null>()
-
-  useEffect(() => {
-    sloDowntimePayloadRef.current = formikProps.values
-    prevStepDataRef.current = formikProps.values
-  }, [])
-
-  const onStepChange = (): void => {
-    prevStepDataRef.current = formikProps.values
-  }
 
   return (
     <>
-      {/* add retryOnError to Page.Body afterwards */}
-      <Page.Body loading={loading} error={error}>
+      <Page.Body loading={loading} error={error} retryOnError={() => retryOnError()}>
         <>
           <CVStepper
             id="createDowntimeTabs"
             isStepValid={isStepValid}
             runValidationOnMount={validateAllSteps}
-            onStepChange={onStepChange}
             stepList={[
               {
                 id: CreateDowntimeSteps.DEFINE_DOWNTIME,
                 title: getString('cv.sloDowntime.steps.identification'),
-                panel: <DowntimeName formikProps={formikProps} identifier={identifier} />,
+                panel: <DowntimeName identifier={identifier} />,
                 errorMessage: getErrorMessageByTabId(formikProps, CreateDowntimeSteps.DEFINE_DOWNTIME),
                 preview: <CreateDowntimePreview id={CreateDowntimeSteps.DEFINE_DOWNTIME} data={formikProps.values} />
               },
               {
                 id: CreateDowntimeSteps.SELECT_DOWNTIME_WINDOW,
-                title: getString('cv.sloDowntime.steps.identification'),
+                title: getString('cv.sloDowntime.steps.downtimeWindow'),
+                panel: <DowntimeWindow />,
+                errorMessage: getErrorMessageByTabId(formikProps, CreateDowntimeSteps.SELECT_DOWNTIME_WINDOW),
+                preview: (
+                  <CreateDowntimePreview id={CreateDowntimeSteps.SELECT_DOWNTIME_WINDOW} data={formikProps.values} />
+                )
+              },
+              {
+                id: CreateDowntimeSteps.SELECT_MONITORED_SERVICES,
+                title: getString('cv.sloDowntime.steps.monitoredServices'),
                 panel: <></>,
                 errorMessage: getErrorMessageByTabId(formikProps, CreateDowntimeSteps.SELECT_DOWNTIME_WINDOW),
                 preview: <></>

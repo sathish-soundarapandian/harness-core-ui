@@ -17,6 +17,7 @@ declare const styles: {
   readonly harnessTag: string
   readonly moduleTag: string
   readonly predefinedTags: string
+  readonly sscsTag: string
   readonly stoTag: string
 }
 export default styles

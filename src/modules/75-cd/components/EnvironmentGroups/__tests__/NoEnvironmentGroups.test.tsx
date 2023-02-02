@@ -31,7 +31,7 @@ describe('No Environment Groups', () => {
         <NoEnvironmentGroups {...defaultProps} />
       </TestWrapper>
     )
-    expect(screen.queryByText('common.environmentGroup.createNew')).toBeInTheDocument()
+    expect(screen.queryByText('common.environmentGroup.new')).toBeInTheDocument()
   })
 
   test('search returns empty result', () => {

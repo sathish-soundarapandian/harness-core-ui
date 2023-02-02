@@ -260,7 +260,7 @@ exports[`VerifyStepLogContent should render VerifyStepLogContent component of ty
                   <path
                     d="M1.207 6.125l5.78 2.75 5.806-2.75m-11.586-5l5.78 2.75 5.806-2.75"
                     fill="none"
-                    stroke="#3E7BFA"
+                    stroke="#3e7bfa"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   />

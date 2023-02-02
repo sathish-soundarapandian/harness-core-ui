@@ -6,20 +6,17 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { get, memoize } from 'lodash-es'
-
-import { getMultiTypeFromValue, MultiTypeInputType, SelectOption, Text, useToaster } from '@harness/uicore'
+import { memoize } from 'lodash-es'
+import { SelectOption, Text, useToaster } from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useStrings } from 'framework/strings'
 import type { ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import type { Failure } from 'services/cd-ng'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
-import { BuildDetailsDTO, getTagError, isExecutionTimeFieldDisabled } from '../artifactSourceUtils'
+import { BuildDetailsDTO, getTagError } from '../artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 
 interface DigestFieldProps extends ArtifactSourceRenderProps {
@@ -42,7 +39,6 @@ const DigestField = (props: DigestFieldProps): JSX.Element => {
     fetchDigest,
     fetchDigestError,
     stageIdentifier,
-    stepViewType,
     digestData
   } = props
 
@@ -129,29 +125,6 @@ const DigestField = (props: DigestFieldProps): JSX.Element => {
         fieldPath={''}
         template={undefined}
       />
-      {getMultiTypeFromValue(
-        get(
-          formik?.values,
-
-          `${path}.artifacts.${artifactPath}.spec.digest`
-        )
-      ) === MultiTypeInputType.RUNTIME && (
-        <ConfigureOptions
-          className={css.configureOptions}
-          style={{ alignSelf: 'center' }}
-          value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.digest`)}
-          type="String"
-          variableName="digest"
-          showRequiredField={false}
-          isReadonly={readonly}
-          showDefaultField={true}
-          isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-          showAdvanced={true}
-          onChange={value => {
-            formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.digest`, value)
-          }}
-        />
-      )}
     </div>
   )
 }

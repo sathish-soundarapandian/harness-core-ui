@@ -1872,6 +1872,12 @@
             "in": "query",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "folderNamePattern",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {

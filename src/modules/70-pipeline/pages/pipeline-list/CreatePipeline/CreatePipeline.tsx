@@ -9,9 +9,11 @@ import React, { ReactElement } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { ResourceType } from '@common/interfaces/GitSyncInterface'
 import routes from '@common/RouteDefinitions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import CreatePipelineButton from '@pipeline/components/CreatePipelineButton/CreatePipelineButton'
 import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
 import { useStrings } from 'framework/strings'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import type { PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
@@ -24,9 +26,13 @@ export function CreatePipeline({ onSuccess }: CreatePipelineProps): ReactElement
   const { getString } = useStrings()
   const pathParams = useParams<PipelineListPagePathParams>()
   const history = useHistory()
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
 
   const goToPipelineStudio = (pipeline?: PMSPipelineSummaryResponse): void =>
     history.push(routes.toPipelineStudio(getRouteProps(pathParams, pipeline)))
+
+  const goToPipelineStudioV1 = (pipeline?: PMSPipelineSummaryResponse): void =>
+    history.push(routes.toPipelineStudioV1(getRouteProps(pathParams, pipeline)))
 
   const { showMigrateResourceModal: showImportResourceModal } = useMigrateResource({
     resourceType: ResourceType.PIPELINES,
@@ -37,7 +43,12 @@ export function CreatePipeline({ onSuccess }: CreatePipelineProps): ReactElement
   return (
     <CreatePipelineButton
       label={getString('common.createPipeline')}
-      onCreatePipelineClick={() => goToPipelineStudio({ identifier: '-1' })}
+      onCreatePipelineClick={() =>
+        CI_YAML_VERSIONING &&
+        pathParams.module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.valueOf().toLowerCase()
+          ? goToPipelineStudioV1({ identifier: '-1' })
+          : goToPipelineStudio({ identifier: '-1' })
+      }
       onImportPipelineClick={showImportResourceModal}
     />
   )

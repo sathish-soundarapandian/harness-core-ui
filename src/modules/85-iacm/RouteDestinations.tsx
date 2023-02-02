@@ -79,7 +79,10 @@ function IACMRoutes(): JSX.Element {
       </Route>
       <RouteWithLayout
         sidebarProps={IACMSideNavProps}
-        path={routes.toIACMMicroFrontend({ ...projectPathProps, ...accountPathProps, ...orgPathProps })}
+        path={[
+          routes.toIACMOverview({ ...accountPathProps }),
+          routes.toIACMMicroFrontend({ ...projectPathProps, ...accountPathProps, ...orgPathProps })
+        ]}
       >
         <IACMApp />
       </RouteWithLayout>

@@ -37,6 +37,7 @@ export type ManifestTypes =
   | 'AsgLaunchTemplate'
   | 'AsgScalingPolicy'
   | 'AsgScheduledUpdateGroupAction'
+  | 'GoogleCloudFunctionDefinition'
   | 'HelmRepoOverride'
 
 export type PrimaryManifestType =

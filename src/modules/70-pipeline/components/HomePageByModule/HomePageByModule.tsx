@@ -261,7 +261,7 @@ function HomePageByModule({ moduleName, bgImageURL, useTrialModal }: HomePageMod
     }
     if (project) {
       history.push(
-        routes.toProjectOverview({
+        routes.toDeployments({
           projectIdentifier: project.identifier,
           orgIdentifier: project.orgIdentifier || '',
           accountId,

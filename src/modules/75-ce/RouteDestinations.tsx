@@ -72,6 +72,8 @@ import CloudIntegrationPage from './pages/cloud-integration/CloudIntegrationPage
 import ServiceDetailsPage from './pages/service-details/ServiceDetailsPage'
 import AnomaliesFilter from './components/AnomaliesFilter/AnomaliesFilter'
 import GatewayListFilters from './components/COGatewayList/GatewayListFilters'
+import PerspectiveResourceModalBody from './components/ResourceGroupModals/PerspectiveResourceModalBody'
+import PerspectiveResourceRenderer from './components/ResourceGroupModals/PerspectiveResourceRenderer'
 
 RbacFactory.registerResourceCategory(ResourceCategory.CLOUD_COSTS, {
   icon: 'ccm-solid',
@@ -107,7 +109,9 @@ RbacFactory.registerResourceTypeHandler(ResourceType.CCM_PERSPECTIVE_FOLDERS, {
     [PermissionIdentifier.VIEW_CCM_PERSPECTIVE_FOLDERS]: <LocaleString stringID="rbac.permissionLabels.view" />,
     [PermissionIdentifier.EDIT_CCM_PERSPECTIVE_FOLDERS]: <LocaleString stringID="rbac.permissionLabels.createEdit" />,
     [PermissionIdentifier.DELETE_CCM_PERSPECTIVE_FOLDERS]: <LocaleString stringID="delete" />
-  }
+  },
+  addResourceModalBody: props => <PerspectiveResourceModalBody {...props} />,
+  staticResourceRenderer: props => <PerspectiveResourceRenderer {...props} />
 })
 
 RbacFactory.registerResourceTypeHandler(ResourceType.CCM_BUDGETS, {

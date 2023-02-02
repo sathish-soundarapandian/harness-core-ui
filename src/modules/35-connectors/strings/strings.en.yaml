@@ -411,7 +411,7 @@ customHealth:
   valueRequired: Value is required.
   keyRequired: Key is required.
 cdng:
-  continousVerificationType: Continous Verification Type
+  continousVerificationType: Continuous Verification Type
   monitoredServiceType: Monitored Service Type
   verificationTypeHeading: Select a type that matches your deployment strategy.
   artifactTag: Artifact Tag

@@ -11,7 +11,7 @@ import { Button, ButtonVariation, Container, Heading, Layout, Text } from '@harn
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 
-import EmptyContent from './images/EmptyEnvironmentGroup.svg'
+import EmptyContent from './images/NoEnvironmentGroup.svg'
 import EmptySearch from './images/NoEnvironmentGroups-Search.svg'
 
 export default function NoEnvironmentGroups({
@@ -52,12 +52,12 @@ export default function NoEnvironmentGroups({
         </Layout.Vertical>
       ) : (
         <Container flex style={{ flexDirection: 'column' }}>
-          <img src={EmptyContent} width={220} height={220} />
+          <img src={EmptyContent} width={300} height={150} />
           <Heading level={2} padding={{ top: 'xxlarge' }} margin={{ bottom: 'large' }}>
             {getString('common.environmentGroups.noEnvironmentGroups.label')}
           </Heading>
           <Button
-            text={getString('common.environmentGroup.createNew')}
+            text={getString('common.environmentGroup.new')}
             icon="plus"
             onClick={showModal}
             variation={ButtonVariation.PRIMARY}

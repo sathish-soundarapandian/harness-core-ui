@@ -89,7 +89,8 @@ function TemplateStepWidget(
       ...getScopeBasedProjectPathParams(queryParams, scope),
       versionLabel: stepTemplateVersionLabel,
       ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
-    }
+    },
+    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
   })
 
   React.useEffect(() => {

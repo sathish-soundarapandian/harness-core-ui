@@ -38,6 +38,7 @@ stepField:
     teamName: Team Name
     projectVersion: Project Version
     projectToken: Project Token
+    productToken: Product Token
     productLookupType: Lookup Type
     exclude: Exclude
   container:

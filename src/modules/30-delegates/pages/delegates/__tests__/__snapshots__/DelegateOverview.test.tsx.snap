@@ -61,10 +61,13 @@ exports[`Delegates Overview Page render data 1`] = `
                   width="21"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path
-                    d="M.8 13l-.8-.4V1.3L.8.9l3 5.8zM3.1 11l1.1 1.6L9 10.3l-1.1-.2zM2.2 2.9l1.2-1.7L9 3.7l-1 .2z"
+                  <g
                     fill="#9d5025"
-                  />
+                  >
+                    <path
+                      d="M.8 13l-.8-.4V1.3L.8.9l3 5.8zM3.1 11l1.1 1.6L9 10.3l-1.1-.2zM2.2 2.9l1.2-1.7L9 3.7l-1 .2z"
+                    />
+                  </g>
                   <path
                     d="M2.6 1.3L.9.9V13l1.7-.5z"
                     fill="#f58536"

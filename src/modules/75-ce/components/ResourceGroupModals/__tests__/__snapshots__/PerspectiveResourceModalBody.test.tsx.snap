@@ -1,0 +1,412 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Connector Resource Modal Body test Show no data in case there is no perspective folders 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-small StyledProps--main noDataContainer StyledProps--flex StyledProps--flex-align-center-center"
+  >
+    <span
+      class="bp3-icon StyledProps--main"
+      data-icon="resources-icon"
+    >
+      <svg
+        height="20"
+        width="20"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M10.003 0a9.893 9.893 0 00-4.348.992.5.5 0 00.436.9A8.912 8.912 0 0110.003 1 8.996 8.996 0 112.17 5.564a.5.5 0 10-.872-.492A10 10 0 1010.003 0zM2.587 3.152a1 1 0 102 0 1 1 0 00-2 0zM12.927 5.2a.496.496 0 00-.228-.668 6.1 6.1 0 10-2.692 11.572 6.104 6.104 0 006.024-7.052.5.5 0 00-.988.148 5.092 5.092 0 11-2.8-3.784.496.496 0 00.684-.216zm1.396 2.48a1 1 0 10.22-1.988 1 1 0 00-.22 1.988zM9.003 10a1 1 0 102 0 1 1 0 00-2 0z"
+          fill="#25A6F7"
+        />
+      </svg>
+    </span>
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-body1 StyledProps--color StyledProps--color-black"
+    >
+      noData
+    </p>
+  </div>
+</div>
+`;
+
+exports[`Connector Resource Modal Body test initializes ok  1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main"
+  >
+    <div
+      class="TableV2--table"
+    >
+      <div
+        class="TableV2--header"
+        role="row"
+      >
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 5%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+             
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 95%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            CE.PERSPECTIVES.FOLDERS.TITLE
+          </p>
+        </div>
+      </div>
+      <div
+        class="TableV2--body"
+      >
+        <div
+          class="TableV2--row TableV2--card TableV2--clickable"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 5%;"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkBox StyledProps--main"
+              >
+                <input
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+              </label>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 95%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                <span
+                  class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey600"
+                  data-icon="main-folder"
+                >
+                  <svg
+                    height="16"
+                    viewBox="0 0 14 11"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 10.3c0 .4.3.7.7.7h12.6c.4 0 .7-.3.7-.7V3.4H0zm13.3-8.9H6.6L5.4.2C5.3.1 5.1 0 4.9 0H.7C.3 0 0 .3 0 .7v2.1h14v-.7c0-.4-.3-.7-.7-.7z"
+                      fill="#4d5969"
+                    />
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600"
+                >
+                  Abhijeet-Test
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card TableV2--clickable"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 5%;"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkBox StyledProps--main"
+              >
+                <input
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+              </label>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 95%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                <span
+                  class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey600"
+                  data-icon="main-folder"
+                >
+                  <svg
+                    height="16"
+                    viewBox="0 0 14 11"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 10.3c0 .4.3.7.7.7h12.6c.4 0 .7-.3.7-.7V3.4H0zm13.3-8.9H6.6L5.4.2C5.3.1 5.1 0 4.9 0H.7C.3 0 0 .3 0 .7v2.1h14v-.7c0-.4-.3-.7-.7-.7z"
+                      fill="#4d5969"
+                    />
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600"
+                >
+                  Default Folder
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card TableV2--clickable"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 5%;"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkBox StyledProps--main"
+              >
+                <input
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+              </label>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 95%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                <span
+                  class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey600"
+                  data-icon="main-folder"
+                >
+                  <svg
+                    height="16"
+                    viewBox="0 0 14 11"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 10.3c0 .4.3.7.7.7h12.6c.4 0 .7-.3.7-.7V3.4H0zm13.3-8.9H6.6L5.4.2C5.3.1 5.1 0 4.9 0H.7C.3 0 0 .3 0 .7v2.1h14v-.7c0-.4-.3-.7-.7-.7z"
+                      fill="#4d5969"
+                    />
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600"
+                >
+                  Default Folder
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card TableV2--clickable"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 5%;"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkBox StyledProps--main"
+              >
+                <input
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+              </label>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 95%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                <span
+                  class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey600"
+                  data-icon="main-folder"
+                >
+                  <svg
+                    height="16"
+                    viewBox="0 0 14 11"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 10.3c0 .4.3.7.7.7h12.6c.4 0 .7-.3.7-.7V3.4H0zm13.3-8.9H6.6L5.4.2C5.3.1 5.1 0 4.9 0H.7C.3 0 0 .3 0 .7v2.1h14v-.7c0-.4-.3-.7-.7-.7z"
+                      fill="#4d5969"
+                    />
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600"
+                >
+                  Move here
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card TableV2--clickable"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 5%;"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkBox StyledProps--main"
+              >
+                <input
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+              </label>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 95%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                <span
+                  class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey600"
+                  data-icon="main-folder"
+                >
+                  <svg
+                    height="16"
+                    viewBox="0 0 14 11"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 10.3c0 .4.3.7.7.7h12.6c.4 0 .7-.3.7-.7V3.4H0zm13.3-8.9H6.6L5.4.2C5.3.1 5.1 0 4.9 0H.7C.3 0 0 .3 0 .7v2.1h14v-.7c0-.4-.3-.7-.7-.7z"
+                      fill="#4d5969"
+                    />
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600"
+                >
+                  Out of the box Folder
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="TableV2--row TableV2--card TableV2--clickable"
+          role="row"
+        >
+          <div
+            class="TableV2--cells"
+          >
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 5%;"
+            >
+              <label
+                class="bp3-control bp3-checkbox StyledProps--font Checkbox--checkbox checkBox StyledProps--main"
+              >
+                <input
+                  type="checkbox"
+                />
+                <span
+                  class="bp3-control-indicator"
+                />
+              </label>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 95%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                <span
+                  class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey600"
+                  data-icon="main-folder"
+                >
+                  <svg
+                    height="16"
+                    viewBox="0 0 14 11"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M0 10.3c0 .4.3.7.7.7h12.6c.4 0 .7-.3.7-.7V3.4H0zm13.3-8.9H6.6L5.4.2C5.3.1 5.1 0 4.9 0H.7C.3 0 0 .3 0 .7v2.1h14v-.7c0-.4-.3-.7-.7-.7z"
+                      fill="#4d5969"
+                    />
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-grey600"
+                >
+                  Test
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

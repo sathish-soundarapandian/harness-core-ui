@@ -7,17 +7,58 @@
 
 import * as Yup from 'yup'
 import type { Item } from '@harness/uicore/dist/components/ThumbnailSelect/ThumbnailSelect'
+import moment from 'moment'
 import type { UseStringsReturn } from 'framework/strings'
-import type { DowntimeDTO } from 'services/cv'
-import { DowntimeForm, DowntimeFormFields } from './CVCreateDowntime.types'
+import type {
+  DowntimeDTO,
+  OnetimeDowntimeSpec,
+  OnetimeDurationBasedSpec,
+  OnetimeEndTimeBasedSpec,
+  RecurringDowntimeSpec
+} from 'services/cv'
+import { DowntimeCategory, DowntimeForm, DowntimeFormFields, EndTimeMode } from './CVCreateDowntime.types'
+import { DATE_PARSE_FORMAT } from './CVCreateDowntime.constants'
+import { DowntimeWindowToggleViews } from './components/CreateDowntimeForm/CreateDowntimeForm.types'
+
+export const getFormattedTime = (field: DowntimeFormFields, time?: number): string => {
+  if (time) {
+    return moment(time * 1000).format(DATE_PARSE_FORMAT)
+  } else if (field === DowntimeFormFields.END_TIME) {
+    return moment().add(30, 'm').format(DATE_PARSE_FORMAT)
+  } else if (field === DowntimeFormFields.RECURRENCE_END_TIME) {
+    return moment().add(1, 'y').format(DATE_PARSE_FORMAT)
+  }
+  return moment().format(DATE_PARSE_FORMAT)
+}
 
 export const getDowntimeInitialFormData = (sloDowntime?: DowntimeDTO): DowntimeForm => {
+  const onetimeDowntimeSpec = sloDowntime?.spec?.spec as OnetimeDowntimeSpec
+  const onetimeDurationBasedSpec = onetimeDowntimeSpec?.spec as OnetimeDurationBasedSpec
+  const onetimeEndTimeBasedSpec = onetimeDowntimeSpec?.spec as OnetimeEndTimeBasedSpec
+  const recurringDowntimeSpec = sloDowntime?.spec?.spec as RecurringDowntimeSpec
   return {
     [DowntimeFormFields.NAME]: sloDowntime?.name || '',
     [DowntimeFormFields.IDENTIFIER]: sloDowntime?.identifier || '',
     [DowntimeFormFields.TAGS]: sloDowntime?.tags,
     [DowntimeFormFields.DESCRIPTION]: sloDowntime?.description,
-    [DowntimeFormFields.CATEGORY]: sloDowntime?.category || ('' as DowntimeDTO['category'])
+    [DowntimeFormFields.CATEGORY]: sloDowntime?.category || ('' as DowntimeDTO['category']),
+    [DowntimeFormFields.TYPE]: sloDowntime?.spec?.type || DowntimeWindowToggleViews.ONE_TIME,
+    [DowntimeFormFields.TIMEZONE]:
+      sloDowntime?.spec?.spec?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
+    [DowntimeFormFields.START_TIME]: getFormattedTime(
+      DowntimeFormFields.START_TIME,
+      sloDowntime?.spec?.spec?.startTime
+    ),
+    [DowntimeFormFields.END_TIME_MODE]: onetimeDowntimeSpec?.type || EndTimeMode.DURATION,
+    [DowntimeFormFields.DURATION_VALUE]: onetimeDurationBasedSpec?.downtimeDuration?.durationValue || 30,
+    [DowntimeFormFields.DURATION_TYPE]: onetimeDurationBasedSpec?.downtimeDuration?.durationType || 'Minutes',
+    [DowntimeFormFields.END_TIME]: getFormattedTime(DowntimeFormFields.END_TIME, onetimeEndTimeBasedSpec?.endTime),
+    [DowntimeFormFields.RECURRENCE_VALUE]: recurringDowntimeSpec?.downtimeRecurrence?.recurrenceValue || 2,
+    [DowntimeFormFields.RECURRENCE_TYPE]: recurringDowntimeSpec?.downtimeRecurrence?.recurrenceType || 'Week',
+    [DowntimeFormFields.RECURRENCE_END_TIME]: getFormattedTime(
+      DowntimeFormFields.RECURRENCE_END_TIME,
+      recurringDowntimeSpec?.recurrenceEndTime
+    )
   }
 }
 
@@ -32,7 +73,10 @@ export const getDowntimeFormValidationSchema = (getString: UseStringsReturn['get
     [DowntimeFormFields.IDENTIFIER]: Yup.string().when([DowntimeFormFields.NAME], {
       is: name => name,
       then: Yup.string().trim().required(getString('validation.identifierRequired'))
-    })
+    }),
+    [DowntimeFormFields.CATEGORY]: Yup.string()
+      .trim()
+      .required(getString('cv.sloDowntime.validations.categoryValidation'))
   })
 }
 
@@ -40,15 +84,31 @@ export const getDowntimeCategoryOptions = (getString: UseStringsReturn['getStrin
   return [
     {
       label: getString('cv.sloDowntime.scheduledMaintenance'),
-      value: 'ScheduledMaintenance'
+      value: DowntimeCategory.SCHEDULED_MAINTENANCE
     },
     {
       label: getString('deploymentText'),
-      value: 'Deployment'
+      value: DowntimeCategory.DEPLOYMENT
     },
     {
       label: getString('common.other'),
-      value: 'Other'
+      value: DowntimeCategory.OTHER
     }
   ]
+}
+
+export const getDowntimeCategoryLabel = (
+  value: DowntimeDTO['category'],
+  getString: UseStringsReturn['getString']
+): string => {
+  switch (value) {
+    case DowntimeCategory.SCHEDULED_MAINTENANCE:
+      return getString('cv.sloDowntime.scheduledMaintenance')
+    case DowntimeCategory.DEPLOYMENT:
+      return getString('deploymentText')
+    case DowntimeCategory.OTHER:
+      return getString('common.other')
+    default:
+      return ''
+  }
 }

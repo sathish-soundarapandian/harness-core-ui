@@ -10,13 +10,14 @@ import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 import { noop } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
-import { Button, ButtonVariation, Container, HarnessDocTooltip, Layout, Text } from '@harness/uicore'
+import { Button, ButtonSize, ButtonVariation, Container, HarnessDocTooltip, Layout, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 // import { HelpPanel } from '@harness/help-panel'
 import { Spinner } from '@blueprintjs/core'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings, UseStringsReturn } from 'framework/strings'
-import { useAgentServiceForServerCreate, V1AgentType, useAgentServiceForServerList } from 'services/gitops'
+import { useAgentServiceForServerCreate, V1AgentType, useAgentServiceForServerList, V1Agent } from 'services/gitops'
+import { useCDOnboardingContext } from '@cd/pages/get-started-with-cd/CDOnboardingStore'
 import { GitOpsAgentCard } from './GitOpsAgentCard'
 import css from '../GetStartedWithCD.module.scss'
 import createK8sCSS from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
@@ -73,18 +74,29 @@ const AgentStaticInfo = ({ getString }: { getString: UseStringsReturn['getString
 const ProvisioningStaticInfo = ({
   loading,
   errorMessage,
-  getString
+  getString,
+  onProvisionAgent
 }: {
   loading: boolean
   errorMessage?: string
   getString: UseStringsReturn['getString']
+  onProvisionAgent: () => void
 }) => (
   <Container>
     <div className={css.provisioningInfo}>
       {loading ? (
         <Spinner size={24} />
       ) : errorMessage ? (
-        <div className={css.error}>{errorMessage}</div>
+        <>
+          <div className={css.error}>{errorMessage}</div>
+          <Button
+            text={getString('retry')}
+            variation={ButtonVariation.SECONDARY}
+            onClick={onProvisionAgent}
+            margin={{ left: 'medium' }}
+            size={ButtonSize.SMALL}
+          />
+        </>
       ) : (
         <div>{getString('cd.getStartedWithCD.agentProvisionedSuccessfully')}</div>
       )}
@@ -101,13 +113,21 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
   const { getString } = useStrings()
   // isProvisioningScreen is 2nd screen
   const [isProvisioningScreen, setIsProvisioningScreen] = React.useState(false)
+  const [selectedAgent, setSelectedAgent] = React.useState<V1Agent | null>(null)
+  const [provisionedAgent, setProvisionedAgent] = React.useState<V1Agent | null>(null)
   const { accountId } = useParams<ProjectPathProps>()
-  const { mutate: createAgent, loading, error } = useAgentServiceForServerCreate({})
+  const { saveAgentData } = useCDOnboardingContext()
+
+  const {
+    mutate: createAgent,
+    loading: agentCreateLoading,
+    error: agentCreateError
+  } = useAgentServiceForServerCreate({})
   const onProvisionAgent = async () => {
     setIsProvisioningScreen(true)
-    const _uuid = uuid()
+    const _uuid = uuid().split('-')[0]
     const payload = {
-      name: `HostedAgent${_uuid}`,
+      name: `Hosted Agent${_uuid}`,
       identifier: `HostedAgent${_uuid}`,
       type: 'HOSTED_ARGO_PROVIDER' as V1AgentType,
       metadata: {
@@ -116,7 +136,11 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
       },
       accountIdentifier: accountId
     }
-    await createAgent(payload).then(noop).catch(noop)
+    await createAgent(payload)
+      .then(agent => {
+        setProvisionedAgent(agent)
+      })
+      .catch(noop)
   }
 
   const {
@@ -134,6 +158,13 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
     debounce: 500
   })
 
+  React.useEffect(() => {
+    if (!loadingAgentsList && agentList?.content?.length) {
+      setSelectedAgent(agentList.content[0])
+      setIsProvisioningScreen(true)
+    }
+  }, [loadingAgentsList])
+
   const renderContent = () => {
     if (loadingAgentsList) {
       return <Spinner className={css.agentsLoadingSpinner} size={24} />
@@ -142,7 +173,12 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
       return (
         <div>
           {agentList.content.map(agent => (
-            <GitOpsAgentCard key={agent.identifier} agent={agent} />
+            <GitOpsAgentCard
+              key={agent.identifier}
+              agent={agent}
+              selectedAgent={selectedAgent as V1Agent}
+              setSelectedAgent={setSelectedAgent}
+            />
           ))}
         </div>
       )
@@ -151,7 +187,12 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
       <>
         <div className={css.agentDiagram} />
         {isProvisioningScreen ? (
-          <ProvisioningStaticInfo loading={loading} errorMessage={error?.message} getString={getString} />
+          <ProvisioningStaticInfo
+            loading={agentCreateLoading}
+            errorMessage={agentCreateError?.message}
+            getString={getString}
+            onProvisionAgent={onProvisionAgent}
+          />
         ) : (
           <AgentStaticInfo getString={getString} />
         )}
@@ -175,24 +216,29 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
         {/*</Container>*/}
       </Container>
       <Layout.Vertical>
-        {/*className={css.footer}*/}
         <Layout.Horizontal spacing="medium" padding={{ top: 'medium', bottom: 'large' }} width="100%">
           {isProvisioningScreen ? (
             <>
-              <Button
-                variation={ButtonVariation.SECONDARY}
-                text={getString('back')}
-                icon="chevron-left"
-                minimal
-                onClick={onBack}
-              />
-              <Button
-                text={`${getString('next')}: ${getString('connectors.ceAws.curExtention.stepB.step1.p1')}`}
-                variation={ButtonVariation.PRIMARY}
-                rightIcon="chevron-right"
-                onClick={onNext}
-                // disabled={disableBtn}
-              />
+              <>
+                <Button
+                  variation={ButtonVariation.SECONDARY}
+                  text={getString('back')}
+                  icon="chevron-left"
+                  minimal
+                  onClick={onBack}
+                />
+                <Button
+                  text={`${getString('next')}: ${getString('connectors.ceAws.curExtention.stepB.step1.p1')}`}
+                  variation={ButtonVariation.PRIMARY}
+                  rightIcon="chevron-right"
+                  onClick={() => {
+                    saveAgentData((selectedAgent || provisionedAgent) as V1Agent)
+                    onNext()
+                  }}
+                  disabled={Boolean(agentCreateLoading || agentCreateError)}
+                  loading={false}
+                />
+              </>
             </>
           ) : (
             <>
@@ -208,6 +254,7 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
                 variation={ButtonVariation.PRIMARY}
                 rightIcon="chevron-right"
                 onClick={onProvisionAgent}
+                disabled={loadingAgentsList}
               />
             </>
           )}
