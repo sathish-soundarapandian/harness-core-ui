@@ -912,7 +912,7 @@ resourceCenter:
     title: Product Updates
     whatsnew: 'What’s New'
     earlyAcess: Early Access
-    releaseText: Your Harness account {{accountid}} is hosted on the harness {{clustername}} cluster. Following are the versions of various components running along with links to their release notes.
+    releaseText: Your Harness account {{accountid}} is hosted on the Harness {{clustername}} cluster. Following are the versions of various components running along with links to their release notes.
   ticketmenu:
     title: 'Contact us'
     tickets: 'My tickets'

@@ -60,7 +60,7 @@ export const useReleaseNotesModal = (): ModalReturn => {
         <ModuleVersionTable />
       </Dialog>
     )
-  }, [])
+  }, [accountId, clusterName])
 
   return {
     showModal,
