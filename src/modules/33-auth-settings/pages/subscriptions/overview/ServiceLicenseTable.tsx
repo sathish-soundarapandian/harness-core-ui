@@ -9,7 +9,19 @@ import React, { useMemo, useState } from 'react'
 import type { Column } from 'react-table'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Text, TableV2, Layout, Card, Heading, NoDataCard, DropDown, SelectOption, PageSpinner } from '@harness/uicore'
+import {
+  Text,
+  TableV2,
+  Layout,
+  Card,
+  Heading,
+  NoDataCard,
+  DropDown,
+  SelectOption,
+  PageSpinner,
+  Button,
+  ButtonVariation
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import moment from 'moment'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -22,7 +34,8 @@ import {
   LicenseUsageDTO,
   useGetProjectList,
   useGetOrganizationList,
-  useGetProjectAggregateDTOList
+  useGetProjectAggregateDTOList,
+  useDownloadActiveServiceCSVReport
 } from 'services/cd-ng'
 import type { SortBy } from './types'
 
@@ -48,7 +61,7 @@ export interface ServiceLicenseTableProps {
   gotoPage: (pageNumber: number) => void
   setSortBy: (sortBy: string[]) => void
   sortBy: string[]
-  updateFilters: (orgId: string, projId: string) => void
+  updateFilters: (orgId: string, projId: string, serviceId: string) => void
   servicesLoading: boolean
 }
 
@@ -148,7 +161,13 @@ export function ServiceLicenseTable({
   const [selectedService, setSelectedService] = useState<string | undefined>()
   const activeServiceText = `${totalElements}`
   const timeValue = moment(content[0]?.timestamp).format('DD-MM-YYYY h:mm:ss')
-
+  const { accountId } = useParams<AccountPathProps>()
+  const { data: dataInCsv } = useDownloadActiveServiceCSVReport({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+  console.log(dataInCsv, 'hello')
   return (
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
@@ -165,6 +184,12 @@ export function ServiceLicenseTable({
               {getString('common.whatIsActiveService')}
             </Text>
           </Layout.Vertical>
+          <div>
+            {' '}
+            <a href={`data:text/csv;charset=utf-8,${escape(dataInCsv || '')}`} download="filename.csv">
+              {'Export CSV'}
+            </a>
+          </div>
         </Layout.Horizontal>
         <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
           <Layout.Vertical className={pageCss.badgesContainer}>

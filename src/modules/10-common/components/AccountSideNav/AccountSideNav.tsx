@@ -46,7 +46,7 @@ export default function AccountSideNav(): React.ReactElement {
       {accountData?.data?.productLed && (
         <SidebarLink exact label={getString('common.billing')} to={routes.toBilling({ accountId })} />
       )}
-      {NG_LICENSES_ENABLED && (
+      {true && (
         <SidebarLink exact label={getString('common.subscriptions.title')} to={routes.toSubscriptions({ accountId })} />
       )}
       <SidebarLink label={getString('common.auditTrail')} to={routes.toAuditTrail({ accountId })} />

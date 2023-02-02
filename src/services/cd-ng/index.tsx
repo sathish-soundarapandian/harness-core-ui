@@ -928,8 +928,6 @@ export interface ArtifactSource {
     | 'GithubPackageRegistry'
     | 'AzureArtifacts'
     | 'AmazonMachineImage'
-    | 'GoogleCloudStorage'
-    | 'GoogleCloudSource'
 }
 
 export interface ArtifactSourceConfig {
@@ -949,8 +947,6 @@ export interface ArtifactSourceConfig {
     | 'GithubPackageRegistry'
     | 'AzureArtifacts'
     | 'AmazonMachineImage'
-    | 'GoogleCloudStorage'
-    | 'GoogleCloudSource'
 }
 
 export interface ArtifactSourceYamlRequest {
@@ -3777,10 +3773,6 @@ export interface EntityDetail {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
 }
 
 export interface EntityDetailProtoDTO {
@@ -3998,7 +3990,7 @@ export interface EnvironmentInstanceDetail {
   count?: number
   envId: string
   envName?: string
-  environmentType: 'PreProduction' | 'Production'
+  environmentType?: 'PreProduction' | 'Production'
 }
 
 export interface EnvironmentInstanceDetails {
@@ -5983,15 +5975,6 @@ export type GcpManualDetails = GcpCredentialSpec & {
   secretKeyRef: string
 }
 
-export interface GcpProjectDetails {
-  id?: string
-  name?: string
-}
-
-export interface GcpProjectResponseDTO {
-  projects?: GcpProjectDetails[]
-}
-
 export interface GcpResponseDTO {
   clusterNames?: string[]
 }
@@ -6284,10 +6267,6 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
   )[]
   moduleType?:
     | 'CD'
@@ -6495,10 +6474,6 @@ export interface GitEntityFilterProperties {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6777,10 +6752,6 @@ export interface GitFullSyncEntityInfoDTO {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -6982,10 +6953,6 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7308,10 +7275,6 @@ export interface GitSyncEntityDTO {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7507,10 +7470,6 @@ export interface GitSyncEntityListDTO {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7723,10 +7682,6 @@ export interface GitSyncErrorDTO {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -7989,55 +7944,6 @@ export type GoogleCloudFunctionDefinitionManifest = ManifestAttributes & {
 
 export type GoogleCloudFunctionsServiceSpec = ServiceSpec & {}
 
-export type GoogleCloudSourceArtifactConfig = ArtifactConfig & {
-  connectorRef: string
-  project: string
-  repository: string
-  sourceDirectory: string
-}
-
-export type GoogleCloudStorageArtifactConfig = ArtifactConfig & {
-  artifactPath: string
-  bucket: string
-  connectorRef: string
-  project: string
-}
-
-export interface GoogleCloudStorageBucketDetails {
-  id?: string
-  name?: string
-}
-
-export interface GoogleCloudStorageBucketsResponseDTO {
-  buckets?: GoogleCloudStorageBucketDetails[]
-}
-
-export type GoogleFunctionsDeployStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-  updateFieldMask?: string
-}
-
-export type GoogleFunctionsDeployWithoutTrafficStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-  updateFieldMask?: string
-}
-
-export type GoogleFunctionsInfrastructure = Infrastructure & {
-  connectorRef: string
-  metadata?: string
-  project: string
-  region: string
-}
-
-export type GoogleFunctionsRollbackStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-}
-
-export type GoogleFunctionsTrafficShiftStepInfo = StepSpecType & {
-  delegateSelectors?: string[]
-  trafficPercent?: number
-}
-
 export interface GovernanceMetadata {
   [key: string]: any
 }
@@ -8136,8 +8042,9 @@ export interface HelmManifestCommandFlag {
 }
 
 export type HelmRepoOverrideManifest = ManifestAttributes & {
+  connectorRef: string
   metadata?: string
-  store?: StoreConfigWrapper
+  type: string
 }
 
 export type HelmRollbackStepInfo = StepSpecType & {
@@ -8330,7 +8237,6 @@ export interface InfrastructureDef {
     | 'Elastigroup'
     | 'TAS'
     | 'Asg'
-    | 'GoogleCloudFunctions'
 }
 
 export interface InfrastructureDefinitionConfig {
@@ -8373,7 +8279,6 @@ export interface InfrastructureDefinitionConfig {
     | 'Elastigroup'
     | 'TAS'
     | 'Asg'
-    | 'GoogleCloudFunctions'
 }
 
 export interface InfrastructureDetails {
@@ -8414,7 +8319,6 @@ export interface InfrastructureRequestDTO {
     | 'Elastigroup'
     | 'TAS'
     | 'Asg'
-    | 'GoogleCloudFunctions'
   yaml?: string
 }
 
@@ -8462,7 +8366,6 @@ export interface InfrastructureResponseDTO {
     | 'Elastigroup'
     | 'TAS'
     | 'Asg'
-    | 'GoogleCloudFunctions'
   yaml?: string
 }
 
@@ -8568,6 +8471,17 @@ export interface InstanceCountDetailsByEnvTypeBase {
   totalInstances?: number
 }
 
+export interface InstanceDetailGroupedByPipelineExecution {
+  instances: InstanceDetailsDTO[]
+  lastDeployedAt?: number
+  pipelineId: string
+  planExecutionId: string
+}
+
+export interface InstanceDetailGroupedByPipelineExecutionList {
+  instanceDetailGroupedByPipelineExecutionList: InstanceDetailGroupedByPipelineExecution[]
+}
+
 export interface InstanceDetailsByBuildId {
   buildId?: string
   instances?: InstanceDetailsDTO[]
@@ -8601,19 +8515,19 @@ export interface InstanceGroupedByArtifactV2 {
 }
 
 export interface InstanceGroupedByEnvironment {
-  envId?: string
+  envId: string
   envName?: string
-  instanceGroupedByEnvironmentTypeList?: InstanceGroupedByEnvironmentType[]
+  instanceGroupedByEnvironmentTypeList: InstanceGroupedByEnvironmentType[]
   lastDeployedAt?: number
 }
 
 export interface InstanceGroupedByEnvironmentList {
-  instanceGroupedByEnvironmentList?: InstanceGroupedByEnvironment[]
+  instanceGroupedByEnvironmentList: InstanceGroupedByEnvironment[]
 }
 
 export interface InstanceGroupedByEnvironmentType {
   environmentType?: 'PreProduction' | 'Production'
-  instanceGroupedByInfrastructureList?: InstanceGroupedByInfrastructure[]
+  instanceGroupedByInfrastructureList: InstanceGroupedByInfrastructure[]
   lastDeployedAt?: number
 }
 
@@ -8630,7 +8544,7 @@ export interface InstanceGroupedByInfrastructure {
   clusterId?: string
   infrastructureId?: string
   infrastructureName?: string
-  instanceGroupedByArtifactList?: InstanceGroupedByArtifact[]
+  instanceGroupedByArtifactList: InstanceGroupedByArtifact[]
   lastDeployedAt?: number
 }
 
@@ -10726,8 +10640,6 @@ export interface PrimaryArtifact {
     | 'GithubPackageRegistry'
     | 'AzureArtifacts'
     | 'AmazonMachineImage'
-    | 'GoogleCloudStorage'
-    | 'GoogleCloudSource'
 }
 
 export interface Principal {
@@ -11040,10 +10952,6 @@ export interface ReferencedByDTO {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
 }
 
 export interface RefreshResponse {
@@ -11753,13 +11661,6 @@ export interface ResponseGARResponseDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponseGcpProjectResponseDTO {
-  correlationId?: string
-  data?: GcpProjectResponseDTO
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
 export interface ResponseGcpResponseDTO {
   correlationId?: string
   data?: GcpResponseDTO
@@ -11872,13 +11773,6 @@ export interface ResponseGlobalFreezeBannerDetailsResponseDTO {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
-export interface ResponseGoogleCloudStorageBucketsResponseDTO {
-  correlationId?: string
-  data?: GoogleCloudStorageBucketsResponseDTO
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
 export interface ResponseHealthDeploymentDashboard {
   correlationId?: string
   data?: HealthDeploymentDashboard
@@ -11938,6 +11832,13 @@ export interface ResponseInputsValidationResponse {
 export interface ResponseInstanceCountDetailsByEnvTypeAndServiceId {
   correlationId?: string
   data?: InstanceCountDetailsByEnvTypeAndServiceId
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseInstanceDetailGroupedByPipelineExecutionList {
+  correlationId?: string
+  data?: InstanceDetailGroupedByPipelineExecutionList
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -12313,10 +12214,6 @@ export interface ResponseListEntityType {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -15207,8 +15104,6 @@ export interface SidecarArtifact {
     | 'GithubPackageRegistry'
     | 'AzureArtifacts'
     | 'AmazonMachineImage'
-    | 'GoogleCloudStorage'
-    | 'GoogleCloudSource'
 }
 
 export interface SidecarArtifactWrapper {
@@ -16931,9 +16826,9 @@ export type ScimUserRequestBody = ScimUser
 
 export type ScopingRuleDetailsNgArrayRequestBody = ScopingRuleDetailsNg[]
 
-export type SecretRequestWrapperRequestBody = SecretRequestWrapper
+export type SecretRequestWrapperRequestBody = void
 
-export type SecretRequestWrapper2RequestBody = void
+export type SecretRequestWrapper2RequestBody = SecretRequestWrapper
 
 export type ServiceAccountDTORequestBody = ServiceAccountDTO
 
@@ -17688,10 +17583,6 @@ export interface ListActivitiesQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -17879,10 +17770,6 @@ export interface ListActivitiesQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -18174,10 +18061,6 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -18365,10 +18248,6 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -24320,99 +24199,6 @@ export const getVersionsFromPackagesPromise = (
     props,
     signal
   )
-
-export interface GetGcsBucketsQueryParams {
-  project?: string
-  connectorRef?: string
-  accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
-  pipelineIdentifier?: string
-  fqnPath?: string
-  branch?: string
-  repoIdentifier?: string
-  getDefaultFromOtherRepo?: boolean
-  parentEntityConnectorRef?: string
-  parentEntityRepoName?: string
-  parentEntityAccountIdentifier?: string
-  parentEntityOrgIdentifier?: string
-  parentEntityProjectIdentifier?: string
-  repoName?: string
-  serviceId?: string
-}
-
-export type GetGcsBucketsProps = Omit<
-  MutateProps<
-    ResponseGoogleCloudStorageBucketsResponseDTO,
-    Failure | Error,
-    GetGcsBucketsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get list of buckets from google cloud storage
- */
-export const GetGcsBuckets = (props: GetGcsBucketsProps) => (
-  <Mutate<
-    ResponseGoogleCloudStorageBucketsResponseDTO,
-    Failure | Error,
-    GetGcsBucketsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    void
-  >
-    verb="POST"
-    path={`/artifacts/google-cloud-storage/buckets`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetGcsBucketsProps = Omit<
-  UseMutateProps<
-    ResponseGoogleCloudStorageBucketsResponseDTO,
-    Failure | Error,
-    GetGcsBucketsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get list of buckets from google cloud storage
- */
-export const useGetGcsBuckets = (props: UseGetGcsBucketsProps) =>
-  useMutate<
-    ResponseGoogleCloudStorageBucketsResponseDTO,
-    Failure | Error,
-    GetGcsBucketsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    void
-  >('POST', `/artifacts/google-cloud-storage/buckets`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Get list of buckets from google cloud storage
- */
-export const getGcsBucketsPromise = (
-  props: MutateUsingFetchProps<
-    ResponseGoogleCloudStorageBucketsResponseDTO,
-    Failure | Error,
-    GetGcsBucketsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseGoogleCloudStorageBucketsResponseDTO,
-    Failure | Error,
-    GetGcsBucketsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/artifacts/google-cloud-storage/buckets`, props, signal)
 
 export interface GetBuildsForJenkinsQueryParams {
   connectorRef?: string
@@ -30642,6 +30428,88 @@ export const getActiveServiceDeploymentsPromise = (
     signal
   )
 
+export interface GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  serviceId: string
+  envId: string
+  environmentType: 'PreProduction' | 'Production'
+  infraIdentifier?: string
+  clusterIdentifier?: string
+  artifact: string
+}
+
+export type GetActiveServiceInstanceDetailsGroupedByPipelineExecutionProps = Omit<
+  GetProps<
+    ResponseInstanceDetailGroupedByPipelineExecutionList,
+    Failure | Error,
+    GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get list of active instance metadata grouped by pipeline execution for a service
+ */
+export const GetActiveServiceInstanceDetailsGroupedByPipelineExecution = (
+  props: GetActiveServiceInstanceDetailsGroupedByPipelineExecutionProps
+) => (
+  <Get<
+    ResponseInstanceDetailGroupedByPipelineExecutionList,
+    Failure | Error,
+    GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams,
+    void
+  >
+    path={`/dashboard/getActiveServiceInstanceDetailsGroupedByPipelineExecution`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetActiveServiceInstanceDetailsGroupedByPipelineExecutionProps = Omit<
+  UseGetProps<
+    ResponseInstanceDetailGroupedByPipelineExecutionList,
+    Failure | Error,
+    GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get list of active instance metadata grouped by pipeline execution for a service
+ */
+export const useGetActiveServiceInstanceDetailsGroupedByPipelineExecution = (
+  props: UseGetActiveServiceInstanceDetailsGroupedByPipelineExecutionProps
+) =>
+  useGet<
+    ResponseInstanceDetailGroupedByPipelineExecutionList,
+    Failure | Error,
+    GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams,
+    void
+  >(`/dashboard/getActiveServiceInstanceDetailsGroupedByPipelineExecution`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Get list of active instance metadata grouped by pipeline execution for a service
+ */
+export const getActiveServiceInstanceDetailsGroupedByPipelineExecutionPromise = (
+  props: GetUsingFetchProps<
+    ResponseInstanceDetailGroupedByPipelineExecutionList,
+    Failure | Error,
+    GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseInstanceDetailGroupedByPipelineExecutionList,
+    Failure | Error,
+    GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams,
+    void
+  >(getConfig('ng/api'), `/dashboard/getActiveServiceInstanceDetailsGroupedByPipelineExecution`, props, signal)
+
 export interface GetActiveServiceInstanceSummaryQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -34078,10 +33946,6 @@ export interface ListReferredByEntitiesQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -34330,10 +34194,6 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
   searchTerm?: string
 }
 
@@ -37647,10 +37507,6 @@ export interface GetReferencedByQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
   searchTerm?: string
 }
 
@@ -39054,100 +38910,6 @@ export const getClusterNamesForGcpInfraPromise = (
     signal
   )
 
-export interface GetProjectsQueryParams {
-  connectorRef?: string
-  accountIdentifier: string
-  orgIdentifier: string
-  projectIdentifier: string
-  pipelineIdentifier?: string
-  fqnPath?: string
-  branch?: string
-  repoIdentifier?: string
-  getDefaultFromOtherRepo?: boolean
-  parentEntityConnectorRef?: string
-  parentEntityRepoName?: string
-  parentEntityAccountIdentifier?: string
-  parentEntityOrgIdentifier?: string
-  parentEntityProjectIdentifier?: string
-  repoName?: string
-  serviceId?: string
-  envId?: string
-  infraDefinitionId?: string
-}
-
-export type GetProjectsProps = Omit<
-  MutateProps<
-    ResponseGcpProjectResponseDTO,
-    Failure | Error,
-    GetProjectsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get list of projects from gcp
- */
-export const GetProjects = (props: GetProjectsProps) => (
-  <Mutate<
-    ResponseGcpProjectResponseDTO,
-    Failure | Error,
-    GetProjectsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    void
-  >
-    verb="POST"
-    path={`/gcp/project`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetProjectsProps = Omit<
-  UseMutateProps<
-    ResponseGcpProjectResponseDTO,
-    Failure | Error,
-    GetProjectsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    void
-  >,
-  'path' | 'verb'
->
-
-/**
- * Get list of projects from gcp
- */
-export const useGetProjects = (props: UseGetProjectsProps) =>
-  useMutate<
-    ResponseGcpProjectResponseDTO,
-    Failure | Error,
-    GetProjectsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    void
-  >('POST', `/gcp/project`, { base: getConfig('ng/api'), ...props })
-
-/**
- * Get list of projects from gcp
- */
-export const getProjectsPromise = (
-  props: MutateUsingFetchProps<
-    ResponseGcpProjectResponseDTO,
-    Failure | Error,
-    GetProjectsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    void
-  >,
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseGcpProjectResponseDTO,
-    Failure | Error,
-    GetProjectsQueryParams,
-    ListTagsForAMIArtifactBodyRequestBody,
-    void
-  >('POST', getConfig('ng/api'), `/gcp/project`, props, signal)
-
 export interface TriggerFullSyncQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -40255,10 +40017,6 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -40514,10 +40272,6 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'AsgBlueGreenSwapService'
       | 'AsgBlueGreenDeploy'
       | 'AsgBlueGreenRollback'
-      | 'DeployCloudFunction'
-      | 'DeployCloudFunctionWithNoTraffic'
-      | 'CloudFunctionTrafficShift'
-      | 'CloudFunctionRollback'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -46472,10 +46226,6 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
   yamlGroup?: string
 }
 
@@ -46791,10 +46541,6 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -50539,21 +50285,6 @@ export const getServiceNowIssueCreateMetadataPromise = (
     props,
     signal
   )
-export interface V1Time {
-  /**
-   * Non-negative fractions of a second at nanosecond resolution. Negative
-   * second values with fractions must still have non-negative nanos values
-   * that count forward in time. Must be from 0 to 999,999,999
-   * inclusive. This field may be limited in precision depending on context.
-   */
-  nanos?: number
-  /**
-   * Represents seconds of UTC time since Unix epoch
-   * 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
-   * 9999-12-31T23:59:59Z inclusive.
-   */
-  seconds?: string
-}
 
 export interface GetServiceNowTemplateMetadataQueryParams {
   connectorRef: string
@@ -50579,50 +50310,6 @@ export type GetServiceNowTemplateMetadataProps = Omit<
   GetProps<ResponseListServiceNowTemplate, Failure | Error, GetServiceNowTemplateMetadataQueryParams, void>,
   'path'
 >
-
-export interface ProtobufAny {
-  /**
-   * A URL/resource name that uniquely identifies the type of the serialized
-   * protocol buffer message. This string must contain at least
-   * one "/" character. The last segment of the URL's path must represent
-   * the fully qualified name of the type (as in
-   * `path/google.protobuf.Duration`). The name should be in a canonical form
-   * (e.g., leading "." is not accepted).
-   *
-   * In practice, teams usually precompile into the binary all types that they
-   * expect it to use in the context of Any. However, for URLs which use the
-   * scheme `http`, `https`, or no scheme, one can optionally set up a type
-   * server that maps type URLs to message definitions as follows:
-   *
-   * * If no scheme is provided, `https` is assumed.
-   * * An HTTP GET on the URL must yield a [google.protobuf.Type][]
-   *   value in binary format, or produce an error.
-   * * Applications are allowed to cache lookup results based on the
-   *   URL, or have them precompiled into a binary to avoid any
-   *   lookup. Therefore, binary compatibility needs to be preserved
-   *   on changes to types. (Use versioned type names to manage
-   *   breaking changes.)
-   *
-   * Note: this functionality is not currently available in the official
-   * protobuf release, and it is not used for type URLs beginning with
-   * type.googleapis.com.
-   *
-   * Schemes other than `http`, `https` (or the empty scheme) might be
-   * used with implementation specific semantics.
-   */
-  type_url?: string
-  /**
-   * Must be a valid serialized protocol buffer of the above specified type.
-   */
-  value?: string
-}
-
-export interface GatewayruntimeError {
-  code?: number
-  details?: ProtobufAny[]
-  error?: string
-  message?: string
-}
 
 /**
  * Get ServiceNow template metadata
@@ -55427,6 +55114,55 @@ export const lisCDActiveServicesPromise = (
     void
   >('POST', getConfig('ng/api'), `/usage/cd/active-services`, props, signal)
 
+export interface DownloadActiveServiceCSVReportQueryParams {
+  accountIdentifier?: string
+  timestamp?: number
+}
+
+export type DownloadActiveServiceCSVReportProps = Omit<
+  GetProps<void, Failure | Error, DownloadActiveServiceCSVReportQueryParams, void>,
+  'path'
+>
+
+/**
+ * Download CSV Active Services report
+ */
+export const DownloadActiveServiceCSVReport = (props: DownloadActiveServiceCSVReportProps) => (
+  <Get<void, Failure | Error, DownloadActiveServiceCSVReportQueryParams, void>
+    path={`/usage/cd/active-services/csv/download`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDownloadActiveServiceCSVReportProps = Omit<
+  UseGetProps<void, Failure | Error, DownloadActiveServiceCSVReportQueryParams, void>,
+  'path'
+>
+
+/**
+ * Download CSV Active Services report
+ */
+export const useDownloadActiveServiceCSVReport = (props: UseDownloadActiveServiceCSVReportProps) =>
+  useGet<void, Failure | Error, DownloadActiveServiceCSVReportQueryParams, void>(
+    `/usage/cd/active-services/csv/download`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Download CSV Active Services report
+ */
+export const downloadActiveServiceCSVReportPromise = (
+  props: GetUsingFetchProps<void, Failure | Error, DownloadActiveServiceCSVReportQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<void, Failure | Error, DownloadActiveServiceCSVReportQueryParams, void>(
+    getConfig('ng/api'),
+    `/usage/cd/active-services/csv/download`,
+    props,
+    signal
+  )
+
 export interface GetLicenseUsageQueryParams {
   accountIdentifier?: string
   timestamp?: number
@@ -58656,7 +58392,7 @@ export type PostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -58666,7 +58402,7 @@ export type PostSecretProps = Omit<
  * Create a secret
  */
 export const PostSecret = (props: PostSecretProps) => (
-  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapperRequestBody, void>
+  <Mutate<ResponseSecretResponseWrapper, Failure | Error, PostSecretQueryParams, SecretRequestWrapper2RequestBody, void>
     verb="POST"
     path={`/v2/secrets`}
     base={getConfig('ng/api')}
@@ -58679,7 +58415,7 @@ export type UsePostSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   'path' | 'verb'
@@ -58693,7 +58429,7 @@ export const usePostSecret = (props: UsePostSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', `/v2/secrets`, { base: getConfig('ng/api'), ...props })
 
@@ -58705,7 +58441,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -58714,7 +58450,7 @@ export const postSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets`, props, signal)
 
@@ -59107,7 +58843,7 @@ export type PostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -59121,7 +58857,7 @@ export const PostSecretViaYaml = (props: PostSecretViaYamlProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >
     verb="POST"
@@ -59136,7 +58872,7 @@ export type UsePostSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   'path' | 'verb'
@@ -59150,7 +58886,7 @@ export const usePostSecretViaYaml = (props: UsePostSecretViaYamlProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', `/v2/secrets/yaml`, { base: getConfig('ng/api'), ...props })
 
@@ -59162,7 +58898,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >,
   signal?: RequestInit['signal']
@@ -59171,7 +58907,7 @@ export const postSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PostSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     void
   >('POST', getConfig('ng/api'), `/v2/secrets/yaml`, props, signal)
 
@@ -59307,7 +59043,7 @@ export type PutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -59322,7 +59058,7 @@ export const PutSecret = ({ identifier, ...props }: PutSecretProps) => (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >
     verb="PUT"
@@ -59337,7 +59073,7 @@ export type UsePutSecretProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >,
   'path' | 'verb'
@@ -59352,7 +59088,7 @@ export const usePutSecret = ({ identifier, ...props }: UsePutSecretProps) =>
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', (paramsInPath: PutSecretPathParams) => `/v2/secrets/${paramsInPath.identifier}`, {
     base: getConfig('ng/api'),
@@ -59371,7 +59107,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -59380,7 +59116,7 @@ export const putSecretPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretQueryParams,
-    SecretRequestWrapperRequestBody,
+    SecretRequestWrapper2RequestBody,
     PutSecretPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}`, props, signal)
 
@@ -59399,7 +59135,7 @@ export type PutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -59414,7 +59150,7 @@ export const PutSecretViaYaml = ({ identifier, ...props }: PutSecretViaYamlProps
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >
     verb="PUT"
@@ -59429,7 +59165,7 @@ export type UsePutSecretViaYamlProps = Omit<
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >,
   'path' | 'verb'
@@ -59444,7 +59180,7 @@ export const usePutSecretViaYaml = ({ identifier, ...props }: UsePutSecretViaYam
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', (paramsInPath: PutSecretViaYamlPathParams) => `/v2/secrets/${paramsInPath.identifier}/yaml`, {
     base: getConfig('ng/api'),
@@ -59463,7 +59199,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   > & { identifier: string },
   signal?: RequestInit['signal']
@@ -59472,7 +59208,7 @@ export const putSecretViaYamlPromise = (
     ResponseSecretResponseWrapper,
     Failure | Error,
     PutSecretViaYamlQueryParams,
-    SecretRequestWrapper2RequestBody,
+    SecretRequestWrapperRequestBody,
     PutSecretViaYamlPathParams
   >('PUT', getConfig('ng/api'), `/v2/secrets/${identifier}/yaml`, props, signal)
 
@@ -60330,10 +60066,6 @@ export interface GetYamlSchemaQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
-    | 'DeployCloudFunction'
-    | 'DeployCloudFunctionWithNoTraffic'
-    | 'CloudFunctionTrafficShift'
-    | 'CloudFunctionRollback'
   subtype?:
     | 'K8sCluster'
     | 'Git'
