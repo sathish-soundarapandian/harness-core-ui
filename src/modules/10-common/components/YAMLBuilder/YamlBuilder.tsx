@@ -1024,15 +1024,13 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     )
   }, [isReadOnlyMode, isEditModeSupported])
 
-  return (
+  return shouldShowPluginsPanel ? (
     <Layout.Horizontal>
       <Layout.Vertical>
         <div
-          className={cx(
-            displayBorder ? css.main : null,
-            { [css.darkBg]: theme === 'DARK' },
-            { [css.borderWithPluginsPanel]: shouldRenderPluginsPanel }
-          )}
+          className={cx(displayBorder ? css.main : null, css.borderWithPluginsPanel, {
+            [css.darkBg]: theme === 'DARK'
+          })}
         >
           <div className={css.editor}>
             <Layout.Horizontal flex={{ justifyContent: 'flex-end' }} spacing="medium">
@@ -1043,15 +1041,20 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           </div>
         </div>
       </Layout.Vertical>
-      {shouldRenderPluginsPanel ? (
-        <PluginsPanel
-          height={height}
-          onPluginAddUpdate={addUpdatePluginIntoExistingYAML}
-          onPluginDiscard={() => setSelectedPlugin(undefined)}
-          selectedPluginFromYAMLView={selectedPlugin}
-        />
-      ) : null}
+      <PluginsPanel
+        height={height}
+        onPluginAddUpdate={addUpdatePluginIntoExistingYAML}
+        onPluginDiscard={() => setSelectedPlugin(undefined)}
+        selectedPluginFromYAMLView={selectedPlugin}
+      />
     </Layout.Horizontal>
+  ) : (
+    <div className={cx(displayBorder ? css.main : null, { [css.darkBg]: theme === 'DARK' })}>
+      <div className={css.editor}>
+        {defaultTo(renderCustomHeader, renderHeader)()}
+        {renderEditor()}
+      </div>
+    </div>
   )
 }
 
