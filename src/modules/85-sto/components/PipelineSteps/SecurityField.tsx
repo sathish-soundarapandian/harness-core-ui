@@ -18,12 +18,13 @@ import type { StringsMap } from 'stringTypes'
 import { renderOptionalWrapper } from '@ci/components/PipelineSteps/CIStep/StepUtils'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+import SectionHeader from './SectionHeader'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface SelectItems extends SelectOption {
   disabled?: boolean
 }
-interface SecurityFieldProps<T> {
+export interface SecurityFieldProps<T> {
   enableFields: {
     [key: string]: {
       [key: string]: any
@@ -85,6 +86,7 @@ function SecurityField<T>(props: SecurityFieldProps<T>) {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
+  if (!enableFields) return null
   return (
     <>
       {stepViewType !== StepViewType.Template &&
@@ -103,6 +105,8 @@ function SecurityField<T>(props: SecurityFieldProps<T>) {
 
           if (hide) return null
 
+          if (fieldName === 'header') return <SectionHeader text={label} />
+
           if (fieldType === 'dropdown') {
             return (
               <Container key={fieldName} className={cx(stepCss.formGroup, stepCss.lg, stepCss.bottomMargin5)}>
@@ -117,7 +121,7 @@ function SecurityField<T>(props: SecurityFieldProps<T>) {
                     multiTypeInputProps: {
                       expressions,
                       allowableTypes,
-                      selectProps: { addClearBtn: true, items: selectItems }
+                      selectProps: { items: selectItems }
                     },
                     width: 384,
                     disabled: readonly || selectItems?.length === 1,

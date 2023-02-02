@@ -8271,6 +8271,7 @@ export interface StringsMap {
   'sto.continuous': string
   'sto.exemptions': string
   'sto.failedToGetIssueCounts': string
+  'sto.gettingStarted': string
   'sto.issues': string
   'sto.noSecurityIssues': string
   'sto.noSecurityResults': string
@@ -8278,15 +8279,19 @@ export interface StringsMap {
   'sto.securityStage.description': string
   'sto.stepDescription.AquaTrivy': string
   'sto.stepDescription.Bandit': string
-  'sto.stepDescription.Blackduckhub': string
+  'sto.stepDescription.Blackduck': string
   'sto.stepDescription.Brakeman': string
   'sto.stepDescription.Burp': string
   'sto.stepDescription.Checkmarx': string
   'sto.stepDescription.Fortify': string
   'sto.stepDescription.FortifyOnDemand': string
+  'sto.stepDescription.Grype': string
+  'sto.stepDescription.Mend': string
   'sto.stepDescription.Owasp': string
+  'sto.stepDescription.PrismaCloud': string
   'sto.stepDescription.ScoutSuite': string
   'sto.stepDescription.Snyk': string
+  'sto.stepDescription.Sonarqube': string
   'sto.stepDescription.TwistLock': string
   'sto.stepDescription.Veracode': string
   'sto.stepDescription.WhiteSource': string
@@ -8298,17 +8303,31 @@ export interface StringsMap {
   'sto.stepField.advanced.logLevel': string
   'sto.stepField.advanced.passthrough': string
   'sto.stepField.advanced.serializer': string
+  'sto.stepField.authAccessId': string
+  'sto.stepField.authSsl': string
+  'sto.stepField.authVersion': string
   'sto.stepField.config': string
+  'sto.stepField.container.containerAccessToken': string
+  'sto.stepField.container.containerRegion': string
+  'sto.stepField.image.fieldsHeading': string
   'sto.stepField.ingestion.file': string
   'sto.stepField.mode': string
   'sto.stepField.optionLabels.logLevel.debug': string
-  'sto.stepField.target.name': string
-  'sto.stepField.target.ssl': string
-  'sto.stepField.target.type': string
   'sto.stepField.target.variant': string
-  'sto.stepField.target.workspace': string
+  'sto.stepField.tool.context': string
+  'sto.stepField.tool.exclude': string
+  'sto.stepField.tool.fieldsHeading': string
+  'sto.stepField.tool.javaBinaries': string
+  'sto.stepField.tool.javaLibraries': string
+  'sto.stepField.tool.productLookupType': string
+  'sto.stepField.tool.productToken': string
+  'sto.stepField.tool.projectToken': string
+  'sto.stepField.tool.projectVersion': string
+  'sto.stepField.tool.teamName': string
+  'sto.stepField.toolInclude': string
   'sto.stoExemption': string
   'sto.targets.testTargets': string
+  'sto.tickets': string
   'sto.zeroNorthImagePlaceholder': string
   /**
    * @deprecated migrate this string to module level file

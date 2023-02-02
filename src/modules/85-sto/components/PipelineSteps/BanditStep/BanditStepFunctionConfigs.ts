@@ -5,43 +5,28 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import {
   commonFieldsTransformConfig as transformValuesFieldsConfigValues,
-  commonFieldsValidationConfig
+  commonFieldsValidationConfig,
+  ingestionFieldValidationConfig
 } from '../constants'
 import type { Field, InputSetViewValidateFieldsConfig } from '../types'
 import type { BanditStepData } from './BanditStep'
 
-export const transformValuesFieldsConfig = (data: BanditStepData): Field[] => {
-  if (data.spec.mode === 'ingestion') {
-    transformValuesFieldsConfigValues.push({
-      name: 'spec.ingestion.file',
-      type: TransformValuesTypes.Text
-    })
-  }
-
-  return transformValuesFieldsConfigValues
-}
+export const transformValuesFieldsConfig = (data: BanditStepData): Field[] => transformValuesFieldsConfigValues(data)
 
 export const editViewValidateFieldsConfig = (data: BanditStepData) => {
   const editViewValidationConfig = [
     ...commonFieldsValidationConfig,
+    ...ingestionFieldValidationConfig(data),
     {
       name: 'spec.limitMemory',
       type: ValidationFieldTypes.LimitMemory
     },
     {
       name: 'spec.limitCPU',
-      type: ValidationFieldTypes.LimitCPU,
-      isRequired: true
-    },
-    {
-      name: 'spec.ingestion.file',
-      type: ValidationFieldTypes.Text,
-      label: 'sto.stepField.ingestion.file',
-      isRequired: data.spec.mode === 'ingestion'
+      type: ValidationFieldTypes.LimitCPU
     }
   ]
 
@@ -51,6 +36,7 @@ export const editViewValidateFieldsConfig = (data: BanditStepData) => {
 export function getInputSetViewValidateFieldsConfig(data: BanditStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
     ...commonFieldsValidationConfig,
+    ...ingestionFieldValidationConfig(data),
     {
       name: 'spec.resources.limits.memory',
       type: ValidationFieldTypes.LimitMemory
@@ -58,12 +44,6 @@ export function getInputSetViewValidateFieldsConfig(data: BanditStepData): Input
     {
       name: 'spec.resources.limits.cpu',
       type: ValidationFieldTypes.LimitCPU
-    },
-    {
-      name: 'spec.ingestion.file',
-      type: ValidationFieldTypes.Text,
-      label: 'sto.stepField.ingestion.file',
-      isRequired: data.spec.mode === 'ingestion'
     }
   ]
 

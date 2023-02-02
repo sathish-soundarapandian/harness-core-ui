@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { getMultiTypeFromValue, MultiTypeInputType, FormikForm } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType, FormikForm, AllowedTypes } from '@harness/uicore'
 import { connect } from 'formik'
+import { isEmpty } from 'lodash-es'
 import StepCommonFieldsInputSet from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFieldsInputSet'
 import { CIStep } from '@ci/components/PipelineSteps/CIStep/CIStep'
 import {
@@ -15,10 +16,26 @@ import {
   CIStepOptionalConfigProps
 } from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig'
 import { shouldRenderRunTimeInputView } from '@pipeline/utils/CIUtils'
-import type { BanditStepProps } from './BanditStep'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { getInputSetFieldName } from './constants'
+import { InputSetFields } from './SecurityFields'
+import type { SecurityStepData, SecurityStepSpec } from './types'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export const BanditStepInputSetBasic: React.FC<BanditStepProps> = ({
+export interface SecurityStepProps {
+  initialValues: SecurityStepData<SecurityStepSpec>
+  template?: SecurityStepData<SecurityStepSpec>
+  path?: string
+  isNewStep?: boolean
+  readonly?: boolean
+  stepViewType: StepViewType
+  onUpdate?: (data: SecurityStepData<SecurityStepSpec>) => void
+  onChange?: (data: SecurityStepData<SecurityStepSpec>) => void
+  allowableTypes: AllowedTypes
+  formik?: any
+}
+
+export const SecurityStepInputSetBasic: React.FC<SecurityStepProps> = ({
   template,
   path,
   readonly,
@@ -26,9 +43,11 @@ export const BanditStepInputSetBasic: React.FC<BanditStepProps> = ({
   allowableTypes,
   formik
 }) => {
+  const prefix = isEmpty(path) ? '' : `${path}.`
+
   const enableFields: CIStepOptionalConfigProps['enableFields'] = {
     ...(shouldRenderRunTimeInputView(template?.spec?.settings) && {
-      'spec.settings': {}
+      [getInputSetFieldName(prefix, 'spec.settings')]: {}
     })
   }
 
@@ -44,6 +63,13 @@ export const BanditStepInputSetBasic: React.FC<BanditStepProps> = ({
           })
         }}
         path={path || ''}
+      />
+      <InputSetFields
+        stepViewType={stepViewType}
+        allowableTypes={allowableTypes}
+        formik={formik}
+        prefix={prefix}
+        template={template}
       />
       <CIStepOptionalConfig
         readonly={readonly}
@@ -66,5 +92,5 @@ export const BanditStepInputSetBasic: React.FC<BanditStepProps> = ({
   )
 }
 
-const BanditStepInputSet = connect(BanditStepInputSetBasic)
-export { BanditStepInputSet }
+const SecurityStepInputSet = connect(SecurityStepInputSetBasic)
+export { SecurityStepInputSet }

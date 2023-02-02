@@ -155,7 +155,17 @@ export enum StepType {
   ElastigroupBGStageSetup = 'ElastigroupBGStageSetup',
   AsgCanaryDeploy = 'AsgCanaryDeploy',
   AsgRollingRollback = 'AsgRollingRollback',
-  AsgRollingDeploy = 'AsgRollingDeploy'
+  AsgRollingDeploy = 'AsgRollingDeploy',
+  BlackDuck = 'BlackDuck',
+  Burp = 'Burp',
+  Snyk = 'Snyk',
+  Grype = 'Grype',
+  Sonarqube = 'Sonarqube',
+  Zap = 'Zap',
+  PrismaCloud = 'PrismaCloud',
+  Checkmarx = 'Checkmarx',
+  Mend = 'Mend',
+  Aquatrivy = 'AquaTrivy'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

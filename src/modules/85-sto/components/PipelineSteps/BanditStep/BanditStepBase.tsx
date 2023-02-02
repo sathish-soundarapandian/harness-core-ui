@@ -6,17 +6,13 @@
  */
 
 import React from 'react'
-import { Divider } from '@blueprintjs/core'
-import { Accordion, Container, Formik, FormikForm } from '@harness/uicore'
+import { Formik, FormikForm } from '@harness/uicore'
 import type { FormikProps } from 'formik'
-import { get } from 'lodash-es'
+import { GetImagePullPolicyOptions } from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import type { StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
-import StepCommonFields, {
-  GetImagePullPolicyOptions
-} from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import {
   getInitialValuesInCorrectFormat,
   getFormValuesInCorrectFormat
@@ -24,18 +20,10 @@ import {
 import { validate } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { CIStep } from '@ci/components/PipelineSteps/CIStep/CIStep'
 import { useGetPropagatedStageById } from '@ci/components/PipelineSteps/CIStep/StepUtils'
-import type { CIBuildInfrastructureType } from '@pipeline/utils/constants'
-import { CIStepOptionalConfig } from '@ci/components/PipelineSteps/CIStep/CIStepOptionalConfig'
 import { transformValuesFieldsConfig, editViewValidateFieldsConfig } from './BanditStepFunctionConfigs'
 import type { BanditStepProps, BanditStepData } from './BanditStep'
-import {
-  SecurityAdvancedFields,
-  SecurityIngestionFields,
-  SecurityScanFields,
-  SecurityTargetFields
-} from '../SecurityFields'
-import { dividerBottomMargin } from '../constants'
-import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import { AdditionalFields, SecurityIngestionFields, SecurityScanFields, SecurityTargetFields } from '../SecurityFields'
+import { INGESTION_SCAN_MODE, ORCHESTRATION_SCAN_MODE, REPOSITORY_TARGET_TYPE } from '../constants'
 
 export const BanditStepBase = (
   { initialValues, onUpdate, isNewStep = true, readonly, stepViewType, allowableTypes, onChange }: BanditStepProps,
@@ -50,10 +38,6 @@ export const BanditStepBase = (
   const { getString } = useStrings()
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
-
-  const buildInfrastructureType =
-    (get(currentStage, 'stage.spec.infrastructure.type') as CIBuildInfrastructureType) ||
-    (get(currentStage, 'stage.spec.runtime.type') as CIBuildInfrastructureType)
 
   const valuesInCorrectFormat = getInitialValuesInCorrectFormat<BanditStepData, BanditStepData>(
     initialValues,
@@ -109,82 +93,30 @@ export const BanditStepBase = (
               formik={formik}
             />
 
-            <Divider style={{ marginBottom: dividerBottomMargin }} />
-
-            <SecurityScanFields<BanditStepData>
+            <SecurityScanFields
               allowableTypes={allowableTypes}
               formik={formik}
               stepViewType={stepViewType}
               scanConfigReadonly
-              scanModeSelectItems={[
-                {
-                  value: 'orchestration',
-                  label: 'Orchestration'
-                },
-                {
-                  value: 'extraction',
-                  label: 'Extraction'
-                },
-                {
-                  value: 'ingestion',
-                  label: 'Ingestion'
-                }
-              ]}
+              scanModeSelectItems={[ORCHESTRATION_SCAN_MODE, INGESTION_SCAN_MODE]}
             />
 
-            <Divider style={{ marginBottom: dividerBottomMargin }} />
-
-            <SecurityTargetFields<BanditStepData>
+            <SecurityTargetFields
               allowableTypes={allowableTypes}
               formik={formik}
               stepViewType={stepViewType}
-              targetTypeSelectItems={[
-                {
-                  label: 'Repository',
-                  value: 'repository'
-                }
-              ]}
+              targetTypeSelectItems={[REPOSITORY_TARGET_TYPE]}
             />
 
-            <SecurityIngestionFields<BanditStepData>
+            <SecurityIngestionFields allowableTypes={allowableTypes} formik={formik} stepViewType={stepViewType} />
+
+            <AdditionalFields
+              readonly={readonly}
+              currentStage={currentStage}
+              stepViewType={stepViewType}
               allowableTypes={allowableTypes}
               formik={formik}
-              stepViewType={stepViewType}
             />
-
-            <Divider style={{ marginBottom: dividerBottomMargin }} />
-
-            <SecurityAdvancedFields<BanditStepData>
-              allowableTypes={allowableTypes}
-              formik={formik}
-              stepViewType={stepViewType}
-            />
-
-            <Divider style={{ marginBottom: dividerBottomMargin }} />
-
-            <CIStepOptionalConfig
-              stepViewType={stepViewType}
-              enableFields={{
-                'spec.settings': {}
-              }}
-              allowableTypes={allowableTypes}
-            />
-            <Accordion className={css.accordion}>
-              <Accordion.Panel
-                id="optional-config"
-                summary={getString('common.optionalConfig')}
-                details={
-                  <Container margin={{ top: 'medium' }}>
-                    <StepCommonFields
-                      enableFields={['spec.imagePullPolicy']}
-                      disabled={readonly}
-                      allowableTypes={allowableTypes}
-                      buildInfrastructureType={buildInfrastructureType}
-                    />
-                  </Container>
-                }
-              />
-            </Accordion>
           </FormikForm>
         )
       }}

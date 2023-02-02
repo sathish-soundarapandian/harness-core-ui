@@ -39,7 +39,6 @@ describe('Bandit Step', () => {
         spec: {
           privileged: RUNTIME_INPUT_VALUE,
           target: {
-            ssl: true,
             type: 'repository',
             name: RUNTIME_INPUT_VALUE,
             variant: RUNTIME_INPUT_VALUE,
@@ -97,7 +96,6 @@ describe('Bandit Step', () => {
         spec: {
           privileged: true,
           target: {
-            ssl: true,
             type: 'repository',
             name: 'Bandit Test',
             variant: 'variant',
@@ -111,7 +109,7 @@ describe('Bandit Step', () => {
           },
           advanced: {
             log: {
-              level: 'DEBUG',
+              level: 'debug',
               serializer: 'SIMPLE_ONPREM' // Remove From UI
             }
           },
@@ -161,6 +159,12 @@ describe('Bandit Step', () => {
         description: RUNTIME_INPUT_VALUE,
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
+          target: {
+            type: 'repository',
+            name: 'Bandit Test',
+            variant: 'variant',
+            workspace: '~/workspace'
+          },
           privileged: RUNTIME_INPUT_VALUE,
           settings: RUNTIME_INPUT_VALUE,
           // Right now we do not support Image Pull Policy but will do in the future
@@ -224,6 +228,13 @@ describe('Bandit Step', () => {
         timeout: '10s',
         spec: {
           privileged: false,
+          config: 'default',
+          target: {
+            type: 'repository',
+            name: 'Bandit Test',
+            variant: 'variant',
+            workspace: '~/workspace'
+          },
           settings: {
             key1: 'value1',
             key2: 'value2',
@@ -381,7 +392,6 @@ describe('Bandit Step', () => {
       timeout: '1h',
       spec: {
         target: {
-          ssl: true,
           type: 'repository',
           name: 'target name',
           variant: 'target variant',
