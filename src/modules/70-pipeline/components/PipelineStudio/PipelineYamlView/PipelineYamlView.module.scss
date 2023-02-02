@@ -6,12 +6,20 @@
  */
 
 .yamlBuilder {
+  padding: var(--spacing-large);
   position: relative;
 
   .buttonsWrapper {
-    height: 50px;
+    position: absolute;
+    right: var(--spacing-xxxlarge);
+    top: var(--spacing-xxlarge);
+    display: flex;
+    column-gap: var(--spacing-large);
+    align-items: center;
     & > .editModeCheckbox {
-      padding: var(--spacing-3) !important;
+      margin-bottom: 0 !important;
+      margin-top: 0 !important;
+      margin-right: var(--spacing-13) !important;
     }
   }
 }
