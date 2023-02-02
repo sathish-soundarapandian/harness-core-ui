@@ -97,9 +97,9 @@ function _PipelineListPage(): React.ReactElement {
 
   const requestBody = {
     filterType: 'PipelineSetup',
-    ...(repoName && { repoName }),
     ...(!isSavedFilterApplied && queryParams.filters && prepareFiltersPayload(queryParams.filters)),
-    ...(isSavedFilterApplied && getFilterByIdentifier(queryParams.filterIdentifier!, filterList)?.filterProperties)
+    ...(isSavedFilterApplied && getFilterByIdentifier(queryParams.filterIdentifier!, filterList)?.filterProperties),
+    ...(repoName && { repoName })
   }
 
   const pipelinesQuery = useMutateAsGet(useGetPipelineList, {
