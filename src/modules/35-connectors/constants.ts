@@ -69,6 +69,7 @@ export interface CreateConnectorModalProps {
 }
 
 export const Connectors: ConnectorType = {
+  HARNESS_CODE: 'HarnessCode' as ConnectorInfoDTO['type'], // TODO: Forcing type for now until cd-ng Swagger spec is updated. See https://harness.slack.com/archives/C04MEQP13LJ/p1675320890284339
   KUBERNETES_CLUSTER: 'K8sCluster',
   CUSTOM: 'CustomHealth',
   GIT: 'Git',

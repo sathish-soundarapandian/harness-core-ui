@@ -339,6 +339,7 @@ letsGetYouStarted: Let’s get you started
 accessKey: Access Key
 secretKey: Secret Key
 repo_provider:
+  harnessCode: Harness Code
   bitbucketLabel: BitBucket
   customLabel: Custom
   githubLabel: GitHub

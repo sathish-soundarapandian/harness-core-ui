@@ -99,6 +99,8 @@ const SelectRepositoryRef = (
         return 'gitlab'
       case Connectors.BITBUCKET:
         return 'bitbucket-blue'
+      case Connectors.HARNESS_CODE:
+        return 'code'
       default:
         return
     }

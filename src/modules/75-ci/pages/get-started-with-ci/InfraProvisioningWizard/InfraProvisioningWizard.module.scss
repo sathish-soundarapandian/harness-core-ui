@@ -32,6 +32,10 @@
   height: 110px;
   width: 110px;
   margin-right: var(--spacing-large);
+
+  .cardText {
+    text-align: center;
+  }
 }
 
 .gitProviderCard:last-of-type {

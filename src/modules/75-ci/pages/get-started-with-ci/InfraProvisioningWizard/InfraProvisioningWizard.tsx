@@ -433,7 +433,11 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             setFieldTouched?.('gitProvider', true)
             return
           }
-          if (!gitAuthenticationMethod && gitProvider?.type !== NonGitOption.OTHER) {
+          if (
+            !gitAuthenticationMethod &&
+            gitProvider?.type !== NonGitOption.OTHER &&
+            gitProvider?.type !== Connectors.HARNESS_CODE
+          ) {
             setFieldTouched?.('gitAuthenticationMethod', true)
             return
           }

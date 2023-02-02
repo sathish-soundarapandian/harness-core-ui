@@ -807,6 +807,7 @@ export interface StringsMap {
   'common.repo_provider.customLabel': string
   'common.repo_provider.githubLabel': string
   'common.repo_provider.gitlabLabel': string
+  'common.repo_provider.harnessCode': string
   'common.reportName': string
   'common.reportNameRequired': string
   'common.repositoryCertificates': string

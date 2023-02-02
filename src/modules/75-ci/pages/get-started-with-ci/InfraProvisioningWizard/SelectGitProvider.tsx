@@ -690,6 +690,8 @@ const SelectGitProviderRef = (
           return (
             authMethod === GitAuthenticationMethod.UserNameAndApplicationPassword && !!username && !!applicationPassword
           )
+        case Connectors.HARNESS_CODE:
+          return true
         default:
           return false
       }
@@ -882,7 +884,11 @@ const SelectGitProviderRef = (
                             { [css.bitbucketIcon]: item.icon === GitProviderIcons.get(Connectors.BITBUCKET) }
                           )}
                         />
-                        <Text font={{ variation: FontVariation.SMALL_SEMI }} padding={{ top: 'small' }}>
+                        <Text
+                          font={{ variation: FontVariation.SMALL_SEMI }}
+                          padding={{ top: 'small' }}
+                          className={css.cardText}
+                        >
                           {getString(item.label)}
                         </Text>
                       </Layout.Vertical>
@@ -929,7 +935,9 @@ const SelectGitProviderRef = (
                   </Container>
                 ) : null}
               </Container>
-              {gitProvider && gitProvider.type !== NonGitOption.OTHER ? (
+              {gitProvider &&
+              gitProvider.type !== NonGitOption.OTHER &&
+              gitProvider.type !== Connectors.HARNESS_CODE ? (
                 <Layout.Vertical>
                   <Container
                     className={cx({
