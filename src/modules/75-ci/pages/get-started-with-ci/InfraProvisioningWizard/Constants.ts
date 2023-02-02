@@ -148,11 +148,14 @@ export const OtherProviderOptions: GitProvider[] = [
 ]
 
 export const AllSaaSGitProviders: GitProvider[] = [
-  {
-    icon: GitProviderIcons.get(Connectors.HARNESS_CODE) as IconName,
-    label: 'common.repo_provider.harnessCode',
-    type: Connectors.HARNESS_CODE
-  },
+  // TODO: Enable this entry and remove CODE_CI_INTEGRATION_ENABLED feature flag logic
+  // in src/modules/75-ci/pages/get-started-with-ci/InfraProvisioningWizard/SelectGitProvider.tsx
+  // when Harness Code is ramped up 100%
+  // {
+  //   icon: GitProviderIcons.get(Connectors.HARNESS_CODE) as IconName,
+  //   label: 'common.repo_provider.harnessCode',
+  //   type: Connectors.HARNESS_CODE
+  // },
   {
     icon: GitProviderIcons.get(Connectors.GITHUB) as IconName,
     label: 'common.repo_provider.githubLabel',

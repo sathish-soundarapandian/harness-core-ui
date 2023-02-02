@@ -25,7 +25,8 @@ import {
   ButtonSize,
   FormError,
   PageSpinner,
-  HarnessDocTooltip
+  HarnessDocTooltip,
+  IconName
 } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { Divider } from '@blueprintjs/core'
@@ -49,6 +50,7 @@ import { Status } from '@common/utils/Constants'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CIOnboardingActions } from '@common/constants/TrackingConstants'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Connectors } from '@connectors/constants'
 import {
   getBackendServerUrl,
@@ -112,6 +114,7 @@ const SelectGitProviderRef = (
   props: SelectGitProviderProps,
   forwardRef: SelectGitProviderForwardRef
 ): React.ReactElement => {
+  const { CODE_CI_INTEGRATION_ENABLED } = useFeatureFlags()
   const { selectedHosting, disableNextBtn, enableNextBtn, updateFooterLabel } = props
   const { getString } = useStrings()
   const [gitProvider, setGitProvider] = useState<GitProvider | undefined>()
@@ -867,7 +870,15 @@ const SelectGitProviderRef = (
               >
                 <Layout.Horizontal spacing="large">
                   <CardSelect
-                    data={AllSaaSGitProviders}
+                    data={AllSaaSGitProviders.concat(
+                      CODE_CI_INTEGRATION_ENABLED
+                        ? {
+                            icon: GitProviderIcons.get(Connectors.HARNESS_CODE) as IconName,
+                            label: 'common.repo_provider.harnessCode',
+                            type: Connectors.HARNESS_CODE
+                          }
+                        : []
+                    )}
                     selected={gitProvider}
                     cornerSelected={true}
                     className={css.icons}
