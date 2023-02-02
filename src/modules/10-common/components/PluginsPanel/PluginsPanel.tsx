@@ -193,7 +193,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
 
   const renderPluginForm = useCallback((): JSX.Element => {
     const { inputs = [] } = plugin || {}
-    return false && inputs.length > 0 ? (
+    return inputs.length > 0 ? (
       <Layout.Vertical height="100%">
         {inputs.map((input: Input) => {
           const { name, secret } = input
