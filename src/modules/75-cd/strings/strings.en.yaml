@@ -578,7 +578,7 @@ getStartedWithCD:
   tryAnotherCreds: Not the right authentication? Switch account here!
   master: master
   targetRevision: Target Revision
-  anonymous: anonymous
+  anonymous: Anonymous
   usernameAndPassword: Username & Password
   clickForOtherDeploymentTypes: Click here for other deployment types
   createCluster: Create a cluster if needed
@@ -594,6 +594,7 @@ getStartedWithCD:
   onboardingTitle: Start your deployments journey with Harness CD
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
   gitopsOnboardingAgentStep: Connect to Harness by provisioning hosted Agent
+  gitopsOnboardingSelectAgent: Select existing agent
   gitopsOnboardingSource: Where is your source?
   gitopsOnboardingDestination: Where to deploy to?
   gitopsOnboardingConfigureStep: Configure the source and destination

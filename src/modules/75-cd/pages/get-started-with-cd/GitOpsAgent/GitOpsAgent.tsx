@@ -171,16 +171,21 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
     }
     if (agentList?.content?.length) {
       return (
-        <div>
-          {agentList.content.map(agent => (
-            <GitOpsAgentCard
-              key={agent.identifier}
-              agent={agent}
-              selectedAgent={selectedAgent as V1Agent}
-              setSelectedAgent={setSelectedAgent}
-            />
-          ))}
-        </div>
+        <>
+          <Text padding={{ bottom: 'medium' }} color={Color.GREY_800}>
+            {getString('cd.getStartedWithCD.gitopsOnboardingSelectAgent')}
+          </Text>
+          <div>
+            {agentList.content.map(agent => (
+              <GitOpsAgentCard
+                key={agent.identifier}
+                agent={agent}
+                selectedAgent={selectedAgent as V1Agent}
+                setSelectedAgent={setSelectedAgent}
+              />
+            ))}
+          </div>
+        </>
       )
     }
     return (

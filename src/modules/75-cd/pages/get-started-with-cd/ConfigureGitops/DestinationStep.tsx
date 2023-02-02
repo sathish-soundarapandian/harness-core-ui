@@ -74,7 +74,8 @@ export const DestinationStep = (props: any) => {
     queryParams: {
       accountIdentifier: accountId,
       identifier: formikRef.current?.values?.identifier
-    }
+    },
+    lazy: true
   })
 
   useEffect(() => {
@@ -215,17 +216,17 @@ export const DestinationStep = (props: any) => {
                   data={clustersTypes}
                   cornerSelected={true}
                   className={moduleCss.icons}
-                  cardClassName={moduleCss.serviceDeploymentTypeCard}
+                  cardClassName={moduleCss.serviceDeploymentTypeSmallCard}
                   renderItem={item => (
                     <>
                       <Layout.Vertical flex>
                         <Icon
                           name={item.icon as IconName}
-                          size={48}
+                          size={24}
                           flex
                           className={moduleCss.serviceDeploymentTypeIcon}
                         />
-                        <Text font={{ variation: FontVariation.BODY2 }} className={moduleCss.text1}>
+                        <Text font={{ variation: FontVariation.BODY2 }} className={moduleCss.text2}>
                           {item.label}
                         </Text>
                       </Layout.Vertical>
@@ -240,8 +241,8 @@ export const DestinationStep = (props: any) => {
               {selectedCluster === CIBuildInfrastructureType.KubernetesDirect ? (
                 <Container>
                   {testConnectionStatus === TestStatus.SUCCESS ? (
-                    <Layout.Vertical>
-                      <Layout.Vertical className={css.success}>
+                    <>
+                      <Layout.Vertical className={css.success} margin={{ bottom: 'medium', top: 'large' }}>
                         <Layout.Horizontal className={css.textPadding}>
                           <Icon name="success-tick" size={25} className={css.iconPadding} />
                           <Text className={css.success} font={{ variation: FontVariation.H6 }} color={Color.GREEN_800}>
@@ -258,7 +259,7 @@ export const DestinationStep = (props: any) => {
                       >
                         {getString('cd.getStartedWithCD.tryAnotherCreds')}
                       </Text>
-                    </Layout.Vertical>
+                    </>
                   ) : (
                     <ul className={css.progress}>
                       <li className={`${css.progressItem} ${css.progressItemActive}`}>
@@ -326,7 +327,7 @@ export const DestinationStep = (props: any) => {
                 </Container>
               ) : (
                 <Container>
-                  <Layout.Vertical margin={{ top: 'medium' }}>
+                  <Layout.Vertical margin={{ top: 'large' }}>
                     <InfoContainer label="cd.getStartedWithCD.managedCluster" />
                     <div className={css.smallMarginBottomClass} />
                     <>

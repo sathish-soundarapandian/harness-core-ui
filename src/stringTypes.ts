@@ -5222,6 +5222,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.gitopsOnboardingConfigureStep': string
   'cd.getStartedWithCD.gitopsOnboardingDeployStep': string
   'cd.getStartedWithCD.gitopsOnboardingDestination': string
+  'cd.getStartedWithCD.gitopsOnboardingSelectAgent': string
   'cd.getStartedWithCD.gitopsOnboardingSource': string
   'cd.getStartedWithCD.gitopsRedirect.subtitle': string
   'cd.getStartedWithCD.gitopsRedirect.title': string

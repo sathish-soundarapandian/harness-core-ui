@@ -60,6 +60,7 @@ declare const styles: {
   readonly testConnectionBtn: string
   readonly text: string
   readonly text1: string
+  readonly text2: string
   readonly uppercase: string
   readonly verticalSeparation: string
   readonly width50: string

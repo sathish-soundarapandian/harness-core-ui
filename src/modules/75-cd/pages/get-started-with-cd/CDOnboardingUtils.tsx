@@ -77,7 +77,8 @@ export const SAMPLE_MANIFEST_FOLDER = 'Sample Manifest Onboarding'
 export const DEFAULT_PIPELINE_NAME = 'Sample Pipeline'
 export const EMPTY_STRING = ''
 export const ONBOARDING_PREFIX = 'onboarding'
-export const DEFAULT_SAMPLE_REPO = 'https://github.com/sample-repo-appln'
+export const DEFAULT_SAMPLE_REPO = 'https://github.com/argoproj/argoproj-deployments'
+// https://github.com/sample-repo-appln
 
 const DEFAULT_STAGE_ID = 'Stage'
 const DEFAULT_STAGE_TYPE = 'Deployment'

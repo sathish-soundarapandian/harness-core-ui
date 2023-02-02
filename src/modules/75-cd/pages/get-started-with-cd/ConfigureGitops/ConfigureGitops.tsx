@@ -123,6 +123,11 @@ export interface RepoTypeItem {
   tooltipProps?: PopoverProps
 }
 
+enum AUTH_TYPES {
+  ANONYMOUS = 'anonymous',
+  USERNAME_AND_PASSWORD = 'usernamepassword'
+}
+
 const ConfigureGitopsRef = (props: any): JSX.Element => {
   const {
     saveRepositoryData,
@@ -148,7 +153,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
     accountIdentifier: accountId
   }
 
-  const { mutate } = useAgentRepositoryServiceCreateRepository({
+  const { mutate, error } = useAgentRepositoryServiceCreateRepository({
     agentIdentifier: '',
     queryParams: {
       accountIdentifier: accountId,
@@ -171,7 +176,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
       {
         queryParams: {
           accountIdentifier: accountId,
-          identifier: getLastURLPathParam(defaultTo(repoURL, ''))
+          identifier: getLastURLPathParam(defaultTo(data?.repo, ''))
         },
         pathParams: {
           agentIdentifier: fullAgentName
@@ -232,7 +237,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
     if (formikRef.current?.values?.repo === DEFAULT_SAMPLE_REPO) {
       return false
     } else {
-      if (formikRef.current?.values?.authType === getString('cd.getStartedWithCD.usernameAndPassword')) {
+      if (formikRef.current?.values?.authType === AUTH_TYPES.USERNAME_AND_PASSWORD) {
         return !formikRef.current?.values?.username || !formikRef.current?.values?.password
       } else {
         return !formikRef.current?.values?.authType || !formikRef.current?.values?.connectionType
@@ -242,15 +247,15 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
 
   const getRepoPayloadData = (data: RepositoryInterface): RepositoryInterface => {
     if (
-      (data.authType === getString('cd.getStartedWithCD.anonymous') && data.connectionType === getString('HTTPS')) ||
+      (data.authType === AUTH_TYPES.ANONYMOUS && data.connectionType === getString('HTTPS')) ||
       data.repo === DEFAULT_SAMPLE_REPO
     ) {
       data = { ...data, connectionType: 'HTTPS_ANONYMOUS' }
     }
     if (data.repo === DEFAULT_SAMPLE_REPO) {
-      data = { ...data, authType: getString('cd.getStartedWithCD.anonymous') }
+      data = { ...data, authType: AUTH_TYPES.ANONYMOUS }
     }
-    if (data.authType === getString('cd.getStartedWithCD.anonymous')) {
+    if (data.authType === AUTH_TYPES.ANONYMOUS) {
       const { username, password, ...restData } = data
       return restData
     }
@@ -352,7 +357,6 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
   const handleAuthTypeChange = (val: string) => {
     formikRef.current?.setFieldValue('authType', val)
   }
-
   const repositoryTypes = [
     {
       label: getString('pipeline.manifestType.gitConnectorLabel'),
@@ -382,11 +386,11 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
   const getValidationSchema: Yup.ObjectSchema = Yup.object().shape({
     repo: Yup.string().required(getString('common.validation.repository')),
     username: Yup.string().when('authType', {
-      is: getString('cd.getStartedWithCD.usernameAndPassword'),
+      is: AUTH_TYPES.USERNAME_AND_PASSWORD,
       then: Yup.string().required(getString('validation.username'))
     }),
     password: Yup.string().when('authType', {
-      is: getString('cd.getStartedWithCD.usernameAndPassword'),
+      is: AUTH_TYPES.USERNAME_AND_PASSWORD,
       then: Yup.string().required(getString('validation.password'))
     })
   })
@@ -407,6 +411,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
             </Text>
             <div className={css.borderBottomClass} />
             <Accordion
+              activeId="application-repo-source-step"
               ref={accordionRef}
               collapseProps={{ keepChildrenMounted: false }}
               panelClassName={moduleCss.configureGitopsPanel}
@@ -472,7 +477,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                   </Text>
                                   {testConnectionStatus === TestStatus.SUCCESS && formikProps.values.repo ? (
                                     <Layout.Vertical>
-                                      <Layout.Vertical className={css.success}>
+                                      <Layout.Vertical className={css.success} margin={{ bottom: 'medium' }}>
                                         <Layout.Horizontal className={css.textPadding}>
                                           <Icon name="success-tick" size={25} className={css.iconPadding} />
                                           <Text
@@ -497,7 +502,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                   ) : (
                                     <>
                                       {testConnectionStatus === TestStatus.FAILED && (
-                                        <Layout.Vertical className={css.danger}>
+                                        <Layout.Vertical className={css.danger} margin={{ bottom: 'medium' }}>
                                           <Layout.Horizontal className={css.textPadding}>
                                             <Icon name="danger-icon" size={25} className={css.iconPadding} />
                                             <Text
@@ -505,14 +510,14 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                               font={{ variation: FontVariation.H6 }}
                                               color={Color.RED_600}
                                             >
-                                              {getString('cd.getStartedWithCD.failedToAuthenticate', {
-                                                target: formikRef.current?.values.repo?.toString() || ''
-                                              })}
+                                              {`${getString('cd.getStartedWithCD.failedToAuthenticate')} ${
+                                                formikProps.values.repo
+                                              }`}
                                             </Text>
                                           </Layout.Horizontal>
                                           <Layout.Vertical width={'83%'}>
-                                            <Text className={css.textPadding}>
-                                              {getString('cd.getStartedWithCD.failedSourceText')}
+                                            <Text style={{ marginLeft: '20px' }} className={css.textPadding}>
+                                              {(error?.data as any)?.message}
                                             </Text>
                                             <ul>
                                               <li>
@@ -569,27 +574,21 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                               </Text>
                                               <Layout.Horizontal spacing="medium" margin={{ bottom: 'medium' }}>
                                                 <Button
-                                                  onClick={() =>
-                                                    handleAuthTypeChange(getString('cd.getStartedWithCD.anonymous'))
-                                                  }
+                                                  onClick={() => handleAuthTypeChange(AUTH_TYPES.ANONYMOUS)}
                                                   className={cx(
                                                     css.kubernetes,
-                                                    authType === getString('cd.getStartedWithCD.anonymous')
-                                                      ? css.active
-                                                      : undefined
+                                                    authType === AUTH_TYPES.ANONYMOUS ? css.active : undefined
                                                   )}
                                                 >
                                                   {getString('cd.getStartedWithCD.anonymous')}
                                                 </Button>
                                                 <Button
                                                   onClick={() => {
-                                                    handleAuthTypeChange(
-                                                      getString('cd.getStartedWithCD.usernameAndPassword')
-                                                    )
+                                                    handleAuthTypeChange(AUTH_TYPES.USERNAME_AND_PASSWORD)
                                                   }}
                                                   className={cx(
                                                     css.docker,
-                                                    authType === getString('cd.getStartedWithCD.usernameAndPassword')
+                                                    authType === AUTH_TYPES.USERNAME_AND_PASSWORD
                                                       ? css.active
                                                       : undefined
                                                   )}
@@ -597,7 +596,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                                   {getString('cd.getStartedWithCD.usernameAndPassword')}
                                                 </Button>
                                               </Layout.Horizontal>
-                                              {authType === getString('cd.getStartedWithCD.usernameAndPassword') && (
+                                              {authType === AUTH_TYPES.USERNAME_AND_PASSWORD && (
                                                 <Layout.Vertical>
                                                   <FormInput.Text
                                                     className={css.inputWidth}
@@ -615,6 +614,9 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                                 </Layout.Vertical>
                                               )}
                                             </>
+                                          )}
+                                          {connectionType === getString('SSH') && (
+                                            <Text className={css.textPadding}>{getString('common.comingSoon2')}</Text>
                                           )}
                                         </>
                                       )}

@@ -7,16 +7,20 @@
 
 import React from 'react'
 import { noop } from 'lodash-es'
-import { Text, Formik, FormikForm, Layout } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import { Text, Formik, FormikForm, Layout, Container } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import type { Servicev1Application } from 'services/gitops'
+import { useStrings } from 'framework/strings'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
-import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
+import successSetup from '../../home/images/success_setup.svg'
+import css from '../RunPipelineSummary/RunPipelineSummary.module.scss'
 
 export const Deploy = () => {
   const {
     state: { application: applicationData }
   } = useCDOnboardingContext()
+
+  const { getString } = useStrings()
 
   return (
     <Formik<Servicev1Application>
@@ -27,11 +31,17 @@ export const Deploy = () => {
       {formikProps => {
         return (
           <FormikForm>
-            <Layout.Vertical>
-              <Text className={css.success} font={{ variation: FontVariation.H6 }} color={Color.GREEN_800}>
-                {formikProps.values?.name}
-              </Text>
-            </Layout.Vertical>
+            <Container className={css.container} width="50%">
+              <Layout.Vertical padding="xxlarge">
+                <Layout.Horizontal flex={{ justifyContent: 'space-between' }} padding={{ bottom: 'large' }}>
+                  <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'xxlarge' }}>
+                    {getString('cd.getStartedWithCD.gitopsOnboardingDeployStep')}
+                  </Text>
+                  <img className={css.successImage} src={successSetup} />
+                </Layout.Horizontal>
+                <Container className={css.borderBottomClass} />
+              </Layout.Vertical>
+            </Container>
           </FormikForm>
         )
       }}
