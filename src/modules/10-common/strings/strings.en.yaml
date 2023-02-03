@@ -1341,8 +1341,6 @@ python: Python
 # SSCS module
 sscs: SSCS
 sscsText: Software Supply Chain Security
-jira:
-  selectConnector: 'Select Jira Connector'
 tickets:
   selectConnector: '[Select] Ticket Provider Connector'
   selectProjectName: '[Select] Project Name'

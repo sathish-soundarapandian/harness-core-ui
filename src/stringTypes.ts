@@ -517,7 +517,6 @@ export interface StringsMap {
   'common.invalidIdentifiers': string
   'common.jexlCondition': string
   'common.jexlExpression': string
-  'common.jira.selectConnector': string
   'common.labelTestConnection': string
   'common.last7days': string
   'common.lastConnected': string
