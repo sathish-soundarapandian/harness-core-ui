@@ -14,6 +14,7 @@ const { pick, omit, mapValues } = require('lodash')
 const ExactSharedPackages = [
   'react-dom',
   'react',
+  'react-router-dom',
   '@harness/use-modal',
   '@blueprintjs/core',
   '@blueprintjs/select',
