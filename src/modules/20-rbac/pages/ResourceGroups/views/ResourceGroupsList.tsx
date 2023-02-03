@@ -67,7 +67,9 @@ const ResourceGroupsList: React.FC = () => {
 
   const { getRBACErrorMessage } = useRBACError()
 
-  return (
+  // @ts-ignore
+    // @ts-ignore
+    return (
     <>
       <PageHeader
         title={
@@ -111,6 +113,7 @@ const ResourceGroupsList: React.FC = () => {
           </Layout.Horizontal>
         }
       />
+        {/*@ts-ignore*/}
       <PageBody loading={loading} retryOnError={() => refetch()} error={error ? getRBACErrorMessage(error) : ''}>
         <ResourceGroupListView data={data?.data} reload={refetch} openResourceGroupModal={openResourceGroupModal} />
       </PageBody>
