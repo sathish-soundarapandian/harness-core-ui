@@ -99,7 +99,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
       {enabled && licenseData && module !== ModuleName.CHAOS && (
         <SubscriptionUsageCard module={module} licenseData={licenseData} />
       )}
-      {module === 'CD' && (licenseData as CDModuleLicenseDTO)?.cdLicenseType === 'SERVICES' ? (
+      {module === 'CD' && true ? (
         <ServiceLicenseTable
           gotoPage={pageNumber => updateQueryParams({ page: pageNumber })}
           data={activeServiceList?.data || {}}
