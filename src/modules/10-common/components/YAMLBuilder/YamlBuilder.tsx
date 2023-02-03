@@ -161,7 +161,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const currentCursorPosition = useRef<Position>()
   const codeLensRegistrations = useRef<Map<number, IDisposable>>(new Map<number, IDisposable>())
   const [selectedPlugin, setSelectedPlugin] = useState<Record<string, any>>()
-  const shouldRenderPluginsPanel = !isReadOnlyMode && isEditModeSupported && shouldShowPluginsPanel
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -881,7 +880,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   useEffect(() => {
     const editor = editorRef.current?.editor
-    if (shouldRenderPluginsPanel && editor) {
+    if (shouldShowPluginsPanel && editor) {
       const matchingPositions = findPositionsForMatchingKeys(editor, 'step:')
       if (matchingPositions.length) {
         matchingPositions.map((matchingPosition: Position) => {
@@ -906,7 +905,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         })
       }
     }
-  }, [currentYaml, editorRef.current?.editor, shouldRenderPluginsPanel, codeLensRegistrations.current])
+  }, [currentYaml, editorRef.current?.editor, shouldShowPluginsPanel, codeLensRegistrations.current])
 
   const highlightInsertedYAML = useCallback(
     (fromLine: number, toLineNum: number): void => {
