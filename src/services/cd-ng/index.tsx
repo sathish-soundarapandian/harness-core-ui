@@ -10796,6 +10796,18 @@ export interface ParameterFieldBoolean {
   value?: boolean
 }
 
+export interface ParameterFieldListFailureStrategyConfig {
+  defaultValue?: FailureStrategyConfig[]
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: FailureStrategyConfig[]
+}
+
 export interface ParameterFieldMapStringString {
   defaultValue?: {
     [key: string]: string
@@ -15779,7 +15791,7 @@ export interface StackTraceElement {
 export interface StageElementConfig {
   delegateSelectors?: string[]
   description?: string
-  failureStrategies?: FailureStrategyConfig[]
+  failureStrategies?: ParameterFieldListFailureStrategyConfig
   identifier: string
   name: string
   skipInstances?: boolean
@@ -15965,7 +15977,7 @@ export interface StepElementConfig {
 
 export interface StepGroupElementConfig {
   delegateSelectors?: string[]
-  failureStrategies?: FailureStrategyConfig[]
+  failureStrategies?: ParameterFieldListFailureStrategyConfig
   identifier: string
   name: string
   steps?: ExecutionWrapperConfig[]
