@@ -164,6 +164,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const codeLensRegistrations = useRef<Map<number, IDisposable>>(new Map<number, IDisposable>())
   const [selectedPlugin, setSelectedPlugin] = useState<Record<string, any>>()
   const [pluginAddUpdateOpnStatus, setPluginAddUpdateOpnStatus] = useState<Status>()
+  const stepMatchRegex = 'steps((.|\n)*)name'
+  const stageMatchRegex = 'spec:\\n(\\s*)steps:\\n(\\s*)-(\\s*)name'
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -783,12 +785,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       if (precedingStageStepsCount > 0) {
         closestStepIndex = getClosestIndexToSearchToken(
           cursorPosition,
-          'step:',
+          stepMatchRegex,
           precedingStageStepsCount,
           precedingStageStepsCount + currentStageStepsCount
         )
       } else {
-        closestStepIndex = getClosestIndexToSearchToken(cursorPosition, 'step:', 0, currentStageStepsCount)
+        closestStepIndex = getClosestIndexToSearchToken(cursorPosition, stepMatchRegex, 0, currentStageStepsCount)
       }
       return closestStepIndex === -1 ? 0 : closestStepIndex
     },
@@ -813,7 +815,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       if (editor) {
         let position: Position
         if (isPluginUpdate) {
-          const allMatches = findPositionsForMatchingKeys(editor, 'step:') || []
+          const allMatches = findPositionsForMatchingKeys(editor, stepMatchRegex) || []
           const allMatchesInClosestStageIndex = allMatches.slice(startStepIndex)
           position = allMatchesInClosestStageIndex[closestStepIndex]
           const { lineNumber: startingLineNum } = position
@@ -885,7 +887,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   useEffect(() => {
     const editor = editorRef.current?.editor
     if (shouldShowPluginsPanel && editor) {
-      const matchingPositions = findPositionsForMatchingKeys(editor, 'step:')
+      const matchingPositions = findPositionsForMatchingKeys(editor, stepMatchRegex)
       if (matchingPositions.length) {
         matchingPositions.map((matchingPosition: Position) => {
           const { lineNumber } = matchingPosition
@@ -956,7 +958,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       const cursorPosition = currentCursorPosition.current
       if (!isEmpty(pluginData) && shouldInsertYAML && cursorPosition) {
         try {
-          const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
+          const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, stageMatchRegex)
           if (closestStageIndex < 0) {
             setPluginAddUpdateOpnStatus(Status.ERROR)
             return
@@ -977,7 +979,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           ).length
           let closestStepIndexInCurrentStage: number = 0
           if (isPluginUpdate) {
-            const currentStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
+            const currentStageIndex = getClosestIndexToSearchToken(cursorPosition, stageMatchRegex)
             const stepsInCurrentStage = findAllValuesForJSONPath(
               currentPipelineJSON,
               getStageYAMLPathForStageIndex(currentStageIndex)
