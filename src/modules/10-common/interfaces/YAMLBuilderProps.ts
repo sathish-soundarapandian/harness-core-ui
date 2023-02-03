@@ -54,6 +54,7 @@ export interface YamlBuilderProps {
   displayBorder?: boolean
   shouldShowPluginsPanel?: boolean
   toggleResizeButton?: () => void
+  customCss?: React.HTMLAttributes<HTMLDivElement>['className']
 }
 
 export interface CompletionItemInterface {

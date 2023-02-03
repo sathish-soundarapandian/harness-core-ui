@@ -9,6 +9,7 @@
 declare const styles: {
   readonly buttonsWrapper: string
   readonly editModeCheckbox: string
+  readonly editorLayout: string
   readonly yamlBuilder: string
 }
 export default styles

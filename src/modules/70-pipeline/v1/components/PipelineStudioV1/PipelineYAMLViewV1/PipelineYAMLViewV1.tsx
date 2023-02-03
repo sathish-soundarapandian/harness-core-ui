@@ -173,8 +173,8 @@ function PipelineYAMLViewV1(): React.ReactElement {
             isReadOnlyMode={isReadonly || !isYamlEditable}
             bind={setYamlHandler}
             yamlSanityConfig={{ removeEmptyString: false, removeEmptyObject: false, removeEmptyArray: false }}
-            height={'calc(100vh - 150px)'}
-            width={shouldShowPluginsPanel ? '50vw' : 'calc(80vw + 10px)'}
+            height={shouldShowPluginsPanel ? 'calc(100vh - 150px)' : 'calc(100vh - 210px)'}
+            width={shouldShowPluginsPanel ? '50vw' : 'calc(100vw - 400px)'}
             onEnableEditMode={enableEditMode}
             shouldShowPluginsPanel={shouldShowPluginsPanel}
             toggleResizeButton={() => setShouldShowPluginsPanel((shouldRender: boolean) => !shouldRender)}
@@ -218,6 +218,7 @@ function PipelineYAMLViewV1(): React.ReactElement {
               </Container>
             )}
             {...yamlOrJsonProp}
+            customCss={shouldShowPluginsPanel ? undefined : css.editorLayout}
           />
         )}
       </>

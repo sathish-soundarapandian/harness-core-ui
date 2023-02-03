@@ -61,7 +61,6 @@ import {
   EDITOR_DARK_SELECTION,
   EDITOR_LIGHT_BG,
   EDITOR_WHITESPACE,
-  MIN_SNIPPET_SECTION_WIDTH,
   TRIGGER_CHARS_FOR_NEW_EXPR,
   TRIGGER_CHAR_FOR_PARTIAL_EXPR,
   KEY_CODE_FOR_PLUS_SIGN,
@@ -141,7 +140,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     comparableYaml,
     displayBorder = true,
     shouldShowPluginsPanel = false,
-    toggleResizeButton
+    toggleResizeButton,
+    customCss
   } = props
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
 
@@ -152,8 +152,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     !defaultTo(existingYaml, existingJSON)
   )
   const [yamlValidationErrors, setYamlValidationErrors] = useState<Map<number, string> | undefined>()
-  const { innerWidth } = window
-  const [dynamicWidth, setDynamicWidth] = useState<number>(innerWidth - 2 * MIN_SNIPPET_SECTION_WIDTH)
 
   const editorRef = useRef<ReactMonacoEditor>(null)
   const yamlRef = useRef<string | undefined>('')
@@ -193,10 +191,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       bind?.(undefined)
     }
   }, [bind, handler])
-
-  useEffect(() => {
-    setDynamicWidth(width as number)
-  }, [width])
 
   const getEditorCurrentVersion = (): number | undefined => {
     return editorRef.current?.editor?.getModel()?.getAlternativeVersionId()
@@ -642,7 +636,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const renderEditor = useCallback(
     (): JSX.Element => (
       <MonacoEditor
-        width={dynamicWidth}
+        width={width}
         height={defaultTo(height, DEFAULT_EDITOR_HEIGHT)}
         language="yaml"
         value={currentYaml}
@@ -664,7 +658,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         ref={editorRef}
       />
     ),
-    [dynamicWidth, height, currentYaml, onYamlChange, codeLensRegistrations.current]
+    [width, height, currentYaml, onYamlChange, codeLensRegistrations.current]
   )
 
   const throttledOnResize = throttle(() => {
@@ -1028,7 +1022,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     <Layout.Horizontal>
       <Layout.Vertical>
         <div
-          className={cx(displayBorder ? css.main : null, css.borderWithPluginsPanel, {
+          className={cx(css.borderWithPluginsPanel, {
             [css.darkBg]: theme === 'DARK'
           })}
         >
@@ -1049,7 +1043,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       />
     </Layout.Horizontal>
   ) : (
-    <div className={cx(displayBorder ? css.main : null, { [css.darkBg]: theme === 'DARK' })}>
+    <div className={cx(customCss, { [css.main]: displayBorder }, { [css.darkBg]: theme === 'DARK' })}>
       <div className={css.editor}>
         {defaultTo(renderCustomHeader, renderHeader)()}
         {renderEditor()}
