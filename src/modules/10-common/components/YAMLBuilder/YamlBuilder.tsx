@@ -41,6 +41,7 @@ import type {
 } from '@common/interfaces/YAMLBuilderProps'
 import { findAllValuesForJSONPath, getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
 import { sanitize } from '@common/utils/JSONUtils'
+import { Status } from '@common/utils/Constants'
 import {
   getYAMLFromEditor,
   getMetaDataForKeyboardEventProcessing,
@@ -162,6 +163,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const currentCursorPosition = useRef<Position>()
   const codeLensRegistrations = useRef<Map<number, IDisposable>>(new Map<number, IDisposable>())
   const [selectedPlugin, setSelectedPlugin] = useState<Record<string, any>>()
+  const [pluginAddUpdateOpnStatus, setPluginAddUpdateOpnStatus] = useState<Status>()
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -850,7 +852,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     if (cursorPosition) {
       try {
         const currentYAMLAsJSON = parse(latestYAML)
-        const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
+        const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stages:')
         const stageStepsForTheClosestIndex = findAllValuesForJSONPath(
           currentYAMLAsJSON,
           getStageYAMLPathForStageIndex(closestStageIndex)
@@ -955,6 +957,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       if (!isEmpty(pluginData) && shouldInsertYAML && cursorPosition) {
         try {
           const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stage:')
+          if (closestStageIndex < 0) {
+            setPluginAddUpdateOpnStatus(Status.ERROR)
+            return
+          }
           const yamlStepToBeInsertedAt = getStageYAMLPathForStageIndex(closestStageIndex)
           const currentPipelineJSON = parse(currentYaml)
           const existingSteps =
@@ -992,6 +998,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           const updatedYAML = yamlStringify(set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps))
           onYamlChange(updatedYAML)
           setCurrentYaml(updatedYAML)
+          setPluginAddUpdateOpnStatus(Status.SUCCESS)
           spotLightInsertedYAML({
             noOflinesInserted: countAllKeysInObject(pluginValuesAsStep),
             closestStageIndex,
@@ -1037,8 +1044,12 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       <PluginsPanel
         height={height}
         onPluginAddUpdate={addUpdatePluginIntoExistingYAML}
-        onPluginDiscard={() => setSelectedPlugin(undefined)}
+        onPluginDiscard={() => {
+          setSelectedPlugin(undefined)
+          setPluginAddUpdateOpnStatus(Status.TO_DO)
+        }}
         selectedPluginFromYAMLView={selectedPlugin}
+        pluginAddUpdateOpnStatus={pluginAddUpdateOpnStatus}
       />
     </Layout.Horizontal>
   ) : (

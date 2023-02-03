@@ -1334,6 +1334,8 @@ artifacts:
     sourceDirectoryPlaceholder: Enter Source Directory
 updated: Updated
 python: Python
+successfullyAdded: Successfully added
+errorOccured: 'Error occured while {{verb}} {{entity}}'
 
 # SSCS module
 sscs: SSCS

@@ -299,6 +299,7 @@ export interface StringsMap {
   'common.errorHandler.issueCouldBe': string
   'common.errorHandler.possibleReasons': string
   'common.errorHandler.tryTheseSuggestions': string
+  'common.errorOccured': string
   'common.execute': string
   'common.executedBy': string
   'common.executionTab.stepsCount': string
@@ -1060,6 +1061,7 @@ export interface StringsMap {
   'common.subtotal': string
   'common.successfullCreate': string
   'common.successfullUpdate': string
+  'common.successfullyAdded': string
   'common.suggestionsLabel': string
   'common.support.subtitle': string
   'common.support.title': string

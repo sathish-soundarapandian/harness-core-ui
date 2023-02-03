@@ -27,6 +27,7 @@ import {
 } from '@harness/uicore'
 import { Input, PluginMetadataResponse, useListPlugins } from 'services/ci'
 import { useStrings } from 'framework/strings'
+import { Status } from '@common/utils/Constants'
 // eslint-disable-next-line no-restricted-imports
 import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 
@@ -58,10 +59,17 @@ interface PluginsPanelInterface {
   onPluginDiscard: () => void
   height?: React.CSSProperties['height']
   shouldEnableFormView?: boolean
+  pluginAddUpdateOpnStatus?: Status
 }
 
 export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
-  const { height, onPluginAddUpdate, onPluginDiscard, selectedPluginFromYAMLView = {} } = props
+  const {
+    height,
+    onPluginAddUpdate,
+    onPluginDiscard,
+    selectedPluginFromYAMLView = {},
+    pluginAddUpdateOpnStatus: pluginCrudOpnStatus = Status.TO_DO
+  } = props
   const { getString } = useStrings()
   const [plugin, setPlugin] = useState<PluginMetadataResponse | undefined>()
   const [plugins, setPlugins] = useState<PluginMetadataResponse[]>([])
@@ -266,6 +274,27 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     }
   }, [])
 
+  const renderPluginAddUpdateOpnStatus = useCallback((): React.ReactElement => {
+    switch (pluginCrudOpnStatus) {
+      case Status.SUCCESS:
+        return (
+          <Layout.Horizontal spacing="small">
+            <Icon color={Color.GREEN_700} name="tick-circle" />
+            <Text color={Color.GREEN_700}>{getString('common.successfullyAdded')}</Text>
+          </Layout.Horizontal>
+        )
+      case Status.ERROR:
+        return (
+          <Layout.Horizontal spacing="small">
+            <Icon color={Color.RED_500} name="circle-cross" />
+            <Text color={Color.RED_500}>{getString('common.errorOccured', { verb: 'adding', entity: 'plugin' })}</Text>
+          </Layout.Horizontal>
+        )
+      default:
+        return <></>
+    }
+  }, [pluginCrudOpnStatus])
+
   return (
     <Container className={css.tabs}>
       <Tabs id={'pluginsPanel'} defaultSelectedTabId={'plugins'} className={css.tabs}>
@@ -344,6 +373,13 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                                   </a>
                                 ) : null}
                               </Layout.Horizontal>
+                              {[Status.SUCCESS, Status.ERROR].includes(pluginCrudOpnStatus) ? (
+                                <Container padding={{ top: 'small', bottom: 'xsmall' }}>
+                                  {renderPluginAddUpdateOpnStatus()}
+                                </Container>
+                              ) : (
+                                <></>
+                              )}
                             </Layout.Vertical>
                           </FormikForm>
                         )
