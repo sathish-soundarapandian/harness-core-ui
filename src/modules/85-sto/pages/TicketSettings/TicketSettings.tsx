@@ -24,7 +24,7 @@ type Settings = {
   connector?: ConnectorSelectedValue | string
   projectKey?: string
 }
-const TicketSettings: React.FC = () => {
+const TicketSettings: React.FC<{ debounceDelay?: number }> = ({ debounceDelay = 1000 }) => {
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier, module } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
@@ -49,7 +49,7 @@ const TicketSettings: React.FC = () => {
           {}
         )
       }
-    }, 1000)
+    }, debounceDelay)
   ).current
 
   const [ticketSettings, setTicketSettings] = useState<Settings | undefined>(undefined)
@@ -98,6 +98,7 @@ const TicketSettings: React.FC = () => {
         <div className={cx(stepCss.formGroup, stepCss.lg)}>
           <TextInput
             value={ticketSettings?.projectKey}
+            title="defaultProjectName"
             name="defaultProjectName"
             placeholder={getString('common.tickets.selectProjectName')}
             onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
