@@ -145,8 +145,10 @@ const findPositionsForMatchingKeys = (editor: editor.IStandaloneCodeEditor, text
   })
 }
 
-const getStageYAMLPathForStageIndex = (stageIndex: number): string =>
-  `pipeline.stages.${stageIndex}.stage.spec.execution.steps`
+const getStageYAMLPathForStageIndex = (stageIndex: number): string => `stages.${stageIndex}.spec.steps`
+
+const getStepYAMLPathForStepInsideAStage = (stageIndex: number, stepIndex: number) =>
+  `${getStageYAMLPathForStageIndex(stageIndex)}.${stepIndex}.step`
 
 export {
   getYAMLFromEditor,
@@ -155,5 +157,6 @@ export {
   getValidationErrorMessagesForToaster,
   verifyYAML,
   findPositionsForMatchingKeys,
-  getStageYAMLPathForStageIndex
+  getStageYAMLPathForStageIndex,
+  getStepYAMLPathForStepInsideAStage
 }

@@ -46,7 +46,8 @@ import {
   getMetaDataForKeyboardEventProcessing,
   verifyYAML,
   findPositionsForMatchingKeys,
-  getStageYAMLPathForStageIndex
+  getStageYAMLPathForStageIndex,
+  getStepYAMLPathForStepInsideAStage
 } from './YAMLBuilderUtils'
 
 import css from './YamlBuilder.module.scss'
@@ -306,6 +307,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     //   }
     // })
     editorVersionRef.current = editor.getModel()?.getAlternativeVersionId()
+    currentCursorPosition.current = new Position(0, 0)
     if (!props.isReadOnlyMode) {
       editor?.focus()
     }
@@ -866,7 +868,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           stageStepsCountForThePrecedingIndex,
           stageStepsForTheClosestIndex.length
         )
-        const stepYAMLPath = `${getStageYAMLPathForStageIndex(closestStageIndex)}.${closestStepIndex}.step`
+        const stepYAMLPath = getStepYAMLPathForStepInsideAStage(closestStageIndex, closestStepIndex)
         const pluginAsStep = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
         setSelectedPlugin(pluginAsStep)
         const stepValueTokens = yamlStringify(pluginAsStep).split('\n').length
@@ -927,16 +929,14 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const wrapPlugInputInAStep = useCallback((pluginMetadata: PluginAddUpdateMetadata): Record<string, any> => {
     const { pluginData, pluginType, pluginName, pluginUses } = pluginMetadata
     return {
-      step: {
-        name: pluginName,
-        //@vardan confirm if identifier needs to be there
-        identifier: `${pluginName?.split(' ').join('_')}_${new Date().getTime().toString()}`,
-        type: pluginType,
-        spec:
-          pluginType === PluginType.HARNESS
-            ? sanitizePluginValues(pluginData)
-            : { with: sanitizePluginValues(pluginData), uses: pluginUses }
-      }
+      name: pluginName,
+      //@vardan confirm if identifier needs to be there
+      identifier: `${pluginName?.split(' ').join('_')}_${new Date().getTime().toString()}`,
+      type: pluginType,
+      spec:
+        pluginType === PluginType.HARNESS
+          ? sanitizePluginValues(pluginData)
+          : { with: sanitizePluginValues(pluginData), uses: pluginUses }
     }
   }, [])
 
