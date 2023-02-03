@@ -147,7 +147,7 @@ export const InstanceDropdownField: React.FC<InstanceDropdownFieldProps> = ({
             ? getString('instanceFieldOptions.percentagePlaceHolder')
             : getString('instanceFieldOptions.instanceHolder'),
           ...textProps,
-          min: 1
+          min: 0
         }}
         onChange={(val, _valType, typeInput) => {
           let finalValue: string | number | undefined

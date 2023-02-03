@@ -230,7 +230,7 @@ exports[`Test AppResizeStep should render edit view 1`] = `
                 >
                   <input
                     class="bp3-input"
-                    min="1"
+                    min="0"
                     placeholder="instanceFieldOptions.instanceHolder"
                     type="number"
                     value="15"
@@ -348,7 +348,7 @@ exports[`Test AppResizeStep should render edit view 1`] = `
                 >
                   <input
                     class="bp3-input"
-                    min="1"
+                    min="0"
                     placeholder="instanceFieldOptions.instanceHolder"
                     type="number"
                     value="15"
@@ -1168,7 +1168,7 @@ exports[`Test AppResizeStep should render edit view as new step 1`] = `
                 >
                   <input
                     class="bp3-input"
-                    min="1"
+                    min="0"
                     placeholder="instanceFieldOptions.percentagePlaceHolder"
                     type="number"
                     value="100"
@@ -1286,7 +1286,7 @@ exports[`Test AppResizeStep should render edit view as new step 1`] = `
                 >
                   <input
                     class="bp3-input"
-                    min="1"
+                    min="0"
                     placeholder="instanceFieldOptions.percentagePlaceHolder"
                     type="number"
                     value=""
@@ -1413,7 +1413,7 @@ exports[`Test AppResizeStep should render input set view 1`] = `
                 >
                   <input
                     class="bp3-input"
-                    min="1"
+                    min="0"
                     placeholder="instanceFieldOptions.instanceHolder"
                     type="number"
                     value="0"
@@ -1533,7 +1533,7 @@ exports[`Test AppResizeStep should render input set view 1`] = `
                 >
                   <input
                     class="bp3-input"
-                    min="1"
+                    min="0"
                     placeholder="instanceFieldOptions.instanceHolder"
                     type="number"
                     value="0"
@@ -1757,7 +1757,7 @@ exports[`Test AppResizeStep should render input set with percentage and timeout 
                 >
                   <input
                     class="bp3-input"
-                    min="1"
+                    min="0"
                     placeholder="instanceFieldOptions.instanceHolder"
                     type="number"
                     value="0"
@@ -1877,7 +1877,7 @@ exports[`Test AppResizeStep should render input set with percentage and timeout 
                 >
                   <input
                     class="bp3-input"
-                    min="1"
+                    min="0"
                     placeholder="instanceFieldOptions.instanceHolder"
                     type="number"
                     value="0"
@@ -2104,7 +2104,7 @@ exports[`Test AppResizeStep should render null for StepviewType.template 1`] = `
                 >
                   <input
                     class="bp3-input"
-                    min="1"
+                    min="0"
                     placeholder="instanceFieldOptions.percentagePlaceHolder"
                     type="number"
                     value="100"
@@ -2222,7 +2222,7 @@ exports[`Test AppResizeStep should render null for StepviewType.template 1`] = `
                 >
                   <input
                     class="bp3-input"
-                    min="1"
+                    min="0"
                     placeholder="instanceFieldOptions.percentagePlaceHolder"
                     type="number"
                     value=""
@@ -2543,7 +2543,7 @@ exports[`Test AppResizeStep should submit with valid payload for instance type p
                 >
                   <input
                     class="bp3-input"
-                    min="1"
+                    min="0"
                     placeholder="instanceFieldOptions.percentagePlaceHolder"
                     type="number"
                     value="20"
@@ -2661,7 +2661,7 @@ exports[`Test AppResizeStep should submit with valid payload for instance type p
                 >
                   <input
                     class="bp3-input"
-                    min="1"
+                    min="0"
                     placeholder="instanceFieldOptions.percentagePlaceHolder"
                     type="number"
                     value="20"
@@ -2974,7 +2974,7 @@ exports[`Test AppResizeStep should submit with valid paylod for instace type cou
                 >
                   <input
                     class="bp3-input"
-                    min="1"
+                    min="0"
                     placeholder="instanceFieldOptions.instanceHolder"
                     type="number"
                     value="15"
@@ -3092,7 +3092,7 @@ exports[`Test AppResizeStep should submit with valid paylod for instace type cou
                 >
                   <input
                     class="bp3-input"
-                    min="1"
+                    min="0"
                     placeholder="instanceFieldOptions.instanceHolder"
                     type="number"
                     value="15"
