@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState ,useEffect} from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import type { Column } from 'react-table'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
