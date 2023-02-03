@@ -52,7 +52,7 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
   const { trackEvent } = useTelemetry()
   const { branch, repoIdentifier, storeType, repoName, connectorRef } = useQueryParams<GitQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams()
-  const { isExact: isPipelineStudioRoute } = useRouteMatch(
+  const { isExact: isPipelineStudioV0Route } = useRouteMatch(
     routes.toPipelineStudio({
       orgIdentifier,
       projectIdentifier,
@@ -61,6 +61,16 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
       module
     })
   ) || { isExact: false }
+  const { isExact: isPipelineStudioV1Route } = useRouteMatch(
+    routes.toPipelineStudioV1({
+      orgIdentifier,
+      projectIdentifier,
+      pipelineIdentifier,
+      accountId,
+      module
+    })
+  ) || { isExact: false }
+  const isPipelineStudioRoute = isPipelineStudioV0Route || isPipelineStudioV1Route
 
   const { data: pipeline, error } = useGetPipelineSummaryQuery(
     {
