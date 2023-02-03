@@ -866,19 +866,25 @@ const SelectGitProviderRef = (
             <Form>
               <Container
                 padding={{ top: 'xxlarge', bottom: 'xxxlarge' }}
-                className={cx({ [css.borderBottom]: gitProvider && gitProvider.type !== NonGitOption.OTHER })}
+                className={cx({
+                  [css.borderBottom]:
+                    gitProvider &&
+                    gitProvider.type !== NonGitOption.OTHER &&
+                    gitProvider.type !== Connectors.HARNESS_CODE
+                })}
               >
                 <Layout.Horizontal spacing="large">
                   <CardSelect
-                    data={AllSaaSGitProviders.concat(
-                      CODE_CI_INTEGRATION_ENABLED
-                        ? {
+                    data={(CODE_CI_INTEGRATION_ENABLED
+                      ? ([
+                          {
                             icon: GitProviderIcons.get(Connectors.HARNESS_CODE) as IconName,
                             label: 'common.repo_provider.harnessCode',
                             type: Connectors.HARNESS_CODE
                           }
-                        : []
-                    )}
+                        ] as GitProvider[])
+                      : []
+                    ).concat(AllSaaSGitProviders)}
                     selected={gitProvider}
                     cornerSelected={true}
                     className={css.icons}
