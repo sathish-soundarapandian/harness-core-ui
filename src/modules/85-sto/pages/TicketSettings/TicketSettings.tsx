@@ -20,7 +20,7 @@ import { ConnectorReferenceField } from '@connectors/components/ConnectorReferen
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './TicketSettings.module.scss'
 
-type TicketSettings = {
+type Settings = {
   connector?: ConnectorSelectedValue | string
   projectKey?: string
 }
@@ -32,7 +32,7 @@ const TicketSettings: React.FC = () => {
   const { mutate } = useSettingsSaveSetting()
 
   const delayedMutate = React.useRef(
-    debounce((newSettings: TicketSettings) => {
+    debounce((newSettings: Settings) => {
       if (newSettings.connector && newSettings.projectKey) {
         const connectorId =
           typeof newSettings.connector === 'string' ? newSettings.connector : newSettings.connector.value
@@ -52,7 +52,7 @@ const TicketSettings: React.FC = () => {
     }, 1000)
   ).current
 
-  const [ticketSettings, setTicketSettings] = useState<TicketSettings | undefined>(undefined)
+  const [ticketSettings, setTicketSettings] = useState<Settings | undefined>(undefined)
 
   const { data } = useSettingsGetSetting<Setting>({
     queryParams: { accountId, projectId: projectIdentifier, orgId: orgIdentifier, module: module || 'sto' }
@@ -117,11 +117,10 @@ const TicketSettings: React.FC = () => {
     </Container>
   )
 
-  function updateTicketSettings(settings: Partial<TicketSettings>): void {
+  function updateTicketSettings(settings: Partial<Settings>): void {
     const newSettings = { ...ticketSettings, ...settings }
     setTicketSettings(newSettings)
     delayedMutate(newSettings)
-    return
   }
 }
 
