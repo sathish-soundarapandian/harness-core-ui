@@ -21,6 +21,7 @@ import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
 import { UserLabel } from '@common/components'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { MinimalLayout } from '@common/layouts'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
@@ -221,7 +222,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.STO_ISSUE, {
 })
 RbacFactory.registerResourceTypeHandler(ResourceType.TICKET, {
   icon: 'sto-color-filled',
-  label: 'sto.tickets',
+  label: 'common.tickets.tickets',
   labelSingular: 'common.singularLabels.ticket',
   category: ResourceCategory.STO,
   permissionLabels: {
@@ -329,6 +330,16 @@ const RouteDestinations: React.FC = () => {
           routes.toSTOGettingStarted({ ...accountPathProps }),
           routes.toSTOProjectGettingStarted({ ...accountPathProps, ...projectPathProps })
         ]}
+      >
+        <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ UserLabel }} />
+      </RouteWithLayout>
+
+      <RouteWithLayout
+        exact
+        licenseRedirectData={licenseRedirectData}
+        sidebarProps={STOSideNavProps}
+        layout={MinimalLayout}
+        path={[routes.toSTOProjectTicketSummary({ ...accountPathProps, ...projectPathProps, issueId: ':issueId' })]}
       >
         <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ UserLabel }} />
       </RouteWithLayout>

@@ -24,12 +24,13 @@ import {
 import { useDeepCompareEffect } from '@common/hooks'
 import { useGetLicenseUsage as useGetFFUsage } from 'services/cf'
 import { useGetUsage as useGetCIUsage } from 'services/ci'
-import { useGetUsage as useGetSTOUsage } from 'services/sto'
+import { useUsageReportUsage as useGetSTOUsage } from 'services/sto/stoComponents'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { ModuleName } from 'framework/types/ModuleName'
 import { useGetCCMLicenseUsage } from 'services/ce'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useGetSRMLicenseUsage } from 'services/cv'
+import type { UsageResult } from 'services/sto/stoSchemas'
 
 export type CHAOSLicenseSummaryDTO = LicensesWithSummaryDTO & {
   totalChaosExperimentRuns?: number
@@ -290,16 +291,21 @@ export function useGetUsage(module: ModuleName): UsageReturn {
 
   const {
     data: stoUsageData,
-    loading: loadingSTOUsage,
+    isLoading: loadingSTOUsage,
     error: stoUsageError,
     refetch: refetchSTOUsage
-  } = useGetSTOUsage({
-    queryParams: {
-      accountId,
-      timestamp
+  } = useGetSTOUsage<UsageResult>(
+    {
+      queryParams: {
+        accountId,
+        timestamp
+      }
     },
-    lazy: module !== ModuleName.STO
-  })
+    {
+      retry: false,
+      enabled: module === ModuleName.STO
+    }
+  )
 
   const {
     data: cvUsageData,
@@ -374,12 +380,12 @@ export function useGetUsage(module: ModuleName): UsageReturn {
         setUsageData({
           usage: {
             sto: {
-              activeDevelopers: stoUsageData?.data?.activeDevelopers,
-              activeScans: stoUsageData?.data?.activeScans
+              activeDevelopers: stoUsageData?.activeDevelopers,
+              activeScans: stoUsageData?.activeScans
             }
           },
           loadingUsage: loadingSTOUsage,
-          usageErrorMsg: stoUsageError?.message,
+          usageErrorMsg: stoUsageError?.payload.message,
           refetchUsage: refetchSTOUsage
         })
         break
