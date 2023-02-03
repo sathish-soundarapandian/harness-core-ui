@@ -17,6 +17,7 @@ declare const styles: {
   readonly filePath: string
   readonly flexCenter: string
   readonly header: string
+  readonly headerBorder: string
   readonly invalidYaml: string
   readonly item: string
   readonly layout: string
