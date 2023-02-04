@@ -13,6 +13,7 @@ import { Checkbox, Container, Layout, Text, TextInput } from '@harness/uicore'
 import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import type { Setting } from 'services/ticket-service/ticketServiceSchemas'
 import { useSettingsGetSetting, useSettingsSaveSetting } from 'services/ticket-service/ticketServiceComponents'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
@@ -86,8 +87,10 @@ const TicketSettings: React.FC<{ debounceDelay?: number }> = ({ debounceDelay = 
             orgIdentifier={orgIdentifier}
             type="Jira"
             selected={ticketSettings?.connector}
-            onChange={value => {
-              updateTicketSettings({ connector: value.identifier })
+            onChange={(value, scope) => {
+              updateTicketSettings({
+                connector: scope !== Scope.PROJECT ? `${scope}.${value.identifier}` : value.identifier
+              })
             }}
           />
         </div>
