@@ -243,7 +243,7 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
   return (
     <>
       <Page.Header
-        className={isPipelineStudioRoute ? css.rightMargin : ''}
+        className={isPipelineStudioV0Route ? css.rightMargin : ''}
         testId={isPipelineStudioRoute ? 'pipeline-studio' : 'not-pipeline-studio'}
         size={isPipelineStudioRoute ? 'small' : 'standard'}
         title={
@@ -352,7 +352,7 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
           />
         }
       />
-      <Page.Body className={isPipelineStudioRoute ? css.rightMargin : ''}>{children}</Page.Body>
+      <Page.Body className={isPipelineStudioV0Route ? css.rightMargin : ''}>{children}</Page.Body>
     </>
   )
 }
