@@ -148,7 +148,7 @@ const findPositionsForMatchingKeys = (editor: editor.IStandaloneCodeEditor, text
 const getStageYAMLPathForStageIndex = (stageIndex: number): string => `stages.${stageIndex}.spec.steps`
 
 const getStepYAMLPathForStepInsideAStage = (stageIndex: number, stepIndex: number) =>
-  `${getStageYAMLPathForStageIndex(stageIndex)}.${stepIndex}.step`
+  `${getStageYAMLPathForStageIndex(stageIndex)}.${stepIndex}`
 
 export {
   getYAMLFromEditor,

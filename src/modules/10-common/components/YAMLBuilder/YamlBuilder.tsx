@@ -164,8 +164,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const codeLensRegistrations = useRef<Map<number, IDisposable>>(new Map<number, IDisposable>())
   const [selectedPlugin, setSelectedPlugin] = useState<Record<string, any>>()
   const [pluginAddUpdateOpnStatus, setPluginAddUpdateOpnStatus] = useState<Status>()
-  const stepMatchRegex = 'steps((.|\n)*)name'
-  const stageMatchRegex = 'spec:\\n(\\s*)steps:\\n(\\s*)-(\\s*)name'
+  const stepMatchRegex = 'steps:\\n(\\s*)-(\\s*)name:'
+  const stageMatchRegex = 'spec:\\n(\\s*)steps:\\n(\\s*)-(\\s*)name:'
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -695,7 +695,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             const numberOfLinesInSelection = getSelectionRangeOnSettingsBtnClick(cursorPosition, currentYaml)
             if (numberOfLinesInSelection) {
               currentCursorPosition.current = cursorPosition
-              highlightInsertedYAML(fromLine, toLineNum + numberOfLinesInSelection + 1)
+              highlightInsertedYAML(fromLine, toLineNum + numberOfLinesInSelection - 1)
             }
           } catch (e) {
             //ignore error
@@ -854,7 +854,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     if (cursorPosition) {
       try {
         const currentYAMLAsJSON = parse(latestYAML)
-        const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, 'stages:')
+        const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, stageMatchRegex)
         const stageStepsForTheClosestIndex = findAllValuesForJSONPath(
           currentYAMLAsJSON,
           getStageYAMLPathForStageIndex(closestStageIndex)
@@ -865,7 +865,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
                 currentYAMLAsJSON,
                 getStageYAMLPathForStageIndex(closestStageIndex - 1)
               ) as unknown[])
-            : {}
+            : []
         const stageStepsCountForThePrecedingIndex = (stageStepsForThePrecedingIndex as unknown[]).length
         const closestStepIndex = getClosestStepIndexInCurrentStage(
           cursorPosition,
@@ -876,7 +876,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         const pluginAsStep = get(currentYAMLAsJSON, stepYAMLPath) as Record<string, any>
         setSelectedPlugin(pluginAsStep)
         const stepValueTokens = yamlStringify(pluginAsStep).split('\n').length
-        return stepValueTokens > 0 ? stepValueTokens - 1 : 0
+        return stepValueTokens
       } catch (e) {
         // ignore error
       }
