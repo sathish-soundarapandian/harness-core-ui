@@ -934,8 +934,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     const { pluginData, pluginType, pluginName, pluginUses } = pluginMetadata
     return {
       name: pluginName,
-      //@vardan confirm if identifier needs to be there
-      identifier: `${pluginName?.split(' ').join('_')}_${new Date().getTime().toString()}`,
+      //@vardan confirm if id needs to be there
+      id: `${pluginName?.split(' ').join('_')}_${new Date().getTime().toString()}`,
       type: pluginType,
       spec:
         pluginType === PluginType.HARNESS

@@ -1341,6 +1341,7 @@ artifacts:
 updated: Updated
 python: Python
 successfullyAdded: Successfully added
+successfullyUpdated: Successfully updated
 errorOccured: 'Error occured while {{verb}} {{entity}}'
 
 # SSCS module

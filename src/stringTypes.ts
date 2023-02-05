@@ -1067,6 +1067,7 @@ export interface StringsMap {
   'common.successfullCreate': string
   'common.successfullUpdate': string
   'common.successfullyAdded': string
+  'common.successfullyUpdated': string
   'common.suggestionsLabel': string
   'common.support.subtitle': string
   'common.support.title': string

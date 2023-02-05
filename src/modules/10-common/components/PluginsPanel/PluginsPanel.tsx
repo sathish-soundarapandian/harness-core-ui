@@ -280,7 +280,9 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
         return (
           <Layout.Horizontal spacing="small">
             <Icon color={Color.GREEN_700} name="tick-circle" />
-            <Text color={Color.GREEN_700}>{getString('common.successfullyAdded')}</Text>
+            <Text color={Color.GREEN_700}>
+              {isPluginUpdateAction ? getString('common.successfullyUpdated') : getString('common.successfullyAdded')}
+            </Text>
           </Layout.Horizontal>
         )
       case Status.ERROR:
@@ -293,7 +295,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
       default:
         return <></>
     }
-  }, [pluginCrudOpnStatus])
+  }, [pluginCrudOpnStatus, isPluginUpdateAction])
 
   return (
     <Container className={css.tabs}>
