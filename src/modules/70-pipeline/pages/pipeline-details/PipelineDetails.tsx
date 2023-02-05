@@ -21,7 +21,9 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useStrings, String } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { DefaultNewPipelineId } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import GitPopover from '@pipeline/components/GitPopover/GitPopover'
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
@@ -106,6 +108,9 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
 
   const [pipelineName, setPipelineName] = React.useState('')
   const [triggerTabDisabled, setTriggerTabDisabled] = React.useState(false)
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
+  const isYAMLSimplicationEnabledForCI =
+    CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.valueOf().toLowerCase()
 
   const routeParams = {
     orgIdentifier,
@@ -141,7 +146,9 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
   React.useEffect(() => {
     // Pipeline View
     const isPipeLineStudioView = !!matchPath(location.pathname, {
-      path: routes.toPipelineStudio(routeParams)
+      path: isYAMLSimplicationEnabledForCI
+        ? routes.toPipelineStudioV1(routeParams)
+        : routes.toPipelineStudio(routeParams)
     })
     if (isPipeLineStudioView) {
       return trackEvent(NavigatedToPage.PipelineStudio, {})
@@ -287,18 +294,31 @@ function PipelinePage({ children }: React.PropsWithChildren<unknown>): React.Rea
             links={[
               {
                 label: getString('pipelineStudio'),
-                to: routes.toPipelineStudio({
-                  orgIdentifier,
-                  projectIdentifier,
-                  pipelineIdentifier,
-                  accountId,
-                  module,
-                  connectorRef,
-                  repoIdentifier,
-                  repoName,
-                  branch,
-                  storeType
-                })
+                to: isYAMLSimplicationEnabledForCI
+                  ? routes.toPipelineStudioV1({
+                      orgIdentifier,
+                      projectIdentifier,
+                      pipelineIdentifier,
+                      accountId,
+                      module,
+                      connectorRef,
+                      repoIdentifier,
+                      repoName,
+                      branch,
+                      storeType
+                    })
+                  : routes.toPipelineStudio({
+                      orgIdentifier,
+                      projectIdentifier,
+                      pipelineIdentifier,
+                      accountId,
+                      module,
+                      connectorRef,
+                      repoIdentifier,
+                      repoName,
+                      branch,
+                      storeType
+                    })
               },
               {
                 label: getString('inputSetsText'),
