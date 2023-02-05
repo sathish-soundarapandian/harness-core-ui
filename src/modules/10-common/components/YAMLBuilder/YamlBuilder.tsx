@@ -691,6 +691,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       const commandId = editorRef.current?.editor?.addCommand(
         0,
         () => {
+          setPluginAddUpdateOpnStatus(Status.TO_DO)
           try {
             const numberOfLinesInSelection = getSelectionRangeOnSettingsBtnClick(cursorPosition, currentYaml)
             if (numberOfLinesInSelection) {
