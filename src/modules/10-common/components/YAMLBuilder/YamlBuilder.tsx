@@ -1036,9 +1036,13 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           })}
         >
           <div className={css.editor}>
-            <Layout.Horizontal flex={{ justifyContent: 'flex-end' }} spacing="medium" className={css.headerBorder}>
-              {renderEditorControls()}
+            <Layout.Horizontal
+              flex={{ justifyContent: 'space-between' }}
+              className={css.headerBorder}
+              padding={{ right: 'medium' }}
+            >
               {defaultTo(renderCustomHeader, renderHeader)()}
+              {renderEditorControls()}
             </Layout.Horizontal>
             {renderEditor()}
           </div>
