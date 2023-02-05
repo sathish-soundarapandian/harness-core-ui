@@ -8,6 +8,7 @@
 import React from 'react'
 import { Button, ButtonVariation, Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import cx from 'classnames'
 import { useStrings } from 'framework/strings'
 import emptyInstanceDetail from '@pipeline/icons/emptyInstanceDetail.svg'
 import emptyServiceDetail from '@pipeline/icons/emptyServiceDetail.svg'
@@ -17,15 +18,17 @@ import css from './EnvironmentDetailSummary.module.scss'
 export function DialogEmptyState({
   isSearchApplied,
   resetSearch,
-  message
+  message,
+  isServicePage = false
 }: {
   isSearchApplied: boolean
   resetSearch: () => void
   message: string
+  isServicePage?: boolean
 }): JSX.Element {
   const { getString } = useStrings()
   return (
-    <Container className={css.instanceEmptyState}>
+    <Container className={cx(css.instanceEmptyState, { [css.serviceDetailDialogEmptyState]: isServicePage })}>
       {isSearchApplied ? (
         <>
           <img src={noDataFound} alt={getString('common.filters.noResultsFound')} />

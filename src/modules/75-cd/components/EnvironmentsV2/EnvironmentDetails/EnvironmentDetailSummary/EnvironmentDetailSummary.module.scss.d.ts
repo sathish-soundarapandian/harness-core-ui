@@ -43,6 +43,7 @@ declare const styles: {
   readonly serviceCardTitle: string
   readonly serviceCards: string
   readonly serviceColumnStyle: string
+  readonly serviceDetailDialogEmptyState: string
   readonly serviceDetailEmptyState: string
   readonly slideStyle: string
   readonly summaryTableStyle: string

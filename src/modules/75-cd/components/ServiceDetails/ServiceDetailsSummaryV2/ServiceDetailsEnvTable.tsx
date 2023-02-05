@@ -1,17 +1,24 @@
-import React, { useMemo } from 'react'
-import { defaultTo, isEqual, isUndefined, noop } from 'lodash-es'
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+import React, { useEffect, useMemo } from 'react'
+import { defaultTo, isEmpty, isEqual, isUndefined } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type { CellProps, Column, Renderer } from 'react-table'
 import { Color } from '@harness/design-system'
-import { Container, PageError, PageSpinner, Text } from '@harness/uicore'
-import { useStrings } from 'framework/strings'
+import { Container, getErrorInfoFromErrorObject, Icon, PageError, Text } from '@harness/uicore'
+import { StringKeys, useStrings } from 'framework/strings'
 import { DialogEmptyState } from '@cd/components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetailSummary/EnvironmentDetailsUtils'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { Table } from '@common/components'
 import {
   GetActiveInstanceGroupedByEnvironmentQueryParams,
-  ResponseInstanceGroupedByEnvironmentList,
+  InstanceGroupedByEnvironment,
   useGetActiveInstanceGroupedByEnvironment
 } from 'services/cd-ng'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
@@ -22,10 +29,10 @@ import css from './ServiceDetailsSummaryV2.module.scss'
 
 interface ServiceDetailsEnvTableProps {
   envFilter?: string
-  resetSearch?: () => void
+  resetSearch: () => void
   setRowClickFilter: React.Dispatch<React.SetStateAction<ServiceDetailInstanceViewProps>>
+  searchTerm: string
 }
-
 export interface TableRowData {
   artifact?: string
   envId?: string
@@ -41,10 +48,16 @@ export interface TableRowData {
   showEnvType?: boolean
 }
 
-const getEnvTableData = (data: ResponseInstanceGroupedByEnvironmentList, envFilter?: string): TableRowData[] => {
+export const convertToEnvType = (envType: string): StringKeys => {
+  if (envType === EnvironmentType.PRODUCTION) {
+    return 'cd.serviceDashboard.prod'
+  }
+  return 'cd.preProduction'
+}
+
+const getEnvTableData = (envTableData: InstanceGroupedByEnvironment[], envFilter?: string): TableRowData[] => {
   const tableData: TableRowData[] = []
-  const envTableData = data.data
-  envTableData?.instanceGroupedByEnvironmentList.forEach(env => {
+  envTableData.forEach(env => {
     if ((envFilter && env.envId === envFilter) || !envFilter) {
       const envName = defaultTo(env.envName, '-')
       const envId = env.envId
@@ -180,7 +193,7 @@ export const RenderArtifact: Renderer<CellProps<TableRowData>> = ({
 }
 
 export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProps): React.ReactElement {
-  const { envFilter, resetSearch, setRowClickFilter } = props
+  const { envFilter, resetSearch, setRowClickFilter, searchTerm } = props
   const { getString } = useStrings()
   const [selectedRow, setSelectedRow] = React.useState<string>()
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
@@ -195,9 +208,44 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
 
   const { data, loading, error, refetch } = useGetActiveInstanceGroupedByEnvironment({ queryParams })
 
+  const envTableDetailData = data?.data?.instanceGroupedByEnvironmentList
+
+  const filteredTableData = useMemo(() => {
+    if (!searchTerm) {
+      return envTableDetailData
+    }
+
+    const searchValue = searchTerm.toLocaleLowerCase()
+    return envTableDetailData?.filter(
+      envDetail =>
+        envDetail.envName?.toLocaleLowerCase().includes(searchValue) ||
+        envDetail.instanceGroupedByEnvironmentTypeList.some(
+          envType =>
+            (envType.environmentType &&
+              getString(convertToEnvType(envType.environmentType))?.toLocaleLowerCase().includes(searchValue)) ||
+            envType.instanceGroupedByInfrastructureList.some(
+              infraOrCluster =>
+                infraOrCluster.clusterId?.toLocaleLowerCase().includes(searchValue) ||
+                infraOrCluster.infrastructureName?.toLocaleLowerCase().includes(searchValue) ||
+                infraOrCluster.instanceGroupedByArtifactList.some(artifact =>
+                  artifact.artifact?.toLocaleLowerCase().includes(searchValue)
+                )
+            )
+        )
+    )
+  }, [searchTerm, envTableDetailData])
+
   const tableData: TableRowData[] = useMemo(() => {
-    return getEnvTableData(defaultTo(data, [] as ResponseInstanceGroupedByEnvironmentList), envFilter)
-  }, [data, envFilter])
+    return getEnvTableData(defaultTo(filteredTableData, [] as InstanceGroupedByEnvironment[]), envFilter)
+  }, [envFilter, filteredTableData])
+
+  const searchApplied = !isEmpty(searchTerm.trim())
+
+  useEffect(() => {
+    if (searchApplied) {
+      setSelectedRow(undefined)
+    }
+  }, [filteredTableData, searchApplied])
 
   const columns: Column<TableRowData>[] = useMemo(() => {
     const columnsArray = [
@@ -256,23 +304,24 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
 
   if (loading) {
     return (
-      <Container data-test="EnvTableLoader" height="600px">
-        <PageSpinner />
+      <Container flex={{ justifyContent: 'center', alignItems: 'center' }} height={730}>
+        <Icon name="spinner" color={Color.BLUE_500} size={30} />
       </Container>
     )
   }
   if (error) {
     return (
-      <Container data-test="EnvTableError" height="600px">
-        <PageError onClick={() => refetch?.()} />
+      <Container data-test="EnvTableError" height={730} flex={{ justifyContent: 'center' }}>
+        <PageError onClick={() => refetch?.()} message={getErrorInfoFromErrorObject(error)} />
       </Container>
     )
   }
-  if (!data?.data?.instanceGroupedByEnvironmentList.length) {
+  if (!filteredTableData?.length) {
     return (
       <DialogEmptyState
-        isSearchApplied={false} //todo
-        resetSearch={defaultTo(resetSearch, noop)}
+        isSearchApplied={searchApplied}
+        isServicePage={true}
+        resetSearch={resetSearch}
         message={getString('cd.environmentDetailPage.noServiceArtifactMsg')}
       />
     )

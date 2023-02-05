@@ -1,4 +1,11 @@
-import React, { useCallback, useRef, useState } from 'react'
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import cx from 'classnames'
 import { capitalize, defaultTo, isEmpty, isUndefined } from 'lodash-es'
 import { useParams } from 'react-router-dom'
@@ -95,7 +102,7 @@ const ActiveInstanceInfo = (prop: ActiveInstanceInfoProp): React.ReactElement =>
                       font={{ weight: 'semi-bold', size: 'small' }}
                       color={Color.GREY_800}
                       className={css.sectionValue}
-                      width={206}
+                      width={300}
                       lineClamp={1}
                     >
                       {itemValue.value}
@@ -131,19 +138,10 @@ function InstanceView(prop: InstanceViewProp): React.ReactElement {
 
   const makeKey = (info?: PipelineExecInfoProps): string => {
     if (isUndefined(info)) return ''
-    return `${info.pipelineId}+${info.planExecutionId}_${info.lastDeployedAt}`
+    return `${info.pipelineId}_${info.planExecutionId}_${info.lastDeployedAt}`
   }
 
-  const [pipelineExecKey, setPipelineExecKey] = useState<PipelineExecInfoProps | undefined>(
-    pipelineDetailList.length
-      ? {
-          pipelineId: pipelineDetailList[0].pipelineId,
-          planExecutionId: pipelineDetailList[0].planExecutionId,
-          lastDeployedAt: defaultTo(pipelineDetailList[0].lastDeployedAt, 0),
-          count: pipelineDetailList[0].count
-        }
-      : undefined
-  )
+  const [pipelineExecKey, setPipelineExecKey] = useState<PipelineExecInfoProps | undefined>()
 
   if (!instanceData?.length) {
     return <></>
@@ -151,8 +149,20 @@ function InstanceView(prop: InstanceViewProp): React.ReactElement {
 
   const instanceDetailMap = new Map<string, InstanceDetailsDTO[]>()
   instanceData.forEach(item =>
-    instanceDetailMap.set(`${item.pipelineId}+${item.planExecutionId}_${item.lastDeployedAt}`, item.instances)
+    instanceDetailMap.set(`${item.pipelineId}_${item.planExecutionId}_${item.lastDeployedAt}`, item.instances)
   )
+
+  if (
+    (isUndefined(pipelineExecKey) && pipelineDetailList.length) ||
+    (pipelineExecKey && !instanceDetailMap.has(makeKey(pipelineExecKey)))
+  ) {
+    setPipelineExecKey({
+      pipelineId: pipelineDetailList[0].pipelineId,
+      planExecutionId: pipelineDetailList[0].planExecutionId,
+      lastDeployedAt: defaultTo(pipelineDetailList[0].lastDeployedAt, 0),
+      count: pipelineDetailList[0].count
+    })
+  }
 
   function handleClick(pipelineId?: string, executionIdentifier?: string): void {
     if (pipelineId && executionIdentifier) {
@@ -243,9 +253,8 @@ function InstanceView(prop: InstanceViewProp): React.ReactElement {
 export default function ServiceDetailInstanceView(props: ServiceDetailInstanceViewProps): React.ReactElement {
   const { artifact, envName, envId, environmentType, clusterIdentifier, infraIdentifier, infraName } = props
   const { getString } = useStrings()
-  const [searchTermInfra, setSearchTermInfra] = useState('')
-  const isSearchAppliedInfra = useRef<boolean>(!isEmpty(searchTermInfra))
-  const searchInfraRef = useRef({} as ExpandingSearchInputHandle)
+  const [searchTermInstance, setSearchTermInstance] = useState('')
+  const searchInstanceRef = useRef({} as ExpandingSearchInputHandle)
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
 
   const queryParams: GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams = {
@@ -266,29 +275,39 @@ export default function ServiceDetailInstanceView(props: ServiceDetailInstanceVi
   })
 
   const instanceDetailData = data?.data?.instanceDetailGroupedByPipelineExecutionList
+
+  const filteredInstanceData = useMemo(() => {
+    if (!searchTermInstance) {
+      return instanceDetailData
+    }
+
+    const searchValue = searchTermInstance.toLocaleLowerCase()
+    return instanceDetailData?.filter(instance => instance.pipelineId.toLocaleLowerCase().includes(searchValue))
+  }, [instanceDetailData, searchTermInstance])
+
   const resetSearch = (): void => /* istanbul ignore next */ {
-    searchInfraRef.current.clear()
+    searchInstanceRef.current.clear()
   }
 
   const onSearchInfra = useCallback((val: string) => /* istanbul ignore next */ {
-    setSearchTermInfra(val.trim())
-    isSearchAppliedInfra.current = !isEmpty(val.trim())
+    setSearchTermInstance(val.trim())
   }, [])
 
-  const noData = !instanceDetailData?.length
+  const noData = !filteredInstanceData?.length
+  const searchApplied = !isEmpty(searchTermInstance.trim())
 
   return (
     <Container className={css.instanceDetailView}>
       <Container className={css.instanceViewHeader}>
         <Text className={css.instanceDetailTitle}>{getString('cd.serviceDashboard.instanceDetails')}</Text>
-        {!noData && (
+        {(!noData || searchApplied) && (
           <ExpandingSearchInput
             placeholder={getString('search')}
             throttle={200}
             onChange={onSearchInfra}
             className={css.searchIconStyle}
             alwaysExpanded
-            ref={searchInfraRef}
+            ref={searchInstanceRef}
           />
         )}
       </Container>
@@ -303,8 +322,9 @@ export default function ServiceDetailInstanceView(props: ServiceDetailInstanceVi
         </Container>
       ) : noData ? (
         <DialogEmptyState
-          isSearchApplied={isSearchAppliedInfra.current}
+          isSearchApplied={searchApplied}
           resetSearch={resetSearch}
+          isServicePage={true}
           message={getString('cd.environmentDetailPage.selectArtifactMsg')}
         />
       ) : (
@@ -340,7 +360,7 @@ export default function ServiceDetailInstanceView(props: ServiceDetailInstanceVi
               {artifact ? artifact : '-'}
             </Text>
           </Layout.Horizontal>
-          <InstanceView instanceData={instanceDetailData} />
+          <InstanceView instanceData={filteredInstanceData} />
         </>
       )}
     </Container>
