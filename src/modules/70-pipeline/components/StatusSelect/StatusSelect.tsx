@@ -24,6 +24,8 @@ type AllowedStatus = Exclude<
   | 'Errored'
   | 'IgnoreFailed'
   | 'Discontinuing'
+  | 'QueuedLicenseLimitReached'
+  | 'QueuedExecutionConcurrencyReached'
 >
 const allowedOptions = [
   ExecutionStatusEnum.Aborted,

@@ -263,9 +263,16 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
       selectedHealthSources.length > 0 ||
         selectedDataFormat !== DATA_OPTIONS[0] ||
         selectedTransactionName.length > 0 ||
-        selectedNodeName.length > 0
+        selectedNodeName.length > 0 ||
+        anomalousMetricsFilterChecked === true
     )
-  }, [selectedDataFormat, selectedHealthSources.length, selectedNodeName, selectedTransactionName.length])
+  }, [
+    anomalousMetricsFilterChecked,
+    selectedDataFormat,
+    selectedHealthSources.length,
+    selectedNodeName.length,
+    selectedTransactionName.length
+  ])
 
   const handleHealthSourceChange = useCallback(selectedHealthSourceFitlers => {
     setSelectedHealthSources(selectedHealthSourceFitlers)
@@ -363,6 +370,7 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
     setSelectedDataFormat(DATA_OPTIONS[0])
     setSelectedHealthSources([])
     setSelectedNodeName(() => getInitialNodeName(selectedNode))
+    setAnomalousMetricsFilterChecked(false)
   }, [selectedNode])
 
   return (

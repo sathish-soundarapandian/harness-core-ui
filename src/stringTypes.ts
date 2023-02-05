@@ -601,6 +601,7 @@ export interface StringsMap {
   'common.moduleList.deployChanges': string
   'common.moduleList.manageImpact': string
   'common.moduleList.optimize': string
+  'common.moduleList.optimizeProcesses': string
   'common.moduleList.title': string
   'common.moduleOverviewLabel.ce': string
   'common.moduleOverviewLabel.chaos': string
@@ -639,6 +640,7 @@ export interface StringsMap {
   'common.noRecentProjects': string
   'common.noRefData': string
   'common.noSearchResultsFound': string
+  'common.noTags': string
   'common.noexpiration': string
   'common.notEnabled': string
   'common.note': string
@@ -779,6 +781,9 @@ export interface StringsMap {
   'common.purpose.cv.verification': string
   'common.purpose.errorTracking.title': string
   'common.purpose.howToProceed': string
+  'common.purpose.idp.fullName': string
+  'common.purpose.idp.name': string
+  'common.purpose.idp.shortName': string
   'common.purpose.moduleSuccess': string
   'common.purpose.selectAModule': string
   'common.purpose.service': string
@@ -1100,6 +1105,13 @@ export interface StringsMap {
   'common.test.connectionSuccessful': string
   'common.test.inProgress': string
   'common.test.retest': string
+  'common.tickets.connector': string
+  'common.tickets.defaultProjectName': string
+  'common.tickets.selectConnector': string
+  'common.tickets.selectProjectName': string
+  'common.tickets.ticketComment': string
+  'common.tickets.ticketExemption': string
+  'common.tickets.tickets': string
   'common.timeRange.calendarMonths': string
   'common.timeRange.recommended': string
   'common.timeRange.relativeDates': string
@@ -3774,6 +3786,8 @@ export interface StringsMap {
   'pipeline.executionStatus.Paused': string
   'pipeline.executionStatus.Pausing': string
   'pipeline.executionStatus.Queued': string
+  'pipeline.executionStatus.QueuedExecutionConcurrencyReached': string
+  'pipeline.executionStatus.QueuedLicenseLimitReached': string
   'pipeline.executionStatus.Running': string
   'pipeline.executionStatus.Skipped': string
   'pipeline.executionStatus.Starting': string
@@ -5491,7 +5505,9 @@ export interface StringsMap {
   'cd.serviceDashboard.activeInstanceCount': string
   'cd.serviceDashboard.activeServiceInstancesLabel': string
   'cd.serviceDashboard.artifact': string
+  'cd.serviceDashboard.asgName': string
   'cd.serviceDashboard.awsRegion': string
+  'cd.serviceDashboard.bgEnv': string
   'cd.serviceDashboard.buildName': string
   'cd.serviceDashboard.containerList': string
   'cd.serviceDashboard.deployedAt': string
@@ -5520,6 +5536,7 @@ export interface StringsMap {
   'cd.serviceDashboard.instanceCountHistory': string
   'cd.serviceDashboard.instanceDataEmpty': string
   'cd.serviceDashboard.instanceDetails': string
+  'cd.serviceDashboard.instanceId': string
   'cd.serviceDashboard.instancesDetails': string
   'cd.serviceDashboard.lastDeployment': string
   'cd.serviceDashboard.lastPipelineExecution': string
@@ -5546,6 +5563,7 @@ export interface StringsMap {
   'cd.serviceDashboard.serviceInstancesInLast': string
   'cd.serviceDashboard.servicesInLast': string
   'cd.serviceDashboard.source': string
+  'cd.serviceDashboard.strategy': string
   'cd.serviceDashboard.taskArn': string
   'cd.serviceDashboard.taskDefinitionArn': string
   'cd.serviceDashboard.totalDeployments': string
@@ -7604,6 +7622,7 @@ export interface StringsMap {
   'ci.titleSettings': string
   'ci.usesLabel': string
   'ci.welcome': string
+  'idp.idpAdmin': string
   'sscs.allowDenyList': string
   'cv.CVStepper.StepError': string
   'cv.CompositeSLO.AddSLO': string
@@ -8470,6 +8489,7 @@ export interface StringsMap {
   'cv.sloGraphUserHint': string
   'cv.sloRecalculationInProgress': string
   'cv.slos.backToSLI': string
+  'cv.slos.badRequestMetric': string
   'cv.slos.burnRate': string
   'cv.slos.completeTitle': string
   'cv.slos.configureSLI': string
@@ -8699,7 +8719,6 @@ export interface StringsMap {
   'sto.stepField.toolInclude': string
   'sto.stoExemption': string
   'sto.targets.testTargets': string
-  'sto.tickets': string
   'sto.zeroNorthImagePlaceholder': string
   /**
    * @deprecated migrate this string to module level file

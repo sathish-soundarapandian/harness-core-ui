@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useEffect } from 'react'
+import React, { useMemo } from 'react'
 import { merge } from 'lodash-es'
 import type Highcharts from 'highcharts'
 import { Container, Icon, Text, PageError, NoDataCard, Layout } from '@harness/uicore'
@@ -49,22 +49,15 @@ const SLOTargetChartWithAPIGetSliGraph: React.FC<SLOTargetChartWithAPIGetSliGrap
   customChartOptions,
   serviceLevelIndicator,
   monitoredServiceIdentifier,
-  debounceFetchSliGraphData,
   sliGraphData,
   loading,
   error,
   retryOnError
 }) => {
-  const sliFormData = convertServiceLevelIndicatorToSLIFormData(serviceLevelIndicator)
-
   const dataPoints = useMemo(
     () => sliGraphData?.dataPoints?.map(point => [Number(point.timeStamp) || 0, Number(point.value) || 0]),
     [sliGraphData?.dataPoints]
   )
-
-  useEffect(() => {
-    debounceFetchSliGraphData?.(serviceLevelIndicator, monitoredServiceIdentifier)
-  }, [...Object.values(sliFormData)])
 
   if (loading) {
     return (
@@ -111,11 +104,13 @@ const SLOTargetChartWrapper: React.FC<SLOTargetChartWithAPIGetSliGraphProps> = p
   } = convertServiceLevelIndicatorToSLIFormData(serviceLevelIndicator)
 
   const emptyState = (
-    <NoDataCard
-      image={NoChartDataImage}
-      containerClassName={css.noData}
-      message={getString('cv.pleaseFillTheRequiredFieldsToSeeTheSLIData')}
-    />
+    <Container flex={{ justifyContent: 'center' }}>
+      <NoDataCard
+        image={NoChartDataImage}
+        containerClassName={css.noData}
+        message={getString('cv.pleaseFillTheRequiredFieldsToSeeTheSLIData')}
+      />
+    </Container>
   )
 
   if (

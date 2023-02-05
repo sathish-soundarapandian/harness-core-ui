@@ -1,0 +1,206 @@
+{
+  "status": "SUCCESS",
+  "data": {
+    "content": [
+      {
+        "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+        "referredEntity": {
+          "type": "Connectors",
+          "entityRef": {
+            "scope": "account",
+            "identifier": "delegate1",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": null,
+            "projectIdentifier": null,
+            "metadata": {
+              "fqn": "infrastructureDefinition.spec.connectorRef"
+            },
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "default": true
+          },
+          "name": ""
+        },
+        "referredByEntity": {
+          "type": "Infrastructure",
+          "entityRef": {
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "Fardeen",
+            "envIdentifier": "fktest8",
+            "identifier": "infra1",
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "default": true
+          },
+          "name": "infra1"
+        },
+        "detail": {
+          "type": "EntityReferredByInfraSetupUsageDetail",
+          "environmentIdentifier": "fktest8",
+          "environmentName": "fk-test"
+        },
+        "createdAt": 1675256511808
+      },
+      {
+        "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+        "referredEntity": {
+          "type": "Connectors",
+          "entityRef": {
+            "scope": "account",
+            "identifier": "delegate1",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": null,
+            "projectIdentifier": null,
+            "metadata": {
+              "fqn": "infrastructureDefinition.spec.connectorRef"
+            },
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "default": true
+          },
+          "name": ""
+        },
+        "referredByEntity": {
+          "type": "Infrastructure",
+          "entityRef": {
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "testabhi",
+            "envIdentifier": "e1",
+            "identifier": "inf",
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "default": true
+          },
+          "name": "inf"
+        },
+        "detail": {
+          "type": "EntityReferredByInfraSetupUsageDetail",
+          "environmentIdentifier": "e1",
+          "environmentName": "e1"
+        },
+        "createdAt": 1675154407858
+      },
+      {
+        "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+        "referredEntity": {
+          "type": "Connectors",
+          "entityRef": {
+            "scope": "account",
+            "identifier": "delegate1",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": null,
+            "projectIdentifier": null,
+            "metadata": {
+              "fqn": "infrastructureDefinition.spec.connectorRef"
+            },
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "default": true
+          },
+          "name": ""
+        },
+        "referredByEntity": {
+          "type": "Infrastructure",
+          "entityRef": {
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "",
+            "projectIdentifier": "",
+            "envIdentifier": "delegateInfra1",
+            "identifier": "infraTest",
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "default": true
+          },
+          "name": "infraTest"
+        },
+        "detail": {
+          "type": "EntityReferredByInfraSetupUsageDetail",
+          "environmentIdentifier": "delegateInfra1",
+          "environmentName": "delegateInfra1"
+        },
+        "createdAt": 1675138812388
+      },
+      {
+        "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+        "referredEntity": {
+          "type": "Connectors",
+          "entityRef": {
+            "scope": "account",
+            "identifier": "delegate1",
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": null,
+            "projectIdentifier": null,
+            "metadata": {
+              "fqn": "infrastructureDefinition.spec.connectorRef"
+            },
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "fullyQualifiedScopeIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "default": true
+          },
+          "name": ""
+        },
+        "referredByEntity": {
+          "type": "Infrastructure",
+          "entityRef": {
+            "accountIdentifier": "px7xd_BFRCi-pfWPYXVjvw",
+            "orgIdentifier": "default",
+            "projectIdentifier": "bbhinger",
+            "envIdentifier": "qa",
+            "identifier": "delegateInfra1",
+            "repoIdentifier": null,
+            "branch": null,
+            "isDefault": true,
+            "default": true
+          },
+          "name": "delegateInfra1"
+        },
+        "detail": {
+          "type": "EntityReferredByInfraSetupUsageDetail",
+          "environmentIdentifier": "qa",
+          "environmentName": "qa"
+        },
+        "createdAt": 1675138489887
+      }
+    ],
+    "pageable": {
+      "sort": {
+        "unsorted": false,
+        "sorted": true,
+        "empty": false
+      },
+      "pageNumber": 0,
+      "pageSize": 10,
+      "offset": 0,
+      "paged": true,
+      "unpaged": false
+    },
+    "totalElements": 4,
+    "last": true,
+    "totalPages": 1,
+    "sort": {
+      "unsorted": false,
+      "sorted": true,
+      "empty": false
+    },
+    "numberOfElements": 4,
+    "number": 0,
+    "first": true,
+    "size": 10,
+    "empty": false
+  },
+  "metaData": null,
+  "correlationId": "206fc7a4-24a2-4c30-ae58-837fc76954b1"
+}

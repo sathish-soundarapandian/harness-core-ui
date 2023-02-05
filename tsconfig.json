@@ -55,7 +55,8 @@
       "@ce/*": ["modules/75-ce/*"],
       "@gitops/*": ["modules/90-gitops/*"],
       "@iacm/*": ["modules/85-iacm/*"],
-      "@sscs/*": ["modules/75-sscs/*"]
+      "@sscs/*": ["modules/75-sscs/*"],
+      "@idp/*": ["modules/75-idp/*"]
     }
   },
   "types": ["cypress"],

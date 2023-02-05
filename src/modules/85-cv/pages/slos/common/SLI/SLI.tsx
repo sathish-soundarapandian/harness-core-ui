@@ -44,7 +44,7 @@ import { defaultOption } from './SLI.constants'
 import { SLIMetricTypes, SLOV2FormFields } from '../../components/CVCreateSLOV2/CVCreateSLOV2.types'
 import sliCss from './SLI.module.scss'
 
-const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
+const SLI: React.FC<SLIProps> = ({ children, showChart, formikProps, ...rest }) => {
   const FLEX_START = 'flex-start'
   const { getString } = useStrings()
   const { showError } = useToaster()
@@ -151,25 +151,6 @@ const SLI: React.FC<SLIProps> = ({ children, formikProps, ...rest }) => {
     setDrawerHeaderProps?.(healthSourceDrawerHeaderProps(true))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monitoredService, serviceRef, environmentRef, healthSources, changeSources, formikProps])
-
-  const {
-    healthSourceRef,
-    SLIMetricType,
-    validRequestMetric,
-    objectiveValue,
-    objectiveComparator,
-    SLIMissingDataType,
-    serviceLevelIndicatorType
-  } = values
-
-  const showChart =
-    healthSourceRef &&
-    SLIMetricType &&
-    validRequestMetric &&
-    objectiveValue &&
-    objectiveComparator &&
-    SLIMissingDataType &&
-    serviceLevelIndicatorType
 
   const sliContainerBorder = values.healthSourceRef ? { border: { right: true } } : undefined
   const chartContainerBorder = !values.healthSourceRef ? { border: { left: true } } : undefined

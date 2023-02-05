@@ -27,6 +27,7 @@ export type NavModuleName =
   | ModuleName.CODE
   | ModuleName.IACM
   | ModuleName.SSCS
+  | ModuleName.IDP
 
 // Default order of modules on side nav, please add modules to this list accordingly.
 // For any module to be visible on side nav, it has to be added in this list
@@ -40,7 +41,8 @@ export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
   ModuleName.STO,
   ModuleName.CHAOS,
   ModuleName.IACM,
-  ModuleName.SSCS
+  ModuleName.SSCS,
+  ModuleName.IDP
 ]
 
 export interface useNavModuleInfoReturnType {
@@ -138,6 +140,13 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     getHomePageUrl: (accountId: string) => routes.toSSCS({ accountId }),
     featureFlagName: FeatureFlag.SSCS_ENABLED,
     color: '--default-module-border'
+  },
+  [ModuleName.IDP]: {
+    icon: 'idp',
+    label: 'common.purpose.idp.fullName',
+    getHomePageUrl: (accountId: string) => routes.toIDP({ accountId }),
+    featureFlagName: FeatureFlag.IDP_ENABLED,
+    color: '--default-module-border'
   }
 }
 
@@ -159,6 +168,10 @@ export const moduleGroupConfig: GroupConfig[] = [
   {
     label: 'common.moduleList.manageImpact',
     items: [ModuleName.CE, ModuleName.CV, ModuleName.SSCS]
+  },
+  {
+    label: 'common.moduleList.optimizeProcesses',
+    items: [ModuleName.IDP]
   }
 ]
 

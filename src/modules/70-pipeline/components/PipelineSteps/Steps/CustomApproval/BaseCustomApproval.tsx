@@ -78,7 +78,7 @@ export default function BaseCustomApproval(props: {
           disabled={readonly}
         />
       </div>
-      <div className={stepCss.divider} />
+      <div className={css.divider} />
       <div className={cx(stepCss.formGroup, stepCss.sm)}>
         <FormInput.Select
           items={customApprovalType}

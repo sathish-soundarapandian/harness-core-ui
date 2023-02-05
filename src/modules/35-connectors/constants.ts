@@ -163,7 +163,8 @@ export const ConnectorLabels: Record<ConnectorInfoDTO['type'], string> = {
   GcpSecretManager: 'GcpSecretManager',
   AzureArtifacts: 'AzureArtifacts',
   Spot: 'Spot',
-  Tas: 'TAS'
+  Tas: 'TAS',
+  TerraformCloud: 'TerraformCloud'
 }
 
 export const ConnectorStatus: ConnectorStatusType = {

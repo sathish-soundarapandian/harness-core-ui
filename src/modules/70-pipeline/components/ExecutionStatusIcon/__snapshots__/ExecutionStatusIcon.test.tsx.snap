@@ -602,6 +602,64 @@ exports[`ExecutionStatusIcon Queued 1`] = `
 </div>
 `;
 
+exports[`ExecutionStatusIcon QueuedExecutionConcurrencyReached 1`] = `
+<div>
+  <span
+    class="bp3-popover-wrapper bp3-dark"
+  >
+    <span
+      class="bp3-popover-target"
+    >
+      <span
+        class="bp3-icon StyledProps--main statusIcon queuedexecutionconcurrencyreached"
+        data-icon="queued"
+        tabindex="0"
+      >
+        <svg
+          height="14"
+          viewBox="0 0 14 11"
+          width="14"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M13.364 0H.636A.636.636 0 000 .636v3.819a.636.636 0 00.636.636h12.728A.636.636 0 0014 4.455V.636A.636.636 0 0013.364 0zm-.637 3.818H1.273V1.273h11.454zM13.364 6.363H.636a.636.636 0 000 1.273h12.728a.636.636 0 100-1.273zM13.364 8.91H.636a.636.636 0 100 1.273h12.728a.636.636 0 000-1.273z"
+          />
+        </svg>
+      </span>
+    </span>
+  </span>
+</div>
+`;
+
+exports[`ExecutionStatusIcon QueuedLicenseLimitReached 1`] = `
+<div>
+  <span
+    class="bp3-popover-wrapper bp3-dark"
+  >
+    <span
+      class="bp3-popover-target"
+    >
+      <span
+        class="bp3-icon StyledProps--main statusIcon queuedlicenselimitreached"
+        data-icon="queued"
+        tabindex="0"
+      >
+        <svg
+          height="14"
+          viewBox="0 0 14 11"
+          width="14"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M13.364 0H.636A.636.636 0 000 .636v3.819a.636.636 0 00.636.636h12.728A.636.636 0 0014 4.455V.636A.636.636 0 0013.364 0zm-.637 3.818H1.273V1.273h11.454zM13.364 6.363H.636a.636.636 0 000 1.273h12.728a.636.636 0 100-1.273zM13.364 8.91H.636a.636.636 0 100 1.273h12.728a.636.636 0 000-1.273z"
+          />
+        </svg>
+      </span>
+    </span>
+  </span>
+</div>
+`;
+
 exports[`ExecutionStatusIcon ResourceWaiting 1`] = `
 <div>
   <span

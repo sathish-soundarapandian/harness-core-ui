@@ -33,7 +33,8 @@ module.exports = ({
   enableCIUI,
   enableTIUI,
   enableIACM,
-  enableSSCS
+  enableSSCS,
+  enableIDP
 }) => {
   const remotes = {}
 
@@ -46,6 +47,11 @@ module.exports = ({
   // if (enableGovernance) {
   remotes.governance = "governance@[window.getApiBaseUrl('pm/remoteEntry.js')]"
   // }
+
+  if (enableIDP) {
+    remotes.idp = "idp@[window.getApiBaseUrl('idp/remoteEntry.js')]"
+    remotes.idpadmin = "idpadmin@[window.getApiBaseUrl('idp-admin/remoteEntry.js')]"
+  }
 
   if (enableCCMUI) {
     remotes.ccmui = "ccmui@[window.getApiBaseUrl('ccmui/remoteEntry.js')]"

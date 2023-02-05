@@ -84,8 +84,7 @@ import {
   isAllowedCustomArtifactDeploymentTypes,
   isAllowedGithubPackageRegistryDeploymentTypes,
   isSidecarAllowed,
-  ModalViewFor,
-  shouldAllowOnlyOneArtifact
+  ModalViewFor
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { showConnectorStep } from './ArtifactUtils'
@@ -145,7 +144,9 @@ export default function ServiceV2ArtifactsSelection({
   } = usePipelineContext()
 
   const [isEditMode, setIsEditMode] = useState(false)
-  const [selectedArtifact, setSelectedArtifact] = useState<ArtifactType | null>(null)
+  const [selectedArtifact, setSelectedArtifact] = useState<ArtifactType | null>(
+    allowedArtifactTypes[deploymentType]?.length === 1 ? allowedArtifactTypes[deploymentType][0] : null
+  )
   const [connectorView, setConnectorView] = useState(false)
   const [artifactContext, setArtifactContext] = useState(ModalViewFor.PRIMARY)
   const [artifactIndex, setEditIndex] = useState(0)
@@ -728,7 +729,6 @@ export default function ServiceV2ArtifactsSelection({
         isReadonly={readonly}
         isSidecarAllowed={isSidecarAllowed(deploymentType, readonly)}
         isMultiArtifactSource
-        allowOnlyOneArtifactAddition={shouldAllowOnlyOneArtifact(deploymentType)}
       />
       <ArtifactConfigDrawer
         onCloseDrawer={handleCloseDrawer}

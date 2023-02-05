@@ -18,17 +18,16 @@ import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/S
 import { FormInstanceDropdown } from '@common/components'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import type { ElastigroupDeployStepInfo } from 'services/cd-ng'
 import { getInstanceDropdownSchema } from '@common/components/InstanceDropdownField/InstanceDropdownField'
 import { InstanceTypes } from '@common/constants/InstanceTypes'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
-import type { ElastigroupDeployStepEditProps } from './ElastigroupDeployInterface'
+import type { ElastigroupDeployStepEditProps, ElastigroupDeployStepInfoData } from './ElastigroupDeployInterface'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './ElastigroupDeploy.module.scss'
 
 const ElastigroupDeployStepEdit = (
   props: ElastigroupDeployStepEditProps,
-  formikRef: StepFormikFowardRef<ElastigroupDeployStepInfo>
+  formikRef: StepFormikFowardRef<ElastigroupDeployStepInfoData>
 ): React.ReactElement => {
   const {
     initialValues,
@@ -45,8 +44,8 @@ const ElastigroupDeployStepEdit = (
 
   return (
     <>
-      <Formik<ElastigroupDeployStepInfo>
-        onSubmit={(values: ElastigroupDeployStepInfo) => {
+      <Formik<ElastigroupDeployStepInfoData>
+        onSubmit={(values: ElastigroupDeployStepInfoData) => {
           onUpdate?.(values)
         }}
         formName={formikFormName}
@@ -70,7 +69,7 @@ const ElastigroupDeployStepEdit = (
           })
         })}
       >
-        {(formik: FormikProps<ElastigroupDeployStepInfo>) => {
+        {(formik: FormikProps<ElastigroupDeployStepInfoData>) => {
           setFormikRef(formikRef, formik)
           const { values, setFieldValue } = formik
           return (

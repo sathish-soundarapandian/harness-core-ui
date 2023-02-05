@@ -317,3 +317,90 @@ export const mockServiceInstanceDetailsForCustomDeployment: UseGetMockDataWithMu
       correlationId: 'a9d67688-9100-4e38-8da6-9852a62bc422'
     }
   }
+
+export const mockServiceInstanceDetailsForAsgBlueGreenDeployment = {
+  loading: false,
+  refetch: jest.fn(),
+  mutate: jest.fn(),
+  data: {
+    status: 'SUCCESS',
+    data: {
+      instancesByBuildIdList: [
+        {
+          buildId: 'AWS AMI ssh 7999',
+          instances: [
+            {
+              podName: '',
+              artifactName: 'AWS AMI ssh 7999',
+              connectorRef: 'cdplay',
+              infrastructureDetails: {
+                region: 'us-east-1'
+              },
+              terraformInstance: null,
+              deployedAt: 1675177753611,
+              deployedById: 'AUTO_SCALED',
+              deployedByName: 'AUTO_SCALED',
+              pipelineExecutionName: 'asg3',
+              instanceInfoDTO: {
+                region: 'us-east-1',
+                infrastructureKey: '6dea2da940a5d2de7c00da7285f06ed03dc66576',
+                asgNameWithoutSuffix: 'lovish1-asg',
+                asgName: 'lovish1-asg__2',
+                instanceId: 'i-0cdf780d3e0d03e83',
+                executionStrategy: 'blue-green',
+                production: true,
+                podName: '',
+                type: 'Asg'
+              }
+            }
+          ]
+        }
+      ]
+    },
+    metaData: null as unknown as undefined,
+    correlationId: 'a9d67688-9100-4e38-8da6-9852a62bc422'
+  }
+}
+export const mockServiceInstanceDetailsForAsgCanaryDeployment = {
+  loading: false,
+  refetch: jest.fn(),
+  mutate: jest.fn(),
+  data: {
+    status: 'SUCCESS',
+    data: {
+      instancesByBuildIdList: [
+        {
+          buildId: 'AWS AMI ssh 7999',
+          instances: [
+            {
+              podName: '',
+              artifactName: 'AWS AMI ssh 7999',
+              connectorRef: 'cdplay',
+              infrastructureDetails: {
+                region: 'us-east-1'
+              },
+              terraformInstance: null,
+              deployedAt: 1675177753611,
+              deployedById: 'AUTO_SCALED',
+              deployedByName: 'AUTO_SCALED',
+              pipelineExecutionName: 'asg3',
+              instanceInfoDTO: {
+                region: 'us-east-1',
+                infrastructureKey: '6dea2da940a5d2de7c00da7285f06ed03dc66576',
+                asgNameWithoutSuffix: 'lovish1-asg',
+                asgName: 'lovish1-asg__2',
+                instanceId: 'i-0cdf780d3e0d03e83',
+                executionStrategy: 'canary',
+                production: null,
+                podName: '',
+                type: 'Asg'
+              }
+            }
+          ]
+        }
+      ]
+    },
+    metaData: null as unknown as undefined,
+    correlationId: 'a9d67688-9100-4e38-8da6-9852a62bc422'
+  }
+}

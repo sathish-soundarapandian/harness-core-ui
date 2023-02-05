@@ -637,10 +637,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
                 <ExperimentalInput
                   formik={formik}
                   name={`${path}.${manifestPath}.spec.chartVersion`}
-                  disabled={
-                    isFieldDisabled(fromTrigger ? 'chartVersion' : `${manifestPath}.spec.chartVersion`) ||
-                    loadingChartVersions
-                  }
+                  disabled={isFieldDisabled(fromTrigger ? 'chartVersion' : `${manifestPath}.spec.chartVersion`)}
                   placeholder={
                     loadingChartVersions
                       ? getString('pipeline.manifestType.http.loadingChartVersion')
@@ -669,7 +666,9 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
                   selectItems={chartVersions}
                   label={getString('pipeline.manifestType.http.chartVersion')}
                 />
-                {chartVersionsError ? (
+                {chartVersionsError &&
+                !get(formik?.values, `${path}.${manifestPath}.spec.chartVersion`) &&
+                !loadingChartVersions ? (
                   <FormError
                     errorMessage={
                       <Text

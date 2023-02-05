@@ -7,14 +7,16 @@
 
 import type { AllowedTypes } from '@harness/uicore'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { ElastigroupDeployStepInfo } from 'services/cd-ng'
 import type { VariableMergeServiceResponse } from 'services/pipeline-ng'
+import type { ElastigroupDeployStepInfo } from 'services/cd-ng'
+
+export type ElastigroupDeployStepInfoData = Partial<ElastigroupDeployStepInfo>
 
 export interface ElastigroupDeployStepEditProps {
-  initialValues: ElastigroupDeployStepInfo
-  onUpdate?: (data: ElastigroupDeployStepInfo) => void
+  initialValues: ElastigroupDeployStepInfoData
+  onUpdate?: (data: ElastigroupDeployStepInfoData) => void
   stepViewType?: StepViewType
-  onChange?: (data: ElastigroupDeployStepInfo) => void
+  onChange?: (data: ElastigroupDeployStepInfoData) => void
   allowableTypes: AllowedTypes
   readonly?: boolean
   isNewStep?: boolean
@@ -22,9 +24,9 @@ export interface ElastigroupDeployStepEditProps {
 }
 
 export interface ElastigroupDeployVariableStepProps {
-  initialValues: ElastigroupDeployStepInfo
+  initialValues: ElastigroupDeployStepInfoData
   stageIdentifier: string
-  onUpdate?(data: ElastigroupDeployStepInfo): void
+  onUpdate?(data: ElastigroupDeployStepInfoData): void
   metadataMap: Required<VariableMergeServiceResponse>['metadataMap']
-  variablesData: ElastigroupDeployStepInfo
+  variablesData: ElastigroupDeployStepInfoData
 }

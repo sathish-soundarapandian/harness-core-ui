@@ -1,8 +1,8 @@
 import { VerificationJobType } from '@cv/constants'
-import type { AdditionalInfo } from 'services/cv'
 
-export const deploymentTypesToShowNodes: Array<AdditionalInfo['type']> = [
+export const deploymentTypesToShowNodes: Array<string> = [
   VerificationJobType.CANARY,
   VerificationJobType.BLUE_GREEN,
-  VerificationJobType.ROLLING
+  VerificationJobType.ROLLING,
+  VerificationJobType.NO_ANALYSIS
 ]

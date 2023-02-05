@@ -52,6 +52,8 @@ module.exports = {
           'chaos/MicroFrontendApp': false,
           'sto/App': false,
           'sscs/MicroFrontendApp': false,
+          'idp/MicroFrontendApp': false,
+          'idpadmin/MicroFrontendApp': false,
           'governance/App': false,
           'governance/EvaluationView': false,
           'governance/PolicySetWizard': false,

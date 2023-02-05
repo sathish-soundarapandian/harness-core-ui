@@ -76,6 +76,16 @@ const RenderColumnDetail: Renderer<CellProps<EntitySetupUsageDTO>> = ({ row }) =
       referredByEntity: data.referredByEntity,
       detail: data.detail
     })
+  else if (
+    data.referredByEntity?.type === (EntityType.Infrastructure as EntityDetail['type']) &&
+    data.referredEntity?.type === EntityType.Connectors &&
+    data.detail?.environmentName
+  )
+    return (
+      <Text color={Color.GREY_400} lineClamp={1} className={css.overflow}>
+        {data.detail.environmentName}
+      </Text>
+    )
   else return null
 }
 

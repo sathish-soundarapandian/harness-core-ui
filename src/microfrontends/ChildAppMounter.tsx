@@ -31,6 +31,7 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import LevelUpBanner from '@common/components/FeatureWarning/LevelUpBanner'
+import ParentLink from '@common/components/ParentLink/ParentLink'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 import { useEventSourceListener } from '@common/hooks/useEventSourceListener'
 import ChildAppError from './ChildAppError'
@@ -101,7 +102,8 @@ export class ChildAppMounter<T = never> extends React.Component<
             MonacoEditor,
             YAMLBuilder,
             MonacoDiffEditor,
-            LevelUpBanner
+            LevelUpBanner,
+            ParentLink
           }}
           hooks={{
             useDocumentTitle,

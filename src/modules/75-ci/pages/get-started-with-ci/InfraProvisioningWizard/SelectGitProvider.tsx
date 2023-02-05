@@ -71,7 +71,8 @@ import {
   AccessTokenPermissionsDocLinks,
   GitProviderIcons,
   OtherProviderOptions,
-  NonGitOption
+  NonGitOption,
+  OAUTH2_USER_NAME
 } from './Constants'
 import { getOAuthConnectorPayload } from '../../../utils/HostedBuildsUtils'
 
@@ -390,11 +391,10 @@ const SelectGitProviderRef = (
         case Connectors.GITLAB:
         case Connectors.GITHUB:
           updatedConnectorPayload = set(commonConnectorPayload, 'spec.authentication.spec.type', 'UsernameToken')
-          updatedConnectorPayload = set(
-            updatedConnectorPayload,
-            'spec.authentication.spec.spec.tokenRef',
-            `${ACCOUNT_SCOPE_PREFIX}${secretId}`
-          )
+          updatedConnectorPayload = set(updatedConnectorPayload, 'spec.authentication.spec.spec', {
+            username: OAUTH2_USER_NAME,
+            tokenRef: `${ACCOUNT_SCOPE_PREFIX}${secretId}`
+          })
           updatedConnectorPayload = set(updatedConnectorPayload, 'spec.apiAccess.type', 'Token')
           updatedConnectorPayload = set(
             updatedConnectorPayload,

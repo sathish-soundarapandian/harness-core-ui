@@ -87,11 +87,13 @@ export function getControlDataType(
 export const getVerificationType = (risk: RiskValues, getString: UseStringsReturn['getString']): string => {
   switch (risk) {
     case RiskValues.HEALTHY:
-      return getString('passed').toLocaleUpperCase()
+      return getString('passed')
+    case RiskValues.NO_ANALYSIS:
+      return getString('cv.noAnalysis')
     case RiskValues.WARNING:
     case RiskValues.FAILED:
-      return getString('failed').toLocaleUpperCase()
+      return getString('failed')
     default:
-      return getString('passed').toLocaleUpperCase()
+      return getString('failed')
   }
 }

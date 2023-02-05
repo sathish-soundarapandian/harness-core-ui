@@ -24,12 +24,16 @@ export type HostControlTestData = Omit<HostTestData, 'risk' | 'name'> & {
   controlDataType?: AnalysedDeploymentTestDataNode['controlDataType']
 }
 
-export const getAnalysisReason = (reason: string, getString: UseStringsReturn['getString']): string => {
+export const getAnalysisReason = (
+  reason: string,
+  getString: UseStringsReturn['getString'],
+  verificationType: string
+): string => {
   switch (reason) {
     case 'CUSTOM_FAIL_FAST_THRESHOLD':
       return getString('cv.metricsAnalysis.analysisReason.customFailFastThreshold')
     case 'ML_ANALYSIS':
-      return getString('cv.metricsAnalysis.analysisReason.mlAnalysis')
+      return getString('cv.metricsAnalysis.analysisReason.mlAnalysis', { verificationType })
     case 'NO_CONTROL_DATA':
       return getString('cv.metricsAnalysis.analysisReason.noControlData')
     case 'NO_TEST_DATA':

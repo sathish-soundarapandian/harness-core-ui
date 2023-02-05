@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import { render, fireEvent, findByText, act, getByText, queryByText } from '@testing-library/react'
+import { render, fireEvent, findByText, act, queryByText, waitFor } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
+
+import * as serviceCDNG from 'services/cd-ng'
 import CreateUpdateSecret from '../CreateUpdateSecret'
 
 import mockData from './listSecretManagersMock.json'
@@ -17,93 +19,146 @@ import secretDetailsMock from './secretDetailsMock.json'
 import secretMockData from './secretMockData.json'
 
 const mockUpdateTextSecret = jest.fn()
-
 jest.mock('services/cd-ng', () => ({
   usePutSecret: jest.fn().mockImplementation(() => ({ mutate: mockUpdateTextSecret })),
   usePostSecret: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   usePostSecretFileV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
+
+  getConnectorListPromise: jest.fn().mockImplementation(() => {
+    return Promise.resolve(mockData)
+  }),
   usePutSecretFileV2: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
   useGetGcpRegions: jest.fn().mockImplementation(() => ({ mutate: jest.fn() })),
-  useGetSecretV2: jest.fn().mockImplementation(() => ({ refetch: jest.fn(), data: secretMockData })),
+  useGetSecretV2: jest.fn().mockImplementation(() => {
+    return {
+      refetch: jest.fn().mockImplementation(() => {
+        return secretMockData
+      }),
+      loading: false,
+      data: null
+    }
+  }),
+
   useGetConnectorList: () => {
     return {
       data: mockData,
-      refetch: jest.fn()
+      loading: false,
+      refetch: jest.fn().mockImplementation(() => {
+        return mockData
+      })
     }
   },
-  useGetConnector: () => {
+  useGetConnector: jest.fn().mockImplementation(() => {
     return {
       data: connectorMockData,
-      refetch: jest.fn()
+      loading: false,
+      refetch: jest.fn().mockImplementation(() => {
+        return null
+      })
     }
-  }
+  })
 }))
 
 describe('CreateUpdateSecret', () => {
-  test('Create Text Secret', () => {
-    const { container } = render(
+  test('Create Text Secret', async () => {
+    const { container, getByText } = render(
       <TestWrapper path="/account/:accountId/resources/secrets" pathParams={{ accountId: 'dummy' }}>
         <CreateUpdateSecret type={'SecretText'} />
       </TestWrapper>
     )
+    await waitFor(() => expect(getByText('secrets.labelSecretName')).toBeTruthy())
+
+    await waitFor(() => expect(getByText('secrets.labelValue')).toBeTruthy())
+
     expect(container).toMatchSnapshot()
   })
 
-  test('Create File Secret', () => {
-    const { container } = render(
+  test('Create File Secret', async () => {
+    const { container, getByText } = render(
       <TestWrapper path="/account/:accountId/resources/secrets" pathParams={{ accountId: 'dummy' }}>
         <CreateUpdateSecret type={'SecretFile'} />
       </TestWrapper>
     )
+    await waitFor(() => expect(getByText('secrets.labelSecretName')).toBeTruthy())
+    await waitFor(() => expect(getByText('secrets.secret.labelSecretFile')).toBeTruthy())
+
     expect(container).toMatchSnapshot()
   })
 
-  test('Create Secret with radio button', () => {
-    const { container } = render(
+  test('Create Secret with radio button', async () => {
+    const { container, getByText } = render(
       <TestWrapper path="/account/:accountId/resources/secrets" pathParams={{ accountId: 'dummy' }}>
         <CreateUpdateSecret />
       </TestWrapper>
     )
-    expect(getByText(container, 'secrets.secret.labelSecretType')).toBeDefined()
-    expect(getByText(container, 'secrets.labelValue')).toBeDefined()
+    await waitFor(() => expect(getByText('secrets.secret.labelSecretType')).toBeTruthy())
+    expect(getByText('secrets.secret.labelSecretType')).toBeDefined()
+    expect(getByText('secrets.labelValue')).toBeDefined()
     expect(container).toMatchSnapshot()
   })
 
-  test('Create Secret with radio button and switch radio from text to file', () => {
-    const { container } = render(
+  test('Create Secret with radio button and switch radio from text to file', async () => {
+    const { container, getByText } = render(
       <TestWrapper path="/account/:accountId/resources/secrets" pathParams={{ accountId: 'dummy' }}>
         <CreateUpdateSecret />
       </TestWrapper>
     )
-    expect(getByText(container, 'secrets.labelValue')).toBeDefined()
-    fireEvent.click(getByText(container, 'secrets.secret.labelFile'))
-    expect(getByText(container, 'secrets.secret.labelSecretFile')).toBeDefined()
+    await waitFor(() => expect(getByText('secrets.secret.labelFile')).toBeTruthy())
+    expect(getByText('secrets.labelValue')).toBeDefined()
+    fireEvent.click(getByText('secrets.secret.labelFile'))
+    expect(getByText('secrets.secret.labelSecretFile')).toBeDefined()
     expect(queryByText(container, 'secrets.labelValue')).toBeNull()
     expect(container).toMatchSnapshot()
   })
 
-  test('Create Secret with radio button and switch radio from text to file and back', () => {
-    const { container } = render(
+  test('Create Secret with radio button and switch radio from text to file and back', async () => {
+    const { container, getByText } = render(
       <TestWrapper path="/account/:accountId/resources/secrets" pathParams={{ accountId: 'dummy' }}>
         <CreateUpdateSecret />
       </TestWrapper>
     )
-    expect(getByText(container, 'secrets.labelValue')).toBeDefined()
-    fireEvent.click(getByText(container, 'secrets.secret.labelFile'))
-    expect(getByText(container, 'secrets.secret.labelSecretFile')).toBeDefined()
+    await waitFor(() => expect(getByText('secrets.secret.labelFile')).toBeTruthy())
+
+    expect(getByText('secrets.labelValue')).toBeDefined()
+    fireEvent.click(getByText('secrets.secret.labelFile'))
+    expect(getByText('secrets.secret.labelSecretFile')).toBeDefined()
     expect(queryByText(container, 'secrets.labelValue')).toBeNull()
-    fireEvent.click(getByText(container, 'secrets.secret.labelText'))
+    fireEvent.click(getByText('secrets.secret.labelText'))
     expect(queryByText(container, 'secrets.secret.labelSecretFile')).toBeNull()
-    expect(getByText(container, 'secrets.labelValue')).toBeDefined()
+    expect(getByText('secrets.labelValue')).toBeDefined()
     expect(container).toMatchSnapshot()
   })
 
   test('Update Text Secret', async () => {
-    const { container } = render(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    jest.spyOn(serviceCDNG, 'useGetSecretV2').mockImplementation(() => {
+      return {
+        refetch: jest.fn().mockImplementation(() => {
+          return secretMockData
+        }),
+        loading: false,
+        data: secretMockData
+      }
+    })
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    jest.spyOn(serviceCDNG, 'useGetConnector').mockImplementation(() => {
+      return {
+        data: connectorMockData,
+        loading: false,
+        refetch: jest.fn().mockImplementation(() => {
+          return connectorMockData
+        })
+      }
+    })
+    const { container, getByText } = render(
       <TestWrapper path="/account/:accountId/resources/secrets" pathParams={{ accountId: 'dummy' }}>
         <CreateUpdateSecret secret={secretDetailsMock as any} type={'SecretText'} />
       </TestWrapper>
     )
+
+    await waitFor(() => expect(getByText('secrets.secret.inlineSecret')).toBeTruthy())
     expect(container).toMatchSnapshot()
 
     await act(async () => {

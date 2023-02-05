@@ -53,7 +53,6 @@ import { isMultiTypeRuntime } from '@common/utils/utils'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
 import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
-import { queryClient } from 'services/queryClient'
 import { getAllowableTypesWithoutExpression } from '@pipeline/utils/runPipelineUtils'
 import { usePipelineVariables } from '@pipeline/components/PipelineVariablesContext/PipelineVariablesContext'
 import { MultiTypeServiceField } from '@pipeline/components/FormMultiTypeServiceFeild/FormMultiTypeServiceFeild'
@@ -322,7 +321,6 @@ export default function DeployServiceEntityWidget({
 
   async function onServiceEntityUpdate(updatedService: ServiceYaml): Promise<void> {
     if (formikRef.current) {
-      queryClient.invalidateQueries(['getServicesYamlAndRuntimeInputs'])
       const { values, setValues } = formikRef.current
 
       const scope = getScopeFromValue(values?.service as string)

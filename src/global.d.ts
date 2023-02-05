@@ -123,6 +123,16 @@ declare module 'chaos/SelectPipelineExperiment' {
   export default ChildApp
 }
 
+declare module 'idp/MicroFrontendApp' {
+  import type { ChildAppComponent } from './microfrontends'
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+declare module 'idpadmin/MicroFrontendApp' {
+  import type { ChildAppComponent } from './microfrontends'
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
 declare module 'chaos/ExperimentPreview' {
   import type { ChildAppComponent } from './microfrontends'
   const ChildApp: ChildAppComponent

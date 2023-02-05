@@ -570,6 +570,60 @@ exports[`<ExecutionStatusLabel /> tests Queued 1`] = `
 </div>
 `;
 
+exports[`<ExecutionStatusLabel /> tests QueuedExecutionConcurrencyReached 1`] = `
+<div>
+  <div
+    class="status queuedexecutionconcurrencyreached"
+  >
+    <span
+      class="bp3-icon StyledProps--main icon"
+      data-icon="queued"
+    >
+      <svg
+        height="10"
+        viewBox="0 0 14 11"
+        width="10"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M13.364 0H.636A.636.636 0 000 .636v3.819a.636.636 0 00.636.636h12.728A.636.636 0 0014 4.455V.636A.636.636 0 0013.364 0zm-.637 3.818H1.273V1.273h11.454zM13.364 6.363H.636a.636.636 0 000 1.273h12.728a.636.636 0 100-1.273zM13.364 8.91H.636a.636.636 0 100 1.273h12.728a.636.636 0 000-1.273z"
+        />
+      </svg>
+    </span>
+    <span>
+      pipeline.executionStatus.QueuedExecutionConcurrencyReached
+    </span>
+  </div>
+</div>
+`;
+
+exports[`<ExecutionStatusLabel /> tests QueuedLicenseLimitReached 1`] = `
+<div>
+  <div
+    class="status queuedlicenselimitreached"
+  >
+    <span
+      class="bp3-icon StyledProps--main icon"
+      data-icon="queued"
+    >
+      <svg
+        height="10"
+        viewBox="0 0 14 11"
+        width="10"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M13.364 0H.636A.636.636 0 000 .636v3.819a.636.636 0 00.636.636h12.728A.636.636 0 0014 4.455V.636A.636.636 0 0013.364 0zm-.637 3.818H1.273V1.273h11.454zM13.364 6.363H.636a.636.636 0 000 1.273h12.728a.636.636 0 100-1.273zM13.364 8.91H.636a.636.636 0 100 1.273h12.728a.636.636 0 000-1.273z"
+        />
+      </svg>
+    </span>
+    <span>
+      pipeline.executionStatus.QueuedLicenseLimitReached
+    </span>
+  </div>
+</div>
+`;
+
 exports[`<ExecutionStatusLabel /> tests ResourceWaiting 1`] = `
 <div>
   <div

@@ -240,3 +240,26 @@ export const SSCSNavItem = (): JSX.Element => {
     </li>
   )
 }
+
+export const IDPNavItem = () => {
+  const params = useParams<ProjectPathProps>()
+
+  return (
+    <li className={css.navItem}>
+      <Link {...commonLinkProps} to={routes.toIDP(params)}>
+        <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+          <Icon name="idp" size={30} />
+          <Text
+            font={{ weight: 'semi-bold', align: 'center' }}
+            margin="xsmall"
+            padding={{ bottom: 'xsmall' }}
+            color={Color.WHITE}
+            className={css.text}
+          >
+            <String stringID="common.purpose.idp.name" />
+          </Text>
+        </Layout.Vertical>
+      </Link>
+    </li>
+  )
+}

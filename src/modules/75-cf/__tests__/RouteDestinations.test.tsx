@@ -25,7 +25,8 @@ describe('RouteDestinations', () => {
     NG_SETTINGS: false,
     FFM_3959_FF_MFE_Environment_Detail: false,
     FFM_5256_FF_MFE_Environment_Listing: false,
-    FFM_6665_FF_MFE_Target_Detail: false
+    FFM_6665_FF_MFE_Target_Detail: false,
+    FFM_6666_FF_MFE_Target_Group_Detail: false
   }
 
   const renderRoutes = (flagOverrides: Partial<Record<FeatureFlag, boolean>> = {}): ReactElement[] => {
@@ -74,6 +75,30 @@ describe('RouteDestinations', () => {
     const routes = renderRoutes({ FFM_5939_MFE_TARGET_GROUPS_LISTING: true })
 
     expect(routesHavePageName(routes, 'SegmentsPage')).toBeFalsy()
+  })
+
+  test('it should render the NGUI version of the Segment Detail page when FFM_6666_FF_MFE_Target_Groups_Detail is false', async () => {
+    const routes = renderRoutes({ FFM_6666_FF_MFE_Target_Group_Detail: false, FFM_1512: false })
+
+    expect(routesHavePageName(routes, 'SegmentDetailPage')).toBeTruthy()
+  })
+
+  test('it should not render the NGUI version of the Segment Detail page when FFM_6666_FF_MFE_Target_Groups_Detail is true', async () => {
+    const routes = renderRoutes({ FFM_6666_FF_MFE_Target_Group_Detail: true, FFM_1512: false })
+
+    expect(routesHavePageName(routes, 'SegmentDetailPage')).toBeFalsy()
+  })
+
+  test('it should render the NGUI version of the Target Group Detail page when FFM_6666_FF_MFE_Target_Groups_Detail is false', async () => {
+    const routes = renderRoutes({ FFM_6666_FF_MFE_Target_Group_Detail: false, FFM_1512: true })
+
+    expect(routesHavePageName(routes, 'TargetGroupDetailPage')).toBeTruthy()
+  })
+
+  test('it should not render the NGUI version of the Target Group Detail page when FFM_6666_FF_MFE_Target_Groups_Detail is true', async () => {
+    const routes = renderRoutes({ FFM_6666_FF_MFE_Target_Group_Detail: true, FFM_1512: true })
+
+    expect(routesHavePageName(routes, 'TargetGroupDetailPage')).toBeFalsy()
   })
 
   test('it should render the NGUI version of the env listing page when FFM_5256_FF_MFE_Environment_Listing is false', async () => {

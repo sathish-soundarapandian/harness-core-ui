@@ -77,81 +77,84 @@ export function DeploymentMetricsAnalysisRow(props: DeploymentMetricsAnalysisRow
 
   return (
     <>
-      {filteredCharts.map((series, index) => (
-        <>
-          <Container key={index} className={cx(css.main, className)}>
-            <div className={css.graphs} ref={graphContainerRef}>
-              <HighchartsReact
-                highcharts={Highcharts}
-                options={chartsConfig(series, graphWidth, testData?.[index], controlData?.[index], getString)}
-              />
-              <Container className={css.metricDetails}>
-                <Container className={css.metricInfo} padding={{ bottom: 'small', left: 'small' }}>
-                  <Container
-                    className={css.node}
-                    background={getRiskColorValue(testData?.[index]?.risk, false)}
-                  ></Container>
-                  <Text
-                    tooltip={testData?.[index]?.name}
-                    font={{ variation: FontVariation.SMALL }}
-                    margin={{ right: 'large' }}
-                  >
-                    {`${getString('pipeline.verification.testHost')}: ${testData?.[index]?.name}`}
-                  </Text>
-                  <Container
-                    style={{ borderColor: Color.PRIMARY_7 }}
-                    className={css.node}
-                    background={Color.PRIMARY_2}
-                  ></Container>
-                  <Text
-                    tooltip={controlData?.[index]?.name as string}
-                    font={{ variation: FontVariation.SMALL }}
-                  >{`${getString('pipeline.verification.controlHost')}: ${controlData?.[index]?.name}`}</Text>
-                  {controlData?.[index]?.controlDataType === MINIMUM_DEVIATION ? (
-                    <Text font={{ variation: FontVariation.SMALL }} padding={{ left: 'small' }}>
-                      {`(${getControlDataType(controlData?.[index]?.controlDataType, getString)})`}
+      {filteredCharts.map((series, index) => {
+        const verificationType = getVerificationType(testData?.[index]?.risk as RiskValues, getString)
+        return (
+          <>
+            <Container key={index} className={cx(css.main, className)}>
+              <div className={css.graphs} ref={graphContainerRef}>
+                <HighchartsReact
+                  highcharts={Highcharts}
+                  options={chartsConfig(series, graphWidth, testData?.[index], controlData?.[index], getString)}
+                />
+                <Container className={css.metricDetails}>
+                  <Container className={css.metricInfo} padding={{ bottom: 'small', left: 'small' }}>
+                    <Container
+                      className={css.node}
+                      background={getRiskColorValue(testData?.[index]?.risk, false)}
+                    ></Container>
+                    <Text
+                      tooltip={testData?.[index]?.name}
+                      font={{ variation: FontVariation.SMALL }}
+                      margin={{ right: 'large' }}
+                    >
+                      {`${getString('pipeline.verification.testHost')}: ${testData?.[index]?.name}`}
                     </Text>
+                    <Container
+                      style={{ borderColor: Color.PRIMARY_7 }}
+                      className={css.node}
+                      background={Color.PRIMARY_2}
+                    ></Container>
+                    <Text
+                      tooltip={controlData?.[index]?.name as string}
+                      font={{ variation: FontVariation.SMALL }}
+                    >{`${getString('pipeline.verification.controlHost')}: ${controlData?.[index]?.name}`}</Text>
+                    {controlData?.[index]?.controlDataType === MINIMUM_DEVIATION ? (
+                      <Text font={{ variation: FontVariation.SMALL }} padding={{ left: 'small' }}>
+                        {`(${getControlDataType(controlData?.[index]?.controlDataType, getString)})`}
+                      </Text>
+                    ) : null}
+                  </Container>
+                  <Container className={css.metricInfo} padding={{ left: 'small', bottom: 'small' }}>
+                    <Text
+                      font={{ variation: FontVariation.TABLE_HEADERS }}
+                      color={getRiskColorValue(testData?.[index]?.risk, false)}
+                      style={{ background: getSecondaryRiskColorValue(testData?.[index]?.risk) }}
+                      className={css.metricRisk}
+                      margin={{ right: 'small' }}
+                    >
+                      {verificationType?.toLocaleUpperCase()}
+                    </Text>
+                    <Text className={css.analysisReason}>
+                      {getAnalysisReason(testData?.[index]?.analysisReason as string, getString, verificationType)}
+                    </Text>
+                  </Container>
+                  {Array.isArray(thresholds) && thresholds.length ? (
+                    <Accordion allowMultiOpen>
+                      <Accordion.Panel
+                        key={`${transactionName}-${metricName}-${type}`}
+                        id={`${transactionName}-${metricName}-${type}`}
+                        summary={
+                          <Text className={css.showDetailsText} padding={{ left: 'small' }} margin={{ right: 'small' }}>
+                            {getString('cv.metricsAnalysis.showDetails')}
+                          </Text>
+                        }
+                        details={
+                          <MetricAnalysisMetricThresolds
+                            thresholds={thresholds}
+                            appliedThresholds={testData?.[index]?.appliedThresholds}
+                          />
+                        }
+                      />
+                    </Accordion>
                   ) : null}
                 </Container>
-                <Container className={css.metricInfo} padding={{ left: 'small', bottom: 'small' }}>
-                  <Text
-                    font={{ variation: FontVariation.TABLE_HEADERS }}
-                    color={getRiskColorValue(testData?.[index]?.risk, false)}
-                    style={{ background: getSecondaryRiskColorValue(testData?.[index]?.risk) }}
-                    className={css.metricRisk}
-                    margin={{ right: 'small' }}
-                  >
-                    {getVerificationType(testData?.[index]?.risk as RiskValues, getString)}
-                  </Text>
-                  <Text className={css.analysisReason}>
-                    {getAnalysisReason(testData?.[index]?.analysisReason as string, getString)}
-                  </Text>
-                </Container>
-                {Array.isArray(thresholds) && thresholds.length ? (
-                  <Accordion allowMultiOpen>
-                    <Accordion.Panel
-                      key={`${transactionName}-${metricName}-${type}`}
-                      id={`${transactionName}-${metricName}-${type}`}
-                      summary={
-                        <Text className={css.showDetailsText} padding={{ left: 'small' }} margin={{ right: 'small' }}>
-                          {getString('cv.metricsAnalysis.showDetails')}
-                        </Text>
-                      }
-                      details={
-                        <MetricAnalysisMetricThresolds
-                          thresholds={thresholds}
-                          appliedThresholds={testData?.[index]?.appliedThresholds}
-                        />
-                      }
-                    />
-                  </Accordion>
-                ) : null}
-              </Container>
-            </div>
-          </Container>
-          <Container background={Color.WHITE} height={20}></Container>
-        </>
-      ))}
+              </div>
+            </Container>
+            <Container background={Color.WHITE} height={20}></Container>
+          </>
+        )
+      })}
       {filteredCharts.length < charts.length && (
         <Container style={{ textAlign: 'center' }}>
           <Button data-testid="loadMore_button" onClick={handleLoadMore} variation={ButtonVariation.LINK}>

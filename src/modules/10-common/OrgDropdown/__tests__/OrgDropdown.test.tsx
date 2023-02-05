@@ -10,7 +10,6 @@ import { render } from '@testing-library/react'
 import type { SelectOption } from '@harness/uicore'
 import { noop } from 'lodash-es'
 import { TestWrapper } from '@common/utils/testUtils'
-import { OrgMockData } from '@projects-orgs/pages/projects/__tests__/ProjectPageMock'
 import OrgDropdown from '../OrgDropdown'
 
 jest.mock('@harness/uicore', () => {
@@ -41,7 +40,39 @@ jest.mock('@harness/uicore', () => {
 })
 
 let orgListPromiseMock = jest.fn().mockImplementation(() => {
-  return Promise.resolve(OrgMockData)
+  return Promise.resolve({
+    data: {
+      status: 'SUCCESS',
+      data: {
+        pageCount: 1,
+        itemCount: 6,
+        pageSize: 50,
+        content: [
+          {
+            projectResponse: {
+              project: {
+                orgIdentifier: 'testOrg',
+                identifier: 'test',
+                name: 'test',
+                color: '#e6b800',
+                modules: ['CD'],
+                description: 'test',
+                tags: { tag1: '', tag2: 'tag3' }
+              },
+              createdAt: null,
+              lastModifiedAt: 1606799067248
+            }
+          }
+        ],
+        pageIndex: 0,
+        empty: false,
+        totalItems: 6
+      },
+      metaData: undefined,
+      correlationId: '370210dc-a345-42fa-b3cf-69bd64eb5073'
+    },
+    loading: false
+  })
 })
 
 jest.mock('services/cd-ng', () => ({

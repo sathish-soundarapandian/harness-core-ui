@@ -150,6 +150,7 @@ const routes = {
   toAuthenticationSettings: withAccountId(() => '/settings/authentication'),
   toAccountConfiguration: withAccountId(() => '/settings/authentication/configuration'),
   toAccountActivityLog: withAccountId(() => '/settings/authentication/activity-log'),
+  toTicketSettings: withAccountId(() => `/settings/tickets`),
 
   // Governance
   toGovernance: withAccountId(({ orgIdentifier, projectIdentifier, module }: GovernancePathProps) =>
@@ -2051,7 +2052,9 @@ const routes = {
       })
     }
   ),
-  toSSCSGettingStarted: withAccountId(() => '/sscs/getting-started')
+  toSSCSGettingStarted: withAccountId(() => '/sscs/getting-started'),
+  toIDP: withAccountId(() => '/idp'),
+  toIDPAdmin: withAccountId(() => '/idp-admin')
 }
 
 export default routes

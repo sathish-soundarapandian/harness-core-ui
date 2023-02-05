@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom'
 
 import { PageSpinner } from '@harness/uicore'
 
-import { GetTriggerQueryParams, NGTriggerConfigV2RequestBody, useGetTrigger } from 'services/pipeline-ng'
+import { GetTriggerQueryParams, NGTriggerConfigV2, useGetTrigger } from 'services/pipeline-ng'
 
 import { useQueryParams } from '@common/hooks'
 import type {
@@ -70,7 +70,7 @@ export default function TriggersWizardPage(): JSX.Element {
   useEffect(() => {
     // istanbul ignore else
     if (!loadingTriggerData && triggerResponse?.data?.yaml) {
-      const parsedTriggerYaml = parse(triggerResponse.data.yaml) as { trigger: NGTriggerConfigV2RequestBody }
+      const parsedTriggerYaml = parse(triggerResponse.data.yaml) as { trigger: NGTriggerConfigV2 }
 
       const triggerBaseType = parsedTriggerYaml?.trigger?.source?.type
       // istanbul ignore else

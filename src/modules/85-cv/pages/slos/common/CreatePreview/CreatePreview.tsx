@@ -12,6 +12,7 @@ import { useStrings } from 'framework/strings'
 import {
   PeriodLengthTypes,
   PeriodTypes,
+  SLIEventTypes,
   SLIMetricTypes
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { KeyValuePair } from '@cv/pages/slos/CVSLODetailsPage/DetailsPanel/views/ServiceDetails'
@@ -164,7 +165,11 @@ export const CreatePreview = ({ id, data }: CreatePreviewProps): JSX.Element => 
                 </Layout.Horizontal>
                 {data.SLIMetricType === SLIMetricTypes.RATIO && (
                   <Layout.Horizontal spacing={'small'}>
-                    <Text font={{ variation: FontVariation.BODY }}>{getString('cv.slos.goodRequestMetric')}: </Text>
+                    <Text font={{ variation: FontVariation.BODY }}>
+                      {data.eventType === SLIEventTypes.GOOD
+                        ? getString('cv.slos.goodRequestMetric')
+                        : getString('cv.slos.badRequestMetric')}
+                    </Text>
                     <Text font={{ variation: FontVariation.BODY }}>{data.goodRequestMetric}</Text>
                   </Layout.Horizontal>
                 )}

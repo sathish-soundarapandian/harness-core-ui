@@ -29,6 +29,7 @@ import {
   useCreateServiceV2,
   useGetYamlSchema
 } from 'services/cd-ng'
+import { queryClient } from 'services/queryClient'
 import { useStrings } from 'framework/strings'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { useToaster } from '@common/exports'
@@ -126,6 +127,8 @@ export const NewEditServiceModal: React.FC<NewEditServiceModalProps> = ({
           if (response.status === 'SUCCESS') {
             clear()
             showSuccess(getString('cd.serviceCreated'))
+            // We invalidate the service list call on creating a new service
+            queryClient.invalidateQueries(['getServiceAccessList'])
             onCreateOrUpdate(values)
           }
         }

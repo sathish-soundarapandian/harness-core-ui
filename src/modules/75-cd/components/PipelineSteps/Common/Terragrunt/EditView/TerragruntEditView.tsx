@@ -292,7 +292,6 @@ export default function TerragruntEditView(
           name={isBackendConfig ? getString('cd.backendConfigFileDetails') : getString('cd.configFileDetails')}
           isBackendConfig={isBackendConfig}
           isTerragruntPlan={false}
-          isTerragrunt
           isReadonly={readonly}
           allowableTypes={allowableTypes}
           onSubmitCallBack={(data: any, prevStepData: any) => {

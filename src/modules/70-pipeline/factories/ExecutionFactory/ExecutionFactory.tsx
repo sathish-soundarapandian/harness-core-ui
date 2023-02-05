@@ -5,7 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { Module } from '@common/interfaces/RouteInterfaces'
 import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import type { CellTypeRegister } from '@pipeline/pages/execution-list/ExecutionListTable/ExecutionListCells'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 
 import type {
@@ -19,6 +21,7 @@ import type {
 export interface ExecutionFactoryConstruct {
   defaultStepDetails: StepDetailsRegister
   defaultConsoleViewStepDetails: ConsoleViewStepDetailsRegister
+  defaultExecutionTriggerCell: CellTypeRegister
 }
 
 export class ExecutionFactory {
@@ -36,9 +39,14 @@ export class ExecutionFactory {
 
   private stageDetailsMap = new Map<StageType, StageDetailsRegister>()
 
+  private executionTriggerCellMap = new Map<Module, CellTypeRegister>()
+
+  private defaultExecutionTriggerCell: CellTypeRegister
+
   constructor(opt: ExecutionFactoryConstruct) {
     this.defaultStepDetails = opt.defaultStepDetails
     this.defaultConsoleViewStepDetails = opt.defaultConsoleViewStepDetails
+    this.defaultExecutionTriggerCell = opt.defaultExecutionTriggerCell
   }
 
   registerStepDetails(stepType: StepType, stepDetails: StepDetailsRegister): void {
@@ -84,5 +92,16 @@ export class ExecutionFactory {
 
   getStageDetails(type: StageType): StageDetailsRegister | null {
     return this.stageDetailsMap.get(type) || null
+  }
+
+  registerExecutionTriggerCellDetails(type: Module, data: CellTypeRegister): void {
+    this.executionTriggerCellMap.set(type, data)
+  }
+
+  getExecutionTriggerCellDetails(type?: Module): CellTypeRegister {
+    return type && this.executionTriggerCellMap.has(type)
+      ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        this.executionTriggerCellMap.get(type)!
+      : this.defaultExecutionTriggerCell
   }
 }

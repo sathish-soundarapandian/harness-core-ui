@@ -29,7 +29,9 @@ import {
   ServiceDefinition,
   useGetActiveInstancesByServiceIdEnvIdAndBuildIds,
   useGetInstancesDetails,
-  SpotInfrastructureDetails
+  SpotInfrastructureDetails,
+  AsgInstanceInfoDTO,
+  AsgInfrastructureDetails
 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { getReadableDateTime } from '@common/utils/dateUtils'
@@ -319,6 +321,25 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
             value: instanceData.artifactName || ''
           }
         ]
+      case ServiceDeploymentType.Asg:
+        return [
+          {
+            label: getString('cd.serviceDashboard.instanceId'),
+            value: (instanceData.instanceInfoDTO as AsgInstanceInfoDTO)?.instanceId || ''
+          },
+          {
+            label: getString('pipeline.artifactTriggerConfigPanel.artifact'),
+            value: instanceData.artifactName || ''
+          },
+          {
+            label: getString('cd.serviceDashboard.strategy'),
+            value: (instanceData.instanceInfoDTO as AsgInstanceInfoDTO)?.executionStrategy || ''
+          },
+          (instanceData.instanceInfoDTO as AsgInstanceInfoDTO)?.executionStrategy === 'blue-green' && {
+            label: getString('cd.serviceDashboard.bgEnv'),
+            value: (instanceData.instanceInfoDTO as AsgInstanceInfoDTO)?.production ? 'Prod' : 'Stage'
+          }
+        ]
       default:
         return ((instanceData?.instanceInfoDTO as K8sInstanceInfoDTO)?.containerList || []).length
           ? [
@@ -362,6 +383,17 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
           {
             label: getString('common.clusterName'),
             value: instanceData.infrastructureDetails?.cluster
+          }
+        ]
+      case ServiceDeploymentType.Asg:
+        return [
+          {
+            label: getString('cd.serviceDashboard.awsRegion'),
+            value: (instanceData.infrastructureDetails as AsgInfrastructureDetails).region || ''
+          },
+          {
+            label: getString('cd.serviceDashboard.asgName'),
+            value: (instanceData.infrastructureDetails as AsgInfrastructureDetails).asgName || ''
           }
         ]
       default:

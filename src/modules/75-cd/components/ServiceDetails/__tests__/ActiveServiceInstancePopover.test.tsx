@@ -14,7 +14,9 @@ import {
   mockserviceInstanceDetails,
   mockGitopsServiceInstanceDetails,
   mockServiceInstanceDetailsWithContainerList,
-  mockServiceInstanceDetailsForCustomDeployment
+  mockServiceInstanceDetailsForCustomDeployment,
+  mockServiceInstanceDetailsForAsgCanaryDeployment,
+  mockServiceInstanceDetailsForAsgBlueGreenDeployment
 } from './mocks'
 
 describe('ActiveServiceInstancePopover', () => {
@@ -112,5 +114,46 @@ describe('ActiveServiceInstancePopover', () => {
     expect(getByText('version:')!).toBeInTheDocument()
     expect(getByText('library/nginx:stable-perl')!).toBeInTheDocument()
     expect(getByText('2021.07.10_app_2.war')!).toBeInTheDocument()
+  })
+  test('should render instances info for Asg service deployment type for blue green deployment', () => {
+    jest
+      .spyOn(cdngServices, 'useGetActiveInstancesByServiceIdEnvIdAndBuildIds')
+      .mockImplementation(() => mockServiceInstanceDetailsForAsgBlueGreenDeployment as any)
+    const { getByText } = render(
+      <TestWrapper
+        path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <ActiveServiceInstancePopover buildId="buildId" envId="envId" instanceNum={0} />
+      </TestWrapper>
+    )
+    expect(getByText('cd.serviceDashboard.instanceId:')!).toBeInTheDocument()
+    expect(getByText('pipeline.artifactTriggerConfigPanel.artifact:')!).toBeInTheDocument()
+    expect(getByText('cd.serviceDashboard.strategy:')!).toBeInTheDocument()
+    expect(getByText('cd.serviceDashboard.bgEnv:')!).toBeInTheDocument()
+    expect(getByText('i-0cdf780d3e0d03e83')!).toBeInTheDocument()
+    expect(getByText('AWS AMI ssh 7999')!).toBeInTheDocument()
+    expect(getByText('blue-green')!).toBeInTheDocument()
+    expect(getByText('Prod')!).toBeInTheDocument()
+  })
+  test('should render instances info for Asg service deployment type for canary', () => {
+    jest
+      .spyOn(cdngServices, 'useGetActiveInstancesByServiceIdEnvIdAndBuildIds')
+      .mockImplementation(() => mockServiceInstanceDetailsForAsgCanaryDeployment as any)
+    const { getByText, queryByText } = render(
+      <TestWrapper
+        path="account/:accountId/cd/orgs/:orgIdentifier/projects/:projectIdentifier/services"
+        pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}
+      >
+        <ActiveServiceInstancePopover buildId="buildId" envId="envId" instanceNum={0} />
+      </TestWrapper>
+    )
+    expect(getByText('cd.serviceDashboard.instanceId:')!).toBeInTheDocument()
+    expect(getByText('pipeline.artifactTriggerConfigPanel.artifact:')!).toBeInTheDocument()
+    expect(getByText('cd.serviceDashboard.strategy:')!).toBeInTheDocument()
+    expect(queryByText('cd.serviceDashboard.bgEnv:')!).toBeFalsy()
+    expect(getByText('i-0cdf780d3e0d03e83')!).toBeInTheDocument()
+    expect(getByText('AWS AMI ssh 7999')!).toBeInTheDocument()
+    expect(getByText('canary')!).toBeInTheDocument()
   })
 })

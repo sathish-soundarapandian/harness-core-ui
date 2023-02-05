@@ -17,7 +17,9 @@ import {
   ModalErrorHandler,
   ButtonVariation,
   MultiSelectOption,
-  Popover
+  Popover,
+  PageSpinner,
+  getErrorInfoFromErrorObject
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { useParams } from 'react-router-dom'
@@ -55,7 +57,6 @@ import VaultFormFields from './views/VaultFormFields'
 import LocalFormFields from './views/LocalFormFields'
 import CustomFormFields from './views/CustomFormFields/CustomFormFields'
 import css from './CreateUpdateSecret.module.scss'
-
 export type SecretFormData = Omit<SecretDTOV2, 'spec'> & SecretTextSpecDTO & SecretFileSpecDTO & TemplateInputInterface
 interface TemplateInputInterface {
   templateInputs?: JsonNode
@@ -83,17 +84,25 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   const { getRBACErrorMessage } = useRBACError()
   const { onSuccess, connectorTypeContext, privateSecret } = props
   const propsSecret = props.secret
+
+  const editing = !!propsSecret
   const { accountId: accountIdentifier, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { showSuccess } = useToaster()
   const [modalErrorHandler, setModalErrorHandler] = useState<ModalErrorHandlerBinding>()
   const secretTypeFromProps = props.type
   const [type, setType] = useState<SecretResponseWrapper['secret']['type']>(secretTypeFromProps || 'SecretText')
   const [secret, setSecret] = useState<SecretDTOV2>()
+  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [initialSecretManagerAPICallInProgress, setInitialSecretManagerAPICallInProgress] = useState(true)
+  const [initialSecretManagerChangedOrSearchStared, setInitialSecretManagerChangedOrSearchStared] =
+    useState<boolean>(false)
   const { conditionallyOpenGovernanceErrorModal } = useGovernanceMetaDataModal({
     considerWarningAsError: false,
     errorHeaderMsg: 'secrets.policyEvaluations.failedToSave',
     warningHeaderMsg: 'secrets.policyEvaluations.warning'
   })
+  const [defaultSecretManagerId, setDefaultSecretManagerId] = useState<string>()
+  const [secretManagersOptions, setSecretManagerOptions] = useState<SelectOption[]>([])
 
   const {
     loading: loadingSecret,
@@ -139,17 +148,37 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   const {
     data: secretManagersApiResponse,
     loading: loadingSecretsManagers,
-    refetch: getSecretManagers
+    error: secretManagerError
   } = useGetConnectorList({
     queryParams: {
       accountIdentifier,
       orgIdentifier,
       projectIdentifier,
       category: 'SECRET_MANAGER',
-      source_category: sourceCategory
+      source_category: sourceCategory,
+      searchTerm: searchTerm
     },
-    lazy: true
+    debounce: 500
   })
+
+  useEffect(() => {
+    if (secretManagerError) {
+      modalErrorHandler?.showDanger(getErrorInfoFromErrorObject(secretManagerError))
+    }
+  }, [secretManagerError])
+  useEffect(() => {
+    if (secretManagersApiResponse) {
+      if (initialSecretManagerAPICallInProgress) {
+        setInitialSecretManagerAPICallInProgress(false)
+        const defaultSecretManagerIdLocal = secretManagersApiResponse?.data?.content?.find(
+          item => item.connector?.spec?.default
+        )?.connector?.identifier
+        if (defaultSecretManagerIdLocal) {
+          setDefaultSecretManagerId(defaultSecretManagerIdLocal)
+        }
+      }
+    }
+  }, [secretManagersApiResponse])
 
   const {
     data: connectorDetails,
@@ -204,13 +233,11 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
   }
 
   const loading = loadingCreateText || loadingUpdateText || loadingCreateFile || loadingUpdateFile
-  const editing = !!propsSecret
 
   useEffect(() => {
-    if (!editing) {
-      getSecretManagers()
-    } else if (secretResponse?.data?.secret && !loadingSecret) {
+    if (secretResponse?.data?.secret && !loadingSecret) {
       setSecret(secretResponse?.data?.secret)
+
       getConnectorDetails({
         queryParams: {
           accountIdentifier,
@@ -328,23 +355,28 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
     }
   }
 
-  const secretManagersOptions: SelectOption[] = editing
-    ? [
-        {
-          label: connectorDetails?.data?.connector?.name || '',
-          value: connectorDetails?.data?.connector?.identifier || ''
-        }
-      ]
-    : secretManagersApiResponse?.data?.content?.map((item: ConnectorResponse) => {
-        return {
-          label: item.connector?.name || '',
-          value: item.connector?.identifier || ''
-        }
-      }) || []
+  useEffect(() => {
+    if (connectorDetails || secretManagersApiResponse) {
+      const options = editing
+        ? [
+            {
+              label: connectorDetails?.data?.connector?.name || '',
+              value: connectorDetails?.data?.connector?.identifier || ''
+            }
+          ]
+        : secretManagersApiResponse?.data?.content?.map((item: ConnectorResponse) => {
+            return {
+              label: item.connector?.name || '',
+              value: item.connector?.identifier || ''
+            }
+          })
 
-  const defaultSecretManagerId = secretManagersApiResponse?.data?.content?.filter(
-    item => item.connector?.spec?.default
-  )[0]?.connector?.identifier
+      if (options) {
+        setSecretManagerOptions(options)
+      }
+    }
+  }, [secretManagersApiResponse, connectorDetails, editing])
+
   const secretTypeOptions = [
     { label: getString('secrets.secret.labelText'), value: 'SecretText' },
     { label: getString('secrets.secret.labelFile'), value: 'SecretFile' }
@@ -378,207 +410,228 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
     (secret?.type === 'SecretText' && (secret?.spec as SecretTextSpecDTO)?.valueType) === 'Inline'
   // update selectedSecretManager and readOnly flag in state when we get new data
   useEffect(() => {
-    const selectedSM = editing
-      ? // when editing, use connector from api response directly, since user cannot change SM
-        connectorDetails?.data?.connector
-      : // when creating, iterate over all secret managers to find default SM
-        secretManagersApiResponse?.data?.content?.filter(
-          itemValue => itemValue.connector?.identifier === defaultSecretManagerId
-        )?.[0]?.connector
+    if (!initialSecretManagerChangedOrSearchStared) {
+      const selectedSM = editing
+        ? // when editing, use connector from api response directly, since user cannot change SM
+          connectorDetails?.data?.connector
+        : // when creating, iterate over all secret managers to find default SM
+          secretManagersApiResponse?.data?.content?.find(
+            itemValue => itemValue.connector?.identifier === defaultSecretManagerId
+          )?.connector
 
-    setSelectedSecretManager(selectedSM)
-    setReadOnlySecretManager((selectedSM?.spec as VaultConnectorDTO)?.readOnly)
-  }, [defaultSecretManagerId, connectorDetails])
+      setSelectedSecretManager(selectedSM)
+      setReadOnlySecretManager((selectedSM?.spec as VaultConnectorDTO)?.readOnly)
+    }
+  }, [defaultSecretManagerId, connectorDetails, secretManagersApiResponse])
   return (
     <>
       <ModalErrorHandler bind={setModalErrorHandler} />
-      <Formik<SecretFormData>
-        initialValues={{
-          name: '',
-          description: '',
-          identifier: '',
-          tags: {},
-          valueType:
-            selectedSecretManager?.type === 'CustomSecretManager'
-              ? 'CustomSecretManagerValues'
-              : readOnlySecretManager
-              ? 'Reference'
-              : 'Inline',
-          type,
-          secretManagerIdentifier: selectedSecretManager?.identifier || defaultSecretManagerId || '',
-          orgIdentifier,
-          projectIdentifier,
-          templateInputs: templateInputSets,
-          ...pick(secret, ['name', 'identifier', 'description', 'tags']),
-          ...pick(secret?.spec, ['valueType', 'secretManagerIdentifier']),
-          ...(editing &&
-            secret &&
-            (secret?.spec as SecretTextSpecDTO)?.valueType === 'Reference' && {
-              reference: get(secret, 'spec.value')
-            }),
-          ...(editing &&
-            secret && {
-              regions: convertPayloadtoRegionsMultiSelectData(get(secret, 'spec.additionalMetadata.values.regions'))
-            }),
-          ...(editing && secret && pick((secret?.spec as SecretTextSpecDTO)?.additionalMetadata?.values, ['version'])),
-          ...(editing &&
-            get(secret, 'spec.additionalMetadata.values.regions') && {
-              configureRegions: !!get(secret, 'spec.additionalMetadata.values.regions')
-            })
-        }}
-        formName="createUpdateSecretForm"
-        enableReinitialize
-        validationSchema={Yup.object().shape({
-          name: NameSchema(getString),
-          identifier: IdentifierSchema(getString),
-          value:
-            editing || type === 'SecretFile' || selectedSecretManager?.type === 'CustomSecretManager'
-              ? Yup.string().trim()
-              : Yup.string()
-                  .trim()
-                  .when('valueType', {
-                    is: 'Inline',
-                    then: Yup.string().trim().required(getString('common.validation.valueIsRequired')),
-                    otherwise: Yup.string().trim()
-                  }),
-          reference:
-            editing || type === 'SecretFile' || selectedSecretManager?.type === 'CustomSecretManager'
-              ? Yup.string().trim()
-              : Yup.string()
-                  .trim()
-                  .when('valueType', {
-                    is: 'Reference',
-                    then: Yup.string().trim().required(getString('secrets.secret.referenceRqrd')),
-                    otherwise: Yup.string().trim()
-                  }),
-          secretManagerIdentifier: Yup.string().required(getString('secrets.secret.validationKms')),
-          templateInputs:
-            selectedSecretManager?.type === 'CustomSecretManager'
-              ? Yup.object().shape({
-                  environmentVariables: VariableSchemaWithoutHook(getString)
-                })
-              : Yup.object(),
-          version:
-            selectedSecretManager?.type === 'GcpSecretManager'
-              ? Yup.string()
-                  .trim()
-                  .when('valueType', {
-                    is: 'Reference',
-                    then: Yup.string().required(getString('secrets.secret.referenceSecretVersionRqrd'))
+      {initialSecretManagerAPICallInProgress ? (
+        <PageSpinner />
+      ) : (
+        <Formik<SecretFormData>
+          enableReinitialize
+          initialValues={{
+            name: '',
+            description: '',
+            identifier: '',
+            tags: {},
+            valueType:
+              selectedSecretManager?.type === 'CustomSecretManager'
+                ? 'CustomSecretManagerValues'
+                : readOnlySecretManager
+                ? 'Reference'
+                : 'Inline',
+            type,
+            secretManagerIdentifier:
+              selectedSecretManager?.identifier ||
+              (!initialSecretManagerChangedOrSearchStared && defaultSecretManagerId) ||
+              '',
+            orgIdentifier,
+            projectIdentifier,
+            templateInputs: templateInputSets,
+            ...pick(secret, ['name', 'identifier', 'description', 'tags']),
+            ...pick(secret?.spec, ['valueType', 'secretManagerIdentifier']),
+            ...(editing &&
+              secret &&
+              (secret?.spec as SecretTextSpecDTO)?.valueType === 'Reference' && {
+                reference: get(secret, 'spec.value')
+              }),
+            ...(editing &&
+              secret && {
+                regions: convertPayloadtoRegionsMultiSelectData(get(secret, 'spec.additionalMetadata.values.regions'))
+              }),
+            ...(editing &&
+              secret &&
+              pick((secret?.spec as SecretTextSpecDTO)?.additionalMetadata?.values, ['version'])),
+            ...(editing &&
+              get(secret, 'spec.additionalMetadata.values.regions') && {
+                configureRegions: !!get(secret, 'spec.additionalMetadata.values.regions')
+              })
+          }}
+          formName="createUpdateSecretForm"
+          validationSchema={Yup.object().shape({
+            name: NameSchema(getString),
+            identifier: IdentifierSchema(getString),
+            value:
+              editing || type === 'SecretFile' || selectedSecretManager?.type === 'CustomSecretManager'
+                ? Yup.string().trim()
+                : Yup.string()
+                    .trim()
+                    .when('valueType', {
+                      is: 'Inline',
+                      then: Yup.string().trim().required(getString('common.validation.valueIsRequired')),
+                      otherwise: Yup.string().trim()
+                    }),
+            reference:
+              editing || type === 'SecretFile' || selectedSecretManager?.type === 'CustomSecretManager'
+                ? Yup.string().trim()
+                : Yup.string()
+                    .trim()
+                    .when('valueType', {
+                      is: 'Reference',
+                      then: Yup.string().trim().required(getString('secrets.secret.referenceRqrd')),
+                      otherwise: Yup.string().trim()
+                    }),
+            secretManagerIdentifier: Yup.string().required(getString('secrets.secret.validationKms')),
+            templateInputs:
+              selectedSecretManager?.type === 'CustomSecretManager'
+                ? Yup.object().shape({
+                    environmentVariables: VariableSchemaWithoutHook(getString)
                   })
-              : Yup.string()
-        })}
-        validate={formData => {
-          props.onChange?.({
-            type: formData.type,
-            ...pick(formData, ['name', 'description', 'identifier', 'tags']),
-            spec: pick(formData, ['value', 'valueType', 'secretManagerIdentifier']) as SecretTextSpecDTO
-          })
-        }}
-        onSubmit={data => {
-          handleSubmit(data)
-        }}
-      >
-        {formikProps => {
-          const typeOfSelectedSecretManager = selectedSecretManager?.type
+                : Yup.object(),
+            version:
+              selectedSecretManager?.type === 'GcpSecretManager'
+                ? Yup.string()
+                    .trim()
+                    .when('valueType', {
+                      is: 'Reference',
+                      then: Yup.string().required(getString('secrets.secret.referenceSecretVersionRqrd'))
+                    })
+                : Yup.string()
+          })}
+          validate={formData => {
+            props.onChange?.({
+              type: formData.type,
+              ...pick(formData, ['name', 'description', 'identifier', 'tags']),
+              spec: pick(formData, ['value', 'valueType', 'secretManagerIdentifier']) as SecretTextSpecDTO
+            })
+          }}
+          onSubmit={data => {
+            handleSubmit(data)
+          }}
+        >
+          {formikProps => {
+            const typeOfSelectedSecretManager = selectedSecretManager?.type
+            return (
+              <FormikForm>
+                <FormInput.Select
+                  onQueryChange={(query: string) => {
+                    if (!initialSecretManagerChangedOrSearchStared) {
+                      setInitialSecretManagerChangedOrSearchStared(true)
+                    }
+                    setSearchTerm(query)
+                  }}
+                  name="secretManagerIdentifier"
+                  label={getString('secrets.labelSecretsManager')}
+                  items={secretManagersOptions}
+                  disabled={editing || loadingSecretsManagers || loadingConnectorDetails}
+                  onChange={item => {
+                    if (!initialSecretManagerChangedOrSearchStared) {
+                      setInitialSecretManagerChangedOrSearchStared(true)
+                    }
+                    const secretManagerData = secretManagersApiResponse?.data?.content?.find(
+                      itemValue => itemValue.connector?.identifier === item.value
+                    )?.connector
+                    const readOnlyTemp =
+                      secretManagerData?.type === 'Vault'
+                        ? (secretManagerData?.spec as VaultConnectorDTO)?.readOnly
+                        : false
+                    setReadOnlySecretManager(readOnlyTemp)
+                    formikProps.setFieldValue(
+                      'valueType',
+                      secretManagerData?.type === 'CustomSecretManager'
+                        ? 'CustomSecretManagerValues'
+                        : readOnlyTemp
+                        ? 'Reference'
+                        : 'Inline'
+                    )
 
-          return (
-            <FormikForm>
-              <FormInput.Select
-                name="secretManagerIdentifier"
-                label={getString('secrets.labelSecretsManager')}
-                items={secretManagersOptions}
-                disabled={editing || loadingSecretsManagers || loadingConnectorDetails}
-                onChange={item => {
-                  const secretManagerData = secretManagersApiResponse?.data?.content?.filter(
-                    itemValue => itemValue.connector?.identifier === item.value
-                  )?.[0]?.connector
-                  const readOnlyTemp =
-                    secretManagerData?.type === 'Vault'
-                      ? (secretManagerData?.spec as VaultConnectorDTO)?.readOnly
-                      : false
-                  setReadOnlySecretManager(readOnlyTemp)
-                  formikProps.setFieldValue(
-                    'valueType',
-                    secretManagerData?.type === 'CustomSecretManager'
-                      ? 'CustomSecretManagerValues'
-                      : readOnlyTemp
-                      ? 'Reference'
-                      : 'Inline'
-                  )
-
-                  initializeTemplateInputs(secretManagerData)
-                  setSelectedSecretManager(secretManagerData)
-                }}
-              />
-              {!secretTypeFromProps ? (
-                <FormInput.RadioGroup
-                  name="type"
-                  label={getString('secrets.secret.labelSecretType')}
-                  items={secretTypeOptions}
-                  radioGroup={{ inline: true }}
-                  onChange={ev => {
-                    setType((ev.target as HTMLInputElement).value as SecretResponseWrapper['secret']['type'])
+                    initializeTemplateInputs(secretManagerData)
+                    setSelectedSecretManager(secretManagerData)
                   }}
                 />
-              ) : null}
-              <Popover
-                interactionKind={'hover-target'}
-                position="top"
-                className={css.hoverMsg}
-                targetClassName={css.hoverMsgTarget}
-                content={<Text padding="medium">{getString('secrets.gcpSecretEdit')}</Text>}
-                disabled={!isGcpSMInlineEditMode()}
-              >
-                <FormInput.InputWithIdentifier
-                  inputName="name"
-                  inputLabel={getString('secrets.labelSecretName')}
-                  idName="identifier"
-                  isIdentifierEditable={!editing}
-                  maxInput={128}
-                  inputGroupProps={{
-                    disabled: isGcpSMInlineEditMode() || loading
-                  }}
-                />
-              </Popover>
+                {!secretTypeFromProps ? (
+                  <FormInput.RadioGroup
+                    name="type"
+                    label={getString('secrets.secret.labelSecretType')}
+                    items={secretTypeOptions}
+                    radioGroup={{ inline: true }}
+                    onChange={ev => {
+                      setType((ev.target as HTMLInputElement).value as SecretResponseWrapper['secret']['type'])
+                    }}
+                  />
+                ) : null}
+                <Popover
+                  interactionKind={'hover-target'}
+                  position="top"
+                  className={css.hoverMsg}
+                  targetClassName={css.hoverMsgTarget}
+                  content={<Text padding="medium">{getString('secrets.gcpSecretEdit')}</Text>}
+                  disabled={!isGcpSMInlineEditMode()}
+                >
+                  <FormInput.InputWithIdentifier
+                    inputName="name"
+                    inputLabel={getString('secrets.labelSecretName')}
+                    idName="identifier"
+                    isIdentifierEditable={!editing}
+                    maxInput={128}
+                    inputGroupProps={{
+                      disabled: isGcpSMInlineEditMode() || loading
+                    }}
+                  />
+                </Popover>
 
-              {!typeOfSelectedSecretManager ? <Text>{getString('secrets.secret.messageSelectSM')}</Text> : null}
-              {typeOfSelectedSecretManager === 'CustomSecretManager' ? (
-                <CustomFormFields
-                  formikProps={formikProps}
-                  type={type}
-                  templateInputSets={templateInputSets as JsonNode}
-                  modalErrorHandler={modalErrorHandler}
-                />
-              ) : null}
-              {LocalFormFieldsSMList.findIndex(val => val === typeOfSelectedSecretManager) !== -1 ? (
-                <LocalFormFields disableAutocomplete formik={formikProps} type={type} editing={editing} />
-              ) : null}
-              {typeOfSelectedSecretManager === 'Vault' ||
-              typeOfSelectedSecretManager === 'AzureKeyVault' ||
-              typeOfSelectedSecretManager === 'AwsSecretManager' ||
-              typeOfSelectedSecretManager === 'GcpSecretManager' ? (
-                <VaultFormFields
-                  secretManagerType={typeOfSelectedSecretManager}
-                  formik={formikProps}
-                  type={type}
-                  editing={editing}
-                  readonly={readOnlySecretManager}
-                />
-              ) : null}
+                {!typeOfSelectedSecretManager ? <Text>{getString('secrets.secret.messageSelectSM')}</Text> : null}
+                {typeOfSelectedSecretManager === 'CustomSecretManager' ? (
+                  <CustomFormFields
+                    formikProps={formikProps}
+                    type={type}
+                    templateInputSets={templateInputSets as JsonNode}
+                    modalErrorHandler={modalErrorHandler}
+                  />
+                ) : null}
+                {LocalFormFieldsSMList.findIndex(val => val === typeOfSelectedSecretManager) !== -1 ? (
+                  <LocalFormFields disableAutocomplete formik={formikProps} type={type} editing={editing} />
+                ) : null}
+                {typeOfSelectedSecretManager === 'Vault' ||
+                typeOfSelectedSecretManager === 'AzureKeyVault' ||
+                typeOfSelectedSecretManager === 'AwsSecretManager' ||
+                typeOfSelectedSecretManager === 'GcpSecretManager' ? (
+                  <VaultFormFields
+                    secretManagerType={typeOfSelectedSecretManager}
+                    formik={formikProps}
+                    type={type}
+                    editing={editing}
+                    readonly={readOnlySecretManager}
+                  />
+                ) : null}
 
-              <Button
-                intent="primary"
-                type="submit"
-                text={loading ? getString('common.saving') : getString('save')}
-                margin={{ top: 'large' }}
-                disabled={loading || !typeOfSelectedSecretManager}
-                variation={ButtonVariation.PRIMARY}
-              />
-            </FormikForm>
-          )
-        }}
-      </Formik>
+                <Button
+                  intent="primary"
+                  type="submit"
+                  text={loading ? getString('common.saving') : getString('save')}
+                  margin={{ top: 'large' }}
+                  disabled={
+                    loading || !typeOfSelectedSecretManager || loadingSecretsManagers || loadingConnectorDetails
+                  }
+                  variation={ButtonVariation.PRIMARY}
+                />
+              </FormikForm>
+            )
+          }}
+        </Formik>
+      )}
     </>
   )
 }

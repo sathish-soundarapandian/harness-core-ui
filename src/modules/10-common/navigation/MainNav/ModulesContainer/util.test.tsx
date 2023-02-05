@@ -98,6 +98,14 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     hasLicense: false,
     homePageUrl: '',
     color: 'green'
+  },
+  IDP: {
+    shouldVisible: true,
+    icon: 'idp',
+    label: 'common.purpose.idp.shortName',
+    hasLicense: false,
+    homePageUrl: '',
+    color: 'green'
   }
 }
 

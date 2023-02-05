@@ -134,8 +134,15 @@ function ServiceStudioDetails(props: ServiceStudioDetailsProps): React.ReactElem
     try {
       const response = isServiceCreateModalView ? await createService(body) : await updateService(body)
       if (response.status === 'SUCCESS') {
-        if (isServiceEntityModalView) {
+        if (isServiceCreateModalView) {
+          // We invalidate the service list call on creating a new service
           queryClient.invalidateQueries(['getServiceAccessList'])
+        } else {
+          // We invalidate the service inputs call on updating an existing service
+          queryClient.invalidateQueries(['getServicesYamlAndRuntimeInputs'])
+        }
+
+        if (isServiceEntityModalView) {
           const serviceResponse = response.data?.service
           onServiceCreate?.({
             identifier: serviceResponse?.identifier as string,

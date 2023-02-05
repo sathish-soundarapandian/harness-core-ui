@@ -86,7 +86,7 @@ export class DeployCloudFunctionRollbackStep extends PipelineStep<StepElementCon
 
     return (
       <GenericExecutionStepEditRef
-        formikFormName={'deloyCloudFunctionRollbackStepEdit'}
+        formikFormName={'cloudFunctionRollbackStep'}
         initialValues={initialValues}
         onUpdate={onUpdate}
         isNewStep={isNewStep}

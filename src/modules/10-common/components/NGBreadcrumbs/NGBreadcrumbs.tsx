@@ -126,6 +126,10 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
         url = paths.toSSCS(params)
         label = getString('common.sscsText')
         break
+      case ModuleName.IDP:
+        url = paths.toIDP(params)
+        label = getString('common.purpose.idp.name')
+        break
     }
 
     if (projectIdentifier) {

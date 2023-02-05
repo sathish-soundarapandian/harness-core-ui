@@ -67,6 +67,12 @@ const PIPELINE_STUDIO_PATH = routes.toPipelineStudio({
   ...pipelineModuleParams
 })
 
+const PIPELINE_STUDIO_V1_PATH = routes.toPipelineStudioV1({
+  ...accountPathProps,
+  ...pipelinePathProps,
+  ...pipelineModuleParams
+})
+
 jest.mock('@common/hooks', () => ({
   ...(jest.requireActual('@common/hooks') as any),
   useQueryParams: jest.fn().mockImplementation(() => ({}))
@@ -164,6 +170,27 @@ describe('Pipeline Details tests', () => {
           projectIdentifier: 'test',
           pipelineIdentifier: 'pipeline',
           module: 'cd'
+        }}
+        defaultAppStoreValues={defaultAppStoreValues}
+      >
+        <PipelineDetails />
+      </TestWrapper>
+    )
+    const pipelineStudio = getByTestId('pipeline-studio')
+    expect(pipelineStudio).toBeTruthy()
+    expect(getByText('inputSetsText')).toBeInTheDocument()
+  })
+
+  test('pipelineStudio should be rendered if pipeline studio V1 is visited', () => {
+    const { getByTestId, getByText } = render(
+      <TestWrapper
+        path={PIPELINE_STUDIO_V1_PATH}
+        pathParams={{
+          accountId: 'testAcc',
+          orgIdentifier: 'testOrg',
+          projectIdentifier: 'test',
+          pipelineIdentifier: 'pipeline',
+          module: 'ci'
         }}
         defaultAppStoreValues={defaultAppStoreValues}
       >

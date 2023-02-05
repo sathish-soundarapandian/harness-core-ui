@@ -19,8 +19,9 @@ import { useUpdateQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
-import type { PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { ModulePathParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
+import factory from '@pipeline/factories/ExecutionFactory'
 import {
   DurationCell,
   ExecutionCell,
@@ -29,8 +30,7 @@ import {
   PipelineNameCell,
   RowSelectCell,
   StatusCell,
-  ToggleAccordionCell,
-  TriggerInfoCell
+  ToggleAccordionCell
 } from './ExecutionListCells'
 import { ExecutionStageList } from './ExecutionStageList'
 import type { SortBy } from '../types'
@@ -53,7 +53,7 @@ function ExecutionListTable({
 }: ExecutionListTableProps): React.ReactElement {
   const history = useHistory()
   const { updateQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
-  const pathParams = useParams<PipelineType<PipelinePathProps>>()
+  const pathParams = useParams<PipelineType<PipelinePathProps & ModulePathParams>>()
   const queryParams = useExecutionListQueryParams()
   const { getString } = useStrings()
   const { isCompareMode } = useExecutionCompareContext()
@@ -101,7 +101,7 @@ function ExecutionListTable({
       {
         Header: '',
         accessor: 'moduleInfo',
-        Cell: TriggerInfoCell,
+        Cell: factory.getExecutionTriggerCellDetails(pathParams.module).component,
         disableSortBy: true
       },
       {

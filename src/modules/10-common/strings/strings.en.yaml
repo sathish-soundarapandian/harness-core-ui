@@ -61,6 +61,7 @@ preProduction: 'Pre-Production'
 addVariable: Add Variable
 advanced: '{{ $.advancedTitle }}'
 editVariable: Edit variable
+noTags: No tags found
 editVariableType: Edit variable type
 removeThisVariable: Remove This variable
 optionalConfig: Optional Configuration
@@ -333,6 +334,10 @@ purpose:
     subtitle: Build and validate the resilience of your service through controlled chaos experiments.
     description: '{{$.common.purpose.chaos.subtitle}}'
     moduleSelectionSubHeading: '{{$.common.purpose.chaos.subtitle}}'
+  idp:
+    name: Developer Portal
+    fullName: Internal Developer Portal
+    shortName: IDP
 trialInProgress: Trial in progress
 trialInProgressDescription: A Project contains your pipelines, resources, and team members. Get started by creating your first Project.
 letsGetYouStarted: Let’s get you started
@@ -1024,6 +1029,7 @@ moduleList:
   deployChanges: Deploy Changes
   manageImpact: Manage Impact
   optimize: Optimize
+  optimizeProcesses: Optimize Processes
 moduleConfig:
   customize: Customize your navigation
   selectModules: Select which modules you want readily available on
@@ -1340,3 +1346,11 @@ errorOccured: 'Error occured while {{verb}} {{entity}}'
 # SSCS module
 sscs: SSCS
 sscsText: Software Supply Chain Security
+tickets:
+  selectConnector: '[Select] Ticket Provider Connector'
+  selectProjectName: '[Select] Project Name'
+  connector: 'Ticket Provider Connector'
+  defaultProjectName: 'Default Project Name'
+  tickets: 'Tickets'
+  ticketComment: 'Append comment to ticket when Security Issue changes are detected (coming soon)'
+  ticketExemption: 'Create a ticket when an Exemption is created (coming soon)'

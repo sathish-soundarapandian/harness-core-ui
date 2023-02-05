@@ -15,6 +15,7 @@ declare const styles: {
   readonly customTag: string
   readonly customTagButton: string
   readonly harnessTag: string
+  readonly idpTag: string
   readonly moduleTag: string
   readonly predefinedTags: string
   readonly sscsTag: string

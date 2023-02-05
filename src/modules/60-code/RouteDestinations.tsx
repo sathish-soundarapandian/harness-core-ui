@@ -12,6 +12,8 @@ import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import SideNav from '@code/components/SideNav/SideNav'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { projectPathProps } from '@common/utils/routeUtils'
+import { ModuleName } from 'framework/types/ModuleName'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import {
   Repository,
   Repositories,
@@ -50,10 +52,20 @@ const codePathProps: Required<CODEPathProps> = {
 
 const RedirectToDefaultSCMRoute: React.FC = () => {
   const { accountId } = useParams<CODEPathProps>()
+
   const history = useHistory()
+  const { selectedProject } = useAppStore() // eslint-disable-line react-hooks/rules-of-hooks
 
   useEffect(() => {
-    history.replace(routes.toCODEHome({ accountId }))
+    if (selectedProject?.modules?.includes(ModuleName.CODE)) {
+      history.replace(
+        routes.toCODERepositories({
+          space: [accountId, selectedProject.orgIdentifier || '', selectedProject.identifier].join('/')
+        })
+      )
+    } else {
+      history.replace(routes.toCODEHome({ accountId }))
+    }
   }, [history, accountId])
 
   return null

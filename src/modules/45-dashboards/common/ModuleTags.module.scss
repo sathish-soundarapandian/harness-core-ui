@@ -57,6 +57,11 @@
   background: var(--sscs-background);
   border: 1px solid var(--sscs-border);
 }
+.idpTag {
+  color: var(--idp-foreground);
+  background: var(--idp-background);
+  border: 1px solid var(--idp-border);
+}
 
 .predefinedTags {
   // Continuous Delivery
@@ -98,6 +103,11 @@
   --sscs-foreground: #1947ec;
   --sscs-border: #4791ff;
   --sscs-background: #ebefff;
+
+  // Internal Developer Portal
+  --idp-foreground: #36baa2;
+  --idp-border: #36baa2;
+  --idp-background: #ebefff;
 
   margin-top: var(--spacing-4);
   section,

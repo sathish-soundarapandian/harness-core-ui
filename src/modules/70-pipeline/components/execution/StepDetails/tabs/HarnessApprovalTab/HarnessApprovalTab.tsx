@@ -136,9 +136,11 @@ export function HarnessApprovalTab(props: HarnessApprovalTabProps): React.ReactE
                 </div>
               </div>
               <Text
-                intent="warning"
+                intent="none"
                 font={{ align: 'left' }}
                 style={{ wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
+                color={Color.PRIMARY_6}
+                icon="code-info"
               >
                 {approvalData?.details?.approvalMessage}
               </Text>

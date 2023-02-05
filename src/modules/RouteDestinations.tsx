@@ -30,6 +30,7 @@ import CVRoutes from '@cv/RouteDestinations'
 import CFRoutes from '@cf/RouteDestinations'
 import CERoutes from '@ce/RouteDestinations'
 import STORoutes from '@sto/RouteDestinations'
+import IDPRoutes from '@idp/RouteDestinations'
 import GovernanceRoutes from '@governance/RouteDestinations'
 import IACMRoutes from '@iacm/RouteDestinations'
 import ChaosRoutes from '@chaos/RouteDestinations'
@@ -59,7 +60,8 @@ export default function RouteDestinations(): React.ReactElement {
     NG_SETTINGS,
     CODE_ENABLED,
     IACM_ENABLED,
-    SSCS_ENABLED
+    SSCS_ENABLED,
+    IDP_ENABLED
   } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
@@ -91,6 +93,7 @@ export default function RouteDestinations(): React.ReactElement {
       {CDNG_ENABLED ? CDRoutes.props.children : null}
       {isCVModuleEnabled ? CVRoutes.props.children : null}
       {GitOpsRoutes.props.children}
+      {IDP_ENABLED ? IDPRoutes.props.children : null}
       {licenseInformation['STO']?.status === 'ACTIVE' ? (
         <Route path="/account/:accountId/:module(sto)">
           <STORoutes />

@@ -5,13 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { AdditionalInfo } from 'services/cv'
-
-export const VerificationJobType: { [key: string]: AdditionalInfo['type'] } = {
+export const VerificationJobType: { [key: string]: string } = {
   TEST: 'TEST',
   CANARY: 'CANARY',
   BLUE_GREEN: 'BLUE_GREEN',
-  ROLLING: 'ROLLING'
+  ROLLING: 'ROLLING',
+  NO_ANALYSIS: 'NO_ANALYSIS'
 }
 
 export enum HealthSourcesType {

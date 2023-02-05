@@ -10,6 +10,7 @@ declare const styles: {
   readonly addButton: string
   readonly customApprovalContainer: string
   readonly deploymentViewMedium: string
+  readonly divider: string
   readonly environmentVarHeader: string
   readonly label: string
   readonly minConfigBtn: string

@@ -157,7 +157,9 @@ export const ExecutionStatusIconMap: Record<ExecutionStatus, IconName> = {
   ApprovalWaiting: 'waiting',
   Pausing: 'pause',
   InputWaiting: 'waiting',
-  WaitStepRunning: 'waiting'
+  WaitStepRunning: 'waiting',
+  QueuedLicenseLimitReached: 'queued',
+  QueuedExecutionConcurrencyReached: 'queued'
 }
 
 export type InterruptType = InterruptEffectDTO['interruptType']

@@ -93,6 +93,10 @@ const moduleLabelMap: Record<NavModuleName, IModuleOverviewMap> = {
   [ModuleName.SSCS]: {
     label: 'common.sscs',
     Component: () => null
+  },
+  [ModuleName.IDP]: {
+    label: 'common.purpose.idp.name',
+    Component: () => null
   }
 }
 

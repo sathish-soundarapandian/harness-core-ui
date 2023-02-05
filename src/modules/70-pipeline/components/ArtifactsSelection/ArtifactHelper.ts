@@ -62,18 +62,10 @@ export const isSidecarAllowed = (deploymentType: ServiceDefinition['type'], isRe
   )
 }
 
-export const shouldAllowOnlyOneArtifact = (deploymentType: ServiceDefinition['type']): boolean => {
-  return deploymentType === ServiceDeploymentType.GoogleCloudFunctions
-}
-
 export const isPrimaryAdditionAllowed = (
   primaryArtifact: ArtifactSource[] | PrimaryArtifact,
-  isMultiArtifactSource?: boolean,
-  allowOnlyOneArtifactAddition = false
+  isMultiArtifactSource?: boolean
 ): boolean => {
-  if (!isEmpty(primaryArtifact) && allowOnlyOneArtifactAddition) {
-    return false
-  }
   if (isMultiArtifactSource) {
     return true
   }

@@ -70,7 +70,7 @@ co:
   deleteRuleSuccessMessage: 'Rule {{name}} deleted successfully'
   createAsRule: 'Create AutoStopping Rule'
   editAsRule: 'Edit AutoStopping Rule'
-  clusterOrchestratorLabel: Cluster Orchestrators
+  clusterOrchestratorLabel: Cluster Orchestrator
   landingPageText:
     '<b>AutoStopping Rules</b> dynamically make sure that your <i>non-production workloads</i> are <b>running (and costing you)
     only when you’re using them</b>, and never when they are idle. Additionally, run your workloads on fully

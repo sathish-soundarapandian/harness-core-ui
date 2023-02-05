@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom'
 import type { WorkloadDateCountInfo, LastWorkloadInfo, ChangeRate } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import type { ExecutorInfoDTO } from 'services/pipeline-ng'
 import ServiceCardWithChart from './CardWithChart'
 import css from '../CDDashboardPage.module.scss'
@@ -47,7 +48,7 @@ export default function WorkloadCard({
   }, [workload])
   const gotoServices = (): void => {
     const route = routes.toServiceStudio({ accountId, orgIdentifier, projectIdentifier, serviceId, module })
-    window.open(`#${route}`)
+    window.open(`${windowLocationUrlPartBeforeHash()}#${route}`)
   }
   return (
     <ServiceCardWithChart

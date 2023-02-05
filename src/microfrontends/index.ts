@@ -16,6 +16,7 @@ import type YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import type MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import type RBACTooltip from '@rbac/components/RBACTooltip/RBACTooltip'
 import type LevelUpBanner from '@common/components/FeatureWarning/LevelUpBanner'
+import type ParentLink from '@common/components/ParentLink/ParentLink'
 
 // hook types
 import type { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -63,6 +64,7 @@ export interface CommonComponents {
   MonacoDiffEditor: typeof MonacoDiffEditor
   RBACTooltip?: typeof RBACTooltip
   LevelUpBanner?: typeof LevelUpBanner
+  ParentLink?: typeof ParentLink
 }
 
 export interface Hooks {

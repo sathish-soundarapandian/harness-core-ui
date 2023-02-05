@@ -184,7 +184,7 @@ const NewFolderForm: React.FC<NewFolderModalData> = props => {
             <Layout.Vertical style={{ justifyContent: 'space-between' }} height="100%">
               <Container>
                 <ModalErrorHandler bind={setModalErrorHandler} />
-                <NameId identifierProps={{ isIdentifierEditable: !editMode }} />
+                <NameId identifierProps={{ isIdentifierEditable: !editMode, maxInput: 128 }} />
               </Container>
               <FooterRenderer
                 type="submit"

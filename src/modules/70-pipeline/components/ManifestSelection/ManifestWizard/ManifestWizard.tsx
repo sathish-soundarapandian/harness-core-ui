@@ -56,7 +56,8 @@ const showManifestStoreStepDirectly = (selectedManifest: ManifestTypes | null): 
       ManifestDataType.AsgConfiguration,
       ManifestDataType.AsgLaunchTemplate,
       ManifestDataType.AsgScalingPolicy,
-      ManifestDataType.AsgScheduledUpdateGroupAction
+      ManifestDataType.AsgScheduledUpdateGroupAction,
+      ManifestDataType.GoogleCloudFunctionDefinition
     ].includes(selectedManifest)
   )
 }

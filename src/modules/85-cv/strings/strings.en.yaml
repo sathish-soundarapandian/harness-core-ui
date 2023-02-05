@@ -800,7 +800,7 @@ sensitivityValidation: Sensitivity should be high, medium or low
 metricsAnalysis:
   analysisReason:
     customFailFastThreshold: Failed because a fail-fast threshold was breached
-    mlAnalysis: Passed/failed by the Harness ML analysis
+    mlAnalysis: '{{ verificationType }} by the Harness ML analysis'
     noControlData: No control data to compare against.
     noTestData: No data to be analysed.
   showDetails: Show details
@@ -866,6 +866,7 @@ slos:
   searchSLO: Search by SLO name
   requestType: RequestType
   goodRequestMetric: Good request metric
+  badRequestMetric: Bad request metric
   validRequestMetric: Valid request metric
   sloFormula:
     title: How we do the SLI calculation?

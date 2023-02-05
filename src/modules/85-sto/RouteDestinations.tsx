@@ -222,7 +222,7 @@ RbacFactory.registerResourceTypeHandler(ResourceType.STO_ISSUE, {
 })
 RbacFactory.registerResourceTypeHandler(ResourceType.TICKET, {
   icon: 'sto-color-filled',
-  label: 'sto.tickets',
+  label: 'common.tickets.tickets',
   labelSingular: 'common.singularLabels.ticket',
   category: ResourceCategory.STO,
   permissionLabels: {

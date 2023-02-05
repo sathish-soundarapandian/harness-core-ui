@@ -7,6 +7,7 @@
 
 import { DefaultView } from '@pipeline/components/execution/StepDetails/views/DefaultView/DefaultView'
 import { DefaultConsoleViewStepDetails } from '@pipeline/components/LogsContent/LogsContent'
+import { DefaultTriggerInfoCell } from '@pipeline/pages/execution-list/ExecutionListTable/ExecutionListCells'
 import { ExecutionFactory } from './ExecutionFactory'
 
 const factory = new ExecutionFactory({
@@ -15,6 +16,9 @@ const factory = new ExecutionFactory({
   },
   defaultConsoleViewStepDetails: {
     component: DefaultConsoleViewStepDetails
+  },
+  defaultExecutionTriggerCell: {
+    component: DefaultTriggerInfoCell
   }
 })
 

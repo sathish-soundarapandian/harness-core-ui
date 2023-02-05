@@ -38,8 +38,8 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import ProjectCard from '@projects-orgs/components/ProjectCard/ProjectCard'
 import { PageSpinner } from '@common/components'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
 import pointerImage from './pointer.svg'
-import OrgDropdown from '../OrgDropdown/OrgDropdown'
 import css from './ProjectSelector.module.scss'
 
 export interface ProjectSelectorProps {

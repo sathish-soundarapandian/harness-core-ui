@@ -37,12 +37,12 @@ const navModuleToClassMap: Record<NavModuleName, string> = {
   [ModuleName.CHAOS]: css.chaos,
   [ModuleName.IACM]: css.iacm,
   [ModuleName.SSCS]: css.sscs,
-  [ModuleName.CODE]: css.default
+  [ModuleName.CODE]: css.default,
+  [ModuleName.IDP]: css.default
 }
 
 const NavModule: React.FC<NavModuleProps> = ({ module, active, onClick, checkboxProps }) => {
   const { icon, label } = useNavModuleInfo(module)
-
   return (
     <Container
       className={cx(css.container, { [css.active]: active }, navModuleToClassMap[module])}

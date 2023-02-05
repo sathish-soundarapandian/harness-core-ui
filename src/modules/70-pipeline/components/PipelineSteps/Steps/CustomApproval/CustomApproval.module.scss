@@ -99,3 +99,9 @@
     }
   }
 }
+
+.divider {
+  width: 100%;
+  margin: var(--spacing-5) 0 var(--spacing-6) 0;
+  border-top: 0.5px solid var(--grey-200);
+}
