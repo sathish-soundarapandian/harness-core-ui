@@ -19,3 +19,9 @@
 .editorLayout {
   margin: var(--spacing-medium);
 }
+
+.readOnlyCallout {
+  padding: var(--spacing-xsmall) var(--spacing-small) !important;
+  background-color: var(--yellow-300) !important;
+  border-radius: 5px;
+}

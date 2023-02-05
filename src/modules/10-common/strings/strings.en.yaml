@@ -477,6 +477,7 @@ newLines: 'New lines'
 unsavedChanges: You may have unsaved changes
 unsavedChangesLong: You have unsaved changes that will be lost. Are you sure you want to leave this page?
 readonlyPermissions: You have read-only permissions
+readonlyPermissionsForFile: You have read-only permissions for this file
 viewAndExecutePermissions: You have View and Execute permission only
 newVersion: There is a new version of this branch
 confictOccured: '{{name}} has committed since you started editing.'

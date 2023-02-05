@@ -6,14 +6,14 @@
  */
 
 import React, { useState } from 'react'
-import { defaultTo, isEqual, omit } from 'lodash-es'
+import { isEqual, omit } from 'lodash-es'
+import { Icon, Layout, Text } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { parse } from '@common/utils/YamlHelperMethods'
 import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import type { YamlBuilderHandlerBinding } from '@common/interfaces/YAMLBuilderProps'
-import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { StoreType } from '@common/constants/GitSyncTypes'
+import { useStrings } from 'framework/strings'
 import type { EntityValidityDetails, PipelineInfoConfig } from 'services/pipeline-ng'
-import { getYamlFileName } from '@pipeline/utils/yamlUtils'
 import { useEnableEditModes } from '@pipeline/components/PipelineStudio/hooks/useEnableEditModes'
 import { usePipelineSchemaV1 } from '../PipelineSchemaContextV1/PipelineSchemaContextV1'
 import { usePipelineContextV1 } from '../PipelineContextV1/PipelineContextV1'
@@ -23,16 +23,13 @@ import css from './PipelineYAMLViewV1.module.scss'
 export const POLL_INTERVAL = 1 /* sec */ * 1000 /* ms */
 
 let Interval: number | undefined
-const defaultFileName = 'Pipeline.yaml'
 function PipelineYAMLViewV1(): React.ReactElement {
   const {
     state: {
       pipeline,
       pipelineView: { isDrawerOpened },
       pipelineView,
-      gitDetails,
-      entityValidityDetails,
-      storeMetadata
+      entityValidityDetails
     },
     updatePipelineView,
     stepsFactory,
@@ -43,28 +40,11 @@ function PipelineYAMLViewV1(): React.ReactElement {
   } = usePipelineContextV1()
   const { enableEditMode } = useEnableEditModes()
   const { pipelineSchema } = usePipelineSchemaV1()
-  const {
-    isGitSyncEnabled: isGitSyncEnabledForProject,
-    gitSyncEnabledOnlyForFF,
-    supportingGitSimplification
-  } = useAppStore()
-  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
-  const isPipelineRemote = supportingGitSimplification && storeMetadata?.storeType === StoreType.REMOTE
   const [yamlHandler, setYamlHandler] = React.useState<YamlBuilderHandlerBinding | undefined>()
-  const [yamlFileName, setYamlFileName] = React.useState<string>(defaultFileName)
   const updateEntityValidityDetailsRef = React.useRef<(entityValidityDetails: EntityValidityDetails) => Promise<void>>()
   updateEntityValidityDetailsRef.current = updateEntityValidityDetails
-  const [shouldShowPluginsPanel, setShouldShowPluginsPanel] = useState<boolean>(!isReadonly)
-
-  const remoteFileName = React.useMemo(
-    () =>
-      getYamlFileName({
-        isPipelineRemote,
-        filePath: gitDetails?.filePath,
-        defaultName: defaultFileName
-      }),
-    [gitDetails?.filePath, isPipelineRemote]
-  )
+  const [shouldShowPluginsPanel, setShouldShowPluginsPanel] = useState<boolean>(true)
+  const { getString } = useStrings()
 
   // setup polling
   React.useEffect(() => {
@@ -106,17 +86,6 @@ function PipelineYAMLViewV1(): React.ReactElement {
     }
   }, [yamlHandler, setYamlHandlerContext])
 
-  React.useEffect(() => {
-    if (isGitSyncEnabled && !isPipelineRemote) {
-      if (gitDetails?.objectId) {
-        const filePathArr = gitDetails.filePath?.split('/')
-        const fileName = filePathArr?.length ? filePathArr[filePathArr?.length - 1] : 'Pipeline.yaml'
-        setYamlFileName(fileName)
-      }
-      setYamlFileName(pipeline?.identifier + '.yaml')
-    }
-  }, [gitDetails, isGitSyncEnabled, isPipelineRemote, pipeline?.identifier])
-
   const yamlOrJsonProp =
     entityValidityDetails?.valid === false && entityValidityDetails?.invalidYaml
       ? { existingYaml: entityValidityDetails?.invalidYaml }
@@ -126,14 +95,26 @@ function PipelineYAMLViewV1(): React.ReactElement {
     updatePipelineView({ ...pipelineView, isYamlEditable: true })
   }, [])
 
+  const yamlEditorCustomHeaderProp = isReadonly && {
+    renderCustomHeader: () => {
+      return isReadonly ? (
+        <Layout.Horizontal spacing="xsmall" className={css.readOnlyCallout} flex>
+          <Text font={{ variation: FontVariation.SMALL }}>{getString('common.readonlyPermissionsForFile')}</Text>
+          <Icon name="info" size={15} />
+        </Layout.Horizontal>
+      ) : (
+        <></>
+      )
+    }
+  }
+
   return (
     <div className={css.yamlBuilder}>
       <>
         {!isDrawerOpened && (
           <YAMLBuilder
-            fileName={isPipelineRemote ? remoteFileName : defaultTo(yamlFileName, defaultFileName)}
             entityType="Pipelines"
-            isReadOnlyMode={isReadonly}
+            fileName=""
             bind={setYamlHandler}
             yamlSanityConfig={{ removeEmptyString: false, removeEmptyObject: false, removeEmptyArray: false }}
             height={shouldShowPluginsPanel ? 'calc(100vh - 150px)' : 'calc(100vh - 210px)'}
@@ -143,9 +124,9 @@ function PipelineYAMLViewV1(): React.ReactElement {
             toggleResizeButton={() => setShouldShowPluginsPanel((shouldRender: boolean) => !shouldRender)}
             invocationMap={stepsFactory.getInvocationMap()}
             schema={pipelineSchema?.data}
-            isEditModeSupported={!isReadonly}
-            {...yamlOrJsonProp}
             customCss={shouldShowPluginsPanel ? undefined : css.editorLayout}
+            {...yamlEditorCustomHeaderProp}
+            {...yamlOrJsonProp}
           />
         )}
       </>

@@ -798,6 +798,7 @@ export interface StringsMap {
   'common.python': string
   'common.readOnly': string
   'common.readonlyPermissions': string
+  'common.readonlyPermissionsForFile': string
   'common.recents': string
   'common.recommended': string
   'common.referenceButtonText': string

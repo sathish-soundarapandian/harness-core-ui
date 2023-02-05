@@ -119,7 +119,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const {
     height,
     width,
-    fileName,
+    fileName = '',
     entityType,
     existingJSON,
     existingYaml,
@@ -604,11 +604,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         <div className={css.flexCenter}>
           <span className={cx(css.filePath, css.flexCenter, { [css.lightBg]: theme === 'DARK' })}>{fileName}</span>
           {fileName && entityType ? <Tag className={css.entityTag}>{entityType}</Tag> : null}
-          {yamlRef.current ? (
-            <Container padding={{ left: entityType ? 'medium' : undefined }}>
-              {showCopyIcon ? <CopyToClipboard content={defaultTo(yamlRef.current, '')} showFeedback={true} /> : null}
-            </Container>
-          ) : null}
         </div>
         <div className={cx(css.flexCenter, css.validationStatus)}>
           {!isReadOnlyMode && yamlValidationErrors && yamlValidationErrors.size > 0 && (
@@ -1019,13 +1014,18 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
 
   const renderEditorControls = useCallback((): React.ReactElement => {
     return !isReadOnlyMode && isEditModeSupported ? (
-      <Layout.Horizontal>
+      <Layout.Horizontal spacing="small">
+        {yamlRef.current ? (
+          <Container padding={{ left: entityType ? 'medium' : undefined }}>
+            {showCopyIcon ? <CopyToClipboard content={defaultTo(yamlRef.current, '')} showFeedback={true} /> : null}
+          </Container>
+        ) : null}
         <Icon className={css.resizeIcon} name="main-minimize" onClick={toggleResizeButton} />
       </Layout.Horizontal>
     ) : (
       <></>
     )
-  }, [isReadOnlyMode, isEditModeSupported])
+  }, [isReadOnlyMode, isEditModeSupported, yamlRef.current, entityType, showCopyIcon])
 
   return shouldShowPluginsPanel ? (
     <Layout.Horizontal>
@@ -1039,7 +1039,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             <Layout.Horizontal
               flex={{ justifyContent: 'space-between' }}
               className={css.headerBorder}
-              padding={{ right: 'medium' }}
+              padding={
+                renderCustomHeader
+                  ? { top: 'small', right: 'medium', bottom: 'small', left: 'xlarge' }
+                  : { right: 'medium' }
+              }
             >
               {defaultTo(renderCustomHeader, renderHeader)()}
               {renderEditorControls()}
