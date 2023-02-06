@@ -660,9 +660,11 @@ gitDetails: git details
 runtimeInputs: Runtime Inputs
 approveOrReject: Approve or Reject
 jenkinsBuild: Jenkins Builds
+bambooBuilds: Bamboo Builds
 enterBuildRegex: Enter Build Regex
 buildRegex: Build Regex
 selectJenkinsBuildsPlaceholder: Select Jenkins Build
+selectBambooBuildsPlaceholder: Select Bamboo Build
 releaseRepo: Release Repo
 deploymentRepo: Deployment Repo
 addReleaseRepo: + Add Release Repo Manifest
@@ -1628,3 +1630,6 @@ lastDeployed: 'Last deployed'
 prTitle: PR Title
 ServiceDetail:
   envCardEmptyStateMsg: 'There are no environments with instances in this service.'
+bamboo:
+  fetchingPlans: 'Fetching Plans ...'
+  planName: 'Plan Name'
