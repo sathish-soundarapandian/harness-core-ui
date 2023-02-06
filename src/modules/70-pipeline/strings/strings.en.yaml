@@ -675,9 +675,11 @@ gitDetails: git details
 runtimeInputs: Runtime Inputs
 approveOrReject: Approve or Reject
 jenkinsBuild: Jenkins Builds
+bambooBuilds: Bamboo Builds
 enterBuildRegex: Enter Build Regex
 buildRegex: Build Regex
 selectJenkinsBuildsPlaceholder: Select Jenkins Build
+selectBambooBuildsPlaceholder: Select Bamboo Build
 releaseRepo: Release Repo
 deploymentRepo: Deployment Repo
 addReleaseRepo: + Add Release Repo Manifest
@@ -1666,3 +1668,6 @@ validation:
   pipelineValidated: Pipeline validated
   revalidate: Revalidate
   validationResultApiError: Unable to complete validation due to [{{message}}] error.
+bamboo:
+  fetchingPlans: 'Fetching Plans ...'
+  planName: 'Plan Name'
