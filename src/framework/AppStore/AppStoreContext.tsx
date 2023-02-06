@@ -221,6 +221,8 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
       if (__DEV__ && DEV_FF) {
         Object.assign(featureFlagsMap, DEV_FF)
       }
+      
+      Object.assign(featureFlagsMap, {"IDP_ENABLED": true})
 
       setState(prevState => ({
         ...prevState,
