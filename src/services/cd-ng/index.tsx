@@ -408,6 +408,7 @@ export interface AccessControlCheckError {
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -460,6 +461,7 @@ export interface Account {
   subdomainUrl?: string
   techStacks?: TechStack[]
   trialSignupOptions?: TrialSignupOptions
+  trustLevel?: number
   twoFactorAdminEnforced?: boolean
   uuid: string
   whitelistedDomains?: string[]
@@ -893,6 +895,15 @@ export interface ArtifactFileMetadata {
   url?: string
 }
 
+export interface ArtifactInstanceDetail {
+  artifact?: string
+  environmentInstanceDetails: EnvironmentInstanceDetails
+}
+
+export interface ArtifactInstanceDetails {
+  artifactInstanceDetails: ArtifactInstanceDetail[]
+}
+
 export interface ArtifactListConfig {
   primary?: PrimaryArtifact
   sidecars?: SidecarArtifactWrapper[]
@@ -1053,6 +1064,7 @@ export type ArtifactoryUsernamePasswordAuth = ArtifactoryAuthCredentials & {
 }
 
 export interface ArtifactsSummary {
+  artifactDisplayName?: string
   primary?: ArtifactSummary
   sidecars?: ArtifactSummary[]
 }
@@ -1092,6 +1104,21 @@ export type AsgConfigurationManifest = ManifestAttributes & {
 export type AsgInfrastructure = Infrastructure & {
   connectorRef: string
   metadata?: string
+  region: string
+}
+
+export type AsgInfrastructureDetails = InfrastructureDetails & {
+  asgName?: string
+  region?: string
+}
+
+export type AsgInstanceInfoDTO = InstanceInfoDTO & {
+  asgName: string
+  asgNameWithoutSuffix: string
+  executionStrategy?: string
+  infrastructureKey: string
+  instanceId?: string
+  production?: boolean
   region: string
 }
 
@@ -1204,8 +1231,8 @@ export interface AwsCFTemplateParamsData {
 }
 
 export type AwsCloudProviderBasicConfig = CloudProviderSpec & {
-  connectorRef?: string
-  region?: string
+  connectorRef: string
+  region: string
 }
 
 export interface AwsCodeCommitAuthenticationDTO {
@@ -1318,11 +1345,11 @@ export interface AwsListInstancesFilter {
 }
 
 export type AwsLoadBalancerConfigYaml = LoadBalancerSpec & {
-  loadBalancer?: string
-  prodListenerPort?: string
-  prodListenerRuleArn?: string
-  stageListenerPort?: string
-  stageListenerRuleArn?: string
+  loadBalancer: string
+  prodListenerPort: string
+  prodListenerRuleArn: string
+  stageListenerPort: string
+  stageListenerRuleArn: string
 }
 
 export type AwsManualConfigSpec = AwsCredentialSpec & {
@@ -1888,6 +1915,7 @@ export type CDModuleLicenseDTO = ModuleLicenseDTO & {
 }
 
 export interface CDPipelineModuleInfo {
+  artifactDisplayNames?: string[]
   envGroupIdentifiers?: string[]
   envIdentifiers?: string[]
   environmentTypes?: ('PreProduction' | 'Production')[]
@@ -1954,10 +1982,12 @@ export type CFModuleLicenseDTO = ModuleLicenseDTO & {
 }
 
 export type CILicenseSummaryDTO = LicensesWithSummaryDTO & {
+  cacheSizeAllowance?: number
   totalDevelopers?: number
 }
 
 export type CIModuleLicenseDTO = ModuleLicenseDTO & {
+  cacheAllowance?: number
   hostingCredits?: number
   numberOfCommitters?: number
 }
@@ -2121,12 +2151,14 @@ export interface CloudformationTemplateFileSpec {
 }
 
 export interface Cluster {
+  agentId?: string
   clusterId?: string
   clusterName?: string
   envGroupId?: string
   envGroupName?: string
   envId?: string
   envName?: string
+  scope?: string
 }
 
 export interface ClusterBasicDTO {
@@ -2317,6 +2349,7 @@ export interface ConnectorCatalogueItem {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'TerraformCloud'
   )[]
 }
 
@@ -2400,6 +2433,7 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'TerraformCloud'
   )[]
 }
 
@@ -2459,6 +2493,7 @@ export interface ConnectorInfoDTO {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'TerraformCloud'
 }
 
 export interface ConnectorResponse {
@@ -2535,6 +2570,7 @@ export interface ConnectorTypeStatistics {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'TerraformCloud'
 }
 
 export interface ConnectorValidationResult {
@@ -2598,7 +2634,7 @@ export type CopyCommandUnitSpec = CommandUnitBaseSpec & {
 }
 
 export type CountCapacitySpec = CapacitySpec & {
-  count?: number
+  count: number
 }
 
 export type CountInstanceSelection = InstanceSelectionBase & {
@@ -3480,7 +3516,7 @@ export type ElastigroupBGStageSetupStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   instances: ElastigroupInstances
   loadBalancers: LoadBalancer[]
-  name: string
+  name?: string
 }
 
 export interface ElastigroupConfiguration {
@@ -3493,14 +3529,14 @@ export type ElastigroupCurrentRunningInstances = ElastigroupInstancesSpec & { [k
 export type ElastigroupDeployStepInfo = StepSpecType & {
   delegateSelectors?: string[]
   metadata?: string
-  newService?: Capacity
+  newService: Capacity
   oldService?: Capacity
 }
 
 export type ElastigroupFixedInstances = ElastigroupInstancesSpec & {
-  desired?: number
-  max?: number
-  min?: number
+  desired: number
+  max: number
+  min: number
 }
 
 export type ElastigroupInfrastructure = Infrastructure & {
@@ -3777,6 +3813,7 @@ export interface EntityDetail {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -3804,6 +3841,9 @@ export interface EntityReference {
   branch?: string
   default?: boolean
   identifier?: string
+  metadata?: {
+    [key: string]: string
+  }
   orgIdentifier?: string
   projectIdentifier?: string
   repoIdentifier?: string
@@ -3998,7 +4038,7 @@ export interface EnvironmentInstanceDetail {
   count?: number
   envId: string
   envName?: string
-  environmentType: 'PreProduction' | 'Production'
+  environmentType?: 'PreProduction' | 'Production'
 }
 
 export interface EnvironmentInstanceDetails {
@@ -4432,6 +4472,7 @@ export interface Error {
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -4800,6 +4841,7 @@ export interface ErrorMetadata {
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
   errorMessage?: string
 }
 
@@ -5219,6 +5261,7 @@ export interface Failure {
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -5281,6 +5324,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'ACTIVE_COMMITTERS'
     | 'TEST_INTELLIGENCE'
     | 'TEMPLATE_SERVICE'
+    | 'CACHE_SIZE_ALLOWANCE'
     | 'SRM_SERVICES'
     | 'K8S_BG_SWAP_SERVICES'
     | 'K8S_BLUE_GREEN_DEPLOY'
@@ -5310,6 +5354,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
     | 'K8S_DRY_RUN'
+    | 'TERRAFORM_CLOUD_RUN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5368,6 +5413,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'ACTIVE_COMMITTERS'
     | 'TEST_INTELLIGENCE'
     | 'TEMPLATE_SERVICE'
+    | 'CACHE_SIZE_ALLOWANCE'
     | 'SRM_SERVICES'
     | 'K8S_BG_SWAP_SERVICES'
     | 'K8S_BLUE_GREEN_DEPLOY'
@@ -5397,6 +5443,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
     | 'K8S_DRY_RUN'
+    | 'TERRAFORM_CLOUD_RUN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5471,6 +5518,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'ACTIVE_COMMITTERS'
     | 'TEST_INTELLIGENCE'
     | 'TEMPLATE_SERVICE'
+    | 'CACHE_SIZE_ALLOWANCE'
     | 'SRM_SERVICES'
     | 'K8S_BG_SWAP_SERVICES'
     | 'K8S_BLUE_GREEN_DEPLOY'
@@ -5500,6 +5548,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
     | 'K8S_DRY_RUN'
+    | 'TERRAFORM_CLOUD_RUN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -5582,6 +5631,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'ACTIVE_COMMITTERS'
     | 'TEST_INTELLIGENCE'
     | 'TEMPLATE_SERVICE'
+    | 'CACHE_SIZE_ALLOWANCE'
     | 'SRM_SERVICES'
     | 'K8S_BG_SWAP_SERVICES'
     | 'K8S_BLUE_GREEN_DEPLOY'
@@ -5611,6 +5661,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
     | 'K8S_DRY_RUN'
+    | 'TERRAFORM_CLOUD_RUN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -6284,6 +6335,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -6495,6 +6547,7 @@ export interface GitEntityFilterProperties {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -6777,6 +6830,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -6982,6 +7036,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -7308,6 +7363,7 @@ export interface GitSyncEntityDTO {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -7507,6 +7563,7 @@ export interface GitSyncEntityListDTO {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -7723,6 +7780,7 @@ export interface GitSyncErrorDTO {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -8105,6 +8163,7 @@ export type HelmChartManifest = ManifestAttributes & {
   metadata?: string
   skipResourceVersioning?: boolean
   store?: StoreConfigWrapper
+  subChartName?: string
   valuesPaths?: string[]
 }
 
@@ -8136,8 +8195,9 @@ export interface HelmManifestCommandFlag {
 }
 
 export type HelmRepoOverrideManifest = ManifestAttributes & {
+  connectorRef: string
   metadata?: string
-  store?: StoreConfigWrapper
+  type: string
 }
 
 export type HelmRollbackStepInfo = StepSpecType & {
@@ -8269,9 +8329,6 @@ export type HttpStoreConfig = StoreConfig & {
 export type IdentifierRef = EntityReference & {
   fullyQualifiedScopeIdentifier?: string
   isDefault?: boolean
-  metadata?: {
-    [key: string]: string
-  }
   scope?: 'account' | 'org' | 'project' | 'unknown'
 }
 
@@ -8568,6 +8625,17 @@ export interface InstanceCountDetailsByEnvTypeBase {
   totalInstances?: number
 }
 
+export interface InstanceDetailGroupedByPipelineExecution {
+  instances: InstanceDetailsDTO[]
+  lastDeployedAt?: number
+  pipelineId: string
+  planExecutionId: string
+}
+
+export interface InstanceDetailGroupedByPipelineExecutionList {
+  instanceDetailGroupedByPipelineExecutionList: InstanceDetailGroupedByPipelineExecution[]
+}
+
 export interface InstanceDetailsByBuildId {
   buildId?: string
   instances?: InstanceDetailsDTO[]
@@ -8601,19 +8669,19 @@ export interface InstanceGroupedByArtifactV2 {
 }
 
 export interface InstanceGroupedByEnvironment {
-  envId?: string
+  envId: string
   envName?: string
-  instanceGroupedByEnvironmentTypeList?: InstanceGroupedByEnvironmentType[]
+  instanceGroupedByEnvironmentTypeList: InstanceGroupedByEnvironmentType[]
   lastDeployedAt?: number
 }
 
 export interface InstanceGroupedByEnvironmentList {
-  instanceGroupedByEnvironmentList?: InstanceGroupedByEnvironment[]
+  instanceGroupedByEnvironmentList: InstanceGroupedByEnvironment[]
 }
 
 export interface InstanceGroupedByEnvironmentType {
   environmentType?: 'PreProduction' | 'Production'
-  instanceGroupedByInfrastructureList?: InstanceGroupedByInfrastructure[]
+  instanceGroupedByInfrastructureList: InstanceGroupedByInfrastructure[]
   lastDeployedAt?: number
 }
 
@@ -8630,7 +8698,7 @@ export interface InstanceGroupedByInfrastructure {
   clusterId?: string
   infrastructureId?: string
   infrastructureName?: string
-  instanceGroupedByArtifactList?: InstanceGroupedByArtifact[]
+  instanceGroupedByArtifactList: InstanceGroupedByArtifact[]
   lastDeployedAt?: number
 }
 
@@ -8659,6 +8727,38 @@ export interface InstanceGroupedByService {
 
 export interface InstanceGroupedByServiceList {
   instanceGroupedByServiceList?: InstanceGroupedByService[]
+}
+
+export interface InstanceGroupedOnArtifact {
+  artifact?: string
+  instanceGroupedOnEnvironmentList: InstanceGroupedOnEnvironment[]
+  lastDeployedAt?: number
+}
+
+export interface InstanceGroupedOnArtifactList {
+  instanceGroupedOnArtifactList: InstanceGroupedOnArtifact[]
+}
+
+export interface InstanceGroupedOnEnvironment {
+  envId?: string
+  envName?: string
+  instanceGroupedOnEnvironmentTypeList?: InstanceGroupedOnEnvironmentType[]
+  lastDeployedAt?: number
+}
+
+export interface InstanceGroupedOnEnvironmentType {
+  environmentType?: 'PreProduction' | 'Production'
+  instanceGroupedOnInfrastructureList?: InstanceGroupedOnInfrastructure[]
+  lastDeployedAt?: number
+}
+
+export interface InstanceGroupedOnInfrastructure {
+  agentId?: string
+  clusterId?: string
+  count?: number
+  infrastructureId?: string
+  infrastructureName?: string
+  lastDeployedAt?: number
 }
 
 export interface InstanceInfoDTO {
@@ -9578,6 +9678,12 @@ export interface NGTag {
   value: string
 }
 
+export type NGTemplateReference = EntityReference & {
+  isDefault?: boolean
+  scope?: 'account' | 'org' | 'project' | 'unknown'
+  versionLabel?: string
+}
+
 export interface NGVariable {
   description?: string
   metadata?: string
@@ -9987,6 +10093,11 @@ export interface OrganizationAggregateDTO {
   templatesCount?: number
 }
 
+export interface OrganizationDTO {
+  organizationId: string
+  organizationName: string
+}
+
 export interface OrganizationRequest {
   organization: Organization
 }
@@ -9996,6 +10107,10 @@ export interface OrganizationResponse {
   harnessManaged?: boolean
   lastModifiedAt?: number
   organization: Organization
+}
+
+export interface OrganizationsDTO {
+  organizations?: OrganizationDTO[]
 }
 
 export interface OverlayConfiguration {
@@ -10626,7 +10741,7 @@ export interface PendingUpdateDetailDTO {
 }
 
 export type PercentageCapacitySpec = CapacitySpec & {
-  percentage?: number
+  percentage: number
 }
 
 export type PercentageInstanceSelection = InstanceSelectionBase & {
@@ -11040,6 +11155,7 @@ export interface ReferencedByDTO {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -11264,6 +11380,13 @@ export interface ResponseApiKeyAggregateDTO {
 export interface ResponseApiKeyDTO {
   correlationId?: string
   data?: ApiKeyDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseArtifactInstanceDetails {
+  correlationId?: string
+  data?: ArtifactInstanceDetails
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -11942,6 +12065,13 @@ export interface ResponseInstanceCountDetailsByEnvTypeAndServiceId {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseInstanceDetailGroupedByPipelineExecutionList {
+  correlationId?: string
+  data?: InstanceDetailGroupedByPipelineExecutionList
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseInstanceDetailsByBuildId {
   correlationId?: string
   data?: InstanceDetailsByBuildId
@@ -11966,6 +12096,13 @@ export interface ResponseInstanceGroupedByService {
 export interface ResponseInstanceGroupedByServiceList {
   correlationId?: string
   data?: InstanceGroupedByServiceList
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseInstanceGroupedOnArtifactList {
+  correlationId?: string
+  data?: InstanceGroupedOnArtifactList
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -12313,6 +12450,7 @@ export interface ResponseListEntityType {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -12349,6 +12487,8 @@ export interface ResponseListExecutionStatus {
     | 'InterventionWaiting'
     | 'ApprovalWaiting'
     | 'WaitStepRunning'
+    | 'QueuedLicenseLimitReached'
+    | 'QueuedExecutionConcurrencyReached'
     | 'Success'
     | 'Suspended'
     | 'Skipped'
@@ -12986,6 +13126,7 @@ export interface ResponseMessage {
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -13078,6 +13219,13 @@ export interface ResponseOrganizationAggregateDTO {
 export interface ResponseOrganizationResponse {
   correlationId?: string
   data?: OrganizationResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseOrganizationsDTO {
+  correlationId?: string
+  data?: OrganizationsDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -13435,6 +13583,13 @@ export interface ResponseRoleAssignmentResponse {
 export interface ResponseSaasGitDTO {
   correlationId?: string
   data?: SaasGitDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseScmBatchGetFileResponseDTO {
+  correlationId?: string
+  data?: ScmBatchGetFileResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -13804,6 +13959,13 @@ export interface ResponseVariableResponseDTO {
 export interface ResponseVoid {
   correlationId?: string
   data?: Void
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseWorkspacesDTO {
+  correlationId?: string
+  data?: WorkspacesDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -14392,6 +14554,25 @@ export interface ScimUser {
   userName?: string
 }
 
+export interface ScmBatchGetFileRequestDTO {
+  scmGetFileRequestDTOMap?: {
+    [key: string]: ScmGetFileRequestDTO
+  }
+}
+
+export interface ScmBatchGetFileResponseDTO {
+  scmGetFileResponseV2DTOMap?: {
+    [key: string]: ScmGetFileResponseV2DTO
+  }
+}
+
+export interface ScmCacheDetails {
+  cacheExpiryTTL?: number
+  lastUpdatedAt?: number
+  scmCacheState?: 'VALID_CACHE' | 'STALE_CACHE'
+  validUntilTTL?: number
+}
+
 export interface ScmConnectorDTO {
   connector?: ConnectorInfoDTO
   secret?: SecretDTOV2
@@ -14403,6 +14584,12 @@ export interface ScmConnectorResponse {
   secretResponseWrapper?: SecretResponseWrapper
 }
 
+export interface ScmErrorDetails {
+  error?: string
+  explanation?: string
+  hint?: string
+}
+
 export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
   conflictCommitId?: string
 }
@@ -14412,6 +14599,28 @@ export interface ScmFileGitDetailsDTO {
   commitId?: string
   contentType?: 'INVALID_CONTENT_TYPE' | 'UNKNOWN_CONTENT' | 'FILE' | 'DIRECTORY' | 'SYMLINK' | 'GITLINK'
   path?: string
+}
+
+export interface ScmGetFileRequestDTO {
+  accountIdentifier?: string
+  branch?: string
+  commitId?: string
+  connectorRef?: string
+  filepath?: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  repoName?: string
+  useCache?: boolean
+}
+
+export interface ScmGetFileResponseV2DTO {
+  blobId?: string
+  branchName?: string
+  cacheDetails?: ScmCacheDetails
+  commitId?: string
+  errorResponse?: boolean
+  fileContent?: string
+  scmErrorDetails?: ScmErrorDetails
 }
 
 export interface ScmListFilesResponseDTO {
@@ -15460,6 +15669,7 @@ export interface StepData {
     | 'DeleteStack'
     | 'RollbackStack'
     | 'SHELL_SCRIPT_PROVISIONER'
+    | 'TerraformCloudRun'
     | 'JIRA'
     | 'SERVICENOW'
     | 'EMAIL'
@@ -15486,8 +15696,8 @@ export interface StepData {
     | 'ElastigroupDeploy'
     | 'ElastigroupRollback'
     | 'ElastigroupSetup'
-    | 'TerraformPlan'
-    | 'TerraformApply'
+    | 'TerragruntPlan'
+    | 'TerragruntApply'
     | 'TerragruntDestroy'
     | 'TerragruntRollback'
     | 'AsgCanaryDeploy'
@@ -15509,6 +15719,10 @@ export interface StepData {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'DeployCloudFunction'
+    | 'DeployCloudFunctionWithNoTraffic'
+    | 'CloudFunctionTrafficShift'
+    | 'CloudFunctionRollback'
 }
 
 export interface StepElementConfig {
@@ -16023,6 +16237,99 @@ export interface TerraformBackendConfig {
 
 export interface TerraformBackendConfigSpec {
   [key: string]: any
+}
+
+export type TerraformCloudApplySpec = TerraformCloudRunExecutionSpec & {
+  provisionerIdentifier: string
+}
+
+export type TerraformCloudConnector = ConnectorConfigDTO & {
+  credential: TerraformCloudCredential
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+  terraformCloudUrl: string
+}
+
+export interface TerraformCloudCredential {
+  spec?: TerraformCloudCredentialSpec
+  type: 'ApiToken'
+}
+
+export interface TerraformCloudCredentialSpec {
+  [key: string]: any
+}
+
+export type TerraformCloudPlanAndApplySpec = TerraformCloudRunExecutionSpec & {
+  connectorRef: string
+  discardPendingRuns?: boolean
+  organization: string
+  provisionerIdentifier: string
+  targets?: string[]
+  variables?: NGVariable[]
+  workspace: string
+}
+
+export type TerraformCloudPlanAndDestroySpec = TerraformCloudRunExecutionSpec & {
+  connectorRef: string
+  discardPendingRuns?: boolean
+  organization: string
+  provisionerIdentifier: string
+  targets?: string[]
+  variables?: NGVariable[]
+  workspace: string
+}
+
+export type TerraformCloudPlanOnlySpec = TerraformCloudRunExecutionSpec & {
+  connectorRef: string
+  discardPendingRuns: boolean
+  exportTerraformPlanJson?: boolean
+  organization: string
+  planType?: 'Apply' | 'Destroy'
+  provisionerIdentifier: string
+  targets?: string[]
+  terraformVersion?: string
+  variables?: NGVariable[]
+  workspace: string
+}
+
+export type TerraformCloudPlanSpec = TerraformCloudRunExecutionSpec & {
+  connectorRef: string
+  discardPendingRuns: boolean
+  exportTerraformPlanJson?: boolean
+  organization: string
+  planType?: 'Apply' | 'Destroy'
+  provisionerIdentifier: string
+  targets?: string[]
+  variables?: NGVariable[]
+  workspace: string
+}
+
+export type TerraformCloudRefreshSpec = TerraformCloudRunExecutionSpec & {
+  connectorRef: string
+  discardPendingRuns?: boolean
+  organization: string
+  variables?: NGVariable[]
+  workspace: string
+}
+
+export interface TerraformCloudRunExecutionSpec {
+  specParams?: TerraformCloudRunSpecParameters
+  type?: 'RefreshState' | 'PlanOnly' | 'PlanAndApply' | 'PlanAndDestroy' | 'Plan' | 'Apply'
+}
+
+export interface TerraformCloudRunSpecParameters {
+  type?: 'RefreshState' | 'PlanOnly' | 'PlanAndApply' | 'PlanAndDestroy' | 'Plan' | 'Apply'
+}
+
+export type TerraformCloudRunStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+  message?: string
+  runType: 'RefreshState' | 'PlanOnly' | 'PlanAndApply' | 'PlanAndDestroy' | 'Plan' | 'Apply'
+  spec: TerraformCloudRunExecutionSpec
+}
+
+export type TerraformCloudTokenCredentials = TerraformCloudCredentialSpec & {
+  apiToken: string
 }
 
 export interface TerraformConfigFilesWrapper {
@@ -16772,6 +17079,15 @@ export interface WorkloadDeploymentInfoV2 {
   totalDeploymentChangeRate?: ChangeRate
   totalDeployments?: number
   workload?: WorkloadDateCountInfo[]
+}
+
+export interface WorkspaceDTO {
+  workspaceId: string
+  workspaceName: string
+}
+
+export interface WorkspacesDTO {
+  workspaces?: WorkspaceDTO[]
 }
 
 export interface YamlGroup {
@@ -17688,6 +18004,7 @@ export interface ListActivitiesQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -17879,6 +18196,7 @@ export interface ListActivitiesQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -18174,6 +18492,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -18365,6 +18684,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -28743,6 +29063,7 @@ export interface GetConnectorListQueryParams {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'TerraformCloud'
   category?:
     | 'CLOUD_PROVIDER'
     | 'SECRET_MANAGER'
@@ -29144,6 +29465,7 @@ export interface GetAllAllowedFieldValuesQueryParams {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'TerraformCloud'
 }
 
 export type GetAllAllowedFieldValuesProps = Omit<
@@ -30512,6 +30834,69 @@ export const getDeploymentHealthV2Promise = (
     signal
   )
 
+export interface GetActiveInstanceGroupedByArtifactQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  serviceId: string
+  environmentIdentifier?: string
+  artifact?: string
+}
+
+export type GetActiveInstanceGroupedByArtifactProps = Omit<
+  GetProps<ResponseInstanceGroupedOnArtifactList, Failure | Error, GetActiveInstanceGroupedByArtifactQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get active instance count for a service grouped on artifact, environment, infrastructure
+ */
+export const GetActiveInstanceGroupedByArtifact = (props: GetActiveInstanceGroupedByArtifactProps) => (
+  <Get<ResponseInstanceGroupedOnArtifactList, Failure | Error, GetActiveInstanceGroupedByArtifactQueryParams, void>
+    path={`/dashboard/getActiveInstanceGroupedByArtifact`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetActiveInstanceGroupedByArtifactProps = Omit<
+  UseGetProps<
+    ResponseInstanceGroupedOnArtifactList,
+    Failure | Error,
+    GetActiveInstanceGroupedByArtifactQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get active instance count for a service grouped on artifact, environment, infrastructure
+ */
+export const useGetActiveInstanceGroupedByArtifact = (props: UseGetActiveInstanceGroupedByArtifactProps) =>
+  useGet<ResponseInstanceGroupedOnArtifactList, Failure | Error, GetActiveInstanceGroupedByArtifactQueryParams, void>(
+    `/dashboard/getActiveInstanceGroupedByArtifact`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get active instance count for a service grouped on artifact, environment, infrastructure
+ */
+export const getActiveInstanceGroupedByArtifactPromise = (
+  props: GetUsingFetchProps<
+    ResponseInstanceGroupedOnArtifactList,
+    Failure | Error,
+    GetActiveInstanceGroupedByArtifactQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseInstanceGroupedOnArtifactList,
+    Failure | Error,
+    GetActiveInstanceGroupedByArtifactQueryParams,
+    void
+  >(getConfig('ng/api'), `/dashboard/getActiveInstanceGroupedByArtifact`, props, signal)
+
 export interface GetActiveInstanceGroupedByEnvironmentQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -30641,6 +31026,88 @@ export const getActiveServiceDeploymentsPromise = (
     props,
     signal
   )
+
+export interface GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  serviceId: string
+  envId: string
+  environmentType: 'PreProduction' | 'Production'
+  infraIdentifier?: string
+  clusterIdentifier?: string
+  artifact: string
+}
+
+export type GetActiveServiceInstanceDetailsGroupedByPipelineExecutionProps = Omit<
+  GetProps<
+    ResponseInstanceDetailGroupedByPipelineExecutionList,
+    Failure | Error,
+    GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get list of active instance metadata grouped by pipeline execution for a service
+ */
+export const GetActiveServiceInstanceDetailsGroupedByPipelineExecution = (
+  props: GetActiveServiceInstanceDetailsGroupedByPipelineExecutionProps
+) => (
+  <Get<
+    ResponseInstanceDetailGroupedByPipelineExecutionList,
+    Failure | Error,
+    GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams,
+    void
+  >
+    path={`/dashboard/getActiveServiceInstanceDetailsGroupedByPipelineExecution`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetActiveServiceInstanceDetailsGroupedByPipelineExecutionProps = Omit<
+  UseGetProps<
+    ResponseInstanceDetailGroupedByPipelineExecutionList,
+    Failure | Error,
+    GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams,
+    void
+  >,
+  'path'
+>
+
+/**
+ * Get list of active instance metadata grouped by pipeline execution for a service
+ */
+export const useGetActiveServiceInstanceDetailsGroupedByPipelineExecution = (
+  props: UseGetActiveServiceInstanceDetailsGroupedByPipelineExecutionProps
+) =>
+  useGet<
+    ResponseInstanceDetailGroupedByPipelineExecutionList,
+    Failure | Error,
+    GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams,
+    void
+  >(`/dashboard/getActiveServiceInstanceDetailsGroupedByPipelineExecution`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Get list of active instance metadata grouped by pipeline execution for a service
+ */
+export const getActiveServiceInstanceDetailsGroupedByPipelineExecutionPromise = (
+  props: GetUsingFetchProps<
+    ResponseInstanceDetailGroupedByPipelineExecutionList,
+    Failure | Error,
+    GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseInstanceDetailGroupedByPipelineExecutionList,
+    Failure | Error,
+    GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams,
+    void
+  >(getConfig('ng/api'), `/dashboard/getActiveServiceInstanceDetailsGroupedByPipelineExecution`, props, signal)
 
 export interface GetActiveServiceInstanceSummaryQueryParams {
   accountIdentifier: string
@@ -30813,6 +31280,62 @@ export const getActiveServiceInstancesPromise = (
   getUsingFetch<ResponseInstanceGroupedByService, Failure | Error, GetActiveServiceInstancesQueryParams, void>(
     getConfig('ng/api'),
     `/dashboard/getActiveServiceInstances`,
+    props,
+    signal
+  )
+
+export interface GetArtifactInstanceDetailsQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  serviceId: string
+}
+
+export type GetArtifactInstanceDetailsProps = Omit<
+  GetProps<ResponseArtifactInstanceDetails, Failure | Error, GetArtifactInstanceDetailsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get last deployment detail in each environment for artifacts having active instances of a service
+ */
+export const GetArtifactInstanceDetails = (props: GetArtifactInstanceDetailsProps) => (
+  <Get<ResponseArtifactInstanceDetails, Failure | Error, GetArtifactInstanceDetailsQueryParams, void>
+    path={`/dashboard/getArtifactInstanceDetails`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetArtifactInstanceDetailsProps = Omit<
+  UseGetProps<ResponseArtifactInstanceDetails, Failure | Error, GetArtifactInstanceDetailsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get last deployment detail in each environment for artifacts having active instances of a service
+ */
+export const useGetArtifactInstanceDetails = (props: UseGetArtifactInstanceDetailsProps) =>
+  useGet<ResponseArtifactInstanceDetails, Failure | Error, GetArtifactInstanceDetailsQueryParams, void>(
+    `/dashboard/getArtifactInstanceDetails`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Get last deployment detail in each environment for artifacts having active instances of a service
+ */
+export const getArtifactInstanceDetailsPromise = (
+  props: GetUsingFetchProps<
+    ResponseArtifactInstanceDetails,
+    Failure | Error,
+    GetArtifactInstanceDetailsQueryParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseArtifactInstanceDetails, Failure | Error, GetArtifactInstanceDetailsQueryParams, void>(
+    getConfig('ng/api'),
+    `/dashboard/getArtifactInstanceDetails`,
     props,
     signal
   )
@@ -33672,6 +34195,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'ACTIVE_COMMITTERS'
     | 'TEST_INTELLIGENCE'
     | 'TEMPLATE_SERVICE'
+    | 'CACHE_SIZE_ALLOWANCE'
     | 'SRM_SERVICES'
     | 'K8S_BG_SWAP_SERVICES'
     | 'K8S_BLUE_GREEN_DEPLOY'
@@ -33701,6 +34225,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'AZURE_ROLLBACK_ARM_RESOURCE'
     | 'SHELL_SCRIPT_PROVISION'
     | 'K8S_DRY_RUN'
+    | 'TERRAFORM_CLOUD_RUN'
     | 'SECURITY'
     | 'DEVELOPERS'
     | 'MONTHLY_ACTIVE_USERS'
@@ -33829,6 +34354,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'ACTIVE_COMMITTERS'
       | 'TEST_INTELLIGENCE'
       | 'TEMPLATE_SERVICE'
+      | 'CACHE_SIZE_ALLOWANCE'
       | 'SRM_SERVICES'
       | 'K8S_BG_SWAP_SERVICES'
       | 'K8S_BLUE_GREEN_DEPLOY'
@@ -33858,6 +34384,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'AZURE_ROLLBACK_ARM_RESOURCE'
       | 'SHELL_SCRIPT_PROVISION'
       | 'K8S_DRY_RUN'
+      | 'TERRAFORM_CLOUD_RUN'
       | 'SECURITY'
       | 'DEVELOPERS'
       | 'MONTHLY_ACTIVE_USERS'
@@ -34078,6 +34605,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -34330,6 +34858,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -37647,6 +38176,7 @@ export interface GetReferencedByQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -40255,6 +40785,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -40514,6 +41045,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'AsgBlueGreenSwapService'
       | 'AsgBlueGreenDeploy'
       | 'AsgBlueGreenRollback'
+      | 'TerraformCloudRun'
       | 'DeployCloudFunction'
       | 'DeployCloudFunctionWithNoTraffic'
       | 'CloudFunctionTrafficShift'
@@ -46472,6 +47004,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -46791,6 +47324,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -47150,6 +47684,7 @@ export interface GetProvisionerExecutionStrategyYamlQueryParams {
     | 'AZURE_BLUEPRINT'
     | 'SHELL_SCRIPT_PROVISIONER'
     | 'TERRAGRUNT'
+    | 'TERRAFORM_CLOUD'
 }
 
 export type GetProvisionerExecutionStrategyYamlProps = Omit<
@@ -49253,6 +49788,77 @@ export const getFileContentPromise = (
     signal
   )
 
+export interface GetBatchFileQueryParams {
+  accountIdentifier?: string
+}
+
+export type GetBatchFileProps = Omit<
+  MutateProps<
+    ResponseScmBatchGetFileResponseDTO,
+    Failure | Error,
+    GetBatchFileQueryParams,
+    ScmBatchGetFileRequestDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get file url
+ */
+export const GetBatchFile = (props: GetBatchFileProps) => (
+  <Mutate<ResponseScmBatchGetFileResponseDTO, Failure | Error, GetBatchFileQueryParams, ScmBatchGetFileRequestDTO, void>
+    verb="POST"
+    path={`/scm/get-batch-file`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetBatchFileProps = Omit<
+  UseMutateProps<
+    ResponseScmBatchGetFileResponseDTO,
+    Failure | Error,
+    GetBatchFileQueryParams,
+    ScmBatchGetFileRequestDTO,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get file url
+ */
+export const useGetBatchFile = (props: UseGetBatchFileProps) =>
+  useMutate<
+    ResponseScmBatchGetFileResponseDTO,
+    Failure | Error,
+    GetBatchFileQueryParams,
+    ScmBatchGetFileRequestDTO,
+    void
+  >('POST', `/scm/get-batch-file`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Get file url
+ */
+export const getBatchFilePromise = (
+  props: MutateUsingFetchProps<
+    ResponseScmBatchGetFileResponseDTO,
+    Failure | Error,
+    GetBatchFileQueryParams,
+    ScmBatchGetFileRequestDTO,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseScmBatchGetFileResponseDTO,
+    Failure | Error,
+    GetBatchFileQueryParams,
+    ScmBatchGetFileRequestDTO,
+    void
+  >('POST', getConfig('ng/api'), `/scm/get-batch-file`, props, signal)
+
 export interface GetFileByBranchQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -50539,21 +51145,6 @@ export const getServiceNowIssueCreateMetadataPromise = (
     props,
     signal
   )
-export interface V1Time {
-  /**
-   * Non-negative fractions of a second at nanosecond resolution. Negative
-   * second values with fractions must still have non-negative nanos values
-   * that count forward in time. Must be from 0 to 999,999,999
-   * inclusive. This field may be limited in precision depending on context.
-   */
-  nanos?: number
-  /**
-   * Represents seconds of UTC time since Unix epoch
-   * 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
-   * 9999-12-31T23:59:59Z inclusive.
-   */
-  seconds?: string
-}
 
 export interface GetServiceNowTemplateMetadataQueryParams {
   connectorRef: string
@@ -50579,50 +51170,6 @@ export type GetServiceNowTemplateMetadataProps = Omit<
   GetProps<ResponseListServiceNowTemplate, Failure | Error, GetServiceNowTemplateMetadataQueryParams, void>,
   'path'
 >
-
-export interface ProtobufAny {
-  /**
-   * A URL/resource name that uniquely identifies the type of the serialized
-   * protocol buffer message. This string must contain at least
-   * one "/" character. The last segment of the URL's path must represent
-   * the fully qualified name of the type (as in
-   * `path/google.protobuf.Duration`). The name should be in a canonical form
-   * (e.g., leading "." is not accepted).
-   *
-   * In practice, teams usually precompile into the binary all types that they
-   * expect it to use in the context of Any. However, for URLs which use the
-   * scheme `http`, `https`, or no scheme, one can optionally set up a type
-   * server that maps type URLs to message definitions as follows:
-   *
-   * * If no scheme is provided, `https` is assumed.
-   * * An HTTP GET on the URL must yield a [google.protobuf.Type][]
-   *   value in binary format, or produce an error.
-   * * Applications are allowed to cache lookup results based on the
-   *   URL, or have them precompiled into a binary to avoid any
-   *   lookup. Therefore, binary compatibility needs to be preserved
-   *   on changes to types. (Use versioned type names to manage
-   *   breaking changes.)
-   *
-   * Note: this functionality is not currently available in the official
-   * protobuf release, and it is not used for type URLs beginning with
-   * type.googleapis.com.
-   *
-   * Schemes other than `http`, `https` (or the empty scheme) might be
-   * used with implementation specific semantics.
-   */
-  type_url?: string
-  /**
-   * Must be a valid serialized protocol buffer of the above specified type.
-   */
-  value?: string
-}
-
-export interface GatewayruntimeError {
-  code?: number
-  details?: ProtobufAny[]
-  error?: string
-  message?: string
-}
 
 /**
  * Get ServiceNow template metadata
@@ -54677,6 +55224,109 @@ export const getTasSpacesV2Promise = (
     signal
   )
 
+export interface GetTerraformCloudOrganizationsQueryParams {
+  connectorRef: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetTerraformCloudOrganizationsProps = Omit<
+  GetProps<ResponseOrganizationsDTO, Failure | Error, GetTerraformCloudOrganizationsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets terraform cloud organizations
+ */
+export const GetTerraformCloudOrganizations = (props: GetTerraformCloudOrganizationsProps) => (
+  <Get<ResponseOrganizationsDTO, Failure | Error, GetTerraformCloudOrganizationsQueryParams, void>
+    path={`/terraform-cloud/organizations`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetTerraformCloudOrganizationsProps = Omit<
+  UseGetProps<ResponseOrganizationsDTO, Failure | Error, GetTerraformCloudOrganizationsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets terraform cloud organizations
+ */
+export const useGetTerraformCloudOrganizations = (props: UseGetTerraformCloudOrganizationsProps) =>
+  useGet<ResponseOrganizationsDTO, Failure | Error, GetTerraformCloudOrganizationsQueryParams, void>(
+    `/terraform-cloud/organizations`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets terraform cloud organizations
+ */
+export const getTerraformCloudOrganizationsPromise = (
+  props: GetUsingFetchProps<ResponseOrganizationsDTO, Failure | Error, GetTerraformCloudOrganizationsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseOrganizationsDTO, Failure | Error, GetTerraformCloudOrganizationsQueryParams, void>(
+    getConfig('ng/api'),
+    `/terraform-cloud/organizations`,
+    props,
+    signal
+  )
+
+export interface GetTerraformCloudWorkspacesQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  organization: string
+}
+
+export type GetTerraformCloudWorkspacesProps = Omit<
+  GetProps<ResponseWorkspacesDTO, Failure | Error, GetTerraformCloudWorkspacesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets terraform cloud workspaces
+ */
+export const GetTerraformCloudWorkspaces = (props: GetTerraformCloudWorkspacesProps) => (
+  <Get<ResponseWorkspacesDTO, Failure | Error, GetTerraformCloudWorkspacesQueryParams, void>
+    path={`/terraform-cloud/workspaces`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetTerraformCloudWorkspacesProps = Omit<
+  UseGetProps<ResponseWorkspacesDTO, Failure | Error, GetTerraformCloudWorkspacesQueryParams, void>,
+  'path'
+>
+
+/**
+ * Gets terraform cloud workspaces
+ */
+export const useGetTerraformCloudWorkspaces = (props: UseGetTerraformCloudWorkspacesProps) =>
+  useGet<ResponseWorkspacesDTO, Failure | Error, GetTerraformCloudWorkspacesQueryParams, void>(
+    `/terraform-cloud/workspaces`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Gets terraform cloud workspaces
+ */
+export const getTerraformCloudWorkspacesPromise = (
+  props: GetUsingFetchProps<ResponseWorkspacesDTO, Failure | Error, GetTerraformCloudWorkspacesQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseWorkspacesDTO, Failure | Error, GetTerraformCloudWorkspacesQueryParams, void>(
+    getConfig('ng/api'),
+    `/terraform-cloud/workspaces`,
+    props,
+    signal
+  )
+
 export interface GetTokenQueryParams {
   tokenId?: string
 }
@@ -55426,6 +56076,55 @@ export const lisCDActiveServicesPromise = (
     ActiveServicesFilterParams,
     void
   >('POST', getConfig('ng/api'), `/usage/cd/active-services`, props, signal)
+
+export interface DownloadActiveServiceCSVReportQueryParams {
+  accountIdentifier?: string
+  timestamp?: number
+}
+
+export type DownloadActiveServiceCSVReportProps = Omit<
+  GetProps<void, Failure | Error, DownloadActiveServiceCSVReportQueryParams, void>,
+  'path'
+>
+
+/**
+ * Download CSV Active Services report
+ */
+export const DownloadActiveServiceCSVReport = (props: DownloadActiveServiceCSVReportProps) => (
+  <Get<void, Failure | Error, DownloadActiveServiceCSVReportQueryParams, void>
+    path={`/usage/cd/active-services/csv/download`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseDownloadActiveServiceCSVReportProps = Omit<
+  UseGetProps<void, Failure | Error, DownloadActiveServiceCSVReportQueryParams, void>,
+  'path'
+>
+
+/**
+ * Download CSV Active Services report
+ */
+export const useDownloadActiveServiceCSVReport = (props: UseDownloadActiveServiceCSVReportProps) =>
+  useGet<void, Failure | Error, DownloadActiveServiceCSVReportQueryParams, void>(
+    `/usage/cd/active-services/csv/download`,
+    { base: getConfig('ng/api'), ...props }
+  )
+
+/**
+ * Download CSV Active Services report
+ */
+export const downloadActiveServiceCSVReportPromise = (
+  props: GetUsingFetchProps<void, Failure | Error, DownloadActiveServiceCSVReportQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<void, Failure | Error, DownloadActiveServiceCSVReportQueryParams, void>(
+    getConfig('ng/api'),
+    `/usage/cd/active-services/csv/download`,
+    props,
+    signal
+  )
 
 export interface GetLicenseUsageQueryParams {
   accountIdentifier?: string
@@ -60330,6 +61029,7 @@ export interface GetYamlSchemaQueryParams {
     | 'AsgBlueGreenSwapService'
     | 'AsgBlueGreenDeploy'
     | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
     | 'DeployCloudFunction'
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
@@ -60380,6 +61080,7 @@ export interface GetYamlSchemaQueryParams {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'TerraformCloud'
   projectIdentifier?: string
   orgIdentifier?: string
   scope?: 'account' | 'org' | 'project' | 'unknown'
