@@ -11,7 +11,7 @@ import type { MonacoEditorProps } from 'react-monaco-editor'
 import ReactMonacoEditor from 'react-monaco-editor'
 import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
-import { IKeyboardEvent, languages, Position } from 'monaco-editor/esm/vs/editor/editor.api'
+import { IKeyboardEvent, IPosition, languages, Position, Range } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor, IDisposable } from 'monaco-editor/esm/vs/editor/editor.api'
 import {
   debounce,
@@ -85,6 +85,7 @@ import { countAllKeysInObject } from '@common/utils/utils'
 import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
 import { CompletionItemKind } from 'vscode-languageserver-types'
 import { PluginAddUpdateMetadata, PluginsPanel, PluginType } from '../PluginsPanel/PluginsPanel'
+import { AutoCompletionMap } from './YAMLAutocompletionHelper'
 
 // Please do not remove this, read this https://eemeli.org/yaml/#scalar-options
 scalarOptions.str.fold.lineWidth = 100000
@@ -271,9 +272,50 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         errorMessage: yamlError
       })
       onChange?.(!(updatedYaml === ''))
+      autoCompleteYAML()
     }, 500),
     [setYamlValidationErrors, showError, schema, yamlError, setCurrentYaml, onChange]
   )
+
+  const autoCompleteYAML = useCallback((): void => {
+    const editor = editorRef.current?.editor
+    if (editor) {
+      const currentCursorPosition = editor.getPosition()
+      const { lineNumber, column } = currentCursorPosition || {}
+      if (lineNumber && column) {
+        const editorContent = editor.getModel()?.getValue() || ''
+        const contextKey = editorContent.replace('\n', '')
+        const { autoCompletionYAML } = AutoCompletionMap.get(contextKey) || {}
+        if (AutoCompletionMap.has(contextKey)) {
+          editor.executeEdits('', [
+            {
+              range: {
+                startLineNumber: lineNumber,
+                startColumn: column,
+                endLineNumber: lineNumber,
+                endColumn: column
+              } as Range,
+              text: autoCompletionYAML || '',
+              forceMoveMarkers: true
+            }
+          ])
+          const lastLineNum = editor.getModel()?.getLineCount()
+          if (lastLineNum) {
+            const lastColumn = editor.getModel()?.getLineMaxColumn(lastLineNum)
+            editor.setSelection(new monaco.Range(0, 0, 0, 0))
+            editor.setPosition({
+              lineNumber: lastLineNum,
+              column: lastColumn
+            } as IPosition)
+            const updatedPosition = editor.getPosition()
+            if (updatedPosition) {
+              setTimeout(() => editor.setPosition({ ...updatedPosition, column: updatedPosition?.column + 1 }), 1000)
+            }
+          }
+        }
+      }
+    }
+  }, [editorRef.current?.editor])
 
   const showNoPermissionError = useCallback(
     throttle(() => {

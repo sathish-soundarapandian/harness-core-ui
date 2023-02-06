@@ -12,7 +12,8 @@
         },
         "name": {
           "description": "Pipeline provides the pipeline name.",
-          "type": "string"
+          "type": "string",
+          "examples": ["Java with Maven", "Java with Gradle"]
         },
         "stages": {
           "type": "array",
