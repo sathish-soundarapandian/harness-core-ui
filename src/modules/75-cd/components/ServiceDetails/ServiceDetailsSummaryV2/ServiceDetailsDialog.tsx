@@ -50,6 +50,7 @@ export default function ServiceDetailsDialog(props: ServiceDetailsDialogProps): 
       onClose={() => {
         setIsOpen(false)
         setRowClickFilter({ artifact: '', envId: '', environmentType: 'PreProduction', envName: '' })
+        setSearchTerm('')
       }}
       enforceFocus={false}
     >
