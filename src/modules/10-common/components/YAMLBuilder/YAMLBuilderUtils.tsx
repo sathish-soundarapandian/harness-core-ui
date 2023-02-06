@@ -12,6 +12,7 @@ import { parse } from 'yaml'
 import type { editor, Position } from 'monaco-editor/esm/vs/editor/editor.api'
 
 import { findLeafToParentPath, getSchemaWithLanguageSettings, validateYAMLWithSchema } from '../../utils/YamlUtils'
+import type { Module } from 'framework/types/ModuleName'
 import type { YamlBuilderProps } from '@common/interfaces/YAMLBuilderProps'
 import type { ToasterProps } from '@harness/uicore/dist/hooks/useToaster/useToaster'
 
@@ -150,6 +151,16 @@ const getStageYAMLPathForStageIndex = (stageIndex: number): string => `stages.${
 const getStepYAMLPathForStepInsideAStage = (stageIndex: number, stepIndex: number) =>
   `${getStageYAMLPathForStageIndex(stageIndex)}.${stepIndex}`
 
+const getDefaultStageForModule = (module: Module): Record<string, any> => {
+  return {
+    name: 'stage',
+    type: `${module.valueOf().toLowerCase()}`,
+    spec: {
+      steps: []
+    }
+  }
+}
+
 export {
   getYAMLFromEditor,
   getMetaDataForKeyboardEventProcessing,
@@ -158,5 +169,6 @@ export {
   verifyYAML,
   findPositionsForMatchingKeys,
   getStageYAMLPathForStageIndex,
-  getStepYAMLPathForStepInsideAStage
+  getStepYAMLPathForStepInsideAStage,
+  getDefaultStageForModule
 }

@@ -13,6 +13,7 @@ import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import '@wings-software/monaco-yaml/lib/esm/monaco.contribution'
 import { IKeyboardEvent, languages, Position } from 'monaco-editor/esm/vs/editor/editor.api'
 import type { editor, IDisposable } from 'monaco-editor/esm/vs/editor/editor.api'
+import { CompletionItemKind } from 'vscode-languageserver-types'
 import {
   debounce,
   isEmpty,
@@ -26,13 +27,14 @@ import {
   set,
   truncate
 } from 'lodash-es'
-import { Icon, Layout, Tag, Container, useConfirmationDialog } from '@harness/uicore'
-import { useToaster } from '@common/exports'
 import { useParams } from 'react-router-dom'
 import { Intent, Popover, PopoverInteractionKind, Position as PopoverPosition } from '@blueprintjs/core'
-import { useStrings } from 'framework/strings'
 import cx from 'classnames'
 import { scalarOptions, defaultOptions, parse } from 'yaml'
+import { Icon, Layout, Tag, Container, useConfirmationDialog } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
+import type { Module } from 'framework/types/ModuleName'
+import { useToaster } from '@common/exports'
 import type {
   YamlBuilderProps,
   YamlBuilderHandlerBinding,
@@ -42,17 +44,17 @@ import type {
 import { findAllValuesForJSONPath, getSchemaWithLanguageSettings } from '@common/utils/YamlUtils'
 import { sanitize } from '@common/utils/JSONUtils'
 import { Status } from '@common/utils/Constants'
+import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { countAllKeysInObject } from '@common/utils/utils'
 import {
   getYAMLFromEditor,
   getMetaDataForKeyboardEventProcessing,
   verifyYAML,
   findPositionsForMatchingKeys,
   getStageYAMLPathForStageIndex,
-  getStepYAMLPathForStepInsideAStage
+  getStepYAMLPathForStepInsideAStage,
+  getDefaultStageForModule
 } from './YAMLBuilderUtils'
-
-import css from './YamlBuilder.module.scss'
-import './resizer.scss'
 import {
   DEFAULT_EDITOR_HEIGHT,
   EditorTheme,
@@ -80,11 +82,11 @@ import {
   allowedKeysInReadOnlyModeMap
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import { countAllKeysInObject } from '@common/utils/utils'
 import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
-import { CompletionItemKind } from 'vscode-languageserver-types'
 import { PluginAddUpdateMetadata, PluginsPanel, PluginType } from '../PluginsPanel/PluginsPanel'
+
+import css from './YamlBuilder.module.scss'
+import './resizer.scss'
 
 // Please do not remove this, read this https://eemeli.org/yaml/#scalar-options
 scalarOptions.str.fold.lineWidth = 100000
@@ -167,6 +169,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const stepMatchRegex = 'steps:\\n(\\s*)-(\\s*)name:'
   const stageMatchRegex = 'spec:\\n(\\s*)steps:\\n(\\s*)-(\\s*)name:'
   const [isEditorExpanded, setIsEditorExpanded] = useState<boolean>(true)
+  const { module } = useParams<{
+    module: Module
+  }>()
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -954,14 +959,17 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       const { pluginData, shouldInsertYAML } = pluginMetadata
       const cursorPosition = currentCursorPosition.current
       if (!isEmpty(pluginData) && shouldInsertYAML && cursorPosition) {
+        let updatedYAML = currentYaml
         try {
-          const closestStageIndex = getClosestIndexToSearchToken(cursorPosition, stageMatchRegex)
+          let closestStageIndex = getClosestIndexToSearchToken(cursorPosition, stageMatchRegex)
           if (closestStageIndex < 0) {
-            setPluginAddUpdateOpnStatus(Status.ERROR)
-            return
+            updatedYAML = yamlStringify({ ...parse(currentYaml), stages: [getDefaultStageForModule(module)] })
+            onYamlChange(updatedYAML)
+            setCurrentYaml(updatedYAML)
+            closestStageIndex = 0
           }
           const yamlStepToBeInsertedAt = getStageYAMLPathForStageIndex(closestStageIndex)
-          const currentPipelineJSON = parse(currentYaml)
+          const currentPipelineJSON = parse(updatedYAML)
           const existingSteps =
             (findAllValuesForJSONPath(currentPipelineJSON, yamlStepToBeInsertedAt) as unknown[]) || []
           let updatedSteps = existingSteps.slice(0) as unknown[]
@@ -994,7 +1002,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
               updatedSteps = [pluginValuesAsStep]
             }
           }
-          const updatedYAML = yamlStringify(set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps))
+          updatedYAML = yamlStringify(set(currentPipelineJSON, yamlStepToBeInsertedAt, updatedSteps))
           onYamlChange(updatedYAML)
           setCurrentYaml(updatedYAML)
           setPluginAddUpdateOpnStatus(Status.SUCCESS)
