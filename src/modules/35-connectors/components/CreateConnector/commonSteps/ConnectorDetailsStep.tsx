@@ -157,7 +157,6 @@ const ConnectorDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDe
       </Text>
       <ModalErrorHandler bind={setModalErrorHandler} style={{ maxWidth: '740px' }} />
       <Container className={css.connectorForm}>
-        sdfds
         <Formik<DetailsForm>
           onSubmit={formData => {
             trackEvent(ConnectorActions.ConnectorDetailsStepSubmit, {
