@@ -35,7 +35,7 @@ import css from './PluginsPanel.module.scss'
 
 export enum PluginType {
   HARNESS = 'script',
-  BITRISE = 'Bitrise',
+  BITRISE = 'bitrise',
   ACTION = 'action'
 }
 
