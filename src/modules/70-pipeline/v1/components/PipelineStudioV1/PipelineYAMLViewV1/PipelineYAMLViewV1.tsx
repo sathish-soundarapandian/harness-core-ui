@@ -43,7 +43,7 @@ function PipelineYAMLViewV1(): React.ReactElement {
   const [yamlHandler, setYamlHandler] = React.useState<YamlBuilderHandlerBinding | undefined>()
   const updateEntityValidityDetailsRef = React.useRef<(entityValidityDetails: EntityValidityDetails) => Promise<void>>()
   updateEntityValidityDetailsRef.current = updateEntityValidityDetails
-  const [shouldShowPluginsPanel, setShouldShowPluginsPanel] = useState<boolean>(true)
+  const [isEditorExpanded, setIsEditorExpanded] = useState<boolean>(true)
   const { getString } = useStrings()
 
   // setup polling
@@ -117,14 +117,13 @@ function PipelineYAMLViewV1(): React.ReactElement {
             fileName=""
             bind={setYamlHandler}
             yamlSanityConfig={{ removeEmptyString: false, removeEmptyObject: false, removeEmptyArray: false }}
-            height={shouldShowPluginsPanel ? 'calc(100vh - 150px)' : 'calc(100vh - 210px)'}
-            width={shouldShowPluginsPanel ? '50vw' : 'calc(100vw - 400px)'}
+            height={'calc(100vh - 150px)'}
+            width={isEditorExpanded ? '50vw' : 'calc(100vw - 275px)'}
             onEnableEditMode={enableEditMode}
-            shouldShowPluginsPanel={shouldShowPluginsPanel}
-            toggleResizeButton={() => setShouldShowPluginsPanel((shouldRender: boolean) => !shouldRender)}
+            shouldShowPluginsPanel={true}
+            onEditorResize={(isExpanded: boolean) => setIsEditorExpanded(isExpanded)}
             invocationMap={stepsFactory.getInvocationMap()}
             schema={pipelineSchema?.data}
-            customCss={shouldShowPluginsPanel ? undefined : css.editorLayout}
             {...yamlEditorCustomHeaderProp}
             {...yamlOrJsonProp}
           />

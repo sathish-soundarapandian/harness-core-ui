@@ -53,7 +53,7 @@ export interface YamlBuilderProps {
   comparableYaml?: string //this is the actual Yaml that we enter at studio level and is used in Yaml builder to get the value of a field by comparing the Yaml with the given regex/yamlPath
   displayBorder?: boolean
   shouldShowPluginsPanel?: boolean
-  toggleResizeButton?: () => void
+  onEditorResize?: (isExpanded: boolean) => void
   customCss?: React.HTMLAttributes<HTMLDivElement>['className']
 }
 

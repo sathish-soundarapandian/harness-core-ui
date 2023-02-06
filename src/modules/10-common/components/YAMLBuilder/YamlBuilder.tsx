@@ -142,7 +142,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     comparableYaml,
     displayBorder = true,
     shouldShowPluginsPanel = false,
-    toggleResizeButton,
+    onEditorResize,
     customCss
   } = props
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
@@ -166,6 +166,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const [pluginAddUpdateOpnStatus, setPluginAddUpdateOpnStatus] = useState<Status>()
   const stepMatchRegex = 'steps:\\n(\\s*)-(\\s*)name:'
   const stageMatchRegex = 'spec:\\n(\\s*)steps:\\n(\\s*)-(\\s*)name:'
+  const [isEditorExpanded, setIsEditorExpanded] = useState<boolean>(true)
 
   let expressionCompletionDisposer: { dispose: () => void }
   let runTimeCompletionDisposer: { dispose: () => void }
@@ -1020,12 +1021,20 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             {showCopyIcon ? <CopyToClipboard content={defaultTo(yamlRef.current, '')} showFeedback={true} /> : null}
           </Container>
         ) : null}
-        <Icon className={css.resizeIcon} name="main-minimize" onClick={toggleResizeButton} />
+        <Icon
+          className={css.resizeIcon}
+          name="main-minimize"
+          onClick={() => {
+            const isExpanded = !isEditorExpanded
+            setIsEditorExpanded(isExpanded)
+            onEditorResize?.(isExpanded)
+          }}
+        />
       </Layout.Horizontal>
     ) : (
       <></>
     )
-  }, [isReadOnlyMode, isEditModeSupported, yamlRef.current, entityType, showCopyIcon])
+  }, [isReadOnlyMode, isEditModeSupported, yamlRef.current, entityType, showCopyIcon, isEditorExpanded])
 
   return shouldShowPluginsPanel ? (
     <Layout.Horizontal>
@@ -1052,16 +1061,18 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
           </div>
         </div>
       </Layout.Vertical>
-      <PluginsPanel
-        height={height}
-        onPluginAddUpdate={addUpdatePluginIntoExistingYAML}
-        onPluginDiscard={() => {
-          setSelectedPlugin(undefined)
-          setPluginAddUpdateOpnStatus(Status.TO_DO)
-        }}
-        selectedPluginFromYAMLView={selectedPlugin}
-        pluginAddUpdateOpnStatus={pluginAddUpdateOpnStatus}
-      />
+      {isEditorExpanded ? (
+        <PluginsPanel
+          height={height}
+          onPluginAddUpdate={addUpdatePluginIntoExistingYAML}
+          onPluginDiscard={() => {
+            setSelectedPlugin(undefined)
+            setPluginAddUpdateOpnStatus(Status.TO_DO)
+          }}
+          selectedPluginFromYAMLView={selectedPlugin}
+          pluginAddUpdateOpnStatus={pluginAddUpdateOpnStatus}
+        />
+      ) : null}
     </Layout.Horizontal>
   ) : (
     <div className={cx(customCss, { [css.main]: displayBorder }, { [css.darkBg]: theme === 'DARK' })}>
