@@ -64,7 +64,8 @@ export default function CDSideNav(): React.ReactElement {
   const location = useLocation()
   const module = 'cd'
   const { updateAppStore, selectedProject } = useAppStore()
-  const { CD_ONBOARDING_ENABLED, GITOPS_ONPREM_ENABLED } = useFeatureFlags()
+  const { GITOPS_ONPREM_ENABLED } = useFeatureFlags()
+  const CD_ONBOARDING_ENABLED = true
   const { getString } = useStrings()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const isCommunity = useGetCommunity()

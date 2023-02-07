@@ -39,12 +39,13 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     CVNG_TEMPLATE_MONITORED_SERVICE,
     NG_SETTINGS,
     USE_OLD_GIT_SYNC,
-    CD_ONBOARDING_ENABLED,
+
     NG_DEPLOYMENT_FREEZE,
     SRM_ET_EXPERIMENTAL,
     NEW_LEFT_NAVBAR_SETTINGS,
     SRM_DOWNTIME
   } = useFeatureFlags()
+  const CD_ONBOARDING_ENABLED = true
   const { showGetStartedTabInMainMenu, showGetStartedCDTabInMainMenu } = useSideNavContext()
   const { enabledHostedBuildsForFreeUsers } = useHostedBuilds()
   const { isGitSimplificationEnabled, isGitSyncEnabled, gitSyncEnabledOnlyForFF, selectedProject } = useAppStore()
