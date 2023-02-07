@@ -581,6 +581,13 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  syncCompleteMessage: Application sync has been triggered successfully
+  provisionedSuccessfully: provisioned successfully
+  selectAuthenticationType: Select Authentication Type
+  failedToProvisionCluster: Failed to provision cluster
+  provisioningInProgress: Provisioning in progress
+  createHostedCluster: Provision cluster
+  retryProvisioningHostedCluster: Retry provisioning cluster
   clustersCount: 'You currently have {{target}} cluster(s), would you like to connect it to?'
   backToRepoList: < Back to existing repo selection
   backToClusterList: < Back to existing cluster selection

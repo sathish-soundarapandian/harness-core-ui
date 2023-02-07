@@ -5231,6 +5231,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.connectTo': string
   'cd.getStartedWithCD.connectionStatus': string
   'cd.getStartedWithCD.createCluster': string
+  'cd.getStartedWithCD.createHostedCluster': string
   'cd.getStartedWithCD.createdSuccessfully': string
   'cd.getStartedWithCD.delegateDescription': string
   'cd.getStartedWithCD.delegateInfo1': string
@@ -5251,6 +5252,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.environmentDetails': string
   'cd.getStartedWithCD.failedSourceText': string
   'cd.getStartedWithCD.failedToAuthenticate': string
+  'cd.getStartedWithCD.failedToProvisionCluster': string
   'cd.getStartedWithCD.gitOpsAgent': string
   'cd.getStartedWithCD.gitopsOnboardingAgentStep': string
   'cd.getStartedWithCD.gitopsOnboardingConfigureStep': string
@@ -5297,12 +5299,15 @@ export interface StringsMap {
   'cd.getStartedWithCD.onboardingTitle': string
   'cd.getStartedWithCD.provideManifest': string
   'cd.getStartedWithCD.provideMyOwn': string
+  'cd.getStartedWithCD.provisionedSuccessfully': string
+  'cd.getStartedWithCD.provisioningInProgress': string
   'cd.getStartedWithCD.provisioningText': string
   'cd.getStartedWithCD.redisCache': string
   'cd.getStartedWithCD.redisCacheInstalled': string
   'cd.getStartedWithCD.repoServer': string
   'cd.getStartedWithCD.repoServerInstalled': string
   'cd.getStartedWithCD.reposubheading': string
+  'cd.getStartedWithCD.retryProvisioningHostedCluster': string
   'cd.getStartedWithCD.runDelegateSubtitle': string
   'cd.getStartedWithCD.sampleRepoLink': string
   'cd.getStartedWithCD.sampleRule1': string
@@ -5313,6 +5318,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.selectArtifactRepo': string
   'cd.getStartedWithCD.selectAuthMethod': string
   'cd.getStartedWithCD.selectAuthType': string
+  'cd.getStartedWithCD.selectAuthenticationType': string
   'cd.getStartedWithCD.selectDeploymentType': string
   'cd.getStartedWithCD.selfManaged': string
   'cd.getStartedWithCD.serverless': string
@@ -5327,6 +5333,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.successFull': string
   'cd.getStartedWithCD.successfullyAuthenticated': string
   'cd.getStartedWithCD.syncApplication': string
+  'cd.getStartedWithCD.syncCompleteMessage': string
   'cd.getStartedWithCD.targetRevision': string
   'cd.getStartedWithCD.testConnection': string
   'cd.getStartedWithCD.testesSuccessfully': string

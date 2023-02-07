@@ -8,7 +8,7 @@
 import React from 'react'
 import { defaultTo, noop, snakeCase, sortBy } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
-import { Text, Formik, FormikForm, Layout, Container, Button, ButtonVariation } from '@harness/uicore'
+import { Text, Formik, FormikForm, Layout, Container, Button, ButtonVariation, useToaster } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
 import { Servicev1Application, useAgentApplicationServiceSync } from 'services/gitops'
@@ -34,9 +34,9 @@ export const Deploy = ({ onBack }: { onBack: () => void }) => {
   const { getString } = useStrings()
   const history = useHistory()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
-
+  const toast = useToaster()
   const applicationId = applicationData?.name
-  const { mutate: syncApp } = useAgentApplicationServiceSync({
+  const { mutate: syncApp, error: syncError } = useAgentApplicationServiceSync({
     agentIdentifier: defaultTo(applicationData?.agentIdentifier, ''),
     requestName: defaultTo(applicationId, ''),
     queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier }
@@ -57,6 +57,9 @@ export const Deploy = ({ onBack }: { onBack: () => void }) => {
 
     const body = getSyncBody(formData, sortedResources, defaultTo(applicationData?.app, {}))
     await syncApp(body)
+    if (!syncError) {
+      toast.showSuccess(getString('cd.getStartedWithCD.syncCompleteMessage'))
+    }
     history.push(
       routes.toGitOpsApplication({
         orgIdentifier: applicationData?.orgIdentifier || '',

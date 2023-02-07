@@ -252,6 +252,9 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
   useEffect(() => {
     getRepositories({ accountIdentifier: accountId, agentIdentifier: fullAgentName }).then(response => {
       setRepositoryListData(defaultTo(response?.content, []))
+      if (!response?.content?.length) {
+        formikRef.current?.setFieldValue('isNewRepository', true)
+      }
     })
   }, [])
 
