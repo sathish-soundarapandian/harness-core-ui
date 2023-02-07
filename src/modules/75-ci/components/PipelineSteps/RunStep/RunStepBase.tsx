@@ -25,7 +25,8 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
-import { getImagePullPolicyOptions, getShellOptions } from '@common/utils/ContainerRunStepUtils'
+import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
+import { getCIShellOptions } from '@ci/utils/CIShellOptionsUtils'
 import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
@@ -71,7 +72,7 @@ export const RunStepBase = (
       initialValues={getInitialValuesInCorrectFormat<RunStepData, RunStepDataUI>(
         initialValues,
         transformValuesFieldsConfig,
-        { imagePullPolicyOptions: getImagePullPolicyOptions(getString), shellOptions: getShellOptions(getString) }
+        { imagePullPolicyOptions: getImagePullPolicyOptions(getString), shellOptions: getCIShellOptions(getString) }
       )}
       formName="ciRunStep"
       validate={valuesToValidate => {
@@ -155,11 +156,11 @@ export const RunStepBase = (
                   </Text>
                 }
                 multiTypeInputProps={{
-                  selectItems: getShellOptions(getString),
+                  selectItems: getCIShellOptions(getString),
                   placeholder: getString('select'),
                   multiTypeInputProps: {
                     expressions,
-                    selectProps: { items: getShellOptions(getString) },
+                    selectProps: { items: getCIShellOptions(getString) },
                     allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
                   },
                   disabled: readonly

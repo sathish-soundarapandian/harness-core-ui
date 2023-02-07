@@ -11,7 +11,8 @@ import { Color } from '@harness/design-system'
 import cx from 'classnames'
 import { connect } from 'formik'
 import { useStrings } from 'framework/strings'
-import { getImagePullPolicyOptions, getShellOptions } from '@common/utils/ContainerRunStepUtils'
+import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
+import { getCIShellOptions } from '@ci/utils/CIShellOptionsUtils'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
 import { MultiTypeTextField } from '@common/components/MultiTypeText/MultiTypeText'
@@ -117,11 +118,11 @@ const StepCommonFields = ({
               </Layout.Horizontal>
             }
             multiTypeInputProps={{
-              selectItems: getShellOptions(getString),
+              selectItems: getCIShellOptions(getString),
               placeholder: getString('select'),
               multiTypeInputProps: {
                 expressions,
-                selectProps: { addClearBtn: true, items: getShellOptions(getString) },
+                selectProps: { addClearBtn: true, items: getCIShellOptions(getString) },
                 allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
               },
               disabled

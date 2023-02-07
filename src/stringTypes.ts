@@ -760,6 +760,7 @@ export interface StringsMap {
   'common.purpose.sto.tests': string
   'common.purpose.welcome': string
   'common.pwsh': string
+  'common.python': string
   'common.readOnly': string
   'common.readonlyPermissions': string
   'common.recents': string

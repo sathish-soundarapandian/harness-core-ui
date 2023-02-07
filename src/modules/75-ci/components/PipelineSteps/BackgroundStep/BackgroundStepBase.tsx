@@ -21,7 +21,8 @@ import { isEmpty, get } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useLocation } from 'react-router-dom'
-import { getImagePullPolicyOptions, getShellOptions } from '@common/utils/ContainerRunStepUtils'
+import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
+import { getCIShellOptions } from '@ci/utils/CIShellOptionsUtils'
 import { StepFormikFowardRef, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -83,7 +84,7 @@ export const BackgroundStepBase = (
       initialValues={getInitialValuesInCorrectFormat<BackgroundStepData, BackgroundStepDataUI>(
         initialValues,
         transformValuesFieldsConfig,
-        { imagePullPolicyOptions: getImagePullPolicyOptions(getString), shellOptions: getShellOptions(getString) }
+        { imagePullPolicyOptions: getImagePullPolicyOptions(getString), shellOptions: getCIShellOptions(getString) }
       )}
       formName="ciBackgroundStep"
       validate={valuesToValidate => {
@@ -159,11 +160,11 @@ export const BackgroundStepBase = (
                   </Text>
                 }
                 multiTypeInputProps={{
-                  selectItems: getShellOptions(getString),
+                  selectItems: getCIShellOptions(getString),
                   placeholder: getString('select'),
                   multiTypeInputProps: {
                     expressions,
-                    selectProps: { items: getShellOptions(getString) },
+                    selectProps: { items: getCIShellOptions(getString) },
                     allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
                   },
                   disabled: readonly
