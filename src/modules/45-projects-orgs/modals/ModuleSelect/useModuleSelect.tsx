@@ -136,7 +136,8 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
   const { showError } = useToaster()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const FREE_PLAN_ENABLED = !isOnPrem()
-  const { CD_ONBOARDING_ENABLED } = useFeatureFlags()
+  // const { CD_ONBOARDING_ENABLED } = useFeatureFlags()
+  const CD_ONBOARDING_ENABLED = true
   const history = useHistory()
   const { selectedModuleName, projectData } = props
   const { accountId } = useParams<AccountPathProps>()
