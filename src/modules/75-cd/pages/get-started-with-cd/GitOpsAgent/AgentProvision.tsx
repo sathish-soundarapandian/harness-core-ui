@@ -6,7 +6,7 @@ import { useAgentServiceForServerGet, V1Agent } from 'services/gitops'
 import { useStrings } from 'framework/strings'
 import css from './GitOpsAgentCard.module.scss'
 
-const maxRetryCount = 12
+const maxRetryCount = 30
 const pollingInterval = 10000
 export const depSuccessLegacy = 'deployment-success-legacy'
 export const danger = 'danger-icon'

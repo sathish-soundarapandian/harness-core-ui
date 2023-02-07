@@ -727,7 +727,7 @@ getStartedWithCD:
     progressing: Progressing
     suspended: Suspended
     unknown: Unknown
-  checkAgentStatus: Checking if the agent has been installed. This process may take upto 2 minutes to complete
+  checkAgentStatus: Checking if the agent has been installed. This process may take upto 2-5 minutes to complete
   agentInstalled: GitOps agent installed
   repoServerInstalled: Repo server installed
   redisCacheInstalled: Redis cache installed
