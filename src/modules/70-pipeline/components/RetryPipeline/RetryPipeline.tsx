@@ -179,7 +179,7 @@ function RetryPipeline({
   const [isLastIndex, setIsLastIndex] = useState(false)
   const [isAllStage, setIsAllStage] = useState(true)
   const [inputSetTemplateYaml, setInputSetTemplateYaml] = useState('')
-  const [skipPreFlightCheck, setSkipPreFlightCheck] = useState(false)
+  const [skipPreFlightCheck, setSkipPreFlightCheck] = useState(isPipelineRemote)
   const [notifyOnlyMe, setNotifyOnlyMe] = useState(false)
   const [triggerValidation, setTriggerValidation] = useState(false)
   const [listOfSelectedStages, setListOfSelectedStages] = useState<Array<string>>([])
