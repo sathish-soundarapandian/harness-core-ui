@@ -50,8 +50,9 @@ export function ChangeSourceDrawer({
   const isCustomChangeSourceEnabled = useFeatureFlag(FeatureFlag.SRM_CUSTOM_CHANGE_SOURCE)
 
   const onSuccessWrapper = (data: UpdatedChangeSourceDTO): void => {
+    const isCustom = CustomChangeSourceList.includes(data?.type as ChangeSourceTypes)
     // for PagerDuty
-    if (data.type === ChangeSourceTypes.PagerDuty) {
+    if (data.type === ChangeSourceTypes.PagerDuty || isCustom) {
       data.enabled = true
     }
     data['spec'] = updateSpecByType(data)
