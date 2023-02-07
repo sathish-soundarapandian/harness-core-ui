@@ -15,8 +15,9 @@ import {
   useGetModuleLicensesByAccountAndModuleType,
   useExtendTrialLicense,
   useSaveFeedback,
-  useGetOrganizationList,
-  useGetProjectList
+  getOrganizationListPromise,
+  getProjectListPromise,
+  getServiceListPromise
 } from 'services/cd-ng'
 import { CDLicenseType, Editions } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -24,14 +25,44 @@ import SubscriptionsPage from '../SubscriptionsPage'
 import activeServices from './mocks/activeServices.json'
 import orgMockData from './mocks/orgMockData.json'
 import projMockData from './mocks/projMockData.json'
+import serviceMockData from './mocks/projMockData.json'
 jest.mock('services/cd-ng')
+const getOrganizationListPromiseMock = getOrganizationListPromise as jest.MockedFunction<any>
+const getProjectListPromiseMock = getProjectListPromise as jest.MockedFunction<any>
+const getServiceListPromiseMock = getServiceListPromise as jest.MockedFunction<any>
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
+
+let orgListPromiseMock = jest.fn().mockImplementation(() => {
+  return Promise.resolve({
+    orgMockData
+  })
+})
+let projListPromiseMock = jest.fn().mockImplementation(() => {
+  return Promise.resolve({
+    projMockData
+  })
+})
+let ServiceListPromiseMock = jest.fn().mockImplementation(() => {
+  return Promise.resolve({
+    serviceMockData
+  })
+})
 useExtendTrialLicenseMock.mockImplementation(() => {
   return {
     mutate: jest.fn()
   }
+})
+
+getOrganizationListPromiseMock.mockImplementation(() => {
+  return orgListPromiseMock()
+})
+getProjectListPromiseMock.mockImplementation(() => {
+  return projListPromiseMock()
+})
+getServiceListPromiseMock.mockImplementation(() => {
+  return orgListPromiseMock()
 })
 const useSaveFeedbackMock = useSaveFeedback as jest.MockedFunction<any>
 useSaveFeedbackMock.mockImplementation(() => {
@@ -39,14 +70,7 @@ useSaveFeedbackMock.mockImplementation(() => {
     mutate: jest.fn()
   }
 })
-const useGetOrganizationListMock = useGetOrganizationList as jest.MockedFunction<any>
-useGetOrganizationListMock.mockImplementation(() => {
-  return { ...orgMockData, refetch: jest.fn(), error: null }
-})
-const useGetProjectListMock = useGetProjectList as jest.MockedFunction<any>
-useGetProjectListMock.mockImplementation(() => {
-  return { ...projMockData, refetch: jest.fn(), error: null }
-})
+
 jest.mock('@common/hooks', () => ({
   ...(jest.requireActual('@common/hooks') as any),
   useMutateAsGet: jest.fn().mockImplementation(() => {
@@ -140,11 +164,6 @@ describe('Subscriptions Page', () => {
     )
     expect(getByText('common.licensesConsumed')).toBeTruthy()
     userEvent.click(getByText('common.licensesConsumed'))
-    const orgFilter = document.body.getElementsByClassName('DropDown--dropdownButton')[0]
-    userEvent.click(orgFilter)
-    const orgName = await waitFor(() => getByText('default'))
-    expect(orgName).toBeDefined()
-    userEvent.click(orgName)
     const fetchButton = getByText('Fetch')
     expect(fetchButton).toBeDefined()
     userEvent.click(fetchButton)

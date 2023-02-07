@@ -7,7 +7,7 @@
       "pageSize": 50,
       "content": [
         {
-          "project": {
+          "service": {
             "orgIdentifier": "default",
             "identifier": "TestCiproject",
             "name": "TestCiproject",
@@ -18,7 +18,7 @@
           }
         },
         {
-          "project": {
+          "service": {
             "orgIdentifier": "default",
             "identifier": "test11",
             "name": "test11",
@@ -29,7 +29,7 @@
           }
         },
         {
-          "project": {
+          "service": {
             "orgIdentifier": "default",
             "identifier": "Project_1",
             "name": "Project 1",
@@ -40,7 +40,7 @@
           }
         },
         {
-          "project": {
+          "service": {
             "orgIdentifier": "testOrg",
             "identifier": "fdfder32432",
             "name": "fdfder32432",

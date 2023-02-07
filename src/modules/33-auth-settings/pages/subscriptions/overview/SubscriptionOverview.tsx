@@ -79,10 +79,14 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
     },
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
-  const updateFilters = (orgId: SelectOption, projId: SelectOption, serviceId: SelectOption) => {
-    setOrgName(orgId.value as string)
-    setProjName(projId.value as string)
-    setServiceName(serviceId.value as string)
+  const updateFilters = (
+    orgId: SelectOption | undefined,
+    projId: SelectOption | undefined,
+    serviceId: SelectOption | undefined
+  ) => {
+    setOrgName(orgId?.value as string)
+    setProjName(projId?.value as string)
+    setServiceName(serviceId?.value as string)
   }
   return (
     <Layout.Vertical spacing="large" width={'90%'}>

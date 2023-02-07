@@ -5,25 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState, useEffect } from 'react'
+import React, { useMemo, useState } from 'react'
 import type { Column } from 'react-table'
-import { useParams } from 'react-router-dom'
 import cx from 'classnames'
-import { Text, TableV2, Layout, Card, Heading, NoDataCard, DropDown, SelectOption, PageSpinner } from '@harness/uicore'
+import { Text, TableV2, Layout, Card, Heading, NoDataCard, SelectOption, PageSpinner } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import moment from 'moment'
-import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { String, useStrings, StringKeys } from 'framework/strings'
+import { PageActiveServiceDTO, LicenseUsageDTO } from 'services/cd-ng'
 import OrgDropdown from '../../../../10-common/OrgDropdown/OrgDropdown'
 import ProjectDropdown from '../../../../10-common/ProjectDropdown/ProjectDropdown'
 import ServiceDropdown from '../../../../10-common/ServiceDropdown/ServiceDropdown'
-import { String, useStrings, StringKeys } from 'framework/strings'
-import {
-  PageActiveServiceDTO,
-  LicenseUsageDTO,
-  useGetProjectList,
-  useGetOrganizationList,
-  useGetProjectAggregateDTOList
-} from 'services/cd-ng'
 import type { SortBy } from './types'
 
 import {
@@ -38,9 +30,6 @@ import {
 import { getInfoIcon } from './UsageInfoCard'
 import pageCss from '../SubscriptionsPage.module.scss'
 
-enum OrgFilter {
-  ALL = '$$ALL$$'
-}
 const DEFAULT_PAGE_INDEX = 0
 const DEFAULT_PAGE_SIZE = 30
 export interface ServiceLicenseTableProps {
