@@ -34,10 +34,10 @@ import { useQueryParams } from '@common/hooks'
 import {
   ConnectorConfigDTO,
   JobDetails,
-  useGetArtifactPathForJenkins,
-  useGetJobDetailsForJenkins,
-  useGetBuildsForJenkins,
-  BuildDetails
+  BuildDetails,
+  useGetPlansKey,
+  useGetBuildsForBamboo,
+  useGetArtifactPathsForBamboo
 } from 'services/cd-ng'
 import {
   getConnectorIdValue,
@@ -77,7 +77,7 @@ function FormComponent({
   const [jobDetails, setJobDetails] = useState<SelectWithSubmenuOption[]>([])
   const selectedJobName = useRef<string | null>(null)
   const [artifactPath, setFilePath] = useState<SelectOption[]>([])
-  const [build, setJenkinsBuilds] = useState<SelectOption[]>([])
+  const [build, setBambooBuilds] = useState<SelectOption[]>([])
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -87,8 +87,8 @@ function FormComponent({
   }
 
   const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
-  const jobNameValue = formik.values?.spec?.jobName
-  const artifactValue = getGenuineValue(formik.values?.spec?.artifactPath)
+  const planNameValue = formik.values?.spec?.planName
+  // const artifactValue = getGenuineValue(formik.values?.spec?.artifactPaths)
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const {
@@ -96,7 +96,7 @@ function FormComponent({
     data: jobsResponse,
     loading: fetchingJobs,
     error: fetchingJobsError
-  } = useGetJobDetailsForJenkins({
+  } = useGetPlansKey({
     lazy: getMultiTypeFromValue(prevStepData?.connectorId) === MultiTypeInputType.RUNTIME,
     queryParams: {
       ...commonParams,
@@ -109,28 +109,27 @@ function FormComponent({
     data: artifactPathsResponse,
     loading: fetchingArtifacts,
     error: errorFetchingPath
-  } = useGetArtifactPathForJenkins({
+  } = useGetArtifactPathsForBamboo({
     lazy: true,
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString()
     },
-    jobName: encodeURIComponent(encodeURIComponent(jobNameValue?.label || ''))
+    planName: encodeURIComponent(encodeURIComponent(planNameValue?.label || ''))
   })
 
   const {
     refetch: refetchJenkinsBuild,
-    data: jenkinsBuildResponse,
+    data: bambooBuildResponse,
     loading: fetchingBuild,
     error: errorFetchingBuild
-  } = useGetBuildsForJenkins({
+  } = useGetBuildsForBamboo({
     lazy: true,
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue?.toString(),
-      artifactPath: artifactValue || ''
+      connectorRef: connectorRefValue?.toString()
     },
-    jobName: encodeURIComponent(encodeURIComponent(jobNameValue?.label || ''))
+    planName: encodeURIComponent(encodeURIComponent(planNameValue?.label || ''))
   })
 
   useEffect(() => {
@@ -148,8 +147,8 @@ function FormComponent({
   }, [artifactPathsResponse])
 
   useEffect(() => {
-    if (jenkinsBuildResponse?.data) {
-      const jenkinsBuildsResponseFormatted: MultiSelectOption[] = jenkinsBuildResponse?.data?.map(
+    if (bambooBuildResponse?.data) {
+      const bambooBuildResponseFormatted: MultiSelectOption[] = bambooBuildResponse?.data?.map(
         (jenkinsBuild: BuildDetails) => {
           return {
             label: jenkinsBuild.uiDisplayName,
@@ -157,9 +156,9 @@ function FormComponent({
           } as MultiSelectOption
         }
       )
-      setJenkinsBuilds(jenkinsBuildsResponseFormatted)
+      setBambooBuilds(bambooBuildResponseFormatted)
     }
-  }, [jenkinsBuildResponse])
+  }, [bambooBuildResponse])
 
   const getJobItems = (jobs: JobDetails[]): SelectWithSubmenuOption[] => {
     return jobs?.map(job => {
@@ -173,12 +172,12 @@ function FormComponent({
   }
 
   useEffect(() => {
-    if (typeof formik.values?.spec?.jobName === 'string' && jobDetails?.length) {
-      const targetJob = jobsResponse?.data?.jobDetails?.find(job => job.jobName === initialValues?.spec.jobName)
+    if (typeof formik.values?.spec?.planName === 'string' && jobDetails?.length) {
+      const targetJob = jobsResponse?.data?.planKeys?.find(job => job.name === initialValues?.spec.planName)
       if (targetJob) {
         const jobObj = {
-          label: targetJob?.jobName || '',
-          value: targetJob?.url || '',
+          label: targetJob?.name || '',
+          value: targetJob?.value || '',
           submenuItems: [],
           hasSubmenuItems: targetJob?.folder
         }
@@ -252,8 +251,8 @@ function FormComponent({
 
   const canFetchBuildsOrArtifacts =
     getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.RUNTIME ||
-    getMultiTypeFromValue(jobNameValue) === MultiTypeInputType.RUNTIME ||
-    !jobNameValue ||
+    getMultiTypeFromValue(planNameValue) === MultiTypeInputType.RUNTIME ||
+    !planNameValue ||
     !connectorRefValue
 
   return (
@@ -281,7 +280,7 @@ function FormComponent({
                 items: jobDetails,
                 allowCreatingNewItems: true,
                 onChange: primaryValue => {
-                  setJenkinsBuilds([])
+                  setBambooBuilds([])
                   selectedJobName.current =
                     getMultiTypeFromValue(primaryValue) === MultiTypeInputType.RUNTIME
                       ? (primaryValue as unknown as string)
