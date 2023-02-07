@@ -90,7 +90,9 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   const handleBuildChart = async (): Promise<void> => {
     const fetchMetricsRecordsRequestBody = getRecordsRequestBody(connectorIdentifier, providerType, query)
     fetchHealthSourceTimeSeriesData(fetchMetricsRecordsRequestBody).then(data => {
-      setHealthSourceTimeSeriesData(data?.resource?.timeSeriesData)
+      const timeSeriesData = data?.resource?.timeSeriesData || []
+      setHealthSourceTimeSeriesData(timeSeriesData)
+      setFieldValue(CustomMetricFormFieldNames.RECORD_COUNT, timeSeriesData.length)
     })
   }
 
@@ -102,7 +104,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
       const recordsData = recordsInfo?.resource?.rawRecords || []
       if (recordsData.length) {
         setRecords(recordsData as Record<string, any>[])
-        setFieldValue(CustomMetricFormFieldNames.RECORD_COUNT, recordsData.length)
+
         if (shouldAutoBuildChart(chartConfig)) {
           handleBuildChart()
         }
