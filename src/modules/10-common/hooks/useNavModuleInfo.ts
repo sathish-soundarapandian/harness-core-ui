@@ -167,7 +167,11 @@ export const moduleGroupConfig: GroupConfig[] = [
   },
   {
     label: 'common.moduleList.manageImpact',
-    items: [ModuleName.CE, ModuleName.CV, ModuleName.SSCS, ModuleName.IDP]
+    items: [ModuleName.CE, ModuleName.CV, ModuleName.SSCS]
+  },
+  {
+    label: 'common.moduleList.optimizeProcesses',
+    items: [ModuleName.IDP]
   }
 ]
 

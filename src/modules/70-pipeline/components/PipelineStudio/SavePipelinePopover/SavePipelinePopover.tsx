@@ -109,6 +109,7 @@ function SavePipelinePopover(
   const { openTemplateErrorsModal } = useTemplateErrors({ entity: TemplateErrorEntity.PIPELINE })
   const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
+  const isPipelineInline = supportingGitSimplification && storeType === StoreType.INLINE
 
   const [showOPAErrorModal, closeOPAErrorModal] = useModalHook(
     () => (
@@ -182,7 +183,9 @@ function SavePipelinePopover(
               connectorRef,
               storeType
             }
-          : {})
+          : isPipelineInline
+          ? { storeType }
+          : {}) //Not keeping storeType only for oldGitSync
       })
     )
   }

@@ -524,7 +524,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
                 selectProps: {
                   items: regions,
                   noResults: (
-                    <Text lineClamp={1} width={400} height={35}>
+                    <Text lineClamp={1} width={332} margin="small">
                       {getRBACErrorMessage(errorRegions as RBACError) || getString('pipeline.noRegions')}
                     </Text>
                   ),
@@ -557,7 +557,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
                 },
                 selectProps: {
                   noResults: (
-                    <Text lineClamp={1} width={400} padding="small">
+                    <Text lineClamp={1} width={332} margin="small">
                       {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBucketsFound')}
                     </Text>
                   ),
@@ -596,7 +596,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
                 allowableTypes,
                 selectProps: {
                   noResults: (
-                    <Text lineClamp={1} width={400} padding="small">
+                    <Text lineClamp={1} width={332} margin="small">
                       {getRBACErrorMessage(filePathError as RBACError) || getString('pipeline.noFilePathsFound')}
                     </Text>
                   ),

@@ -84,7 +84,7 @@ export function chartsConfig(
         const testDataTimestamp = testeDataTime ? moment(testeDataTime).format('lll') : getString('noData')
 
         return `
-        <div style="margin-bottom: var(--spacing-xsmall); color: var(--grey-350">${baseDataTimestamp}</div>
+        <div style="margin-bottom: var(--spacing-xsmall); color: var(--grey-350">${testDataTimestamp}</div>
         <div class="sectionParent" style="margin-top: 4px">
         <div class="riskIndicator" style="border: 1px solid ${getRiskColorValue(
           testData?.risk
@@ -95,7 +95,7 @@ export function chartsConfig(
         )}:</span><span style="color: var(--white); margin-left: var(--spacing-small)">${testDataDisplayValue}</span></p>
         </div>
         </div>      
-        <div style="margin-bottom: var(--spacing-xsmall); color: var(--grey-350">${testDataTimestamp}</div>
+        <div style="margin-bottom: var(--spacing-xsmall); color: var(--grey-350">${baseDataTimestamp}</div>
         <div class="sectionParent"> 
         <div class="riskIndicator" style="border: 1px solid var(--primary-7);background: var(--primary-2); margin:0 10px 0 4px"></div> 
         <p><span style="color: var(--grey-350)">${getString(

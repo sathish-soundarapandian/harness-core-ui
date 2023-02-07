@@ -388,6 +388,25 @@ exports[`Unit tests for CVChanges Verify if all the fields are rendered correctl
                 class="StyledProps--font Text--lineclamp StyledProps--main rowLabel"
                 style="--text-line-clamp: 1; width: 90px;"
               >
+                common.purpose.cf.continuous
+              </p>
+              <div
+                class="StyledProps--font StyledProps--main timeline"
+              >
+                <hr />
+              </div>
+            </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main main"
+          >
+            <div
+              class="StyledProps--font StyledProps--main timelineRow"
+            >
+              <p
+                class="StyledProps--font Text--lineclamp StyledProps--main rowLabel"
+                style="--text-line-clamp: 1; width: 90px;"
+              >
                 cv.changeSource.tooltip.incidents
               </p>
               <div

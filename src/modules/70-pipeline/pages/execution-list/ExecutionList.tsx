@@ -6,7 +6,7 @@
  */
 
 import React, { useRef, useState } from 'react'
-import { Container, ExpandingSearchInputHandle, PageSpinner, Text } from '@harness/uicore'
+import { Container, ExpandingSearchInputHandle, Icon, PageSpinner, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { matchPath, useLocation, useParams } from 'react-router-dom'
 import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
@@ -26,7 +26,7 @@ import { DEFAULT_PAGE_INDEX } from '@pipeline/utils/constants'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useStrings } from 'framework/strings'
 import { GetListOfExecutionsQueryParams, PipelineExecutionSummary, useGetListOfExecutions } from 'services/pipeline-ng'
-import { ExecutionListEmpty } from './ExecutionListEmpty/ExecutionListEmpty'
+import { ExecutionListEmpty, ExecutionListEmptyWithoutCta } from './ExecutionListEmpty/ExecutionListEmpty'
 import { ExecutionListSubHeader } from './ExecutionListSubHeader/ExecutionListSubHeader'
 import { MemoisedExecutionListTable } from './ExecutionListTable/ExecutionListTable'
 import { getIsAnyFilterApplied, getIsSavedFilterApplied, useExecutionListQueryParams } from './utils/executionListUtil'
@@ -34,15 +34,17 @@ import { prepareFiltersPayload } from '../utils/Filters/filters'
 import css from './ExecutionList.module.scss'
 
 export interface ExecutionListProps {
-  onRunPipeline(): void
+  onRunPipeline?(): void
   showHealthAndExecution?: boolean
   isPipelineInvalid?: boolean
   showBranchFilter?: boolean
+  isExecutionPage?: boolean
+  filters?: any
 }
 
 function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
   const params = useParams<PipelinePathProps>()
-  const { showHealthAndExecution, ...rest } = props
+  const { showHealthAndExecution, isExecutionPage = true, ...rest } = props
   const { getString } = useStrings()
   const defaultBranchSelect: string = getString('common.gitSync.selectBranch')
   const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<Partial<GetListOfExecutionsQueryParams>>()
@@ -123,6 +125,8 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
     body:
       !isSavedFilterApplied && queryParams.filters
         ? { ...prepareFiltersPayload(queryParams.filters), filterType: 'PipelineExecution' }
+        : !isExecutionPage && !isSavedFilterApplied
+        ? { ...props.filters }
         : null
   })
 
@@ -147,6 +151,16 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
 
   const { globalFreezes } = useGlobalFreezeBanner()
 
+  function LoadingComponent(): JSX.Element {
+    return isExecutionPage ? (
+      <PageSpinner />
+    ) : (
+      <Container flex={{ justifyContent: 'center', alignItems: 'center' }} height={500}>
+        <Icon name="spinner" color={Color.BLUE_500} size={30} />
+      </Container>
+    )
+  }
+
   return (
     <>
       <Page.Body error={(error?.data as Error)?.message || error?.message} retryOnError={fetchExecutions}>
@@ -168,6 +182,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
             repoName={repoName}
             borderless
             ref={searchRef}
+            isExecutionPage={isExecutionPage}
             {...rest}
           />
         )}
@@ -175,7 +190,7 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
 
         <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />
         {showSpinner ? (
-          <PageSpinner />
+          <LoadingComponent />
         ) : executionList && hasExecutions ? (
           <>
             <div className={css.tableTitle}>
@@ -189,8 +204,10 @@ function ExecutionListInternal(props: ExecutionListProps): React.ReactElement {
               {...rest}
             />
           </>
-        ) : (
+        ) : isExecutionPage ? (
           <ExecutionListEmpty {...rest} resetFilter={resetFilter} />
+        ) : (
+          <ExecutionListEmptyWithoutCta resetFilter={resetFilter} />
         )}
       </Page.Body>
     </>

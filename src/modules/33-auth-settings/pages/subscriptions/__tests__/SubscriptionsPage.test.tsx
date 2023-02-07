@@ -17,7 +17,8 @@ import {
   useSaveFeedback,
   getOrganizationListPromise,
   getProjectListPromise,
-  getServiceListPromise
+  getServiceListPromise,
+  useDownloadActiveServiceCSVReport
 } from 'services/cd-ng'
 import { CDLicenseType, Editions } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -31,6 +32,7 @@ const getOrganizationListPromiseMock = getOrganizationListPromise as jest.Mocked
 const getProjectListPromiseMock = getProjectListPromise as jest.MockedFunction<any>
 const getServiceListPromiseMock = getServiceListPromise as jest.MockedFunction<any>
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
+const useDownloadActiveServiceCSVReportMock = useDownloadActiveServiceCSVReport as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
 
@@ -89,6 +91,13 @@ const featureFlags = {
 }
 
 describe('Subscriptions Page', () => {
+  useDownloadActiveServiceCSVReportMock.mockImplementation(() => {
+    return {
+      data: '',
+      refetch: jest.fn()
+    }
+  })
+
   test('it renders the subscriptions page', async () => {
     useGetModuleLicenseInfoMock.mockImplementation(() => {
       return {
@@ -497,6 +506,12 @@ describe('Subscriptions Page', () => {
   })
 
   describe('Subscription Details Card', () => {
+    useDownloadActiveServiceCSVReportMock.mockImplementation(() => {
+      return {
+        data: '',
+        refetch: jest.fn()
+      }
+    })
     test('should render CD details', () => {
       useGetModuleLicenseInfoMock.mockImplementation(() => {
         return {

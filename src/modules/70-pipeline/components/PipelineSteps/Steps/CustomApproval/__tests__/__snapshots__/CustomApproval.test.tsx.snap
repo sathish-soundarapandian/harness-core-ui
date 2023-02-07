@@ -2438,7 +2438,14 @@ exports[`CustomApproval tests Edit stage - readonly: edit stage view readonly 1`
             >
               <textarea
                 name="spec.source.spec.script"
-              />
+              >
+                #
+# Specify output variables in the step and these
+# variables should be used for setting up the approval 
+# and rejection criteria.
+#
+
+              </textarea>
               <button
                 class="bp3-button bp3-small Button--button StyledProps--font StyledProps--main expandBtn Button--with-current-color Button--iconOnly Button--withLeftIcon"
                 type="button"

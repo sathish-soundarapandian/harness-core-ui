@@ -45,7 +45,7 @@ import { Scope } from '@common/interfaces/SecretsInterface'
 import { getScopeFromDTO, getScopeLabelfromScope } from '@common/components/EntityReference/EntityReference'
 import { GitSyncForm, gitSyncFormSchema } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import { CardInterface, InlineRemoteSelect } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
-import { StoreMetadata, StoreType as GitStoreType } from '@common/constants/GitSyncTypes'
+import { StoreMetadata, StoreType as GitStoreType, SaveTemplateAsType } from '@common/constants/GitSyncTypes'
 import type { TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import type { ConnectorSelectedValue } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
@@ -102,6 +102,7 @@ export interface ModalProps {
   lastPublishedVersion?: string
   disableCreatingNewBranch?: boolean
   onFailure?: (error: any, latestTemplate: NGTemplateInfoConfig) => void
+  saveAsType?: string
 }
 
 export interface TemplateConfigValues extends NGTemplateInfoConfigWithGitDetails {
@@ -152,7 +153,8 @@ const BasicTemplateDetails = (
     promise,
     lastPublishedVersion,
     onFailure,
-    disableCreatingNewBranch
+    disableCreatingNewBranch,
+    saveAsType
   } = props
   const pathParams = useParams<TemplateStudioPathProps>()
   const { orgIdentifier, projectIdentifier } = pathParams
@@ -163,6 +165,7 @@ const BasicTemplateDetails = (
   } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const [loading, setLoading] = React.useState<boolean>()
+  const [filePathPrefix, setFilePathPrefix] = React.useState<string>('')
   const { isReadonly } = useContext(TemplateContext)
   const scope = getScopeFromDTO(pathParams)
   const [selectedScope, setSelectedScope] = React.useState<Scope>(scope)
@@ -217,7 +220,6 @@ const BasicTemplateDetails = (
         if (isEqual(initialValues.versionLabel, DefaultNewVersionLabel)) {
           unset(draft, 'versionLabel')
         }
-
         if (isGitSyncEnabled) {
           draft.repo = gitDetails?.repoIdentifier
           draft.branch = gitDetails?.branch
@@ -227,10 +229,16 @@ const BasicTemplateDetails = (
           draft.branch = defaultTo(storeMetadata?.branch, '')
           draft.storeType = defaultTo(storeMetadata?.storeType, GitStoreType.INLINE)
           draft.filePath = intent === Intent.SAVE ? '' : defaultTo(storeMetadata?.filePath, '')
+          if (saveAsType && saveAsType === SaveTemplateAsType.NEW_LABEL_VERSION && intent === Intent.SAVE) {
+            const paths = defaultTo(storeMetadata?.filePath, '').split('/')
+            if (paths.length > 1) {
+              setFilePathPrefix(paths.slice(0, paths.length - 1).join('/'))
+            }
+          }
         }
         draft.iconFile = undefined
       }),
-    [initialValues, storeMetadata, gitDetails]
+    [initialValues, storeMetadata, gitDetails, saveAsType]
   )
 
   const submitButtonLabel = React.useMemo(() => {
@@ -568,6 +576,7 @@ const BasicTemplateDetails = (
                             initialValues={formInitialValues}
                             entityScope={getScopeFromDTO(formik.values)}
                             disableFields={gitDisabledFields}
+                            filePathPrefix={filePathPrefix}
                           />
                         )}
                       </>

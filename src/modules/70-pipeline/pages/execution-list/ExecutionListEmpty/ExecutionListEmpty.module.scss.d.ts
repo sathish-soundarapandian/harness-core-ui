@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly executionListEmpty: string
   readonly image: string
   readonly imageNoPipeline: string
   readonly noExecutions: string

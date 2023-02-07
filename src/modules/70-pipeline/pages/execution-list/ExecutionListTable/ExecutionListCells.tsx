@@ -6,13 +6,22 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Checkbox, Classes } from '@blueprintjs/core'
+import { Classes } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
-import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text } from '@harness/uicore'
+import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text, Checkbox } from '@harness/uicore'
 import { get, isEmpty, defaultTo } from 'lodash-es'
-import React, { useRef } from 'react'
+import React from 'react'
 import { Link, useParams } from 'react-router-dom'
-import type { Cell, CellValue, ColumnInstance, Renderer, Row, TableInstance, UseExpandedRowProps } from 'react-table'
+import type {
+  Cell,
+  CellValue,
+  ColumnInstance,
+  Renderer,
+  Row,
+  TableInstance,
+  UseExpandedRowProps,
+  UseTableCellProps
+} from 'react-table'
 import { Duration, TimeAgoPopover } from '@common/components'
 import type { StoreType } from '@common/constants/GitSyncTypes'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
@@ -113,9 +122,12 @@ type CellTypeWithActions<D extends Record<string, any>, V = any> = TableInstance
 
 type CellType = Renderer<CellTypeWithActions<PipelineExecutionSummary>>
 
+export interface CellTypeRegister {
+  component: React.ComponentType<UseTableCellProps<PipelineExecutionSummary>>
+}
+
 export const RowSelectCell: CellType = ({ row }) => {
   const data = row.original
-  const checkboxRef = useRef<HTMLDivElement>(null)
   const { compareItems, addToCompare, removeFromCompare } = useExecutionCompareContext()
 
   const isCompareItem =
@@ -130,7 +142,7 @@ export const RowSelectCell: CellType = ({ row }) => {
   }
 
   return (
-    <div ref={checkboxRef} className={css.checkbox} onClick={killEvent}>
+    <div className={css.checkbox} onClick={killEvent}>
       <Checkbox
         size={12}
         checked={isCompareItem}
@@ -386,9 +398,9 @@ export const MenuCell: CellType = ({ row, column }) => {
   )
 }
 
-export const TriggerInfoCell: CellType = ({ row }) => {
+export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutionSummary>): React.ReactElement {
   const { getString } = useStrings()
-  const data = row.original
+  const data = props.row.original
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
   const queryParams = useQueryParams<GitQueryParams>()
   const triggerType = get(data, 'executionTriggerInfo.triggerType', 'MANUAL')

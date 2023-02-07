@@ -35,7 +35,7 @@ const commonLinkProps: Partial<NavLinkProps> = {
 
 export default function L1Nav(): React.ReactElement {
   const params = useParams<ProjectPathProps>()
-  const { RESOURCE_CENTER_ENABLED, NG_DASHBOARDS, NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
+  const { NG_DASHBOARDS, NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
   const { isOpen: isModuleListOpen, toggle: toggleModuleList, close: closeModuleList } = useToggleOpen(false)
   const { isOpen: isModuleConfigOpen, toggle: toggleModuleConfig, close: closeModuleConfig } = useToggleOpen(false)
 
@@ -141,11 +141,10 @@ export default function L1Nav(): React.ReactElement {
           )}
         </ul>
         <ul className={css.navList}>
-          {RESOURCE_CENTER_ENABLED && (
-            <li className={css.navItem}>
-              <ResourceCenter />
-            </li>
-          )}
+          <li className={css.navItem}>
+            <ResourceCenter />
+          </li>
+
           {NG_DASHBOARDS && (
             <li className={css.navItem}>
               <Link

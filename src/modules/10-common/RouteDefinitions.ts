@@ -150,6 +150,7 @@ const routes = {
   toAuthenticationSettings: withAccountId(() => '/settings/authentication'),
   toAccountConfiguration: withAccountId(() => '/settings/authentication/configuration'),
   toAccountActivityLog: withAccountId(() => '/settings/authentication/activity-log'),
+  toTicketSettings: withAccountId(() => `/settings/tickets`),
 
   // Governance
   toGovernance: withAccountId(({ orgIdentifier, projectIdentifier, module }: GovernancePathProps) =>

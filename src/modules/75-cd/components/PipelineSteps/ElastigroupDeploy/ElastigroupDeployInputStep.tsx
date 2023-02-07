@@ -14,18 +14,18 @@ import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { ElastigroupDeployStepInfo } from 'services/cd-ng'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import type { ElastigroupDeployStepInfoData } from './ElastigroupDeployInterface'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface ElastigroupDeployInputStepProps {
-  initialValues: ElastigroupDeployStepInfo
-  onUpdate?: (data: ElastigroupDeployStepInfo) => void
-  onChange?: (data: ElastigroupDeployStepInfo) => void
+  initialValues: ElastigroupDeployStepInfoData
+  onUpdate?: (data: ElastigroupDeployStepInfoData) => void
+  onChange?: (data: ElastigroupDeployStepInfoData) => void
   allowableTypes: AllowedTypes
   stepViewType?: StepViewType
   isNewStep?: boolean
-  template?: ElastigroupDeployStepInfo
+  template?: ElastigroupDeployStepInfoData
   readonly?: boolean
   path?: string
 }

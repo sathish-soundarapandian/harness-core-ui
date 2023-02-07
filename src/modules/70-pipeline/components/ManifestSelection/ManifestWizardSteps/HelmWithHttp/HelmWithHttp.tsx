@@ -27,8 +27,8 @@ import { get, isEmpty } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { HelmWithHTTPDataType } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 
@@ -62,6 +62,7 @@ function HelmWithHttp({
   deploymentType
 }: StepProps<ConnectorConfigDTO> & HelmWithHttpPropType): React.ReactElement {
   const { getString } = useStrings()
+  const { CDP_HELM_SUB_CHARTS } = useFeatureFlags()
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
 
   const [selectedHelmVersion, setHelmVersion] = useState(initialValues?.spec?.helmVersion ?? 'V2')
@@ -76,6 +77,7 @@ function HelmWithHttp({
         helmVersion: initialValues.spec?.helmVersion,
         chartName: initialValues.spec?.chartName,
         chartVersion: initialValues.spec?.chartVersion,
+        subChartName: initialValues.spec?.subChartName,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
         valuesPaths:
           typeof initialValues?.spec?.valuesPaths === 'string'
@@ -96,6 +98,7 @@ function HelmWithHttp({
       helmVersion: 'V2',
       chartName: '',
       chartVersion: '',
+      subChartName: '',
       skipResourceVersioning: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
     }
@@ -118,6 +121,7 @@ function HelmWithHttp({
               : formData?.valuesPaths?.map((path: { path: string }) => path.path),
           chartName: formData?.chartName,
           chartVersion: formData?.chartVersion,
+          subChartName: formData?.subChartName,
           helmVersion: formData?.helmVersion,
           skipResourceVersioning: formData?.skipResourceVersioning
         }
@@ -250,6 +254,37 @@ function HelmWithHttp({
                   />
                 </div>
               </Layout.Horizontal>
+              {CDP_HELM_SUB_CHARTS && (
+                <Layout.Horizontal flex spacing="huge" margin={{ bottom: 'small' }}>
+                  <div
+                    className={cx(helmcss.halfWidth, {
+                      [helmcss.runtimeInput]:
+                        getMultiTypeFromValue(formik.values?.subChartName) === MultiTypeInputType.RUNTIME
+                    })}
+                  >
+                    <FormInput.MultiTextInput
+                      label={getString('pipeline.manifestType.subChart')}
+                      placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
+                      name="subChartName"
+                      multiTextInputProps={{ expressions, allowableTypes }}
+                    />
+                    {getMultiTypeFromValue(formik.values?.subChartName) === MultiTypeInputType.RUNTIME && (
+                      <ConfigureOptions
+                        style={{ alignSelf: 'center', marginBottom: 5 }}
+                        value={formik.values?.subChartName as string}
+                        type="String"
+                        variableName="subChartName"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={value => formik.setFieldValue('subChartName', value)}
+                        isReadonly={isReadonly}
+                        allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+                      />
+                    )}
+                  </div>
+                </Layout.Horizontal>
+              )}
               <div
                 className={cx({
                   [helmcss.runtimeInput]:

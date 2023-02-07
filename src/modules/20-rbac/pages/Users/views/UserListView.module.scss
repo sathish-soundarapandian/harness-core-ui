@@ -5,9 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+.listHeader {
+  margin: var(--spacing-medium) var(--spacing-xxlarge) !important;
+}
+
 .table {
-  padding: var(--spacing-large) var(--spacing-xxlarge);
-  padding-bottom: var(--spacing-none);
+  margin: var(--spacing-none) var(--spacing-xxlarge);
 }
 
 .invitation {

@@ -19,7 +19,7 @@ import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
 import type { CloudFunctionTrafficShiftExecutionStepInitialValues } from '@pipeline/utils/types'
 import { validateGenericFields } from '../../Common/GenericExecutionStep/utils'
 import { TrafficShiftExecutionStepEditRef } from '../TrafficShiftExecutionStepEdit'
-import { TrafficShiftExecutionStepInputSet } from '../TrafficShiftExecutionStepInputSet'
+import { GenericExecutionStepInputSet } from '../../Common/GenericExecutionStep/GenericExecutionStepInputSet'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 interface DeployCloudFunctionTrafficShiftVariableStepProps {
@@ -68,7 +68,7 @@ export class DeployCloudFunctionTrafficShiftStep extends PipelineStep<CloudFunct
 
     if (this.isTemplatizedView(stepViewType)) {
       return (
-        <TrafficShiftExecutionStepInputSet
+        <GenericExecutionStepInputSet
           allowableTypes={allowableTypes}
           inputSetData={inputSetData as InputSetData<CloudFunctionTrafficShiftExecutionStepInitialValues>}
           stepViewType={stepViewType}
@@ -88,7 +88,7 @@ export class DeployCloudFunctionTrafficShiftStep extends PipelineStep<CloudFunct
 
     return (
       <TrafficShiftExecutionStepEditRef
-        formikFormName={'canaryCloudFunctionTrafficShiftStepEdit'}
+        formikFormName={'cloudFunctionTrafficShiftStep'}
         initialValues={initialValues as CloudFunctionTrafficShiftExecutionStepInitialValues}
         onUpdate={onUpdate}
         isNewStep={isNewStep}

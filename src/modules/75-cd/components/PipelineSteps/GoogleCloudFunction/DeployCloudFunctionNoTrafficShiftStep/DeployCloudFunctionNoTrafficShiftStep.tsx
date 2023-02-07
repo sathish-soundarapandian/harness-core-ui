@@ -88,7 +88,7 @@ export class DeployCloudFunctionNoTrafficShiftStep extends PipelineStep<CloudFun
 
     return (
       <NoTrafficShiftExecutionStepEditRef
-        formikFormName={'deployCloudFunctionStepEdit'}
+        formikFormName={'deployCloudFunctionWithNoTrafficStep'}
         initialValues={initialValues as CloudFunctionExecutionStepInitialValues}
         onUpdate={onUpdate}
         isNewStep={isNewStep}

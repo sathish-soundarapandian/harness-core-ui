@@ -40,7 +40,6 @@ const StepGroupTemplateForm = (_props: unknown, formikRef: TemplateFormRef): JSX
 
   const stepFormikRef = React.useRef<StepFormikRef | null>(null)
   const advancedConfRef = React.useRef<FormikProps<unknown> | null>(null)
-  const [activeTab, setActiveTab] = React.useState(StepCommandTabs.Advanced)
 
   React.useImperativeHandle(formikRef, () => ({
     resetForm() {
@@ -56,7 +55,6 @@ const StepGroupTemplateForm = (_props: unknown, formikRef: TemplateFormRef): JSX
 
   const onSubmitStep = async (item: Partial<Values>): Promise<void> => {
     const processNode: any = getStepDataFromValues(item, template.spec as StepGroupElementConfig)
-
     if (!isEmpty(processNode?.spec?.delegateSelectors)) {
       processNode.delegateSelectors = processNode?.spec?.delegateSelectors
     } else {
@@ -65,12 +63,12 @@ const StepGroupTemplateForm = (_props: unknown, formikRef: TemplateFormRef): JSX
 
     if (!isEqual(template.spec, processNode) || !isEqual(item.delegateSelectors, template?.spec?.delegateSelectors)) {
       delete processNode.spec
-
       set(template, 'spec', {
         ...processNode,
         steps: processNode.steps,
         stageType: processNode.stageType
       })
+
       await updateTemplate(template)
     }
   }
@@ -82,7 +80,7 @@ const StepGroupTemplateForm = (_props: unknown, formikRef: TemplateFormRef): JSX
   return (
     <Container background={Color.FORM_BG} className={css.stepGroupForm}>
       {template && !isEmpty(template.spec) && !!template.type && (
-        <Tabs id="step-commands" selectedTabId={activeTab} onChange={(tab: StepCommandTabs) => setActiveTab(tab)}>
+        <Tabs id="step-commands" selectedTabId={StepCommandTabs.Advanced}>
           <Tab
             id={StepCommandTabs.Advanced}
             title={getString('advancedTitle')}

@@ -330,7 +330,6 @@ function TerragruntPlanWidget(
               : getString('cd.configFileDetails')
           }
           isTerragruntPlan
-          isTerragrunt
           isBackendConfig={isBackendConfig}
           isReadonly={readonly}
           allowableTypes={allowableTypes}

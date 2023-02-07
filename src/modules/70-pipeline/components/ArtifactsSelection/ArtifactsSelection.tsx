@@ -67,8 +67,7 @@ import {
   isSidecarAllowed,
   isAllowedGithubPackageRegistryDeploymentTypes,
   isAllowedAzureArtifactDeploymentTypes,
-  isAllowedAMIDeploymentTypes,
-  shouldAllowOnlyOneArtifact
+  isAllowedAMIDeploymentTypes
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { showConnectorStep } from './ArtifactUtils'
@@ -89,7 +88,9 @@ export default function ArtifactsSelection({
   } = usePipelineContext()
 
   const [isEditMode, setIsEditMode] = useState(false)
-  const [selectedArtifact, setSelectedArtifact] = useState<ArtifactType | null>(null)
+  const [selectedArtifact, setSelectedArtifact] = useState<ArtifactType | null>(
+    allowedArtifactTypes[deploymentType]?.length === 1 ? allowedArtifactTypes[deploymentType][0] : null
+  )
   const [connectorView, setConnectorView] = useState(false)
   const [context, setModalContext] = useState(ModalViewFor.PRIMARY)
   const [sidecarIndex, setEditIndex] = useState(0)
@@ -589,7 +590,6 @@ export default function ArtifactsSelection({
       refetchConnectors={refetchConnectorList}
       isReadonly={readonly}
       isSidecarAllowed={isSidecarAllowed(deploymentType, readonly)}
-      allowOnlyOneArtifactAddition={shouldAllowOnlyOneArtifact(deploymentType)}
     />
   )
 }

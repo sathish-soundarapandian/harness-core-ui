@@ -94,6 +94,8 @@ export function ShellScriptMonaco(props: ConnectedShellScriptMonacoProps): React
   const getHeight = (): number => {
     if (lineCount <= 5) {
       return 80
+    } else if (lineCount <= 6) {
+      return 120
     }
     return 200
   }

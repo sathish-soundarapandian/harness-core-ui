@@ -6,14 +6,16 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
-import { Text, Formik, FormInput, Container, ThumbnailSelect } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Text, Formik, FormInput, Container, ThumbnailSelect, FormikForm } from '@harness/uicore'
+import { Color, FontVariation } from '@harness/design-system'
 import type { FormikProps } from 'formik'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import DrawerFooter from '@cv/pages/health-source/common/DrawerFooter/DrawerFooter'
 import type { ConnectorReferenceFieldProps } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import CardWithOuterTitle from '@common/components/CardWithOuterTitle/CardWithOuterTitle'
@@ -28,9 +30,10 @@ import {
 } from './ChangeSourceDrawer.utils'
 import type { ChangeSoureDrawerInterface, UpdatedChangeSourceDTO } from './ChangeSourceDrawer.types'
 import PageDutyChangeSource from './components/PagerDutyChangeSource/PagerDutyChangeSource'
-import { ChangeSourceFieldNames, ChangeSourceTypes } from './ChangeSourceDrawer.constants'
+import { ChangeSourceFieldNames, ChangeSourceTypes, CustomChangeSourceList } from './ChangeSourceDrawer.constants'
 import HarnessCDCurrentGenChangeSource from './components/HarnessCDCurrentGenChangeSource/HarnessCDCurrentGenChangeSource'
 import KubernetesChangeSource from './components/KubernetesChangeSource/KubernetesChangeSource'
+import CustomChangeSource from './components/CustomChangeSource/CustomChangeSource'
 import style from './ChangeSourceDrawer.module.scss'
 
 export function ChangeSourceDrawer({
@@ -44,6 +47,8 @@ export function ChangeSourceDrawer({
   const { getString } = useStrings()
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps & { identifier: string }>()
 
+  const isCustomChangeSourceEnabled = useFeatureFlag(FeatureFlag.SRM_CUSTOM_CHANGE_SOURCE)
+
   const onSuccessWrapper = (data: UpdatedChangeSourceDTO): void => {
     // for PagerDuty
     if (data.type === ChangeSourceTypes.PagerDuty) {
@@ -55,14 +60,19 @@ export function ChangeSourceDrawer({
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const categoryOptions = useMemo(() => getChangeSourceOptions(getString, monitoredServiceType), [monitoredServiceType])
+  const categoryOptions = useMemo(
+    () => getChangeSourceOptions(getString, monitoredServiceType, isCustomChangeSourceEnabled),
+    [monitoredServiceType, isCustomChangeSourceEnabled]
+  )
 
   const renderChangeSource = useCallback(
     (formik: FormikProps<any>): React.ReactNode => {
       const changeSourceType = formik.values?.type as string
+      const isCustom = CustomChangeSourceList.includes(changeSourceType as ChangeSourceTypes)
       if (!changeSourceType || changeSourceType === ChangeSourceTypes.HarnessCDNextGen) {
         return null
       }
+
       let changeSource = null
 
       switch (changeSourceType) {
@@ -74,6 +84,12 @@ export function ChangeSourceDrawer({
           break
         case ChangeSourceTypes.K8sCluster:
           changeSource = <KubernetesChangeSource formik={formik} isEdit={isEdit} />
+          break
+        case ChangeSourceTypes.CustomFF:
+        case ChangeSourceTypes.CustomDeploy:
+        case ChangeSourceTypes.CustomIncident:
+        case ChangeSourceTypes.CustomInfrastructure:
+          changeSource = isEdit ? <CustomChangeSource /> : null
           break
         default:
           changeSource = (
@@ -98,8 +114,12 @@ export function ChangeSourceDrawer({
           )
       }
 
-      return (
-        <CardWithOuterTitle title={getString('cv.changeSource.connectChangeSource')}>{changeSource}</CardWithOuterTitle>
+      return changeSource ? (
+        <CardWithOuterTitle title={isCustom ? '' : getString('cv.changeSource.connectChangeSource')}>
+          {changeSource}
+        </CardWithOuterTitle>
+      ) : (
+        <></>
       )
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -115,8 +135,10 @@ export function ChangeSourceDrawer({
       enableReinitialize
     >
       {formik => {
+        const changeSourceType = formik.values?.type as string
+        const isCustomChangeSource = CustomChangeSourceList.includes(changeSourceType as ChangeSourceTypes)
         return (
-          <>
+          <FormikForm className={style.formFullheight}>
             <CardWithOuterTitle title={getString('cv.changeSource.defineChangeSource')} className={style.outerCard}>
               <Text className={style.selectChangeSource}>{getString('cv.changeSource.selectChangeSource')}</Text>
               <Container
@@ -143,7 +165,8 @@ export function ChangeSourceDrawer({
                       formik.setValues({
                         [ChangeSourceFieldNames.CATEGORY]: categoryName?.value || ('' as string),
                         [ChangeSourceFieldNames.TYPE]: preSelectChangeSourceConnectorOnCategoryChange(
-                          categoryName?.value as string
+                          categoryName?.value as string,
+                          isCustomChangeSourceEnabled
                         ),
                         spec: {}
                       })
@@ -154,7 +177,7 @@ export function ChangeSourceDrawer({
                   <ThumbnailSelect
                     isReadonly={isEdit}
                     name={ChangeSourceFieldNames.TYPE}
-                    items={createCardOptions(formik.values?.category, getString)}
+                    items={createCardOptions(formik.values?.category, getString, isCustomChangeSourceEnabled)}
                   />
                 )}
               </Container>
@@ -165,10 +188,15 @@ export function ChangeSourceDrawer({
                   isIdentifierEditable={!isEdit}
                 />
               </Container>
+              {isCustomChangeSource && !isEdit && (
+                <Text font={{ variation: FontVariation.SMALL }} icon="info" iconProps={{ color: Color.BLUE_400 }}>
+                  {getString('cv.onboarding.changeSourceTypes.Custom.note')}
+                </Text>
+              )}
             </CardWithOuterTitle>
             {renderChangeSource(formik)}
             <DrawerFooter isSubmit onPrevious={hideDrawer} onNext={formik.submitForm} />
-          </>
+          </FormikForm>
         )
       }}
     </Formik>

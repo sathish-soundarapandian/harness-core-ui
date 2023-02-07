@@ -31,7 +31,7 @@ export default function Expression(props: ExpressionInterface): JSX.Element {
         <HarnessDocTooltip tooltipId="cronExpression" useStandAlone={true} />
       </Text>
       <Container className={cx(css.field, (showError && css.errorField) || '')}>
-        <Text>{expression}</Text>
+        <Text data-testid="expression">{expression}</Text>
       </Container>
     </Container>
   )

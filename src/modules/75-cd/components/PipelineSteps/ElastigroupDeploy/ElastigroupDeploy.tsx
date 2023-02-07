@@ -16,22 +16,21 @@ import { StepViewType, ValidateInputSetProps } from '@pipeline/components/Abstra
 import { PipelineStep, StepProps } from '@pipeline/components/PipelineSteps/PipelineStep'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
-import type { ElastigroupDeployStepInfo } from 'services/cd-ng'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
 import { getInstanceDropdownSchema } from '@common/components/InstanceDropdownField/InstanceDropdownField'
 import { InstanceTypes } from '@common/constants/InstanceTypes'
 import { ElastigroupDeployStepEditRef } from './ElastigroupDeployStepEdit'
 import { ElastigroupDeployInputStep } from './ElastigroupDeployInputStep'
-import type { ElastigroupDeployVariableStepProps } from './ElastigroupDeployInterface'
+import type { ElastigroupDeployStepInfoData, ElastigroupDeployVariableStepProps } from './ElastigroupDeployInterface'
 
 export class ElastigroupDeploy extends PipelineStep<
-  ElastigroupDeployStepInfo & { name?: string; identifier?: string }
+  ElastigroupDeployStepInfoData & { name?: string; identifier?: string }
 > {
   protected type = StepType.ElastigroupDeploy
   protected stepIcon: IconName = 'elastigroup-deploy'
   protected stepName = 'Elastigroup Deploy'
   protected stepDescription: keyof StringsMap = 'pipeline.stepDescription.ElastigroupDeploy'
-  protected defaultValues: ElastigroupDeployStepInfo = {
+  protected defaultValues: ElastigroupDeployStepInfoData = {
     type: StepType.ElastigroupDeploy,
     name: '',
     identifier: '',
@@ -57,7 +56,7 @@ export class ElastigroupDeploy extends PipelineStep<
     template,
     getString,
     viewType
-  }: ValidateInputSetProps<ElastigroupDeployStepInfo>): FormikErrors<ElastigroupDeployStepInfo> {
+  }: ValidateInputSetProps<ElastigroupDeployStepInfoData>): FormikErrors<ElastigroupDeployStepInfoData> {
     const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const errors = { spec: {} } as any
@@ -147,7 +146,7 @@ export class ElastigroupDeploy extends PipelineStep<
     return errors
   }
 
-  processFormData(values: ElastigroupDeployStepInfo): ElastigroupDeployStepInfo {
+  processFormData(values: ElastigroupDeployStepInfoData): ElastigroupDeployStepInfoData {
     if (
       get(values, 'spec.newService.type') === InstanceTypes.Instances &&
       has(values, 'spec.newService.spec.percentage')
@@ -185,7 +184,7 @@ export class ElastigroupDeploy extends PipelineStep<
     inputSetData,
     path,
     customStepProps
-  }: StepProps<ElastigroupDeployStepInfo>): JSX.Element {
+  }: StepProps<ElastigroupDeployStepInfoData>): JSX.Element {
     if (this.isTemplatizedView(stepViewType)) {
       return (
         <ElastigroupDeployInputStep

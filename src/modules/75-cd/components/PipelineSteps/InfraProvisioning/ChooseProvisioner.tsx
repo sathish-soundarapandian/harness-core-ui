@@ -13,7 +13,8 @@ import { useModalHook } from '@harness/use-modal'
 
 import { merge } from 'lodash-es'
 import { useStrings } from 'framework/strings'
-import { ProvisionerTypes } from '../Common/ProvisionerConstants'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { payloadValueforProvisionerTypes, ProvisionerTypes } from '../Common/ProvisionerConstants'
 
 import css from './InfraProvisioning.module.scss'
 
@@ -26,7 +27,8 @@ interface ProvDialogProps {
 
 const ProvDialog = ({ onClose, hideModal, provData, onSubmit }: ProvDialogProps) => {
   const { getString } = useStrings()
-  const [provisioner, setProvisioner] = useState<string>(ProvisionerTypes.Terraform)
+  const { NG_SVC_ENV_REDESIGN } = useFeatureFlags()
+  const [provisioner, setProvisioner] = useState<ProvisionerTypes>(ProvisionerTypes.Terraform)
   const modalProps = {
     isOpen: true,
     canEscapeKeyClose: true,
@@ -35,9 +37,13 @@ const ProvDialog = ({ onClose, hideModal, provData, onSubmit }: ProvDialogProps)
   const provisionerTypes: { name: ProvisionerTypes; icon: IconName; iconColor?: string; enabled: boolean }[] = [
     {
       name: ProvisionerTypes.Terraform,
-      icon: 'terraform-apply-new',
-      iconColor: '#5C4EE5',
+      icon: 'service-terraform',
       enabled: true
+    },
+    {
+      name: ProvisionerTypes.Terragrunt,
+      icon: 'service-terragrunt',
+      enabled: !!NG_SVC_ENV_REDESIGN
     },
     {
       name: ProvisionerTypes.CloudFormation,
@@ -47,12 +53,17 @@ const ProvDialog = ({ onClose, hideModal, provData, onSubmit }: ProvDialogProps)
     {
       name: ProvisionerTypes.ARM,
       icon: 'arm',
-      enabled: false
+      enabled: !!NG_SVC_ENV_REDESIGN
+    },
+    {
+      name: ProvisionerTypes.Blueprint,
+      icon: 'azure-blueprints',
+      enabled: !!NG_SVC_ENV_REDESIGN
     },
     {
       name: ProvisionerTypes.Script,
       icon: 'script',
-      enabled: false
+      enabled: !!NG_SVC_ENV_REDESIGN
     }
   ]
   return (
@@ -68,47 +79,46 @@ const ProvDialog = ({ onClose, hideModal, provData, onSubmit }: ProvDialogProps)
       <Layout.Vertical spacing="large">
         <div className={css.provisionerText}>{getString('cd.chooseProvisionerText')}</div>
         <Layout.Horizontal height={120}>
-          {provisionerTypes.map((type: { name: string; icon: IconName; enabled: boolean; iconColor?: string }) => {
-            const iconProps = {
-              name: type.icon as IconName,
-              size: 26
+          {provisionerTypes.map(
+            (type: { name: ProvisionerTypes; icon: IconName; enabled: boolean; iconColor?: string }) => {
+              const iconProps = {
+                name: type.icon as IconName,
+                size: 26
+              }
+
+              return (
+                <div key={type.name} className={css.squareCardContainer}>
+                  <Card
+                    disabled={!type.enabled}
+                    interactive={true}
+                    selected={type.name === provisioner}
+                    cornerSelected={type.name === provisioner}
+                    className={cx({ [css.disabled]: !type.enabled }, css.squareCard)}
+                    data-testid={`provisioner-${type.name}`}
+                    onClick={/*istanbul ignore next*/ () => setProvisioner(type.name)}
+                  >
+                    <Icon {...iconProps} />
+                  </Card>
+                  <Text
+                    style={{
+                      fontSize: '12px',
+                      color: type.enabled ? 'var(--grey-900)' : 'var(--grey-350)',
+                      textAlign: 'center'
+                    }}
+                  >
+                    {type.name}
+                  </Text>
+                </div>
+              )
             }
-            if (type.iconColor) {
-              merge(iconProps, { color: type.iconColor })
-            }
-            return (
-              <div key={type.name} className={css.squareCardContainer}>
-                <Card
-                  disabled={!type.enabled}
-                  interactive={true}
-                  selected={type.name === provisioner}
-                  cornerSelected={type.name === provisioner}
-                  className={cx({ [css.disabled]: !type.enabled }, css.squareCard)}
-                  onClick={() => setProvisioner(type.name)}
-                >
-                  <Icon {...iconProps} />
-                </Card>
-                <Text
-                  style={{
-                    fontSize: '12px',
-                    color: type.enabled ? 'var(--grey-900)' : 'var(--grey-350)',
-                    textAlign: 'center'
-                  }}
-                >
-                  {type.name}
-                </Text>
-              </div>
-            )
-          })}
+          )}
         </Layout.Horizontal>
         <Button
           variation={ButtonVariation.PRIMARY}
           text={getString('cd.setUpProvisionerBtnText')}
           className={css.provisionerBtnText}
           onClick={() => {
-            const selectedProvisioner =
-              provisioner === ProvisionerTypes.CloudFormation ? 'CLOUD_FORMATION' : provisioner
-            onSubmit(merge(provData, { selectedProvisioner: selectedProvisioner.toUpperCase() }))
+            onSubmit(merge(provData, { selectedProvisioner: payloadValueforProvisionerTypes(provisioner) }))
             hideModal()
           }}
         />

@@ -5,6 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+.listHeader {
+  margin: var(--spacing-medium) var(--spacing-xxlarge) !important;
+}
+
 .userGroupsEmptyState {
   width: 262px;
 }

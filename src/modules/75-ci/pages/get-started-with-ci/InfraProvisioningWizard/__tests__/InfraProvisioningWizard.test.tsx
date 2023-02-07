@@ -24,15 +24,11 @@ jest.mock('services/pipeline-ng', () => ({
       }
     })
   ),
-  useCreateTrigger: jest.fn().mockImplementation(() => {
-    return {
-      mutate: jest.fn(() =>
-        Promise.resolve({
-          status: 'SUCCESS'
-        })
-      )
-    }
-  })
+  createTriggerPromise: jest.fn(() =>
+    Promise.resolve({
+      status: 'SUCCESS'
+    })
+  )
 }))
 
 const updateConnector = jest.fn()

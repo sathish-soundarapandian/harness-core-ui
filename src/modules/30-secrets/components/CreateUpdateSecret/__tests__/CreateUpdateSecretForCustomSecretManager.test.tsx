@@ -42,7 +42,7 @@ describe('CreateUpdateSecret', () => {
         <CreateUpdateSecret type={'SecretText'} secret={secretResponse as any} />
       </TestWrapper>
     )
-    await waitFor(() => getByText('secrets.labelSecretsManager'))
+    await waitFor(() => expect(getByText('secrets.labelSecretsManager')).toBeTruthy())
     expect(container.querySelector("input[value='customSM']")).toBeDefined()
     expect(container.querySelector("input[value='vaulttoken']")).toBeDefined()
 

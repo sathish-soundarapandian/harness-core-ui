@@ -122,7 +122,6 @@ describe('SLOTargetChartWrapper', () => {
   })
 
   test('it should not render empty state for Threshold based with objective value > 100', async () => {
-    const debounceFetchSliGraphData = jest.fn()
     const serviceLevelIndicatorThreshold = {
       ...serviceLevelIndicator,
       spec: {
@@ -140,16 +139,11 @@ describe('SLOTargetChartWrapper', () => {
           monitoredServiceIdentifier="Service_1_Environment_1"
           serviceLevelIndicator={serviceLevelIndicatorThreshold}
           retryOnError={jest.fn()}
-          debounceFetchSliGraphData={debounceFetchSliGraphData}
         />
       </TestWrapper>
     )
 
     expect(screen.queryByText('cv.pleaseFillTheRequiredFieldsToSeeTheSLIData')).not.toBeInTheDocument()
-    await waitFor(() => {
-      expect(debounceFetchSliGraphData).toHaveBeenCalledTimes(1)
-      expect(debounceFetchSliGraphData).toBeCalledWith(serviceLevelIndicatorThreshold, 'Service_1_Environment_1')
-    })
   })
 
   test('it should render loader', () => {

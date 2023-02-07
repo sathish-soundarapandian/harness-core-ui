@@ -186,7 +186,7 @@ const ConnectorDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDe
                   <NameIdDescriptionTags
                     className={css.formElm}
                     formikProps={formikProps}
-                    identifierProps={{ inputName: 'name', isIdentifierEditable: !isEdit, maxInput: 128 }}
+                    identifierProps={{ inputName: 'name', isIdentifierEditable: !isEdit }}
                   />
 
                   {showGitContextForm ? (

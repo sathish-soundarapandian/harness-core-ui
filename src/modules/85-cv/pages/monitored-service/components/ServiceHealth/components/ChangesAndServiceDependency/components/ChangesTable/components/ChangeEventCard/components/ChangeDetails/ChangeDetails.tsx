@@ -11,7 +11,10 @@ import { entries as _entries, map as _map } from 'lodash-es'
 import { Text, Container, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
+import {
+  ChangeSourceTypes,
+  CustomChangeSourceList
+} from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import { EXECUTED_BY, UPDATED_BY } from '@cv/constants'
 import type { ChangeEventDTO } from 'services/cv'
 import { getDetailsLabel } from '@cv/utils/CommonUtils'
@@ -32,6 +35,8 @@ export default function ChangeDetails({
   if ([ChangeSourceTypes.HarnessCDNextGen, ChangeSourceTypes.K8sCluster].includes(type as ChangeSourceTypes)) {
     details = { source: type as string, ...details, executedBy: (executedBy as any) || null }
   } else if ([ChangeSourceTypes.HarnessFF].includes(type as ChangeSourceTypes)) {
+    details = { source: getSourceLabel(getString, type), ...details, updatedBy: (executedBy as any) || null }
+  } else if (CustomChangeSourceList.includes(type as ChangeSourceTypes)) {
     details = { source: getSourceLabel(getString, type), ...details, updatedBy: (executedBy as any) || null }
   }
 

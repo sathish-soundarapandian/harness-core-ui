@@ -61,7 +61,7 @@ exports[`Test ChangeSourceTable should render 1`] = `
             class="TableV2--cell TableV2--sortable"
             colspan="1"
             role="columnheader"
-            style="width: 35%;"
+            style="width: 25%;"
             title="Toggle SortBy"
           >
             <p
@@ -93,7 +93,19 @@ exports[`Test ChangeSourceTable should render 1`] = `
             class="TableV2--cell TableV2--sortable"
             colspan="1"
             role="columnheader"
-            style="width: 35%;"
+            style="width: 45%;"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+            >
+              WebHook
+            </p>
+          </div>
+          <div
+            class="TableV2--cell TableV2--sortable"
+            colspan="1"
+            role="columnheader"
+            style="width: 150px;"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -117,22 +129,8 @@ exports[`Test ChangeSourceTable should render 1`] = `
                 role="cell"
                 style="width: 30%;"
               >
-                adadas
-              </div>
-              <div
-                class="TableV2--cell"
-                role="cell"
-                style="width: 35%;"
-              >
-                Deployment
-              </div>
-              <div
-                class="TableV2--cell"
-                role="cell"
-                style="width: 35%;"
-              >
                 <div
-                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
                 >
                   <span
                     class="bp3-icon StyledProps--main sourceTypeIcon"
@@ -150,6 +148,35 @@ exports[`Test ChangeSourceTable should render 1`] = `
                       />
                     </svg>
                   </span>
+                  <p
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    adadas
+                  </p>
+                </div>
+              </div>
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 25%;"
+              >
+                Deployment
+              </div>
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 45%;"
+              >
+                na
+              </div>
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 150px;"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+                >
                   <span
                     class="bp3-popover-wrapper"
                   >
@@ -293,7 +320,7 @@ exports[`Test ChangeSourceTable should render 2`] = `
             class="TableV2--cell TableV2--sortable"
             colspan="1"
             role="columnheader"
-            style="width: 35%;"
+            style="width: 25%;"
             title="Toggle SortBy"
           >
             <p
@@ -325,7 +352,19 @@ exports[`Test ChangeSourceTable should render 2`] = `
             class="TableV2--cell TableV2--sortable"
             colspan="1"
             role="columnheader"
-            style="width: 35%;"
+            style="width: 45%;"
+          >
+            <p
+              class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+            >
+              WebHook
+            </p>
+          </div>
+          <div
+            class="TableV2--cell TableV2--sortable"
+            colspan="1"
+            role="columnheader"
+            style="width: 150px;"
           >
             <p
               class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -349,22 +388,8 @@ exports[`Test ChangeSourceTable should render 2`] = `
                 role="cell"
                 style="width: 30%;"
               >
-                adadas
-              </div>
-              <div
-                class="TableV2--cell"
-                role="cell"
-                style="width: 35%;"
-              >
-                Deployment
-              </div>
-              <div
-                class="TableV2--cell"
-                role="cell"
-                style="width: 35%;"
-              >
                 <div
-                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+                  class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
                 >
                   <span
                     class="bp3-icon StyledProps--main sourceTypeIcon"
@@ -382,6 +407,35 @@ exports[`Test ChangeSourceTable should render 2`] = `
                       />
                     </svg>
                   </span>
+                  <p
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    adadas
+                  </p>
+                </div>
+              </div>
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 25%;"
+              >
+                Deployment
+              </div>
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 45%;"
+              >
+                na
+              </div>
+              <div
+                class="TableV2--cell"
+                role="cell"
+                style="width: 150px;"
+              >
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
+                >
                   <span
                     class="bp3-popover-wrapper"
                   >

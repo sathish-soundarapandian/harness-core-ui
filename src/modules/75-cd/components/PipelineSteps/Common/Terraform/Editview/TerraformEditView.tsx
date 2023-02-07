@@ -428,7 +428,6 @@ export default function TerraformEditView(
               setShowModal(false)
               setShowBackendConfigRemoteWizard(false)
             }}
-            isTerragrunt={false}
           />
         )}
       </StepWizard>

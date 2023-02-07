@@ -27,14 +27,6 @@ export const GitOpsAgentCard: React.FC<GitOpsAgentCardProps> = props => {
   const { agent, selectedAgent, setSelectedAgent } = props
   const { getString } = useStrings()
 
-  let numMappedProjects, firstHarnessProject, firstArgoProject
-  const mappedProjects = agent?.metadata?.mappedProjects?.appProjMap
-  if (!isEmpty(mappedProjects) && mappedProjects !== undefined) {
-    const mappedProjectKeys = mappedProjects && Object.keys(mappedProjects)
-    numMappedProjects = mappedProjectKeys.length
-    firstArgoProject = mappedProjectKeys?.[0]
-    firstHarnessProject = mappedProjects[firstArgoProject].projectIdentifier
-  }
   return (
     <Card
       className={cx(css.card, { [css.isSelected]: agent === selectedAgent })}
@@ -79,13 +71,7 @@ export const GitOpsAgentCard: React.FC<GitOpsAgentCardProps> = props => {
             </Container>
           )}
         </Layout.Horizontal>
-        <AgentInfo
-          mappedProjects={mappedProjects}
-          firstArgoProject={firstArgoProject}
-          firstHarnessProject={firstHarnessProject}
-          numMappedProjects={numMappedProjects}
-          agent={agent}
-        />
+        <AgentInfo agent={agent} />
         <div className={css.gitOpsStatusContainer} id="connectionStatus">
           <Layout.Horizontal>
             <div className={css.connectionStatus}>

@@ -204,7 +204,6 @@ const renderStepTwoComponent = (data?: any): void => {
         isReadonly={false}
         allowableTypes={allowableTypes}
         onSubmitCallBack={jest.fn()}
-        isTerragrunt={false}
       />
     </TestWrapper>
   )

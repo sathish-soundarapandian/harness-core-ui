@@ -11,11 +11,11 @@ import moment from 'moment'
 import cx from 'classnames'
 import type { AnalysedNodeOverview, VerificationOverview } from 'services/cv'
 import { useStrings } from 'framework/strings'
+import { VerificationJobType } from '@cv/constants'
 import CVProgressBar from './components/CVProgressBar/CVProgressBar'
 import { PrimaryAndCanaryNodes } from '../ExecutionVerificationSummary/components/PrimaryandCanaryNodes/PrimaryAndCanaryNodes'
 import VerificationStatusCard from './components/VerificationStatusCard/VerificationStatusCard'
 import { DurationView } from './components/DurationView/DurationView'
-import { deploymentTypesToShowNodes } from './DeploymentProgressAndNodes.constants'
 import TestsSummaryView from './components/TestSummaryView/TestsSummaryView'
 import css from './DeploymentProgressAndNodes.module.scss'
 
@@ -28,11 +28,11 @@ export interface DeploymentProgressAndNodesProps {
 
 export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProps): JSX.Element {
   const { onSelectNode, className, isConsoleView, data } = props
-  const { appliedDeploymentAnalysisType, metricsAnalysis, verificationStartTimestamp } = data || {}
+  const { metricsAnalysis, verificationStartTimestamp, spec } = data || {}
   const { getString } = useStrings()
 
   const deploymentNodesData = useMemo(() => {
-    if (data && deploymentTypesToShowNodes.includes(appliedDeploymentAnalysisType as any)) {
+    if (data && spec?.analysisType !== VerificationJobType.TEST) {
       const { testNodes: after = [], controlNodes: before = [] } = data || {}
       const labelBefore = (before as AnalysedNodeOverview)?.nodeType
       const labelAfter = (after as AnalysedNodeOverview)?.nodeType
@@ -44,10 +44,10 @@ export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProp
         labelAfter
       }
     }
-  }, [appliedDeploymentAnalysisType, data])
+  }, [data, spec?.analysisType])
 
   const baselineSummaryData = useMemo(() => {
-    if (data && data?.appliedDeploymentAnalysisType === 'TEST') {
+    if (spec?.analysisType === VerificationJobType.TEST) {
       const testNodes = data?.testNodes || []
       const controlNodes = data?.controlNodes
 
@@ -63,7 +63,7 @@ export function DeploymentProgressAndNodes(props: DeploymentProgressAndNodesProp
         currentTestDate
       }
     }
-  }, [data])
+  }, [data?.controlNodes, data?.testNodes, spec?.analysisType])
 
   const renderContent = (): JSX.Element | undefined => {
     if (data?.verificationProgressPercentage === 0 && data?.verificationStatus === 'IN_PROGRESS') {

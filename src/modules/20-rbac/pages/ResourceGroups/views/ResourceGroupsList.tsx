@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Layout, ExpandingSearchInput, ButtonVariation, PageHeader, PageBody } from '@harness/uicore'
 import { useHistory, useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -24,12 +24,17 @@ import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPagina
 import { rbacQueryParamOptions } from '@rbac/utils/utils'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
+import ListHeader from '@common/components/ListHeader/ListHeader'
+import { sortByCreated, sortByEmail, sortByLastModified, sortByName } from '@common/utils/sortUtils'
+import css from '@rbac/components/ResourceGroupList/ResourceGroupList.module.scss'
 
 const ResourceGroupsList: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
   const history = useHistory()
+  const [sort, setSort] = useState<string>(sortByLastModified[0].value as string)
   useDocumentTitle(getString('resourceGroups'))
+
   const {
     search: searchTerm,
     page: pageIndex,
@@ -44,8 +49,10 @@ const ResourceGroupsList: React.FC = () => {
       projectIdentifier,
       pageIndex,
       pageSize,
-      searchTerm
+      searchTerm,
+      sortOrders: [sort]
     },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
   })
 
@@ -112,6 +119,13 @@ const ResourceGroupsList: React.FC = () => {
         }
       />
       <PageBody loading={loading} retryOnError={() => refetch()} error={error ? getRBACErrorMessage(error) : ''}>
+        <ListHeader
+          value={sort}
+          sortOptions={[...sortByName, ...sortByEmail, ...sortByCreated, ...sortByLastModified]}
+          onChange={option => setSort(option.value as string)}
+          totalCount={data?.data?.totalItems}
+          className={css.listHeader}
+        />
         <ResourceGroupListView data={data?.data} reload={refetch} openResourceGroupModal={openResourceGroupModal} />
       </PageBody>
     </>

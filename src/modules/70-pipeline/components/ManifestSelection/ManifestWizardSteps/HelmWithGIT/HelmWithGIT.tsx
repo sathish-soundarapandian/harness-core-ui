@@ -25,7 +25,8 @@ import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { get, isEmpty, set } from 'lodash-es'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
@@ -79,6 +80,7 @@ function HelmWithGIT({
   context
 }: StepProps<ConnectorConfigDTO> & HelmWithGITPropType): React.ReactElement {
   const { getString } = useStrings()
+  const { CDP_HELM_SUB_CHARTS } = useFeatureFlags()
   const hideHeaderAndNavBtns = context ? shouldHideHeaderAndNavBtns(context) : false
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
   const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
@@ -105,6 +107,7 @@ function HelmWithGIT({
         folderPath: specValues.folderPath,
         repoName: getRepositoryName(prevStepData, initialValues),
         helmVersion: initialValues.spec?.helmVersion,
+        subChartName: initialValues.spec?.subChartName,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
         valuesPaths:
           typeof initialValues?.spec?.valuesPaths === 'string'
@@ -126,6 +129,7 @@ function HelmWithGIT({
       commitId: undefined,
       gitFetchType: 'Branch',
       folderPath: '/',
+      subChartName: '',
       helmVersion: 'V2',
       skipResourceVersioning: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],
@@ -147,6 +151,7 @@ function HelmWithGIT({
               folderPath: formData?.folderPath
             }
           },
+          subChartName: formData?.subChartName,
           valuesPaths:
             typeof formData?.valuesPaths === 'string'
               ? formData?.valuesPaths
@@ -366,6 +371,37 @@ function HelmWithGIT({
                   <FormInput.Select name="helmVersion" label={getString('helmVersion')} items={helmVersions} />
                 </div>
               </Layout.Horizontal>
+              {CDP_HELM_SUB_CHARTS && (
+                <Layout.Horizontal flex spacing="huge" margin={{ bottom: 'small' }}>
+                  <div
+                    className={cx(helmcss.halfWidth, {
+                      [helmcss.runtimeInput]:
+                        getMultiTypeFromValue(formik.values?.subChartName) === MultiTypeInputType.RUNTIME
+                    })}
+                  >
+                    <FormInput.MultiTextInput
+                      label={getString('pipeline.manifestType.subChart')}
+                      placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
+                      name="subChartName"
+                      multiTextInputProps={{ expressions, allowableTypes }}
+                    />
+                    {getMultiTypeFromValue(formik.values?.subChartName) === MultiTypeInputType.RUNTIME && (
+                      <ConfigureOptions
+                        style={{ alignSelf: 'center', marginBottom: 5 }}
+                        value={formik.values?.subChartName as string}
+                        type="String"
+                        variableName="subChartName"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={value => formik.setFieldValue('subChartName', value)}
+                        isReadonly={isReadonly}
+                        allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+                      />
+                    )}
+                  </div>
+                </Layout.Horizontal>
+              )}
               <div
                 className={cx({
                   [helmcss.runtimeInput]:

@@ -289,7 +289,7 @@ export const MenuCell: CellType = ({ row, column }) => {
   )
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
-  const [canDelete, canRun] = usePermission(
+  const [canDelete, canRun, canEdit] = usePermission(
     {
       resourceScope: {
         accountIdentifier: accountId,
@@ -353,12 +353,14 @@ export const MenuCell: CellType = ({ row, column }) => {
             }}
           />
           {data?.storeType === StoreType.INLINE ? (
-            <Menu.Item
+            <RbacMenuItem
               icon="git-merge"
               text={getString('common.moveToGit')}
+              disabled={!canEdit}
               onClick={() => {
                 showMoveResourceModal()
               }}
+              data-testid="moveConfigToRemote"
             />
           ) : null}
 

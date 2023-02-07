@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
 import CreateUpdateSecret from '../CreateUpdateSecret'
@@ -50,11 +50,14 @@ jest.mock('services/cd-ng', () => ({
 
 describe('CreateUpdateSecret GCP Secret manager', () => {
   test('Text Secret in GCP', async () => {
-    const { container } = render(
+    const { container, getByText } = render(
       <TestWrapper path="/account/:accountId/resources/secrets" pathParams={{ accountId: 'dummy' }}>
         <CreateUpdateSecret secret={gcpSecretMock as any} type={'SecretText'} />
       </TestWrapper>
     )
+
+    await waitFor(() => expect(getByText('secrets.labelSecretName')).toBeTruthy())
+    await waitFor(() => expect(getByText('secrets.secret.configureRegion')).toBeTruthy())
     expect(container).toMatchSnapshot()
   })
 })

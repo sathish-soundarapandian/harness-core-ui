@@ -114,7 +114,25 @@ const formValues = {
       os: ['macos', 'windows', 'linux']
     },
     maxConcurrency: 2
-  }
+  },
+  failureStrategies: [
+    {
+      onFailure: {
+        errors: ['Authentication'],
+        action: {
+          type: 'ManualIntervention',
+          spec: {
+            timeout: '1d',
+            onTimeout: {
+              action: {
+                type: 'StageRollback'
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }
 
 const initialValues = {
@@ -168,7 +186,25 @@ const initialValues = {
       os: ['macos', 'windows', 'linux']
     },
     maxConcurrency: 2
-  }
+  },
+  failureStrategies: [
+    {
+      onFailure: {
+        errors: ['Authentication'],
+        action: {
+          type: 'ManualIntervention',
+          spec: {
+            timeout: '1d',
+            onTimeout: {
+              action: {
+                type: 'StageRollback'
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }
 
 describe('StepsTransformValuesUtils', () => {

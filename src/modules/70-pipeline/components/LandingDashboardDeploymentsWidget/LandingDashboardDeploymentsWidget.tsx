@@ -55,6 +55,7 @@ import {
 import { useErrorHandler } from '@pipeline/components/Dashboards/shared'
 import DashboardAPIErrorWidget from '@projects-orgs/components/DashboardAPIErrorWidget/DashboardAPIErrorWidget'
 import DashboardNoDataWidget from '@projects-orgs/components/DashboardNoDataWidget/DashboardNoDataWidget'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 
 import { renderTooltipContent } from '@pipeline/utils/DashboardUtils'
 import css from './LandingDashboardDeploymentsWidget.module.scss'
@@ -157,7 +158,8 @@ function DeployOverviewPopover({
           }
         }
     const search = qs.stringify({ filters: { ...filterQuery } })
-    window.open(`#${route + '?' + search}`)
+    const baseUrl = windowLocationUrlPartBeforeHash()
+    window.open(`${baseUrl}#${route + '?' + search}`)
   }
 
   const keyList = Array.from(projectOrgCount.keys())

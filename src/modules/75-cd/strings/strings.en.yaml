@@ -319,6 +319,10 @@ serviceDashboard:
   nonProd: 'Non Prod'
   prod: 'Prod'
   in: 'in {{timeRange}}'
+  instanceId: 'Instance Id'
+  strategy: 'Strategy'
+  bgEnv: 'BG Env'
+  asgName: 'Asg Name'
   frequency: '{{$.common.frequency}}'
   totalServices: 'Total Services: {{total}}'
   lastDeployment: 'last deployment'
@@ -577,6 +581,18 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  clustersCount: 'You currently have {{target}} cluster(s), would you like to connect it to?'
+  backToRepoList: < Back to existing repo selection
+  backToClusterList: < Back to existing cluster selection
+  sampleRule1: Login to your git account and clone the sample app repository below.
+  sampleRule2: Set your repository name any as you desire
+  sampleRule3: Under Privacy, Select "Public"
+  sampleRule4: Click "Begin Import"
+  sampleRule5: Tell us your new repository
+  sampleRepoLink: https://github.com/wings-software/gitops-demo.git
+  useSample: Use sample file
+  provideMyOwn: Provide my own
+  sourceOrSampleCode: Would you like to use your own source code or sample code?
   clusterSpec1: 4GB Memory
   clusterSpec2: 2 CPU
   clusterSpec3: 1 worker node
@@ -587,12 +603,13 @@ getStartedWithCD:
   tryAnotherCreds: Not the right authentication? Switch account here!
   master: master
   targetRevision: Target Revision
-  anonymous: anonymous
+  anonymous: Anonymous
   usernameAndPassword: Username & Password
   clickForOtherDeploymentTypes: Click here for other deployment types
   createCluster: Create a cluster if needed
   failedToAuthenticate: Failed to authenticate to
-  clusterCreatedSuccessfully: created successfully
+  createdSuccessfully: created successfully
+  testesSuccessfully: tested successfully
   successfullyAuthenticated: Successfully authenticated to
   failedSourceText: Still failed to authenticate despite having entered the correct credentials? Here’s what you can try to do..
   checkAnnonymously: Connect Annonymously
@@ -603,6 +620,7 @@ getStartedWithCD:
   onboardingTitle: Start your deployments journey with Harness CD
   onBoardingSubTitle: Define and manage your deployment pipelines to deliver software faster, with visibility and control
   gitopsOnboardingAgentStep: Connect to Harness by provisioning hosted Agent
+  gitopsOnboardingSelectAgent: Select existing agent
   gitopsOnboardingSource: Where is your source?
   gitopsOnboardingDestination: Where to deploy to?
   gitopsOnboardingConfigureStep: Configure the source and destination
@@ -675,8 +693,8 @@ getStartedWithCD:
   delegateDescription: A Delegate is a service that runs on your infrastructure to execute tasks on behalf of the Harness platform.
   helpAndTroubleshoot: Help & Troubleshoot
   hostedAgentExplain: What is it?
-  hostedAgentExplainContent: Sample Text
-  hostedAgentInstall: What will be installed
+  hostedAgentExplainContent: Harness hosts and manages your GitOps agent, making set up easy with zero maintenance
+  hostedAgentInstall: What will be Provisioned
   hostedAgentInfoTitle: What you need to do
   gitOpsAgent: GitOps agent
   repoServer: Repo server
@@ -694,6 +712,7 @@ getStartedWithCD:
   healthStatusLabel: Health Status
   mappedHarnessProjects: Mapped Harness projects
   disconnected: Disconnected
+  syncApplication: Sync Application
   healthStatus:
     degraded: Degraded
     healthy: Healthy
@@ -712,6 +731,7 @@ credentialsRef: credentialsRef
 connectorRefText: connectorRef
 loadingDelegate: Please Wait, Creating a Delegate for you...
 fetchingDelegate: Please wait, fetching delegate details for you...
+fetchingAgent: Please wait, fetching agent details for you...
 hosts: hosts
 hostFilters: hostFilters
 attributeFilters: attributeFilters
@@ -729,6 +749,10 @@ azureBlueprint:
   managementGroup: Management Group
   templateFolderPath: Template Folder Path
 validation:
+  keyData: Key data is required
+  certData: Cert data is required
+  authType: Auth Type is required
+  clusterType: Cluster Type is required
   specifyFilter: Specify the filter condition
 welcomeMessage: Welcome to Harness
 welcomeToHarnessCD: Welcome to Harness Continuous Delivery!
@@ -811,7 +835,6 @@ environmentDetailPage:
   noServiceArtifactMsg: 'There is no service and artifact details present'
   emptyInstanceDetailMsg: 'Empty instance detail'
   emptyServiceDetailMsg: 'There are no services with instances in this environment.'
-  emptyExecutionListMsg: 'There are no executions for this given criteria.'
 ElastigroupStep:
   appName: App Name
   minInstances: Min Instances
@@ -849,3 +872,6 @@ trendMessage:
   invalidTrend: 'No trend data in the previous time interval'
 envChanges: 'Environment Changes'
 valuesYamlValidation: 'Values.yaml file path cannot be empty'
+infra: infra
+pipelineId: 'Pipeline ID: '
+openExecution: 'Open Execution'

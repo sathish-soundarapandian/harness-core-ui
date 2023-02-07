@@ -40,7 +40,9 @@ export const stringsMap: Record<ExecutionStatus, StringKeys> = {
   InterventionWaiting: 'pipeline.executionStatus.Waiting',
   ApprovalWaiting: 'pipeline.executionStatus.Waiting',
   InputWaiting: 'pipeline.executionStatus.Waiting',
-  WaitStepRunning: 'pipeline.executionStatus.Waiting'
+  WaitStepRunning: 'pipeline.executionStatus.Waiting',
+  QueuedLicenseLimitReached: 'pipeline.executionStatus.QueuedLicenseLimitReached',
+  QueuedExecutionConcurrencyReached: 'pipeline.executionStatus.QueuedExecutionConcurrencyReached'
 }
 
 export const iconMap: Record<ExecutionStatus, IconProps> = {
@@ -67,7 +69,9 @@ export const iconMap: Record<ExecutionStatus, IconProps> = {
   NotStarted: { name: 'play-outline', size: 8 },
   Skipped: { name: 'skipped', size: 8 },
   InputWaiting: { name: 'loading', size: 10 },
-  WaitStepRunning: { name: 'time', size: 9 }
+  WaitStepRunning: { name: 'time', size: 9 },
+  QueuedLicenseLimitReached: { name: 'queued', size: 10 },
+  QueuedExecutionConcurrencyReached: { name: 'queued', size: 10 }
 }
 
 export interface ExecutionStatusLabelProps {

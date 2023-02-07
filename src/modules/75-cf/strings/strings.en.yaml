@@ -308,7 +308,7 @@ segments:
   usingSegmentWithCount: Flags using this target group ({{ count }})
   modalTitle: Create a Target Group
   delete:
-    message: 'Are you sure you want to delete target group <strong>{{segmentName}}</strong>? This action cannot be undone.'
+    message: 'Are you sure you want to delete Target Group <strong>{{segmentName}}</strong>? <br/>This action cannot be undone.'
     title: Delete Target Group
   nameRequired: Target Group name is required
   idRequired: Target Group identifier is required

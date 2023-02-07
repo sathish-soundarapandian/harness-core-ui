@@ -56,6 +56,8 @@ import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
+import ListHeader from '@common/components/ListHeader/ListHeader'
+import { sortByCreated, sortByEmail, sortByLastModified, sortByName } from '@common/utils/sortUtils'
 import css from './UserListView.module.scss'
 
 interface ActiveUserListViewProps {
@@ -380,6 +382,7 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { page, size } = useQueryParams(rbacQueryParamOptions)
   const isCommunity = useGetCommunity()
+  const [sort, setSort] = useState<string>(sortByCreated[0].value as string)
 
   const { data, loading, error, refetch } = useMutateAsGet(useGetAggregatedUsers, {
     body: {},
@@ -389,7 +392,8 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
       projectIdentifier,
       pageIndex: page,
       pageSize: size,
-      searchTerm: searchTerm
+      searchTerm: searchTerm,
+      sortOrders: sort
     },
     debounce: 300
   })
@@ -487,6 +491,13 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
             }
       }
     >
+      <ListHeader
+        value={sort}
+        sortOptions={[...sortByName, ...sortByEmail, ...sortByCreated, ...sortByLastModified]}
+        onChange={option => setSort(option.value as string)}
+        totalCount={data?.data?.totalItems}
+        className={css.listHeader}
+      />
       <TableV2<UserAggregate>
         className={css.table}
         columns={columns}

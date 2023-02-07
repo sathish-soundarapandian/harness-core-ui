@@ -10,6 +10,10 @@
   height: calc(100vh - 146px);
 }
 
+.listHeader {
+  margin: var(--spacing-medium) var(--spacing-xxlarge) !important;
+}
+
 .masonry {
   min-height: calc(100vh - 146px - 64px);
   overflow: auto;
@@ -18,11 +22,11 @@
   grid-template-rows: repeat(3, 250px);
   grid-gap: 30px;
   justify-content: center;
-  padding: var(--spacing-xxxlarge);
+  padding: 0 var(--spacing-xxxlarge);
 }
 
 .pagination {
-  padding: 0 var(--spacing-xxxlarge) !important ;
+  padding: var(--spacing-xxlarge) var(--spacing-xxxlarge) !important ;
 }
 
 .warning {

@@ -50,22 +50,12 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
       <div>
         <div
           class="logLine"
-          style="--char-size: 1ch;"
+          style="grid-template-columns: 3ch 1fr;"
         >
           <span
             class="lineNumber"
           >
             1
-          </span>
-          <span
-            class="level"
-          >
-            INFO
-          </span>
-          <span
-            class="time"
-          >
-            2022-03-04 17:00
           </span>
           <span
             class="out"
@@ -81,22 +71,12 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
         </div>
         <div
           class="logLine"
-          style="--char-size: 1ch;"
+          style="grid-template-columns: 3ch 1fr;"
         >
           <span
             class="lineNumber"
           >
             2
-          </span>
-          <span
-            class="level"
-          >
-            INFO
-          </span>
-          <span
-            class="time"
-          >
-            2022-03-04 17:00
           </span>
           <span
             class="out"
@@ -112,22 +92,12 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
         </div>
         <div
           class="logLine"
-          style="--char-size: 1ch;"
+          style="grid-template-columns: 3ch 1fr;"
         >
           <span
             class="lineNumber"
           >
             3
-          </span>
-          <span
-            class="level"
-          >
-            INFO
-          </span>
-          <span
-            class="time"
-          >
-            2022-03-04 17:00
           </span>
           <span
             class="out"
@@ -143,22 +113,12 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
         </div>
         <div
           class="logLine"
-          style="--char-size: 1ch;"
+          style="grid-template-columns: 3ch 1fr;"
         >
           <span
             class="lineNumber"
           >
             4
-          </span>
-          <span
-            class="level"
-          >
-            INFO
-          </span>
-          <span
-            class="time"
-          >
-            2022-03-04 17:00
           </span>
           <span
             class="out"
@@ -174,22 +134,12 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
         </div>
         <div
           class="logLine"
-          style="--char-size: 1ch;"
+          style="grid-template-columns: 3ch 1fr;"
         >
           <span
             class="lineNumber"
           >
             5
-          </span>
-          <span
-            class="level"
-          >
-            INFO
-          </span>
-          <span
-            class="time"
-          >
-            2022-03-04 17:00
           </span>
           <span
             class="out"
@@ -214,22 +164,12 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
       <div>
         <div
           class="logLine"
-          style="--char-size: 1ch;"
+          style="grid-template-columns: 3ch 1fr;"
         >
           <span
             class="lineNumber"
           >
             1
-          </span>
-          <span
-            class="level"
-          >
-            INFO
-          </span>
-          <span
-            class="time"
-          >
-            2022-03-04 17:00
           </span>
           <span
             class="out"
@@ -245,22 +185,12 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
         </div>
         <div
           class="logLine"
-          style="--char-size: 1ch;"
+          style="grid-template-columns: 3ch 1fr;"
         >
           <span
             class="lineNumber"
           >
             2
-          </span>
-          <span
-            class="level"
-          >
-            INFO
-          </span>
-          <span
-            class="time"
-          >
-            2022-03-04 17:00
           </span>
           <span
             class="out"
@@ -276,22 +206,12 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
         </div>
         <div
           class="logLine"
-          style="--char-size: 1ch;"
+          style="grid-template-columns: 3ch 1fr;"
         >
           <span
             class="lineNumber"
           >
             3
-          </span>
-          <span
-            class="level"
-          >
-            INFO
-          </span>
-          <span
-            class="time"
-          >
-            2022-03-04 17:00
           </span>
           <span
             class="out"
@@ -307,22 +227,12 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
         </div>
         <div
           class="logLine"
-          style="--char-size: 1ch;"
+          style="grid-template-columns: 3ch 1fr;"
         >
           <span
             class="lineNumber"
           >
             4
-          </span>
-          <span
-            class="level"
-          >
-            INFO
-          </span>
-          <span
-            class="time"
-          >
-            2022-03-04 17:00
           </span>
           <span
             class="out"
@@ -338,22 +248,12 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
         </div>
         <div
           class="logLine"
-          style="--char-size: 1ch;"
+          style="grid-template-columns: 3ch 1fr;"
         >
           <span
             class="lineNumber"
           >
             5
-          </span>
-          <span
-            class="level"
-          >
-            INFO
-          </span>
-          <span
-            class="time"
-          >
-            2022-03-04 17:00
           </span>
           <span
             class="out"
@@ -378,22 +278,12 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
       <div>
         <div
           class="logLine"
-          style="--char-size: 1ch;"
+          style="grid-template-columns: 3ch 1fr;"
         >
           <span
             class="lineNumber"
           >
             1
-          </span>
-          <span
-            class="level"
-          >
-            INFO
-          </span>
-          <span
-            class="time"
-          >
-            2022-03-04 17:00
           </span>
           <span
             class="out"
@@ -409,22 +299,12 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
         </div>
         <div
           class="logLine"
-          style="--char-size: 1ch;"
+          style="grid-template-columns: 3ch 1fr;"
         >
           <span
             class="lineNumber"
           >
             2
-          </span>
-          <span
-            class="level"
-          >
-            INFO
-          </span>
-          <span
-            class="time"
-          >
-            2022-03-04 17:00
           </span>
           <span
             class="out"
@@ -440,22 +320,12 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
         </div>
         <div
           class="logLine"
-          style="--char-size: 1ch;"
+          style="grid-template-columns: 3ch 1fr;"
         >
           <span
             class="lineNumber"
           >
             3
-          </span>
-          <span
-            class="level"
-          >
-            INFO
-          </span>
-          <span
-            class="time"
-          >
-            2022-03-04 17:00
           </span>
           <span
             class="out"
@@ -471,22 +341,12 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
         </div>
         <div
           class="logLine"
-          style="--char-size: 1ch;"
+          style="grid-template-columns: 3ch 1fr;"
         >
           <span
             class="lineNumber"
           >
             4
-          </span>
-          <span
-            class="level"
-          >
-            INFO
-          </span>
-          <span
-            class="time"
-          >
-            2022-03-04 17:00
           </span>
           <span
             class="out"
@@ -502,22 +362,12 @@ exports[`<FullPageLogView /> tests multi section data 1`] = `
         </div>
         <div
           class="logLine"
-          style="--char-size: 1ch;"
+          style="grid-template-columns: 3ch 1fr;"
         >
           <span
             class="lineNumber"
           >
             5
-          </span>
-          <span
-            class="level"
-          >
-            INFO
-          </span>
-          <span
-            class="time"
-          >
-            2022-03-04 17:00
           </span>
           <span
             class="out"
@@ -546,22 +396,12 @@ exports[`<FullPageLogView /> tests retry node 1`] = `
     <div>
       <div
         class="logLine"
-        style="--char-size: 1ch;"
+        style="grid-template-columns: 3ch 1fr;"
       >
         <span
           class="lineNumber"
         >
           1
-        </span>
-        <span
-          class="level"
-        >
-          INFO
-        </span>
-        <span
-          class="time"
-        >
-          2022-03-04 17:00
         </span>
         <span
           class="out"
@@ -577,22 +417,12 @@ exports[`<FullPageLogView /> tests retry node 1`] = `
       </div>
       <div
         class="logLine"
-        style="--char-size: 1ch;"
+        style="grid-template-columns: 3ch 1fr;"
       >
         <span
           class="lineNumber"
         >
           2
-        </span>
-        <span
-          class="level"
-        >
-          INFO
-        </span>
-        <span
-          class="time"
-        >
-          2022-03-04 17:00
         </span>
         <span
           class="out"
@@ -608,22 +438,12 @@ exports[`<FullPageLogView /> tests retry node 1`] = `
       </div>
       <div
         class="logLine"
-        style="--char-size: 1ch;"
+        style="grid-template-columns: 3ch 1fr;"
       >
         <span
           class="lineNumber"
         >
           3
-        </span>
-        <span
-          class="level"
-        >
-          INFO
-        </span>
-        <span
-          class="time"
-        >
-          2022-03-04 17:00
         </span>
         <span
           class="out"
@@ -639,22 +459,12 @@ exports[`<FullPageLogView /> tests retry node 1`] = `
       </div>
       <div
         class="logLine"
-        style="--char-size: 1ch;"
+        style="grid-template-columns: 3ch 1fr;"
       >
         <span
           class="lineNumber"
         >
           4
-        </span>
-        <span
-          class="level"
-        >
-          INFO
-        </span>
-        <span
-          class="time"
-        >
-          2022-03-04 17:00
         </span>
         <span
           class="out"
@@ -670,22 +480,12 @@ exports[`<FullPageLogView /> tests retry node 1`] = `
       </div>
       <div
         class="logLine"
-        style="--char-size: 1ch;"
+        style="grid-template-columns: 3ch 1fr;"
       >
         <span
           class="lineNumber"
         >
           5
-        </span>
-        <span
-          class="level"
-        >
-          INFO
-        </span>
-        <span
-          class="time"
-        >
-          2022-03-04 17:00
         </span>
         <span
           class="out"
@@ -713,22 +513,12 @@ exports[`<FullPageLogView /> tests single section data 1`] = `
     <div>
       <div
         class="logLine"
-        style="--char-size: 1ch;"
+        style="grid-template-columns: 3ch 1fr;"
       >
         <span
           class="lineNumber"
         >
           1
-        </span>
-        <span
-          class="level"
-        >
-          INFO
-        </span>
-        <span
-          class="time"
-        >
-          2022-03-04 17:00
         </span>
         <span
           class="out"
@@ -744,22 +534,12 @@ exports[`<FullPageLogView /> tests single section data 1`] = `
       </div>
       <div
         class="logLine"
-        style="--char-size: 1ch;"
+        style="grid-template-columns: 3ch 1fr;"
       >
         <span
           class="lineNumber"
         >
           2
-        </span>
-        <span
-          class="level"
-        >
-          INFO
-        </span>
-        <span
-          class="time"
-        >
-          2022-03-04 17:00
         </span>
         <span
           class="out"
@@ -775,22 +555,12 @@ exports[`<FullPageLogView /> tests single section data 1`] = `
       </div>
       <div
         class="logLine"
-        style="--char-size: 1ch;"
+        style="grid-template-columns: 3ch 1fr;"
       >
         <span
           class="lineNumber"
         >
           3
-        </span>
-        <span
-          class="level"
-        >
-          INFO
-        </span>
-        <span
-          class="time"
-        >
-          2022-03-04 17:00
         </span>
         <span
           class="out"
@@ -806,22 +576,12 @@ exports[`<FullPageLogView /> tests single section data 1`] = `
       </div>
       <div
         class="logLine"
-        style="--char-size: 1ch;"
+        style="grid-template-columns: 3ch 1fr;"
       >
         <span
           class="lineNumber"
         >
           4
-        </span>
-        <span
-          class="level"
-        >
-          INFO
-        </span>
-        <span
-          class="time"
-        >
-          2022-03-04 17:00
         </span>
         <span
           class="out"
@@ -837,22 +597,12 @@ exports[`<FullPageLogView /> tests single section data 1`] = `
       </div>
       <div
         class="logLine"
-        style="--char-size: 1ch;"
+        style="grid-template-columns: 3ch 1fr;"
       >
         <span
           class="lineNumber"
         >
           5
-        </span>
-        <span
-          class="level"
-        >
-          INFO
-        </span>
-        <span
-          class="time"
-        >
-          2022-03-04 17:00
         </span>
         <span
           class="out"

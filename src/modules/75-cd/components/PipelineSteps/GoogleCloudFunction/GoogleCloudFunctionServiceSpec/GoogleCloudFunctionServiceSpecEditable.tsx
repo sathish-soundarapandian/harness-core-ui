@@ -58,15 +58,15 @@ export interface GoogleCloudFunctionServiceSpecEditableProps {
 }
 
 const initialSuggestedManifest = {
-  functionName: '<+service.name>',
-  runtime: 'node.js16.x',
-  functionHandler: '/hello/world',
-  region: 'us-east',
-  bucket: 'https://gcs/bucket_name/function.zip',
-  image: 'Docker',
-  layers: {
-    layer1: 's3layer'
-  }
+  function: {
+    name: '<functionName>',
+    buildConfig: {
+      runtime: 'nodejs18',
+      entryPoint: 'helloGET'
+    },
+    environment: 'GEN_2'
+  },
+  function_id: '<functionName>'
 }
 
 const initialSuggestedManifestYaml =

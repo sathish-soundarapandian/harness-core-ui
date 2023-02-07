@@ -35,6 +35,7 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { FileSelectList } from '@filestore/components/FileStoreList/FileStoreList'
 import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -80,6 +81,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     pipelineIdentifier
   } = props
   const { getString } = useStrings()
+  const { CDP_HELM_SUB_CHARTS } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const [showRepoName, setShowRepoName] = useState(true)
   const { getRBACErrorMessage } = useRBACError()
@@ -637,10 +639,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
                 <ExperimentalInput
                   formik={formik}
                   name={`${path}.${manifestPath}.spec.chartVersion`}
-                  disabled={
-                    isFieldDisabled(fromTrigger ? 'chartVersion' : `${manifestPath}.spec.chartVersion`) ||
-                    loadingChartVersions
-                  }
+                  disabled={isFieldDisabled(fromTrigger ? 'chartVersion' : `${manifestPath}.spec.chartVersion`)}
                   placeholder={
                     loadingChartVersions
                       ? getString('pipeline.manifestType.http.loadingChartVersion')
@@ -669,7 +668,9 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
                   selectItems={chartVersions}
                   label={getString('pipeline.manifestType.http.chartVersion')}
                 />
-                {chartVersionsError ? (
+                {chartVersionsError &&
+                !get(formik?.values, `${path}.${manifestPath}.spec.chartVersion`) &&
+                !loadingChartVersions ? (
                   <FormError
                     errorMessage={
                       <Text
@@ -719,6 +720,23 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           />
         )}
       </div>
+
+      {CDP_HELM_SUB_CHARTS && isFieldRuntime(`${manifestPath}.spec.subChartName`, template) && (
+        <TextFieldInputSetView
+          template={template}
+          fieldPath={`${manifestPath}.spec.subChartName`}
+          disabled={isFieldDisabled(`${manifestPath}.spec.subChartName`)}
+          name={`${path}.${manifestPath}.spec.subChartName`}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          className={css.inputFieldLayout}
+          label={getString('pipeline.manifestType.subChart')}
+          placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
+        />
+      )}
+
       {isFieldRuntime(`${manifestPath}.spec.valuesPaths`, template) && (
         <div className={css.verticalSpacingInput}>
           {manifestStoreType === ManifestStoreMap.Harness ? (

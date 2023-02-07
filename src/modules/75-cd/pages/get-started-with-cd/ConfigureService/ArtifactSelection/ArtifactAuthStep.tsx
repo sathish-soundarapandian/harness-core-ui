@@ -39,7 +39,12 @@ import StepAWSAuthentication, {
 } from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAWSAuthentication'
 import { regionValues } from '@connectors/components/CreateConnector/AWSConnector/StepAuth/StepAuthConstants'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import { ArtifactoryGenericFormInterface, getUniqueEntityIdentifier, ServiceDataType } from '../../CDOnboardingUtils'
+import {
+  ALLOWABLE_TYPES,
+  ArtifactoryGenericFormInterface,
+  getUniqueEntityIdentifier,
+  ServiceDataType
+} from '../../CDOnboardingUtils'
 import { StepStatus } from '../../DeployProvisioningWizard/Constants'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
 import type { ConfigureServiceInterface } from '../ConfigureService'
@@ -310,6 +315,7 @@ const ArtifactoryAuthStep = ({
       projectIdentifier,
       connectorInfo: undefined,
       prevStepData,
+      allowableTypes: ALLOWABLE_TYPES,
       nextStep: (data: any) => {
         setTestConnectionErrors([])
         setArtifactAuthData(data)

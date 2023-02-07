@@ -899,6 +899,60 @@ export interface Servicev1Application {
   stale?: boolean
 }
 
+export interface V1Repositorylist {
+  content?: Servicev1Repository[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface V1RepositoryQuery {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier?: string
+  /**
+   * Filters for Repositories. Eg. "identifier": { "$in": ["id1", "id2"]
+   */
+  filter?: { [key: string]: any }
+  identifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  pageIndex?: number
+  pageSize?: number
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  repoCredsId?: string
+  searchTerm?: string
+}
+
+export type UseRepositoryServiceListRepositoriesProps = Omit<
+  UseMutateProps<V1Repositorylist, GatewayruntimeError, void, V1RepositoryQuery, void>,
+  'path' | 'verb'
+>
+
+/**
+ * List returns list of Repositories
+ *
+ * List returns list of Repositories
+ */
+export const useRepositoryServiceListRepositories = (props: UseRepositoryServiceListRepositoriesProps) =>
+  useMutate<V1Repositorylist, GatewayruntimeError, void, V1RepositoryQuery, void>('POST', `/api/v1/repositories`, {
+    base: window.getApiBaseUrl('gitops'),
+    ...props
+  })
+
 export interface AgentApplicationServiceCreatePathParams {
   /**
    * Agent identifier for entity.
@@ -1261,3 +1315,180 @@ export const useAgentServiceForServerList = (props: UseAgentServiceForServerList
     base: window.getApiBaseUrl('gitops'),
     ...props
   })
+
+export interface AgentRepositoryServiceGetQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  /**
+   * Repo URL for query.
+   */
+  'query.repo'?: string
+  /**
+   * Whether to force a cache refresh on repo's connection state.
+   */
+  'query.forceRefresh'?: boolean
+  /**
+   * The associated project project.
+   */
+  'query.project'?: string
+}
+
+export interface AgentRepositoryServiceGetPathParams {
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier: string
+  identifier: string
+}
+
+export type UseAgentRepositoryServiceGetProps = Omit<
+  UseGetProps<
+    Servicev1Repository,
+    GatewayruntimeError,
+    AgentRepositoryServiceGetQueryParams,
+    AgentRepositoryServiceGetPathParams
+  >,
+  'path'
+> &
+  AgentRepositoryServiceGetPathParams
+
+/**
+ * Get returns a repository or its credentials
+ *
+ * Get returns a repository or its credentials.
+ */
+export const useAgentRepositoryServiceGet = ({
+  agentIdentifier,
+  identifier,
+  ...props
+}: UseAgentRepositoryServiceGetProps) =>
+  useGet<
+    Servicev1Repository,
+    GatewayruntimeError,
+    AgentRepositoryServiceGetQueryParams,
+    AgentRepositoryServiceGetPathParams
+  >(
+    (paramsInPath: AgentRepositoryServiceGetPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentifier}/repositories/${paramsInPath.identifier}`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier, identifier }, ...props }
+  )
+
+export interface V1Clusterlist {
+  content?: Servicev1Cluster[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface Servicev1ClusterQuery {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier?: string
+  /**
+   * Filters for Clusters. Eg. "identifier": { "$in": ["id1", "id2"]
+   */
+  filter?: { [key: string]: any }
+  identifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  pageIndex?: number
+  pageSize?: number
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  searchTerm?: string
+}
+
+export type UseClusterServiceListClustersProps = Omit<
+  UseMutateProps<V1Clusterlist, GatewayruntimeError, void, Servicev1ClusterQuery, void>,
+  'path' | 'verb'
+>
+
+/**
+ * List returns list of Clusters
+ *
+ * List returns list of Clusters
+ */
+export const useClusterServiceListClusters = (props: UseClusterServiceListClustersProps) =>
+  useMutate<V1Clusterlist, GatewayruntimeError, void, Servicev1ClusterQuery, void>('POST', `/api/v1/clusters`, {
+    base: window.getApiBaseUrl('gitops'),
+    ...props
+  })
+
+export interface AgentClusterServiceGetQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  'query.server'?: string
+  'query.name'?: string
+  /**
+   * type is the type of the specified cluster identifier ( "server" - default, "name" ).
+   */
+  'query.id.type'?: string
+  /**
+   * value holds the cluster server URL or cluster name.
+   */
+  'query.id.value'?: string
+  'query.project'?: string
+}
+
+export interface AgentClusterServiceGetPathParams {
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier: string
+  identifier: string
+}
+
+export type UseAgentClusterServiceGetProps = Omit<
+  UseGetProps<
+    Servicev1Cluster,
+    GatewayruntimeError,
+    AgentClusterServiceGetQueryParams,
+    AgentClusterServiceGetPathParams
+  >,
+  'path'
+> &
+  AgentClusterServiceGetPathParams
+
+/**
+ * Get returns a cluster by identifier
+ *
+ * Get cluster.
+ */
+export const useAgentClusterServiceGet = ({ agentIdentifier, identifier, ...props }: UseAgentClusterServiceGetProps) =>
+  useGet<Servicev1Cluster, GatewayruntimeError, AgentClusterServiceGetQueryParams, AgentClusterServiceGetPathParams>(
+    (paramsInPath: AgentClusterServiceGetPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentifier}/clusters/${paramsInPath.identifier}`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier, identifier }, ...props }
+  )

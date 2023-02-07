@@ -11,6 +11,12 @@ import type { UseStringsReturn } from 'framework/strings'
 import type { CustomApprovalStepInfo, StepElementConfig } from 'services/pipeline-ng'
 import type { ApprovalRejectionCriteria } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 
+export const SCRIPT_DEFAULT_VALUE = `#
+# Specify output variables in the step and these
+# variables should be used for setting up the approval 
+# and rejection criteria.
+#
+`
 export const scriptInputType: SelectOption[] = [
   { label: 'String', value: 'String' },
   { label: 'Number', value: 'Number' }

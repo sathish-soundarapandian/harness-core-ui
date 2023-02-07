@@ -1,0 +1,94 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Ticket Settings Page matches snapshot 1`] = `
+<div>
+  <div
+    class="StyledProps--font StyledProps--main container StyledProps--margin-xlarge StyledProps--padding-xlarge"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-semi-bold StyledProps--font-size-medium StyledProps--margin-bottom-xlarge"
+    >
+      common.tickets.tickets
+    </p>
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-right StyledProps--margin-bottom-large"
+    >
+      <p
+        class="StyledProps--font StyledProps--main minWidth"
+      >
+        common.tickets.connector
+      </p>
+      <div
+        class="formGroup lg"
+      >
+        <div>
+          ConnectorReferenceField
+        </div>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-right StyledProps--margin-bottom-large"
+    >
+      <p
+        class="StyledProps--font StyledProps--main minWidth"
+      >
+        common.tickets.defaultProjectName
+      </p>
+      <div
+        class="formGroup lg"
+      >
+        <div
+          class="TextInput--main"
+        >
+          <div
+            class="bp3-input-group"
+          >
+            <input
+              class="bp3-input"
+              name="defaultProjectName"
+              placeholder="common.tickets.selectProjectName"
+              title="defaultProjectName"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--margin-bottom-large"
+    >
+      <label
+        class="bp3-control bp3-checkbox bp3-disabled StyledProps--font Checkbox--checkbox StyledProps--main"
+      >
+        <input
+          disabled=""
+          name="ticketComment"
+          type="checkbox"
+        />
+        <span
+          class="bp3-control-indicator"
+        />
+        common.tickets.ticketComment
+      </label>
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main StyledProps--margin-bottom-large"
+    >
+      <label
+        class="bp3-control bp3-checkbox bp3-disabled StyledProps--font Checkbox--checkbox StyledProps--main"
+      >
+        <input
+          disabled=""
+          name="ticketExemption"
+          type="checkbox"
+        />
+        <span
+          class="bp3-control-indicator"
+        />
+        common.tickets.ticketExemption
+      </label>
+    </div>
+  </div>
+</div>
+`;

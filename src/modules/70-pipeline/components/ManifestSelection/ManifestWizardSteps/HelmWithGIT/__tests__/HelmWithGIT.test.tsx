@@ -180,6 +180,8 @@ describe('helm with GIT tests', () => {
               },
               type: 'Git'
             },
+            subChartName: '',
+            valuesPaths: undefined,
             helmVersion: 'V2',
             skipResourceVersioning: false
           }

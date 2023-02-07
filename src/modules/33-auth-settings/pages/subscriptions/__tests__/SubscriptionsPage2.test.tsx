@@ -15,7 +15,8 @@ import {
   useExtendTrialLicense,
   useSaveFeedback,
   useGetOrganizationList,
-  useGetProjectList
+  useGetProjectList,
+  useDownloadActiveServiceCSVReport
 } from 'services/cd-ng'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import SubscriptionsPage from '../SubscriptionsPage'
@@ -23,6 +24,7 @@ import orgMockData from './mocks/orgMockData.json'
 import projMockData from './mocks/projMockData.json'
 jest.mock('services/cd-ng')
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
+const useDownloadActiveServiceCSVReportMock = useDownloadActiveServiceCSVReport as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
 useExtendTrialLicenseMock.mockImplementation(() => {
@@ -50,6 +52,12 @@ jest.mock('@common/hooks', () => ({
     return { data: {}, refetch: jest.fn(), error: null, loading: false }
   })
 }))
+useDownloadActiveServiceCSVReportMock.mockImplementation(() => {
+  return {
+    data: '',
+    refetch: jest.fn()
+  }
+})
 moment.now = jest.fn(() => 1482363367071)
 
 const featureFlags = {

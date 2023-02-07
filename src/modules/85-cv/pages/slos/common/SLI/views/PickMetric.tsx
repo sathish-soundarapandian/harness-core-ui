@@ -7,18 +7,8 @@
 
 import React, { useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import {
-  Container,
-  FormInput,
-  Layout,
-  Text,
-  useToaster,
-  SelectOption,
-  Icon,
-  ButtonVariation,
-  Card
-} from '@harness/uicore'
-import { FontVariation, Color } from '@harness/design-system'
+import { Container, FormInput, Layout, Text, useToaster, SelectOption, ButtonVariation, Card } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 import type { RadioButtonProps } from '@harness/uicore/dist/components/RadioButton/RadioButton'
 import { ResponseMonitoredServiceResponse, useGetSloMetrics } from 'services/cv'
 import { useStrings } from 'framework/strings'
@@ -29,7 +19,6 @@ import RbacButton from '@rbac/components/Button/Button'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import CVRadioLabelTextAndDescription from '@cv/components/CVRadioLabelTextAndDescription'
 import {
-  comparatorOptions,
   getEventTypeOptions,
   getMissingDataTypeOptions
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.constants'
@@ -41,16 +30,17 @@ import {
 } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.types'
 import { getSLOMetricOptions } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import { defaultOption } from '../SLI.constants'
+import { ObjectiveStatementBlock } from './ObjectiveStatementBlock'
 import css from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.module.scss'
 
-interface PickMetricProps extends Omit<SLIProps, 'children' | 'monitoredServicesLoading' | 'monitoredServicesData'> {
+export interface PickMetricProps
+  extends Omit<SLIProps, 'children' | 'monitoredServicesLoading' | 'monitoredServicesData'> {
   onAddNewMetric: () => void
   monitoredServiceData: ResponseMonitoredServiceResponse | null
 }
 
 const PickMetric: React.FC<PickMetricProps> = props => {
   const { formikProps, onAddNewMetric, monitoredServiceData } = props
-  const FLEX_START = 'flex-start'
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps & { identifier?: string }>()
@@ -213,41 +203,12 @@ const PickMetric: React.FC<PickMetricProps> = props => {
             />
           </Layout.Horizontal>
 
-          <Layout.Horizontal flex={{ justifyContent: FLEX_START, alignItems: 'baseline' }} spacing="small">
-            <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
-              {SLIMetricType === SLIMetricTypes.RATIO
-                ? getString('cv.SLIValueIsGoodIf')
-                : getString('cv.ThresholdSLIValueGoodIf')}
-            </Text>
-            <FormInput.Select
-              name={SLOV2FormFields.OBJECTIVE_COMPARATOR}
-              items={comparatorOptions}
-              onChange={option => {
-                formikProps.setFieldValue(SLOV2FormFields.OBJECTIVE_COMPARATOR, option.value)
-              }}
-              className={css.comparatorOptions}
-              disabled={isRatioBasedMetric ? !validRequestMetric || !goodRequestMetric : !validRequestMetric}
-            />
-            <FormInput.Text
-              name={SLOV2FormFields.OBJECTIVE_VALUE}
-              placeholder={SLIMetricType === SLIMetricTypes.RATIO ? '1 to 99' : ''}
-              inputGroup={{
-                type: 'number',
-                min: 0,
-                max: SLIMetricType === SLIMetricTypes.RATIO ? 100 : undefined,
-                step: 'any',
-                rightElement:
-                  SLIMetricType === SLIMetricTypes.RATIO ? <Icon name="percentage" padding="small" /> : undefined
-              }}
-              className={css.objectiveValue}
-              disabled={isRatioBasedMetric ? !validRequestMetric || !goodRequestMetric : !validRequestMetric}
-            />
-            <Text font={{ variation: FontVariation.BODY }} color={Color.GREY_600}>
-              {SLIMetricType === SLIMetricTypes.RATIO
-                ? getString('cv.percentageValidrequests')
-                : getString('cv.ThresholdValidrequests')}
-            </Text>
-          </Layout.Horizontal>
+          <ObjectiveStatementBlock
+            isRatioBasedMetric={isRatioBasedMetric}
+            validRequestMetric={validRequestMetric}
+            goodRequestMetric={goodRequestMetric}
+            formikProps={formikProps}
+          />
 
           <Card className={css.noShadow}>
             <FormInput.RadioGroup

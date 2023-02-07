@@ -558,6 +558,15 @@ exports[`Subscriptions Page it renders an expired banner when the trial is expir
                 </span>
               </span>
             </div>
+            <div>
+               
+              <a
+                download="serviceLicensesData.csv"
+                href="data:text/csv;charset=utf-8,"
+              >
+                Export CSV
+              </a>
+            </div>
           </div>
           <div
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
@@ -1658,6 +1667,15 @@ exports[`Subscriptions Page it renders the correct card in the subscriptions pag
                 </span>
               </span>
             </div>
+            <div>
+               
+              <a
+                download="serviceLicensesData.csv"
+                href="data:text/csv;charset=utf-8,"
+              >
+                Export CSV
+              </a>
+            </div>
           </div>
           <div
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"
@@ -2757,6 +2775,15 @@ exports[`Subscriptions Page it renders the subscriptions page 1`] = `
                   </p>
                 </span>
               </span>
+            </div>
+            <div>
+               
+              <a
+                download="serviceLicensesData.csv"
+                href="data:text/csv;charset=utf-8,"
+              >
+                Export CSV
+              </a>
             </div>
           </div>
           <div
@@ -4238,6 +4265,15 @@ exports[`Subscriptions Page it should update the license store 1`] = `
                   </p>
                 </span>
               </span>
+            </div>
+            <div>
+               
+              <a
+                download="serviceLicensesData.csv"
+                href="data:text/csv;charset=utf-8,"
+              >
+                Export CSV
+              </a>
             </div>
           </div>
           <div

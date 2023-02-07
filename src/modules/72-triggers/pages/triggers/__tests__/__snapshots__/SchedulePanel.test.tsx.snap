@@ -1050,6 +1050,7 @@ exports[`SchedulePanel Triggers tests Interactivity: Schedule Tabs Hourly select
                     >
                       <p
                         class="StyledProps--font StyledProps--main"
+                        data-testid="expression"
                       >
                         3 0/4 * * *
                       </p>
@@ -1531,6 +1532,7 @@ exports[`SchedulePanel Triggers tests Interactivity: Schedule Tabs Minutes selec
                     >
                       <p
                         class="StyledProps--font StyledProps--main"
+                        data-testid="expression"
                       >
                         0/30 * * * *
                       </p>
@@ -1939,6 +1941,7 @@ exports[`SchedulePanel Triggers tests Renders/snapshots Initial Render - Schedul
                     >
                       <p
                         class="StyledProps--font StyledProps--main"
+                        data-testid="expression"
                       />
                     </div>
                   </div>

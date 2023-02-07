@@ -7,7 +7,7 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import classnames from 'classnames'
-import { noop } from 'lodash-es'
+import { defaultTo, noop } from 'lodash-es'
 import {
   Text,
   Formik,
@@ -20,8 +20,11 @@ import {
   Button,
   IconName,
   ButtonSize,
-  useToaster
+  useToaster,
+  ExpandingSearchInput,
+  ButtonVariation
 } from '@harness/uicore'
+import * as Yup from 'yup'
 import { Color, FontVariation } from '@harness/design-system'
 import type { FormikContextType } from 'formik'
 import { useParams } from 'react-router-dom'
@@ -32,7 +35,13 @@ import { TestStatus } from '@common/components/TestConnectionWidget/TestConnecti
 import type { ResponseMessage } from 'services/cd-ng'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { Servicev1Cluster, useAgentClusterServiceCreate } from 'services/gitops'
+import {
+  Servicev1Cluster,
+  useAgentClusterServiceCreate,
+  useAgentClusterServiceGet,
+  useClusterServiceListClusters
+} from 'services/gitops'
+import { useDeepCompareEffect } from '@common/hooks'
 import { AuthTypeForm, CREDENTIALS_TYPE } from './AuthTypeForm'
 import InfoContainer from '../InfoContainer/InfoContainer'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
@@ -54,6 +63,8 @@ export const DestinationStep = (props: any) => {
   )
   const formikRef = useRef<FormikContextType<ClusterInterface>>()
   const [testConnectionErrors, setTestConnectionErrors] = useState<ResponseMessage[]>()
+  const [clusterListdata, setClusterListData] = useState<Servicev1Cluster[]>([])
+  const [selectedCluster, setSelectedCluster] = useState<Servicev1Cluster>({})
   const clustersTypes = [
     {
       label: getString('cd.getStartedWithCD.harnessHosted'),
@@ -67,6 +78,7 @@ export const DestinationStep = (props: any) => {
     }
   ]
   const fullAgentName = getFullAgentWithScope(agentIdentifier, scope)
+  const serverId = defaultTo(selectedCluster?.identifier, '')
   const { accountId } = useParams<ProjectPathProps>()
 
   const { mutate, error } = useAgentClusterServiceCreate({
@@ -76,6 +88,60 @@ export const DestinationStep = (props: any) => {
       identifier: formikRef.current?.values?.identifier
     }
   })
+
+  const { mutate: getClusters } = useClusterServiceListClusters({})
+
+  const {
+    data: testConnectionData,
+    error: testConnectionError,
+    refetch
+  } = useAgentClusterServiceGet({
+    agentIdentifier: fullAgentName,
+    identifier: serverId,
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: true
+  })
+
+  useEffect(() => {
+    if (testConnectionError) {
+      toast.showError(`Failed testing connection: ${(testConnectionError as APIError).data.error}`)
+    }
+  }, [testConnectionError])
+
+  useDeepCompareEffect(() => {
+    if (testConnectionData) {
+      if (testConnectionData.cluster?.connectionState?.status === 'Successful') {
+        props?.enableNextBtn()
+        setTestConnectionStatus(TestStatus.SUCCESS)
+      } else {
+        setTestConnectionStatus(TestStatus.FAILED)
+        setTestConnectionErrors([
+          {
+            level: 'ERROR',
+            message: (testConnectionData as any)?.message
+          }
+        ])
+      }
+    }
+  }, [testConnectionData])
+
+  const refreshConnectionStatus = (e: React.MouseEvent<Element>): void => {
+    e.stopPropagation()
+    refetch({
+      pathParams: { agentIdentifier: fullAgentName, identifier: serverId }, // TODO: remove this later
+      queryParams: {
+        accountIdentifier: accountId
+      }
+    })
+  }
+
+  useEffect(() => {
+    getClusters({ accountIdentifier: accountId, agentIdentifier: fullAgentName }).then(response => {
+      setClusterListData(defaultTo(response?.content, []))
+    })
+  }, [])
 
   useEffect(() => {
     if (error) {
@@ -128,39 +194,45 @@ export const DestinationStep = (props: any) => {
               width={200}
               style={{ marginTop: '20px' }}
               type="submit"
-              onClick={() => {
-                setTestConnectionStatus(TestStatus.IN_PROGRESS)
-                setTestConnectionErrors([])
-                const data = formikRef.current?.values
-                saveClusterData(data || {})
-                onClusterCreate(data)
-                  .then((response: Servicev1Cluster) => {
-                    if (response.cluster?.connectionState?.status === 'Successful') {
-                      props?.enableNextBtn()
-                      setTestConnectionStatus(TestStatus.SUCCESS)
-                    } else {
-                      setTestConnectionStatus(TestStatus.FAILED)
-                      setTestConnectionErrors([
-                        {
-                          level: 'ERROR',
-                          message: (response as any)?.message
-                        }
-                      ])
-                    }
+              onClick={e => {
+                if (!formikRef.current?.values?.isNewCluster) {
+                  setTestConnectionStatus(TestStatus.IN_PROGRESS)
+                  setTestConnectionErrors([])
+                  refreshConnectionStatus(e)
+                } else {
+                  setTestConnectionStatus(TestStatus.IN_PROGRESS)
+                  setTestConnectionErrors([])
+                  const data = formikRef.current?.values
+                  saveClusterData(data || {})
+                  onClusterCreate(data)
+                    .then((response: Servicev1Cluster) => {
+                      if (response.cluster?.connectionState?.status === 'Successful') {
+                        props?.enableNextBtn()
+                        setTestConnectionStatus(TestStatus.SUCCESS)
+                      } else {
+                        setTestConnectionStatus(TestStatus.FAILED)
+                        setTestConnectionErrors([
+                          {
+                            level: 'ERROR',
+                            message: (response as any)?.message
+                          }
+                        ])
+                      }
 
-                    toast.showSuccess(
-                      getString('common.entitycreatedSuccessfully', {
-                        entity: getString('common.cluster'),
-                        name: data?.name
-                      }),
-                      undefined,
-                      'create.cluster.error'
-                    )
-                  })
-                  .catch(err => {
-                    setTestConnectionStatus(TestStatus.FAILED)
-                    setTestConnectionErrors((err?.data as any)?.responseMessages)
-                  })
+                      toast.showSuccess(
+                        getString('common.entitycreatedSuccessfully', {
+                          entity: getString('common.cluster'),
+                          name: data?.name
+                        }),
+                        undefined,
+                        'create.cluster.error'
+                      )
+                    })
+                    .catch(err => {
+                      setTestConnectionStatus(TestStatus.FAILED)
+                      setTestConnectionErrors((err?.data as any)?.responseMessages)
+                    })
+                }
               }}
               className={css.downloadButton}
               id="test-connection-btn"
@@ -197,16 +269,60 @@ export const DestinationStep = (props: any) => {
     }
   }
 
+  const getValidationSchema: Yup.ObjectSchema = Yup.object().shape({
+    clusterType: Yup.string().required(getString('cd.validation.clusterType')),
+    server: Yup.string().when('clusterType', {
+      is: CIBuildInfrastructureType.KubernetesDirect,
+      then: Yup.string().required(getString('validation.masterUrl'))
+    }),
+    authType: Yup.string().required(getString('cd.validation.authType')),
+    username: Yup.string().when('authType', {
+      is: CREDENTIALS_TYPE.USERNAME_AND_PASSWORD,
+      then: Yup.string().required(getString('validation.username'))
+    }),
+    password: Yup.string().when('authType', {
+      is: CREDENTIALS_TYPE.USERNAME_AND_PASSWORD,
+      then: Yup.string().required(getString('validation.password'))
+    }),
+    bearerToken: Yup.string().when('authType', {
+      is: CREDENTIALS_TYPE.SERVICE_ACCOUNT,
+      then: Yup.string().required(getString('connectors.jenkins.bearerTokenRequired'))
+    }),
+    keyData: Yup.string().when('authType', {
+      is: CREDENTIALS_TYPE.CLIENT_KEY_CERTIFICATE,
+      then: Yup.string().required(getString('cd.validation.keyData'))
+    }),
+    certData: Yup.string().when('authType', {
+      is: CREDENTIALS_TYPE.CLIENT_KEY_CERTIFICATE,
+      then: Yup.string().required(getString('cd.validation.certData'))
+    })
+  })
+
+  const getSuccessText = () => {
+    if (formikRef.current?.values?.isNewCluster) {
+      return `${getString('common.cluster')} ${formikRef?.current?.values?.server} ${getString(
+        'cd.getStartedWithCD.createdSuccessfully'
+      )}`
+    } else {
+      return `${getString('common.cluster')} ${selectedCluster?.cluster?.server} ${getString(
+        'cd.getStartedWithCD.testesSuccessfully'
+      )}`
+    }
+  }
+
   return (
     <Formik<ClusterInterface>
       initialValues={{ ...clusterData }}
+      validationSchema={getValidationSchema}
       formName="application-repo-destination-step"
       onSubmit={noop}
     >
       {formikProps => {
         formikRef.current = formikProps
-        const selectedCluster = formikProps.values.clusterType
+        const selectedClusterType = formikProps.values.clusterType
         const authType = formikProps.values.authType
+        const isNewCluster: boolean | undefined = formikProps.values?.isNewCluster
+
         return (
           <FormikForm>
             <Layout.Vertical>
@@ -215,39 +331,37 @@ export const DestinationStep = (props: any) => {
                   data={clustersTypes}
                   cornerSelected={true}
                   className={moduleCss.icons}
-                  cardClassName={moduleCss.serviceDeploymentTypeCard}
+                  cardClassName={moduleCss.serviceDeploymentTypeSmallCard}
                   renderItem={item => (
                     <>
                       <Layout.Vertical flex>
                         <Icon
                           name={item.icon as IconName}
-                          size={48}
+                          size={24}
                           flex
                           className={moduleCss.serviceDeploymentTypeIcon}
                         />
-                        <Text font={{ variation: FontVariation.BODY2 }} className={moduleCss.text1}>
+                        <Text font={{ variation: FontVariation.BODY2 }} className={moduleCss.text2}>
                           {item.label}
                         </Text>
                       </Layout.Vertical>
                     </>
                   )}
-                  selected={clustersTypes.find(c => c.value === selectedCluster)}
+                  selected={clustersTypes.find(c => c.value === selectedClusterType)}
                   onChange={item => {
                     formikProps.setFieldValue('clusterType', item.value)
                   }}
                 />
               </Container>
-              {selectedCluster === CIBuildInfrastructureType.KubernetesDirect ? (
+              {selectedClusterType === CIBuildInfrastructureType.KubernetesDirect ? (
                 <Container>
                   {testConnectionStatus === TestStatus.SUCCESS ? (
-                    <Layout.Vertical>
-                      <Layout.Vertical className={css.success}>
-                        <Layout.Horizontal className={css.textPadding}>
+                    <>
+                      <Layout.Vertical className={css.success} margin={{ bottom: 'medium', top: 'large' }}>
+                        <Layout.Horizontal padding={{ top: 'medium', bottom: 'medium' }}>
                           <Icon name="success-tick" size={25} className={css.iconPadding} />
                           <Text className={css.success} font={{ variation: FontVariation.H6 }} color={Color.GREEN_800}>
-                            {`${getString('common.cluster')} ${formikProps.values?.server} ${getString(
-                              'cd.getStartedWithCD.clusterCreatedSuccessfully'
-                            )}`}
+                            {getSuccessText()}
                           </Text>
                         </Layout.Horizontal>
                       </Layout.Vertical>
@@ -258,75 +372,161 @@ export const DestinationStep = (props: any) => {
                       >
                         {getString('cd.getStartedWithCD.tryAnotherCreds')}
                       </Text>
-                    </Layout.Vertical>
+                    </>
                   ) : (
-                    <ul className={css.progress}>
-                      <li className={`${css.progressItem} ${css.progressItemActive}`}>
-                        <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
-                          {getString('cd.steps.common.clusterDetails').toLocaleUpperCase()}
-                        </Text>
-                        <InfoContainer label="cd.getStartedWithCD.ipWhitelist" />
-                        <div className={css.smallMarginBottomClass} />
-                        <div className={moduleCss.width50}>
-                          <NameId nameLabel={getString('cd.getStartedWithCD.nameYourCluster')} />
-                          <FormInput.Text
-                            name="server"
-                            label={getString('connectors.k8.masterUrlLabel')}
-                            placeholder={getString('UrlLabel')}
-                          />
-                        </div>
-                      </li>
-                      <li className={`${css.progressItem} ${css.progressItemActive}`}>
-                        <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
-                          {getString('authentication').toLocaleUpperCase()}
-                        </Text>
-                        <Text tooltipProps={{ dataTooltipId: 'clusterAuthentication' }} margin={{ bottom: 'small' }}>
-                          Select Authentication Type
-                        </Text>
-                        <div className={moduleCss.marginBottom25}>
-                          <Button
-                            onClick={() => formikProps.setFieldValue('authType', CREDENTIALS_TYPE.USERNAME_PASSWORD)}
-                            className={classnames(
-                              css.kubernetes,
-                              authType === CREDENTIALS_TYPE.USERNAME_PASSWORD ? css.active : undefined
-                            )}
+                    <>
+                      {isNewCluster ? (
+                        <Layout.Vertical>
+                          <Text
+                            style={{ cursor: 'pointer', marginTop: '20px' }}
+                            className={css.marginBottomClass}
+                            onClick={() => formikProps.setFieldValue('isNewCluster', false)}
+                            color={Color.PRIMARY_7}
                           >
-                            {getString('usernamePassword')}
-                          </Button>
-                          <Button
-                            onClick={() => formikProps.setFieldValue('authType', CREDENTIALS_TYPE.SERVICE_ACCOUNT)}
-                            className={classnames(
-                              css.docker,
-                              authType === CREDENTIALS_TYPE.SERVICE_ACCOUNT ? css.active : undefined
-                            )}
-                          >
-                            {getString('serviceAccount')}
-                          </Button>
-                          <Button
-                            onClick={() =>
-                              formikProps.setFieldValue('authType', CREDENTIALS_TYPE.CLIENT_KEY_CERTIFICATE)
-                            }
-                            className={classnames(
-                              css.docker,
-                              authType === CREDENTIALS_TYPE.CLIENT_KEY_CERTIFICATE ? css.active : undefined
-                            )}
-                          >
-                            {getString('connectors.k8.clientKey')}
-                          </Button>
-                        </div>
-                        <AuthTypeForm authType={authType} />
-                        <Layout.Vertical padding={{ top: 'small' }}>
-                          <Container padding={{ top: 'medium' }}>
-                            <TestConnection />
-                          </Container>
+                            {getString('cd.getStartedWithCD.backToClusterList')}
+                          </Text>
+                          <ul className={css.progress}>
+                            <li className={`${css.progressItem} ${css.progressItemActive}`}>
+                              <Text
+                                font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
+                                className={css.subHeading}
+                              >
+                                {getString('cd.steps.common.clusterDetails').toLocaleUpperCase()}
+                              </Text>
+                              <InfoContainer label="cd.getStartedWithCD.ipWhitelist" />
+                              <div className={css.smallMarginBottomClass} />
+                              <div className={moduleCss.width50}>
+                                <NameId nameLabel={getString('cd.getStartedWithCD.nameYourCluster')} />
+                                <FormInput.Text
+                                  name="server"
+                                  label={getString('connectors.k8.masterUrlLabel')}
+                                  placeholder={getString('UrlLabel')}
+                                />
+                              </div>
+                            </li>
+                            <li className={`${css.progressItem} ${css.progressItemActive}`}>
+                              <Text
+                                font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
+                                className={css.subHeading}
+                              >
+                                {getString('authentication').toLocaleUpperCase()}
+                              </Text>
+                              <Text
+                                tooltipProps={{ dataTooltipId: 'clusterAuthentication' }}
+                                margin={{ bottom: 'small' }}
+                              >
+                                Select Authentication Type
+                              </Text>
+                              <div className={moduleCss.marginBottom25}>
+                                <Button
+                                  onClick={() =>
+                                    formikProps.setFieldValue('authType', CREDENTIALS_TYPE.USERNAME_PASSWORD)
+                                  }
+                                  className={classnames(
+                                    css.kubernetes,
+                                    authType === CREDENTIALS_TYPE.USERNAME_PASSWORD ? css.active : undefined
+                                  )}
+                                >
+                                  {getString('usernamePassword')}
+                                </Button>
+                                <Button
+                                  onClick={() =>
+                                    formikProps.setFieldValue('authType', CREDENTIALS_TYPE.SERVICE_ACCOUNT)
+                                  }
+                                  className={classnames(
+                                    css.docker,
+                                    authType === CREDENTIALS_TYPE.SERVICE_ACCOUNT ? css.active : undefined
+                                  )}
+                                >
+                                  {getString('serviceAccount')}
+                                </Button>
+                                <Button
+                                  onClick={() =>
+                                    formikProps.setFieldValue('authType', CREDENTIALS_TYPE.CLIENT_KEY_CERTIFICATE)
+                                  }
+                                  className={classnames(
+                                    css.docker,
+                                    authType === CREDENTIALS_TYPE.CLIENT_KEY_CERTIFICATE ? css.active : undefined
+                                  )}
+                                >
+                                  {getString('connectors.k8.clientKey')}
+                                </Button>
+                              </div>
+                              <AuthTypeForm authType={authType} />
+                            </li>
+                          </ul>
                         </Layout.Vertical>
-                      </li>
-                    </ul>
+                      ) : (
+                        <Layout.Vertical>
+                          <Text
+                            font={{ variation: FontVariation.BODY2 }}
+                            className={moduleCss.text}
+                            margin={{ bottom: 'medium' }}
+                          >
+                            {getString('cd.getStartedWithCD.clustersCount', { target: clusterListdata?.length })}
+                          </Text>
+                          <Layout.Horizontal margin={{ bottom: 'medium' }}>
+                            <ExpandingSearchInput
+                              alwaysExpanded
+                              width={300}
+                              onChange={searchTerm => {
+                                getClusters({
+                                  accountIdentifier: accountId,
+                                  searchTerm,
+                                  agentIdentifier: fullAgentName
+                                }).then(response => {
+                                  setClusterListData(defaultTo(response?.content, []))
+                                })
+                              }}
+                            />
+                            <Button
+                              variation={ButtonVariation.LINK}
+                              onClick={() => formikProps.setFieldValue('isNewCluster', true)}
+                            >
+                              {getString('common.addNewCluster')}
+                            </Button>
+                          </Layout.Horizontal>
+                          <CardSelect
+                            data={clusterListdata as Servicev1Cluster[]}
+                            cornerSelected={true}
+                            className={moduleCss.icons}
+                            cardClassName={moduleCss.repositoryListCard}
+                            renderItem={(item: Servicev1Cluster) => (
+                              <>
+                                <Layout.Vertical spacing={'small'} className={moduleCss.repositoryListItem}>
+                                  <Layout.Horizontal className={moduleCss.repositoryHeader}>
+                                    <Icon
+                                      name={'service-github'}
+                                      size={24}
+                                      flex
+                                      className={moduleCss.repositoriesIcon}
+                                    />
+                                    <Text font={{ variation: FontVariation.BODY2 }} className={moduleCss.text3}>
+                                      {item?.cluster?.name}
+                                    </Text>
+                                  </Layout.Horizontal>
+                                  <Text font="normal">{item?.cluster?.server}</Text>
+                                </Layout.Vertical>
+                              </>
+                            )}
+                            selected={selectedCluster}
+                            onChange={(item: Servicev1Cluster) => {
+                              setSelectedCluster(item)
+                            }}
+                          />
+                        </Layout.Vertical>
+                      )}
+                      <Layout.Vertical padding={{ top: 'small' }}>
+                        <Container padding={{ top: 'medium' }}>
+                          <TestConnection />
+                        </Container>
+                      </Layout.Vertical>
+                    </>
                   )}
                 </Container>
               ) : (
                 <Container>
-                  <Layout.Vertical margin={{ top: 'medium' }}>
+                  <Layout.Vertical margin={{ top: 'large' }}>
                     <InfoContainer label="cd.getStartedWithCD.managedCluster" />
                     <div className={css.smallMarginBottomClass} />
                     <>

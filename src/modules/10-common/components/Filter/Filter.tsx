@@ -10,10 +10,11 @@ import * as Yup from 'yup'
 import { Drawer, IDrawerProps } from '@blueprintjs/core'
 import { Formik, FormikProps, FormikErrors } from 'formik'
 import { truncate } from 'lodash-es'
-import { FormikForm, Button, Layout, OverlaySpinner, ButtonVariation } from '@harness/uicore'
+import { FormikForm, Button, Layout, OverlaySpinner, ButtonVariation, useToaster } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { CrudOperation, FilterCRUD, FilterCRUDFowardRef } from './FilterCRUD/FilterCRUD'
 import type { FilterInterface, FilterDataInterface } from './Constants'
+import { isObjectEmpty } from './utils/FilterUtils'
 
 import css from './Filter.module.scss'
 
@@ -71,6 +72,7 @@ const FilterRef = <T, U extends FilterInterface>(props: FilterProps<T, U>, filte
     isOpen
   } = props
   const { getString } = useStrings()
+  const { showError } = useToaster()
 
   const [drawerOpen, setDrawerOpen] = React.useState(typeof isOpen === 'undefined' ? true : isOpen)
 
@@ -182,6 +184,11 @@ const FilterRef = <T, U extends FilterInterface>(props: FilterProps<T, U>, filte
                     isRefreshingFilters={isRefreshingFilters}
                     filters={filters}
                     onSaveOrUpdate={async (_isUpdate: boolean, formdata: U): Promise<void> => {
+                      if (isObjectEmpty(formik.values as Record<string, unknown>)) {
+                        showError(getString('filters.invalidCriteria'))
+                        return
+                      }
+
                       await onSaveOrUpdate(_isUpdate, {
                         metadata: formdata,
                         formValues: formik.values

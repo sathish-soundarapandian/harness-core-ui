@@ -174,7 +174,7 @@ describe('Environment Detail Summary', () => {
     userEvent.type(screen.getByPlaceholderText('Search'), 'my search term')
     jest.runOnlyPendingTimers()
 
-    await waitFor(() => expect(getByText('cd.environmentDetailPage.emptyExecutionListMsg')).toBeTruthy())
+    await waitFor(() => expect(getByText('pipeline.emptyExecutionListMsg')).toBeTruthy())
   })
 
   test('test active instance empty state', () => {

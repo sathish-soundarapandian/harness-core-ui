@@ -7,10 +7,10 @@
 
 import React from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { Text, useToaster, UseConfirmationDialogReturn } from '@harness/uicore'
+import { useToaster, UseConfirmationDialogReturn } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { useDeleteSegment, Segment } from 'services/cf'
-import { useStrings } from 'framework/strings'
+import { useStrings, String } from 'framework/strings'
 import { useConfirmAction } from '@common/hooks'
 import { getErrorMessage, showToaster } from '@cf/utils/CFUtils'
 import routes from '@common/RouteDefinitions'
@@ -36,15 +36,7 @@ const useDeleteTargetGroupDialog = (targetGroup: Segment): UseConfirmationDialog
     title: getString('cf.segments.delete.title'),
     intent: Intent.DANGER,
     confirmText: getString('delete'),
-    message: (
-      <Text>
-        <span
-          dangerouslySetInnerHTML={{
-            __html: getString('cf.segments.delete.message', { segmentName: targetGroup?.name })
-          }}
-        />
-      </Text>
-    ),
+    message: <String useRichText stringID="cf.segments.delete.message" vars={{ segmentName: targetGroup?.name }} />,
     action: async () => {
       clear()
 

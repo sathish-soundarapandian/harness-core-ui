@@ -106,7 +106,7 @@ approvalStep:
   ensureUserGroups: To use Harness Approvals, please make sure your project has user groups.
   approversWithColon: '{{$.pipeline.approvalStep.approvers}}:'
   approverInputs: 'Inputs to be provided by approver'
-  includePipelineExecutionHistory: 'Include pipeline execution history in approval details'
+  includeStageExecutionDetails: 'Include stage execution details in approval'
   addUserGroups: Enter User Group
   fetchingUserGroups: Select User Group
   fetchUserGroupsFailed: Failed to fetch User Groups
@@ -356,6 +356,8 @@ manifestType:
   pathPlaceholder: Enter File Path
   folderPathPlaceholder: Enter Folder Path
   chartPathPlaceholder: Enter Chart Path
+  subChart: Sub-Chart Name
+  subChartPlaceholder: Enter Sub Chart Name
   bucketName: Bucket Name
   gitFetchTypeLabel: Git Fetch Type
   commitId: Commit Id / Git Tag
@@ -614,6 +616,8 @@ executionStatus:
   Suspended: SUSPENDED
   NotStarted: NOT STARTED
   ApprovalRejected: REJECTED
+  QueuedLicenseLimitReached: QUEUED LICENSE LIMIT REACHED
+  QueuedExecutionConcurrencyReached: QUEUED EXECUTION CONCURRENCY REACHED
   Unknown: UNKNOWN
 executionFilters:
   labels:
@@ -1147,10 +1151,10 @@ stepDescription:
   Policy: Evaluate policy during pipeline execution
   ServerlessLambdaDeploy: Create the Lambda functions defined in this Stage.
   ServerlessLambdaRollback: Deploy the previous successful version as a new version.
-  DeployCloudFunction: Deploy a Google Function.
-  DeployCloudFunctionRollback: Deploy the previous successful version of your Google Function as a new version.
-  DeployCloudFunctionNoTrafficShift: Deploy a new Google Function validate it and progressively route traffic and cut it over from the current primary function.
-  DeployCloudFunctionTrafficShift: Deploy a Google Function as a canary and route traffic to it.
+  DeployCloudFunction: Deploy a Google function.
+  DeployCloudFunctionRollback: Roll back the Google function.
+  DeployCloudFunctionNoTrafficShift: Deploy a Google function and route traffic to it.
+  DeployCloudFunctionTrafficShift: Shift traffic between the existing revision and the new revision of a Google function.
   createPR: Create PR
   mergePR: Merge the PR created by the GitOps Update Release Repo step
   updateReleaseRepo: Create the PR with your updated JSON files
@@ -1171,6 +1175,7 @@ stepDescription:
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
   ElastigroupRollback: Rollback for the Elastigroup steps
   ElastigroupSetup: Elastigroup setup step
+
   SwapRoute: Swap between Active and InActive TAS Applications
   SwapRollback: Rollback the Swap to Active in Blue Green Deployments
   TasRollback: Rollback to previous deployment during failure
@@ -1549,6 +1554,10 @@ phasesForm:
     website: 'IIS Website'
     virtualDir: 'IIS Virtual directory'
 draft: 'Draft'
+logLevelSettings: 'Show Log Level'
+logDateTimeSettings: 'Show Date and Time Information'
+configureLogSettings: 'Configure Logs Settings'
+logSettingsHeader: 'Configure the following Logs Settings at the User Scope'
 duplicateStepIdentifiers: 'Duplicate identifiers found: {{duplicateIdString}}'
 alwaysEditModeYAML: Enable read/write mode always
 warningForInvalidYAMLDiscard: Enabling this option lets you edit and save changes to the YAML code of the pipelines you are viewing. You can toggle this setting on or off in any pipeline.
@@ -1613,3 +1622,7 @@ commitsTab:
   youWillSeeYourCommitsHere: You will see your commits here
 commitsOn: 'Commits on'
 vmLabel: VM
+emptyExecutionListMsg: 'There are no executions for this given criteria.'
+lastDeployed: 'Last deployed'
+ServiceDetail:
+  envCardEmptyStateMsg: 'There are no environments with instances in this service.'

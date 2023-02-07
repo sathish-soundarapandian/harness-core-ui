@@ -27,6 +27,42 @@ export const stepTemplateMock: NGTemplateInfoConfig = {
   } as JsonNode
 }
 
+export const stepGroupTemplateMock: NGTemplateInfoConfig = {
+  name: 'TestStepGroupTemplate',
+  identifier: 'TestStepGroupTemplate',
+  versionLabel: 'v1',
+  type: 'StepGroup',
+  projectIdentifier: 'Stas_Test',
+  orgIdentifier: 'default',
+  tags: {},
+  spec: {
+    stageType: 'Deployment',
+    delegateSelectors: ['test2'],
+    steps: [
+      {
+        step: {
+          type: 'ShellScript',
+          name: 'step1',
+          identifier: 'step1',
+          spec: {
+            shell: 'Bash',
+            onDelegate: true,
+            source: {
+              type: 'Inline',
+              spec: {
+                script: 'echo "hello1"'
+              }
+            },
+            environmentVariables: [],
+            outputVariables: []
+          },
+          timeout: '10m'
+        }
+      }
+    ]
+  } as JsonNode
+}
+
 export const secretManagerTemplateMock: NGTemplateInfoConfig = {
   name: 'Test Template Secret Manager',
   identifier: 'Test_Template_SM',
@@ -707,6 +743,11 @@ export const getTemplateContextMock = (type: TemplateType): TemplateContextInter
       return produce(defaultTemplateContextMock, draft => {
         set(draft, 'state.template', stepTemplateMock)
         set(draft, 'state.originalTemplate', stepTemplateMock)
+      })
+    case TemplateType.StepGroup:
+      return produce(defaultTemplateContextMock, draft => {
+        set(draft, 'state.template', stepGroupTemplateMock)
+        set(draft, 'state.originalTemplate', stepGroupTemplateMock)
       })
     case TemplateType.Stage:
       return produce(defaultTemplateContextMock, draft => {

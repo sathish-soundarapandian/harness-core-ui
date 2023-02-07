@@ -37,6 +37,8 @@ import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { rbacQueryParamOptions } from '@rbac/utils/utils'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
+import ListHeader from '@common/components/ListHeader/ListHeader'
+import { sortByCreated, sortByEmail, sortByLastModified, sortByName } from '@common/utils/sortUtils'
 import css from './UserListView.module.scss'
 
 interface PendingUserListViewProps {
@@ -200,6 +202,7 @@ const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, s
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { page, size } = useQueryParams(rbacQueryParamOptions)
   const isCommunity = useGetCommunity()
+  const [sort, setSort] = useState<string>(sortByCreated[0].value as string)
 
   const { data, loading, error, refetch } = useMutateAsGet(useGetPendingUsersAggregated, {
     body: {},
@@ -310,6 +313,13 @@ const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, s
             }
       }
     >
+      <ListHeader
+        value={sort}
+        sortOptions={[...sortByName, ...sortByEmail, ...sortByCreated, ...sortByLastModified]}
+        onChange={option => setSort(option.value as string)}
+        totalCount={data?.data?.totalItems}
+        className={css.listHeader}
+      />
       <TableV2<Invite>
         className={css.table}
         columns={columns}

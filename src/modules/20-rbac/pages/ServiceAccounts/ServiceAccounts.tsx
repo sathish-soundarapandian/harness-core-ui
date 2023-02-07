@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { ButtonSize, ButtonVariation, ExpandingSearchInput, Layout } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -24,6 +24,8 @@ import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import { rbacQueryParamOptions } from '@rbac/utils/utils'
+import ListHeader from '@common/components/ListHeader/ListHeader'
+import { sortByCreated, sortByEmail, sortByName } from '@common/utils/sortUtils'
 import ServiceAccountsEmptyState from './service-accounts-empty-state.png'
 import css from './ServiceAccounts.module.scss'
 
@@ -31,6 +33,7 @@ const ServiceAccountsPage: React.FC = () => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
   useDocumentTitle(getString('rbac.serviceAccounts.label'))
+  const [sort, setSort] = useState<string>(sortByCreated[0].value as string)
 
   const {
     search: searchTerm,
@@ -46,8 +49,10 @@ const ServiceAccountsPage: React.FC = () => {
       projectIdentifier,
       searchTerm,
       pageIndex,
-      pageSize
+      pageSize,
+      sortOrders: [sort]
     },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
   })
 
@@ -121,6 +126,13 @@ const ServiceAccountsPage: React.FC = () => {
           ) : undefined
         }}
       >
+        <ListHeader
+          value={sort}
+          sortOptions={[...sortByName, ...sortByEmail, ...sortByCreated]}
+          onChange={option => setSort(option.value as string)}
+          totalCount={data?.data?.totalItems}
+          className={css.listHeader}
+        />
         <ServiceAccountsListView
           data={data?.data}
           reload={refetch}

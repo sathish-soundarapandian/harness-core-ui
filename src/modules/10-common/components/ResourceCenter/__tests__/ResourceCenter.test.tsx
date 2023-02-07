@@ -74,9 +74,7 @@ describe('ResourceCenter', () => {
   })
 
   test('should render feedback when click on icon', async () => {
-    const featureFlags = {
-      SHOW_NG_REFINER_FEEDBACK: true
-    }
+    const featureFlags = {}
 
     const defaultAppStoreValues = {
       featureFlags

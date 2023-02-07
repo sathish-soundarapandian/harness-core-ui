@@ -187,12 +187,7 @@ const renderSwitch = ({
   isTriggerRbacDisabled: boolean
   triggerResponse: ResponseNGTriggerDetailsResponse
   // triggerResponse: ResponseNGTriggerDetailsResponse
-  updateTrigger: MutateMethod<
-    ResponseNGTriggerResponse,
-    NGTriggerConfigV2,
-    UpdateTriggerQueryParams,
-    UpdateTriggerPathParams
-  >
+  updateTrigger: MutateMethod<ResponseNGTriggerResponse, string, UpdateTriggerQueryParams, UpdateTriggerPathParams>
   showSuccess: (message: string | ReactNode, timeout?: number, key?: string) => void
   showError: (message: string | ReactNode, timeout?: number, key?: string) => void
   refetchTrigger: () => void

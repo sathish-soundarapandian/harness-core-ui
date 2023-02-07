@@ -11,6 +11,7 @@ import { ansiToJson, AnserJsonEntry } from 'anser'
 import { tokenize } from 'linkifyjs'
 
 import { getAnserClasses } from '@common/components/LogViewer/LogLine'
+import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { getRegexForSearch } from '../../LogsState/utils'
 import type { LogLineData } from '../../LogsState/types'
 import css from './MultiLogLine.module.scss'
@@ -150,23 +151,48 @@ export interface MultiLogLineProps extends LogLineData {
 export function MultiLogLine(props: MultiLogLineProps): React.ReactElement {
   const { text = {}, lineNumber, limit, searchText = '', currentSearchIndex = 0, searchIndices } = props
 
+  const { preference: logsInfoViewSettings } = usePreferenceStore<string | undefined>(
+    PreferenceScope.USER,
+    'logsInfoViewSettings'
+  )
+  const { preference: logsDateTimeViewSettings } = usePreferenceStore<string | undefined>(
+    PreferenceScope.USER,
+    'logsDateTimeViewSettings'
+  )
+
+  const showLogInfo = logsInfoViewSettings === 'true'
+  const showDateTimeInfo = logsDateTimeViewSettings === 'true'
+
   return (
-    <div className={css.logLine} style={{ '--char-size': `${limit.toString().length}ch` } as any}>
+    <div
+      className={css.logLine}
+      style={
+        {
+          gridTemplateColumns: `${Math.max(defaultTo(limit.toString().length, 3), 3)}ch${showLogInfo ? ' 5ch' : ''}${
+            showDateTimeInfo ? ' 25ch' : ''
+          } 1fr`
+        } as React.CSSProperties
+      }
+    >
       <span className={css.lineNumber}>{lineNumber + 1}</span>
-      <TextWithSearchMarkers
-        className={css.level}
-        txt={text.level}
-        searchText={searchText}
-        searchIndices={searchIndices?.level}
-        currentSearchIndex={currentSearchIndex}
-      />
-      <TextWithSearchMarkers
-        className={css.time}
-        txt={text.time}
-        searchText={searchText}
-        searchIndices={searchIndices?.time}
-        currentSearchIndex={currentSearchIndex}
-      />
+      {showLogInfo && (
+        <TextWithSearchMarkers
+          className={css.level}
+          txt={text.level}
+          searchText={searchText}
+          searchIndices={searchIndices?.level}
+          currentSearchIndex={currentSearchIndex}
+        />
+      )}
+      {showDateTimeInfo && (
+        <TextWithSearchMarkers
+          className={css.time}
+          txt={text.time}
+          searchText={searchText}
+          searchIndices={searchIndices?.time}
+          currentSearchIndex={currentSearchIndex}
+        />
+      )}
       <TextWithSearchMarkersAndLinks
         className={css.out}
         txt={text.out}

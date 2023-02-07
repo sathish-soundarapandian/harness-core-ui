@@ -151,7 +151,7 @@ export function AmazonS3(
             allowableTypes: [MultiTypeInputType.FIXED],
             selectProps: {
               noResults: (
-                <Text lineClamp={1} width={500} height={100}>
+                <Text lineClamp={1} width={384} margin="small">
                   {getRBACErrorMessage(error as RBACError) || getString('pipeline.noBuckets')}
                 </Text>
               ),
@@ -201,7 +201,7 @@ export function AmazonS3(
                     selectProps: {
                       items: regions,
                       noResults: (
-                        <Text lineClamp={1} width={500} height={100}>
+                        <Text lineClamp={1} width={384} margin="small">
                           {getRBACErrorMessage(errorRegions as RBACError) || getString('pipeline.noRegions')}
                         </Text>
                       )

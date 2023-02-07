@@ -38,9 +38,10 @@ import {
   useGetBucketListForS3
 } from 'services/cd-ng'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useListAwsRegions } from 'services/portal'
 import type { AccountPathProps, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { HelmWithGcsDataType } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 
@@ -74,6 +75,7 @@ function HelmWithS3({
   deploymentType
 }: StepProps<ConnectorConfigDTO> & HelmWithHttpPropType): React.ReactElement {
   const { getString } = useStrings()
+  const { CDP_HELM_SUB_CHARTS } = useFeatureFlags()
   const { getRBACErrorMessage } = useRBACError()
   const [regions, setRegions] = useState<SelectOption[]>([])
 
@@ -180,6 +182,7 @@ function HelmWithS3({
         helmVersion: initialValues.spec?.helmVersion,
         chartName: initialValues.spec?.chartName,
         chartVersion: initialValues.spec?.chartVersion,
+        subChartName: initialValues.spec?.subChartName,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
         valuesPaths:
           typeof initialValues?.spec?.valuesPaths === 'string'
@@ -208,6 +211,7 @@ function HelmWithS3({
       helmVersion: 'V2',
       chartName: '',
       chartVersion: '',
+      subChartName: '',
       skipResourceVersioning: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
     }
@@ -236,6 +240,7 @@ function HelmWithS3({
               : formData?.valuesPaths?.map((path: { path: string }) => path.path),
           chartName: formData?.chartName,
           chartVersion: formData?.chartVersion,
+          subChartName: formData?.subChartName,
           helmVersion: formData?.helmVersion,
           skipResourceVersioning: formData?.skipResourceVersioning
         }
@@ -524,6 +529,37 @@ function HelmWithS3({
                   />
                 </div>
               </Layout.Horizontal>
+              {CDP_HELM_SUB_CHARTS && (
+                <Layout.Horizontal flex spacing="huge" margin={{ bottom: 'small' }}>
+                  <div
+                    className={cx(helmcss.halfWidth, {
+                      [helmcss.runtimeInput]:
+                        getMultiTypeFromValue(formik.values?.subChartName) === MultiTypeInputType.RUNTIME
+                    })}
+                  >
+                    <FormInput.MultiTextInput
+                      label={getString('pipeline.manifestType.subChart')}
+                      placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
+                      name="subChartName"
+                      multiTextInputProps={{ expressions, allowableTypes }}
+                    />
+                    {getMultiTypeFromValue(formik.values?.subChartName) === MultiTypeInputType.RUNTIME && (
+                      <ConfigureOptions
+                        style={{ alignSelf: 'center', marginBottom: 5 }}
+                        value={formik.values?.subChartName as string}
+                        type="String"
+                        variableName="subChartName"
+                        showRequiredField={false}
+                        showDefaultField={false}
+                        showAdvanced={true}
+                        onChange={value => formik.setFieldValue('subChartName', value)}
+                        isReadonly={isReadonly}
+                        allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+                      />
+                    )}
+                  </div>
+                </Layout.Horizontal>
+              )}
               <div className={helmcss.halfWidth}>
                 <DragnDropPaths
                   formik={formik}

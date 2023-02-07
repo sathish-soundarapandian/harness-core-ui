@@ -9,14 +9,14 @@ import React from 'react'
 import { Accordion, Formik, AllowedTypes } from '@harness/uicore'
 import * as Yup from 'yup'
 import type { FormikProps } from 'formik'
-
+import { isEmpty } from 'lodash-es'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { setFormikRef, StepFormikFowardRef, StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 import { ApprovalRejectionCriteriaType } from '@pipeline/components/PipelineSteps/Steps/Common/types'
 
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
-import { CustomApprovalFormData, variableSchema } from './types'
+import { CustomApprovalFormData, SCRIPT_DEFAULT_VALUE, variableSchema } from './types'
 import BaseCustomApproval from './BaseCustomApproval'
 import OptionalConfiguration from './OptionalConfiguration'
 
@@ -63,7 +63,12 @@ export function CustomApprovalWidget(
       ),
       source: Yup.object().shape({
         spec: Yup.object().shape({
-          script: Yup.string().trim().required(getString('common.scriptRequired'))
+          script: Yup.string().test('script', getString('common.scriptRequired'), value => {
+            if (value === SCRIPT_DEFAULT_VALUE || isEmpty(value.trim())) {
+              return false
+            }
+            return true
+          })
         })
       }),
       environmentVariables: variableSchema(getString),

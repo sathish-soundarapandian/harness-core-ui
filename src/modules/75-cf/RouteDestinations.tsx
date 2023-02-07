@@ -156,6 +156,7 @@ const CFRoutes: FC = () => {
     NG_SETTINGS,
     FFM_3959_FF_MFE_Environment_Detail,
     FFM_5939_MFE_TARGET_GROUPS_LISTING,
+    FFM_6666_FF_MFE_Target_Group_Detail,
     FFM_5256_FF_MFE_Environment_Listing,
     FFM_5951_FF_MFE_Targets_Listing,
     FFM_6665_FF_MFE_Target_Detail
@@ -236,9 +237,21 @@ const CFRoutes: FC = () => {
           ...segmentPathProps
         })}
         exact
-        pageName={FFM_1512 ? PAGE_NAME.TargetGroupDetailPage : PAGE_NAME.SegmentDetailPage}
+        pageName={
+          FFM_1512 || FFM_6666_FF_MFE_Target_Group_Detail
+            ? PAGE_NAME.TargetGroupDetailPage
+            : PAGE_NAME.SegmentDetailPage
+        }
       >
-        <FFGitSyncProvider> {FFM_1512 ? <TargetGroupDetailPage /> : <SegmentDetailPage />}</FFGitSyncProvider>
+        <FFGitSyncProvider>
+          {FFM_6666_FF_MFE_Target_Group_Detail ? (
+            <FFUIApp />
+          ) : FFM_1512 ? (
+            <TargetGroupDetailPage />
+          ) : (
+            <SegmentDetailPage />
+          )}
+        </FFGitSyncProvider>
       </RouteWithLayout>
 
       <RouteWithLayout

@@ -15,6 +15,7 @@ import { defaultTo, uniqBy } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
 import type { EnvironmentDeploymentsInfo, InfrastructureInfo, ServiceDeploymentInfo } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './ServiceExecutionsCard.module.scss'
 
@@ -293,7 +294,7 @@ function EnvList({ envIdentifiers, limit = 2 }: EnvListProp): React.ReactElement
         environmentIdentifier: envId,
         sectionId: EnvironmentDetailsTab.CONFIGURATION
       })
-      window.open(`#${route}`)
+      window.open(`${windowLocationUrlPartBeforeHash()}#${route}`)
     }
   }
 

@@ -66,6 +66,10 @@ interface ArtifactWizardProps {
   newConnectorProps: any
 }
 
+const showArtifactStoreStepDirectly = (selectedArtifact: ArtifactType | null): boolean => {
+  return !!(selectedArtifact && [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage].includes(selectedArtifact))
+}
+
 function ArtifactWizard({
   types,
   labels,
@@ -128,6 +132,8 @@ function ArtifactWizard({
       case ENABLED_ARTIFACT_TYPES.Acr:
         return <AzureAuthentication name={getString('details')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
+      case ENABLED_ARTIFACT_TYPES.GoogleCloudStorage:
+      case ENABLED_ARTIFACT_TYPES.GoogleCloudSource:
         return <GcpAuthentication name={getString('details')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.AzureArtifacts:
         return <StepAzureArtifactAuthentication name={getString('details')} {...newConnectorProps.auth} />
@@ -159,6 +165,8 @@ function ArtifactWizard({
         return buildDockerPayload
       case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
       case ENABLED_ARTIFACT_TYPES.Gcr:
+      case ENABLED_ARTIFACT_TYPES.GoogleCloudStorage:
+      case ENABLED_ARTIFACT_TYPES.GoogleCloudSource:
         return buildGcpPayload
       case ENABLED_ARTIFACT_TYPES.Ecr:
       case ENABLED_ARTIFACT_TYPES.AmazonS3:
@@ -191,6 +199,8 @@ function ArtifactWizard({
       case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:
       case ENABLED_ARTIFACT_TYPES.Acr:
       case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
+      case ENABLED_ARTIFACT_TYPES.GoogleCloudStorage:
+      case ENABLED_ARTIFACT_TYPES.GoogleCloudSource:
         return true
       default:
         return false
@@ -198,7 +208,12 @@ function ArtifactWizard({
   }
 
   return (
-    <StepWizard className={css.existingDocker} subtitle={renderSubtitle()} onStepChange={onStepChange}>
+    <StepWizard
+      className={css.existingDocker}
+      subtitle={renderSubtitle()}
+      onStepChange={onStepChange}
+      initialStep={showArtifactStoreStepDirectly(selectedArtifact) ? 2 : undefined}
+    >
       <ArtifactoryRepoType
         artifactTypes={types}
         name={getString('connectors.artifactRepoType')}

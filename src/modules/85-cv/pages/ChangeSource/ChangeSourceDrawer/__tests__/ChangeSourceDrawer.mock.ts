@@ -51,6 +51,20 @@ export const k8sChangeSourceDrawerData = {
   type: 'K8sCluster' as any
 }
 
+export const customDeployData = {
+  name: 'Custom Deploy 101',
+  identifier: 'Custom_Deploy_101',
+  type: 'CustomDeploy' as any,
+  enabled: true,
+  spec: {
+    name: 'Custom Deploy 101',
+    webhookUrl: 'dummy url',
+    webhookCurlCommand: 'dummy cURL',
+    type: 'Deployment'
+  },
+  category: 'Deployment' as any
+}
+
 export const changeSourceTableData = [
   {
     name: 'Harness CD',

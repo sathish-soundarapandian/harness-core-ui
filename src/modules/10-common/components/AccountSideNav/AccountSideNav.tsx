@@ -22,7 +22,13 @@ import { useGetAccountNG } from 'services/cd-ng'
 export default function AccountSideNav(): React.ReactElement {
   const { getString } = useStrings()
   const { accountId } = useParams<AccountPathProps>()
-  const { NG_LICENSES_ENABLED, OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE, NG_DEPLOYMENT_FREEZE } = useFeatureFlags()
+  const {
+    NG_LICENSES_ENABLED,
+    OPA_PIPELINE_GOVERNANCE,
+    OPA_FF_GOVERNANCE,
+    NG_DEPLOYMENT_FREEZE,
+    STO_JIRA_INTEGRATION
+  } = useFeatureFlags()
   const canUsePolicyEngine = useAnyEnterpriseLicense()
   const { licenseInformation } = useLicenseStore()
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, ModuleName.CD)
@@ -51,6 +57,9 @@ export default function AccountSideNav(): React.ReactElement {
       )}
       <SidebarLink label={getString('common.auditTrail')} to={routes.toAuditTrail({ accountId })} />
       <SidebarLink label={getString('orgsText')} to={routes.toOrganizations({ accountId })} />
+      {STO_JIRA_INTEGRATION && (
+        <SidebarLink label={getString('common.tickets.tickets')} to={routes.toTicketSettings({ accountId })} />
+      )}
     </Layout.Vertical>
   )
 }

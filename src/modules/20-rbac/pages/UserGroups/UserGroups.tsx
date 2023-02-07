@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { ButtonSize, ButtonVariation, ExpandingSearchInput, Layout, PageHeader } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -24,6 +24,8 @@ import { getPrincipalScopeFromDTO } from '@common/components/EntityReference/Ent
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
+import ListHeader from '@common/components/ListHeader/ListHeader'
+import { sortByCreated, sortByEmail, sortByLastModified, sortByName } from '@common/utils/sortUtils'
 import UserGroupEmptyState from './user-group-empty-state.png'
 import css from './UserGroups.module.scss'
 
@@ -40,6 +42,7 @@ const UserGroupsPage: React.FC = () => {
   })
   const { getString } = useStrings()
   useDocumentTitle(getString('common.userGroups'))
+  const [sort, setSort] = useState<string>(sortByCreated[0].value as string)
 
   const {
     search: searchTerm,
@@ -55,8 +58,10 @@ const UserGroupsPage: React.FC = () => {
       pageIndex,
       pageSize,
       searchTerm,
-      filterType: 'INCLUDE_INHERITED_GROUPS'
+      filterType: 'INCLUDE_INHERITED_GROUPS',
+      sortOrders: [sort]
     },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
   })
 
@@ -143,6 +148,13 @@ const UserGroupsPage: React.FC = () => {
           imageClassName: css.userGroupsEmptyState
         }}
       >
+        <ListHeader
+          value={sort}
+          sortOptions={[...sortByName, ...sortByEmail, ...sortByCreated, ...sortByLastModified]}
+          onChange={option => setSort(option.value as string)}
+          totalCount={data?.data?.totalItems}
+          className={css.listHeader}
+        />
         <UserGroupsListView
           data={data}
           openRoleAssignmentModal={openRoleAssignmentModal}

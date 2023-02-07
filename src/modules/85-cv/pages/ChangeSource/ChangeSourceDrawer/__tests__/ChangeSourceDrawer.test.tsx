@@ -18,11 +18,17 @@ import {
   onSuccessPagerDuty,
   pagerDutyChangeSourceDrawerData,
   pagerDutyChangeSourceDrawerDataWithoutService,
-  k8sChangeSourceDrawerData
+  k8sChangeSourceDrawerData,
+  customDeployData
 } from './ChangeSourceDrawer.mock'
 
 const onSuccess = jest.fn()
 const hideDrawer = jest.fn()
+
+jest.mock('@common/hooks/useFeatureFlag', () => ({
+  useFeatureFlag: jest.fn(() => true),
+  useFeatureFlags: jest.fn(() => ({}))
+}))
 
 jest.mock('services/cd-ng', () => ({
   ...(jest.requireActual('services/cd-ng') as any),
@@ -63,6 +69,27 @@ describe('Test Change Source Drawer', () => {
     })
 
     await waitFor(() => expect(getByText('cv.changeSource.selectChangeSourceName')).toBeTruthy())
+  })
+
+  test('ChangeSource Drawer for DeployFF in editmode', async () => {
+    const { container, getByText } = render(
+      <TestWrapper>
+        <ChangeSourceDrawer
+          isEdit
+          rowdata={customDeployData}
+          tableData={[customDeployData]}
+          onSuccess={onSuccess}
+          hideDrawer={hideDrawer}
+        />
+      </TestWrapper>
+    )
+
+    // change source name input and source type dropdown are rendered
+    await waitFor(() => expect(container.querySelector('input[value="deploymentsText"]')).toBeTruthy())
+    await waitFor(() => expect(container.querySelector('input[value="CustomDeploy"]')).toBeTruthy())
+
+    expect(getByText(customDeployData.spec.webhookUrl)).toBeInTheDocument()
+    expect(getByText(customDeployData.spec.webhookCurlCommand)).toBeInTheDocument()
   })
 
   test('ChangeSource Drawer renders in edit mode for HarnessCD', async () => {
@@ -210,7 +237,7 @@ describe('Test Change Source Drawer', () => {
 
     // select infra
     fireEvent.click(getByText('infrastructureText'))
-    await waitFor(() => expect(getByText('cv.healthSource.connectors.selectConnector')).not.toBeNull())
+    await waitFor(() => expect(getByText('common.repo_provider.customLabel')).not.toBeNull())
 
     fireEvent.click(container.querySelector(`.bp3-input-action [data-icon="chevron-down"]`)!)
     await waitFor(() => container.querySelector('.menuItem'))

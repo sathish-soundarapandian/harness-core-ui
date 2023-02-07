@@ -46,6 +46,24 @@ const fetchDelFn = jest.fn().mockImplementation((_sanitizedFilterRequest, { quer
 })
 
 jest.mock('services/portal', () => ({
+  useGetInstallationCommand: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn(),
+      data: { resource: { command: 'test' } },
+      loading: false,
+      error: null,
+      refetch: jest.fn().mockImplementation(() => {
+        return {
+          data: { resource: { command: 'test' } },
+          loading: false,
+          error: null
+        }
+      })
+    }
+  }),
+  useGetDelegatesHeartbeatDetailsV2: jest.fn().mockImplementation(() => {
+    return { data: { resource: { numberOfConnectedDelegates: 1 } }, refetch: jest.fn(), error: null, loading: false }
+  }),
   useGetDelegateGroupsNGV2WithFilter: jest.fn().mockImplementation(() => {
     return {
       mutate: fetchDelFn,
@@ -60,6 +78,17 @@ jest.mock('services/portal', () => ({
 }))
 
 jest.mock('services/cd-ng', () => ({
+  useGenerateTerraformModule: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn(),
+      data: 'test',
+      loading: false,
+      error: null,
+      refetch: jest.fn().mockImplementation(() => {
+        return 'test'
+      })
+    }
+  }),
   useGetFilterList: jest.fn().mockImplementation(() => {
     return {
       mutate: jest.fn()

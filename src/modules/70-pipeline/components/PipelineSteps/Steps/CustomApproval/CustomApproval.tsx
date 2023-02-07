@@ -30,7 +30,7 @@ import type { ApprovalRejectionCriteria } from '@pipeline/components/PipelineSte
 import type { StringsMap } from 'stringTypes'
 import { customApprovalType } from './BaseCustomApproval'
 
-import { CustomApprovalData, CustomApprovalFormData, variableSchema } from './types'
+import { CustomApprovalData, CustomApprovalFormData, SCRIPT_DEFAULT_VALUE, variableSchema } from './types'
 import CustomApprovalInputSetStep from './CustomApprovalInputSetStep'
 import { CustomApprovalWidgetWithRef } from './CustomApprovalWidget'
 import { CustomApprovalVariablesView, CustomApprovalVariablesViewProps } from './CustomApprovalVariablesView'
@@ -240,7 +240,7 @@ export class CustomApproval extends PipelineStep<CustomApprovalData> {
       source: {
         type: 'Inline',
         spec: {
-          script: ''
+          script: SCRIPT_DEFAULT_VALUE
         }
       }
     },

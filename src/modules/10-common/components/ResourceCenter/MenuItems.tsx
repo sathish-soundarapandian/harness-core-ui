@@ -12,7 +12,6 @@ import { capitalize } from 'lodash-es'
 import { Button, ButtonVariation, Layout, Text, Popover, Icon } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { PopoverInteractionKind, Classes, Position } from '@blueprintjs/core'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetCommunity } from '@common/utils/utils'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
@@ -97,7 +96,6 @@ const HARNESS_SUPPORT_LINK =
 const MenuItems: React.FC<MenuItemsProps> = ({ closeResourceCenter }: MenuItemsProps) => {
   const { getString } = useStrings()
   const isCommunity = useGetCommunity()
-  const { SHOW_NG_REFINER_FEEDBACK } = useFeatureFlags()
   const { currentUserInfo } = useAppStore()
   const openZendeskSupport = (e: React.MouseEvent<Element, MouseEvent>): void => {
     e.stopPropagation()
@@ -120,11 +118,8 @@ const MenuItems: React.FC<MenuItemsProps> = ({ closeResourceCenter }: MenuItemsP
     <CommunitySubmitTicket />
   ) : (
     <Layout.Vertical padding={'xlarge'} className={css.middleregion}>
-      {SHOW_NG_REFINER_FEEDBACK && <Feedback label={getString('common.resourceCenter.feedback.submit')} />}
-      <Layout.Horizontal
-        padding={SHOW_NG_REFINER_FEEDBACK ? { top: 'medium' } : {}}
-        flex={{ justifyContent: 'space-between' }}
-      >
+      <Feedback label={getString('common.resourceCenter.feedback.submit')} />
+      <Layout.Horizontal padding={{ top: 'medium' }} flex={{ justifyContent: 'space-between' }}>
         {getMenuItems({
           title: capitalize(getString('common.contactSupport')),
           description: getString('common.resourceCenter.ticketmenu.submitDesc'),

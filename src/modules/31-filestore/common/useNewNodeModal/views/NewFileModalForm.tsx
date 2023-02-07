@@ -216,7 +216,8 @@ const NewFileForm: React.FC<NewFileModalData> = props => {
                 <NameIdDescriptionTags
                   formikProps={formikProps}
                   identifierProps={{
-                    isIdentifierEditable: !editMode || !!tempNode
+                    isIdentifierEditable: !editMode || !!tempNode,
+                    maxInput: 128
                   }}
                 />
                 <FormInput.Select

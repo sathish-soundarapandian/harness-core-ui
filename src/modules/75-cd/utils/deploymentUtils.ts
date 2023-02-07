@@ -74,7 +74,7 @@ export function getNgSupportedDeploymentTypes(props: GetNgSupportedDeploymentTyp
     }
   ]
 
-  if (CDS_GOOGLE_CLOUD_FUNCTION) {
+  if (NG_SVC_ENV_REDESIGN && CDS_GOOGLE_CLOUD_FUNCTION) {
     baseTypes.push({
       label: 'pipeline.serviceDeploymentTypes.googleCloudFunctions',
       icon: deploymentIconMap[ServiceDeploymentType.GoogleCloudFunctions],

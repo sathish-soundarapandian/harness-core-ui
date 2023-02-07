@@ -146,6 +146,7 @@ export interface HelmWithGITDataType {
   repoName?: string
   gitFetchType: 'Branch' | 'Commit'
   folderPath: string
+  subChartName?: string
   helmVersion: HelmVersionOptions
   valuesPaths?: any
   skipResourceVersioning: boolean
@@ -157,6 +158,7 @@ export interface HelmWithHTTPDataType {
   skipResourceVersioning: boolean
   chartName: string
   chartVersion: string
+  subChartName?: string
   valuesPaths?: any
   commandFlags: Array<CommandFlags>
 }
@@ -168,6 +170,7 @@ export interface HelmWithOCIDataType {
   basePath: string
   chartName: string
   chartVersion: string
+  subChartName?: string
   valuesPaths?: any
   commandFlags: Array<CommandFlags>
 }

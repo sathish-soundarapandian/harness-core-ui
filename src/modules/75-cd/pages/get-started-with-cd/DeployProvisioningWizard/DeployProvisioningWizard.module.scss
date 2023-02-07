@@ -40,9 +40,31 @@
 .text {
   padding-top: var(--spacing-xxlarge) !important;
 }
+
 .text1 {
   padding-top: var(--spacing-xxxlarge) !important;
   text-align: center;
+}
+
+.text2 {
+  padding-top: var(--spacing-large) !important;
+  text-align: center;
+}
+
+.text3 {
+  margin-left: 5px;
+  text-align: center;
+}
+
+.repositoryListItem {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.repositoryHeader {
+  display: flex;
+  align-items: center;
 }
 
 .formInput {
@@ -73,9 +95,20 @@
   padding: var(--spacing-large) 0 !important;
 }
 
+.repositoryListCard {
+  margin-right: var(--spacing-large);
+  padding: var(--spacing-large) !important;
+}
+
 .serviceDeploymentTypeIcon {
-  margin-top: var(--spacing-medium) !important;
-  margin-bottom: var(--spacing-xsmall) !important;
+  margin-top: var(--spacing-small) !important;
+  margin-bottom: var(--spacing-small) !important;
+}
+
+.repositoriesIcon {
+  margin-top: var(--spacing-small) !important;
+  margin-bottom: var(--spacing-small) !important;
+  margin-right: 10px !important;
 }
 
 .icons {

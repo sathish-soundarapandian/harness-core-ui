@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect, useCallback } from 'react'
 import {
   Layout,
   FormInput,
@@ -22,8 +22,10 @@ import {
 } from '@harness/uicore'
 import { useFormikContext } from 'formik'
 import { get, isEmpty, set } from 'lodash-es'
+
 import { useStrings } from 'framework/strings'
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+
 import css from './MultiTypeTagSelector.module.scss'
 
 interface SelectedTagsType {
@@ -50,6 +52,33 @@ const preventEnter = (e: React.KeyboardEvent) => {
     e.preventDefault()
     e.stopPropagation()
   }
+}
+
+export function NoTagResults({
+  isLoadingTags,
+  availableTags,
+  tagError
+}: {
+  tagError?: string
+  isLoadingTags?: boolean
+  availableTags?: SelectOption[]
+}): JSX.Element {
+  const { getString } = useStrings()
+
+  const getNoTagsComponent = useCallback(() => {
+    if (isLoadingTags) {
+      return getString('loading')
+    } else if (!isLoadingTags && availableTags?.length) {
+      return getString('common.noAvailableTags')
+    }
+    return tagError || getString('common.noAvailableTags')
+  }, [tagError, getString])
+
+  return (
+    <Text lineClamp={1} width={400}>
+      {getNoTagsComponent()}
+    </Text>
+  )
 }
 
 const MultiTypeTagSelector = ({
@@ -111,11 +140,11 @@ const MultiTypeTagSelector = ({
     () => tags.filter(tag => !get(usedTagKeys, get(tag, 'value', ''), false)),
     [tags, usedTagKeys]
   )
-
   const isFixedValueSetted = typeof get(formik.values, name) === 'object'
 
   useEffect(() => {
     const tagsObject = {}
+
     selectedTags.forEach(tag => set(tagsObject, tag.key, tag.value))
     !isEmpty(tagsObject) ? formik.setFieldValue(name, tagsObject) : null
   }, [selectedTags])
@@ -156,7 +185,9 @@ const MultiTypeTagSelector = ({
               }}
               className={css.tagsSelect}
               allowCreatingNewItems={true}
-              noResults={<Text padding={'small'}>{isLoadingTags ? getString('loading') : errorMessage}</Text>}
+              noResults={
+                <NoTagResults isLoadingTags={isLoadingTags} tagError={errorMessage} availableTags={availableTags} />
+              }
               onChange={
                 /* istanbul ignore next */ option => {
                   const newSelTags = [...selectedTags]

@@ -12,9 +12,8 @@ import { Button, ButtonVariation, Container, Layout, Page, useToaster, Text, Ico
 import { Color, FontVariation } from '@harness/design-system'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
+import { useMutateAsGet } from '@common/hooks'
 import {
-  ServiceLevelIndicatorDTO,
-  TimeGraphResponse,
   useGetAllMonitoredServicesWithTimeSeriesHealthSources,
   useGetNotificationRuleData,
   useGetSliGraph
@@ -26,9 +25,12 @@ import SLOName from '@cv/pages/slos/common/SLOName/SLOName'
 import SLI from '@cv/pages/slos/common/SLI/SLI'
 import SLOTargetAndBudgetPolicy from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/SLOTargetAndBudgetPolicy'
 import { CreatePreview } from '@cv/pages/slos/common/CreatePreview/CreatePreview'
-import { getMonitoredServiceOptions } from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
+import {
+  convertSLOFormDataToServiceLevelIndicatorDTO,
+  getMonitoredServiceOptions
+} from '@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2.utils'
 import SLOTargetNotifications from '@cv/pages/slos/common/SLOTargetAndBudgetPolicy/components/SLOTargetNotificationsContainer/SLOTargetNotifications'
-import type { SLOV2Form } from '../../CVCreateSLOV2.types'
+import { SLOV2Form, SLIMetricTypes } from '../../CVCreateSLOV2.types'
 import { getErrorMessageByTabId, isFormDataValid } from './CreateSimpleSloForm.utils'
 import useCreateCompositeSloWarningModal from '../CreateCompositeSloForm/useCreateCompositeSloWarningModal'
 import { CreateSimpleSLOSteps } from './CreateSimpleSloForm.types'
@@ -144,36 +146,12 @@ export default function CreateSimpleSLOForm({
     [formikProps.values, formikProps.errors]
   )
 
-  const [sliGraphData, setSliGraphData] = useState<TimeGraphResponse>()
   const {
-    mutate,
+    data: sliGraphData,
+    refetch: fetchSliGraphData,
     loading: sliGraphLoading,
     error: sliGraphError
-  } = useGetSliGraph({
-    monitoredServiceIdentifier: '',
-    queryParams: {
-      accountId,
-      orgIdentifier,
-      projectIdentifier
-    }
-  })
-
-  const fetchSliGraphData = async (
-    serviceLevelIndicator: ServiceLevelIndicatorDTO,
-    monitoredServiceIdentifier?: string
-  ): Promise<void> => {
-    try {
-      const sliGraphResponseData = await mutate(serviceLevelIndicator, {
-        pathParams: {
-          monitoredServiceIdentifier: monitoredServiceIdentifier as string
-        }
-      })
-
-      setSliGraphData(sliGraphResponseData.resource)
-    } catch (e) {
-      //
-    }
-  }
+  } = useMutateAsGet(useGetSliGraph, { lazy: true })
 
   const debounceFetchSliGraphData = useCallback(debounce(fetchSliGraphData, 2000), [])
 
@@ -189,6 +167,51 @@ export default function CreateSimpleSLOForm({
         : [],
     [formikProps.values.notificationRuleRefs, notificationData?.data?.content]
   )
+
+  const serviceLevelIndicator = convertSLOFormDataToServiceLevelIndicatorDTO(formikProps.values)
+  const {
+    healthSourceRef,
+    SLIMetricType,
+    validRequestMetric,
+    objectiveValue,
+    objectiveComparator,
+    SLIMissingDataType,
+    goodRequestMetric,
+    serviceLevelIndicatorType
+  } = formikProps.values
+
+  const isRatioBased = SLIMetricType === SLIMetricTypes.RATIO
+  const metricList = isRatioBased ? [validRequestMetric, goodRequestMetric] : [validRequestMetric]
+
+  const valuesToDetermineReload = [
+    healthSourceRef,
+    SLIMetricType,
+    ...metricList,
+    objectiveValue,
+    objectiveComparator,
+    SLIMissingDataType,
+    serviceLevelIndicatorType
+  ]
+
+  const showChart = valuesToDetermineReload.reduce((total, value) => {
+    return Boolean(value) && total
+  }, true)
+
+  useEffect(() => {
+    if (showChart) {
+      debounceFetchSliGraphData?.({
+        body: serviceLevelIndicator,
+        queryParams: {
+          accountId,
+          orgIdentifier,
+          projectIdentifier
+        },
+        pathParams: {
+          monitoredServiceIdentifier: formikProps.values.monitoredServiceRef as string
+        }
+      })
+    }
+  }, [showChart, valuesToDetermineReload.join('')])
 
   return (
     <>
@@ -242,11 +265,11 @@ export default function CreateSimpleSLOForm({
                   panel: (
                     <SLI
                       formikProps={formikProps}
-                      sliGraphData={sliGraphData}
+                      sliGraphData={sliGraphData?.resource}
                       loading={sliGraphLoading}
                       error={getErrorMessage(sliGraphError)}
                       retryOnError={fetchSliGraphData}
-                      debounceFetchSliGraphData={debounceFetchSliGraphData}
+                      showChart={showChart}
                     />
                   ),
                   errorMessage: getErrorMessageByTabId(
@@ -270,8 +293,7 @@ export default function CreateSimpleSLOForm({
                       loading={sliGraphLoading}
                       error={getErrorMessage(sliGraphError)}
                       retryOnError={fetchSliGraphData}
-                      sliGraphData={sliGraphData}
-                      debounceFetchSliGraphData={debounceFetchSliGraphData}
+                      sliGraphData={sliGraphData?.resource}
                     />
                   ),
                   errorMessage: getErrorMessageByTabId(formikProps, CreateSimpleSLOSteps.Set_SLO),

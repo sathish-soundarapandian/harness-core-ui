@@ -64,7 +64,6 @@ targets:
 issues: Issues
 scans: Scans
 exemptions: Exemptions
-tickets: Tickets
 noSecurityResults: No Security Results Processed
 failedToGetIssueCounts: Failed to get issue counts
 noSecurityIssues: No Security Issues

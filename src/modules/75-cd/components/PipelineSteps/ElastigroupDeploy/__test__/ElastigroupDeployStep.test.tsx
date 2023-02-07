@@ -12,17 +12,17 @@ import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { InstanceTypes } from '@common/constants/InstanceTypes'
-import type { ElastigroupDeployStepInfo } from 'services/cd-ng'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { ElastigroupDeploy } from '../ElastigroupDeploy'
+import type { ElastigroupDeployStepInfoData } from '../ElastigroupDeployInterface'
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 
 const onUpdate = jest.fn()
 const onChange = jest.fn()
 
-const initialValuesRuntime: ElastigroupDeployStepInfo = {
+const initialValuesRuntime: ElastigroupDeployStepInfoData = {
   type: 'ElastigroupDeploy',
   name: 'Elastigroup Deploy2',
   identifier: 'Elastigroup_Deploy',
@@ -43,7 +43,7 @@ const initialValuesRuntime: ElastigroupDeployStepInfo = {
   timeout: RUNTIME_INPUT_VALUE
 }
 
-const initialValuesEdit: ElastigroupDeployStepInfo = {
+const initialValuesEdit: ElastigroupDeployStepInfoData = {
   type: 'ElastigroupDeploy',
   name: 'Elastigroup Deploy2',
   identifier: 'Elastigroup_Deploy',

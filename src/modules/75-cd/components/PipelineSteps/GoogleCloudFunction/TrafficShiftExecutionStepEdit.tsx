@@ -18,7 +18,6 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { StepViewType, setFormikRef, StepFormikFowardRef } from '@pipeline/components/AbstractSteps/Step'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import type { CloudFunctionTrafficShiftExecutionStepInitialValues } from '@pipeline/utils/types'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { NameTimeoutField } from '../Common/GenericExecutionStep/NameTimeoutField'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
@@ -49,7 +48,6 @@ const TrafficShiftExecutionStepEdit = (
   } = props
 
   const { getString } = useStrings()
-  const { expressions } = useVariablesExpression()
 
   return (
     <>
@@ -80,16 +78,13 @@ const TrafficShiftExecutionStepEdit = (
               />
 
               <div className={cx(stepCss.formGroup, stepCss.lg)}>
-                <FormInput.MultiTextInput
+                <FormInput.Text
                   name="spec.trafficPercent"
                   label={getString('cd.steps.googleCloudFunctionCommon.trafficPercent')}
                   placeholder={getString('cd.steps.googleCloudFunctionCommon.trafficPercentPlaceholder')}
                   disabled={readonly}
-                  multiTextInputProps={{
-                    textProps: { type: 'number' },
-                    expressions,
-                    disabled: readonly,
-                    allowableTypes
+                  inputGroup={{
+                    type: 'number'
                   }}
                 />
                 {getMultiTypeFromValue(formik.values.spec?.trafficPercent) === MultiTypeInputType.RUNTIME && !readonly && (

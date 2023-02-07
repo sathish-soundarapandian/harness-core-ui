@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly listHeader: string
   readonly placeHolderDiv: string
   readonly resourceGroupColor: string
   readonly selectResource: string

@@ -143,6 +143,7 @@ export enum Days {
 export interface SLIProps
   extends Omit<SLOTargetChartWithAPIGetSliGraphProps, 'serviceLevelIndicator' | 'monitoredServiceIdentifier'> {
   formikProps: FormikProps<SLOV2Form>
+  showChart?: boolean
 }
 
 export interface GetMetricRequestValuesBySLIMetricTypeProps {

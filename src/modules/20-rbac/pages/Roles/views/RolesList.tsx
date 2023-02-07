@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import {
   ButtonVariation,
   Container,
@@ -34,6 +34,8 @@ import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { CommonPaginationQueryParams, useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import { queryParamDecodeAll } from '@common/hooks/useQueryParams'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
+import ListHeader from '@common/components/ListHeader/ListHeader'
+import { sortByCreated, sortByName } from '@common/utils/sortUtils'
 import css from '../Roles.module.scss'
 
 const DEFAULT_ROLES_PAGE_SIZE = 12
@@ -55,6 +57,7 @@ const RolesList: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
   const history = useHistory()
+  const [sort, setSort] = useState<string>(sortByName[0].value as string)
   useDocumentTitle(getString('roles'))
 
   const {
@@ -71,8 +74,10 @@ const RolesList: React.FC = () => {
       orgIdentifier,
       pageIndex,
       pageSize,
-      searchTerm
+      searchTerm,
+      sortOrders: [sort]
     },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
   })
 
@@ -169,6 +174,13 @@ const RolesList: React.FC = () => {
         }
         className={css.pageContainer}
       >
+        <ListHeader
+          value={sort}
+          sortOptions={[...sortByName, ...sortByCreated]}
+          onChange={option => setSort(option.value as string)}
+          totalCount={data?.data?.totalItems}
+          className={css.listHeader}
+        />
         <div className={css.masonry}>
           {data?.data?.content?.map((roleResponse: RoleResponse) =>
             isAccountBasicRole(roleResponse.role.identifier) ? null : (

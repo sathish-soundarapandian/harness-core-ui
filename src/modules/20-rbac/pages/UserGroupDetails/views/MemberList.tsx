@@ -31,6 +31,8 @@ import { AuthenticationMechanisms, getUserGroupQueryParams } from '@rbac/utils/u
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { sortByEmail, sortByName } from '@common/utils/sortUtils'
+import ListHeader from '@common/components/ListHeader/ListHeader'
 import css from '../UserGroupDetails.module.scss'
 
 interface MemberListProps {
@@ -198,6 +200,7 @@ const MemberList: React.FC<MemberListProps> = ({
     ProjectPathProps & UserGroupPathProps
   >()
   const { parentScope } = useQueryParams<{ parentScope: PrincipalScope }>()
+  const [sort, setSort] = useState<string>(sortByName[0].value as string)
 
   const { data, refetch } = useMutateAsGet(useGetUsersInUserGroup, {
     body: {},
@@ -205,7 +208,8 @@ const MemberList: React.FC<MemberListProps> = ({
     queryParams: {
       ...getUserGroupQueryParams(accountId, orgIdentifier, projectIdentifier, parentScope),
       pageIndex: page,
-      pageSize: 10
+      pageSize: 10,
+      sortOrders: sort
     }
   })
 
@@ -245,6 +249,12 @@ const MemberList: React.FC<MemberListProps> = ({
   if (users?.length)
     return (
       <Container className={css.memberList}>
+        <ListHeader
+          value={sort}
+          sortOptions={[...sortByName, ...sortByEmail]}
+          onChange={option => setSort(option.value as string)}
+          totalCount={data?.data?.totalItems}
+        />
         <TableV2<UserInfo>
           data={users}
           columns={columns}
