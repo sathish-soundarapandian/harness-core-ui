@@ -461,6 +461,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                   orgIdentifier,
                   projectIdentifier,
                   spec: {
+                    executeOnDelegate: false,
                     url: `${window.location.origin}${window.harnessNameSpace || ''}/code/git` // /${accountId}/${orgIdentifier}/${projectIdentifier}
                   }
                 }
