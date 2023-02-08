@@ -24,14 +24,20 @@ import {
   SelectOption,
   Collapse
 } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
-import type { ConnectorInfoDTO } from 'services/cd-ng'
+import { Color, FontVariation } from '@harness/design-system'
+import {
+  ConnectorInfoDTO,
+  getListOfBranchesByRefConnectorV2Promise,
+  ResponseGitBranchesResponseDTO
+} from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { Separator } from '@common/components'
 import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { getScopedValueFromDTO, ScopedValueObjectDTO } from '@common/components/EntityReference/EntityReference.types'
+import { Status } from '@common/utils/Constants'
 import { Connectors } from '@connectors/constants'
-import { getScmConnectorPrefix } from '@ci/utils/HostedBuildsUtils'
+import { getScmConnectorPrefix, getValidRepoName } from '../../../utils/HostedBuildsUtils'
 
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -68,6 +74,11 @@ export interface ImportPipelineYAMLInterface {
   yamlPath?: string
 }
 
+export interface SavePipelineToRemoteInterface {
+  branch?: string
+  yamlPath?: string
+}
+
 export interface ConfigurePipelineRef {
   values?: ImportPipelineYAMLInterface
   configuredOption?: StarterTemplate
@@ -98,8 +109,8 @@ interface StarterTemplate {
 }
 
 const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: ConfigurePipelineForwardRef) => {
-  const { orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const { showError, configuredGitConnector, repoName, enableForTesting } = props
+  const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
+  const { showError, configuredGitConnector, repoName, enableForTesting, disableNextBtn, enableNextBtn } = props
   const { getString } = useStrings()
   const [pipelineName, setPipelineName] = useState<string>()
   const pipelineNameToSpecify = `Build ${pipelineName}`
@@ -112,6 +123,8 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
   }
   const [selectedConfigOption, setSelectedConfigOption] = useState<StarterTemplate>(starterMinimumPipeline)
   const [showAdvancedOptions, setShowAdvancedOptions] = useState<boolean>(true)
+  const [isFetchingDefaultBranch, setIsFetchingDefaultBranch] = useState<boolean>(false)
+  const saveToGitFormikRef = useRef<FormikContextType<SavePipelineToRemoteInterface>>()
 
   const configuredGitConnectorIdentifier = useMemo(
     (): string =>
@@ -261,6 +274,45 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
     [selectedConfigOption, showError]
   )
 
+  useEffect(() => {
+    if (configuredGitConnector && [Connectors.GITHUB, Connectors.BITBUCKET].includes(configuredGitConnector.type)) {
+      fetchDefaultBranch()
+    }
+  }, [configuredGitConnector?.type])
+
+  const fetchDefaultBranch = useCallback(() => {
+    disableNextBtn()
+    try {
+      setIsFetchingDefaultBranch(true)
+      getListOfBranchesByRefConnectorV2Promise({
+        queryParams: {
+          connectorRef: getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO),
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier,
+          repoName: getValidRepoName(repoName),
+          size: 1
+        }
+      })
+        .then((result: ResponseGitBranchesResponseDTO) => {
+          const { data, status } = result
+          if (status === Status.SUCCESS) {
+            const { defaultBranch } = data || {}
+            if (defaultBranch?.name) {
+              saveToGitFormikRef.current?.setFieldValue('branch', defaultBranch.name)
+            }
+          }
+          setIsFetchingDefaultBranch(false)
+        })
+        .catch((_e: unknown) => {
+          setIsFetchingDefaultBranch(false)
+        })
+    } catch (e) {
+      setIsFetchingDefaultBranch(false)
+    }
+    enableNextBtn()
+  }, [configuredGitConnector?.type, saveToGitFormikRef.current])
+
   return (
     <Layout.Vertical width="40%" spacing="small">
       <Container>
@@ -296,55 +348,74 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
               onToggleOpen={isOpen => setShowAdvancedOptions(isOpen)}
             >
               <Formik onSubmit={() => {}} formName="configure-pipeline-advanced-options" initialValues={{}}>
-                <FormikForm>
-                  <Layout.Vertical className={css.advancedOptionFormFields}>
-                    <Layout.Vertical>
-                      <FormInput.Text
-                        name="pipelineName"
-                        label={
-                          <Text font={{ variation: FontVariation.FORM_LABEL }}>
-                            {getString('filters.executions.pipelineName')}
-                          </Text>
-                        }
-                        placeholder={getString('pipeline.filters.pipelineNamePlaceholder')}
-                      />
-                      <FormInput.CheckBox
-                        name="storeInGit"
-                        label={getString('ci.getStartedWithCI.storeInGit')}
-                        checked={true}
-                        defaultChecked={true}
-                      />
-                    </Layout.Vertical>
-                    <Container padding={{ top: 'medium', bottom: 'medium' }}>
-                      <FormInput.Text
-                        name="yamlPath"
-                        label={
-                          <Text font={{ variation: FontVariation.FORM_LABEL }}>
-                            {getString('gitsync.gitSyncForm.yamlPathLabel')}
-                          </Text>
-                        }
-                        placeholder={getString('gitsync.gitSyncForm.enterYamlPath')}
-                      />
-                    </Container>
-                    <Layout.Vertical>
-                      <FormInput.Text
-                        name="branch"
-                        label={
-                          <Text font={{ variation: FontVariation.FORM_LABEL }}>
-                            {getString('pipelineSteps.deploy.inputSet.branch')}
-                          </Text>
-                        }
-                        placeholder={getString('ci.getStartedWithCI.enterBranch')}
-                      />
-                      <FormInput.CheckBox
-                        name="storeInGit"
-                        label={getString('ci.getStartedWithCI.createBranchIfNotExists')}
-                        checked={true}
-                        defaultChecked={true}
-                      />
-                    </Layout.Vertical>
-                  </Layout.Vertical>
-                </FormikForm>
+                {_formikProps => {
+                  saveToGitFormikRef.current = _formikProps
+                  return (
+                    <FormikForm>
+                      <Layout.Vertical className={css.advancedOptionFormFields}>
+                        <Layout.Vertical>
+                          <FormInput.Text
+                            name="pipelineName"
+                            label={
+                              <Text font={{ variation: FontVariation.FORM_LABEL }}>
+                                {getString('filters.executions.pipelineName')}
+                              </Text>
+                            }
+                            placeholder={getString('pipeline.filters.pipelineNamePlaceholder')}
+                          />
+                          <FormInput.CheckBox
+                            name="storeInGit"
+                            label={getString('ci.getStartedWithCI.storeInGit')}
+                            checked={true}
+                            defaultChecked={true}
+                          />
+                        </Layout.Vertical>
+                        <Container padding={{ top: 'medium', bottom: 'medium' }}>
+                          <FormInput.Text
+                            name="yamlPath"
+                            label={
+                              <Text font={{ variation: FontVariation.FORM_LABEL }}>
+                                {getString('gitsync.gitSyncForm.yamlPathLabel')}
+                              </Text>
+                            }
+                            placeholder={getString('gitsync.gitSyncForm.enterYamlPath')}
+                          />
+                        </Container>
+                        <Layout.Vertical>
+                          <Layout.Horizontal
+                            flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+                            spacing="medium"
+                          >
+                            <FormInput.Text
+                              name="branch"
+                              label={
+                                <Text font={{ variation: FontVariation.FORM_LABEL }}>
+                                  {getString('pipelineSteps.deploy.inputSet.branch')}
+                                </Text>
+                              }
+                              placeholder={getString('ci.getStartedWithCI.enterBranch')}
+                              disabled={isFetchingDefaultBranch}
+                            />
+                            {isFetchingDefaultBranch ? (
+                              <Icon
+                                name="steps-spinner"
+                                color={Color.PRIMARY_7}
+                                size={20}
+                                padding={{ top: 'medium' }}
+                              />
+                            ) : null}
+                          </Layout.Horizontal>
+                          <FormInput.CheckBox
+                            name="storeInGit"
+                            label={getString('ci.getStartedWithCI.createBranchIfNotExists')}
+                            checked={true}
+                            defaultChecked={true}
+                          />
+                        </Layout.Vertical>
+                      </Layout.Vertical>
+                    </FormikForm>
+                  )
+                }}
               </Formik>
             </Collapse>
           ) : null}

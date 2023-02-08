@@ -228,10 +228,10 @@ export default function GetStartedWithCI(): React.ReactElement {
             secretForPreSelectedConnector
           }}
           lastConfiguredWizardStepId={
-            // preSelectedGitConnector
-            //   ? InfraProvisiongWizardStepId.SelectRepository
-            //   : InfraProvisiongWizardStepId.SelectGitProvider
-            InfraProvisiongWizardStepId.ConfigurePipeline
+            preSelectedGitConnector
+              ? InfraProvisiongWizardStepId.SelectRepository
+              : InfraProvisiongWizardStepId.SelectGitProvider
+            // InfraProvisiongWizardStepId.ConfigurePipeline
           }
         />
       ) : (

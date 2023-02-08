@@ -12,6 +12,7 @@ import type { PipelineConfig } from 'services/pipeline-ng'
 import type { UseStringsReturn } from 'framework/strings'
 import { StringUtils } from '@common/exports'
 import { Connectors } from '@connectors/constants'
+import { GIT_EXTENSION } from '@pipeline/utils/CIUtils'
 import {
   ACCOUNT_SCOPE_PREFIX,
   ORG_SCOPE_PREFIX,
@@ -203,4 +204,16 @@ export const getPayloadForPipelineCreation = ({
     connectorRef: `${getScmConnectorPrefix(configuredGitConnector)}${configuredGitConnector?.identifier}`,
     repoName: getFullRepoName(repository)
   })
+}
+
+export const getValidRepoName = (repositoryName: string): string => {
+  let repoName = repositoryName
+  if (!repositoryName) {
+    return ''
+  }
+  if (repositoryName.indexOf('/')) {
+    const tokens = repositoryName.split('/')
+    repoName = tokens.length > 0 ? tokens[tokens.length - 1] : ''
+  }
+  return encodeURI(repoName.endsWith(GIT_EXTENSION) ? repoName.replace(/\.[^/.]+$/, '') : repoName)
 }
