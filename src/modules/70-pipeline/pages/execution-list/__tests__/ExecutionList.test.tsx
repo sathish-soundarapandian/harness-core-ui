@@ -401,4 +401,24 @@ describe('Execution List', () => {
     request.queryParams.sort = 'name,ASC'
     expect(useGetListOfExecutions).toHaveBeenLastCalledWith(request)
   })
+
+  test('should show an error if a new filter is saved with empty filter fields', async () => {
+    const { baseElement } = renderExecutionPage()
+    const filtersButton = await waitFor(() => {
+      const element = baseElement.querySelector('[id="ngfilterbtn"]')
+      expect(element).toBeInTheDocument()
+      return element
+    })
+    userEvent.click(filtersButton!)
+
+    const newFilterButton = await screen.findByLabelText('filters.newFilter')
+    userEvent.click(newFilterButton)
+
+    const filterNameInput = await screen.findByPlaceholderText('filters.typeFilterName')
+    userEvent.clear(filterNameInput)
+    userEvent.type(filterNameInput, 'foo')
+    userEvent.click(screen.getByLabelText('save'))
+
+    expect(await screen.findByText('filters.invalidCriteria')).toBeInTheDocument()
+  })
 })

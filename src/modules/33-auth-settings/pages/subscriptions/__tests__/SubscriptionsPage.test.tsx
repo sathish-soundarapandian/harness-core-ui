@@ -16,7 +16,8 @@ import {
   useExtendTrialLicense,
   useSaveFeedback,
   useGetOrganizationList,
-  useGetProjectList
+  useGetProjectList,
+  useDownloadActiveServiceCSVReport
 } from 'services/cd-ng'
 import { CDLicenseType, Editions } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -26,6 +27,7 @@ import orgMockData from './mocks/orgMockData.json'
 import projMockData from './mocks/projMockData.json'
 jest.mock('services/cd-ng')
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
+const useDownloadActiveServiceCSVReportMock = useDownloadActiveServiceCSVReport as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
 useExtendTrialLicenseMock.mockImplementation(() => {
@@ -65,6 +67,13 @@ const featureFlags = {
 }
 
 describe('Subscriptions Page', () => {
+  useDownloadActiveServiceCSVReportMock.mockImplementation(() => {
+    return {
+      data: '',
+      refetch: jest.fn()
+    }
+  })
+
   test('it renders the subscriptions page', async () => {
     useGetModuleLicenseInfoMock.mockImplementation(() => {
       return {
@@ -478,6 +487,12 @@ describe('Subscriptions Page', () => {
   })
 
   describe('Subscription Details Card', () => {
+    useDownloadActiveServiceCSVReportMock.mockImplementation(() => {
+      return {
+        data: '',
+        refetch: jest.fn()
+      }
+    })
     test('should render CD details', () => {
       useGetModuleLicenseInfoMock.mockImplementation(() => {
         return {

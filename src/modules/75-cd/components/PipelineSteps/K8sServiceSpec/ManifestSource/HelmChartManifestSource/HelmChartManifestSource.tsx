@@ -35,6 +35,7 @@ import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFie
 import { FileSelectList } from '@filestore/components/FileStoreList/FileStoreList'
 import { SELECT_FILES_TYPE } from '@filestore/utils/constants'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
@@ -80,6 +81,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     pipelineIdentifier
   } = props
   const { getString } = useStrings()
+  const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const [showRepoName, setShowRepoName] = useState(true)
   const { getRBACErrorMessage } = useRBACError()
@@ -718,6 +720,23 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
           />
         )}
       </div>
+
+      {NG_CDS_HELM_SUB_CHARTS && isFieldRuntime(`${manifestPath}.spec.subChartName`, template) && (
+        <TextFieldInputSetView
+          template={template}
+          fieldPath={`${manifestPath}.spec.subChartName`}
+          disabled={isFieldDisabled(`${manifestPath}.spec.subChartName`)}
+          name={`${path}.${manifestPath}.spec.subChartName`}
+          multiTextInputProps={{
+            expressions,
+            allowableTypes
+          }}
+          className={css.inputFieldLayout}
+          label={getString('pipeline.manifestType.subChart')}
+          placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
+        />
+      )}
+
       {isFieldRuntime(`${manifestPath}.spec.valuesPaths`, template) && (
         <div className={css.verticalSpacingInput}>
           {manifestStoreType === ManifestStoreMap.Harness ? (
@@ -749,6 +768,41 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       )}
       <CustomRemoteManifestRuntimeFields {...props} />
       <ManifestCommonRuntimeFields {...props} />
+
+      <div className={css.inputFieldLayout}>
+        {isFieldRuntime(`${manifestPath}.spec.enableDeclarativeRollback`, template) && (
+          <div className={css.verticalSpacingInput}>
+            <FormMultiTypeCheckboxField
+              disabled={isFieldDisabled(`${manifestPath}.spec.enableDeclarativeRollback`)}
+              name={`${path}.${manifestPath}.spec.enableDeclarativeRollback`}
+              label={getString('pipeline.manifestType.enableDeclarativeRollback')}
+              setToFalseWhenEmpty={true}
+              multiTypeTextbox={{
+                expressions,
+                allowableTypes
+              }}
+            />
+          </div>
+        )}
+        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.enableDeclarativeRollback`)) ===
+          MultiTypeInputType.RUNTIME && (
+          <ConfigureOptions
+            className={css.configureOptions}
+            style={{ alignSelf: 'center' }}
+            value={get(formik?.values, `${path}.${manifestPath}.spec.enableDeclarativeRollback`)}
+            type="String"
+            variableName="enableDeclarativeRollback"
+            showRequiredField={false}
+            showDefaultField={true}
+            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+            showAdvanced={true}
+            onChange={value => {
+              formik.setFieldValue(`${path}.${manifestPath}.spec.enableDeclarativeRollback`, value)
+            }}
+          />
+        )}
+      </div>
+
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.skipResourceVersioning`, template) && (
           <div className={css.verticalSpacingInput}>

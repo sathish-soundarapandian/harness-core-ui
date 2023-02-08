@@ -44,3 +44,21 @@
 .imageNoPipeline {
   justify-content: space-between;
 }
+
+.executionListEmpty {
+  height: 48vh !important;
+  margin: 18px !important;
+  box-shadow: var(--elevation-2);
+  border-radius: var(--spacing-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: var(--grey-0) !important;
+  margin-left: var(--spacing-6) !important;
+  margin-right: var(--spacing-6) !important;
+
+  p {
+    margin-top: var(--spacing-7) !important;
+  }
+}

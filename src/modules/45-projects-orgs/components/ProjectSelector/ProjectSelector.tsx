@@ -39,6 +39,8 @@ import ProjectCard from '@projects-orgs/components/ProjectCard/ProjectCard'
 import { PageSpinner } from '@common/components'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import OrgDropdown from '@common/OrgDropdown/OrgDropdown'
+import { sortByCreated, sortByLastModified, sortByName } from '@common/utils/sortUtils'
+import ListHeader from '@common/components/ListHeader/ListHeader'
 import pointerImage from './pointer.svg'
 import css from './ProjectSelector.module.scss'
 
@@ -54,6 +56,7 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
   const { selectedProject } = useAppStore()
   const [page, setPage] = useState(0)
   const [searchTerm, setSearchTerm] = useState<string>()
+  const [sort, setSort] = useState<string>(sortByLastModified[0].value as string)
   const { preference: savedProjectView, setPreference: setSavedProjectView } = usePreferenceStore<Views | undefined>(
     PreferenceScope.MACHINE,
     'projectSelectorViewType'
@@ -67,8 +70,10 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
       orgIdentifier: selectedOrg?.value as string,
       searchTerm,
       pageIndex: page,
-      pageSize: 50
+      pageSize: 50,
+      sortOrders: [sort]
     },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
   })
 
@@ -173,6 +178,13 @@ const ProjectSelect: React.FC<ProjectSelectorProps> = ({ onSelect }) => {
           />
         </Layout.Horizontal>
         {loading && <PageSpinner />}
+        <ListHeader
+          value={sort}
+          sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
+          onChange={option => setSort(option.value as string)}
+          totalCount={data?.data?.totalItems}
+          className={css.listHeader}
+        />
         {data?.data?.content?.length ? (
           <>
             {projectView === Views.GRID ? (

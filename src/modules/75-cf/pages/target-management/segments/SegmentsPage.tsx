@@ -16,7 +16,7 @@ import { Color } from '@harness/design-system'
 import ListingPageTemplate from '@cf/components/ListingPageTemplate/ListingPageTemplate'
 import { CF_DEFAULT_PAGE_SIZE, getErrorMessage, SEGMENT_PRIMARY_COLOR, showToaster } from '@cf/utils/CFUtils'
 import { useConfirmAction } from '@common/hooks'
-import { useStrings } from 'framework/strings'
+import { useStrings, String } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import { useToaster } from '@common/exports'
 import {
@@ -182,13 +182,11 @@ export const SegmentsPage: React.FC = () => {
           const deleteSegmentConfirm = useConfirmAction({
             title: getString('cf.segments.delete.title'),
             message: (
-              <Text>
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: getString('cf.segments.delete.message', { segmentName: cell.row.original.name })
-                  }}
-                />
-              </Text>
+              <String
+                useRichText
+                stringID="cf.segments.delete.message"
+                vars={{ segmentName: cell.row.original.name }}
+              />
             ),
             intent: Intent.DANGER,
             action: async () => {

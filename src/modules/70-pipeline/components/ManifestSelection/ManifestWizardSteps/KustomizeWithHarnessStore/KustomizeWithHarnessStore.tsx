@@ -23,7 +23,7 @@ import cx from 'classnames'
 import { FontVariation } from '@harness/design-system'
 import { Form } from 'formik'
 import * as Yup from 'yup'
-import { get, isEmpty } from 'lodash-es'
+import { get, isBoolean, isEmpty } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import { FormMultiTypeCheckboxField } from '@common/components'
@@ -31,7 +31,11 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { FileUsage } from '@filestore/interfaces/FileStore'
-import { ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
+import {
+  getSkipResourceVersioningBasedOnDeclarativeRollback,
+  ManifestIdentifierValidation,
+  ManifestStoreMap
+} from '../../Manifesthelper'
 import type { KustomizeWithHarnessStorePropTypeDataType, ManifestTypes } from '../../ManifestInterface'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
@@ -71,13 +75,15 @@ function KustomizeWithHarnessStore({
         overlayConfiguration,
         patchesPaths,
         pluginPath: get(initialValues, 'spec.pluginPath'),
-        skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning')
+        skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning'),
+        enableDeclarativeRollback: get(initialValues, 'spec.enableDeclarativeRollback')
       }
     }
     return {
       identifier: '',
       files: [''],
-      skipResourceVersioning: false
+      skipResourceVersioning: false,
+      enableDeclarativeRollback: false
     }
   }
 
@@ -102,7 +108,11 @@ function KustomizeWithHarnessStore({
               : undefined,
             patchesPaths: formData.patchesPaths,
             pluginPath: formData?.pluginPath,
-            skipResourceVersioning: formData.skipResourceVersioning
+            skipResourceVersioning: getSkipResourceVersioningBasedOnDeclarativeRollback(
+              formData?.skipResourceVersioning,
+              formData?.enableDeclarativeRollback
+            ),
+            enableDeclarativeRollback: formData?.enableDeclarativeRollback
           }
         }
       }
@@ -141,6 +151,9 @@ function KustomizeWithHarnessStore({
         }}
       >
         {formik => {
+          const isSkipVersioningDisabled =
+            isBoolean(formik?.values?.enableDeclarativeRollback) && !!formik?.values?.enableDeclarativeRollback
+
           return (
             <Form>
               <Layout.Vertical
@@ -252,33 +265,59 @@ function KustomizeWithHarnessStore({
                       addDomId={true}
                       summary={getString('advancedTitle')}
                       details={
-                        <Layout.Horizontal
-                          width={'50%'}
-                          flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
-                          margin={{ bottom: 'huge' }}
-                        >
-                          <FormMultiTypeCheckboxField
-                            name="skipResourceVersioning"
-                            label={getString('skipResourceVersion')}
-                            multiTypeTextbox={{ expressions, allowableTypes }}
-                            className={css.checkbox}
-                          />
-                          {getMultiTypeFromValue(get(formik, 'values.skipResourceVersioning')) ===
-                            MultiTypeInputType.RUNTIME && (
-                            <ConfigureOptions
-                              value={get(formik, 'values.skipResourceVersioning', '') as string}
-                              type="String"
-                              variableName="skipResourceVersioning"
-                              showRequiredField={false}
-                              showDefaultField={false}
-                              showAdvanced={true}
-                              onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
-                              style={{ alignSelf: 'center', marginTop: 11 }}
-                              className={css.addmarginTop}
-                              isReadonly={isReadonly}
+                        <Layout.Vertical width={'50%'} margin={{ bottom: 'huge' }}>
+                          <Layout.Horizontal
+                            flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+                            margin={{ bottom: 'small' }}
+                          >
+                            <FormMultiTypeCheckboxField
+                              name="enableDeclarativeRollback"
+                              label={getString('pipeline.manifestType.enableDeclarativeRollback')}
+                              multiTypeTextbox={{ expressions, allowableTypes }}
+                              className={css.checkbox}
                             />
-                          )}
-                        </Layout.Horizontal>
+                            {getMultiTypeFromValue(formik.values?.enableDeclarativeRollback) ===
+                              MultiTypeInputType.RUNTIME && (
+                              <ConfigureOptions
+                                value={get(formik, 'values.enableDeclarativeRollback', '') as string}
+                                type="String"
+                                variableName="enableDeclarativeRollback"
+                                showRequiredField={false}
+                                showDefaultField={false}
+                                showAdvanced={true}
+                                onChange={value => formik.setFieldValue('enableDeclarativeRollback', value)}
+                                style={{ alignSelf: 'center', marginTop: 11 }}
+                                className={css.addmarginTop}
+                                isReadonly={isReadonly}
+                              />
+                            )}
+                          </Layout.Horizontal>
+                          <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
+                            <FormMultiTypeCheckboxField
+                              key={isSkipVersioningDisabled.toString()}
+                              name="skipResourceVersioning"
+                              label={getString('skipResourceVersion')}
+                              multiTypeTextbox={{ expressions, allowableTypes, disabled: isSkipVersioningDisabled }}
+                              className={css.checkbox}
+                              disabled={isSkipVersioningDisabled}
+                            />
+                            {getMultiTypeFromValue(get(formik, 'values.skipResourceVersioning')) ===
+                              MultiTypeInputType.RUNTIME && (
+                              <ConfigureOptions
+                                value={get(formik, 'values.skipResourceVersioning', '') as string}
+                                type="String"
+                                variableName="skipResourceVersioning"
+                                showRequiredField={false}
+                                showDefaultField={false}
+                                showAdvanced={true}
+                                onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
+                                style={{ alignSelf: 'center', marginTop: 11 }}
+                                className={css.addmarginTop}
+                                isReadonly={isReadonly}
+                              />
+                            )}
+                          </Layout.Horizontal>
+                        </Layout.Vertical>
                       }
                     />
                   </Accordion>

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { AllowedTypesWithRunTime, Layout, MultiTypeInputType, StepProps, Text } from '@harness/uicore'
+import { Layout, StepProps, Text } from '@harness/uicore'
 
 import { FontVariation } from '@harness/design-system'
 import produce from 'immer'
@@ -23,6 +23,7 @@ import { ModalViewFor } from '@connectors/components/CreateConnector/CreateConne
 import { Connectors } from '@connectors/constants'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
 import type { ConfigureServiceInterface } from '../ConfigureService'
+import { ALLOWABLE_TYPES } from '../../CDOnboardingUtils'
 
 export type ManifestLastTypeProps = StepProps<ConnectorConfigDTO> &
   ManifestLastStepProps & {
@@ -65,11 +66,6 @@ export const ProvideManifest = (): React.ReactElement => {
     selectedManifest: values?.manifestData?.type,
     store: values?.manifestStoreType === Connectors.GITLAB ? ManifestStoreMap.GitLab : values?.manifestStoreType
   }
-  const allowableTypes: AllowedTypesWithRunTime[] = [
-    MultiTypeInputType.FIXED,
-    MultiTypeInputType.RUNTIME,
-    MultiTypeInputType.EXPRESSION
-  ]
 
   const getManifestInitialValues = (): ManifestConfig => {
     const updatedInitialValueWithUserRepo = produce(values?.manifestConfig?.manifest as ManifestConfig, draft => {
@@ -90,7 +86,7 @@ export const ProvideManifest = (): React.ReactElement => {
       name: getString('pipeline.manifestType.manifestDetails'),
       context: ModalViewFor.CD_Onboarding,
       expressions,
-      allowableTypes,
+      allowableTypes: ALLOWABLE_TYPES,
       stepName: getString('pipeline.manifestType.manifestDetails'),
       initialValues: getManifestInitialValues(),
       handleSubmit: (data: ManifestConfigWrapper) => {

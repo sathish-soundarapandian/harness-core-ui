@@ -7,9 +7,7 @@
 
 import React from 'react'
 import classnames from 'classnames'
-import { FormInput, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
-import { noop } from 'lodash-es'
+import { FormInput } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import css from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
@@ -27,29 +25,26 @@ export const AuthTypeForm = ({ authType }: { authType: any }) => {
     return (
       <>
         <FormInput.Text
-          // tooltipProps={{ dataTooltipId: 'clusterUsername' }}
+          tooltipProps={{ dataTooltipId: 'clusterUsername' }}
           label={getString('username')}
           className={css.width50}
           name="username"
         />
         <FormInput.Text
-          // tooltipProps={{ dataTooltipId: 'clusterPassword' }}
+          tooltipProps={{ dataTooltipId: 'clusterPassword' }}
           label={getString('password')}
           inputGroup={{ type: 'password' }}
           className={css.width50}
           name="password"
         />
         <FormInput.Text isOptional label={getString('common.namespace')} className={css.width50} name="namespace" />
-        <Text style={{ cursor: 'pointer' }} onClick={noop} color={Color.PRIMARY_7}>
-          {getString('cd.getStartedWithCD.tryAnotherCreds')}
-        </Text>
       </>
     )
   }
   if (authType === CREDENTIALS_TYPE.SERVICE_ACCOUNT) {
     return (
       <FormInput.TextArea
-        // tooltipProps={{ dataTooltipId: 'clusterBearerToken' }}
+        tooltipProps={{ dataTooltipId: 'clusterBearerToken' }}
         maxLength={16000}
         label={getString('connectors.k8.serviceAccountToken')}
         className={classnames(css.keyTextArea, css.width50)}
@@ -62,13 +57,13 @@ export const AuthTypeForm = ({ authType }: { authType: any }) => {
     return (
       <>
         <FormInput.Text
-          // tooltipProps={{ dataTooltipId: 'clusterClientKey' }}
+          tooltipProps={{ dataTooltipId: 'clusterClientKey' }}
           label={getString('connectors.k8.clientKey')}
           className={css.width50}
           name="keyData"
         />
         <FormInput.TextArea
-          // tooltipProps={{ dataTooltipId: 'clusterClientKeyCertificate' }}
+          tooltipProps={{ dataTooltipId: 'clusterClientKeyCertificate' }}
           maxLength={2048}
           label={getString('connectors.k8.authLabels.clientKeyCertificate')}
           className={classnames(css.width50, css.keyTextArea)}

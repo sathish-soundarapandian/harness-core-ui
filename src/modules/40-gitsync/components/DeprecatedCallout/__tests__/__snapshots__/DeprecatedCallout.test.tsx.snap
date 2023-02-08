@@ -24,17 +24,21 @@ exports[`DeprecatedCallout testing Should render DeprecatedCallout 1`] = `
         />
       </svg>
     </span>
-    We noticed that you’re still using older and deprecated version of Git Experience in this project. Harness has now introduced a
+    We noticed that you’re still using older version of Git Experience in this project which has now reached
+    <b>
+       End-of-Support
+    </b>
+    . Harness has now introduced a
     <a
       href="https://developer.harness.io/docs/platform/Git-Experience/git-experience-overview"
       rel="noreferrer"
       target="_blank"
     >
       <b>
-         new and simplified version of Git Experience. 
+         new and simplified version of Git Experience, 
       </b>
     </a>
-    and we encourage you to migrate to new Git Experience before January 31, 2023 to continue getting uninterrupted support. Please contact
+    and we encourage you to migrate to new Git Experience at the earliest to continue getting uninterrupted support. Please contact
     <a
       href="https://support.harness.io/hc/en-us"
       rel="noreferrer"

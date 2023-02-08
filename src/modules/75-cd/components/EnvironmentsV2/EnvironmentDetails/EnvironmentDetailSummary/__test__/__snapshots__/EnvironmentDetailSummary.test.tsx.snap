@@ -236,7 +236,7 @@ exports[`Environment Detail Summary Initial render - basic snapshot 1`] = `
                             class="StyledProps--font StyledProps--main"
                           >
                             <p
-                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
                             >
                               12
                             </p>
@@ -306,7 +306,7 @@ exports[`Environment Detail Summary Initial render - basic snapshot 1`] = `
                             class="StyledProps--font StyledProps--main"
                           >
                             <p
-                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
                             >
                               16
                             </p>
@@ -376,7 +376,7 @@ exports[`Environment Detail Summary Initial render - basic snapshot 1`] = `
                             class="StyledProps--font StyledProps--main"
                           >
                             <p
-                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
                             >
                               11
                             </p>
@@ -557,7 +557,7 @@ exports[`Environment Detail Summary Initial render - basic snapshot 1`] = `
                             class="StyledProps--font StyledProps--main"
                           >
                             <p
-                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
                             >
                               1
                             </p>
@@ -633,7 +633,7 @@ exports[`Environment Detail Summary Initial render - basic snapshot 1`] = `
                             class="StyledProps--font StyledProps--main"
                           >
                             <p
-                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
                             >
                               5
                             </p>
@@ -807,7 +807,7 @@ exports[`Environment Detail Summary Initial render - basic snapshot 1`] = `
                             class="StyledProps--font StyledProps--main"
                           >
                             <p
-                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
                             >
                               2
                             </p>
@@ -877,7 +877,7 @@ exports[`Environment Detail Summary Initial render - basic snapshot 1`] = `
                             class="StyledProps--font StyledProps--main"
                           >
                             <p
-                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
                             >
                               1
                             </p>
@@ -1058,7 +1058,7 @@ exports[`Environment Detail Summary Initial render - basic snapshot 1`] = `
                             class="StyledProps--font StyledProps--main"
                           >
                             <p
-                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
                             >
                               3
                             </p>
@@ -1247,7 +1247,7 @@ exports[`Environment Detail Summary Initial render - basic snapshot 1`] = `
                             class="StyledProps--font StyledProps--main"
                           >
                             <p
-                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--font-weight-bold StyledProps--color StyledProps--color-primary7"
+                              class="StyledProps--font StyledProps--main overflow StyledProps--font-size-small StyledProps--color StyledProps--color-grey600"
                             >
                               3
                             </p>

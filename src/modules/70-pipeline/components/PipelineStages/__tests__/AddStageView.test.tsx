@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { act, fireEvent, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, waitFor, screen } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
+import { PipelineContextType } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { AddStageView, AddStageViewProps } from '../views/AddStageView'
 import { stageMockData } from './mocks'
 
@@ -154,5 +155,15 @@ describe('Add Stage View', () => {
     expect(emptyStageDescription).toBeDefined()
     const comingSoonText = findByText('common.comingSoon2')
     expect(comingSoonText).toBeDefined()
+  })
+
+  test('hide pipeline stage when context type is pipeline or stage template', async () => {
+    render(
+      <TestWrapper>
+        <AddStageView {...commonProps} contextType={PipelineContextType.PipelineTemplate} />
+      </TestWrapper>
+    )
+    expect(screen.getByText('Deploy')).toBeDefined()
+    expect(screen.queryByTestId('stage-Pipeline')).toBeFalsy()
   })
 })

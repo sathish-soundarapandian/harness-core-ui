@@ -21,6 +21,7 @@ import cx from 'classnames'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { FieldArray, FormikValues } from 'formik'
 
+import { isBoolean } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeCheckboxField } from '@common/components'
@@ -55,6 +56,8 @@ function HelmAdvancedStepSection({
   const { getString } = useStrings()
   const defaultValueToReset = [{ commandType: '', flag: '', id: uuid('', nameSpace()) }]
   const [commandFlagOptions, setCommandFlagOptions] = useState<Record<string, SelectOption[]>>({ V2: [], V3: [] })
+  const isSkipVersioningDisabled =
+    isBoolean(formik?.values?.enableDeclarativeRollback) && !!formik?.values?.enableDeclarativeRollback
 
   const { data: commandFlags, refetch: refetchCommandFlags } = useHelmCmdFlags({
     queryParams: {
@@ -90,12 +93,40 @@ function HelmAdvancedStepSection({
 
   return (
     <div className={helmcss.helmAdvancedSteps}>
+      <Layout.Horizontal
+        width={'90%'}
+        flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+        margin={{ bottom: 'small' }}
+      >
+        <FormMultiTypeCheckboxField
+          name="enableDeclarativeRollback"
+          label={getString('pipeline.manifestType.enableDeclarativeRollback')}
+          className={cx(helmcss.checkbox, helmcss.halfWidth)}
+          multiTypeTextbox={{ expressions, allowableTypes }}
+        />
+        {getMultiTypeFromValue(formik.values?.enableDeclarativeRollback) === MultiTypeInputType.RUNTIME && (
+          <ConfigureOptions
+            value={(formik.values?.enableDeclarativeRollback || '') as string}
+            type="String"
+            variableName="enableDeclarativeRollback"
+            showRequiredField={false}
+            showDefaultField={false}
+            showAdvanced={true}
+            onChange={value => formik.setFieldValue('enableDeclarativeRollback', value)}
+            style={{ alignSelf: 'center', marginTop: 11 }}
+            className={cx(css.addmarginTop)}
+            isReadonly={isReadonly}
+          />
+        )}
+      </Layout.Horizontal>
       <Layout.Horizontal width={'90%'} flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
         <FormMultiTypeCheckboxField
+          key={isSkipVersioningDisabled.toString()}
           name="skipResourceVersioning"
           label={getString('skipResourceVersion')}
           className={cx(helmcss.checkbox, helmcss.halfWidth)}
-          multiTypeTextbox={{ expressions, allowableTypes }}
+          multiTypeTextbox={{ expressions, allowableTypes, disabled: isSkipVersioningDisabled }}
+          disabled={isSkipVersioningDisabled}
         />
         {getMultiTypeFromValue(formik.values?.skipResourceVersioning) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions

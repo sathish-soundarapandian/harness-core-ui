@@ -220,6 +220,7 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
                 showMoveResourceModal()
                 setMenuOpen(false)
               }}
+              disabled={!(column as any).canUpdate}
             />
           ) : null}
           <Menu.Item

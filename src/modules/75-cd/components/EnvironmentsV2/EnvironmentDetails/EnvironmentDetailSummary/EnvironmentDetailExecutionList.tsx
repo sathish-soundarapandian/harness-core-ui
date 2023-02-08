@@ -27,7 +27,7 @@ import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext
 import { useExecutionListQueryParams } from '@pipeline/pages/execution-list/utils/executionListUtil'
 import { ExecutionCompareYamlHeader } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareYamlHeader'
 import { Width } from '@common/constants/Utils'
-import { ExecutionListEmptyState } from './EnvironmentDetailsUtils'
+import { ExecutionListEmptyWithoutCta } from '@pipeline/pages/execution-list/ExecutionListEmpty/ExecutionListEmpty'
 import css from './EnvironmentDetailSummary.module.scss'
 
 interface EnvironmentDetailExecutionListProps {
@@ -137,7 +137,7 @@ function EnvironmentDetailExecutionListInternal(props: EnvironmentDetailExecutio
       ) : executionList && hasExecutions ? (
         <MemoisedExecutionListTable executionList={executionList} onViewCompiledYaml={setViewCompiledYaml} />
       ) : (
-        <ExecutionListEmptyState resetFilter={resetFilter} />
+        <ExecutionListEmptyWithoutCta resetFilter={resetFilter} />
       )}
 
       <ExecutionCompiledYaml onClose={() => setViewCompiledYaml(undefined)} executionSummary={viewCompiledYaml} />

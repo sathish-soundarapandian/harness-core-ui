@@ -11,11 +11,15 @@ import { Divider } from '@blueprintjs/core'
 import { Card, Container, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import moment from 'moment'
-import type { ChangeEventDTO, InternalChangeEventMetaData } from 'services/cv'
+import type { ChangeEventDTO, CustomChangeEventMetadata, InternalChangeEventMetaData } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import ChangeEventServiceHealth from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/components/ChangeCard/components/ChangeEventServiceHealth/ChangeEventServiceHealth'
 import SLOAndErrorBudget from '@cv/pages/monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/components/ChangeCard/components/SLOAndErrorBudget/SLOAndErrorBudget'
 import { UserLabel } from '@common/exports'
+import {
+  ChangeSourceTypes,
+  CustomChangeSourceList
+} from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import type { ChangeDetailsDataInterface, ChangeTitleData } from '../../../ChangeEventCard.types'
 import { createChangeDetailsData, createChangeTitleDataForInternalCS } from '../../../ChangeEventCard.utils'
 import { TIME_FORMAT_DETAILS_CARD, TWO_HOURS_IN_MILLISECONDS } from '../../../ChangeEventCard.constant'
@@ -30,8 +34,10 @@ export default function InternalCSEventCard({ data }: { data: ChangeEventDTO }):
   const changeTitleData: ChangeTitleData = useMemo(() => createChangeTitleDataForInternalCS(data), [])
 
   const changeDetailsData: ChangeDetailsDataInterface = useMemo(() => createChangeDetailsData(data), [])
-  const metadata: InternalChangeEventMetaData = defaultTo(data.metadata, {})
-  const { eventStartTime, updatedBy, internalChangeEvent } = metadata
+  const metadata: InternalChangeEventMetaData | CustomChangeEventMetadata = defaultTo(data.metadata, {})
+  const { eventStartTime, updatedBy, internalChangeEvent, customChangeEvent, user, startTime } = metadata
+
+  const isCustomChangeSource = CustomChangeSourceList.includes(data.type as ChangeSourceTypes)
 
   const renderUserLabel = (): JSX.Element => (
     <Layout.Vertical width="max-content">
@@ -41,49 +47,61 @@ export default function InternalCSEventCard({ data }: { data: ChangeEventDTO }):
         margin={{ bottom: 'medium' }}
       >
         <UserLabel
-          name={updatedBy || ''}
-          email={updatedBy}
+          name={updatedBy || user || ''}
+          email={updatedBy || user}
           iconProps={{ size: 16 }}
           textProps={{ font: { size: 'small', weight: 'semi-bold' }, color: Color.BLACK_100 }}
         />
         <Divider className={css.verticalDivider} />
         <Text icon={'time'} iconProps={{ size: 15 }} font={{ size: 'small' }} margin={{ right: 'medium' }}>
           <Text tag="span" font={{ size: 'small', weight: 'semi-bold' }} color={Color.BLACK_100}>
-            {moment(eventStartTime).format(TIME_FORMAT_DETAILS_CARD)}
+            {moment(eventStartTime || startTime).format(TIME_FORMAT_DETAILS_CARD)}
           </Text>
         </Text>
       </Layout.Horizontal>
     </Layout.Vertical>
   )
 
+  const changeDetailsProps = isCustomChangeSource
+    ? {
+        ...changeDetailsData,
+        details: { ...customChangeEvent },
+        executedBy: {
+          shouldVisible: true,
+          component: renderUserLabel()
+        }
+      }
+    : {
+        ...changeDetailsData,
+        details: { action: defaultTo(internalChangeEvent?.eventDescriptions, []) },
+        executedBy: {
+          shouldVisible: true,
+          component: renderUserLabel()
+        }
+      }
+
   return (
     <Card className={css.main}>
       <ChangeTitleWithRedirectButton changeTitleData={changeTitleData} />
       <Divider className={css.divider} />
-      <ChangeDetails
-        ChangeDetailsData={{
-          ...changeDetailsData,
-          details: { action: defaultTo(internalChangeEvent?.eventDescriptions, []) },
-          executedBy: {
-            shouldVisible: true,
-            component: renderUserLabel()
-          }
-        }}
-      />
+      <ChangeDetails ChangeDetailsData={changeDetailsProps} />
       <Divider className={css.divider} />
       {internalChangeEvent?.changeEventDetailsLink?.url && (
-        <Container>
-          <Text
-            font={{ size: 'normal', weight: 'bold' }}
-            color={Color.GREY_800}
-            style={{ marginBottom: 'var(--spacing-medium)' }}
-          >
-            {getString('auditTrail.yamlDifference')}
-          </Text>
-          <YAMLDiffView url={internalChangeEvent?.changeEventDetailsLink?.url} />
-        </Container>
+        <>
+          <Container>
+            <Text
+              font={{ size: 'normal', weight: 'bold' }}
+              color={Color.GREY_800}
+              style={{ marginBottom: 'var(--spacing-medium)' }}
+            >
+              {getString('auditTrail.yamlDifference')}
+            </Text>
+            <YAMLDiffView url={internalChangeEvent?.changeEventDetailsLink?.url} />
+          </Container>
+          <Divider className={css.divider} />
+        </>
       )}
-      <Divider className={css.divider} />
+
       {data.eventTime && data.monitoredServiceIdentifier && (
         <>
           <ChangeEventServiceHealth

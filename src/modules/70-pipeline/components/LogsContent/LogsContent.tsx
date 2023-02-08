@@ -39,6 +39,7 @@ import { useLogsContent } from './useLogsContent'
 import { GroupedLogsWithRef as GroupedLogs } from './components/GroupedLogs'
 import { SingleSectionLogsWithRef as SingleSectionLogs } from './components/SingleSectionLogs'
 import type { UseActionCreatorReturn } from './LogsState/actions'
+import { useLogSettings } from './useLogsSettings'
 import css from './LogsContent.module.scss'
 
 function resolveCurrentStep(selectedStepId: string, queryParams: ExecutionPageQueryParams): string {
@@ -140,12 +141,14 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
   const [isFullScreen, setIsFullScreen] = React.useState(false)
   const hasLogs = state.units.length > 0
   const isSingleSectionLogs = state.units.length === 1
+  const { openDialog } = useLogSettings()
 
   const virtuosoRef = React.useRef<null | GroupedVirtuosoHandle | VirtuosoHandle>(null)
   const { setPreference: setSavedExecutionView } = usePreferenceStore<string | undefined>(
     PreferenceScope.USER,
     'executionViewType'
   )
+
   /* istanbul ignore next */
   function getSectionName(index: number): string {
     return getString('pipeline.logs.sectionName', { index })
@@ -236,6 +239,14 @@ export function LogsContent(props: LogsContentProps): React.ReactElement {
             onNext={/* istanbul ignore next */ () => actions.goToNextSearchResult()}
             onPrev={/* istanbul ignore next */ () => actions.goToPrevSearchResult()}
             onEnter={/* istanbul ignore next */ () => actions.goToNextSearchResult()}
+          />
+          <Button
+            icon={'nav-settings'}
+            iconProps={{ size: 22 }}
+            className={css.fullScreen}
+            variation={ButtonVariation.ICON}
+            withoutCurrentColor
+            onClick={openDialog}
           />
           <Button
             icon={isFullScreen ? 'full-screen-exit' : 'full-screen'}

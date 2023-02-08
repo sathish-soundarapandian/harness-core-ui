@@ -225,7 +225,7 @@ exports[`Email Step Test should render deployment form 1`] = `
       class="formGroup md"
     >
       <div
-        class="bp3-form-group"
+        class="bp3-form-group subject"
       >
         <label
           class="bp3-label"
@@ -256,6 +256,7 @@ exports[`Email Step Test should render deployment form 1`] = `
                 class="bp3-input input"
                 name="spec.subject"
                 placeholder="pipeline.utilitiesStep.subject"
+                style="height: 0px;"
               />
               <span
                 class="bp3-popover-wrapper MultiTypeInput--wrapper"
@@ -295,7 +296,7 @@ exports[`Email Step Test should render deployment form 1`] = `
       class="formGroup md"
     >
       <div
-        class="bp3-form-group"
+        class="bp3-form-group body"
       >
         <label
           class="bp3-label"
@@ -326,6 +327,7 @@ exports[`Email Step Test should render deployment form 1`] = `
                 class="bp3-input input"
                 name="spec.body"
                 placeholder="pipeline.utilitiesStep.requestBody"
+                style="height: 0px;"
               />
               <span
                 class="bp3-popover-wrapper MultiTypeInput--wrapper"
@@ -757,6 +759,7 @@ exports[`Email Step Test should render edit view as edit step 1`] = `
                   class="bp3-input input"
                   name="spec.subject"
                   placeholder="pipeline.utilitiesStep.subject"
+                  style="height: 0px;"
                 >
                   Test
                 </textarea>
@@ -829,6 +832,7 @@ exports[`Email Step Test should render edit view as edit step 1`] = `
                   class="bp3-input input"
                   name="spec.body"
                   placeholder="pipeline.utilitiesStep.requestBody"
+                  style="height: 0px;"
                 >
                   Test email
                 </textarea>
@@ -1242,6 +1246,7 @@ exports[`Email Step Test should render edit view as new step with empty initial 
                   class="bp3-input input"
                   name="spec.subject"
                   placeholder="pipeline.utilitiesStep.subject"
+                  style="height: 0px;"
                 />
                 <span
                   class="bp3-popover-wrapper MultiTypeInput--wrapper"
@@ -1312,6 +1317,7 @@ exports[`Email Step Test should render edit view as new step with empty initial 
                   class="bp3-input input"
                   name="spec.body"
                   placeholder="pipeline.utilitiesStep.requestBody"
+                  style="height: 0px;"
                 />
                 <span
                   class="bp3-popover-wrapper MultiTypeInput--wrapper"

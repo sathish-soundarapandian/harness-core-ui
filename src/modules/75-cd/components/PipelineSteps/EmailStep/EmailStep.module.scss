@@ -8,18 +8,18 @@
 .subject {
   :global {
     textarea {
-      min-height: 50px;
+      min-height: 60px;
       max-height: 120px;
-      height: 60px !important;
+      resize: vertical;
     }
   }
 }
 .body {
   :global {
     textarea {
-      min-height: 50px;
-      max-height: 120px;
-      height: 75px !important;
+      min-height: 75px;
+      max-height: 150px;
+      resize: vertical;
     }
   }
 }

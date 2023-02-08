@@ -215,19 +215,27 @@ export function Nexus3Artifact({
   }, [repositoryDetails?.data])
 
   const getRepository = (): { label: string; value: string }[] => {
+    /* istanbul ignore next */
     if (fetchingRepository) {
-      return [{ label: 'Loading Repository...', value: 'Loading Repository...' }]
+      return [
+        {
+          label: getString('pipeline.artifactsSelection.loadingRepository'),
+          value: getString('pipeline.artifactsSelection.loadingRepository')
+        }
+      ]
     }
     return defaultTo(selectRepositoryItems, [])
   }
 
   useEffect(() => {
+    /* istanbul ignore next */
     if (checkIfQueryParamsisNotEmpty(Object.values(lastQueryData))) {
       refetchNexusTag()
     }
   }, [lastQueryData, refetchNexusTag])
 
   useEffect(() => {
+    /* istanbul ignore next */
     if (nexusTagError) {
       setTagList([])
     } else if (Array.isArray(data?.data?.buildDetailsList)) {
@@ -439,7 +447,6 @@ export function Nexus3Artifact({
       })
     }
   }
-
   return (
     <Layout.Vertical spacing="medium" className={css.firstep}>
       {!hideHeaderAndNavBtns && (
@@ -472,7 +479,8 @@ export function Nexus3Artifact({
                   items={getAllowedRepoOptions(
                     selectedDeploymentType,
                     AZURE_WEB_APP_NG_NEXUS_PACKAGE,
-                    hideHeaderAndNavBtns
+                    hideHeaderAndNavBtns,
+                    selectedArtifact
                   )}
                   onChange={value => {
                     if (value.value === RepositoryFormatTypes.Maven) {

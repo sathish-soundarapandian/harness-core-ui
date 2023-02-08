@@ -7,7 +7,7 @@
 
 process.env.TZ = 'GMT'
 const config = require('./jest.config')
-const { omit } = require('lodash')
+const { omit } = require('lodash-es')
 
 module.exports = {
   ...omit(config, ['coverageThreshold', 'coverageReporters']),

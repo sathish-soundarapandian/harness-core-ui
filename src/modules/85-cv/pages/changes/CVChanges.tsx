@@ -36,7 +36,6 @@ import {
   ChangeSourceCategoryName,
   ChangeSourceTypes
 } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
-import { ChangeSourceConnectorOptions } from '../ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import type { CardSelectOption } from '../ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.types'
 import { getChangeSourceOptions } from '../ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.utils'
 import { HorizontalLayout } from '../health-source/common/StyledComponents'
@@ -51,6 +50,7 @@ import {
   renderTime,
   renderType
 } from '../monitored-service/components/ServiceHealth/components/ChangesAndServiceDependency/components/ChangesTable/ChangesTable.utils'
+import { ChangeSourceConnectorOptions } from './CVChanges.constant'
 import css from './CVChanges.module.scss'
 
 export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element => {

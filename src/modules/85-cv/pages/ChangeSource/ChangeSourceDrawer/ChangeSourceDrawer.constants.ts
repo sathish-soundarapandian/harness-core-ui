@@ -13,8 +13,19 @@ export enum ChangeSourceTypes {
   HarnessCDNextGen = 'HarnessCDNextGen',
   PagerDuty = 'PagerDuty',
   K8sCluster = 'K8sCluster',
-  HarnessFF = 'HarnessFF'
+  HarnessFF = 'HarnessFF',
+  CustomDeploy = 'CustomDeploy',
+  CustomIncident = 'CustomIncident',
+  CustomInfrastructure = 'CustomInfrastructure',
+  CustomFF = 'CustomFF'
 }
+
+export const CustomChangeSourceList = [
+  ChangeSourceTypes.CustomFF,
+  ChangeSourceTypes.CustomDeploy,
+  ChangeSourceTypes.CustomIncident,
+  ChangeSourceTypes.CustomInfrastructure
+]
 
 export const ChangeSourceCategoryName = {
   DEPLOYMENT: 'Deployment',
@@ -45,10 +56,32 @@ export const ChangeSourceConnectorOptions: CardSelectOption[] = [
   { label: 'kubernetesText', value: Connectors.KUBERNETES_CLUSTER, category: ChangeSourceCategoryName.INFRASTRUCTURE },
   { label: 'common.pagerDuty', value: Connectors.PAGER_DUTY, category: ChangeSourceCategoryName.ALERT },
   {
-    label: 'cv.changeSource.FeatureFlag.label',
-    value: ChangeSourceTypes.HarnessFF,
+    label: 'common.repo_provider.customLabel',
+    value: ChangeSourceTypes.CustomDeploy,
+    category: ChangeSourceCategoryName.DEPLOYMENT
+  },
+  {
+    label: 'common.repo_provider.customLabel',
+    value: ChangeSourceTypes.CustomInfrastructure,
+    category: ChangeSourceCategoryName.INFRASTRUCTURE
+  },
+  {
+    label: 'common.repo_provider.customLabel',
+    value: ChangeSourceTypes.CustomIncident,
+    category: ChangeSourceCategoryName.ALERT
+  },
+  {
+    label: 'common.repo_provider.customLabel',
+    value: ChangeSourceTypes.CustomFF,
     category: ChangeSourceCategoryName.FEATURE_FLAG
   }
+
+  // TODO: Show HarnessFF ones BE is ready
+  // {
+  //   label: 'cv.changeSource.FeatureFlag.label',
+  //   value: ChangeSourceTypes.HarnessFF,
+  //   category: ChangeSourceCategoryName.FEATURE_FLAG
+  // }
 ]
 
 export const ChangeSourceFieldNames = {

@@ -8,7 +8,6 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly masonry: string
-  readonly pageContainer: string
   readonly pagination: string
   readonly warning: string
 }

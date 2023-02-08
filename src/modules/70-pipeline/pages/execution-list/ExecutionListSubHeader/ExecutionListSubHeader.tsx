@@ -63,7 +63,7 @@ interface ExecutionListSubHeaderProps {
 }
 
 function _ExecutionListSubHeader(
-  props: Pick<ExecutionListProps, 'isPipelineInvalid' | 'onRunPipeline' | 'showBranchFilter'> &
+  props: Pick<ExecutionListProps, 'isPipelineInvalid' | 'onRunPipeline' | 'showBranchFilter' | 'isExecutionPage'> &
     ExecutionListSubHeaderProps,
   ref: React.ForwardedRef<ExpandingSearchInputHandle>
 ): React.ReactElement {
@@ -122,26 +122,28 @@ function _ExecutionListSubHeader(
         <ExecutionCompareYamlHeader />
       ) : (
         <div className={css.subHeaderItems}>
-          <RbacButton
-            variation={ButtonVariation.PRIMARY}
-            className={css.runButton}
-            onClick={props.onRunPipeline}
-            disabled={props.isPipelineInvalid}
-            tooltip={props.isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : ''}
-            permission={{
-              resource: {
-                resourceType: ResourceType.PIPELINE,
-                resourceIdentifier: pipelineIdentifier || queryParams.pipelineIdentifier
-              },
-              permission: PermissionIdentifier.EXECUTE_PIPELINE,
-              options: {
-                skipCondition: ({ resourceIdentifier }) => !resourceIdentifier
-              }
-            }}
-            featuresProps={getFeaturePropsForRunPipelineButton({ modules: rbacButtonModules, getString })}
-          >
-            {getString('runPipelineText')}
-          </RbacButton>
+          {props.isExecutionPage && (
+            <RbacButton
+              variation={ButtonVariation.PRIMARY}
+              className={css.runButton}
+              onClick={props.onRunPipeline}
+              disabled={props.isPipelineInvalid}
+              tooltip={props.isPipelineInvalid ? getString('pipeline.cannotRunInvalidPipeline') : ''}
+              permission={{
+                resource: {
+                  resourceType: ResourceType.PIPELINE,
+                  resourceIdentifier: pipelineIdentifier || queryParams.pipelineIdentifier
+                },
+                permission: PermissionIdentifier.EXECUTE_PIPELINE,
+                options: {
+                  skipCondition: ({ resourceIdentifier }) => !resourceIdentifier
+                }
+              }}
+              featuresProps={getFeaturePropsForRunPipelineButton({ modules: rbacButtonModules, getString })}
+            >
+              {getString('runPipelineText')}
+            </RbacButton>
+          )}
           <Checkbox
             font={{ size: 'small', weight: 'semi-bold' }}
             color={Color.GREY_800}

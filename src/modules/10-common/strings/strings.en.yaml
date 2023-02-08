@@ -166,6 +166,8 @@ configureOptions:
     minOneAllowedValue: 'Minimum one allowed value'
   notValidExpression: 'Not a valid input Expression'
   advancedHelp: 'With the advanced option, <br> you can type in JEXL expressions to return a list of values. <br> <a target="_blank">More information</a> <br> E.g. ${env.type} == “prod” ? aws1, aws2 : aws3, aws4'
+addNewRepo: + New Repository
+addNewCluster: + New Cluster
 namespace: Namespace
 cluster: Cluster
 clusterName: Cluster Name
@@ -283,7 +285,7 @@ purpose:
     subtitle: Deploy in peace - verify activities that take place in your system. Identify risk early.
     description: 'Measure overall service health with always-on change impact analysis.'
     continuous: '{{ $.common.serviceReliabilityManagement }}'
-    moduleSelectionSubHeading: Take your software build verification  process to the next level usng our Change Intelligence
+    moduleSelectionSubHeading: Take your software build verification  process to the next level using our Change Intelligence
 
   ci:
     continuousLabel: Continuous

@@ -124,7 +124,7 @@ export function CDOnboardingProvider({
   }, [])
 
   const saveApplicationData = React.useCallback((data: Servicev1Application) => {
-    dispatch(CDOnboardingContextActions.updateApplication({ cluster: data }))
+    dispatch(CDOnboardingContextActions.updateApplication({ application: data }))
   }, [])
 
   const saveAgentData = React.useCallback((data: V1Agent) => {

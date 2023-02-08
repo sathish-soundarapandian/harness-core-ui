@@ -1115,6 +1115,9 @@ exports[`StepWidget tests inputSetMode 1`] = `
           <div
             class="inputFieldLayout"
           />
+          <div
+            class="inputFieldLayout"
+          />
         </div>
       </div>
       <div>
@@ -1358,6 +1361,9 @@ exports[`StepWidget tests inputSetMode 1`] = `
               </div>
             </div>
           </div>
+          <div
+            class="inputFieldLayout"
+          />
           <div
             class="inputFieldLayout"
           />

@@ -58,7 +58,7 @@ export function ConfigureOptions(props: ConfigureOptionsProps): React.ReactEleme
   const closeModal = React.useCallback(
     (str?: string, defaultStr?: string | number, required?: boolean) => {
       hideModal()
-      onChange?.(str ?? input, defaultStr ?? defaultValue, required)
+      onChange?.(str ?? input, defaultStr || str ? defaultStr : defaultValue, required)
     },
     [hideModal, onChange, input, defaultValue]
   )

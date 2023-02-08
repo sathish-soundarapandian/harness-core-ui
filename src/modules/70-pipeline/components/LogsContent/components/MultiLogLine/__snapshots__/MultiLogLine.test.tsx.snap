@@ -4,22 +4,12 @@ exports[`<MultiLogLine /> tests search with highlight works 1`] = `
 <div>
   <div
     class="logLine"
-    style="--char-size: 3ch;"
+    style="grid-template-columns: 3ch 1fr;"
   >
     <span
       class="lineNumber"
     >
       101
-    </span>
-    <span
-      class="level"
-    >
-      INFO
-    </span>
-    <span
-      class="time"
-    >
-      12:30 AM
     </span>
     <span
       class="out"
@@ -46,22 +36,12 @@ exports[`<MultiLogLine /> tests search works 1`] = `
 <div>
   <div
     class="logLine"
-    style="--char-size: 3ch;"
+    style="grid-template-columns: 3ch 1fr;"
   >
     <span
       class="lineNumber"
     >
       101
-    </span>
-    <span
-      class="level"
-    >
-      INFO
-    </span>
-    <span
-      class="time"
-    >
-      12:30 AM
     </span>
     <span
       class="out"
@@ -87,22 +67,12 @@ exports[`<MultiLogLine /> tests snapshot test 1`] = `
 <div>
   <div
     class="logLine"
-    style="--char-size: 3ch;"
+    style="grid-template-columns: 3ch 1fr;"
   >
     <span
       class="lineNumber"
     >
       101
-    </span>
-    <span
-      class="level"
-    >
-      INFO
-    </span>
-    <span
-      class="time"
-    >
-      12:30 AM
     </span>
     <span
       class="out"
@@ -123,22 +93,12 @@ exports[`<MultiLogLine /> tests works with link containing search text 2`] = `
 <div>
   <div
     class="logLine"
-    style="--char-size: 2ch;"
+    style="grid-template-columns: 3ch 1fr;"
   >
     <span
       class="lineNumber"
     >
       2
-    </span>
-    <span
-      class="level"
-    >
-      info
-    </span>
-    <span
-      class="time"
-    >
-      20/08/2021 11:12:18
     </span>
     <span
       class="out"
@@ -180,22 +140,12 @@ exports[`<MultiLogLine /> tests works with mutliple links containing search text
 <div>
   <div
     class="logLine"
-    style="--char-size: 2ch;"
+    style="grid-template-columns: 3ch 1fr;"
   >
     <span
       class="lineNumber"
     >
       2
-    </span>
-    <span
-      class="level"
-    >
-      info
-    </span>
-    <span
-      class="time"
-    >
-      20/08/2021 11:12:18
     </span>
     <span
       class="out"

@@ -32,6 +32,8 @@ import {
   getTypeForTemplate,
   TemplateListType
 } from '@templates-library/pages/TemplatesPage/TemplatesPageUtils'
+import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
+
 import { useMutateAsGet } from '@common/hooks'
 import {
   CacheResponseMetadata,
@@ -268,9 +270,8 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
         repoIdentifier: selectedTemplate.gitDetails?.repoIdentifier,
         branch: !isStandAlone ? selectedTemplate.gitDetails?.branch || selectedBranch : storeMetadata?.branch
       })
-
       if (isStandAlone) {
-        window.open(`#${url}`, '_blank')
+        window.open(`${windowLocationUrlPartBeforeHash()}#${url}`, '_blank')
       } else {
         history.push(url)
       }

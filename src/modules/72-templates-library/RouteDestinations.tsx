@@ -21,7 +21,7 @@ import { String } from 'framework/strings'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import type { ResourceDTO } from 'services/audit'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
-import type { Module, ModulePathParams } from '@common/interfaces/RouteInterfaces'
+import type { Module, ModulePathParams, TemplateType } from '@common/interfaces/RouteInterfaces'
 import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
 import TemplateResourceModal from './components/RbacResourceModals/TemplateResourceModal'
 import TemplateResourceRenderer from './components/RbacResourceModals/TemplateResourceRenderer'
@@ -54,20 +54,23 @@ RbacFactory.registerResourceTypeHandler(ResourceType.TEMPLATE, {
  * Register for Audit Trail
  * */
 const cdLabel = 'common.purpose.cd.continuous'
-AuditTrailFactory.registerResourceHandler(ResourceType.TEMPLATE, {
+AuditTrailFactory.registerResourceHandler('TEMPLATE', {
   moduleIcon: {
     name: 'cd-main'
   },
   moduleLabel: cdLabel,
   resourceLabel: 'common.template.label',
-  resourceUrl: (_: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
+  resourceUrl: (template: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
-    if (module && orgIdentifier && projectIdentifier) {
-      return routes.toTemplates({
+    if (template.identifier && template.labels?.templateEntityType && orgIdentifier && projectIdentifier) {
+      return routes.toTemplateStudio({
         module,
         orgIdentifier,
         projectIdentifier,
-        accountId: accountIdentifier
+        accountId: accountIdentifier,
+        templateIdentifier: template.identifier,
+        versionLabel: template.labels?.versionLabel,
+        templateType: template.labels?.templateEntityType as TemplateType
       })
     }
     return undefined

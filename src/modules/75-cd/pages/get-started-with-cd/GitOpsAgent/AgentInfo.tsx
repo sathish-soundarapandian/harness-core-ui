@@ -7,50 +7,24 @@
 
 import React from 'react'
 import moment from 'moment'
-import cx from 'classnames'
 import { Text, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { V1Agent, Servicev1Project } from 'services/gitops'
+import type { V1Agent } from 'services/gitops'
 
 import css from './GitOpsAgentCard.module.scss'
 
 export interface AgentInfoProps {
-  mappedProjects:
-    | {
-        [key: string]: Servicev1Project
-      }
-    | undefined
-  firstArgoProject: string | undefined
-  firstHarnessProject: string | undefined
-  numMappedProjects: number | undefined
   agent: V1Agent
 }
 
 export const AgentInfo = (props: AgentInfoProps): React.ReactElement => {
   const { getString } = useStrings()
-  const { mappedProjects, numMappedProjects, firstArgoProject, agent, firstHarnessProject } = props
+  const { agent } = props
 
   return (
     <div className={css.applications}>
       <Layout.Vertical>
-        {!mappedProjects || Object.keys(mappedProjects).length === 0 ? null : (
-          <>
-            <Text font="xsmall" color={Color.GREY_500} style={{ display: 'flex' }}>
-              {getString('cd.getStartedWithCD.mappedHarnessProjects')}
-            </Text>
-
-            <div className={css.mappedProjectContainer} style={{ display: 'flex' }}>
-              <div className={css.mappedProjectBadge}>{`${firstArgoProject} - ${firstHarnessProject}`}</div>
-              {numMappedProjects && numMappedProjects > 1 && (
-                <div className={cx(css.mappedProjectBadge, css.groupedProjectsBadge)}>{`+${
-                  numMappedProjects - 1
-                }`}</div>
-              )}
-            </div>
-          </>
-        )}
-
         <Text font="xsmall" color={Color.GREY_500} style={{ display: 'flex' }}>
           {getString('version')}
           <Text font="xsmall" className={css.paddingLeft}>

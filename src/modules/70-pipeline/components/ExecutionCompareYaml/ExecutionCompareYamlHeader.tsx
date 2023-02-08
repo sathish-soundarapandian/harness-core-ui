@@ -6,12 +6,13 @@
  */
 
 import { FontVariation } from '@harness/design-system'
-import { Button, ButtonVariation, Layout, Page, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Layout, Text } from '@harness/uicore'
 import React, { ReactElement } from 'react'
 import { useStrings } from 'framework/strings'
 import { useBooleanStatus } from '@common/hooks'
 import { useExecutionCompareContext } from './ExecutionCompareContext'
 import { ExecutionCompareYaml } from './ExecutionCompareYaml'
+import css from './ExecutionCompareYaml.module.scss'
 
 export function ExecutionCompareYamlHeader(): ReactElement {
   const { cancelCompareMode, compareItems } = useExecutionCompareContext()
@@ -20,9 +21,9 @@ export function ExecutionCompareYamlHeader(): ReactElement {
 
   return (
     <>
-      <Page.SubHeader>
+      <div className={css.header}>
         <Text font={{ variation: FontVariation.LEAD }}>{getString('pipeline.execution.compareExecutionsTitle')}</Text>
-        <Layout.Horizontal spacing="small" flex={{ alignItems: 'flex-end', justifyContent: 'flex-start' }}>
+        <Layout.Horizontal spacing="small">
           <Button
             text={getString('pipeline.execution.compareAction')}
             variation={ButtonVariation.PRIMARY}
@@ -31,7 +32,7 @@ export function ExecutionCompareYamlHeader(): ReactElement {
           />
           <Button text={getString('cancel')} variation={ButtonVariation.TERTIARY} onClick={() => cancelCompareMode()} />
         </Layout.Horizontal>
-      </Page.SubHeader>
+      </div>
       {showCompareExecutionDrawer && (
         <ExecutionCompareYaml
           compareItems={compareItems}

@@ -31,6 +31,7 @@ import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { getServiceDeploymentTypeSchema } from '@cd/components/PipelineSteps/PipelineStepsUtil'
 import type { ServiceDefinition } from 'services/cd-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
@@ -64,7 +65,7 @@ const SelectDeploymentTypeRef = (
   const { trackEvent } = useTelemetry()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { disableNextBtn, enableNextBtn, onSuccess } = props
-
+  const { GITOPS_HOSTED } = useFeatureFlags()
   const {
     state: { service: serviceData },
     saveServiceData
@@ -86,12 +87,16 @@ const SelectDeploymentTypeRef = (
       value: ServiceDeploymentType.Kubernetes,
       disabled: false
     }
-    // {
-    //   label: 'pipeline.serviceDeploymentTypes.kubernetesWithGitops',
-    //   icon: deploymentIconMap[ServiceDeploymentType.KubernetesGitops],
-    //   value: ServiceDeploymentType.KubernetesGitops
-    // }
   ]
+
+  if (GITOPS_HOSTED) {
+    ngSupportedDeploymentTypes.push({
+      label: 'pipeline.serviceDeploymentTypes.kubernetesWithGitops',
+      icon: deploymentIconMap[ServiceDeploymentType.KubernetesGitops],
+      value: ServiceDeploymentType.KubernetesGitops,
+      disabled: false
+    })
+  }
 
   useEffect(() => {
     if (formikRef?.current?.values?.selectedDeploymentType) {

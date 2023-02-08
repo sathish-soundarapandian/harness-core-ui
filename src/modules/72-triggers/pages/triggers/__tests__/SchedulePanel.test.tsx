@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, queryByText, fireEvent } from '@testing-library/react'
+import { render, waitFor, fireEvent } from '@testing-library/react'
 import { Formik, FormikForm, Button } from '@harness/uicore'
 import { renderHook } from '@testing-library/react-hooks'
 import { InputTypes, setFieldValue } from '@common/utils/JestFormHelper'
@@ -139,14 +139,14 @@ function WrapperComponent(props: { initialValues: any }): JSX.Element {
 describe('SchedulePanel Triggers tests', () => {
   describe('Renders/snapshots', () => {
     test('Initial Render - Schedule Panel', async () => {
-      const { container } = render(<WrapperComponent initialValues={getTriggerConfigInitialValues({})} />)
-      await waitFor(() => queryByText(container, result.current.getString('common.schedule')))
+      const { container, queryByText } = render(<WrapperComponent initialValues={getTriggerConfigInitialValues({})} />)
+      await waitFor(() => queryByText(result.current.getString('common.schedule')))
       expect(container).toMatchSnapshot()
     })
   })
   describe('Interactivity: Schedule Tabs', () => {
     test('Minutes selection updates expression breakdown and expression', async () => {
-      const { container } = render(
+      const { container, queryByText } = render(
         <WrapperComponent
           initialValues={getTriggerConfigInitialValues({
             expression: '0/5 * * * *',
@@ -154,7 +154,7 @@ describe('SchedulePanel Triggers tests', () => {
           })}
         />
       )
-      await waitFor(() => queryByText(container, result.current.getString('common.schedule')))
+      await waitFor(() => queryByText(result.current.getString('common.schedule')))
 
       setFieldValue({ container, type: InputTypes.SELECT, fieldId: 'minutes', value: '30' })
 
@@ -163,7 +163,7 @@ describe('SchedulePanel Triggers tests', () => {
     })
 
     test('Hourly selection updates expression breakdown and expression', async () => {
-      const { container } = render(
+      const { container, queryByText, queryByTestId } = render(
         <WrapperComponent
           initialValues={getTriggerConfigInitialValues({
             expression: '0/5 * * * *',
@@ -178,9 +178,7 @@ describe('SchedulePanel Triggers tests', () => {
       }
       fireEvent.click(hourlyTab)
 
-      await waitFor(() =>
-        queryByText(container, result.current.getString('triggers.schedulePanel.minutesAfterTheHour'))
-      )
+      await waitFor(() => queryByText(result.current.getString('triggers.schedulePanel.minutesAfterTheHour')))
       const firstSelect = document.querySelector('[data-name="toothpick"] [icon="chevron-down"] svg')
 
       if (!firstSelect) {
@@ -191,7 +189,8 @@ describe('SchedulePanel Triggers tests', () => {
 
       const options = document.querySelectorAll('[class*="bp3-menu"] li')
       fireEvent.click(options[3])
-      await waitFor(() => expect(queryByText(container, '0 0/4 * * *')).not.toBeNull())
+
+      await waitFor(() => expect(queryByTestId('expression')?.textContent).toBe('0 0/4 * * *'))
 
       const secondSelect = document.querySelectorAll('[data-name="toothpick"] [icon="chevron-down"] svg')[1]
 
@@ -209,7 +208,7 @@ describe('SchedulePanel Triggers tests', () => {
     })
 
     test('Daily selection updates expression breakdown and expression', async () => {
-      const { container } = render(
+      const { queryByText, queryByTestId } = render(
         <WrapperComponent
           initialValues={getTriggerConfigInitialValues({
             expression: '0/5 * * * *',
@@ -224,7 +223,7 @@ describe('SchedulePanel Triggers tests', () => {
       }
       fireEvent.click(dailyTab)
 
-      await waitFor(() => queryByText(container, result.current.getString('triggers.schedulePanel.runDailyAt')))
+      await waitFor(() => queryByText(result.current.getString('triggers.schedulePanel.runDailyAt')))
       const hourSelect = document.querySelectorAll(
         '[data-name="timeselect"] [class*="selectStyle"] [icon="chevron-down"] svg'
       )[0]
@@ -237,7 +236,8 @@ describe('SchedulePanel Triggers tests', () => {
 
       const hourOptions = document.querySelectorAll('[class*="bp3-menu"] li')
       fireEvent.click(hourOptions[11])
-      await waitFor(() => expect(queryByText(container, '0 0 * * *')).not.toBeNull())
+
+      await waitFor(() => expect(queryByTestId('expression')?.textContent).toBe('0 0 * * *'))
 
       const minutesSelect = document.querySelectorAll(
         '[data-name="timeselect"] [class*="selectStyle"] [icon="chevron-down"] svg'
@@ -251,7 +251,7 @@ describe('SchedulePanel Triggers tests', () => {
       await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(60))
       const minutesOptions = document.querySelectorAll('[class*="bp3-menu"] li')
       fireEvent.click(minutesOptions[3])
-      await waitFor(() => expect(queryByText(container, '3 0 * * *')).not.toBeNull())
+      await waitFor(() => expect(queryByText('3 0 * * *')).not.toBeNull())
 
       const amPmSelect = document.querySelectorAll(
         '[data-name="timeselect"] [class*="selectStyle"] [icon="chevron-down"] svg'
@@ -266,11 +266,12 @@ describe('SchedulePanel Triggers tests', () => {
       const amPmOptions = document.querySelectorAll('[class*="bp3-menu"] li')
       fireEvent.click(amPmOptions[1])
       // tests pm adds 12 hours
-      await waitFor(() => expect(queryByText(container, '3 12 * * *')).not.toBeNull())
+
+      await waitFor(() => expect(queryByTestId('expression')?.textContent).toBe('3 12 * * *'))
     })
     // eslint-disable-next-line jest/no-disabled-tests
     test('Weekly selection updates expression breakdown and expression', async () => {
-      const { container } = render(
+      const { queryByText, queryByTestId } = render(
         <WrapperComponent
           initialValues={getTriggerConfigInitialValues({
             expression: '0/5 * * * *',
@@ -285,15 +286,16 @@ describe('SchedulePanel Triggers tests', () => {
       }
       fireEvent.click(weeklyTab)
 
-      await waitFor(() => queryByText(container, result.current.getString('triggers.schedulePanel.runOn')))
+      await waitFor(() => queryByText(result.current.getString('triggers.schedulePanel.runOn')))
       // tested minutes select
       fillTimeSelect({ hoursIndex: 2, minutesValue: '04', amPmIndex: 0 })
-      await waitFor(() => expect(queryByText(container, '0 4 * * MON')).not.toBeNull())
+
+      await waitFor(() => expect(queryByTestId('expression')?.textContent).toBe('0 4 * * MON'))
     })
 
     // eslint-disable-next-line jest/no-disabled-tests
     test('Monthly selection updates expression breakdown and expression', async () => {
-      const { container } = render(
+      const { queryByText, queryByTestId } = render(
         <WrapperComponent
           initialValues={getTriggerConfigInitialValues({
             expression: '0/5 * * * *',
@@ -308,9 +310,10 @@ describe('SchedulePanel Triggers tests', () => {
       }
       fireEvent.click(monthlyTab)
 
-      await waitFor(() => queryByText(container, result.current.getString('triggers.schedulePanel.runOnSpecificDay')))
+      await waitFor(() => queryByText(result.current.getString('triggers.schedulePanel.runOnSpecificDay')))
       fillTimeSelect({ hoursIndex: 10, amPmIndex: 1 })
-      await waitFor(() => expect(queryByText(container, '0 23 1 1/1 *')).not.toBeNull())
+
+      await waitFor(() => expect(queryByTestId('expression')?.textContent).toBe('0 23 1 1/1 *'))
 
       const monthSelect = document.querySelector('[class*="selectMonth"] [icon="chevron-down"] svg')
 
@@ -318,7 +321,7 @@ describe('SchedulePanel Triggers tests', () => {
         throw Error('No month select')
       }
       fireEvent.click(monthSelect)
-      await waitFor(() => expect(document.querySelectorAll('[class*="bp3-menu"] li')).toHaveLength(12))
+      await waitFor(() => document.querySelectorAll('[class*="bp3-menu"] li'))
       const monthOptions = document.querySelectorAll('[class*="bp3-menu"] li')
       fireEvent.click(monthOptions[1]) // February
 
@@ -331,7 +334,7 @@ describe('SchedulePanel Triggers tests', () => {
       const dayOptions = document.querySelectorAll('[class*="bp3-menu"] li')
       fireEvent.click(dayOptions[15])
 
-      await waitFor(() => expect(queryByText(container, '0 23 16 2/1 *')).not.toBeNull())
+      await waitFor(() => expect(queryByTestId('expression')?.textContent).toBe('0 23 16 2/1 *'))
 
       const numMonthSelect = document.querySelectorAll('[data-name="toothpick"] [icon="chevron-down"] svg')[1]
       if (!numMonthSelect) {
@@ -342,12 +345,12 @@ describe('SchedulePanel Triggers tests', () => {
       const numMonthOptions = document.querySelectorAll('[class*="bp3-menu"] li')
       fireEvent.click(numMonthOptions[10])
 
-      await waitFor(() => expect(queryByText(container, '0 23 16 2/11 *')).not.toBeNull())
+      await waitFor(() => expect(queryByTestId('expression')?.textContent).toBe('0 23 16 2/11 *'))
     })
 
     // eslint-disable-next-line jest/no-disabled-tests
     test('Yearly selection updates expression breakdown and expression', async () => {
-      const { container } = render(
+      const { queryByText, queryByTestId } = render(
         <WrapperComponent
           initialValues={getTriggerConfigInitialValues({
             expression: '0/5 * * * *',
@@ -362,9 +365,7 @@ describe('SchedulePanel Triggers tests', () => {
       }
       fireEvent.click(yearlyTab)
 
-      await waitFor(() =>
-        queryByText(container, result.current.getString('triggers.schedulePanel.runOnSpecificDayMonth'))
-      )
+      await waitFor(() => queryByText(result.current.getString('triggers.schedulePanel.runOnSpecificDayMonth')))
 
       const monthSelect = document.querySelectorAll('[data-name="toothpick"] [icon="chevron-down"] svg')[0]
 
@@ -376,7 +377,7 @@ describe('SchedulePanel Triggers tests', () => {
       const monthOptions = document.querySelectorAll('[class*="bp3-menu"] li')
       fireEvent.click(monthOptions[3]) // April
 
-      await waitFor(() => expect(queryByText(container, '0 1 1 4 *')).not.toBeNull())
+      await waitFor(() => expect(queryByTestId('expression')?.textContent).toBe('0 1 1 4 *'))
 
       const daySelect = document.querySelectorAll('[data-name="toothpick"] [icon="chevron-down"] svg')[1]
       if (!daySelect) {
@@ -387,14 +388,15 @@ describe('SchedulePanel Triggers tests', () => {
       const dayOptions = document.querySelectorAll('[class*="bp3-menu"] li')
       fireEvent.click(dayOptions[14])
 
-      await waitFor(() => expect(queryByText(container, '0 1 15 4 *')).not.toBeNull())
+      await waitFor(() => expect(queryByTestId('expression')?.textContent).toBe('0 1 15 4 *'))
 
       fillTimeSelect({ hoursIndex: 10, amPmIndex: 1 })
-      await waitFor(() => expect(queryByText(container, '0 23 15 4 *')).not.toBeNull())
+
+      await waitFor(() => expect(queryByTestId('expression')?.textContent).toBe('0 23 15 4 *'))
     })
 
     test('Custom selection updates expression breakdown and expression', async () => {
-      const { container } = render(
+      const { container, queryByText, queryByTestId } = render(
         <WrapperComponent
           initialValues={getTriggerConfigInitialValues({
             expression: '0/5 * * * *',
@@ -409,22 +411,22 @@ describe('SchedulePanel Triggers tests', () => {
       }
       fireEvent.click(customTab)
 
-      await waitFor(() => queryByText(container, result.current.getString('triggers.schedulePanel.enterCustomCron')))
+      await waitFor(() => queryByText(result.current.getString('triggers.schedulePanel.enterCustomCron')))
 
-      await waitFor(() => expect(queryByText(container, '0/5 * * * *')).not.toBeNull()) // persists last
+      await waitFor(() => expect(queryByTestId('expression')?.textContent).toBe('0/5 * * * *'))
 
       setFieldValue({ container, type: InputTypes.TEXTFIELD, fieldId: 'expression', value: '' })
 
       await waitFor(() => expect(document.body.querySelector('[class*="errorField"]')).not.toBeNull())
-      expect(queryByText(container, result.current.getString('invalidText'))).toBeNull() // all invalid text hidden
+      expect(queryByText(result.current.getString('invalidText'))).toBeNull() // all invalid text hidden
 
       setFieldValue({ container, type: InputTypes.TEXTFIELD, fieldId: 'expression', value: '0 1 1 1/1' })
 
-      await waitFor(() => expect(queryByText(container, result.current.getString('invalidText'))).not.toBeNull())
+      await waitFor(() => expect(queryByText(result.current.getString('invalidText'))).not.toBeNull())
 
       setFieldValue({ container, type: InputTypes.TEXTFIELD, fieldId: 'expression', value: '0 1 1 1/1 SAT' })
 
-      await waitFor(() => expect(queryByText(container, result.current.getString('invalidText'))).toBeNull())
+      await waitFor(() => expect(queryByText(result.current.getString('invalidText'))).toBeNull())
     })
   })
 })

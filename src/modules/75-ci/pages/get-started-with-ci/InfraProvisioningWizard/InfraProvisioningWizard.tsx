@@ -33,7 +33,7 @@ import {
   NGTriggerConfigV2,
   ResponseNGTriggerResponse,
   ResponsePipelineSaveResponse,
-  useCreateTrigger
+  createTriggerPromise
 } from 'services/pipeline-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
@@ -120,16 +120,6 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.Success)
     }
   }, [preSelectedGitConnector])
-
-  const { mutate: createTrigger } = useCreateTrigger({
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      targetIdentifier: ''
-    },
-    requestOptions: { headers: { 'content-type': 'application/yaml' } }
-  })
 
   const { mutate: createSCMConnector } = useCreateDefaultScmConnector({
     queryParams: { accountIdentifier: accountId }
@@ -292,8 +282,9 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                 targetIdentifier: createPipelineResponse?.data?.identifier
               }
 
-              const createPRTrigger = createTrigger(
-                yamlStringify({
+              // PR trigger
+              createTriggerPromise({
+                body: yamlStringify({
                   trigger: clearNullUndefined(
                     constructTriggerPayload({
                       pipelineId: createPipelineResponse?.data?.identifier,
@@ -305,45 +296,47 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                     }) || {}
                   )
                 }) as any,
-                { queryParams: commonQueryParams }
-              )
-
-              const createPushTrigger = createTrigger(
-                yamlStringify({
-                  trigger: clearNullUndefined(
-                    constructTriggerPayload({
-                      pipelineId: createPipelineResponse?.data?.identifier,
-                      eventType: eventTypes.PUSH
-                    }) || {}
-                  )
-                }) as any,
-                { queryParams: commonQueryParams }
-              )
-
-              createPRTrigger
+                queryParams: commonQueryParams
+              })
                 .then((createPRTriggerResponse: ResponseNGTriggerResponse) => {
-                  if (createPRTriggerResponse?.status === Status.SUCCESS) {
-                    return createPushTrigger
-                  }
-                })
-                .then((createPushTriggerResponse?: ResponseNGTriggerResponse) => {
-                  if (createPushTriggerResponse?.status === Status.SUCCESS) {
-                    setDisableBtn(false)
-                    setShowPageLoader(false)
-                    setShowGetStartedTabInMainMenu(false)
-                    if (createPipelineResponse?.data?.identifier) {
-                      history.push(
-                        routes.toPipelineStudio({
-                          accountId: accountId,
-                          module: 'ci',
-                          orgIdentifier,
-                          projectIdentifier,
-                          pipelineIdentifier: createPipelineResponse?.data?.identifier,
-                          stageId: getString('buildText'),
-                          sectionId: BuildTabs.EXECUTION
-                        })
-                      )
-                    }
+                  if (createPRTriggerResponse.status === Status.SUCCESS) {
+                    // push trigger
+                    createTriggerPromise({
+                      body: yamlStringify({
+                        trigger: clearNullUndefined(
+                          constructTriggerPayload({
+                            pipelineId: createPipelineResponse?.data?.identifier || '',
+                            eventType: eventTypes.PUSH
+                          }) || {}
+                        )
+                      }) as any,
+                      queryParams: commonQueryParams
+                    })
+                      .then((createPushTriggerResponse: ResponseNGTriggerResponse) => {
+                        if (createPushTriggerResponse.status === Status.SUCCESS) {
+                          setDisableBtn(false)
+                          setShowPageLoader(false)
+                          setShowGetStartedTabInMainMenu(false)
+                          if (createPipelineResponse?.data?.identifier) {
+                            history.push(
+                              routes.toPipelineStudio({
+                                accountId: accountId,
+                                module: 'ci',
+                                orgIdentifier,
+                                projectIdentifier,
+                                pipelineIdentifier: createPipelineResponse?.data?.identifier,
+                                stageId: getString('buildText'),
+                                sectionId: BuildTabs.EXECUTION
+                              })
+                            )
+                          }
+                        }
+                      })
+                      .catch(triggerCreationError => {
+                        showErrorToaster(triggerCreationError?.data?.message)
+                        setDisableBtn(false)
+                        setShowPageLoader(false)
+                      })
                   }
                 })
                 .catch(triggerCreationError => {

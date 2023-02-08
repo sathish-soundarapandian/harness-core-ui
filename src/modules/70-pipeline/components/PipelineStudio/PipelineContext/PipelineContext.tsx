@@ -1101,7 +1101,7 @@ export function PipelineProvider({
           orgIdentifier: queryParams.orgIdentifier
         }
       },
-      initialState
+      { ...initialState, pipeline: { ...initialState.pipeline, identifier: pipelineIdentifier } }
     )
   )
   const [view, setView] = useLocalStorage<SelectedView>(

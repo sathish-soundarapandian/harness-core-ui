@@ -172,7 +172,7 @@ describe('Test DeployService Step', () => {
     `)
   })
 
-  test('Should be able save even if there is 64 characters limit warning for name', async () => {
+  test('Should be able save even if there is 128 characters limit warning for name', async () => {
     const { container } = render(
       <DeployService
         type={StepType.DeployService}
@@ -198,11 +198,12 @@ describe('Test DeployService Step', () => {
         container: dialog!,
         fieldId: 'name',
         type: InputTypes.TEXTFIELD,
-        value: 'ljdlkcjv vldjvldkj dlvjdlvkj vljdlkvjd vlmdlfvm vlmdlkvj dlvdkla'
+        value:
+          'ljdlkcjv vldjvldkj dlvjdlvkj vljdlkvjd vlmdlfvm vlmdlkvj dlvdklaljdlkcjv vldjvldkj dlvjdlvkj vljdlkvjd vlmdlfvm vlmdlkvj dlvdkla'
       }
     ])
 
-    expect(getByText(dialog!, 'Limit of 64 characters is reached for name')).not.toBeNull()
+    expect(getByText(dialog!, 'Limit of 128 characters is reached for name')).not.toBeNull()
 
     await act(async () => {
       fireEvent.click(getByText(dialog!, 'save'))

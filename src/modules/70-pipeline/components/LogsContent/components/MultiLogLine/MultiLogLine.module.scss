@@ -9,7 +9,6 @@
   display: grid;
   font-size: var(--font-size-small);
   column-gap: 1em;
-  grid-template-columns: max(var(--char-size, 3ch), 3ch) 5ch 25ch 1fr;
   font-family: 'Roboto Mono', 'Monaco', 'Ubuntu Mono', monospace;
   color: var(--white);
   padding: 0 var(--spacing-5);

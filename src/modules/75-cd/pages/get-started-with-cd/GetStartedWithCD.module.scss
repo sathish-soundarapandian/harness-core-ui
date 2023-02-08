@@ -92,20 +92,6 @@
 }
 
 /** GitOps **/
-.agentDiagram {
-  margin-top: var(--spacing-xlarge);
-  width: 733px;
-  height: 154px;
-  background: var(--grey-250);
-}
-
-.aboutHarnessAdapterContainer {
-  width: 43%;
-  padding: 0 16px;
-  float: right;
-  height: calc(100% - 40px);
-}
-
 .aboutHarnessAdapterAnswer {
   font-weight: 600 !important;
   color: var(--grey-800) !important;
@@ -177,9 +163,4 @@
 
 .error {
   color: var(--error);
-}
-
-.agentsLoadingSpinner {
-  justify-content: flex-start;
-  margin-bottom: var(--spacing-medium);
 }

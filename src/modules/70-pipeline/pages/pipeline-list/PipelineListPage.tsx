@@ -18,6 +18,7 @@ import {
 import { defaultTo, isEmpty, pick } from 'lodash-es'
 import React, { useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { flushSync } from 'react-dom'
 import { GlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/GlobalFreezeBanner'
 import { useGlobalFreezeBanner } from '@common/components/GlobalFreezeBanner/useGlobalFreezeBanner'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
@@ -142,7 +143,7 @@ function _PipelineListPage(): React.ReactElement {
   }
 
   const resetFilter = (): void => {
-    searchRef.current.clear()
+    flushSync(searchRef.current.clear)
     replaceQueryParams({})
   }
 

@@ -17,6 +17,7 @@ import {
   ConnectorReferenceField,
   ConnectorSelectedValue
 } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useQueryParams } from '@common/hooks'
@@ -49,6 +50,7 @@ interface GitSyncFormProps<T> {
   errorData?: ResponseMessage[]
   entityScope?: Scope
   className?: string
+  filePathPrefix?: string
 }
 
 export const gitSyncFormSchema = (
@@ -99,7 +101,8 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
     initialValues,
     errorData,
     entityScope = Scope.PROJECT,
-    className = ''
+    className = '',
+    filePathPrefix
   } = props
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { branch, connectorRef, repoName } = useQueryParams<GitQueryParams>()
@@ -117,9 +120,10 @@ export function GitSyncForm<T extends GitSyncFormFields = GitSyncFormFields>(
       if (formikProps.values.versionLabel?.trim()) {
         versionLabel = '_' + formikProps.values.versionLabel.trim().split(' ').join('_')
       }
-      formikProps.setFieldValue('filePath', `.harness/${formikProps.values.identifier}${versionLabel}.yaml`)
+      const pathPrefix = filePathPrefix || '.harness'
+      formikProps.setFieldValue('filePath', `${pathPrefix}/${formikProps.values.identifier}${versionLabel}.yaml`)
     }
-  }, [formikProps?.values?.identifier, formikProps?.values?.versionLabel, isEdit, filePathTouched])
+  }, [formikProps?.values?.identifier, formikProps?.values?.versionLabel, isEdit, filePathTouched, filePathPrefix])
 
   useEffect(() => {
     if (!filePathTouched && formikProps.touched.filePath) {

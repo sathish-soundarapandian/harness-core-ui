@@ -10,6 +10,7 @@ import { render, waitFor, screen, RenderResult, within, getByTestId } from '@tes
 import { act } from 'react-dom/test-utils'
 import userEvent from '@testing-library/user-event'
 import mockImport from 'framework/utils/mockImport'
+import * as usePermission from '@rbac/hooks/usePermission'
 import gitSyncListResponse from '@common/utils/__tests__/mocks/gitSyncRepoListMock.json'
 import { findDialogContainer, findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
@@ -279,6 +280,34 @@ describe('CD Pipeline List Page', () => {
     expect(mockDeleteFunction).toBeCalled()
   })
 
+  test('Move to remote button should not be disabled with edit pipeline permission', async () => {
+    jest.spyOn(usePermission, 'usePermission').mockImplementation(() => [true, true, true])
+    renderPipelinesListPage()
+    expect(useGetRepositoryList).toBeCalled()
+    const row = await screen.findAllByRole('row')
+    const moreOptions = within(row[1]).getByRole('button', {
+      name: /pipeline menu actions/i
+    })
+    userEvent.click(moreOptions)
+    const menuContent = findPopoverContainer() as HTMLElement
+    const moveConfigToRemote = getByTestId(menuContent, 'moveConfigToRemote')
+    expect(moveConfigToRemote?.classList.contains('bp3-disabled')).toBe(false)
+  })
+
+  test('Move to remote button should  be disabled without edit pipeline permission', async () => {
+    jest.spyOn(usePermission, 'usePermission').mockImplementation(() => [true, true, false])
+    renderPipelinesListPage()
+    expect(useGetRepositoryList).toBeCalled()
+    const row = await screen.findAllByRole('row')
+    const moreOptions = within(row[1]).getByRole('button', {
+      name: /pipeline menu actions/i
+    })
+    userEvent.click(moreOptions)
+    const menuContent = findPopoverContainer() as HTMLElement
+    const moveConfigToRemote = getByTestId(menuContent, 'moveConfigToRemote')
+    expect(moveConfigToRemote?.classList.contains('bp3-disabled')).toBe(true)
+  })
+
   test('should be able to search by pipeline name and identifier', async () => {
     const useGetPipelineListMock = useGetPipelineList as jest.MockedFunction<any>
     const mutateListOfPipelines = jest.fn().mockResolvedValue(pipelines)
@@ -308,6 +337,26 @@ describe('CD Pipeline List Page', () => {
         }
       }
     )
+  })
+
+  test('renders error toast when trying to save a filter with empty filter fields', async () => {
+    const { baseElement } = renderPipelinesListPage()
+    const filtersButton = await waitFor(() => {
+      const element = baseElement.querySelector('[id="ngfilterbtn"]')
+      expect(element).toBeInTheDocument()
+      return element
+    })
+    userEvent.click(filtersButton!)
+
+    const newFilterButton = await screen.findByLabelText('filters.newFilter')
+    userEvent.click(newFilterButton)
+
+    const filterNameInput = await screen.findByPlaceholderText('filters.typeFilterName')
+    userEvent.clear(filterNameInput)
+    userEvent.type(filterNameInput, 'foo')
+    userEvent.click(screen.getByLabelText('save'))
+
+    expect(await screen.findByText('filters.invalidCriteria')).toBeInTheDocument()
   })
 })
 

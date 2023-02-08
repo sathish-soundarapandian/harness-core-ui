@@ -167,7 +167,9 @@ describe('Kustomize with Git/ Github/Gitlab/Bitbucket tests', () => {
               type: 'Git'
             },
             pluginPath: 'plugin-path',
-            skipResourceVersioning: false
+            skipResourceVersioning: false,
+            enableDeclarativeRollback: false,
+            patchesPaths: undefined
           }
         }
       })

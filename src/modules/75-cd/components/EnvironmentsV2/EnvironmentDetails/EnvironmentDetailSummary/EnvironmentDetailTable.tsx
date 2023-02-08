@@ -236,7 +236,7 @@ const RenderInstanceCount: Renderer<CellProps<TableRowData>> = ({
 }) => {
   return instanceCount ? (
     <Container>
-      <Text font={{ size: 'small', weight: 'bold' }} color={Color.PRIMARY_7} className={css.overflow}>
+      <Text font={{ size: 'small' }} color={Color.GREY_600} className={css.overflow}>
         {numberFormatter(instanceCount)}
       </Text>
     </Container>

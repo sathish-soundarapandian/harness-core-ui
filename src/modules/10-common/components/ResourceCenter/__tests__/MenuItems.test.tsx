@@ -47,11 +47,9 @@ describe('MenuItems', () => {
     expect(container).toMatchSnapshot()
   })
 
-  test('has Feedback when SHOW_NG_REFINER_FEEDBACK is true', () => {
+  test('has Feedback ', () => {
     const defaultAppStoreValues = {
-      featureFlags: {
-        SHOW_NG_REFINER_FEEDBACK: true
-      }
+      featureFlags: {}
     }
     const { container, getByText } = render(
       <TestWrapper defaultAppStoreValues={defaultAppStoreValues}>

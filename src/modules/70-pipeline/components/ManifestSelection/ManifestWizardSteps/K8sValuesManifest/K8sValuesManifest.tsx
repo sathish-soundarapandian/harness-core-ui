@@ -32,7 +32,13 @@ import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from '
 import type { ModalViewFor } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { shouldHideHeaderAndNavBtns } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type { CommonManifestDataType, ManifestTypes } from '../../ManifestInterface'
-import { GitRepoName, ManifestDataType, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
+import {
+  getSkipResourceVersioningBasedOnDeclarativeRollback,
+  GitRepoName,
+  ManifestDataType,
+  ManifestIdentifierValidation,
+  ManifestStoreMap
+} from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
 import { filePathWidth, getRepositoryName, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import { ManifestDetailsCoreSection } from '../CommonManifestDetails/ManifestDetailsCoreSection'
@@ -85,6 +91,7 @@ function K8sValuesManifest({
         ...specValues,
         identifier: initialValues.identifier,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
+        enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
         repoName: getRepositoryName(prevStepData, initialValues),
         paths:
           typeof specValues.paths === 'string'
@@ -109,6 +116,7 @@ function K8sValuesManifest({
       gitFetchType: 'Branch',
       paths: [{ path: '', uuid: uuid('', nameSpace()) }],
       skipResourceVersioning: false,
+      enableDeclarativeRollback: false,
       repoName: getRepositoryName(prevStepData, initialValues)
     }
   }
@@ -150,7 +158,15 @@ function K8sValuesManifest({
     }
 
     if (selectedManifest === ManifestDataType.K8sManifest) {
-      set(manifestObj, 'manifest.spec.skipResourceVersioning', formData?.skipResourceVersioning)
+      set(
+        manifestObj,
+        'manifest.spec.skipResourceVersioning',
+        getSkipResourceVersioningBasedOnDeclarativeRollback(
+          formData?.skipResourceVersioning,
+          formData?.enableDeclarativeRollback
+        )
+      )
+      set(manifestObj, 'manifest.spec.enableDeclarativeRollback', formData?.enableDeclarativeRollback)
     }
     handleSubmit(manifestObj)
   }
@@ -288,6 +304,7 @@ function K8sValuesManifest({
                       allowableTypes={allowableTypes}
                       initialValues={initialValues}
                       isReadonly={isReadonly}
+                      selectedManifest={selectedManifest}
                     />
                   )}
                 </div>
