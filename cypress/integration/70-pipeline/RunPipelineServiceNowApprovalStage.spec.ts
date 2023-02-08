@@ -58,7 +58,7 @@ describe('RUN PIPELINE MODAL - ServiceNow Approval Stage', () => {
     cy.get('[icon="play"]').click({ force: true, multiple: true })
     cy.wait(2000)
     cy.contains('p', 'ServiceNowStageTest').trigger('mouseover')
-    cy.get('[icon="cross"]').eq(1).click({ force: true })
+    cy.get('[icon="cross"]').click({ force: true })
     cy.contains('p', 'Delete Pipeline Stage').should('be.visible')
     cy.contains('span', 'Delete').click({ force: true })
     cy.contains('span', 'Pipeline Stage Successfully removed.').should('be.visible')

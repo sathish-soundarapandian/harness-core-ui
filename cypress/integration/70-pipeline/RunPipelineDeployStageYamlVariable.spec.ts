@@ -71,9 +71,7 @@ describe('Checks visual to YAML and visual to variable view parity', () => {
     cy.wait(1000)
 
     // Infrastructure tab config
-    cy.get('div[role="tablist"]').within(() => {
-      cy.contains('span', 'Environment').click({ force: true })
-    })
+    cy.contains('span', 'Environment').click({ force: true })
     cy.wait(1000)
     cy.get('input[name="environment.environmentRef"]').click({ force: true })
     cy.contains('p', 'testEnv').click({ force: true })
