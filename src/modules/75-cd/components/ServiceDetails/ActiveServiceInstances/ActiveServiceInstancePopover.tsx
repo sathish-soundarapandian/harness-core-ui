@@ -69,7 +69,7 @@ export interface ActiveServiceInstancePopoverProps {
   pipelineExecutionId?: string
 }
 
-interface SectionProps {
+export interface SectionProps {
   header: string
   values: {
     label: string
@@ -124,97 +124,8 @@ const Section: React.FC<{ data: SectionProps[] }> = props => {
   )
 }
 
-export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopoverProps> = props => {
-  const {
-    buildId = '',
-    envId = '',
-    instanceNum = 0,
-    serviceIdentifier = '',
-    isEnvDetail = false,
-    pipelineExecutionId,
-    infraIdentifier,
-    clusterId
-  } = props
-  const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
+export const CommonActiveInstanceData = (instanceData: InstanceDetailsDTO): SectionProps[] => {
   const { getString } = useStrings()
-
-  const queryParams: GetActiveInstancesByServiceIdEnvIdAndBuildIdsQueryParams = {
-    accountIdentifier: accountId,
-    orgIdentifier,
-    projectIdentifier,
-    serviceId: serviceId || serviceIdentifier,
-    envId,
-    buildIds: [buildId],
-    clusterIdentifier: clusterId,
-    infraIdentifier,
-    pipelineExecutionId
-  }
-
-  const queryParamsEnv: GetInstancesDetailsQueryParams = {
-    accountIdentifier: accountId,
-    orgIdentifier,
-    projectIdentifier,
-    serviceId: serviceId || serviceIdentifier,
-    envId,
-    infraIdentifier,
-    clusterIdentifier: clusterId,
-    pipelineExecutionId: defaultTo(pipelineExecutionId, ''),
-    buildId: buildId
-  }
-
-  const { loading, data, error } = useGetActiveInstancesByServiceIdEnvIdAndBuildIds({
-    queryParams,
-    queryParamStringifyOptions: {
-      arrayFormat: 'repeat'
-    },
-    lazy: isEnvDetail
-  })
-
-  const {
-    loading: envLoading,
-    data: envData,
-    error: envError
-  } = useGetInstancesDetails({
-    queryParams: queryParamsEnv,
-    queryParamStringifyOptions: {
-      arrayFormat: 'repeat'
-    },
-    lazy: !isEnvDetail
-  })
-
-  if ((!isEnvDetail && loading) || (isEnvDetail && envLoading)) {
-    return (
-      <Card className={cx(css.activeServiceInstancePopover, css.spinner)}>
-        <Spinner />
-      </Card>
-    )
-  }
-
-  if ((!isEnvDetail && error) || (isEnvDetail && envError)) {
-    const errorObj = isEnvDetail ? envError : error
-    return (
-      <Card className={cx(css.activeServiceInstancePopover, css.spinner)}>
-        <Text className={css.errorText}>{getErrorInfoFromErrorObject(errorObj as GetDataError<Failure | Error>)}</Text>
-      </Card>
-    )
-  }
-
-  if (
-    (!isEnvDetail && !data?.data?.instancesByBuildIdList?.[0]?.instances?.length) ||
-    (isEnvDetail && !envData?.data?.instances?.length)
-  ) {
-    return (
-      <Card className={cx(css.activeServiceInstancePopover, css.spinner)}>
-        <Text>{getString('cd.serviceDashboard.instanceDataEmpty')}</Text>
-      </Card>
-    )
-  }
-
-  const instanceData =
-    (isEnvDetail
-      ? envData?.data?.instances?.[instanceNum]
-      : data?.data?.instancesByBuildIdList?.[0]?.instances?.[instanceNum]) || {}
-
   const instanceInfoDTOProperties = (instanceData?.instanceInfoDTO as CustomDeploymentInstanceInfoDTO)?.properties || {}
   const defaultInstanceInfoData = [
     {
@@ -463,5 +374,99 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
       ]
     })
   }
-  return <Section data={sectionData}></Section>
+  return sectionData
+}
+
+export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopoverProps> = props => {
+  const {
+    buildId = '',
+    envId = '',
+    instanceNum = 0,
+    serviceIdentifier = '',
+    isEnvDetail = false,
+    pipelineExecutionId,
+    infraIdentifier,
+    clusterId
+  } = props
+  const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
+  const { getString } = useStrings()
+
+  const queryParams: GetActiveInstancesByServiceIdEnvIdAndBuildIdsQueryParams = {
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier,
+    serviceId: serviceId || serviceIdentifier,
+    envId,
+    buildIds: [buildId],
+    clusterIdentifier: clusterId,
+    infraIdentifier,
+    pipelineExecutionId
+  }
+
+  const queryParamsEnv: GetInstancesDetailsQueryParams = {
+    accountIdentifier: accountId,
+    orgIdentifier,
+    projectIdentifier,
+    serviceId: serviceId || serviceIdentifier,
+    envId,
+    infraIdentifier,
+    clusterIdentifier: clusterId,
+    pipelineExecutionId: defaultTo(pipelineExecutionId, ''),
+    buildId: buildId
+  }
+
+  const { loading, data, error } = useGetActiveInstancesByServiceIdEnvIdAndBuildIds({
+    queryParams,
+    queryParamStringifyOptions: {
+      arrayFormat: 'repeat'
+    },
+    lazy: isEnvDetail
+  })
+
+  const {
+    loading: envLoading,
+    data: envData,
+    error: envError
+  } = useGetInstancesDetails({
+    queryParams: queryParamsEnv,
+    queryParamStringifyOptions: {
+      arrayFormat: 'repeat'
+    },
+    lazy: !isEnvDetail
+  })
+
+  if ((!isEnvDetail && loading) || (isEnvDetail && envLoading)) {
+    return (
+      <Card className={cx(css.activeServiceInstancePopover, css.spinner)}>
+        <Spinner />
+      </Card>
+    )
+  }
+
+  if ((!isEnvDetail && error) || (isEnvDetail && envError)) {
+    const errorObj = isEnvDetail ? envError : error
+    return (
+      <Card className={cx(css.activeServiceInstancePopover, css.spinner)}>
+        <Text className={css.errorText}>{getErrorInfoFromErrorObject(errorObj as GetDataError<Failure | Error>)}</Text>
+      </Card>
+    )
+  }
+
+  if (
+    (!isEnvDetail && !data?.data?.instancesByBuildIdList?.[0]?.instances?.length) ||
+    (isEnvDetail && !envData?.data?.instances?.length)
+  ) {
+    return (
+      <Card className={cx(css.activeServiceInstancePopover, css.spinner)}>
+        <Text>{getString('cd.serviceDashboard.instanceDataEmpty')}</Text>
+      </Card>
+    )
+  }
+
+  const instanceData =
+    (isEnvDetail
+      ? envData?.data?.instances?.[instanceNum]
+      : data?.data?.instancesByBuildIdList?.[0]?.instances?.[instanceNum]) || {}
+
+  return <Section data={CommonActiveInstanceData(instanceData)}></Section>
 }

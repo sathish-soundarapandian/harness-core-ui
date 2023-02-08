@@ -19,7 +19,8 @@ import {
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo } from 'lodash-es'
-import { MonacoDiffEditor } from 'react-monaco-editor'
+import type { MonacoDiffEditor as MonacoDiffEditorType } from 'react-monaco-editor'
+import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import { useStrings } from 'framework/strings'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { ResponseCustomDeploymentRefreshYaml } from 'services/cd-ng'
@@ -33,7 +34,7 @@ export interface YamlDiffViewProps {
 
 export function YamlDiffView({ originalEntityYaml, getUpdatedYaml, onUpdate }: YamlDiffViewProps): JSX.Element {
   const { getString } = useStrings()
-  const editorRef = useRef<MonacoDiffEditor>(null)
+  const editorRef = useRef<MonacoDiffEditorType>(null)
   const [loading, setLoading] = React.useState<boolean>(false)
   const [error, setError] = React.useState<any>()
   const [originalYaml, setOriginalYaml] = React.useState<string>('')

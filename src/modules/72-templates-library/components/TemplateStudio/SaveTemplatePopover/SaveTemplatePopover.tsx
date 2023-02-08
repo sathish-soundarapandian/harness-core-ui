@@ -30,7 +30,8 @@ import type { EntityGitDetails, Failure, NGTemplateInfoConfig, TemplateSummaryRe
 import { DefaultNewTemplateId, DefaultNewVersionLabel } from 'framework/Templates/templates'
 import useCommentModal from '@common/hooks/CommentModal/useCommentModal'
 import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { StoreMetadata, StoreType, SaveTemplateAsType } from '@common/constants/GitSyncTypes'
+
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { sanitize } from '@common/utils/JSONUtils'
 import useTemplateErrors from '@pipeline/components/TemplateErrors/useTemplateErrors'
@@ -311,7 +312,8 @@ function SaveTemplatePopover(
         intent: Intent.SAVE,
         disabledFields: [Fields.Name, Fields.Identifier, Fields.StoreType],
         lastPublishedVersion,
-        onFailure: onSaveAsNewFailure
+        onFailure: onSaveAsNewFailure,
+        saveAsType: SaveTemplateAsType.NEW_LABEL_VERSION
       })
       showConfigModal()
     } catch (error) {

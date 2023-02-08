@@ -32,6 +32,7 @@ export const useGetConnectorsListHook = (
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
   const isSpotElastigroupEnabled = useFeatureFlag(FeatureFlag.SPOT_ELASTIGROUP_NG)
   const isTasEnabled = useFeatureFlag(FeatureFlag.CDS_TAS_NG)
+  const isTerraformCloudEnabled = useFeatureFlag(FeatureFlag.TERRAFORM_CLOUD)
   // This list will control which categories will be displayed in UI and its order
   const connectorCatalogueOrder: Array<ConnectorCatalogueItem['category']> = [
     'CLOUD_PROVIDER',
@@ -151,6 +152,8 @@ export const useGetConnectorsListHook = (
             return isSpotElastigroupEnabled
           case Connectors.TAS:
             return isTasEnabled
+          case Connectors.TERRAFORM_CLOUD:
+            return isTerraformCloudEnabled
           default:
             return true
         }

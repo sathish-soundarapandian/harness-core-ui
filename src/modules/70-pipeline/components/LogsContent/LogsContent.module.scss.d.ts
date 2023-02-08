@@ -25,6 +25,7 @@ declare const styles: {
   readonly search: string
   readonly selectedSearchResult: string
   readonly singleSectionScrollBtn: string
+  readonly tabs: string
   readonly toConsoleView: string
   readonly txt: string
 }

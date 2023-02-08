@@ -5,17 +5,17 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
+import React, { useMemo } from 'react'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
-import { cloneDeep, debounce } from 'lodash-es'
+import { debounce } from 'lodash-es'
 import { Heading, Container, FormikForm } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import produce from 'immer'
 import { NameIdDescription } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useStrings } from 'framework/strings'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { isDuplicateStageId } from '@pipeline/components/PipelineStudio/StageBuilder/StageBuilderUtil'
-import type { StageElementConfig } from 'services/cd-ng'
 import { getNameAndIdentifierSchema } from '@cf/utils/stageValidationSchema'
 
 export default function StageOverview(_props: React.PropsWithChildren<unknown>): JSX.Element {
@@ -30,16 +30,8 @@ export default function StageOverview(_props: React.PropsWithChildren<unknown>):
     getStageFromPipeline
   } = usePipelineContext()
   const { stage } = getStageFromPipeline(selectedStageId || '')
-  const cloneOriginalData = cloneDeep(stage)
-
   const { getString } = useStrings()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const updateStageDebounced = useCallback(
-    debounce((values: StageElementConfig): void => {
-      updateStage({ ...stage?.stage, ...values })
-    }, 300),
-    [stage?.stage, updateStage]
-  )
+  const updateStageDebounced = useMemo(() => debounce(updateStage, 300), [updateStage])
 
   return (
     <Container padding="huge">
@@ -48,37 +40,38 @@ export default function StageOverview(_props: React.PropsWithChildren<unknown>):
       </Heading>
       <Container data-testid="stageOverview" id="stageOverview">
         <Formik
-          enableReinitialize
           initialValues={{
-            identifier: cloneOriginalData?.stage?.identifier,
-            name: cloneOriginalData?.stage?.name,
-            description: cloneOriginalData?.stage?.description,
-            tags: cloneOriginalData?.stage?.tags || {}
+            identifier: stage?.stage?.identifier,
+            name: stage?.stage?.name,
+            description: stage?.stage?.description,
+            tags: stage?.stage?.tags || {}
           }}
           validationSchema={Yup.object().shape(getNameAndIdentifierSchema(getString, contextType))}
           validate={values => {
             const errors: { name?: string } = {}
-            if (values.identifier && isDuplicateStageId(values.identifier, stages)) {
+            if (values.identifier && isDuplicateStageId(values.identifier, stages, true)) {
               errors.name = getString('validation.identifierDuplicate')
             }
-            if (cloneOriginalData) {
-              updateStageDebounced({
-                ...(cloneOriginalData.stage as StageElementConfig),
-                name: values?.name || '',
-                identifier: values?.identifier || '',
-                description: values?.description || ''
-              })
+            if (stage?.stage) {
+              updateStageDebounced(
+                produce(stage.stage, draft => {
+                  draft.name = values?.name || ''
+                  draft.identifier = values?.identifier || ''
+                  draft.description = values?.description || ''
+                })
+              )
             }
             return errors
           }}
           onSubmit={values => {
-            if (cloneOriginalData) {
-              updateStageDebounced({
-                ...(cloneOriginalData.stage as StageElementConfig),
-                name: values?.name || '',
-                identifier: values?.identifier || '',
-                description: values?.description || ''
-              })
+            if (stage?.stage) {
+              updateStageDebounced(
+                produce(stage.stage, draft => {
+                  draft.name = values?.name || ''
+                  draft.identifier = values?.identifier || ''
+                  draft.description = values?.description || ''
+                })
+              )
             }
           }}
         >

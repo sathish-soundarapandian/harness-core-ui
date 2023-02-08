@@ -585,7 +585,6 @@ const CreateUpdateSecret: React.FC<CreateUpdateSecretProps> = props => {
                     inputLabel={getString('secrets.labelSecretName')}
                     idName="identifier"
                     isIdentifierEditable={!editing}
-                    maxInput={128}
                     inputGroupProps={{
                       disabled: isGcpSMInlineEditMode() || loading
                     }}

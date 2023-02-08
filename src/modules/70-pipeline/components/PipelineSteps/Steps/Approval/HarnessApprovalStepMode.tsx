@@ -110,7 +110,7 @@ function FormContent({
       </div>
       <FormInput.CheckBox
         name="spec.includePipelineExecutionHistory"
-        label={getString('pipeline.approvalStep.includePipelineExecutionHistory')}
+        label={getString('pipeline.approvalStep.includeStageExecutionDetails')}
         disabled={isApprovalStepFieldDisabled(readonly)}
       />
 

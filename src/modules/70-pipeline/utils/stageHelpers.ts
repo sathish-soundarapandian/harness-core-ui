@@ -29,6 +29,8 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { getStageFromPipeline as getStageByPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
 import type { DependencyElement } from 'services/ci'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
+import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+
 import type { InputSetDTO } from './types'
 import type { DeploymentStageElementConfig, PipelineStageWrapper, StageElementWrapper } from './pipelineTypes'
 import type { TemplateServiceDataType } from './templateUtils'
@@ -84,11 +86,17 @@ export enum RepositoryFormatTypes {
   Raw = 'raw'
 }
 
-export const nexus2RepositoryFormatTypes = [
+const commonRepoFormatTypes = [
   { label: 'Maven', value: RepositoryFormatTypes.Maven },
   { label: 'NPM', value: RepositoryFormatTypes.NPM },
   { label: 'NuGet', value: RepositoryFormatTypes.NuGet }
-  // { label: 'Raw', value: RepositoryFormatTypes.Raw }
+]
+
+export const nexus2RepositoryFormatTypes = [...commonRepoFormatTypes]
+
+export const nexus3RepositoryFormatTypes = [
+  ...commonRepoFormatTypes,
+  { label: 'Raw', value: RepositoryFormatTypes.Raw }
 ]
 
 export const k8sRepositoryFormatTypes = [{ label: 'Docker', value: RepositoryFormatTypes.Docker }]
@@ -728,8 +736,13 @@ export const getVariablesHeaderTooltipId = (selectedDeploymentType: ServiceDefin
 export const getAllowedRepoOptions = (
   deploymentType: string,
   azureFlag?: boolean,
-  isTemplateContext?: boolean
+
+  isTemplateContext?: boolean,
+  selectedArtifact?: ArtifactType | null
 ): SelectOption[] => {
+  if (selectedArtifact === 'Nexus3Registry') {
+    return [...k8sRepositoryFormatTypes, ...nexus3RepositoryFormatTypes]
+  }
   return !!isTemplateContext ||
     isSSHWinRMDeploymentType(deploymentType) ||
     isTASDeploymentType(deploymentType) ||

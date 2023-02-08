@@ -75,7 +75,7 @@ export function CommonRecords(props: CommonRecordsProps): JSX.Element {
         <StackTraceList
           stackTraceList={records}
           className={css.recordContainer}
-          stackTracePanelClassName={css.stackTracePanelClassName}
+          stackTracePanelClassName={cx({ [css.stackTracePanelClassName]: records?.length === 1 })}
         />
       </Container>
     )

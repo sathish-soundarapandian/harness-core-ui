@@ -140,7 +140,9 @@ describe('Open shift template with git tests', () => {
               },
               type: 'Git'
             },
-            skipResourceVersioning: false
+            skipResourceVersioning: false,
+            enableDeclarativeRollback: false,
+            paramsPaths: undefined
           }
         }
       })

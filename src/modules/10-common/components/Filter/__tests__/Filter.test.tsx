@@ -6,8 +6,9 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { FormInput } from '@harness/uicore'
+import userEvent from '@testing-library/user-event'
 import { act } from 'react-dom/test-utils'
 import { TestWrapper } from '@common/utils/testUtils'
 import { Filter, FilterProps } from '../Filter'
@@ -22,7 +23,7 @@ const props: FilterProps<unknown, FilterInterface> = {
   onSaveOrUpdate: jest.fn(),
   onDelete: jest.fn(),
   initialFilter: {
-    formValues: { connectorNames: [''], description: '' },
+    formValues: { connectorNames: [], description: '' },
     metadata: { name: 'Sample', filterVisibility: 'OnlyCreator', identifier: 'Sample' }
   },
   onFilterSelect: jest.fn(),
@@ -53,5 +54,25 @@ describe('Test Filter component', () => {
       const portal = document.getElementsByClassName('bp3-portal')[0]
       expect(portal).toMatchSnapshot('Filter')
     })
+  })
+
+  test('should show an error if save is clicked with empty filter fields', async () => {
+    render(
+      <TestWrapper>
+        <Filter {...props}>
+          <ConnectorFormFields />
+        </Filter>
+      </TestWrapper>
+    )
+
+    userEvent.click(await screen.findByLabelText('filters.newFilter'))
+
+    const filterNameInput = await screen.findByPlaceholderText('filters.typeFilterName')
+
+    userEvent.clear(filterNameInput)
+    userEvent.type(filterNameInput, 'foo')
+    userEvent.click(screen.getByLabelText('save'))
+
+    expect(await screen.findByText('filters.invalidCriteria')).toBeInTheDocument()
   })
 })

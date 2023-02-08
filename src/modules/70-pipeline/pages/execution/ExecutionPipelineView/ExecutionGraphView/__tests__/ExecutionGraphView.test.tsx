@@ -81,11 +81,7 @@ const contextValue = (mock: any = mockCD): ExecutionContextParams => ({
   },
   logsToken: 'token',
   setLogsToken: jest.fn(),
-  addNewNodeToMap: jest.fn(),
-  setSelectedStepId: jest.fn(),
-  setSelectedStageId: jest.fn(),
-  setSelectedStageExecutionId: jest.fn(),
-  setSelectedCollapsedNodeId: jest.fn()
+  addNewNodeToMap: jest.fn()
 })
 
 const fetchMock = jest.spyOn(global, 'fetch' as any)

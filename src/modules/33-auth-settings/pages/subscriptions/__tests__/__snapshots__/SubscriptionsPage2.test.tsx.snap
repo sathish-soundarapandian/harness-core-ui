@@ -456,6 +456,15 @@ exports[`Subscriptions Page it renders the subscriptions page with no data servi
                 </span>
               </span>
             </div>
+            <div>
+               
+              <a
+                download="serviceLicensesData.csv"
+                href="data:text/csv;charset=utf-8,"
+              >
+                Export CSV
+              </a>
+            </div>
           </div>
           <div
             class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between"

@@ -49,7 +49,7 @@ import { useQueryParams } from '@common/hooks'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ManifestActions } from '@common/constants/TrackingConstants'
 import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
-import { getScope } from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
+import { FileUsage } from '@filestore/interfaces/FileStore'
 import { ManifestWizard } from '../ManifestWizard/ManifestWizard'
 import { getStatus, getConnectorNameFromValue } from '../../PipelineStudio/StageBuilder/StageBuilderUtil'
 import { useVariablesExpression } from '../../PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -103,6 +103,7 @@ import { ECSWithS3 } from '../ManifestWizardSteps/ECSWithS3/ECSWithS3'
 import { ServerlessLambdaWithS3 } from '../ManifestWizardSteps/ServerlessLambdaWithS3/ServerlessLambdaWithS3'
 import TasManifest from '../ManifestWizardSteps/TasManifest/TasManifest'
 import TASWithHarnessStore from '../ManifestWizardSteps/TASWithHarnessStore/TASWithHarnessStore'
+import { LocationValue } from '../../ConfigFilesSelection/ConfigFilesListView/LocationValue'
 import css from '../ManifestSelection.module.scss'
 
 const DIALOG_PROPS: IDialogProps = {
@@ -161,7 +162,8 @@ function ManifestListView({
   }
 
   const FileStoreModal = useFileStoreModal({
-    isReadonly: true
+    isReadonly: true,
+    fileUsage: FileUsage.MANIFEST_FILE
   })
 
   const editManifest = (manifestType: ManifestTypes, store: ManifestStores, index: number): void => {
@@ -561,6 +563,8 @@ function ManifestListView({
                   getManifestLocation(manifest?.type as ManifestTypes, manifest?.spec?.store?.type)
                 )
 
+                const isManifestLocationString = typeof manifestLocation === 'string'
+                const isHarnessStore = manifest?.spec?.store.type === ManifestStoreMap.Harness
                 return (
                   <div className={css.rowItem} key={`${manifest?.identifier}-${index}`}>
                     <section className={css.manifestList}>
@@ -585,31 +589,21 @@ function ManifestListView({
                             width={200}
                             alwaysShowTooltip
                             tooltip={
-                              typeof manifestLocation === 'string' ? (
-                                manifestLocation
-                              ) : manifest?.spec?.store.type === ManifestStoreMap.Harness ? (
-                                <Container className={css.fsLinkWrapper} padding="small">
-                                  {manifestLocation.map((manifestPath: string, i: number) => {
-                                    const { path, scope } = getScope(manifestPath)
-                                    return (
-                                      <div
-                                        className={css.pathLink}
-                                        key={`${manifestPath}${i}`}
-                                        onClick={() => FileStoreModal.openFileStoreModal(path, scope)}
-                                      >
-                                        <Text margin={{ top: 'xsmall', bottom: 'xsmall' }} color={Color.BLACK}>
-                                          {manifestPath}
-                                        </Text>
-                                      </div>
-                                    )
-                                  })}
-                                </Container>
-                              ) : (
-                                manifestLocation.join(', ')
-                              )
+                              <LocationValue
+                                isTooltip
+                                locations={isManifestLocationString ? [manifestLocation] : manifestLocation}
+                                isHarnessStore={isHarnessStore}
+                                onClick={(path: string, scope: string) =>
+                                  FileStoreModal.openFileStoreModal(path, scope)
+                                }
+                              />
                             }
                           >
-                            {typeof manifestLocation === 'string' ? manifestLocation : manifestLocation.join(', ')}
+                            <LocationValue
+                              locations={isManifestLocationString ? [manifestLocation] : manifestLocation}
+                              isHarnessStore={isHarnessStore}
+                              onClick={(path: string, scope: string) => FileStoreModal.openFileStoreModal(path, scope)}
+                            />
                           </Text>
                         </span>
                       )}

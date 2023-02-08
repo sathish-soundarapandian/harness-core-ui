@@ -74,6 +74,11 @@ import {
   variablesResponse
 } from './85-cv/verifyStep/constants'
 
+interface dynamicValueInterface {
+  key: string
+  value: string
+}
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
@@ -123,6 +128,8 @@ declare global {
       // https://github.com/jaredpalmer/cypress-image-snapshot
       matchImageSnapshot(snapshotName?: string, options?: unknown): void
       checkIfMetricThresholdsExists(): void
+      generateCIPipelineYamlDynamicFixture(dynamicValues: dynamicValueInterface[]): void
+      generateCIPipelineTemplateYamlDynamicFixture(dynamicValues: dynamicValueInterface[]): void
     }
   }
 }
@@ -614,3 +621,40 @@ Cypress.Commands.add(
     expect(isChildVisible(subject[0]), 'Element Visible').to.be.true
   }
 )
+Cypress.Commands.add('generateCIPipelineYamlDynamicFixture', (dynamicValues: dynamicValueInterface[]) => {
+  const fixture = {
+    status: 'SUCCESS',
+    data: {
+      yamlPipeline: '',
+      resolvedTemplatesPipelineYaml: '',
+      entityValidityDetails: { valid: true, invalidYaml: null },
+      modules: ['ci', 'pms']
+    },
+    metaData: null,
+    correlationId: '761cef15-f468-4b5d-91ae-14d44f84cfe6'
+  }
+  dynamicValues.forEach(dynamicValue => {
+    if (Object.prototype.hasOwnProperty.call(fixture.data, dynamicValue.key)) {
+      fixture.data[dynamicValue.key] = dynamicValue.value
+    }
+  })
+  cy.writeFile('fixtures/ci/api/common/dynamicFixtureCIPipelineYAML.json', fixture)
+})
+Cypress.Commands.add('generateCIPipelineTemplateYamlDynamicFixture', (dynamicValues: dynamicValueInterface[]) => {
+  const fixture = {
+    status: 'SUCCESS',
+    data: {
+      inputSetTemplateYaml: '',
+      modules: ['ci', 'pms'],
+      hasInputSets: false
+    },
+    metaData: null,
+    correlationId: 'bce48f83-aa7c-4e22-8001-1038d114a616'
+  }
+  dynamicValues.forEach(dynamicValue => {
+    if (Object.prototype.hasOwnProperty.call(fixture.data, dynamicValue.key)) {
+      fixture.data[dynamicValue.key] = dynamicValue.value
+    }
+  })
+  cy.writeFile('fixtures/ci/api/common/dynamicFixtureCIPipelineTemplate.json', fixture)
+})

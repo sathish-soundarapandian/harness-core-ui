@@ -172,7 +172,7 @@ const ResourceGroupListView: React.FC<ResourceGroupListViewProps> = props => {
         openResourceSelector
       },
       {
-        Header: getString('lastUpdated'),
+        Header: getString('common.lastModified'),
         accessor: row => row?.lastModifiedAt,
         id: 'lastUpdated',
         width: '16%',

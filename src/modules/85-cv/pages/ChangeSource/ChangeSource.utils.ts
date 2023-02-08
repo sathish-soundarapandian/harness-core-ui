@@ -16,6 +16,11 @@ export const getIconBySource = (source: ChangeSourceDTO['type']): IconName => {
       return 'cd-main' as IconName
     case ChangeSourceTypes.HarnessCD:
       return 'harness' as IconName
+    case ChangeSourceTypes.CustomFF:
+    case ChangeSourceTypes.CustomDeploy:
+    case ChangeSourceTypes.CustomIncident:
+    case ChangeSourceTypes.CustomInfrastructure:
+      return 'service-custom-connector'
     default:
       return getConnectorIconByType(source || '')
   }

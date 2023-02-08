@@ -102,7 +102,7 @@ export const SegmentDetailPage: React.FC = () => {
 
   const deleteSegmentConfirm = useConfirmAction({
     title: getString('cf.segments.delete.title'),
-    message: <String useRichText stringID="cf.segments.delete.message" vars={{ name: segment?.name }} />,
+    message: <String useRichText stringID="cf.segments.delete.message" vars={{ segmentName: segment?.name }} />,
     intent: Intent.DANGER,
     action: async () => {
       clear()

@@ -212,60 +212,139 @@ LandingDashboardFactory.registerModuleDashboardHandler(ModuleName.CD, {
  * Register for Audit Trail
  * */
 const cdLabel = 'common.purpose.cd.continuous'
-AuditTrailFactory.registerResourceHandler(ResourceType.PIPELINE, {
+AuditTrailFactory.registerResourceHandler('PIPELINE', {
   moduleIcon: {
     name: 'cd-main'
   },
   moduleLabel: cdLabel,
   resourceLabel: 'common.pipeline',
-  resourceUrl: (_: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
+  resourceUrl: (pipeline: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
-    if (module && orgIdentifier && projectIdentifier) {
-      return routes.toPipelines({
+    if (pipeline.identifier && orgIdentifier && projectIdentifier) {
+      return routes.toPipelineStudio({
         module,
         orgIdentifier,
         projectIdentifier,
-        accountId: accountIdentifier
+        accountId: accountIdentifier,
+        pipelineIdentifier: pipeline.identifier
       })
     }
     return undefined
   }
 })
 
-AuditTrailFactory.registerResourceHandler(ResourceType.SERVICE, {
+AuditTrailFactory.registerResourceHandler('INPUT_SET', {
+  moduleIcon: {
+    name: 'cd-main'
+  },
+  moduleLabel: cdLabel,
+  resourceLabel: 'inputSetsText',
+  resourceUrl: (inputSet: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
+    const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    if (inputSet.identifier && inputSet.labels?.pipelineIdentifier && orgIdentifier && projectIdentifier) {
+      return routes.toInputSetForm({
+        module,
+        orgIdentifier,
+        projectIdentifier,
+        accountId: accountIdentifier,
+        inputSetIdentifier: inputSet.identifier,
+        pipelineIdentifier: inputSet.labels.pipelineIdentifier
+      })
+    }
+    return undefined
+  }
+})
+
+AuditTrailFactory.registerResourceHandler('SERVICE', {
   moduleIcon: {
     name: 'cd-main'
   },
   moduleLabel: cdLabel,
   resourceLabel: 'service',
-  resourceUrl: (_: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
+  resourceUrl: (service: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
     const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
-    if (module && orgIdentifier && projectIdentifier) {
-      return routes.toServices({
+    if (service.identifier && orgIdentifier && projectIdentifier) {
+      return routes.toServiceStudio({
         module,
         orgIdentifier,
         projectIdentifier,
-        accountId: accountIdentifier
+        accountId: accountIdentifier,
+        serviceId: service.identifier
       })
     }
     return undefined
   }
 })
 
-AuditTrailFactory.registerResourceHandler(ResourceType.ENVIRONMENT, {
+AuditTrailFactory.registerResourceHandler('ENVIRONMENT_GROUP', {
   moduleIcon: {
     name: 'cd-main'
   },
   moduleLabel: cdLabel,
-  resourceLabel: 'environment'
+  resourceLabel: 'common.environmentGroup.label',
+  resourceUrl: (environmentGroup: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
+    const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    if (environmentGroup.identifier && orgIdentifier && projectIdentifier) {
+      return routes.toEnvironmentGroupDetails({
+        module,
+        orgIdentifier,
+        projectIdentifier,
+        accountId: accountIdentifier,
+        environmentGroupIdentifier: environmentGroup.identifier
+      })
+    }
+    return undefined
+  }
 })
 
-AuditTrailFactory.registerResourceHandler(ResourceType.TRIGGER, {
+AuditTrailFactory.registerResourceHandler('ENVIRONMENT', {
+  moduleIcon: {
+    name: 'cd-main'
+  },
+  moduleLabel: cdLabel,
+  resourceLabel: 'environment',
+  resourceUrl: (environment: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
+    const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    if (environment.identifier && orgIdentifier && projectIdentifier) {
+      return routes.toEnvironmentDetails({
+        module,
+        orgIdentifier,
+        projectIdentifier,
+        accountId: accountIdentifier,
+        environmentIdentifier: environment.identifier
+      })
+    }
+    return undefined
+  }
+})
+
+AuditTrailFactory.registerResourceHandler('TRIGGER', {
   moduleIcon: {
     name: 'pipeline'
   },
   moduleLabel: 'common.pipeline',
-  resourceLabel: 'common.triggerLabel'
+  resourceLabel: 'common.triggerLabel',
+  resourceUrl: (trigger: ResourceDTO, resourceScope: ResourceScope, module?: Module) => {
+    const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    if (
+      trigger.identifier &&
+      trigger.labels?.pipelineIdentifier &&
+      trigger.labels?.triggerType &&
+      orgIdentifier &&
+      projectIdentifier
+    ) {
+      return routes.toTriggersDetailPage({
+        module,
+        orgIdentifier,
+        projectIdentifier,
+        accountId: accountIdentifier,
+        triggerIdentifier: trigger.identifier,
+        triggerType: trigger.labels.triggerType,
+        pipelineIdentifier: trigger.labels.pipelineIdentifier
+      })
+    }
+    return undefined
+  }
 })
 
 export function RedirectToPipelineDetailHome(): React.ReactElement {

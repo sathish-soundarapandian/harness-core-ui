@@ -16,7 +16,10 @@ import { StageType } from '@pipeline/utils/stageHelpers'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { Category, StageActions } from '@common/constants/TrackingConstants'
-import { isContextTypeStageOrStepGroupTemplate } from '@pipeline/components/PipelineStudio/PipelineUtils'
+import {
+  isContextTypeStageOrStepGroupTemplate,
+  isContextTypeTemplateType
+} from '@pipeline/components/PipelineStudio/PipelineUtils'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import type { PipelineStageProps } from '../PipelineStage'
@@ -91,7 +94,8 @@ export function AddStageView({
               <React.Fragment key={stage.type}>
                 {stage.isHidden !== true &&
                 (!stage.isApproval || !isParallel) &&
-                (stage.type !== StageType.PIPELINE || isPipelineChainingEnabled) ? (
+                (stage.type !== StageType.PIPELINE ||
+                  (isPipelineChainingEnabled && !isContextTypeTemplateType(contextType))) ? (
                   <div>
                     <Card
                       data-testid={`stage-${stage.type}`}

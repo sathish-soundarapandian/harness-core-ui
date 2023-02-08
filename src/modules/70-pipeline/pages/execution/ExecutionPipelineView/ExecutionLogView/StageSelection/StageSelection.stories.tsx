@@ -26,10 +26,6 @@ const contextValue: ExecutionContextParams = {
   logsToken: '',
   setLogsToken: noop,
   addNewNodeToMap: noop,
-  setSelectedStepId: noop,
-  setSelectedStageId: noop,
-  setSelectedStageExecutionId: noop,
-  setSelectedCollapsedNodeId: noop,
   pipelineStagesMap: new Map([
     ['stage1', { nodeIdentifier: 'stage1', name: 'Stage 1', status: 'Success' }],
     ['stage2', { nodeIdentifier: 'stage2', name: 'Stage 2', status: 'Success' }],

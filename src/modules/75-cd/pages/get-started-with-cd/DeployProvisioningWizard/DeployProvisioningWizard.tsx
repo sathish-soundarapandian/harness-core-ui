@@ -14,8 +14,7 @@ import {
   MultiStepProgressIndicator,
   PageSpinner,
   useConfirmationDialog,
-  Text,
-  useToaster
+  Text
 } from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { defaultTo, get, noop } from 'lodash-es'
@@ -26,13 +25,12 @@ import routes from '@common/RouteDefinitions'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import { useAgentApplicationServiceCreate } from 'services/gitops'
 import { WizardStep, StepStatus, DeployProvisiongWizardStepId, DeployProvisioningWizardProps } from './Constants'
 import { SelectDeploymentType, SelectDeploymentTypeRefInstance } from '../SelectWorkload/SelectDeploymentType'
 import type { SelectInfrastructureRefInstance } from '../SelectInfrastructure/SelectInfrastructure'
 import { DelegateSelectorRefInstance, DelegateSelectorWizard } from '../DelegateSelectorWizard/DelegateSelectorWizard'
 import { Configure } from '../ConfigureService/ConfigureService'
-import { DOCUMENT_URL, getAppPayload, getFullAgentWithScope, Scope } from '../CDOnboardingUtils'
+import { DOCUMENT_URL } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import RunPipelineSummary from '../RunPipelineSummary/RunPipelineSummary'
 import { ConfigureGitops } from '../ConfigureGitops/ConfigureGitops'
@@ -52,14 +50,12 @@ const WizardStepOrder = [
 export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> = props => {
   const { lastConfiguredWizardStepId = DeployProvisiongWizardStepId.Deploy } = props
   const {
-    saveApplicationData,
-    state: { service: serviceData, repository: repositoryData, cluster: clusterData }
+    state: { service: serviceData, agent: agentData }
   } = useCDOnboardingContext()
 
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const history = useHistory()
-  const toast = useToaster()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const selectedDeploymentType: string | undefined = get(serviceData, 'serviceDefinition.type')
 
@@ -75,17 +71,6 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   const SelectDeploymentTypeRef = React.useRef<SelectDeploymentTypeRefInstance | null>(null)
   const delegateSelectorRef = React.useRef<DelegateSelectorRefInstance | null>(null)
   const configureServiceRef = React.useRef<SelectInfrastructureRefInstance | null>(null)
-
-  const fullAgentName = getFullAgentWithScope('meenaaccagent', Scope.ACCOUNT)
-  const { mutate: createApplication } = useAgentApplicationServiceCreate({
-    agentIdentifier: fullAgentName,
-    queryParams: {
-      projectIdentifier,
-      orgIdentifier,
-      accountIdentifier: accountId,
-      repoIdentifier: `account.${repositoryData?.identifier}`
-    }
-  })
 
   // this needs to be worked upon after confirming the steps name
   const [wizardStepStatus, setWizardStepStatus] = React.useState<Map<DeployProvisiongWizardStepId, StepStatus>>(
@@ -268,7 +253,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
             enableNextBtn={() => setDisableBtn(false)}
             ref={delegateSelectorRef}
             prevStepData={{
-              agent: 'meenaaccagent',
+              agent: agentData?.identifier,
               scope: 'account'
             }}
           />
@@ -280,40 +265,10 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
           trackEvent(CDOnboardingActions.MovetoConfigureEnvironment, {})
         },
         onClickNext: () => {
-          const payload = getAppPayload({
-            repositoryData,
-            clusterData,
-            name: 'testapp'
-          })
-          const data: any = {
-            ...payload,
-            projectIdentifier: projectIdentifier,
-            orgIdentifier: orgIdentifier,
-            accountIdentifier: accountId
-          }
-
-          createApplication(data, {
-            queryParams: {
-              clusterIdentifier: `account.${clusterData?.identifier}`,
-              projectIdentifier,
-              orgIdentifier,
-              accountIdentifier: accountId,
-              repoIdentifier: `account.${repositoryData?.identifier}`
-            }
-          }).then(response => {
-            toast.showSuccess(
-              getString('common.entitycreatedSuccessfully', {
-                entity: getString('common.application'),
-                name: response?.name
-              }),
-              undefined
-            )
-            saveApplicationData(response)
-            setSelectedSectionId(DeployProvisiongWizardStepId.Deploy)
-            setCurrentWizardStepId(DeployProvisiongWizardStepId.Deploy)
-            updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
-            updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.Success)
-          })
+          setSelectedSectionId(DeployProvisiongWizardStepId.Deploy)
+          setCurrentWizardStepId(DeployProvisiongWizardStepId.Deploy)
+          updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
+          updateStepStatus([DeployProvisiongWizardStepId.Configure], StepStatus.Success)
         },
         stepFooterLabel: 'review'
       }
@@ -321,11 +276,16 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
     [
       DeployProvisiongWizardStepId.Deploy,
       {
-        stepRender: <Deploy />,
-        onClickBack: () => {
-          setCurrentWizardStepId(DeployProvisiongWizardStepId.Configure)
-          updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
-        },
+        stepRender: (
+          <Deploy
+            onBack={() => {
+              setCurrentWizardStepId(DeployProvisiongWizardStepId.Configure)
+              updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
+            }}
+          />
+        ),
+        showFooter: false,
+        onClickBack: noop,
         stepFooterLabel: 'common.createPipeline'
       }
     ]
@@ -514,6 +474,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
             data-testid={'close-cd-onboarding-wizard'}
           />
         </Container>
+        <hr className={css.divider} />
         {/* content */}
         <Layout.Vertical
           padding={{ left: 'huge', right: 'huge', top: 'huge' }}

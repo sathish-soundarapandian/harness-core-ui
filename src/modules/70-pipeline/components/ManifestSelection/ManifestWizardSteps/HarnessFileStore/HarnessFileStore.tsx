@@ -7,7 +7,6 @@
 
 import React from 'react'
 import {
-  Accordion,
   AllowedTypes,
   Button,
   ButtonVariation,
@@ -27,11 +26,15 @@ import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
-import { FormMultiTypeCheckboxField } from '@common/components'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { FileUsage } from '@filestore/interfaces/FileStore'
-import { ManifestDataType, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
+import {
+  getSkipResourceVersioningBasedOnDeclarativeRollback,
+  ManifestDataType,
+  ManifestIdentifierValidation,
+  ManifestStoreMap
+} from '../../Manifesthelper'
 import type { HarnessFileStoreDataType, HarnessFileStoreFormData, ManifestTypes } from '../../ManifestInterface'
+import { ManifestDetailsAdvancedSection } from '../CommonManifestDetails/ManifestDetailsAdvancedSection'
 import { shouldAllowOnlyOneFilePath } from '../CommonManifestDetails/utils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
@@ -83,7 +86,8 @@ function HarnessFileStore({
         identifier: initialValues.identifier,
         valuesPaths,
         paramsPaths,
-        skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning')
+        skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning'),
+        enableDeclarativeRollback: get(initialValues, 'spec.enableDeclarativeRollback')
       }
     }
     return {
@@ -91,7 +95,8 @@ function HarnessFileStore({
       files: [''],
       valuesPaths: [''],
       paramsPaths: [],
-      skipResourceVersioning: false
+      skipResourceVersioning: false,
+      enableDeclarativeRollback: false
     }
   }
 
@@ -119,7 +124,15 @@ function HarnessFileStore({
         set(manifestObj, 'manifest.spec.paramsPaths', formData.paramsPaths)
       }
       if (showSkipResourceVersion(selectedManifest as ManifestTypes)) {
-        set(manifestObj, 'manifest.spec.skipResourceVersioning', formData?.skipResourceVersioning)
+        set(
+          manifestObj,
+          'manifest.spec.skipResourceVersioning',
+          getSkipResourceVersioningBasedOnDeclarativeRollback(
+            formData?.skipResourceVersioning,
+            formData?.enableDeclarativeRollback
+          )
+        )
+        set(manifestObj, 'manifest.spec.enableDeclarativeRollback', formData?.enableDeclarativeRollback)
       }
 
       handleSubmit(manifestObj)
@@ -236,45 +249,14 @@ function HarnessFileStore({
                     </div>
                   )}
                   {showSkipResourceVersion(selectedManifest as ManifestTypes) && (
-                    <Accordion
-                      activeId={get(initialValues, 'spec.skipResourceVersioning') ? getString('advancedTitle') : ''}
-                      className={css.advancedStepOpen}
-                    >
-                      <Accordion.Panel
-                        id={getString('advancedTitle')}
-                        addDomId={true}
-                        summary={getString('advancedTitle')}
-                        details={
-                          <Layout.Horizontal
-                            width={'50%'}
-                            flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
-                            margin={{ bottom: 'huge' }}
-                          >
-                            <FormMultiTypeCheckboxField
-                              name="skipResourceVersioning"
-                              label={getString('skipResourceVersion')}
-                              multiTypeTextbox={{ expressions, allowableTypes }}
-                              className={css.checkbox}
-                            />
-                            {getMultiTypeFromValue(get(formik, 'values.skipResourceVersioning')) ===
-                              MultiTypeInputType.RUNTIME && (
-                              <ConfigureOptions
-                                value={get(formik, 'values.skipResourceVersioning', '') as string}
-                                type="String"
-                                variableName="skipResourceVersioning"
-                                showRequiredField={false}
-                                showDefaultField={false}
-                                showAdvanced={true}
-                                onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
-                                style={{ alignSelf: 'center', marginTop: 11 }}
-                                className={css.addmarginTop}
-                                isReadonly={isReadonly}
-                              />
-                            )}
-                          </Layout.Horizontal>
-                        }
-                      />
-                    </Accordion>
+                    <ManifestDetailsAdvancedSection
+                      formik={formik}
+                      expressions={expressions}
+                      allowableTypes={allowableTypes}
+                      initialValues={initialValues}
+                      isReadonly={isReadonly}
+                      selectedManifest={selectedManifest}
+                    />
                   )}
                 </div>
 

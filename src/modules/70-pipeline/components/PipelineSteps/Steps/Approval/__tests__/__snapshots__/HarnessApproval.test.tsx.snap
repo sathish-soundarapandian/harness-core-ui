@@ -1305,7 +1305,7 @@ exports[`Harness Approval tests Edit stage - readonly: edit stage readonly 1`] =
                 class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
                 data-tooltip-id="harnessApproval_spec.includePipelineExecutionHistory"
               >
-                pipeline.approvalStep.includePipelineExecutionHistory
+                pipeline.approvalStep.includeStageExecutionDetails
               </span>
             </label>
           </div>
@@ -1864,7 +1864,7 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
                 class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
                 data-tooltip-id="harnessApproval_spec.includePipelineExecutionHistory"
               >
-                pipeline.approvalStep.includePipelineExecutionHistory
+                pipeline.approvalStep.includeStageExecutionDetails
               </span>
             </label>
           </div>
@@ -2846,7 +2846,7 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
                 class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
                 data-tooltip-id="harnessApproval_spec.includePipelineExecutionHistory"
               >
-                pipeline.approvalStep.includePipelineExecutionHistory
+                pipeline.approvalStep.includeStageExecutionDetails
               </span>
             </label>
           </div>
@@ -3800,7 +3800,7 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
                 class="Tooltip--acenter FormikForm--checkBoxDocTooltipLabel"
                 data-tooltip-id="harnessApproval_spec.includePipelineExecutionHistory"
               >
-                pipeline.approvalStep.includePipelineExecutionHistory
+                pipeline.approvalStep.includeStageExecutionDetails
               </span>
             </label>
           </div>

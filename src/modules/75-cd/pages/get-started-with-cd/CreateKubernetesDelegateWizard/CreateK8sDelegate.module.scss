@@ -75,12 +75,13 @@
 }
 
 .dangerColor {
-  color: 'rgba(207, 35, 24, 1)' !important;
+  color: rgba(207, 35, 24, 1) !important;
   padding-top: 4px !important;
 }
 
 .textPadding {
-  padding: 10px !important;
+  padding: 4px !important;
+  color: var(--black) !important;
 }
 
 .danger {
@@ -337,6 +338,16 @@
   align-items: center;
   color: var(--grey-800);
   padding-bottom: var(--spacing-xsmall);
+}
+
+.provisioningInfo {
+  height: 32px;
+  margin-top: var(--spacing-xxxlarge);
+  display: flex;
+  font-weight: 500;
+  font-size: var(--form-input-font-size);
+  color: var(--grey-900);
+  align-items: center;
 }
 
 .marginTopClass {

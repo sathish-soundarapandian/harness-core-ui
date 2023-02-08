@@ -38,7 +38,7 @@ function mockGetString(name: string): string {
 }
 describe('Validate ChangeSource Utils', () => {
   test('Validate CreateCardOptions', () => {
-    expect(createCardOptions('Deployment', mockGetString)).toEqual([
+    expect(createCardOptions('Deployment', mockGetString, true)).toEqual([
       {
         category: 'Deployment',
         icon: 'cd-main',
@@ -50,13 +50,21 @@ describe('Validate ChangeSource Utils', () => {
         icon: 'harness',
         label: '',
         value: 'HarnessCD'
+      },
+      {
+        category: 'Deployment',
+        icon: 'service-custom-connector',
+        label: '',
+        value: 'CustomDeploy'
       }
     ])
-    expect(createCardOptions('Infrastructure', mockGetString)).toEqual([
-      { category: 'Infrastructure', icon: 'app-kubernetes', label: 'Kubernetes', value: 'K8sCluster' }
+    expect(createCardOptions('Infrastructure', mockGetString, true)).toEqual([
+      { category: 'Infrastructure', icon: 'app-kubernetes', label: 'Kubernetes', value: 'K8sCluster' },
+      { category: 'Infrastructure', icon: 'service-custom-connector', label: '', value: 'CustomInfrastructure' }
     ])
-    expect(createCardOptions('Alert', mockGetString)).toEqual([
-      { category: 'Alert', icon: 'service-pagerduty', label: 'PagerDuty', value: 'PagerDuty' }
+    expect(createCardOptions('Alert', mockGetString, true)).toEqual([
+      { category: 'Alert', icon: 'service-pagerduty', label: 'PagerDuty', value: 'PagerDuty' },
+      { category: 'Alert', icon: 'service-custom-connector', label: '', value: 'CustomIncident' }
     ])
   })
 
@@ -91,7 +99,7 @@ describe('Validate ChangeSource Utils', () => {
 
   test('Ensure getChangeSourceOptions works as intended', async () => {
     // no infra options should be returned for application type
-    expect(getChangeSourceOptions(jest.fn(), 'Application')).toEqual([
+    expect(getChangeSourceOptions(jest.fn(), 'Application', true)).toEqual([
       {
         label: undefined,
         value: 'Deployment'
@@ -99,11 +107,15 @@ describe('Validate ChangeSource Utils', () => {
       {
         label: undefined,
         value: 'Alert'
+      },
+      {
+        label: undefined,
+        value: 'FeatureFlag'
       }
     ])
 
     // no deployment options should be return for infra type
-    expect(getChangeSourceOptions(jest.fn(), 'Infrastructure')).toEqual([
+    expect(getChangeSourceOptions(jest.fn(), 'Infrastructure', true)).toEqual([
       {
         label: undefined,
         value: 'Infrastructure'
@@ -111,6 +123,10 @@ describe('Validate ChangeSource Utils', () => {
       {
         label: undefined,
         value: 'Alert'
+      },
+      {
+        label: undefined,
+        value: 'FeatureFlag'
       }
     ])
 

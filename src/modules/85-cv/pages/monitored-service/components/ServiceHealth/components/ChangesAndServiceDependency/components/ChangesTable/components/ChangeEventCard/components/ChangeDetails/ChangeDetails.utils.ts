@@ -170,6 +170,11 @@ export const getSourceLabel = (getString: UseStringsReturn['getString'], type: C
   switch (type) {
     case ChangeSourceTypes.HarnessFF:
       return getString('common.moduleTitles.cf')
+    case ChangeSourceTypes.CustomFF:
+    case ChangeSourceTypes.CustomDeploy:
+    case ChangeSourceTypes.CustomIncident:
+    case ChangeSourceTypes.CustomInfrastructure:
+      return type
     default:
       return ''
   }

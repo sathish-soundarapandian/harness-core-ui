@@ -17,3 +17,8 @@ export interface StoreMetadata {
   branch?: string
   filePath?: string
 }
+
+export enum SaveTemplateAsType {
+  NEW_LABEL_VERSION = ' NEW_LABEL_VEFSION',
+  NEW_TEMPALTE = 'NEW_TEMPLATE'
+}

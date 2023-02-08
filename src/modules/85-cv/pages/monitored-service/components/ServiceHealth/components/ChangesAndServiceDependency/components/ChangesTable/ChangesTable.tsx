@@ -59,9 +59,9 @@ export default function ChangesTable({
     onClose: noop
   } as IDrawerProps
   const { showDrawer } = useDrawer({
-    // eslint-disable-next-line react/display-name
     createDrawerContent: props => <ChangeEventCard activityId={props.id} />,
-    drawerOptions
+    drawerOptions,
+    showConfirmationDuringClose: false
   })
 
   useEffect(() => {

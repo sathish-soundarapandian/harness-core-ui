@@ -1,0 +1,110 @@
+{
+  "data": {
+    "pipelineExecutionSummary": {
+      "status": "Errored",
+      "layoutNodeMap": {
+        "S0": {
+          "nodeUuid": "S0",
+          "nodeType": "MATRIX",
+          "status": "NotStarted",
+          "edgeLayoutList": {
+            "currentNodeChildren": ["S1", "S2", "S3"],
+            "nextIds": []
+          }
+        },
+        "S1": {
+          "nodeUuid": "M1",
+          "nodeExecutionId": "S1",
+          "nodeType": "Deployment",
+          "status": "Success",
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          }
+        },
+        "S2": {
+          "nodeUuid": "M1",
+          "nodeExecutionId": "S2",
+          "nodeType": "Deployment",
+          "status": "Errored",
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          }
+        },
+        "S3": {
+          "nodeUuid": "M1",
+          "nodeExecutionId": "S3",
+          "nodeType": "Deployment",
+          "status": "NotStarted",
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          }
+        }
+      },
+      "startingNodeId": "S0"
+    },
+    "executionGraph": {
+      "rootNodeId": "N0",
+      "nodeMap": {
+        "N0": {
+          "uuid": "N0",
+          "stepType": "CUSTOM_STAGE",
+          "status": "NotStarted"
+        },
+        "N1": {
+          "uuid": "N1",
+          "stepType": "NG_EXECUTION",
+          "status": "NotStarted"
+        },
+        "N2": {
+          "uuid": "N2",
+          "stepType": "STRATEGY",
+          "status": "NotStarted"
+        },
+        "S1": {
+          "uuid": "S1",
+          "stepType": "Wait",
+          "status": "Success"
+        },
+        "S2": {
+          "uuid": "S2",
+          "stepType": "Wait",
+          "status": "Errored"
+        },
+        "S3": {
+          "uuid": "S3",
+          "stepType": "Wait",
+          "status": "Errored"
+        }
+      },
+      "nodeAdjacencyListMap": {
+        "N0": {
+          "children": ["N1"],
+          "nextIds": []
+        },
+        "N1": {
+          "children": ["N2"],
+          "nextIds": []
+        },
+        "N2": {
+          "children": ["S1", "S2", "S3"],
+          "nextIds": []
+        },
+        "S1": {
+          "children": [],
+          "nextIds": []
+        },
+        "S2": {
+          "children": [],
+          "nextIds": []
+        },
+        "S3": {
+          "children": [],
+          "nextIds": []
+        }
+      }
+    }
+  }
+}

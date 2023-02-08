@@ -7,7 +7,26 @@
 
 export enum ProvisionerTypes {
   Terraform = 'Terraform',
+  Terragrunt = 'Terragrunt',
   CloudFormation = 'CloudFormation',
   ARM = 'ARM',
+  Blueprint = 'Blueprint',
   Script = 'Script'
+}
+
+export const payloadValueforProvisionerTypes = (provisionerTypes: ProvisionerTypes) => {
+  switch (provisionerTypes) {
+    case ProvisionerTypes.Terraform:
+      return 'TERRAFORM'
+    case ProvisionerTypes.Terragrunt:
+      return 'TERRAGRUNT'
+    case ProvisionerTypes.CloudFormation:
+      return 'CLOUD_FORMATION'
+    case ProvisionerTypes.ARM:
+      return 'AZURE_ARM'
+    case ProvisionerTypes.Blueprint:
+      return 'AZURE_BLUEPRINT'
+    case ProvisionerTypes.Script:
+      return 'SHELL_SCRIPT_PROVISIONER'
+  }
 }

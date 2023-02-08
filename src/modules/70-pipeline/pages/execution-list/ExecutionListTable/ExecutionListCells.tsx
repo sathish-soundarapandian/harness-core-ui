@@ -6,11 +6,11 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Checkbox, Classes } from '@blueprintjs/core'
+import { Classes } from '@blueprintjs/core'
 import { Color, FontVariation } from '@harness/design-system'
-import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text } from '@harness/uicore'
+import { Avatar, Button, ButtonVariation, Icon, Layout, TagsPopover, Text, Checkbox } from '@harness/uicore'
 import { get, isEmpty, defaultTo } from 'lodash-es'
-import React, { useRef } from 'react'
+import React from 'react'
 import { Link, useParams } from 'react-router-dom'
 import type {
   Cell,
@@ -128,7 +128,6 @@ export interface CellTypeRegister {
 
 export const RowSelectCell: CellType = ({ row }) => {
   const data = row.original
-  const checkboxRef = useRef<HTMLDivElement>(null)
   const { compareItems, addToCompare, removeFromCompare } = useExecutionCompareContext()
 
   const isCompareItem =
@@ -143,7 +142,7 @@ export const RowSelectCell: CellType = ({ row }) => {
   }
 
   return (
-    <div ref={checkboxRef} className={css.checkbox} onClick={killEvent}>
+    <div className={css.checkbox} onClick={killEvent}>
       <Checkbox
         size={12}
         checked={isCompareItem}

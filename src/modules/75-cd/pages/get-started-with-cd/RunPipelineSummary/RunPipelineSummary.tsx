@@ -6,34 +6,34 @@
  */
 
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import {
   Button,
   ButtonSize,
   ButtonVariation,
   Container,
-  Dialog,
   getErrorInfoFromErrorObject,
   Icon,
   Layout,
-  PageSpinner,
   Text,
   useToaster
 } from '@harness/uicore'
-import cx from 'classnames'
 import { Color, FontVariation } from '@harness/design-system'
 import { capitalize, defaultTo, get, isEmpty } from 'lodash-es'
-import { useModalHook } from '@harness/use-modal'
-import { Classes, IDialogProps } from '@blueprintjs/core'
 import { StringKeys, useStrings } from 'framework/strings'
 import { useGetDelegateGroupByIdentifier } from 'services/portal'
 import type { ServiceDefinition, UserRepoResponse } from 'services/cd-ng'
 import { StringUtils } from '@common/exports'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import { createPipelineV2Promise, ResponsePipelineSaveResponse, useGetInputsetYaml } from 'services/pipeline-ng'
+import {
+  createPipelineV2Promise,
+  ResponsePipelineSaveResponse,
+  usePostPipelineExecuteWithInputSetYaml
+} from 'services/pipeline-ng'
 import { Status } from '@common/utils/Constants'
 import { useGetServicesData } from '@cd/components/PipelineSteps/DeployServiceEntityStep/useGetServicesData'
-import { RunPipelineForm } from '@pipeline/components/RunPipelineModal/RunPipelineForm'
+import routes from '@common/RouteDefinitions'
+import type { GitQueryParams, PipelinePathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import {
   DEFAULT_PIPELINE_NAME,
   DEFAULT_PIPELINE_PAYLOAD,
@@ -45,7 +45,6 @@ import { DeployProvisiongWizardStepId } from '../DeployProvisioningWizard/Consta
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import successSetup from '../../home/images/success_setup.svg'
 import css from './RunPipelineSummary.module.scss'
-import moduleCss from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
 interface RunPipelineSummaryProps {
   onSuccess: () => void
@@ -57,10 +56,15 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
   const {
     state: { service, delegate, infrastructure, environment }
   } = useCDOnboardingContext()
-  const { showError } = useToaster()
 
   const { getString } = useStrings()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
+  const { showError, showSuccess } = useToaster()
+  const history = useHistory()
+  const { accountId, projectIdentifier, orgIdentifier, module } = useParams<
+    PipelineType<PipelinePathProps> & GitQueryParams
+  >()
+
+  const [isEditMode, setIsEditMode] = React.useState(false)
   const { data: delegateDetails } = useGetDelegateGroupByIdentifier({
     identifier: delegate?.delegateIdentifier as string,
     queryParams: { accountId, orgId: orgIdentifier, projectId: projectIdentifier },
@@ -103,46 +107,6 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
     </Layout.Horizontal>
   )
 
-  const [inputSetYaml, setInputSetYaml] = React.useState(EMPTY_STRING)
-  const [pipelineIdentifier, setPipelineIdentifier] = React.useState<string>(EMPTY_STRING)
-  function onCloseRunPipelineModal(): void {
-    closeRunPipelineModal()
-    setInputSetYaml(EMPTY_STRING)
-  }
-
-  const runModalProps: IDialogProps = {
-    isOpen: true,
-    usePortal: true,
-    autoFocus: true,
-    canEscapeKeyClose: true,
-    canOutsideClickClose: false,
-    enforceFocus: false,
-    className: cx(moduleCss.runPipelineDialog, Classes.DIALOG),
-    isCloseButtonShown: false
-  }
-  const { data: inputSetYAMLData, loading } = useGetInputsetYaml({
-    planExecutionId: EMPTY_STRING,
-    queryParams: {
-      orgIdentifier,
-      projectIdentifier,
-      accountIdentifier: accountId
-    },
-    lazy: true,
-    requestOptions: {
-      headers: {
-        'content-type': 'application/yaml'
-      }
-    }
-  })
-
-  React.useEffect(() => {
-    if (inputSetYAMLData) {
-      ;(inputSetYAMLData as unknown as Response).text().then(str => {
-        setInputSetYaml(str)
-      })
-    }
-  }, [inputSetYAMLData])
-
   const { servicesData } = useGetServicesData({
     gitOpsEnabled: false,
     serviceIdentifiers: [service?.identifier as string],
@@ -164,6 +128,34 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
     }
   }, [service?.identifier, servicesData])
 
+  const pipelineInfo = React.useMemo(() => {
+    const { name: repoName } = get(service, 'data.repoValues') || { name: DEFAULT_PIPELINE_NAME }
+    const constructPipelineName = (name: string): string =>
+      `${getString('pipelineSteps.deploy.create.deployStageName')}_${StringUtils.getIdentifierFromName(name)}`
+
+    const uniquePipelineId = getUniqueEntityIdentifier(repoName)
+    const userPipelineIdentifier = constructPipelineName(uniquePipelineId)
+
+    return {
+      name: constructPipelineName(repoName),
+      identifier: userPipelineIdentifier
+    }
+  }, [service])
+
+  const { mutate: runPipeline } = usePostPipelineExecuteWithInputSetYaml({
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier
+    },
+    identifier: pipelineInfo.identifier,
+    requestOptions: {
+      headers: {
+        'content-type': 'application/yaml'
+      }
+    }
+  })
+
   const constructPipelinePayload = React.useCallback(
     (data: PipelineRefPayload, repository = { name: DEFAULT_PIPELINE_NAME } as UserRepoResponse): string => {
       const { name: repoName } = repository
@@ -172,22 +164,16 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
       if (!repoName || !serviceRef || !environmentRef || !infraStructureRef) {
         return EMPTY_STRING
       }
-      const constructPipelineName = (name: string): string =>
-        `${getString('pipelineSteps.deploy.create.deployStageName')}_${StringUtils.getIdentifierFromName(name)}`
-
-      const uniquePipelineId = getUniqueEntityIdentifier(repoName)
-      const userPipelineIdentifier = constructPipelineName(uniquePipelineId)
 
       const payload = DEFAULT_PIPELINE_PAYLOAD
-      payload.pipeline.name = constructPipelineName(repoName)
-      payload.pipeline.identifier = userPipelineIdentifier
+      payload.pipeline.name = pipelineInfo.name
+      payload.pipeline.identifier = pipelineInfo.identifier
       payload.pipeline.projectIdentifier = projectIdentifier
       payload.pipeline.orgIdentifier = orgIdentifier
       payload.pipeline.stages[0].stage.spec.deploymentType = deploymentType
       payload.pipeline.stages[0].stage.spec.service = serviceInputsObj
       payload.pipeline.stages[0].stage.spec.environment.environmentRef = environmentRef
       payload.pipeline.stages[0].stage.spec.environment.infrastructureDefinitions[0].identifier = infraStructureRef
-      setPipelineIdentifier(userPipelineIdentifier)
       try {
         return yamlStringify(payload)
       } catch (e) {
@@ -197,6 +183,34 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
     },
     [getString, projectIdentifier, orgIdentifier, serviceInputsObj]
   )
+
+  const runPipelineHandler = async (): Promise<void> => {
+    try {
+      setLoader(true)
+      const response = await runPipeline()
+      if (response.status === 'SUCCESS') {
+        if (response.data) {
+          setLoader(false)
+          showSuccess(getString('runPipelineForm.pipelineRunSuccessFully'))
+          history.push({
+            pathname: routes.toExecutionPipelineView({
+              orgIdentifier,
+              pipelineIdentifier: pipelineInfo?.identifier,
+              projectIdentifier,
+              executionIdentifier: defaultTo(response.data?.planExecution?.uuid, ''),
+              accountId,
+              module,
+              source: 'deployments'
+            })
+          })
+          onSuccess()
+        }
+      }
+    } catch (error: any) {
+      setLoader(false)
+      showError(getErrorInfoFromErrorObject(error))
+    }
+  }
 
   const setupPipeline = (data: PipelineRefPayload): void => {
     try {
@@ -208,12 +222,12 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
           projectIdentifier
         },
         requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-      }).then((createPipelineResponse: ResponsePipelineSaveResponse) => {
+      }).then(async (createPipelineResponse: ResponsePipelineSaveResponse) => {
         const { status } = createPipelineResponse
         if (status === Status.SUCCESS && createPipelineResponse?.data?.identifier) {
+          setIsEditMode(true)
           if (createPipelineResponse?.data?.identifier) {
-            setLoader(false)
-            openRunPipelineModal()
+            runPipelineHandler()
           }
         }
       })
@@ -223,42 +237,6 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
     }
   }
 
-  const [openRunPipelineModal, closeRunPipelineModal] = useModalHook(
-    () =>
-      loading ? (
-        <PageSpinner />
-      ) : (
-        <Dialog {...runModalProps}>
-          <Layout.Vertical>
-            <RunPipelineForm
-              pipelineIdentifier={pipelineIdentifier}
-              orgIdentifier={orgIdentifier}
-              projectIdentifier={projectIdentifier}
-              accountId={accountId}
-              module={'cd'}
-              inputSetYAML={inputSetYaml || EMPTY_STRING}
-              source="executions"
-              onClose={() => {
-                onCloseRunPipelineModal()
-              }}
-              storeType={'INLINE'}
-            />
-            <Button
-              aria-label="close modal"
-              minimal
-              icon="cross"
-              iconProps={{ size: 20 }}
-              onClick={() => {
-                onCloseRunPipelineModal()
-              }}
-              className={moduleCss.crossIcon}
-            />
-          </Layout.Vertical>
-        </Dialog>
-      ),
-    [loading, inputSetYaml, pipelineIdentifier]
-  )
-
   const onSuccessHandler = (): void => {
     const refsData = {
       serviceRef: service?.identifier as string,
@@ -266,9 +244,7 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
       infraStructureRef: infrastructure?.identifier as string,
       deploymentType: service?.serviceDefinition?.type as string
     }
-    setupPipeline(refsData)
-
-    onSuccess()
+    isEditMode ? runPipelineHandler() : setupPipeline(refsData)
   }
 
   return (

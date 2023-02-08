@@ -253,11 +253,6 @@
   }
 }
 
-.executionListEmpty {
-  height: 400px !important;
-  margin: 18px !important;
-}
-
 .serviceColumnStyle {
   font-size: var(--font-size-small) !important;
   color: var(--grey-800) !important;
@@ -410,4 +405,12 @@
 
 .marginBottom1 {
   margin-bottom: 1px !important;
+}
+
+.serviceDetailDialogEmptyState {
+  height: 730px;
+
+  img {
+    margin-top: 250px;
+  }
 }

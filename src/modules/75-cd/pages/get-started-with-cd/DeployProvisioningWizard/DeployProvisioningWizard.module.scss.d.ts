@@ -29,6 +29,7 @@ declare const styles: {
   readonly crossIcon: string
   readonly delegateOverviewWrapper: string
   readonly disable: string
+  readonly divider: string
   readonly dropdownPopover: string
   readonly footer: string
   readonly formInput: string
@@ -38,7 +39,9 @@ declare const styles: {
   readonly keyTextArea: string
   readonly learnMore: string
   readonly main: string
+  readonly marginBottom20: string
   readonly marginBottom25: string
+  readonly marginTop20: string
   readonly modalCard: string
   readonly modalContent: string
   readonly noDelegateWarning: string
@@ -48,6 +51,10 @@ declare const styles: {
   readonly repoCard: string
   readonly repoborderBottom: string
   readonly repositories: string
+  readonly repositoriesIcon: string
+  readonly repositoryHeader: string
+  readonly repositoryListCard: string
+  readonly repositoryListItem: string
   readonly repositoryRow: string
   readonly repositorySearch: string
   readonly repositoryTable: string
@@ -60,9 +67,12 @@ declare const styles: {
   readonly testConnectionBtn: string
   readonly text: string
   readonly text1: string
+  readonly text2: string
+  readonly text3: string
   readonly uppercase: string
   readonly verticalSeparation: string
   readonly width50: string
+  readonly width70: string
   readonly workloadTypeCard: string
   readonly workloadTypeIcon: string
 }

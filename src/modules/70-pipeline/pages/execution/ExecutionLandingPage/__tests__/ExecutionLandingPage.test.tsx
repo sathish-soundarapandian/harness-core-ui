@@ -18,15 +18,17 @@ import {
 import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
-import { ResponsePipelineExecutionDetail, useGetExecutionDetailV2 } from 'services/pipeline-ng'
+import { useGetExecutionDetailV2 } from 'services/pipeline-ng'
 
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
-import { useExecutionContext } from '@pipeline/context/ExecutionContext'
-import { getActiveStageForPipeline, getActiveStep } from '@pipeline/utils/executionUtils'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
+import { PipelineResponse as PipelineDetailsMockResponse } from '@pipeline/pages/pipeline-details/__tests__/PipelineDetailsMocks'
 import ExecutionLandingPage, { POLL_INTERVAL } from '../ExecutionLandingPage'
-import mockData from './mock.json'
 import reportSummaryMock from './report-summary-mock.json'
+
+jest.mock('services/pipeline-rq', () => ({
+  useGetPipelineSummaryQuery: jest.fn(() => PipelineDetailsMockResponse)
+}))
 
 jest.mock('services/pipeline-ng', () => ({
   useGetPipelineSummary: jest.fn(() => ({
@@ -44,7 +46,8 @@ jest.mock('services/pipeline-ng', () => ({
     }
   })),
   useCreateVariablesForPipelineExecution: jest.fn().mockReturnValue({
-    mutate: jest.fn()
+    mutate: jest.fn(),
+    cancel: jest.fn()
   }),
   useHandleInterrupt: jest.fn(() => ({
     mutate: jest.fn()
@@ -207,74 +210,6 @@ describe('<ExecutionLandingPage /> tests', () => {
     })
 
     expect(refetch).toHaveBeenCalledTimes(called ? 1 : 0)
-  })
-
-  test('auto stage selection works', () => {
-    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
-      refetch: jest.fn(),
-      loading: true,
-      data: mockData
-    }))
-
-    function Child(): React.ReactElement {
-      const { selectedStageId, selectedStepId } = useExecutionContext()
-
-      return (
-        <React.Fragment>
-          <div data-testid="autoSelectedStageId">{selectedStageId}</div>
-          <div data-testid="autoSelectedStepId">{selectedStepId}</div>
-        </React.Fragment>
-      )
-    }
-
-    const { getByTestId } = render(
-      <TestWrapper path={TEST_EXECUTION_PIPELINE_PATH} pathParams={pathParams as unknown as Record<string, string>}>
-        <ExecutionLandingPage>
-          <Child />
-        </ExecutionLandingPage>
-      </TestWrapper>
-    )
-    const testData = mockData as unknown as ResponsePipelineExecutionDetail
-    const stage = getActiveStageForPipeline(testData.data?.pipelineExecutionSummary)
-    const runningStep = getActiveStep(testData.data?.executionGraph || {})
-    jest.runOnlyPendingTimers()
-
-    expect(getByTestId('autoSelectedStageId').innerHTML).toBe(stage)
-    expect(getByTestId('autoSelectedStepId').innerHTML).toBe(runningStep?.node)
-  })
-
-  test('auto stage should not work when user has selected a stage/step', () => {
-    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
-      refetch: jest.fn(),
-      loading: false,
-      data: mockData
-    }))
-
-    function Child(): React.ReactElement {
-      const { selectedStageId, selectedStepId } = useExecutionContext()
-
-      return (
-        <React.Fragment>
-          <div data-testid="autoSelectedStageId">{selectedStageId}</div>
-          <div data-testid="autoSelectedStepId">{selectedStepId}</div>
-        </React.Fragment>
-      )
-    }
-
-    const { getByTestId } = render(
-      <TestWrapper
-        path={TEST_EXECUTION_PIPELINE_PATH}
-        queryParams={{ stage: 'qaStage' }}
-        pathParams={pathParams as unknown as Record<string, string>}
-      >
-        <ExecutionLandingPage>
-          <Child />
-        </ExecutionLandingPage>
-      </TestWrapper>
-    )
-
-    expect(getByTestId('autoSelectedStageId').innerHTML).toBe('')
-    expect(getByTestId('autoSelectedStepId').innerHTML).toBe('')
   })
 })
 

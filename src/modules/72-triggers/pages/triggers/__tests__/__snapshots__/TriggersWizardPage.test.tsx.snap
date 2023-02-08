@@ -6664,6 +6664,7 @@ exports[`TriggersWizardPage Triggers tests Renders/snapshots OnEdit Render - Sch
                             >
                               <p
                                 class="StyledProps--font StyledProps--main"
+                                data-testid="expression"
                               >
                                 0/5 * * * *
                               </p>

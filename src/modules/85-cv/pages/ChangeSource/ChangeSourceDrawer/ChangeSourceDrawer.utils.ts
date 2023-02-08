@@ -11,7 +11,6 @@ import type { Item } from '@harness/uicore/dist/components/ThumbnailSelect/Thumb
 import type { StringsMap } from 'stringTypes'
 import type { UseStringsReturn } from 'framework/strings'
 import type { ChangeSourceDTO, MonitoredServiceDTO } from 'services/cv'
-import { Connectors } from '@connectors/constants'
 import { MonitoredServiceType } from '@cv/pages/monitored-service/components/Configurations/components/Service/components/MonitoredServiceOverview/MonitoredServiceOverview.constants'
 import { getIconBySource } from '../ChangeSource.utils'
 import {
@@ -20,6 +19,7 @@ import {
   ChangeSourceCategoryOptions,
   ChangeSourceCategoryName,
   ChangeSourceTypes,
+  CustomChangeSourceList,
   internalChangeSources
 } from './ChangeSourceDrawer.constants'
 import type { UpdatedChangeSourceDTO } from './ChangeSourceDrawer.types'
@@ -49,10 +49,15 @@ export const createChangesourceList = (
 
 export const createCardOptions = (
   category: ChangeSourceDTO['category'],
-  getString: UseStringsReturn['getString']
+  getString: UseStringsReturn['getString'],
+  isCustomChangeSourceEnabled?: boolean
 ): Item[] => {
+  let clonedOptions = cloneDeep(ChangeSourceConnectorOptions)
+  if (!isCustomChangeSourceEnabled) {
+    clonedOptions = clonedOptions.filter(item => !CustomChangeSourceList.includes(item.value as ChangeSourceTypes))
+  }
   return (
-    cloneDeep(ChangeSourceConnectorOptions)
+    clonedOptions
       .filter(item => item.category === category)
       .map(item => {
         item.icon = getIconBySource(item.value as ChangeSourceDTO['type'])
@@ -77,6 +82,8 @@ export const validateChangeSource = (
     spec?: { [key: string]: any }
   } = {}
 
+  const isCustom = CustomChangeSourceList.includes(type as any)
+
   if (!isEdit && tableData?.some(item => item.identifier === identifier)) {
     errors.name = getString('cv.changeSource.duplicateIdentifier')
   }
@@ -90,7 +97,13 @@ export const validateChangeSource = (
     errors.type = getString('cv.changeSource.selectChangeSourceType')
   }
 
-  if (!spec?.connectorRef && type !== ChangeSourceTypes.HarnessCDNextGen && type !== ChangeSourceTypes.HarnessCD) {
+  const shouldValidateConnector =
+    !isCustom &&
+    !spec?.connectorRef &&
+    type !== ChangeSourceTypes.HarnessCDNextGen &&
+    type !== ChangeSourceTypes.HarnessCD
+
+  if (shouldValidateConnector) {
     errors.spec = {
       connectorRef: getString('cv.onboarding.selectProductScreen.validationText.connectorRef')
     }
@@ -141,12 +154,13 @@ export const validateChangeSourceSpec = (
 
 export const getChangeSourceOptions = (
   getString: UseStringsReturn['getString'],
-  type?: MonitoredServiceDTO['type']
+  type?: MonitoredServiceDTO['type'],
+  isCustomChangeSourceEnabled?: boolean
 ): SelectOption[] => {
   const options: SelectOption[] = []
   for (const category of ChangeSourceCategoryOptions) {
     if (
-      (type && internalChangeSources.includes(category.value)) ||
+      (!isCustomChangeSourceEnabled && type && internalChangeSources.includes(category.value)) ||
       (type === MonitoredServiceType.APPLICATION && category.value === ChangeSourceCategoryName.INFRASTRUCTURE) ||
       (type === MonitoredServiceType.INFRASTRUCTURE && category.value === ChangeSourceCategoryName.DEPLOYMENT)
     ) {
@@ -175,6 +189,13 @@ export const updateSpecByType = (data: ChangeSourceDTO): ChangeSourceDTO['spec']
         harnessServiceId: data?.spec?.harnessServiceId?.value,
         harnessEnvironmentId: data?.spec?.harnessEnvironmentId?.value
       }
+    case ChangeSourceTypes.CustomFF:
+    case ChangeSourceTypes.CustomDeploy:
+    case ChangeSourceTypes.CustomIncident:
+    case ChangeSourceTypes.CustomInfrastructure:
+      return {
+        type: data?.category
+      }
     default:
       return {}
   }
@@ -188,12 +209,17 @@ export const buildInitialData = (categoryOptions: SelectOption[]): UpdatedChange
     enabled: true
   }
 }
-export const preSelectChangeSourceConnectorOnCategoryChange = (categoryName: string): string => {
+export const preSelectChangeSourceConnectorOnCategoryChange = (
+  categoryName: string,
+  isCustomChangeSourceEnabled?: boolean
+): string => {
   switch (categoryName) {
     case ChangeSourceCategoryName.ALERT:
-      return Connectors.PAGER_DUTY
+      return isCustomChangeSourceEnabled ? '' : ChangeSourceTypes.PagerDuty
     case ChangeSourceCategoryName.INFRASTRUCTURE:
-      return Connectors.KUBERNETES_CLUSTER
+      return isCustomChangeSourceEnabled ? '' : ChangeSourceTypes.K8sCluster
+    case ChangeSourceCategoryName.FEATURE_FLAG:
+      return ChangeSourceTypes.CustomFF
     default:
       return ''
   }

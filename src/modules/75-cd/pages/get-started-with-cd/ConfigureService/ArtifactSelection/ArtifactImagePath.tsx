@@ -6,7 +6,6 @@
  */
 
 import React from 'react'
-import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { get, set } from 'lodash-es'
 import produce from 'immer'
 import { useFormikContext } from 'formik'
@@ -21,15 +20,9 @@ import type { ArtifactConfig } from 'services/cd-ng'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { useCDOnboardingContext } from '../../CDOnboardingStore'
-import { getUniqueEntityIdentifier, ServiceDataType } from '../../CDOnboardingUtils'
+import { ALLOWABLE_TYPES, getUniqueEntityIdentifier, ServiceDataType } from '../../CDOnboardingUtils'
 import type { ConfigureServiceInterface } from '../ConfigureService'
 import css from './DockerArtifactory.module.scss'
-
-const ALLOWABLE_TYPES = [
-  MultiTypeInputType.FIXED,
-  MultiTypeInputType.EXPRESSION,
-  MultiTypeInputType.RUNTIME
-] as AllowedTypesWithRunTime[]
 
 export default function ArtifactImagePath(): JSX.Element {
   const { values: formValues, setFieldValue } = useFormikContext<ConfigureServiceInterface>()

@@ -44,6 +44,8 @@ unexpectedEvent: Unexpected event
 unexpectedFrequency: Unexpected Frequency
 copyURL: Copy URL
 urlCopied: URL Copied
+copycURL: Copy cURL command
+cURLCopied: cURL command Copied
 unit: Unit
 anomalousMetrics: Anomalous metrics
 proceedToEdit: Proceed to Edit
@@ -136,6 +138,13 @@ onboarding:
       icon: cd-main
     HarnessCDCurrentGen:
       name: Harness CD
+    Custom:
+      title:
+        Use webhook URL or cURL command to send requests to you custom change source to monitors change events related
+        to deployments, infrastructure changes, and incidents.
+      curl: cURL
+      note: Upon saving, a webhook URL and cURL command will be generated, which can be obtained from the change source listing
+      copyCURL: Copy as cURL command
   monitoringSources:
     addMoreSources: Add more Monitoring Sources
     select: Select your Monitoring Source

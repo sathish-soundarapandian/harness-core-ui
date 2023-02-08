@@ -120,7 +120,13 @@ const BaseEmailStep = (props: BaseEmailStepProps): React.ReactElement => {
           name="spec.subject"
           label={getString('common.smtp.labelSubject')}
           className={css.subject}
-          multiTypeTextArea={{ enableConfigureOptions: false, expressions, disabled: readonly, allowableTypes }}
+          multiTypeTextArea={{
+            enableConfigureOptions: false,
+            expressions,
+            disabled: readonly,
+            allowableTypes,
+            textAreaProps: { growVertically: true }
+          }}
         />
         {getMultiTypeFromValue(formValues.spec.subject) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
@@ -141,7 +147,13 @@ const BaseEmailStep = (props: BaseEmailStepProps): React.ReactElement => {
           name="spec.body"
           label={getString('common.smtp.labelBody')}
           className={css.body}
-          multiTypeTextArea={{ enableConfigureOptions: false, expressions, disabled: readonly, allowableTypes }}
+          multiTypeTextArea={{
+            enableConfigureOptions: false,
+            expressions,
+            disabled: readonly,
+            allowableTypes,
+            textAreaProps: { growVertically: true }
+          }}
         />
         {getMultiTypeFromValue(formValues.spec.body) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions

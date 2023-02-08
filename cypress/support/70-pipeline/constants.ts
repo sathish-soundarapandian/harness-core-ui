@@ -109,7 +109,7 @@ export const stepTemplateSchemaEndpoint = `/template/api/templates/schema/templa
 export const canvasExecutionPipelineCall =
   '/pipeline/api/pipelines/execution/v2/testParallelNodesPipeline?routingId=accountId&orgIdentifier=default&projectIdentifier=project1&accountIdentifier=accountId'
 export const canvasExecutionStageNodeCall =
-  '/pipeline/api/pipelines/execution/v2/testParallelNodesPipeline?routingId=accountId&orgIdentifier=default&projectIdentifier=project1&accountIdentifier=accountId&stageNodeId=irowXCLESvK1hLHWKeobEw'
+  '/pipeline/api/pipelines/execution/v2/testParallelNodesPipeline?routingId=accountId&orgIdentifier=default&projectIdentifier=project1&accountIdentifier=accountId&stageNodeId=y2b4qTE6QPu2wkd4z5vRfg'
 // Routes
 
 export const updatedPipelineExecutionEndpoint = `/pipeline/api/pipeline/execute/${pipelineIdentifier}?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&moduleType=cd&notifyOnlyUser=false`

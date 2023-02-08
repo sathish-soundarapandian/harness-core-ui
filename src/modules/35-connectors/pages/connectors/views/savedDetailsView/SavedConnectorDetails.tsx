@@ -109,6 +109,8 @@ const getLabelByType = (type: string): string => {
       return 'connectors.name_labels.Spot'
     case Connectors.TAS:
       return 'connectors.name_labels.TAS'
+    case Connectors.TERRAFORM_CLOUD:
+      return 'connectors.name_labels.Terraform'
     default:
       return 'connector'
   }
@@ -376,6 +378,19 @@ const getTasSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInte
     {
       label: 'password',
       value: connector?.spec?.credential?.spec?.passwordRef
+    }
+  ]
+}
+
+const getTerraformCloudSchema = (connector: ConnectorInfoDTO): Array<ActivityDetailsRowInterface> => {
+  return [
+    {
+      label: 'connectors.terraformCloud.url',
+      value: connector?.spec?.terraformCloudUrl
+    },
+    {
+      label: 'connectors.apiToken',
+      value: connector?.spec?.credential?.spec?.apiToken
     }
   ]
 }
@@ -932,6 +947,8 @@ const getSchemaByType = (
       return getSpotSchema(connector)
     case Connectors.TAS:
       return getTasSchema(connector)
+    case Connectors.TERRAFORM_CLOUD:
+      return getTerraformCloudSchema(connector)
     default:
       return []
   }

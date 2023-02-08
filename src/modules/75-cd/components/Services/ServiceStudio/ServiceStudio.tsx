@@ -15,9 +15,12 @@ import { ServiceResponseDTO, useGetServiceV2 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { ServiceContextProvider } from '@cd/context/ServiceContext'
 import ServiceDetailsSummary from '@cd/components/ServiceDetails/ServiceDetailsContent/ServiceDetailsSummary'
+import ServiceDetailsSummaryV2 from '@cd/components/ServiceDetails/ServiceDetailsSummaryV2/ServiceDetailsSummaryV2'
 import EntitySetupUsage from '@common/pages/entityUsage/EntityUsage'
 import type { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import ServiceConfigurationWrapper from './ServiceConfigWrapper/ServiceConfigWrapper'
 
 export interface ServiceHeaderRefetchRef {
@@ -28,6 +31,7 @@ function ServiceStudio(): React.ReactElement | null {
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
   const refetch = useRef<ServiceHeaderRefetchRef>(null)
   const [isDeploymentTypeDisabled, setIsDeploymentTypeDisabled] = useState(false)
+  const isServiceDetailSummaryV2 = useFeatureFlag(FeatureFlag.CDC_SERVICE_DASHBOARD_REVAMP_NG)
 
   const { data: serviceResponse, loading: serviceDataLoading } = useGetServiceV2({
     serviceIdentifier: serviceId,
@@ -72,7 +76,7 @@ function ServiceStudio(): React.ReactElement | null {
         setIsDeploymentTypeDisabled={setIsDeploymentTypeDisabled}
       >
         <ServiceConfigurationWrapper
-          summaryPanel={<ServiceDetailsSummary />}
+          summaryPanel={isServiceDetailSummaryV2 ? <ServiceDetailsSummaryV2 /> : <ServiceDetailsSummary />}
           refercedByPanel={<EntitySetupUsage entityType={EntityType.Service} entityIdentifier={serviceId} />}
           invokeServiceHeaderRefetch={invokeRefetch}
         />

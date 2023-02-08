@@ -166,6 +166,8 @@ configureOptions:
     minOneAllowedValue: 'Minimum one allowed value'
   notValidExpression: 'Not a valid input Expression'
   advancedHelp: 'With the advanced option, <br> you can type in JEXL expressions to return a list of values. <br> <a target="_blank">More information</a> <br> E.g. ${env.type} == “prod” ? aws1, aws2 : aws3, aws4'
+addNewRepo: + New Repository
+addNewCluster: + New Cluster
 namespace: Namespace
 cluster: Cluster
 clusterName: Cluster Name
@@ -283,7 +285,7 @@ purpose:
     subtitle: Deploy in peace - verify activities that take place in your system. Identify risk early.
     description: 'Measure overall service health with always-on change impact analysis.'
     continuous: '{{ $.common.serviceReliabilityManagement }}'
-    moduleSelectionSubHeading: Take your software build verification  process to the next level usng our Change Intelligence
+    moduleSelectionSubHeading: Take your software build verification  process to the next level using our Change Intelligence
 
   ci:
     continuousLabel: Continuous
@@ -1322,8 +1324,6 @@ openInNewTab: Open in new tab
 stayOnThisPage: 'Stay on this Page'
 leaveThisPage: 'Leave this Page'
 matchType: Match type
-svcEnv2Banner: 'Harness has made a significant update to the services and environments in CD. Services and Environments now have definitions that are associated with the respective object and can be managed independent of the pipeline. This change is a forward looking change that won’t impact your existing pipelines. However, we do plan on reducing our support on the service v1 and environments v1 and plan to deprecate by end of January. We have an automated migration tool to support our users. Please contact <a href= {{support}} target="_blank" rel="noreferrer"> <b>&nbsp;support.harness.io&nbsp;</b> </a> for further questions.'
-svcEnvV2Truncated: 'Harness has made a significant update to the services and environments in CD. Services and Environments now have definitions that are associated with the respective object and can be managed ...'
 ifNotPresent: 'If Not Present'
 collapse: Collapse
 expand: Expand

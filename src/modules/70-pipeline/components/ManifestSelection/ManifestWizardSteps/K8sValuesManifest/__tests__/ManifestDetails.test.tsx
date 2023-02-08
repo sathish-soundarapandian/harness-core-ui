@@ -7,9 +7,10 @@
 
 import React from 'react'
 import * as uuid from 'uuid'
-import { act, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, waitFor } from '@testing-library/react'
 import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
-import { TestWrapper } from '@common/utils/testUtils'
+import userEvent from '@testing-library/user-event'
+import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
@@ -103,13 +104,12 @@ describe('Manifest Details tests', () => {
       </TestWrapper>
     )
 
-    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     await act(async () => {
-      fireEvent.change(queryByNameAttribute('identifier')!, { target: { value: 'testidentifier' } })
-      fireEvent.change(queryByNameAttribute('gitFetchType')!, { target: { value: 'Branch' } })
-      fireEvent.change(queryByNameAttribute('branch')!, { target: { value: 'testBranch' } })
-      fireEvent.change(queryByNameAttribute('paths[0].path')!, { target: { value: 'test-path' } })
-      fireEvent.change(queryByNameAttribute('repoName')!, { target: { value: 'repo-name' } })
+      fireEvent.change(queryByNameAttribute('identifier', container)!, { target: { value: 'testidentifier' } })
+      fireEvent.change(queryByNameAttribute('gitFetchType', container)!, { target: { value: 'Branch' } })
+      fireEvent.change(queryByNameAttribute('branch', container)!, { target: { value: 'testBranch' } })
+      fireEvent.change(queryByNameAttribute('paths[0].path', container)!, { target: { value: 'test-path' } })
+      fireEvent.change(queryByNameAttribute('repoName', container)!, { target: { value: 'repo-name' } })
     })
     fireEvent.click(container.querySelector('button[type="submit"]')!)
     await waitFor(() => {
@@ -392,13 +392,12 @@ describe('Manifest Details tests', () => {
         <K8sValuesManifest {...defaultProps} />
       </TestWrapper>
     )
-    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     await act(async () => {
-      fireEvent.change(queryByNameAttribute('identifier')!, { target: { value: 'testidentifier' } })
-      fireEvent.change(queryByNameAttribute('gitFetchType')!, { target: { value: 'Branch' } })
-      fireEvent.change(queryByNameAttribute('branch')!, { target: { value: 'testBranch' } })
-      fireEvent.change(queryByNameAttribute('paths[0].path')!, { target: { value: 'test-path' } })
-      fireEvent.change(queryByNameAttribute('repoName')!, { target: { value: 'repo-name' } })
+      fireEvent.change(queryByNameAttribute('identifier', container)!, { target: { value: 'testidentifier' } })
+      fireEvent.change(queryByNameAttribute('gitFetchType', container)!, { target: { value: 'Branch' } })
+      fireEvent.change(queryByNameAttribute('branch', container)!, { target: { value: 'testBranch' } })
+      fireEvent.change(queryByNameAttribute('paths[0].path', container)!, { target: { value: 'test-path' } })
+      fireEvent.change(queryByNameAttribute('repoName', container)!, { target: { value: 'repo-name' } })
     })
     fireEvent.click(container.querySelector('button[type="submit"]')!)
     await waitFor(() => {
@@ -451,5 +450,89 @@ describe('Manifest Details tests', () => {
 
     fireEvent.click(getByText('advancedTitle'))
     expect(container).toMatchSnapshot()
+  })
+
+  test('enableDeclarativeRollback field in case of K8sManifest', async () => {
+    const defaultProps = {
+      stepName: 'Manifest details',
+      expressions: [],
+      allowableTypes: [
+        MultiTypeInputType.FIXED,
+        MultiTypeInputType.RUNTIME,
+        MultiTypeInputType.EXPRESSION
+      ] as AllowedTypesWithRunTime[],
+      manifestIdsList: [],
+      prevStepData: {
+        store: 'Git',
+        connectorRef: {
+          label: 'test',
+          value: 'test',
+          scope: Scope.ACCOUNT,
+          connector: {
+            identifier: 'test'
+          }
+        }
+      },
+      initialValues: {
+        identifier: 'k8Github',
+        type: ManifestDataType.K8sManifest,
+        spec: {
+          store: {
+            type: 'Github',
+            spec: {
+              commitId: 'test-commit',
+              connectorRef: 'account.test',
+              gitFetchType: 'Commit',
+              paths: ['testPath'],
+              repoName: 'repo',
+              branch: 'branch'
+            }
+          },
+          skipResourceVersioning: true
+        }
+      },
+      selectedManifest: ManifestDataType.K8sManifest
+    }
+    const handleSubmit = jest.fn()
+    const { container, getByText } = render(
+      <TestWrapper>
+        <K8sValuesManifest {...defaultProps} handleSubmit={handleSubmit} />
+      </TestWrapper>
+    )
+    userEvent.click(getByText('advancedTitle'))
+    expect(getByText('pipeline.manifestType.enableDeclarativeRollback')!).toBeInTheDocument()
+
+    const enableDeclarativeRollbackCheckbox = queryByNameAttribute(
+      'enableDeclarativeRollback',
+      container
+    ) as HTMLInputElement
+    await waitFor(() => expect(enableDeclarativeRollbackCheckbox).not.toBeChecked())
+    userEvent.click(getByText('pipeline.manifestType.enableDeclarativeRollback')!)
+    await waitFor(() => expect(enableDeclarativeRollbackCheckbox).toBeTruthy())
+    fireEvent.click(container.querySelector('button[type="submit"]')!)
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledTimes(1)
+      expect(handleSubmit).toHaveBeenCalledWith({
+        manifest: {
+          identifier: 'k8Github',
+          type: 'K8sManifest',
+          spec: {
+            enableDeclarativeRollback: true,
+            skipResourceVersioning: false,
+            valuesPaths: undefined,
+            store: {
+              spec: {
+                commitId: 'test-commit',
+                connectorRef: 'test',
+                gitFetchType: 'Commit',
+                paths: ['testPath'],
+                repoName: 'repo'
+              },
+              type: 'Git'
+            }
+          }
+        }
+      })
+    })
   })
 })

@@ -31,7 +31,6 @@ import type { ConfigFileWrapper, StageElementConfig } from 'services/cd-ng'
 
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { getScope } from '@filestore/components/MultiTypeFileSelect/FileStoreSelect/FileStoreSelectField'
 
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -57,9 +56,12 @@ import {
   ConfigFileTypeTitle,
   ConfigFileIconByType,
   ConfigFilesToConnectorMap,
-  FILE_TYPE_VALUES
+  FILE_TYPE_VALUES,
+  ConfigFilesMap
 } from '../ConfigFilesHelper'
 import { HarnessConfigStep } from '../ConfigFilesWizard/ConfigFilesSteps/HarnessConfigStep'
+import { LocationValue } from './LocationValue'
+
 import css from '../ConfigFilesSelection.module.scss'
 
 function ConfigFilesListView({
@@ -430,49 +432,21 @@ function ConfigFilesListView({
                           inline
                           alwaysShowTooltip
                           tooltip={
-                            isArray(filesLocation)
-                              ? filesLocation.map((field: string, i: number) => {
-                                  const { scope, path } = getScope(field)
-                                  return (
-                                    <div
-                                      className={css.locationLink}
-                                      key={i}
-                                      onClick={() => {
-                                        if (configFile?.spec?.store?.spec?.files?.length) {
-                                          openFileStore.openFileStoreModal(path, scope)
-                                        }
-                                      }}
-                                    >
-                                      <Text padding="small" key={i} color={Color.BLACK}>
-                                        {field}
-                                      </Text>
-                                    </div>
-                                  )
-                                })
-                              : filesLocation
+                            <LocationValue
+                              isTooltip
+                              isFileStore={!!configFile?.spec?.store?.spec?.files?.length}
+                              isHarnessStore={configFile?.spec?.store?.type === ConfigFilesMap.Harness}
+                              locations={isArray(filesLocation) ? filesLocation : [filesLocation]}
+                              onClick={(path: string, scope: string) => openFileStore.openFileStoreModal(path, scope)}
+                            />
                           }
                         >
-                          {configFile?.spec?.store?.spec?.files?.length === 1 ? (
-                            <span
-                              className={css.locationLink}
-                              onClick={() => {
-                                if (configFile?.spec?.store?.spec?.files?.length) {
-                                  openFileStore.openFileStoreModal(
-                                    getScope(filesLocation[0]).path,
-                                    getScope(filesLocation[0]).scope
-                                  )
-                                }
-                              }}
-                            >
-                              <Text padding="small" color={Color.BLACK} inline>
-                                {filesLocation}
-                              </Text>
-                            </span>
-                          ) : (
-                            <Text padding="small" color={Color.BLACK} inline>
-                              {filesLocation}
-                            </Text>
-                          )}
+                          <LocationValue
+                            isFileStore={!!configFile?.spec?.store?.spec?.files?.length}
+                            isHarnessStore={configFile?.spec?.store?.type === ConfigFilesMap.Harness}
+                            locations={isArray(filesLocation) ? filesLocation : [filesLocation]}
+                            onClick={(path: string, scope: string) => openFileStore.openFileStoreModal(path, scope)}
+                          />
                         </Text>
                       </div>
                       {!isReadonly && (

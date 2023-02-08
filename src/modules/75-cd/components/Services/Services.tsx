@@ -8,8 +8,6 @@
 import React from 'react'
 import { Tabs } from '@harness/uicore'
 import moment from 'moment'
-import { isEmpty } from 'lodash-es'
-import { useParams } from 'react-router-dom'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { Page } from '@common/exports'
 import { useStrings } from 'framework/strings'
@@ -21,8 +19,6 @@ import {
 } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { useLocalStorage } from '@common/hooks'
 import { convertStringToDateTimeRange } from '@cd/pages/dashboard/dashboardUtils'
-import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import EndOfLifeBanner from '@pipeline/components/PipelineStudio/PipelineCanvas/EndOfLifeBanner'
 import { DeploymentsTimeRangeContext, ServiceStoreContext, useServiceStore } from './common'
 
 import { ServicesListPage } from './ServicesListPage/ServicesListPage'
@@ -45,8 +41,6 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
   )
 
   const resultTimeFilterRange = convertStringToDateTimeRange(timeRange)
-  const { module, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
-  const showBanner = !isEmpty(projectIdentifier) && module === 'cd'
 
   return (
     <ServiceStoreContext.Provider
@@ -56,7 +50,6 @@ export const Services: React.FC<{ showServicesDashboard?: boolean }> = ({ showSe
         fetchDeploymentList
       }}
     >
-      {showBanner && <EndOfLifeBanner isSvcOrEnv />}
       <Page.Header
         title={getString('services')}
         breadcrumbs={<NGBreadcrumbs />}

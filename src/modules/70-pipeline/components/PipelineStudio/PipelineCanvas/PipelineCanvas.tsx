@@ -192,7 +192,6 @@ export function PipelineCanvas({
 
   useDocumentTitle([parse(pipeline?.name || getString('pipelines'))])
   const [discardBEUpdateDialog, setDiscardBEUpdate] = React.useState(false)
-
   const { openDialog: openConfirmBEUpdateError } = useConfirmationDialog({
     cancelButtonText: getString('cancel'),
     contentText: getString('pipelines-studio.pipelineUpdatedError'),
@@ -725,6 +724,7 @@ export function PipelineCanvas({
             })
 
             // This is special handler when user update yaml and immediately click on run
+            // With the new flow  (where user can not run without saving) this block may not be required at all
             if (isYaml && yamlHandler && isYamlEditable && !localUpdated) {
               try {
                 const parsedYaml = parse<Pipeline>(yamlHandler.getLatestYaml())
@@ -738,7 +738,9 @@ export function PipelineCanvas({
                   return true
                 }
                 localUpdated = !isEqual(omit(originalPipeline, 'repo', 'branch'), parsedYaml.pipeline)
-                updatePipeline(parsedYaml.pipeline)
+                // If selected branch and branch are not equal, then fetching is in progress,
+                // and below code will call updatePipeline with older data and set loading as false while fetching
+                selectedBranch === branch && updatePipeline(parsedYaml.pipeline)
               } catch (e) {
                 setYamlError(true)
                 return true
@@ -771,7 +773,6 @@ export function PipelineCanvas({
         />
         <Layout.Vertical height={'100%'}>
           <PipelineCanvasHeader
-            module={module}
             isPipelineRemote={!!isPipelineRemote}
             isGitSyncEnabled={!!isGitSyncEnabled}
             onGitBranchChange={onGitBranchChange}

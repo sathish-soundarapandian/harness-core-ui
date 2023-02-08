@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo, useState } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import type { Column } from 'react-table'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
@@ -14,7 +14,13 @@ import { Color, FontVariation } from '@harness/design-system'
 import moment from 'moment'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { String, useStrings, StringKeys } from 'framework/strings'
-import { PageActiveServiceDTO, LicenseUsageDTO, useGetProjectList, useGetOrganizationList } from 'services/cd-ng'
+import {
+  PageActiveServiceDTO,
+  LicenseUsageDTO,
+  useGetProjectList,
+  useGetOrganizationList,
+  useDownloadActiveServiceCSVReport
+} from 'services/cd-ng'
 import type { SortBy } from './types'
 
 import {
@@ -138,6 +144,7 @@ export function ServiceLicenseTable({
   const [orgName, setOrgName] = useState<string>('')
   const [projName, setProjName] = useState<string>('')
   const activeServiceText = `${totalElements}`
+  const [initialContent, setInitialContent] = useState<string>('')
   const timeValue = moment(content[0]?.timestamp).format('DD-MM-YYYY h:mm:ss')
   const { data: projectListData, loading: projLoading } = useGetProjectList({
     queryParams: {
@@ -180,6 +187,26 @@ export function ServiceLicenseTable({
       }) || [])
     ]
   }, [orgsData?.data?.content, allOrgsSelectOption])
+  const { data: dataInCsv, refetch } = useDownloadActiveServiceCSVReport({
+    queryParams: {
+      accountIdentifier: accountId
+    },
+    lazy: true
+  })
+  useEffect(() => {
+    if (dataInCsv) {
+      ;(dataInCsv as unknown as Response)
+        .clone()
+        .text()
+        .then((cont: string) => {
+          setInitialContent(cont)
+        })
+    }
+  }, [dataInCsv])
+
+  useEffect(() => {
+    refetch()
+  }, [refetch])
   return (
     <Card className={pageCss.outterCard}>
       <Layout.Vertical spacing="xxlarge" flex={{ alignItems: 'stretch' }}>
@@ -196,6 +223,12 @@ export function ServiceLicenseTable({
               {getString('common.whatIsActiveService')}
             </Text>
           </Layout.Vertical>
+          <div>
+            {' '}
+            <a href={`data:text/csv;charset=utf-8,${escape(initialContent || '')}`} download="serviceLicensesData.csv">
+              {'Export CSV'}
+            </a>
+          </div>
         </Layout.Horizontal>
         <Layout.Horizontal spacing="small" flex={{ justifyContent: 'space-between' }} width={'100%'}>
           <Layout.Vertical className={pageCss.badgesContainer}>

@@ -13,8 +13,9 @@ import { FontVariation } from '@harness/design-system'
 import { useModalHook } from '@harness/use-modal'
 import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
 import produce from 'immer'
-import { get, isEmpty, set } from 'lodash-es'
+import { get, isEmpty, set, isArray } from 'lodash-es'
 import { useStrings } from 'framework/strings'
+import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
 
 import type {
   ApplicationSettingsConfiguration,
@@ -46,6 +47,8 @@ import { getConnectorNameFromValue, getStatus } from '@pipeline/components/Pipel
 import { ApplicationConfigWizard } from '@pipeline/components/ApplicationConfig/ApplicationConfigListView/ApplicationConfigWizard/ApplicationConfigWizard'
 import { ServiceConfigActions } from '@common/constants/TrackingConstants'
 import GitDetailsStep from '@connectors/components/CreateConnector/commonSteps/GitDetailsStep'
+import { ConfigFilesMap } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import { LocationValue } from '@pipeline/components/ConfigFilesSelection/ConfigFilesListView/LocationValue'
 import ApplicationConfigWizardStepTwo from './ApplicationConfigWizard/ApplicationConfigWizardStepTwo'
 import ConnectorField from './ApplicationConfigConnectorField'
 import {
@@ -99,6 +102,8 @@ function ApplicationConfigListView({
   const [connectorType, setConnectorType] = useState('')
   const [isEditMode, setIsEditMode] = useState(false)
   const { trackEvent } = useTelemetry()
+
+  const { openFileStoreModal } = useFileStoreModal({ isReadonly: true })
 
   const pipelineView = selectionType === ApplicationConfigSelectionTypes.PIPELINE
 
@@ -463,7 +468,7 @@ function ApplicationConfigListView({
       const connectorList = option === ModalViewOption.CONNECTIONSTRING ? stringsConnectors : settingsConnectors
       const { color } = getStatus(selectedConnectorRef, connectorList, accountId)
       const connectorName = getConnectorNameFromValue(selectedConnectorRef, connectorList)
-
+      const files = get(currentOption, 'store.spec.files')
       return (
         <div className={css.rowItem}>
           <section className={cx(css.serviceConfigList, pipelineView ? css.pipelineView : css.environmentView)}>
@@ -497,10 +502,14 @@ function ApplicationConfigListView({
                 </Text>
               </div>
             )}
-            {get(currentOption, 'store.spec.files')?.length && (
+            {files?.length && (
               <div>
                 <Text lineClamp={1} width={200} className={css.serviceConfigLocation}>
-                  <span>{get(currentOption, 'store.spec.files')}</span>
+                  <LocationValue
+                    locations={isArray(files) ? files : [files]}
+                    onClick={(path: string, scope: string) => openFileStoreModal(path, scope)}
+                    isHarnessStore={get(currentOption, 'store.type') === ConfigFilesMap.Harness}
+                  />
                 </Text>
               </div>
             )}

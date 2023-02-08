@@ -6,11 +6,11 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
-
-import { TestWrapper } from '@common/utils/testUtils'
-
+import { getByText, render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import useChooseProvisioner from './ChooseProvisioner'
+import { payloadValueforProvisionerTypes, ProvisionerTypes } from '../Common/ProvisionerConstants'
 
 const TestComponent = (): React.ReactElement => {
   const { showModal, hideModal } = useChooseProvisioner({
@@ -19,19 +19,42 @@ const TestComponent = (): React.ReactElement => {
   })
   return (
     <>
-      <button className="open" onClick={showModal} />
+      <button className="open" onClick={showModal} aria-label="open provisioner" />
       <button className="close" onClick={hideModal} />
     </>
   )
 }
 describe('Choose Provisioner tests', () => {
-  test('render dialog for choosing provisioner type', () => {
-    const { container } = render(
+  test('render dialog for choosing provisioner type', async () => {
+    render(
       <TestWrapper>
         <TestComponent />
       </TestWrapper>
     )
 
-    expect(container).toMatchSnapshot()
+    userEvent.click(
+      screen.getByRole('button', {
+        name: 'open provisioner'
+      })
+    )
+    const modal = findDialogContainer()
+    expect(modal).toBeDefined()
+    expect(getByText(modal!, 'cd.chooseProvisionerText')).toBeInTheDocument()
+    const terragruntProv = await screen.findByTestId('provisioner-Terragrunt')
+    userEvent.click(terragruntProv)
+    userEvent.click(
+      screen.getByRole('button', {
+        name: 'cd.setUpProvisionerBtnText'
+      })
+    )
+  })
+
+  test('payloadValueforProvisionerTypes function', () => {
+    expect(payloadValueforProvisionerTypes(ProvisionerTypes.Terraform)).toBe('TERRAFORM')
+    expect(payloadValueforProvisionerTypes(ProvisionerTypes.Terragrunt)).toBe('TERRAGRUNT')
+    expect(payloadValueforProvisionerTypes(ProvisionerTypes.CloudFormation)).toBe('CLOUD_FORMATION')
+    expect(payloadValueforProvisionerTypes(ProvisionerTypes.ARM)).toBe('AZURE_ARM')
+    expect(payloadValueforProvisionerTypes(ProvisionerTypes.Blueprint)).toBe('AZURE_BLUEPRINT')
+    expect(payloadValueforProvisionerTypes(ProvisionerTypes.Script)).toBe('SHELL_SCRIPT_PROVISIONER')
   })
 })

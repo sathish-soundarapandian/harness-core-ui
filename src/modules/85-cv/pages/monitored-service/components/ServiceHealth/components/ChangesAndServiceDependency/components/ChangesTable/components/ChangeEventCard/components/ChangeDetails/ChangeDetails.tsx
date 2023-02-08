@@ -11,13 +11,17 @@ import { entries as _entries, map as _map } from 'lodash-es'
 import { Text, Container, Layout } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
+import {
+  ChangeSourceTypes,
+  CustomChangeSourceList
+} from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import { EXECUTED_BY, UPDATED_BY } from '@cv/constants'
 import type { ChangeEventDTO } from 'services/cv'
 import { getDetailsLabel } from '@cv/utils/CommonUtils'
 import { getOnClickOptions, getSourceLabel, statusToColorMapping } from './ChangeDetails.utils'
 import type { ChangeDetailsDataInterface } from '../../ChangeEventCard.types'
 import StatusChip from './components/StatusChip/StatusChip'
+import { ExternalLinkToEntity } from './ChangeDetails.constant'
 import css from './ChangeDetails.module.scss'
 
 export default function ChangeDetails({
@@ -32,6 +36,8 @@ export default function ChangeDetails({
   if ([ChangeSourceTypes.HarnessCDNextGen, ChangeSourceTypes.K8sCluster].includes(type as ChangeSourceTypes)) {
     details = { source: type as string, ...details, executedBy: (executedBy as any) || null }
   } else if ([ChangeSourceTypes.HarnessFF].includes(type as ChangeSourceTypes)) {
+    details = { source: getSourceLabel(getString, type), ...details, updatedBy: (executedBy as any) || null }
+  } else if (CustomChangeSourceList.includes(type as ChangeSourceTypes)) {
     details = { source: getSourceLabel(getString, type), ...details, updatedBy: (executedBy as any) || null }
   }
 
@@ -55,7 +61,7 @@ export const getChanges = (details: {
     const isExecutedBy = item[0] === EXECUTED_BY
     const isUpdatedBy = item[0] === UPDATED_BY
     const { getString } = useStrings()
-    let value = null
+    let value: any = null
     let shouldVisible = true
 
     if (isExecutedBy || isUpdatedBy) {
@@ -65,6 +71,29 @@ export const getChanges = (details: {
       value = item[1]
     } else {
       value = typeof item[1] === 'string' ? item[1] : item[1]?.name
+    }
+
+    const isURL = item[0] === ExternalLinkToEntity
+
+    if (isURL) {
+      return (
+        <>
+          <Text className={css.gridItem} font={{ size: 'small' }}>
+            {shouldVisible ? getDetailsLabel(item[0], getString) : ''}
+          </Text>
+          <Text
+            className={css.isLink}
+            title={value}
+            onClick={() => {
+              if (value) {
+                window.open(value || '', '_blank', 'noreferrer')
+              }
+            }}
+          >
+            {value}
+          </Text>
+        </>
+      )
     }
 
     return value ? (

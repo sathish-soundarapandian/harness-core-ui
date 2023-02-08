@@ -9,12 +9,26 @@ import React, { useMemo } from 'react'
 import { Text, Container, Layout, Button, ButtonVariation, ButtonSize } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import type { ChangeEventDTO } from 'services/cv'
+import { ChangeSourceTypes } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 import VerificationStatusCard from '@cv/components/ExecutionVerification/components/DeploymentProgressAndNodes/components/VerificationStatusCard/VerificationStatusCard'
 import { openWindowInNewTab } from '@cv/utils/CommonUtils'
 import type { ChangeTitleData } from '../../ChangeEventCard.types'
 import { IconWithText } from '../IconWithText/IconWithText'
 import { getTextForRedirectButton } from '../../ChangeEventCard.utils'
 import css from '../ChangeTitle/ChangeTitle.module.scss'
+
+const iconByType = (type: ChangeEventDTO['type']) => {
+  switch (type) {
+    case ChangeSourceTypes.CustomFF:
+    case ChangeSourceTypes.CustomDeploy:
+    case ChangeSourceTypes.CustomIncident:
+    case ChangeSourceTypes.CustomInfrastructure:
+      return 'service-custom-connector'
+    default:
+      return 'cd-solid'
+  }
+}
 
 export default function ChangeTitleWithRedirectButton({
   changeTitleData
@@ -55,7 +69,7 @@ export default function ChangeTitleWithRedirectButton({
       </Layout.Horizontal>
       <Container flex margin={{ top: 'xsmall' }}>
         <Layout.Horizontal spacing="xlarge">
-          <IconWithText icon={'cd-solid'} />
+          <IconWithText icon={iconByType(type)} />
           <IconWithText icon={'main-setup'} text={serviceIdentifier} />
           <IconWithText icon={'environments'} text={envIdentifier} />
           {status && <VerificationStatusCard status={status} />}
