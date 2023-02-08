@@ -26,7 +26,9 @@ import {
   ResponseScmConnectorResponse,
   useCreateDefaultScmConnector,
   UserRepoResponse,
-  useUpdateConnector
+  useUpdateConnector,
+  useCreateConnector,
+  Connector
 } from 'services/cd-ng'
 import {
   createPipelineV2Promise,
@@ -103,8 +105,11 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const { showError: showErrorToaster } = useToaster()
   const [buttonLabel, setButtonLabel] = useState<string>('')
   const { trackEvent } = useTelemetry()
+  const { mutate: createConnector } = useCreateConnector({
+    queryParams: { accountIdentifier: accountId }
+  })
 
-  const { CIE_HOSTED_VMS } = useFeatureFlags()
+  const { CIE_HOSTED_VMS, CODE_CI_INTEGRATION_ENABLED } = useFeatureFlags()
 
   useEffect(() => {
     setCurrentWizardStepId(lastConfiguredWizardStepId)
@@ -443,10 +448,44 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           }
           // For non-OAuth auth mechanism, auth fields in the form should validate to proceed here, for OAuth no form validation is needed
           if ((gitAuthenticationMethod === GitAuthenticationMethod.OAuth && validatedConnector) || validate?.()) {
-            setCurrentWizardStepId(InfraProvisiongWizardStepId.SelectRepository)
-            setShowError(false)
-            updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.Success)
-            updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.InProgress)
+            // TODO: Workaround for 2023 CKO Demo - this means no-production whatsoeve!
+            if (CODE_CI_INTEGRATION_ENABLED && gitProvider?.type === Connectors.HARNESS_CODE) {
+              const id = `${orgIdentifier}_${projectIdentifier}_HarnessCode_${Date.now()}`
+              const connectorInfo: Connector = {
+                connector: {
+                  name: id,
+                  description: 'CODE - CI connector',
+                  identifier: id,
+                  tags: {},
+                  type: 'HarnessCode' as 'Git',
+                  orgIdentifier,
+                  projectIdentifier,
+                  spec: {
+                    url: `${window.location.origin}${
+                      window.harnessNameSpace || ''
+                    }/code/git/${accountId}/${orgIdentifier}/${projectIdentifier}`
+                  }
+                }
+              }
+              createConnector(connectorInfo)
+                .then(() => {
+                  setCurrentWizardStepId(InfraProvisiongWizardStepId.SelectRepository)
+                  setShowError(false)
+                  updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.Success)
+                  updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.InProgress)
+                })
+                .catch(exception => {
+                  showErrorToaster(
+                    exception?.data?.details || exception?.data?.message || exception?.message || exception,
+                    0
+                  )
+                })
+            } else {
+              setCurrentWizardStepId(InfraProvisiongWizardStepId.SelectRepository)
+              setShowError(false)
+              updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.Success)
+              updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.InProgress)
+            }
           } else if (gitProvider?.type === NonGitOption.OTHER) {
             setShowError(false)
             setDisableBtn(true)
