@@ -8,6 +8,6 @@
 import type { SyntheticEvent } from 'react'
 
 export function killEvent(e: React.MouseEvent<any> | SyntheticEvent<HTMLElement, Event> | undefined): void {
-  e?.preventDefault()
+  // do not add preventDefault() here, checkbox won't work event if killEvent is applied on parent
   e?.stopPropagation()
 }
