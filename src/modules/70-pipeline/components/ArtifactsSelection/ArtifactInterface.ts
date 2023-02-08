@@ -288,6 +288,19 @@ export interface Nexus2ArtifactProps {
   formClassName?: string
 }
 
+export interface NexusSpecType {
+  artifactId?: string
+  groupId?: string
+  group?: string
+  extension?: string
+  classifier?: string
+  packageName?: string
+  artifactPath?: string
+  repositoryUrl?: string
+  repositoryPort?: string
+  repositoryPortorRepositoryURL?: string
+}
+
 export interface Nexus2InitialValuesType {
   identifier: string
   tagType?: string
@@ -296,18 +309,7 @@ export interface Nexus2InitialValuesType {
   tagRegex: string
   repository: string
   repositoryFormat: string
-  spec: {
-    artifactId?: string
-    groupId?: string
-    group?: string
-    extension?: string
-    classifier?: string
-    packageName?: string
-    artifactPath?: string
-    repositoryUrl?: string
-    repositoryPort?: string
-    repositoryPortorRepositoryURL?: string
-  }
+  spec: NexusSpecType
 }
 
 export interface JenkinsArtifactType {
@@ -364,6 +366,7 @@ export interface ArtifactImagePathTagViewProps {
   isArtifactPath?: boolean
   isImagePath?: boolean
   isServerlessDeploymentTypeSelected?: boolean
+  canFetchTags?: any
 }
 
 export interface ACRArtifactType {

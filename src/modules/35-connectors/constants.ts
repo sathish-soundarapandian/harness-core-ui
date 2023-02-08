@@ -115,7 +115,8 @@ export const Connectors: ConnectorType = {
   ELK: 'ElasticSearch',
   GcpSecretManager: 'GcpSecretManager',
   SPOT: 'Spot',
-  TAS: 'Tas'
+  TAS: 'Tas',
+  TERRAFORM_CLOUD: 'TerraformCloud'
 }
 
 export const ConnectorLabels: Record<ConnectorInfoDTO['type'], string> = {

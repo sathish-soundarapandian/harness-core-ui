@@ -575,7 +575,7 @@ export const getAppPayload = (props: PayloadInterface) => {
           repoId: repositoryData?.identifier
         },
         destination: {
-          namespace: clusterData?.namespaces,
+          namespace: 'default',
           server: clusterData?.server
         }
       }

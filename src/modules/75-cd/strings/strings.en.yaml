@@ -581,6 +581,13 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  syncCompleteMessage: Application sync has been triggered successfully
+  provisionedSuccessfully: provisioned successfully
+  selectAuthenticationType: Select Authentication Type
+  failedToProvisionCluster: Failed to provision cluster
+  provisioningInProgress: Provisioning in progress
+  createHostedCluster: Connect to Cluster
+  retryProvisioningHostedCluster: Retry provisioning cluster
   clustersCount: 'You currently have {{target}} cluster(s), would you like to connect it to?'
   backToRepoList: < Back to existing repo selection
   backToClusterList: < Back to existing cluster selection
@@ -590,8 +597,8 @@ getStartedWithCD:
   sampleRule4: Click "Begin Import"
   sampleRule5: Tell us your new repository
   sampleRepoLink: https://github.com/wings-software/gitops-demo.git
-  useSample: Use sample file
-  provideMyOwn: Provide my own
+  useSample: Sample Source
+  provideMyOwn: Own Source
   sourceOrSampleCode: Would you like to use your own source code or sample code?
   clusterSpec1: 4GB Memory
   clusterSpec2: 2 CPU
@@ -712,7 +719,7 @@ getStartedWithCD:
   healthStatusLabel: Health Status
   mappedHarnessProjects: Mapped Harness projects
   disconnected: Disconnected
-  syncApplication: Sync Application
+  syncApplication: Create and Sync Application
   healthStatus:
     degraded: Degraded
     healthy: Healthy
@@ -720,7 +727,7 @@ getStartedWithCD:
     progressing: Progressing
     suspended: Suspended
     unknown: Unknown
-  checkAgentStatus: Checking if the agent has been installed. This process may take upto 2 minutes to complete
+  checkAgentStatus: Checking if the agent has been installed. This process may take upto 2-5 minutes to complete
   agentInstalled: GitOps agent installed
   repoServerInstalled: Repo server installed
   redisCacheInstalled: Redis cache installed

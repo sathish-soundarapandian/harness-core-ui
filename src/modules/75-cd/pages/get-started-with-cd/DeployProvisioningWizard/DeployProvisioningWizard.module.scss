@@ -11,7 +11,7 @@
   padding-left: 60px !important;
   padding-top: var(--spacing-huge) !important;
   padding-bottom: var(--spacing-medium) !important;
-  box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.08), 0px 0.5px 2px rgba(96, 97, 112, 0.16);
+  //box-shadow: 0px 0px 1px rgba(40, 41, 61, 0.08), 0px 0.5px 2px rgba(96, 97, 112, 0.16);
 }
 
 .containerPadding {
@@ -101,6 +101,7 @@
 }
 
 .serviceDeploymentTypeIcon {
+  padding-top: var(--spacing-xsmall) !important;
   margin-top: var(--spacing-small) !important;
   margin-bottom: var(--spacing-small) !important;
 }
@@ -390,4 +391,27 @@
 
 .configureGitopsPanelSummary {
   justify-content: space-between;
+}
+
+.marginTop20 {
+  margin-top: 20px !important;
+}
+
+.marginBottom20 {
+  margin-bottom: 20px !important;
+}
+
+.width50 {
+  width: 50%;
+}
+
+.divider {
+  opacity: 0.1;
+  height: 0;
+  margin: 0;
+  border: 0.5px solid var(--grey-1000);
+}
+
+.width70 {
+  width: 70% !important;
 }

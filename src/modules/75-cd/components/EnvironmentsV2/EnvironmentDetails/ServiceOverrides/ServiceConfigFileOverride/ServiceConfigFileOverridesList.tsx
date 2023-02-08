@@ -11,8 +11,14 @@ import { Button, ButtonVariation, Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { ConfigFileWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { ConfigFileIconByType, ConfigFileTypeTitle } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
+import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
+import {
+  ConfigFileIconByType,
+  ConfigFileTypeTitle,
+  ConfigFilesMap
+} from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import type { ConfigFileType } from '@pipeline/components/ConfigFilesSelection/ConfigFilesInterface'
+import { LocationValue } from '@pipeline/components/ConfigFilesSelection/ConfigFilesListView/LocationValue'
 import css from './ServiceConfigFileOverridesList.module.scss'
 
 interface ServiceConfigFileOverridesListProps {
@@ -31,6 +37,8 @@ function ServiceConfigFileOverridesList({
   isServiceOverride
 }: ServiceConfigFileOverridesListProps): React.ReactElement {
   const { getString } = useStrings()
+  const { openFileStoreModal } = useFileStoreModal({ isReadonly: true })
+
   return (
     <Layout.Vertical width={'100%'}>
       {!!configFileOverrideList?.length && (
@@ -52,6 +60,9 @@ function ServiceConfigFileOverridesList({
             const filesLocation = configFile?.spec?.store?.spec?.files?.length
               ? configFile?.spec?.store?.spec?.files
               : configFile?.spec?.store?.spec?.secretFiles
+
+            const isHarnessStore = configFile?.spec.store.type === ConfigFilesMap.Harness
+            const isFileStore = !!configFile?.spec?.store?.spec?.files?.length
 
             return (
               <div className={css.rowItem} key={`${configFile?.identifier}-${index}`}>
@@ -85,16 +96,29 @@ function ServiceConfigFileOverridesList({
                         lineClamp={1}
                         width={200}
                         tooltip={
-                          Array.isArray(filesLocation)
-                            ? filesLocation.map((field: string, i: number) => (
-                                <Text padding="small" key={i}>
-                                  {field}
-                                </Text>
-                              ))
-                            : filesLocation
+                          Array.isArray(filesLocation) ? (
+                            <LocationValue
+                              isTooltip
+                              isHarnessStore={isHarnessStore}
+                              locations={filesLocation}
+                              onClick={openFileStoreModal}
+                              isFileStore={isFileStore}
+                            />
+                          ) : (
+                            filesLocation
+                          )
                         }
                       >
-                        {typeof filesLocation === 'string' ? filesLocation : filesLocation.join(', ')}
+                        {typeof filesLocation === 'string' ? (
+                          filesLocation
+                        ) : (
+                          <LocationValue
+                            isFileStore={isFileStore}
+                            isHarnessStore={isHarnessStore}
+                            locations={filesLocation}
+                            onClick={openFileStoreModal}
+                          />
+                        )}
                       </Text>
                     </span>
                   )}

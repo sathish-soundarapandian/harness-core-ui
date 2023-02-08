@@ -36,7 +36,6 @@ import {
   ChangeSourceCategoryName,
   ChangeSourceTypes
 } from '@cv/pages/ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
-import type { CardSelectOption } from '../ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.types'
 import { getChangeSourceOptions } from '../ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.utils'
 import { HorizontalLayout } from '../health-source/common/StyledComponents'
 import { TimePeriodEnum } from '../monitored-service/components/ServiceHealth/ServiceHealth.constants'
@@ -69,10 +68,7 @@ export const CVChanges = ({ updateTime }: { updateTime?: Date }): JSX.Element =>
     })
   }, [])
   const connectorOptions = useMemo(() => {
-    return ChangeSourceConnectorOptions.map((option: CardSelectOption) => ({
-      label: getString(option.label as keyof StringsMap),
-      value: option.value
-    }))
+    return ChangeSourceConnectorOptions(getString)
   }, [])
   const [selectedTimePeriod, setSelectedTimePeriod] = useState<SelectOption>({
     value: TimePeriodEnum.TWENTY_FOUR_HOURS,

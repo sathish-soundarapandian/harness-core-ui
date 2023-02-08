@@ -25,6 +25,35 @@ jest.mock('framework/PreferenceStore/PreferenceStoreContext')
   }
 })
 
+jest.mock('services/cd-ng', () => ({
+  useGetAccountNGMock: jest.fn().mockImplementation(() => {
+    return {
+      data: {
+        data: {
+          name: 'account name',
+          identifier: 'id1',
+          cluster: 'free',
+          defaultExperience: 'NG'
+        }
+      },
+      refetch: jest.fn()
+    }
+  }),
+  useGetAccountNG: jest.fn().mockImplementation(() => {
+    return {
+      data: {
+        data: {
+          name: 'account name',
+          identifier: 'id1',
+          cluster: 'free',
+          defaultExperience: 'NG'
+        }
+      },
+      refetch: jest.fn()
+    }
+  })
+}))
+
 const setModuleConfigPreference = jest.fn()
 
 describe('main nav tests', () => {
@@ -34,7 +63,7 @@ describe('main nav tests', () => {
         <MainNav />
       </TestWrapper>
     )
-    expect(container.querySelectorAll('[class*="navItem"]').length).toBe(3)
+    expect(container.querySelectorAll('[class*="navItem"]').length).toBe(4)
     expect(queryByText('common.home')).not.toBeNull()
     expect(queryByText('common.accountSettings')).not.toBeNull()
     expect(queryByText('common.myProfile')).not.toBeNull()
@@ -88,7 +117,7 @@ describe('main nav tests', () => {
     )
 
     screen.debug(container, 1000000)
-    expect(container.querySelectorAll('[class*="navItem"]').length).toBe(4)
+    expect(container.querySelectorAll('[class*="navItem"]').length).toBe(5)
   })
 
   test('when new nav bar is enabled and preference store has modules', () => {

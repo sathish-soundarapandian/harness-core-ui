@@ -23,7 +23,8 @@ import {
   RepositoryPortOrServer,
   TagTypes,
   AmazonMachineImageInitialValuesType,
-  AzureArtifactsInitialValues
+  AzureArtifactsInitialValues,
+  NexusSpecType
 } from './ArtifactInterface'
 
 export const shellScriptType: SelectOption[] = [
@@ -333,6 +334,9 @@ export const getArtifactFormData = (
     case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
       values = getRepoValues(specValues)
       break
+    case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
+      values = getRepoValuesForNexus2(initialValues as any, specValues)
+      break
     default:
       values = getTagValues(specValues, isServerlessDeploymentTypeSelected)
   }
@@ -386,6 +390,23 @@ const getRepoValues = (specValues: Nexus2InitialValuesType): Nexus2InitialValues
   }
   if (specValues?.tag && getMultiTypeFromValue(specValues?.tag) === MultiTypeInputType.FIXED) {
     formikInitialValues.tag = { label: specValues?.tag, value: specValues?.tag } as any
+  }
+  return formikInitialValues
+}
+
+const getRepoValuesForNexus2 = (
+  initValues: Nexus2InitialValuesType,
+  specValues: NexusSpecType
+): Nexus2InitialValuesType => {
+  const formikInitialValues: Nexus2InitialValuesType = {
+    ...initValues,
+    tagType: initValues?.tag ? TagTypes.Value : TagTypes.Regex,
+    spec: {
+      ...specValues
+    }
+  }
+  if (initValues?.tag && getMultiTypeFromValue(initValues?.tag) === MultiTypeInputType.FIXED) {
+    formikInitialValues.tag = { label: initValues?.tag, value: initValues?.tag } as any
   }
   return formikInitialValues
 }
@@ -656,5 +677,13 @@ export const canFetchDigest = (imagePath: string, tag: string, connectorRefValue
     getMultiTypeFromValue(imagePath) !== MultiTypeInputType.RUNTIME &&
     getMultiTypeFromValue(tag) !== MultiTypeInputType.RUNTIME &&
     getMultiTypeFromValue(connectorRefValue) !== MultiTypeInputType.RUNTIME
+  )
+}
+
+export const canFetchAMITags = (repository: string, groupId?: string, artifactId?: string) => {
+  return (
+    getMultiTypeFromValue(repository) !== MultiTypeInputType.RUNTIME &&
+    getMultiTypeFromValue(groupId) !== MultiTypeInputType.RUNTIME &&
+    getMultiTypeFromValue(artifactId) !== MultiTypeInputType.RUNTIME
   )
 }

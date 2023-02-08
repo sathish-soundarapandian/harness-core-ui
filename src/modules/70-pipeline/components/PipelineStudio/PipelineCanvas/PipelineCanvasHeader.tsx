@@ -1,10 +1,3 @@
-/*
- * Copyright 2023 Harness Inc. All rights reserved.
- * Use of this source code is governed by the PolyForm Shield 1.0.0 license
- * that can be found in the licenses directory at the root of this repository, also available at
- * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
- */
-
 import React from 'react'
 import cx from 'classnames'
 import {
@@ -19,7 +12,7 @@ import {
   VisualYamlSelectedView as SelectedView,
   VisualYamlToggle
 } from '@harness/uicore'
-import { defaultTo, get, isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { Classes, Menu, Position } from '@blueprintjs/core'
 
@@ -62,11 +55,9 @@ import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DefaultNewPipelineId, DrawerTypes } from '../PipelineContext/PipelineActions'
 import { PipelineCachedCopy, PipelineCachedCopyHandle } from './PipelineCachedCopy/PipelineCachedCopy'
 import { getDuplicateStepIdentifierList } from './PipelineCanvasUtils'
-import EndOfLifeBanner from './EndOfLifeBanner'
 import css from './PipelineCanvas.module.scss'
 
 export interface PipelineCanvasHeaderProps {
-  module: string | undefined
   isPipelineRemote: boolean
   isGitSyncEnabled: boolean
   disableVisualView: boolean
@@ -84,7 +75,6 @@ function getStudioSelectedView(isYaml: boolean, disableVisualView: boolean): Sel
 
 export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.ReactElement {
   const {
-    module,
     isPipelineRemote,
     isGitSyncEnabled,
     onGitBranchChange,
@@ -126,8 +116,8 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier } = params
   const { isYamlEditable } = pipelineView
   const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
-  const [showBanner, setShowbanner] = React.useState<boolean>(false)
   const [shouldShowOutOfSyncError, setShouldShowOutOfSyncError] = React.useState(false)
+
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
   const pipelineCachedCopyRef = React.useRef<PipelineCachedCopyHandle | null>(null)
   const isCommunity = useGetCommunity()
@@ -275,25 +265,6 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
     fetchPipeline({ forceFetch: true, forceUpdate: true, loadFromCache: false })
   }
 
-  //Banner Effect
-  React.useEffect(() => {
-    if (module === 'cd') {
-      setShowbanner(true)
-    } else {
-      const v1DeployStages = pipeline?.stages?.filter(
-        (stage: any) =>
-          get(stage, 'stage.spec.serviceConfig') !== undefined ||
-          get(stage, 'parallel')?.some(
-            (parallelStage: any) => get(parallelStage, 'stage.spec.serviceConfig') !== undefined
-          )
-      )
-      //check if non cd module pipeline has any deployment type stage
-      if (v1DeployStages) {
-        if (v1DeployStages.length > 0) setShowbanner(true)
-        else setShowbanner(false)
-      }
-    }
-  }, [pipeline.stages, module])
   const isNewPipeline = pipelineIdentifier === DefaultNewPipelineId
 
   function renderDiscardUnsavedChangeButton(): JSX.Element | null {
@@ -484,7 +455,6 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
           )}
         </div>
       )}
-      {showBanner && <EndOfLifeBanner />}
       {shouldShowOutOfSyncError ? (
         <PipelineOutOfSyncErrorStrip
           updateRootEntity={updateEntity}

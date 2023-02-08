@@ -90,7 +90,8 @@ function ArtifactImagePathTagView({
   tagDisabled,
   isArtifactPath,
   isImagePath = true,
-  isServerlessDeploymentTypeSelected
+  isServerlessDeploymentTypeSelected,
+  canFetchTags
 }: ArtifactImagePathTagViewProps): React.ReactElement {
   const { getString } = useStrings()
   const getSelectItems = useCallback(selectItemsMapper.bind(null, tagList, isServerlessDeploymentTypeSelected), [
@@ -236,8 +237,11 @@ function ArtifactImagePathTagView({
                 allowCreatingNewItems: true,
                 addTooltip: true
               },
-              onFocus: (e: React.FocusEvent<HTMLInputElement>) =>
-                onTagInputFocus(e, formik, fetchTags, isArtifactPath, isServerlessDeploymentTypeSelected)
+              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                if (canFetchTags() || !canFetchTags) {
+                  onTagInputFocus(e, formik, fetchTags, isArtifactPath, isServerlessDeploymentTypeSelected)
+                }
+              }
             }}
             label={isServerlessDeploymentTypeSelected ? getString('pipeline.artifactPathLabel') : getString('tagLabel')}
             name="tag"

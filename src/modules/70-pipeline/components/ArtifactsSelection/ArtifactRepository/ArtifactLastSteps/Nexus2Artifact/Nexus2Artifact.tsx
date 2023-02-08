@@ -39,7 +39,8 @@ import {
   getConnectorIdValue,
   getArtifactFormData,
   shouldFetchFieldOptions,
-  shouldHideHeaderAndNavBtns
+  shouldHideHeaderAndNavBtns,
+  canFetchAMITags
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import type {
   ArtifactType,
@@ -365,6 +366,7 @@ export function Nexus2Artifact({
               )
               hasError = true
             }
+
             if (!formData?.spec?.groupId) {
               formikhelper.setFieldError('spec.groupId', getString('pipeline.artifactsSelection.validation.groupId'))
               hasError = true
@@ -620,6 +622,13 @@ export function Nexus2Artifact({
                 tagDisabled={isTagDisabled(formik?.values)}
                 isArtifactPath={false}
                 isImagePath={false}
+                canFetchTags={() => {
+                  canFetchAMITags(
+                    formik?.values?.repository,
+                    formik?.values?.spec?.groupId,
+                    formik?.values?.spec?.artifactId
+                  )
+                }}
               />
             </div>
             {!hideHeaderAndNavBtns && (

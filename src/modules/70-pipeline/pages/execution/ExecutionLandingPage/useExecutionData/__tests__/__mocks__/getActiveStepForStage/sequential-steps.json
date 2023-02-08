@@ -1,0 +1,277 @@
+[
+  [
+    {
+      "rootNodeId": "N0",
+      "nodeMap": {
+        "N0": {
+          "uuid": "N0",
+          "stepType": "CUSTOM_STAGE",
+          "status": "NotStarted"
+        },
+        "N1": {
+          "uuid": "N1",
+          "stepType": "NG_EXECUTION",
+          "status": "NotStarted"
+        },
+        "S1": {
+          "uuid": "S1",
+          "stepType": "Wait",
+          "status": "NotStarted"
+        },
+        "S2": {
+          "uuid": "S2",
+          "stepType": "Wait",
+          "status": "NotStarted"
+        },
+        "S3": {
+          "uuid": "S3",
+          "stepType": "Wait",
+          "status": "NotStarted"
+        }
+      },
+      "nodeAdjacencyListMap": {
+        "N0": {
+          "children": ["N1"],
+          "nextIds": []
+        },
+        "N1": {
+          "children": ["S1"],
+          "nextIds": []
+        },
+        "S1": {
+          "children": [],
+          "nextIds": ["S2"]
+        },
+        "S2": {
+          "children": [],
+          "nextIds": ["S3"]
+        },
+        "S3": {
+          "children": [],
+          "nextIds": []
+        }
+      }
+    },
+    "Running"
+  ],
+  [
+    {
+      "rootNodeId": "N0",
+      "nodeMap": {
+        "N0": {
+          "uuid": "N0",
+          "stepType": "CUSTOM_STAGE",
+          "status": "NotStarted"
+        },
+        "N1": {
+          "uuid": "N1",
+          "stepType": "NG_EXECUTION",
+          "status": "NotStarted"
+        },
+        "S1": {
+          "uuid": "S1",
+          "stepType": "Wait",
+          "status": "Running"
+        },
+        "S2": {
+          "uuid": "S2",
+          "stepType": "Wait",
+          "status": "NotStarted"
+        },
+        "S3": {
+          "uuid": "S3",
+          "stepType": "Wait",
+          "status": "NotStarted"
+        }
+      },
+      "nodeAdjacencyListMap": {
+        "N0": {
+          "children": ["N1"],
+          "nextIds": []
+        },
+        "N1": {
+          "children": ["S1"],
+          "nextIds": []
+        },
+        "S1": {
+          "children": [],
+          "nextIds": ["S2"]
+        },
+        "S2": {
+          "children": [],
+          "nextIds": ["S3"]
+        },
+        "S3": {
+          "children": [],
+          "nextIds": []
+        }
+      }
+    },
+    "Running"
+  ],
+  [
+    {
+      "rootNodeId": "N0",
+      "nodeMap": {
+        "N0": {
+          "uuid": "N0",
+          "stepType": "CUSTOM_STAGE",
+          "status": "NotStarted"
+        },
+        "N1": {
+          "uuid": "N1",
+          "stepType": "NG_EXECUTION",
+          "status": "NotStarted"
+        },
+        "S1": {
+          "uuid": "S1",
+          "stepType": "Wait",
+          "status": "Success"
+        },
+        "S2": {
+          "uuid": "S2",
+          "stepType": "Wait",
+          "status": "Running"
+        },
+        "S3": {
+          "uuid": "S3",
+          "stepType": "Wait",
+          "status": "NotStarted"
+        }
+      },
+      "nodeAdjacencyListMap": {
+        "N0": {
+          "children": ["N1"],
+          "nextIds": []
+        },
+        "N1": {
+          "children": ["S1"],
+          "nextIds": []
+        },
+        "S1": {
+          "children": [],
+          "nextIds": ["S2"]
+        },
+        "S2": {
+          "children": [],
+          "nextIds": ["S3"]
+        },
+        "S3": {
+          "children": [],
+          "nextIds": []
+        }
+      }
+    },
+    "Running"
+  ],
+  [
+    {
+      "rootNodeId": "N0",
+      "nodeMap": {
+        "N0": {
+          "uuid": "N0",
+          "stepType": "CUSTOM_STAGE",
+          "status": "NotStarted"
+        },
+        "N1": {
+          "uuid": "N1",
+          "stepType": "NG_EXECUTION",
+          "status": "NotStarted"
+        },
+        "S1": {
+          "uuid": "S1",
+          "stepType": "Wait",
+          "status": "Success"
+        },
+        "S2": {
+          "uuid": "S2",
+          "stepType": "Wait",
+          "status": "Success"
+        },
+        "S3": {
+          "uuid": "S3",
+          "stepType": "Wait",
+          "status": "Running"
+        }
+      },
+      "nodeAdjacencyListMap": {
+        "N0": {
+          "children": ["N1"],
+          "nextIds": []
+        },
+        "N1": {
+          "children": ["S1"],
+          "nextIds": []
+        },
+        "S1": {
+          "children": [],
+          "nextIds": ["S2"]
+        },
+        "S2": {
+          "children": [],
+          "nextIds": ["S3"]
+        },
+        "S3": {
+          "children": [],
+          "nextIds": []
+        }
+      }
+    },
+    "Running"
+  ],
+  [
+    {
+      "rootNodeId": "N0",
+      "nodeMap": {
+        "N0": {
+          "uuid": "N0",
+          "stepType": "CUSTOM_STAGE",
+          "status": "NotStarted"
+        },
+        "N1": {
+          "uuid": "N1",
+          "stepType": "NG_EXECUTION",
+          "status": "NotStarted"
+        },
+        "S1": {
+          "uuid": "S1",
+          "stepType": "Wait",
+          "status": "Success"
+        },
+        "S2": {
+          "uuid": "S2",
+          "stepType": "Wait",
+          "status": "Success"
+        },
+        "S3": {
+          "uuid": "S3",
+          "stepType": "Wait",
+          "status": "Success"
+        }
+      },
+      "nodeAdjacencyListMap": {
+        "N0": {
+          "children": ["N1"],
+          "nextIds": []
+        },
+        "N1": {
+          "children": ["S1"],
+          "nextIds": []
+        },
+        "S1": {
+          "children": [],
+          "nextIds": ["S2"]
+        },
+        "S2": {
+          "children": [],
+          "nextIds": ["S3"]
+        },
+        "S3": {
+          "children": [],
+          "nextIds": []
+        }
+      }
+    },
+    "Success"
+  ]
+]

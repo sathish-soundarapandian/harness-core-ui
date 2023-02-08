@@ -113,7 +113,7 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
 
                     {getMultiTypeFromValue((command as CustomScriptCommandUnit)?.spec?.source?.spec?.script) ===
                     MultiTypeInputType.RUNTIME ? (
-                      <div className={cx(stepCss.formGroup, stepCss.alignStart, stepCss.md)}>
+                      <div className={cx(stepCss.formGroup, stepCss.alignStart)}>
                         <MultiTypeFieldSelector
                           name={`${prefix}spec.commandUnits[${i}].spec.source.spec.script`}
                           label={getString('common.script')}
