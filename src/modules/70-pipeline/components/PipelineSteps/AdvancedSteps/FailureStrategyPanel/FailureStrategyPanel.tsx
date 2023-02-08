@@ -41,7 +41,7 @@ export interface FailureStrategyPanelProps {
 
 export default function FailureStrategyPanel(props: FailureStrategyPanelProps): React.ReactElement {
   const {
-    formikProps: { values: formValues, submitForm, errors, isSubmitting, setFormikState },
+    formikProps: { values: formValues, submitForm, errors, isSubmitting, setFormikState, setFieldValue },
     mode,
     isReadonly,
     stageType = StageType.DEPLOY
@@ -68,6 +68,12 @@ export default function FailureStrategyPanel(props: FailureStrategyPanelProps): 
       setSelectedStrategyNum(n)
     }
   }
+
+  React.useEffect(() => {
+    if (!hasItems(formValues.failureStrategies)) {
+      setFieldValue('failureStrategies', undefined)
+    }
+  }, [formValues.failureStrategies])
 
   function handleAdd(push: (obj: any) => void, strategies: AllFailureStrategyConfig[]) {
     return async (): Promise<void> => {
