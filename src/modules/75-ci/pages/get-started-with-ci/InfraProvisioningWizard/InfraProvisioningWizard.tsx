@@ -110,7 +110,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     queryParams: { accountIdentifier: accountId }
   })
 
-  const { CIE_HOSTED_VMS, CODE_CI_INTEGRATION_ENABLED } = useFeatureFlags()
+  const { CIE_HOSTED_VMS, CODE_CI_INTEGRATION_ENABLED = true } = useFeatureFlags()
 
   useEffect(() => {
     setCurrentWizardStepId(lastConfiguredWizardStepId)

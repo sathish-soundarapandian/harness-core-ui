@@ -114,7 +114,7 @@ const SelectGitProviderRef = (
   props: SelectGitProviderProps,
   forwardRef: SelectGitProviderForwardRef
 ): React.ReactElement => {
-  const { CODE_CI_INTEGRATION_ENABLED } = useFeatureFlags()
+  const { CODE_CI_INTEGRATION_ENABLED = true } = useFeatureFlags()
   const { selectedHosting, disableNextBtn, enableNextBtn, updateFooterLabel } = props
   const { getString } = useStrings()
   const [gitProvider, setGitProvider] = useState<GitProvider | undefined>()
