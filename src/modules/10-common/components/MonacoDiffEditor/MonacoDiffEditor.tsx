@@ -8,6 +8,7 @@
 import React, { MutableRefObject } from 'react'
 import { MonacoDiffEditor as ReactMonacoDiffEditor } from 'react-monaco-editor'
 import type { MonacoDiffEditorProps, DiffEditorWillMount } from 'react-monaco-editor'
+import { setupMonacoEnvironment } from '@common/utils/MonacoEditorUtils'
 
 export type ReactMonacoEditorRef =
   | ((instance: ReactMonacoDiffEditor | null) => void)
@@ -53,6 +54,7 @@ const MonacoDiffEditor = (props: ExtendedMonacoDiffEditorProps, ref: ReactMonaco
         'editor.background': '#f3f3fa'
       }
     })
+    setupMonacoEnvironment()
   }
 
   const theme = props.options?.readOnly ? 'disable-theme' : 'vs'

@@ -84,6 +84,7 @@ declare interface Window {
     async: boolean
   }
   noAuthHeader: boolean
+  MonacoEnvironment: any
 }
 
 declare interface WindowEventMap {
