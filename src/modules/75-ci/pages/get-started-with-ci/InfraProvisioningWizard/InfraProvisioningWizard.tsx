@@ -451,12 +451,11 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           if ((gitAuthenticationMethod === GitAuthenticationMethod.OAuth && validatedConnector) || validate?.()) {
             // TODO: Workaround for 2023 CKO Demo - this means no-production whatsoeve!
             if (CODE_CI_INTEGRATION_ENABLED && gitProvider?.type === Connectors.HARNESS_CODE) {
-              const id = `${orgIdentifier}_${projectIdentifier}_HarnessCode_${Date.now()}`
               const connectorInfo: Connector = {
                 connector: {
-                  name: id,
-                  description: 'CODE - CI connector',
-                  identifier: id,
+                  identifier: `HarnessCode_${Date.now()}`,
+                  name: 'Harness Code',
+                  description: 'Harness Code connector',
                   tags: {},
                   type: 'HarnessCode' as 'Git',
                   orgIdentifier,
