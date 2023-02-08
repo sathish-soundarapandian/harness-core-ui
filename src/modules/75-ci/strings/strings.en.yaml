@@ -207,6 +207,9 @@ getStartedWithCI:
   chooseStarterConfig: Choose a Starter Configuration
   configurationOption: Configuration Option
   validYAMLFile: YAML Path should end with ".yaml" extension
+  storeInGit: Store in Git
+  enterBranch: Enter branch name
+  createBranchIfNotExists: Create branch if not exists
   carousel:
     labels:
       harnessCIFeatures: Harness CI

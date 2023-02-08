@@ -111,6 +111,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
     id: 'starter-pipeline'
   }
   const [selectedConfigOption, setSelectedConfigOption] = useState<StarterTemplate>(starterMinimumPipeline)
+  const [showAdvancedOptions, setShowAdvancedOptions] = useState<boolean>(true)
 
   const configuredGitConnectorIdentifier = useMemo(
     (): string =>
@@ -279,16 +280,72 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
             : null}
           {configuredGitConnector?.type !== Connectors.GITLAB ? (
             <Collapse
-              isOpen={false}
+              isOpen={showAdvancedOptions}
               heading={
                 <Container padding={{ top: 'small' }}>
                   <Text font={{ variation: FontVariation.SMALL }}>{getString('common.seeAdvancedOptions')}</Text>
                 </Container>
               }
-              iconProps={{ name: 'chevron-right', size: 20, padding: { top: 'small', right: 'xsmall' } }}
+              iconProps={{
+                name: showAdvancedOptions ? 'chevron-down' : 'chevron-right',
+                size: 20,
+                padding: { top: 'small', right: 'xsmall' }
+              }}
               collapseClassName={css.advancedOptions}
+              keepChildrenMounted={false}
+              onToggleOpen={isOpen => setShowAdvancedOptions(isOpen)}
             >
-              <Text font={{ variation: FontVariation.SMALL }}>{getString('common.seeAdvancedOptions')}</Text>
+              <Formik onSubmit={() => {}} formName="configure-pipeline-advanced-options" initialValues={{}}>
+                <FormikForm>
+                  <Layout.Vertical className={css.advancedOptionFormFields}>
+                    <Layout.Vertical>
+                      <FormInput.Text
+                        name="pipelineName"
+                        label={
+                          <Text font={{ variation: FontVariation.FORM_LABEL }}>
+                            {getString('filters.executions.pipelineName')}
+                          </Text>
+                        }
+                        placeholder={getString('pipeline.filters.pipelineNamePlaceholder')}
+                      />
+                      <FormInput.CheckBox
+                        name="storeInGit"
+                        label={getString('ci.getStartedWithCI.storeInGit')}
+                        checked={true}
+                        defaultChecked={true}
+                      />
+                    </Layout.Vertical>
+                    <Container padding={{ top: 'medium', bottom: 'medium' }}>
+                      <FormInput.Text
+                        name="yamlPath"
+                        label={
+                          <Text font={{ variation: FontVariation.FORM_LABEL }}>
+                            {getString('gitsync.gitSyncForm.yamlPathLabel')}
+                          </Text>
+                        }
+                        placeholder={getString('gitsync.gitSyncForm.enterYamlPath')}
+                      />
+                    </Container>
+                    <Layout.Vertical>
+                      <FormInput.Text
+                        name="branch"
+                        label={
+                          <Text font={{ variation: FontVariation.FORM_LABEL }}>
+                            {getString('pipelineSteps.deploy.inputSet.branch')}
+                          </Text>
+                        }
+                        placeholder={getString('ci.getStartedWithCI.enterBranch')}
+                      />
+                      <FormInput.CheckBox
+                        name="storeInGit"
+                        label={getString('ci.getStartedWithCI.createBranchIfNotExists')}
+                        checked={true}
+                        defaultChecked={true}
+                      />
+                    </Layout.Vertical>
+                  </Layout.Vertical>
+                </FormikForm>
+              </Formik>
             </Collapse>
           ) : null}
         </Layout.Vertical>
