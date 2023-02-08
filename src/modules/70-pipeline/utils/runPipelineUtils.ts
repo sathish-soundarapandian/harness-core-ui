@@ -233,18 +233,18 @@ export const mergeTemplateWithInputSetData = (props: MergeTemplateWithInputSetDa
     This is why 'toBeUpdated' pipeline should have the variables
     */
 
-    if (inputSetPortion.pipeline.variables) {
+    if (inputSetPortion.pipeline?.variables) {
       // If we have variables saved in input set, pick them and update
 
       toBeUpdated.pipeline.variables = getMergedVariables({
-        variables: defaultTo(toBeUpdated.pipeline.variables, []) as AllNGVariables[],
+        variables: defaultTo(toBeUpdated.pipeline?.variables, []) as AllNGVariables[],
         inputSetVariables: defaultTo(inputSetPortion.pipeline.variables, []) as AllNGVariables[],
-        allVariables: defaultTo(allValues.pipeline.variables, []) as AllNGVariables[],
+        allVariables: defaultTo(allValues.pipeline?.variables, []) as AllNGVariables[],
         shouldUseDefaultValues
       })
     }
 
-    if (inputSetPortion.pipeline.delegateSelectors) {
+    if (inputSetPortion.pipeline?.delegateSelectors) {
       toBeUpdated.pipeline.delegateSelectors = inputSetPortion.pipeline.delegateSelectors
     }
   }
