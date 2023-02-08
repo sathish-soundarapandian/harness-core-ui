@@ -49,6 +49,8 @@ import type { TriggerConfigDTO } from '@triggers/pages/triggers/interface/Trigge
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CIOnboardingActions } from '@common/constants/TrackingConstants'
+import { StoreType } from '@common/constants/GitSyncTypes'
+import { getScopedValueFromDTO, ScopedValueObjectDTO } from '@common/components/EntityReference/EntityReference.types'
 import { BuildTabs } from '@ci/components/PipelineStudio/CIPipelineStagesUtils'
 import {
   InfraProvisioningWizardProps,
@@ -263,6 +265,16 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   }, [])
 
   const setupPipelineWithCodebaseAndTriggers = React.useCallback((): void => {
+    const { type: connectorType } = configuredGitConnector || {}
+    const { branch, storeInGit, yamlPath } = configurePipelineRef.current?.values as SavePipelineToRemoteInterface
+    const shouldSavePipelineToGit =
+      connectorType && [Connectors.GITHUB, Connectors.BITBUCKET].includes(connectorType) && storeInGit
+    const gitParams = {
+      storeType: StoreType.REMOTE,
+      connectorRef: getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO),
+      branch,
+      repoName: selectRepositoryRef.current?.repository?.name
+    }
     if (selectRepositoryRef.current?.repository) {
       try {
         createPipelineV2Promise({
@@ -270,7 +282,14 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           queryParams: {
             accountIdentifier: accountId,
             orgIdentifier,
-            projectIdentifier
+            projectIdentifier,
+            ...(shouldSavePipelineToGit && {
+              ...gitParams,
+              filePath: yamlPath,
+              commitMsg: `${getString('common.addedEntityLabel', {
+                entity: getString('common.pipeline').toLowerCase()
+              })} ${yamlPath}`
+            })
           },
           requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
         })
@@ -328,7 +347,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                                 projectIdentifier,
                                 pipelineIdentifier: createPipelineResponse?.data?.identifier,
                                 stageId: getString('buildText'),
-                                sectionId: BuildTabs.EXECUTION
+                                sectionId: BuildTabs.EXECUTION,
+                                ...(shouldSavePipelineToGit ? gitParams : {})
                               })
                             )
                           }
@@ -538,8 +558,6 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
               showValidationErrors?.()
               return
             }
-            showValidationErrors?.()
-            return
           } else if (
             StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.ChooseExistingYAML
           ) {

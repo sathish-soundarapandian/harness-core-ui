@@ -46,6 +46,7 @@ export interface StringsMap {
   'common.addNewCluster': string
   'common.addNewRepo': string
   'common.addVariable': string
+  'common.addedEntityLabel': string
   'common.additionalAttributes': string
   'common.advanced': string
   'common.agent': string

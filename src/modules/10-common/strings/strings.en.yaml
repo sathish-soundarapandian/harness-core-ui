@@ -1338,6 +1338,7 @@ artifacts:
 updated: Updated
 python: Python
 seeAdvancedOptions: See Advanced Options
+addedEntityLabel: 'Added {{entity}}'
 
 # SSCS module
 sscs: SSCS

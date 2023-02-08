@@ -36,6 +36,7 @@ import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranch
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getScopedValueFromDTO, ScopedValueObjectDTO } from '@common/components/EntityReference/EntityReference.types'
 import { Status } from '@common/utils/Constants'
+import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import { Connectors } from '@connectors/constants'
 import { getScmConnectorPrefix, getValidRepoName } from '../../../utils/HostedBuildsUtils'
 
@@ -381,7 +382,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
                 })}
                 initialValues={{
                   pipelineName: `Build ${getValidRepoName(repoName)}`,
-                  yamlPath: `${HARNESS_FOLDER_PREFIX}/${getValidRepoName(repoName)}/.yaml`,
+                  yamlPath: `${HARNESS_FOLDER_PREFIX}/Build_${getIdentifierFromValue(getValidRepoName(repoName))}.yaml`,
                   storeInGit: true,
                   createBranchIfNotExists: true
                 }}
