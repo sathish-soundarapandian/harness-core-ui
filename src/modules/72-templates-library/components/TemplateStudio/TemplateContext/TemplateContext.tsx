@@ -882,7 +882,7 @@ export const TemplateProvider: React.FC<{
           orgIdentifier: queryParams.orgIdentifier
         }
       },
-      initialState
+      { ...initialState, template: { ...initialState.template, identifier: templateIdentifier } }
     )
   )
   const [view, setView] = useLocalStorage<SelectedView>(
