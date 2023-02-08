@@ -281,7 +281,6 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                 projectIdentifier,
                 targetIdentifier: createPipelineResponse?.data?.identifier
               }
-              // Create Input Set for PR trigger, then
               // Create PR trigger
               createTriggerPromise({
                 body: yamlStringify({
@@ -301,7 +300,6 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                 .then((createPRTriggerResponse: ResponseNGTriggerResponse) => {
                   if (createPRTriggerResponse.status === Status.SUCCESS) {
                     // If PR trigger is created succesfully, then
-                    // create Input Set for Push trigger and then finally
                     // create a Push trigger
                     createTriggerPromise({
                       body: yamlStringify({
