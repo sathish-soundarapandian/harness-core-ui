@@ -75,12 +75,15 @@ export interface ImportPipelineYAMLInterface {
 }
 
 export interface SavePipelineToRemoteInterface {
+  pipelineName: string
+  yamlPath: string
+  storeInGit: boolean
+  createBranchIfNotExists: boolean
   branch?: string
-  yamlPath?: string
 }
 
 export interface ConfigurePipelineRef {
-  values?: ImportPipelineYAMLInterface
+  values?: ImportPipelineYAMLInterface | SavePipelineToRemoteInterface
   configuredOption?: StarterTemplate
   showValidationErrors: () => void
 }
@@ -107,6 +110,8 @@ interface StarterTemplate {
   icon: IconName
   id: string
 }
+
+const HARNESS_FOLDER_PREFIX = '.harness'
 
 const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: ConfigurePipelineForwardRef) => {
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
@@ -135,15 +140,29 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
   )
 
   const markFieldsTouchedToShowValidationErrors = React.useCallback((): void => {
-    const { values, setFieldTouched } = formikRef.current || {}
-    const { branch, yamlPath } = values || {}
-    if (!branch) {
-      setFieldTouched?.('branch', true)
+    if (StarterConfigIdToOptionMap[selectedConfigOption.id] === PipelineConfigurationOption.StarterPipeline) {
+      const { values, setFieldTouched } = saveToGitFormikRef.current || {}
+      const { branch, yamlPath, pipelineName: _pipelineName } = values || {}
+      if (!_pipelineName) {
+        setFieldTouched?.('pipelineName', true)
+      }
+      if (!branch) {
+        setFieldTouched?.('branch', true)
+      }
+      if (!yamlPath) {
+        setFieldTouched?.('yamlPath', true)
+      }
+    } else if (StarterConfigIdToOptionMap[selectedConfigOption.id] === PipelineConfigurationOption.ChooseExistingYAML) {
+      const { values, setFieldTouched } = formikRef.current || {}
+      const { branch, yamlPath } = values || {}
+      if (!branch) {
+        setFieldTouched?.('branch', true)
+      }
+      if (!yamlPath) {
+        setFieldTouched?.('yamlPath', true)
+      }
     }
-    if (!yamlPath) {
-      setFieldTouched?.('yamlPath', true)
-    }
-  }, [formikRef.current])
+  }, [formikRef.current, saveToGitFormikRef.current, selectedConfigOption])
 
   const setForwardRef = ({ values, configuredOption }: Omit<ConfigurePipelineRef, 'showValidationErrors'>): void => {
     if (!forwardRef || typeof forwardRef === 'function') {
@@ -347,9 +366,32 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
               keepChildrenMounted={false}
               onToggleOpen={isOpen => setShowAdvancedOptions(isOpen)}
             >
-              <Formik onSubmit={() => {}} formName="configure-pipeline-advanced-options" initialValues={{}}>
+              <Formik<SavePipelineToRemoteInterface>
+                onSubmit={noop}
+                formName="configure-pipeline-advanced-options"
+                validationSchema={Yup.object().shape({
+                  pipelineName: Yup.string().trim().required(getString('createPipeline.pipelineNameRequired')),
+                  branch: Yup.string().trim().required(getString('common.git.validation.branchRequired')),
+                  yamlPath: Yup.string()
+                    .trim()
+                    .required(getString('gitsync.gitSyncForm.yamlPathRequired'))
+                    .test('is-valid-yaml-file', getString('ci.getStartedWithCI.validYAMLFile'), value => {
+                      return (value as string)?.endsWith('.yaml')
+                    })
+                })}
+                initialValues={{
+                  pipelineName: `Build ${getValidRepoName(repoName)}`,
+                  yamlPath: `${HARNESS_FOLDER_PREFIX}/${getValidRepoName(repoName)}/.yaml`,
+                  storeInGit: true,
+                  createBranchIfNotExists: true
+                }}
+              >
                 {_formikProps => {
                   saveToGitFormikRef.current = _formikProps
+                  setForwardRef({
+                    values: _formikProps.values,
+                    configuredOption: selectedConfigOption
+                  })
                   return (
                     <FormikForm>
                       <Layout.Vertical className={css.advancedOptionFormFields}>
@@ -366,7 +408,6 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
                           <FormInput.CheckBox
                             name="storeInGit"
                             label={getString('ci.getStartedWithCI.storeInGit')}
-                            checked={true}
                             defaultChecked={true}
                           />
                         </Layout.Vertical>
@@ -406,9 +447,8 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
                             ) : null}
                           </Layout.Horizontal>
                           <FormInput.CheckBox
-                            name="storeInGit"
+                            name="createBranchIfNotExists"
                             label={getString('ci.getStartedWithCI.createBranchIfNotExists')}
-                            checked={true}
                             defaultChecked={true}
                           />
                         </Layout.Vertical>

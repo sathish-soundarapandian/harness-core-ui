@@ -66,7 +66,9 @@ import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
 import {
   ConfigurePipeline,
   ConfigurePipelineRef,
+  ImportPipelineYAMLInterface,
   PipelineConfigurationOption,
+  SavePipelineToRemoteInterface,
   StarterConfigIdToOptionMap,
   StarterConfigurations
 } from './ConfigurePipeline'
@@ -525,17 +527,27 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
               // ignore error
             }
           }
-          const { branch, yamlPath } = values || {}
+
           if (!configuredOption) {
             setShowError(true)
             return
           }
-          if (
-            StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.ChooseExistingYAML &&
-            (!branch || !yamlPath)
-          ) {
+          if (StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.StarterPipeline) {
+            const { branch, yamlPath, pipelineName } = (values as SavePipelineToRemoteInterface) || {}
+            if (!branch || !yamlPath || !pipelineName) {
+              showValidationErrors?.()
+              return
+            }
             showValidationErrors?.()
             return
+          } else if (
+            StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.ChooseExistingYAML
+          ) {
+            const { branch, yamlPath } = (values as ImportPipelineYAMLInterface) || {}
+            if (!branch || !yamlPath) {
+              showValidationErrors?.()
+              return
+            }
           }
           if (enableCloneCodebase && repository && configuredGitConnector?.spec) {
             setDisableBtn(true)
