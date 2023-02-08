@@ -21,6 +21,7 @@ export interface InfraProvisioningWizardProps {
   }
   lastConfiguredWizardStepId?: InfraProvisiongWizardStepId
   enableFieldsForTesting?: boolean
+  refreshConnectors?: () => void
 }
 
 export const enum Hosting {

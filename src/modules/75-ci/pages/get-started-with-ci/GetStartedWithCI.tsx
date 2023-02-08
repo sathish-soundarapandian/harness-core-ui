@@ -77,8 +77,8 @@ export default function GetStartedWithCI(): React.ReactElement {
   useEffect(() => {
     if (showWizard) {
       fetchGitConnectors({
-        types: [Connectors.GITHUB, Connectors.GITLAB, Connectors.BITBUCKET],
-        connectivityStatuses: [Status.SUCCESS],
+        types: [Connectors.GITHUB, Connectors.GITLAB, Connectors.BITBUCKET, Connectors.HARNESS_CODE],
+        // connectivityStatuses: [Status.SUCCESS],
         filterType: 'Connector'
       } as ConnectorFilterProperties).then((response: ResponsePageConnectorResponse) => {
         const { status, data } = response
@@ -232,6 +232,10 @@ export default function GetStartedWithCI(): React.ReactElement {
               ? InfraProvisiongWizardStepId.SelectRepository
               : InfraProvisiongWizardStepId.SelectGitProvider
           }
+          refreshConnectors={() => {
+            setShowWizard(false)
+            setShowWizard(true)
+          }}
         />
       ) : (
         <>

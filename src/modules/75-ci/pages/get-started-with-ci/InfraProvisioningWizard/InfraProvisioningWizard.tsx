@@ -85,7 +85,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const {
     lastConfiguredWizardStepId = InfraProvisiongWizardStepId.SelectGitProvider,
     precursorData,
-    enableFieldsForTesting
+    enableFieldsForTesting,
+    refreshConnectors
   } = props
   const { preSelectedGitConnector, connectorsEligibleForPreSelection, secretForPreSelectedConnector } =
     precursorData || {}
@@ -461,9 +462,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                   orgIdentifier,
                   projectIdentifier,
                   spec: {
-                    url: `${window.location.origin}${
-                      window.harnessNameSpace || ''
-                    }/code/git/${accountId}/${orgIdentifier}/${projectIdentifier}`
+                    url: `${window.location.origin}${window.harnessNameSpace || ''}/code/git` // /${accountId}/${orgIdentifier}/${projectIdentifier}
                   }
                 }
               }
@@ -472,7 +471,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                   setCurrentWizardStepId(InfraProvisiongWizardStepId.SelectRepository)
                   setShowError(false)
                   updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.Success)
-                  updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.InProgress)
+                  updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.ToDo)
+                  refreshConnectors?.()
                 })
                 .catch(exception => {
                   showErrorToaster(
