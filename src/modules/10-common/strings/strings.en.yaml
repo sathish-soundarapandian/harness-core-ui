@@ -1339,6 +1339,7 @@ artifacts:
     sourceDirectoryPlaceholder: Enter Source Directory
 updated: Updated
 python: Python
+seeAdvancedOptions: See Advanced Options
 
 # SSCS module
 sscs: SSCS

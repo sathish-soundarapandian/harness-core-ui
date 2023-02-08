@@ -905,6 +905,7 @@ export interface StringsMap {
   'common.seconds': string
   'common.secretKey': string
   'common.secrets': string
+  'common.seeAdvancedOptions': string
   'common.seeDetails': string
   'common.seeLess': string
   'common.seeMore': string
@@ -7554,6 +7555,7 @@ export interface StringsMap {
   'ci.getStartedWithCI.configurationOption': string
   'ci.getStartedWithCI.configurePipeline': string
   'ci.getStartedWithCI.configureYourPipeline': string
+  'ci.getStartedWithCI.createEmptyPipelineConfig': string
   'ci.getStartedWithCI.createPipeline': string
   'ci.getStartedWithCI.createPipelineWithOtherOption': string
   'ci.getStartedWithCI.devFriendly': string

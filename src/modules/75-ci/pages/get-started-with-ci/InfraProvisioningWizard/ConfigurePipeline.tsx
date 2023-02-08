@@ -8,7 +8,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
-import { parse } from 'yaml'
 import type { FormikContextType } from 'formik'
 import { noop } from 'lodash-es'
 import {
@@ -22,23 +21,17 @@ import {
   Formik,
   FormikForm,
   FormInput,
-  SelectOption
+  SelectOption,
+  Collapse
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
-import type { PipelineConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { Separator } from '@common/components'
-import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { StringUtils } from '@common/exports'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { Connectors } from '@connectors/constants'
-import { addDetailsToPipeline, getScmConnectorPrefix } from '@ci/utils/HostedBuildsUtils'
-import k8sStarterTemplates from './starter-templates/k8s.json'
-import vmStarterTemplates from './starter-templates/vm.json'
+import { getScmConnectorPrefix } from '@ci/utils/HostedBuildsUtils'
 
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -109,15 +102,12 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
   const { showError, configuredGitConnector, repoName, enableForTesting } = props
   const { getString } = useStrings()
   const [pipelineName, setPipelineName] = useState<string>()
-  const [pipelineYAML, setPipelineYAML] = useState<string>('')
   const pipelineNameToSpecify = `Build ${pipelineName}`
   const formikRef = useRef<FormikContextType<ImportPipelineYAMLInterface>>()
-  const { CIE_HOSTED_VMS } = useFeatureFlags()
-  const starterTemplates = CIE_HOSTED_VMS ? vmStarterTemplates : k8sStarterTemplates
   const starterMinimumPipeline: StarterTemplate = {
-    name: getString('ci.getStartedWithCI.starterPipeline'),
+    name: getString('ci.getStartedWithCI.createEmptyPipelineConfig'),
     description: getString('ci.getStartedWithCI.starterPipelineHelptext'),
-    icon: 'create-via-starter-pipeline',
+    icon: 'create-via-pipeline-template',
     id: 'starter-pipeline'
   }
   const [selectedConfigOption, setSelectedConfigOption] = useState<StarterTemplate>(starterMinimumPipeline)
@@ -156,32 +146,6 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
   useEffect(() => {
     if (selectedConfigOption) {
       setForwardRef({ configuredOption: selectedConfigOption })
-      if (
-        ![PipelineConfigurationOption.StarterPipeline, PipelineConfigurationOption.ChooseExistingYAML].includes(
-          StarterConfigIdToOptionMap[selectedConfigOption.id]
-        )
-      ) {
-        if (selectedConfigOption?.pipelineYaml) {
-          try {
-            const existingPipelineObj = parse(selectedConfigOption.pipelineYaml) as PipelineConfig
-            const enrichedPipelineObj = addDetailsToPipeline({
-              originalPipeline: existingPipelineObj,
-              identifier: StringUtils.getIdentifierFromName(pipelineNameToSpecify)
-                .concat('_')
-                .concat(new Date().getTime().toString()),
-              name: pipelineNameToSpecify,
-              orgIdentifier,
-              projectIdentifier,
-              connectorRef: configuredGitConnectorIdentifier,
-              repoName
-            })
-            const correspondingYAML = yamlStringify(enrichedPipelineObj)
-            setPipelineYAML(correspondingYAML)
-          } catch (e) {
-            // Ignore error
-          }
-        }
-      }
       setPipelineName(selectedConfigOption.name)
     }
   }, [
@@ -297,64 +261,39 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
   )
 
   return (
-    <Layout.Horizontal spacing="huge">
-      <Layout.Vertical width="40%" spacing="small">
-        <Container>
-          <Layout.Vertical spacing="small" width="100%">
-            <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'xsmall' }}>
-              {getString('ci.getStartedWithCI.configureYourPipeline')}
-            </Text>
-            {renderCard(starterMinimumPipeline)}
-            {/* Enable this once limitations related to import yaml api are resolved. */}
-            {enableForTesting && configuredGitConnector?.type !== Connectors.GITLAB
-              ? renderCard({
-                  name: getString('ci.getStartedWithCI.chooseExistingYAML'),
-                  description: getString('ci.getStartedWithCI.chooseExistingYAMLHelptext'),
-                  icon: 'create-via-pipeline-template',
-                  id: 'choose-existing-yaml'
-                })
-              : null}
-          </Layout.Vertical>
-        </Container>
-        <Container>
-          <Layout.Vertical>
-            <Container flex>
-              <Text font={{ variation: FontVariation.H6 }} padding={{ bottom: 'xsmall' }} lineClamp={1}>
-                {getString('ci.getStartedWithCI.chooseStarterConfig')} ({starterTemplates.length})
-              </Text>
-              <Container padding={{ left: 'xsmall' }} width="40%">
-                <Separator topSeparation={22} />
-              </Container>
-            </Container>
-            {(starterTemplates as StarterTemplate[]).map(item => renderCard(item))}
-          </Layout.Vertical>
-        </Container>
-      </Layout.Vertical>
-      <Layout.Vertical width="55%" spacing="huge">
-        {selectedConfigOption &&
-          ![PipelineConfigurationOption.StarterPipeline, PipelineConfigurationOption.ChooseExistingYAML].includes(
-            StarterConfigIdToOptionMap[selectedConfigOption.id]
-          ) &&
-          pipelineYAML && (
-            <YAMLBuilder
-              entityType="Pipelines"
-              fileName={selectedConfigOption.label || selectedConfigOption.name}
-              isReadOnlyMode={true}
-              isEditModeSupported={false}
-              existingYaml={pipelineYAML}
-              height={'calc(100vh - 100px)'}
-              showCopyIcon={false}
-              hideErrorMesageOnReadOnlyMode={true}
-              renderCustomHeader={() => (
-                <div className={css.header}>
-                  <span>{pipelineName}</span>
-                </div>
-              )}
-              displayBorder={false}
-            />
-          )}
-      </Layout.Vertical>
-    </Layout.Horizontal>
+    <Layout.Vertical width="40%" spacing="small">
+      <Container>
+        <Layout.Vertical spacing="medium" width="100%">
+          <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'xsmall' }}>
+            {getString('ci.getStartedWithCI.createPipeline')}
+          </Text>
+          {renderCard(starterMinimumPipeline)}
+          {/* Enable this once limitations related to import yaml api are resolved. */}
+          {enableForTesting && configuredGitConnector?.type !== Connectors.GITLAB
+            ? renderCard({
+                name: getString('ci.getStartedWithCI.chooseExistingYAML'),
+                description: getString('ci.getStartedWithCI.chooseExistingYAMLHelptext'),
+                icon: 'create-via-pipeline-template',
+                id: 'choose-existing-yaml'
+              })
+            : null}
+          {configuredGitConnector?.type !== Connectors.GITLAB ? (
+            <Collapse
+              isOpen={false}
+              heading={
+                <Container padding={{ top: 'small' }}>
+                  <Text font={{ variation: FontVariation.SMALL }}>{getString('common.seeAdvancedOptions')}</Text>
+                </Container>
+              }
+              iconProps={{ name: 'chevron-right', size: 20, padding: { top: 'small', right: 'xsmall' } }}
+              collapseClassName={css.advancedOptions}
+            >
+              <Text font={{ variation: FontVariation.SMALL }}>{getString('common.seeAdvancedOptions')}</Text>
+            </Collapse>
+          ) : null}
+        </Layout.Vertical>
+      </Container>
+    </Layout.Vertical>
   )
 }
 
