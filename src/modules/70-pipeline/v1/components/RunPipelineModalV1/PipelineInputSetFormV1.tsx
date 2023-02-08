@@ -6,16 +6,16 @@
  */
 
 import React from 'react'
-import { Layout, MultiTypeInputType, IconName, AllowedTypes } from '@harness/uicore'
+import { Layout, MultiTypeInputType, AllowedTypes } from '@harness/uicore'
 import cx from 'classnames'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ConfigureOptionsContextProvider } from '@common/components/ConfigureOptions/ConfigureOptionsContext'
+import type { ResponseInputs } from 'services/pipeline-ng'
 import { CICodebaseInputSetFormV1 } from './CICodebaseInputSetFormV1'
 import css from '../../../components/PipelineInputSetForm/PipelineInputSetForm.module.scss'
 
 export interface PipelineInputSetFormV1Props {
-  path?: string
   executionIdentifier?: string
   readonly?: boolean
   maybeContainerClass?: string
@@ -26,31 +26,22 @@ export interface PipelineInputSetFormV1Props {
   gitAwareForTriggerEnabled?: boolean
   hideTitle?: boolean
   disableRuntimeInputConfigureOptions?: boolean
-}
-
-export const stageTypeToIconMap: Record<string, IconName> = {
-  Deployment: 'cd-main',
-  CI: 'ci-main',
-  Pipeline: 'pipeline',
-  Custom: 'custom-stage-icon',
-  Approval: 'approval-stage-icon'
+  inputSets?: ResponseInputs | null
+  hasRuntimeInputs?: boolean
+  hasCodebaseInputs?: boolean
 }
 
 export function PipelineInputSetFormV1Internal(props: PipelineInputSetFormV1Props): React.ReactElement {
-  const { path = '', readonly, viewType, maybeContainerClass = '', viewTypeMetadata, hideTitle } = props
-  const finalPath = path
+  const { readonly, viewType, maybeContainerClass = '', viewTypeMetadata, hideTitle, hasCodebaseInputs } = props
 
   return (
     <Layout.Vertical
       spacing="medium"
       className={cx(css.container, { [maybeContainerClass]: !hideTitle, [css.pipelineStageForm]: !!hideTitle })}
     >
-      <CICodebaseInputSetFormV1
-        path={finalPath}
-        readonly={readonly}
-        viewType={viewType}
-        viewTypeMetadata={viewTypeMetadata}
-      />
+      {hasCodebaseInputs ? (
+        <CICodebaseInputSetFormV1 readonly={readonly} viewType={viewType} viewTypeMetadata={viewTypeMetadata} />
+      ) : null}
     </Layout.Vertical>
   )
 }

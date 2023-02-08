@@ -37,6 +37,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     setRunClicked,
     submitForm,
     loadingInputSets,
+    inputSets,
     inputSetsError
   } = props
   const { getString } = useStrings()
@@ -71,6 +72,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
           <>
             {!loadingInputSets ? (
               <PipelineInputSetFormWrapper
+                inputSets={inputSets}
                 executionView={executionView}
                 executionIdentifier={executionIdentifier}
                 hasRuntimeInputs={hasRuntimeInputs}
@@ -89,17 +91,20 @@ export interface PipelineInputSetFormWrapperProps {
   executionIdentifier?: string
   hasRuntimeInputs?: boolean
   hasCodebaseInputs?: boolean
+  inputSets?: ResponseInputs | null
 }
 
 function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): React.ReactElement | null {
-  const { executionView, hasRuntimeInputs, hasCodebaseInputs, executionIdentifier } = props
+  const { executionView, hasRuntimeInputs, hasCodebaseInputs, executionIdentifier, inputSets } = props
 
   if (hasRuntimeInputs || hasCodebaseInputs || executionView) {
     return (
       <>
         <PipelineInputSetFormV1
+          inputSets={inputSets}
+          hasRuntimeInputs={hasRuntimeInputs}
+          hasCodebaseInputs={hasCodebaseInputs}
           readonly={executionView}
-          path=""
           viewType={StepViewType.DeploymentForm}
           isRunPipelineForm
           executionIdentifier={executionIdentifier}

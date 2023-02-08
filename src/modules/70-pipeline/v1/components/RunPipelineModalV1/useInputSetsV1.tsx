@@ -17,8 +17,9 @@ export interface useInputSetsV1Props {
   connectorRef?: string
 }
 
+export type pipelineInputsV1 = { [key: string]: string }
 export interface inputsYaml {
-  inputs?: { [key: string]: string }
+  inputs?: pipelineInputsV1
   repository?: {
     reference: { [key: string]: any }
   }

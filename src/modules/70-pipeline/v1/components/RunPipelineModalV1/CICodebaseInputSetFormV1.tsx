@@ -18,7 +18,6 @@ import css from '../../../components/PipelineInputSetForm/CICodebaseInputSetForm
 import pipelineInputSetCss from '../../../components/PipelineInputSetForm/PipelineInputSetForm.module.scss'
 
 export interface CICodebaseInputSetFormV1Props {
-  path: string
   readonly?: boolean
   formik?: any
   viewType: StepViewType
@@ -53,25 +52,18 @@ export const getBuildTypeInputLabels = (getString: UseStringsReturn['getString']
 export const codeBaseInputFieldFormName = `repository.reference.value`
 
 function CICodebaseInputSetFormV1Internal({
-  path,
   readonly,
   formik,
   viewType,
   viewTypeMetadata
 }: CICodebaseInputSetFormV1Props): JSX.Element {
   const containerWidth = viewTypeMetadata?.isTemplateDetailDrawer ? '100%' : '50%' // drawer view is much smaller 50% would cut out
-  const prefix = isEmpty(path) ? '' : `${path}.`
-  const buildTypeValue = get(formik?.values, `${prefix}properties.ci.codebase.build.type`)
-  const previousBuildTypeSpecValue = get(formik?.values, `${prefix}properties.ci.codebase.build.spec.${buildTypeValue}`)
   const savedValues = useRef<Record<string, string>>(
-    Object.assign(
-      {
-        branch: '',
-        tag: '',
-        PR: ''
-      },
-      { [buildTypeValue]: previousBuildTypeSpecValue || '' }
-    )
+    Object.assign({
+      branch: '',
+      tag: '',
+      PR: ''
+    })
   )
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -102,16 +94,6 @@ function CICodebaseInputSetFormV1Internal({
       setCodeBaseType(type)
     }
   }, [formik?.values])
-
-  // useEffect(() => {
-  //   if (
-  //     (viewType === StepViewType.InputSet && formik?.values?.pipeline?.identifier) ||
-  //     (viewType === StepViewType.DeploymentForm && formik?.values?.identifier)
-  //   ) {
-  //     const newInitialValues = { ...formik.values }
-  //     formik?.setValues(newInitialValues)
-  //   }
-  // }, [formik?.values?.pipeline?.identifier, formik?.values?.identifier])
 
   useEffect(() => {
     // OnEdit Case, persists saved ciCodebase build spec
