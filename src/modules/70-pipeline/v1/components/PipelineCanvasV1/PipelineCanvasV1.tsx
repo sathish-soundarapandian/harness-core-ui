@@ -692,7 +692,6 @@ export function PipelineCanvasV1({
       />
       <Layout.Vertical height={'100%'}>
         <PipelineCanvasHeaderV1
-          module={module}
           isPipelineRemote={!!isPipelineRemote}
           isGitSyncEnabled={!!isGitSyncEnabled}
           onGitBranchChange={onGitBranchChange}

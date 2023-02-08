@@ -1068,8 +1068,6 @@ export interface StringsMap {
   'common.supportText': string
   'common.supportedInFirstGeneration': string
   'common.supportedModals': string
-  'common.svcEnv2Banner': string
-  'common.svcEnvV2Truncated': string
   'common.switchAccount': string
   'common.switchAccountError': string
   'common.switchAccountSearch': string
