@@ -84,8 +84,7 @@ import {
   isAllowedCustomArtifactDeploymentTypes,
   isAllowedGithubPackageRegistryDeploymentTypes,
   isSidecarAllowed,
-  ModalViewFor,
-  showArtifactStoreStepDirectly
+  ModalViewFor
 } from './ArtifactHelper'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { showConnectorStep } from './ArtifactUtils'
@@ -709,8 +708,6 @@ export default function ServiceV2ArtifactsSelection({
         }}
         handleViewChange={handleConnectorViewChange}
         showConnectorStep={showConnectorStep(selectedArtifact as ArtifactType)}
-        artifactWizardInitialStep={showArtifactStoreStepDirectly(selectedArtifact) ? 2 : 1}
-        showArtifactSelectionStep
       />
     )
   }

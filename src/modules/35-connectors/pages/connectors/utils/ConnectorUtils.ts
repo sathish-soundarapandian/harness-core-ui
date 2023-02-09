@@ -876,6 +876,31 @@ export const setupJenkinsFormData = async (connectorInfo: ConnectorInfoDTO, acco
   }
   return formData
 }
+
+export const setupBambooFormData = async (connectorInfo: ConnectorInfoDTO, accountId: string): Promise<FormData> => {
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo.projectIdentifier,
+    orgIdentifier: connectorInfo.orgIdentifier
+  }
+
+  const formData = {
+    bambooUrl: connectorInfo.spec.bambooUrl,
+    username:
+      connectorInfo.spec.auth.spec.username || connectorInfo.spec.auth.spec.usernameRef
+        ? {
+            value: connectorInfo.spec.auth.spec.username || connectorInfo.spec.auth.spec.usernameRef,
+            type: connectorInfo.spec.auth.spec.usernameRef ? ValueType.ENCRYPTED : ValueType.TEXT
+          }
+        : undefined,
+
+    password:
+      connectorInfo.spec.auth.type === AuthTypes.USER_PASSWORD
+        ? await setSecretField(connectorInfo.spec.auth.spec.passwordRef, scopeQueryParams)
+        : undefined
+  }
+  return formData
+}
 export const setupAzureArtifactsFormData = async (
   connectorInfo: ConnectorInfoDTO,
   accountId: string
@@ -1383,6 +1408,31 @@ export const buildJenkinsPayload = (formData: FormData) => {
                 tokenRef: formData.bearerToken.referenceString
               }
             }
+    }
+  }
+  return { connector: savedData }
+}
+
+export const buildBambooPayload = (formData: FormData) => {
+  const savedData = {
+    name: formData.name,
+    description: formData.description,
+    projectIdentifier: formData.projectIdentifier,
+    identifier: formData.identifier,
+    orgIdentifier: formData.orgIdentifier,
+    tags: formData.tags,
+    type: Connectors.Bamboo,
+    spec: {
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      bambooUrl: formData.bambooUrl.trim(),
+      auth: {
+        type: 'UsernamePassword',
+        spec: {
+          username: formData.username.type === ValueType.TEXT ? formData.username.value : undefined,
+          usernameRef: formData.username.type === ValueType.ENCRYPTED ? formData.username.value : undefined,
+          passwordRef: formData.password.referenceString
+        }
+      }
     }
   }
   return { connector: savedData }
@@ -2351,6 +2401,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'microsoft-azure'
     case Connectors.JENKINS:
       return 'service-jenkins'
+    case Connectors.Bamboo:
+      return 'service-bamboo'
     case Connectors.AZURE_ARTIFACTS:
       return 'service-azure-artifact-connector'
     case Connectors.CUSTOM_SECRET_MANAGER:
