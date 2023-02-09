@@ -1728,6 +1728,7 @@ export interface Input {
   name?: string
   required?: boolean
   secret?: boolean
+  type?: string
 }
 
 export interface InputSetError {
