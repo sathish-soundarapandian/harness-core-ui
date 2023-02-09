@@ -34,9 +34,12 @@ export function chartsConfig(
     },
     xAxis: {
       tickLength: 0,
-
       labels: {
         enabled: false
+      },
+      crosshair: {
+        width: 1,
+        color: 'var(--primary-9-dark)'
       }
     },
     yAxis: {
@@ -84,7 +87,7 @@ export function chartsConfig(
         const testDataTimestamp = testeDataTime ? moment(testeDataTime).format('lll') : getString('noData')
 
         return `
-        <div style="margin-bottom: var(--spacing-xsmall); color: var(--grey-350">${testDataTimestamp}</div>
+        <div style="margin-bottom: var(--spacing-xsmall); color: var(--grey-350)">${testDataTimestamp}</div>
         <div class="sectionParent" style="margin-top: 4px">
         <div class="riskIndicator" style="border: 1px solid ${getRiskColorValue(
           testData?.risk
@@ -95,13 +98,21 @@ export function chartsConfig(
         )}:</span><span style="color: var(--white); margin-left: var(--spacing-small)">${testDataDisplayValue}</span></p>
         </div>
         </div>      
-        <div style="margin-bottom: var(--spacing-xsmall); color: var(--grey-350">${baseDataTimestamp}</div>
+        <div style="margin-bottom: var(--spacing-xsmall); color: var(--grey-350)">${baseDataTimestamp}</div>
         <div class="sectionParent"> 
         <div class="riskIndicator" style="border: 1px solid var(--primary-7);background: var(--primary-2); margin:0 10px 0 4px"></div> 
         <p><span style="color: var(--grey-350)">${getString(
           'pipeline.verification.controlData'
         )}:</span><span style="color: var(--white); margin-left: var(--spacing-small)" >${baseDataDisplayValue}</span></p>
         </div>`
+      },
+      positioner: (_, __, point) => {
+        const { plotX } = point || {}
+        const xPosition = plotX > 900 ? plotX - 200 : plotX - 100
+        return {
+          x: xPosition,
+          y: -70
+        }
       },
       useHTML: true,
       outside: false,

@@ -273,6 +273,7 @@ export const expectedChartConfigData = {
   tooltip: {
     className: 'metricsGraph_tooltip',
     formatter: expect.any(Function),
+    positioner: expect.any(Function),
     outside: false,
     shared: true,
     useHTML: true
@@ -280,6 +281,10 @@ export const expectedChartConfigData = {
   xAxis: {
     labels: {
       enabled: false
+    },
+    crosshair: {
+      color: 'var(--primary-9-dark)',
+      width: 1
     },
     tickLength: 0
   },
