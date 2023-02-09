@@ -382,7 +382,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
                 padding: { top: 'small', right: 'xsmall' }
               }}
               collapseClassName={css.advancedOptions}
-              keepChildrenMounted={false}
+              keepChildrenMounted={true}
               onToggleOpen={isOpen => setShowAdvancedOptions(isOpen)}
             >
               <Formik<SavePipelineToRemoteInterface>
