@@ -92,7 +92,7 @@ export const buildTypeInputNames: Record<string, string> = {
   PR: 'number'
 }
 
-const defaultValues = {
+export const defaultValues = {
   branch: '<+trigger.branch>',
   tag: '<+trigger.tag>',
   PR: '<+trigger.prNumber>'

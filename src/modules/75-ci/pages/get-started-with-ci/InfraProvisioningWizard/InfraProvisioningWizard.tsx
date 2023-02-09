@@ -51,6 +51,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CIOnboardingActions } from '@common/constants/TrackingConstants'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { getScopedValueFromDTO, ScopedValueObjectDTO } from '@common/components/EntityReference/EntityReference.types'
+import { defaultValues as CodebaseDefaultValues } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import { BuildTabs } from '@ci/components/PipelineStudio/CIPipelineStagesUtils'
 import {
   InfraProvisioningWizardProps,
@@ -181,10 +182,12 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const constructTriggerPayload = React.useCallback(
     ({
       pipelineId,
-      eventType
+      eventType,
+      shouldSavePipelineToGit
     }: {
       pipelineId: string
       eventType: string
+      shouldSavePipelineToGit: boolean
     }): NGTriggerConfigV2 | TriggerConfigDTO | undefined => {
       const connectorType: ConnectorInfoDTO['type'] | undefined = configuredGitConnector?.type
       if (!connectorType) {
@@ -237,7 +240,9 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             }
           }
         },
-        inputYaml: yamlStringify(omitBy(omitBy(pipelineInput, isUndefined), isNull))
+        ...(shouldSavePipelineToGit
+          ? { pipelineBranchName: CodebaseDefaultValues.branch }
+          : { inputYaml: yamlStringify(omitBy(omitBy(pipelineInput, isUndefined), isNull)) })
       }
     },
     [
@@ -268,7 +273,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     const { type: connectorType } = configuredGitConnector || {}
     const { branch, storeInGit, yamlPath } = configurePipelineRef.current?.values as SavePipelineToRemoteInterface
     const shouldSavePipelineToGit =
-      connectorType && [Connectors.GITHUB, Connectors.BITBUCKET].includes(connectorType) && storeInGit
+      (connectorType && [Connectors.GITHUB, Connectors.BITBUCKET].includes(connectorType) && storeInGit) || false
     const gitParams = {
       storeType: StoreType.REMOTE,
       connectorRef: getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO),
@@ -312,7 +317,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                         configuredGitConnector?.type &&
                         [Connectors.GITHUB, Connectors.BITBUCKET].includes(configuredGitConnector?.type)
                           ? eventTypes.PULL_REQUEST
-                          : eventTypes.MERGE_REQUEST
+                          : eventTypes.MERGE_REQUEST,
+                      shouldSavePipelineToGit
                     }) || {}
                   )
                 }) as any,
@@ -327,7 +333,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                         trigger: clearNullUndefined(
                           constructTriggerPayload({
                             pipelineId: createPipelineResponse?.data?.identifier || '',
-                            eventType: eventTypes.PUSH
+                            eventType: eventTypes.PUSH,
+                            shouldSavePipelineToGit
                           }) || {}
                         )
                       }) as any,
@@ -340,7 +347,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                           setShowGetStartedTabInMainMenu(false)
                           if (createPipelineResponse?.data?.identifier) {
                             history.push(
-                              routes.toPipelineStudio({
+                              routes.toPipelineStudioV1({
                                 accountId: accountId,
                                 module: 'ci',
                                 orgIdentifier,
@@ -401,7 +408,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           setShowGetStartedTabInMainMenu(false)
           if (createPipelineResponse?.data?.identifier) {
             history.push(
-              routes.toPipelineStudio({
+              routes.toPipelineStudioV1({
                 accountId: accountId,
                 module: 'ci',
                 orgIdentifier,
