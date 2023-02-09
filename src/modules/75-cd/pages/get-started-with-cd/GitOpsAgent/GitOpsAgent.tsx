@@ -107,7 +107,8 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
       pageIndex: 0,
       pageSize: 10,
       searchTerm: '',
-      accountIdentifier: accountId
+      accountIdentifier: accountId,
+      type: 'HOSTED_ARGO_PROVIDER'
     }
     // lazy: true
   })

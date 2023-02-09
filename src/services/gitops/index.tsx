@@ -1343,7 +1343,7 @@ export interface AgentServiceForServerListQueryParams {
   orgIdentifier?: string
   identifier?: string
   name?: string
-  type?: 'AGENT_TYPE_UNSET' | 'CONNECTED_ARGO_PROVIDER' | 'MANAGED_ARGO_PROVIDER'
+  type?: 'AGENT_TYPE_UNSET' | 'CONNECTED_ARGO_PROVIDER' | 'MANAGED_ARGO_PROVIDER' | 'HOSTED_ARGO_PROVIDER'
   tags?: string[]
   searchTerm?: string
   pageSize?: number

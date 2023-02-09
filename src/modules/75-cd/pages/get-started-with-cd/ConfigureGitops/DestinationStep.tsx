@@ -670,9 +670,9 @@ export const DestinationStep = (props: any) => {
                         {getString('cd.getStartedWithCD.clusterSpec3')}
                       </div>
                     </> */}
-                    <Text font="normal" className={css.smallMarginBottomClass}>
-                      {getString('cd.getStartedWithCD.clusterSpecInfo')}
-                    </Text>
+                    {/*<Text font="normal" className={css.smallMarginBottomClass}>*/}
+                    {/*{getString('cd.getStartedWithCD.clusterSpecInfo')}*/}
+                    {/*</Text>*/}
                     <ProvisionCluster />
                   </Layout.Vertical>
                 </Container>
