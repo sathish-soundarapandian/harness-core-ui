@@ -11,7 +11,7 @@ import cx from 'classnames'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ConfigureOptionsContextProvider } from '@common/components/ConfigureOptions/ConfigureOptionsContext'
-import type { ResponseInputs } from 'services/pipeline-ng'
+import type { ResponseInputs, PipelineConfig } from 'services/pipeline-ng'
 import { CICodebaseInputSetFormV1 } from './CICodebaseInputSetFormV1'
 import css from '../../../components/PipelineInputSetForm/PipelineInputSetForm.module.scss'
 
@@ -29,6 +29,7 @@ export interface PipelineInputSetFormV1Props {
   inputSets?: ResponseInputs | null
   hasRuntimeInputs?: boolean
   hasCodebaseInputs?: boolean
+  originalPipeline?: PipelineConfig
 }
 
 export function PipelineInputSetFormV1Internal(props: PipelineInputSetFormV1Props): React.ReactElement {
@@ -40,7 +41,12 @@ export function PipelineInputSetFormV1Internal(props: PipelineInputSetFormV1Prop
       className={cx(css.container, { [maybeContainerClass]: !hideTitle, [css.pipelineStageForm]: !!hideTitle })}
     >
       {hasCodebaseInputs ? (
-        <CICodebaseInputSetFormV1 readonly={readonly} viewType={viewType} viewTypeMetadata={viewTypeMetadata} />
+        <CICodebaseInputSetFormV1
+          readonly={readonly}
+          viewType={viewType}
+          viewTypeMetadata={viewTypeMetadata}
+          originalPipeline={props.originalPipeline}
+        />
       ) : null}
     </Layout.Vertical>
   )
