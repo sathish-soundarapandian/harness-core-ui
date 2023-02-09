@@ -8,18 +8,22 @@
 import React from 'react'
 import { useLocation } from 'react-router-dom'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { SavedExecutionViewTypes } from '@pipeline/components/LogsContent/LogsContent'
 import ExecutionGraphView from './ExecutionGraphView/ExecutionGraphView'
 import ExecutionLogView from './ExecutionLogView/ExecutionLogView'
 
 export default function ExecutionPipelineView(): React.ReactElement {
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const { preference: savedExecutionView } = usePreferenceStore<string | undefined>(
     PreferenceScope.USER,
     'executionViewType'
   )
-  const initialSelectedView = savedExecutionView || SavedExecutionViewTypes.GRAPH
+  const initialSelectedView = CI_YAML_VERSIONING
+    ? SavedExecutionViewTypes.LOG
+    : savedExecutionView || SavedExecutionViewTypes.GRAPH
   const view = queryParams.get('view')
   const isLogView =
     view === SavedExecutionViewTypes.LOG || (!view && initialSelectedView === SavedExecutionViewTypes.LOG)

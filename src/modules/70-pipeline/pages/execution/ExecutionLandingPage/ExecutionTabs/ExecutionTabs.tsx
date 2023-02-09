@@ -49,7 +49,10 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const { children, savedExecutionView, setSavedExecutionView } = props
   const { getString } = useStrings()
   const { pipelineExecutionDetail, isPipelineInvalid } = useExecutionContext()
-  const initialSelectedView = savedExecutionView || SavedExecutionViewTypes.GRAPH
+  const isSimplifiedYAMLEnabled = useFeatureFlag(FeatureFlag.CI_YAML_VERSIONING)
+  const initialSelectedView = isSimplifiedYAMLEnabled
+    ? SavedExecutionViewTypes.LOG
+    : savedExecutionView || SavedExecutionViewTypes.GRAPH
   const params = useParams<PipelineType<ExecutionPathProps>>()
   const location = useLocation()
   const { view } = useQueryParams<ExecutionQueryParams>()
