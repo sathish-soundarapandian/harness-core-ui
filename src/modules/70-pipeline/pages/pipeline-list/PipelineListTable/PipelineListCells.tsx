@@ -300,7 +300,11 @@ export const MenuCell: CellType = ({ row, column }) => {
         resourceType: ResourceType.PIPELINE,
         resourceIdentifier: data.identifier as string
       },
-      permissions: [PermissionIdentifier.DELETE_PIPELINE, PermissionIdentifier.EXECUTE_PIPELINE]
+      permissions: [
+        PermissionIdentifier.DELETE_PIPELINE,
+        PermissionIdentifier.EXECUTE_PIPELINE,
+        PermissionIdentifier.EDIT_PIPELINE
+      ]
     },
     [data.identifier]
   )
