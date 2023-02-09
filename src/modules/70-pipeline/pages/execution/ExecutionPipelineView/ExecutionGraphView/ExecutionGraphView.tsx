@@ -67,10 +67,7 @@ export default function ExecutionGraphView(): React.ReactElement {
     selectedStageId,
     selectedChildStageId,
     selectedStageExecutionId,
-    queryParams,
-    setSelectedStepId,
-    setSelectedStageExecutionId,
-    setSelectedCollapsedNodeId
+    queryParams
   } = useExecutionContext()
 
   function handleStepSelection(step?: string): void {
@@ -82,7 +79,6 @@ export default function ExecutionGraphView(): React.ReactElement {
       delete params.step
 
       replaceQueryParams(params)
-      setSelectedStepId('')
     } else {
       const selectedStep = allNodeMap?.[step]
       const errorMessage =
@@ -112,10 +108,6 @@ export default function ExecutionGraphView(): React.ReactElement {
   function handleStageSelection(stage: string, parentStageId?: string, stageExecId?: string): void {
     const selectedStage = pipelineStagesMap.get(stage)
 
-    if (!stageExecId) {
-      setSelectedStageExecutionId('')
-    }
-
     if (isExecutionNotStarted(selectedStage?.status) || isExecutionSkipped(selectedStage?.status)) {
       return
     }
@@ -123,7 +115,7 @@ export default function ExecutionGraphView(): React.ReactElement {
     const params = {
       ...queryParams,
       ...(parentStageId ? { stage: parentStageId } : { stage }),
-      stageExecId,
+      ...(stageExecId ? { stageExecId } : {}),
       ...(parentStageId && { childStage: stage })
     }
 
@@ -150,20 +142,11 @@ export default function ExecutionGraphView(): React.ReactElement {
 
       if (!collapsedNode) {
         delete params.collapsedNode
-        setSelectedCollapsedNodeId('')
       }
 
       replaceQueryParams(params)
     },
-    [
-      queryParams,
-      replaceQueryParams,
-      selectedChildStageId,
-      selectedStageExecutionId,
-      selectedStageId,
-      selectedStepId,
-      setSelectedCollapsedNodeId
-    ]
+    [queryParams, replaceQueryParams, selectedChildStageId, selectedStageExecutionId, selectedStageId, selectedStepId]
   )
 
   const [layouts, setLayoutState] = useLocalStorage<ExecutionLayoutState[]>(

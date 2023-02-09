@@ -20,7 +20,8 @@ import {
 import { Color, FontVariation } from '@harness/design-system'
 import { defaultTo, isEqual } from 'lodash-es'
 import { useParams } from 'react-router-dom'
-import { MonacoDiffEditor } from 'react-monaco-editor'
+import type { MonacoDiffEditor as MonacoDiffEditorType } from 'react-monaco-editor'
+import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import {
   ErrorNodeSummary,
   getRefreshedYamlPromise,
@@ -60,7 +61,7 @@ export function YamlDiffView({
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const params = useParams<ProjectPathProps>()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const editorRef = useRef<MonacoDiffEditor>(null)
+  const editorRef = useRef<MonacoDiffEditorType>(null)
   const [loading, setLoading] = React.useState<boolean>(false)
   const [error, setError] = React.useState<any>()
   const [originalYaml, setOriginalYaml] = React.useState<string>('')

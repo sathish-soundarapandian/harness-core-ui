@@ -9,9 +9,10 @@ import React, { useCallback, useRef } from 'react'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import { Formik } from 'formik'
-import { cloneDeep, debounce, noop } from 'lodash-es'
+import { debounce, noop } from 'lodash-es'
 import { Accordion, Card, Container, FormikForm, HarnessDocTooltip, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
+import produce from 'immer'
 import { NameIdDescriptionTags } from '@common/components/NameIdDescriptionTags/NameIdDescriptionTags'
 import { useStrings } from 'framework/strings'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
@@ -44,17 +45,11 @@ export function ApprovalStageOverview(props: ApprovalStageOverviewProps): React.
   } = usePipelineContext()
   const { variablesPipeline, metadataMap } = usePipelineVariables()
   const { stage } = getStageFromPipeline<ApprovalStageElementConfig>(selectedStageId || '')
-  const cloneOriginalData = cloneDeep(stage)!
-  const allNGVariables = (cloneOriginalData?.stage?.variables || []) as AllNGVariables[]
+  const allNGVariables = (stage?.stage?.variables || []) as AllNGVariables[]
   const { getString } = useStrings()
   const scrollRef = useRef<HTMLDivElement | null>(null)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const updateStageDebounced = useCallback(
-    debounce((values: StageElementConfig): void => {
-      updateStage({ ...stage?.stage, ...values })
-    }, 300),
-    [stage?.stage, updateStage]
-  )
+  const updateStageDebounced = useCallback(debounce(updateStage, 300), [updateStage])
 
   return (
     <div className={cx(css.approvalStageOverviewWrapper, css.stageSection)}>
@@ -64,12 +59,11 @@ export function ApprovalStageOverview(props: ApprovalStageOverviewProps): React.
         </Text>
         <Container id="stageOverview" className={css.basicOverviewDetails}>
           <Formik
-            enableReinitialize
             initialValues={{
-              identifier: cloneOriginalData?.stage?.identifier,
-              name: cloneOriginalData?.stage?.name,
-              description: cloneOriginalData?.stage?.description,
-              tags: cloneOriginalData?.stage?.tags || {}
+              identifier: stage?.stage?.identifier,
+              name: stage?.stage?.name,
+              description: stage?.stage?.description,
+              tags: stage?.stage?.tags || {}
             }}
             validationSchema={Yup.object().shape(getNameAndIdentifierSchema(getString, contextType))}
             validate={values => {
@@ -77,14 +71,15 @@ export function ApprovalStageOverview(props: ApprovalStageOverviewProps): React.
               if (isDuplicateStageId(values.identifier || '', stages, true)) {
                 errors.name = getString('validation.identifierDuplicate')
               }
-              if (cloneOriginalData) {
-                updateStageDebounced({
-                  ...(cloneOriginalData.stage as ApprovalStageElementConfig),
-                  name: values?.name || '',
-                  identifier: values?.identifier || '',
-                  description: values?.description || '',
-                  tags: values.tags || {}
-                })
+              if (stage?.stage) {
+                updateStageDebounced(
+                  produce(stage.stage, draft => {
+                    draft.name = values?.name || ''
+                    draft.identifier = values?.identifier || ''
+                    draft.description = values?.description || ''
+                    draft.tags = values.tags || {}
+                  })
+                )
               }
               return errors
             }}
@@ -134,23 +129,27 @@ export function ApprovalStageOverview(props: ApprovalStageOverviewProps): React.
                     factory={stepsFactory}
                     readonly={isReadonly}
                     initialValues={{
-                      variables: ((cloneOriginalData?.stage as StageElementConfig)?.variables ||
-                        []) as AllNGVariables[],
+                      variables: ((stage?.stage as StageElementConfig)?.variables || []) as AllNGVariables[],
                       canAddVariable: true
                     }}
                     allowableTypes={allowableTypes}
                     type={StepType.CustomVariable}
                     stepViewType={StepViewType.StageVariable}
                     onUpdate={({ variables }: CustomVariablesData) => {
-                      updateStageDebounced({
-                        ...(cloneOriginalData?.stage as ApprovalStageElementConfig),
-                        variables
-                      })
+                      if (!stage?.stage) {
+                        return
+                      }
+
+                      updateStageDebounced(
+                        produce(stage.stage, draft => {
+                          draft.variables = variables
+                        })
+                      )
                     }}
                     customStepProps={{
                       yamlProperties:
                         getStageFromPipeline(
-                          cloneOriginalData?.stage?.identifier || '',
+                          stage?.stage?.identifier || '',
                           variablesPipeline
                         )?.stage?.stage?.variables?.map?.(
                           variable => metadataMap[(variable as StringNGVariable).value || '']?.yamlProperties || {}

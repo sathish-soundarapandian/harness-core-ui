@@ -44,7 +44,7 @@ export interface SelectDeploymentTypeRefInstance {
   submitForm?: FormikProps<SelectDeploymentTypeInterface>['submitForm']
 }
 export interface SelectDeploymentTypeInterface {
-  selectedDeploymentType: DeploymentTypeItem[]
+  selectedDeploymentType: string
 }
 interface SelectDeploymentTypeProps {
   disableNextBtn: () => void
@@ -132,7 +132,7 @@ const SelectDeploymentTypeRef = (
         <Text
           font={{ variation: FontVariation.H3 }}
           padding={{ bottom: 'large' }}
-          color={Color.GREY_600}
+          color={Color.GREY_800}
           data-tooltip-id="cdOnboardingDeploymentType"
         >
           {getString('cd.getStartedWithCD.selectDeploymentType')}
@@ -163,16 +163,23 @@ const SelectDeploymentTypeRef = (
                         cornerSelected={true}
                         className={css.icons}
                         cardClassName={css.serviceDeploymentTypeCard}
-                        renderItem={(item: DeploymentTypeItem) => (
-                          <>
-                            <Layout.Vertical flex>
-                              <Icon name={item.icon} size={48} flex className={css.serviceDeploymentTypeIcon} />
-                              <Text font={{ variation: FontVariation.CARD_TITLE }} className={css.text1}>
-                                {getString(item.label)}
-                              </Text>
-                            </Layout.Vertical>
-                          </>
-                        )}
+                        renderItem={(item: DeploymentTypeItem) => {
+                          const isSelected = item.value === formikProps.values.selectedDeploymentType
+                          return (
+                            <>
+                              <Layout.Vertical flex>
+                                <Icon name={item.icon} size={48} flex className={css.serviceDeploymentTypeIcon} />
+                                <Text
+                                  font={{ variation: FontVariation.CARD_TITLE }}
+                                  className={css.text1}
+                                  color={isSelected ? Color.GREY_1000 : Color.GREY_600}
+                                >
+                                  {getString(item.label)}
+                                </Text>
+                              </Layout.Vertical>
+                            </>
+                          )
+                        }}
                         selected={selectedDeploymentType}
                         onChange={
                           /* istanbul ignore next */ (item: DeploymentTypeItem) => {
@@ -198,6 +205,7 @@ const SelectDeploymentTypeRef = (
                         color={Color.PRIMARY_7}
                         font={{ variation: FontVariation.BODY2 }}
                         margin={{ top: 'huge' }}
+                        padding={{ top: 'small' }}
                         data-tooltip-id="cdOnboardingOtherDeploymentTypes"
                       >
                         {getString('cd.getStartedWithCD.clickForOtherDeploymentTypes')}

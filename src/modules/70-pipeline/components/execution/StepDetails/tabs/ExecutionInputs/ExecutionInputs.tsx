@@ -44,7 +44,7 @@ import { parse, stringify } from '@common/utils/YamlHelperMethods'
 import type { StepElementConfig } from 'services/cd-ng'
 import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
-import { NodeType, NonSelectableNodes } from '@pipeline/utils/executionUtils'
+import { StepNodeType, NonSelectableStepNodes } from '@pipeline/utils/executionUtils'
 import { StageForm, StageFormInternal } from '@pipeline/components/PipelineInputSetForm/PipelineInputSetForm'
 import { getStageFromPipeline, validateStage } from '@pipeline/components/PipelineStudio/StepUtil'
 import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
@@ -85,7 +85,7 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
   })
 
   const stepType = step.stepType as StepType
-  const isStageForm = NonSelectableNodes.includes(step.stepType as NodeType)
+  const isStageForm = NonSelectableStepNodes.includes(step.stepType as StepNodeType)
   const template = parse<{ step: StepElementConfig; stage: StageElementConfig }>(
     defaultTo(get(data, 'data.inputTemplate'), '{}')
   )
@@ -206,7 +206,7 @@ export function ExecutionInputs(props: ExecutionInputsProps): React.ReactElement
       >
         <FormikForm>
           {isStageForm ? (
-            step.stepType === NodeType.PIPELINE_STAGE ? (
+            step.stepType === StepNodeType.PIPELINE_STAGE ? (
               finalTemplateParsedPipelineStage?.stages?.map((stageObj, index) => {
                 const childPipelineFieldYaml = isTemplateParsedPipelineStage
                   ? ((fieldYaml?.stage?.spec as PipelineStageConfig)?.inputs?.template

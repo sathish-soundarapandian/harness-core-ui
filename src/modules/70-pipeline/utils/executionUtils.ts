@@ -64,7 +64,7 @@ export interface ServiceDependency {
   errorReason: string | null
 }
 
-export enum NodeType {
+export enum StepNodeType {
   SERVICE = 'SERVICE',
   SERVICE_CONFIG = 'SERVICE_CONFIG',
   SERVICE_SECTION = 'SERVICE_SECTION',
@@ -90,24 +90,26 @@ export enum NodeType {
   PIPELINE_STAGE = 'PIPELINE_STAGE'
 }
 
-export const NonSelectableNodes: NodeType[] = [
-  NodeType.NG_SECTION,
-  NodeType.FORK,
-  NodeType.DEPLOYMENT_STAGE_STEP,
-  NodeType.APPROVAL_STAGE,
-  NodeType.CUSTOM_STAGE,
-  NodeType.NG_EXECUTION,
-  NodeType.PIPELINE_STAGE
+export const NonSelectableStepNodes: StepNodeType[] = [
+  StepNodeType.NG_SECTION,
+  StepNodeType.FORK,
+  StepNodeType.DEPLOYMENT_STAGE_STEP,
+  StepNodeType.APPROVAL_STAGE,
+  StepNodeType.CUSTOM_STAGE,
+  StepNodeType.NG_EXECUTION,
+  StepNodeType.PIPELINE_STAGE,
+  StepNodeType.STRATEGY,
+  StepNodeType.STEP_GROUP
 ]
 
-export const TopLevelNodes: NodeType[] = [
-  NodeType.NG_SECTION,
-  NodeType.ROLLBACK_OPTIONAL_CHILD_CHAIN,
-  NodeType.INFRASTRUCTURE_SECTION,
-  NodeType.NG_SECTION_WITH_ROLLBACK_INFO,
-  NodeType.NG_EXECUTION
+export const TopLevelStepNodes: StepNodeType[] = [
+  StepNodeType.NG_SECTION,
+  StepNodeType.ROLLBACK_OPTIONAL_CHILD_CHAIN,
+  StepNodeType.INFRASTRUCTURE_SECTION,
+  StepNodeType.NG_SECTION_WITH_ROLLBACK_INFO,
+  StepNodeType.NG_EXECUTION
 ]
-export const StepTypeIconsMap: { [key in NodeType]: IconName } = {
+export const StepTypeIconsMap: { [key in StepNodeType]: IconName } = {
   SERVICE: 'services',
   SERVICE_CONFIG: 'services',
   SERVICE_SECTION: 'services',
@@ -215,7 +217,7 @@ export function getPipelineStagesMap(
   const map = new Map<string, GraphLayoutNode>()
 
   function recursiveSetInMap(node: GraphLayoutNode): void {
-    if (node.nodeType === NodeTypes.Parallel || isNodeTypeMatrixOrFor(node.nodeType)) {
+    if (node.nodeType === StageNodeType.Parallel || isNodeTypeMatrixOrFor(node.nodeType)) {
       node.edgeLayoutList?.currentNodeChildren?.forEach(item => {
         if (item && layoutNodeMap?.[item]) {
           // register nodes in case of strategy
@@ -250,13 +252,21 @@ export function getPipelineStagesMap(
   return map
 }
 
-enum NodeTypes {
+export enum StageNodeType {
   Parallel = 'parallel',
   Stage = 'stage',
   Matrix = 'MATRIX',
   Loop = 'LOOP',
   Parallelism = 'PARALLELISM'
 }
+
+export const NonSelectableStageNodes = [
+  StageNodeType.Loop,
+  StageNodeType.Matrix,
+  StageNodeType.Parallel,
+  StageNodeType.Parallelism
+]
+
 export interface ProcessLayoutNodeMapResponse {
   stage?: GraphLayoutNode
   parallel?: GraphLayoutNode[]
@@ -274,10 +284,14 @@ export const processLayoutNodeMap = (executionSummary?: PipelineExecutionSummary
     while (node) {
       const currentNodeChildren: string[] | undefined = node?.edgeLayoutList?.currentNodeChildren
       const nextIds: string[] | undefined = node?.edgeLayoutList?.nextIds
-      if (node.nodeType === NodeTypes.Parallel && currentNodeChildren && currentNodeChildren.length > 1) {
+      if (node.nodeType === StageNodeType.Parallel && currentNodeChildren && currentNodeChildren.length > 1) {
         response.push({ parallel: currentNodeChildren.map(item => layoutNodeMap[item]) })
         node = layoutNodeMap[node.edgeLayoutList?.nextIds?.[0] || '']
-      } else if (node.nodeType === NodeTypes.Parallel && currentNodeChildren && layoutNodeMap[currentNodeChildren[0]]) {
+      } else if (
+        node.nodeType === StageNodeType.Parallel &&
+        currentNodeChildren &&
+        layoutNodeMap[currentNodeChildren[0]]
+      ) {
         response.push({ stage: layoutNodeMap[currentNodeChildren[0]] })
         node = layoutNodeMap[node.edgeLayoutList?.nextIds?.[0] || '']
       } else {
@@ -438,7 +452,7 @@ export function getActiveStep(
   }
 
   if (
-    !NonSelectableNodes.includes(node.stepType as NodeType) &&
+    !NonSelectableStepNodes.includes(node.stepType as StepNodeType) &&
     currentNodeId !== rootNodeId &&
     !has(layoutNodeMap, node.setupId || '')
   ) {
@@ -571,10 +585,10 @@ const processNodeData = (
     const nodeData = nodeMap?.[item] as ExecutionNode
     const isRollback = nodeData?.name?.endsWith(StepGroupRollbackIdentifier) ?? false
     const nodeStrategyType =
-      nodeData?.stepType === NodeType.STRATEGY
+      nodeData?.stepType === StepNodeType.STRATEGY
         ? ((nodeData?.stepParameters?.strategyType || 'MATRIX') as string)
         : (nodeData?.stepType as string)
-    if (nodeStrategyType === NodeType.FORK) {
+    if (nodeStrategyType === StepNodeType.FORK) {
       items.push({
         parallel: processNodeData(
           nodeAdjacencyListMap?.[item].children || /* istanbul ignore next */ [],
@@ -584,8 +598,8 @@ const processNodeData = (
         )
       })
     } else if (
-      nodeStrategyType === NodeType.STEP_GROUP ||
-      nodeStrategyType === NodeType.NG_SECTION ||
+      nodeStrategyType === StepNodeType.STEP_GROUP ||
+      nodeStrategyType === StepNodeType.NG_SECTION ||
       isNodeTypeMatrixOrFor(nodeStrategyType) ||
       (nodeData && isRollback)
     ) {
@@ -637,10 +651,10 @@ const processNodeData = (
       const nodeDataNext = nodeMap?.[id] as ExecutionNode
       const isRollbackNext = nodeDataNext?.name?.endsWith(StepGroupRollbackIdentifier) ?? false
       const nodeNextStrategyType =
-        nodeDataNext?.stepType === NodeType.STRATEGY
+        nodeDataNext?.stepType === StepNodeType.STRATEGY
           ? ((nodeDataNext?.stepParameters?.strategyType || 'MATRIX') as string)
           : (nodeDataNext?.stepType as string)
-      if (nodeNextStrategyType === NodeType.FORK) {
+      if (nodeNextStrategyType === StepNodeType.FORK) {
         items.push({
           parallel: processNodeData(
             nodeAdjacencyListMap?.[id].children || /* istanbul ignore next */ [],
@@ -650,7 +664,7 @@ const processNodeData = (
           )
         })
       } else if (
-        nodeNextStrategyType === NodeType.STEP_GROUP ||
+        nodeNextStrategyType === StepNodeType.STEP_GROUP ||
         isNodeTypeMatrixOrFor(nodeNextStrategyType) ||
         (isRollbackNext && nodeDataNext)
       ) {
@@ -724,7 +738,7 @@ export const processExecutionData = (graph?: ExecutionGraph): Array<ExecutionPip
       /* istanbul ignore else */
       if (nodeData) {
         const isRollback = nodeData.name?.endsWith(StepGroupRollbackIdentifier) ?? false
-        if (nodeData.stepType && (TopLevelNodes.indexOf(nodeData.stepType as NodeType) > -1 || isRollback)) {
+        if (nodeData.stepType && (TopLevelStepNodes.indexOf(nodeData.stepType as StepNodeType) > -1 || isRollback)) {
           // NOTE: exception if we have only lite task engine in Execution group
           if (hasOnlyLiteEngineTask(nodeAdjacencyListMap[nodeId].children, graph)) {
             const liteTaskEngineId = nodeAdjacencyListMap?.[nodeId]?.children?.[0] || ''
@@ -763,7 +777,7 @@ export const processExecutionData = (graph?: ExecutionGraph): Array<ExecutionPip
               })
             }
           }
-        } else if (nodeData.stepType === NodeType.FORK) {
+        } else if (nodeData.stepType === StepNodeType.FORK) {
           items.push({
             parallel: processNodeData(
               nodeAdjacencyListMap[nodeId].children || /* istanbul ignore next */ [],
@@ -779,7 +793,8 @@ export const processExecutionData = (graph?: ExecutionGraph): Array<ExecutionPip
               skipCondition: nodeData.skipInfo?.evaluatedCondition ? nodeData.skipInfo.skipCondition : undefined,
               when: nodeData.nodeRunInfo,
               ...getIconDataBasedOnType(nodeData),
-              showInLabel: nodeData.stepType === NodeType.SERVICE || nodeData.stepType === NodeType.INFRASTRUCTURE,
+              showInLabel:
+                nodeData.stepType === StepNodeType.SERVICE || nodeData.stepType === StepNodeType.INFRASTRUCTURE,
               identifier: nodeId,
               status: nodeData.status as ExecutionStatus,
               type: getExecutionPipelineNodeType(nodeData?.stepType),
@@ -833,7 +848,7 @@ export function getIconDataBasedOnType(nodeData?: ExecutionNode): {
     if (nodeData.stepType === StepType.ResourceConstraint) {
       return { icon: 'traffic-lights', iconSize: 40 }
     }
-    const icon = StepTypeIconsMap[nodeData?.stepType as NodeType] || factory.getStepIcon(nodeData?.stepType || '')
+    const icon = StepTypeIconsMap[nodeData?.stepType as StepNodeType] || factory.getStepIcon(nodeData?.stepType || '')
     return {
       icon,
       iconSize: cloudFormationSteps.includes(nodeData.stepType as StepType) ? 32 : 20
@@ -925,7 +940,7 @@ export const getChildNodeDataForMatrix = (
 }
 
 export const isNodeTypeMatrixOrFor = (nodeType?: string): boolean => {
-  return [NodeTypes.Matrix, NodeTypes.Loop, NodeTypes.Parallelism].includes(nodeType as NodeTypes)
+  return [StageNodeType.Matrix, StageNodeType.Loop, StageNodeType.Parallelism].includes(nodeType as StageNodeType)
 }
 
 export function processLayoutNodeMapV1(executionSummary?: PipelineExecutionSummary): PipelineGraphState[] {
@@ -979,7 +994,7 @@ export const processLayoutNodeMapInternal = (
 
       const currentNodeChildren: string[] | undefined = nodeDetails?.edgeLayoutList?.currentNodeChildren
       const nextIds: string[] | undefined = nodeDetails?.edgeLayoutList?.nextIds
-      if (nodeDetails?.nodeType === NodeTypes.Parallel && currentNodeChildren && currentNodeChildren.length > 1) {
+      if (nodeDetails?.nodeType === StageNodeType.Parallel && currentNodeChildren && currentNodeChildren.length > 1) {
         const firstParallelNode = layoutNodeMap[currentNodeChildren[0]]
         const restChildNodes = currentNodeChildren.slice(1)
         const parentNode = {
@@ -1068,7 +1083,7 @@ export const processLayoutNodeMapInternal = (
           nodeDetails = undefined
         }
       } else if (
-        nodeDetails?.nodeType === NodeTypes.Parallel &&
+        nodeDetails?.nodeType === StageNodeType.Parallel &&
         currentNodeChildren &&
         layoutNodeMap[currentNodeChildren[0]]
       ) {

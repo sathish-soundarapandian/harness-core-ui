@@ -5,31 +5,16 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { Dispatch, SetStateAction, useEffect, useCallback, useState } from 'react'
+import React, { useEffect, useCallback, useState } from 'react'
 import { Intent } from '@blueprintjs/core'
-import type { GetDataError } from 'restful-react'
 import { useParams, useLocation, useHistory } from 'react-router-dom'
 import { get, isEmpty, pickBy } from 'lodash-es'
 import { Text, Icon, PageError, PageSpinner, Layout, Container } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { CIExecutionImages, getCustomerConfigPromise, ResponseCIExecutionImages } from 'services/ci'
-import {
-  Failure,
-  GovernanceMetadata,
-  GraphLayoutNode,
-  ResponsePipelineExecutionDetail,
-  useGetExecutionDetailV2,
-  useGetPipelineSummary
-} from 'services/pipeline-ng'
-import type { ExecutionNode } from 'services/pipeline-ng'
-import { ExecutionStatus, isExecutionComplete } from '@pipeline/utils/statusHelpers'
-import {
-  getPipelineStagesMap,
-  getActiveStageForPipeline,
-  getActiveStep,
-  isNodeTypeMatrixOrFor,
-  processForCIData
-} from '@pipeline/utils/executionUtils'
+import type { GovernanceMetadata, GraphLayoutNode, ExecutionNode } from 'services/pipeline-ng'
+import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
+import { getPipelineStagesMap, processForCIData } from '@pipeline/utils/executionUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import { useQueryParams, useDeepCompareEffect } from '@common/hooks'
 import { joinAsASentence } from '@common/utils/StringUtils'
@@ -48,146 +33,18 @@ import { hasCIStage, hasOverviewDetail, hasServiceDetail } from '@pipeline/utils
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
+import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
 import ExecutionTabs from './ExecutionTabs/ExecutionTabs'
 import ExecutionMetadata from './ExecutionMetadata/ExecutionMetadata'
 import { ExecutionPipelineVariables } from './ExecutionPipelineVariables'
 import { ExecutionHeader } from './ExecutionHeader/ExecutionHeader'
+import { useExecutionData } from './useExecutionData'
 import { CIBuildInfrastructureType } from '../../../utils/constants'
 
 import css from './ExecutionLandingPage.module.scss'
 
 export const POLL_INTERVAL = 2 /* sec */ * 1000 /* ms */
 const PageTabs = { PIPELINE: 'pipeline' }
-
-const setStageIds = ({
-  queryParams,
-  setAutoSelectedStageId,
-  setAutoSelectedChildStageId,
-  setAutoSelectedStepId,
-  setAutoStageNodeExecutionId,
-  setSelectedStepId,
-  setSelectedStageId,
-  setSelectedChildStageId,
-  setSelectedStageExecutionId,
-  data,
-  error
-}: {
-  queryParams: ExecutionPageQueryParams
-  setAutoSelectedStageId: Dispatch<SetStateAction<string>>
-  setAutoSelectedChildStageId: Dispatch<SetStateAction<string>>
-  setAutoSelectedStepId: Dispatch<SetStateAction<string>>
-  setAutoStageNodeExecutionId: Dispatch<SetStateAction<string>>
-  setSelectedStepId: Dispatch<SetStateAction<string>>
-  setSelectedStageId: Dispatch<SetStateAction<string>>
-  setSelectedChildStageId: Dispatch<SetStateAction<string>>
-  setSelectedStageExecutionId: Dispatch<SetStateAction<string>>
-  data?: ResponsePipelineExecutionDetail | null
-  error?: GetDataError<Failure | Error> | null
-}): void => {
-  if (error) {
-    return
-  }
-
-  // if user has selected a stage/step/collapsedNode do not auto-update
-  if (queryParams.stage || queryParams.step || queryParams.collapsedNode) {
-    setAutoSelectedStageId('')
-    setAutoSelectedChildStageId('')
-    setAutoSelectedStepId('')
-    return
-  }
-
-  // if no data is found, reset the stage and step
-  if (!data || !data?.data) {
-    setAutoSelectedStageId('')
-    setAutoSelectedChildStageId('')
-    setAutoSelectedStepId('')
-    return
-  }
-
-  const runningStage = getActiveStageForPipeline(
-    data.data.pipelineExecutionSummary,
-    data.data?.pipelineExecutionSummary?.status as ExecutionStatus
-  )
-
-  const runningChildStage = getActiveStageForPipeline(
-    data.data?.childGraph?.pipelineExecutionSummary,
-    data.data?.childGraph?.pipelineExecutionSummary?.status as ExecutionStatus
-  )
-
-  let runningStep = null
-  if (data.data?.executionGraph)
-    runningStep = getActiveStep(data.data?.executionGraph, data.data.pipelineExecutionSummary)
-  else if (data.data?.childGraph?.executionGraph)
-    runningStep = getActiveStep(data.data?.childGraph?.executionGraph, data.data?.childGraph?.pipelineExecutionSummary)
-
-  if (runningStage) {
-    if (isNodeTypeMatrixOrFor(data.data?.pipelineExecutionSummary?.layoutNodeMap?.[runningStage]?.nodeType)) {
-      const nodeExecid = get(
-        data,
-        ['data', 'pipelineExecutionSummary', 'layoutNodeMap', runningStage, 'edgeLayoutList', 'currentNodeChildren', 0],
-        runningStage
-      ) as string // UNIQUE ID--> stageNodeExecutionID
-      const nodeId = get(
-        data,
-        ['data', 'pipelineExecutionSummary', 'layoutNodeMap', nodeExecid, 'nodeUuid'],
-        ''
-      ) as string // COMMMON--> stageNodeID
-      setAutoSelectedStageId(nodeId)
-      setSelectedStageId(nodeId)
-      setAutoStageNodeExecutionId(nodeExecid)
-      setSelectedStageExecutionId(nodeExecid)
-    } else {
-      setAutoSelectedStageId(runningStage)
-      setSelectedStageId(runningStage)
-      if (runningChildStage) {
-        if (
-          isNodeTypeMatrixOrFor(
-            data.data?.childGraph?.pipelineExecutionSummary?.layoutNodeMap?.[runningChildStage]?.nodeType
-          )
-        ) {
-          const childNodeExecid = get(
-            data,
-            [
-              'data',
-              'childGraph',
-              'pipelineExecutionSummary',
-              'layoutNodeMap',
-              runningChildStage,
-              'edgeLayoutList',
-              'currentNodeChildren',
-              0
-            ],
-            runningChildStage
-          ) as string // UNIQUE ID--> stageNodeExecutionID
-          const childNodeId = get(
-            data,
-            ['data', 'childGraph', 'pipelineExecutionSummary', 'layoutNodeMap', childNodeExecid, 'nodeUuid'],
-            ''
-          ) as string // COMMMON--> stageNodeID
-          setAutoSelectedChildStageId(childNodeId)
-          setSelectedChildStageId(childNodeId)
-          setAutoStageNodeExecutionId(childNodeExecid)
-          setSelectedStageExecutionId(childNodeExecid)
-        } else {
-          setAutoSelectedChildStageId(runningChildStage)
-          setSelectedChildStageId(runningChildStage)
-          setAutoStageNodeExecutionId('')
-          setSelectedStageExecutionId('')
-        }
-      } else {
-        setAutoSelectedChildStageId('')
-        setSelectedChildStageId('')
-        setAutoStageNodeExecutionId('')
-        setSelectedStageExecutionId('')
-      }
-    }
-  }
-
-  if (runningStep) {
-    setAutoSelectedStepId(runningStep.node)
-    setSelectedStepId(runningStep.node)
-  }
-}
 
 export default function ExecutionLandingPage(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { getString } = useStrings()
@@ -198,20 +55,19 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   /* cache token required for retrieving logs */
   const [logsToken, setLogsToken] = React.useState('')
   const { getRBACErrorMessage } = useRBACError()
+  const {
+    data,
+    error,
+    loading,
+    refetch,
+    selectedStageId,
+    selectedStepId,
+    selectedStageExecutionId,
+    selectedChildStageId,
+    selectedCollapsedNodeId
+  } = useExecutionData()
 
-  /* These are used when auto updating selected stage/step when a pipeline is running */
-  const [autoSelectedStageId, setAutoSelectedStageId] = React.useState<string>('')
-  const [autoSelectedChildStageId, setAutoSelectedChildStageId] = React.useState<string>('')
-  const [autoSelectedStepId, setAutoSelectedStepId] = React.useState<string>('')
-  const [autoStageNodeExecutionId, setAutoStageNodeExecutionId] = React.useState<string>('')
   const [isPipelineInvalid, setIsPipelineInvalid] = React.useState(false)
-
-  /* These are updated only when new data is fetched successfully */
-  const [selectedStageId, setSelectedStageId] = React.useState<string>('')
-  const [selectedStageExecutionId, setSelectedStageExecutionId] = React.useState<string>('')
-  const [selectedChildStageId, setSelectedChildStageId] = React.useState<string>('')
-  const [selectedStepId, setSelectedStepId] = React.useState<string>('')
-  const [selectedCollapsedNodeId, setSelectedCollapsedNodeId] = React.useState<string>('')
   const { preference: savedExecutionView, setPreference: setSavedExecutionView } = usePreferenceStore<
     string | undefined
   >(PreferenceScope.USER, 'executionViewType')
@@ -225,35 +81,20 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   const [deprecatedImageUsageMap, setDeprecatedImageUsageMap] =
     useState<Map<CIBuildInfrastructureType, CIExecutionImages>>()
 
-  const { data, refetch, loading, error } = useGetExecutionDetailV2({
-    planExecutionId: executionIdentifier,
-    queryParams: {
-      orgIdentifier,
-      projectIdentifier,
-      accountIdentifier: accountId,
-      stageNodeId: isEmpty(queryParams.stage || autoSelectedStageId)
-        ? undefined
-        : queryParams.stage || autoSelectedStageId,
-      ...(selectedStageId !== selectedStageExecutionId &&
-        !isEmpty(selectedStageExecutionId) && {
-          stageNodeExecutionId: selectedStageExecutionId
-        }),
-      ...(!isEmpty(queryParams.childStage || autoSelectedChildStageId) && {
-        childStageNodeId: queryParams.childStage || autoSelectedChildStageId
-      })
+  const { data: pipeline, isLoading: loadingPipeline } = useGetPipelineSummaryQuery(
+    {
+      pipelineIdentifier,
+      queryParams: {
+        accountIdentifier: accountId,
+        orgIdentifier,
+        projectIdentifier,
+        getMetadataOnly: true
+      }
     },
-    debounce: 500
-  })
-
-  const { data: pipeline, loading: loadingPipeline } = useGetPipelineSummary({
-    pipelineIdentifier,
-    queryParams: {
-      accountIdentifier: accountId,
-      orgIdentifier,
-      projectIdentifier,
-      getMetadataOnly: true
+    {
+      staleTime: 5 * 60 * 1000
     }
-  })
+  )
 
   const HAS_CI = hasCIStage(data?.data?.pipelineExecutionSummary)
   const IS_SERVICEDETAIL = hasServiceDetail(data?.data?.pipelineExecutionSummary)
@@ -422,47 +263,11 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
     pollOnInactiveTab: !isExecutionComplete(data?.data?.pipelineExecutionSummary?.status)
   })
 
-  // show the current running stage and steps automatically
-  React.useEffect(() => {
-    setStageIds({
-      queryParams,
-      setAutoSelectedStageId,
-      setAutoSelectedChildStageId,
-      setAutoSelectedStepId,
-      setAutoStageNodeExecutionId,
-      setSelectedStepId,
-      setSelectedStageId,
-      setSelectedChildStageId,
-      setSelectedStageExecutionId,
-      data,
-      error
-    })
-  }, [queryParams, data, error])
-
   React.useEffect(() => {
     return () => {
       logsCache.clear()
     }
   }, [])
-
-  // update stage/step selection
-  React.useEffect(() => {
-    if (loading) {
-      setSelectedStageId((queryParams.stage as string) || autoSelectedStageId)
-      setSelectedChildStageId((queryParams.childStage as string) || autoSelectedChildStageId)
-    }
-    setSelectedStageExecutionId((queryParams?.stageExecId as string) || autoStageNodeExecutionId)
-    setSelectedStepId((queryParams.step as string) || autoSelectedStepId)
-    setSelectedCollapsedNodeId(queryParams?.collapsedNode ?? '')
-    queryParams?.stage && !queryParams?.stageExecId && setAutoStageNodeExecutionId(queryParams?.stageExecId || '')
-  }, [
-    loading,
-    queryParams,
-    autoSelectedStageId,
-    autoSelectedChildStageId,
-    autoSelectedStepId,
-    autoStageNodeExecutionId
-  ])
 
   useEffect(() => {
     if (HAS_CI && CI_TESTTAB_NAVIGATION && reportSummary?.failed_tests) {
@@ -504,11 +309,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         logsToken,
         setLogsToken,
         refetch,
-        setSelectedStageId,
-        setSelectedStepId,
         setIsPipelineInvalid,
-        setSelectedStageExecutionId,
-        setSelectedCollapsedNodeId,
         addNewNodeToMap(id, node) {
           setAllNodeMap(nodeMap => ({ ...nodeMap, [id]: node }))
         }

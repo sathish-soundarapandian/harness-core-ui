@@ -1077,8 +1077,6 @@ export interface StringsMap {
   'common.supportText': string
   'common.supportedInFirstGeneration': string
   'common.supportedModals': string
-  'common.svcEnv2Banner': string
-  'common.svcEnvV2Truncated': string
   'common.switchAccount': string
   'common.switchAccountError': string
   'common.switchAccountSearch': string
@@ -2801,6 +2799,7 @@ export interface StringsMap {
   'connectors.name_labels.Splunk': string
   'connectors.name_labels.Spot': string
   'connectors.name_labels.TAS': string
+  'connectors.name_labels.Terraform': string
   'connectors.name_labels.gcpKms': string
   'connectors.newArtifactRepository': string
   'connectors.newRelic.accountIdFieldLabel': string
@@ -2885,6 +2884,8 @@ export interface StringsMap {
   'connectors.sumologic.urlValidation': string
   'connectors.tenantId': string
   'connectors.tenantIdRequired': string
+  'connectors.terraformCloud.url': string
+  'connectors.terraformCloud.urlValidation': string
   'connectors.testConnectionStep.errorDetails': string
   'connectors.testConnectionStep.executingOn': string
   'connectors.testConnectionStep.installNewDelegate': string
@@ -2929,6 +2930,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.validationText.spot': string
   'connectors.testConnectionStep.validationText.sumologic': string
   'connectors.testConnectionStep.validationText.tas': string
+  'connectors.testConnectionStep.validationText.terraform': string
   'connectors.testConnectionStep.validationText.testingURLReachability': string
   'connectors.testConnectionStep.validationText.vault': string
   'connectors.testConnectionStep.verificationSuccessful': string
@@ -2970,6 +2972,7 @@ export interface StringsMap {
   'connectors.title.spot': string
   'connectors.title.sumologic': string
   'connectors.title.tas': string
+  'connectors.title.terraform': string
   'connectors.unableToCreateConnector': string
   'connectors.unableToUpdateConnector': string
   'connectors.updatedSuccessfully': string
@@ -5238,6 +5241,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.connectTo': string
   'cd.getStartedWithCD.connectionStatus': string
   'cd.getStartedWithCD.createCluster': string
+  'cd.getStartedWithCD.createHostedCluster': string
   'cd.getStartedWithCD.createdSuccessfully': string
   'cd.getStartedWithCD.delegateDescription': string
   'cd.getStartedWithCD.delegateInfo1': string
@@ -5258,6 +5262,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.environmentDetails': string
   'cd.getStartedWithCD.failedSourceText': string
   'cd.getStartedWithCD.failedToAuthenticate': string
+  'cd.getStartedWithCD.failedToProvisionCluster': string
   'cd.getStartedWithCD.gitOpsAgent': string
   'cd.getStartedWithCD.gitopsOnboardingAgentStep': string
   'cd.getStartedWithCD.gitopsOnboardingConfigureStep': string
@@ -5304,12 +5309,15 @@ export interface StringsMap {
   'cd.getStartedWithCD.onboardingTitle': string
   'cd.getStartedWithCD.provideManifest': string
   'cd.getStartedWithCD.provideMyOwn': string
+  'cd.getStartedWithCD.provisionedSuccessfully': string
+  'cd.getStartedWithCD.provisioningInProgress': string
   'cd.getStartedWithCD.provisioningText': string
   'cd.getStartedWithCD.redisCache': string
   'cd.getStartedWithCD.redisCacheInstalled': string
   'cd.getStartedWithCD.repoServer': string
   'cd.getStartedWithCD.repoServerInstalled': string
   'cd.getStartedWithCD.reposubheading': string
+  'cd.getStartedWithCD.retryProvisioningHostedCluster': string
   'cd.getStartedWithCD.runDelegateSubtitle': string
   'cd.getStartedWithCD.sampleRepoLink': string
   'cd.getStartedWithCD.sampleRule1': string
@@ -5320,6 +5328,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.selectArtifactRepo': string
   'cd.getStartedWithCD.selectAuthMethod': string
   'cd.getStartedWithCD.selectAuthType': string
+  'cd.getStartedWithCD.selectAuthenticationType': string
   'cd.getStartedWithCD.selectDeploymentType': string
   'cd.getStartedWithCD.selfManaged': string
   'cd.getStartedWithCD.serverless': string
@@ -5334,6 +5343,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.successFull': string
   'cd.getStartedWithCD.successfullyAuthenticated': string
   'cd.getStartedWithCD.syncApplication': string
+  'cd.getStartedWithCD.syncCompleteMessage': string
   'cd.getStartedWithCD.targetRevision': string
   'cd.getStartedWithCD.testConnection': string
   'cd.getStartedWithCD.testesSuccessfully': string

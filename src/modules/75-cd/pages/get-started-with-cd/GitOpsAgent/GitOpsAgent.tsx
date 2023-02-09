@@ -24,7 +24,7 @@ import deployCSS from '../DeployProvisioningWizard/DeployProvisioningWizard.modu
 
 const AgentStaticInfo = ({ getString }: { getString: UseStringsReturn['getString'] }) => (
   <Container>
-    <ul className={createK8sCSS.progress}>
+    <ul className={classnames(createK8sCSS.progress, deployCSS.marginTop20)}>
       <li className={classnames(createK8sCSS.progressItem, createK8sCSS.progressItemActive, css.progressItem)}>
         <div className={css.agentFirstSection}>
           <Text className={css.aboutHarnessAdapterAnswer}>{getString('cd.getStartedWithCD.hostedAgentExplain')}</Text>
@@ -130,7 +130,7 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
     if (agentList?.content?.length) {
       return (
         <>
-          <Text padding={{ bottom: 'medium' }} color={Color.GREY_800}>
+          <Text padding={{ bottom: 'medium' }} color={Color.GREY_800} font={{ weight: 'semi-bold' }}>
             {getString('cd.getStartedWithCD.gitopsOnboardingSelectAgent')}
           </Text>
           <div>
@@ -162,14 +162,15 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
     <>
       <Container flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
         <Layout.Vertical width="70%">
-          <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'large' }} color={Color.GREY_600}>
+          <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'xlarge' }} color={Color.GREY_900}>
             {getString('cd.getStartedWithCD.gitopsOnboardingAgentStep')}
             <HarnessDocTooltip tooltipId="cdOnboardGitopsAgent" useStandAlone={true} />
           </Text>
           {renderContent()}
         </Layout.Vertical>
       </Container>
-      <Layout.Vertical className={deployCSS.footer}>
+      <Layout.Vertical className={classnames(deployCSS.footer, deployCSS.width70)}>
+        <hr className={deployCSS.divider} />
         <Layout.Horizontal spacing="medium" padding={{ top: 'medium', bottom: 'large' }} width="100%">
           {isProvisioningScreen ? (
             <>
@@ -179,7 +180,7 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
                   text={getString('back')}
                   icon="chevron-left"
                   minimal
-                  onClick={() => setIsProvisioningScreen(false)}
+                  onClick={onBack}
                 />
                 <Button
                   text={`${getString('next')}: ${getString('connectors.ceAws.curExtention.stepB.step1.p1')}`}

@@ -8,19 +8,22 @@
 import React from 'react'
 import { defaultTo, noop, snakeCase, sortBy } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
-import { Text, Formik, FormikForm, Layout, Container, Button, ButtonVariation } from '@harness/uicore'
+import { Text, Formik, FormikForm, Layout, Container, Button, ButtonVariation, useToaster } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import routes from '@common/RouteDefinitions'
-import { Servicev1Application, useAgentApplicationServiceSync } from 'services/gitops'
+import { Servicev1Application, useAgentApplicationServiceCreate, useAgentApplicationServiceSync } from 'services/gitops'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
 import successSetup from '../../home/images/success_setup.svg'
 import {
   getApplicationPayloadForSync,
+  getAppPayload,
+  getFullAgentWithScope,
   getResourceKey,
   getSyncBody,
   resourceStatusSortOrder,
+  Scope,
   SyncStatus
 } from '../CDOnboardingUtils'
 import css from '../RunPipelineSummary/RunPipelineSummary.module.scss'
@@ -28,54 +31,99 @@ import deployCSS from '../DeployProvisioningWizard/DeployProvisioningWizard.modu
 
 export const Deploy = ({ onBack }: { onBack: () => void }) => {
   const {
-    state: { application: applicationData }
+    saveApplicationData,
+    state: { cluster: clusterData, repository: repositoryData, agent: agentData, application: applicationData }
   } = useCDOnboardingContext()
 
   const { getString } = useStrings()
   const history = useHistory()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
+  const toast = useToaster()
+  const fullAgentName = getFullAgentWithScope(defaultTo(agentData?.identifier, ''), Scope.ACCOUNT)
 
-  const applicationId = applicationData?.name
-  const { mutate: syncApp } = useAgentApplicationServiceSync({
-    agentIdentifier: defaultTo(applicationData?.agentIdentifier, ''),
-    requestName: defaultTo(applicationId, ''),
+  const { mutate: createApplication } = useAgentApplicationServiceCreate({
+    agentIdentifier: fullAgentName,
+    queryParams: {
+      projectIdentifier,
+      orgIdentifier,
+      accountIdentifier: accountId,
+      repoIdentifier: `account.${repositoryData?.identifier}`
+    }
+  })
+
+  const { mutate: syncApp, error: syncError } = useAgentApplicationServiceSync({
+    agentIdentifier: fullAgentName,
+    requestName: defaultTo(applicationData?.name, ''),
     queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier }
   })
 
-  const goToAppDetailPage = async () => {
-    const sortedResources = new Map(
-      sortBy(
-        applicationData?.app?.status?.resources || [],
-        resource => resourceStatusSortOrder[(resource.status as SyncStatus) || SyncStatus.Unknown]
-      ).map(resource => [snakeCase(getResourceKey(resource)), resource])
-    )
-    const formData = getApplicationPayloadForSync(
-      defaultTo(applicationData?.app, {}),
-      [...sortedResources.keys()],
-      defaultTo(applicationData?.app?.spec?.source?.targetRevision, 'HEAD')
-    )
+  const goToAppDetailPage = () => {
+    const payload = getAppPayload({
+      repositoryData,
+      clusterData,
+      name: 'hostedapp'
+    })
+    const data: any = {
+      ...payload,
+      projectIdentifier: projectIdentifier,
+      orgIdentifier: orgIdentifier,
+      accountIdentifier: accountId
+    }
 
-    const body = getSyncBody(formData, sortedResources, defaultTo(applicationData?.app, {}))
-    await syncApp(body)
-    history.push(
-      routes.toGitOpsApplication({
-        orgIdentifier: applicationData?.orgIdentifier || '',
-        projectIdentifier: applicationData?.projectIdentifier || '',
-        accountId: applicationData?.accountIdentifier || '',
-        module: 'cd',
-        applicationId: applicationData?.name || '',
-        agentId: applicationData?.agentIdentifier || ''
+    createApplication(data, {
+      queryParams: {
+        clusterIdentifier: `account.${clusterData?.identifier}`,
+        projectIdentifier,
+        orgIdentifier,
+        accountIdentifier: accountId,
+        repoIdentifier: `account.${repositoryData?.identifier}`
+      }
+    }).then(applicationResponse => {
+      toast.showSuccess(
+        getString('common.entitycreatedSuccessfully', {
+          entity: getString('common.application'),
+          name: applicationResponse?.name
+        }),
+        undefined
+      )
+      saveApplicationData(applicationResponse)
+      const sortedResources = new Map(
+        sortBy(
+          applicationResponse?.app?.status?.resources || [],
+          resource => resourceStatusSortOrder[(resource.status as SyncStatus) || SyncStatus.Unknown]
+        ).map(resource => [snakeCase(getResourceKey(resource)), resource])
+      )
+      const formData = getApplicationPayloadForSync(
+        defaultTo(applicationResponse?.app, {}),
+        [...sortedResources.keys()],
+        defaultTo(applicationResponse?.app?.spec?.source?.targetRevision, 'HEAD')
+      )
+
+      const body = getSyncBody(formData, sortedResources, defaultTo(applicationResponse?.app, {}))
+
+      syncApp(body, {
+        pathParams: { requestName: defaultTo(applicationResponse?.name, ''), agentIdentifier: fullAgentName }
+      }).then(() => {
+        if (!syncError) {
+          toast.showSuccess(getString('cd.getStartedWithCD.syncCompleteMessage'))
+        }
+        history.push(
+          routes.toGitOpsApplication({
+            orgIdentifier: applicationResponse?.orgIdentifier || '',
+            projectIdentifier: applicationResponse?.projectIdentifier || '',
+            accountId: applicationResponse?.accountIdentifier || '',
+            module: 'cd',
+            applicationId: applicationResponse?.name || '',
+            agentId: applicationResponse?.agentIdentifier || ''
+          })
+        )
       })
-    )
+    })
   }
 
   return (
     <>
-      <Formik<Servicev1Application>
-        initialValues={{ ...applicationData }}
-        formName="application-repo-deploy-step"
-        onSubmit={noop}
-      >
+      <Formik<Servicev1Application> initialValues={{}} formName="application-repo-deploy-step" onSubmit={noop}>
         {() => {
           return (
             <FormikForm>

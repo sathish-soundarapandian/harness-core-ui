@@ -21,6 +21,7 @@ import { getDetailsLabel } from '@cv/utils/CommonUtils'
 import { getOnClickOptions, getSourceLabel, statusToColorMapping } from './ChangeDetails.utils'
 import type { ChangeDetailsDataInterface } from '../../ChangeEventCard.types'
 import StatusChip from './components/StatusChip/StatusChip'
+import { ExternalLinkToEntity } from './ChangeDetails.constant'
 import css from './ChangeDetails.module.scss'
 
 export default function ChangeDetails({
@@ -60,7 +61,7 @@ export const getChanges = (details: {
     const isExecutedBy = item[0] === EXECUTED_BY
     const isUpdatedBy = item[0] === UPDATED_BY
     const { getString } = useStrings()
-    let value = null
+    let value: any = null
     let shouldVisible = true
 
     if (isExecutedBy || isUpdatedBy) {
@@ -70,6 +71,29 @@ export const getChanges = (details: {
       value = item[1]
     } else {
       value = typeof item[1] === 'string' ? item[1] : item[1]?.name
+    }
+
+    const isURL = item[0] === ExternalLinkToEntity
+
+    if (isURL) {
+      return (
+        <>
+          <Text className={css.gridItem} font={{ size: 'small' }}>
+            {shouldVisible ? getDetailsLabel(item[0], getString) : ''}
+          </Text>
+          <Text
+            className={css.isLink}
+            title={value}
+            onClick={() => {
+              if (value) {
+                window.open(value || '', '_blank', 'noreferrer')
+              }
+            }}
+          >
+            {value}
+          </Text>
+        </>
+      )
     }
 
     return value ? (

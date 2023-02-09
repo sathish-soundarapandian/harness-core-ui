@@ -6,33 +6,43 @@
  */
 
 import { Connectors } from '@connectors/constants'
-import {
-  ChangeSourceCategoryName,
-  ChangeSourceTypes
-} from '../ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
-import type { CardSelectOption } from '../ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.types'
+import type { UseStringsReturn } from 'framework/strings'
+import { ChangeSourceTypes } from '../ChangeSource/ChangeSourceDrawer/ChangeSourceDrawer.constants'
 
-export const ChangeSourceConnectorOptions: CardSelectOption[] = [
-  {
-    label: 'cv.onboarding.changeSourceTypes.HarnessCDNextGen.name',
-    value: ChangeSourceTypes.HarnessCDNextGen,
-    category: ChangeSourceCategoryName.DEPLOYMENT
-  },
-  {
-    label: 'cv.onboarding.changeSourceTypes.HarnessCDCurrentGen.name',
-    value: ChangeSourceTypes.HarnessCD,
-    category: ChangeSourceCategoryName.DEPLOYMENT
-  },
-  { label: 'kubernetesText', value: Connectors.KUBERNETES_CLUSTER, category: ChangeSourceCategoryName.INFRASTRUCTURE },
-  { label: 'common.pagerDuty', value: Connectors.PAGER_DUTY, category: ChangeSourceCategoryName.ALERT },
-  {
-    label: 'common.repo_provider.customLabel',
-    value: ChangeSourceTypes.CustomDeploy,
-    category: ChangeSourceCategoryName.DEPLOYMENT
-  },
-  {
-    label: 'cv.changeSource.FeatureFlag.label',
-    value: ChangeSourceTypes.HarnessFF,
-    category: ChangeSourceCategoryName.FEATURE_FLAG
-  }
-]
+export const ChangeSourceConnectorOptions = (getString: UseStringsReturn['getString']) => {
+  return [
+    {
+      label: getString('cv.onboarding.changeSourceTypes.HarnessCDNextGen.name'),
+      value: ChangeSourceTypes.HarnessCDNextGen
+    },
+    {
+      label: getString('cv.onboarding.changeSourceTypes.HarnessCDCurrentGen.name'),
+      value: ChangeSourceTypes.HarnessCD
+    },
+    {
+      label: getString('kubernetesText'),
+      value: Connectors.KUBERNETES_CLUSTER
+    },
+    { label: getString('common.pagerDuty'), value: Connectors.PAGER_DUTY },
+    {
+      label: getString('cv.changeSource.FeatureFlag.label'),
+      value: ChangeSourceTypes.HarnessFF
+    },
+    {
+      label: `${getString('common.repo_provider.customLabel')} - ${getString('deploymentsText')}`,
+      value: ChangeSourceTypes.CustomDeploy
+    },
+    {
+      label: `${getString('common.repo_provider.customLabel')} - ${getString('infrastructureText')}`,
+      value: ChangeSourceTypes.CustomInfrastructure
+    },
+    {
+      label: `${getString('common.repo_provider.customLabel')} - ${getString('cv.changeSource.incident')}`,
+      value: ChangeSourceTypes.CustomIncident
+    },
+    {
+      label: `${getString('common.repo_provider.customLabel')} - ${getString('common.purpose.cf.continuous')}`,
+      value: ChangeSourceTypes.CustomFF
+    }
+  ]
+}

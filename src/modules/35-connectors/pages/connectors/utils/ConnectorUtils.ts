@@ -27,7 +27,8 @@ import type {
   GcpKmsConnectorDTO,
   ErrorTrackingConnectorDTO,
   ELKConnectorDTO,
-  TasConnector
+  TasConnector,
+  TerraformCloudConnector
 } from 'services/cd-ng'
 import { FormData, CredTypeValues, HashiCorpVaultAccessTypes } from '@connectors/interfaces/ConnectorInterface'
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
@@ -514,6 +515,31 @@ export const buildAzureRepoPayload = (formData: FormData) => {
     }
   } else {
     delete savedData.spec.apiAccess
+  }
+
+  return { connector: savedData }
+}
+
+export const buildTerraformCloudPayload = (formData: FormData): ConnectorRequestBody => {
+  const savedData: ConnectorInfoDTO = {
+    name: formData.name,
+    description: formData?.description,
+    projectIdentifier: formData?.projectIdentifier,
+    orgIdentifier: formData?.orgIdentifier,
+    identifier: formData.identifier,
+    tags: formData?.tags,
+    type: Connectors.TERRAFORM_CLOUD,
+    spec: {
+      ...(formData?.delegateSelectors ? { delegateSelectors: formData.delegateSelectors } : {}),
+      executeOnDelegate: getExecuteOnDelegateValue(formData.connectivityMode),
+      terraformCloudUrl: formData.terraformCloudUrl.trim(),
+      credential: {
+        type: AuthTypes.API_TOKEN,
+        spec: {
+          apiToken: formData.apiToken.referenceString
+        }
+      }
+    } as TerraformCloudConnector
   }
 
   return { connector: savedData }
@@ -1076,6 +1102,27 @@ export const setupGcpKmsFormData = async (connectorInfo: ConnectorInfoDTO, accou
     credentials,
     default: connectorInfoSpec.default
   }
+}
+
+export const setupTerraformCloudFormData = async (
+  connectorInfo: ConnectorInfoDTO,
+  accountId: string
+): Promise<FormData> => {
+  const scopeQueryParams: GetSecretV2QueryParams = {
+    accountIdentifier: accountId,
+    projectIdentifier: connectorInfo?.projectIdentifier,
+    orgIdentifier: connectorInfo?.orgIdentifier
+  }
+  const data = connectorInfo?.spec
+  const formData = {
+    terraformCloudUrl: data?.terraformCloudUrl,
+    type: data?.credential?.type,
+    apiToken: await setSecretField(data?.credential?.spec?.apiToken, scopeQueryParams),
+    connectivityMode: getConnectivityMode(data?.executeOnDelegate),
+    delegate: data?.delegateSelectors
+  }
+
+  return formData
 }
 
 export const buildAWSPayload = (formData: FormData) => {
@@ -2314,6 +2361,8 @@ export const getIconByType = (type: ConnectorInfoDTO['type'] | undefined): IconN
       return 'spot'
     case Connectors.TAS:
       return 'tas'
+    case Connectors.TERRAFORM_CLOUD:
+      return 'terraform-cloud'
     default:
       return 'cog'
   }
@@ -2397,6 +2446,8 @@ export const getConnectorDisplayName = (type: string): string => {
       return 'Azure Artifacts'
     case Connectors.TAS:
       return 'Tanzu Application Service'
+    case Connectors.TERRAFORM_CLOUD:
+      return 'Terraform Cloud'
     default:
       return ''
   }
@@ -2504,6 +2555,8 @@ export function GetTestConnectionValidationTextByType(type: ConnectorConfigDTO['
       return getString('connectors.testConnectionStep.validationText.spot')
     case Connectors.TAS:
       return getString('connectors.testConnectionStep.validationText.tas')
+    case Connectors.TERRAFORM_CLOUD:
+      return getString('connectors.testConnectionStep.validationText.terraform')
     default:
       return ''
   }

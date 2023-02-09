@@ -385,7 +385,17 @@ describe('Unit tests for CVChanges', () => {
       expect(refetch).toHaveBeenLastCalledWith({
         queryParams: expect.objectContaining({
           changeCategories: ['Deployment', 'Infrastructure', 'Alert', 'FeatureFlag'],
-          changeSourceTypes: ['HarnessCDNextGen', 'HarnessCD', 'K8sCluster', 'PagerDuty', 'CustomDeploy', 'HarnessFF']
+          changeSourceTypes: [
+            'HarnessCDNextGen',
+            'HarnessCD',
+            'K8sCluster',
+            'PagerDuty',
+            'HarnessFF',
+            'CustomDeploy',
+            'CustomInfrastructure',
+            'CustomIncident',
+            'CustomFF'
+          ]
         }),
         queryParamStringifyOptions: {
           arrayFormat: 'repeat'

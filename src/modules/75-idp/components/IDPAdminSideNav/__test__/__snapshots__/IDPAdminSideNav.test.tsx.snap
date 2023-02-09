@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IDP Sidenav render 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+  >
+    <a
+      aria-current="page"
+      class="link selected"
+      href="/account/accountId/idp-admin"
+    >
+      <p
+        class="StyledProps--font StyledProps--main text"
+      >
+        getStarted
+      </p>
+    </a>
+  </div>
+</div>
+`;

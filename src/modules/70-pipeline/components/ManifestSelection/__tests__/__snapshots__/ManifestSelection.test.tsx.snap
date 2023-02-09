@@ -145,7 +145,14 @@ exports[`ManifestSelection tests delete manifest list works correctly 1`] = `
                       style="--text-line-clamp: 1; width: 200px;"
                       tabindex="0"
                     >
-                      path
+                      <div>
+                        <span
+                          class=""
+                          color="black"
+                        >
+                          path
+                        </span>
+                      </div>
                     </p>
                   </span>
                 </span>
@@ -510,7 +517,14 @@ exports[`ManifestSelection tests edit manifest list works correctly 1`] = `
                       style="--text-line-clamp: 1; width: 200px;"
                       tabindex="0"
                     >
-                      test
+                      <div>
+                        <span
+                          class=""
+                          color="black"
+                        >
+                          test
+                        </span>
+                      </div>
                     </p>
                   </span>
                 </span>
@@ -936,7 +950,23 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                         style="--text-line-clamp: 1; width: 200px;"
                         tabindex="0"
                       >
-                        1, 2
+                        <div>
+                          <span
+                            class=""
+                            color="black"
+                          >
+                            1
+                             ,
+                          </span>
+                        </div>
+                        <div>
+                          <span
+                            class=""
+                            color="black"
+                          >
+                            2
+                          </span>
+                        </div>
                       </p>
                     </span>
                   </span>
@@ -1113,7 +1143,23 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                         style="--text-line-clamp: 1; width: 200px;"
                         tabindex="0"
                       >
-                        a1, b
+                        <div>
+                          <span
+                            class=""
+                            color="black"
+                          >
+                            a1
+                             ,
+                          </span>
+                        </div>
+                        <div>
+                          <span
+                            class=""
+                            color="black"
+                          >
+                            b
+                          </span>
+                        </div>
                       </p>
                     </span>
                   </span>
@@ -1290,7 +1336,14 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                         style="--text-line-clamp: 1; width: 200px;"
                         tabindex="0"
                       >
-                        &lt;+input&gt;
+                        <div>
+                          <span
+                            class=""
+                            color="black"
+                          >
+                            &lt;+input&gt;
+                          </span>
+                        </div>
                       </p>
                     </span>
                   </span>
@@ -1467,7 +1520,14 @@ exports[`ManifestSelection tests renders add Manifest option without crashing 1`
                         style="--text-line-clamp: 1; width: 200px;"
                         tabindex="0"
                       >
-                        p1
+                        <div>
+                          <span
+                            class=""
+                            color="black"
+                          >
+                            p1
+                          </span>
+                        </div>
                       </p>
                     </span>
                   </span>
@@ -1729,7 +1789,23 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                         style="--text-line-clamp: 1; width: 200px;"
                         tabindex="0"
                       >
-                        1, 2
+                        <div>
+                          <span
+                            class=""
+                            color="black"
+                          >
+                            1
+                             ,
+                          </span>
+                        </div>
+                        <div>
+                          <span
+                            class=""
+                            color="black"
+                          >
+                            2
+                          </span>
+                        </div>
                       </p>
                     </span>
                   </span>
@@ -1906,7 +1982,23 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                         style="--text-line-clamp: 1; width: 200px;"
                         tabindex="0"
                       >
-                        a1, b
+                        <div>
+                          <span
+                            class=""
+                            color="black"
+                          >
+                            a1
+                             ,
+                          </span>
+                        </div>
+                        <div>
+                          <span
+                            class=""
+                            color="black"
+                          >
+                            b
+                          </span>
+                        </div>
                       </p>
                     </span>
                   </span>
@@ -2083,7 +2175,14 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                         style="--text-line-clamp: 1; width: 200px;"
                         tabindex="0"
                       >
-                        &lt;+input&gt;
+                        <div>
+                          <span
+                            class=""
+                            color="black"
+                          >
+                            &lt;+input&gt;
+                          </span>
+                        </div>
                       </p>
                     </span>
                   </span>
@@ -2260,7 +2359,14 @@ exports[`ManifestSelection tests renders manifest selection when overrideSetIden
                         style="--text-line-clamp: 1; width: 200px;"
                         tabindex="0"
                       >
-                        p1
+                        <div>
+                          <span
+                            class=""
+                            color="black"
+                          >
+                            p1
+                          </span>
+                        </div>
                       </p>
                     </span>
                   </span>

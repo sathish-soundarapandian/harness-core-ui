@@ -7,9 +7,10 @@
 
 import React, { useRef } from 'react'
 import { Container, Layout, Text, PageError } from '@harness/uicore'
-import { MonacoDiffEditor } from 'react-monaco-editor'
 import { FontVariation } from '@harness/design-system'
 import { get } from 'lodash-es'
+import type { MonacoDiffEditor as MonacoDiffEditorType } from 'react-monaco-editor'
+import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { useStrings } from 'framework/strings'
 import css from './YamlDiffView.module.scss'
@@ -22,7 +23,7 @@ interface YamlDiffViewProps {
 }
 
 export function YamlDiffView({ oldYaml, newYaml, error, refetchYamlDiff }: YamlDiffViewProps): React.ReactElement {
-  const editorRef = useRef<MonacoDiffEditor>(null)
+  const editorRef = useRef<MonacoDiffEditorType>(null)
   const { getString } = useStrings()
 
   return (
