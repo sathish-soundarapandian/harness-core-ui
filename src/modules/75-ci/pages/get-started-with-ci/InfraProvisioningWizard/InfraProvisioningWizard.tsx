@@ -63,7 +63,8 @@ import {
   Hosting,
   GitAuthenticationMethod,
   NonGitOption,
-  getCloudPipelinePayloadWithoutCodebase
+  getCloudPipelinePayloadWithoutCodebase,
+  getCIStarterPipelineV1
 } from './Constants'
 import { SelectGitProvider, SelectGitProviderRef } from './SelectGitProvider'
 import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
@@ -110,7 +111,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const [buttonLabel, setButtonLabel] = useState<string>('')
   const { trackEvent } = useTelemetry()
 
-  const { CIE_HOSTED_VMS } = useFeatureFlags()
+  const { CIE_HOSTED_VMS, CI_YAML_VERSIONING } = useFeatureFlags()
 
   useEffect(() => {
     setCurrentWizardStepId(lastConfiguredWizardStepId)
@@ -285,7 +286,9 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     if (selectRepositoryRef.current?.repository) {
       try {
         createPipelineV2Promise({
-          body: constructPipelinePayloadWithCodebase(selectRepositoryRef.current.repository),
+          body: CI_YAML_VERSIONING
+            ? yamlStringify(getCIStarterPipelineV1())
+            : constructPipelinePayloadWithCodebase(selectRepositoryRef.current.repository),
           queryParams: {
             accountIdentifier: accountId,
             orgIdentifier,

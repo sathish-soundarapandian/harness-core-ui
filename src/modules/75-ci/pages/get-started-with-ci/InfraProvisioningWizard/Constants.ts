@@ -266,6 +266,30 @@ export const getPipelinePayloadWithoutCodebase = (): Record<string, any> => {
   }
 }
 
+export const getCIStarterPipelineV1 = (): Record<string, any> => {
+  return {
+    version: 1,
+    name: 'HelloWorld CI',
+    stages: [
+      {
+        name: 'build',
+        type: 'ci',
+        spec: {
+          steps: [
+            {
+              name: 'Run echo',
+              type: 'script',
+              spec: {
+                run: 'echo "Hello Harness CI!"'
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+
 export const getPipelinePayloadWithCodebase = (): Record<string, any> => {
   const originalPipeline = getPipelinePayloadWithoutCodebase()
   return set(
