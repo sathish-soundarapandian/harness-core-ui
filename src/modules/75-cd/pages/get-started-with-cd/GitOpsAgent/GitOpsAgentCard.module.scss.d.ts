@@ -17,6 +17,7 @@ declare const styles: {
   readonly description: string
   readonly descriptionIcon: string
   readonly descriptionTitle: string
+  readonly divider: string
   readonly failure: string
   readonly frameContainer: string
   readonly frameHeader: string

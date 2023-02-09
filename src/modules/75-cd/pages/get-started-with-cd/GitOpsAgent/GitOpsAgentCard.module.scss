@@ -352,3 +352,20 @@
   font-size: var(--font-size-small) !important;
   padding-bottom: var(--spacing-small) !important;
 }
+
+.verificationStep {
+  font-weight: 500;
+  font-size: var(--form-input-font-size);
+  color: var(--grey-600);
+
+  .stepDesc {
+    margin-left: var(--spacing-medium);
+  }
+}
+
+.divider {
+  opacity: 0.2;
+  height: 1px;
+  color: var(--grey-1000);
+  margin: var(--spacing-large) 0;
+}

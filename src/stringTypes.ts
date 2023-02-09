@@ -43,6 +43,8 @@ export interface StringsMap {
   'common.addAccountName': string
   'common.addAttribute': string
   'common.addName': string
+  'common.addNewCluster': string
+  'common.addNewRepo': string
   'common.addVariable': string
   'common.additionalAttributes': string
   'common.advanced': string
@@ -3597,6 +3599,7 @@ export interface StringsMap {
   'pipeline.configFiles.title': string
   'pipeline.configSource': string
   'pipeline.configureArtifactSource': string
+  'pipeline.configureLogSettings': string
   'pipeline.createANewPipeline': string
   'pipeline.createPipeline.choosePipelineSetupHeader': string
   'pipeline.createPipeline.learnMore': string
@@ -4032,6 +4035,9 @@ export interface StringsMap {
   'pipeline.lastExecution': string
   'pipeline.lastSevenDays': string
   'pipeline.linuxOnly': string
+  'pipeline.logDateTimeSettings': string
+  'pipeline.logLevelSettings': string
+  'pipeline.logSettingsHeader': string
   'pipeline.logs.errorText': string
   'pipeline.logs.retry': string
   'pipeline.logs.sectionName': string
@@ -4078,6 +4084,7 @@ export interface StringsMap {
   'pipeline.manifestType.customRemoteExtractedFileLocation': string
   'pipeline.manifestType.customRemoteExtractedFileLocationPlaceholder': string
   'pipeline.manifestType.customRemoteExtractionScript': string
+  'pipeline.manifestType.enableDeclarativeRollback': string
   'pipeline.manifestType.filePathPlaceholder': string
   'pipeline.manifestType.folderPathPlaceholder': string
   'pipeline.manifestType.folderPathRequired': string
@@ -4135,6 +4142,8 @@ export interface StringsMap {
   'pipeline.manifestType.serverlessConfigFilePathPlaceholder': string
   'pipeline.manifestType.specifyManifestRepoType': string
   'pipeline.manifestType.specifyManifestStore': string
+  'pipeline.manifestType.subChart': string
+  'pipeline.manifestType.subChartPlaceholder': string
   'pipeline.manifestType.valuesYamlPath': string
   'pipeline.manifestType.varsPathRequired': string
   'pipeline.manifestType.varsYAMLPath': string
@@ -5173,6 +5182,7 @@ export interface StringsMap {
   'cd.featureRestriction.banners.serviceLevelUpTeamEnterprise': string
   'cd.featureRestriction.banners.serviceOveruseTeamEnterprise': string
   'cd.featureRestriction.banners.serviceWarningActive': string
+  'cd.fetchingAgent': string
   'cd.fetchingDelegate': string
   'cd.fetchingRepository': string
   'cd.filePathPlaceholder': string
@@ -5181,10 +5191,12 @@ export interface StringsMap {
   'cd.gcloudClusterCmd': string
   'cd.gcloudClusterCreate': string
   'cd.gcloudClusterList': string
+  'cd.getStartedWithCD.agentInstalled': string
   'cd.getStartedWithCD.agentProvisionedSuccessfully': string
   'cd.getStartedWithCD.agentSetupTimeInfo': string
   'cd.getStartedWithCD.allSet': string
   'cd.getStartedWithCD.anonymous': string
+  'cd.getStartedWithCD.appControllerInstalled': string
   'cd.getStartedWithCD.applicationController': string
   'cd.getStartedWithCD.artifactLocation': string
   'cd.getStartedWithCD.artifactManifest': string
@@ -5195,17 +5207,20 @@ export interface StringsMap {
   'cd.getStartedWithCD.awsRegionHelperText': string
   'cd.getStartedWithCD.azureAKSHelperText': string
   'cd.getStartedWithCD.azureK8s': string
+  'cd.getStartedWithCD.backToClusterList': string
+  'cd.getStartedWithCD.backToRepoList': string
+  'cd.getStartedWithCD.checkAgentStatus': string
   'cd.getStartedWithCD.checkAnnonymously': string
   'cd.getStartedWithCD.checkAuthSettings': string
   'cd.getStartedWithCD.checkDelegateInstalled': string
   'cd.getStartedWithCD.clickForOtherDeploymentTypes': string
   'cd.getStartedWithCD.closeOnboarding.subtitle': string
   'cd.getStartedWithCD.closeOnboarding.title': string
-  'cd.getStartedWithCD.clusterCreatedSuccessfully': string
   'cd.getStartedWithCD.clusterSpec1': string
   'cd.getStartedWithCD.clusterSpec2': string
   'cd.getStartedWithCD.clusterSpec3': string
   'cd.getStartedWithCD.clusterSpecInfo': string
+  'cd.getStartedWithCD.clustersCount': string
   'cd.getStartedWithCD.clusterspec': string
   'cd.getStartedWithCD.codeRepos': string
   'cd.getStartedWithCD.configureRepo': string
@@ -5213,6 +5228,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.connectTo': string
   'cd.getStartedWithCD.connectionStatus': string
   'cd.getStartedWithCD.createCluster': string
+  'cd.getStartedWithCD.createHostedCluster': string
+  'cd.getStartedWithCD.createdSuccessfully': string
   'cd.getStartedWithCD.delegateDescription': string
   'cd.getStartedWithCD.delegateInfo1': string
   'cd.getStartedWithCD.delegateInfo2': string
@@ -5232,6 +5249,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.environmentDetails': string
   'cd.getStartedWithCD.failedSourceText': string
   'cd.getStartedWithCD.failedToAuthenticate': string
+  'cd.getStartedWithCD.failedToProvisionCluster': string
   'cd.getStartedWithCD.gitOpsAgent': string
   'cd.getStartedWithCD.gitopsOnboardingAgentStep': string
   'cd.getStartedWithCD.gitopsOnboardingConfigureStep': string
@@ -5277,14 +5295,27 @@ export interface StringsMap {
   'cd.getStartedWithCD.onBoardingSubTitle': string
   'cd.getStartedWithCD.onboardingTitle': string
   'cd.getStartedWithCD.provideManifest': string
+  'cd.getStartedWithCD.provideMyOwn': string
+  'cd.getStartedWithCD.provisionedSuccessfully': string
+  'cd.getStartedWithCD.provisioningInProgress': string
   'cd.getStartedWithCD.provisioningText': string
   'cd.getStartedWithCD.redisCache': string
+  'cd.getStartedWithCD.redisCacheInstalled': string
   'cd.getStartedWithCD.repoServer': string
+  'cd.getStartedWithCD.repoServerInstalled': string
   'cd.getStartedWithCD.reposubheading': string
+  'cd.getStartedWithCD.retryProvisioningHostedCluster': string
   'cd.getStartedWithCD.runDelegateSubtitle': string
+  'cd.getStartedWithCD.sampleRepoLink': string
+  'cd.getStartedWithCD.sampleRule1': string
+  'cd.getStartedWithCD.sampleRule2': string
+  'cd.getStartedWithCD.sampleRule3': string
+  'cd.getStartedWithCD.sampleRule4': string
+  'cd.getStartedWithCD.sampleRule5': string
   'cd.getStartedWithCD.selectArtifactRepo': string
   'cd.getStartedWithCD.selectAuthMethod': string
   'cd.getStartedWithCD.selectAuthType': string
+  'cd.getStartedWithCD.selectAuthenticationType': string
   'cd.getStartedWithCD.selectDeploymentType': string
   'cd.getStartedWithCD.selfManaged': string
   'cd.getStartedWithCD.serverless': string
@@ -5295,12 +5326,16 @@ export interface StringsMap {
   'cd.getStartedWithCD.setupDelegate': string
   'cd.getStartedWithCD.setupIPWhiteListing': string
   'cd.getStartedWithCD.setupaNewDelegate': string
+  'cd.getStartedWithCD.sourceOrSampleCode': string
   'cd.getStartedWithCD.successFull': string
   'cd.getStartedWithCD.successfullyAuthenticated': string
   'cd.getStartedWithCD.syncApplication': string
+  'cd.getStartedWithCD.syncCompleteMessage': string
   'cd.getStartedWithCD.targetRevision': string
   'cd.getStartedWithCD.testConnection': string
+  'cd.getStartedWithCD.testesSuccessfully': string
   'cd.getStartedWithCD.tryAnotherCreds': string
+  'cd.getStartedWithCD.useSample': string
   'cd.getStartedWithCD.usernameAndPassword': string
   'cd.getStartedWithCD.viewDelegateDetails': string
   'cd.getStartedWithCD.workloadDeploy': string
@@ -5313,6 +5348,7 @@ export interface StringsMap {
   'cd.hostFilters': string
   'cd.hosts': string
   'cd.ignoreReleaseHistFailStatus': string
+  'cd.infra': string
   'cd.infrastructure.createNew': string
   'cd.infrastructure.created': string
   'cd.infrastructure.delete': string
@@ -5383,11 +5419,13 @@ export interface StringsMap {
   'cd.oauthPlugin': string
   'cd.oauthPluginCmd': string
   'cd.oldService': string
+  'cd.openExecution': string
   'cd.overrideType': string
   'cd.overrideValue': string
   'cd.overrideYaml': string
   'cd.pathCannotBeEmpty': string
   'cd.pipelineCreation': string
+  'cd.pipelineId': string
   'cd.pipelineSteps.environmentTab.allClustersSelected': string
   'cd.pipelineSteps.environmentTab.allInfrastructures': string
   'cd.pipelineSteps.environmentTab.clusterIsRequired': string

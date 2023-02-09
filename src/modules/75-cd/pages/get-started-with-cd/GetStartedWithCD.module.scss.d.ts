@@ -11,7 +11,6 @@ declare const styles: {
   readonly agentFirstSection: string
   readonly agentSecondSection: string
   readonly agentThirdSection: string
-  readonly agentsLoadingSpinner: string
   readonly arrow: string
   readonly blueDot: string
   readonly btn: string

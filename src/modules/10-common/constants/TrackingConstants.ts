@@ -315,6 +315,7 @@ export enum CDOnboardingActions {
   SetupOnboardingDelegate = 'Setup onboarding Delegate',
   SaveCreateOnboardingDelegate = 'Save create onboarding Delegate',
   DownloadOnboardingYAML = 'Download onboarding YAML File',
+  PreviewHelpAndTroubleshooting = 'Preview Help and Troubleshoot for K8s',
   HeartbeatVerifiedOnboardingYAML = 'Heartbeat verified onboarding YAML',
   HeartbeatFailedOnboardingYAML = 'Heartbeat failed onboarding YAML',
   EnvironmentEntitiesCreation = 'Harness environment entities created',

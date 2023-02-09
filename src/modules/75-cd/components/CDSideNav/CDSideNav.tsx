@@ -64,7 +64,7 @@ export default function CDSideNav(): React.ReactElement {
   const location = useLocation()
   const module = 'cd'
   const { updateAppStore, selectedProject } = useAppStore()
-  const { CD_ONBOARDING_ENABLED, GITOPS_ONPREM_ENABLED } = useFeatureFlags()
+  const { GITOPS_ONPREM_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const { experience } = useQueryParams<{ experience?: ModuleLicenseType }>()
   const isCommunity = useGetCommunity()
@@ -86,18 +86,20 @@ export default function CDSideNav(): React.ReactElement {
   })
 
   React.useEffect(() => {
-    if (CD_ONBOARDING_ENABLED && selectedProject?.identifier) {
+    if (selectedProject?.identifier) {
       fetchPipelines()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedProject?.identifier])
 
   React.useEffect(() => {
+    /* istanbul ignore else */
     if (!fetchingPipelines && fetchPipelinesData) {
       const { data, status } = fetchPipelinesData
       const isGettingStartedEnabled =
         status === 'SUCCESS' && (data as PagePMSPipelineSummaryResponse)?.totalElements === 0
       setShowGetStartedCDTabInMainMenu(isGettingStartedEnabled)
+      /* istanbul ignore else */
       if (isGettingStartedEnabled) {
         isDeploymentPage && history.replace(routes.toGetStartedWithCD({ ...params, module }))
       }
@@ -111,6 +113,7 @@ export default function CDSideNav(): React.ReactElement {
       <ProjectSelector
         moduleFilter={ModuleName.CD}
         onSelect={data => {
+          setShowGetStartedCDTabInMainMenu(false)
           updateAppStore({ selectedProject: data })
           if (connectorId) {
             history.push(
@@ -177,37 +180,36 @@ export default function CDSideNav(): React.ReactElement {
             )
           } else if (projectIdentifier && !pipelineIdentifier) {
             // changing project
-            history.push(
-              compile(routeMatch.path)({
-                ...routeMatch.params,
-                projectIdentifier: data.identifier,
-                orgIdentifier: data.orgIdentifier
-              })
-            )
+            if (!showGetStartedCDTabInMainMenu) {
+              history.push(
+                compile(routeMatch.path)({
+                  ...routeMatch.params,
+                  projectIdentifier: data.identifier,
+                  orgIdentifier: data.orgIdentifier
+                })
+              )
+            } else {
+              // If redirecting from blank project to populated project, move to deployments
+              history.push(
+                routes.toDeployments({
+                  projectIdentifier: data.identifier,
+                  orgIdentifier: data.orgIdentifier as string,
+                  accountId,
+                  module
+                })
+              )
+            }
           } else if (experience) {
             // when it's on trial page, forward to get-started (behind FF)/ pipeline
-            history.push(
-              CD_ONBOARDING_ENABLED
-                ? {
-                    pathname: routes.toGetStartedWithCD({
-                      orgIdentifier: data.orgIdentifier || '',
-                      projectIdentifier: data.identifier || '',
-                      accountId,
-                      module
-                    }),
-                    search: `?modal=${experience}`
-                  }
-                : {
-                    pathname: routes.toPipelineStudio({
-                      orgIdentifier: data.orgIdentifier || '',
-                      projectIdentifier: data.identifier || '',
-                      pipelineIdentifier: '-1',
-                      accountId,
-                      module
-                    }),
-                    search: `?modal=${experience}`
-                  }
-            )
+            history.push({
+              pathname: routes.toGetStartedWithCD({
+                orgIdentifier: data.orgIdentifier || '',
+                projectIdentifier: data.identifier || '',
+                accountId,
+                module
+              }),
+              search: `?modal=${experience}`
+            })
           } else {
             history.push(
               routes.toDeployments({
@@ -222,7 +224,7 @@ export default function CDSideNav(): React.ReactElement {
       />
       {projectIdentifier && orgIdentifier ? (
         <React.Fragment>
-          {showGetStartedCDTabInMainMenu && CD_ONBOARDING_ENABLED && (
+          {showGetStartedCDTabInMainMenu && (
             <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
           )}
           <SidebarLink label="Deployments" to={routes.toDeployments({ ...params, module })} />

@@ -581,6 +581,25 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  syncCompleteMessage: Application sync has been triggered successfully
+  provisionedSuccessfully: provisioned successfully
+  selectAuthenticationType: Select Authentication Type
+  failedToProvisionCluster: Failed to provision cluster
+  provisioningInProgress: Provisioning in progress
+  createHostedCluster: Connect to Cluster
+  retryProvisioningHostedCluster: Retry provisioning cluster
+  clustersCount: 'You currently have {{target}} cluster(s), would you like to connect it to?'
+  backToRepoList: < Back to existing repo selection
+  backToClusterList: < Back to existing cluster selection
+  sampleRule1: Login to your git account and clone the sample app repository below.
+  sampleRule2: Set your repository name any as you desire
+  sampleRule3: Under Privacy, Select "Public"
+  sampleRule4: Click "Begin Import"
+  sampleRule5: Tell us your new repository
+  sampleRepoLink: https://github.com/wings-software/gitops-demo.git
+  useSample: Sample Source
+  provideMyOwn: Own Source
+  sourceOrSampleCode: Would you like to use your own source code or sample code?
   clusterSpec1: 4GB Memory
   clusterSpec2: 2 CPU
   clusterSpec3: 1 worker node
@@ -596,7 +615,8 @@ getStartedWithCD:
   clickForOtherDeploymentTypes: Click here for other deployment types
   createCluster: Create a cluster if needed
   failedToAuthenticate: Failed to authenticate to
-  clusterCreatedSuccessfully: created successfully
+  createdSuccessfully: created successfully
+  testesSuccessfully: tested successfully
   successfullyAuthenticated: Successfully authenticated to
   failedSourceText: Still failed to authenticate despite having entered the correct credentials? Here’s what you can try to do..
   checkAnnonymously: Connect Annonymously
@@ -687,7 +707,7 @@ getStartedWithCD:
   repoServer: Repo server
   redisCache: Redis cache
   applicationController: Application controller
-  provisioningText: Provisioning these components will take up to 1 minute
+  provisioningText: Provisioning these components will take up to 5 minutes
   setupIPWhiteListing: Set up IP Whitelisting for Harness to connect to your cluster
   agentProvisionedSuccessfully: Your agent has been provisioned successfully
   agentSetupTimeInfo: This process may take up to 1 minutes to complete. While the agent is being provisioned, please set up IP Whitelisting so Harness can connect to your cluster
@@ -699,7 +719,7 @@ getStartedWithCD:
   healthStatusLabel: Health Status
   mappedHarnessProjects: Mapped Harness projects
   disconnected: Disconnected
-  syncApplication: Sync Application
+  syncApplication: Create and Sync Application
   healthStatus:
     degraded: Degraded
     healthy: Healthy
@@ -707,6 +727,11 @@ getStartedWithCD:
     progressing: Progressing
     suspended: Suspended
     unknown: Unknown
+  checkAgentStatus: Checking if the agent has been installed. This process may take upto 2-5 minutes to complete
+  agentInstalled: GitOps agent installed
+  repoServerInstalled: Repo server installed
+  redisCacheInstalled: Redis cache installed
+  appControllerInstalled: Application controller installed
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment
@@ -718,6 +743,7 @@ credentialsRef: credentialsRef
 connectorRefText: connectorRef
 loadingDelegate: Please Wait, Creating a Delegate for you...
 fetchingDelegate: Please wait, fetching delegate details for you...
+fetchingAgent: Please wait, fetching agent details for you...
 hosts: hosts
 hostFilters: hostFilters
 attributeFilters: attributeFilters
@@ -859,3 +885,6 @@ trendMessage:
   invalidTrend: 'No trend data in the previous time interval'
 envChanges: 'Environment Changes'
 valuesYamlValidation: 'Values.yaml file path cannot be empty'
+infra: infra
+pipelineId: 'Pipeline ID: '
+openExecution: 'Open Execution'

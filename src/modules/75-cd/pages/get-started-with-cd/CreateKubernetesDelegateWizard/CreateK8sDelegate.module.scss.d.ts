@@ -50,6 +50,7 @@ declare const styles: {
   readonly progressItem: string
   readonly progressItemActive: string
   readonly progressTitle: string
+  readonly provisioningInfo: string
   readonly revisionTypeNewApp: string
   readonly revisionTypeWrapper: string
   readonly secondaryHeader: string

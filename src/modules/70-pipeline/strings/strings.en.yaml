@@ -356,6 +356,8 @@ manifestType:
   pathPlaceholder: Enter File Path
   folderPathPlaceholder: Enter Folder Path
   chartPathPlaceholder: Enter Chart Path
+  subChart: Sub-Chart Name
+  subChartPlaceholder: Enter Sub Chart Name
   bucketName: Bucket Name
   gitFetchTypeLabel: Git Fetch Type
   commitId: Commit Id / Git Tag
@@ -400,6 +402,7 @@ manifestType:
   optimizedKustomizeManifestCollection: Optimized Kustomize Manifest Collection
   kustomizeYamlFolderPath: Kustomize YAML Folder Path
   kustomizeYamlFolderPathRequired: Kustomize YAML Folder Path is required
+  enableDeclarativeRollback: Enable Declarative Rollback
 manifestTypeLabels:
   K8sManifest: K8s Manifest
   ValuesYaml: Values YAML
@@ -1551,6 +1554,10 @@ phasesForm:
     website: 'IIS Website'
     virtualDir: 'IIS Virtual directory'
 draft: 'Draft'
+logLevelSettings: 'Show Log Level'
+logDateTimeSettings: 'Show Date and Time Information'
+configureLogSettings: 'Configure Logs Settings'
+logSettingsHeader: 'Configure the following Logs Settings at the User Scope'
 duplicateStepIdentifiers: 'Duplicate identifiers found: {{duplicateIdString}}'
 alwaysEditModeYAML: Enable read/write mode always
 warningForInvalidYAMLDiscard: Enabling this option lets you edit and save changes to the YAML code of the pipelines you are viewing. You can toggle this setting on or off in any pipeline.

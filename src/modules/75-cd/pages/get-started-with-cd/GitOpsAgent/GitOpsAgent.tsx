@@ -10,21 +10,21 @@ import classnames from 'classnames'
 import { useParams } from 'react-router-dom'
 import { noop } from 'lodash-es'
 import { v4 as uuid } from 'uuid'
-import { Button, ButtonSize, ButtonVariation, Container, HarnessDocTooltip, Layout, Text } from '@harness/uicore'
+import { Button, ButtonVariation, Container, HarnessDocTooltip, Layout, PageSpinner, Text } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-// import { HelpPanel } from '@harness/help-panel'
-import { Spinner } from '@blueprintjs/core'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { useAgentServiceForServerCreate, V1AgentType, useAgentServiceForServerList, V1Agent } from 'services/gitops'
 import { useCDOnboardingContext } from '@cd/pages/get-started-with-cd/CDOnboardingStore'
 import { GitOpsAgentCard } from './GitOpsAgentCard'
+import { AgentProvision } from './AgentProvision'
 import css from '../GetStartedWithCD.module.scss'
 import createK8sCSS from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
+import deployCSS from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
 const AgentStaticInfo = ({ getString }: { getString: UseStringsReturn['getString'] }) => (
   <Container>
-    <ul className={createK8sCSS.progress}>
+    <ul className={classnames(createK8sCSS.progress, deployCSS.marginTop20)}>
       <li className={classnames(createK8sCSS.progressItem, createK8sCSS.progressItemActive, css.progressItem)}>
         <div className={css.agentFirstSection}>
           <Text className={css.aboutHarnessAdapterAnswer}>{getString('cd.getStartedWithCD.hostedAgentExplain')}</Text>
@@ -59,53 +59,7 @@ const AgentStaticInfo = ({ getString }: { getString: UseStringsReturn['getString
           </div>
         </div>
       </li>
-      {/*<li className={classnames(createK8sCSS.progressItem, createK8sCSS.progressItemActive, css.progressItem)}>*/}
-      {/*<div className={css.agentThirdSection}>*/}
-      {/*<Text className={css.aboutHarnessAdapterAnswer}>{getString('cd.getStartedWithCD.hostedAgentInfoTitle')}</Text>*/}
-      {/*</div>*/}
-      {/*<div className={classnames(css.installedComponent, css.provisioningText)}>*/}
-      {/*{getString('cd.getStartedWithCD.setupIPWhiteListing')}*/}
-      {/*</div>*/}
-      {/*</li>*/}
     </ul>
-  </Container>
-)
-
-const ProvisioningStaticInfo = ({
-  loading,
-  errorMessage,
-  getString,
-  onProvisionAgent
-}: {
-  loading: boolean
-  errorMessage?: string
-  getString: UseStringsReturn['getString']
-  onProvisionAgent: () => void
-}) => (
-  <Container>
-    <div className={css.provisioningInfo}>
-      {loading ? (
-        <Spinner size={24} />
-      ) : errorMessage ? (
-        <>
-          <div className={css.error}>{errorMessage}</div>
-          <Button
-            text={getString('retry')}
-            variation={ButtonVariation.SECONDARY}
-            onClick={onProvisionAgent}
-            margin={{ left: 'medium' }}
-            size={ButtonSize.SMALL}
-          />
-        </>
-      ) : (
-        <div>{getString('cd.getStartedWithCD.agentProvisionedSuccessfully')}</div>
-      )}
-    </div>
-    {/*<div className={css.provisioningSecondaryInfo}>*/}
-    {/*{loading*/}
-    {/*? getString('cd.getStartedWithCD.agentSetupTimeInfo')*/}
-    {/*: getString('cd.getStartedWithCD.ensureFullConnectivity')}*/}
-    {/*</div>*/}
   </Container>
 )
 
@@ -114,7 +68,7 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
   // isProvisioningScreen is 2nd screen
   const [isProvisioningScreen, setIsProvisioningScreen] = React.useState(false)
   const [selectedAgent, setSelectedAgent] = React.useState<V1Agent | null>(null)
-  const [provisionedAgent, setProvisionedAgent] = React.useState<V1Agent | null>(null)
+  const [provisionedAgent, setProvisionedAgent] = React.useState<V1Agent | undefined>()
   const { accountId } = useParams<ProjectPathProps>()
   const { saveAgentData } = useCDOnboardingContext()
 
@@ -154,8 +108,8 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
       pageSize: 10,
       searchTerm: '',
       accountIdentifier: accountId
-    },
-    debounce: 500
+    }
+    // lazy: true
   })
 
   React.useEffect(() => {
@@ -167,12 +121,16 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
 
   const renderContent = () => {
     if (loadingAgentsList) {
-      return <Spinner className={css.agentsLoadingSpinner} size={24} />
+      return (
+        <Container className={createK8sCSS.spinner}>
+          <PageSpinner message={getString('cd.fetchingAgent')} />
+        </Container>
+      )
     }
     if (agentList?.content?.length) {
       return (
         <>
-          <Text padding={{ bottom: 'medium' }} color={Color.GREY_800}>
+          <Text padding={{ bottom: 'medium' }} color={Color.GREY_800} font={{ weight: 'semi-bold' }}>
             {getString('cd.getStartedWithCD.gitopsOnboardingSelectAgent')}
           </Text>
           <div>
@@ -188,15 +146,11 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
         </>
       )
     }
+
     return (
       <>
         {isProvisioningScreen ? (
-          <ProvisioningStaticInfo
-            loading={agentCreateLoading}
-            errorMessage={agentCreateError?.message}
-            getString={getString}
-            onProvisionAgent={onProvisionAgent}
-          />
+          <AgentProvision agent={provisionedAgent} loading={agentCreateLoading} error={agentCreateError?.message} />
         ) : (
           <AgentStaticInfo getString={getString} />
         )}
@@ -208,18 +162,15 @@ export const GitOpsAgent = ({ onBack, onNext }: { onBack: () => void; onNext: ()
     <>
       <Container flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
         <Layout.Vertical width="70%">
-          <Text font={{ variation: FontVariation.H3 }} padding={{ bottom: 'large' }} color={Color.GREY_600}>
+          <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'xlarge' }} color={Color.GREY_900}>
             {getString('cd.getStartedWithCD.gitopsOnboardingAgentStep')}
             <HarnessDocTooltip tooltipId="cdOnboardGitopsAgent" useStandAlone={true} />
           </Text>
           {renderContent()}
         </Layout.Vertical>
-
-        {/*<Container className={css.helpPanelContainer}>*/}
-        {/*<HelpPanel referenceId="cdOnboardGitopsAgent" />*/}
-        {/*</Container>*/}
       </Container>
-      <Layout.Vertical>
+      <Layout.Vertical className={classnames(deployCSS.footer, deployCSS.width70)}>
+        <hr className={deployCSS.divider} />
         <Layout.Horizontal spacing="medium" padding={{ top: 'medium', bottom: 'large' }} width="100%">
           {isProvisioningScreen ? (
             <>

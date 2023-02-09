@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { set } from 'lodash-es'
+import { defaultTo, set } from 'lodash-es'
 import { customAlphabet } from 'nanoid'
 import type { IconName } from '@harness/icons'
 import { AllowedTypesWithRunTime, MultiTypeInputType, SelectOption } from '@harness/uicore'
@@ -38,11 +38,19 @@ import type { TextReferenceInterface } from '@secrets/components/TextReference/T
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import type { UseSaveSuccessResponse } from '@common/modals/SaveToGitDialog/useSaveToGitDialog'
 import { CIBuildInfrastructureType } from '@pipeline/utils/constants'
-import type { Servicev1Application } from 'services/gitops'
+import type {
+  ApplicationsApplication,
+  ApplicationsApplicationSyncRequest,
+  ApplicationsRetryStrategy,
+  ApplicationsSyncPolicyAutomated,
+  Servicev1Application
+} from 'services/gitops'
 import type { SelectAuthenticationMethodInterface } from './SelectInfrastructure/SelectAuthenticationMethod'
 import type { SelectGitProviderInterface } from './ConfigureService/ManifestRepoTypes/SelectGitProvider'
 import { CREDENTIALS_TYPE } from './ConfigureGitops/AuthTypeForm'
 
+type ResourceStringType = 'group' | 'kind' | 'namespace' | 'name'
+export type Resource = Partial<Record<ResourceStringType, string>>
 export const DOCUMENT_URL = 'https://www.harness.io/technical-blog/deploy-in-5-minutes-with-a-delegate-first-approach'
 export interface PipelineRefPayload {
   serviceRef: string
@@ -80,7 +88,6 @@ export const DEFAULT_PIPELINE_NAME = 'Sample Pipeline'
 export const EMPTY_STRING = ''
 export const ONBOARDING_PREFIX = 'onboarding'
 export const DEFAULT_SAMPLE_REPO = 'https://github.com/argoproj/argoproj-deployments'
-// https://github.com/sample-repo-appln
 
 const DEFAULT_STAGE_ID = 'Stage'
 const DEFAULT_STAGE_TYPE = 'Deployment'
@@ -128,6 +135,33 @@ export interface ArtifactoryGenericFormInterface {
   connectivityMode: string
   delegateSelectors: string[]
   connectorResponse?: UseSaveSuccessResponse
+}
+
+export interface SyncOptions {
+  Validate?: boolean
+  CreateNamespace?: boolean
+  pruneLast?: boolean
+  applyOutofSyncOnly?: boolean
+  Replace?: boolean
+  PrunePropagationPolicy?: 'background' | 'foreground' | 'orphan'
+}
+
+export interface FormValues {
+  applyOnly: boolean
+  force: boolean
+  prune: boolean
+  dryRun: boolean
+  spec?: {
+    syncPolicy?: {
+      automated?: ApplicationsSyncPolicyAutomated
+      retry?: ApplicationsRetryStrategy
+      syncOptions?: SyncOptions
+    }
+  }
+  retryCheckbox: boolean
+  revision: string
+  revisionType: 'branch' | 'tags'
+  resources: Record<string, boolean>
 }
 
 export type ServiceDataType = NGServiceV2InfoConfig & { data: ServiceData }
@@ -179,6 +213,11 @@ export enum RevisionType {
   Tags = 'Tags'
 }
 
+export enum SourceCodeType {
+  PROVIDE_MY_OWN = 'provideMyOwn',
+  USE_SAMPLE = 'useSample'
+}
+
 export const revisionTypeArray: SelectOption[] = [
   {
     label: RevisionType.Branch,
@@ -227,6 +266,8 @@ export type RepositoryInterface = RepositoriesRepository & {
   targetRevision?: string
   revisionType?: RevisionType
   path?: string
+  sourceCodeType?: string
+  isNewRepository?: boolean
   identifier?: string
 }
 
@@ -256,6 +297,7 @@ export interface ClusterInterface {
   namespaces?: string[]
   project?: string
   server?: string
+  isNewCluster?: boolean
   serverVersion?: string
 }
 
@@ -271,8 +313,10 @@ export const newRepositoryData = {
   revisionType: RevisionType.Branch,
   path: '',
   repo: DEFAULT_SAMPLE_REPO,
+  sourceCodeType: SourceCodeType.USE_SAMPLE,
   type: 'git',
-  identifier: ''
+  identifier: '',
+  isNewRepository: false
 } as RepositoryInterface
 
 export const intialClusterData = {
@@ -287,7 +331,8 @@ export const intialClusterData = {
   identifier: '',
   agent: '',
   scope: '',
-  clusterType: CIBuildInfrastructureType.Cloud
+  clusterType: CIBuildInfrastructureType.Cloud,
+  isNewCluster: false
 } as ClusterInterface
 
 export const initialApplicationData = {
@@ -530,7 +575,7 @@ export const getAppPayload = (props: PayloadInterface) => {
           repoId: repositoryData?.identifier
         },
         destination: {
-          namespace: clusterData?.namespaces,
+          namespace: 'default',
           server: clusterData?.server
         }
       }
@@ -745,4 +790,157 @@ export const ArtifactIconByType: Record<string, IconName> = {
   ArtifactoryRegistry: 'service-artifactory',
   Ecr: 'ecr-step',
   Acr: 'service-azure'
+}
+
+export const sampleRepositorySourceSteps = [
+  'cd.getStartedWithCD.sampleRule1',
+  'cd.getStartedWithCD.sampleRule2',
+  'cd.getStartedWithCD.sampleRule3',
+  'cd.getStartedWithCD.sampleRule4',
+  'cd.getStartedWithCD.sampleRule5'
+]
+
+export enum SyncStatus {
+  Unknown = 'Unknown',
+  Synced = 'Synced',
+  OutOfSync = 'OutOfSync'
+}
+
+export const resourceStatusSortOrder = {
+  [SyncStatus.OutOfSync]: 1,
+  [SyncStatus.Unknown]: 2,
+  [SyncStatus.Synced]: 3
+}
+
+export function getResourceKey(resource: Resource): string {
+  return [
+    defaultTo(resource.group, ''),
+    defaultTo(resource.kind, ''),
+    defaultTo(resource.namespace, ''),
+    defaultTo(resource.name, '')
+  ]
+    .join('/')
+    .replace('//', '/')
+}
+
+export const getApplicationPayloadForSync = (
+  data: ApplicationsApplication | null,
+  resources: string[],
+  revision: string
+): FormValues => {
+  const rawSyncOptions = data?.spec?.syncPolicy?.syncOptions
+  const parsedSyncOptions: Record<string, any> = {} // eslint-disable-line @typescript-eslint/no-explicit-any
+  const syncOptions: SyncOptions = {}
+
+  if (rawSyncOptions && Object.keys(rawSyncOptions).length) {
+    for (const syncOption of rawSyncOptions) {
+      const [key, value] = syncOption.split('=')
+      parsedSyncOptions[key] = key === 'PrunePropagationPolicy' ? value : value === 'true'
+    }
+  }
+
+  ;(Object.keys(parsedSyncOptions) as Array<keyof SyncOptions>).forEach(syncOptionKey => {
+    syncOptions[syncOptionKey] = parsedSyncOptions[syncOptionKey]
+  })
+
+  return {
+    prune: false,
+    dryRun: false,
+    applyOnly: false,
+    force: false,
+    spec: {
+      syncPolicy: {
+        ...data?.spec?.syncPolicy,
+        syncOptions: {
+          ...syncOptions
+        }
+      }
+    },
+    retryCheckbox: !!Object.keys(data?.spec?.syncPolicy?.retry || {}).length,
+    revision,
+    revisionType: 'branch',
+    resources: resources.reduce((acc, key) => ({ ...acc, [key]: true }), {})
+  }
+}
+
+export function getSyncBody(formData: FormValues, sortedResources: any, data: ApplicationsApplication): any {
+  const body: ApplicationsApplicationSyncRequest = {
+    name: data?.metadata?.name,
+    revision: formData.revision,
+    dryRun: false,
+    prune: false
+  }
+
+  const ensureSyncOptionsItems = (): void => {
+    if (!Array.isArray(body.syncOptions?.items)) {
+      set(body, 'syncOptions.items', [])
+    }
+  }
+
+  if (formData.applyOnly && formData.force) {
+    set(body, 'strategy.apply.force', true)
+  } else if (formData.applyOnly) {
+    set(body, 'strategy.apply.force', false)
+  } else if (formData.force) {
+    set(body, 'strategy.hook.force', true)
+  } else {
+    set(body, 'strategy.hook.force', false)
+  }
+
+  if (formData.dryRun) {
+    body.dryRun = true
+  }
+
+  if (formData.prune) {
+    body.prune = true
+  }
+
+  if (formData.spec?.syncPolicy?.syncOptions?.Validate) {
+    ensureSyncOptionsItems()
+    body.syncOptions?.items?.push('Validate=false')
+  }
+
+  if (formData.spec?.syncPolicy?.syncOptions?.CreateNamespace) {
+    ensureSyncOptionsItems()
+    body.syncOptions?.items?.push('CreateNamespace=true')
+  }
+
+  if (formData.spec?.syncPolicy?.syncOptions?.pruneLast) {
+    ensureSyncOptionsItems()
+    body.syncOptions?.items?.push('pruneLast=true')
+  }
+
+  if (formData.spec?.syncPolicy?.syncOptions?.applyOutofSyncOnly) {
+    ensureSyncOptionsItems()
+    body.syncOptions?.items?.push('ApplyOutOfSyncOnly=true')
+  }
+
+  if (formData.spec?.syncPolicy?.syncOptions?.PrunePropagationPolicy) {
+    ensureSyncOptionsItems()
+    body.syncOptions?.items?.push(
+      `PrunePropagationPolicy=${formData.spec?.syncPolicy?.syncOptions?.PrunePropagationPolicy}`
+    )
+  }
+
+  if (formData.spec?.syncPolicy?.syncOptions?.Replace) {
+    ensureSyncOptionsItems()
+    body.syncOptions?.items?.push('Replace=true')
+  }
+
+  if (formData.resources) {
+    const allSelected = Object.values(formData.resources).every(v => v)
+
+    if (!allSelected) {
+      body.resources = Object.entries(formData.resources)
+        .filter(([_key, value]) => value)
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        .map(([key]) => sortedResources.get(key)!)
+    }
+  }
+
+  if (formData.retryCheckbox && formData.spec?.syncPolicy?.retry) {
+    body.retryStrategy = { ...formData.spec.syncPolicy.retry }
+  }
+
+  return body
 }
