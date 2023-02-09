@@ -23,7 +23,8 @@ import {
   FormikForm,
   ButtonVariation,
   FormInput,
-  Popover
+  Popover,
+  IconName
 } from '@harness/uicore'
 import { Input, PluginMetadataResponse, useListPlugins } from 'services/ci'
 import { useStrings } from 'framework/strings'
@@ -34,12 +35,14 @@ import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiT
 import css from './PluginsPanel.module.scss'
 
 export enum PluginType {
-  HARNESS = 'script',
+  SCRIPT = 'script',
+  PLUGIN = 'plugin',
   BITRISE = 'bitrise',
   ACTION = 'action'
 }
 
 export enum PluginKind {
+  HARNESS_NATIVE = 'harness_native',
   HARNESS = 'harness',
   BITRISE = 'bitrise',
   ACTION = 'action'
@@ -97,9 +100,24 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     }
   }, [selectedPluginFromYAMLView])
 
+  const runStepAsPlugin: PluginMetadataResponse = {
+    name: 'Run',
+    inputs: [{ name: 'command', type: 'textarea' }],
+    kind: PluginKind.HARNESS_NATIVE,
+    description: 'Run a script on macOS, Linux, or Windows'
+  }
+
+  const runTestStepAsPlugin: PluginMetadataResponse = {
+    name: 'Run test(Test Intelligence)',
+    inputs: [{ name: 'command', type: 'textarea' }],
+    kind: PluginKind.HARNESS_NATIVE,
+    description: 'Run only impacted tests as part of your pipeline'
+  }
+
   useEffect(() => {
     if (!error && !loading) {
-      setPlugins(data?.data?.content || [])
+      const pluginsFromApiResponse = data?.data?.content || []
+      setPlugins([runStepAsPlugin, runTestStepAsPlugin, ...pluginsFromApiResponse])
     }
   }, [data, loading, error])
 
@@ -141,6 +159,31 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     refetch({ queryParams: { ...defaultQueryParams, searchTerm } })
   }, [])
 
+  const getPluginIconForKind = useCallback((pluginKind: string): IconName => {
+    switch (pluginKind) {
+      case PluginKind.HARNESS:
+        return 'harness'
+      case PluginKind.BITRISE:
+        return 'bitrise'
+      case PluginKind.ACTION:
+        return 'github-actions'
+      default:
+        return 'gear'
+    }
+  }, [])
+
+  const getCertificationLabelForKind = useCallback((_kindOfPlugin: string): string => {
+    switch (_kindOfPlugin) {
+      case PluginKind.HARNESS:
+      case PluginKind.BITRISE:
+        return `by ${capitalize(_kindOfPlugin)}`
+      case PluginKind.ACTION:
+        return `by ${getString('common.repo_provider.githubLabel')} ${capitalize(_kindOfPlugin)}`
+      default:
+        return ''
+    }
+  }, [])
+
   const renderPlugin = useCallback((_plugin: PluginMetadataResponse): JSX.Element => {
     const { name, description, kind: pluginKind } = _plugin
     return (
@@ -153,7 +196,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
       >
         <Layout.Horizontal style={{ flex: 2 }}>
           <Layout.Horizontal width="100%">
-            <Icon name={'gear'} size={20} className={css.pluginIcon} />
+            {pluginKind ? <Icon name={getPluginIconForKind(pluginKind)} size={20} className={css.pluginIcon} /> : null}
             <Layout.Vertical spacing="xsmall" width="100%" padding={{ left: 'small' }}>
               <Text font={{ variation: FontVariation.BODY2 }} color={Color.PRIMARY_7} width="95%">
                 {name}
@@ -164,7 +207,9 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
             </Layout.Vertical>
           </Layout.Horizontal>
         </Layout.Horizontal>
-        <Text font={{ variation: FontVariation.TINY }}>{`by ${capitalize(pluginKind)}`}</Text>
+        {pluginKind ? (
+          <Text font={{ variation: FontVariation.TINY }}>{getCertificationLabelForKind(pluginKind)}</Text>
+        ) : null}
       </Layout.Horizontal>
     )
   }, [])
@@ -204,11 +249,18 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     return inputs.length > 0 ? (
       <Layout.Vertical height="100%">
         {inputs.map((input: Input) => {
-          const { name, secret } = input
+          const { name, secret, type } = input
           return name ? (
             <Layout.Horizontal padding="xmall">
               {secret ? (
                 <MultiTypeSecretInput name={name} label={generateLabelForPluginField(input) as string} />
+              ) : type === 'textarea' ? (
+                <FormInput.TextArea
+                  name={name}
+                  label={generateLabelForPluginField(input)}
+                  style={{ width: '100%' }}
+                  placeholder={formFields?.find((item: Input) => item.name === name)?.default}
+                />
               ) : (
                 <FormInput.Text
                   name={name}
@@ -261,16 +313,18 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     return <></>
   }, [loading, plugins, error, query])
 
-  const getPluginTypeFromKind = useCallback((_kind: string): PluginType => {
-    switch (_kind) {
+  const getPluginTypeFromKind = useCallback((kindOfPlugin: string): PluginType => {
+    switch (kindOfPlugin) {
+      case PluginKind.HARNESS_NATIVE:
+        return PluginType.SCRIPT
       case PluginKind.HARNESS:
-        return PluginType.HARNESS
+        return PluginType.PLUGIN
       case PluginKind.BITRISE:
         return PluginType.BITRISE
       case PluginKind.ACTION:
         return PluginType.ACTION
       default:
-        return PluginType.HARNESS
+        return PluginType.PLUGIN
     }
   }, [])
 
@@ -327,11 +381,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                   </Layout.Horizontal>
                   <Container className={css.form}>
                     <Formik
-                      initialValues={
-                        isPluginUpdateAction
-                          ? get(selectedPluginFromYAMLView, kind === PluginKind.HARNESS ? 'spec' : 'spec.with')
-                          : {}
-                      }
+                      initialValues={isPluginUpdateAction ? get(selectedPluginFromYAMLView, 'spec.with') : {}}
                       validationSchema={formFields ? generateValidationSchema(formFields) : {}}
                       enableReinitialize={true}
                       formName="pluginsForm"
