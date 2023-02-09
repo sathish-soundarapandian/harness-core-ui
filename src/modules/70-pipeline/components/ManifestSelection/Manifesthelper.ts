@@ -133,6 +133,7 @@ export const allowedManifestTypes: Record<ServiceDefinition['type'], Array<Manif
     ManifestDataType.Kustomize,
     ManifestDataType.KustomizePatches
   ],
+  AwsLambda: [],
   NativeHelm: [ManifestDataType.HelmChart, ManifestDataType.Values],
   ServerlessAwsLambda: [ManifestDataType.ServerlessAwsLambda],
   Ssh: [],

@@ -3515,6 +3515,9 @@ export interface StringsMap {
   'pipeline.azureWebApp.strategy.basic': string
   'pipeline.azureWebApp.strategy.blueGreen': string
   'pipeline.azureWebApp.strategy.canary': string
+  'pipeline.bamboo.fetchingPlans': string
+  'pipeline.bamboo.planName': string
+  'pipeline.bambooBuilds': string
   'pipeline.barrierStep.barrierReference': string
   'pipeline.barrierStep.barrierReferencePlaceholder': string
   'pipeline.barrierStep.barrierReferenceRequired': string
@@ -4371,6 +4374,7 @@ export interface StringsMap {
   'pipeline.scriptInputVariables': string
   'pipeline.scriptOutputVariables': string
   'pipeline.selectArtifactPathPlaceholder': string
+  'pipeline.selectBambooBuildsPlaceholder': string
   'pipeline.selectJenkinsBuildsPlaceholder': string
   'pipeline.selectOrCreateForm.description': string
   'pipeline.selectOrCreatePipeline.pipelineNameRequired': string

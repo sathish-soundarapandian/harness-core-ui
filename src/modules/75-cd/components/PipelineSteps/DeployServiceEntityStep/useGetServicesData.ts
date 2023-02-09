@@ -59,7 +59,7 @@ export function useGetServicesData(props: UseGetServicesDataProps): UseGetServic
         accountIdentifier: accountId,
         orgIdentifier,
         projectIdentifier,
-        type: deploymentType as ServiceDefinition['type'],
+        type: deploymentType as ServiceDefinition['type'] as any,
         gitOpsEnabled,
         deploymentTemplateIdentifier,
         versionLabel

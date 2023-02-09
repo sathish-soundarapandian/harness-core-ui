@@ -1337,6 +1337,17 @@ export type AwsKmsCredentialSpecManualConfig = AwsKmsCredentialSpec & {
   secretKey: string
 }
 
+export type AwsLambdaDefinitionManifest = ManifestAttributes & {
+  metadata?: string
+  store?: StoreConfigWrapper
+}
+
+export type AwsLambdaDeployStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
+export type AwsLambdaServiceSpec = ServiceSpec & {}
+
 export interface AwsListInstancesFilter {
   autoScalingGroupName?: string
   region: string
@@ -3239,6 +3250,7 @@ export type DeploymentStageConfig = StageInfoConfig & {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   environment?: EnvironmentYamlV2
   environmentGroup?: EnvironmentGroupYaml
   environments?: EnvironmentsYaml
@@ -3867,6 +3879,7 @@ export interface EntityDetail {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
 }
 
 export interface EntityDetailProtoDTO {
@@ -6382,6 +6395,7 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   )[]
   moduleType?:
     | 'CD'
@@ -6594,6 +6608,7 @@ export interface GitEntityFilterProperties {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6877,6 +6892,7 @@ export interface GitFullSyncEntityInfoDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -7083,6 +7099,7 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7410,6 +7427,7 @@ export interface GitSyncEntityDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7610,6 +7628,7 @@ export interface GitSyncEntityListDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7827,6 +7846,7 @@ export interface GitSyncErrorDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -8465,6 +8485,7 @@ export interface InfrastructureDefinitionConfig {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -8556,6 +8577,7 @@ export interface InfrastructureResponseDTO {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   description?: string
   environmentRef?: string
   identifier?: string
@@ -9273,7 +9295,7 @@ export type KustomizePatchesManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type LDAPSettings = NGAuthSettings & {
+export interface LDAPSettings {
   connectionSettings: LdapConnectionSettings
   cronExpression?: string
   disabled?: boolean
@@ -9281,6 +9303,7 @@ export type LDAPSettings = NGAuthSettings & {
   groupSettingsList?: LdapGroupSettings[]
   identifier: string
   nextIterations?: number[]
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
   userSettingsList?: LdapUserSettings[]
 }
 
@@ -9582,6 +9605,7 @@ export interface ManifestConfig {
     | 'AsgScalingPolicy'
     | 'AsgScheduledUpdateGroupAction'
     | 'GoogleCloudFunctionDefinition'
+    | 'AwsLambda'
 }
 
 export interface ManifestConfigWrapper {
@@ -9985,9 +10009,10 @@ export type NumberNGVariable = NGVariable & {
   value: number
 }
 
-export type OAuthSettings = NGAuthSettings & {
+export interface OAuthSettings {
   allowedProviders?: ('AZURE' | 'BITBUCKET' | 'GITHUB' | 'GITLAB' | 'GOOGLE' | 'LINKEDIN')[]
   filter?: string
+  settingsType?: 'USER_PASSWORD' | 'SAML' | 'LDAP' | 'OAUTH'
 }
 
 export interface OAuthSignupDTO {
@@ -11217,6 +11242,7 @@ export interface ReferencedByDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
 }
 
 export interface RefreshResponse {
@@ -12520,6 +12546,7 @@ export interface ResponseListEntityType {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -12712,6 +12739,7 @@ export interface ResponseListServiceDefinitionType {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -14306,6 +14334,7 @@ export interface Role {
 export interface RoleAssignment {
   disabled?: boolean
   identifier?: string
+  internal?: boolean
   managed?: boolean
   principal: Principal
   resourceGroupIdentifier: string
@@ -15012,6 +15041,7 @@ export interface ServiceDefinition {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
 }
 
 export interface ServiceDeployment {
@@ -15791,6 +15821,7 @@ export interface StepData {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
 }
 
 export interface StepElementConfig {
@@ -18107,6 +18138,7 @@ export interface ListActivitiesQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -18299,6 +18331,7 @@ export interface ListActivitiesQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -18595,6 +18628,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -18787,6 +18821,7 @@ export interface GetActivitiesSummaryQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -22495,6 +22530,7 @@ export interface GetBuildsForBambooQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  pipelineIdentifier?: string
   artifactPath?: string[]
   branch?: string
   repoIdentifier?: string
@@ -22505,6 +22541,8 @@ export interface GetBuildsForBambooQueryParams {
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
   repoName?: string
+  fqnPath?: string
+  serviceId?: string
 }
 
 export interface GetBuildsForBambooPathParams {
@@ -22570,6 +22608,7 @@ export interface GetArtifactPathsForBambooQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
+  pipelineIdentifier?: string
   branch?: string
   repoIdentifier?: string
   getDefaultFromOtherRepo?: boolean
@@ -22579,6 +22618,8 @@ export interface GetArtifactPathsForBambooQueryParams {
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
   repoName?: string
+  fqnPath?: string
+  serviceId?: string
 }
 
 export interface GetArtifactPathsForBambooPathParams {
@@ -22669,6 +22710,8 @@ export interface GetPlansKeyQueryParams {
   parentEntityOrgIdentifier?: string
   parentEntityProjectIdentifier?: string
   repoName?: string
+  fqnPath?: string
+  serviceId?: string
 }
 
 export type GetPlansKeyProps = Omit<
@@ -34936,6 +34979,7 @@ export interface ListReferredByEntitiesQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -35189,6 +35233,7 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   searchTerm?: string
 }
 
@@ -38507,6 +38552,7 @@ export interface GetReferencedByQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   searchTerm?: string
 }
 
@@ -41116,6 +41162,7 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -41376,6 +41423,7 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'DeployCloudFunctionWithNoTraffic'
       | 'CloudFunctionTrafficShift'
       | 'CloudFunctionRollback'
+      | 'AwsLambdaDeploy'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -43293,6 +43341,7 @@ export interface GetInfrastructureListQueryParams {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   deploymentTemplateIdentifier?: string
   versionLabel?: string
   sort?: string[]
@@ -47335,6 +47384,7 @@ export interface GetStepYamlSchemaQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   yamlGroup?: string
 }
 
@@ -47655,6 +47705,7 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -47915,6 +47966,7 @@ export interface GetStepsQueryParams {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
 }
 
 export type GetStepsProps = Omit<GetProps<ResponseStepCategory, Failure | Error, GetStepsQueryParams, void>, 'path'>
@@ -48071,6 +48123,7 @@ export interface GetExecutionStrategyYamlQueryParams {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
   accountIdentifier?: string
@@ -48135,6 +48188,7 @@ export interface PostExecutionStrategyYamlQueryParams {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   strategyType: 'Basic' | 'Canary' | 'BlueGreen' | 'Rolling' | 'Default' | 'GitOps'
   includeVerify?: boolean
 }
@@ -52261,6 +52315,7 @@ export interface GetServiceListQueryParams {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -52876,6 +52931,7 @@ export interface GetServiceAccessListQueryParams {
     | 'TAS'
     | 'Asg'
     | 'GoogleCloudFunctions'
+    | 'AwsLambda'
   gitOpsEnabled?: boolean
   deploymentTemplateIdentifier?: string
   versionLabel?: string
@@ -61356,6 +61412,7 @@ export interface GetYamlSchemaQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
   subtype?:
     | 'K8sCluster'
     | 'Git'
