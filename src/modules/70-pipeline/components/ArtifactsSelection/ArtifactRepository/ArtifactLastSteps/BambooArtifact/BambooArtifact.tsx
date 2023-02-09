@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
 import {
   Formik,
@@ -19,12 +19,11 @@ import {
   getMultiTypeFromValue,
   FormInput,
   MultiSelectOption,
-  FormikForm,
-  SelectWithSubmenuOption
+  FormikForm
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
-import { cloneDeep, defaultTo, isEqual, memoize } from 'lodash-es'
+import { defaultTo, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
@@ -33,11 +32,11 @@ import { useQueryParams } from '@common/hooks'
 
 import {
   ConnectorConfigDTO,
-  JobDetails,
   BuildDetails,
   useGetPlansKey,
   useGetBuildsForBamboo,
-  useGetArtifactPathsForBamboo
+  useGetArtifactPathsForBamboo,
+  BambooPlanNames
 } from 'services/cd-ng'
 import {
   getConnectorIdValue,
@@ -63,7 +62,6 @@ function FormComponent({
   expressions,
   allowableTypes,
   prevStepData,
-  initialValues,
   previousStep,
   isReadonly = false,
   formik,
@@ -71,11 +69,9 @@ function FormComponent({
   formClassName = ''
 }: any): React.ReactElement {
   const { getString } = useStrings()
-  const lastOpenedJob = useRef<any>(null)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const [jobDetails, setJobDetails] = useState<SelectWithSubmenuOption[]>([])
-  const selectedJobName = useRef<string | null>(null)
+  const [planDetails, setPlanDetails] = useState<SelectOption[]>([])
   const [artifactPath, setFilePath] = useState<SelectOption[]>([])
   const [build, setBambooBuilds] = useState<SelectOption[]>([])
   const commonParams = {
@@ -92,12 +88,11 @@ function FormComponent({
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const {
-    refetch: refetchJobs,
-    data: jobsResponse,
-    loading: fetchingJobs,
-    error: fetchingJobsError
+    refetch: refetchPlans,
+    data: plansResponse,
+    loading: loadingPlans,
+    error: plansError
   } = useGetPlansKey({
-    lazy: getMultiTypeFromValue(prevStepData?.connectorId) === MultiTypeInputType.RUNTIME,
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString()
@@ -115,7 +110,7 @@ function FormComponent({
       ...commonParams,
       connectorRef: connectorRefValue?.toString()
     },
-    planName: encodeURIComponent(encodeURIComponent(planNameValue?.label || ''))
+    planName: planNameValue
   })
 
   const {
@@ -129,7 +124,7 @@ function FormComponent({
       ...commonParams,
       connectorRef: connectorRefValue?.toString()
     },
-    planName: encodeURIComponent(encodeURIComponent(planNameValue?.label || ''))
+    planName: planNameValue
   })
 
   useEffect(() => {
@@ -160,86 +155,26 @@ function FormComponent({
     }
   }, [bambooBuildResponse])
 
-  const getJobItems = (jobs: JobDetails[]): SelectWithSubmenuOption[] => {
-    return jobs?.map(job => {
-      return {
-        label: job.jobName || '',
-        value: job.url || '',
-        submenuItems: [],
-        hasSubmenuItems: job.folder
-      }
-    })
-  }
-
   useEffect(() => {
-    if (typeof formik.values?.spec?.planName === 'string' && jobDetails?.length) {
-      const targetJob = jobsResponse?.data?.planKeys?.find(job => job.name === initialValues?.spec.planName)
-      if (targetJob) {
-        const jobObj = {
-          label: targetJob?.name || '',
-          value: targetJob?.value || '',
-          submenuItems: [],
-          hasSubmenuItems: targetJob?.folder
-        }
-        formik.setValues({
-          ...formik.values,
-          spec: {
-            ...formik.values.spec,
-            jobName: jobObj as any
-          }
-        })
-      } else {
-        if (formik.values.spec.jobName?.split('/').length > 1) {
-          const parentJobName = formik.values.spec.jobName?.split('/')[0]
-          lastOpenedJob.current = parentJobName
-          const parentJob = jobDetails?.find(job => job.label === parentJobName)
-          if (parentJob?.submenuItems?.length) {
-            const targetChildJob = parentJob.submenuItems?.find(job => job.label === formik.values?.spec?.jobName)
-            formik.setValues({
-              ...formik.values,
-              spec: {
-                ...formik.values.spec,
-                jobName: targetChildJob as any
-              }
-            })
-          } else {
-            refetchJobs({
-              queryParams: {
-                ...commonParams,
-                connectorRef: connectorRefValue?.toString(),
-                parentJobName
-              }
-            })
-          }
-        }
-      }
-    }
-  }, [jobDetails])
-
-  useEffect(() => {
-    if (lastOpenedJob.current) {
-      setJobDetails((prevState: SelectWithSubmenuOption[]) => {
-        const clonedJobDetails = cloneDeep(prevState)
-        const parentJob = clonedJobDetails.find(obj => obj.value === lastOpenedJob.current)
-        if (parentJob) {
-          parentJob.submenuItems = [...getJobItems(jobsResponse?.data?.jobDetails || [])]
-        }
-        return clonedJobDetails
-      })
-    } else {
-      const jobs = jobsResponse?.data?.jobDetails?.map(job => {
+    if (plansResponse?.data?.planKeys) {
+      const planOptions: SelectOption[] = (plansResponse?.data?.planKeys || [])?.map((plan: BambooPlanNames) => {
         return {
-          label: job.jobName || '',
-          value: job.url || '',
-          submenuItems: [],
-          hasSubmenuItems: job.folder
+          label: plan.name,
+          value: plan.name
+        } as SelectOption
+      }) || [
+        {
+          label: 'Loading plans ...',
+          value: 'Loading plans ...'
         }
-      })
-      if (!isEqual(jobs, jobDetails)) {
-        setJobDetails(jobs || [])
-      }
+      ]
+      setPlanDetails(planOptions)
     }
-  }, [jobsResponse])
+  }, [plansResponse?.data?.planKeys])
+
+  const planPathItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={loadingPlans} />
+  ))
 
   const artifactPathItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingArtifacts} />
@@ -261,46 +196,47 @@ function FormComponent({
         {isMultiArtifactSource && context === ModalViewFor.PRIMARY && <ArtifactSourceIdentifier />}
         {context === ModalViewFor.SIDECAR && <SideCarArtifactIdentifier />}
         <div className={css.imagePathContainer}>
-          <FormInput.SelectWithSubmenuTypeInput
+          <FormInput.MultiTypeInput
             label={getString('pipeline.bamboo.planName')}
-            name={'spec.planName'}
+            name="spec.planName"
+            useValue
+            selectItems={planDetails}
             placeholder={
               connectorRefValue && getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED
-                ? fetchingJobs
+                ? loadingPlans
                   ? getString('pipeline.bamboo.fetchingPlans')
-                  : fetchingJobsError?.message
-                  ? fetchingJobsError?.message
+                  : plansError?.message
+                  ? plansError?.message
                   : getString('select')
                 : getString('select')
             }
-            selectItems={jobDetails}
-            selectWithSubmenuTypeInputProps={{
+            multiTypeInputProps={{
+              onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.planName', type),
               expressions,
-              selectWithSubmenuProps: {
-                items: jobDetails,
+              selectProps: {
                 allowCreatingNewItems: true,
-                onChange: primaryValue => {
-                  setBambooBuilds([])
-                  selectedJobName.current =
-                    getMultiTypeFromValue(primaryValue) === MultiTypeInputType.RUNTIME
-                      ? (primaryValue as unknown as string)
-                      : primaryValue.label
-                },
-                onSubmenuOpen: (item?: SelectWithSubmenuOption) => {
-                  lastOpenedJob.current = item?.value
-                  const parentJob = jobDetails?.find(job => job.label === item?.label)
-                  if (!parentJob?.submenuItems?.length) {
-                    return refetchJobs({
-                      queryParams: {
-                        ...commonParams,
-                        connectorRef: connectorRefValue?.toString(),
-                        parentJobName: item?.label
-                      }
-                    })
-                  }
-                  return Promise.resolve()
+                addClearBtn: !isReadonly,
+                items: planDetails,
+                loadingItems: loadingPlans,
+                itemRenderer: planPathItemRenderer,
+                noResults: (
+                  <NoTagResults
+                    tagError={plansError}
+                    isServerlessDeploymentTypeSelected={false}
+                    defaultErrorText={loadingPlans ? getString('loading') : getString('common.filters.noResultsFound')}
+                  />
+                )
+              },
+              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+                if (
+                  e?.target?.type !== 'text' ||
+                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+                ) {
+                  return
                 }
-              }
+                refetchPlans()
+              },
+              allowableTypes
             }}
           />
           {getMultiTypeFromValue(formik.values.spec?.planName) === MultiTypeInputType.RUNTIME && (
@@ -478,7 +414,7 @@ export function BambooArtifact(props: StepProps<ConnectorConfigDTO> & BambooArti
         connectorRef: connectorId,
         artifactPaths: formData.spec.artifactPaths,
         build: formData.spec.build,
-        jobName:
+        planName:
           getMultiTypeFromValue(formData.spec?.planName) === MultiTypeInputType.FIXED
             ? (formData.spec?.planName as SelectOption).label
             : formData.spec?.planName
@@ -499,12 +435,12 @@ export function BambooArtifact(props: StepProps<ConnectorConfigDTO> & BambooArti
 
   const schemaObject = {
     spec: Yup.object().shape({
-      jobName: Yup.lazy(value =>
+      planName: Yup.lazy(value =>
         typeof value === 'object'
           ? Yup.object().required(getString('pipeline.jenkinsStep.validations.jobName')) // typeError is necessary here, otherwise we get a bad-looking yup error
           : Yup.string().required(getString('pipeline.jenkinsStep.validations.jobName'))
       ),
-      artifactPath: Yup.string()
+      artifactPaths: Yup.string()
     })
   }
 
