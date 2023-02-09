@@ -93,6 +93,7 @@ function FormComponent({
     loading: loadingPlans,
     error: plansError
   } = useGetPlansKey({
+    lazy: true,
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString()
@@ -207,7 +208,7 @@ function FormComponent({
                   ? getString('pipeline.bamboo.fetchingPlans')
                   : plansError?.message
                   ? plansError?.message
-                  : getString('select')
+                  : getString('pipeline.planNamePlaceholder')
                 : getString('select')
             }
             multiTypeInputProps={{
@@ -437,8 +438,8 @@ export function BambooArtifact(props: StepProps<ConnectorConfigDTO> & BambooArti
     spec: Yup.object().shape({
       planName: Yup.lazy(value =>
         typeof value === 'object'
-          ? Yup.object().required(getString('pipeline.jenkinsStep.validations.jobName')) // typeError is necessary here, otherwise we get a bad-looking yup error
-          : Yup.string().required(getString('pipeline.jenkinsStep.validations.jobName'))
+          ? Yup.object().required(getString('pipeline.bambooStep.validations.planName')) // typeError is necessary here, otherwise we get a bad-looking yup error
+          : Yup.string().required(getString('pipeline.bambooStep.validations.planName'))
       ),
       artifactPaths: Yup.string()
     })
