@@ -106,6 +106,7 @@ function RunPipelineFormV1Basic({
   const { getRBACErrorMessage } = useRBACError()
   const { supportingGitSimplification } = useAppStore()
   const [runClicked, setRunClicked] = useState(false)
+  const [resolvedPipeline, setResolvedPipeline] = useState<PipelineConfig | undefined>()
 
   const { data: shouldDisableDeploymentData, loading: loadingShouldDisableDeployment } = useShouldDisableDeployment({
     queryParams: {
@@ -131,10 +132,14 @@ function RunPipelineFormV1Basic({
     requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
   })
 
-  const pipeline: PipelineInfoConfig | undefined = React.useMemo(
-    () => yamlParse<PipelineConfig>(defaultTo(pipelineResponse?.data?.yamlPipeline, ''))?.pipeline,
+  const pipeline = React.useMemo(
+    () => yamlParse<PipelineConfig>(defaultTo(pipelineResponse?.data?.yamlPipeline, '')),
     [pipelineResponse?.data?.yamlPipeline]
   )
+
+  useEffect(() => {
+    setResolvedPipeline(yamlParse<PipelineConfig>(defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, '')))
+  }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
 
   const {
     inputSets,
@@ -396,6 +401,7 @@ function RunPipelineFormV1Basic({
                     loadingInputSets={loadingInputSets}
                     hasRuntimeInputs={hasRuntimeInputs}
                     hasCodebaseInputs={hasCodebaseInputs}
+                    resolvedPipeline={resolvedPipeline}
                   />
                   <CheckBoxActions
                     executionView={executionView}
@@ -432,7 +438,7 @@ function RunPipelineFormV1Basic({
                           })}
                           permission={{
                             resource: {
-                              resourceIdentifier: pipeline?.identifier as string,
+                              resourceIdentifier: pipelineIdentifier as string,
                               resourceType: ResourceType.PIPELINE
                             },
                             permission: PermissionIdentifier.EXECUTE_PIPELINE
@@ -486,7 +492,7 @@ function RunPipelineFormV1Basic({
 
 export interface RunPipelineFormV1WrapperProps extends PipelineType<PipelinePathProps> {
   children: React.ReactNode
-  pipeline?: PipelineInfoConfig
+  pipeline?: PipelineConfig
 }
 export function RunPipelineFormWrapper(props: RunPipelineFormV1WrapperProps): React.ReactElement {
   const { children } = props

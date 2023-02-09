@@ -5,14 +5,39 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useRef } from 'react'
-import { get, isEmpty, set } from 'lodash-es'
-import { FormInput, MultiTypeInputType, Container, Layout, Text, Radio, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useParams } from 'react-router-dom'
+import { get, isEmpty, set, isUndefined } from 'lodash-es'
+import produce from 'immer'
+import {
+  FormInput,
+  MultiTypeInputType,
+  Container,
+  Layout,
+  Text,
+  Radio,
+  RUNTIME_INPUT_VALUE,
+  Icon
+} from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { connect } from 'formik'
+import {
+  getIdentifierFromValue,
+  getScopeFromDTO,
+  getScopeFromValue
+} from '@common/components/EntityReference/EntityReference'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import { getReference } from '@common/utils/utils'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { CodebaseTypes } from '@pipeline/utils/CIUtils'
+import { CodebaseTypes, GIT_EXTENSION, getCodebaseRepoNameFromConnector } from '@pipeline/utils/CIUtils'
+import type { PipelineConfig } from 'services/pipeline-ng'
+import {
+  ConnectorInfoDTO,
+  getListOfBranchesByRefConnectorV2Promise,
+  ResponseGitBranchesResponseDTO,
+  useGetConnector
+} from 'services/cd-ng'
 import { StepViewType } from '../../../components/AbstractSteps/Step'
 import css from '../../../components/PipelineInputSetForm/CICodebaseInputSetForm.module.scss'
 import pipelineInputSetCss from '../../../components/PipelineInputSetForm/PipelineInputSetForm.module.scss'
@@ -22,6 +47,7 @@ export interface CICodebaseInputSetFormV1Props {
   formik?: any
   viewType: StepViewType
   viewTypeMetadata?: Record<string, boolean>
+  originalPipeline?: PipelineConfig
 }
 
 export enum ConnectionType {
@@ -55,8 +81,10 @@ function CICodebaseInputSetFormV1Internal({
   readonly,
   formik,
   viewType,
-  viewTypeMetadata
+  viewTypeMetadata,
+  originalPipeline
 }: CICodebaseInputSetFormV1Props): JSX.Element {
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
   const containerWidth = viewTypeMetadata?.isTemplateDetailDrawer ? '100%' : '50%' // drawer view is much smaller 50% would cut out
   const savedValues = useRef<Record<string, string>>(
     Object.assign({
@@ -71,8 +99,13 @@ function CICodebaseInputSetFormV1Internal({
   const codeBaseTypePath = `repository.reference.type`
   const [codeBaseType, setCodeBaseType] = useState<CodebaseTypes | undefined>(get(formik?.values, codeBaseTypePath))
 
+  const [isFetchingBranches, setIsFetchingBranches] = useState<boolean>(false)
+  const [isDefaultBranchSet, setIsDefaultBranchSet] = useState<boolean>(false)
   const radioLabels = getBuildTypeLabels(getString)
   const codebaseTypeError = get(formik?.errors, codeBaseTypePath)
+  const [codebaseConnector, setCodebaseConnector] = useState<ConnectorInfoDTO>()
+  const [connectorId, setConnectorId] = useState<string>('')
+  const [connectorRef, setConnectorRef] = useState<string>('')
 
   const inputLabels = getBuildTypeInputLabels(getString)
 
@@ -93,6 +126,9 @@ function CICodebaseInputSetFormV1Internal({
     if (type) {
       setCodeBaseType(type)
     }
+    const ctrRef = get(originalPipeline, 'repository.connector') as string
+    setConnectorRef(ctrRef)
+    setConnectorId(getIdentifierFromValue(ctrRef))
   }, [formik?.values])
 
   useEffect(() => {
@@ -108,10 +144,11 @@ function CICodebaseInputSetFormV1Internal({
   }, [codeBaseType])
 
   const handleTypeChange = (newType: CodebaseTypes): void => {
-    formik?.setFieldValue(`repository.reference.type`, '')
+    // formik?.setFieldValue(`repository.reference.type`, '')
     formik?.setFieldValue(codeBaseTypePath, newType)
   }
   const renderCodeBaseTypeInput = (type: CodebaseTypes): JSX.Element => {
+    const shouldDisableBranchTextInput = type === CodebaseTypes.BRANCH && isFetchingBranches
     return (
       <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }} spacing="medium">
         <FormInput.MultiTextInput
@@ -122,15 +159,124 @@ function CICodebaseInputSetFormV1Internal({
             allowableTypes: [MultiTypeInputType.EXPRESSION, MultiTypeInputType.FIXED]
           }}
           placeholder=""
-          disabled={readonly}
+          disabled={readonly || shouldDisableBranchTextInput}
           onChange={val => {
             savedValues.current[type] = (val || '') as string
           }}
-          className={css.width100}
+          className={shouldDisableBranchTextInput ? css.width90 : css.width100}
         />
+        {shouldDisableBranchTextInput ? <Icon name="steps-spinner" size={20} padding={{ top: 'xsmall' }} /> : null}
       </Layout.Horizontal>
     )
   }
+
+  const {
+    data: connectorDetails,
+    loading: loadingConnectorDetails,
+    refetch: getConnectorDetails
+  } = useGetConnector({
+    identifier: connectorId,
+    lazy: true
+  })
+
+  useEffect(() => {
+    if (connectorId) {
+      const connectorScope = getScopeFromValue(connectorRef)
+      getConnectorDetails({
+        pathParams: {
+          identifier: connectorId
+        },
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier: connectorScope === Scope.ORG || connectorScope === Scope.PROJECT ? orgIdentifier : undefined,
+          projectIdentifier: connectorScope === Scope.PROJECT ? projectIdentifier : undefined
+        }
+      })
+    }
+  }, [connectorId])
+
+  useEffect(() => {
+    if (!loadingConnectorDetails && !isUndefined(connectorDetails)) {
+      setCodebaseConnector(connectorDetails?.data?.connector)
+    }
+  }, [loadingConnectorDetails, connectorDetails])
+
+  const shouldAllowRepoFetch = useMemo((): boolean => {
+    return (
+      viewType === StepViewType.DeploymentForm &&
+      codeBaseType === CodebaseTypes.BRANCH &&
+      !get(formik?.values, codeBaseInputFieldFormName) &&
+      !isDefaultBranchSet &&
+      !isUndefined(codebaseConnector)
+    )
+  }, [viewType, codeBaseType, get(formik?.values, codeBaseInputFieldFormName), isDefaultBranchSet, codebaseConnector])
+
+  const fetchBranchesForRepo = useCallback(
+    (repoName: string) => {
+      if (shouldAllowRepoFetch) {
+        // Default branch needs to be set only if not specified by the user already for "branch" type build, only on Run Pipeline form
+        if (!get(codebaseConnector, 'spec.apiAccess')) {
+          return
+        }
+        const connectorReference = get(originalPipeline, 'repository.connector', '').includes(RUNTIME_INPUT_VALUE)
+          ? codebaseConnector && getReference(getScopeFromDTO(codebaseConnector), codebaseConnector.identifier)
+          : get(originalPipeline, 'repository.connector', '')
+
+        if (repoName) {
+          try {
+            setIsFetchingBranches(true)
+            getListOfBranchesByRefConnectorV2Promise({
+              queryParams: {
+                connectorRef: connectorReference,
+                accountIdentifier: accountId,
+                orgIdentifier,
+                projectIdentifier,
+                repoName: encodeURI(repoName.endsWith(GIT_EXTENSION) ? repoName.replace(/\.[^/.]+$/, '') : repoName),
+                size: 1
+              }
+            })
+              .then((result: ResponseGitBranchesResponseDTO) => {
+                setIsFetchingBranches(false)
+                const branchName = result.data?.defaultBranch?.name || ''
+                formik?.setValues(
+                  produce(formik?.values, (draft: any) => {
+                    set(set(draft, codeBaseTypePath, codeBaseType), codeBaseInputFieldFormName, branchName)
+                  })
+                )
+                savedValues.current.branch = branchName as string
+
+                if (result.data?.defaultBranch?.name) {
+                  setIsDefaultBranchSet(true)
+                }
+              })
+              .catch(_e => {
+                setIsFetchingBranches(false)
+              })
+          } catch (e) {
+            setIsFetchingBranches(false)
+          }
+        }
+      }
+    },
+    [shouldAllowRepoFetch, originalPipeline, codeBaseType]
+  )
+  useEffect(() => {
+    if (codebaseConnector) {
+      const codebaseConnectorConnectionType = get(codebaseConnector, 'spec.type')
+      if (codebaseConnectorConnectionType === ConnectionType.Repo) {
+        fetchBranchesForRepo(getCodebaseRepoNameFromConnector(codebaseConnector, getString))
+      } else if (
+        codebaseConnectorConnectionType === ConnectionType.Account &&
+        !get(originalPipeline, 'repository.name', '').includes(RUNTIME_INPUT_VALUE)
+      ) {
+        fetchBranchesForRepo(get(originalPipeline, 'repository.name', ''))
+      }
+    }
+  }, [codebaseConnector, originalPipeline])
+
+  const disableBuildRadioBtnSelection = useMemo(() => {
+    return readonly || (codeBaseType === CodebaseTypes.BRANCH && isFetchingBranches)
+  }, [readonly, codeBaseType, isFetchingBranches])
 
   return (
     <>
@@ -166,7 +312,7 @@ function CICodebaseInputSetFormV1Internal({
                   width={110}
                   onClick={() => handleTypeChange(CodebaseTypes.BRANCH)}
                   checked={codeBaseType === CodebaseTypes.BRANCH}
-                  disabled={readonly}
+                  disabled={disableBuildRadioBtnSelection}
                   font={{ variation: FontVariation.FORM_LABEL }}
                   key="branch-radio-option"
                 />
@@ -176,7 +322,7 @@ function CICodebaseInputSetFormV1Internal({
                   margin={{ left: 'huge' }}
                   onClick={() => handleTypeChange(CodebaseTypes.TAG)}
                   checked={codeBaseType === CodebaseTypes.TAG}
-                  disabled={readonly}
+                  disabled={disableBuildRadioBtnSelection}
                   font={{ variation: FontVariation.FORM_LABEL }}
                   key="tag-radio-option"
                 />
@@ -186,7 +332,7 @@ function CICodebaseInputSetFormV1Internal({
                   margin={{ left: 'huge' }}
                   onClick={() => handleTypeChange(CodebaseTypes.PR)}
                   checked={codeBaseType === CodebaseTypes.PR}
-                  disabled={readonly}
+                  disabled={disableBuildRadioBtnSelection}
                   font={{ variation: FontVariation.FORM_LABEL }}
                   key="pr-radio-option"
                 />

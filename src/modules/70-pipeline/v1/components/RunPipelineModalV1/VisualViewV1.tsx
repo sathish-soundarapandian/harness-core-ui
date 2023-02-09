@@ -9,7 +9,7 @@ import React, { Dispatch, SetStateAction } from 'react'
 import cx from 'classnames'
 import { FormikForm, Layout, Text } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import type { ResponseInputs } from 'services/pipeline-ng'
+import type { ResponseInputs, PipelineConfig } from 'services/pipeline-ng'
 import { PipelineInputSetFormV1 } from './PipelineInputSetFormV1'
 import { StepViewType } from '../../../components/AbstractSteps/Step'
 import css from '../../../components/RunPipelineModal/RunPipelineForm.module.scss'
@@ -26,6 +26,7 @@ export interface VisualViewProps {
   loadingInputSets: boolean
   inputSets?: ResponseInputs | null
   inputSetsError: any
+  resolvedPipeline?: PipelineConfig
 }
 
 export default function VisualView(props: VisualViewProps): React.ReactElement {
@@ -38,7 +39,8 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     submitForm,
     loadingInputSets,
     inputSets,
-    inputSetsError
+    inputSetsError,
+    resolvedPipeline
   } = props
   const { getString } = useStrings()
 
@@ -77,6 +79,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
                 executionIdentifier={executionIdentifier}
                 hasRuntimeInputs={hasRuntimeInputs}
                 hasCodebaseInputs={hasCodebaseInputs}
+                resolvedPipeline={resolvedPipeline}
               />
             ) : null}
           </>
@@ -92,10 +95,11 @@ export interface PipelineInputSetFormWrapperProps {
   hasRuntimeInputs?: boolean
   hasCodebaseInputs?: boolean
   inputSets?: ResponseInputs | null
+  resolvedPipeline?: PipelineConfig
 }
 
 function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): React.ReactElement | null {
-  const { executionView, hasRuntimeInputs, hasCodebaseInputs, executionIdentifier, inputSets } = props
+  const { executionView, hasRuntimeInputs, hasCodebaseInputs, executionIdentifier, inputSets, resolvedPipeline } = props
 
   if (hasRuntimeInputs || hasCodebaseInputs || executionView) {
     return (
@@ -108,6 +112,7 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
           viewType={StepViewType.DeploymentForm}
           isRunPipelineForm
           executionIdentifier={executionIdentifier}
+          originalPipeline={resolvedPipeline}
           disableRuntimeInputConfigureOptions
         />
       </>
