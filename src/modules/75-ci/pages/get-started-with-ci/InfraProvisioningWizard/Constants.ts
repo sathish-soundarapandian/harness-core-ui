@@ -269,7 +269,7 @@ export const getPipelinePayloadWithoutCodebase = (): Record<string, any> => {
 export const getCIStarterPipelineV1 = (): Record<string, any> => {
   return {
     version: 1,
-    name: 'HelloWorld CI',
+    name: `HelloWorld CI ${new Date().getTime().toString()}`,
     stages: [
       {
         name: 'build',

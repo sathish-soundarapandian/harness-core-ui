@@ -36,6 +36,7 @@ declare const styles: {
   readonly otherOptionCard: string
   readonly provisioningFailed: string
   readonly provisioningSuccessful: string
+  readonly recommendedTag: string
   readonly repositories: string
   readonly repositoriesWithError: string
   readonly repositoryRow: string

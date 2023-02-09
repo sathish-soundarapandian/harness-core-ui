@@ -7586,6 +7586,7 @@ export interface StringsMap {
   'ci.getStartedWithCI.fieldIsMissing': string
   'ci.getStartedWithCI.flexibleInfra': string
   'ci.getStartedWithCI.flexibleInfraHelpText': string
+  'ci.getStartedWithCI.generatePipelineConfig': string
   'ci.getStartedWithCI.genericGit': string
   'ci.getStartedWithCI.hostedByHarness': string
   'ci.getStartedWithCI.hostedByHarnessBuildLocation': string

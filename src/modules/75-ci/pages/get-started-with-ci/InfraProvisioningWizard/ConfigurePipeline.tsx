@@ -110,6 +110,7 @@ interface StarterTemplate {
   pipelineYaml?: string
   icon: IconName
   id: string
+  isRecommended?: boolean
 }
 
 const HARNESS_FOLDER_PREFIX = '.harness'
@@ -121,14 +122,21 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
   const [pipelineName, setPipelineName] = useState<string>()
   const pipelineNameToSpecify = `Build ${pipelineName}`
   const formikRef = useRef<FormikContextType<ImportPipelineYAMLInterface>>()
-  const starterMinimumPipeline: StarterTemplate = {
+  const starterMinimumPipelineConfig: StarterTemplate = {
     name: getString('ci.getStartedWithCI.createEmptyPipelineConfig'),
     description: getString('ci.getStartedWithCI.starterPipelineHelptext'),
-    icon: 'create-via-pipeline-template',
-    id: 'starter-pipeline'
+    icon: 'create-via-starter-pipeline',
+    id: 'generate-pipeline'
   }
-  const [selectedConfigOption, setSelectedConfigOption] = useState<StarterTemplate>(starterMinimumPipeline)
-  const [showAdvancedOptions, setShowAdvancedOptions] = useState<boolean>(true)
+  const generatePipelineConfig: StarterTemplate = {
+    name: getString('ci.getStartedWithCI.generatePipelineConfig'),
+    description: getString('ci.getStartedWithCI.starterPipelineHelptext'),
+    icon: 'create-via-pipeline-template',
+    id: 'starter-pipeline',
+    isRecommended: true
+  }
+  const [selectedConfigOption, setSelectedConfigOption] = useState<StarterTemplate>(generatePipelineConfig)
+  const [showAdvancedOptions, setShowAdvancedOptions] = useState<boolean>(false)
   const [isFetchingDefaultBranch, setIsFetchingDefaultBranch] = useState<boolean>(false)
   const saveToGitFormikRef = useRef<FormikContextType<SavePipelineToRemoteInterface>>()
 
@@ -193,7 +201,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
 
   const renderCard = useCallback(
     (item: StarterTemplate): JSX.Element => {
-      const { name, description, icon, id, label } = item
+      const { name, description, icon, id, label, isRecommended } = item
       const isCurrentOptionSelected = item.id === selectedConfigOption?.id
       return (
         <Card
@@ -203,90 +211,99 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
           className={css.configOptionCard}
           key={item.id}
         >
-          <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="large">
-            <Icon name={icon} size={30} />
-            <Layout.Vertical padding={{ left: 'large' }} spacing="xsmall" width="100%">
-              <Text font={{ variation: FontVariation.BODY2 }}>{label ?? name}</Text>
-              <Text font={{ variation: FontVariation.TINY }}>{description}</Text>
-              {isCurrentOptionSelected &&
-              StarterConfigIdToOptionMap[id] === PipelineConfigurationOption.ChooseExistingYAML ? (
-                <Layout.Vertical>
-                  <Container width="90%">
-                    <Separator />
-                  </Container>
-                  <Container width="60%">
-                    <Formik<ImportPipelineYAMLInterface>
-                      initialValues={{}}
-                      onSubmit={noop}
-                      formName="importYAMLForm"
-                      validationSchema={Yup.object().shape({
-                        branch: Yup.string().trim().required(getString('common.git.validation.baseBranchRequired')),
-                        yamlPath: Yup.string()
-                          .trim()
-                          .required(getString('gitsync.gitSyncForm.yamlPathRequired'))
-                          .test('is-valid-yaml-file', getString('ci.getStartedWithCI.validYAMLFile'), value => {
-                            return (value as string)?.endsWith('.yaml')
+          <Layout.Horizontal flex>
+            <Layout.Horizontal flex={{ justifyContent: 'flex-start' }} spacing="medium">
+              <Icon name={icon} size={30} />
+              <Layout.Vertical padding={{ left: 'medium' }} spacing="xsmall" width="100%">
+                <Text font={{ variation: FontVariation.BODY2 }}>{label ?? name}</Text>
+                <Text font={{ variation: FontVariation.TINY }}>{description}</Text>
+                {isCurrentOptionSelected &&
+                StarterConfigIdToOptionMap[id] === PipelineConfigurationOption.ChooseExistingYAML ? (
+                  <Layout.Vertical>
+                    <Container width="90%">
+                      <Separator />
+                    </Container>
+                    <Container width="60%">
+                      <Formik<ImportPipelineYAMLInterface>
+                        initialValues={{}}
+                        onSubmit={noop}
+                        formName="importYAMLForm"
+                        validationSchema={Yup.object().shape({
+                          branch: Yup.string().trim().required(getString('common.git.validation.baseBranchRequired')),
+                          yamlPath: Yup.string()
+                            .trim()
+                            .required(getString('gitsync.gitSyncForm.yamlPathRequired'))
+                            .test('is-valid-yaml-file', getString('ci.getStartedWithCI.validYAMLFile'), value => {
+                              return (value as string)?.endsWith('.yaml')
+                            })
+                        })}
+                      >
+                        {formikProps => {
+                          formikRef.current = formikProps
+                          setForwardRef({
+                            values: formikProps.values,
+                            configuredOption: selectedConfigOption
                           })
-                      })}
-                    >
-                      {formikProps => {
-                        formikRef.current = formikProps
-                        setForwardRef({
-                          values: formikProps.values,
-                          configuredOption: selectedConfigOption
-                        })
-                        return (
-                          <FormikForm>
-                            <Layout.Vertical
-                              spacing="xsmall"
-                              padding={formikProps.errors.yamlPath ? { bottom: 'large' } : {}}
-                            >
-                              <Container>
-                                <Text font={{ variation: FontVariation.FORM_LABEL }} padding={{ bottom: 'xsmall' }}>
-                                  {getString('gitsync.selectBranchTitle')}
-                                </Text>
-                                <RepoBranchSelectV2
-                                  name="branch"
-                                  noLabel={true}
-                                  connectorIdentifierRef={configuredGitConnectorIdentifier}
-                                  repoName={repoName}
-                                  onChange={(selected: SelectOption) => {
-                                    if (formikProps.values.branch !== selected.value) {
-                                      formikProps.setFieldValue?.('branch', selected.value)
-                                    }
-                                  }}
-                                  branchSelectorClassName={css.branchSelector}
-                                />
-                              </Container>
-                              <FormInput.Text
-                                name="yamlPath"
-                                label={
-                                  <Text font={{ variation: FontVariation.FORM_LABEL }}>
-                                    {getString('gitsync.gitSyncForm.yamlPathLabel')}
+                          return (
+                            <FormikForm>
+                              <Layout.Vertical
+                                spacing="xsmall"
+                                padding={formikProps.errors.yamlPath ? { bottom: 'large' } : {}}
+                              >
+                                <Container>
+                                  <Text font={{ variation: FontVariation.FORM_LABEL }} padding={{ bottom: 'xsmall' }}>
+                                    {getString('gitsync.selectBranchTitle')}
                                   </Text>
-                                }
-                                placeholder={getString('gitsync.gitSyncForm.enterYamlPath')}
-                                className={css.yamlPathField}
-                              />
-                              {showError && !formikProps.values.yamlPath ? (
-                                <Container padding={{ top: 'xsmall' }}>
-                                  <FormError
-                                    name={'yamlPath'}
-                                    errorMessage={getString('connectors.cdng.runTimeMonitoredService.pleaseSpecify', {
-                                      field: `a ${getString('gitsync.gitSyncForm.yamlPathLabel').toLowerCase()}`
-                                    })}
+                                  <RepoBranchSelectV2
+                                    name="branch"
+                                    noLabel={true}
+                                    connectorIdentifierRef={configuredGitConnectorIdentifier}
+                                    repoName={repoName}
+                                    onChange={(selected: SelectOption) => {
+                                      if (formikProps.values.branch !== selected.value) {
+                                        formikProps.setFieldValue?.('branch', selected.value)
+                                      }
+                                    }}
+                                    branchSelectorClassName={css.branchSelector}
                                   />
                                 </Container>
-                              ) : null}
-                            </Layout.Vertical>
-                          </FormikForm>
-                        )
-                      }}
-                    </Formik>
-                  </Container>
-                </Layout.Vertical>
-              ) : null}
-            </Layout.Vertical>
+                                <FormInput.Text
+                                  name="yamlPath"
+                                  label={
+                                    <Text font={{ variation: FontVariation.FORM_LABEL }}>
+                                      {getString('gitsync.gitSyncForm.yamlPathLabel')}
+                                    </Text>
+                                  }
+                                  placeholder={getString('gitsync.gitSyncForm.enterYamlPath')}
+                                  className={css.yamlPathField}
+                                />
+                                {showError && !formikProps.values.yamlPath ? (
+                                  <Container padding={{ top: 'xsmall' }}>
+                                    <FormError
+                                      name={'yamlPath'}
+                                      errorMessage={getString('connectors.cdng.runTimeMonitoredService.pleaseSpecify', {
+                                        field: `a ${getString('gitsync.gitSyncForm.yamlPathLabel').toLowerCase()}`
+                                      })}
+                                    />
+                                  </Container>
+                                ) : null}
+                              </Layout.Vertical>
+                            </FormikForm>
+                          )
+                        }}
+                      </Formik>
+                    </Container>
+                  </Layout.Vertical>
+                ) : null}
+              </Layout.Vertical>
+            </Layout.Horizontal>
+            {isRecommended ? (
+              <Container className={css.recommendedTag}>
+                <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.WHITE}>
+                  {getString('common.recommended')}
+                </Text>
+              </Container>
+            ) : null}
           </Layout.Horizontal>
         </Card>
       )
@@ -298,7 +315,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
     if (configuredGitConnector && [Connectors.GITHUB, Connectors.BITBUCKET].includes(configuredGitConnector.type)) {
       fetchDefaultBranch()
     }
-  }, [configuredGitConnector?.type])
+  }, [configuredGitConnector])
 
   const fetchDefaultBranch = useCallback(() => {
     disableNextBtn()
@@ -337,10 +354,11 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
     <Layout.Vertical width="40%" spacing="small">
       <Container>
         <Layout.Vertical spacing="medium" width="100%">
-          <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'xsmall' }}>
-            {getString('ci.getStartedWithCI.createPipeline')}
-          </Text>
-          {renderCard(starterMinimumPipeline)}
+          <Text font={{ variation: FontVariation.H4 }}>{getString('ci.getStartedWithCI.createPipeline')}</Text>
+          <Layout.Vertical spacing="medium" padding={{ bottom: 'medium' }}>
+            {renderCard(generatePipelineConfig)}
+            {renderCard(starterMinimumPipelineConfig)}
+          </Layout.Vertical>
           {/* Enable this once limitations related to import yaml api are resolved. */}
           {enableForTesting && configuredGitConnector?.type !== Connectors.GITLAB
             ? renderCard({
@@ -364,7 +382,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
                 padding: { top: 'small', right: 'xsmall' }
               }}
               collapseClassName={css.advancedOptions}
-              keepChildrenMounted={false}
+              keepChildrenMounted={true}
               onToggleOpen={isOpen => setShowAdvancedOptions(isOpen)}
             >
               <Formik<SavePipelineToRemoteInterface>
@@ -386,6 +404,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
                   storeInGit: true,
                   createBranchIfNotExists: true
                 }}
+                enableReinitialize={true}
               >
                 {_formikProps => {
                   saveToGitFormikRef.current = _formikProps

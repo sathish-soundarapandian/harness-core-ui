@@ -36,10 +36,12 @@ import {
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
 import { useStrings } from 'framework/strings'
 import type { StringKeys } from 'framework/strings'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import RbacButton from '@rbac/components/Button/Button'
 import { killEvent } from '@common/utils/eventUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RetryPipeline from '../RetryPipeline/RetryPipeline'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
@@ -201,6 +203,7 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
       }
     }
   })
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
 
   const { canAbort, canPause, canRerun, canResume } = getValidExecutionActions(canExecute, executionStatus)
   const { abortText, pauseText, rerunText, resumeText } = getActionTexts(stageId)
@@ -221,7 +224,10 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   }
 
   const executionDetailsView = routes.toExecutionPipelineView({ ...commonRouteProps, source, executionIdentifier })
-  const pipelineDetailsView = routes.toPipelineStudio(commonRouteProps)
+  const pipelineDetailsView =
+    CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+      ? routes.toPipelineStudioV1(commonRouteProps)
+      : routes.toPipelineStudio(commonRouteProps)
 
   async function executeAction(interruptType: HandleInterruptQueryParams['interruptType']): Promise<void> {
     clear()

@@ -33,10 +33,12 @@ import RetryHistory from '@pipeline/components/RetryPipeline/RetryHistory/RetryH
 import { PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED } from '@pipeline/utils/constants'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
 import type { PipelineExecutionSummary, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './ExecutionHeader.module.scss'
 
 export interface ExecutionHeaderProps {
@@ -109,6 +111,20 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     stagesExecuted: pipelineExecutionSummary?.stagesExecuted,
     isDebugMode: hasCI
   })
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
+
+  const pipelineStudioRoutingProps = {
+    orgIdentifier,
+    projectIdentifier,
+    pipelineIdentifier,
+    accountId,
+    module,
+    repoIdentifier,
+    connectorRef,
+    repoName,
+    branch,
+    storeType: pipelineMetadata?.data?.storeType
+  }
 
   return (
     <header className={css.header}>
@@ -172,18 +188,11 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
           )}
           <Link
             className={css.view}
-            to={routes.toPipelineStudio({
-              orgIdentifier,
-              projectIdentifier,
-              pipelineIdentifier,
-              accountId,
-              module,
-              repoIdentifier,
-              connectorRef,
-              repoName,
-              branch,
-              storeType: pipelineMetadata?.data?.storeType
-            })}
+            to={
+              CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+                ? routes.toPipelineStudioV1(pipelineStudioRoutingProps)
+                : routes.toPipelineStudio(pipelineStudioRoutingProps)
+            }
           >
             <Icon name="Edit" size={12} />
             <String stringID="editPipeline" />
