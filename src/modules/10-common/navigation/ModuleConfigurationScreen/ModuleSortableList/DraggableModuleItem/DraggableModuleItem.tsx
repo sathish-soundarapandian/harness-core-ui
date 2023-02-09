@@ -11,8 +11,8 @@ import { Icon } from '@harness/icons'
 import { Color } from '@harness/design-system'
 import { Draggable } from 'react-beautiful-dnd'
 import NavModule from '@common/navigation/ModuleList/NavModule/NavModule'
-import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
-import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
+import type { NavModuleName } from '@common/hooks/useGetModuleInfo'
+import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
 import css from './DraggableModuleItem.module.scss'
 
 export interface DraggableModuleItemProps {
@@ -59,7 +59,7 @@ const DraggableModuleItem: React.FC<DraggableModuleItemProps> = ({
 }
 
 const DraggableModuleItemWithCondition: React.FC<DraggableModuleItemProps> = props => {
-  const { shouldVisible } = useNavModuleInfo(props.module)
+  const { shouldVisible } = useGetModuleInfo(props.module)
 
   if (!shouldVisible) {
     return null

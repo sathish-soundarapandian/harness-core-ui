@@ -69,7 +69,6 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     icon: 'cd-main',
     label: 'common.cdAndGitops',
     getHomePageUrl: (accountId: string) => routes.toCD({ accountId }),
-    featureFlagName: FeatureFlag.CDNG_ENABLED,
     color: '--cd-border',
     backgroundColor: '--cd-background'
   },
@@ -215,7 +214,7 @@ const shouldBeVisible = (
     : licenseInformation[module]?.status === 'ACTIVE'
 }
 
-const useNavModuleInfo = (module: NavModuleName) => {
+const useGetModuleInfo = (module: NavModuleName) => {
   const { accountId } = useParams<AccountPathProps>()
   const featureFlags = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
@@ -256,4 +255,4 @@ export const useNavModuleInfoMap = (): Record<NavModuleName, useNavModuleInfoRet
   return infoMap as Record<NavModuleName, useNavModuleInfoReturnType>
 }
 
-export default useNavModuleInfo
+export default useGetModuleInfo

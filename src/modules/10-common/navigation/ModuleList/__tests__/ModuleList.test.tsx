@@ -36,7 +36,6 @@ describe('ModuleList', () => {
       <TestWrapper
         defaultAppStoreValues={{
           featureFlags: {
-            CDNG_ENABLED: true,
             CING_ENABLED: true,
             CVNG_ENABLED: true,
             CFNG_ENABLED: true
@@ -61,7 +60,6 @@ describe('ModuleList', () => {
       <TestWrapper
         defaultAppStoreValues={{
           featureFlags: {
-            CDNG_ENABLED: true,
             CING_ENABLED: true,
             CVNG_ENABLED: true,
             CFNG_ENABLED: true
@@ -83,7 +81,6 @@ describe('ModuleList', () => {
       <TestWrapper
         defaultAppStoreValues={{
           featureFlags: {
-            CDNG_ENABLED: true,
             CING_ENABLED: true,
             CVNG_ENABLED: true,
             CFNG_ENABLED: true
@@ -103,9 +100,9 @@ describe('ModuleList', () => {
   test('render module config screen by clicking on module tooltip', () => {
     const { container, queryByText } = render(
       <TestWrapper
-        defaultAppStoreValues={{
-          featureFlags: {
-            CDNG_ENABLED: true
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
           }
         }}
       >

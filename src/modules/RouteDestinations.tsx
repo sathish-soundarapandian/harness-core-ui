@@ -51,7 +51,6 @@ export const AccountSideNavProps: SidebarContext = {
 
 export default function RouteDestinations(): React.ReactElement {
   const {
-    CDNG_ENABLED,
     CVNG_ENABLED,
     CING_ENABLED,
     CENG_ENABLED,
@@ -90,7 +89,7 @@ export default function RouteDestinations(): React.ReactElement {
       {userProfileRoutes.props.children}
       {CHAOS_ENABLED ? ChaosRoutes().props.children : null}
       {CING_ENABLED ? CIRoutes.props.children : null}
-      {CDNG_ENABLED ? CDRoutes.props.children : null}
+      {licenseInformation['CD']?.status === 'ACTIVE' ? CDRoutes.props.children : null}
       {isCVModuleEnabled ? CVRoutes.props.children : null}
       {GitOpsRoutes.props.children}
       {IDP_ENABLED ? IDPRoutes.props.children : null}

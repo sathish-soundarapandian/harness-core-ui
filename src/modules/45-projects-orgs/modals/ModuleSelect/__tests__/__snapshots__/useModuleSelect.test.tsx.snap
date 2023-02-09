@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`module select test free plan btn 1`] = `
+exports[`module select test module btn with license passed 1`] = `
 <div
   class="bp3-dialog"
   style="width: 1100px; border-left: 0; padding-bottom: 0px; position: relative; overflow: auto;"
@@ -428,14 +428,14 @@ exports[`module select test free plan btn 1`] = `
           common.purpose.cd.continuous
         </p>
         <button
-          aria-label="common.startFreePlan"
+          aria-label="projectsOrgs.goToModuleBtn"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           type="button"
         >
           <span
             class="bp3-button-text"
           >
-            common.startFreePlan
+            projectsOrgs.goToModuleBtn
           </span>
         </button>
       </div>
@@ -444,7 +444,7 @@ exports[`module select test free plan btn 1`] = `
 </div>
 `;
 
-exports[`module select test free trial btn 1`] = `
+exports[`module select test module btn plan btn 1`] = `
 <div
   class="bp3-dialog"
   style="width: 1100px; border-left: 0; padding-bottom: 0px; position: relative; overflow: auto;"
@@ -872,14 +872,14 @@ exports[`module select test free trial btn 1`] = `
           common.purpose.cd.continuous
         </p>
         <button
-          aria-label="common.startFreePlan"
+          aria-label="projectsOrgs.goToModuleBtn"
           class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-primary"
           type="button"
         >
           <span
             class="bp3-button-text"
           >
-            common.startFreePlan
+            projectsOrgs.goToModuleBtn
           </span>
         </button>
       </div>

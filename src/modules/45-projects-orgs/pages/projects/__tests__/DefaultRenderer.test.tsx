@@ -18,6 +18,11 @@ describe('Default Renderer test', () => {
         path="/account/:accountId"
         pathParams={{ accountId: 'testAcc' }}
         defaultAppStoreValues={defaultAppStoreValues}
+        defaultLicenseStoreValues={{
+          licenseInformation: {
+            CD: { edition: 'FREE', status: 'ACTIVE' }
+          }
+        }}
       >
         <DefaultRenderer />
       </TestWrapper>

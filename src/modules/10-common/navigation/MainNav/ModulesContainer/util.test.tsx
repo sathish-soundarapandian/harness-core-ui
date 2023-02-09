@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { DEFAULT_MODULES_ORDER, NavModuleName, useNavModuleInfoReturnType } from '@common/hooks/useNavModuleInfo'
+import { DEFAULT_MODULES_ORDER, NavModuleName, useNavModuleInfoReturnType } from '@common/hooks/useGetModuleInfo'
 import { filterNavModules } from '../util'
 
 const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {

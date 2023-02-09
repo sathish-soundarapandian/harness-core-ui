@@ -20,7 +20,7 @@ import paths from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter'
-import { DEFAULT_MODULES_ORDER, useNavModuleInfoMap } from '@common/hooks/useNavModuleInfo'
+import { DEFAULT_MODULES_ORDER, useNavModuleInfoMap } from '@common/hooks/useGetModuleInfo'
 import ModuleList from '../ModuleList/ModuleList'
 import ModuleConfigurationScreen from '../ModuleConfigurationScreen/ModuleConfigurationScreen'
 
