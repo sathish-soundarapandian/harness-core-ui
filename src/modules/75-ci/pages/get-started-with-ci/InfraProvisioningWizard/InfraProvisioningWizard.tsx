@@ -291,6 +291,22 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           .then((createPipelineResponse: ResponsePipelineSaveResponse) => {
             const { status } = createPipelineResponse
             if (status === Status.SUCCESS && createPipelineResponse?.data?.identifier) {
+              // TODO: Bypass trigger creation for CI-CODE CKO demo. This should never be merged!!!
+              if (createPipelineResponse?.data?.identifier) {
+                history.push(
+                  routes.toPipelineStudio({
+                    accountId: accountId,
+                    module: 'ci',
+                    orgIdentifier,
+                    projectIdentifier,
+                    pipelineIdentifier: createPipelineResponse?.data?.identifier,
+                    stageId: getString('buildText'),
+                    sectionId: BuildTabs.EXECUTION
+                  })
+                )
+                return
+              }
+
               const commonQueryParams = {
                 accountIdentifier: accountId,
                 orgIdentifier,
@@ -462,7 +478,9 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                   projectIdentifier,
                   spec: {
                     executeOnDelegate: false,
-                    url: `${window.location.origin}${window.harnessNameSpace || ''}/code/git` // /${accountId}/${orgIdentifier}/${projectIdentifier}
+                    url: `${window.location.origin}${
+                      window.harnessNameSpace ? '/' + window.harnessNameSpace : ''
+                    }/code/git` // /${accountId}/${orgIdentifier}/${projectIdentifier}
                   }
                 }
               }
