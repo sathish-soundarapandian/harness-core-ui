@@ -7,6 +7,7 @@
 
 import * as Yup from 'yup'
 import type { UseStringsReturn } from 'framework/strings'
+import { DelegateNameLengthLimit } from '@delegates/constants'
 import { k8sPermissionType } from './DelegateSetupStep.types'
 import { delegateNameRegex } from './DelegateSetupStep.constants'
 
@@ -19,7 +20,7 @@ export const validateDelegateSetupDetails = (
     name: Yup.string()
       .trim()
       .required(getString('delegate.delegateNameRequired'))
-      .max(63)
+      .max(DelegateNameLengthLimit)
       .matches(delegateNameRegex, getString('delegates.delegateNameRegexIssue')),
     size: Yup.string().trim().required(getString('delegate.delegateSizeRequired')),
     description: Yup.string().trim(),

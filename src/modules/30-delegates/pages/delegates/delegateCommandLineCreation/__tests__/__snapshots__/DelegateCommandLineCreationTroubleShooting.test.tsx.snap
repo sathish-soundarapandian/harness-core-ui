@@ -187,6 +187,7 @@ exports[`Delegate Command line creation failure troubleShoot click for Kubernete
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value="mock_value"
@@ -860,6 +861,7 @@ exports[`Delegate Command line creation failure troubleShoot click for docker 1`
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value="docker-delegate"
@@ -1747,6 +1749,7 @@ exports[`Delegate Command line creation failure troubleShoot click for helm 1`] 
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value="helm-delegate"
@@ -2766,6 +2769,7 @@ exports[`Delegate Command line creation failure troubleShoot click for terraform
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value="terraform-delegate"

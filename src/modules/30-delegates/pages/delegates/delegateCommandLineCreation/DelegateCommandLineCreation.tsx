@@ -23,6 +23,7 @@ import {
   DelegateCommandLineTypes,
   DelegateCommonProblemTypes,
   DelegateDefaultName,
+  DelegateNameLengthLimit,
   KubernetesType
 } from '@delegates/constants'
 import { useGenerateTerraformModule } from 'services/cd-ng'
@@ -59,6 +60,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
   const [commandType, setCommandType] = useState<CommandType | undefined>(CommandType.HELM)
   const [command, setCommand] = useState<string>('')
   const [errorDelegateName, setErrorDelegateName] = useState<boolean>(false)
+  const [errorDelegateNameLength, setErrorDelegateNameLength] = useState<boolean>(false)
   const [delegateDefaultName, setDelegateDefaultName] = useState<string>(DelegateDefaultName.HELM)
   const [originalCommand, setOriginalCommand] = useState<string>('')
   const [commonProblemsDelegateType, setCommonProblemsDelegateType] = useState<DelegateCommonProblemTypes | undefined>(
@@ -136,6 +138,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
   const commonCommandsForAllDelegateTypes = () => {
     setVerifyButtonClicked(false)
     setErrorDelegateName(false)
+    setErrorDelegateNameLength(false)
     setShowVerifyButton(true)
   }
 
@@ -214,21 +217,38 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
       ></Button>
     </Layout.Horizontal>
   )
+  const delegateNameError = () => {
+    let errorMessage = undefined
+    if (errorDelegateName) {
+      errorMessage = getString('delegates.delegateNameRegexIssue')
+    }
+    if (errorDelegateNameLength) {
+      const lengthMessage = getString('delegates.delegateNameLength', { length: DelegateNameLengthLimit })
+      errorMessage = errorMessage ? `${errorMessage}${lengthMessage}` : lengthMessage
+    }
+    return errorMessage
+  }
   const delegateNameInput = (
     <Layout.Vertical margin={{ bottom: 'xlarge' }}>
       <Label>{getString('delegate.delegateName')}</Label>
       <TextInput
         className={css.delegateNameText}
         value={delegateName}
-        errorText={errorDelegateName ? getString('delegates.delegateNameRegexIssue') : undefined}
+        errorText={delegateNameError()}
+        maxLength={DelegateNameLengthLimit + 1}
         placeholder={getString('delegate.delegateName')}
-        intent={errorDelegateName ? Intent.DANGER : Intent.NONE}
+        intent={errorDelegateName || errorDelegateNameLength ? Intent.DANGER : Intent.NONE}
         onChange={e => {
           const latestValue = (e.currentTarget as HTMLInputElement).value.trim()
           const delegateNameSchema = Yup.object({
             name: Yup.string().trim().matches(delegateNameRegex)
           })
+          const delegateLengthSchema = Yup.object({
+            name: Yup.string().trim().max(DelegateNameLengthLimit)
+          })
           const validText = delegateNameSchema.isValidSync({ name: latestValue })
+          const validTextLength = delegateLengthSchema.isValidSync({ name: latestValue })
+          setErrorDelegateNameLength(!validTextLength)
           setErrorDelegateName(!validText)
           setVerifyButtonClicked(false)
           setDelegateName(latestValue)
@@ -257,7 +277,7 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
                 margin={{ bottom: 'xlarge' }}
               >
                 <Button
-                  disabled={!delegateName || errorDelegateName}
+                  disabled={!delegateName || errorDelegateName || errorDelegateNameLength}
                   variation={ButtonVariation.SECONDARY}
                   text={getString('verify')}
                   onClick={() => {

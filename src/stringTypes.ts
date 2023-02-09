@@ -1600,6 +1600,7 @@ export interface StringsMap {
   'delegates.delegateDeleted': string
   'delegates.delegateIdentifier': string
   'delegates.delegateInstances': string
+  'delegates.delegateNameLength': string
   'delegates.delegateNameNotUnique': string
   'delegates.delegateNameRegexIssue': string
   'delegates.delegateNamespaceRequired': string

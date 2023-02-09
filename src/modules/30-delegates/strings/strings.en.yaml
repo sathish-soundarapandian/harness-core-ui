@@ -21,6 +21,7 @@ delegateSizeUpTo: 'Run up to {{count}} parallel deployments/builds'
 lastUpdated: 'LAST UPDATED'
 usedBy: 'USED BY'
 delegateNameRegexIssue: 'Delegate name should be lowercase and can include only dash(-) between letters and cannot start or end with a number.'
+delegateNameLength: Length cannot be more than {{length}}.
 delegateDeleted: 'Delegate {{name}} deleted'
 infoForDeleteDelegate: 'Deleting the delegate from the Harness Platform does not uninstall the delegate running on your infrastructure. Click on the Delete button after you have uninstalled the delegate from your infrastructure.'
 questionForceDeleteDelegate: 'Are you sure you want to delete the Delegate {{name}} from the Harness Platform?'

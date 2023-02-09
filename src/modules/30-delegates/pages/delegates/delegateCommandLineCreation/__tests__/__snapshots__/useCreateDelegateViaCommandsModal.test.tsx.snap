@@ -227,6 +227,7 @@ HTMLCollection [
               >
                 <input
                   class="bp3-input"
+                  maxlength="64"
                   placeholder="delegate.delegateName"
                   type="text"
                   value="helm-delegate"
@@ -742,6 +743,7 @@ HTMLCollection [
               >
                 <input
                   class="bp3-input"
+                  maxlength="64"
                   placeholder="delegate.delegateName"
                   type="text"
                   value="helm-delegate"
@@ -1246,6 +1248,7 @@ HTMLCollection [
               >
                 <input
                   class="bp3-input"
+                  maxlength="64"
                   placeholder="delegate.delegateName"
                   type="text"
                   value="helm-delegate"

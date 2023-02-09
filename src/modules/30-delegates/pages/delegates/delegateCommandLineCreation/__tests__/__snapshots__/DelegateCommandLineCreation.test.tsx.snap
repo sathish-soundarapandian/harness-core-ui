@@ -150,6 +150,7 @@ exports[`Delegate Command line creation render UI Docker Delegate 1`] = `
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value="docker-delegate"
@@ -517,6 +518,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Manifest 1`]
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value=""
@@ -1018,6 +1020,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Terraform 1`
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value="terraform-delegate"
@@ -1517,6 +1520,7 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value="helm-delegate"
@@ -1991,6 +1995,7 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value="helm-delegate"

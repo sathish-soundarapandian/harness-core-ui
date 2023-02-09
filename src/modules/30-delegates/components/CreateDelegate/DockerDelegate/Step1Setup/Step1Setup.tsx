@@ -23,6 +23,7 @@ import { useCreateTokenModal } from '@delegates/components/DelegateTokens/modals
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
 
+import { DelegateNameLengthLimit } from '@delegates/constants'
 import type { DockerDelegateWizardData } from '../CreateDockerDelegate'
 import css from './Step1Setup.module.scss'
 
@@ -136,6 +137,7 @@ const Step1Setup: React.FC<StepProps<DockerDelegateWizardData> & DelegateSetupSt
           validationSchema={Yup.object().shape({
             name: Yup.string()
               .trim()
+              .max(DelegateNameLengthLimit)
               .required(getString('delegate.delegateNameRequired'))
               .matches(delegateNameRegex, getString('delegates.delegateNameRegexIssue')),
             tokenName: Yup.string().required(getString('delegates.tokens.tokenRequired'))
@@ -151,7 +153,8 @@ const Step1Setup: React.FC<StepProps<DockerDelegateWizardData> & DelegateSetupSt
                         <AddDescriptionAndKVTagsWithIdentifier
                           forceOpenTags
                           identifierProps={{
-                            inputLabel: getString('delegate.delegateName')
+                            inputLabel: getString('delegate.delegateName'),
+                            maxInput: DelegateNameLengthLimit + 1
                           }}
                         />
                       </div>
