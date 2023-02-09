@@ -201,6 +201,7 @@ getStartedWithCI:
   configurePipeline: Configure Pipeline
   starterPipeline: Starter Pipeline
   createEmptyPipelineConfig: Create empty Pipeline configuration
+  generatePipelineConfig: Generate my Pipeline configuration
   starterPipelineHelptext: Start with a minimum pipeline that you can build upon
   chooseExistingYAML: Choose an existing yaml
   chooseExistingYAMLHelptext: Select an existing pipeline yaml from any branch in the repository
