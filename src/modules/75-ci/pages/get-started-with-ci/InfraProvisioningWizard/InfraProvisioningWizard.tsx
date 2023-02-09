@@ -49,6 +49,10 @@ import type { TriggerConfigDTO } from '@triggers/pages/triggers/interface/Trigge
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CIOnboardingActions } from '@common/constants/TrackingConstants'
+import { StoreType } from '@common/constants/GitSyncTypes'
+import { getScopedValueFromDTO, ScopedValueObjectDTO } from '@common/components/EntityReference/EntityReference.types'
+import { getIdentifierFromName } from '@common/utils/StringUtils'
+import { defaultValues as CodebaseDefaultValues } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import { BuildTabs } from '@ci/components/PipelineStudio/CIPipelineStagesUtils'
 import {
   InfraProvisioningWizardProps,
@@ -66,7 +70,9 @@ import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
 import {
   ConfigurePipeline,
   ConfigurePipelineRef,
+  ImportPipelineYAMLInterface,
   PipelineConfigurationOption,
+  SavePipelineToRemoteInterface,
   StarterConfigIdToOptionMap,
   StarterConfigurations
 } from './ConfigurePipeline'
@@ -177,10 +183,12 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const constructTriggerPayload = React.useCallback(
     ({
       pipelineId,
-      eventType
+      eventType,
+      shouldSavePipelineToGit
     }: {
       pipelineId: string
       eventType: string
+      shouldSavePipelineToGit: boolean
     }): NGTriggerConfigV2 | TriggerConfigDTO | undefined => {
       const connectorType: ConnectorInfoDTO['type'] | undefined = configuredGitConnector?.type
       if (!connectorType) {
@@ -233,7 +241,9 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             }
           }
         },
-        inputYaml: yamlStringify(omitBy(omitBy(pipelineInput, isUndefined), isNull))
+        ...(shouldSavePipelineToGit
+          ? { pipelineBranchName: CodebaseDefaultValues.branch }
+          : { inputYaml: yamlStringify(omitBy(omitBy(pipelineInput, isUndefined), isNull)) })
       }
     },
     [
@@ -261,6 +271,17 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   }, [])
 
   const setupPipelineWithCodebaseAndTriggers = React.useCallback((): void => {
+    const { type: connectorType } = configuredGitConnector || {}
+    const { branch, storeInGit, yamlPath, pipelineName } = configurePipelineRef.current
+      ?.values as SavePipelineToRemoteInterface
+    const shouldSavePipelineToGit =
+      (connectorType && [Connectors.GITHUB, Connectors.BITBUCKET].includes(connectorType) && storeInGit) || false
+    const gitParams = {
+      storeType: StoreType.REMOTE,
+      connectorRef: getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO),
+      branch,
+      repoName: selectRepositoryRef.current?.repository?.name
+    }
     if (selectRepositoryRef.current?.repository) {
       try {
         createPipelineV2Promise({
@@ -268,7 +289,14 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           queryParams: {
             accountIdentifier: accountId,
             orgIdentifier,
-            projectIdentifier
+            projectIdentifier,
+            ...(shouldSavePipelineToGit && {
+              ...gitParams,
+              filePath: yamlPath,
+              commitMsg: `${getString('common.addedEntityLabel', {
+                entity: getString('common.pipeline').toLowerCase()
+              })} ${getIdentifierFromName(pipelineName)}`
+            })
           },
           requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
         })
@@ -281,8 +309,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                 projectIdentifier,
                 targetIdentifier: createPipelineResponse?.data?.identifier
               }
-
-              // PR trigger
+              // Create PR trigger
               createTriggerPromise({
                 body: yamlStringify({
                   trigger: clearNullUndefined(
@@ -292,7 +319,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                         configuredGitConnector?.type &&
                         [Connectors.GITHUB, Connectors.BITBUCKET].includes(configuredGitConnector?.type)
                           ? eventTypes.PULL_REQUEST
-                          : eventTypes.MERGE_REQUEST
+                          : eventTypes.MERGE_REQUEST,
+                      shouldSavePipelineToGit
                     }) || {}
                   )
                 }) as any,
@@ -300,13 +328,15 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
               })
                 .then((createPRTriggerResponse: ResponseNGTriggerResponse) => {
                   if (createPRTriggerResponse.status === Status.SUCCESS) {
-                    // push trigger
+                    // If PR trigger is created succesfully, then
+                    // create a Push trigger
                     createTriggerPromise({
                       body: yamlStringify({
                         trigger: clearNullUndefined(
                           constructTriggerPayload({
                             pipelineId: createPipelineResponse?.data?.identifier || '',
-                            eventType: eventTypes.PUSH
+                            eventType: eventTypes.PUSH,
+                            shouldSavePipelineToGit
                           }) || {}
                         )
                       }) as any,
@@ -319,14 +349,15 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                           setShowGetStartedTabInMainMenu(false)
                           if (createPipelineResponse?.data?.identifier) {
                             history.push(
-                              routes.toPipelineStudio({
+                              routes.toPipelineStudioV1({
                                 accountId: accountId,
                                 module: 'ci',
                                 orgIdentifier,
                                 projectIdentifier,
                                 pipelineIdentifier: createPipelineResponse?.data?.identifier,
                                 stageId: getString('buildText'),
-                                sectionId: BuildTabs.EXECUTION
+                                sectionId: BuildTabs.EXECUTION,
+                                ...(shouldSavePipelineToGit ? gitParams : {})
                               })
                             )
                           }
@@ -379,7 +410,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           setShowGetStartedTabInMainMenu(false)
           if (createPipelineResponse?.data?.identifier) {
             history.push(
-              routes.toPipelineStudio({
+              routes.toPipelineStudioV1({
                 accountId: accountId,
                 module: 'ci',
                 orgIdentifier,
@@ -525,17 +556,25 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
               // ignore error
             }
           }
-          const { branch, yamlPath } = values || {}
+
           if (!configuredOption) {
             setShowError(true)
             return
           }
-          if (
-            StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.ChooseExistingYAML &&
-            (!branch || !yamlPath)
+          if (StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.StarterPipeline) {
+            const { branch, yamlPath, pipelineName } = (values as SavePipelineToRemoteInterface) || {}
+            if (!branch || !yamlPath || !pipelineName) {
+              showValidationErrors?.()
+              return
+            }
+          } else if (
+            StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.ChooseExistingYAML
           ) {
-            showValidationErrors?.()
-            return
+            const { branch, yamlPath } = (values as ImportPipelineYAMLInterface) || {}
+            if (!branch || !yamlPath) {
+              showValidationErrors?.()
+              return
+            }
           }
           if (enableCloneCodebase && repository && configuredGitConnector?.spec) {
             setDisableBtn(true)

@@ -1344,6 +1344,8 @@ python: Python
 successfullyAdded: Successfully added
 successfullyUpdated: Successfully updated
 errorOccured: 'Error occured while {{verb}} {{entity}}'
+seeAdvancedOptions: See Advanced Options
+addedEntityLabel: 'Added {{entity}}'
 
 # SSCS module
 sscs: SSCS

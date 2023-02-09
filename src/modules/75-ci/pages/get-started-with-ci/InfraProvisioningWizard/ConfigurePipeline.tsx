@@ -8,7 +8,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
-import { parse } from 'yaml'
 import type { FormikContextType } from 'formik'
 import { noop } from 'lodash-es'
 import {
@@ -22,23 +21,24 @@ import {
   Formik,
   FormikForm,
   FormInput,
-  SelectOption
+  SelectOption,
+  Collapse
 } from '@harness/uicore'
-import { FontVariation } from '@harness/design-system'
-import type { ConnectorInfoDTO } from 'services/cd-ng'
-import type { PipelineConfig } from 'services/pipeline-ng'
+import { Color, FontVariation } from '@harness/design-system'
+import {
+  ConnectorInfoDTO,
+  getListOfBranchesByRefConnectorV2Promise,
+  ResponseGitBranchesResponseDTO
+} from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import { Separator } from '@common/components'
-import YAMLBuilder from '@common/components/YAMLBuilder/YamlBuilder'
 import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { StringUtils } from '@common/exports'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { getScopedValueFromDTO, ScopedValueObjectDTO } from '@common/components/EntityReference/EntityReference.types'
+import { Status } from '@common/utils/Constants'
+import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import { Connectors } from '@connectors/constants'
-import { addDetailsToPipeline, getScmConnectorPrefix } from '@ci/utils/HostedBuildsUtils'
-import k8sStarterTemplates from './starter-templates/k8s.json'
-import vmStarterTemplates from './starter-templates/vm.json'
+import { getScmConnectorPrefix, getValidRepoName } from '../../../utils/HostedBuildsUtils'
 
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -75,8 +75,16 @@ export interface ImportPipelineYAMLInterface {
   yamlPath?: string
 }
 
+export interface SavePipelineToRemoteInterface {
+  pipelineName: string
+  yamlPath: string
+  storeInGit: boolean
+  createBranchIfNotExists: boolean
+  branch?: string
+}
+
 export interface ConfigurePipelineRef {
-  values?: ImportPipelineYAMLInterface
+  values?: ImportPipelineYAMLInterface | SavePipelineToRemoteInterface
   configuredOption?: StarterTemplate
   showValidationErrors: () => void
 }
@@ -104,23 +112,25 @@ interface StarterTemplate {
   id: string
 }
 
+const HARNESS_FOLDER_PREFIX = '.harness'
+
 const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: ConfigurePipelineForwardRef) => {
-  const { orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const { showError, configuredGitConnector, repoName, enableForTesting } = props
+  const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps>()
+  const { showError, configuredGitConnector, repoName, enableForTesting, disableNextBtn, enableNextBtn } = props
   const { getString } = useStrings()
   const [pipelineName, setPipelineName] = useState<string>()
-  const [pipelineYAML, setPipelineYAML] = useState<string>('')
   const pipelineNameToSpecify = `Build ${pipelineName}`
   const formikRef = useRef<FormikContextType<ImportPipelineYAMLInterface>>()
-  const { CIE_HOSTED_VMS } = useFeatureFlags()
-  const starterTemplates = CIE_HOSTED_VMS ? vmStarterTemplates : k8sStarterTemplates
   const starterMinimumPipeline: StarterTemplate = {
-    name: getString('ci.getStartedWithCI.starterPipeline'),
+    name: getString('ci.getStartedWithCI.createEmptyPipelineConfig'),
     description: getString('ci.getStartedWithCI.starterPipelineHelptext'),
-    icon: 'create-via-starter-pipeline',
+    icon: 'create-via-pipeline-template',
     id: 'starter-pipeline'
   }
   const [selectedConfigOption, setSelectedConfigOption] = useState<StarterTemplate>(starterMinimumPipeline)
+  const [showAdvancedOptions, setShowAdvancedOptions] = useState<boolean>(true)
+  const [isFetchingDefaultBranch, setIsFetchingDefaultBranch] = useState<boolean>(false)
+  const saveToGitFormikRef = useRef<FormikContextType<SavePipelineToRemoteInterface>>()
 
   const configuredGitConnectorIdentifier = useMemo(
     (): string =>
@@ -131,15 +141,29 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
   )
 
   const markFieldsTouchedToShowValidationErrors = React.useCallback((): void => {
-    const { values, setFieldTouched } = formikRef.current || {}
-    const { branch, yamlPath } = values || {}
-    if (!branch) {
-      setFieldTouched?.('branch', true)
+    if (StarterConfigIdToOptionMap[selectedConfigOption.id] === PipelineConfigurationOption.StarterPipeline) {
+      const { values, setFieldTouched } = saveToGitFormikRef.current || {}
+      const { branch, yamlPath, pipelineName: _pipelineName } = values || {}
+      if (!_pipelineName) {
+        setFieldTouched?.('pipelineName', true)
+      }
+      if (!branch) {
+        setFieldTouched?.('branch', true)
+      }
+      if (!yamlPath) {
+        setFieldTouched?.('yamlPath', true)
+      }
+    } else if (StarterConfigIdToOptionMap[selectedConfigOption.id] === PipelineConfigurationOption.ChooseExistingYAML) {
+      const { values, setFieldTouched } = formikRef.current || {}
+      const { branch, yamlPath } = values || {}
+      if (!branch) {
+        setFieldTouched?.('branch', true)
+      }
+      if (!yamlPath) {
+        setFieldTouched?.('yamlPath', true)
+      }
     }
-    if (!yamlPath) {
-      setFieldTouched?.('yamlPath', true)
-    }
-  }, [formikRef.current])
+  }, [formikRef.current, saveToGitFormikRef.current, selectedConfigOption])
 
   const setForwardRef = ({ values, configuredOption }: Omit<ConfigurePipelineRef, 'showValidationErrors'>): void => {
     if (!forwardRef || typeof forwardRef === 'function') {
@@ -156,32 +180,6 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
   useEffect(() => {
     if (selectedConfigOption) {
       setForwardRef({ configuredOption: selectedConfigOption })
-      if (
-        ![PipelineConfigurationOption.StarterPipeline, PipelineConfigurationOption.ChooseExistingYAML].includes(
-          StarterConfigIdToOptionMap[selectedConfigOption.id]
-        )
-      ) {
-        if (selectedConfigOption?.pipelineYaml) {
-          try {
-            const existingPipelineObj = parse(selectedConfigOption.pipelineYaml) as PipelineConfig
-            const enrichedPipelineObj = addDetailsToPipeline({
-              originalPipeline: existingPipelineObj,
-              identifier: StringUtils.getIdentifierFromName(pipelineNameToSpecify)
-                .concat('_')
-                .concat(new Date().getTime().toString()),
-              name: pipelineNameToSpecify,
-              orgIdentifier,
-              projectIdentifier,
-              connectorRef: configuredGitConnectorIdentifier,
-              repoName
-            })
-            const correspondingYAML = yamlStringify(enrichedPipelineObj)
-            setPipelineYAML(correspondingYAML)
-          } catch (e) {
-            // Ignore error
-          }
-        }
-      }
       setPipelineName(selectedConfigOption.name)
     }
   }, [
@@ -296,65 +294,175 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
     [selectedConfigOption, showError]
   )
 
+  useEffect(() => {
+    if (configuredGitConnector && [Connectors.GITHUB, Connectors.BITBUCKET].includes(configuredGitConnector.type)) {
+      fetchDefaultBranch()
+    }
+  }, [configuredGitConnector?.type])
+
+  const fetchDefaultBranch = useCallback(() => {
+    disableNextBtn()
+    try {
+      setIsFetchingDefaultBranch(true)
+      getListOfBranchesByRefConnectorV2Promise({
+        queryParams: {
+          connectorRef: getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO),
+          accountIdentifier: accountId,
+          orgIdentifier,
+          projectIdentifier,
+          repoName: getValidRepoName(repoName),
+          size: 1
+        }
+      })
+        .then((result: ResponseGitBranchesResponseDTO) => {
+          const { data, status } = result
+          if (status === Status.SUCCESS) {
+            const { defaultBranch } = data || {}
+            if (defaultBranch?.name) {
+              saveToGitFormikRef.current?.setFieldValue('branch', defaultBranch.name)
+            }
+          }
+          setIsFetchingDefaultBranch(false)
+        })
+        .catch((_e: unknown) => {
+          setIsFetchingDefaultBranch(false)
+        })
+    } catch (e) {
+      setIsFetchingDefaultBranch(false)
+    }
+    enableNextBtn()
+  }, [configuredGitConnector?.type, saveToGitFormikRef.current])
+
   return (
-    <Layout.Horizontal spacing="huge">
-      <Layout.Vertical width="40%" spacing="small">
-        <Container>
-          <Layout.Vertical spacing="small" width="100%">
-            <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'xsmall' }}>
-              {getString('ci.getStartedWithCI.configureYourPipeline')}
-            </Text>
-            {renderCard(starterMinimumPipeline)}
-            {/* Enable this once limitations related to import yaml api are resolved. */}
-            {enableForTesting && configuredGitConnector?.type !== Connectors.GITLAB
-              ? renderCard({
-                  name: getString('ci.getStartedWithCI.chooseExistingYAML'),
-                  description: getString('ci.getStartedWithCI.chooseExistingYAMLHelptext'),
-                  icon: 'create-via-pipeline-template',
-                  id: 'choose-existing-yaml'
-                })
-              : null}
-          </Layout.Vertical>
-        </Container>
-        <Container>
-          <Layout.Vertical>
-            <Container flex>
-              <Text font={{ variation: FontVariation.H6 }} padding={{ bottom: 'xsmall' }} lineClamp={1}>
-                {getString('ci.getStartedWithCI.chooseStarterConfig')} ({starterTemplates.length})
-              </Text>
-              <Container padding={{ left: 'xsmall' }} width="40%">
-                <Separator topSeparation={22} />
-              </Container>
-            </Container>
-            {(starterTemplates as StarterTemplate[]).map(item => renderCard(item))}
-          </Layout.Vertical>
-        </Container>
-      </Layout.Vertical>
-      <Layout.Vertical width="55%" spacing="huge">
-        {selectedConfigOption &&
-          ![PipelineConfigurationOption.StarterPipeline, PipelineConfigurationOption.ChooseExistingYAML].includes(
-            StarterConfigIdToOptionMap[selectedConfigOption.id]
-          ) &&
-          pipelineYAML && (
-            <YAMLBuilder
-              entityType="Pipelines"
-              fileName={selectedConfigOption.label || selectedConfigOption.name}
-              isReadOnlyMode={true}
-              isEditModeSupported={false}
-              existingYaml={pipelineYAML}
-              height={'calc(100vh - 100px)'}
-              showCopyIcon={false}
-              hideErrorMesageOnReadOnlyMode={true}
-              renderCustomHeader={() => (
-                <div className={css.header}>
-                  <span>{pipelineName}</span>
-                </div>
-              )}
-              displayBorder={false}
-            />
-          )}
-      </Layout.Vertical>
-    </Layout.Horizontal>
+    <Layout.Vertical width="40%" spacing="small">
+      <Container>
+        <Layout.Vertical spacing="medium" width="100%">
+          <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'xsmall' }}>
+            {getString('ci.getStartedWithCI.createPipeline')}
+          </Text>
+          {renderCard(starterMinimumPipeline)}
+          {/* Enable this once limitations related to import yaml api are resolved. */}
+          {enableForTesting && configuredGitConnector?.type !== Connectors.GITLAB
+            ? renderCard({
+                name: getString('ci.getStartedWithCI.chooseExistingYAML'),
+                description: getString('ci.getStartedWithCI.chooseExistingYAMLHelptext'),
+                icon: 'create-via-pipeline-template',
+                id: 'choose-existing-yaml'
+              })
+            : null}
+          {configuredGitConnector?.type !== Connectors.GITLAB ? (
+            <Collapse
+              isOpen={showAdvancedOptions}
+              heading={
+                <Container padding={{ top: 'small' }}>
+                  <Text font={{ variation: FontVariation.SMALL }}>{getString('common.seeAdvancedOptions')}</Text>
+                </Container>
+              }
+              iconProps={{
+                name: showAdvancedOptions ? 'chevron-down' : 'chevron-right',
+                size: 20,
+                padding: { top: 'small', right: 'xsmall' }
+              }}
+              collapseClassName={css.advancedOptions}
+              keepChildrenMounted={false}
+              onToggleOpen={isOpen => setShowAdvancedOptions(isOpen)}
+            >
+              <Formik<SavePipelineToRemoteInterface>
+                onSubmit={noop}
+                formName="configure-pipeline-advanced-options"
+                validationSchema={Yup.object().shape({
+                  pipelineName: Yup.string().trim().required(getString('createPipeline.pipelineNameRequired')),
+                  branch: Yup.string().trim().required(getString('common.git.validation.branchRequired')),
+                  yamlPath: Yup.string()
+                    .trim()
+                    .required(getString('gitsync.gitSyncForm.yamlPathRequired'))
+                    .test('is-valid-yaml-file', getString('ci.getStartedWithCI.validYAMLFile'), value => {
+                      return (value as string)?.endsWith('.yaml')
+                    })
+                })}
+                initialValues={{
+                  pipelineName: `Build ${getValidRepoName(repoName)}`,
+                  yamlPath: `${HARNESS_FOLDER_PREFIX}/Build_${getIdentifierFromValue(getValidRepoName(repoName))}.yaml`,
+                  storeInGit: true,
+                  createBranchIfNotExists: true
+                }}
+              >
+                {_formikProps => {
+                  saveToGitFormikRef.current = _formikProps
+                  setForwardRef({
+                    values: _formikProps.values,
+                    configuredOption: selectedConfigOption
+                  })
+                  return (
+                    <FormikForm>
+                      <Layout.Vertical className={css.advancedOptionFormFields}>
+                        <Layout.Vertical>
+                          <FormInput.Text
+                            name="pipelineName"
+                            label={
+                              <Text font={{ variation: FontVariation.FORM_LABEL }}>
+                                {getString('filters.executions.pipelineName')}
+                              </Text>
+                            }
+                            placeholder={getString('pipeline.filters.pipelineNamePlaceholder')}
+                          />
+                          <FormInput.CheckBox
+                            name="storeInGit"
+                            label={getString('ci.getStartedWithCI.storeInGit')}
+                            defaultChecked={true}
+                          />
+                        </Layout.Vertical>
+                        <Container padding={{ top: 'medium', bottom: 'medium' }}>
+                          <FormInput.Text
+                            name="yamlPath"
+                            label={
+                              <Text font={{ variation: FontVariation.FORM_LABEL }}>
+                                {getString('gitsync.gitSyncForm.yamlPathLabel')}
+                              </Text>
+                            }
+                            placeholder={getString('gitsync.gitSyncForm.enterYamlPath')}
+                          />
+                        </Container>
+                        <Layout.Vertical>
+                          <Layout.Horizontal
+                            flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+                            spacing="medium"
+                          >
+                            <FormInput.Text
+                              name="branch"
+                              label={
+                                <Text font={{ variation: FontVariation.FORM_LABEL }}>
+                                  {getString('pipelineSteps.deploy.inputSet.branch')}
+                                </Text>
+                              }
+                              placeholder={getString('ci.getStartedWithCI.enterBranch')}
+                              disabled={isFetchingDefaultBranch}
+                            />
+                            {isFetchingDefaultBranch ? (
+                              <Icon
+                                name="steps-spinner"
+                                color={Color.PRIMARY_7}
+                                size={20}
+                                padding={{ top: 'medium' }}
+                              />
+                            ) : null}
+                          </Layout.Horizontal>
+                          <FormInput.CheckBox
+                            name="createBranchIfNotExists"
+                            label={getString('ci.getStartedWithCI.createBranchIfNotExists')}
+                            defaultChecked={true}
+                          />
+                        </Layout.Vertical>
+                      </Layout.Vertical>
+                    </FormikForm>
+                  )
+                }}
+              </Formik>
+            </Collapse>
+          ) : null}
+        </Layout.Vertical>
+      </Container>
+    </Layout.Vertical>
   )
 }
 

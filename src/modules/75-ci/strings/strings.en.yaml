@@ -148,7 +148,6 @@ getStartedWithCI:
   learnMoreAboutCI: Learn more about Harness CI
   buildyourOwnPipeline: Build your own Pipeline
   configInfra: Configure Infrastructure
-
   hostedByHarness: Hosted by Harness
   takeToTheNextLevel: Take your software build process to the next level using our Harness Continuous Integration
   ti: Test Intelligence
@@ -201,12 +200,16 @@ getStartedWithCI:
   configureYourPipeline: Configure your Pipeline
   configurePipeline: Configure Pipeline
   starterPipeline: Starter Pipeline
+  createEmptyPipelineConfig: Create empty Pipeline configuration
   starterPipelineHelptext: Start with a minimum pipeline that you can build upon
   chooseExistingYAML: Choose an existing yaml
   chooseExistingYAMLHelptext: Select an existing pipeline yaml from any branch in the repository
   chooseStarterConfig: Choose a Starter Configuration
   configurationOption: Configuration Option
   validYAMLFile: YAML Path should end with ".yaml" extension
+  storeInGit: Store in Git
+  enterBranch: Enter branch name
+  createBranchIfNotExists: Create branch if not exists
   carousel:
     labels:
       harnessCIFeatures: Harness CI

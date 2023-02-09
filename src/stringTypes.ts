@@ -46,6 +46,7 @@ export interface StringsMap {
   'common.addNewCluster': string
   'common.addNewRepo': string
   'common.addVariable': string
+  'common.addedEntityLabel': string
   'common.additionalAttributes': string
   'common.advanced': string
   'common.agent': string
@@ -909,6 +910,7 @@ export interface StringsMap {
   'common.seconds': string
   'common.secretKey': string
   'common.secrets': string
+  'common.seeAdvancedOptions': string
   'common.seeDetails': string
   'common.seeDocumentation': string
   'common.seeLess': string
@@ -7570,6 +7572,8 @@ export interface StringsMap {
   'ci.getStartedWithCI.configurationOption': string
   'ci.getStartedWithCI.configurePipeline': string
   'ci.getStartedWithCI.configureYourPipeline': string
+  'ci.getStartedWithCI.createBranchIfNotExists': string
+  'ci.getStartedWithCI.createEmptyPipelineConfig': string
   'ci.getStartedWithCI.createPipeline': string
   'ci.getStartedWithCI.createPipelineWithOtherOption': string
   'ci.getStartedWithCI.devFriendly': string
@@ -7577,6 +7581,7 @@ export interface StringsMap {
   'ci.getStartedWithCI.dockerRunner': string
   'ci.getStartedWithCI.dockerRunnerBuildLocation': string
   'ci.getStartedWithCI.duration': string
+  'ci.getStartedWithCI.enterBranch': string
   'ci.getStartedWithCI.fetchingRepos': string
   'ci.getStartedWithCI.fieldIsMissing': string
   'ci.getStartedWithCI.flexibleInfra': string
@@ -7612,6 +7617,7 @@ export interface StringsMap {
   'ci.getStartedWithCI.settingUpCIPipeline': string
   'ci.getStartedWithCI.starterPipeline': string
   'ci.getStartedWithCI.starterPipelineHelptext': string
+  'ci.getStartedWithCI.storeInGit': string
   'ci.getStartedWithCI.takeToTheNextLevel': string
   'ci.getStartedWithCI.ti': string
   'ci.getStartedWithCI.tiHelpText': string
