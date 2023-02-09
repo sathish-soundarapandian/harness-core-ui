@@ -51,6 +51,7 @@ import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CIOnboardingActions } from '@common/constants/TrackingConstants'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { getScopedValueFromDTO, ScopedValueObjectDTO } from '@common/components/EntityReference/EntityReference.types'
+import { getIdentifierFromName } from '@common/utils/StringUtils'
 import { defaultValues as CodebaseDefaultValues } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import { BuildTabs } from '@ci/components/PipelineStudio/CIPipelineStagesUtils'
 import {
@@ -271,7 +272,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
 
   const setupPipelineWithCodebaseAndTriggers = React.useCallback((): void => {
     const { type: connectorType } = configuredGitConnector || {}
-    const { branch, storeInGit, yamlPath } = configurePipelineRef.current?.values as SavePipelineToRemoteInterface
+    const { branch, storeInGit, yamlPath, pipelineName } = configurePipelineRef.current
+      ?.values as SavePipelineToRemoteInterface
     const shouldSavePipelineToGit =
       (connectorType && [Connectors.GITHUB, Connectors.BITBUCKET].includes(connectorType) && storeInGit) || false
     const gitParams = {
@@ -293,7 +295,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
               filePath: yamlPath,
               commitMsg: `${getString('common.addedEntityLabel', {
                 entity: getString('common.pipeline').toLowerCase()
-              })} ${yamlPath}`
+              })} ${getIdentifierFromName(pipelineName)}`
             })
           },
           requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
