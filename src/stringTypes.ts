@@ -3518,6 +3518,7 @@ export interface StringsMap {
   'pipeline.bamboo.fetchingPlans': string
   'pipeline.bamboo.planName': string
   'pipeline.bambooBuilds': string
+  'pipeline.bambooStep.validations.planName': string
   'pipeline.barrierStep.barrierReference': string
   'pipeline.barrierStep.barrierReferencePlaceholder': string
   'pipeline.barrierStep.barrierReferenceRequired': string
@@ -4299,6 +4300,7 @@ export interface StringsMap {
   'pipeline.pipelineTimeoutHelpText': string
   'pipeline.pipelineTimeoutSettings': string
   'pipeline.piplineDiffTitle': string
+  'pipeline.planNamePlaceholder': string
   'pipeline.policyEnforcement.description': string
   'pipeline.policyEnforcement.title': string
   'pipeline.policyEvaluations.emptyPolicySet': string
