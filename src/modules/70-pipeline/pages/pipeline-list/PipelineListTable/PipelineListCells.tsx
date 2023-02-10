@@ -37,9 +37,11 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { useStrings } from 'framework/strings'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { ResourceType as GitResourceType } from '@common/interfaces/GitSyncInterface'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { PMSPipelineSummaryResponse, RecentExecutionInfoDTO } from 'services/pipeline-ng'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
@@ -50,6 +52,7 @@ import { killEvent } from '@common/utils/eventUtils'
 import RbacButton from '@rbac/components/Button/Button'
 import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
 import { MigrationType } from '@pipeline/components/MigrateResource/MigrateUtils'
+import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 import type { PipelineListColumnActions } from './PipelineListTable'
@@ -278,10 +281,11 @@ export const MenuCell: CellType = ({ row, column }) => {
   const data = row.original
   const pathParams = useParams<PipelineListPagePathParams>()
   const { getString } = useStrings()
-  const { projectIdentifier, orgIdentifier, accountId } = useParams<{
+  const { projectIdentifier, orgIdentifier, accountId, module } = useParams<{
     projectIdentifier: string
     orgIdentifier: string
     accountId: string
+    module: string
   }>()
 
   const { confirmDelete } = useDeleteConfirmationDialog(data, 'pipeline', commitMsg =>
@@ -305,11 +309,22 @@ export const MenuCell: CellType = ({ row, column }) => {
     [data.identifier]
   )
 
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
   const runPipeline = (): void => {
-    openRunPipelineModal()
+    CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+      ? openRunPipelineModalV1()
+      : openRunPipelineModal()
   }
 
   const { openRunPipelineModal } = useRunPipelineModal({
+    pipelineIdentifier: (data.identifier || '') as string,
+    repoIdentifier: isGitSyncEnabled ? data.gitDetails?.repoIdentifier : data.gitDetails?.repoName,
+    branch: data.gitDetails?.branch,
+    connectorRef: data.connectorRef,
+    storeType: data.storeType as StoreType
+  })
+
+  const { openRunPipelineModalV1 } = useRunPipelineModalV1({
     pipelineIdentifier: (data.identifier || '') as string,
     repoIdentifier: isGitSyncEnabled ? data.gitDetails?.repoIdentifier : data.gitDetails?.repoName,
     branch: data.gitDetails?.branch,

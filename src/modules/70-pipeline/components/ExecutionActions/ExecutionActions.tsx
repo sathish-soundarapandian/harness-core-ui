@@ -42,6 +42,7 @@ import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/i
 import RbacButton from '@rbac/components/Button/Button'
 import { killEvent } from '@common/utils/eventUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import RetryPipeline from '../RetryPipeline/RetryPipeline'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
@@ -78,7 +79,7 @@ export interface ExecutionActionsProps {
   source: ExecutionPathProps['source']
   onViewCompiledYaml?: () => void
   onCompareExecutions?: () => void
-  onReRunInDebugMode?: () => void
+  onReRunInDebugMode?: any
   menuOnlyActions?: boolean
   isExecutionListView?: boolean
 }
@@ -303,7 +304,9 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   /*--------------------------------------Run Pipeline---------------------------------------------*/
 
   const reRunPipeline = (): void => {
-    openRunPipelineModal()
+    CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+      ? openRunPipelineModalV1()
+      : openRunPipelineModal()
   }
 
   const { openRunPipelineModal } = useRunPipelineModal({
@@ -314,6 +317,15 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     connectorRef,
     storeType,
     stagesExecuted
+  })
+
+  const { openRunPipelineModalV1 } = useRunPipelineModalV1({
+    pipelineIdentifier,
+    executionId: executionIdentifier,
+    repoIdentifier: isGitSyncEnabled ? repoIdentifier : repoName,
+    branch,
+    connectorRef,
+    storeType
   })
 
   /*--------------------------------------Run Pipeline---------------------------------------------*/

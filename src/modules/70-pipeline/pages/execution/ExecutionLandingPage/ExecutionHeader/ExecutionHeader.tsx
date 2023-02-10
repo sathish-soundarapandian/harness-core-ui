@@ -36,6 +36,7 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
+import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import type { PipelineExecutionSummary, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -109,6 +110,15 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     connectorRef,
     storeType: pipelineMetadata?.data?.storeType,
     stagesExecuted: pipelineExecutionSummary?.stagesExecuted,
+    isDebugMode: hasCI
+  })
+  const { openRunPipelineModalV1 } = useRunPipelineModalV1({
+    pipelineIdentifier,
+    executionId: executionIdentifier,
+    repoIdentifier: isGitSyncEnabled ? repoIdentifier : repoName,
+    branch,
+    connectorRef,
+    storeType: pipelineMetadata?.data?.storeType,
     isDebugMode: hasCI
   })
   const { CI_YAML_VERSIONING } = useFeatureFlags()
@@ -224,7 +234,9 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
             modules={pipelineExecutionSummary.modules}
             onReRunInDebugMode={
               hasCI && PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED.includes(accountId)
-                ? () => openRunPipelineModal()
+                ? CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+                  ? openRunPipelineModalV1()
+                  : openRunPipelineModal()
                 : undefined
             }
             onViewCompiledYaml={() => setViewCompiledYaml(pipelineExecutionSummary)}

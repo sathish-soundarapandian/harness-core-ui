@@ -24,8 +24,8 @@ export interface RunPipelineModalV1Params {
 }
 
 export interface useRunPipelineModalV1Return {
-  openRunPipelineModal: () => void
-  closeRunPipelineModal: () => void
+  openRunPipelineModalV1: () => void
+  closeRunPipelineModalV1: () => void
 }
 
 export const useRunPipelineModalV1 = (
@@ -112,7 +112,7 @@ export const useRunPipelineModalV1 = (
   }, [showRunPipelineModal])
 
   return {
-    openRunPipelineModal: () => open(),
-    closeRunPipelineModal: hideRunPipelineModal
+    openRunPipelineModalV1: () => open(),
+    closeRunPipelineModalV1: hideRunPipelineModal
   }
 }

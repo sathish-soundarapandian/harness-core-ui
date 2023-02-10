@@ -42,13 +42,16 @@ import { PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED, AUTO_TRIGGERS } from '@p
 import { hasCIStage } from '@pipeline/utils/stageHelpers'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { mapTriggerTypeToIconAndExecutionText, mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
+import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary, PipelineStageInfo } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { CITriggerInfo, CITriggerInfoProps } from './CITriggerInfoCell'
 import type { ExecutionListColumnActions } from './ExecutionListTable'
 import css from './ExecutionListTable.module.scss'
@@ -343,6 +346,17 @@ export const MenuCell: CellType = ({ row, column }) => {
     stagesExecuted: data.stagesExecuted,
     isDebugMode: hasCI
   })
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
+
+  const { openRunPipelineModalV1 } = useRunPipelineModalV1({
+    pipelineIdentifier: data.pipelineIdentifier || pipelineIdentifier,
+    executionId: defaultTo(data.planExecutionId, ''),
+    repoIdentifier: isGitSyncEnabled ? data.gitDetails?.repoIdentifier : data.gitDetails?.repoName,
+    branch: data.gitDetails?.branch,
+    connectorRef: data.connectorRef,
+    storeType: data.storeType as StoreType,
+    isDebugMode: hasCI
+  })
 
   const [canEdit, canExecute] = usePermission(
     {
@@ -384,7 +398,9 @@ export const MenuCell: CellType = ({ row, column }) => {
         onCompareExecutions={() => addToCompare(data)}
         onReRunInDebugMode={
           hasCI && PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED.includes(accountId)
-            ? () => openRunPipelineModal()
+            ? CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+              ? openRunPipelineModalV1()
+              : openRunPipelineModal()
             : undefined
         }
         source={source}
