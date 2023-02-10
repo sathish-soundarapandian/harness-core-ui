@@ -91,14 +91,20 @@ export function StepPalette({ onSelect, stepsFactory, stepPaletteModuleInfos }: 
 
   if (
     stepsData &&
-    stepsData.data?.stepCategories?.[0]?.stepCategories?.findIndex(stepCategory => stepCategory.name === 'SSCS') === -1
+    stepsData.data?.stepCategories?.[0]?.stepCategories?.findIndex(stepCategory => stepCategory.name === 'SSCA') === -1
   ) {
     stepsData.data?.stepCategories?.[0]?.stepCategories?.push({
-      name: 'SSCS',
+      name: 'SSCA',
       stepsData: [
         {
-          name: 'SSCS Generation',
-          type: 'SSCSGeneration',
+          name: 'SSCA Orchestrate',
+          type: 'SSCAOrchestrate',
+          disabled: false,
+          featureRestrictionName: undefined
+        },
+        {
+          name: 'SSCA Orchestrate',
+          type: 'SSCAEnforce',
           disabled: false,
           featureRestrictionName: undefined
         }

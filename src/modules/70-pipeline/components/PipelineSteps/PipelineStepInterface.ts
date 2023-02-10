@@ -178,7 +178,8 @@ export enum StepType {
   AsgBlueGreenRollback = 'AsgBlueGreenRollback',
   AsgBlueGreenSwapService = 'AsgBlueGreenSwapService',
   AsgBlueGreenDeploy = 'AsgBlueGreenDeploy',
-  SSCSGeneration = 'SSCSGeneration'
+  SSCAOrchestrate = 'SSCAOrchestrate',
+  SSCAEnforce = 'SSCAEnforce'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

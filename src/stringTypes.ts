@@ -997,8 +997,8 @@ export interface StringsMap {
   'common.sourceBranchPlaceholder': string
   'common.specified': string
   'common.specify': string
-  'common.sscs': string
-  'common.sscsText': string
+  'common.ssca': string
+  'common.sscaText': string
   'common.stable': string
   'common.stage': string
   'common.stageName': string
@@ -4551,8 +4551,9 @@ export interface StringsMap {
   'pipeline.stepDescription.Run': string
   'pipeline.stepDescription.RunTests': string
   'pipeline.stepDescription.S3': string
-  'pipeline.stepDescription.SCSSGeneration': string
   'pipeline.stepDescription.SHELLSCRIPT': string
+  'pipeline.stepDescription.SSCAEnforce': string
+  'pipeline.stepDescription.SSCAOrchestrate': string
   'pipeline.stepDescription.SaveCacheGCS': string
   'pipeline.stepDescription.SaveCacheS3': string
   'pipeline.stepDescription.ServerlessLambdaDeploy': string

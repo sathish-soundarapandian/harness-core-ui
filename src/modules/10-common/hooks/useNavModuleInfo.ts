@@ -26,7 +26,7 @@ export type NavModuleName =
   | ModuleName.STO
   | ModuleName.CODE
   | ModuleName.IACM
-  | ModuleName.SSCS
+  | ModuleName.SSCA
   | ModuleName.IDP
 
 // Default order of modules on side nav, please add modules to this list accordingly.
@@ -41,7 +41,7 @@ export const DEFAULT_MODULES_ORDER: NavModuleName[] = [
   ModuleName.STO,
   ModuleName.CHAOS,
   ModuleName.IACM,
-  ModuleName.SSCS,
+  ModuleName.SSCA,
   ModuleName.IDP
 ]
 

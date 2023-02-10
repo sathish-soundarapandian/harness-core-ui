@@ -49,7 +49,7 @@ export enum StageType {
   PARALLELISM = 'PARALLELISM',
   ROLLBACK = 'Rollback',
   IACM = 'IACM',
-  SSCS = 'SSCS'
+  SSCA = 'SSCA'
 }
 
 export enum ServiceDeploymentType {

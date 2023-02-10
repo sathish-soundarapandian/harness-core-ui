@@ -1175,9 +1175,7 @@ stepDescription:
   GitClone: Clone a Git repository to a directory in addition to the codebase Git clone
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
   ElastigroupRollback: Rollback for the Elastigroup steps
-  SCSSGeneration: Allows you to generate SBOM for your artifacts, repository
   ElastigroupSetup: Elastigroup setup step
-
   SwapRoute: Swap between Active and InActive TAS Applications
   SwapRollback: Rollback the Swap to Active in Blue Green Deployments
   TasRollback: Rollback to previous deployment during failure
@@ -1194,6 +1192,9 @@ stepDescription:
   ElastigroupSwapRoute: Elastigroup Swap Route
   ElastigroupBGStageSetup: Elastigroup Blue/Green Step
   Container: Execute one or more commands on a container image in a CD stage.
+  SSCAOrchestrate: Orchestrate SBOM generation for your artifacts, repository
+  SSCAEnforce: Enforce rules to avoid mishaps in your software supply chain
+
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy

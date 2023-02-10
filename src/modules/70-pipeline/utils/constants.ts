@@ -54,7 +54,7 @@ export const stageTypeToIconMap: Record<string, IconName> = {
   Approval: 'approval-stage-icon',
   FeatureFlag: 'cf-main',
   IACM: 'iacm',
-  SSCS: 'sscs-main'
+  SSCA: 'sscs-main'
 }
 
 export const getPrCloneStrategyOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
