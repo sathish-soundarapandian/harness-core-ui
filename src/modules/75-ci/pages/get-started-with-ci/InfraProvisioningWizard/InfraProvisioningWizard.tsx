@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { get, set, isNull, isUndefined, omitBy } from 'lodash-es'
 import {
@@ -23,6 +23,7 @@ import routes from '@common/RouteDefinitions'
 import {
   ConnectorInfoDTO,
   ResponseConnectorResponse,
+  ResponseMessage,
   ResponseScmConnectorResponse,
   useCreateDefaultScmConnector,
   UserRepoResponse,
@@ -270,21 +271,22 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     }
   }, [])
 
-  const setupPipelineWithCodebaseAndTriggers = React.useCallback((): void => {
-    const { type: connectorType } = configuredGitConnector || {}
-    const { branch, storeInGit, yamlPath } = configurePipelineRef.current?.values as SavePipelineToRemoteInterface
-    const shouldSavePipelineToGit =
-      (connectorType && [Connectors.GITHUB, Connectors.BITBUCKET].includes(connectorType) && storeInGit) || false
-    const connectorRef = getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO)
-    const gitParams = {
-      storeType: StoreType.REMOTE,
-      connectorRef,
-      branch,
-      repoName: selectRepositoryRef.current?.repository?.name
-    }
-    if (selectRepositoryRef.current?.repository) {
-      try {
-        createPipelineV2Promise({
+  const getPipelineAndTriggerSetupPromise = useCallback(
+    (isGitSaveRetry?: boolean): Promise<void> | undefined => {
+      const { type: connectorType } = configuredGitConnector || {}
+      const { branch, storeInGit, yamlPath, defaultBranch } = configurePipelineRef.current
+        ?.values as SavePipelineToRemoteInterface
+      const shouldSavePipelineToGit =
+        (connectorType && [Connectors.GITHUB, Connectors.BITBUCKET].includes(connectorType) && storeInGit) || false
+      const connectorRef = getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO)
+      const gitParams = {
+        storeType: StoreType.REMOTE,
+        connectorRef,
+        branch,
+        repoName: selectRepositoryRef.current?.repository?.name
+      }
+      if (selectRepositoryRef.current?.repository) {
+        return createPipelineV2Promise({
           body: CI_YAML_VERSIONING
             ? yamlStringify(getCIStarterPipelineV1WithCodebase(connectorRef))
             : constructPipelinePayloadWithCodebase(selectRepositoryRef.current.repository),
@@ -297,102 +299,146 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
               filePath: yamlPath,
               commitMsg: `${getString('common.addedEntityLabel', {
                 entity: getString('common.pipeline').toLowerCase()
-              })} ${yamlPath}`
+              })} ${yamlPath}`,
+              ...(isGitSaveRetry && { isNewBranch: isGitSaveRetry, baseBranch: defaultBranch })
             })
           },
           requestOptions: { headers: { 'Content-Type': 'application/yaml' } }
-        })
-          .then((createPipelineResponse: ResponsePipelineSaveResponse) => {
-            const { status } = createPipelineResponse
-            if (status === Status.SUCCESS && createPipelineResponse?.data?.identifier) {
-              const commonQueryParams = {
-                accountIdentifier: accountId,
-                orgIdentifier,
-                projectIdentifier,
-                targetIdentifier: createPipelineResponse?.data?.identifier
-              }
-              // Create PR trigger
-              createTriggerPromise({
-                body: yamlStringify({
-                  trigger: clearNullUndefined(
-                    constructTriggerPayload({
-                      pipelineId: createPipelineResponse?.data?.identifier,
-                      eventType:
-                        configuredGitConnector?.type &&
-                        [Connectors.GITHUB, Connectors.BITBUCKET].includes(configuredGitConnector?.type)
-                          ? eventTypes.PULL_REQUEST
-                          : eventTypes.MERGE_REQUEST,
-                      shouldSavePipelineToGit
-                    }) || {}
-                  )
-                }) as any,
-                queryParams: commonQueryParams
-              })
-                .then((createPRTriggerResponse: ResponseNGTriggerResponse) => {
-                  if (createPRTriggerResponse.status === Status.SUCCESS) {
-                    // If PR trigger is created succesfully, then
-                    // create a Push trigger
-                    createTriggerPromise({
-                      body: yamlStringify({
-                        trigger: clearNullUndefined(
-                          constructTriggerPayload({
-                            pipelineId: createPipelineResponse?.data?.identifier || '',
-                            eventType: eventTypes.PUSH,
-                            shouldSavePipelineToGit
-                          }) || {}
-                        )
-                      }) as any,
-                      queryParams: commonQueryParams
-                    })
-                      .then((createPushTriggerResponse: ResponseNGTriggerResponse) => {
-                        if (createPushTriggerResponse.status === Status.SUCCESS) {
-                          setDisableBtn(false)
-                          setShowPageLoader(false)
-                          setShowGetStartedTabInMainMenu(false)
-                          if (createPipelineResponse?.data?.identifier) {
-                            history.push(
-                              routes.toPipelineStudioV1({
-                                accountId: accountId,
-                                module: 'ci',
-                                orgIdentifier,
-                                projectIdentifier,
-                                pipelineIdentifier: createPipelineResponse?.data?.identifier,
-                                stageId: getString('buildText'),
-                                sectionId: BuildTabs.EXECUTION,
-                                ...(shouldSavePipelineToGit ? gitParams : {})
-                              })
-                            )
-                          }
-                        }
-                      })
-                      .catch(triggerCreationError => {
-                        showErrorToaster(triggerCreationError?.data?.message)
+        }).then((createPipelineResponse: ResponsePipelineSaveResponse) => {
+          const { status } = createPipelineResponse
+          if (status === Status.SUCCESS && createPipelineResponse?.data?.identifier) {
+            const commonQueryParams = {
+              accountIdentifier: accountId,
+              orgIdentifier,
+              projectIdentifier,
+              targetIdentifier: createPipelineResponse?.data?.identifier
+            }
+            // Create PR trigger
+            createTriggerPromise({
+              body: yamlStringify({
+                trigger: clearNullUndefined(
+                  constructTriggerPayload({
+                    pipelineId: createPipelineResponse?.data?.identifier,
+                    eventType:
+                      configuredGitConnector?.type &&
+                      [Connectors.GITHUB, Connectors.BITBUCKET].includes(configuredGitConnector?.type)
+                        ? eventTypes.PULL_REQUEST
+                        : eventTypes.MERGE_REQUEST,
+                    shouldSavePipelineToGit
+                  }) || {}
+                )
+              }) as any,
+              queryParams: commonQueryParams
+            })
+              .then((createPRTriggerResponse: ResponseNGTriggerResponse) => {
+                if (createPRTriggerResponse.status === Status.SUCCESS) {
+                  // If PR trigger is created succesfully, then
+                  // create a Push trigger
+                  createTriggerPromise({
+                    body: yamlStringify({
+                      trigger: clearNullUndefined(
+                        constructTriggerPayload({
+                          pipelineId: createPipelineResponse?.data?.identifier || '',
+                          eventType: eventTypes.PUSH,
+                          shouldSavePipelineToGit
+                        }) || {}
+                      )
+                    }) as any,
+                    queryParams: commonQueryParams
+                  })
+                    .then((createPushTriggerResponse: ResponseNGTriggerResponse) => {
+                      if (createPushTriggerResponse.status === Status.SUCCESS) {
                         setDisableBtn(false)
                         setShowPageLoader(false)
-                      })
-                  }
-                })
-                .catch(triggerCreationError => {
-                  showErrorToaster(triggerCreationError?.data?.message)
-                  setDisableBtn(false)
-                  setShowPageLoader(false)
-                })
-            } else {
-              showErrorToaster((createPipelineResponse as Error)?.message)
-              setDisableBtn(false)
-              setShowPageLoader(false)
-            }
-          })
-          .catch(() => {
-            setDisableBtn(false)
-            setShowPageLoader(false)
-          })
-      } catch (e) {
-        setDisableBtn(false)
-        setShowPageLoader(false)
+                        setShowGetStartedTabInMainMenu(false)
+                        if (createPipelineResponse?.data?.identifier) {
+                          history.push(
+                            routes.toPipelineStudioV1({
+                              accountId: accountId,
+                              module: 'ci',
+                              orgIdentifier,
+                              projectIdentifier,
+                              pipelineIdentifier: createPipelineResponse?.data?.identifier,
+                              stageId: getString('buildText'),
+                              sectionId: BuildTabs.EXECUTION,
+                              ...(shouldSavePipelineToGit ? gitParams : {})
+                            })
+                          )
+                        }
+                      }
+                    })
+                    .catch(triggerCreationError => {
+                      showErrorToaster(triggerCreationError?.data?.message)
+                      setDisableBtn(false)
+                      setShowPageLoader(false)
+                    })
+                }
+              })
+              .catch(triggerCreationError => {
+                showErrorToaster(triggerCreationError?.data?.message)
+                setDisableBtn(false)
+                setShowPageLoader(false)
+              })
+          } else {
+            throw createPipelineResponse
+          }
+        })
+      }
+    },
+    [selectRepositoryRef.current?.repository, configuredGitConnector, accountId, projectIdentifier, orgIdentifier]
+  )
+
+  const handleAPIFailure = useCallback((err?: unknown): void => {
+    if (err) {
+      showErrorToaster((err as Error)?.message)
+    }
+    setDisableBtn(false)
+    setShowPageLoader(false)
+  }, [])
+
+  const setupPipelineWithCodebaseAndTriggers = React.useCallback((): void => {
+    const { type: connectorType } = configuredGitConnector || {}
+    const { storeInGit, createBranchIfNotExists, branch } = configurePipelineRef.current
+      ?.values as SavePipelineToRemoteInterface
+    const shouldSavePipelineToGit =
+      (connectorType && [Connectors.GITHUB, Connectors.BITBUCKET].includes(connectorType) && storeInGit) || false
+    if (selectRepositoryRef.current?.repository) {
+      let setupPipelineAndTriggerPromise = getPipelineAndTriggerSetupPromise()
+      if (setupPipelineAndTriggerPromise) {
+        try {
+          // if pipeline is being saved to Git and create branch if not specified is selected, we will attempt to save pipeline to Git twice
+          // Once to directly save pipeline to the specified branch with git param isNewBranch as "false"
+          // If above fails, save pipeline to the specified branch with git param isNewBranch as "true" and pass default branch of the repo as base branch
+          if (shouldSavePipelineToGit && createBranchIfNotExists) {
+            setupPipelineAndTriggerPromise.catch(_e => {
+              const isBranchNotFoundOnGit =
+                ((get(_e, 'responseMessages') as ResponseMessage[]) || []).filter(
+                  (item: ResponseMessage) =>
+                    item.code === 'SCM_BAD_REQUEST' && item.message === `Branch ${branch} not found`
+                ).length > 0
+              if (isBranchNotFoundOnGit) {
+                // Attempt pipeline save to git to new branch if only specified by user and if the branch specified doesn't exist on Git
+                setupPipelineAndTriggerPromise = getPipelineAndTriggerSetupPromise(true)
+                if (setupPipelineAndTriggerPromise) {
+                  setupPipelineAndTriggerPromise.catch(e => {
+                    handleAPIFailure(e)
+                  })
+                }
+              } else {
+                handleAPIFailure(_e)
+              }
+            })
+          } else {
+            setupPipelineAndTriggerPromise.catch(err => {
+              handleAPIFailure(err)
+            })
+          }
+        } catch (e) {
+          handleAPIFailure()
+        }
       }
     }
-  }, [selectRepositoryRef.current?.repository, configuredGitConnector, accountId, projectIdentifier, orgIdentifier])
+  }, [selectRepositoryRef.current?.repository, configuredGitConnector])
 
   const setupPipelineWithoutCodebaseAndTriggers = React.useCallback((): void => {
     try {
@@ -407,8 +453,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       }).then((createPipelineResponse: ResponsePipelineSaveResponse) => {
         const { status } = createPipelineResponse
         if (status === Status.SUCCESS && createPipelineResponse?.data?.identifier) {
-          setDisableBtn(false)
-          setShowPageLoader(false)
+          handleAPIFailure()
           setShowGetStartedTabInMainMenu(false)
           if (createPipelineResponse?.data?.identifier) {
             history.push(
@@ -426,8 +471,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         }
       })
     } catch (e) {
-      setDisableBtn(false)
-      setShowPageLoader(false)
+      handleAPIFailure()
     }
   }, [
     constructPipelinePayloadWithoutCodebase,
@@ -607,8 +651,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                   })
                   .catch(scmCtrErr => {
                     showErrorToaster(scmCtrErr?.data?.message)
-                    setDisableBtn(false)
-                    setShowPageLoader(false)
+                    handleAPIFailure()
                   })
               }
             } else {

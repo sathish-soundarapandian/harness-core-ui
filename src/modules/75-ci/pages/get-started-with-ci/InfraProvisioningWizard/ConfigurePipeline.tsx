@@ -6,10 +6,11 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import produce from 'immer'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
 import type { FormikContextType } from 'formik'
-import { noop } from 'lodash-es'
+import { noop, set } from 'lodash-es'
 import {
   Text,
   Layout,
@@ -81,6 +82,7 @@ export interface SavePipelineToRemoteInterface {
   storeInGit: boolean
   createBranchIfNotExists: boolean
   branch?: string
+  defaultBranch?: string
 }
 
 export interface ConfigurePipelineRef {
@@ -317,7 +319,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
     }
   }, [configuredGitConnector])
 
-  const fetchDefaultBranch = useCallback(() => {
+  const fetchDefaultBranch = useCallback((): void => {
     disableNextBtn()
     try {
       setIsFetchingDefaultBranch(true)
@@ -335,8 +337,12 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
           const { data, status } = result
           if (status === Status.SUCCESS) {
             const { defaultBranch } = data || {}
-            if (defaultBranch?.name) {
-              saveToGitFormikRef.current?.setFieldValue('branch', defaultBranch.name)
+            if (defaultBranch?.name && saveToGitFormikRef.current) {
+              saveToGitFormikRef.current.setValues(
+                produce(saveToGitFormikRef.current.values, (draft: SavePipelineToRemoteInterface) => {
+                  return set(set(draft, 'branch', defaultBranch.name), 'defaultBranch', defaultBranch.name)
+                })
+              )
             }
           }
           setIsFetchingDefaultBranch(false)
