@@ -340,7 +340,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                 configuredOption &&
                   StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.GenerateYAML
                   ? generatedYAMLAsJSON
-                  : getCIStarterPipelineV1
+                  : getCIStarterPipelineV1()
               )
             : constructPipelinePayloadWithCodebase(selectRepositoryRef.current.repository),
           queryParams: {
