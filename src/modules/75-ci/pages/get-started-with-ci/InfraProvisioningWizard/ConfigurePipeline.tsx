@@ -400,7 +400,9 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
                 })}
                 initialValues={{
                   pipelineName: `Build ${getValidRepoName(repoName)}`,
-                  yamlPath: `${HARNESS_FOLDER_PREFIX}/Build_${getIdentifierFromValue(getValidRepoName(repoName))}.yaml`,
+                  yamlPath: `${HARNESS_FOLDER_PREFIX}/pipelines/${getIdentifierFromValue(
+                    getValidRepoName(repoName)
+                  )}.yaml`,
                   storeInGit: true,
                   createBranchIfNotExists: true
                 }}
