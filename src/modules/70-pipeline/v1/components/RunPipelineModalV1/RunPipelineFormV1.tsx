@@ -402,6 +402,8 @@ function RunPipelineFormV1Basic({
                     hasRuntimeInputs={hasRuntimeInputs}
                     hasCodebaseInputs={hasCodebaseInputs}
                     resolvedPipeline={resolvedPipeline}
+                    connectorRef={connectorRef}
+                    repoIdentifier={repoIdentifier}
                   />
                   <CheckBoxActions
                     executionView={executionView}
