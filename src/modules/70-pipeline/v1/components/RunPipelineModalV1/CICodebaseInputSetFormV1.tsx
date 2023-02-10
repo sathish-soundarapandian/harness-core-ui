@@ -139,7 +139,6 @@ function CICodebaseInputSetFormV1Internal({
   }, [codeBaseType])
 
   const handleTypeChange = (newType: CodebaseTypes): void => {
-    // formik?.setFieldValue(`repository.reference.type`, '')
     formik?.setFieldValue(codeBaseTypePath, newType)
   }
   const renderCodeBaseTypeInput = (type: CodebaseTypes): JSX.Element => {

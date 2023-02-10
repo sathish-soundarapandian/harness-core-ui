@@ -35,11 +35,14 @@ import {
 } from '@pipeline/utils/statusHelpers'
 import { getFeaturePropsForRunPipelineButton } from '@pipeline/utils/runPipelineUtils'
 import { useStrings } from 'framework/strings'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
+import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import type { StringKeys } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import RbacButton from '@rbac/components/Button/Button'
 import { killEvent } from '@common/utils/eventUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RetryPipeline from '../RetryPipeline/RetryPipeline'
 import { useRunPipelineModal } from '../RunPipelineModal/useRunPipelineModal'
 import { useExecutionCompareContext } from '../ExecutionCompareYaml/ExecutionCompareContext'
@@ -76,7 +79,7 @@ export interface ExecutionActionsProps {
   source: ExecutionPathProps['source']
   onViewCompiledYaml?: () => void
   onCompareExecutions?: () => void
-  onReRunInDebugMode?: () => void
+  onReRunInDebugMode?: any
   menuOnlyActions?: boolean
   isExecutionListView?: boolean
 }
@@ -295,9 +298,11 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
   /*--------------------------------------Retry Pipeline---------------------------------------------*/
 
   /*--------------------------------------Run Pipeline---------------------------------------------*/
-
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
   const reRunPipeline = (): void => {
-    openRunPipelineModal()
+    CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+      ? openRunPipelineModalV1()
+      : openRunPipelineModal()
   }
 
   const { openRunPipelineModal } = useRunPipelineModal({
@@ -308,6 +313,14 @@ const ExecutionActions: React.FC<ExecutionActionsProps> = props => {
     connectorRef,
     storeType,
     stagesExecuted
+  })
+  const { openRunPipelineModalV1 } = useRunPipelineModalV1({
+    pipelineIdentifier,
+    executionId: executionIdentifier,
+    repoIdentifier: isGitSyncEnabled ? repoIdentifier : repoName,
+    branch,
+    connectorRef,
+    storeType
   })
 
   /*--------------------------------------Run Pipeline---------------------------------------------*/

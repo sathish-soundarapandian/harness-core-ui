@@ -36,6 +36,8 @@ import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetai
 import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
 import type { PipelineExecutionSummary, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
+import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import css from './ExecutionHeader.module.scss'
 
 export interface ExecutionHeaderProps {
@@ -110,6 +112,17 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     isDebugMode: hasCI
   })
 
+  const { openRunPipelineModalV1 } = useRunPipelineModalV1({
+    pipelineIdentifier,
+    executionId: executionIdentifier,
+    repoIdentifier: isGitSyncEnabled ? repoIdentifier : repoName,
+    branch,
+    connectorRef,
+    storeType: pipelineMetadata?.data?.storeType,
+    isDebugMode: hasCI
+  })
+
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
   return (
     <header className={css.header}>
       <div className={css.headerTopRow}>
@@ -213,7 +226,13 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
             canExecute={canExecute}
             canRetry={pipelineExecutionSummary.canRetry}
             modules={pipelineExecutionSummary.modules}
-            onReRunInDebugMode={hasCI && CI_REMOTE_DEBUG ? () => openRunPipelineModal() : undefined}
+            onReRunInDebugMode={
+              hasCI && CI_REMOTE_DEBUG
+                ? CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+                  ? openRunPipelineModalV1()
+                  : openRunPipelineModal()
+                : undefined
+            }
             onViewCompiledYaml={() => setViewCompiledYaml(pipelineExecutionSummary)}
           />
         </div>

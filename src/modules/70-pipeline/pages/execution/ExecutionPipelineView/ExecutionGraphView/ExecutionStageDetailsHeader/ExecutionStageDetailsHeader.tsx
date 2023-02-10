@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom'
 import { ButtonVariation, Text } from '@harness/uicore'
 import { String as StrTemplate, useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import type { StageDetailProps } from '@pipeline/factories/ExecutionFactory/types'
 import factory from '@pipeline/factories/ExecutionFactory'
@@ -21,6 +22,7 @@ import { ExecutionStatus, isExecutionFailed, isExecutionComplete } from '@pipeli
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
 import { usePermission } from '@rbac/hooks/usePermission'
+import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -28,6 +30,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { extractInfo } from '@common/components/ErrorHandler/ErrorHandler'
 import type { StoreType } from '@common/constants/GitSyncTypes'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './ExecutionStageDetailsHeader.module.scss'
 
 export function ExecutionStageDetailsHeader(): React.ReactElement {
@@ -94,8 +97,11 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
       ) : null}
     </div>
   )
+  const { CI_YAML_VERSIONING } = useFeatureFlags()
   const runPipeline = (): void => {
-    openRunPipelineModal()
+    CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+      ? openRunPipelineModalV1()
+      : openRunPipelineModal()
   }
 
   const { openRunPipelineModal } = useRunPipelineModal({
@@ -107,6 +113,16 @@ export function ExecutionStageDetailsHeader(): React.ReactElement {
     connectorRef: pipelineExecutionDetail?.pipelineExecutionSummary?.connectorRef,
     storeType: pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType,
     stagesExecuted: [stage?.nodeIdentifier || '']
+  })
+
+  const { openRunPipelineModalV1 } = useRunPipelineModalV1({
+    pipelineIdentifier,
+    repoIdentifier: isGitSyncEnabled
+      ? pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoIdentifier
+      : pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.repoName,
+    branch: pipelineExecutionDetail?.pipelineExecutionSummary?.gitDetails?.branch,
+    connectorRef: pipelineExecutionDetail?.pipelineExecutionSummary?.connectorRef,
+    storeType: pipelineExecutionDetail?.pipelineExecutionSummary?.storeType as StoreType
   })
 
   return (
