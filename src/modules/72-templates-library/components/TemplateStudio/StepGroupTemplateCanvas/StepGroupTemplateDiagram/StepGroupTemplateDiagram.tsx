@@ -17,6 +17,7 @@ import ExecutionGraph, {
   ExecutionGraphEditStepEvent,
   ExecutionGraphRefObj
 } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
+import { ModuleName } from 'framework/types/ModuleName'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import {
   usePipelineContext,
