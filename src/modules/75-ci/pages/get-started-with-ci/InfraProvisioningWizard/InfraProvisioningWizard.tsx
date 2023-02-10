@@ -86,7 +86,8 @@ import {
   getPayloadForPipelineCreation,
   addDetailsToPipeline,
   getScmConnectorPrefix,
-  updateUrlAndRepoInGitRepoConnector as updateUrlAndRepoInGitConnector
+  updateUrlAndRepoInGitRepoConnector as updateUrlAndRepoInGitConnector,
+  DefaultCIPipelineName
 } from '../../../utils/HostedBuildsUtils'
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -159,8 +160,13 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         }).then((response: ResponseString) => {
           const { status, data } = response || {}
           if (status === Status.SUCCESS && data) {
-            const yamlAsObject = parse<PipelineInfoConfig>(data)
-            setGeneratedYAMLAsJSON(yamlAsObject)
+            setGeneratedYAMLAsJSON(
+              set(
+                parse<PipelineInfoConfig>(data),
+                'name',
+                `${DefaultCIPipelineName}_${new Date().getTime().toString()}`
+              )
+            )
           }
           setDisableBtn(false)
         })
@@ -330,11 +336,12 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         const { configuredOption } = configurePipelineRef.current || {}
         return createPipelineV2Promise({
           body: CI_YAML_VERSIONING
-            ? configuredOption &&
-              StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.GenerateYAML &&
-              generatedYAMLAsJSON
-              ? yamlStringify(generatedYAMLAsJSON)
-              : yamlStringify(getCIStarterPipelineV1WithCodebase(connectorRef))
+            ? yamlStringify(
+                configuredOption &&
+                  StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.GenerateYAML
+                  ? generatedYAMLAsJSON
+                  : getCIStarterPipelineV1WithCodebase(connectorRef)
+              )
             : constructPipelinePayloadWithCodebase(selectRepositoryRef.current.repository),
           queryParams: {
             accountIdentifier: accountId,

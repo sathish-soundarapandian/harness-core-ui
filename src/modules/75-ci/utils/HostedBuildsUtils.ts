@@ -232,3 +232,5 @@ export const updateUrlAndRepoInGitRepoConnector = (
     repoName
   )
 }
+
+export const DefaultCIPipelineName = 'Sample Pipeline'
