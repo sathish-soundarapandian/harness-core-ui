@@ -9,11 +9,11 @@ import React, { CSSProperties } from 'react'
 import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
-import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
+import type { NavModuleName } from '@common/hooks/useGetModuleInfo'
 import type { TimeRangeFilterType } from '@common/types'
 import { ModuleName } from 'framework/types/ModuleName'
 import { StringKeys, useStrings } from 'framework/strings'
-import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
+import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
 import type { ModuleOverviewBaseProps } from './Grid/ModuleOverviewGrid'
 import CDModuleOverview from './modules/CDModuleOverview'
 import CIModuleOverview from './modules/CIModuleOverview'
@@ -110,7 +110,7 @@ const ModuleOverview: React.FC<ModuleOverviewProps> = ({
 }) => {
   const { label, Component, imageSrc } = moduleLabelMap[module]
   const { getString } = useStrings()
-  const { color, icon, backgroundColor, hasLicense } = useNavModuleInfo(module)
+  const { color, icon, backgroundColor, hasLicense } = useGetModuleInfo(module)
   const showEmptyState = !hasLicense
 
   const containerStyle = cx(css.container, {
