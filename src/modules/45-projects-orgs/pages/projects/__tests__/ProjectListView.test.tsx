@@ -55,6 +55,7 @@ describe('Project List', () => {
       <TestWrapper
         path={routes.toProjects({ ...accountPathProps })}
         pathParams={{ accountId: 'testAcc' }}
+        defaultAppStoreValues={defaultAppStoreValues}
         defaultLicenseStoreValues={{
           licenseInformation: {
             CD: { edition: 'FREE', status: 'ACTIVE' }
