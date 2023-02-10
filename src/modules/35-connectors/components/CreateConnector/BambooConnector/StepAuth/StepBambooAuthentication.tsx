@@ -119,7 +119,7 @@ const StepBambooAuthentication: React.FC<StepProps<StepBambooAuthenticationProps
                 <FormInput.Text
                   name="bambooUrl"
                   placeholder={getString('UrlLabel')}
-                  label={getString('connectors.bamboo.bambooUrlRequired')}
+                  label={getString('connectors.bamboo.bambooUrl')}
                 />
                 <Container className={css.authHeaderRow}>
                   <Text

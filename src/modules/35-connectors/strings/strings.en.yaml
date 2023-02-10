@@ -346,6 +346,7 @@ helmRepo:
   helmRepoUrl: 'Helm Repository URL'
 bamboo:
   bamboo: 'Bamboo'
+  bambooUrl: 'Bamboo URL'
   bambooUrlRequired: 'Bamboo URL is required'
 aws:
   awsAccessKey: AWS Access Key

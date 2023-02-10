@@ -415,9 +415,9 @@ export function BambooArtifact(props: StepProps<ConnectorConfigDTO> & BambooArti
         connectorRef: connectorId,
         artifactPaths: formData.spec.artifactPaths,
         build: formData.spec.build,
-        planName:
+        planKey:
           getMultiTypeFromValue(formData.spec?.planName) === MultiTypeInputType.FIXED
-            ? (formData.spec?.planName as SelectOption).label
+            ? formData.spec?.planName
             : formData.spec?.planName
       }
     })
