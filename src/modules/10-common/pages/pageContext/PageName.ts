@@ -75,7 +75,6 @@ export enum PAGE_NAME {
   CITemplateStudioWrapper = 'CITemplateStudioWrapper',
   CFTemplateStudioWrapper = 'CFTemplateStudioWrapper',
   GitOpsPage = 'GitOpsPage',
-  SSCSPage = 'SSCSPage',
   FileStorePage = 'FileStorePage',
   AccountConfiguration = 'AccountConfiguration',
   AccountOverview = 'AccountOverview',

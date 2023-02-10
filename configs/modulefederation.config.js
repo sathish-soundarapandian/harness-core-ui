@@ -6,7 +6,7 @@
  */
 
 const packageJSON = require('../package.json')
-const { pick, mapValues } = require('lodash')
+const { pick, omit, mapValues } = require('lodash')
 
 /**
  * These packages must be strictly shared with exact versions
@@ -84,10 +84,6 @@ module.exports = ({
 
   if (enableIACM) {
     remotes.iacm = "remoteIACM@[window.getApiBaseUrl('iacm/remoteEntry.js')]"
-  }
-
-  if (enableSSCS) {
-    remotes.sscs = "sscs@[window.getApiBaseUrl('sscs/remoteEntry.js')]"
   }
 
   if (process.env.TARGET_LOCALHOST) {

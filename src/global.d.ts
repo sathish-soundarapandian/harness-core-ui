@@ -105,19 +105,21 @@ declare interface Document {
 declare const monaco: any
 
 declare module 'refiner-js'
-import type { ChildAppComponent } from './microfrontends'
 
 declare module 'gitopsui/MicroFrontendApp' {
+  import type { ChildAppComponent } from './microfrontends'
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
 
 declare module 'chaos/MicroFrontendApp' {
+  import type { ChildAppComponent } from './microfrontends'
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
 
 declare module 'chaos/SelectPipelineExperiment' {
+  import type { ChildAppComponent } from './microfrontends'
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
@@ -133,16 +135,19 @@ declare module 'idpadmin/MicroFrontendApp' {
   export default ChildApp
 }
 declare module 'chaos/ExperimentPreview' {
+  import type { ChildAppComponent } from './microfrontends'
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
 
 declare module 'chaos/ChaosStepExecution' {
+  import type { ChildAppComponent } from './microfrontends'
   const ChildApp: ChildAppComponent
   export default ChildApp
 }
 
 declare module 'chaos/ResilienceViewContent' {
+  import type { ChildAppComponent } from './microfrontends'
   const ChildApp: ChildAppComponent
   export default ChildApp
 }

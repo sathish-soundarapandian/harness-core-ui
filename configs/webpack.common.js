@@ -280,9 +280,6 @@ if (!enableIACM) {
   config.resolve.alias['iacm/MicroFrontendApp'] = ChildAppError
   config.resolve.alias['iacm/IACMStage'] = ChildAppError
 }
-if (!enableSSCS) {
-  config.resolve.alias['sscs/MicroFrontendApp'] = ChildAppError
-}
 
 if (!enableSSCA) {
   config.resolve.alias['ssca/MicroFrontendApp'] = ChildAppError

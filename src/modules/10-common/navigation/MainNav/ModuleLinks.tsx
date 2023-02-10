@@ -21,28 +21,6 @@ const commonLinkProps: Partial<NavLinkProps> = {
   className: cx(css.navLink)
 }
 
-export const SSCSNavItem = () => {
-  const params = useParams<ProjectPathProps>()
-
-  return (
-    <li className={css.navItem}>
-      <Link {...commonLinkProps} to={routes.toSSCS(params)}>
-        <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-          <Icon name="sscs-main" size={30} inverse />
-          <Text
-            font={{ weight: 'semi-bold', align: 'center' }}
-            padding={{ bottom: 'xsmall' }}
-            color={Color.WHITE}
-            className={css.text}
-          >
-            <String stringID="common.sscsText" />
-          </Text>
-        </Layout.Vertical>
-      </Link>
-    </li>
-  )
-}
-
 export const ChaosNavItem = () => {
   const params = useParams<ProjectPathProps>()
 

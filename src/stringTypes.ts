@@ -997,6 +997,8 @@ export interface StringsMap {
   'common.sourceBranchPlaceholder': string
   'common.specified': string
   'common.specify': string
+  'common.sscs': string
+  'common.sscsText': string
   'common.stable': string
   'common.stage': string
   'common.stageName': string
@@ -4549,7 +4551,6 @@ export interface StringsMap {
   'pipeline.stepDescription.Run': string
   'pipeline.stepDescription.RunTests': string
   'pipeline.stepDescription.S3': string
-  'pipeline.stepDescription.SCSSGeneration': string
   'pipeline.stepDescription.SHELLSCRIPT': string
   'pipeline.stepDescription.SaveCacheGCS': string
   'pipeline.stepDescription.SaveCacheS3': string
@@ -7663,10 +7664,6 @@ export interface StringsMap {
   'ci.runTestsStep.validation.namespacesRequiredWhenCsharp': string
   'ci.save': string
   'ci.secrets': string
-  'ci.sscs.generationType': string
-  'ci.sscs.sbomFormat': string
-  'ci.sscs.sbomGenerationTool': string
-  'ci.sscs.signed': string
   'ci.successful': string
   'ci.templates': string
   'ci.testSummary': string
@@ -8722,7 +8719,6 @@ export interface StringsMap {
   'iacm.stageDescription': string
   'iacm.stageTitle': string
   'iacm.terragrunt': string
-  'sscs.navTitle': string
   'sto.Critical': string
   'sto.Info': string
   'sto.Unassigned': string
