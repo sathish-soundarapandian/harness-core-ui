@@ -139,7 +139,6 @@ describe('main nav tests', () => {
     render(
       <TestWrapper
         defaultFeatureFlagValues={{
-          CDNG_ENABLED: true,
           CING_ENABLED: true,
           CFNG_ENABLED: false,
           CHAOS_ENABLED: true,
