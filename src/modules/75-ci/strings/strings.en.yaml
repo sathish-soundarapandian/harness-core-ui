@@ -192,6 +192,7 @@ getStartedWithCI:
   pleaseChoose: 'Please choose {{field}}'
   fieldIsMissing: '{{field}} is missing'
   provisioningHelpText: Provision the '{{ $.ci.getStartedWithCI.hostedByHarness }}' Infrastructure (~2 mins)
+  updatingGitConnectorWithRepo: Updating your Git connector with repository info...
   settingUpCIPipeline: Just a moment while we set up a CI pipeline for you...
   nonGitCloneOption: Use this option if your Git provider is not supported by Harness or if you have nothing to clone.
   cloneGitRepo: Clone Git Repository

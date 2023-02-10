@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { set } from 'lodash-es'
+import { get, set } from 'lodash-es'
 import { parse } from 'yaml'
 import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorResponse, UserRepoResponse } from 'services/cd-ng'
 import type { PipelineConfig } from 'services/pipeline-ng'
@@ -216,4 +216,19 @@ export const getValidRepoName = (repositoryName: string): string => {
     repoName = tokens.length > 0 ? tokens[tokens.length - 1] : ''
   }
   return encodeURI(repoName.endsWith(GIT_EXTENSION) ? repoName.replace(/\.[^/.]+$/, '') : repoName)
+}
+
+export const updateUrlAndRepoInGitRepoConnector = (
+  existingConnector: ConnectorInfoDTO,
+  repository?: UserRepoResponse
+): ConnectorInfoDTO => {
+  const existingGitConnectorUrl: string = get(existingConnector, 'spec.url')
+  const { name: repoName, namespace } = repository || {}
+  return set(
+    existingGitConnectorUrl && namespace && !existingGitConnectorUrl.endsWith(namespace)
+      ? set(existingConnector, 'spec.url', `${existingGitConnectorUrl}/${namespace}`)
+      : existingConnector,
+    'spec.validationRepo',
+    repoName
+  )
 }
