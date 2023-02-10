@@ -57,6 +57,11 @@
   background: var(--ssca-background);
   border: 1px solid var(--ssca-border);
 }
+.idpTag {
+  color: var(--idp-foreground);
+  background: var(--idp-background);
+  border: 1px solid var(--idp-border);
+}
 
 .predefinedTags {
   // Continuous Delivery
