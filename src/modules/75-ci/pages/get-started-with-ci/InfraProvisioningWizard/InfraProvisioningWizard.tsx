@@ -67,7 +67,7 @@ import {
   GitAuthenticationMethod,
   NonGitOption,
   getCloudPipelinePayloadWithoutCodebase,
-  getCIStarterPipelineV1WithCodebase
+  getCIStarterPipelineV1
 } from './Constants'
 import { SelectGitProvider, SelectGitProviderRef } from './SelectGitProvider'
 import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
@@ -340,7 +340,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                 configuredOption &&
                   StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.GenerateYAML
                   ? generatedYAMLAsJSON
-                  : getCIStarterPipelineV1WithCodebase(connectorRef)
+                  : getCIStarterPipelineV1
               )
             : constructPipelinePayloadWithCodebase(selectRepositoryRef.current.repository),
           queryParams: {
