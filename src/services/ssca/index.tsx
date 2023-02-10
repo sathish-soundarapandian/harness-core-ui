@@ -1706,7 +1706,7 @@ export const SearchFind = ({ packagename, ...props }: SearchFindProps) => (
     SearchFindPathParams
   >
     path={`/api/v1/search/${packagename}`}
-    base={getConfig('ssca/api/v1')}
+    base={getConfig('ssca/api')}
     {...props}
   />
 )
@@ -1745,7 +1745,7 @@ export const useSearchFind = ({ packagename, ...props }: UseSearchFindProps) =>
     SearchFindQueryParams,
     SearchFindPathParams
   >((paramsInPath: SearchFindPathParams) => `/api/v1/search/${paramsInPath.packagename}`, {
-    base: getConfig('ssca/api/v1'),
+    base: getConfig('ssca/api'),
     pathParams: { packagename },
     ...props
   })

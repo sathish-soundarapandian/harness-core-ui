@@ -18,6 +18,7 @@ import { PipelineRouteDestinations } from '@pipeline/RouteDestinations'
 import SSCASideNav from './components/SSCASideNav'
 import SSCAPipelineDeploymentList from './components/SSCAPipelineDeploymentList'
 import { SSCAApp } from './components/SSCAApp'
+import { SBOMList } from './components/SBOMList/SBOMList'
 
 const SSCASideNavProps: SidebarContext = {
   navComponent: SSCASideNav,
@@ -60,9 +61,16 @@ export default (
       sidebarProps={SSCASideNavProps}
       path={[
         routes.toSSCAOverview({ ...accountPathProps }),
-        routes.toAllowDenyList({ ...projectPathProps, ...moduleParams }),
         routes.toProjectOverview({ ...projectPathProps, ...moduleParams })
       ]}
+    >
+      <SBOMList />
+    </RouteWithLayout>
+
+    <RouteWithLayout
+      exact
+      sidebarProps={SSCASideNavProps}
+      path={[routes.toAllowDenyList({ ...projectPathProps, ...moduleParams })]}
     >
       <SSCAApp />
     </RouteWithLayout>
