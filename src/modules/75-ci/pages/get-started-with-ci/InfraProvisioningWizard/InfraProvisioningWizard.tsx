@@ -22,9 +22,11 @@ import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
 import routes from '@common/RouteDefinitions'
 import {
   ConnectorInfoDTO,
+  generateYamlPromise,
   ResponseConnectorResponse,
   ResponseMessage,
   ResponseScmConnectorResponse,
+  ResponseString,
   useCreateDefaultScmConnector,
   UserRepoResponse,
   useUpdateConnector
@@ -34,10 +36,11 @@ import {
   NGTriggerConfigV2,
   ResponseNGTriggerResponse,
   ResponsePipelineSaveResponse,
-  createTriggerPromise
+  createTriggerPromise,
+  PipelineInfoConfig
 } from 'services/pipeline-ng'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { yamlStringify } from '@common/utils/YamlHelperMethods'
+import { yamlStringify, parse } from '@common/utils/YamlHelperMethods'
 import { Status } from '@common/utils/Constants'
 import { Connectors } from '@connectors/constants'
 import {
@@ -111,6 +114,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const { showError: showErrorToaster } = useToaster()
   const [buttonLabel, setButtonLabel] = useState<string>('')
   const { trackEvent } = useTelemetry()
+  const [generatedYAMLAsJSON, setGeneratedYAMLAsJSON] = useState<PipelineInfoConfig>({ name: '', identifier: '-1' })
 
   const { CIE_HOSTED_VMS, CI_YAML_VERSIONING } = useFeatureFlags()
 
@@ -135,6 +139,42 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const { mutate: updateConnector } = useUpdateConnector({
     queryParams: { accountIdentifier: accountId }
   })
+
+  useEffect(() => {
+    if (
+      configuredGitConnector &&
+      configurePipelineRef.current?.configuredOption &&
+      StarterConfigIdToOptionMap[configurePipelineRef.current?.configuredOption.id] ===
+        PipelineConfigurationOption.GenerateYAML
+    ) {
+      setDisableBtn(true)
+      try {
+        generateYamlPromise({
+          queryParams: {
+            accountIdentifier: accountId,
+            projectIdentifier,
+            orgIdentifier,
+            connectorIdentifier: getScopedValueFromDTO(configuredGitConnector)
+          }
+        }).then((response: ResponseString) => {
+          const { status, data } = response || {}
+          if (status === Status.SUCCESS && data) {
+            const yamlAsObject = parse<PipelineInfoConfig>(data)
+            setGeneratedYAMLAsJSON(yamlAsObject)
+          }
+          setDisableBtn(false)
+        })
+      } catch (e) {
+        setDisableBtn(false)
+      }
+    }
+  }, [
+    configuredGitConnector,
+    accountId,
+    projectIdentifier,
+    orgIdentifier,
+    configurePipelineRef.current?.configuredOption
+  ])
 
   const constructPipelinePayloadWithCodebase = React.useCallback(
     (repository: UserRepoResponse): string => {
@@ -287,9 +327,14 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         repoName: selectRepositoryRef.current?.repository?.name
       }
       if (selectRepositoryRef.current?.repository) {
+        const { configuredOption } = configurePipelineRef.current || {}
         return createPipelineV2Promise({
           body: CI_YAML_VERSIONING
-            ? yamlStringify(getCIStarterPipelineV1WithCodebase(connectorRef))
+            ? configuredOption &&
+              StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.GenerateYAML &&
+              generatedYAMLAsJSON
+              ? yamlStringify(generatedYAMLAsJSON)
+              : yamlStringify(getCIStarterPipelineV1WithCodebase(connectorRef))
             : constructPipelinePayloadWithCodebase(selectRepositoryRef.current.repository),
           queryParams: {
             accountIdentifier: accountId,
@@ -383,7 +428,16 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         })
       }
     },
-    [selectRepositoryRef.current?.repository, configuredGitConnector, accountId, projectIdentifier, orgIdentifier]
+    [
+      selectRepositoryRef.current?.repository,
+      configuredGitConnector,
+      accountId,
+      projectIdentifier,
+      orgIdentifier,
+      generatedYAMLAsJSON,
+      configurePipelineRef.current,
+      CI_YAML_VERSIONING
+    ]
   )
 
   const initiateAPIOperation = useCallback((loaderMessage: string): void => {
@@ -441,7 +495,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         }
       }
     }
-  }, [selectRepositoryRef.current?.repository, configuredGitConnector])
+  }, [selectRepositoryRef.current?.repository, configuredGitConnector, generatedYAMLAsJSON])
 
   const setupPipelineWithoutCodebaseAndTriggers = React.useCallback((): void => {
     try {
@@ -662,7 +716,12 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             setShowError(true)
             return
           }
-          if (StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.StarterPipeline) {
+
+          if (
+            [PipelineConfigurationOption.StarterPipeline, PipelineConfigurationOption.GenerateYAML].includes(
+              StarterConfigIdToOptionMap[configuredOption.id]
+            )
+          ) {
             const { branch, yamlPath, pipelineName } = (values as SavePipelineToRemoteInterface) || {}
             if (!branch || !yamlPath || !pipelineName) {
               showValidationErrors?.()
