@@ -82,7 +82,8 @@ import {
   getFullRepoName,
   getPayloadForPipelineCreation,
   addDetailsToPipeline,
-  getScmConnectorPrefix
+  getScmConnectorPrefix,
+  updateUrlAndRepoInGitRepoConnector as updateUrlAndRepoInGitConnector
 } from '../../../utils/HostedBuildsUtils'
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -101,7 +102,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
   const [showError, setShowError] = useState<boolean>(false)
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const history = useHistory()
-  const [showPageLoader, setShowPageLoader] = useState<boolean>(false)
+  const [pageLoader, setPageLoader] = useState<{ show: boolean; message?: string }>({ show: false })
   const [configuredGitConnector, setConfiguredGitConnector] = useState<ConnectorInfoDTO>()
   const selectGitProviderRef = React.useRef<SelectGitProviderRef | null>(null)
   const selectRepositoryRef = React.useRef<SelectRepositoryRef | null>(null)
@@ -348,8 +349,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                   })
                     .then((createPushTriggerResponse: ResponseNGTriggerResponse) => {
                       if (createPushTriggerResponse.status === Status.SUCCESS) {
-                        setDisableBtn(false)
-                        setShowPageLoader(false)
+                        wrapUpAPIOperation()
                         setShowGetStartedTabInMainMenu(false)
                         if (createPipelineResponse?.data?.identifier) {
                           history.push(
@@ -369,15 +369,13 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                     })
                     .catch(triggerCreationError => {
                       showErrorToaster(triggerCreationError?.data?.message)
-                      setDisableBtn(false)
-                      setShowPageLoader(false)
+                      wrapUpAPIOperation()
                     })
                 }
               })
               .catch(triggerCreationError => {
                 showErrorToaster(triggerCreationError?.data?.message)
-                setDisableBtn(false)
-                setShowPageLoader(false)
+                wrapUpAPIOperation()
               })
           } else {
             throw createPipelineResponse
@@ -388,12 +386,17 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     [selectRepositoryRef.current?.repository, configuredGitConnector, accountId, projectIdentifier, orgIdentifier]
   )
 
-  const handleAPIFailure = useCallback((err?: unknown): void => {
+  const initiateAPIOperation = useCallback((loaderMessage: string): void => {
+    setDisableBtn(true)
+    setPageLoader({ show: true, message: loaderMessage })
+  }, [])
+
+  const wrapUpAPIOperation = useCallback((err?: unknown): void => {
     if (err) {
       showErrorToaster((err as Error)?.message)
     }
     setDisableBtn(false)
-    setShowPageLoader(false)
+    setPageLoader({ show: false })
   }, [])
 
   const setupPipelineWithCodebaseAndTriggers = React.useCallback((): void => {
@@ -421,20 +424,20 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
                 setupPipelineAndTriggerPromise = getPipelineAndTriggerSetupPromise(true)
                 if (setupPipelineAndTriggerPromise) {
                   setupPipelineAndTriggerPromise.catch(e => {
-                    handleAPIFailure(e)
+                    wrapUpAPIOperation(e)
                   })
                 }
               } else {
-                handleAPIFailure(_e)
+                wrapUpAPIOperation(_e)
               }
             })
           } else {
             setupPipelineAndTriggerPromise.catch(err => {
-              handleAPIFailure(err)
+              wrapUpAPIOperation(err)
             })
           }
         } catch (e) {
-          handleAPIFailure()
+          wrapUpAPIOperation()
         }
       }
     }
@@ -453,7 +456,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       }).then((createPipelineResponse: ResponsePipelineSaveResponse) => {
         const { status } = createPipelineResponse
         if (status === Status.SUCCESS && createPipelineResponse?.data?.identifier) {
-          handleAPIFailure()
+          wrapUpAPIOperation()
           setShowGetStartedTabInMainMenu(false)
           if (createPipelineResponse?.data?.identifier) {
             history.push(
@@ -471,7 +474,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         }
       })
     } catch (e) {
-      handleAPIFailure()
+      wrapUpAPIOperation()
     }
   }, [
     constructPipelinePayloadWithoutCodebase,
@@ -515,8 +518,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.InProgress)
           } else if (gitProvider?.type === NonGitOption.OTHER) {
             setShowError(false)
-            setDisableBtn(true)
-            setShowPageLoader(true)
+            initiateAPIOperation(getString('ci.getStartedWithCI.settingUpCIPipeline'))
             setupPipelineWithoutCodebaseAndTriggers()
           }
         },
@@ -549,21 +551,75 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         onClickNext: () => {
           try {
             trackEvent(CIOnboardingActions.ConfigurePipelineClicked, {})
+            const { repository, enableCloneCodebase } = selectRepositoryRef.current || {}
+            if (enableCloneCodebase && repository && configuredGitConnector?.spec) {
+              initiateAPIOperation(getString('ci.getStartedWithCI.updatingGitConnectorWithRepo'))
+              if (selectGitProviderRef.current?.values?.gitAuthenticationMethod !== GitAuthenticationMethod.OAuth) {
+                if (preSelectedGitConnector) {
+                  // The pre-selected connector shouldn't be modified
+                  updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.Success)
+                  setCurrentWizardStepId(InfraProvisiongWizardStepId.ConfigurePipeline)
+                  wrapUpAPIOperation()
+                } else {
+                  createSCMConnector({
+                    connector: set(
+                      // Inline-created git connector url needs to be suffixed with repository name, if not already present,
+                      // otherwise default branch fetch in next step fails
+                      updateUrlAndRepoInGitConnector(configuredGitConnector, selectRepositoryRef?.current?.repository),
+                      'spec.authentication.spec.spec.username',
+                      get(configuredGitConnector, 'spec.authentication.spec.spec.username') ?? OAUTH2_USER_NAME
+                    ),
+                    secret: preSelectedGitConnector
+                      ? secretForPreSelectedConnector
+                      : selectGitProviderRef?.current?.validatedSecret
+                  })
+                    .then((scmConnectorResponse: ResponseScmConnectorResponse) => {
+                      if (scmConnectorResponse.status === Status.SUCCESS) {
+                        updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.Success)
+                        setCurrentWizardStepId(InfraProvisiongWizardStepId.ConfigurePipeline)
+                        wrapUpAPIOperation()
+                      }
+                    })
+                    .catch(scmCtrErr => {
+                      showErrorToaster(scmCtrErr?.data?.message)
+                      wrapUpAPIOperation()
+                    })
+                }
+              } else {
+                if (preSelectedGitConnector) {
+                  // The pre-selected connector shouldn't be modified
+                  updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.Success)
+                  setCurrentWizardStepId(InfraProvisiongWizardStepId.ConfigurePipeline)
+                  setShowError(false)
+                } else {
+                  updateConnector({
+                    // Inline-created git connector url needs to be suffixed with repository name, if not already present,
+                    connector:
+                      // otherwise default branch fetch in next step fails
+                      updateUrlAndRepoInGitConnector(configuredGitConnector, selectRepositoryRef?.current?.repository)
+                  })
+                    .then((oAuthConnectoResponse: ResponseConnectorResponse) => {
+                      if (oAuthConnectoResponse.status === Status.SUCCESS) {
+                        updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.Success)
+                        setCurrentWizardStepId(InfraProvisiongWizardStepId.ConfigurePipeline)
+                        setShowError(false)
+                      }
+                    })
+                    .catch(oAuthCtrErr => {
+                      showErrorToaster(oAuthCtrErr?.data?.message)
+                      wrapUpAPIOperation()
+                    })
+                }
+              }
+            } else if (!enableCloneCodebase) {
+              setShowError(false)
+              initiateAPIOperation(getString('ci.getStartedWithCI.settingUpCIPipeline'))
+              setupPipelineWithoutCodebaseAndTriggers()
+            } else {
+              setShowError(true)
+            }
           } catch (e) {
             // ignore error
-          }
-          const { repository, enableCloneCodebase } = selectRepositoryRef.current || {}
-          if (enableCloneCodebase && repository && configuredGitConnector?.spec) {
-            updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.Success)
-            setCurrentWizardStepId(InfraProvisiongWizardStepId.ConfigurePipeline)
-            setShowError(false)
-          } else if (!enableCloneCodebase) {
-            setShowError(false)
-            setDisableBtn(true)
-            setShowPageLoader(true)
-            setupPipelineWithoutCodebaseAndTriggers()
-          } else {
-            setShowError(true)
           }
         },
         stepFooterLabel: `${getString('next')}: ${getString('ci.getStartedWithCI.configurePipeline')}`
@@ -591,7 +647,6 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           updateStepStatus([InfraProvisiongWizardStepId.ConfigurePipeline], StepStatus.ToDo)
         },
         onClickNext: () => {
-          const { repository, enableCloneCodebase } = selectRepositoryRef.current || {}
           const { configuredOption, values, showValidationErrors } = configurePipelineRef.current || {}
           if (configuredOption?.name) {
             try {
@@ -622,62 +677,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
               return
             }
           }
-          if (enableCloneCodebase && repository && configuredGitConnector?.spec) {
-            setDisableBtn(true)
-            setShowPageLoader(true)
-            if (selectGitProviderRef.current?.values?.gitAuthenticationMethod !== GitAuthenticationMethod.OAuth) {
-              if (preSelectedGitConnector) {
-                setupPipelineWithCodebaseAndTriggers()
-              } else {
-                // The pre-selected connector shouldn't be modified
-                createSCMConnector({
-                  connector: set(
-                    set(
-                      configuredGitConnector,
-                      'spec.validationRepo',
-                      getFullRepoName(selectRepositoryRef?.current?.repository || {})
-                    ),
-                    'spec.authentication.spec.spec.username',
-                    get(configuredGitConnector, 'spec.authentication.spec.spec.username') ?? OAUTH2_USER_NAME
-                  ),
-                  secret: preSelectedGitConnector
-                    ? secretForPreSelectedConnector
-                    : selectGitProviderRef?.current?.validatedSecret
-                })
-                  .then((scmConnectorResponse: ResponseScmConnectorResponse) => {
-                    if (scmConnectorResponse.status === Status.SUCCESS) {
-                      setupPipelineWithCodebaseAndTriggers()
-                    }
-                  })
-                  .catch(scmCtrErr => {
-                    showErrorToaster(scmCtrErr?.data?.message)
-                    handleAPIFailure()
-                  })
-              }
-            } else {
-              if (preSelectedGitConnector) {
-                setupPipelineWithCodebaseAndTriggers()
-              } else {
-                updateConnector({
-                  connector: set(
-                    configuredGitConnector,
-                    'spec.validationRepo',
-                    getFullRepoName(selectRepositoryRef?.current?.repository || {})
-                  )
-                })
-                  .then((oAuthConnectoResponse: ResponseConnectorResponse) => {
-                    if (oAuthConnectoResponse.status === Status.SUCCESS) {
-                      setupPipelineWithCodebaseAndTriggers()
-                    }
-                  })
-                  .catch(oAuthCtrErr => {
-                    showErrorToaster(oAuthCtrErr?.data?.message)
-                    setDisableBtn(false)
-                    setShowPageLoader(false)
-                  })
-              }
-            }
-          }
+          initiateAPIOperation(getString('ci.getStartedWithCI.settingUpCIPipeline'))
+          setupPipelineWithCodebaseAndTriggers()
         },
         stepFooterLabel: getString('ci.getStartedWithCI.createPipeline')
       }
@@ -742,7 +743,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           disabled={disableBtn}
         />
       </Layout.Horizontal>
-      {showPageLoader ? <PageSpinner message={getString('ci.getStartedWithCI.settingUpCIPipeline')} /> : null}
+      {pageLoader.show ? <PageSpinner message={pageLoader.message} /> : null}
     </Layout.Vertical>
   ) : null
 }

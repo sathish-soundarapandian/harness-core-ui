@@ -7617,6 +7617,7 @@ export interface StringsMap {
   'ci.getStartedWithCI.ti': string
   'ci.getStartedWithCI.tiHelpText': string
   'ci.getStartedWithCI.troubleShootFailedProvisioning': string
+  'ci.getStartedWithCI.updatingGitConnectorWithRepo': string
   'ci.getStartedWithCI.validYAMLFile': string
   'ci.gradleNote1': string
   'ci.gradleNote2': string
