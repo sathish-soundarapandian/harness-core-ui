@@ -64,7 +64,7 @@ import {
   GitAuthenticationMethod,
   NonGitOption,
   getCloudPipelinePayloadWithoutCodebase,
-  getCIStarterPipelineV1
+  getCIStarterPipelineV1WithCodebase
 } from './Constants'
 import { SelectGitProvider, SelectGitProviderRef } from './SelectGitProvider'
 import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
@@ -277,9 +277,10 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       ?.values as SavePipelineToRemoteInterface
     const shouldSavePipelineToGit =
       (connectorType && [Connectors.GITHUB, Connectors.BITBUCKET].includes(connectorType) && storeInGit) || false
+    const connectorRef = getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO)
     const gitParams = {
       storeType: StoreType.REMOTE,
-      connectorRef: getScopedValueFromDTO(configuredGitConnector as ScopedValueObjectDTO),
+      connectorRef,
       branch,
       repoName: selectRepositoryRef.current?.repository?.name
     }
@@ -287,7 +288,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       try {
         createPipelineV2Promise({
           body: CI_YAML_VERSIONING
-            ? yamlStringify(getCIStarterPipelineV1())
+            ? yamlStringify(getCIStarterPipelineV1WithCodebase(connectorRef))
             : constructPipelinePayloadWithCodebase(selectRepositoryRef.current.repository),
           queryParams: {
             accountIdentifier: accountId,
