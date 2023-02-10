@@ -30,10 +30,21 @@ export interface PipelineInputSetFormV1Props {
   hasRuntimeInputs?: boolean
   hasCodebaseInputs?: boolean
   originalPipeline?: PipelineConfig
+  connectorRef?: string
+  repoIdentifier?: string
 }
 
 export function PipelineInputSetFormV1Internal(props: PipelineInputSetFormV1Props): React.ReactElement {
-  const { readonly, viewType, maybeContainerClass = '', viewTypeMetadata, hideTitle, hasCodebaseInputs } = props
+  const {
+    readonly,
+    viewType,
+    maybeContainerClass = '',
+    viewTypeMetadata,
+    hideTitle,
+    hasCodebaseInputs,
+    connectorRef,
+    repoIdentifier
+  } = props
 
   return (
     <Layout.Vertical
@@ -46,6 +57,8 @@ export function PipelineInputSetFormV1Internal(props: PipelineInputSetFormV1Prop
           viewType={viewType}
           viewTypeMetadata={viewTypeMetadata}
           originalPipeline={props.originalPipeline}
+          connectorRef={connectorRef}
+          repoIdentifier={repoIdentifier}
         />
       ) : null}
     </Layout.Vertical>

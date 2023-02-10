@@ -48,6 +48,8 @@ export interface CICodebaseInputSetFormV1Props {
   viewType: StepViewType
   viewTypeMetadata?: Record<string, boolean>
   originalPipeline?: PipelineConfig
+  connectorRef?: string
+  repoIdentifier?: string
 }
 
 export enum ConnectionType {
@@ -82,7 +84,9 @@ function CICodebaseInputSetFormV1Internal({
   formik,
   viewType,
   viewTypeMetadata,
-  originalPipeline
+  originalPipeline,
+  connectorRef,
+  repoIdentifier
 }: CICodebaseInputSetFormV1Props): JSX.Element {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
   const containerWidth = viewTypeMetadata?.isTemplateDetailDrawer ? '100%' : '50%' // drawer view is much smaller 50% would cut out
@@ -105,18 +109,11 @@ function CICodebaseInputSetFormV1Internal({
   const codebaseTypeError = get(formik?.errors, codeBaseTypePath)
   const [codebaseConnector, setCodebaseConnector] = useState<ConnectorInfoDTO>()
   const [connectorId, setConnectorId] = useState<string>('')
-  const [connectorRef, setConnectorRef] = useState<string>('')
 
   const inputLabels = getBuildTypeInputLabels(getString)
 
   useEffect(() => {
-    if (get(formik?.values, buildPath) === RUNTIME_INPUT_VALUE) {
-      setCodeBaseType(undefined)
-    } else if (
-      viewType === StepViewType.DeploymentForm &&
-      !isEmpty(formik?.values) &&
-      !get(formik?.values, buildPath)
-    ) {
+    if (viewType === StepViewType.DeploymentForm && !isEmpty(formik?.values) && !get(formik?.values, buildPath)) {
       setCodeBaseType(CodebaseTypes.BRANCH)
     }
   }, [get(formik?.values, buildPath), viewType])
@@ -126,9 +123,7 @@ function CICodebaseInputSetFormV1Internal({
     if (type) {
       setCodeBaseType(type)
     }
-    const ctrRef = get(originalPipeline, 'repository.connector') as string
-    setConnectorRef(ctrRef)
-    setConnectorId(getIdentifierFromValue(ctrRef))
+    setConnectorId(getIdentifierFromValue(connectorRef || ''))
   }, [formik?.values])
 
   useEffect(() => {
@@ -181,7 +176,7 @@ function CICodebaseInputSetFormV1Internal({
 
   useEffect(() => {
     if (connectorId) {
-      const connectorScope = getScopeFromValue(connectorRef)
+      const connectorScope = getScopeFromValue(connectorRef || '')
       getConnectorDetails({
         pathParams: {
           identifier: connectorId
@@ -218,9 +213,9 @@ function CICodebaseInputSetFormV1Internal({
         if (!get(codebaseConnector, 'spec.apiAccess')) {
           return
         }
-        const connectorReference = get(originalPipeline, 'repository.connector', '').includes(RUNTIME_INPUT_VALUE)
+        const connectorReference = connectorRef?.includes(RUNTIME_INPUT_VALUE)
           ? codebaseConnector && getReference(getScopeFromDTO(codebaseConnector), codebaseConnector.identifier)
-          : get(originalPipeline, 'repository.connector', '')
+          : connectorRef
 
         if (repoName) {
           try {
@@ -269,7 +264,7 @@ function CICodebaseInputSetFormV1Internal({
         codebaseConnectorConnectionType === ConnectionType.Account &&
         !get(originalPipeline, 'repository.name', '').includes(RUNTIME_INPUT_VALUE)
       ) {
-        fetchBranchesForRepo(get(originalPipeline, 'repository.name', ''))
+        fetchBranchesForRepo(repoIdentifier || '')
       }
     }
   }, [codebaseConnector, originalPipeline])
