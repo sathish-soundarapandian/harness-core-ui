@@ -45,6 +45,7 @@ import css from './InfraProvisioningWizard.module.scss'
 
 export enum PipelineConfigurationOption {
   StarterPipeline = 'STARTER_PIPELINE',
+  GenerateYAML = 'GENERATE_YAML',
   ChooseExistingYAML = 'CHOOSE_EXISTING_YAML',
   ChooseStarterConfig_DotNetCore = 'CHOOSE_STARTER_CONFIG_DOT_NET_CORE',
   ChooseStarterConfig_JavenWithMaven = 'CHOOSE_STARTER_CONFIG_JAVA_WITH_MAVEN',
@@ -63,6 +64,7 @@ export const StarterConfigurations = [
 
 export const StarterConfigIdToOptionMap: { [key: string]: PipelineConfigurationOption } = {
   'starter-pipeline': PipelineConfigurationOption.StarterPipeline,
+  'generate-yaml': PipelineConfigurationOption.GenerateYAML,
   'choose-existing-yaml': PipelineConfigurationOption.ChooseExistingYAML,
   'dot-net-core': PipelineConfigurationOption.ChooseStarterConfig_DotNetCore,
   'java-with-maven': PipelineConfigurationOption.ChooseStarterConfig_JavenWithMaven,
@@ -124,18 +126,18 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
   const [pipelineName, setPipelineName] = useState<string>()
   const pipelineNameToSpecify = `Build ${pipelineName}`
   const formikRef = useRef<FormikContextType<ImportPipelineYAMLInterface>>()
-  const starterMinimumPipelineConfig: StarterTemplate = {
-    name: getString('ci.getStartedWithCI.createEmptyPipelineConfig'),
-    description: getString('ci.getStartedWithCI.starterPipelineHelptext'),
-    icon: 'create-via-starter-pipeline',
-    id: 'generate-pipeline'
-  }
   const generatePipelineConfig: StarterTemplate = {
     name: getString('ci.getStartedWithCI.generatePipelineConfig'),
     description: getString('ci.getStartedWithCI.starterPipelineHelptext'),
     icon: 'create-via-pipeline-template',
-    id: 'starter-pipeline',
+    id: 'generate-yaml',
     isRecommended: true
+  }
+  const starterMinimumPipelineConfig: StarterTemplate = {
+    name: getString('ci.getStartedWithCI.createEmptyPipelineConfig'),
+    description: getString('ci.getStartedWithCI.starterPipelineHelptext'),
+    icon: 'create-via-starter-pipeline',
+    id: 'starter-pipeline'
   }
   const [selectedConfigOption, setSelectedConfigOption] = useState<StarterTemplate>(generatePipelineConfig)
   const [showAdvancedOptions, setShowAdvancedOptions] = useState<boolean>(false)
@@ -151,7 +153,11 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
   )
 
   const markFieldsTouchedToShowValidationErrors = React.useCallback((): void => {
-    if (StarterConfigIdToOptionMap[selectedConfigOption.id] === PipelineConfigurationOption.StarterPipeline) {
+    if (
+      [PipelineConfigurationOption.StarterPipeline, PipelineConfigurationOption.GenerateYAML].includes(
+        StarterConfigIdToOptionMap[selectedConfigOption.id]
+      )
+    ) {
       const { values, setFieldTouched } = saveToGitFormikRef.current || {}
       const { branch, yamlPath, pipelineName: _pipelineName } = values || {}
       if (!_pipelineName) {
