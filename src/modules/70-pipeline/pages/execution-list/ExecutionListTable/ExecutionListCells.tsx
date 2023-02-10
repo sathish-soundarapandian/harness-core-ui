@@ -33,12 +33,13 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { killEvent } from '@common/utils/eventUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
 import { TimePopoverWithLocal } from '@pipeline/components/ExecutionCard/TimePopoverWithLocal'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
-import { PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED, AUTO_TRIGGERS } from '@pipeline/utils/constants'
+import { AUTO_TRIGGERS } from '@pipeline/utils/constants'
 import { hasCIStage } from '@pipeline/utils/stageHelpers'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { mapTriggerTypeToIconAndExecutionText, mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
@@ -345,6 +346,8 @@ export const MenuCell: CellType = ({ row, column }) => {
     isDebugMode: hasCI
   })
 
+  const { CI_REMOTE_DEBUG } = useFeatureFlags()
+
   const [canEdit, canExecute] = usePermission(
     {
       resourceScope: {
@@ -383,11 +386,7 @@ export const MenuCell: CellType = ({ row, column }) => {
         canEdit={canEdit}
         onViewCompiledYaml={() => onViewCompiledYaml(data)}
         onCompareExecutions={() => addToCompare(data)}
-        onReRunInDebugMode={
-          hasCI && PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED.includes(accountId)
-            ? () => openRunPipelineModal()
-            : undefined
-        }
+        onReRunInDebugMode={hasCI && CI_REMOTE_DEBUG ? () => openRunPipelineModal() : undefined}
         source={source}
         canExecute={canExecute}
         canRetry={data.canRetry}
