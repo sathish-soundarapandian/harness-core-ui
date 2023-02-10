@@ -95,7 +95,7 @@ const KubernetesManifestCommands = () => {
             properties: { category: Category.DELEGATE }
           }
         }}
-        commandSnippet={getString('delegate.verifyDelegateYamlCmnd')}
+        commandSnippet={getString('delegates.commandLineCreation.lastCommandKubernetesLastLine')}
         allowCopy={true}
       />
     </Layout.Vertical>

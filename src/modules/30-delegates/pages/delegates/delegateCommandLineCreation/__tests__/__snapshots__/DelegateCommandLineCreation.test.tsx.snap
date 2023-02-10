@@ -680,7 +680,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Manifest 1`]
             <p
               class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--font-variation-yaml"
             >
-              delegate.verifyDelegateYamlCmnd
+              delegates.commandLineCreation.lastCommandKubernetesLastLine
             </p>
             <div
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-center"

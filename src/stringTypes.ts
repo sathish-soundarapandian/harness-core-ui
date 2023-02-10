@@ -1560,6 +1560,7 @@ export interface StringsMap {
   'delegates.commandLineCreation.kubernetesSecondDirectionPartTwo': string
   'delegates.commandLineCreation.kubernetesThirdDirectionPartOne': string
   'delegates.commandLineCreation.kubernetesThirdDirectionPartTwo': string
+  'delegates.commandLineCreation.lastCommandKubernetesLastLine': string
   'delegates.commandLineCreation.learnWatch': string
   'delegates.commandLineCreation.oldWayToCreateDelegate': string
   'delegates.commandLineCreation.retryConnections': string
