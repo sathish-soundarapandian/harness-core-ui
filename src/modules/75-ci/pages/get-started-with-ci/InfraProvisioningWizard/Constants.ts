@@ -266,7 +266,7 @@ export const getPipelinePayloadWithoutCodebase = (): Record<string, any> => {
   }
 }
 
-export const getCIStarterPipelineV1 = (): Record<string, any> => {
+const getCIStarterPipelineV1 = (): Record<string, any> => {
   return {
     version: 1,
     name: `HelloWorld CI ${new Date().getTime().toString()}`,
@@ -288,6 +288,12 @@ export const getCIStarterPipelineV1 = (): Record<string, any> => {
       }
     ]
   }
+}
+
+export const getCIStarterPipelineV1WithCodebase = (connectorRef: string): Record<string, any> => {
+  let basePipeline = getCIStarterPipelineV1()
+  basePipeline = set(basePipeline, 'repository', { connector: connectorRef })
+  return basePipeline
 }
 
 export const getPipelinePayloadWithCodebase = (): Record<string, any> => {
