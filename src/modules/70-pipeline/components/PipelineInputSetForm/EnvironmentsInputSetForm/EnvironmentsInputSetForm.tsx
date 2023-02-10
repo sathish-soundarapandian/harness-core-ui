@@ -29,7 +29,7 @@ export default function EnvironmentsInputSetForm({
   viewType,
   stageIdentifier,
   allowableTypes
-}: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier'>): React.ReactElement {
+}: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier' | 'stageType'>): React.ReactElement {
   const { getString } = useStrings()
   const { NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled } = useFeatureFlags()
 

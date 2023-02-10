@@ -6,9 +6,11 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, fireEvent, act } from '@testing-library/react'
+import mockImport from 'framework/utils/mockImport'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as commonHooks from '@common/hooks'
+import type { Module } from '@common/interfaces/RouteInterfaces'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, pipelineModuleParams, pipelinePathProps } from '@common/utils/routeUtils'
@@ -98,6 +100,77 @@ describe('Pipeline Details tests', () => {
     const notPipelineStudio = getByTestId('not-pipeline-studio')
     expect(notPipelineStudio).toBeTruthy()
     expect(container).toMatchSnapshot()
+  })
+
+  test('Should visit Pipeline Studio V1 route for CI with FF CI_YAML_VERSIONING enabled', async () => {
+    mockImport('@common/hooks/useFeatureFlag', {
+      useFeatureFlags: () => ({ CI_YAML_VERSIONING: true })
+    })
+    const params = {
+      accountId: 'testAcc',
+      orgIdentifier: 'testOrg',
+      projectIdentifier: 'test',
+      pipelineIdentifier: 'pipeline',
+      module: 'ci' as Module
+    }
+    const { container } = render(
+      <TestWrapper path={PIPELINE_STUDIO_V1_PATH} pathParams={params} defaultAppStoreValues={defaultAppStoreValues}>
+        <PipelineDetails />
+      </TestWrapper>
+    )
+    const btn = container.querySelector('a[class*="TabNavigation--active"]')
+    await act(async () => {
+      fireEvent.click(btn!)
+    })
+    expect(btn).toHaveAttribute('href', routes.toPipelineStudioV1(params))
+  })
+
+  test('Should not Pipeline Studio V0 route for CI with FF CI_YAML_VERSIONING disabled', async () => {
+    mockImport('@common/hooks/useFeatureFlag', {
+      useFeatureFlags: () => ({ CI_YAML_VERSIONING: false })
+    })
+    const params = {
+      accountId: 'testAcc',
+      orgIdentifier: 'testOrg',
+      projectIdentifier: 'test',
+      pipelineIdentifier: 'pipeline',
+      module: 'ci' as Module
+    }
+    const { container } = render(
+      <TestWrapper path={PIPELINE_STUDIO_PATH} pathParams={params} defaultAppStoreValues={defaultAppStoreValues}>
+        <PipelineDetails />
+      </TestWrapper>
+    )
+    const btn = container.querySelector('a[class*="TabNavigation--active"]')
+    await act(async () => {
+      fireEvent.click(btn!)
+    })
+    expect(btn).not.toHaveAttribute('href', routes.toPipelineStudioV1(params))
+    expect(btn).toHaveAttribute('href', routes.toPipelineStudio(params))
+  })
+
+  test('Should not visit Pipeline Studio V1 route for non-CI modules even with FF CI_YAML_VERSIONING enabled', async () => {
+    mockImport('@common/hooks/useFeatureFlag', {
+      useFeatureFlags: () => ({ CI_YAML_VERSIONING: true })
+    })
+    const params = {
+      accountId: 'testAcc',
+      orgIdentifier: 'testOrg',
+      projectIdentifier: 'test',
+      pipelineIdentifier: 'pipeline',
+      module: 'cd' as Module
+    }
+    const { container } = render(
+      <TestWrapper path={PIPELINE_STUDIO_PATH} pathParams={params} defaultAppStoreValues={defaultAppStoreValues}>
+        <PipelineDetails />
+      </TestWrapper>
+    )
+    const btn = container.querySelector('a[class*="TabNavigation--active"]')
+    await act(async () => {
+      fireEvent.click(btn!)
+    })
+    expect(btn).not.toHaveAttribute('href', routes.toPipelineStudioV1(params))
+    expect(btn).toHaveAttribute('href', routes.toPipelineStudio(params))
   })
 
   test('Trigger tab disabled for git sync defaultBranch not the same as in url', async () => {

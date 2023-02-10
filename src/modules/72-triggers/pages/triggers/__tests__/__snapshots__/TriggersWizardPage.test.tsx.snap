@@ -2854,6 +2854,10 @@ exports[`TriggersWizardPage Triggers tests Payload/Values Comparison Existing Tr
                               >
                                 <div
                                   class="accordionSummary"
+                                  id="pipeline.stages[0].stage.spec.Environment"
+                                />
+                                <div
+                                  class="accordionSummary"
                                   id="Stage.Coverage_Report.Infrastructure"
                                 >
                                   <div

@@ -109,7 +109,8 @@
   padding: var(--spacing-small) var(--spacing-xlarge);
 }
 
-.conditionalExecutionTitle {
+.conditionalExecutionTitle,
+.failureStrategiesTitle {
   font-size: var(--form-input-font-size) !important;
 }
 
@@ -135,4 +136,12 @@
 
 .runTimeWidth {
   width: 400px;
+}
+
+.titleWrapper {
+  display: flex;
+  align-items: center;
+  color: var(--grey-600);
+  font-weight: 600;
+  margin-bottom: var(--spacing-2);
 }

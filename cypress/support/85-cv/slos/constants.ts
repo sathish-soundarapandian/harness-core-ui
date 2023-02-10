@@ -558,6 +558,50 @@ export const getServiceLevelObjectiveV2Response = {
 }
 
 export const getServiceLevelObjectiveResponse = {
+  metaData: {},
+  resource: {
+    serviceLevelObjectiveV2: {
+      orgIdentifier: 'default',
+      projectIdentifier: 'project1',
+      name: 'SLO-1',
+      identifier: 'SLO1',
+      description: 'Tracks SLO error rate',
+      tags: {},
+      userJourneyRefs: ['newone'],
+      sloTarget: { type: 'Rolling', sloTargetPercentage: 90, spec: { periodLength: '30d' } },
+      type: 'Simple',
+      spec: {
+        monitoredServiceRef: 'cvng_prod',
+        healthSourceRef: healthSource,
+        serviceLevelIndicatorType: 'Latency',
+        serviceLevelIndicators: [
+          {
+            name: 'service_appd_env_appd_appd_SLO4_d0465971-4885-474f-be87-4a32c55d30f9}',
+            identifier: 'service_appd_env_appd_appd_SLO4_cc7b5a73-4fbb-4fd4-872f-146f854d74d7',
+            type: 'Latency',
+            spec: {
+              type: 'Ratio',
+              spec: {
+                eventType: 'Good',
+                metric1: 'https_errors_per_min',
+                metric2: 'number_of_slow_calls',
+                thresholdValue: 20,
+                thresholdType: '<='
+              }
+            },
+            sliMissingDataType: 'Good'
+          }
+        ]
+      },
+      notificationRuleRefs: [{ notificationRuleRef: 'test1010', enabled: true }]
+    },
+    createdAt: 1663212197411,
+    lastModifiedAt: 1675745969791
+  },
+  responseMessages: []
+}
+
+export const getServiceLevelObjectiveResponseOld = {
   status: 'SUCCESS',
   resource: {
     serviceLevelObjective: {

@@ -14,11 +14,13 @@ import {
   Container,
   ExpandingSearchInput,
   ExpandingSearchInputHandle,
-  Icon
+  Icon,
+  Tab,
+  Tabs
 } from '@harness/uicore'
 import type { GroupedVirtuosoHandle, VirtuosoHandle } from 'react-virtuoso'
 import { Color } from '@harness/design-system'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, merge } from 'lodash-es'
 import routes from '@common/RouteDefinitions'
 import { ErrorList, extractInfo } from '@common/components/ErrorHandler/ErrorHandler'
 import { String as StrTemplate, useStrings } from 'framework/strings'
@@ -32,7 +34,7 @@ import type {
 import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import type { ModulePathParams, ExecutionPathProps } from '@common/interfaces/RouteInterfaces'
 import { addHotJarSuppressionAttribute } from '@common/utils/utils'
-import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
+import { isExecutionComplete, isExecutionWaitingForInput } from '@pipeline/utils/statusHelpers'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { LinkifyText } from '@common/components/LinkifyText/LinkifyText'
 import { useLogsContent } from './useLogsContent'
@@ -40,7 +42,14 @@ import { GroupedLogsWithRef as GroupedLogs } from './components/GroupedLogs'
 import { SingleSectionLogsWithRef as SingleSectionLogs } from './components/SingleSectionLogs'
 import type { UseActionCreatorReturn } from './LogsState/actions'
 import { useLogSettings } from './useLogsSettings'
+import { InputOutputTab } from '../execution/StepDetails/tabs/InputOutputTab/InputOutputTab'
 import css from './LogsContent.module.scss'
+
+enum ConsoleDetailTab {
+  CONSOLE_LOGS = 'CONSOLE_LOGS',
+  INPUT = 'INPUT',
+  OUTPUT = 'OUTPUT'
+}
 
 function resolveCurrentStep(selectedStepId: string, queryParams: ExecutionPageQueryParams): string {
   return queryParams.retryStep ? queryParams.retryStep : selectedStepId
@@ -356,16 +365,68 @@ export class LogsContentWithErrorBoundary extends React.Component<LogsContentPro
 }
 
 export function DefaultConsoleViewStepDetails(props: ConsoleViewStepDetailProps): React.ReactElement {
-  const { errorMessage, isSkipped, renderLogs } = props
+  const { errorMessage, isSkipped, renderLogs, step, isStageExecutionInputConfigured } = props
+  const { identifier, stepParameters, baseFqn, outcomes, status, stepType } = defaultTo(step, {})
+  const { getString } = useStrings()
+  const [activeTab, setActiveTab] = React.useState(ConsoleDetailTab.CONSOLE_LOGS)
+  const manuallySelected = React.useRef(false)
+  const isWaitingOnExecInputs = isExecutionWaitingForInput(status)
+  const shouldShowInputOutput = ((stepType ?? '') as string) !== 'liteEngineTask' && !isStageExecutionInputConfigured
+
+  React.useEffect(() => {
+    if (!shouldShowInputOutput && activeTab !== ConsoleDetailTab.CONSOLE_LOGS) {
+      setActiveTab(ConsoleDetailTab.CONSOLE_LOGS)
+    }
+  }, [identifier, isStageExecutionInputConfigured, activeTab, shouldShowInputOutput])
 
   return (
-    <div className={css.logViewer}>
-      <LogsContentWithErrorBoundary
-        mode="console-view"
-        errorMessage={errorMessage}
-        isWarning={isSkipped}
-        renderLogs={renderLogs}
-      />
+    <div className={css.tabs}>
+      <Tabs
+        id="console-details"
+        selectedTabId={activeTab}
+        onChange={newTab => {
+          manuallySelected.current = true
+          setActiveTab(newTab as ConsoleDetailTab)
+        }}
+        renderAllTabPanels={false}
+      >
+        {isStageExecutionInputConfigured ? null : (
+          <Tab
+            id={ConsoleDetailTab.CONSOLE_LOGS}
+            title={'Logs'}
+            panel={
+              <LogsContentWithErrorBoundary
+                mode="console-view"
+                errorMessage={errorMessage}
+                isWarning={isSkipped}
+                renderLogs={renderLogs}
+              />
+            }
+          />
+        )}
+        {shouldShowInputOutput && (
+          <Tab
+            id={ConsoleDetailTab.INPUT}
+            title={getString('common.input')}
+            disabled={isWaitingOnExecInputs}
+            panel={<InputOutputTab baseFqn={baseFqn} mode="input" data={stepParameters} />}
+          />
+        )}
+        {shouldShowInputOutput && (
+          <Tab
+            id={ConsoleDetailTab.OUTPUT}
+            title={getString('outputLabel')}
+            disabled={isWaitingOnExecInputs}
+            panel={
+              <InputOutputTab
+                baseFqn={baseFqn}
+                mode="output"
+                data={Array.isArray(outcomes) ? { output: merge({}, ...outcomes) } : outcomes}
+              />
+            }
+          />
+        )}
+      </Tabs>
     </div>
   )
 }

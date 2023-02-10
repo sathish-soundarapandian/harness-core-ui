@@ -202,8 +202,7 @@ function OpenShiftParamWithGit({
                 placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                 className={templateCss.halfWidth}
               />
-
-              {!!(connectionType === GitRepoName.Account && accountUrl) && (
+              {!!(connectionType === GitRepoName.Account || accountUrl) && (
                 <GitRepositoryName
                   accountUrl={accountUrl}
                   expressions={expressions}
@@ -213,7 +212,6 @@ function OpenShiftParamWithGit({
                   isReadonly={isReadonly}
                 />
               )}
-
               <Layout.Horizontal flex spacing="huge" margin={{ top: 'small', bottom: 'small' }}>
                 <div className={templateCss.halfWidth}>
                   <FormInput.Select

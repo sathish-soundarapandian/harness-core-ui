@@ -98,7 +98,7 @@ export class WaitStep extends PipelineStep<WaitStepData> {
     const errors: FormikErrors<WaitStepData> = {}
     const isRequired = viewType === StepViewType.DeploymentForm
     /* istanbul ignore else */
-    if (getMultiTypeFromValue(template?.spec.duration) === MultiTypeInputType.RUNTIME) {
+    if (getMultiTypeFromValue(template?.spec?.duration) === MultiTypeInputType.RUNTIME) {
       let durationSchema = getDurationValidationSchema({ minimum: '10s' })
       /* istanbul ignore else */
       if (isRequired) {

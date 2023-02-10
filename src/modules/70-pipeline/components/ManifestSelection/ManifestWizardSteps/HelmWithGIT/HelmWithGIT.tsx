@@ -35,6 +35,7 @@ import type { ModalViewFor } from '@pipeline/components/ArtifactsSelection/Artif
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 import type { HelmWithGITDataType } from '../../ManifestInterface'
 import {
+  getSkipResourceVersioningBasedOnDeclarativeRollback,
   gitFetchTypeList,
   GitFetchTypes,
   GitRepoName,
@@ -80,7 +81,7 @@ function HelmWithGIT({
   context
 }: StepProps<ConnectorConfigDTO> & HelmWithGITPropType): React.ReactElement {
   const { getString } = useStrings()
-  const { CDP_HELM_SUB_CHARTS } = useFeatureFlags()
+  const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
   const hideHeaderAndNavBtns = context ? shouldHideHeaderAndNavBtns(context) : false
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
   const gitConnectionType: string = prevStepData?.store === ManifestStoreMap.Git ? 'connectionType' : 'type'
@@ -109,6 +110,7 @@ function HelmWithGIT({
         helmVersion: initialValues.spec?.helmVersion,
         subChartName: initialValues.spec?.subChartName,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
+        enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
         valuesPaths:
           typeof initialValues?.spec?.valuesPaths === 'string'
             ? initialValues?.spec?.valuesPaths
@@ -132,6 +134,7 @@ function HelmWithGIT({
       subChartName: '',
       helmVersion: 'V2',
       skipResourceVersioning: false,
+      enableDeclarativeRollback: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],
       repoName: getRepositoryName(prevStepData, initialValues)
     }
@@ -156,7 +159,11 @@ function HelmWithGIT({
             typeof formData?.valuesPaths === 'string'
               ? formData?.valuesPaths
               : formData?.valuesPaths?.map((path: { path: string }) => path.path),
-          skipResourceVersioning: formData?.skipResourceVersioning,
+          skipResourceVersioning: getSkipResourceVersioningBasedOnDeclarativeRollback(
+            formData?.skipResourceVersioning,
+            formData?.enableDeclarativeRollback
+          ),
+          enableDeclarativeRollback: formData?.enableDeclarativeRollback,
           helmVersion: formData?.helmVersion
         }
       }
@@ -261,8 +268,7 @@ function HelmWithGIT({
                 placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                 className={helmcss.halfWidth}
               />
-
-              {!!(connectionType === GitRepoName.Account && accountUrl) && (
+              {!!(connectionType === GitRepoName.Account || accountUrl) && (
                 <GitRepositoryName
                   accountUrl={accountUrl}
                   expressions={expressions}
@@ -371,7 +377,7 @@ function HelmWithGIT({
                   <FormInput.Select name="helmVersion" label={getString('helmVersion')} items={helmVersions} />
                 </div>
               </Layout.Horizontal>
-              {CDP_HELM_SUB_CHARTS && (
+              {NG_CDS_HELM_SUB_CHARTS && (
                 <Layout.Horizontal flex spacing="huge" margin={{ bottom: 'small' }}>
                   <div
                     className={cx(helmcss.halfWidth, {
@@ -384,6 +390,7 @@ function HelmWithGIT({
                       placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
                       name="subChartName"
                       multiTextInputProps={{ expressions, allowableTypes }}
+                      isOptional
                     />
                     {getMultiTypeFromValue(formik.values?.subChartName) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions

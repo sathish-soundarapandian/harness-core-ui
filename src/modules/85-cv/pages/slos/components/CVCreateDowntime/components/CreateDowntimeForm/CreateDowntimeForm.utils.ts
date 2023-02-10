@@ -35,6 +35,8 @@ export const isFormDataValid = (
       return validateDefineDowntimeSection(formikProps)
     case CreateDowntimeSteps.SELECT_DOWNTIME_WINDOW:
       return validateSelectDowntimeWindowSection(formikProps)
+    case CreateDowntimeSteps.SELECT_MONITORED_SERVICES:
+      return validateSelectMonitoredServicesSection(formikProps)
     default:
       return false
   }
@@ -101,6 +103,12 @@ export const validateSelectDowntimeWindowSection = (formikProps: FormikProps<Dow
   return true
 }
 
+export const validateSelectMonitoredServicesSection = (formikProps: FormikProps<DowntimeForm>): boolean => {
+  formikProps.setFieldTouched(DowntimeFormFields.MS_LIST, true)
+  const { msList } = formikProps.values
+  return !isEmpty(msList)
+}
+
 export const getErrorMessageByTabId = (
   formikProps: FormikProps<DowntimeForm>,
   selectedTabId: CreateDowntimeSteps
@@ -110,6 +118,8 @@ export const getErrorMessageByTabId = (
       return errorDefineDowntimeSection(formikProps.errors)
     case CreateDowntimeSteps.SELECT_DOWNTIME_WINDOW:
       return errorSelectDowntimeWindowSection(formikProps)
+    case CreateDowntimeSteps.SELECT_MONITORED_SERVICES:
+      return errorSelectMonitoredServiceSection(formikProps.errors)
     default:
       return []
   }
@@ -140,4 +150,10 @@ const errorSelectDowntimeWindowSection = (formikProps: FormikProps<DowntimeForm>
     ) as string[]
     return [...errors, ...recurrenceErrors]
   }
+}
+
+const errorSelectMonitoredServiceSection = (errors: FormikProps<DowntimeForm>['errors']): string[] => {
+  const { msList } = errors
+
+  return [msList].filter(item => Boolean(item)) as string[]
 }

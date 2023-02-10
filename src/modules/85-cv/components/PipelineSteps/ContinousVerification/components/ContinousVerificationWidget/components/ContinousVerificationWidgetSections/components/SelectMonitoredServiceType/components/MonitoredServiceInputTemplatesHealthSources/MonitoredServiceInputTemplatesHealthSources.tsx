@@ -15,7 +15,6 @@ import {
   getFieldLabelForVerifyTemplate,
   getNestedFields
 } from '@cv/pages/monitored-service/CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
-import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -69,44 +68,42 @@ export default function MonitoredServiceInputTemplatesHealthSources(
               {/* TODO - healthsource name should also be persisted in templateData */}
               {getString('cv.healthSource.nameLabel')}: {healthSource?.name || healthSource?.identifier}
             </Text>
-            {fields.length ? (
-              fields.map(input => {
-                if (input.name === CONNECTOR_REF) {
-                  return (
-                    <FormMultiTypeConnectorField
-                      accountIdentifier={accountId}
-                      projectIdentifier={projectIdentifier}
-                      orgIdentifier={orgIdentifier}
-                      width={400}
-                      name={`spec.monitoredService.spec.templateInputs.${input.path}`}
-                      label={getString('connector')}
-                      placeholder={getString('cv.healthSource.connectors.selectConnector', {
-                        sourceType: getSourceTypeForConnector(healthSource)
-                      })}
-                      disabled={!getSourceTypeForConnector(healthSource)}
-                      setRefValue
-                      multiTypeProps={{ allowableTypes, expressions }}
-                      type={getSourceTypeForConnector(healthSource) as ConnectorInfoDTO['type']}
-                      enableConfigureOptions={false}
-                    />
-                  )
-                } else if (shouldRenderField(input)) {
-                  return (
-                    <FormInput.MultiTextInput
-                      key={input.name}
-                      name={`spec.monitoredService.spec.templateInputs.${input.path}`}
-                      label={getFieldLabelForVerifyTemplate(input.name, getString)}
-                      multiTextInputProps={{
-                        expressions,
-                        allowableTypes
-                      }}
-                    />
-                  )
-                }
-              })
-            ) : (
-              <NoResultsView text={'No Runtime inputs available'} minimal={true} />
-            )}
+            {fields.length
+              ? fields.map(input => {
+                  if (input.name === CONNECTOR_REF) {
+                    return (
+                      <FormMultiTypeConnectorField
+                        accountIdentifier={accountId}
+                        projectIdentifier={projectIdentifier}
+                        orgIdentifier={orgIdentifier}
+                        width={400}
+                        name={`spec.monitoredService.spec.templateInputs.${input.path}`}
+                        label={getString('connector')}
+                        placeholder={getString('cv.healthSource.connectors.selectConnector', {
+                          sourceType: getSourceTypeForConnector(healthSource)
+                        })}
+                        disabled={!getSourceTypeForConnector(healthSource)}
+                        setRefValue
+                        multiTypeProps={{ allowableTypes, expressions }}
+                        type={getSourceTypeForConnector(healthSource) as ConnectorInfoDTO['type']}
+                        enableConfigureOptions={false}
+                      />
+                    )
+                  } else if (shouldRenderField(input)) {
+                    return (
+                      <FormInput.MultiTextInput
+                        key={input.name}
+                        name={`spec.monitoredService.spec.templateInputs.${input.path}`}
+                        label={getFieldLabelForVerifyTemplate(input.name, getString)}
+                        multiTextInputProps={{
+                          expressions,
+                          allowableTypes
+                        }}
+                      />
+                    )
+                  }
+                })
+              : null}
             {Array.isArray(metricDefinitions) && metricDefinitions.length ? (
               <Layout.Vertical padding={{ top: 'medium' }}>
                 {metricDefinitions.map((item: any, idx: number) => {

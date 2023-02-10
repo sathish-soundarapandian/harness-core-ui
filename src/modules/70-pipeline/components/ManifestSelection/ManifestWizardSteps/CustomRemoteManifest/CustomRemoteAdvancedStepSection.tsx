@@ -20,7 +20,7 @@ import cx from 'classnames'
 
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { FieldArray, FormikValues } from 'formik'
-import { defaultTo, get } from 'lodash-es'
+import { defaultTo, get, isBoolean } from 'lodash-es'
 import { String, useStrings } from 'framework/strings'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { FormMultiTypeCheckboxField } from '@common/components'
@@ -29,7 +29,7 @@ import { ManifestConfig, useHelmCmdFlags } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import type { CommandFlags, HelmVersionOptions, ManifestTypes } from '../../ManifestInterface'
-import { helmVersions, ManifestDataType } from '../../Manifesthelper'
+import { allowedManifestForDeclarativeRollback, helmVersions, ManifestDataType } from '../../Manifesthelper'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
 import css from './CustomRemoteAdvancedStepSection.module.scss'
 interface CustomRemoteAdvancedStepProps {
@@ -60,7 +60,8 @@ function CustomRemoteAdvancedStepSection({
   const [commandFlagOptions, setCommandFlagOptions] = useState<Record<string, SelectOption[]>>({ V2: [], V3: [] })
 
   const [selectedHelmVersion, setHelmVersion] = useState(get(initialValues, 'spec.helmVersion') ?? 'V2')
-
+  const isSkipVersioningDisabled =
+    isBoolean(formik?.values?.enableDeclarativeRollback) && !!formik?.values?.enableDeclarativeRollback
   const { data: commandFlags, refetch: refetchCommandFlags } = useHelmCmdFlags({
     queryParams: {
       serviceSpecType: deploymentType as string,
@@ -94,12 +95,42 @@ function CustomRemoteAdvancedStepSection({
 
   return (
     <div className={helmcss.helmAdvancedSteps}>
+      {allowedManifestForDeclarativeRollback(selectedManifest) && (
+        <Layout.Horizontal
+          flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+          width={'90%'}
+          margin={{ bottom: 'small' }}
+        >
+          <FormMultiTypeCheckboxField
+            name="enableDeclarativeRollback"
+            label={getString('pipeline.manifestType.enableDeclarativeRollback')}
+            multiTypeTextbox={{ expressions, allowableTypes }}
+            className={cx(helmcss.checkbox, css.checkboxWidth)}
+          />
+          {getMultiTypeFromValue(formik.values?.enableDeclarativeRollback) === MultiTypeInputType.RUNTIME && (
+            <ConfigureOptions
+              value={(formik.values?.enableDeclarativeRollback || '') as string}
+              type="String"
+              variableName="enableDeclarativeRollback"
+              showRequiredField={false}
+              showDefaultField={false}
+              showAdvanced={true}
+              onChange={value => formik.setFieldValue('enableDeclarativeRollback', value)}
+              style={{ alignSelf: 'center', marginTop: 11 }}
+              className={css.addmarginTop}
+              isReadonly={isReadonly}
+            />
+          )}
+        </Layout.Horizontal>
+      )}
       <Layout.Horizontal width={'90%'} flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
         <FormMultiTypeCheckboxField
+          key={isSkipVersioningDisabled.toString()}
           name="skipResourceVersioning"
           label={getString('skipResourceVersion')}
           className={cx(helmcss.checkbox, css.checkboxWidth)}
-          multiTypeTextbox={{ expressions, allowableTypes }}
+          multiTypeTextbox={{ expressions, allowableTypes, disabled: isSkipVersioningDisabled }}
+          disabled={isSkipVersioningDisabled}
         />
         {getMultiTypeFromValue(formik.values?.skipResourceVersioning) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
@@ -136,6 +167,7 @@ function CustomRemoteAdvancedStepSection({
           <></>
         )}
       </Layout.Horizontal>
+
       {commandFlagOptions[helmVersion]?.length > 0 && (
         <div className={css.commandFlags}>
           <MultiTypeFieldSelector

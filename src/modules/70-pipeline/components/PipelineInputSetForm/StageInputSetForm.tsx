@@ -54,7 +54,8 @@ import type { StringsMap } from 'stringTypes'
 import {
   getCustomStepProps,
   getStepTypeByDeploymentType,
-  infraDefinitionTypeMapping
+  infraDefinitionTypeMapping,
+  StageType
 } from '@pipeline/utils/stageHelpers'
 import type { K8sDirectInfraYaml } from 'services/ci'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
@@ -137,6 +138,7 @@ export interface StageInputSetFormProps {
   stageIdentifier?: string
   executionIdentifier?: string
   allowableTypes: AllowedTypes
+  stageType: StageType
 }
 
 export function StageInputSetFormInternal({
@@ -148,7 +150,8 @@ export function StageInputSetFormInternal({
   viewType,
   stageIdentifier,
   executionIdentifier,
-  allowableTypes
+  allowableTypes,
+  stageType
 }: StageInputSetFormProps): React.ReactElement {
   const deploymentStageInputSet = get(formik?.values, path, {})
   const { getString } = useStrings()
@@ -1212,6 +1215,7 @@ export function StageInputSetFormInternal({
                 allowableTypes={allowableTypes}
                 customStepProps={{
                   stageIdentifier: stageIdentifier as string,
+                  stageType,
                   selectedStage: deploymentStage
                 }}
               />
@@ -1231,6 +1235,7 @@ export function StageInputSetFormInternal({
                 allowableTypes={allowableTypes}
                 customStepProps={{
                   stageIdentifier: stageIdentifier as string,
+                  stageType,
                   selectedStage: deploymentStage
                 }}
               />
@@ -1332,6 +1337,7 @@ export function StageInputSetFormInternal({
                 allowableTypes={allowableTypes}
                 customStepProps={{
                   stageIdentifier: stageIdentifier as string,
+                  stageType,
                   selectedStage: deploymentStage
                 }}
               />
@@ -1349,6 +1355,7 @@ export function StageInputSetFormInternal({
                 allowableTypes={allowableTypes}
                 customStepProps={{
                   stageIdentifier: stageIdentifier as string,
+                  stageType,
                   selectedStage: deploymentStage
                 }}
               />

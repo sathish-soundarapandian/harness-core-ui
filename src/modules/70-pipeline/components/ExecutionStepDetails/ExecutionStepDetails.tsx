@@ -21,7 +21,12 @@ import { useStrings } from 'framework/strings'
 import factory from '@pipeline/factories/ExecutionFactory'
 import { isCDStage, isCIStage, StageType } from '@pipeline/utils/stageHelpers'
 import { isExecutionCompletedWithBadState, isExecutionRunning, isExecutionSuccess } from '@pipeline/utils/statusHelpers'
-import { getInterruptHistoriesFromType, Interrupt, NodeType, NonSelectableNodes } from '@pipeline/utils/executionUtils'
+import {
+  getInterruptHistoriesFromType,
+  Interrupt,
+  StepNodeType,
+  NonSelectableStepNodes
+} from '@pipeline/utils/executionUtils'
 
 import type { StepType } from '../PipelineSteps/PipelineStepInterface'
 import css from './ExecutionStepDetails.module.scss'
@@ -118,7 +123,7 @@ export default function ExecutionStepDetails(): React.ReactElement {
   }
 
   const StepDetails = stepDetails.component
-  const isStage = NonSelectableNodes.includes(selectedStep?.stepType as NodeType)
+  const isStage = NonSelectableStepNodes.includes(selectedStep?.stepType as StepNodeType)
 
   return (
     <div className={css.main}>

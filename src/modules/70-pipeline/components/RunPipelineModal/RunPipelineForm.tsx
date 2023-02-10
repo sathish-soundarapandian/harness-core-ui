@@ -174,6 +174,7 @@ function RunPipelineFormBasic({
   const { setPipeline: updatePipelineInVaribalesContext, setSelectedInputSetsContext } = usePipelineVariables()
   const [existingProvide, setExistingProvide] = useState<'existing' | 'provide'>('existing')
   const [yamlHandler, setYamlHandler] = useState<YamlBuilderHandlerBinding | undefined>()
+  const [currentPipeline, setCurrentPipeline] = useState<PipelineInfoConfig | undefined>()
   const [resolvedPipeline, setResolvedPipeline] = useState<PipelineInfoConfig | undefined>()
 
   const [canSaveInputSet, canEditYaml] = usePermission(
@@ -276,7 +277,8 @@ function RunPipelineFormBasic({
     executionIdentifier,
     inputSetSelected: selectedInputSets,
     resolvedPipeline: resolvedMergedPipeline,
-    setSelectedInputSets
+    setSelectedInputSets,
+    currentYAML: currentPipeline
   })
 
   const { mutate: runPipeline, loading: runPipelineLoading } = usePostPipelineExecuteWithInputSetYaml({
@@ -429,6 +431,10 @@ function RunPipelineFormBasic({
     setSelectedInputSets(inputSetSelected)
     setSelectedInputSetsContext?.(inputSetSelected)
   }, [inputSetSelected])
+
+  useEffect(() => {
+    !isEmpty(formikRef?.current?.values) && setCurrentPipeline(formikRef?.current?.values)
+  }, [selectedStageData])
 
   useEffect(() => {
     if (inputSetYAML) {

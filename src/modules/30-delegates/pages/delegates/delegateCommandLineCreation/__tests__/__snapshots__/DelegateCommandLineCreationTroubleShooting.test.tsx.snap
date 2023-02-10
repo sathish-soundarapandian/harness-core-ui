@@ -187,6 +187,7 @@ exports[`Delegate Command line creation failure troubleShoot click for Kubernete
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value="mock_value"
@@ -354,7 +355,6 @@ exports[`Delegate Command line creation failure troubleShoot click for Kubernete
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-primary8"
                 >
                   <a
-                    href="/account/dummy/settings/resources/delegates/tokens"
                     rel="noreferrer"
                     target="_blank"
                   >
@@ -375,7 +375,7 @@ exports[`Delegate Command line creation failure troubleShoot click for Kubernete
             <p
               class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--font-variation-yaml"
             >
-              delegate.verifyDelegateYamlCmnd
+              delegates.commandLineCreation.lastCommandKubernetesLastLine
             </p>
             <div
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-center"
@@ -860,6 +860,7 @@ exports[`Delegate Command line creation failure troubleShoot click for docker 1`
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value="docker-delegate"
@@ -1747,6 +1748,7 @@ exports[`Delegate Command line creation failure troubleShoot click for helm 1`] 
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value="helm-delegate"
@@ -2766,6 +2768,7 @@ exports[`Delegate Command line creation failure troubleShoot click for terraform
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value="terraform-delegate"

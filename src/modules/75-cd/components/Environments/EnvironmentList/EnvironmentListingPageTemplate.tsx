@@ -6,15 +6,12 @@
  */
 
 import React, { ReactNode, useMemo, FC } from 'react'
-import { Breadcrumb, Page, Heading, HarnessDocTooltip, Layout } from '@harness/uicore'
+import { Breadcrumb, Page, Heading, HarnessDocTooltip } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import { get, isEmpty } from 'lodash-es'
-import { useParams } from 'react-router-dom'
+import { get } from 'lodash-es'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
-import EndOfLifeBanner from '@pipeline/components/PipelineStudio/PipelineCanvas/EndOfLifeBanner'
-import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './EnvironmentsList.module.scss'
 
 interface EnvironmentPageHeadingProps {
@@ -82,37 +79,31 @@ const EnvironmentListingPageTemplate: React.FC<EnvironmentPageTemplateProps> = (
     [title, titleTooltipId]
   )
 
-  const { module, projectIdentifier } = useParams<PipelineType<ProjectPathProps>>()
-  const showBanner = !isEmpty(projectIdentifier) && module === 'cd'
-
   return (
-    <Layout.Vertical>
-      {showBanner && <EndOfLifeBanner isSvcOrEnv />}
-      <main className={css.layout}>
-        <Page.Header
-          title={headerTitle}
-          breadcrumbs={<NGBreadcrumbs customPathParams={{ module: 'cd' }} links={breadcrumbs} />}
-          className={css.header}
-          content={headerContent}
-          toolbar={headerToolbar}
-        />
+    <main className={css.layout}>
+      <Page.Header
+        title={headerTitle}
+        breadcrumbs={<NGBreadcrumbs customPathParams={{ module: 'cd' }} links={breadcrumbs} />}
+        className={css.header}
+        content={headerContent}
+        toolbar={headerToolbar}
+      />
 
-        {toolbar && <Page.SubHeader className={css.toolbar}>{toolbar}</Page.SubHeader>}
+      {toolbar && <Page.SubHeader className={css.toolbar}>{toolbar}</Page.SubHeader>}
 
-        <div className={css.content}>
-          {state === STATUS.error && <Page.Error message={getErrorMessage(error)} onClick={retryOnError} />}
-          {state === STATUS.ok && children}
+      <div className={css.content}>
+        {state === STATUS.error && <Page.Error message={getErrorMessage(error)} onClick={retryOnError} />}
+        {state === STATUS.ok && children}
+      </div>
+
+      {state === STATUS.ok && pagination && <footer className={css.footer}>{pagination}</footer>}
+
+      {state === STATUS.loading && !error && (
+        <div className={css.loading}>
+          <ContainerSpinner />
         </div>
-
-        {state === STATUS.ok && pagination && <footer className={css.footer}>{pagination}</footer>}
-
-        {state === STATUS.loading && !error && (
-          <div className={css.loading}>
-            <ContainerSpinner />
-          </div>
-        )}
-      </main>
-    </Layout.Vertical>
+      )}
+    </main>
   )
 }
 

@@ -19,7 +19,7 @@ import {
 import { AllowedTypesWithRunTime, MultiTypeInputType, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { omit } from 'lodash-es'
-import { TestWrapper } from '@common/utils/testUtils'
+import { queryByNameAttribute, TestWrapper } from '@common/utils/testUtils'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
 import type { ManifestTypes } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import HarnessFileStore from '../HarnessFileStore'
@@ -127,9 +127,8 @@ describe('Harness File Store tests', () => {
       </TestWrapper>
     )
 
-    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
     await act(async () => {
-      fireEvent.change(queryByNameAttribute('identifier')!, { target: { value: 'testidentifier' } })
+      fireEvent.change(queryByNameAttribute('identifier', container)!, { target: { value: 'testidentifier' } })
     })
 
     fireEvent.click(container.querySelector('button[type="submit"]')!)
@@ -287,5 +286,75 @@ describe('Harness File Store tests', () => {
     )
     const valuesPathsText = queryByText(container, 'pipeline.manifestType.valuesYamlPath')
     expect(valuesPathsText).toBeNull()
+  })
+
+  test('enableDeclarativeRollback field in case of K8sManifest', async () => {
+    const defaultProps = {
+      ...props,
+      stepName: 'Manifest details',
+      expressions: [],
+      initialValues: {
+        identifier: 'test',
+        files: RUNTIME_INPUT_VALUE,
+        valuesPaths: RUNTIME_INPUT_VALUE
+      },
+      prevStepData: {
+        store: 'Harness'
+      }
+    }
+    const handleSubmit = jest.fn()
+    const { container, getByText } = render(
+      <TestWrapper>
+        <HarnessFileStore
+          {...defaultProps}
+          handleSubmit={handleSubmit}
+          initialValues={{
+            identifier: 'testidentifier',
+            type: ManifestDataType.K8sManifest,
+            spec: {
+              skipResourceVersioning: false,
+              valuesPaths: ['test-path'],
+              store: {
+                spec: {
+                  files: ['file path']
+                },
+                type: 'Harness'
+              }
+            }
+          }}
+        />
+      </TestWrapper>
+    )
+    userEvent.click(getByText('advancedTitle'))
+    expect(getByText('pipeline.manifestType.enableDeclarativeRollback')!).toBeInTheDocument()
+
+    const enableDeclarativeRollbackCheckbox = queryByNameAttribute(
+      'enableDeclarativeRollback',
+      container
+    ) as HTMLInputElement
+    await waitFor(() => expect(enableDeclarativeRollbackCheckbox).not.toBeChecked())
+    userEvent.click(getByText('pipeline.manifestType.enableDeclarativeRollback')!)
+    await waitFor(() => expect(enableDeclarativeRollbackCheckbox).toBeTruthy())
+    fireEvent.click(container.querySelector('button[type="submit"]')!)
+    await waitFor(() => {
+      expect(handleSubmit).toHaveBeenCalledTimes(1)
+      expect(handleSubmit).toHaveBeenCalledWith({
+        manifest: {
+          identifier: 'testidentifier',
+          type: 'K8sManifest',
+          spec: {
+            enableDeclarativeRollback: true,
+            skipResourceVersioning: false,
+            valuesPaths: ['test-path'],
+            store: {
+              spec: {
+                files: ['file path']
+              },
+              type: 'Harness'
+            }
+          }
+        }
+      })
+    })
   })
 })

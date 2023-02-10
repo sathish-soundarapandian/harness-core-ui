@@ -19,7 +19,8 @@ export const AuthTypes = {
   ANNONYMOUS: 'Anonymous',
   BEARER_TOKEN: 'Bearer Token(HTTP Header)',
   PERSONAL_ACCESS_TOKEN: 'PersonalAccessToken',
-  ADFS: 'AdfsClientCredentialsWithCertificate'
+  ADFS: 'AdfsClientCredentialsWithCertificate',
+  API_TOKEN: 'ApiToken'
 }
 
 export enum GitAuthTypes {
@@ -176,6 +177,8 @@ export const getConnectorTitleIdByType = (type: string): StringKeys => {
       return 'connectors.title.azureArtifacts'
     case Connectors.TAS:
       return 'connectors.title.tas'
+    case Connectors.TERRAFORM_CLOUD:
+      return 'connectors.title.terraform'
     default:
       return 'connector'
   }
@@ -276,6 +279,8 @@ export const getConnectorIconByType = (type: string): IconName => {
       return 'spot'
     case Connectors.TAS:
       return 'tas'
+    case Connectors.TERRAFORM_CLOUD:
+      return 'terraform-cloud'
     default:
       return 'placeholder'
   }

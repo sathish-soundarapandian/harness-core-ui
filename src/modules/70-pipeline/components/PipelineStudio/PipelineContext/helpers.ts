@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import stableStringify from 'fast-json-stable-stringify'
 import type { PipelineStageWrapper } from '@pipeline/utils/pipelineTypes'
 import type { PipelineInfoConfig, StageElementConfig, StageElementWrapperConfig } from 'services/pipeline-ng'
 
@@ -52,4 +53,11 @@ export function getStagePathFromPipeline(stageId: string, prefix: string, pipeli
   }
 
   return prefix
+}
+
+export function comparePipelines(
+  pipeline1: PipelineInfoConfig | undefined,
+  pipeline2: PipelineInfoConfig | undefined
+): boolean {
+  return stableStringify(pipeline1) !== stableStringify(pipeline2)
 }

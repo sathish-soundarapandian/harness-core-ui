@@ -53,7 +53,6 @@ interface ModulesRoutesMap extends GoToModuleBtnProps {
   search?: string
   accountId: string
   freePlanEnabled?: boolean
-  cdOnboardingEnabled?: boolean
 }
 interface UpdateLicneseStoreAndGotoModulePageProps {
   planData: ResponseModuleLicenseDTO
@@ -64,8 +63,7 @@ const getModulesWithSubscriptionsRoutesMap = ({
   projectData,
   search = '',
   accountId,
-  freePlanEnabled = false,
-  cdOnboardingEnabled = false
+  freePlanEnabled = false
 }: ModulesRoutesMap): Map<ModuleName, any> => {
   const cdCiPath = {
     pathname: routes.toPipelineStudio({
@@ -106,7 +104,7 @@ const getModulesWithSubscriptionsRoutesMap = ({
         })
       }
     ],
-    [ModuleName.CD, cdOnboardingEnabled ? cdOnboardingPath : cdCiPath],
+    [ModuleName.CD, cdOnboardingPath],
     [ModuleName.CI, cdCiPath],
     [
       ModuleName.STO,
@@ -137,7 +135,6 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
   const { showError } = useToaster()
   const { licenseInformation, updateLicenseStore } = useLicenseStore()
   const FREE_PLAN_ENABLED = !isOnPrem()
-  const { CD_ONBOARDING_ENABLED } = useFeatureFlags()
   const history = useHistory()
   const { selectedModuleName, projectData } = props
   const { accountId } = useParams<AccountPathProps>()
@@ -156,8 +153,7 @@ const GoToModuleBtn: React.FC<GoToModuleBtnProps> = props => {
       projectData,
       accountId,
       search: `?experience=${experienceType}&&modal=${experienceType}`,
-      freePlanEnabled: FREE_PLAN_ENABLED,
-      cdOnboardingEnabled: CD_ONBOARDING_ENABLED
+      freePlanEnabled: FREE_PLAN_ENABLED
     })
     history.push(moudleRoutePathMap.get(selectedModuleName))
   }

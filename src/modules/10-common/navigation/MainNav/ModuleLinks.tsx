@@ -211,7 +211,7 @@ export const IACNavItem = (): JSX.Element => {
             color={Color.WHITE}
             className={css.text}
           >
-            <String stringID="common.iacm" />
+            <String stringID="common.infrastructures" />
           </Text>
         </Layout.Vertical>
       </Link>
@@ -219,12 +219,12 @@ export const IACNavItem = (): JSX.Element => {
   )
 }
 
-export const SSCSNavItem = (): JSX.Element => {
+export const SSCANavItem = (): JSX.Element => {
   const params = useParams<ProjectPathProps>()
 
   return (
     <li className={css.navItem}>
-      <Link {...commonLinkProps} to={routes.toSSCS(params)}>
+      <Link {...commonLinkProps} to={routes.toSSCA(params)}>
         <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
           <Icon name="sscs-main" size={30} />
           <Text
@@ -233,7 +233,7 @@ export const SSCSNavItem = (): JSX.Element => {
             color={Color.WHITE}
             className={css.text}
           >
-            <String stringID="common.sscs" />
+            <String stringID="common.ssca" />
           </Text>
         </Layout.Vertical>
       </Link>

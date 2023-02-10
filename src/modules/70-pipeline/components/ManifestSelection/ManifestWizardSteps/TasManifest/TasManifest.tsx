@@ -272,7 +272,7 @@ function TasManifest({
                       disabled
                     />
                   </div>
-                  {!!(connectionType === GitRepoName.Account && accountUrl) && (
+                  {!!(connectionType === GitRepoName.Account || accountUrl) && (
                     <GitRepositoryName
                       accountUrl={accountUrl}
                       expressions={expressions}
@@ -284,7 +284,6 @@ function TasManifest({
                       isReadonly={isReadonly}
                     />
                   )}
-
                   <Layout.Horizontal spacing="huge" margin={{ top: 'small', bottom: 'small' }}>
                     <div className={css.halfWidth}>
                       <FormInput.Select

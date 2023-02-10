@@ -103,7 +103,7 @@ export function FailureStrategy(props: FailureStrategyProps, ref: StepCommandsRe
             isReadonly={isReadonly}
             mode={Modes.STAGE}
             stageType={stageType}
-            formikProps={formik as FormikProps<{ failureStrategies?: AllFailureStrategyConfig[] }>}
+            path="failureStrategies"
           />
         )
       }}

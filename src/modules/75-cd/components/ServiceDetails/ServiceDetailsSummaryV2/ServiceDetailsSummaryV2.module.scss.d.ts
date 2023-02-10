@@ -8,13 +8,17 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly activeInstanceStyle: string
-  readonly cardGrid: string
+  readonly artifactCardGrid: string
+  readonly artifactCards: string
+  readonly artifactViewEnvDetail: string
+  readonly artifactViewEnvList: string
   readonly collapse: string
   readonly collapseHeader: string
   readonly cursor: string
   readonly detailSummaryView: string
   readonly dialogBase: string
   readonly dialogWrap: string
+  readonly envCardGrid: string
   readonly envCardTitle: string
   readonly envCardViewEmptyState: string
   readonly envCards: string

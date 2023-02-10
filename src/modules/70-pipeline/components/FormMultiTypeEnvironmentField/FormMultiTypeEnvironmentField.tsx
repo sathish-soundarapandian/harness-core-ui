@@ -14,11 +14,13 @@ import {
   Container,
   DataTooltipInterface,
   errorCheck,
+  ExpressionAndRuntimeTypeProps,
   FormError,
   FormikTooltipContext,
   HarnessDocTooltip,
   Layout,
   MultiTypeInputType,
+  MultiTypeInputValue,
   SelectOption,
   Tag,
   Text
@@ -56,7 +58,11 @@ export interface EnvironmentReferenceFieldProps extends Omit<IFormGroupProps, 'l
   multitypeInputValue?: MultiTypeInputType
   multiTypeProps?: Omit<MultiTypeReferenceInputProps<EnvironmentResponseDTO>, 'name' | 'referenceSelectProps'>
   setRefValue?: boolean
-  onChange?: (service: any) => void
+  onChange?: (
+    environment: ExpressionAndRuntimeTypeProps['value'],
+    valueType?: MultiTypeInputValue,
+    type?: MultiTypeInputType
+  ) => void
   selected?: string
   defaultScope?: Scope
   width?: number
@@ -218,13 +224,13 @@ export function MultiTypeEnvironmentField(props: EnvironmentReferenceFieldProps)
                 onChange?.(value.value)
               } else {
                 formik?.setFieldValue(name, value)
-                onChange?.(value)
+                onChange?.(value as unknown as string)
               }
               setSelectedValue(value)
             } else {
               formik?.setFieldValue(name, defaultTo(val, ''))
               setSelectedValue(defaultTo(val, ''))
-              onChange?.(val)
+              onChange?.(val, undefined, type1)
             }
           }}
           value={Array.isArray(selectedValue) ? '' : selectedValue}

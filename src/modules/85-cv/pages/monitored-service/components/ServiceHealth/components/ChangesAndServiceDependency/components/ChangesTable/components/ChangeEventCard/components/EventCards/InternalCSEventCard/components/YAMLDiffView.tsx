@@ -8,7 +8,7 @@
 import React from 'react'
 import { Icon, Layout, NoDataCard, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { MonacoDiffEditor } from 'react-monaco-editor'
+import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import noDataImage from '@cv/assets/noData.svg'

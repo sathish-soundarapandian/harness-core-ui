@@ -317,6 +317,10 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
                     >
                       <div
                         class="accordionSummary"
+                        id="pipeline.stages[0].stage.spec.Environment"
+                      />
+                      <div
+                        class="accordionSummary"
                         id="Stage.stage1.Infrastructure"
                       >
                         <div
@@ -824,6 +828,10 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
                       </div>
                       <div
                         class="accordionSummary"
+                        id="pipeline.stages[0].stage.spec.Environment"
+                      />
+                      <div
+                        class="accordionSummary"
                         id="Stage.undefined.Infrastructure"
                       >
                         <div
@@ -1264,6 +1272,10 @@ exports[`WebhookPipelineInputPanel Triggers tests Renders/snapshots Initial Rend
                     <div
                       class="topAccordion"
                     >
+                      <div
+                        class="accordionSummary"
+                        id="pipeline.stages[0].stage.spec.Environment"
+                      />
                       <div
                         class="accordionSummary"
                         id="Stage.stage1.Infrastructure"

@@ -231,8 +231,7 @@ function ServerlessAwsLambdaManifest({
                       placeholder={getString('pipeline.manifestType.manifestPlaceholder')}
                     />
                   </div>
-
-                  {!!(connectionType === GitRepoName.Account && accountUrl) && (
+                  {!!(connectionType === GitRepoName.Account || accountUrl) && (
                     <GitRepositoryName
                       accountUrl={accountUrl}
                       expressions={expressions}

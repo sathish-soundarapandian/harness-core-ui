@@ -5,8 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 import React from 'react'
-import { Button, Text } from '@harness/uicore'
-import { FieldArray, FormikProps } from 'formik'
+import { Button, FormInput, Text } from '@harness/uicore'
+import { FieldArray, FormikErrors, useFormikContext } from 'formik'
 import { v4 as uuid } from 'uuid'
 import { defaultTo, flatMap, get, isEmpty, uniq } from 'lodash-es'
 import cx from 'classnames'
@@ -14,14 +14,17 @@ import { Color } from '@harness/design-system'
 import { String, useStrings } from 'framework/strings'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepMode as Modes } from '@pipeline/utils/stepUtils'
-
+import { useDeepCompareEffect } from '@common/hooks'
 import { ErrorType, Strategy } from '@pipeline/utils/FailureStrategyUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import FailureTypeMultiSelect from './FailureTypeMultiSelect'
+import { isValueRuntimeInput } from '@common/utils/utils'
+
+import { FailureTypeMultiSelect } from './FailureTypeMultiSelect'
 import { allowedStrategiesAsPerStep, errorTypesForStages } from './StrategySelection/StrategyConfig'
 import StrategySelection from './StrategySelection/StrategySelection'
 import { findTabWithErrors, hasItems, handleChangeInStrategies, getTabIntent } from './utils'
 import type { AllFailureStrategyConfig } from './utils'
+
 import css from './FailureStrategyPanel.module.scss'
 
 /**
@@ -31,57 +34,51 @@ import css from './FailureStrategyPanel.module.scss'
  */
 
 export interface FailureStrategyPanelProps {
-  formikProps: FormikProps<{
-    failureStrategies?: AllFailureStrategyConfig[]
-  }>
+  path?: string
   mode: Modes
   isReadonly: boolean
   stageType?: StageType
 }
 
-export default function FailureStrategyPanel(props: FailureStrategyPanelProps): React.ReactElement {
-  const {
-    formikProps: { values: formValues, submitForm, errors, isSubmitting, setFormikState },
-    mode,
-    isReadonly,
-    stageType = StageType.DEPLOY
-  } = props
-  const [selectedStrategyNum, setSelectedStrategyNum] = React.useState(Math.max(findTabWithErrors(errors), 0))
-  const hasFailureStrategies = hasItems(formValues.failureStrategies)
+export function FailureStrategyPanel(props: FailureStrategyPanelProps): React.ReactElement {
+  const { mode, path = 'failureStrategies', isReadonly, stageType = StageType.DEPLOY } = props
   const { getString } = useStrings()
+  const formik = useFormikContext()
+  const strategies = get(formik.values, path, []) as AllFailureStrategyConfig[]
+  const errors = get(formik.errors, path, []) as FormikErrors<AllFailureStrategyConfig[]>
+  const [selectedStrategyNum, setSelectedStrategyNum] = React.useState(Math.max(findTabWithErrors(errors), 0))
+  const hasFailureStrategies = hasItems(strategies)
   const uids = React.useRef<string[]>([])
-  const filterTypes = uniq(
-    flatMap(defaultTo(formValues.failureStrategies, []), e => defaultTo(e.onFailure?.errors, []))
-  )
-  const currentTabHasErrors = !isEmpty(get(errors, `failureStrategies[${selectedStrategyNum}]`))
+  const filterTypes = uniq(flatMap(strategies, e => defaultTo(e.onFailure?.errors, [])))
+  const currentTabHasErrors = !isEmpty(get(errors, selectedStrategyNum))
   const addedAllErrors = filterTypes.includes(ErrorType.AllErrors)
   const addedAllStratgies = filterTypes.length === errorTypesForStages[stageType].length
   const isAddBtnDisabled = addedAllErrors || addedAllStratgies || isReadonly || currentTabHasErrors
   const { NG_EXECUTION_INPUT, PIPELINE_ROLLBACK } = useFeatureFlags()
 
   async function handleTabChange(n: number): Promise<void> {
-    await submitForm()
+    await formik.submitForm()
 
     // only change tab if current tab has no errors
     /* istanbul ignore else */
-    if (isEmpty(get(errors, `failureStrategies[${selectedStrategyNum}]`))) {
+    if (isEmpty(get(errors, selectedStrategyNum))) {
       setSelectedStrategyNum(n)
     }
   }
 
-  function handleAdd(push: (obj: any) => void, strategies: AllFailureStrategyConfig[]) {
+  function handleAdd(push: (obj: any) => void, newStrategies: AllFailureStrategyConfig[]) {
     return async (): Promise<void> => {
       /* istanbul ignore else */
-      if (strategies.length > 0) {
-        await submitForm()
+      if (newStrategies.length > 0) {
+        await formik.submitForm()
       }
 
       // only allow add if current tab has no errors
       /* istanbul ignore else */
-      if (isEmpty(get(errors, `failureStrategies[${selectedStrategyNum}]`))) {
+      if (isEmpty(get(errors, selectedStrategyNum))) {
         uids.current.push(uuid())
         push({ onFailure: { errors: [], action: {} } })
-        setSelectedStrategyNum(strategies.length)
+        setSelectedStrategyNum(newStrategies.length)
       }
     }
   }
@@ -93,26 +90,26 @@ export default function FailureStrategyPanel(props: FailureStrategyPanelProps): 
     }
   }
 
-  React.useEffect(() => {
+  useDeepCompareEffect(() => {
     handleChangeInStrategies({
-      formValues,
+      strategies,
       selectedStrategyNum,
-      setFormikState,
+      setFormikState: formik.setFormikState,
       setSelectedStrategyNum
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formValues.failureStrategies, selectedStrategyNum])
+  }, [strategies, selectedStrategyNum])
 
   // open errored tab
-  React.useEffect(() => {
-    if (isSubmitting) {
+  useDeepCompareEffect(() => {
+    if (formik.isSubmitting) {
       const tabNum = findTabWithErrors(errors)
 
       if (tabNum > -1) {
         setSelectedStrategyNum(tabNum)
       }
     }
-  }, [isSubmitting, errors])
+  }, [formik.isSubmitting, errors])
 
   let allowedStrategies = allowedStrategiesAsPerStep(stageType)[mode]
 
@@ -125,18 +122,10 @@ export default function FailureStrategyPanel(props: FailureStrategyPanelProps): 
   }
 
   return (
-    <div data-testid="failure-strategy-panel" className={css.main}>
-      <Text color={Color.GREY_700} font={{ size: 'small' }}>
-        <String stringID="pipeline.failureStrategies.helpText" />
-        <a rel="noreferrer" target="_blank" href={getString('pipeline.failureStrategies.learnMoreLink')}>
-          {getString('pipeline.createPipeline.learnMore')}
-        </a>
-      </Text>
+    <React.Fragment>
       <div className={css.header}>
-        <FieldArray name="failureStrategies">
+        <FieldArray name={path}>
           {({ push, remove }) => {
-            const strategies = defaultTo(formValues.failureStrategies, [])
-
             return (
               <React.Fragment>
                 <div className={css.tabs}>
@@ -217,6 +206,29 @@ export default function FailureStrategyPanel(props: FailureStrategyPanelProps): 
           />
         </React.Fragment>
       ) : null}
+    </React.Fragment>
+  )
+}
+
+export default function FailureStrategyPanelWrapper(props: FailureStrategyPanelProps): React.ReactElement {
+  const { path = 'failureStrategies' } = props
+  const { getString } = useStrings()
+  const formik = useFormikContext()
+  const strategies = get(formik.values, path)
+
+  return (
+    <div data-testid="failure-strategy-panel" className={css.main}>
+      <Text color={Color.GREY_700} font={{ size: 'small' }}>
+        <String stringID="pipeline.failureStrategies.helpText" />
+        <a rel="noreferrer" target="_blank" href={getString('pipeline.failureStrategies.learnMoreLink')}>
+          {getString('pipeline.createPipeline.learnMore')}
+        </a>
+      </Text>
+      {isValueRuntimeInput(strategies) ? (
+        <FormInput.Text name={path} className={css.runtimeInput} disabled />
+      ) : (
+        <FailureStrategyPanel {...props} />
+      )}
     </div>
   )
 }

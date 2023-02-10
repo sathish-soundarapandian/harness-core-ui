@@ -18,7 +18,6 @@ import {
   getNestedRuntimeInputs
 } from '@cv/pages/monitored-service/CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import {
   useGetHarnessEnvironments,
   useGetHarnessServices
@@ -104,46 +103,44 @@ export default function TemplatisedRunTimeMonitoredService(
               {/* TODO - healthsource name should also be persisted in templateData */}
               {getString('cv.healthSource.nameLabel')}: {healthSource?.name || healthSource?.identifier}
             </Text>
-            {runtimeInputs.length ? (
-              runtimeInputs.map(input => {
-                if (input.name === CONNECTOR_REF) {
-                  return (
-                    <FormMultiTypeConnectorField
-                      accountIdentifier={accountId}
-                      projectIdentifier={projectIdentifier}
-                      orgIdentifier={orgIdentifier}
-                      width={330}
-                      name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
-                      label={getString('connector')}
-                      placeholder={getString('cv.healthSource.connectors.selectConnector', {
-                        sourceType: getSourceTypeForConnector(healthSource)
-                      })}
-                      disabled={!getSourceTypeForConnector(healthSource)}
-                      setRefValue
-                      multiTypeProps={{ allowableTypes, expressions }}
-                      type={getSourceTypeForConnector(healthSource) as ConnectorInfoDTO['type']}
-                      enableConfigureOptions={false}
-                    />
-                  )
-                } else {
-                  return (
-                    <>
-                      <FormInput.MultiTextInput
-                        key={input.name}
+            {runtimeInputs.length
+              ? runtimeInputs.map(input => {
+                  if (input.name === CONNECTOR_REF) {
+                    return (
+                      <FormMultiTypeConnectorField
+                        accountIdentifier={accountId}
+                        projectIdentifier={projectIdentifier}
+                        orgIdentifier={orgIdentifier}
+                        width={330}
                         name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
-                        label={getFieldLabelForVerifyTemplate(input.name, getString)}
-                        multiTextInputProps={{
-                          expressions,
-                          allowableTypes
-                        }}
+                        label={getString('connector')}
+                        placeholder={getString('cv.healthSource.connectors.selectConnector', {
+                          sourceType: getSourceTypeForConnector(healthSource)
+                        })}
+                        disabled={!getSourceTypeForConnector(healthSource)}
+                        setRefValue
+                        multiTypeProps={{ allowableTypes, expressions }}
+                        type={getSourceTypeForConnector(healthSource) as ConnectorInfoDTO['type']}
+                        enableConfigureOptions={false}
                       />
-                    </>
-                  )
-                }
-              })
-            ) : (
-              <NoResultsView text={'No Runtime inputs available'} minimal={true} />
-            )}
+                    )
+                  } else {
+                    return (
+                      <>
+                        <FormInput.MultiTextInput
+                          key={input.name}
+                          name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
+                          label={getFieldLabelForVerifyTemplate(input.name, getString)}
+                          multiTextInputProps={{
+                            expressions,
+                            allowableTypes
+                          }}
+                        />
+                      </>
+                    )
+                  }
+                })
+              : null}
             {Array.isArray(metricDefinitions) && metricDefinitions.length ? (
               <Layout.Vertical padding={{ top: 'medium' }}>
                 {metricDefinitions.map((item: any, idx: number) => {

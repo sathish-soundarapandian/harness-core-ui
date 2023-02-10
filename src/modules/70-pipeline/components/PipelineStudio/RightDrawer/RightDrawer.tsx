@@ -39,6 +39,7 @@ import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext
 import type { ECSRollingDeployStepInitialValues } from '@pipeline/utils/types'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
@@ -49,7 +50,7 @@ import {
   Values
 } from '../StepCommands/StepCommandTypes'
 import { StepPalette } from '../StepPalette/StepPalette'
-import { addService, addStepOrGroup, generateRandomString, getStepFromId } from '../ExecutionGraph/ExecutionGraphUtil'
+import { addService, addStepOrGroup, getStepFromId } from '../ExecutionGraph/ExecutionGraphUtil'
 import PipelineVariables, { PipelineVariablesRef } from '../PipelineVariables/PipelineVariables'
 import { PipelineNotifications, PipelineNotificationsRef } from '../PipelineNotifications/PipelineNotifications'
 import { PipelineTemplates } from '../PipelineTemplates/PipelineTemplates'
@@ -189,13 +190,17 @@ const processNodeImpl = (
       addReplace(item, node)
 
       // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.
-      if (Array.isArray(item.failureStrategies)) {
+      if (Array.isArray(item.failureStrategies) || isValueRuntimeInput(item.failureStrategies as any)) {
         node.failureStrategies = item.failureStrategies
-        const telemetryData = item.failureStrategies.map(strategy => ({
-          onError: strategy.onFailure?.errors?.join(', '),
-          action: strategy.onFailure?.action?.type
-        }))
-        telemetryData.length && trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
+
+        if (Array.isArray(item.failureStrategies)) {
+          const telemetryData = item.failureStrategies.map(strategy => ({
+            onError: strategy.onFailure?.errors?.join(', '),
+            action: strategy.onFailure?.action?.type
+          }))
+          telemetryData.length &&
+            trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
+        }
       }
       if (!data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
         set(node, 'spec.delegateSelectors', item.delegateSelectors)
@@ -547,7 +552,7 @@ export function RightDrawer(): React.ReactElement {
   const executionStrategyRef = React.useRef<ExecutionStrategyRefInterface | null>(null)
   const { getString } = useStrings()
   const isFullScreenDrawer = FullscreenDrawers.includes(type)
-  let title: React.ReactNode | null = null
+  let title: React.ReactNode | undefined = undefined
   if (data?.stepConfig?.isStepGroup) {
     stepData = stepsFactory.getStepData(StepType.StepGroup)
   }
@@ -605,8 +610,6 @@ export function RightDrawer(): React.ReactElement {
         }
       ></RightDrawerTitle>
     )
-  } else {
-    title = null
   }
 
   React.useEffect(() => {
@@ -770,10 +773,11 @@ export function RightDrawer(): React.ReactElement {
 
   const { onSearchInputChange } = usePipelineVariables()
 
-  const getStepNameSuffix = (stepType: string, stepName: string, isProvisioner = false): string => {
+  const getStepNameSuffix = (stepType: string, stepName: string, isProvisioner: boolean): string => {
     let maxId = 0
     const suffixNameArray: string[] = []
     const stepsMap = data?.paletteData?.stepsMap
+    const _stepName = stepName.split(' ').join('')
     stepsMap?.forEach((_value, key: string) => {
       const stepDetails = getStepFromId(
         isProvisioner
@@ -781,10 +785,15 @@ export function RightDrawer(): React.ReactElement {
           : selectedStage?.stage?.spec?.execution,
         key
       )
-      if (get(stepDetails, 'node.template.templateInputs.type', stepDetails?.node?.type) === stepType) {
-        const stepNodeName = stepDetails?.node?.name
-        if (stepNodeName.length > stepName.length) {
-          const suffix = stepNodeName.slice(stepName.length)
+      const stepNodeName = stepDetails?.node?.name?.split(' ').join('')
+
+      const selectedStepType = get(stepDetails, 'node.template.templateRef') //save step as template without runtime fields
+        ? stepNodeName?.slice(0, stepType.length)
+        : get(stepDetails, 'node.template.templateInputs.type', stepDetails?.node?.type) // save step as template with runtime fields/save step in pipeline studio
+
+      if (selectedStepType === stepType) {
+        if (stepNodeName.length > _stepName.length) {
+          const suffix = stepNodeName.slice(_stepName.length)
           suffixNameArray.push(suffix)
         }
         maxId++
@@ -803,7 +812,7 @@ export function RightDrawer(): React.ReactElement {
 
   const onStepSelection = async (item: StepData): Promise<void> => {
     const paletteData = data?.paletteData
-    const suffixString = getStepNameSuffix(item.type, item.name)
+    const suffixString = getStepNameSuffix(item.type, item.name, false)
     const stepName = `${item.name}${suffixString}`
     if (paletteData?.entity) {
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(defaultTo(selectedStageId, '')))
@@ -1104,11 +1113,13 @@ export function RightDrawer(): React.ReactElement {
             const paletteData = data.paletteData
             if (paletteData?.entity) {
               const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))
+              const suffixString = getStepNameSuffix(item.type, item.name, true)
+              const stepName = `${item.name}${suffixString}`
               const newStepData = {
                 step: {
                   type: item.type,
-                  name: item.name,
-                  identifier: generateRandomString(item.name),
+                  name: stepName,
+                  identifier: stepName.split(' ').join(''),
                   spec: {}
                 }
               }

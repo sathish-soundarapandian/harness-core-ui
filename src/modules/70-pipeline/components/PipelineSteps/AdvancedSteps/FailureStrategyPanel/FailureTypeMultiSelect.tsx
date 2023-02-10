@@ -8,7 +8,7 @@
 import React from 'react'
 import { FormGroup, Menu, Intent, Checkbox } from '@blueprintjs/core'
 import { MultiSelect as BPMultiSelect, ItemRenderer } from '@blueprintjs/select'
-import { connect, FormikContextType } from 'formik'
+import { useFormikContext } from 'formik'
 import { get } from 'lodash-es'
 
 import { errorCheck } from '@common/utils/formikHelpers'
@@ -59,14 +59,10 @@ export interface FailureTypeMultiSelectProps {
   disabled?: boolean
 }
 
-export interface ConnectedFailureTypeMultiSelectProps extends FailureTypeMultiSelectProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  formik: FormikContextType<any>
-}
-
-export function FailureTypeMultiSelect(props: ConnectedFailureTypeMultiSelectProps): React.ReactElement {
-  const { name, label, formik, stageType, filterTypes, disabled } = props
+export function FailureTypeMultiSelect(props: FailureTypeMultiSelectProps): React.ReactElement {
+  const { name, label, stageType, filterTypes, disabled } = props
   const { getString } = useStrings()
+  const formik = useFormikContext()
 
   const hasError = errorCheck(name, formik)
   const intent = hasError ? Intent.DANGER : Intent.NONE
@@ -164,5 +160,3 @@ export function FailureTypeMultiSelect(props: ConnectedFailureTypeMultiSelectPro
     </FormGroup>
   )
 }
-
-export default connect<FailureTypeMultiSelectProps>(FailureTypeMultiSelect)

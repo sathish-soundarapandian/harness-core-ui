@@ -174,8 +174,12 @@ module.exports = {
     pathRewrite: { '^/iacm': '' },
     target: process.env.IAC_UI_URL || 'https://localhost:8185'
   },
-  '/sscs': {
-    pathRewrite: { '^/sscs': '' },
-    target: process.env.SSCS_UI_URL || 'https://localhost:8186'
+  '/ssca': {
+    pathRewrite: { '^/ssca': '' },
+    target: process.env.SSCA_UI_URL || 'https://localhost:8186'
+  },
+  '/ssca/api': {
+    pathRewrite: { '^/ssca/api': '/api' },
+    target: process.env.SSCA_API_URL || 'https://localhost:8186'
   }
 }

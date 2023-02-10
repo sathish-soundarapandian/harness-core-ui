@@ -91,7 +91,7 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
     homePageUrl: '',
     color: 'green'
   },
-  SSCS: {
+  SSCA: {
     shouldVisible: true,
     icon: 'sscs-main',
     label: 'common.cdAndGitops',

@@ -20,7 +20,7 @@ import type {
   DeployEnvironmentEntityFormState,
   EnvironmentData
 } from '../types'
-import AddEditEnvironmentModal from '../../DeployInfrastructureStep/AddEditEnvironmentModal'
+import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import { EnvironmentEntityCard } from './EnvironmentEntityCard/EnvironmentEntityCard'
 
 import css from './EnvironmentEntitiesList.module.scss'

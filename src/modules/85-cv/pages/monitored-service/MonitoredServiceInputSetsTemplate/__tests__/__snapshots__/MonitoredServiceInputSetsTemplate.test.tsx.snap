@@ -908,19 +908,6 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
           >
             common.variables
           </p>
-          <div
-            class="Layout--vertical Layout--layout-spacing-large StyledProps--main mainContainer StyledProps--flex StyledProps--flex-align-center-center"
-          >
-            <img
-              src="test-file-stub"
-              width="117px"
-            />
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
-            >
-              No Runtime inputs variables available
-            </p>
-          </div>
         </div>
       </div>
     </div>
@@ -2378,19 +2365,6 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
           >
             common.variables
           </p>
-          <div
-            class="Layout--vertical Layout--layout-spacing-large StyledProps--main mainContainer StyledProps--flex StyledProps--flex-align-center-center"
-          >
-            <img
-              src="test-file-stub"
-              width="117px"
-            />
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
-            >
-              No Runtime inputs variables available
-            </p>
-          </div>
         </div>
         <button
           class="bp3-button Button--button StyledProps--font StyledProps--main cardStyle Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"
@@ -2891,19 +2865,6 @@ exports[`Test MonitoredServiceInputSetsTemplate with GCO should render with ms i
           >
             common.variables
           </p>
-          <div
-            class="Layout--vertical Layout--layout-spacing-large StyledProps--main mainContainer StyledProps--flex StyledProps--flex-align-center-center"
-          >
-            <img
-              src="test-file-stub"
-              width="117px"
-            />
-            <p
-              class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--color StyledProps--color-grey700"
-            >
-              No Runtime inputs variables available
-            </p>
-          </div>
         </div>
         <button
           class="bp3-button Button--button StyledProps--font StyledProps--main cardStyle Button--with-current-color Button--iconOnly Button--variation Button--variation-primary"

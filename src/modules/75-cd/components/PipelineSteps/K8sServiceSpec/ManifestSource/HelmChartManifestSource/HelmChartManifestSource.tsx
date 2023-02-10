@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import cx from 'classnames'
 import { FormError, FormInput, getMultiTypeFromValue, Layout, MultiTypeInputType, Text } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
@@ -22,14 +22,8 @@ import { FormMultiTypeCheckboxField } from '@common/components'
 import List from '@common/components/List/List'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { NameValuePair, useListAwsRegions } from 'services/portal'
-import {
-  GitConfigDTO,
-  useGetBucketsInManifests,
-  useGetGCSBucketList,
-  useGetHelmChartVersionDetails
-} from 'services/cd-ng'
+import { useGetBucketsInManifests, useGetGCSBucketList, useGetHelmChartVersionDetails } from 'services/cd-ng'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
-import type { Scope } from '@common/interfaces/SecretsInterface'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { FileSelectList } from '@filestore/components/FileStoreList/FileStoreList'
@@ -39,14 +33,14 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { FileUsage } from '@filestore/interfaces/FileStore'
 import {
   getDefaultQueryParam,
   getFinalQueryParamData,
   getFqnPath,
   getFqnPathForChart,
   getManifestFieldFqnPath,
-  isFieldfromTriggerTabDisabled,
-  shouldDisplayRepositoryName
+  isFieldfromTriggerTabDisabled
 } from '../ManifestSourceUtils'
 import { isFieldFixedType, isFieldRuntime } from '../../K8sServiceSpecHelper'
 import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
@@ -78,12 +72,12 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
     stageIdentifier,
     serviceIdentifier,
     stepViewType,
-    pipelineIdentifier
+    pipelineIdentifier,
+    fileUsage = FileUsage.MANIFEST_FILE
   } = props
   const { getString } = useStrings()
-  const { CDP_HELM_SUB_CHARTS } = useFeatureFlags()
+  const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
-  const [showRepoName, setShowRepoName] = useState(true)
   const { getRBACErrorMessage } = useRBACError()
   const manifestStoreType = get(template, `${manifestPath}.spec.store.type`, null)
 
@@ -361,16 +355,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
             type={ManifestToConnectorMap[defaultTo(manifest?.spec?.store?.type, '')]}
-            onChange={(selected, _itemType, multiType) => {
-              const item = selected as unknown as { record?: GitConfigDTO; scope: Scope }
-              if (multiType === MultiTypeInputType.FIXED) {
-                if (shouldDisplayRepositoryName(item)) {
-                  setShowRepoName(true)
-                } else {
-                  setShowRepoName(false)
-                }
-              }
-            }}
             gitScope={{
               repo: defaultTo(repoIdentifier, ''),
               branch: defaultTo(branch, ''),
@@ -380,7 +364,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
         </div>
       )}
       <div className={css.inputFieldLayout}>
-        {isFieldRuntime(`${manifestPath}.spec.store.spec.repoName`, template) && showRepoName && (
+        {isFieldRuntime(`${manifestPath}.spec.store.spec.repoName`, template) && (
           <div className={css.verticalSpacingInput}>
             <FormInput.MultiTextInput
               disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.repoName`)}
@@ -721,7 +705,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
         )}
       </div>
 
-      {CDP_HELM_SUB_CHARTS && isFieldRuntime(`${manifestPath}.spec.subChartName`, template) && (
+      {NG_CDS_HELM_SUB_CHARTS && isFieldRuntime(`${manifestPath}.spec.subChartName`, template) && (
         <TextFieldInputSetView
           template={template}
           fieldPath={`${manifestPath}.spec.subChartName`}
@@ -750,6 +734,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
               expressions={expressions}
               isNameOfArrayType
               type={SELECT_FILES_TYPE.FILE_STORE}
+              fileUsage={fileUsage}
               formik={formik}
             />
           ) : (
@@ -767,7 +752,42 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
         </div>
       )}
       <CustomRemoteManifestRuntimeFields {...props} />
-      <ManifestCommonRuntimeFields {...props} />
+      <ManifestCommonRuntimeFields {...props} fileUsage={fileUsage} />
+
+      <div className={css.inputFieldLayout}>
+        {isFieldRuntime(`${manifestPath}.spec.enableDeclarativeRollback`, template) && (
+          <div className={css.verticalSpacingInput}>
+            <FormMultiTypeCheckboxField
+              disabled={isFieldDisabled(`${manifestPath}.spec.enableDeclarativeRollback`)}
+              name={`${path}.${manifestPath}.spec.enableDeclarativeRollback`}
+              label={getString('pipeline.manifestType.enableDeclarativeRollback')}
+              setToFalseWhenEmpty={true}
+              multiTypeTextbox={{
+                expressions,
+                allowableTypes
+              }}
+            />
+          </div>
+        )}
+        {getMultiTypeFromValue(get(formik?.values, `${path}.${manifestPath}.spec.enableDeclarativeRollback`)) ===
+          MultiTypeInputType.RUNTIME && (
+          <ConfigureOptions
+            className={css.configureOptions}
+            style={{ alignSelf: 'center' }}
+            value={get(formik?.values, `${path}.${manifestPath}.spec.enableDeclarativeRollback`)}
+            type="String"
+            variableName="enableDeclarativeRollback"
+            showRequiredField={false}
+            showDefaultField={true}
+            isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
+            showAdvanced={true}
+            onChange={value => {
+              formik.setFieldValue(`${path}.${manifestPath}.spec.enableDeclarativeRollback`, value)
+            }}
+          />
+        )}
+      </div>
+
       <div className={css.inputFieldLayout}>
         {isFieldRuntime(`${manifestPath}.spec.skipResourceVersioning`, template) && (
           <div className={css.verticalSpacingInput}>

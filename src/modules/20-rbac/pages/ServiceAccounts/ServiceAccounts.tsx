@@ -128,10 +128,9 @@ const ServiceAccountsPage: React.FC = () => {
       >
         <ListHeader
           value={sort}
-          sortOptions={[...sortByName, ...sortByEmail, ...sortByCreated]}
+          sortOptions={[...sortByCreated, ...sortByName, ...sortByEmail]}
           onChange={option => setSort(option.value as string)}
           totalCount={data?.data?.totalItems}
-          className={css.listHeader}
         />
         <ServiceAccountsListView
           data={data?.data}

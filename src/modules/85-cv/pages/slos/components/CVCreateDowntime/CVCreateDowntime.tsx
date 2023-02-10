@@ -6,30 +6,39 @@
  */
 
 import React, { useEffect } from 'react'
-import { Formik, Page, Container, Heading } from '@harness/uicore'
+import { Formik, Page, Container, Heading, useToaster } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useGetDowntime } from 'services/cv'
+import { useGetDowntime, useSaveDowntime, useUpdateDowntimeData } from 'services/cv'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
+import routes from '@common/RouteDefinitions'
 import type { DowntimeForm } from './CVCreateDowntime.types'
 import {
+  createSLODowntimeRequestPayload,
   getDowntimeFormValidationSchema,
-  getDowntimeInitialFormData,
-  handleDowntimeSubmit
+  getDowntimeInitialFormData
 } from './CVCreateDowntime.utils'
 import { CreateDowntimeForm } from './components/CreateDowntimeForm/CreateDowntimeForm'
 
 const CVCreateDowntime = (): JSX.Element => {
   const { getString } = useStrings()
+  const history = useHistory()
+  const { showSuccess, showError } = useToaster()
 
   const { accountId, orgIdentifier, projectIdentifier, identifier } = useParams<
     ProjectPathProps & { identifier: string }
   >()
-
   const pathParams = { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+
+  const { mutate: createDowntime, loading: createDowntimeLoading } = useSaveDowntime(pathParams)
+
+  const { mutate: updateDowntime, loading: updateDowntimeLoading } = useUpdateDowntimeData({
+    identifier,
+    ...pathParams
+  })
 
   const { data, error, refetch, loading } = useGetDowntime({
     ...pathParams,
@@ -43,6 +52,27 @@ const CVCreateDowntime = (): JSX.Element => {
     }
   }, [identifier])
 
+  const handleRedirect = (): void => {
+    history.push(routes.toCVSLODowntime({ accountId, orgIdentifier, projectIdentifier, module: 'cv' }))
+  }
+
+  const handleDowntimeSubmit = async (values: DowntimeForm): Promise<void> => {
+    const sloDowntimeRequestPayload = createSLODowntimeRequestPayload(values, orgIdentifier, projectIdentifier)
+
+    try {
+      if (identifier) {
+        await updateDowntime(sloDowntimeRequestPayload)
+        showSuccess(getString('cv.sloDowntime.downtimeUpdated'))
+      } else {
+        await createDowntime(sloDowntimeRequestPayload)
+        showSuccess(getString('cv.sloDowntime.downtimeCreated'))
+      }
+      handleRedirect()
+    } catch (e) {
+      showError(getErrorMessage(e))
+    }
+  }
+
   return (
     <Container margin={{ bottom: 'large' }}>
       <Page.Header
@@ -53,21 +83,24 @@ const CVCreateDowntime = (): JSX.Element => {
           </Heading>
         }
       />
-      <Formik<DowntimeForm>
-        initialValues={getDowntimeInitialFormData(data?.resource?.downtime)}
-        formName="downtimeForm"
-        onSubmit={handleDowntimeSubmit}
-        validationSchema={getDowntimeFormValidationSchema(getString)}
-        enableReinitialize
-      >
-        <CreateDowntimeForm
-          loading={loading}
-          error={getErrorMessage(error)}
-          retryOnError={refetch}
-          runValidationOnMount={Boolean(identifier)}
-          loadingSaveButton={false}
-        />
-      </Formik>
+      <Page.Body loading={loading} error={getErrorMessage(error)} retryOnError={() => refetch()}>
+        {((identifier && data) || !identifier) && (
+          <Formik<DowntimeForm>
+            initialValues={getDowntimeInitialFormData(data?.resource?.downtime)}
+            formName="downtimeForm"
+            onSubmit={values => {
+              handleDowntimeSubmit(values)
+            }}
+            validationSchema={getDowntimeFormValidationSchema(getString)}
+          >
+            <CreateDowntimeForm
+              handleRedirect={handleRedirect}
+              runValidationOnMount={Boolean(identifier)}
+              loadingSaveButton={createDowntimeLoading || updateDowntimeLoading}
+            />
+          </Formik>
+        )}
+      </Page.Body>
     </Container>
   )
 }

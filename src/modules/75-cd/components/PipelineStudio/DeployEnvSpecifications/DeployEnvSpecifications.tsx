@@ -12,7 +12,7 @@ import cx from 'classnames'
 
 import { Container, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
-import type { StageElementConfig } from 'services/cd-ng'
+import type { DeploymentStageConfig, StageElementConfig } from 'services/cd-ng'
 
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
@@ -26,7 +26,6 @@ import { useValidationErrors } from '@pipeline/components/PipelineStudio/Pipline
 import factory from '@pipeline/components/PipelineSteps/PipelineStepFactory'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { getAllowableTypesWithoutFixedValue } from '@pipeline/utils/runPipelineUtils'
 
 import ErrorsStripBinded from '@cd/components/PipelineStudio/DeployServiceSpecifications/DeployServiceErrors'
@@ -75,9 +74,9 @@ export default function DeployEnvSpecifications(props: PropsWithChildren<unknown
   )
 
   const updateEnvStep = useCallback(
-    /* istanbul ignore next */ (value: DeployStageConfig) => {
+    /* istanbul ignore next */ (value: DeploymentStageConfig) => {
       const stageData = produce(stage, draft => {
-        const specObject: DeployStageConfig = get(draft, 'stage.spec', {})
+        const specObject: DeploymentStageConfig = get(draft, 'stage.spec', {})
 
         // istanbul ignore else
         if (specObject) {

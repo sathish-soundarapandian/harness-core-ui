@@ -3568,6 +3568,9 @@ exports[`MANIFEST renders the K8 manifest: manifest form skeleton 1`] = `
           <div
             class="inputFieldLayout"
           />
+          <div
+            class="inputFieldLayout"
+          />
         </div>
       </div>
     </div>

@@ -255,6 +255,8 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
           return '' //TODO
         case Connectors.TAS:
           return '' //TODO
+        case Connectors.TERRAFORM_CLOUD:
+          return '' //TODO
         default:
           return ''
       }

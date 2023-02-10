@@ -43,7 +43,7 @@
       "@cv/*": ["modules/85-cv/*"],
       "@ce/*": ["modules/75-ce/*"],
       "@sto/*": ["modules/85-sto/*"],
-      "@sscs/*": ["modules/75-sscs/*"],
+      "@ssca/*": ["modules/75-ssca/*"],
       "@idp/*": ["modules/75-idp/*"],
       "@gitops/*": ["modules/90-gitops/*"],
       "@wings-software/*": ["../node_modules/@harness/*"]

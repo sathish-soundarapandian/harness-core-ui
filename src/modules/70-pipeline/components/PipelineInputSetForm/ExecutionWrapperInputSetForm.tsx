@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { AllowedTypes } from '@harness/uicore'
-import { identity, pickBy, set, isEmpty } from 'lodash-es'
 import React from 'react'
+import { identity, pickBy, set, isEmpty } from 'lodash-es'
+import type { AllowedTypes } from '@harness/uicore'
+import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageConfig, ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'
 import type { StepViewType } from '../AbstractSteps/Step'
 import { CollapseForm } from './CollapseForm'
@@ -45,6 +46,7 @@ export function ExecutionWrapperInputSetForm(props: {
   customStepProps?: {
     stageIdentifier: string
     selectedStage?: DeploymentStageConfig
+    stageType?: StageType
   }
 }): JSX.Element {
   const {

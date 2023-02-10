@@ -36,7 +36,7 @@ const enableSTO = process.env.ENABLE_STO !== 'false'
 const enableCODE = process.env.ENABLE_CODE === 'true'
 const enableFFUI = process.env.ENABLE_FF_UI !== 'false'
 const enableIACM = process.env.ENABLE_IACM !== 'false'
-const enableSSCS = process.env.ENABLE_SSCS === 'true'
+const enableSSCA = process.env.ENABLE_SSCA === 'true'
 const enableIDP = process.env.ENABLE_IDP === 'true'
 
 console.log('Common build flags')
@@ -51,7 +51,7 @@ console.table({
   enableCODE,
   enableFFUI,
   enableIACM,
-  enableSSCS,
+  enableSSCA,
   enableIDP
 })
 
@@ -211,7 +211,7 @@ const config = {
         enableCODE,
         enableFFUI,
         enableIACM,
-        enableSSCS,
+        enableSSCA,
         enableIDP
       })
     ),
@@ -281,8 +281,8 @@ if (!enableIACM) {
   config.resolve.alias['iacm/IACMStage'] = ChildAppError
 }
 
-if (!enableSSCS) {
-  config.resolve.alias['sscs/MicroFrontendApp'] = ChildAppError
+if (!enableSSCA) {
+  config.resolve.alias['ssca/MicroFrontendApp'] = ChildAppError
 }
 
 if (!enableIDP) {

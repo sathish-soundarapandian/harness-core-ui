@@ -44,7 +44,7 @@ export function MultiEnvironmentsInputSetForm({
   entityType,
   pathToEnvironments,
   envGroupRef
-}: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier'> & {
+}: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier' | 'stageType'> & {
   entityType: 'environments' | 'environmentGroup'
   pathToEnvironments: 'environments.values' | 'environmentGroup.environments'
   envGroupRef?: string

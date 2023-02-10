@@ -11,6 +11,7 @@ declare const styles: {
   readonly conditionalExecutionTitle: string
   readonly container: string
   readonly editor: string
+  readonly failureStrategiesTitle: string
   readonly header: string
   readonly infraSection: string
   readonly inputWidth: string
@@ -23,6 +24,7 @@ declare const styles: {
   readonly stagesTreeBulletSquare: string
   readonly strategyContainer: string
   readonly tabSubHeading: string
+  readonly titleWrapper: string
   readonly topAccordion: string
 }
 export default styles

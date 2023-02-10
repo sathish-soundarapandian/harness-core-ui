@@ -19,7 +19,7 @@ declare const styles: {
   readonly iacm: string
   readonly idp: string
   readonly srm: string
-  readonly sscs: string
+  readonly ssca: string
   readonly sto: string
 }
 export default styles

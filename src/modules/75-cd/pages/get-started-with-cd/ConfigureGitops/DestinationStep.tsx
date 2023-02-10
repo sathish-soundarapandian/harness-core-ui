@@ -38,6 +38,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   Servicev1Cluster,
   useAgentClusterServiceCreate,
+  useAgentClusterServiceCreateHosted,
   useAgentClusterServiceGet,
   useClusterServiceListClusters
 } from 'services/gitops'
@@ -102,6 +103,15 @@ export const DestinationStep = (props: any) => {
       accountIdentifier: accountId
     },
     lazy: true
+  })
+
+  const { error: hostedClusterError, mutate: createHostedCluster } = useAgentClusterServiceCreateHosted({
+    agentIdentifier: fullAgentName,
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    queryParams: {
+      accountIdentifier: accountId
+    }
   })
 
   useEffect(() => {
@@ -195,14 +205,15 @@ export const DestinationStep = (props: any) => {
               style={{ marginTop: '20px' }}
               type="submit"
               onClick={e => {
+                const data = formikRef.current?.values
                 if (!formikRef.current?.values?.isNewCluster) {
                   setTestConnectionStatus(TestStatus.IN_PROGRESS)
                   setTestConnectionErrors([])
+                  saveClusterData({ ...data, ...selectedCluster?.cluster, identifier: selectedCluster?.identifier })
                   refreshConnectionStatus(e)
                 } else {
                   setTestConnectionStatus(TestStatus.IN_PROGRESS)
                   setTestConnectionErrors([])
-                  const data = formikRef.current?.values
                   saveClusterData(data || {})
                   onClusterCreate(data)
                     .then((response: Servicev1Cluster) => {
@@ -269,6 +280,117 @@ export const DestinationStep = (props: any) => {
     }
   }
 
+  const ProvisionCluster = (): React.ReactElement => {
+    const data = formikRef.current?.values
+    switch (testConnectionStatus) {
+      case TestStatus.FAILED:
+        return (
+          <Layout.Vertical>
+            <Layout.Vertical className={css.danger} margin={{ bottom: 'medium' }}>
+              <Layout.Horizontal className={css.textPadding}>
+                <Icon name="danger-icon" size={25} className={css.iconPadding} />
+                <Text className={css.dangerColor} font={{ variation: FontVariation.H6 }} color={Color.RED_600}>
+                  {getString('cd.getStartedWithCD.failedToProvisionCluster')}
+                </Text>
+              </Layout.Horizontal>
+              <Text style={{ marginLeft: '20px' }} className={css.dangerColor}>
+                {(hostedClusterError?.data as any)?.message}
+              </Text>
+            </Layout.Vertical>
+            <Button
+              variation={ButtonVariation.SECONDARY}
+              style={{ marginTop: '20px', width: '250px' }}
+              minimal
+              onClick={() => {
+                setTestConnectionStatus(TestStatus.IN_PROGRESS)
+                createHostedCluster()
+                  .then(response => {
+                    if (response?.cluster?.connectionState?.status === 'Successful') {
+                      props?.enableNextBtn()
+                      setSelectedCluster(response)
+                      saveClusterData({ ...data, ...response?.cluster, identifier: response?.identifier })
+                      setTestConnectionStatus(TestStatus.SUCCESS)
+                    } else {
+                      setTestConnectionStatus(TestStatus.FAILED)
+                      setTestConnectionErrors([
+                        {
+                          level: 'ERROR',
+                          message: (response as any)?.message
+                        }
+                      ])
+                    }
+                  })
+                  .catch(err => {
+                    setTestConnectionStatus(TestStatus.FAILED)
+                    setTestConnectionErrors((err?.data as any)?.responseMessages)
+                  })
+              }}
+            >
+              {getString('cd.getStartedWithCD.retryProvisioningHostedCluster')}
+            </Button>
+          </Layout.Vertical>
+        )
+      case TestStatus.NOT_INITIATED:
+        return (
+          <Layout.Vertical>
+            <Button
+              variation={ButtonVariation.SECONDARY}
+              style={{ marginTop: '20px', width: '250px' }}
+              minimal
+              onClick={() => {
+                setTestConnectionStatus(TestStatus.IN_PROGRESS)
+                createHostedCluster()
+                  .then(response => {
+                    if (response?.cluster?.connectionState?.status === 'Successful') {
+                      props?.enableNextBtn()
+                      setSelectedCluster(response)
+                      saveClusterData({ ...data, ...response?.cluster, identifier: response?.identifier })
+                      setTestConnectionStatus(TestStatus.SUCCESS)
+                    } else {
+                      setTestConnectionStatus(TestStatus.FAILED)
+                      setTestConnectionErrors([
+                        {
+                          level: 'ERROR',
+                          message: (response as any)?.message
+                        }
+                      ])
+                    }
+                  })
+                  .catch(err => {
+                    setTestConnectionStatus(TestStatus.FAILED)
+                    setTestConnectionErrors((err?.data as any)?.responseMessages)
+                  })
+              }}
+            >
+              {getString('cd.getStartedWithCD.createHostedCluster')}
+            </Button>
+          </Layout.Vertical>
+        )
+      case TestStatus.IN_PROGRESS:
+        return (
+          <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing="small">
+            <Icon name="steps-spinner" color={Color.PRIMARY_7} />
+            <Text font={{ variation: FontVariation.BODY2 }} color={Color.PRIMARY_7}>
+              {getString('cd.getStartedWithCD.provisioningInProgress')}
+            </Text>
+          </Layout.Horizontal>
+        )
+      case TestStatus.SUCCESS:
+        return (
+          <Layout.Vertical className={css.success} margin={{ bottom: 'medium', top: 'large' }}>
+            <Layout.Horizontal padding={{ top: 'medium', bottom: 'medium' }}>
+              <Icon name="success-tick" size={25} className={css.iconPadding} />
+              <Text className={css.success} font={{ variation: FontVariation.H6 }} color={Color.GREEN_800}>
+                {getSuccessText()}
+              </Text>
+            </Layout.Horizontal>
+          </Layout.Vertical>
+        )
+      default:
+        return <></>
+    }
+  }
+
   const getValidationSchema: Yup.ObjectSchema = Yup.object().shape({
     clusterType: Yup.string().required(getString('cd.validation.clusterType')),
     server: Yup.string().when('clusterType', {
@@ -300,13 +422,12 @@ export const DestinationStep = (props: any) => {
 
   const getSuccessText = () => {
     if (formikRef.current?.values?.isNewCluster) {
-      return `${getString('common.cluster')} ${formikRef?.current?.values?.server} ${getString(
-        'cd.getStartedWithCD.createdSuccessfully'
-      )}`
+      return `${getString('common.cluster')} ${getString('cd.getStartedWithCD.createdSuccessfully')}`
     } else {
-      return `${getString('common.cluster')} ${selectedCluster?.cluster?.server} ${getString(
-        'cd.getStartedWithCD.testesSuccessfully'
-      )}`
+      if (formikRef?.current?.values?.clusterType === CIBuildInfrastructureType.KubernetesDirect) {
+        return `${getString('common.cluster')} ${getString('cd.getStartedWithCD.testesSuccessfully')}`
+      }
+      return `${getString('common.cluster')} ${getString('cd.getStartedWithCD.provisionedSuccessfully')}`
     }
   }
 
@@ -349,6 +470,7 @@ export const DestinationStep = (props: any) => {
                   )}
                   selected={clustersTypes.find(c => c.value === selectedClusterType)}
                   onChange={item => {
+                    setTestConnectionStatus(TestStatus.NOT_INITIATED)
                     formikProps.setFieldValue('clusterType', item.value)
                   }}
                 />
@@ -375,16 +497,18 @@ export const DestinationStep = (props: any) => {
                     </>
                   ) : (
                     <>
-                      {isNewCluster ? (
+                      {isNewCluster || clusterListdata.length === 0 ? (
                         <Layout.Vertical>
-                          <Text
-                            style={{ cursor: 'pointer', marginTop: '20px' }}
-                            className={css.marginBottomClass}
-                            onClick={() => formikProps.setFieldValue('isNewCluster', false)}
-                            color={Color.PRIMARY_7}
-                          >
-                            {getString('cd.getStartedWithCD.backToClusterList')}
-                          </Text>
+                          {clusterListdata.length !== 0 && (
+                            <Text
+                              style={{ cursor: 'pointer', marginTop: '20px' }}
+                              className={css.marginBottomClass}
+                              onClick={() => formikProps.setFieldValue('isNewCluster', false)}
+                              color={Color.PRIMARY_7}
+                            >
+                              {getString('cd.getStartedWithCD.backToClusterList')}
+                            </Text>
+                          )}
                           <ul className={css.progress}>
                             <li className={`${css.progressItem} ${css.progressItemActive}`}>
                               <Text
@@ -415,7 +539,7 @@ export const DestinationStep = (props: any) => {
                                 tooltipProps={{ dataTooltipId: 'clusterAuthentication' }}
                                 margin={{ bottom: 'small' }}
                               >
-                                Select Authentication Type
+                                {getString('cd.getStartedWithCD.selectAuthenticationType')}
                               </Text>
                               <div className={moduleCss.marginBottom25}>
                                 <Button
@@ -529,7 +653,7 @@ export const DestinationStep = (props: any) => {
                   <Layout.Vertical margin={{ top: 'large' }}>
                     <InfoContainer label="cd.getStartedWithCD.managedCluster" />
                     <div className={css.smallMarginBottomClass} />
-                    <>
+                    {/* <>
                       <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} className={css.subHeading}>
                         {getString('cd.getStartedWithCD.clusterspec').toLocaleUpperCase()}
                       </Text>
@@ -545,10 +669,11 @@ export const DestinationStep = (props: any) => {
                         <div className={css.blackDot} />
                         {getString('cd.getStartedWithCD.clusterSpec3')}
                       </div>
-                    </>
-                    <Text font="normal" className={css.smallMarginBottomClass}>
-                      {getString('cd.getStartedWithCD.clusterSpecInfo')}
-                    </Text>
+                    </> */}
+                    {/*<Text font="normal" className={css.smallMarginBottomClass}>*/}
+                    {/*{getString('cd.getStartedWithCD.clusterSpecInfo')}*/}
+                    {/*</Text>*/}
+                    <ProvisionCluster />
                   </Layout.Vertical>
                 </Container>
               )}

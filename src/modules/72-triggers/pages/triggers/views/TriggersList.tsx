@@ -49,7 +49,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
     size = DEFAULT_PAGE_SIZE,
     searchTerm
   } = useQueryParams<GitQueryParams & Pick<GetTriggerListForTargetQueryParams, 'page' | 'size' | 'searchTerm'>>()
-  const { CD_TRIGGER_V2, CD_TRIGGER_CATALOG_API_ENABLED } = useFeatureFlags()
+  const { CD_TRIGGER_V2, CD_TRIGGER_CATALOG_API_ENABLED, CDS_GOOGLE_CLOUD_FUNCTION } = useFeatureFlags()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps>>()
   const { getString } = useStrings()
@@ -183,7 +183,7 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
 
     return (
       <AddDrawer
-        addDrawerMap={getCategoryItems(getString, false, CD_TRIGGER_V2)}
+        addDrawerMap={getCategoryItems(getString, false, CD_TRIGGER_V2, CDS_GOOGLE_CLOUD_FUNCTION)}
         onSelect={onSelect}
         onClose={hideDrawer}
         drawerContext={DrawerContext.STUDIO}

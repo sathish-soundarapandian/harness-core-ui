@@ -143,6 +143,7 @@ export enum PAGE_NAME {
   CODEBranches = 'CODEBranches',
   ExecutionList = 'ExecutionList',
   CFConfigurePath = 'CFConfigurePath',
-  SSCSHomePage = 'SSCSHomePage',
-  SSCSOverviewPage = 'SSCSOverviewPage'
+  SSCAHomePage = 'SSCAHomePage',
+  SSCAOverviewPage = 'SSCAOverviewPage',
+  IDPAdminPage = 'IDPAdminPage'
 }

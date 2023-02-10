@@ -39,7 +39,6 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     CVNG_TEMPLATE_MONITORED_SERVICE,
     NG_SETTINGS,
     USE_OLD_GIT_SYNC,
-    CD_ONBOARDING_ENABLED,
     NG_DEPLOYMENT_FREEZE,
     SRM_ET_EXPERIMENTAL,
     NEW_LEFT_NAVBAR_SETTINGS,
@@ -120,7 +119,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCI({ ...params, module })} />
         )}
 
-        {CD_ONBOARDING_ENABLED && module === 'cd' && !showGetStartedCDTabInMainMenu && (
+        {module === 'cd' && !showGetStartedCDTabInMainMenu && (
           <SidebarLink label={getString('getStarted')} to={routes.toGetStartedWithCD({ ...params, module })} />
         )}
         {SRM_ET_EXPERIMENTAL && module === 'cv' && !showGetStartedTabInMainMenu && (

@@ -1343,7 +1343,7 @@ export interface AgentServiceForServerListQueryParams {
   orgIdentifier?: string
   identifier?: string
   name?: string
-  type?: 'AGENT_TYPE_UNSET' | 'CONNECTED_ARGO_PROVIDER' | 'MANAGED_ARGO_PROVIDER'
+  type?: 'AGENT_TYPE_UNSET' | 'CONNECTED_ARGO_PROVIDER' | 'MANAGED_ARGO_PROVIDER' | 'HOSTED_ARGO_PROVIDER'
   tags?: string[]
   searchTerm?: string
   pageSize?: number
@@ -1551,4 +1551,109 @@ export const useAgentClusterServiceGet = ({ agentIdentifier, identifier, ...prop
     (paramsInPath: AgentClusterServiceGetPathParams) =>
       `/api/v1/agents/${paramsInPath.agentIdentifier}/clusters/${paramsInPath.identifier}`,
     { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier, identifier }, ...props }
+  )
+
+export interface AgentApplicationServiceSyncQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+}
+
+export interface ApplicationsSyncOptions {
+  items?: string[]
+}
+
+export interface ApplicationsApplicationSyncRequest {
+  dryRun?: boolean
+  infos?: ApplicationsInfo[]
+  manifests?: string[]
+  name?: string
+  prune?: boolean
+  resources?: ApplicationsSyncOperationResource[]
+  retryStrategy?: ApplicationsRetryStrategy
+  revision?: string
+  strategy?: ApplicationsSyncStrategy
+  syncOptions?: ApplicationsSyncOptions
+}
+
+export interface AgentApplicationServiceSyncPathParams {
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier: string
+  requestName: string
+}
+
+export type UseAgentApplicationServiceSyncProps = Omit<
+  UseMutateProps<
+    Servicev1Application,
+    GatewayruntimeError,
+    AgentApplicationServiceSyncQueryParams,
+    ApplicationsApplicationSyncRequest,
+    AgentApplicationServiceSyncPathParams
+  >,
+  'path' | 'verb'
+> &
+  AgentApplicationServiceSyncPathParams
+
+/**
+ * Sync syncs an application to its target state
+ * Harness Event type (deploy)
+ *
+ * Delete deletes an application.
+ */
+export const useAgentApplicationServiceSync = ({
+  agentIdentifier,
+  requestName,
+  ...props
+}: UseAgentApplicationServiceSyncProps) =>
+  useMutate<
+    Servicev1Application,
+    GatewayruntimeError,
+    AgentApplicationServiceSyncQueryParams,
+    ApplicationsApplicationSyncRequest,
+    AgentApplicationServiceSyncPathParams
+  >(
+    'POST',
+    (paramsInPath: AgentApplicationServiceSyncPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentifier}/applications/${paramsInPath.requestName}/sync`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier, requestName }, ...props }
+  )
+
+export interface AgentClusterServiceCreateHostedPathParams {
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier: string
+}
+
+export type UseAgentClusterServiceCreateHostedProps = Omit<
+  UseMutateProps<Servicev1Cluster, GatewayruntimeError, void, void, AgentClusterServiceCreateHostedPathParams>,
+  'path' | 'verb'
+> &
+  AgentClusterServiceCreateHostedPathParams
+
+/**
+ * CreateHosted creates a harness hosted cluster
+ *
+ * Creates Harness hosted cluster.
+ */
+export const useAgentClusterServiceCreateHosted = ({
+  agentIdentifier,
+  ...props
+}: UseAgentClusterServiceCreateHostedProps) =>
+  useMutate<Servicev1Cluster, GatewayruntimeError, void, void, AgentClusterServiceCreateHostedPathParams>(
+    'POST',
+    (paramsInPath: AgentClusterServiceCreateHostedPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentifier}/hosted/cluster`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier }, ...props }
   )

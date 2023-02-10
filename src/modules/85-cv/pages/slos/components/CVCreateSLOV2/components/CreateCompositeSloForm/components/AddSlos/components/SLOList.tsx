@@ -200,40 +200,34 @@ export const SLOList = ({ filter, onAddSLO, hideDrawer, serviceLevelObjectivesDe
       }
     },
     {
-      accessor: 'name',
       Header: getString('cv.slos.sloName').toUpperCase(),
-      width: '20%',
       Cell: RenderSLOName
     },
     ...(getProjectAndOrgColumn({ getString }) as Column<SLOHealthListView>[]),
     {
-      accessor: 'serviceName',
       Header: getString('cv.slos.monitoredService').toUpperCase(),
-      width: '20%',
-      Cell: RenderMonitoredService
+      Cell: RenderMonitoredService,
+      width: '17%'
     },
     {
-      accessor: 'userJourneyName',
       Header: getString('cv.slos.userJourney').toUpperCase(),
-      width: '20%',
-      Cell: RenderUserJourney
+      Cell: RenderUserJourney,
+      width: '15%'
     },
     {
-      accessor: 'tags',
       Header: getString('tagsLabel').toUpperCase(),
-      width: '20%',
-      Cell: RenderTags
+      Cell: RenderTags,
+      width: '10%'
     },
     {
       Header: getString('cv.slos.sliType'),
-      width: '20%',
-      Cell: RenderSLIType
+      Cell: RenderSLIType,
+      width: '15%'
     },
     {
-      accessor: 'sliType',
       Header: getString('cv.slos.target').toUpperCase(),
-      width: '20%',
-      Cell: RenderTarget
+      Cell: RenderTarget,
+      width: '15%'
     }
   ]
 

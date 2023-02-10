@@ -10,6 +10,11 @@
     font-size: var(--font-size-small);
   }
 
+  .runtimeInput {
+    width: 245px;
+    margin-top: var(--spacing-4);
+  }
+
   .header,
   .tabs,
   .stepList {

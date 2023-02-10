@@ -305,3 +305,7 @@ export const ArtifactIdentifierValidation = (
 export const getArtifactsHeaderTooltipId = (selectedDeploymentType: ServiceDefinition['type']): string => {
   return `${selectedDeploymentType}DeploymentTypeArtifacts`
 }
+
+export const showArtifactStoreStepDirectly = (selectedArtifact: ArtifactType | null): boolean => {
+  return !!(selectedArtifact && [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage].includes(selectedArtifact))
+}

@@ -28,7 +28,6 @@ import {
 import { getStepTypeByDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import { getPrCloneStrategyOptions } from '@pipeline/utils/constants'
 import { CodebaseTypes, isCloneCodebaseEnabledAtLeastOneStage } from '@pipeline/utils/CIUtils'
-import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import type { AccountPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import factory from '../PipelineSteps/PipelineStepFactory'
@@ -358,7 +357,7 @@ export const validateStage = ({
       }
     }
 
-    if (stage.type === 'Deployment' && (templateStageConfig as DeployStageConfig)?.service) {
+    if (stage.type === 'Deployment' && templateStageConfig?.service) {
       const currentStep = factory.getStep(StepType.DeployServiceEntity)
       const stepErrorsResponse = currentStep?.validateInputSet({
         data: stageConfig,
@@ -370,15 +369,12 @@ export const validateStage = ({
       if (!isEmpty(stepErrorsResponse)) {
         set(errors, 'spec.service.serviceRef', stepErrorsResponse?.service?.serviceRef)
       }
-      const serviceInputs = (stageConfig as DeployStageConfig).service?.serviceInputs
-      if (
-        serviceInputs &&
-        !isValueRuntimeInput((templateStageConfig as DeployStageConfig).service?.serviceInputs as unknown as string)
-      ) {
+      const serviceInputs = stageConfig?.service?.serviceInputs
+      if (serviceInputs && !isValueRuntimeInput(templateStageConfig?.service?.serviceInputs as unknown as string)) {
         const serviceStep = factory.getStep(getStepTypeByDeploymentType(serviceInputs?.serviceDefinition?.type))
         const serviceStepErrorResponse = serviceStep?.validateInputSet({
           data: serviceInputs.serviceDefinition.spec,
-          template: (templateStageConfig as DeployStageConfig).service?.serviceInputs?.serviceDefinition.spec,
+          template: templateStageConfig?.service?.serviceInputs?.serviceDefinition.spec,
           getString,
           viewType
         })
@@ -400,7 +396,7 @@ export const validateStage = ({
         }
       }
     }
-    if (stage.type === 'Deployment' && (templateStageConfig as DeployStageConfig)?.services) {
+    if (stage.type === 'Deployment' && templateStageConfig?.services) {
       const currentStep = factory.getStep(StepType.DeployServiceEntity)
       const stepErrorsResponse = currentStep?.validateInputSet({
         data: stageConfig,
@@ -412,19 +408,15 @@ export const validateStage = ({
       if (!isEmpty(stepErrorsResponse)) {
         set(errors, 'spec.services', stepErrorsResponse?.services)
       }
-      const serviceInputs = (stageConfig as DeployStageConfig).services?.values
-      if (
-        serviceInputs &&
-        !isValueRuntimeInput((templateStageConfig as DeployStageConfig).services?.values as unknown as string)
-      ) {
+      const serviceInputs = stageConfig?.services?.values
+      if (serviceInputs && !isValueRuntimeInput(templateStageConfig?.services?.values as unknown as string)) {
         serviceInputs.forEach((serviceInput: ServiceYamlV2, index: number) => {
           const serviceStep = factory.getStep(
             getStepTypeByDeploymentType(serviceInput?.serviceInputs?.serviceDefinition?.type)
           )
           const serviceStepErrorResponse = serviceStep?.validateInputSet({
             data: serviceInput.serviceInputs?.serviceDefinition.spec,
-            template: (templateStageConfig as DeployStageConfig).services?.values?.[index].serviceInputs
-              ?.serviceDefinition.spec,
+            template: templateStageConfig?.services?.values?.[index]?.serviceInputs?.serviceDefinition?.spec,
             getString,
             viewType
           })
@@ -435,8 +427,7 @@ export const validateStage = ({
             const variablesStep = factory.getStep(StepType.CustomVariable)
             const variablesErrorResponse = variablesStep?.validateInputSet({
               data: serviceInput.serviceInputs?.serviceDefinition?.spec,
-              template: (templateStageConfig as DeployStageConfig).services?.values?.[index].serviceInputs
-                ?.serviceDefinition.spec,
+              template: templateStageConfig?.services?.values?.[index].serviceInputs?.serviceDefinition.spec,
               getString,
               viewType
             }) as FormikErrors<CustomVariablesData>

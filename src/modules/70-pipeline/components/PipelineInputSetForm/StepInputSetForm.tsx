@@ -5,17 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import {
-  AllowedTypes,
-  Container,
-  FormInput,
-  getMultiTypeFromValue,
-  Icon,
-  Label,
-  Layout,
-  MultiTypeInputType,
-  Text
-} from '@harness/uicore'
+import { AllowedTypes, Container, FormInput, Icon, Label, Layout, Text } from '@harness/uicore'
 import { get } from 'lodash-es'
 import { Color } from '@harness/design-system'
 import React from 'react'
@@ -27,14 +17,17 @@ import type { DeploymentStageConfig, ExecutionWrapperConfig, StepElementConfig }
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { PipelineInfoConfig, PmsAbstractStepNode, TemplateStepNode } from 'services/pipeline-ng'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
-import type { StepViewType } from '../AbstractSteps/Step'
+import type { StageType } from '@pipeline/utils/stageHelpers'
+import { isValueRuntimeInput } from '@common/utils/utils'
+import { StepViewType } from '../AbstractSteps/Step'
 import type { CommandFlags } from '../ManifestSelection/ManifestInterface'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepWidget } from '../AbstractSteps/StepWidget'
 import type { StepType } from '../PipelineSteps/PipelineStepInterface'
-import { ConditionalExecutionForm, StrategyForm } from './StageAdvancedInputSetForm'
+import { ConditionalExecutionForm, StrategyForm } from './StageAdvancedInputSetForm/StageAdvancedInputSetForm'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import MultiTypePolicySetSelector from '../PipelineSteps/Common/PolicySets/MultiTypePolicySetSelector/MultiTypePolicySetSelector'
+import { FailureStrategiesInputSetForm } from './StageAdvancedInputSetForm/FailureStrategiesInputSetForm'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 function StepFormInternal({
@@ -59,6 +52,7 @@ function StepFormInternal({
   customStepProps?: {
     stageIdentifier: string
     selectedStage?: DeploymentStageConfig
+    stageType?: StageType
   }
 }): JSX.Element {
   const { getString } = useStrings()
@@ -67,9 +61,7 @@ function StepFormInternal({
   const renderCommandFlags = (commandFlagPath: string): React.ReactElement => {
     const commandFlags = get(template, commandFlagPath)
     return commandFlags?.map((commandFlag: CommandFlags, flagIdx: number) => {
-      if (
-        getMultiTypeFromValue(get(template, `step.spec.commandFlags[${flagIdx}].flag`)) === MultiTypeInputType.RUNTIME
-      ) {
+      if (isValueRuntimeInput(get(template, `step.spec.commandFlags[${flagIdx}].flag`))) {
         return (
           <div className={cx(stepCss.formGroup, stepCss.md)} key={flagIdx}>
             <FormInput.MultiTextInput
@@ -112,8 +104,7 @@ function StepFormInternal({
             : null
         }
       />
-      {getMultiTypeFromValue((template?.step as StepElementConfig)?.spec?.delegateSelectors) ===
-        MultiTypeInputType.RUNTIME && (
+      {isValueRuntimeInput((template?.step as StepElementConfig)?.spec?.delegateSelectors) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <MultiTypeDelegateSelector
             expressions={expressions}
@@ -125,7 +116,7 @@ function StepFormInternal({
           />
         </div>
       )}
-      {getMultiTypeFromValue((template?.step as StepElementConfig)?.when?.condition) === MultiTypeInputType.RUNTIME && (
+      {isValueRuntimeInput((template?.step as StepElementConfig)?.when?.condition) && (
         <Container className={cx(stepCss.formGroup, stepCss.md)}>
           <ConditionalExecutionForm
             readonly={readonly}
@@ -139,9 +130,18 @@ function StepFormInternal({
           <StrategyForm path={`${path}.strategy`} readonly={readonly} />
         </div>
       )}
+      {isValueRuntimeInput((template?.step as StepElementConfig)?.failureStrategies as any) && (
+        <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
+          <FailureStrategiesInputSetForm
+            stageType={customStepProps?.stageType as StageType}
+            path={`${path}.failureStrategies`}
+            readonly={readonly}
+            viewType={viewType}
+          />
+        </div>
+      )}
       {renderCommandFlags('step.spec.commandFlags')}
-      {getMultiTypeFromValue((template?.step as PmsAbstractStepNode)?.enforce?.policySets) ===
-        MultiTypeInputType.RUNTIME && (
+      {isValueRuntimeInput((template?.step as PmsAbstractStepNode)?.enforce?.policySets) && (
         <Container width={'55%'}>
           <Text
             color={Color.GREY_600}
@@ -187,6 +187,7 @@ export function StepForm({
   customStepProps?: {
     stageIdentifier: string
     selectedStage?: DeploymentStageConfig
+    stageType?: StageType
   }
 }): JSX.Element {
   const { getString } = useStrings()

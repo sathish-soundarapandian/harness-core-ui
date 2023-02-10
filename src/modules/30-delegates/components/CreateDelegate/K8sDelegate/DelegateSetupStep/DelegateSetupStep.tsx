@@ -49,7 +49,7 @@ import {
   FormikForAddDescriptionandKVTags
 } from '@common/components/AddDescriptionAndTags/AddDescriptionAndTags'
 
-import { DelegateSize, isHelmDelegateEnabled } from '@delegates/constants'
+import { DelegateNameLengthLimit, DelegateSize, isHelmDelegateEnabled } from '@delegates/constants'
 import { useCreateTokenModal } from '@delegates/components/DelegateTokens/modals/useCreateTokenModal'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { Category, DelegateActions } from '@common/constants/TrackingConstants'
@@ -69,7 +69,6 @@ export interface K8sDelegateWizardData {
   name: string
   replicas?: number
 }
-
 const formatProfileList = (data: any): Array<SelectOption> => {
   const profiles: Array<DelegateProfile> = data?.resource?.response
 
@@ -285,7 +284,8 @@ const DelegateSetup: React.FC<StepProps<K8sDelegateWizardData> & DelegateSetupSt
                             addOnBlur: true
                           }}
                           identifierProps={{
-                            inputLabel: getString('delegate.delegateName')
+                            inputLabel: getString('delegate.delegateName'),
+                            maxInput: DelegateNameLengthLimit + 1
                           }}
                         />
                       </div>

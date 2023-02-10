@@ -51,7 +51,7 @@ module.exports = {
           'gitopsui/MicroFrontendApp': false,
           'chaos/MicroFrontendApp': false,
           'sto/App': false,
-          'sscs/MicroFrontendApp': false,
+          'ssca/MicroFrontendApp': false,
           'idp/MicroFrontendApp': false,
           'idpadmin/MicroFrontendApp': false,
           'governance/App': false,

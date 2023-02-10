@@ -13,6 +13,7 @@ declare const styles: {
   readonly disabled: string
   readonly editStageGrid: string
   readonly inputContainer: string
+  readonly multiTypeBtn: string
   readonly navigationButtons: string
   readonly noPadVertical: string
   readonly removeLink: string

@@ -13,6 +13,7 @@ declare const styles: {
   readonly card: string
   readonly detailsContainer: string
   readonly header: string
+  readonly listHeader: string
   readonly memberList: string
   readonly membersContainer: string
   readonly popover: string

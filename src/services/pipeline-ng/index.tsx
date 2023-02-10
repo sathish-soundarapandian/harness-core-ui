@@ -391,6 +391,7 @@ export interface AccessControlCheckError {
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -1469,6 +1470,7 @@ export interface Error {
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1832,6 +1834,7 @@ export interface ErrorMetadata {
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
   errorMessage?: string
 }
 
@@ -2402,6 +2405,7 @@ export interface Failure {
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -3069,6 +3073,7 @@ export interface MergeInputSetForRerunRequest {
 
 export interface MergeInputSetRequest {
   inputSetReferences?: string[]
+  lastYamlToMerge?: string
   stageIdentifiers?: string[]
   withMergedPipelineYaml?: boolean
 }
@@ -3833,6 +3838,17 @@ export interface PipelineStageOutputs {
   value: string
 }
 
+export interface PipelineValidationResponseBody {
+  end_ts?: number
+  policy_eval?: { [key: string]: any }
+  start_ts?: number
+  status?: string
+}
+
+export interface PipelineValidationUUIDResponseBody {
+  uuid?: string
+}
+
 export interface PipelineWrapperResponse {
   label?: string
   pipelineInputResponse?: PipelineInputResponse[]
@@ -4102,6 +4118,7 @@ export interface ResourceDTO {
     | 'DELEGATE_GROUPS'
     | 'SERVICE'
     | 'ENVIRONMENT'
+    | 'ENVIRONMENT_GROUP'
     | 'DELEGATE'
     | 'SERVICE_ACCOUNT'
     | 'CONNECTOR'
@@ -4812,6 +4829,7 @@ export interface ResponseMessage {
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -4988,6 +5006,20 @@ export interface ResponsePipelineOpaEvaluationContext {
 export interface ResponsePipelineSaveResponse {
   correlationId?: string
   data?: PipelineSaveResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePipelineValidationResponseBody {
+  correlationId?: string
+  data?: PipelineValidationResponseBody
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePipelineValidationUUIDResponseBody {
+  correlationId?: string
+  data?: PipelineValidationUUIDResponseBody
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -5841,7 +5873,16 @@ export interface TriggerCatalogResponse {
 
 export interface TriggerEventDataCondition {
   key?: string
-  operator?: 'In' | 'Equals' | 'NotEquals' | 'NotIn' | 'Regex' | 'EndsWith' | 'StartsWith' | 'Contains'
+  operator?:
+    | 'In'
+    | 'Equals'
+    | 'NotEquals'
+    | 'NotIn'
+    | 'Regex'
+    | 'EndsWith'
+    | 'StartsWith'
+    | 'Contains'
+    | 'DoesNotContain'
   value?: string
 }
 
@@ -13438,6 +13479,98 @@ export const validatePipelineByYAMLPromise = (
     void
   >('POST', getConfig('pipeline/api'), `/pipelines/validate-yaml-with-schema`, props, signal)
 
+export interface GetPipelineValidateResultQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export interface GetPipelineValidateResultPathParams {
+  uuid: string
+}
+
+export type GetPipelineValidateResultProps = Omit<
+  MutateProps<
+    ResponsePipelineValidationResponseBody,
+    Failure | Error,
+    GetPipelineValidateResultQueryParams,
+    void,
+    GetPipelineValidateResultPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetPipelineValidateResultPathParams
+
+/**
+ * Get Pipeline validation event data
+ */
+export const GetPipelineValidateResult = ({ uuid, ...props }: GetPipelineValidateResultProps) => (
+  <Mutate<
+    ResponsePipelineValidationResponseBody,
+    Failure | Error,
+    GetPipelineValidateResultQueryParams,
+    void,
+    GetPipelineValidateResultPathParams
+  >
+    verb="POST"
+    path={`/pipelines/validate/${uuid}`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseGetPipelineValidateResultProps = Omit<
+  UseMutateProps<
+    ResponsePipelineValidationResponseBody,
+    Failure | Error,
+    GetPipelineValidateResultQueryParams,
+    void,
+    GetPipelineValidateResultPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetPipelineValidateResultPathParams
+
+/**
+ * Get Pipeline validation event data
+ */
+export const useGetPipelineValidateResult = ({ uuid, ...props }: UseGetPipelineValidateResultProps) =>
+  useMutate<
+    ResponsePipelineValidationResponseBody,
+    Failure | Error,
+    GetPipelineValidateResultQueryParams,
+    void,
+    GetPipelineValidateResultPathParams
+  >('POST', (paramsInPath: GetPipelineValidateResultPathParams) => `/pipelines/validate/${paramsInPath.uuid}`, {
+    base: getConfig('pipeline/api'),
+    pathParams: { uuid },
+    ...props
+  })
+
+/**
+ * Get Pipeline validation event data
+ */
+export const getPipelineValidateResultPromise = (
+  {
+    uuid,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponsePipelineValidationResponseBody,
+    Failure | Error,
+    GetPipelineValidateResultQueryParams,
+    void,
+    GetPipelineValidateResultPathParams
+  > & { uuid: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePipelineValidationResponseBody,
+    Failure | Error,
+    GetPipelineValidateResultQueryParams,
+    void,
+    GetPipelineValidateResultPathParams
+  >('POST', getConfig('pipeline/api'), `/pipelines/validate/${uuid}`, props, signal)
+
 export interface CreateVariablesQueryParams {
   accountIdentifier: string
   orgIdentifier: string
@@ -13739,6 +13872,107 @@ export const putPipelinePromise = (
     CreateTriggerBodyRequestBody,
     PutPipelinePathParams
   >('PUT', getConfig('pipeline/api'), `/pipelines/${pipelineIdentifier}`, props, signal)
+
+export interface ValidatePipelineAsyncQueryParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+}
+
+export interface ValidatePipelineAsyncPathParams {
+  pipelineIdentifier: string
+}
+
+export type ValidatePipelineAsyncProps = Omit<
+  MutateProps<
+    ResponsePipelineValidationUUIDResponseBody,
+    Failure | Error,
+    ValidatePipelineAsyncQueryParams,
+    void,
+    ValidatePipelineAsyncPathParams
+  >,
+  'path' | 'verb'
+> &
+  ValidatePipelineAsyncPathParams
+
+/**
+ * Start a validation event for a Pipeline
+ */
+export const ValidatePipelineAsync = ({ pipelineIdentifier, ...props }: ValidatePipelineAsyncProps) => (
+  <Mutate<
+    ResponsePipelineValidationUUIDResponseBody,
+    Failure | Error,
+    ValidatePipelineAsyncQueryParams,
+    void,
+    ValidatePipelineAsyncPathParams
+  >
+    verb="POST"
+    path={`/pipelines/${pipelineIdentifier}/validate`}
+    base={getConfig('pipeline/api')}
+    {...props}
+  />
+)
+
+export type UseValidatePipelineAsyncProps = Omit<
+  UseMutateProps<
+    ResponsePipelineValidationUUIDResponseBody,
+    Failure | Error,
+    ValidatePipelineAsyncQueryParams,
+    void,
+    ValidatePipelineAsyncPathParams
+  >,
+  'path' | 'verb'
+> &
+  ValidatePipelineAsyncPathParams
+
+/**
+ * Start a validation event for a Pipeline
+ */
+export const useValidatePipelineAsync = ({ pipelineIdentifier, ...props }: UseValidatePipelineAsyncProps) =>
+  useMutate<
+    ResponsePipelineValidationUUIDResponseBody,
+    Failure | Error,
+    ValidatePipelineAsyncQueryParams,
+    void,
+    ValidatePipelineAsyncPathParams
+  >(
+    'POST',
+    (paramsInPath: ValidatePipelineAsyncPathParams) => `/pipelines/${paramsInPath.pipelineIdentifier}/validate`,
+    { base: getConfig('pipeline/api'), pathParams: { pipelineIdentifier }, ...props }
+  )
+
+/**
+ * Start a validation event for a Pipeline
+ */
+export const validatePipelineAsyncPromise = (
+  {
+    pipelineIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponsePipelineValidationUUIDResponseBody,
+    Failure | Error,
+    ValidatePipelineAsyncQueryParams,
+    void,
+    ValidatePipelineAsyncPathParams
+  > & { pipelineIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponsePipelineValidationUUIDResponseBody,
+    Failure | Error,
+    ValidatePipelineAsyncQueryParams,
+    void,
+    ValidatePipelineAsyncPathParams
+  >('POST', getConfig('pipeline/api'), `/pipelines/${pipelineIdentifier}/validate`, props, signal)
 
 export interface RefreshAndUpdateTemplateInputsQueryParams {
   accountIdentifier: string

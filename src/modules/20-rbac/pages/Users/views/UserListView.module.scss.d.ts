@@ -8,7 +8,6 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly invitation: string
-  readonly listHeader: string
   readonly lockIcon: string
   readonly overflow: string
   readonly popover: string

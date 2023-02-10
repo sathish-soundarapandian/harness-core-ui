@@ -29,8 +29,11 @@ import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/Rout
 import { EnvironmentType } from '@common/constants/EnvironmentType'
 import {
   ArtifactDeploymentDetail,
+  ArtifactInstanceDetail,
   EnvironmentInstanceDetail,
+  GetArtifactInstanceDetailsQueryParams,
   GetEnvironmentInstanceDetailsQueryParams,
+  useGetArtifactInstanceDetails,
   useGetEnvironmentInstanceDetails
 } from 'services/cd-ng'
 import { EnvCardViewEmptyState } from './ServiceDetailEmptyStates'
@@ -40,6 +43,7 @@ import css from './ServiceDetailsSummaryV2.module.scss'
 
 interface ServiceDetailsEnvViewProps {
   setEnvId: React.Dispatch<React.SetStateAction<string | undefined>>
+  setArtifactName: React.Dispatch<React.SetStateAction<string | undefined>>
 }
 
 enum CardView {
@@ -55,21 +59,21 @@ interface EnvCardProps {
   count?: number
 }
 
-function createGroups(arr: EnvCardProps[] | undefined): EnvCardProps[][] {
-  if (isUndefined(arr)) {
-    return []
-  }
-  const numGroups = Math.ceil(arr.length / 5)
-  return new Array(numGroups).fill('').map((_, i) => arr.slice(i * 5, (i + 1) * 5))
+function createGroups(
+  arr: ArtifactInstanceDetail[] | EnvCardProps[],
+  groupSize: number
+): (ArtifactInstanceDetail[] | EnvCardProps[])[] {
+  const numGroups = Math.ceil(arr.length / groupSize)
+  return new Array(numGroups).fill('').map((_, i) => arr.slice(i * groupSize, (i + 1) * groupSize))
 }
 
 const EnvCard = (
-  env: EnvCardProps | undefined,
-  selectedEnv: string | undefined,
   setSelectedEnv: React.Dispatch<React.SetStateAction<string | undefined>>,
   setEnvId: React.Dispatch<React.SetStateAction<string | undefined>>,
   setIsDetailsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>,
-  setEnv: React.Dispatch<React.SetStateAction<string>>
+  setEnv: React.Dispatch<React.SetStateAction<string>>,
+  env?: EnvCardProps,
+  selectedEnv?: string
 ): JSX.Element => {
   const { getString } = useStrings()
   const envName = env?.envName
@@ -101,7 +105,6 @@ const EnvCard = (
         >
           {envName}
         </Text>
-        <Icon name="success-tick" />
       </div>
       {env?.environmentType && (
         <Text
@@ -137,7 +140,12 @@ const EnvCard = (
         </div>
       )}
       <Container flex={{ justifyContent: 'flex-end' }}>
-        <Text font={{ variation: FontVariation.CARD_TITLE }} lineClamp={1} tooltipProps={{ isDark: true }}>
+        <Text
+          font={{ variation: FontVariation.CARD_TITLE, weight: 'semi-bold' }}
+          color={Color.GREY_800}
+          lineClamp={1}
+          tooltipProps={{ isDark: true }}
+        >
           {env?.artifactDeploymentDetail.artifact ? env?.artifactDeploymentDetail.artifact : '-'}
         </Text>
       </Container>
@@ -145,8 +153,80 @@ const EnvCard = (
   )
 }
 
+const ArtifactCard = (
+  setArtifactName: React.Dispatch<React.SetStateAction<string | undefined>>,
+  setSelectedArtifact: React.Dispatch<React.SetStateAction<string | undefined>>,
+  artifact?: ArtifactInstanceDetail | null,
+  selectedArtifact?: string
+): JSX.Element => {
+  const artifactName = artifact?.artifact
+  const { getString } = useStrings()
+  const envList = artifact?.environmentInstanceDetails.environmentInstanceDetails || []
+
+  if (isUndefined(artifactName) && !envList.length) {
+    return <></>
+  }
+
+  return (
+    <Card
+      className={cx(css.artifactCards, css.cursor)}
+      onClick={() => {
+        if (selectedArtifact === artifactName) {
+          setSelectedArtifact(undefined)
+          setArtifactName(undefined)
+        } else {
+          setSelectedArtifact(artifactName)
+          setArtifactName(artifactName)
+        }
+      }}
+      selected={selectedArtifact === artifactName}
+    >
+      <Text font={{ variation: FontVariation.H5 }} color={Color.GREY_600} lineClamp={1} tooltipProps={{ isDark: true }}>
+        {artifactName}
+      </Text>
+      <div className={css.artifactViewEnvList}>
+        {envList.map(envInfo => (
+          <Layout.Horizontal key={envInfo.envId} className={css.artifactViewEnvDetail}>
+            <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+              <Text
+                font={{ variation: FontVariation.BODY2 }}
+                color={Color.GREY_600}
+                lineClamp={1}
+                padding={{ right: 'small' }}
+                tooltipProps={{ isDark: true }}
+              >
+                {envInfo.envName}
+              </Text>
+              {envInfo?.environmentType && (
+                <Text
+                  className={cx(css.environmentType, {
+                    [css.production]: envInfo?.environmentType === EnvironmentType.PRODUCTION
+                  })}
+                  font={{ size: 'xsmall' }}
+                  height={16}
+                >
+                  {getString(
+                    envInfo?.environmentType === EnvironmentType.PRODUCTION
+                      ? 'cd.serviceDashboard.prod'
+                      : 'cd.preProductionType'
+                  )}
+                </Text>
+              )}
+            </Layout.Horizontal>
+            {envInfo?.artifactDeploymentDetail.lastDeployedAt && (
+              <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
+                <ReactTimeago date={envInfo.artifactDeploymentDetail.lastDeployedAt} />
+              </Text>
+            )}
+          </Layout.Horizontal>
+        ))}
+      </div>
+    </Card>
+  )
+}
+
 export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.ReactElement {
-  const { setEnvId } = props
+  const { setEnvId, setArtifactName } = props
   const { getString } = useStrings()
   const [selectedEnv, setSelectedEnv] = useState<string>()
   const { accountId, orgIdentifier, projectIdentifier, serviceId } = useParams<ProjectPathProps & ServicePathProps>()
@@ -155,17 +235,35 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState<boolean>(false)
   const [env, setEnv] = useState<string>('')
 
-  const queryParams: GetEnvironmentInstanceDetailsQueryParams = {
+  //artifact state
+  const [selectedArtifact, setSelectedArtifact] = useState<string>()
+
+  const queryParams: GetEnvironmentInstanceDetailsQueryParams | GetArtifactInstanceDetailsQueryParams = {
     accountIdentifier: accountId,
     serviceId,
     orgIdentifier,
     projectIdentifier
   }
 
-  const { data, loading, error, refetch } = useGetEnvironmentInstanceDetails({ queryParams })
-  const resData = defaultTo(data?.data?.environmentInstanceDetails, [] as EnvironmentInstanceDetail[])
+  //Env Card
+  const {
+    data: envData,
+    loading: envLoading,
+    error: envError,
+    refetch: envRefetch
+  } = useGetEnvironmentInstanceDetails({ queryParams })
+  const resData = defaultTo(envData?.data?.environmentInstanceDetails, [] as EnvironmentInstanceDetail[])
 
-  const envList = resData.map(item => {
+  //Artifact Card
+  const {
+    data: artifactData,
+    loading: artifactLoading,
+    error: artifactError,
+    refetch: artifactRefetch
+  } = useGetArtifactInstanceDetails({ queryParams })
+  const artifactCardData = defaultTo(artifactData?.data?.artifactInstanceDetails, [] as ArtifactInstanceDetail[])
+
+  const envList: EnvCardProps[] = resData.map(item => {
     return {
       envId: item.envId,
       envName: item.envName,
@@ -175,7 +273,45 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
     }
   })
 
-  const renderCards = createGroups(envList)
+  const artifactList: ArtifactInstanceDetail[] = artifactCardData.map(item => {
+    return {
+      artifact: item.artifact,
+      environmentInstanceDetails: item.environmentInstanceDetails
+    }
+  })
+
+  const [data, loading, error, refetch, visibleCardCount, cardInfoList] =
+    cardView === CardView.ENV
+      ? [resData, envLoading, envError, envRefetch, 5, envList]
+      : [artifactCardData, artifactLoading, artifactError, artifactRefetch, 4, artifactList] //todo
+
+  const renderCards = createGroups(cardInfoList, visibleCardCount)
+
+  const CardSlides =
+    cardView === CardView.ENV
+      ? renderCards.map((item, idx) => {
+          const envInfo = item as EnvCardProps[]
+          return (
+            <Layout.Horizontal key={idx} className={css.envCardGrid}>
+              {envInfo[0] && EnvCard(setSelectedEnv, setEnvId, setIsDetailsDialogOpen, setEnv, envInfo[0], selectedEnv)}
+              {envInfo[1] && EnvCard(setSelectedEnv, setEnvId, setIsDetailsDialogOpen, setEnv, envInfo[1], selectedEnv)}
+              {envInfo[2] && EnvCard(setSelectedEnv, setEnvId, setIsDetailsDialogOpen, setEnv, envInfo[2], selectedEnv)}
+              {envInfo[3] && EnvCard(setSelectedEnv, setEnvId, setIsDetailsDialogOpen, setEnv, envInfo[3], selectedEnv)}
+              {envInfo[4] && EnvCard(setSelectedEnv, setEnvId, setIsDetailsDialogOpen, setEnv, envInfo[4], selectedEnv)}
+            </Layout.Horizontal>
+          )
+        })
+      : renderCards.map((item, idx) => {
+          const artifactInfo = item as ArtifactInstanceDetail[]
+          return (
+            <Layout.Horizontal key={idx} className={css.artifactCardGrid}>
+              {artifactInfo[0] && ArtifactCard(setArtifactName, setSelectedArtifact, artifactInfo[0], selectedArtifact)}
+              {artifactInfo[1] && ArtifactCard(setArtifactName, setSelectedArtifact, artifactInfo[1], selectedArtifact)}
+              {artifactInfo[2] && ArtifactCard(setArtifactName, setSelectedArtifact, artifactInfo[2], selectedArtifact)}
+              {artifactInfo[3] && ArtifactCard(setArtifactName, setSelectedArtifact, artifactInfo[3], selectedArtifact)}
+            </Layout.Horizontal>
+          )
+        })
 
   return (
     <Container>
@@ -194,7 +330,7 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
               setEnv('')
               setIsDetailsDialogOpen(true)
             }}
-            disabled={resData.length === 0}
+            disabled={!data || data.length === 0}
           />
           <ServiceDetailsDialog isOpen={isDetailsDialogOpen} setIsOpen={setIsDetailsDialogOpen} envFilter={env} />
           <PillToggle
@@ -204,7 +340,13 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
               { label: getString('artifacts'), value: CardView.ARTIFACT }
             ]}
             className={css.pillToggle}
-            onChange={val => setCardView(val)}
+            onChange={val => {
+              setEnvId(undefined)
+              setArtifactName(undefined)
+              setSelectedEnv('')
+              setSelectedArtifact('')
+              setCardView(val)
+            }}
           />
         </div>
       </div>
@@ -220,7 +362,7 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
         <Container data-test="ServiceDetailsEnvCardError" height={250} flex={{ justifyContent: 'center' }}>
           <PageError onClick={() => refetch?.()} message={getErrorInfoFromErrorObject(error)} />
         </Container>
-      ) : resData.length === 0 ? (
+      ) : !data || data.length === 0 ? (
         <EnvCardViewEmptyState message={getString('pipeline.ServiceDetail.envCardEmptyStateMsg')} />
       ) : (
         <Carousel
@@ -241,7 +383,7 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
             )
           }
           nextElement={
-            activeSlide < Math.ceil(defaultTo(resData, []).length / 5) ? (
+            activeSlide < Math.ceil(defaultTo(data, []).length / visibleCardCount) ? (
               <Button
                 intent="primary"
                 className={css.nextButton}
@@ -260,17 +402,7 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
           onChange={setActiveSlide}
           slideClassName={cx(css.slideStyle, { [css.paddingLeft12]: activeSlide === 1 })}
         >
-          {renderCards.map((item, idx) => {
-            return (
-              <Layout.Horizontal key={idx} className={css.cardGrid}>
-                {item[0] && EnvCard(item[0], selectedEnv, setSelectedEnv, setEnvId, setIsDetailsDialogOpen, setEnv)}
-                {item[1] && EnvCard(item[1], selectedEnv, setSelectedEnv, setEnvId, setIsDetailsDialogOpen, setEnv)}
-                {item[2] && EnvCard(item[2], selectedEnv, setSelectedEnv, setEnvId, setIsDetailsDialogOpen, setEnv)}
-                {item[3] && EnvCard(item[3], selectedEnv, setSelectedEnv, setEnvId, setIsDetailsDialogOpen, setEnv)}
-                {item[4] && EnvCard(item[4], selectedEnv, setSelectedEnv, setEnvId, setIsDetailsDialogOpen, setEnv)}
-              </Layout.Horizontal>
-            )
-          })}
+          {CardSlides}
         </Carousel>
       )}
     </Container>

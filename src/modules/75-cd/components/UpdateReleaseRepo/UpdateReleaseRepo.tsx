@@ -30,7 +30,7 @@ import UpdateReleaseRepoForm from './UpdateReleaseRepoForm'
 
 import { UpdateReleaseRepoVariableStepProps, UpdateReleaseRepoVariableView } from './UpdateReleaseRepoVariableStep'
 import UpdateReleaseRepoInputStep from './UpdateReleaseRepoInputStep'
-import { validateStepForm } from '../PipelineSteps/DeployInfrastructureStep/utils'
+import { validateGitOpsExecutionStepForm } from '../PipelineSteps/PipelineStepsUtil'
 
 export interface ReleaseRepoVariable {
   value: number | string
@@ -186,7 +186,7 @@ export class UpdateReleaseRepo extends PipelineStep<UpdateReleaseRepoStepData> {
     getString,
     viewType
   }: ValidateInputSetProps<UpdateReleaseRepoStepData>): FormikErrors<UpdateReleaseRepoStepData> {
-    return validateStepForm({ data, template, getString, viewType })
+    return validateGitOpsExecutionStepForm({ data, template, getString, viewType })
   }
 
   protected defaultValues: UpdateReleaseRepoStepData = {

@@ -9,10 +9,13 @@ import React from 'react'
 import cx from 'classnames'
 import { Button, Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { get, isEmpty } from 'lodash-es'
+import { get, isEmpty, isArray } from 'lodash-es'
 import type { ManifestConfigWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { getManifestLocation } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import useFileStoreModal from '@filestore/components/FileStoreComponent/FileStoreComponent'
+import { getManifestLocation, ManifestStoreMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { LocationValue } from '@pipeline/components/ConfigFilesSelection/ConfigFilesListView/LocationValue'
+
 import {
   ManifestIcons,
   ManifestLabels,
@@ -20,6 +23,7 @@ import {
   OverrideManifestStoresTypes,
   OverrideManifestTypes
 } from './ServiceManifestOverrideUtils'
+
 import css from './ServiceManifestOverride.module.scss'
 
 interface ServiceManifestOverridesListProps {
@@ -36,6 +40,9 @@ function ServiceManifestOverridesList({
   removeManifestConfig
 }: ServiceManifestOverridesListProps): React.ReactElement {
   const { getString } = useStrings()
+
+  const { openFileStoreModal } = useFileStoreModal({ isReadonly: true })
+
   return (
     <Layout.Vertical width={'100%'}>
       {!!manifestOverridesList?.length && (
@@ -56,6 +63,8 @@ function ServiceManifestOverridesList({
               manifest?.spec,
               getManifestLocation(manifest?.type as OverrideManifestTypes, manifest?.spec?.store?.type)
             )
+
+            const isHarnessStore = manifest?.spec.store.type === ManifestStoreMap.Harness
 
             return (
               <div className={css.rowItem} key={`${manifest?.identifier}-${index}`}>
@@ -82,8 +91,31 @@ function ServiceManifestOverridesList({
                   )}
                   {!isEmpty(manifestLocation) && (
                     <span>
-                      <Text lineClamp={1} width={200}>
-                        {typeof manifestLocation === 'string' ? manifestLocation : manifestLocation.join(', ')}
+                      <Text
+                        lineClamp={1}
+                        width={200}
+                        tooltip={
+                          isArray(manifestLocation) ? (
+                            <LocationValue
+                              isTooltip
+                              isHarnessStore={isHarnessStore}
+                              locations={manifestLocation}
+                              onClick={openFileStoreModal}
+                            />
+                          ) : (
+                            manifestLocation
+                          )
+                        }
+                      >
+                        {typeof manifestLocation === 'string'
+                          ? manifestLocation
+                          : isArray(manifestLocation) && (
+                              <LocationValue
+                                locations={manifestLocation}
+                                isHarnessStore={isHarnessStore}
+                                onClick={openFileStoreModal}
+                              />
+                            )}
                       </Text>
                     </span>
                   )}

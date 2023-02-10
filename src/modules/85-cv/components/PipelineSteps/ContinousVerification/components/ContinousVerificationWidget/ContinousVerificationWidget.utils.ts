@@ -14,13 +14,17 @@ import {
 } from '@cv/pages/monitored-service/CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
 import type { StringKeys } from 'framework/strings'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import type { MonitoredServiceDTO } from 'services/cv'
 import type {
   ContinousVerificationData,
   MonitoredServiceTemplateVariable,
   spec,
   VerifyStepMonitoredService
 } from '../../types'
-import { isAnExpression } from './components/ContinousVerificationWidgetSections/components/MonitoredService/MonitoredService.utils'
+import {
+  isAnExpression,
+  isFirstTimeOpenForDefaultMonitoredSvc
+} from './components/ContinousVerificationWidgetSections/components/MonitoredService/MonitoredService.utils'
 import { MONITORED_SERVICE_TYPE } from './components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 import {
   METRIC_DEFINITIONS,
@@ -264,6 +268,18 @@ export function shouldValidateTemplateInputs(templateInputsToValidate: any, key:
   return templateInputsToValidate[key] !== 'object' && !templateInputs[key]
 }
 
+export function getMetricDefinitionsKey(healthSource: any): string {
+  let metricDefinitionsKey = METRIC_DEFINITIONS
+  if (!isEmpty(healthSource?.spec[QUERY_DEFINITIONS])) {
+    metricDefinitionsKey = QUERY_DEFINITIONS
+  } else if (!isEmpty(healthSource?.spec[QUERIES])) {
+    metricDefinitionsKey = QUERIES
+  } else if (!isEmpty(healthSource?.spec[NEWRELIC_METRIC_DEFINITIONS])) {
+    metricDefinitionsKey = NEWRELIC_METRIC_DEFINITIONS
+  }
+  return metricDefinitionsKey
+}
+
 export function resetFormik(
   formValues: ContinousVerificationData,
   newSpecs: {
@@ -281,14 +297,50 @@ export function resetFormik(
   formik.resetForm({ values: formNewValues })
 }
 
-export function getMetricDefinitionsKey(healthSource: any): string {
-  let metricDefinitionsKey = METRIC_DEFINITIONS
-  if (!isEmpty(healthSource?.spec[QUERY_DEFINITIONS])) {
-    metricDefinitionsKey = QUERY_DEFINITIONS
-  } else if (!isEmpty(healthSource?.spec[QUERIES])) {
-    metricDefinitionsKey = QUERIES
-  } else if (!isEmpty(healthSource?.spec[NEWRELIC_METRIC_DEFINITIONS])) {
-    metricDefinitionsKey = NEWRELIC_METRIC_DEFINITIONS
+export function resetFormikIfNeededForDefaultMonitoredService({
+  formValues,
+  monitoredServiceData,
+  newSpecs,
+  formik
+}: {
+  formValues: ContinousVerificationData
+  monitoredServiceData: MonitoredServiceDTO | undefined
+  newSpecs: {
+    monitoredServiceRef?: string
+    monitoredServiceName?: string
+    type?: string
+    healthSources?: { identifier: string }[]
+    spec?: spec
+    monitoredService: VerifyStepMonitoredService
+    initialMonitoredService?: VerifyStepMonitoredService
   }
-  return metricDefinitionsKey
+  formik: FormikProps<ContinousVerificationData>
+}): void {
+  if (
+    isFirstTimeOpenForDefaultMonitoredSvc(formValues, monitoredServiceData) &&
+    isMonitoredServiceTypeSame(formValues)
+  ) {
+    resetFormik(formValues, newSpecs, formik)
+  }
+}
+
+export function resetFormikWhenNoChange(
+  formValues: ContinousVerificationData,
+  newSpecs: {
+    monitoredServiceRef?: string
+    monitoredServiceName?: string
+    type?: string
+    healthSources?: { identifier: string }[]
+    spec?: spec
+    monitoredService: VerifyStepMonitoredService
+    initialMonitoredService?: VerifyStepMonitoredService
+  },
+  formik: FormikProps<ContinousVerificationData>
+): void {
+  if (isMonitoredServiceTypeSame(formValues)) {
+    resetFormik(formValues, newSpecs, formik)
+  }
+}
+export function isMonitoredServiceTypeSame(formValues: ContinousVerificationData): boolean {
+  return formValues?.spec?.initialMonitoredService?.type === formValues?.spec?.monitoredService?.type
 }

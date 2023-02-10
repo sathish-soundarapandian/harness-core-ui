@@ -51,3 +51,5 @@ export enum EXECUTION_STATUS_HARNESS_CD {
   EXPIRED = 'EXPIRED',
   PREPARING = 'PREPARING'
 }
+
+export const ExternalLinkToEntity = 'externalLinkToEntity'

@@ -20,6 +20,8 @@ import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import FreezeWindowsPage from '@freeze-windows/pages/FreezeWindowsPage'
 import FreezeWindowStudioPage from '@freeze-windows/pages/FreezeWindowStudioPage'
+import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
+import type { ResourceDTO } from 'services/audit'
 
 RbacFactory.registerResourceTypeHandler(ResourceType.DEPLOYMENTFREEZE, {
   icon: 'nav-settings',
@@ -29,6 +31,27 @@ RbacFactory.registerResourceTypeHandler(ResourceType.DEPLOYMENTFREEZE, {
     [PermissionIdentifier.MANAGE_DEPLOYMENT_FREEZE]: <String stringID="rbac.permissionLabels.manage" />,
     [PermissionIdentifier.OVERRIDE_DEPLOYMENT_FREEZE]: <String stringID="common.override" />,
     [PermissionIdentifier.GLOBAL_DEPLOYMENT_FREEZE]: <String stringID="freezeWindows.rbac.global" />
+  }
+})
+
+AuditTrailFactory.registerResourceHandler('DEPLOYMENT_FREEZE', {
+  moduleIcon: {
+    name: 'cd-main'
+  },
+  moduleLabel: 'common.purpose.cd.continuous',
+  resourceLabel: 'freezeWindows.deploymentFreeze',
+  resourceUrl: (windowIdentifier: ResourceDTO, resourceScope: ResourceScope) => {
+    const { accountIdentifier, orgIdentifier, projectIdentifier } = resourceScope
+    if (windowIdentifier.identifier) {
+      return routes.toFreezeWindowStudio({
+        module: 'cd',
+        orgIdentifier,
+        projectIdentifier,
+        accountId: accountIdentifier,
+        windowIdentifier: windowIdentifier.identifier
+      })
+    }
+    return undefined
   }
 })
 

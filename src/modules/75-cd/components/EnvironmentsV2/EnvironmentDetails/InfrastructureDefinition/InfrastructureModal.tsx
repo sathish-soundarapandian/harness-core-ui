@@ -64,7 +64,6 @@ import { usePipelineContext } from '@pipeline/components/PipelineStudio/Pipeline
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
 import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import { DeployStageErrorProvider, StageErrorContext } from '@pipeline/context/StageErrorContext'
 
 import DeployInfraDefinition from '@cd/components/PipelineStudio/DeployInfraSpecifications/DeployInfraDefinition/DeployInfraDefinition'
@@ -75,7 +74,6 @@ import { InfrastructurePipelineProvider } from '@cd/context/InfrastructurePipeli
 import { TemplateSummaryResponse, useGetTemplate } from 'services/template-ng'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { TemplateType, TemplateUsage } from '@templates-library/utils/templatesUtils'
-import { isEditInfrastructure } from '@cd/components/PipelineSteps/DeployInfrastructureStep/utils'
 import type {
   GetTemplateProps,
   GetTemplateResponse
@@ -290,7 +288,7 @@ function BootstrapDeployInfraDefinition({
   const shouldFetchCustomDeploymentTemplate =
     !isEmpty(stageCustomDeploymentData) &&
     isEmpty(getDeploymentTemplateData()?.templateMetaData) &&
-    !isEditInfrastructure(selectedInfrastructure)
+    isEmpty(selectedInfrastructure)
 
   const { data: customDeploymentTemplateResponse } = useGetTemplate({
     templateIdentifier: getIdentifierFromValue(defaultTo(stageCustomDeploymentData?.templateRef, '')),
@@ -801,9 +799,9 @@ function BootstrapDeployInfraDefinition({
                     orgIdentifier: scope !== Scope.ACCOUNT ? orgIdentifier : undefined,
                     projectIdentifier: scope === Scope.PROJECT ? projectIdentifier : undefined,
                     environmentRef: getIdentifierFromScopedRef(environmentIdentifier),
-                    deploymentType: (pipeline.stages?.[0].stage?.spec as DeployStageConfig)?.serviceConfig
+                    deploymentType: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.serviceConfig
                       ?.serviceDefinition?.type,
-                    type: (pipeline.stages?.[0].stage?.spec as DeployStageConfig)?.infrastructure
+                    type: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
                       ?.infrastructureDefinition?.type,
                     spec: (pipeline.stages?.[0].stage?.spec as DeploymentStageConfig)?.infrastructure
                       ?.infrastructureDefinition?.spec,

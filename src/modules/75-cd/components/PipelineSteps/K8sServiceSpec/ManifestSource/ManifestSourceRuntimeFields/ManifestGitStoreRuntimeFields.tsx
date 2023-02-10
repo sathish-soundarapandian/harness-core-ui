@@ -5,21 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
+import React from 'react'
 import { FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { defaultTo, get } from 'lodash-es'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import type { ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import type { GitConfigDTO } from 'services/cd-ng'
 import { ManifestToConnectorMap } from '@pipeline/components/ManifestSelection/Manifesthelper'
-import type { Scope } from '@common/interfaces/SecretsInterface'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
-import { isFieldfromTriggerTabDisabled, shouldDisplayRepositoryName } from '../ManifestSourceUtils'
+import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import { isExecutionTimeFieldDisabled } from '../../ArtifactSource/artifactSourceUtils'
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
@@ -43,7 +41,6 @@ const ManifestGitStoreRuntimeFields = ({
 }: ManifestSourceRenderProps): React.ReactElement => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  const [showRepoName, setShowRepoName] = useState(true)
   const isFieldDisabled = (fieldName: string): boolean => {
     // /* instanbul ignore else */
     if (readonly) {
@@ -77,16 +74,6 @@ const ManifestGitStoreRuntimeFields = ({
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
             type={ManifestToConnectorMap[defaultTo(manifest?.spec.store.type, '')]}
-            onChange={(selected, _itemType, multiType) => {
-              const item = selected as unknown as { record?: GitConfigDTO; scope: Scope }
-              if (multiType === MultiTypeInputType.FIXED) {
-                if (shouldDisplayRepositoryName(item)) {
-                  setShowRepoName(true)
-                } else {
-                  setShowRepoName(false)
-                }
-              }
-            }}
             gitScope={{
               repo: defaultTo(repoIdentifier, ''),
               branch: defaultTo(branch, ''),
@@ -96,7 +83,7 @@ const ManifestGitStoreRuntimeFields = ({
         </div>
       )}
       <div className={css.inputFieldLayout}>
-        {isFieldRuntime(`${manifestPath}.spec.store.spec.repoName`, template) && showRepoName && (
+        {isFieldRuntime(`${manifestPath}.spec.store.spec.repoName`, template) && (
           <div className={css.verticalSpacingInput}>
             <FormInput.MultiTextInput
               disabled={isFieldDisabled(`${manifestPath}.spec.store.spec.repoName`)}

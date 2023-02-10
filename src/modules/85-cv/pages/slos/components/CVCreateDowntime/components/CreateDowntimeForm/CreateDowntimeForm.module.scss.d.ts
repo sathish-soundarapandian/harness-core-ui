@@ -7,10 +7,12 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly addMonitoredServices: string
   readonly cardTitle: string
   readonly downtimeWindow: string
   readonly endTime: string
   readonly footer: string
+  readonly minHeight: string
   readonly picker: string
   readonly pillToggle: string
   readonly text: string

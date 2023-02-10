@@ -16,9 +16,9 @@ import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterfa
 import { VariablesListTable } from '@pipeline/components/VariablesListTable/VariablesListTable'
 import type { StepElementConfig } from 'services/cd-ng'
 import type { VariableResponseMapValue } from 'services/pipeline-ng'
-import { validateStepForm } from '@cd/components/PipelineSteps/DeployInfrastructureStep/utils'
 import GitOpsFetchLinkedAppsWidget from './GitOpsFetchLinkedAppsWidget'
 import GitOpsFetchLinkedAppsInputStep from './GitOpsFetchLinkedAppsInputStep'
+import { validateGitOpsExecutionStepForm } from '../PipelineSteps/PipelineStepsUtil'
 import pipelineVariableCss from '@pipeline/components/PipelineStudio/PipelineVariables/PipelineVariables.module.scss'
 
 const GitOpsFetchLinkedAppsWidgetWithRef = React.forwardRef(GitOpsFetchLinkedAppsWidget)
@@ -91,7 +91,7 @@ export class GitOpsFetchLinkedApps extends PipelineStep<StepElementConfig> {
     getString,
     viewType
   }: ValidateInputSetProps<StepElementConfig>): FormikErrors<StepElementConfig> {
-    return validateStepForm({ data, template, getString, viewType })
+    return validateGitOpsExecutionStepForm({ data, template, getString, viewType })
   }
 
   processFormData(values: StepElementConfig): StepElementConfig {

@@ -6,6 +6,7 @@
  */
 
 import type { KubernetesManifestsProps } from '@cd/components/PipelineSteps/K8sServiceSpec/K8sServiceSpecInterface'
+import type { FileUsage } from '@filestore/interfaces/FileStore'
 export interface ManifestSourceRenderProps extends KubernetesManifestsProps {
   isManifestsRuntime: boolean
   projectIdentifier: string
@@ -14,6 +15,7 @@ export interface ManifestSourceRenderProps extends KubernetesManifestsProps {
   pipelineIdentifier: string
   repoIdentifier?: string
   branch?: string
+  fileUsage?: FileUsage
 }
 
 export abstract class ManifestSourceBase<T> {

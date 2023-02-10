@@ -23,7 +23,6 @@ export const createEnvTemplate = (
   existingTemplate: EnvironmentYamlV2[],
   environmentIdentifiers: string[],
   environmentsData: EnvironmentData[],
-  isMultiEnvironment: boolean,
   childEntity: 'gitOpsClusters' | 'infrastructureDefinitions'
 ): EnvironmentYamlV2[] => {
   return environmentIdentifiers.map(envId => {
@@ -50,7 +49,7 @@ export const createEnvTemplate = (
       environmentRef: RUNTIME_INPUT_VALUE,
       environmentInputs: newEnvironmentInputsTemplate,
       deployToAll: RUNTIME_INPUT_VALUE as any,
-      ...(isMultiEnvironment ? { [childEntity]: newChildEntityTemplate } : {})
+      [childEntity]: newChildEntityTemplate
     }
   })
 }

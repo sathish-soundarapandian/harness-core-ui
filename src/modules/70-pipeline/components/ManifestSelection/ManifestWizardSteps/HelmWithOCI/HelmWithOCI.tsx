@@ -32,7 +32,11 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import type { HelmWithOCIDataType } from '../../ManifestInterface'
 import HelmAdvancedStepSection from '../HelmAdvancedStepSection'
 
-import { ManifestDataType, ManifestIdentifierValidation } from '../../Manifesthelper'
+import {
+  getSkipResourceVersioningBasedOnDeclarativeRollback,
+  ManifestDataType,
+  ManifestIdentifierValidation
+} from '../../Manifesthelper'
 import { filePathWidth, handleCommandFlagsSubmitData, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import DragnDropPaths from '../../DragnDropPaths'
 import css from '../ManifestWizardSteps.module.scss'
@@ -62,7 +66,7 @@ function HelmWithOCI({
   deploymentType
 }: StepProps<ConnectorConfigDTO> & HelmWithOCIPropType): React.ReactElement {
   const { getString } = useStrings()
-  const { CDP_HELM_SUB_CHARTS } = useFeatureFlags()
+  const { NG_CDS_HELM_SUB_CHARTS } = useFeatureFlags()
   const isActiveAdvancedStep: boolean = initialValues?.spec?.skipResourceVersioning || initialValues?.spec?.commandFlags
 
   const getInitialValues = (): HelmWithOCIDataType => {
@@ -78,6 +82,7 @@ function HelmWithOCI({
         chartVersion: initialValues.spec?.chartVersion,
         subChartName: initialValues.spec?.subChartName,
         skipResourceVersioning: initialValues?.spec?.skipResourceVersioning,
+        enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
         valuesPaths:
           /* istanbul ignore next */
           typeof initialValues?.spec?.valuesPaths === 'string'
@@ -100,6 +105,7 @@ function HelmWithOCI({
       chartVersion: '',
       subChartName: '',
       skipResourceVersioning: false,
+      enableDeclarativeRollback: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
     }
   }
@@ -126,7 +132,11 @@ function HelmWithOCI({
           subChartName: formData?.subChartName,
           chartVersion: formData?.chartVersion,
           helmVersion: 'V380',
-          skipResourceVersioning: formData?.skipResourceVersioning,
+          skipResourceVersioning: getSkipResourceVersioningBasedOnDeclarativeRollback(
+            formData?.skipResourceVersioning,
+            formData?.enableDeclarativeRollback
+          ),
+          enableDeclarativeRollback: formData?.enableDeclarativeRollback,
           valuesPaths:
             /* istanbul ignore next */
             typeof formData?.valuesPaths === 'string'
@@ -276,7 +286,7 @@ function HelmWithOCI({
                   )}
                 </div>
               </Layout.Horizontal>
-              {CDP_HELM_SUB_CHARTS && (
+              {NG_CDS_HELM_SUB_CHARTS && (
                 <Layout.Horizontal flex spacing="huge" margin={{ bottom: 'small' }}>
                   <div
                     className={cx(helmcss.halfWidth, {
@@ -289,6 +299,7 @@ function HelmWithOCI({
                       placeholder={getString('pipeline.manifestType.subChartPlaceholder')}
                       name="subChartName"
                       multiTextInputProps={{ expressions, allowableTypes }}
+                      isOptional
                     />
                     {getMultiTypeFromValue(formik.values?.subChartName) === MultiTypeInputType.RUNTIME && (
                       <ConfigureOptions

@@ -58,7 +58,7 @@ import type {
   EnvironmentWithInputs
 } from '../types'
 import { useGetEnvironmentsData } from './useGetEnvironmentsData'
-import AddEditEnvironmentModal from '../../DeployInfrastructureStep/AddEditEnvironmentModal'
+import AddEditEnvironmentModal from '../AddEditEnvironmentModal'
 import DeployInfrastructure from '../DeployInfrastructure/DeployInfrastructure'
 import DeployCluster from '../DeployCluster/DeployCluster'
 
@@ -446,8 +446,8 @@ export default function DeployEnvironment({
               onMultiSelectChange={onMultiSelectChangeForEnvironments}
               multitypeInputValue={environmentsType}
               isNewConnectorLabelVisible
-              onChange={(item: SelectOption[]) => {
-                onMultiSelectChangeForEnvironments(item)
+              onChange={item => {
+                onMultiSelectChangeForEnvironments(item as SelectOption[])
               }}
               width={300}
               multiTypeProps={{
@@ -482,8 +482,8 @@ export default function DeployEnvironment({
             openAddNewModal={openAddNewModal}
             isNewConnectorLabelVisible
             onChange={item => {
-              if (getMultiTypeFromValue(item) === MultiTypeInputType.FIXED && item.length) {
-                setSelectedEnvironments([item])
+              if (getMultiTypeFromValue(item) === MultiTypeInputType.FIXED && (item as string)?.length) {
+                setSelectedEnvironments([item as string])
               } else setSelectedEnvironments([])
             }}
             width={300}

@@ -150,6 +150,7 @@ exports[`Delegate Command line creation render UI Docker Delegate 1`] = `
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value="docker-delegate"
@@ -517,6 +518,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Manifest 1`]
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value=""
@@ -657,7 +659,6 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Manifest 1`]
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-small-semi StyledProps--color StyledProps--color-primary8"
                 >
                   <a
-                    href="/account/dummy/settings/resources/delegates/tokens"
                     rel="noreferrer"
                     target="_blank"
                   >
@@ -678,7 +679,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Manifest 1`]
             <p
               class="StyledProps--font StyledProps--main ignoreWhiteSpaces StyledProps--font-variation-yaml"
             >
-              delegate.verifyDelegateYamlCmnd
+              delegates.commandLineCreation.lastCommandKubernetesLastLine
             </p>
             <div
               class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-center StyledProps--flex-alignItems-center"
@@ -1018,6 +1019,7 @@ exports[`Delegate Command line creation render UI Docker Kubernetes Terraform 1`
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value="terraform-delegate"
@@ -1517,6 +1519,7 @@ exports[`Delegate Command line creation render UI Helm Kubernetes Helm 1`] = `
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value="helm-delegate"
@@ -1991,6 +1994,7 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
             >
               <input
                 class="bp3-input"
+                maxlength="64"
                 placeholder="delegate.delegateName"
                 type="text"
                 value="helm-delegate"
@@ -2204,26 +2208,6 @@ exports[`Delegate Command line creation verifyButton click 1`] = `
         >
           delegates.commandLineCreation.verifyDelegateConnection
         </p>
-        <div
-          class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-center StyledProps--margin-bottom-xlarge"
-        >
-          <button
-            aria-label="verify"
-            class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--margin-right-xlarge Button--with-current-color Button--variation Button--variation-secondary"
-            type="button"
-          >
-            <span
-              class="bp3-button-text"
-            >
-              verify
-            </span>
-          </button>
-          <p
-            class="StyledProps--font StyledProps--main StyledProps--font-variation-body"
-          >
-            delegates.commandLineCreation.verifyInfo
-          </p>
-        </div>
         <div
           class="Layout--vertical StyledProps--main StyledProps--margin-bottom-xxxlarge"
         >

@@ -343,6 +343,7 @@ describe('Manifest Details tests', () => {
             spec: {
               branch: 'testBranch',
               connectorRef: RUNTIME_INPUT_VALUE,
+              repoName: RUNTIME_INPUT_VALUE,
               gitFetchType: 'Branch',
               paths: ['test-path']
             },

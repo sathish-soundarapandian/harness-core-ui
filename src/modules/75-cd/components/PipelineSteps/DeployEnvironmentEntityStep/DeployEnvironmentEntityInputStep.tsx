@@ -13,9 +13,12 @@ import { v4 as uuid } from 'uuid'
 
 import {
   AllowedTypes,
+  ExpressionAndRuntimeTypeProps,
+  FormInput,
   getMultiTypeFromValue,
   Layout,
   MultiTypeInputType,
+  MultiTypeInputValue,
   RUNTIME_INPUT_VALUE,
   SelectOption
 } from '@harness/uicore'
@@ -24,17 +27,17 @@ import { useStrings } from 'framework/strings'
 import type { EnvironmentYamlV2 } from 'services/cd-ng'
 
 import { useDeepCompareEffect } from '@common/hooks'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
-import { isValueRuntimeInput } from '@common/utils/utils'
+import { isMultiTypeExpression, isValueExpression, isValueFixed, isValueRuntimeInput } from '@common/utils/utils'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
 
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
-
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { MultiTypeEnvironmentField } from '@pipeline/components/FormMultiTypeEnvironmentField/FormMultiTypeEnvironmentField'
+
 import type { DeployEnvironmentEntityConfig, DeployEnvironmentEntityCustomInputStepProps } from './types'
-import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
 import { useGetEnvironmentsData } from './DeployEnvironment/useGetEnvironmentsData'
 import { createEnvTemplate, createEnvValues } from './DeployEnvironmentEntityInputStepUtils'
 
@@ -49,6 +52,7 @@ export interface DeployEnvironmentEntityInputStepProps extends Required<DeployEn
     path?: string
     readonly?: boolean
   }
+  setEnvironmentRefType?(type: MultiTypeInputType): void
 }
 
 export default function DeployEnvironmentEntityInputStep({
@@ -61,9 +65,11 @@ export default function DeployEnvironmentEntityInputStep({
   deployToAllEnvironments,
   gitOpsEnabled,
   stepViewType,
-  areFiltersAdded
+  areFiltersAdded,
+  setEnvironmentRefType
 }: DeployEnvironmentEntityInputStepProps): React.ReactElement {
   const { getString } = useStrings()
+  const { expressions } = useVariablesExpression()
   const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
   const formik = useFormikContext<DeployEnvironmentEntityConfig>()
   const uniquePath = useRef(`_pseudo_field_${uuid()}`)
@@ -73,7 +79,7 @@ export default function DeployEnvironmentEntityInputStep({
   // fullPath contains the outer formik path and the path to environments
   const fullPath = pathPrefix + pathToEnvironments
 
-  const mainEntityPath = pathToEnvironments.split('.')[0]
+  const mainEntityPath = isMultiEnvironment ? pathToEnvironments.split('.')[0] : pathToEnvironments
   const pathForDeployToAll = `${mainEntityPath}.deployToAll`
 
   const environmentValue = get(initialValues, `environment.environmentRef`)
@@ -81,13 +87,19 @@ export default function DeployEnvironmentEntityInputStep({
 
   // environmentsSelectedType is to handle deployToAll/runtime envs
   // 'all' is for deployToAll, 'runtime' when envs is marked runtime
-  const [environmentsSelectedType, setEnvironmentsSelectedType] = useState<'all' | 'runtime' | 'other' | undefined>(
-    get(formik.values, pathForDeployToAll) === true ? 'all' : undefined
+  const [environmentsSelectedType, setEnvironmentsSelectedType] = useState<
+    'all' | 'runtime' | 'other' | 'expression' | undefined
+  >(
+    get(formik.values, pathForDeployToAll) === true
+      ? 'all'
+      : !isMultiEnvironment && isValueExpression(get(formik.values, 'environment.environmentRef'))
+      ? 'expression'
+      : undefined
   )
   const { CDS_OrgAccountLevelServiceEnvEnvGroup } = useFeatureFlags()
 
   const getEnvironmentIdentifiers = useCallback(() => {
-    if (environmentValue) {
+    if (environmentValue && isValueFixed(environmentValue)) {
       return [environmentValue]
     }
 
@@ -164,18 +176,54 @@ export default function DeployEnvironmentEntityInputStep({
   useDeepCompareEffect(() => {
     // if no environments are selected when not under env group
     if (environmentIdentifiers.length === 0) {
+      if (environmentsSelectedType === 'expression') {
+        updateStageFormTemplate(
+          {
+            environmentRef: RUNTIME_INPUT_VALUE,
+            infrastructureDefinitions: RUNTIME_INPUT_VALUE
+          },
+          fullPath
+        )
+
+        formik.setFieldValue(pathToEnvironments, {
+          environmentRef: get(formik.touched, uniquePath.current)
+            ? get(formik.values, uniquePath.current)
+            : get(formik.values, 'environment.environmentRef'),
+          infrastructureDefinitions: formik.values?.environment?.infrastructureDefinitions
+        })
+
+        return
+      }
+
       // 'runtime' is for when field is marked runtime, whereas 'other' is for emptying selection
       if (environmentsSelectedType === 'runtime' || environmentsSelectedType === 'other') {
-        updateStageFormTemplate(RUNTIME_INPUT_VALUE, fullPath)
+        if (isMultiEnvironment) {
+          updateStageFormTemplate(RUNTIME_INPUT_VALUE, fullPath)
 
-        const newFormikValues = { ...formik.values }
-        set(newFormikValues, pathToEnvironments, environmentsSelectedType === 'runtime' ? RUNTIME_INPUT_VALUE : [])
+          const newFormikValues = { ...formik.values }
+          set(newFormikValues, pathToEnvironments, environmentsSelectedType === 'runtime' ? RUNTIME_INPUT_VALUE : [])
 
-        if (!isBoolean(deployToAllEnvironments) && envGroupIdentifier) {
-          set(newFormikValues, pathForDeployToAll, environmentsSelectedType === 'runtime' ? RUNTIME_INPUT_VALUE : false)
+          if (!isBoolean(deployToAllEnvironments) && envGroupIdentifier) {
+            set(
+              newFormikValues,
+              pathForDeployToAll,
+              environmentsSelectedType === 'runtime' ? RUNTIME_INPUT_VALUE : false
+            )
+          }
+
+          formik.setValues(newFormikValues)
+        } else {
+          const valueToReset = environmentsSelectedType === 'runtime' ? RUNTIME_INPUT_VALUE : ''
+          const newEnvironmentObject = {
+            environmentRef: valueToReset,
+            environmentInputs: valueToReset,
+            // serviceOverrideInputs: valueToReset,
+            infrastructureDefinitions: valueToReset
+          }
+
+          updateStageFormTemplate({ ...newEnvironmentObject, environmentRef: RUNTIME_INPUT_VALUE }, fullPath)
+          formik.setFieldValue(pathToEnvironments, newEnvironmentObject)
         }
-
-        formik.setValues(newFormikValues)
       }
       // This condition is required when there exist no environments but user selects all
       else if (!isBoolean(deployToAllEnvironments) && envGroupIdentifier && environmentsSelectedType === 'all') {
@@ -196,14 +244,13 @@ export default function DeployEnvironmentEntityInputStep({
       existingTemplate as EnvironmentYamlV2[],
       environmentIdentifiers,
       cloneDeep(environmentsData),
-      isMultiEnvironment,
       gitOpsEnabled ? 'gitOpsClusters' : 'infrastructureDefinitions'
     )
 
     // updated values based on selected environments
     const existingEnvironmentValues = get(formik.values, pathToEnvironments)
     const newEnvironmentsValues = createEnvValues(
-      existingEnvironmentValues,
+      isMultiEnvironment ? existingEnvironmentValues : [existingEnvironmentValues],
       environmentIdentifiers,
       cloneDeep(environmentsData),
       deployToAllEnvironments,
@@ -231,9 +278,37 @@ export default function DeployEnvironmentEntityInputStep({
         set(newFormikValues, pathForDeployToAll, environmentsSelectedType === 'all')
       }
       formik.setFieldValue(mainEntityPath, get(newFormikValues, mainEntityPath))
+    } else {
+      updateStageFormTemplate(newEnvironmentsTemplate[0], fullPath)
+      formik.setFieldValue(mainEntityPath, newEnvironmentsValues[0])
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [environmentsData, environmentIdentifiers, environmentsSelectedType, envGroupIdentifier])
+
+  function handleSingleEnvironmentChange(
+    item?: ExpressionAndRuntimeTypeProps['value'],
+    _?: MultiTypeInputValue,
+    type?: MultiTypeInputType
+  ): void {
+    if (isValueRuntimeInput(item)) {
+      setEnvironmentsSelectedType('runtime')
+      setEnvironmentIdentifiers([])
+    } else if (isMultiTypeExpression(type as MultiTypeInputType)) {
+      setEnvironmentsSelectedType('expression')
+      setEnvironmentIdentifiers([])
+    } else {
+      setEnvironmentsSelectedType('other')
+      setEnvironmentIdentifiers(
+        // This condition will be simplified when gitOps supports account/org changes
+        item && typeof item === 'string'
+          ? [item]
+          : (item as SelectOption)?.value
+          ? [(item as SelectOption)?.value as string]
+          : []
+      )
+    }
+    setEnvironmentRefType?.(type as MultiTypeInputType)
+  }
 
   function handleEnvironmentsChange(items: SelectOption[]): void {
     if (isValueRuntimeInput(items)) {
@@ -262,47 +337,58 @@ export default function DeployEnvironmentEntityInputStep({
     : getString('cd.pipelineSteps.environmentTab.selectEnvironments')
 
   const commonProps = {
-    name: isMultiEnvironment ? uniquePath.current : `${pathPrefix}environment.environmentRef`,
+    name: isMultiEnvironment ? uniquePath.current : 'environment.environmentRef',
     tooltipProps: isMultiEnvironment
       ? { dataTooltipId: 'specifyYourEnvironments' }
       : { dataTooltipId: 'specifyYourEnvironment' },
     label: isMultiEnvironment
       ? getString('cd.pipelineSteps.environmentTab.specifyYourEnvironments')
       : getString('cd.pipelineSteps.environmentTab.specifyYourEnvironment'),
-    disabled: disabled
+    disabled
   }
 
   return (
     <>
       <Layout.Horizontal spacing="medium" style={{ alignItems: 'flex-end' }}>
-        {getMultiTypeFromValue(inputSetData?.template?.environment?.environmentRef) === MultiTypeInputType.RUNTIME ? (
+        {!isMultiEnvironment ? (
           CDS_OrgAccountLevelServiceEnvEnvGroup && !gitOpsEnabled ? (
             <MultiTypeEnvironmentField
               {...commonProps}
+              onChange={handleSingleEnvironmentChange}
               placeholder={placeHolderForEnvironment}
               setRefValue={true}
               isNewConnectorLabelVisible={false}
               width={300}
               multiTypeProps={{
-                allowableTypes: allowableTypes,
+                expressions,
+                allowableTypes: (allowableTypes as MultiTypeInputType[])?.filter(
+                  item =>
+                    item !== MultiTypeInputType.EXECUTION_TIME &&
+                    (gitOpsEnabled ? item !== MultiTypeInputType.EXPRESSION : true)
+                ) as AllowedTypes,
                 defaultValueToReset: ''
               }}
             />
           ) : (
-            <ExperimentalInput
+            <FormInput.MultiTypeInput
               {...commonProps}
               placeholder={placeHolderForEnvironment}
               selectItems={selectOptions}
               useValue
               multiTypeInputProps={{
-                allowableTypes: allowableTypes,
+                expressions,
+                allowableTypes: (allowableTypes as MultiTypeInputType[])?.filter(
+                  item =>
+                    item !== MultiTypeInputType.EXECUTION_TIME &&
+                    (gitOpsEnabled ? item !== MultiTypeInputType.EXPRESSION : true)
+                ) as AllowedTypes,
                 selectProps: {
                   addClearBtn: !disabled,
                   items: selectOptions
-                }
+                },
+                onChange: handleSingleEnvironmentChange
               }}
               className={css.inputWidth}
-              formik={formik}
             />
           )
         ) : null}

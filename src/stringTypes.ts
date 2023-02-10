@@ -552,6 +552,7 @@ export interface StringsMap {
   'common.module.cf': string
   'common.module.chaos': string
   'common.module.ci': string
+  'common.module.code': string
   'common.module.core': string
   'common.module.cv': string
   'common.module.governance': string
@@ -996,8 +997,8 @@ export interface StringsMap {
   'common.sourceBranchPlaceholder': string
   'common.specified': string
   'common.specify': string
-  'common.sscs': string
-  'common.sscsText': string
+  'common.ssca': string
+  'common.sscaText': string
   'common.stable': string
   'common.stage': string
   'common.stageName': string
@@ -1070,8 +1071,6 @@ export interface StringsMap {
   'common.supportText': string
   'common.supportedInFirstGeneration': string
   'common.supportedModals': string
-  'common.svcEnv2Banner': string
-  'common.svcEnvV2Truncated': string
   'common.switchAccount': string
   'common.switchAccountError': string
   'common.switchAccountSearch': string
@@ -1562,6 +1561,7 @@ export interface StringsMap {
   'delegates.commandLineCreation.kubernetesSecondDirectionPartTwo': string
   'delegates.commandLineCreation.kubernetesThirdDirectionPartOne': string
   'delegates.commandLineCreation.kubernetesThirdDirectionPartTwo': string
+  'delegates.commandLineCreation.lastCommandKubernetesLastLine': string
   'delegates.commandLineCreation.learnWatch': string
   'delegates.commandLineCreation.oldWayToCreateDelegate': string
   'delegates.commandLineCreation.retryConnections': string
@@ -1604,6 +1604,7 @@ export interface StringsMap {
   'delegates.delegateDeleted': string
   'delegates.delegateIdentifier': string
   'delegates.delegateInstances': string
+  'delegates.delegateNameLength': string
   'delegates.delegateNameNotUnique': string
   'delegates.delegateNameRegexIssue': string
   'delegates.delegateNamespaceRequired': string
@@ -2794,6 +2795,7 @@ export interface StringsMap {
   'connectors.name_labels.Splunk': string
   'connectors.name_labels.Spot': string
   'connectors.name_labels.TAS': string
+  'connectors.name_labels.Terraform': string
   'connectors.name_labels.gcpKms': string
   'connectors.newArtifactRepository': string
   'connectors.newRelic.accountIdFieldLabel': string
@@ -2878,6 +2880,8 @@ export interface StringsMap {
   'connectors.sumologic.urlValidation': string
   'connectors.tenantId': string
   'connectors.tenantIdRequired': string
+  'connectors.terraformCloud.url': string
+  'connectors.terraformCloud.urlValidation': string
   'connectors.testConnectionStep.errorDetails': string
   'connectors.testConnectionStep.executingOn': string
   'connectors.testConnectionStep.installNewDelegate': string
@@ -2922,6 +2926,7 @@ export interface StringsMap {
   'connectors.testConnectionStep.validationText.spot': string
   'connectors.testConnectionStep.validationText.sumologic': string
   'connectors.testConnectionStep.validationText.tas': string
+  'connectors.testConnectionStep.validationText.terraform': string
   'connectors.testConnectionStep.validationText.testingURLReachability': string
   'connectors.testConnectionStep.validationText.vault': string
   'connectors.testConnectionStep.verificationSuccessful': string
@@ -2963,6 +2968,7 @@ export interface StringsMap {
   'connectors.title.spot': string
   'connectors.title.sumologic': string
   'connectors.title.tas': string
+  'connectors.title.terraform': string
   'connectors.unableToCreateConnector': string
   'connectors.unableToUpdateConnector': string
   'connectors.updatedSuccessfully': string
@@ -3862,7 +3868,7 @@ export interface StringsMap {
   'pipeline.failureStrategies.tabHasErrors': string
   'pipeline.failureStrategies.title': string
   'pipeline.failureStrategies.validation.actionRequired': string
-  'pipeline.failureStrategies.validation.arrayOrUndefined': string
+  'pipeline.failureStrategies.validation.arrayOrRuntime': string
   'pipeline.failureStrategies.validation.ciCodebaseRequired': string
   'pipeline.failureStrategies.validation.errorsMinimum': string
   'pipeline.failureStrategies.validation.errorsRequired': string
@@ -4088,6 +4094,7 @@ export interface StringsMap {
   'pipeline.manifestType.customRemoteExtractedFileLocation': string
   'pipeline.manifestType.customRemoteExtractedFileLocationPlaceholder': string
   'pipeline.manifestType.customRemoteExtractionScript': string
+  'pipeline.manifestType.enableDeclarativeRollback': string
   'pipeline.manifestType.filePathPlaceholder': string
   'pipeline.manifestType.folderPathPlaceholder': string
   'pipeline.manifestType.folderPathRequired': string
@@ -5230,6 +5237,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.connectTo': string
   'cd.getStartedWithCD.connectionStatus': string
   'cd.getStartedWithCD.createCluster': string
+  'cd.getStartedWithCD.createHostedCluster': string
   'cd.getStartedWithCD.createdSuccessfully': string
   'cd.getStartedWithCD.delegateDescription': string
   'cd.getStartedWithCD.delegateInfo1': string
@@ -5250,6 +5258,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.environmentDetails': string
   'cd.getStartedWithCD.failedSourceText': string
   'cd.getStartedWithCD.failedToAuthenticate': string
+  'cd.getStartedWithCD.failedToProvisionCluster': string
   'cd.getStartedWithCD.gitOpsAgent': string
   'cd.getStartedWithCD.gitopsOnboardingAgentStep': string
   'cd.getStartedWithCD.gitopsOnboardingConfigureStep': string
@@ -5296,12 +5305,15 @@ export interface StringsMap {
   'cd.getStartedWithCD.onboardingTitle': string
   'cd.getStartedWithCD.provideManifest': string
   'cd.getStartedWithCD.provideMyOwn': string
+  'cd.getStartedWithCD.provisionedSuccessfully': string
+  'cd.getStartedWithCD.provisioningInProgress': string
   'cd.getStartedWithCD.provisioningText': string
   'cd.getStartedWithCD.redisCache': string
   'cd.getStartedWithCD.redisCacheInstalled': string
   'cd.getStartedWithCD.repoServer': string
   'cd.getStartedWithCD.repoServerInstalled': string
   'cd.getStartedWithCD.reposubheading': string
+  'cd.getStartedWithCD.retryProvisioningHostedCluster': string
   'cd.getStartedWithCD.runDelegateSubtitle': string
   'cd.getStartedWithCD.sampleRepoLink': string
   'cd.getStartedWithCD.sampleRule1': string
@@ -5312,6 +5324,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.selectArtifactRepo': string
   'cd.getStartedWithCD.selectAuthMethod': string
   'cd.getStartedWithCD.selectAuthType': string
+  'cd.getStartedWithCD.selectAuthenticationType': string
   'cd.getStartedWithCD.selectDeploymentType': string
   'cd.getStartedWithCD.selfManaged': string
   'cd.getStartedWithCD.serverless': string
@@ -5326,6 +5339,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.successFull': string
   'cd.getStartedWithCD.successfullyAuthenticated': string
   'cd.getStartedWithCD.syncApplication': string
+  'cd.getStartedWithCD.syncCompleteMessage': string
   'cd.getStartedWithCD.targetRevision': string
   'cd.getStartedWithCD.testConnection': string
   'cd.getStartedWithCD.testesSuccessfully': string
@@ -6968,6 +6982,8 @@ export interface StringsMap {
   'cf.auditLogs.updateMessageSegment': string
   'cf.auditLogs.user': string
   'cf.auditLogs.viewEventSummary': string
+  'cf.auditTrail.label': string
+  'cf.auditTrail.tgResourceLabel': string
   'cf.boolean': string
   'cf.cfTrialHomePage.dontCode.description': string
   'cf.cfTrialHomePage.dontCode.inviteDeveloper': string
@@ -7657,7 +7673,7 @@ export interface StringsMap {
   'ci.usesLabel': string
   'ci.welcome': string
   'idp.idpAdmin': string
-  'sscs.allowDenyList': string
+  'ssca.allowDenyList': string
   'cv.CVStepper.StepError': string
   'cv.CompositeSLO.AddSLO': string
   'cv.CompositeSLO.AddSLOMessage': string
@@ -8509,17 +8525,24 @@ export interface StringsMap {
   'cv.sliMissingDataTypeIsRequired': string
   'cv.sloAnalysisTakingLong': string
   'cv.sloCreateInfo': string
+  'cv.sloDowntime.NoData': string
+  'cv.sloDowntime.NoDataSuggestion': string
   'cv.sloDowntime.addDowntime': string
   'cv.sloDowntime.category': string
+  'cv.sloDowntime.downtimeCreated': string
   'cv.sloDowntime.downtimeName': string
+  'cv.sloDowntime.downtimeUpdated': string
   'cv.sloDowntime.durationText': string
   'cv.sloDowntime.info': string
   'cv.sloDowntime.label': string
+  'cv.sloDowntime.msList': string
   'cv.sloDowntime.noData': string
+  'cv.sloDowntime.numberOfSLOs': string
   'cv.sloDowntime.repeatEndsOn': string
   'cv.sloDowntime.repeatEvery': string
   'cv.sloDowntime.scheduledMaintenance': string
   'cv.sloDowntime.selectCategory': string
+  'cv.sloDowntime.selectMonitoredServices': string
   'cv.sloDowntime.steps.downtimeWindow': string
   'cv.sloDowntime.steps.identification': string
   'cv.sloDowntime.steps.monitoredServices': string

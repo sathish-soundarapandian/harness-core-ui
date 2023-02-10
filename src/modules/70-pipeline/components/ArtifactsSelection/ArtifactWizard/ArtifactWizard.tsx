@@ -64,10 +64,8 @@ interface ArtifactWizardProps {
   allowableTypes: AllowedTypes
   showConnectorStep: boolean
   newConnectorProps: any
-}
-
-const showArtifactStoreStepDirectly = (selectedArtifact: ArtifactType | null): boolean => {
-  return !!(selectedArtifact && [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage].includes(selectedArtifact))
+  artifactWizardInitialStep: number
+  showArtifactSelectionStep: boolean
 }
 
 function ArtifactWizard({
@@ -84,7 +82,9 @@ function ArtifactWizard({
   lastSteps,
   iconsProps,
   showConnectorStep,
-  isReadonly
+  isReadonly,
+  artifactWizardInitialStep,
+  showArtifactSelectionStep
 }: ArtifactWizardProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -212,16 +212,18 @@ function ArtifactWizard({
       className={css.existingDocker}
       subtitle={renderSubtitle()}
       onStepChange={onStepChange}
-      initialStep={showArtifactStoreStepDirectly(selectedArtifact) ? 2 : undefined}
+      initialStep={artifactWizardInitialStep}
     >
-      <ArtifactoryRepoType
-        artifactTypes={types}
-        name={getString('connectors.artifactRepoType')}
-        stepName={labels.firstStepName}
-        selectedArtifact={selectedArtifact}
-        artifactInitialValue={artifactInitialValue}
-        changeArtifactType={changeArtifactType}
-      />
+      {showArtifactSelectionStep ? (
+        <ArtifactoryRepoType
+          artifactTypes={types}
+          name={getString('connectors.artifactRepoType')}
+          stepName={labels.firstStepName}
+          selectedArtifact={selectedArtifact}
+          artifactInitialValue={artifactInitialValue}
+          changeArtifactType={changeArtifactType}
+        />
+      ) : null}
       {showConnectorStep ? (
         <ArtifactConnector
           name={getString('connectors.artifactRepository')}
@@ -232,6 +234,7 @@ function ArtifactWizard({
           initialValues={artifactInitialValue}
           selectedArtifact={selectedArtifact}
           allowableTypes={allowableTypes}
+          showArtifactSelectionStep={showArtifactSelectionStep}
         />
       ) : null}
 

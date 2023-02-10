@@ -10,7 +10,6 @@ import { isEmpty } from 'lodash-es'
 import { Card, Text, FormInput, MultiTypeInputType } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import css from '../../MonitoredServiceInputSetsTemplate.module.scss'
 
 interface MonitoredServiceInputsetVariablesInterface {
@@ -22,7 +21,7 @@ export default function MonitoredServiceInputsetVariables({
 }: MonitoredServiceInputsetVariablesInterface): JSX.Element {
   const { getString } = useStrings()
 
-  let content = <></>
+  let content: JSX.Element | null = <></>
   if (!isEmpty(monitoredServiceVariables)) {
     content = monitoredServiceVariables?.map((variable: any, index: number) => {
       return (
@@ -35,7 +34,7 @@ export default function MonitoredServiceInputsetVariables({
       )
     })
   } else {
-    content = <NoResultsView text={'No Runtime inputs variables available'} minimal={true} />
+    content = null
   }
 
   return (

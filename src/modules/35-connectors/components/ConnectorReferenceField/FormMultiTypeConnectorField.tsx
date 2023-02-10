@@ -24,6 +24,7 @@ import { connect, FormikContextType } from 'formik'
 import { Classes, FormGroup, Intent } from '@blueprintjs/core'
 import { get, isEmpty } from 'lodash-es'
 import { useModalHook } from '@harness/use-modal'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import useCreateConnectorModal from '@connectors/modals/ConnectorModal/useCreateConnectorModal'
 import useCreateConnectorMultiTypeModal from '@connectors/modals/ConnectorModal/useCreateConnectorMultiTypeModal'
 import { useGetSecretsManagerConnectorsHook } from '@connectors/pages/connectors/hooks/useGetSecretsManagerConnectors/useGetSecretsManagerConnectors'
@@ -129,6 +130,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
     ...restProps
   } = props
   const hasError = errorCheck(name, formik)
+  const { getRBACErrorMessage } = useRBACError()
   const {
     intent = hasError ? Intent.DANGER : Intent.NONE,
     helperText = hasError ? <FormError name={name} errorMessage={get(formik?.errors, name)} /> : null,
@@ -267,6 +269,7 @@ export const MultiTypeConnectorField = (props: MultiTypeConnectorFieldProps): Re
         setConnector?.(connectorData?.data)
       } else if (error) {
         if (!setRefValue) {
+          showError(getRBACErrorMessage(error))
           formik?.setFieldValue(name, '')
         }
         setSelectedValue('')

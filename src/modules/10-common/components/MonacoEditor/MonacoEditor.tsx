@@ -11,7 +11,7 @@ import type { MonacoEditorProps } from 'react-monaco-editor'
 //@ts-ignore
 import { StaticServices } from 'monaco-editor/esm/vs/editor/standalone/browser/standaloneServices'
 import { suppressHotJarRecording } from '@common/utils/utils'
-import { getLocationPathName } from 'framework/utils/WindowLocation'
+import { setupMonacoEnvironment } from '@common/utils/MonacoEditorUtils'
 StaticServices.configurationService.get().updateValue('files.eol', '\n')
 
 export type ReactMonacoEditorRef =
@@ -58,32 +58,7 @@ const MonacoEditor = (props: ExtendedMonacoEditorProps, ref: ReactMonacoEditorRe
         'editor.background': '#f3f3fa'
       }
     })
-    const getLocationPath = () => {
-      if (window.browserRouterEnabled) {
-        return `${__DEV__ ? '/' : getLocationPathName()}`
-      } else {
-        return `${window.location.pathname}`
-      }
-    }
-    const getUrlPrefix = () => {
-      let urlPrefix = `${window.location.origin}${getLocationPath()}`
-      if (urlPrefix.charAt(urlPrefix.length - 1) !== '/') {
-        urlPrefix += '/'
-      }
-      return urlPrefix
-    }
-
-    //@ts-ignore
-    window.MonacoEnvironment = {
-      getWorker(_workerId: unknown, label: string) {
-        if (label === 'yaml') {
-          const YamlWorker = new Worker(new URL(`${getUrlPrefix()}static/yamlWorker2.js`, import.meta.url))
-          return YamlWorker
-        }
-        const EditorWorker = new Worker(new URL(`${getUrlPrefix()}static/editorWorker2.js`, import.meta.url))
-        return EditorWorker
-      }
-    }
+    setupMonacoEnvironment()
 
     // Don't allow HotJar to record content in Yaml/Code editor(s)
     suppressHotJarRecording([...document.querySelectorAll('.react-monaco-editor-container')])

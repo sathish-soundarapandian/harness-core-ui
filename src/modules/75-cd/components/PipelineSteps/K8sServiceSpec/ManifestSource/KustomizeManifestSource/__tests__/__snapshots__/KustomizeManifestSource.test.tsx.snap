@@ -246,6 +246,9 @@ exports[`KustomizeManifestSource tests Should match snapshot 1`] = `
         <div
           class="inputFieldLayout"
         />
+        <div
+          class="inputFieldLayout"
+        />
       </div>
     </div>
     <div>
@@ -635,6 +638,9 @@ exports[`KustomizeManifestSource tests Should match snapshot 1`] = `
         <div
           class="inputFieldLayout"
         />
+        <div
+          class="inputFieldLayout"
+        />
       </div>
     </div>
   </div>
@@ -877,6 +883,9 @@ exports[`KustomizeManifestSource tests Should match snapshot with fromTrigger 1`
             </div>
           </div>
         </div>
+        <div
+          class="inputFieldLayout"
+        />
         <div
           class="inputFieldLayout"
         />
@@ -1264,6 +1273,9 @@ exports[`KustomizeManifestSource tests Should match snapshot with fromTrigger 1`
             </div>
           </div>
         </div>
+        <div
+          class="inputFieldLayout"
+        />
         <div
           class="inputFieldLayout"
         />

@@ -8,10 +8,11 @@
 import { Text, Layout, Icon, Container } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import React, { ReactElement, useMemo, useState } from 'react'
-import { MonacoDiffEditor } from 'react-monaco-editor'
+import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import { useStrings } from 'framework/strings'
 import { useGetYamlDiff } from 'services/audit'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+
 import css from './EventSummary.module.scss'
 
 interface YamlDiffButtonProps {

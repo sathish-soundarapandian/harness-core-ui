@@ -12,6 +12,7 @@ declare const styles: {
   readonly header: string
   readonly helpText: string
   readonly main: string
+  readonly runtimeInput: string
   readonly selectWrapper: string
   readonly stepList: string
   readonly stepListBtn: string

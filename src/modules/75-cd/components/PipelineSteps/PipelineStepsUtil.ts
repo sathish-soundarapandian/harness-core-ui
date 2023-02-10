@@ -5,8 +5,9 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
+import { getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import * as Yup from 'yup'
+import { FormikErrors, yupToFormErrors } from 'formik'
 import { get, isEmpty } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import { getNameAndIdentifierSchema } from '@pipeline/utils/tempates'
@@ -15,9 +16,10 @@ import {
   getVariablesValidationField
 } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/validation'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
-import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
 import type { GetExecutionStrategyYamlQueryParams } from 'services/cd-ng'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import { StepViewType, ValidateInputSetProps } from '@pipeline/components/AbstractSteps/Step'
+import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/helper'
 
 const namespaceRegex = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?$/
 const releaseNameRegex = /^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$/
@@ -133,58 +135,6 @@ export function getServiceDeploymentTypeSchema(
   return Yup.string()
     .oneOf(Object.values(ServiceDeploymentType))
     .required(getString('cd.pipelineSteps.serviceTab.deploymentTypeRequired'))
-}
-
-export function getEnvironmentTabSchema(getString: UseStringsReturn['getString']): Yup.MixedSchema {
-  return Yup.mixed()
-    .required()
-    .test({
-      test(valueObj: DeployStageConfig): boolean | Yup.ValidationError {
-        if (!valueObj.gitOpsEnabled) {
-          if (valueObj.environment?.environmentRef === undefined) {
-            return this.createError({
-              path: 'environment.environmentRef',
-              message: getString('cd.pipelineSteps.environmentTab.environmentIsRequired')
-            })
-          }
-
-          if (
-            valueObj.environment?.environmentRef !== RUNTIME_INPUT_VALUE &&
-            valueObj.infrastructureRef === undefined
-          ) {
-            return this.createError({
-              path: 'infrastructureRef',
-              message: getString('cd.pipelineSteps.environmentTab.infrastructureIsRequired')
-            })
-          }
-        } else {
-          if (
-            valueObj.environmentOrEnvGroupRef !== RUNTIME_INPUT_VALUE &&
-            (valueObj.environmentOrEnvGroupRef as SelectOption)?.value === undefined
-          ) {
-            return this.createError({
-              path: 'environmentOrEnvGroupRef',
-              message: getString('cd.pipelineSteps.environmentTab.environmentOrEnvGroupIsRequired')
-            })
-          }
-
-          if (valueObj.isEnvGroup && valueObj.environmentInEnvGroupRef?.length === 0) {
-            return this.createError({
-              path: 'environmentInEnvGroupRef',
-              message: getString('cd.pipelineSteps.environmentTab.environmentInEnvGroupIsRequired')
-            })
-          }
-
-          if (valueObj.clusterRef?.length === 0 && valueObj.environmentOrEnvGroupRef !== RUNTIME_INPUT_VALUE) {
-            return this.createError({
-              path: 'clusterRef',
-              message: getString('cd.pipelineSteps.environmentTab.clusterIsRequired')
-            })
-          }
-        }
-        return true
-      }
-    })
 }
 
 export function getInfraDeploymentTypeSchema(
@@ -359,4 +309,41 @@ export const checkEmptyOrLessThan = (value: any, minimumCount = 0): boolean => /
     return value < minimumCount
   }
   return false
+}
+
+export function validateGitOpsExecutionStepForm({
+  data,
+  template,
+  getString,
+  viewType
+}: ValidateInputSetProps<any>): FormikErrors<any> {
+  const isRequired = viewType === StepViewType.DeploymentForm || viewType === StepViewType.TriggerForm
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const errors = {} as any
+  // istanbul ignore next
+  // istanbul ignore else
+  if (getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME) {
+    // istanbul ignore next
+    let timeoutSchema = getDurationValidationSchema({ minimum: '10s' })
+    // istanbul ignore next
+    if (isRequired) {
+      // istanbul ignore next
+      timeoutSchema = timeoutSchema.required(getString?.('validation.timeout10SecMinimum'))
+    }
+    const timeout = Yup.object().shape({
+      timeout: timeoutSchema
+    })
+
+    try {
+      timeout.validateSync(data)
+    } catch (e) {
+      /* istanbul ignore else */
+      if (e instanceof Yup.ValidationError) {
+        const err = yupToFormErrors(e)
+
+        Object.assign(errors, err)
+      }
+    }
+  }
+  return errors
 }

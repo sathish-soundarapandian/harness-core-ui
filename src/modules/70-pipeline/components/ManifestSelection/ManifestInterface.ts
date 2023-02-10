@@ -113,6 +113,7 @@ export interface CommonManifestDataType {
   gitFetchType: 'Branch' | 'Commit'
   paths: any
   skipResourceVersioning?: boolean
+  enableDeclarativeRollback?: boolean
   repoName?: string
   valuesPaths?: any
 }
@@ -150,12 +151,14 @@ export interface HelmWithGITDataType {
   helmVersion: HelmVersionOptions
   valuesPaths?: any
   skipResourceVersioning: boolean
+  enableDeclarativeRollback?: boolean
   commandFlags: Array<CommandFlags>
 }
 export interface HelmWithHTTPDataType {
   identifier: string
   helmVersion: HelmVersionOptions
   skipResourceVersioning: boolean
+  enableDeclarativeRollback?: boolean
   chartName: string
   chartVersion: string
   subChartName?: string
@@ -167,6 +170,7 @@ export interface HelmWithOCIDataType {
   identifier: string
   helmVersion: HelmOCIVersionOptions
   skipResourceVersioning: boolean
+  enableDeclarativeRollback?: boolean
   basePath: string
   chartName: string
   chartVersion: string
@@ -199,6 +203,7 @@ export interface OpenShiftTemplateGITDataType {
   path: string
   paramsPaths?: any
   skipResourceVersioning: boolean
+  enableDeclarativeRollback?: boolean
 }
 
 export interface KustomizePatchDataType {
@@ -216,6 +221,7 @@ export interface KustomizeWithGITDataType {
   repoName?: string
   gitFetchType: 'Branch' | 'Commit'
   skipResourceVersioning: boolean
+  enableDeclarativeRollback?: boolean
   folderPath: string
   pluginPath: string
   patchesPaths?: any
@@ -253,11 +259,13 @@ export interface HarnessFileStoreDataType {
   valuesPaths: string[]
   paramsPaths: string[]
   skipResourceVersioning?: boolean
+  enableDeclarativeRollback?: boolean
 }
 export interface HarnessFileStoreFormData {
   identifier: string
   files: string | string[]
   skipResourceVersioning: boolean
+  enableDeclarativeRollback?: boolean
   valuesPaths?: string | string[]
   paramsPaths?: string | string[]
 }
@@ -285,6 +293,7 @@ export interface CustomManifestManifestDataType {
   autoScalerPath?: Array<{ path: string }> | string
   cfCliVersion?: CLIVersionOptions
   skipResourceVersioning?: boolean
+  enableDeclarativeRollback?: boolean
   helmVersion: HelmVersionOptions
   commandFlags: Array<CommandFlags>
 }

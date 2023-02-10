@@ -43,14 +43,8 @@ export function hasItems<T>(data?: T[]): boolean {
   return Array.isArray(data) && data.length > 0
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function findTabWithErrors(errors?: FormikErrors<any>): number {
-  const fsErrors = errors?.failureStrategies
-
-  return Array.isArray(fsErrors)
-    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      fsErrors.findIndex((err: any) => !isEmpty(err))
-    : -1
+export function findTabWithErrors(errors: FormikErrors<AllFailureStrategyConfig[]>): number {
+  return Array.isArray(errors) ? errors.findIndex(err => !isEmpty(err)) : -1
 }
 
 export interface FormState {
@@ -58,29 +52,28 @@ export interface FormState {
 }
 
 export interface HandleChangeInStrategiesProps {
-  formValues: FormState
+  strategies: AllFailureStrategyConfig[]
   selectedStrategyNum: number
   setSelectedStrategyNum: (value: SetStateAction<number>) => void
-  setFormikState: FormikProps<FormState>['setFormikState']
+  setFormikState: FormikProps<unknown>['setFormikState']
 }
 
 export function handleChangeInStrategies({
-  formValues,
+  strategies,
   selectedStrategyNum,
   setSelectedStrategyNum,
   setFormikState
 }: HandleChangeInStrategiesProps): void {
-  const fs = formValues.failureStrategies
   /* istanbul ignore else */
-  if (Array.isArray(fs)) {
+  if (Array.isArray(strategies)) {
     /* istanbul ignore else */
-    if (selectedStrategyNum >= fs.length) {
+    if (selectedStrategyNum >= strategies.length) {
       // select the new last tab, if the last tab was deleted
-      setSelectedStrategyNum(Math.max(0, fs.length - 1))
+      setSelectedStrategyNum(Math.max(0, strategies.length - 1))
     }
 
     /* istanbul ignore else */
-    if (fs.length === 0) {
+    if (strategies.length === 0) {
       // reset errors when all the tabs are deleted
       setFormikState(prevState => ({ ...prevState, errors: {}, submitCount: 0 }))
     }

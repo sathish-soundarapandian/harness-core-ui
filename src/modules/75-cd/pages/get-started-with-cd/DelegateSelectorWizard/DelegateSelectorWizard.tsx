@@ -141,6 +141,7 @@ const DelegateSelectorWizardRef = (
   }, [disableBtn])
 
   const isHelpPanelVisible = (): void => {
+    !helpPanelVisible && trackEvent(CDOnboardingActions.PreviewHelpAndTroubleshooting, {})
     setHelpPanelVisible(!helpPanelVisible)
   }
 

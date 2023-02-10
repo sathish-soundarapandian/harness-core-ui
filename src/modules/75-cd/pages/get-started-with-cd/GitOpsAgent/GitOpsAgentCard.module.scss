@@ -356,7 +356,6 @@
 .verificationStep {
   font-weight: 500;
   font-size: var(--form-input-font-size);
-  margin: var(--spacing-medium) 0;
   color: var(--grey-600);
 
   .stepDesc {
@@ -368,5 +367,5 @@
   opacity: 0.2;
   height: 1px;
   color: var(--grey-1000);
-  margin: var(--spacing-xxlarge) 0;
+  margin: var(--spacing-large) 0;
 }

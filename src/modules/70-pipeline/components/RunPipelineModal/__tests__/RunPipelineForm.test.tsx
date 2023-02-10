@@ -613,6 +613,13 @@ describe('RERUN MODE', () => {
   - name: "checkVariable1"
     type: "String"
     value: "variablevalue"`
+    mockMergeInputSet.mockReset().mockImplementation(
+      jest.fn().mockResolvedValue({
+        data: {
+          pipelineYaml: inputSetYaml
+        }
+      })
+    )
     const { container, queryByText, queryByDisplayValue } = render(
       <TestWrapper>
         <RunPipelineForm
@@ -647,6 +654,13 @@ describe('RERUN MODE', () => {
   - name: "checkVariable1"
     type: "String"
     value: "variablevalue"`
+    mockMergeInputSet.mockReset().mockImplementation(
+      jest.fn().mockResolvedValue({
+        data: {
+          pipelineYaml: inputSetYaml
+        }
+      })
+    )
     const { queryByText, queryAllByText } = render(
       <TestWrapper>
         <RunPipelineForm

@@ -17,7 +17,7 @@ import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import routes from '@common/RouteDefinitions'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import type { CommonPaginationQueryParams } from '@common/hooks/useDefaultPaginationProps'
@@ -25,8 +25,7 @@ import { rbacQueryParamOptions } from '@rbac/utils/utils'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { usePreviousPageWhenEmpty } from '@common/hooks/usePreviousPageWhenEmpty'
 import ListHeader from '@common/components/ListHeader/ListHeader'
-import { sortByCreated, sortByEmail, sortByLastModified, sortByName } from '@common/utils/sortUtils'
-import css from '@rbac/components/ResourceGroupList/ResourceGroupList.module.scss'
+import { sortByCreated, sortByLastModified, sortByName } from '@common/utils/sortUtils'
 
 const ResourceGroupsList: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
@@ -118,13 +117,16 @@ const ResourceGroupsList: React.FC = () => {
           </Layout.Horizontal>
         }
       />
-      <PageBody loading={loading} retryOnError={() => refetch()} error={error ? getRBACErrorMessage(error) : ''}>
+      <PageBody
+        loading={loading}
+        retryOnError={() => refetch()}
+        error={error ? getRBACErrorMessage(error as RBACError) : ''}
+      >
         <ListHeader
           value={sort}
-          sortOptions={[...sortByName, ...sortByEmail, ...sortByCreated, ...sortByLastModified]}
+          sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName]}
           onChange={option => setSort(option.value as string)}
           totalCount={data?.data?.totalItems}
-          className={css.listHeader}
         />
         <ResourceGroupListView data={data?.data} reload={refetch} openResourceGroupModal={openResourceGroupModal} />
       </PageBody>

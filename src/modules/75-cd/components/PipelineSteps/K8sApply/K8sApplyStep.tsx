@@ -198,7 +198,11 @@ function K8sApplyDeployWidget(props: K8sApplyProps, formikRef: StepFormikFowardR
                   defaultValueToReset={defaultValueToReset}
                   name={'spec.filePaths'}
                   label={getString('common.git.filePath')}
-                  allowedTypes={allowableTypes}
+                  allowedTypes={
+                    (allowableTypes as MultiTypeInputType[]).filter(
+                      allowedType => allowedType !== MultiTypeInputType.EXPRESSION
+                    ) as AllowedTypes
+                  }
                 >
                   <FieldArray
                     name="spec.filePaths"

@@ -973,9 +973,16 @@ sloDowntime:
   info: During downtime, SLO status and error budget calculations will be excluded for that specific time period.
   scheduledMaintenance: Scheduled Maintenance
   selectCategory: Select downtime category
+  selectMonitoredServices: Select Monitored Services
   repeatEvery: Repeat every
   repeatEndsOn: Repeat ends on
   durationText: from start time
+  numberOfSLOs: NUMBER OF SLOs ASSIGNED
+  downtimeCreated: SLO Downtime created successfully
+  downtimeUpdated: SLO Downtime updated successfully
+  msList: Downtime will be applied to the following monitored services
+  NoData: You don’t have any matching monitored services
+  NoDataSuggestion: Try changing the filter or clearing your search input.
   validations:
     nameValidation: SLO Downtime is required
     categoryValidation: Category is required

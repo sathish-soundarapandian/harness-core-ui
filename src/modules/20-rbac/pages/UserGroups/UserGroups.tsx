@@ -42,7 +42,7 @@ const UserGroupsPage: React.FC = () => {
   })
   const { getString } = useStrings()
   useDocumentTitle(getString('common.userGroups'))
-  const [sort, setSort] = useState<string>(sortByCreated[0].value as string)
+  const [sort, setSort] = useState<string>(sortByLastModified[0].value as string)
 
   const {
     search: searchTerm,
@@ -150,10 +150,9 @@ const UserGroupsPage: React.FC = () => {
       >
         <ListHeader
           value={sort}
-          sortOptions={[...sortByName, ...sortByEmail, ...sortByCreated, ...sortByLastModified]}
+          sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName, ...sortByEmail]}
           onChange={option => setSort(option.value as string)}
           totalCount={data?.data?.totalItems}
-          className={css.listHeader}
         />
         <UserGroupsListView
           data={data}

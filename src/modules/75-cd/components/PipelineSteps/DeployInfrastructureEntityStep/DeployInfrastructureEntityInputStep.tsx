@@ -6,12 +6,22 @@
  */
 
 import React, { useCallback, useMemo, useRef, useState } from 'react'
-import { cloneDeep, defaultTo, get, isBoolean, isEmpty, isEqual, isNil, pick, set } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isBoolean, isEmpty, isEqual, isNil, isUndefined, pick, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
 import { Spinner } from '@blueprintjs/core'
 import { v4 as uuid } from 'uuid'
+import produce from 'immer'
 
-import { AllowedTypes, Layout, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
+import {
+  AllowedTypes,
+  ExpressionAndRuntimeTypeProps,
+  FormInput,
+  Layout,
+  MultiTypeInputType,
+  MultiTypeInputValue,
+  RUNTIME_INPUT_VALUE,
+  SelectOption
+} from '@harness/uicore'
 
 import { useStrings } from 'framework/strings'
 
@@ -20,13 +30,14 @@ import type { InfraStructureDefinitionYaml } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
-import { isValueRuntimeInput } from '@common/utils/utils'
+import { isMultiTypeExpression, isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
+import { getScopeAppendedToIdentifier } from '@common/utils/StringUtils'
 
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import { getScopeAppendedToIdentifier } from '@common/utils/StringUtils'
-import ExperimentalInput from '../K8sServiceSpec/K8sServiceSpecForms/ExperimentalInput'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
+
 import { useGetInfrastructuresData } from '../DeployEnvironmentEntityStep/DeployInfrastructure/useGetInfrastructuresData'
 import type { DeployEnvironmentEntityConfig } from '../DeployEnvironmentEntityStep/types'
 import type { DeployInfrastructureEntityCustomInputStepProps } from './types'
@@ -57,9 +68,11 @@ export default function DeployInfrastructureEntityInputStep({
   deployToAllInfrastructures,
   scope,
   stepViewType,
-  areEnvironmentFiltersAdded
+  areEnvironmentFiltersAdded,
+  lazyInfrastructure
 }: DeployInfrastructureEntityInputStepProps): React.ReactElement {
   const { getString } = useStrings()
+  const { expressions } = useVariablesExpression()
   const formik = useFormikContext<DeployEnvironmentEntityConfig>()
   const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
   const uniquePath = useRef(`_pseudo_field_${uuid()}`)
@@ -81,13 +94,15 @@ export default function DeployInfrastructureEntityInputStep({
   // infrastructuresSelectedType is to handle deployToAll/runtime envs
   // 'all' is for deployToAll, 'runtime' when envs is marked runtime
   const [infrastructuresSelectedType, setInfrastructuresSelectedType] = useState<
-    'all' | 'runtime' | 'other' | undefined
+    'all' | 'runtime' | 'other' | 'expression' | undefined
   >(
     get(formik.values, pathForDeployToAll) === true
       ? 'all'
-      : isValueRuntimeInput(get(formik.values, pathForDeployToAll)) &&
-        isValueRuntimeInput(get(formik.values, localPath))
+      : isValueRuntimeInput(get(formik.values, localPath)) &&
+        (isMultipleInfrastructure ? isValueRuntimeInput(get(formik.values, pathForDeployToAll)) : true)
       ? 'runtime'
+      : isValueExpression(get(formik.values, `${localPath}.0.identifier`))
+      ? 'expression'
       : undefined
   )
 
@@ -113,13 +128,18 @@ export default function DeployInfrastructureEntityInputStep({
     // This is required only when updating the entities list
     updatingInfrastructuresData
   } = useGetInfrastructuresData({
-    infrastructureIdentifiers,
+    infrastructureIdentifiers:
+      // This is required to prevent the API call when expression is being typed
+      infrastructuresSelectedType === 'expression' || isValueExpression(infrastructureIdentifiers[0])
+        ? []
+        : infrastructureIdentifiers,
     environmentIdentifier: getScopeAppendedToIdentifier(environmentIdentifier, scope),
     deploymentType,
     ...(shouldAddCustomDeploymentData && {
       deploymentTemplateIdentifier,
       versionLabel
-    })
+    }),
+    lazyInfrastructure
   })
 
   const selectOptions = useMemo(() => {
@@ -152,6 +172,23 @@ export default function DeployInfrastructureEntityInputStep({
   }, [infrastructuresList])
 
   useDeepCompareEffect(() => {
+    if (infrastructuresSelectedType === 'expression') {
+      updateStageFormTemplate(RUNTIME_INPUT_VALUE, `${fullPathPrefix}infrastructureDefinitions`)
+
+      formik.setValues(
+        produce(formik.values, draft => {
+          if (!(uniquePath.current in draft)) {
+            set(draft, uniquePath.current, get(draft, `${localPath}.0.identifier`))
+          } else {
+            // We need to have the entire object with identifier as we want to overwrite the infra values if made from fixed to expression
+            set(draft, `${localPath}.0`, { identifier: infrastructureIdentifiers[0] })
+          }
+        })
+      )
+
+      return
+    }
+
     // On load of data
     // if no value is selected, clear the inputs and template
     if (infrastructureIdentifiers.length === 0) {
@@ -162,12 +199,14 @@ export default function DeployInfrastructureEntityInputStep({
         const newFormikValues = { ...formik.values }
         set(newFormikValues, localPath, infrastructuresSelectedType === 'runtime' ? RUNTIME_INPUT_VALUE : [])
 
-        if (!isBoolean(deployToAllInfrastructures)) {
-          set(
-            newFormikValues,
-            pathForDeployToAll,
-            infrastructuresSelectedType === 'runtime' ? RUNTIME_INPUT_VALUE : false
-          )
+        if (isMultipleInfrastructure) {
+          if (!isBoolean(deployToAllInfrastructures)) {
+            set(
+              newFormikValues,
+              pathForDeployToAll,
+              infrastructuresSelectedType === 'runtime' ? RUNTIME_INPUT_VALUE : false
+            )
+          }
         }
 
         let uniquePathValue = get(formik.values, uniquePath.current)
@@ -258,9 +297,40 @@ export default function DeployInfrastructureEntityInputStep({
 
         formik.setValues(newFormikValues)
       }
+    } else {
+      updateStageFormTemplate(newInfrastructuresTemplate, `${fullPathPrefix}infrastructureDefinitions`)
+
+      // update form values
+      const newFormikValues = { ...formik.values }
+
+      set(newFormikValues, localPath, newInfrastructuresValues)
+
+      const uniquePathValue = get(formik.values, uniquePath.current)
+      if (isNil(uniquePathValue)) {
+        set(newFormikValues, uniquePath.current, infrastructureIdentifiers[0])
+      }
+
+      formik.setValues(newFormikValues)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [infrastructuresData, infrastructureIdentifiers, infrastructuresSelectedType])
+
+  function handleSingleInfrastructureChange(
+    item?: ExpressionAndRuntimeTypeProps['value'],
+    _?: MultiTypeInputValue,
+    type?: MultiTypeInputType
+  ): void {
+    if (isValueRuntimeInput(item)) {
+      setInfrastructuresSelectedType('runtime')
+      setInfrastructureIdentifiers([])
+    } else if (isMultiTypeExpression(type as MultiTypeInputType)) {
+      setInfrastructuresSelectedType('expression')
+      setInfrastructureIdentifiers(item ? [item as string] : [])
+    } else {
+      setInfrastructuresSelectedType('other')
+      setInfrastructureIdentifiers((item as SelectOption)?.value ? [(item as SelectOption).value as string] : [])
+    }
+  }
 
   function handleInfrastructuresChange(items: SelectOption[]): void {
     if (isValueRuntimeInput(items)) {
@@ -284,27 +354,38 @@ export default function DeployInfrastructureEntityInputStep({
     ? getString('common.infrastructures')
     : getString('cd.pipelineSteps.environmentTab.selectInfrastructures')
 
+  const showSingleInfraMultiTypeInput =
+    !isMultipleInfrastructure &&
+    // This check is required to ensure that the component has the actual type set on mount
+    // We need to do this because of the way the FormInput.MultiTypeInput is written
+    (infrastructuresSelectedType === 'expression' || infrastructuresSelectedType === 'runtime'
+      ? !isUndefined(get(formik.values, uniquePath.current)) || get(formik.touched, uniquePath.current)
+      : true)
+
   return (
     <>
       <Layout.Horizontal spacing="medium" style={{ alignItems: 'flex-end' }}>
-        {!isMultipleInfrastructure && (
-          <ExperimentalInput
+        {showSingleInfraMultiTypeInput && (
+          <FormInput.MultiTypeInput
             tooltipProps={{ dataTooltipId: 'specifyYourInfrastructure' }}
             label={getString('cd.pipelineSteps.environmentTab.specifyYourInfrastructure')}
-            name={'infrastructureDefinitions[0].identifier'}
+            name={uniquePath.current}
             placeholder={getString('cd.pipelineSteps.environmentTab.selectInfrastructure')}
             selectItems={selectOptions}
             useValue
             multiTypeInputProps={{
-              allowableTypes: allowableTypes,
+              expressions,
+              allowableTypes: (allowableTypes as MultiTypeInputType[])?.filter(
+                item => item !== MultiTypeInputType.EXECUTION_TIME
+              ) as AllowedTypes,
               selectProps: {
                 addClearBtn: !inputSetData?.readonly,
                 items: selectOptions
-              }
+              },
+              onChange: handleSingleInfrastructureChange
             }}
             disabled={inputSetData?.readonly}
             className={css.inputWidth}
-            formik={formik}
           />
         )}
         {/**

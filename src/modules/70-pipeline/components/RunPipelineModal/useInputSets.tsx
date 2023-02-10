@@ -7,9 +7,9 @@
 
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import type { GetDataError } from 'restful-react'
-import { defaultTo, get, isEmpty, isUndefined, memoize, remove } from 'lodash-es'
+import { get, isEmpty, isUndefined, memoize, remove } from 'lodash-es'
 
-import { parse } from '@common/utils/YamlHelperMethods'
+import { parse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import {
   Failure,
@@ -21,11 +21,11 @@ import type { PipelineInfoConfig } from 'services/pipeline-ng'
 import {
   clearRuntimeInput,
   getStageIdentifierFromStageData,
-  mergeTemplateWithInputSetData,
   StageSelectionData
 } from '@pipeline/utils/runPipelineUtils'
 
 import type { Pipeline } from '@pipeline/utils/types'
+import { replaceDefaultValues } from '@pipeline/utils/templateUtils'
 import type { InputSetValue } from '../InputSetSelector/utils'
 
 const memoizedParse = memoize(parse)
@@ -44,6 +44,7 @@ export interface UseInputSetsProps {
   resolvedPipeline?: PipelineInfoConfig
   executionIdentifier?: string
   setSelectedInputSets: Dispatch<SetStateAction<InputSetValue[] | undefined>>
+  currentYAML?: PipelineInfoConfig
 }
 
 export interface UseInputSetsReturn {
@@ -76,7 +77,8 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     selectedStageData,
     resolvedPipeline,
     executionIdentifier,
-    setSelectedInputSets
+    setSelectedInputSets,
+    currentYAML
   } = props
 
   // inputSetTemplate is the actual template used for reference
@@ -115,7 +117,8 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     lazy: !selectedStageData.selectedStageItems.length
   })
 
-  const shouldFetchInputSets = !rerunInputSetYaml && Array.isArray(inputSetSelected) && inputSetSelected.length > 0
+  const shouldMergeTemplateWithInputSetYAML =
+    rerunInputSetYaml || !isUndefined(currentYAML) || (Array.isArray(inputSetSelected) && inputSetSelected.length > 0)
 
   // Reason for sending repoIdentifier and pipelineRepoID both as same values
   // input sets are only saved in same repo and same branch that of pipeline's or default branch of other repos
@@ -125,10 +128,15 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     loading: loadingInputSetsData,
     error: inputSetError
   } = useMutateAsGet(useGetMergeInputSetFromPipelineTemplateWithListInput, {
-    lazy: !shouldFetchInputSets,
+    lazy: !shouldMergeTemplateWithInputSetYAML,
     body: {
       inputSetReferences: inputSetSelected?.map(row => row.value),
-      stageIdentifiers: getStageIdentifierFromStageData(selectedStageData)
+      stageIdentifiers: getStageIdentifierFromStageData(selectedStageData),
+      lastYamlToMerge: rerunInputSetYaml
+        ? rerunInputSetYaml
+        : !isUndefined(currentYAML)
+        ? yamlStringify({ pipeline: currentYAML })
+        : undefined
     },
     queryParams: {
       accountIdentifier: accountId,
@@ -186,48 +194,27 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
       return
     }
 
-    const shouldUseDefaultValues = isUndefined(executionIdentifier)
-
     // This merges the template and sets the final return data in state
     if (rerunInputSetYaml) {
-      const inputSetPortion = memoizedParse<Pipeline>(rerunInputSetYaml)
+      //  Merge call takes care of merging rerunYAML with the latest updated pipeline
 
-      setInputSet(
-        mergeTemplateWithInputSetData({
-          templatePipeline: clearRuntimeInput(inputSetTemplate),
-          inputSetPortion,
-          allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
-          shouldUseDefaultValues
-        })
-      )
+      setInputSet(clearRuntimeInput(memoizedParse<Pipeline>(inputSetData?.data?.pipelineYaml as any)))
     } else if (hasRuntimeInputs) {
-      if (shouldFetchInputSets && inputSetData?.data?.pipelineYaml) {
-        const parsedInputSets = clearRuntimeInput(memoizedParse<Pipeline>(inputSetData.data.pipelineYaml).pipeline)
+      if (shouldMergeTemplateWithInputSetYAML && inputSetData?.data?.pipelineYaml) {
+        // This is to take care of selectiveStage executions to retain values on switching stages
 
-        setInputSet(
-          mergeTemplateWithInputSetData({
-            templatePipeline: clearRuntimeInput(inputSetTemplate),
-            inputSetPortion: { pipeline: parsedInputSets },
-            allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
-            shouldUseDefaultValues
-          })
-        )
+        setInputSet(clearRuntimeInput(memoizedParse<Pipeline>(inputSetData?.data?.pipelineYaml as any)))
         setShouldValidateForm(true)
       } else {
-        setInputSet(
-          mergeTemplateWithInputSetData({
-            templatePipeline: clearRuntimeInput(inputSetTemplate),
-            inputSetPortion: clearRuntimeInput(inputSetTemplate),
-            allValues: { pipeline: defaultTo(resolvedPipeline, {} as PipelineInfoConfig) },
-            shouldUseDefaultValues
-          })
-        )
+        // In Normal flow we do not need merge call the template is the source of truth for us
+
+        setInputSet(clearRuntimeInput(replaceDefaultValues(inputSetTemplate)))
       }
     }
     setIsTemplateMergeComplete(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    shouldFetchInputSets,
+    shouldMergeTemplateWithInputSetYAML,
     resolvedPipeline,
     executionIdentifier,
     inputSetTemplate,

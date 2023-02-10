@@ -38,8 +38,8 @@ import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { repositoryPortOrServer } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { ImagePathProps, RepositoryPortOrServer } from '../../../ArtifactInterface'
-import { repositoryPortOrServer } from '../../../ArtifactHelper'
 import css from '../../ArtifactConnector.module.scss'
 
 export interface queryInterface extends specInterface {

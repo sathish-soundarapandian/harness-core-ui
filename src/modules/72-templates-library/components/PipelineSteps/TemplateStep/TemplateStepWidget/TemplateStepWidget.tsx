@@ -28,7 +28,7 @@ import {
   getScopeFromValue
 } from '@common/components/EntityReference/EntityReference'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
-import type { TemplateStepNode } from 'services/pipeline-ng'
+import type { StageElementConfig, TemplateStepNode } from 'services/pipeline-ng'
 import { validateStep, validateSteps } from '@pipeline/components/PipelineStudio/StepUtil'
 import { getTemplateErrorMessage, replaceDefaultValues, TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import { useQueryParams } from '@common/hooks'
@@ -39,6 +39,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { StepForm } from '@pipeline/components/PipelineInputSetForm/StepInputSetForm'
 import { ExecutionWrapperInputSetForm } from '@pipeline/components/PipelineInputSetForm/ExecutionWrapperInputSetForm'
+import type { StageType } from '@pipeline/utils/stageHelpers'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './TemplateStepWidget.module.scss'
 
@@ -51,7 +52,11 @@ export interface TemplateStepWidgetProps {
   readonly?: boolean
   factory: AbstractStepFactory
   allowableTypes: AllowedTypes
-  customStepProps: unknown
+  customStepProps?: {
+    stageIdentifier: string
+    stageType?: StageType
+    selectedStage?: StageElementConfig
+  }
 }
 
 function TemplateStepWidget(
@@ -270,6 +275,10 @@ function TemplateStepWidget(
                           values={formik.values.template?.templateInputs?.steps}
                           allValues={formik.values.template?.templateInputs?.steps}
                           viewType={StepViewType.TemplateUsage}
+                          customStepProps={{
+                            stageType: customStepProps?.stageType,
+                            stageIdentifier: selectedStage?.identifier
+                          }}
                         />
                       </>
                     ) : (
@@ -289,6 +298,7 @@ function TemplateStepWidget(
                           // This data is required in ECSBlueGreenCreateServiceStepInputSet component
                           // where we need to find out Cluster/Region or envRef/infraRef
                           selectedStage: selectedStage?.stage?.spec,
+                          stageType: customStepProps?.stageType,
                           stageIdentifier: selectedStage?.identifier
                         }}
                       />

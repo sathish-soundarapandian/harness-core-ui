@@ -91,3 +91,4 @@ export enum DelegateDefaultName {
   HELM = 'helm-delegate',
   TERRAFORM = 'terraform-delegate'
 }
+export const DelegateNameLengthLimit = 63

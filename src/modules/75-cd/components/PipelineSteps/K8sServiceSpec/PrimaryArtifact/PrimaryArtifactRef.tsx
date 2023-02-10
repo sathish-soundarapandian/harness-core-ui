@@ -57,7 +57,7 @@ function PrimaryArtifactRef({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getStageFormTemplate, updateStageFormTemplate } = useStageFormContext()
 
-  const { data: artifactSourceResponse } = useGetArtifactSourceInputs({
+  const { data: artifactSourceResponse, loading: loadingArtifactSourceResponse } = useGetArtifactSourceInputs({
     queryParams: { accountIdentifier: accountId, projectIdentifier, orgIdentifier },
     serviceIdentifier
   })
@@ -71,6 +71,10 @@ function PrimaryArtifactRef({
   )
 
   useEffect(() => {
+    // if the API is in loading state then just return this ends up showing unsaved changes in the pipeline
+    if (loadingArtifactSourceResponse) {
+      return
+    }
     const artifactSourceTemplate = getStageFormTemplate(`${path}.artifacts.primary.sources`)
     const serviceInputsFormikValue = get(formik?.values, `${path}.artifacts.primary.sources`)
     const isSingleArtifactSource = artifactSources.length === 1

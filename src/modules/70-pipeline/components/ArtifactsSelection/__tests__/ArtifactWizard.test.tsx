@@ -155,6 +155,8 @@ describe('Artifact WizardStep tests', () => {
           iconsProps={{ name: 'info' }}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]}
           lastSteps={<DockerRegistryArtifact {...laststepProps} key={'key'} />}
+          artifactWizardInitialStep={1}
+          showArtifactSelectionStep
         />
       </TestWrapper>
     )
@@ -185,6 +187,8 @@ describe('Artifact WizardStep tests', () => {
           newConnectorProps={newConnectorStepProps}
           iconsProps={{ name: 'info' }}
           lastSteps={<DockerRegistryArtifact {...laststepProps} key={'key'} />}
+          artifactWizardInitialStep={1}
+          showArtifactSelectionStep
         />
       </TestWrapper>
     )
@@ -215,6 +219,8 @@ describe('Artifact WizardStep tests', () => {
           newConnectorProps={newConnectorStepProps}
           iconsProps={{ name: 'info' }}
           lastSteps={<GCRImagePath {...laststepProps} key={'key'} />}
+          artifactWizardInitialStep={1}
+          showArtifactSelectionStep
         />
       </TestWrapper>
     )
@@ -245,6 +251,8 @@ describe('Artifact WizardStep tests', () => {
           newConnectorProps={newConnectorStepProps}
           iconsProps={{ name: 'info' }}
           lastSteps={<DockerRegistryArtifact {...laststepProps} key={'key'} />}
+          artifactWizardInitialStep={1}
+          showArtifactSelectionStep
         />
       </TestWrapper>
     )
@@ -299,6 +307,8 @@ describe('Artifact WizardStep tests', () => {
           newConnectorProps={newConnectorStepProps}
           iconsProps={{ name: 'info' }}
           lastSteps={<DockerRegistryArtifact {...laststepProps} key={'key'} />}
+          artifactWizardInitialStep={1}
+          showArtifactSelectionStep
         />
       </TestWrapper>
     )
@@ -359,6 +369,8 @@ describe('Artifact WizardStep tests', () => {
           newConnectorProps={newConnectorStepProps}
           iconsProps={{ name: 'info' }}
           lastSteps={<DockerRegistryArtifact {...laststepProps} key={'key'} />}
+          artifactWizardInitialStep={1}
+          showArtifactSelectionStep
         />
       </TestWrapper>
     )
@@ -391,6 +403,8 @@ describe('Artifact WizardStep tests', () => {
           newConnectorProps={newConnectorStepProps}
           iconsProps={{ name: 'info' }}
           lastSteps={<AmazonS3 {...AmazsonS3LastStepProps} key={'key'} />}
+          artifactWizardInitialStep={1}
+          showArtifactSelectionStep
         />
       </TestWrapper>
     )

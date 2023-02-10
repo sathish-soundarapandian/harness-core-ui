@@ -90,7 +90,9 @@ const SaveToGitFormV2: React.FC<ModalConfigureProps & SaveToGitFormV2Props> = pr
   const branch = defaultTo(resource.gitDetails?.branch, resource.storeMetadata?.branch)
 
   const handleBranchTypeChange = (isNew: boolean, formik: FormikContextType<SaveToGitFormV2Interface>): void => {
+    const commitMsg = formik.values.commitMsg
     formik.resetForm()
+    formik.setFieldValue('commitMsg', commitMsg)
     if (isNewBranch !== isNew) {
       setIsNewBranch(isNew)
       formik.setFieldValue('branch', isNew ? `${branch}-patch` : initialValues.branch)

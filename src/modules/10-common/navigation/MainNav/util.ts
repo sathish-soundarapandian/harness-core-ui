@@ -17,7 +17,7 @@ import {
   CODENavItem,
   SRMNavItem,
   STONavItem,
-  SSCSNavItem,
+  SSCANavItem,
   IDPNavItem
 } from './ModuleLinks'
 
@@ -31,7 +31,7 @@ export const moduleToNavItemsMap: Record<NavModuleName, () => JSX.Element> = {
   [ModuleName.STO]: STONavItem,
   [ModuleName.CODE]: CODENavItem,
   [ModuleName.IACM]: IACNavItem,
-  [ModuleName.SSCS]: SSCSNavItem,
+  [ModuleName.SSCA]: SSCANavItem,
   [ModuleName.IDP]: IDPNavItem
 }
 

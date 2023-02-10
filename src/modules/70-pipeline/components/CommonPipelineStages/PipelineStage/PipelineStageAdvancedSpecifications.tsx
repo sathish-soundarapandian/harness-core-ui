@@ -5,7 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Card, Container, HarnessDocTooltip, Layout } from '@harness/uicore'
+import {
+  Card,
+  Container,
+  getMultiTypeFromValue,
+  HarnessDocTooltip,
+  Layout,
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE
+} from '@harness/uicore'
 import React from 'react'
 import cx from 'classnames'
 import { produce } from 'immer'
@@ -22,7 +30,10 @@ import { DelegateSelectorWithRef } from '@pipeline/components/PipelineStudio/Del
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
+import { isMultiTypeRuntime } from '@common/utils/utils'
+import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
 import { PipelineStageTabs } from './utils'
+
 import css from './PipelineStageAdvancedSpecifications.module.scss'
 
 interface AdvancedSpecificationsProps {
@@ -129,42 +140,63 @@ export function PipelineStageAdvancedSpecifications({
           </Card>
         )}
         <div className={css.tabHeading}>
-          <span data-tooltip-id={failureStrategyTooltipId}>
-            {getString('pipeline.failureStrategies.title')}
-            <HarnessDocTooltip tooltipId={failureStrategyTooltipId} useStandAlone={true} />
-          </span>
+          <span data-tooltip-id={failureStrategyTooltipId}>{getString('pipeline.failureStrategies.title')}</span>
+          <MultiTypeSelectorButton
+            className={css.multiTypeBtn}
+            type={getMultiTypeFromValue(stage?.stage?.failureStrategies as any)}
+            allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+            onChange={type => {
+              const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
+              if (pipelineStage && pipelineStage.stage) {
+                const stageData = produce(pipelineStage, draft => {
+                  if (isMultiTypeRuntime(type)) {
+                    set(draft, 'stage.failureStrategies', RUNTIME_INPUT_VALUE)
+                  } else {
+                    unset(draft, 'stage.failureStrategies')
+                  }
+                })
+
+                if (stageData.stage) {
+                  updateStage(stageData.stage)
+                }
+              }
+            }}
+          />
+          <HarnessDocTooltip tooltipId={failureStrategyTooltipId} useStandAlone={true} />
         </div>
         <Card className={css.sectionCard} id="failureStrategy">
-          <Layout.Horizontal>
-            <div className={css.stageSection}>
-              <div className={cx(css.stageCreate, css.stageDetails)}>
-                <FailureStrategyWithRef
-                  selectedStage={stage}
-                  isReadonly={isReadonly}
-                  ref={formikRef}
-                  onUpdate={({ failureStrategies }) => {
-                    const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
-                    if (pipelineStage && pipelineStage.stage) {
-                      const stageData = produce(pipelineStage, draft => {
+          <div className={css.stageSection}>
+            <div className={cx(css.stageCreate, css.stageDetails)}>
+              <FailureStrategyWithRef
+                selectedStage={stage}
+                isReadonly={isReadonly}
+                ref={formikRef}
+                onUpdate={({ failureStrategies }) => {
+                  const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
+                  if (pipelineStage && pipelineStage.stage) {
+                    const stageData = produce(pipelineStage, draft => {
+                      if (Array.isArray(failureStrategies) && failureStrategies.length > 0) {
                         set(draft, 'stage.failureStrategies', failureStrategies)
-                      })
-                      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                      updateStage(stageData.stage!)
-                      const errors = formikRef.current?.getErrors()
-                      if (isEmpty(errors)) {
-                        const telemetryData = failureStrategies.map(strategy => ({
-                          onError: strategy.onFailure?.errors?.join(', '),
-                          action: strategy.onFailure?.action?.type
-                        }))
-                        telemetryData.length &&
-                          trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
+                      } else {
+                        unset(draft, 'stage.failureStrategies')
                       }
+                    })
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    updateStage(stageData.stage!)
+                    const errors = formikRef.current?.getErrors()
+                    if (isEmpty(errors)) {
+                      const telemetryData = failureStrategies.map(strategy => ({
+                        onError: strategy.onFailure?.errors?.join(', '),
+                        action: strategy.onFailure?.action?.type
+                      }))
+                      telemetryData.length &&
+                        trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
                     }
-                  }}
-                />
-              </div>
+                  }
+                }}
+              />
             </div>
-          </Layout.Horizontal>
+          </div>
         </Card>
         <Container margin={{ top: 'xxlarge' }} className={css.navigationButtons}>
           {children}

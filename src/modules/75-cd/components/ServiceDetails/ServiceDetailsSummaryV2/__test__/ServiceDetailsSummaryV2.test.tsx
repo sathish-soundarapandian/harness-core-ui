@@ -16,7 +16,12 @@ import {
 import { useGetListOfExecutions } from 'services/pipeline-ng'
 import { useGetActiveServiceInstanceDetailsGroupedByPipelineExecution } from 'services/cd-ng'
 import ServiceDetailsSummaryV2 from '../ServiceDetailsSummaryV2'
-import { activeInstanceDetail, activeInstanceGroupByEnv, envInstanceDetailsMock } from './ServiceDetailsMocks'
+import {
+  activeInstanceDetail,
+  activeInstanceGroupByEnv,
+  artifactInstanceDetailsMock,
+  envInstanceDetailsMock
+} from './ServiceDetailsMocks'
 
 const mockGetCallFunction = jest.fn()
 
@@ -34,6 +39,9 @@ jest.mock('services/cd-ng', () => ({
   }),
   useGetEnvironmentInstanceDetails: jest.fn().mockImplementation(() => {
     return { data: envInstanceDetailsMock, refetch: jest.fn(), loading: false, error: false }
+  }),
+  useGetArtifactInstanceDetails: jest.fn().mockImplementation(() => {
+    return { data: artifactInstanceDetailsMock, refetch: jest.fn(), loading: false, error: false }
   }),
   useGetActiveInstanceGroupedByEnvironment: jest.fn().mockImplementation(() => {
     return { data: activeInstanceGroupByEnv, refetch: jest.fn(), loading: false, error: false }
@@ -208,6 +216,27 @@ describe('Service Detail Summary - ', () => {
     const closeBtn = fullTableDialog?.querySelector('.Dialog--close')
     userEvent.click(closeBtn!)
     await waitFor(() => expect(findDialogContainer()).toBeNull())
+  })
+
+  test('Test ServiceDetail Artifact Cards and Artifact Filter', async () => {
+    const { container } = render(
+      <TestWrapper path={TEST_PATH} pathParams={getModuleParams()}>
+        <ServiceDetailsSummaryV2 />
+      </TestWrapper>
+    )
+
+    //toggle to artifact view
+    const artifactTab = container.querySelector('[data-name="toggle-option-two"]')
+    expect(artifactTab).toBeInTheDocument()
+    userEvent.click(artifactTab!)
+
+    // artifact card click and check for execution list call
+    const artifactName = getByText(container, 'testArtifactDisplayName')
+    expect(artifactName).toBeInTheDocument()
+    expect(artifactName.parentElement).not.toHaveClass('Card--selected')
+    userEvent.click(artifactName)
+    expect(artifactName.parentElement).toHaveClass('Card--selected')
+    expect(useGetListOfExecutions).toHaveBeenCalled()
   })
 })
 

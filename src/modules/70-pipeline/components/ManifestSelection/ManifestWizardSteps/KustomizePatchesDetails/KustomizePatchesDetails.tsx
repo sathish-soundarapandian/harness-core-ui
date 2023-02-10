@@ -374,7 +374,7 @@ function KustomizePatchDetails({
                   />
                 </div>
               </Layout.Horizontal>
-              {!!(connectionType === GitRepoName.Account && accountUrl) && (
+              {!!(connectionType === GitRepoName.Account || accountUrl) && (
                 <GitRepositoryName
                   accountUrl={accountUrl}
                   expressions={expressions}

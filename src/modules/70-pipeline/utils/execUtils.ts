@@ -7,7 +7,6 @@
 
 import type { IconName } from '@harness/uicore'
 import { defaultTo, get, isEmpty } from 'lodash-es'
-import { v4 as uuid } from 'uuid'
 import { PipelineGraphState, PipelineGraphType } from '@pipeline/components/PipelineDiagram/types'
 import type { ExecutionGraph, ExecutionNode, NodeRunInfo } from 'services/pipeline-ng'
 import {
@@ -19,18 +18,18 @@ import { Event } from '@pipeline/components/PipelineDiagram/Constants'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import {
   StepGroupRollbackIdentifier,
-  NodeType,
+  StepNodeType,
   RollbackContainerCss,
   getIconDataBasedOnType,
   LITE_ENGINE_TASK,
   RollbackIdentifier,
-  TopLevelNodes,
+  TopLevelStepNodes,
   hasOnlyLiteEngineTask,
   StepTypeIconsMap,
   ServiceDependency,
   STATIC_SERVICE_GROUP_NAME,
   isNodeTypeMatrixOrFor,
-  NonSelectableNodes
+  NonSelectableStepNodes
 } from './executionUtils'
 import type { ExecutionStatus } from './statusHelpers'
 interface ProcessParalellNodeArgs {
@@ -76,8 +75,8 @@ const addDependencies = (dependencies: ServiceDependency[], stepsPipelineNodes: 
       identifier: STATIC_SERVICE_GROUP_NAME,
       status: dependencies[0].status as ExecutionStatus,
       icon: 'step-group',
-      nodeType: NodeType.STEP_GROUP,
-      type: NodeType.STEP_GROUP,
+      nodeType: StepNodeType.STEP_GROUP,
+      type: StepNodeType.STEP_GROUP,
       id: STATIC_SERVICE_GROUP_NAME,
       data: {
         icon: 'step-group',
@@ -86,8 +85,8 @@ const addDependencies = (dependencies: ServiceDependency[], stepsPipelineNodes: 
           name: 'Dependencies',
           identifier: STATIC_SERVICE_GROUP_NAME,
           status: dependencies[0].status as ExecutionStatus,
-          nodeType: NodeType.STEP_GROUP,
-          type: NodeType.STEP_GROUP,
+          nodeType: StepNodeType.STEP_GROUP,
+          type: StepNodeType.STEP_GROUP,
           data: {},
           steps: [
             { parallel: items.map(stepData => ({ step: { ...stepData, graphType: PipelineGraphType.STEP_GRAPH } })) }
@@ -153,7 +152,7 @@ const processParallelNodeData = ({
   const parentNodeData = nodeMap?.[parentNodeId]
   const iconData = getIconDataBasedOnType(parentNodeData)
   const nodeStrategyType =
-    parentNodeData?.stepType === NodeType.STRATEGY
+    parentNodeData?.stepType === StepNodeType.STRATEGY
       ? ((parentNodeData?.stepParameters?.strategyType || 'MATRIX') as string)
       : (parentNodeData?.stepType as string)
   items.push({
@@ -166,7 +165,7 @@ const processParallelNodeData = ({
     status: parentNodeData?.status as ExecutionStatus,
     data: {
       ...iconData,
-      ...(parentNodeData?.stepType === NodeType.STEP_GROUP
+      ...(parentNodeData?.stepType === StepNodeType.STEP_GROUP
         ? {
             isNestedGroup,
             stepGroup: {
@@ -182,7 +181,7 @@ const processParallelNodeData = ({
               steps: processStepGroupSteps({ nodeAdjacencyListMap, id: parentNodeId, nodeMap, rootNodes })
             }
           }
-        : parentNodeData?.stepType === NodeType.STRATEGY
+        : parentNodeData?.stepType === StepNodeType.STRATEGY
         ? {
             maxParallelism: parentNodeData?.stepParameters?.maxConcurrency,
             stepGroup: {
@@ -238,7 +237,7 @@ const processStepGroupSteps = ({
   const steps: any[] = []
   nodeAdjacencyListMap?.[id].children?.forEach((childId: string): void => {
     const nodeData = nodeMap?.[childId] as ExecutionNode
-    if (nodeData.stepType === NodeType.FORK) {
+    if (nodeData.stepType === StepNodeType.FORK) {
       const childrenNodes = processNodeDataV1(
         nodeAdjacencyListMap[childId].children || [],
         nodeMap,
@@ -263,7 +262,7 @@ const processStepGroupSteps = ({
       }
     } else {
       const nodeStrategyType =
-        nodeData?.stepType === NodeType.STRATEGY
+        nodeData?.stepType === StepNodeType.STRATEGY
           ? ((nodeData?.stepParameters?.strategyType || 'MATRIX') as string)
           : (nodeData?.stepType as string)
 
@@ -275,7 +274,7 @@ const processStepGroupSteps = ({
             rootNodes,
             isNestedGroup
           })
-        : nodeStrategyType === NodeType.STEP_GROUP
+        : nodeStrategyType === StepNodeType.STEP_GROUP
         ? processStepGroupSteps({
             nodeAdjacencyListMap,
             id: nodeData?.uuid as string,
@@ -296,7 +295,7 @@ const processStepGroupSteps = ({
           matrixNodeName,
           type: nodeStrategyType,
           nodeType: nodeStrategyType,
-          ...(isNodeTypeMatrixOrFor(nodeStrategyType) || nodeStrategyType === NodeType.STEP_GROUP
+          ...(isNodeTypeMatrixOrFor(nodeStrategyType) || nodeStrategyType === StepNodeType.STEP_GROUP
             ? {
                 data: {
                   ...nodeData?.progressData,
@@ -370,7 +369,7 @@ const processSingleItem = ({
     showInLabel
   }
   const nodeStrategyType =
-    nodeData.stepType === NodeType.STRATEGY
+    nodeData.stepType === StepNodeType.STRATEGY
       ? ((nodeData?.stepParameters?.strategyType || 'MATRIX') as string)
       : (nodeData?.stepType as string)
   const finalItem = {
@@ -384,14 +383,14 @@ const processSingleItem = ({
     data: {
       ...iconData,
       graphType: PipelineGraphType.STEP_GRAPH,
-      ...(nodeData?.stepType === NodeType.STEP_GROUP
+      ...(nodeData?.stepType === StepNodeType.STEP_GROUP
         ? {
             stepGroup: {
               ...item,
               steps: processStepGroupSteps({ nodeAdjacencyListMap, id, nodeMap, rootNodes })
             }
           }
-        : nodeData?.stepType === NodeType.STRATEGY
+        : nodeData?.stepType === StepNodeType.STRATEGY
         ? {
             isNestedGroup: true, // strategy in step_group
             maxParallelism: nodeData?.stepParameters?.maxConcurrency,
@@ -425,12 +424,12 @@ export const processNodeDataV1 = (
   children?.forEach(item => {
     const nodeData = nodeMap?.[item]
     const isRollback = nodeData?.name?.endsWith(StepGroupRollbackIdentifier) ?? false
-    if (nodeData?.stepType === NodeType.FORK) {
+    if (nodeData?.stepType === StepNodeType.FORK) {
       processParallelNodeData({ items, id: item, nodeAdjacencyListMap, nodeMap, rootNodes, isNestedGroup })
     } else if (
-      nodeData?.stepType === NodeType.STEP_GROUP ||
-      nodeData?.stepType === NodeType.NG_SECTION ||
-      nodeData?.stepType === NodeType.STRATEGY ||
+      nodeData?.stepType === StepNodeType.STEP_GROUP ||
+      nodeData?.stepType === StepNodeType.NG_SECTION ||
+      nodeData?.stepType === StepNodeType.STRATEGY ||
       (nodeData && isRollback)
     ) {
       processGroupItem({
@@ -498,12 +497,12 @@ ProcessGroupItemArgs): void => {
           parallel: stepGroupChildrenNodes?.map(childItemId => {
             const stepNodeData = nodeMap?.[childItemId]
             const nodeStrategyType =
-              stepNodeData?.stepType === NodeType.STRATEGY
+              stepNodeData?.stepType === StepNodeType.STRATEGY
                 ? ((stepNodeData?.stepParameters?.strategyType || 'MATRIX') as string)
                 : (stepNodeData?.stepType as string)
 
             const stepData =
-              isNodeTypeMatrixOrFor(nodeStrategyType) || nodeStrategyType === NodeType.STEP_GROUP
+              isNodeTypeMatrixOrFor(nodeStrategyType) || nodeStrategyType === StepNodeType.STEP_GROUP
                 ? processStepGroupSteps({
                     nodeAdjacencyListMap,
                     id: stepNodeData?.uuid as string,
@@ -527,7 +526,7 @@ ProcessGroupItemArgs): void => {
                   ...stepNodeData,
                   graphType: PipelineGraphType.STEP_GRAPH,
                   conditionalExecutionEnabled: getConditionalExecutionFlag(stepNodeData?.nodeRunInfo),
-                  ...((isNodeTypeMatrixOrFor(nodeStrategyType) || nodeStrategyType === NodeType.STEP_GROUP) && {
+                  ...((isNodeTypeMatrixOrFor(nodeStrategyType) || nodeStrategyType === StepNodeType.STEP_GROUP) && {
                     isNestedGroup: true, // strategy in step_group
                     type: nodeStrategyType,
                     nodeType: nodeStrategyType,
@@ -554,7 +553,7 @@ ProcessGroupItemArgs): void => {
         childStep?.status as ExecutionStatus,
         ExecutionPipelineNodeType.NORMAL
       )
-      if (childStep?.stepType === NodeType.STEP_GROUP) {
+      if (childStep?.stepType === StepNodeType.STEP_GROUP) {
         steps.push({
           step: {
             ...childStepIconData,
@@ -585,7 +584,7 @@ ProcessGroupItemArgs): void => {
         })
       } else {
         const nodeStrategyType =
-          childStep?.stepType === NodeType.STRATEGY
+          childStep?.stepType === StepNodeType.STRATEGY
             ? ((childStep?.stepParameters?.strategyType || 'MATRIX') as string)
             : (childStep?.stepType as string)
 
@@ -663,7 +662,7 @@ ProcessGroupItemArgs): void => {
 
   const isRollbackNext = nodeData?.name?.endsWith(StepGroupRollbackIdentifier) ?? false
   const nodeStrategyType =
-    nodeData.stepType === NodeType.STRATEGY
+    nodeData.stepType === StepNodeType.STRATEGY
       ? ((nodeData?.stepParameters?.strategyType || 'MATRIX') as string)
       : 'STEP_GROUP'
   const finalDataItem = {
@@ -676,7 +675,8 @@ ProcessGroupItemArgs): void => {
     status: nodeData?.status as ExecutionStatus,
     ...getNodeConditions(nodeData),
     data: {
-      ...(nodeData?.stepType === NodeType.STEP_GROUP || nodeData.stepType === NodeType.ROLLBACK_OPTIONAL_CHILD_CHAIN
+      ...(nodeData?.stepType === StepNodeType.STEP_GROUP ||
+      nodeData.stepType === StepNodeType.ROLLBACK_OPTIONAL_CHILD_CHAIN
         ? {
             graphType: PipelineGraphType.STEP_GRAPH,
             isNestedGroup,
@@ -693,7 +693,7 @@ ProcessGroupItemArgs): void => {
               }
             }
           }
-        : nodeData?.stepType === NodeType.STRATEGY
+        : nodeData?.stepType === StepNodeType.STRATEGY
         ? {
             graphType: PipelineGraphType.STEP_GRAPH,
             isNestedGroup,
@@ -740,9 +740,9 @@ export const processNextNodes = ({
   nextIds.forEach(id => {
     const nodeDataNext = nodeMap?.[id]
     const isRollbackNext = nodeDataNext?.name?.endsWith(StepGroupRollbackIdentifier) ?? false
-    if (nodeDataNext?.stepType === NodeType.FORK) {
+    if (nodeDataNext?.stepType === StepNodeType.FORK) {
       processParallelNodeData({ items: result, id, nodeAdjacencyListMap, nodeMap, rootNodes, isNestedGroup })
-    } else if (nodeDataNext?.stepType === NodeType.STEP_GROUP || (isRollbackNext && nodeDataNext)) {
+    } else if (nodeDataNext?.stepType === StepNodeType.STEP_GROUP || (isRollbackNext && nodeDataNext)) {
       processGroupItem({ items: result, id, isRollbackNext, nodeMap, nodeAdjacencyListMap, rootNodes, isNestedGroup })
     } else {
       processSingleItem({ id, items: result, nodeMap, nodeAdjacencyListMap, rootNodes })
@@ -769,14 +769,14 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
     let nodeId = nodeAdjacencyListMap[rootNodeId].children?.[0]
 
     // handling for stage level execution inputs
-    if (rootNode?.executionInputConfigured && NonSelectableNodes.includes(rootNode.stepType as NodeType)) {
+    if (rootNode?.executionInputConfigured && NonSelectableStepNodes.includes(rootNode.stepType as StepNodeType)) {
       items.push({
         name: 'Runtime Inputs',
         identifier: rootNodeId,
-        id: uuid(),
+        id: rootNodeId,
         icon: StepTypeIconsMap.RUNTIME_INPUT,
         type: StepType.StageRuntimeInput,
-        nodeType: NodeType.RUNTIME_INPUT,
+        nodeType: StepNodeType.RUNTIME_INPUT,
         status: rootNode?.status as ExecutionStatus,
         data: {
           ...rootNode
@@ -790,7 +790,7 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
       if (nodeData) {
         /* istanbul ignore else */
         const isRollback = nodeData.name?.endsWith(StepGroupRollbackIdentifier) ?? false
-        if (nodeData.stepType && (TopLevelNodes.indexOf(nodeData.stepType as NodeType) > -1 || isRollback)) {
+        if (nodeData.stepType && (TopLevelStepNodes.indexOf(nodeData.stepType as StepNodeType) > -1 || isRollback)) {
           // NOTE: exception if we have only lite task engine in Execution group
           if (hasOnlyLiteEngineTask(nodeAdjacencyListMap[nodeId].children, graph)) {
             const liteTaskEngineId = nodeAdjacencyListMap?.[nodeId]?.children?.[0] || ''
@@ -844,7 +844,7 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
               })
             }
           }
-        } else if (nodeData.stepType === NodeType.FORK) {
+        } else if (nodeData.stepType === StepNodeType.FORK) {
           items.push({
             parallel: processNodeDataV1(
               nodeAdjacencyListMap[nodeId].children || /* istanbul ignore next */ [],
@@ -869,7 +869,8 @@ export const processExecutionDataV1 = (graph?: ExecutionGraph): any => {
               name: getExecutionNodeName(nodeData),
               skipCondition: nodeData.skipInfo?.evaluatedCondition ? nodeData.skipInfo.skipCondition : undefined,
               when: nodeData.nodeRunInfo,
-              showInLabel: nodeData.stepType === NodeType.SERVICE || nodeData.stepType === NodeType.INFRASTRUCTURE,
+              showInLabel:
+                nodeData.stepType === StepNodeType.SERVICE || nodeData.stepType === StepNodeType.INFRASTRUCTURE,
               identifier: nodeId,
               status: nodeData.status as ExecutionStatus,
               type: nodeData?.stepType,
@@ -904,7 +905,8 @@ export const getExecutionStageDiagramListeners = ({
   const nodeListeners: { [key: string]: (event?: any) => void } = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [Event.ClickNode]: (event: any) => {
-      const selectedNodeId = event?.data?.nodeType === NodeType.RUNTIME_INPUT ? event.data.identifier : event.data?.id
+      const selectedNodeId =
+        event?.data?.nodeType === StepNodeType.RUNTIME_INPUT ? event.data.identifier : event.data?.id
       event?.data?.data?.stageNodeId
         ? onStepSelect(event?.data?.data?.stageNodeId, event?.data?.parentStageId, event?.data?.id)
         : onStepSelect(selectedNodeId, event?.data?.parentStageId)

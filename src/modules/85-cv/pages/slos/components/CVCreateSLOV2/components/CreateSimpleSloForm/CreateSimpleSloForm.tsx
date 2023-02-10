@@ -16,7 +16,7 @@ import { useMutateAsGet } from '@common/hooks'
 import {
   useGetAllMonitoredServicesWithTimeSeriesHealthSources,
   useGetNotificationRuleData,
-  useGetSliGraph
+  useGetSliOnboardingGraphs
 } from 'services/cv'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -151,7 +151,7 @@ export default function CreateSimpleSLOForm({
     refetch: fetchSliGraphData,
     loading: sliGraphLoading,
     error: sliGraphError
-  } = useMutateAsGet(useGetSliGraph, { lazy: true })
+  } = useMutateAsGet(useGetSliOnboardingGraphs, { lazy: true })
 
   const debounceFetchSliGraphData = useCallback(debounce(fetchSliGraphData, 2000), [])
 
@@ -199,6 +199,17 @@ export default function CreateSimpleSLOForm({
 
   useEffect(() => {
     if (showChart) {
+      debounceFetchSliGraphData({
+        body: serviceLevelIndicator,
+        queryParams: {
+          accountId,
+          orgIdentifier,
+          projectIdentifier
+        },
+        pathParams: {
+          monitoredServiceIdentifier: formikProps.values.monitoredServiceRef as string
+        }
+      })
       debounceFetchSliGraphData?.({
         body: serviceLevelIndicator,
         queryParams: {
@@ -265,7 +276,7 @@ export default function CreateSimpleSLOForm({
                   panel: (
                     <SLI
                       formikProps={formikProps}
-                      sliGraphData={sliGraphData?.resource}
+                      sliGraphData={sliGraphData?.resource?.sliGraph}
                       loading={sliGraphLoading}
                       error={getErrorMessage(sliGraphError)}
                       retryOnError={fetchSliGraphData}
@@ -293,7 +304,7 @@ export default function CreateSimpleSLOForm({
                       loading={sliGraphLoading}
                       error={getErrorMessage(sliGraphError)}
                       retryOnError={fetchSliGraphData}
-                      sliGraphData={sliGraphData?.resource}
+                      sliGraphData={sliGraphData?.resource?.sliGraph}
                     />
                   ),
                   errorMessage: getErrorMessageByTabId(formikProps, CreateSimpleSLOSteps.Set_SLO),

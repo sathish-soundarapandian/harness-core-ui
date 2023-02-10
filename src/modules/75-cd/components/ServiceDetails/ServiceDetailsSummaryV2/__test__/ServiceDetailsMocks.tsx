@@ -1,4 +1,5 @@
 import type {
+  ResponseArtifactInstanceDetails,
   ResponseEnvironmentInstanceDetails,
   ResponseInstanceDetailGroupedByPipelineExecutionList,
   ResponseInstanceGroupedByEnvironmentList
@@ -232,4 +233,31 @@ export const activeInstanceDetail: ResponseInstanceDetailGroupedByPipelineExecut
   },
   metaData: undefined,
   correlationId: '40d0feed-0d29-4157-a1da-da7cbc569fb4'
+}
+
+export const artifactInstanceDetailsMock: ResponseArtifactInstanceDetails = {
+  status: 'SUCCESS',
+  data: {
+    artifactInstanceDetails: [
+      {
+        artifact: 'testArtifactDisplayName',
+        environmentInstanceDetails: {
+          environmentInstanceDetails: [
+            {
+              envId: 'sampleEnv',
+              envName: 'sampleEnv',
+              environmentType: 'PreProduction',
+              count: undefined,
+              artifactDeploymentDetail: {
+                artifact: 'testArtifactDisplayName',
+                lastDeployedAt: 1675925501095
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  metaData: undefined,
+  correlationId: 'test'
 }

@@ -57,7 +57,7 @@ const RolesList: React.FC = () => {
   const { accountId, projectIdentifier, orgIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { getString } = useStrings()
   const history = useHistory()
-  const [sort, setSort] = useState<string>(sortByName[0].value as string)
+  const [sort, setSort] = useState<string>(sortByCreated[0].value as string)
   useDocumentTitle(getString('roles'))
 
   const {
@@ -172,14 +172,12 @@ const RolesList: React.FC = () => {
                 message: getString('noRoles')
               }
         }
-        className={css.pageContainer}
       >
         <ListHeader
           value={sort}
-          sortOptions={[...sortByName, ...sortByCreated]}
+          sortOptions={[...sortByCreated, ...sortByName]}
           onChange={option => setSort(option.value as string)}
           totalCount={data?.data?.totalItems}
-          className={css.listHeader}
         />
         <div className={css.masonry}>
           {data?.data?.content?.map((roleResponse: RoleResponse) =>

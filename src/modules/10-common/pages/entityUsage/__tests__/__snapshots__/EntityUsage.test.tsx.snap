@@ -67,7 +67,7 @@ exports[`Entity Usage render for connector data with gitSync 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 30%;"
+          style="width: 25%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -79,7 +79,7 @@ exports[`Entity Usage render for connector data with gitSync 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 50%;"
+          style="width: 30%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -99,6 +99,30 @@ exports[`Entity Usage render for connector data with gitSync 1`] = `
             details
           </p>
         </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 15%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            created
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 10%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            common.scopeLabel
+          </p>
+        </div>
       </div>
       <div
         class="TableV2--body"
@@ -113,33 +137,35 @@ exports[`Entity Usage render for connector data with gitSync 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 30%;"
+              style="width: 25%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main"
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
-                    style="--text-line-clamp: 1;"
+                  <a
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/AaTestOrg/projects/dev7/pipelines/test2/pipeline-studio/"
+                    rel="noreferrer"
+                    target="_blank"
                   >
                     test2
-                  </p>
-                </div>
+                  </a>
+                </p>
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
                   style="--text-line-clamp: 1;"
                 >
-                  Pipelines
+                  typeLabel: Pipelines
                 </p>
               </div>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             >
               <div
                 class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -193,6 +219,45 @@ exports[`Entity Usage render for connector data with gitSync 1`] = `
               role="cell"
               style="width: 20%;"
             />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 15%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                Jun 23, 2021 07:03 am
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
+                >
+                  <a
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/AaTestOrg/projects/dev7/pipelines/test2/pipeline-studio/"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    dev7
+                  </a>
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  typeLabel: projectLabel
+                </p>
+              </div>
+            </div>
           </div>
         </div>
         <div
@@ -205,33 +270,35 @@ exports[`Entity Usage render for connector data with gitSync 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 30%;"
+              style="width: 25%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main"
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
-                    style="--text-line-clamp: 1;"
+                  <a
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/AaTestOrg/projects/dev7/pipelines/test/pipeline-studio/"
+                    rel="noreferrer"
+                    target="_blank"
                   >
                     test
-                  </p>
-                </div>
+                  </a>
+                </p>
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
                   style="--text-line-clamp: 1;"
                 >
-                  Pipelines
+                  typeLabel: Pipelines
                 </p>
               </div>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             >
               <div
                 class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
@@ -285,6 +352,45 @@ exports[`Entity Usage render for connector data with gitSync 1`] = `
               role="cell"
               style="width: 20%;"
             />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 15%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                Jun 22, 2021 09:54 am
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 10%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
+                >
+                  <a
+                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/AaTestOrg/projects/dev7/pipelines/test/pipeline-studio/"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    dev7
+                  </a>
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  typeLabel: projectLabel
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -360,7 +466,7 @@ exports[`Entity Usage render for data 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 50%;"
+          style="width: 30%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
@@ -372,12 +478,36 @@ exports[`Entity Usage render for data 1`] = `
           class="TableV2--cell"
           colspan="1"
           role="columnheader"
-          style="width: 50%;"
+          style="width: 30%;"
         >
           <p
             class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
           >
             details
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 20%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            created
+          </p>
+        </div>
+        <div
+          class="TableV2--cell"
+          colspan="1"
+          role="columnheader"
+          style="width: 20%;"
+        >
+          <p
+            class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+          >
+            common.scopeLabel
           </p>
         </div>
       </div>
@@ -394,34 +524,75 @@ exports[`Entity Usage render for data 1`] = `
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             >
               <div
                 class="Layout--vertical StyledProps--main"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main"
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
                 >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
-                    style="--text-line-clamp: 1;"
+                  <a
+                    href="/account/nqqlJ_62S0q7wFnYSmwNpQ/home/orgs/default/projects/YNC_Project/setup/resources/connectors/harnessImage"
+                    rel="noreferrer"
+                    target="_blank"
                   >
                     Harness Docker Connector
-                  </p>
-                </div>
+                  </a>
+                </p>
                 <p
                   class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
                   style="--text-line-clamp: 1;"
                 >
-                  Connectors
+                  typeLabel: Connectors
                 </p>
               </div>
             </div>
             <div
               class="TableV2--cell"
               role="cell"
-              style="width: 50%;"
+              style="width: 30%;"
             />
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            >
+              <div
+                class="Layout--horizontal Layout--layout-spacing-small StyledProps--main"
+              >
+                Apr 15, 2021 08:41 am
+              </div>
+            </div>
+            <div
+              class="TableV2--cell"
+              role="cell"
+              style="width: 20%;"
+            >
+              <div
+                class="Layout--vertical StyledProps--main"
+              >
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-black"
+                  style="--text-line-clamp: 1;"
+                >
+                  <a
+                    href="/account/nqqlJ_62S0q7wFnYSmwNpQ/home/orgs/default/projects/YNC_Project/setup/resources/connectors/harnessImage"
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    YNC_Project
+                  </a>
+                </p>
+                <p
+                  class="StyledProps--font Text--lineclamp StyledProps--main overflow StyledProps--color StyledProps--color-grey400"
+                  style="--text-line-clamp: 1;"
+                >
+                  typeLabel: projectLabel
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

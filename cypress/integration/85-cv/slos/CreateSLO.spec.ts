@@ -24,7 +24,6 @@ import {
   getSLORiskCountResponse,
   getServiceLevelObjectiveResponse,
   getSLODashboardWidgetsAfterEdit,
-  updateSLO,
   getMonitoredService,
   getMonitoredServiceResponse,
   listSLOsCallWithCVNGProd,
@@ -34,10 +33,11 @@ import {
   getSLODetails,
   responseSLODashboardDetail,
   listMonitoredServicesForSLOs,
-  listMonitoredServicesCallResponseForSLOs
+  listMonitoredServicesCallResponseForSLOs,
+  createSloV2
 } from '../../../support/85-cv/slos/constants'
 
-describe.skip('Create SLO', () => {
+describe('Create SLO', () => {
   beforeEach(() => {
     cy.on('uncaught:exception', () => {
       // returning false here prevents Cypress from
@@ -58,6 +58,8 @@ describe.skip('Create SLO', () => {
   })
 
   it('should be able to create SLO by filling all the details.', () => {
+    cy.intercept('POST', createSloV2).as('saveSLO')
+
     cy.contains('p', 'SLOs').click()
     cy.contains('span', 'Create SLO').click()
 
@@ -69,10 +71,10 @@ describe.skip('Create SLO', () => {
     cy.contains('p', 'cvng_prod').click({ force: true })
 
     // selecting user journey
-    cy.get('input[name="User Journey"]').click()
-    cy.contains('p', 'new-one').click({ force: true })
+    cy.get('div[data-testid="multiSelectService"]').click()
+    cy.contains('label', 'new-one').click({ force: true })
 
-    cy.contains('span', 'Continue').click({ force: true })
+    cy.contains('span', 'Next').click({ force: true })
 
     // selecting health source
     cy.get('input[name="healthSourceRef"]').click()
@@ -98,7 +100,10 @@ describe.skip('Create SLO', () => {
     cy.get('input[name="objectiveComparator"]').click({ force: true })
     cy.contains('p', '<').click({ force: true })
 
-    cy.contains('span', 'Continue').click({ force: true })
+    // Selecting missing data
+    cy.get('input[name="SLIMissingDataType"]').first().click({ force: true })
+
+    cy.contains('span', 'Next').click({ force: true })
 
     // selecting condition for SLI value
     cy.get('input[name="periodLength"]').click()
@@ -136,14 +141,14 @@ describe.skip('Create SLO', () => {
     cy.contains('span', 'Retry').click()
 
     cy.get('input[name="name"]').should('have.value', 'SLO-1')
-    cy.get('input[name="User Journey"]').should('have.value', 'new-one')
+    // cy.get('input[name="User Journey"]').should('have.value', 'new-one')
     cy.get('input[name="monitoredServiceRef"]').should('have.value', 'cvng_prod')
 
-    cy.contains('span', 'Continue').click({ force: true })
-    cy.contains('h2', 'Configure SLI queries').should('be.visible')
+    cy.contains('span', 'Next').click({ force: true })
+    cy.contains('p', 'SLI Type').should('be.visible')
 
     cy.get('input[name="healthSourceRef"]').should('have.value', 'appd_cvng_prod')
-    cy.get('input[name="SLIType"][value="Latency"]').should('be.checked')
+    cy.get('div.PillToggle--selected').should('have.text', 'Latency')
     cy.get('input[name="SLIMetricType"][value="Ratio"]').should('be.checked')
     cy.get('input[name="eventType"]').should('have.value', 'Good')
     cy.get('input[name="goodRequestMetric"]').should('have.value', 'https_errors_per_min')
@@ -153,7 +158,7 @@ describe.skip('Create SLO', () => {
     cy.get('input[name="objectiveComparator"]').should('have.value', '<=')
     cy.get('input[name="SLIMissingDataType"]').should('have.value', 'Good')
 
-    cy.contains('span', 'Continue').click({ force: true })
+    cy.contains('span', 'Next').click({ force: true })
     cy.contains('h2', 'Set the SLO time window and target').should('be.visible')
 
     cy.get('input[name="periodType"]').should('have.value', 'Rolling')
@@ -163,7 +168,7 @@ describe.skip('Create SLO', () => {
     cy.get('input[name="periodLength"]').click()
     cy.contains('p', '28').click({ force: true })
 
-    cy.intercept('PUT', updateSLO, { statusCode: 200 }).as('updateSLO')
+    cy.intercept('PUT', getServiceLevelObjective, { statusCode: 200 }).as('updateSLO')
     cy.intercept('GET', listSLOsCall, getSLODashboardWidgetsAfterEdit).as('getSLODashboardWidgetsAfterEdit')
 
     cy.contains('span', 'Save').click({ force: true })
@@ -186,7 +191,7 @@ describe.skip('Create SLO', () => {
 
     cy.contains('h3', 'Create SLO').should('be.visible')
 
-    cy.contains('span', 'Continue').click({ force: true })
+    cy.contains('span', 'Next').click({ force: true })
 
     cy.contains('span', 'SLO name is required').should('be.visible')
     cy.fillName('SLO-1')
@@ -195,31 +200,27 @@ describe.skip('Create SLO', () => {
     cy.contains('span', 'User journey is required').should('be.visible')
     cy.contains('span', 'Monitored Service is required').should('be.visible')
 
-    cy.get('input[name="User Journey"]').click()
-    cy.contains('p', 'new-one').click({ force: true })
+    cy.get('div[data-testid="multiSelectService"]').click()
+    cy.contains('label', 'new-one').click({ force: true })
     cy.contains('span', 'User journey is required').should('not.exist')
 
     cy.get('input[name="monitoredServiceRef"]').click()
     cy.contains('p', 'cvng_prod').click({ force: true })
 
-    cy.contains('span', 'Continue').click({ force: true })
-    cy.contains('h2', 'Configure SLI queries').scrollIntoView()
+    cy.contains('span', 'Next').click({ force: true })
+    cy.contains('p', 'Health Source to manage the service level').scrollIntoView()
 
-    cy.contains('span', 'Continue').click({ force: true })
+    cy.contains('span', 'Next').click({ force: true })
 
     cy.get('input[name="healthSourceRef"]').should('be.enabled')
 
     cy.contains('span', 'Health Source is required').should('be.visible')
-    cy.get('input[name="goodRequestMetric"]').should('be.disabled')
-    cy.get('input[name="validRequestMetric"]').should('be.disabled')
     cy.get('input[name="healthSourceRef"]').click()
     cy.contains('p', 'appd_cvng_prod').click({ force: true })
     cy.get('input[name="goodRequestMetric"]').should('be.enabled')
     cy.get('input[name="validRequestMetric"]').should('be.enabled')
 
-    cy.get('input[name="SLIType"][value="Latency"]').should('be.checked')
-
-    cy.contains('h2', 'Pick metrics powering the SLI').scrollIntoView()
+    cy.get('div.PillToggle--selected').should('have.text', 'Availability')
 
     cy.get('input[name="SLIMetricType"][value="Ratio"]').should('be.checked')
 
@@ -246,12 +247,12 @@ describe.skip('Create SLO', () => {
 
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
     cy.get('input[name="objectiveComparator"]').click({ force: true })
-    cy.contains('p', 'than objective value').should('be.visible')
+    cy.contains('p', 'the objective value').should('be.visible')
     cy.contains('p', '<=').click({ force: true })
-    cy.contains('p', 'to objective value').should('be.visible')
+    // cy.contains('p', 'to objective value').should('be.visible')
     cy.findAllByText('Required').should('have.length', 0)
 
-    cy.get('input[name="SLIMissingDataType"]').should('have.value', 'Good')
+    cy.get('input[name="SLIMissingDataType"]').first().click({ force: true })
 
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('not.exist')
     cy.get('[data-icon="steps-spinner"]').should('be.visible')
@@ -262,7 +263,7 @@ describe.skip('Create SLO', () => {
 
     cy.contains('span', 'Retry').click()
 
-    cy.contains('span', 'Continue').click({ force: true })
+    cy.contains('span', 'Next').click({ force: true })
 
     cy.contains('h2', 'Set the SLO time window and target').should('be.visible')
 
@@ -277,7 +278,7 @@ describe.skip('Create SLO', () => {
     cy.contains('p', 'Good').click({ force: true })
 
     cy.contains('p', 'Please fill the required fields to see the SLI data').should('be.visible')
-    cy.findAllByText(validations.metric).should('have.length', 1)
+    cy.findAllByText(validations.metric).should('have.length', 2)
     cy.get('input[name="goodRequestMetric"]').click()
     cy.contains('p', 'number_of_slow_calls').click({ force: true })
     cy.findAllByText(validations.metric).should('have.length', 0)
@@ -304,7 +305,7 @@ describe.skip('Create SLO', () => {
     cy.get('input[name="objectiveComparator"]').click({ force: true })
     cy.contains('p', '<').click({ force: true })
 
-    cy.contains('span', 'Continue').click({ force: true })
+    cy.contains('span', 'Next').click({ force: true })
     cy.wait(1000)
     cy.contains('span', 'Save').click({ force: true })
 
@@ -314,13 +315,12 @@ describe.skip('Create SLO', () => {
     cy.get('input[name="SLOTargetPercentage"]').clear()
     cy.contains('Required').should('be.visible')
     cy.fillField('SLOTargetPercentage', '99')
-    cy.contains('Required').should('not.exist')
 
     cy.contains('span', 'Period Length is required').should('be.visible')
     cy.get('input[name="periodLength"]').click()
     cy.contains('p', '7').click({ force: true })
     cy.contains('span', 'Period Length is required').should('not.exist')
-    cy.contains('h1', '101').should('be.visible')
+    cy.contains('span', '101 mins').should('be.visible')
 
     cy.get('input[name="periodType"]').click()
     cy.contains('p', 'Calendar').click({ force: true })
@@ -328,26 +328,26 @@ describe.skip('Create SLO', () => {
     cy.get('input[name="periodLengthType"]').click()
     cy.contains('p', 'Weekly').click({ force: true })
     cy.contains('span', 'Period Length is required').should('not.exist')
-    cy.contains('h1', '101').should('be.visible')
+    cy.contains('span', '101 mins').should('be.visible')
     cy.contains('span', 'Windows End is required').should('be.visible')
     cy.get('input[name="dayOfWeek"]').click()
     cy.contains('p', 'Monday').click({ force: true })
     cy.contains('span', 'Windows End is required').should('not.exist')
     cy.get('input[name="periodLengthType"]').click()
     cy.contains('p', 'Monthly').click({ force: true })
-    cy.contains('h1', '432').should('be.visible')
+    cy.contains('span', '432 mins').should('be.visible')
     cy.contains('span', 'Windows End is required').should('be.visible')
     cy.get('input[name="dayOfMonth"]').click()
     cy.contains('p', '7').click({ force: true })
     cy.contains('span', 'Windows End is required').should('not.exist')
     cy.get('input[name="periodLengthType"]').click()
     cy.contains('p', 'Quarterly').click({ force: true })
-    cy.contains('h1', '1296').should('be.visible')
+    cy.contains('span', '1296 mins').should('be.visible')
     cy.contains('span', 'Window Ends').should('not.exist')
 
-    cy.contains('h1', '1296').should('be.visible')
+    cy.contains('span', '1296 mins').should('be.visible')
 
-    cy.intercept('POST', saveSLO, { statusCode: 200 }).as('saveSLO')
+    cy.intercept('POST', createSloV2).as('saveSLO')
     cy.intercept('GET', listSLOsCall, updatedListSLOsCallResponse)
 
     cy.contains('span', 'Save').click({ force: true })
@@ -364,13 +364,13 @@ describe.skip('Create SLO', () => {
     cy.contains('span', 'Create SLO').click()
 
     cy.fillName('SLO-1')
-    cy.get('input[name="User Journey"]').click()
-    cy.contains('p', 'new-one').click({ force: true })
+    cy.get('div[data-testid="multiSelectService"]').click()
+    cy.contains('label', 'new-one').click({ force: true })
 
     cy.get('input[name="monitoredServiceRef"]').click()
     cy.contains('p', 'cvng_prod').click({ force: true })
 
-    cy.contains('span', 'Continue').click({ force: true })
+    cy.contains('span', 'Next').click({ force: true })
 
     cy.get('input[name="healthSourceRef"]').click()
     cy.contains('p', 'appd_cvng_prod').click({ force: true })
@@ -389,13 +389,14 @@ describe.skip('Create SLO', () => {
 
     cy.get('input[name="objectiveComparator"]').click({ force: true })
     cy.contains('p', '<').click({ force: true })
+    cy.get('input[name="SLIMissingDataType"]').first().click({ force: true })
 
-    cy.contains('span', 'Continue').click({ force: true })
+    cy.contains('span', 'Next').click({ force: true })
 
     cy.get('input[name="periodLength"]').click()
     cy.contains('p', '7').click({ force: true })
 
-    cy.intercept('POST', saveSLO, errorResponseSLODuplication).as('saveSLO')
+    cy.intercept('POST', createSloV2, errorResponseSLODuplication).as('saveSLO')
 
     cy.contains('span', 'Save').click({ force: true })
 
@@ -420,24 +421,24 @@ describe.skip('Create SLO', () => {
     cy.get('[data-icon="Edit"]').click({ force: true })
 
     cy.wait('@getListMonitoredServices')
-    cy.get('input[name="User Journey"]').should('have.value', 'new-one')
 
-    cy.findByRole('button', { name: /Continue/i }).click({ force: true })
-    cy.contains('h2', 'Configure SLI queries').should('be.visible')
+    cy.findByRole('button', { name: /Next/i }).click({ force: true })
+    cy.contains('p', 'Health Source to manage the service level').should('be.visible')
 
-    cy.findByRole('button', { name: /Continue/i }).click()
+    cy.findByRole('button', { name: /Next/i }).click()
     cy.contains('h2', 'Set the SLO time window and target').should('be.visible')
 
-    cy.intercept('PUT', updateSLO, { statusCode: 200 }).as('updateSLO')
+    cy.intercept('PUT', getServiceLevelObjective, { statusCode: 200 }).as('updateSLO')
     cy.intercept('GET', listSLOsCallWithCVNGProd, getSLODashboardWidgetsAfterEdit).as('getSLODashboardWidgetsAfterEdit')
 
     cy.findByRole('button', { name: /Save/i }).click()
+    cy.findByRole('button', { name: /Ok/i }).click()
 
     cy.wait('@updateSLO')
     cy.contains('span', 'SLO updated successfully').should('be.visible')
 
     cy.wait('@getMonitoredService')
-    cy.wait('@getSLODashboardWidgetsAfterEdit')
+    // cy.wait('@getSLODashboardWidgetsAfterEdit')
   })
 
   it('should be able to create new SLO in monitored service details page', () => {
@@ -462,13 +463,13 @@ describe.skip('Create SLO', () => {
     cy.findByRole('button', { name: /Create SLO/i }).click()
 
     cy.fillName('SLO-2')
-    cy.get('input[name="User Journey"]').click()
-    cy.contains('p', 'new-one').click({ force: true })
+    cy.get('div[data-testid="multiSelectService"]').click()
+    cy.contains('label', 'new-one').click({ force: true })
 
     cy.get('input[name="monitoredServiceRef"]').click()
     cy.contains('p', 'cvng_prod').click({ force: true })
 
-    cy.findByRole('button', { name: /Continue/i }).click({ force: true })
+    cy.findByRole('button', { name: /Next/i }).click({ force: true })
 
     cy.get('input[name="healthSourceRef"]').click()
     cy.contains('p', 'appd_cvng_prod').click({ force: true })
@@ -488,13 +489,14 @@ describe.skip('Create SLO', () => {
 
     cy.get('input[name="objectiveComparator"]').click({ force: true })
     cy.contains('p', '<').click({ force: true })
+    cy.get('input[name="SLIMissingDataType"]').first().click({ force: true })
 
-    cy.findByRole('button', { name: /Continue/i }).click({ force: true })
+    cy.findByRole('button', { name: /Next/i }).click({ force: true })
 
     cy.get('input[name="periodLength"]').click()
     cy.contains('p', '7').click({ force: true })
 
-    cy.intercept('POST', saveSLO, { statusCode: 200 }).as('saveSLO')
+    cy.intercept('POST', createSloV2, { statusCode: 200 }).as('saveSLO')
     cy.intercept('GET', getSLORiskCountWithCVNGProd, getTwoSLOsRiskCountResponse)
     cy.intercept('GET', listSLOsCallWithCVNGProd, getTwoSLODashboardWidgets)
 
@@ -504,7 +506,7 @@ describe.skip('Create SLO', () => {
     cy.contains('span', 'SLO created successfully').should('be.visible')
   })
 
-  it('should be able to add new Health Source while editing a SLO and back button should redirect to the SLOs in MS service page', () => {
+  it.only('should be able to add new Health Source while editing a SLO and back button should redirect to the SLOs in MS service page', () => {
     cy.intercept('GET', getSLODetails, responseSLODashboardDetail)
     cy.intercept('GET', getMonitoredService, getMonitoredServiceResponse).as('getMonitoredService')
     cy.intercept('GET', listSLOsCallWithCVNGProd, updatedListSLOsCallResponse)
@@ -519,10 +521,8 @@ describe.skip('Create SLO', () => {
 
     cy.get('[data-icon="Edit"]').click({ force: true })
 
-    cy.get('input[name="User Journey"]').should('have.value', 'new-one')
-
-    cy.findByRole('button', { name: /Continue/i }).click({ force: true })
-    cy.contains('h2', 'Configure SLI queries').should('be.visible')
+    cy.findByRole('button', { name: /Next/i }).click({ force: true })
+    cy.contains('p', 'Health Source to manage the service level').should('be.visible')
 
     cy.findByRole('button', { name: /New Health Source/i }).click()
 

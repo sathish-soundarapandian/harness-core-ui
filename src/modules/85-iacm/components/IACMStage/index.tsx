@@ -14,7 +14,7 @@ import type { PipelineStageProps } from '@pipeline/components/PipelineStages/Pip
 import { IACMComponentMounter } from '../IACMApp'
 
 const getStageAttributes = (_getString: UseStringsReturn['getString']): StageAttributes => ({
-  name: _getString('common.iacm'),
+  name: _getString('infrastructureText'),
   type: StageType.IACM,
   icon: 'iacm',
   iconColor: 'var(--pipeline-custom-stage-color)',
@@ -28,7 +28,7 @@ const IACMStage = (props: PipelineStageProps): React.ReactElement => (
 
 const getStageEditorImplementation = (isEnabled: boolean, _getString: UseStringsReturn['getString']): JSX.Element => (
   <IACMStage
-    name={_getString('common.iacm')}
+    name={_getString('infrastructureText')}
     type={StageType.IACM}
     title={_getString('iacm.stageTitle')}
     description={_getString('iacm.stageDescription')}

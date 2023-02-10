@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Container, FormInput, Layout, SelectOption, Utils, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
@@ -28,6 +28,7 @@ export default function PageDutyChangeSource({
 }): JSX.Element {
   const { getString } = useStrings()
   const { showError, clear } = useToaster()
+  const [query, setQuery] = useState<string>('')
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps & { identifier: string }>()
 
   const {
@@ -47,11 +48,12 @@ export default function PageDutyChangeSource({
           projectIdentifier,
           accountId,
           connectorIdentifier: formik?.values?.spec?.connectorRef,
-          requestGuid: Utils.randomId()
+          requestGuid: Utils.randomId(),
+          ...(query && { query })
         }
       })
     }
-  }, [formik?.values?.spec?.connectorRef])
+  }, [formik?.values?.spec?.connectorRef, query])
 
   if (pagerdutyServicesError) {
     clear()
@@ -104,6 +106,7 @@ export default function PageDutyChangeSource({
             }
             tooltipProps={{ dataTooltipId: 'pagerDutyService' }}
             items={pagerDutyServiceOptions}
+            onQueryChange={(search: string) => setQuery(search)}
           />
           {!pagerDutyServiceOptions.length && !loadingPagerdutyServices && (
             <Text font={'xsmall'} color={Color.ERROR}>

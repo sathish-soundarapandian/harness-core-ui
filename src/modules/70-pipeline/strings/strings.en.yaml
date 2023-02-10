@@ -402,6 +402,7 @@ manifestType:
   optimizedKustomizeManifestCollection: Optimized Kustomize Manifest Collection
   kustomizeYamlFolderPath: Kustomize YAML Folder Path
   kustomizeYamlFolderPathRequired: Kustomize YAML Folder Path is required
+  enableDeclarativeRollback: Enable Declarative Rollback
 manifestTypeLabels:
   K8sManifest: K8s Manifest
   ValuesYaml: Values YAML
@@ -435,7 +436,7 @@ failureStrategies:
   title: Failure Strategy
   learnMoreLink: https://docs.harness.io/article/0zvnn5s1ph
   helpText: |
-    Define one or more failure strategies to control the behavior of your pipeline when your step execution encounters an error.
+    Define one or more failure strategies. These will be used to control the behavior of your pipeline when there is an error in execution.
   addedAllStrategies: You have added all possible failure strategies. There are no more options to add.
   tabHasErrors: The current settings have errors. Please review the error messages displayed and resolve the issues.
   onFailureOfType: On failure of type
@@ -469,7 +470,7 @@ failureStrategies:
     ApprovalRejection: Approval Rejection
     DelegateRestart: Delegate Restart
   validation:
-    arrayOrUndefined: Value must be an array if defined.
+    arrayOrRuntime: Value must be an array or runtime input.
     strategyRequired: 'At least 1 strategy is required'
     strategiesRequired: 'At least {{n}} strategies are required'
     errorsRequired: At least one failure type is required

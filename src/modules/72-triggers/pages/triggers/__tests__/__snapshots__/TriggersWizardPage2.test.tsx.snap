@@ -764,6 +764,9 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                                             <div
                                               class="inputFieldLayout"
                                             />
+                                            <div
+                                              class="inputFieldLayout"
+                                            />
                                           </div>
                                         </div>
                                         <div>
@@ -1228,12 +1231,19 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                                             <div
                                               class="inputFieldLayout"
                                             />
+                                            <div
+                                              class="inputFieldLayout"
+                                            />
                                           </div>
                                         </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
+                                <div
+                                  class="accordionSummary"
+                                  id="pipeline.stages[0].stage.spec.Environment"
+                                />
                               </div>
                             </div>
                           </div>
@@ -3356,6 +3366,9 @@ exports[`Manifest Trigger Tests on click of edit - submits thru the right payloa
                   </div>
                 </div>
               </div>
+              <div
+                class="inputFieldLayout"
+              />
               <div
                 class="inputFieldLayout"
               />

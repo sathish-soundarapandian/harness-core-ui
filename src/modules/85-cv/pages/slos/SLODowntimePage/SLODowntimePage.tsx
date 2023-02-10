@@ -8,6 +8,7 @@
 import React from 'react'
 import { ButtonVariation, Layout, Text, Icon, NoDataCard } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
+import { useHistory, useParams } from 'react-router-dom'
 import { Page } from '@common/exports'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import noDowntimeData from '@cv/assets/noDowntimeData.svg'
@@ -15,10 +16,16 @@ import { useStrings } from 'framework/strings'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
+import routes from '@common/RouteDefinitions'
+import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './SLODowntimePage.module.scss'
 
 export default function SLODowntimePage(): JSX.Element {
   const { getString } = useStrings()
+  const history = useHistory()
+
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
+  const pathParams = { accountId, orgIdentifier, projectIdentifier }
 
   const learnMoreLink = ''
 
@@ -34,6 +41,7 @@ export default function SLODowntimePage(): JSX.Element {
           icon="plus"
           text={getString('cv.sloDowntime.label')}
           variation={ButtonVariation.PRIMARY}
+          onClick={() => history.push(routes.toCVCreateSLODowntime(pathParams))}
           permission={{
             permission: PermissionIdentifier.EDIT_SLO_SERVICE,
             resource: {

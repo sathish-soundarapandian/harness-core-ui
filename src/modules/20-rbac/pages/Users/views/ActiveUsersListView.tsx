@@ -382,7 +382,7 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<PipelineType<ProjectPathProps>>()
   const { page, size } = useQueryParams(rbacQueryParamOptions)
   const isCommunity = useGetCommunity()
-  const [sort, setSort] = useState<string>(sortByCreated[0].value as string)
+  const [sort, setSort] = useState<string>(sortByLastModified[0].value as string)
 
   const { data, loading, error, refetch } = useMutateAsGet(useGetAggregatedUsers, {
     body: {},
@@ -493,10 +493,9 @@ const ActiveUserListView: React.FC<ActiveUserListViewProps> = ({
     >
       <ListHeader
         value={sort}
-        sortOptions={[...sortByName, ...sortByEmail, ...sortByCreated, ...sortByLastModified]}
+        sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName, ...sortByEmail]}
         onChange={option => setSort(option.value as string)}
         totalCount={data?.data?.totalItems}
-        className={css.listHeader}
       />
       <TableV2<UserAggregate>
         className={css.table}

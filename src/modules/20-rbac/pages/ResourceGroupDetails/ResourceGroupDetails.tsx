@@ -32,7 +32,7 @@ import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { SelectionType } from '@rbac/utils/utils'
-import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError, { RBACError } from '@rbac/utils/useRBACError/useRBACError'
 import ResourcesCardList from '@rbac/components/ResourcesCardList/ResourcesCardList'
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import { useDeepCompareEffect } from '@common/hooks'
@@ -212,7 +212,9 @@ const ResourceGroupDetails: React.FC = () => {
   useDocumentTitle([defaultTo(resourceGroup?.name, ''), getString('resourceGroups')])
 
   if (loading) return <Page.Spinner />
-  if (errorInGettingResourceGroup) return <Page.Error message={getRBACErrorMessage(errorInGettingResourceGroup)} />
+  if (errorInGettingResourceGroup) {
+    return <Page.Error message={getRBACErrorMessage(errorInGettingResourceGroup as RBACError)} />
+  }
   if (!resourceGroup)
     return <Page.NoDataCard icon="resources-icon" message={getString('rbac.resourceGroup.noResourceGroupFound')} />
 

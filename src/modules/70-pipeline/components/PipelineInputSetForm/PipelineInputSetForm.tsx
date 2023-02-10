@@ -129,6 +129,7 @@ export function StageFormInternal({
       {template?.stage?.spec && (
         <StageInputSetForm
           stageIdentifier={allValues?.stage?.identifier}
+          stageType={template?.stage?.type as StageType}
           path={`${path}.spec`}
           deploymentStageTemplate={template?.stage?.spec as DeploymentStageConfig}
           deploymentStage={allValues?.stage?.spec as DeploymentStageConfig}
@@ -141,7 +142,8 @@ export function StageFormInternal({
       {(!isEmpty(template?.stage?.when) ||
         !isEmpty(template?.stage?.delegateSelectors) ||
         !isEmpty(template?.stage?.strategy) ||
-        !isEmpty(template?.stage?.skipInstances)) && (
+        !isEmpty(template?.stage?.skipInstances) ||
+        !isEmpty(template?.stage?.failureStrategies)) && (
         <StageAdvancedInputSetForm
           stageIdentifier={allValues?.stage?.identifier}
           path={path}
@@ -150,6 +152,8 @@ export function StageFormInternal({
           allowableTypes={allowableTypes}
           delegateSelectors={template?.stage?.delegateSelectors}
           skipInstances={template?.stage?.skipInstances}
+          stageType={template?.stage?.type as StageType}
+          viewType={viewType}
         />
       )}
     </div>

@@ -1,0 +1,124 @@
+{
+  "data": {
+    "pipelineExecutionSummary": {
+      "status": "Running",
+      "layoutNodeMap": {
+        "C1": {
+          "nodeUuid": "C1",
+          "nodeType": "Deployment",
+          "status": "Success",
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": ["C2"]
+          }
+        },
+        "C2": {
+          "nodeUuid": "C2",
+          "nodeType": "Pipeline",
+          "status": "Running",
+          "edgeLayoutList": {
+            "currentNodeChildren": [],
+            "nextIds": []
+          }
+        }
+      },
+      "startingNodeId": "C1"
+    },
+    "childGraph": {
+      "pipelineExecutionSummary": {
+        "status": "Running",
+        "layoutNodeMap": {
+          "S1": {
+            "nodeUuid": "S1",
+            "nodeType": "Deployment",
+            "status": "Success",
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": ["S2"]
+            }
+          },
+          "S2": {
+            "nodeUuid": "S2",
+            "nodeType": "Deployment",
+            "status": "Running",
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": ["S3"]
+            }
+          },
+          "S3": {
+            "nodeUuid": "S3",
+            "nodeType": "Deployment",
+            "status": "NotStarted",
+            "edgeLayoutList": {
+              "currentNodeChildren": [],
+              "nextIds": []
+            }
+          }
+        },
+        "startingNodeId": "S1"
+      },
+      "executionGraph": {
+        "rootNodeId": "N0",
+        "nodeMap": {
+          "N0": {
+            "uuid": "N0",
+            "stepType": "CUSTOM_STAGE",
+            "status": "NotStarted"
+          },
+          "N1": {
+            "uuid": "N1",
+            "stepType": "NG_EXECUTION",
+            "status": "NotStarted"
+          },
+          "N2": {
+            "uuid": "N2",
+            "stepType": "NG_FORK",
+            "status": "NotStarted"
+          },
+          "S1": {
+            "uuid": "S1",
+            "stepType": "Wait",
+            "status": "Running"
+          },
+          "S2": {
+            "uuid": "S2",
+            "stepType": "Wait",
+            "status": "Running"
+          },
+          "S3": {
+            "uuid": "S3",
+            "stepType": "Wait",
+            "status": "Running"
+          }
+        },
+        "nodeAdjacencyListMap": {
+          "N0": {
+            "children": ["N1"],
+            "nextIds": []
+          },
+          "N1": {
+            "children": ["N2"],
+            "nextIds": []
+          },
+          "N2": {
+            "children": ["S1", "S2", "S3"],
+            "nextIds": []
+          },
+          "S1": {
+            "children": [],
+            "nextIds": []
+          },
+          "S2": {
+            "children": [],
+            "nextIds": []
+          },
+          "S3": {
+            "children": [],
+            "nextIds": []
+          }
+        }
+      }
+    }
+  }
+}

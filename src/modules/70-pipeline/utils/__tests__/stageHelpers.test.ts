@@ -5,6 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { MultiTypeInputType } from '@harness/uicore'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { StageElementWrapperConfig } from 'services/pipeline-ng'
 import type { DeploymentStageElementConfig } from '../pipelineTypes'
@@ -37,7 +38,10 @@ import {
   isAzureWebAppOrSshWinrmGenericDeploymentType,
   isCustomDTGenericDeploymentType,
   isTasGenericDeploymentType,
-  hasChainedPipelineStage
+  hasChainedPipelineStage,
+  isFixedNonEmptyValue,
+  withoutSideCar,
+  hasStageData
 } from '../stageHelpers'
 import inputSetPipeline from './inputset-pipeline.json'
 import chainedPipeline from './mockJson/chainedPipeline.json'
@@ -174,6 +178,16 @@ test('deleteStageData', () => {
 test('getStepTypeByDeploymentType', () => {
   expect(getStepTypeByDeploymentType(ServiceDeploymentType.ServerlessAwsLambda)).toBe(StepType.ServerlessAwsLambda)
   expect(getStepTypeByDeploymentType(ServiceDeploymentType.Kubernetes)).toBe(StepType.K8sServiceSpec)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.Ssh)).toBe(StepType.SshServiceSpec)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.WinRm)).toBe(StepType.WinRmServiceSpec)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.ECS)).toBe(StepType.EcsService)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.CustomDeployment)).toBe(StepType.CustomDeploymentServiceSpec)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.Elastigroup)).toBe(StepType.ElastigroupService)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.TAS)).toBe(StepType.TasService)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.Asg)).toBe(StepType.Asg)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.GoogleCloudFunctions)).toBe(
+    StepType.GoogleCloudFunctionsService
+  )
 })
 
 test('isServerlessDeploymentType', () => {
@@ -227,10 +241,21 @@ test('isAzureWebAppGenericDeploymentType', () => {
   )
 })
 
+test('isFixedNonEmptyValue', () => {
+  expect(isFixedNonEmptyValue(MultiTypeInputType.RUNTIME)).toBe(true)
+  expect(isFixedNonEmptyValue(MultiTypeInputType.FIXED)).toBe(true)
+  expect(isFixedNonEmptyValue('123')).toBe(true)
+  expect(isFixedNonEmptyValue('')).toBe(false)
+})
+
 test('isAzureWebAppOrSshWinrmGenericDeploymentType', () => {
   expect(
     isAzureWebAppOrSshWinrmGenericDeploymentType(ServiceDeploymentType.AzureWebApp, RepositoryFormatTypes.Generic)
   ).toBe(true)
+})
+
+test('withoutSideCar', () => {
+  expect(withoutSideCar(ServiceDeploymentType.Ssh)).toBe(true)
 })
 
 test('isCustomDTGenericDeploymentType', () => {
@@ -242,6 +267,10 @@ test('isCustomDTGenericDeploymentType', () => {
 
 test('isTasGenericDeploymentType', () => {
   expect(isTasGenericDeploymentType(ServiceDeploymentType.TAS, RepositoryFormatTypes.Generic)).toBe(true)
+})
+
+test('isTasGenericDeploymentType should return false for nongeneric repo type', () => {
+  expect(isTasGenericDeploymentType(ServiceDeploymentType.TAS, RepositoryFormatTypes.Docker)).toBe(false)
 })
 
 test('isTASDeploymentType', () => {
@@ -265,6 +294,114 @@ test('getHelpeTextForTags', () => {
   expect(
     getHelpeTextForTags({ imagePath: '/image', artifactPath: '', connectorRef: 'RUNTIME' }, (str: string) => str, true)
   ).toBe('pipeline.artifactsSelection.artifactDirectory  is  pipeline.artifactPathDependencyRequired')
+
+  expect(
+    getHelpeTextForTags({ imagePath: '/image', artifactPath: '', connectorRef: 'RUNTIME' }, (str: string) => str, true)
+  ).toBe('pipeline.artifactsSelection.artifactDirectory  is  pipeline.artifactPathDependencyRequired')
+
+  expect(
+    getHelpeTextForTags(
+      {
+        imagePath: '/image',
+        artifactPath: '',
+        connectorRef: 'sdfds',
+        feed: 'test',
+        repositoryName: '',
+        artifactArrayPath: '',
+        artifactDirectory: 'test-dir',
+        versionPath: 'RUNTIME'
+      },
+      (str: string) => str,
+      true
+    )
+  ).toBe(
+    'common.repositoryName, pipeline.artifactsSelection.artifactsArrayPath  are  pipeline.artifactPathDependencyRequired'
+  )
+
+  // expect(
+  //   getHelpeTextForTags(
+  //     {
+  //       imagePath: '/image',
+  //       artifactPath: '',
+  //       connectorRef: 'sdfds',
+  //       feed: '',
+  //       repositoryName: '',
+  //       artifactArrayPath: '',
+  //       versionPath: '',
+  //       packageName: 'RUNTIME'
+  //     },
+  //     (str: string) => str,
+  //     true
+  //   )
+  // ).toBe('pipeline.testsReports.callgraphField.package')
+
+  // expect(
+  //   getHelpeTextForTags(
+  //     {
+  //       imagePath: '/image',
+  //       artifactPath: '',
+  //       connectorRef: 'sdfds',
+  //       feed: '',
+  //       repositoryName: '',
+  //       artifactArrayPath: '',
+  //       versionPath: '',
+  //       package: 'RUNTIME'
+  //     },
+  //     (str: string) => str,
+  //     true
+  //   )
+  // ).toBe('pipeline.testsReports.callgraphField.package')
+
+  // expect(
+  //   getHelpeTextForTags(
+  //     {
+  //       imagePath: '/image',
+  //       artifactPath: '',
+  //       connectorRef: 'sdfds',
+  //       feed: '',
+  //       repositoryName: '',
+  //       artifactArrayPath: '',
+  //       versionPath: '',
+  //       project: 'RUNTIME'
+  //     },
+  //     (str: string) => str,
+  //     true
+  //   )
+  // ).toBe('projectLabel')
+
+  // expect(
+  //   getHelpeTextForTags(
+  //     {
+  //       imagePath: '/image',
+  //       artifactPath: '',
+  //       connectorRef: 'sdfds',
+  //       feed: '',
+  //       repositoryName: '',
+  //       artifactArrayPath: '',
+  //       versionPath: '',
+  //       region: 'RUNTIME'
+  //     },
+  //     (str: string) => str,
+  //     true
+  //   )
+  // ).toBe('regionLabel')
+
+  // expect(
+  //   getHelpeTextForTags(
+  //     {
+  //       imagePath: '/image',
+  //       artifactPath: '',
+  //       connectorRef: 'sdfds',
+  //       feed: '',
+  //       repositoryName: '',
+  //       artifactArrayPath: '',
+  //       versionPath: '',
+  //       registryHostname: 'RUNTIME'
+  //     },
+  //     (str: string) => str,
+  //     true
+  //   )
+  // ).toBe('connectors.GCR.registryHostname')
 })
 
 test('getCustomStepProps', () => {
@@ -313,4 +450,8 @@ test('getCustomStepProps', () => {
 test('hasChainedPipelineStage', () => {
   expect(hasChainedPipelineStage([])).toBe(false)
   expect(hasChainedPipelineStage(chainedPipeline.pipeline.stages as StageElementWrapperConfig[])).toBe(true)
+})
+
+test('hasStageData', () => {
+  expect(hasStageData()).toBe(false)
 })

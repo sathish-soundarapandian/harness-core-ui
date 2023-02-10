@@ -53,3 +53,17 @@
     }
   }
 }
+
+.addMonitoredServices {
+  :global {
+    .bp3-tag {
+      height: fit-content !important;
+      background: var(--grey-100);
+      padding: var(--spacing-2) var(--spacing-3);
+    }
+  }
+}
+
+.minHeight {
+  min-height: 0 !important;
+}

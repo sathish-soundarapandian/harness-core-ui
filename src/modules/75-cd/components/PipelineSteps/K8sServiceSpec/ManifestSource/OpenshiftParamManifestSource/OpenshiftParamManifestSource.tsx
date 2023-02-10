@@ -13,6 +13,7 @@ import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/Manif
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import List from '@common/components/List/List'
+import { FileUsage } from '@filestore/interfaces/FileStore'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import { isFieldfromTriggerTabDisabled } from '../ManifestSourceUtils'
 import ManifestGitStoreRuntimeFields from '../ManifestSourceRuntimeFields/ManifestGitStoreRuntimeFields'
@@ -21,7 +22,17 @@ import CustomRemoteManifestRuntimeFields from '../ManifestSourceRuntimeFields/Cu
 import css from '../../KubernetesManifests/KubernetesManifests.module.scss'
 
 const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
-  const { template, path, manifestPath, manifest, fromTrigger, readonly, formik, stageIdentifier } = props
+  const {
+    template,
+    path,
+    manifestPath,
+    manifest,
+    fromTrigger,
+    readonly,
+    formik,
+    stageIdentifier,
+    fileUsage = FileUsage.MANIFEST_FILE
+  } = props
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
 
@@ -46,7 +57,7 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
       className={cx(css.inputWidth, css.layoutVerticalSpacing)}
     >
       <ManifestGitStoreRuntimeFields {...props} />
-      <ManifestCommonRuntimeFields {...props} />
+      <ManifestCommonRuntimeFields {...props} fileUsage={fileUsage} />
       <CustomRemoteManifestRuntimeFields {...props} />
       {isFieldRuntime(`${manifestPath}.spec.store.spec.paths`, template) && (
         <div className={css.verticalSpacingInput}>

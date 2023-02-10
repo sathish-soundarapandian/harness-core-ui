@@ -16,12 +16,14 @@ import css from '@cd/components/ServiceDetails/ServiceDetailsContent/ServicesDet
 export default function ServiceDetailsSummaryV2(): JSX.Element {
   const { serviceId } = useParams<ServicePathProps>()
   const [envIdFilter, setEnvIdFilter] = useState<string>()
+  const [artifactNameFilter, setArtifactNameFilter] = useState<string>()
 
   const executionListFilter = {
     moduleProperties: {
       cd: {
         envIdentifiers: envIdFilter,
-        serviceIdentifiers: serviceId && serviceId.length ? serviceId : undefined
+        serviceIdentifiers: serviceId && serviceId.length ? serviceId : undefined,
+        artifactDisplayNames: artifactNameFilter
       }
     },
     filterType: 'PipelineExecution'
@@ -29,7 +31,7 @@ export default function ServiceDetailsSummaryV2(): JSX.Element {
 
   return (
     <Page.Body className={css.pageStyles}>
-      <ServiceDetailsEnvView setEnvId={setEnvIdFilter} />
+      <ServiceDetailsEnvView setEnvId={setEnvIdFilter} setArtifactName={setArtifactNameFilter} />
       <ExecutionList isExecutionPage={false} filters={executionListFilter} />
     </Page.Body>
   )

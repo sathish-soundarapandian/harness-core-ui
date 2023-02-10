@@ -65,7 +65,7 @@ export const getRepositoryName = (prevStepData: any, initialValues: ManifestConf
       : GitRepoName.Account
 
   if (getMultiTypeFromValue(prevStepData?.connectorRef) !== MultiTypeInputType.FIXED) {
-    return prevStepData.connectorRef
+    return prevStepData.repoName
   } else {
     if (connectionType === GitRepoName.Repo) {
       return prevStepData.connectorRef?.connector?.spec.url

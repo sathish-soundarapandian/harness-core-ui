@@ -8,6 +8,6 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly form: string
-  readonly skipConditionLabel: string
+  readonly titleWrapper: string
 }
 export default styles

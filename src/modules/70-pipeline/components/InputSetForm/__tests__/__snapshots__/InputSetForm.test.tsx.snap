@@ -905,6 +905,10 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
                           >
                             <div
                               class="accordionSummary"
+                              id="pipeline.stages[0].stage.spec.Environment"
+                            />
+                            <div
+                              class="accordionSummary"
                               id="Stage.asd.Infrastructure"
                             >
                               <div
@@ -1740,6 +1744,10 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
                           <div
                             class="topAccordion"
                           >
+                            <div
+                              class="accordionSummary"
+                              id="pipeline.stages[0].stage.spec.Environment"
+                            />
                             <div
                               class="accordionSummary"
                               id="Stage.asd.Infrastructure"

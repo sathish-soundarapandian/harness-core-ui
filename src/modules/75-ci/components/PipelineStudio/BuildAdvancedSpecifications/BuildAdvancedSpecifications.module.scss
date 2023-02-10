@@ -88,6 +88,8 @@
 }
 
 .tabHeading {
+  display: flex;
+  align-items: center;
   font-size: var(--font-size-medium);
   color: var(--grey-700);
   margin-bottom: 14px;
@@ -112,4 +114,8 @@
 
 .navigation-buttons {
   margin-top: 44px;
+}
+
+.multiTypeBtn {
+  display: inline-block;
 }

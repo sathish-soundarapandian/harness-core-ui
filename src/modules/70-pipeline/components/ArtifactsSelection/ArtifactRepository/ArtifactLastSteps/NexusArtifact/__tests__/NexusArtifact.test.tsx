@@ -6,7 +6,9 @@
  */
 
 import React from 'react'
+
 import { act, findByText, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
+
 import { AllowedTypesWithRunTime, MultiTypeInputType } from '@harness/uicore'
 import { TestWrapper } from '@common/utils/testUtils'
 import {
@@ -384,5 +386,201 @@ describe('Nexus Artifact tests', () => {
     })
     await waitFor(() => expect(container.querySelector('input[name="repository"]')).toHaveValue('cdp-test-group2'))
     await waitFor(() => expect(container.querySelector('input[name="spec.artifactPath"]')).toHaveValue('artifact-path'))
+  })
+
+  test('render form correctly when repositoryFormat is RAW', async () => {
+    const defaultValues: Nexus2InitialValuesType = {
+      identifier: '',
+      tag: '',
+      tagType: TagTypes.Value,
+      tagRegex: '',
+      repository: '',
+      spec: {
+        artifactPath: '',
+        repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryPort,
+        repositoryUrl: '',
+        repositoryPort: ''
+      }
+    } as Nexus2InitialValuesType
+    const { container, getByText } = render(
+      <TestWrapper>
+        <Nexus3Artifact key={'key'} initialValues={defaultValues} {...props} />
+      </TestWrapper>
+    )
+
+    const repoFormatDropdown = container.querySelector('input[name="repositoryFormat"]') as HTMLInputElement
+    const repoFormatCaret = container
+      .querySelector(`input[name="repositoryFormat"] + [class*="bp3-input-action"]`)
+      ?.querySelector('[data-icon="chevron-down"]')
+    await waitFor(() => {
+      fireEvent.click(repoFormatCaret!)
+    })
+    const repoFormatSelect = await findByText(container, 'Raw')
+    act(() => {
+      fireEvent.click(repoFormatSelect)
+    })
+    expect(repoFormatDropdown.value).toBe('Raw')
+    expect(container).toMatchSnapshot()
+    expect(getByText('rbac.group')).toBeDefined()
+  })
+
+  test('render form correctly when repositoryFormat is Maven', async () => {
+    const defaultValues: Nexus2InitialValuesType = {
+      identifier: '',
+      tag: '',
+      tagType: TagTypes.Value,
+      tagRegex: '',
+      repository: '',
+      spec: {
+        artifactPath: '',
+        repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryPort,
+        repositoryUrl: '',
+        repositoryPort: ''
+      }
+    } as Nexus2InitialValuesType
+    const { container, getByText } = render(
+      <TestWrapper>
+        <Nexus3Artifact key={'key'} initialValues={defaultValues} {...props} />
+      </TestWrapper>
+    )
+
+    const repoFormatDropdown = container.querySelector('input[name="repositoryFormat"]') as HTMLInputElement
+    const repoFormatCaret = container
+      .querySelector(`input[name="repositoryFormat"] + [class*="bp3-input-action"]`)
+      ?.querySelector('[data-icon="chevron-down"]')
+    await waitFor(() => {
+      fireEvent.click(repoFormatCaret!)
+    })
+    const repoFormatSelect = await findByText(container, 'Maven')
+    act(() => {
+      fireEvent.click(repoFormatSelect)
+    })
+    expect(repoFormatDropdown.value).toBe('Maven')
+    expect(container).toMatchSnapshot()
+    expect(getByText('pipeline.artifactsSelection.extension')).toBeDefined()
+  })
+
+  test('render form correctly when repositoryFormat is NPM', async () => {
+    const defaultValues: Nexus2InitialValuesType = {
+      identifier: '',
+      tag: '',
+      tagType: TagTypes.Value,
+      tagRegex: '',
+      repository: '',
+      spec: {
+        artifactPath: '',
+        repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryPort,
+        repositoryUrl: '',
+        repositoryPort: ''
+      }
+    } as Nexus2InitialValuesType
+    const { container, getByText } = render(
+      <TestWrapper>
+        <Nexus3Artifact key={'key'} initialValues={defaultValues} {...props} />
+      </TestWrapper>
+    )
+
+    const repoFormatDropdown = container.querySelector('input[name="repositoryFormat"]') as HTMLInputElement
+    const repoFormatCaret = container
+      .querySelector(`input[name="repositoryFormat"] + [class*="bp3-input-action"]`)
+      ?.querySelector('[data-icon="chevron-down"]')
+    await waitFor(() => {
+      fireEvent.click(repoFormatCaret!)
+    })
+    const repoFormatSelect = await findByText(container, 'NPM')
+    act(() => {
+      fireEvent.click(repoFormatSelect)
+    })
+    expect(repoFormatDropdown.value).toBe('NPM')
+    expect(container).toMatchSnapshot()
+    expect(getByText('pipeline.artifactsSelection.packageName')).toBeDefined()
+  })
+
+  test('render form correctly when repositoryFormat is NuGet', async () => {
+    const defaultValues: Nexus2InitialValuesType = {
+      identifier: '',
+      tag: '',
+      tagType: TagTypes.Value,
+      tagRegex: '',
+      repository: '',
+      spec: {
+        artifactPath: '',
+        repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryPort,
+        repositoryUrl: '',
+        repositoryPort: ''
+      }
+    } as Nexus2InitialValuesType
+    const { container, getByText } = render(
+      <TestWrapper>
+        <Nexus3Artifact key={'key'} initialValues={defaultValues} {...props} />
+      </TestWrapper>
+    )
+
+    const repoFormatDropdown = container.querySelector('input[name="repositoryFormat"]') as HTMLInputElement
+    const repoFormatCaret = container
+      .querySelector(`input[name="repositoryFormat"] + [class*="bp3-input-action"]`)
+      ?.querySelector('[data-icon="chevron-down"]')
+    await waitFor(() => {
+      fireEvent.click(repoFormatCaret!)
+    })
+    const repoFormatSelect = await findByText(container, 'NuGet')
+    act(() => {
+      fireEvent.click(repoFormatSelect)
+    })
+    expect(repoFormatDropdown.value).toBe('NuGet')
+    expect(container).toMatchSnapshot()
+    expect(getByText('pipeline.artifactsSelection.packageName')).toBeDefined()
+  })
+
+  test('render form correctly when tagType is regex', async () => {
+    const defaultValues: Nexus2InitialValuesType = {
+      connectorRef: '<+input>',
+      repository: 'werewre',
+      repositoryFormat: 'docker',
+      tag: '<+input>',
+      type: 'Nexus3Registry',
+      spec: {
+        artifactPath: 'ewrewr',
+        repositoryUrl: 'werewr',
+        repositoryPortorRepositoryURL: 'repositoryUrl'
+      },
+      tagType: TagTypes.Regex,
+      tagRegex: '<+input>',
+      identifier: 'sdfds'
+    } as any
+    const { container } = render(
+      <TestWrapper>
+        <Nexus3Artifact key={'key'} initialValues={defaultValues} {...props} />
+      </TestWrapper>
+    )
+
+    expect(container).toMatchSnapshot()
+  })
+
+  test('when fields are all runtime inputs for maven repositoryformat type', () => {
+    const defaultValues: Nexus2InitialValuesType = {
+      connectorRef: '<+input>',
+      repository: '<+input>',
+      repositoryFormat: 'Maven',
+      tag: '<+input>',
+      type: 'Nexus3Registry',
+      spec: {
+        groupId: '<+input>',
+        artifactId: '<+input>',
+        extension: '<+input>',
+        classifier: '<+input>'
+      },
+      tagType: TagTypes.Regex,
+      tagRegex: '<+input>',
+      identifier: 'sdfds'
+    } as any
+
+    const { container } = render(
+      <TestWrapper>
+        <Nexus3Artifact key={'key'} initialValues={defaultValues} {...props} />
+      </TestWrapper>
+    )
+
+    expect(container).toMatchSnapshot()
   })
 })

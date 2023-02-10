@@ -452,6 +452,10 @@ exports[`Input Set - error scenarios if API errors are displayed in yellow accor
                           >
                             <div
                               class="accordionSummary"
+                              id="pipeline.stages[0].stage.spec.Environment"
+                            />
+                            <div
+                              class="accordionSummary"
                               id="Stage.asd.Infrastructure"
                             >
                               <div

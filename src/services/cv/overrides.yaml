@@ -177,6 +177,7 @@ allowpaths:
   - /aws/regions
   - /slo-dashboard/widget/{identifier}/consumption
   - /slo/v2/composite-slo/onboarding-graph
+  - /monitored-service/{monitoredServiceIdentifier}/sli/onboarding-graphs
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/log-records
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/metric-records
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/records
@@ -188,6 +189,7 @@ allowpaths:
   - /account/{accountIdentifier}/orgs/{orgIdentifier}/projects/{projectIdentifier}/verifications/{verifyStepExecutionId}/transaction-groups
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/identifier/{identifier}
+  - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/monitored-services/{identifier}
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/list
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/history
 

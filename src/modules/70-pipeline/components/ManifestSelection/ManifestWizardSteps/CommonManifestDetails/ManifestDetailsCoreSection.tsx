@@ -55,7 +55,7 @@ export function ManifestDetailsCoreSection({
       ? GitRepoName.Repo
       : GitRepoName.Account
 
-  const accountUrl = connectionType === GitRepoName.Account ? getAccountUrl(prevStepData) : null
+  const accountUrl = connectionType === GitRepoName.Account ? getAccountUrl(prevStepData) : ''
 
   const isOnlyFileTypeManifest =
     selectedManifest &&
@@ -72,8 +72,7 @@ export function ManifestDetailsCoreSection({
           />
         </div>
       )}
-
-      {!!(connectionType === GitRepoName.Account && accountUrl) && (
+      {!!(connectionType === GitRepoName.Account || accountUrl) && (
         <GitRepositoryName
           accountUrl={accountUrl}
           expressions={expressions}

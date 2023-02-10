@@ -261,14 +261,12 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
   const showClearFilters = useMemo(() => {
     return Boolean(
       selectedHealthSources.length > 0 ||
-        selectedDataFormat !== DATA_OPTIONS[0] ||
         selectedTransactionName.length > 0 ||
         selectedNodeName.length > 0 ||
         anomalousMetricsFilterChecked === true
     )
   }, [
     anomalousMetricsFilterChecked,
-    selectedDataFormat,
     selectedHealthSources.length,
     selectedNodeName.length,
     selectedTransactionName.length
@@ -367,7 +365,6 @@ export function DeploymentMetrics(props: DeploymentMetricsProps): JSX.Element {
 
   const resetFilters = useCallback(() => {
     setSelectedTransactionName([])
-    setSelectedDataFormat(DATA_OPTIONS[0])
     setSelectedHealthSources([])
     setSelectedNodeName(() => getInitialNodeName(selectedNode))
     setAnomalousMetricsFilterChecked(false)

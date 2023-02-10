@@ -5,25 +5,30 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useFormikContext } from 'formik'
-import { get, isEmpty, set, unset } from 'lodash-es'
-import cx from 'classnames'
+import { defaultTo, get, isEmpty, isNil, omit, pick, set } from 'lodash-es'
 
-import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import { Container, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
+import { Color } from '@harness/design-system'
 
 import { useStrings } from 'framework/strings'
-import type { DeploymentStageConfig, Infrastructure } from 'services/cd-ng'
+import type { DeploymentStageConfig, EnvironmentYamlV2, Infrastructure, ServiceSpec } from 'services/cd-ng'
 
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
+import { isMultiTypeExpression, isValueExpression, isValueFixed, isValueRuntimeInput } from '@common/utils/utils'
 
-import type { DeployStageConfig } from '@pipeline/utils/DeployStageInterface'
-import { getCustomStepProps, infraDefinitionTypeMapping } from '@pipeline/utils/stageHelpers'
+import {
+  getCustomStepProps,
+  getStepTypeByDeploymentType,
+  infraDefinitionTypeMapping
+} from '@pipeline/utils/stageHelpers'
 
 import { StepWidget } from '../../AbstractSteps/StepWidget'
 import factory from '../../PipelineSteps/PipelineStepFactory'
 import { StepType } from '../../PipelineSteps/PipelineStepInterface'
 import type { StageInputSetFormProps } from '../StageInputSetForm'
+
 import css from '../PipelineInputSetForm.module.scss'
 
 export default function SingleEnvironmentInputSetForm({
@@ -36,117 +41,275 @@ export default function SingleEnvironmentInputSetForm({
   viewType,
   stageIdentifier,
   allowableTypes
-}: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier'>): React.ReactElement {
+}: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier' | 'stageType'>): React.ReactElement {
   const { getString } = useStrings()
   const formik = useFormikContext<DeploymentStageConfig>()
-  const { NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled } = useFeatureFlags()
-  // This is the value of allValues
+
+  const deploymentType = deploymentStage?.deploymentType
+  const environmentTemplate = deploymentStageTemplate?.environment
+  const environmentInDeploymentStage = deploymentStage?.environment
+
   const deploymentStageInputSet = get(formik?.values, path, {})
+  const environment: EnvironmentYamlV2 = get(deploymentStageInputSet, `environment`, {})
+
+  const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
+    getMultiTypeFromValue(environment.environmentRef)
+  )
+
+  /** If the template has environmentRef marked as runtime, then we need to give user the option to select environment at runtime.
+   * The below StepWidget handles fetching the environments, and then rendering the input field for the same. */
+  const showEnvironmentsSelectionInputField = isValueRuntimeInput(environmentTemplate?.environmentRef)
+
+  // This state is required to prevent parallel formik updates with environments and infrastructures
+  const [isEnvironmentLoading, setIsEnvironmentLoading] = useState(showEnvironmentsSelectionInputField)
+
+  const environmentIdentifier = showEnvironmentsSelectionInputField
+    ? deploymentStageInputSet?.environment?.environmentRef
+    : environmentInDeploymentStage?.environmentRef
+
+  const showEnvironmentVariables = Array.isArray(environmentTemplate?.environmentInputs?.variables)
+  const showEnvironmentOverrides = !isEmpty(environmentTemplate?.environmentInputs?.overrides)
+  /** Show the infrastructures selection field in the following scenarios
+   * 1. environmentTemplate.infrastructureDefinitions is a runtime value - condition 1
+   * 2. When 1 is true and the user selects the infrastructures, we need to still continue to show it - condition 2
+   *    a. The check for infrastructureDefinitions in 'deploymentStage' is required to show the field in case of 1 and 2 */
+  const showInfrastructuresSelectionInputField = isMultiTypeExpression(environmentRefType)
+    ? isValueExpression(environment.environmentRef)
+    : isValueRuntimeInput(environmentTemplate?.infrastructureDefinitions as unknown as string) ||
+      (Array.isArray(environmentTemplate?.infrastructureDefinitions) &&
+        !Array.isArray(environmentInDeploymentStage?.infrastructureDefinitions))
+
+  /** Show the clusters selection field in the following scenarios
+   * 1. pathToEnvironments is a runtime value - condition 1
+   * 2. When 1 is true and the user selects the environments, we need to still continue to show it - condition 2
+   *    a. The check for deployToAll of false in 'deploymentStage' is required to show the field in case of 1 and 2,
+   *      as then the values of deployToAll in the above scenarios is either <input> or true, and not false */
+  const showClustersSelectionInputField =
+    isValueRuntimeInput(environmentTemplate?.gitOpsClusters as unknown as string) ||
+    (Array.isArray(environmentTemplate?.gitOpsClusters) &&
+      isValueRuntimeInput(environmentInDeploymentStage?.environmentRef))
+
+  /* If infrastructureDefinitions are selected in the pipeline or in the input view, list the inputs under them */
+  const showInfrastructuresInputSetForm =
+    Array.isArray(environmentTemplate?.infrastructureDefinitions) &&
+    environmentTemplate?.infrastructureDefinitions?.some(infraTemplate => !isNil(infraTemplate.inputs))
+
+  const showEnvironmentPrefix =
+    environmentIdentifier &&
+    !isValueRuntimeInput(environmentIdentifier) &&
+    (showEnvironmentVariables ||
+      showEnvironmentOverrides ||
+      showClustersSelectionInputField ||
+      showInfrastructuresSelectionInputField ||
+      showInfrastructuresInputSetForm)
 
   return (
-    <>
-      {isSvcEnvEntityEnabled &&
-        deploymentStageTemplate?.environment &&
-        deploymentStage?.environment &&
-        !isEmpty(deploymentStageInputSet.environment) && (
-          <div id={`Stage.${stageIdentifier}.Environment`} className={cx(css.accordionSummary)}>
-            <StepWidget
-              factory={factory}
-              initialValues={deploymentStageInputSet}
-              allowableTypes={allowableTypes}
-              allValues={deploymentStage}
-              template={deploymentStageTemplate}
-              type={StepType.DeployInfrastructure}
-              stepViewType={viewType}
-              path={`${path}.environment`}
-              readonly={readonly}
-              customStepProps={{
-                getString,
-                // Show clusters instead of infra on env selection
-                gitOpsEnabled: deploymentStage.gitOpsEnabled,
-                // load service overrides for environment
-                serviceRef: deploymentStage.service?.serviceRef,
-                // load infrastructures/clusters in environment
-                environmentRef: deploymentStage.environment?.environmentRef,
-                // load infrastructure runtime inputs
-                infrastructureRef: deploymentStage.environment?.infrastructureDefinitions?.[0].identifier,
-                // load cluster runtime inputs
-                clusterRef: deploymentStage.environment?.gitOpsClusters?.[0].identifier,
-                // required for artifact manifest inputs
-                stageIdentifier,
-                // required for filtering infrastructures
-                deploymentType: deploymentStage?.deploymentType,
-                customDeploymentData: deploymentStage?.customDeploymentRef
-              }}
-              onUpdate={values => {
-                if (deploymentStageInputSet?.environment) {
-                  formik?.setFieldValue(`${path}.environment`, values.environment)
-                }
-              }}
-            />
+    <div id={`${path}.Environment`} className={css.accordionSummary}>
+      {showEnvironmentsSelectionInputField && (
+        <StepWidget
+          factory={factory}
+          initialValues={pick(deploymentStageInputSet, 'environment')}
+          template={pick(deploymentStageTemplate, 'environment')}
+          type={StepType.DeployEnvironmentEntity}
+          stepViewType={viewType}
+          path={path}
+          allowableTypes={allowableTypes}
+          readonly={readonly}
+          customStepProps={{
+            gitOpsEnabled: deploymentStage?.gitOpsEnabled,
+            pathToEnvironments: 'environment',
+            isMultiEnvironment: false,
+            setEnvironmentRefType
+          }}
+          onUpdate={data => {
+            formik.setFieldValue(`${path}.environment`, get(data, 'environment'))
 
-            {(deploymentStageTemplate as DeployStageConfig).environment?.infrastructureDefinitions &&
-              ((deploymentStageTemplate as DeployStageConfig).environment
-                ?.infrastructureDefinitions as unknown as string) !== RUNTIME_INPUT_VALUE && (
-                <>
-                  {deploymentStage.environment?.environmentRef &&
-                    ((deploymentStage as DeployStageConfig)?.environment
-                      ?.infrastructureDefinitions as unknown as string) !== RUNTIME_INPUT_VALUE && (
-                      <div className={css.inputheader}>{getString('infrastructureText')}</div>
-                    )}
-                  {deploymentStageTemplate.environment?.infrastructureDefinitions
-                    ?.map((infrastructureDefinition, index) => {
-                      return (
-                        <>
-                          <StepWidget<Infrastructure>
-                            key={infrastructureDefinition.identifier}
-                            factory={factory}
-                            template={infrastructureDefinition.inputs?.spec}
-                            initialValues={{
-                              ...deploymentStageInputSet?.environment?.infrastructureDefinitions?.[index]?.inputs?.spec,
-                              environmentRef: deploymentStage?.environment?.environmentRef,
-                              infrastructureRef: infrastructureDefinition.identifier,
-                              deploymentType: deploymentStage?.deploymentType
-                            }}
-                            allowableTypes={allowableTypes}
-                            allValues={{
-                              ...deploymentStage?.environment?.infrastructureDefinitions?.[index]?.inputs?.spec,
-                              environmentRef: deploymentStage?.environment?.environmentRef,
-                              infrastructureRef: infrastructureDefinition.identifier
-                            }}
-                            type={
-                              (infraDefinitionTypeMapping[infrastructureDefinition?.inputs?.type as StepType] ||
-                                infrastructureDefinition?.inputs?.type) as StepType
+            setIsEnvironmentLoading(false)
+          }}
+        />
+      )}
+
+      {deploymentType && showEnvironmentPrefix && !isEnvironmentLoading && (
+        <React.Fragment key={`${path}_${environment.environmentRef}`}>
+          {isValueFixed(environmentIdentifier) && (
+            <Text font={{ size: 'normal', weight: 'bold' }} padding={{ bottom: 'medium' }} color={Color.GREY_700}>
+              {getString('common.environmentPrefix', { name: environmentIdentifier })}
+            </Text>
+          )}
+          <Container padding={{ left: 'medium' }}>
+            {/* If there are runtime environment inputs */}
+            {showEnvironmentVariables && (
+              <>
+                <Text font={{ size: 'normal', weight: 'bold' }} padding={{ bottom: 'medium' }} color={Color.GREY_600}>
+                  {getString('environmentVariables')}
+                </Text>
+                <Container padding={{ left: 'medium' }}>
+                  <StepWidget<ServiceSpec>
+                    factory={factory}
+                    initialValues={get(deploymentStageInputSet, `environment.environmentInputs`, {
+                      variables: []
+                    })}
+                    allowableTypes={allowableTypes}
+                    template={get(deploymentStageTemplate, `environment.environmentInputs`, {})}
+                    type={getStepTypeByDeploymentType(deploymentType)}
+                    stepViewType={viewType}
+                    path={`${path}.environment.environmentInputs`}
+                    readonly={readonly}
+                    customStepProps={{
+                      stageIdentifier,
+                      allValues: get(environmentInDeploymentStage, `environmentInputs`, {
+                        variables: []
+                      })
+                    }}
+                  />
+                </Container>
+              </>
+            )}
+
+            {showEnvironmentOverrides && (
+              <>
+                <Text font={{ size: 'normal', weight: 'bold' }} padding={{ bottom: 'medium' }} color={Color.GREY_600}>
+                  {getString('common.environmentOverrides')}
+                </Text>
+                <Container padding={{ left: 'medium' }}>
+                  <StepWidget<ServiceSpec>
+                    factory={factory}
+                    initialValues={get(deploymentStageInputSet, `environment.environmentInputs.overrides`, {
+                      variables: []
+                    })}
+                    allowableTypes={allowableTypes}
+                    template={get(deploymentStageTemplate, `environment.environmentInputs.overrides`, {})}
+                    type={getStepTypeByDeploymentType(deploymentType)}
+                    stepViewType={viewType}
+                    path={`${path}.environment.environmentInputs.overrides`}
+                    readonly={readonly}
+                    customStepProps={{
+                      stageIdentifier
+                    }}
+                  />
+                </Container>
+              </>
+            )}
+
+            {showClustersSelectionInputField && (
+              <StepWidget
+                factory={factory}
+                initialValues={environment}
+                template={environmentTemplate}
+                type={StepType.DeployClusterEntity}
+                stepViewType={viewType}
+                path={`${path}.environment`}
+                allowableTypes={allowableTypes}
+                readonly={readonly}
+                customStepProps={{
+                  environmentIdentifier,
+                  isMultipleCluster: true,
+                  deployToAllClusters: environmentInDeploymentStage?.deployToAll,
+                  showEnvironmentsSelectionInputField
+                }}
+                onUpdate={data => {
+                  const environmentAtIndex = get(formik.values, `${path}.environment`)
+
+                  formik.setFieldValue(`${path}.environment`, {
+                    ...omit(environmentAtIndex, ['deployToAll', 'gitOpsClusters']),
+                    ...pick(data, ['deployToAll', 'gitOpsClusters'])
+                  })
+                }}
+              />
+            )}
+
+            {showInfrastructuresSelectionInputField && (
+              <StepWidget
+                factory={factory}
+                initialValues={environment}
+                template={environmentTemplate}
+                type={StepType.DeployInfrastructureEntity}
+                stepViewType={viewType}
+                path={`${path}.environment`}
+                allowableTypes={allowableTypes}
+                readonly={readonly}
+                customStepProps={{
+                  deploymentType,
+                  environmentIdentifier,
+                  scope: getScopeFromValue(defaultTo(environmentIdentifier, '')),
+                  isMultipleInfrastructure: false,
+                  customDeploymentRef: deploymentStage?.customDeploymentRef,
+                  showEnvironmentsSelectionInputField,
+                  lazyInfrastructure: isMultiTypeExpression(environmentRefType)
+                }}
+                onUpdate={data => {
+                  const environmentAtIndex = get(formik.values, `${path}.environment`)
+
+                  formik.setFieldValue(`${path}.environment`, {
+                    ...omit(environmentAtIndex, ['deployToAll', 'infrastructureDefinitions']),
+                    ...pick(data, ['deployToAll', 'infrastructureDefinitions'])
+                  })
+                }}
+              />
+            )}
+
+            {showInfrastructuresInputSetForm
+              ? environmentTemplate?.infrastructureDefinitions?.map((infrastructureDefinitionTemplate, infraIndex) => {
+                  const infraInputs = infrastructureDefinitionTemplate.inputs
+
+                  return infraInputs?.identifier ? (
+                    <>
+                      <Text font={{ size: 'normal', weight: 'bold' }} color={Color.GREY_700}>
+                        {getString('common.infrastructurePrefix', {
+                          name: infraInputs.identifier
+                        })}
+                      </Text>
+                      <Container padding={{ left: 'medium' }}>
+                        <StepWidget<Infrastructure>
+                          key={infraInputs.identifier}
+                          factory={factory}
+                          template={infraInputs?.spec}
+                          initialValues={{
+                            ...deploymentStageInputSet?.infrastructureDefinitions?.[infraIndex]?.inputs?.spec,
+                            environmentRef: environment.environmentRef,
+                            infrastructureRef: infraInputs.identifier
+                          }}
+                          allowableTypes={allowableTypes}
+                          allValues={{
+                            environmentRef: environment.environmentRef,
+                            infrastructureRef: infraInputs.identifier
+                          }}
+                          type={
+                            (infraDefinitionTypeMapping[infraInputs.type as StepType] || infraInputs?.type) as StepType
+                          }
+                          path={`${path}.environment.infrastructureDefinitions.${infraIndex}.inputs.spec`}
+                          readonly={readonly}
+                          stepViewType={viewType}
+                          customStepProps={{
+                            ...getCustomStepProps((deploymentStage?.deploymentType as StepType) || '', getString),
+                            environmentRef: environment.environmentRef,
+                            infrastructureRef: infraInputs.identifier
+                          }}
+                          onUpdate={data => {
+                            /* istanbul ignore next */
+                            if (
+                              get(
+                                deploymentStageInputSet,
+                                `${path}.environment.infrastructureDefinitions.[${infraIndex}].inputs.spec`
+                              )
+                            ) {
+                              set(
+                                deploymentStageInputSet,
+                                `${path}.environment.infrastructureDefinitions.[${infraIndex}].inputs.spec`,
+                                data
+                              )
+                              formik?.setValues(set(formik?.values, `${path}.environment`, deploymentStageInputSet))
                             }
-                            path={`${path}.environment.infrastructureDefinitions.${index}.inputs.spec`}
-                            readonly={readonly}
-                            stepViewType={viewType}
-                            customStepProps={{
-                              ...getCustomStepProps((deploymentStage?.deploymentType as StepType) || '', getString),
-                              serviceRef: deploymentStage?.service?.serviceRef,
-                              environmentRef: deploymentStage?.environment?.environmentRef,
-                              infrastructureRef: deploymentStage?.environment?.infrastructureDefinitions?.[0].identifier
-                            }}
-                            onUpdate={data => {
-                              /* istanbul ignore next */
-                              if (
-                                deploymentStageInputSet?.environment?.infrastructureDefinitions?.[index]?.inputs?.spec
-                              ) {
-                                unset(data, 'environmentRef')
-                                unset(data, 'infrastructureRef')
-                                deploymentStageInputSet.environment.infrastructureDefinitions[index].inputs.spec = data
-                                formik?.setValues(set(formik?.values, path, deploymentStageInputSet))
-                              }
-                            }}
-                          />
-                        </>
-                      )
-                    })
-                    .filter(data => data)}
-                </>
-              )}
-          </div>
-        )}
-    </>
+                          }}
+                        />
+                      </Container>
+                    </>
+                  ) : null
+                })
+              : null}
+          </Container>
+        </React.Fragment>
+      )}
+    </div>
   )
 }

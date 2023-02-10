@@ -8,6 +8,7 @@
 import React from 'react'
 import { ManifestSourceBase, ManifestSourceRenderProps } from '@cd/factory/ManifestSourceFactory/ManifestSourceBase'
 import { ManifestDataType } from '@pipeline/components/ManifestSelection/Manifesthelper'
+import { FileUsage } from '@filestore/interfaces/FileStore'
 import { ManifestContent } from '../ManifestSourceRuntimeFields/ManifestContent'
 
 export class K8sManifestSource extends ManifestSourceBase<ManifestSourceRenderProps> {
@@ -17,7 +18,6 @@ export class K8sManifestSource extends ManifestSourceBase<ManifestSourceRenderPr
     if (!props.isManifestsRuntime) {
       return null
     }
-
-    return <ManifestContent {...props} pathFieldlabel="fileFolderPathText" />
+    return <ManifestContent {...props} pathFieldlabel="fileFolderPathText" fileUsage={FileUsage.MANIFEST_FILE} />
   }
 }

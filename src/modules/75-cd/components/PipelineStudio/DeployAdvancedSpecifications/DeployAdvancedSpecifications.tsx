@@ -6,7 +6,15 @@
  */
 
 import React from 'react'
-import { Card, Container, HarnessDocTooltip, Layout } from '@harness/uicore'
+import {
+  Card,
+  Container,
+  getMultiTypeFromValue,
+  HarnessDocTooltip,
+  Layout,
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE
+} from '@harness/uicore'
 import { produce } from 'immer'
 import { set, isEmpty, unset, get } from 'lodash-es'
 import cx from 'classnames'
@@ -28,6 +36,8 @@ import { useValidationErrors } from '@pipeline/components/PipelineStudio/Pipline
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isSSHWinRMDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { DeploymentStageConfig } from 'services/cd-ng'
+import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
+import { isMultiTypeRuntime } from '@common/utils/utils'
 
 import stageCss from '../DeployStageSetupShell/DeployStage.module.scss'
 
@@ -164,45 +174,64 @@ const DeployAdvancedSpecifications: React.FC<AdvancedSpecifications> = ({ childr
         </Card>
 
         <div className={stageCss.tabHeading}>
-          <span data-tooltip-id="failureStrategyDeployStage">
-            {getString('pipeline.failureStrategies.title')}
-            <HarnessDocTooltip tooltipId="failureStrategyDeployStage" useStandAlone={true} />
-          </span>
+          <span data-tooltip-id="failureStrategyDeployStage">{getString('pipeline.failureStrategies.title')}</span>
+          <MultiTypeSelectorButton
+            className={stageCss.multiTypeBtn}
+            type={getMultiTypeFromValue(stage?.stage?.failureStrategies as any)}
+            allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+            onChange={type => {
+              const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
+              if (pipelineStage && pipelineStage.stage) {
+                const stageData = produce(pipelineStage, draft => {
+                  if (isMultiTypeRuntime(type)) {
+                    set(draft, 'stage.failureStrategies', RUNTIME_INPUT_VALUE)
+                  } else {
+                    unset(draft, 'stage.failureStrategies')
+                  }
+                })
+
+                if (stageData.stage) {
+                  updateStage(stageData.stage)
+                }
+              }
+            }}
+          />
+          <HarnessDocTooltip tooltipId="failureStrategyDeployStage" useStandAlone={true} />
         </div>
         <Card className={stageCss.sectionCard} id="failureStrategy">
-          <Layout.Horizontal>
-            <div>
-              <FailureStrategyWithRef
-                selectedStage={stage}
-                isReadonly={isReadonly}
-                ref={formikRef}
-                onUpdate={({ failureStrategies }) => {
-                  const { stage: pipelineStage } = getStageFromPipeline(selectedStageId)
-                  /* istanbul ignore else */
-                  if (pipelineStage && pipelineStage.stage) {
-                    const stageData = produce(pipelineStage, draft => {
-                      set(draft, 'stage.failureStrategies', failureStrategies)
-                    })
-                    /* istanbul ignore else */
-                    if (stageData.stage) {
-                      updateStage(stageData.stage)
-                      const errors = formikRef.current?.getErrors()
-                      /* istanbul ignore else */
-                      if (isEmpty(errors)) {
-                        const telemetryData = failureStrategies.map(strategy => ({
-                          onError: strategy.onFailure?.errors?.join(', '),
-                          action: strategy.onFailure?.action?.type
-                        }))
-                        telemetryData.length &&
-                          trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
-                      }
-                    }
+          <FailureStrategyWithRef
+            selectedStage={stage}
+            isReadonly={isReadonly}
+            ref={formikRef}
+            onUpdate={({ failureStrategies }) => {
+              const { stage: pipelineStage } = getStageFromPipeline(selectedStageId)
+              /* istanbul ignore else */
+              if (pipelineStage && pipelineStage.stage) {
+                const stageData = produce(pipelineStage, draft => {
+                  if (Array.isArray(failureStrategies) && failureStrategies.length > 0) {
+                    set(draft, 'stage.failureStrategies', failureStrategies)
+                  } else {
+                    unset(draft, 'stage.failureStrategies')
                   }
-                }}
-                tabName={DeployTabs.ADVANCED}
-              />
-            </div>
-          </Layout.Horizontal>
+                })
+                /* istanbul ignore else */
+                if (stageData.stage) {
+                  updateStage(stageData.stage)
+                  const errors = formikRef.current?.getErrors()
+                  /* istanbul ignore else */
+                  if (isEmpty(errors)) {
+                    const telemetryData = failureStrategies.map(strategy => ({
+                      onError: strategy.onFailure?.errors?.join(', '),
+                      action: strategy.onFailure?.action?.type
+                    }))
+                    telemetryData.length &&
+                      trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
+                  }
+                }
+              }
+            }}
+            tabName={DeployTabs.ADVANCED}
+          />
         </Card>
         {SSH_NG && getSshOrWinRmType() ? (
           <div data-testid="skip-instances" className={stageCss.tabHeading}>

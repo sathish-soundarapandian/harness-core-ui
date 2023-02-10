@@ -49,10 +49,10 @@ export const Basic: Story<BasicArgs> = args => {
               <Card>
                 <H3>Failure Strategies</H3>
                 <FailureStrategyPanel
-                  formikProps={formik}
                   mode={args.mode}
                   stageType={args.stageType || StageType.DEPLOY}
                   isReadonly={false}
+                  path="failureStrategies"
                 />
                 <Button data-testid="test-submit" onClick={() => formik.submitForm()}>
                   Submit

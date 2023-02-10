@@ -202,7 +202,7 @@ const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, s
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const { page, size } = useQueryParams(rbacQueryParamOptions)
   const isCommunity = useGetCommunity()
-  const [sort, setSort] = useState<string>(sortByCreated[0].value as string)
+  const [sort, setSort] = useState<string>(sortByLastModified[0].value as string)
 
   const { data, loading, error, refetch } = useMutateAsGet(useGetPendingUsersAggregated, {
     body: {},
@@ -315,10 +315,9 @@ const PendingUserListView: React.FC<PendingUserListViewProps> = ({ searchTerm, s
     >
       <ListHeader
         value={sort}
-        sortOptions={[...sortByName, ...sortByEmail, ...sortByCreated, ...sortByLastModified]}
+        sortOptions={[...sortByLastModified, ...sortByCreated, ...sortByName, ...sortByEmail]}
         onChange={option => setSort(option.value as string)}
         totalCount={data?.data?.totalItems}
-        className={css.listHeader}
       />
       <TableV2<Invite>
         className={css.table}

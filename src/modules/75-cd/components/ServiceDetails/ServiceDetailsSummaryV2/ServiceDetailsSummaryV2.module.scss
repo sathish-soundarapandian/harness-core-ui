@@ -15,12 +15,6 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-
-    > span[data-icon='infrastructure'] {
-      color: var(--grey-600);
-      padding-right: 6px;
-    }
 
     > p {
       width: 240px;
@@ -85,7 +79,7 @@
   padding-left: var(--spacing-4);
 }
 
-.cardGrid {
+.envCardGrid {
   display: grid !important;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 
@@ -332,5 +326,39 @@
   :global(.bp3-icon) {
     color: var(--grey-700) !important;
     margin-right: 9px;
+  }
+}
+
+.artifactCardGrid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+
+  :nth-child(1) {
+    margin-left: var(--layout-spacing) !important;
+  }
+}
+
+.artifactCards {
+  min-width: 307px;
+  height: 173px;
+  margin: var(--spacing-6) !important;
+  padding: var(--spacing-5) !important;
+}
+
+.artifactViewEnvList {
+  margin-top: var(--spacing-4);
+  height: 100px;
+  overflow: scroll;
+}
+
+.artifactViewEnvDetail {
+  display: grid !important;
+  grid-template-columns: 1fr 80px;
+  column-gap: var(--spacing-3);
+  align-items: center;
+  height: var(--spacing-8);
+
+  :nth-child(3) {
+    justify-self: end;
   }
 }

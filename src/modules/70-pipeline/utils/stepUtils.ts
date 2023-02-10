@@ -23,6 +23,7 @@ import {
 } from '@pipeline/components/PipelineStudio/StepCommands/StepCommandTypes'
 import { sanitize } from '@common/utils/JSONUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import type { DeploymentStageElementConfigWrapper } from './pipelineTypes'
 
 export enum StepMode {
@@ -268,7 +269,10 @@ export function getStepDataFromValues(
       }
     }
     // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.
-    if (Array.isArray(item.failureStrategies) && !isEmpty(item.failureStrategies)) {
+    if (
+      !isEmpty(item.failureStrategies) &&
+      (Array.isArray(item.failureStrategies) || isValueRuntimeInput(item.failureStrategies))
+    ) {
       node.failureStrategies = item.failureStrategies
     } else if (node.failureStrategies) {
       delete node.failureStrategies

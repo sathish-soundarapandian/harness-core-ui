@@ -30,7 +30,12 @@ import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from '
 import MultiConfigSelectField from '@pipeline/components/ConfigFilesSelection/ConfigFilesWizard/ConfigFilesSteps/MultiConfigSelectField/MultiConfigSelectField'
 import { FILE_TYPE_VALUES } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import { FileUsage } from '@filestore/interfaces/FileStore'
-import { helmVersions, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
+import {
+  getSkipResourceVersioningBasedOnDeclarativeRollback,
+  helmVersions,
+  ManifestIdentifierValidation,
+  ManifestStoreMap
+} from '../../Manifesthelper'
 import type {
   CommandFlags,
   HelmHarnessFileStoreFormData,
@@ -58,6 +63,7 @@ interface HelmWithHarnessStoreDataType {
   files: string[]
   valuesPaths: string[]
   skipResourceVersioning: boolean
+  enableDeclarativeRollback?: boolean
   helmVersion: HelmVersionOptions
   commandFlags: Array<CommandFlags>
 }
@@ -87,6 +93,7 @@ function HelmWithHarnessStore({
         helmVersion: initialValues.spec?.helmVersion,
         valuesPaths,
         skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning'),
+        enableDeclarativeRollback: get(initialValues, 'spec.enableDeclarativeRollback'),
         commandFlags: initialValues.spec?.commandFlags?.map((commandFlag: { commandType: string; flag: string }) => ({
           commandType: commandFlag.commandType,
           flag: commandFlag.flag
@@ -98,6 +105,7 @@ function HelmWithHarnessStore({
       files: [''],
       valuesPaths: [''],
       skipResourceVersioning: false,
+      enableDeclarativeRollback: false,
       helmVersion: 'V2',
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }]
     }
@@ -119,7 +127,11 @@ function HelmWithHarnessStore({
             },
             valuesPaths: formData.valuesPaths,
             helmVersion: formData?.helmVersion,
-            skipResourceVersioning: formData.skipResourceVersioning
+            skipResourceVersioning: getSkipResourceVersioningBasedOnDeclarativeRollback(
+              formData?.skipResourceVersioning,
+              formData?.enableDeclarativeRollback
+            ),
+            enableDeclarativeRollback: formData?.enableDeclarativeRollback
           }
         }
       }

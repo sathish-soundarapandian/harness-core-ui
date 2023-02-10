@@ -35,7 +35,12 @@ import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextFi
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { CustomManifestManifestDataType, ManifestTypes } from '../../ManifestInterface'
-import { ManifestDataType, ManifestIdentifierValidation, cfCliVersions } from '../../Manifesthelper'
+import {
+  ManifestDataType,
+  ManifestIdentifierValidation,
+  cfCliVersions,
+  getSkipResourceVersioningBasedOnDeclarativeRollback
+} from '../../Manifesthelper'
 import CustomRemoteAdvancedStepSection from './CustomRemoteAdvancedStepSection'
 import DragnDropPaths from '../../DragnDropPaths'
 import { filePathWidth, handleCommandFlagsSubmitData, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
@@ -103,6 +108,7 @@ function CustomRemoteManifest({
         ...specValues,
         identifier: initialValues.identifier,
         skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning'),
+        enableDeclarativeRollback: initialValues?.spec?.enableDeclarativeRollback,
         helmVersion: get(initialValues, 'spec.helmVersion'),
         valuesPaths:
           typeof valuesPaths === 'string'
@@ -147,6 +153,7 @@ function CustomRemoteManifest({
       filePath: '',
       extractionScript: '',
       skipResourceVersioning: false,
+      enableDeclarativeRollback: false,
       valuesPaths: [{ path: '', uuid: uuid('', nameSpace()) } as PathsInterface],
       paramsPaths: [{ path: '', uuid: uuid('', nameSpace()) } as PathsInterface],
       helmVersion: 'V2',
@@ -176,7 +183,15 @@ function CustomRemoteManifest({
         }
       }
       if (showSkipResourceVersion(selectedManifest as ManifestTypes)) {
-        set(manifestObj, 'manifest.spec.skipResourceVersioning', formData?.skipResourceVersioning)
+        set(
+          manifestObj,
+          'manifest.spec.skipResourceVersioning',
+          getSkipResourceVersioningBasedOnDeclarativeRollback(
+            formData?.skipResourceVersioning,
+            formData?.enableDeclarativeRollback
+          )
+        )
+        set(manifestObj, 'manifest.spec.enableDeclarativeRollback', formData?.enableDeclarativeRollback)
       }
       if (showHelmVersion(selectedManifest as ManifestTypes)) {
         set(manifestObj, 'manifest.spec.helmVersion', formData?.helmVersion)

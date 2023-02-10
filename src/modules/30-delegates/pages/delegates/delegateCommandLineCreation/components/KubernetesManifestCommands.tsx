@@ -2,7 +2,7 @@ import { Layout, Text, Container } from '@harness/uicore'
 
 import { FontVariation, Color } from '@harness/design-system'
 import React from 'react'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import CommandBlock from '@common/CommandBlock/CommandBlock'
 
 import { useStrings } from 'framework/strings'
@@ -13,6 +13,7 @@ import css from '../DelegateCommandLineCreation.module.scss'
 const KubernetesManifestCommands = () => {
   const { getString } = useStrings()
   const params = useParams<PipelineType<ProjectPathProps>>()
+  const history = useHistory()
   const { accountId, orgIdentifier, projectIdentifier, module } = params
   return (
     <Layout.Vertical margin={{ bottom: 'xxxlarge' }}>
@@ -75,7 +76,11 @@ const KubernetesManifestCommands = () => {
               <a
                 target="_blank"
                 rel="noreferrer"
-                href={routes.toDelegateTokens({ accountId, orgIdentifier, projectIdentifier, module })}
+                onClick={e => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  history.push(routes.toDelegateTokens({ accountId, orgIdentifier, projectIdentifier, module }))
+                }}
               >
                 {getString('delegates.commandLineCreation.kubernetesFourthDirectionPartThree')}
               </a>
@@ -95,7 +100,7 @@ const KubernetesManifestCommands = () => {
             properties: { category: Category.DELEGATE }
           }
         }}
-        commandSnippet={getString('delegate.verifyDelegateYamlCmnd')}
+        commandSnippet={getString('delegates.commandLineCreation.lastCommandKubernetesLastLine')}
         allowCopy={true}
       />
     </Layout.Vertical>

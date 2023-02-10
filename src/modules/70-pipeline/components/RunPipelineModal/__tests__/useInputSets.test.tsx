@@ -230,14 +230,14 @@ describe('<useInputSets /> tests', () => {
           ],
           "variables": Array [
             Object {
-              "name": "test1",
-              "type": "String",
-              "value": "test1",
-            },
-            Object {
               "name": "test2",
               "type": "String",
               "value": "test2",
+            },
+            Object {
+              "name": "test1",
+              "type": "String",
+              "value": "test1",
             },
           ],
         },
@@ -250,6 +250,13 @@ describe('<useInputSets /> tests', () => {
       mutate: jest.fn().mockResolvedValue({
         data: {
           inputSetTemplateYaml: runtimeInputsYaml
+        }
+      })
+    }))
+    ;(useGetMergeInputSetFromPipelineTemplateWithListInput as jest.Mock).mockImplementation(() => ({
+      mutate: jest.fn().mockResolvedValue({
+        data: {
+          pipelineYaml: mergedPipelineYaml
         }
       })
     }))
@@ -309,14 +316,14 @@ describe('<useInputSets /> tests', () => {
           ],
           "variables": Array [
             Object {
-              "name": "test1",
-              "type": "String",
-              "value": "test1",
-            },
-            Object {
               "name": "test2",
               "type": "String",
               "value": "test2",
+            },
+            Object {
+              "name": "test1",
+              "type": "String",
+              "value": "test1",
             },
           ],
         },
@@ -330,6 +337,13 @@ describe('<useInputSets /> tests', () => {
       mutate: jest.fn().mockResolvedValue({
         data: {
           inputSetTemplateYaml: runtimeInputsYaml
+        }
+      })
+    }))
+    ;(useGetMergeInputSetFromPipelineTemplateWithListInput as jest.Mock).mockImplementation(() => ({
+      mutate: jest.fn().mockResolvedValue({
+        data: {
+          pipelineYaml: mergedPipelineYaml
         }
       })
     }))
@@ -357,7 +371,7 @@ describe('<useInputSets /> tests', () => {
                           Object {
                             "name": "var1",
                             "type": "String",
-                            "value": "",
+                            "value": "123",
                           },
                         ],
                       },
@@ -370,34 +384,33 @@ describe('<useInputSets /> tests', () => {
             },
             Object {
               "stage": Object {
-                "identifier": "Stage_3",
-                "spec": Object {
-                  "execution": Object {
-                    "steps": Array [
-                      Object {
-                        "step": Object {
-                          "identifier": "Step_1",
-                          "timeout": "",
-                          "type": "ShellScript",
-                        },
+                "execution": Object {
+                  "steps": Array [
+                    Object {
+                      "step": Object {
+                        "identifier": "Step_1",
+                        "timeout": "",
+                        "type": "ShellScript",
                       },
-                    ],
-                  },
+                    },
+                  ],
                 },
+                "identifier": "Stage_3",
+                "spec": null,
                 "type": "Deployment",
               },
             },
           ],
           "variables": Array [
             Object {
-              "name": "test1",
-              "type": "String",
-              "value": "test1",
-            },
-            Object {
               "name": "test2",
               "type": "String",
               "value": "test2",
+            },
+            Object {
+              "name": "test1",
+              "type": "String",
+              "value": "test1",
             },
           ],
         },

@@ -10,6 +10,7 @@ import type { Column, Renderer, CellProps } from 'react-table'
 import { Text, Layout, Icon, TableV2 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import cx from 'classnames'
+import moment from 'moment'
 import type {
   EntityDetail,
   EntityReference,
@@ -20,8 +21,13 @@ import { useStrings } from 'framework/strings'
 import ResourceDetailFactory from '@common/factories/ResourceDetailFactory'
 import { EntityType } from '@common/pages/entityUsage/EntityConstants'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import css from './EntityUsageList.module.scss'
+import { getScopeLabelfromScope } from '@common/components/EntityReference/EntityReference'
+import type { StringKeys } from 'framework/strings'
+import { getScopeFromDTO } from '@common/components/MultiSelectEntityReference/MultiSelectEntityReference'
 
+import routes from '@common/RouteDefinitions'
+import { Scope } from '@common/interfaces/SecretsInterface'
+import css from './EntityUsageList.module.scss'
 interface EntityUsageListProps {
   entityData: ResponsePageEntitySetupUsageDTO | null
   gotoPage: (pageNumber: number) => void
@@ -30,6 +36,10 @@ interface EntityUsageListProps {
 
 interface ReferredByEntity extends EntityDetail {
   entityRef?: EntityReference & { versionLabel?: string }
+}
+export interface EntitySetupUsageDTOColumnData extends EntitySetupUsageDTO {
+  getString?: (key: StringKeys, vars?: Record<string, any>) => string
+  enableURLLinkToScope?: boolean
 }
 
 const getReferredByEntityName = (referredByEntity?: ReferredByEntity) => {
@@ -43,9 +53,19 @@ const getReferredByEntityName = (referredByEntity?: ReferredByEntity) => {
 
   return referredByEntity.name
 }
-
-const RenderColumnEntity: Renderer<CellProps<EntitySetupUsageDTO>> = ({ row }) => {
+const getReferredByEntityScopeId = (scope: Scope, referredByEntity?: ReferredByEntity) => {
+  switch (scope) {
+    case Scope.PROJECT:
+      return referredByEntity?.entityRef?.projectIdentifier
+    case Scope.ORG:
+      return referredByEntity?.entityRef?.orgIdentifier
+    default:
+      return ''
+  }
+}
+const RenderColumnEntity: Renderer<CellProps<EntitySetupUsageDTOColumnData>> = ({ row, column }) => {
   const data = row.original
+  const scopeURL = getEntityURL(data.referredByEntity)
   const checkReferredByEntityTypeHandler = ResourceDetailFactory.getReferredByEntityTypeHandler(
     data.referredByEntity.type
   )
@@ -54,13 +74,19 @@ const RenderColumnEntity: Renderer<CellProps<EntitySetupUsageDTO>> = ({ row }) =
   else
     return (
       <Layout.Vertical>
-        <Layout.Horizontal>
-          <Text color={Color.BLACK} lineClamp={1} className={css.overflow}>
-            {getReferredByEntityName(data.referredByEntity)}
-          </Text>
-        </Layout.Horizontal>
+        <Text color={Color.BLACK} lineClamp={1} className={css.overflow}>
+          {scopeURL ? (
+            <>
+              <a target="_blank" rel="noreferrer" href={scopeURL}>
+                {getReferredByEntityName(data.referredByEntity)}
+              </a>
+            </>
+          ) : (
+            <>{getReferredByEntityName(data.referredByEntity)}</>
+          )}
+        </Text>
         <Text color={Color.GREY_400} lineClamp={1} className={css.overflow}>
-          {data.referredByEntity?.type}
+          {`${(column as any).getString('typeLabel')}: ${data.referredByEntity?.type}`}
         </Text>
       </Layout.Vertical>
     )
@@ -89,16 +115,103 @@ const RenderColumnDetail: Renderer<CellProps<EntitySetupUsageDTO>> = ({ row }) =
   else return null
 }
 
-// Todo: Enable once BE starts maintaining lastActivity
-// const RenderColumnActivity: Renderer<CellProps<EntitySetupUsageDTO>> = ({ row }) => {
-//   const data = row.original
-//   return (
-//     <Layout.Horizontal spacing="small">
-//       {data.createdAt ? <ReactTimeago date={data.createdAt} /> : null}
-//     </Layout.Horizontal>
-//   )
-// }
+const RenderColumnActivity: Renderer<CellProps<EntitySetupUsageDTO>> = ({ row }) => {
+  const data = row.original
+  return (
+    <Layout.Horizontal spacing="small">
+      {data.createdAt ? moment(data.createdAt).format('MMM DD, YYYY hh:mm a') : null}
+    </Layout.Horizontal>
+  )
+}
+const getEntityURL = (referredByEntity: EntityDetail) => {
+  const accountId = referredByEntity.entityRef?.accountIdentifier || ''
+  const orgIdentifier = referredByEntity.entityRef?.orgIdentifier || ''
+  const projectIdentifier = referredByEntity.entityRef?.projectIdentifier || ''
+  switch (referredByEntity.type) {
+    case 'Connectors':
+      return routes.toConnectorDetails({
+        accountId,
+        connectorId: referredByEntity.entityRef?.identifier || '',
+        orgIdentifier,
+        projectIdentifier
+      })
+    case 'Service':
+      return `${routes.toServiceStudio({
+        accountId,
+        serviceId: referredByEntity.entityRef?.identifier || '',
+        orgIdentifier,
+        projectIdentifier
+      })}?tab=configuration`
+    case 'Template':
+      return `${routes.toTemplates({
+        accountId,
+        orgIdentifier,
+        projectIdentifier
+      })}`
+    case 'Pipelines':
+      return `${routes.toPipelineStudio({
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
+        pipelineIdentifier: referredByEntity.entityRef?.identifier || ''
+      })}`
+    case 'Secrets':
+      return `${routes.toSecretDetailsOverview({
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
+        secretId: referredByEntity.entityRef?.identifier || ''
+      })}`
+    case 'EnvironmentGroup':
+      return `${routes.toEnvironmentGroupDetails({
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
+        environmentGroupIdentifier: referredByEntity.entityRef?.identifier || ''
+      })}`
+    case 'Infrastructure':
+      return `${routes.toEnvironmentDetails({
+        accountId,
+        orgIdentifier,
+        projectIdentifier,
+        environmentIdentifier: (referredByEntity.entityRef as any)?.envIdentifier || ''
+      })}?sectionId=INFRASTRUCTURE`
 
+    default:
+      return ''
+  }
+}
+export const RenderScope: Renderer<CellProps<EntitySetupUsageDTOColumnData>> = ({ row, column }) => {
+  const data = row.original
+  const { accountIdentifier, orgIdentifier, projectIdentifier } = data.referredByEntity?.entityRef || {
+    accountIdentifier: '',
+    orgIdentifier: '',
+    projectIdentifier: ''
+  }
+  const scopeURL = (column as any).enableURLLinkToScope ? getEntityURL(data.referredByEntity) : ''
+  const scope = getScopeFromDTO({ accountIdentifier, orgIdentifier, projectIdentifier, identifier: '' })
+  const scopeName = getScopeLabelfromScope(scope, (column as any).getString)
+
+  const scopeId = getReferredByEntityScopeId(scope, data.referredByEntity)
+  return (
+    <Layout.Vertical>
+      <Text color={Color.BLACK} lineClamp={1} className={css.overflow}>
+        {scopeURL ? (
+          <a target="_blank" rel="noreferrer" href={scopeURL}>
+            {scopeId || scopeName}
+          </a>
+        ) : (
+          <> {scopeId || scopeName}</>
+        )}
+      </Text>
+      {scopeId && (
+        <Text color={Color.GREY_400} lineClamp={1} className={css.overflow}>
+          {`${(column as any).getString('typeLabel')}: ${scopeName}`}
+        </Text>
+      )}
+    </Layout.Vertical>
+  )
+}
 export const RenderGitDetails: Renderer<CellProps<EntitySetupUsageDTO>> = ({ row }) => {
   const data = row.original
 
@@ -120,32 +233,40 @@ const EntityUsageList: React.FC<EntityUsageListProps> = ({ entityData, gotoPage,
   const { getString } = useStrings()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
-  const columns: Column<EntitySetupUsageDTO>[] = useMemo(
+  const columns: Column<EntitySetupUsageDTOColumnData>[] = useMemo(
     () => [
       {
         Header: getString('entity'),
         accessor: 'referredByEntity',
-        width: isGitSyncEnabled ? '30%' : '50%',
-        Cell: RenderColumnEntity
+        width: isGitSyncEnabled ? '25%' : '30%',
+        Cell: RenderColumnEntity,
+        getString: getString
       },
       {
         Header: getString('common.gitSync.repoDetails').toUpperCase(),
         accessor: row => row.referredByEntity?.entityRef?.repoIdentifier,
-        width: '50%',
+        width: '30%',
         Cell: RenderGitDetails
       },
       {
         Header: getString('details'),
         accessor: 'detail',
-        width: isGitSyncEnabled ? '20%' : '50%',
+        width: isGitSyncEnabled ? '20%' : '30%',
         Cell: RenderColumnDetail
+      },
+      {
+        Header: getString('created'),
+        accessor: 'createdAt',
+        width: isGitSyncEnabled ? '15%' : '20%',
+        Cell: RenderColumnActivity
+      },
+      {
+        Header: getString('common.scopeLabel'),
+        width: isGitSyncEnabled ? '10%' : '20%',
+        Cell: RenderScope,
+        getString: getString,
+        enableURLLinkToScope: true
       }
-      // {
-      //   Header: getString('lastActivity'),
-      //   accessor: 'createdAt',
-      //   width: '34%',
-      //   Cell: RenderColumnActivity
-      // }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [data, isGitSyncEnabled]
@@ -156,7 +277,7 @@ const EntityUsageList: React.FC<EntityUsageListProps> = ({ entityData, gotoPage,
   }
 
   return (
-    <TableV2<EntitySetupUsageDTO>
+    <TableV2<EntitySetupUsageDTOColumnData>
       className={cx(css.table, withNoSpaceAroundTable ? css.tableWithNoSpace : css.tableWithSpace)}
       columns={columns}
       data={data}

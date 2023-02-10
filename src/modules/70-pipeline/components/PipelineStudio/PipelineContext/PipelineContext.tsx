@@ -16,7 +16,6 @@ import {
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
 import type { GetDataError } from 'restful-react'
-import stableStringify from 'fast-json-stable-stringify'
 import type { PermissionCheck } from 'services/rbac'
 import { loggerFor } from 'framework/logging/logging'
 import { ModuleName } from 'framework/types/ModuleName'
@@ -77,6 +76,7 @@ import type { AbstractStepFactory } from '../../AbstractSteps/AbstractStepFactor
 import type { PipelineStagesProps } from '../../PipelineStages/PipelineStages'
 import { PipelineSelectionState, usePipelineQuestParamState } from '../PipelineQueryParamState/usePipelineQueryParam'
 import {
+  comparePipelines,
   getStageFromPipeline as _getStageFromPipeline,
   getStagePathFromPipeline as _getStagePathFromPipeline
 } from './helpers'
@@ -592,8 +592,8 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
           remoteFetchError: undefined,
           pipeline: data.pipeline,
           originalPipeline: cloneDeep(pipeline),
-          isBEPipelineUpdated: !isEqual(pipeline, data.originalPipeline),
-          isUpdated: !isEqual(pipeline, data.pipeline),
+          isBEPipelineUpdated: comparePipelines(pipeline, data.originalPipeline),
+          isUpdated: comparePipelines(pipeline, data.pipeline),
           modules: defaultTo(pipelineWithGitDetails?.modules, data.modules),
           gitDetails:
             pipelineWithGitDetails?.gitDetails?.objectId || pipelineWithGitDetails?.gitDetails?.commitId
@@ -707,7 +707,7 @@ const _softFetchPipeline = async (
     try {
       const data: PipelinePayload = await IdbPipeline.get(IdbPipelineStoreName, id)
       if (data?.pipeline && !isEqual(data.pipeline, pipeline)) {
-        const isUpdated = !isEqual(originalPipeline, data.pipeline)
+        const isUpdated = comparePipelines(originalPipeline, data.pipeline)
         if (!isEmpty(selectionState.selectedStageId) && selectionState.selectedStageId) {
           const stage = _getStageFromPipeline(selectionState.selectedStageId, data.pipeline).stage
           if (isNil(stage)) {
@@ -763,7 +763,7 @@ const _updateStoreMetadata = async (
     getRepoIdentifierName(gitDetails),
     gitDetails.branch || ''
   )
-  const isUpdated = !isEqual(originalPipeline, pipeline)
+  const isUpdated = comparePipelines(originalPipeline, pipeline)
 
   // In pipeline studio, storeMetadata only contains 2 properties - connectorRef and storeType.
   // We need all 5 properties in storeMetadata for use in templates, Other 3 are coming from gitDetails
@@ -808,7 +808,7 @@ const _updateGitDetails = async (args: UpdateGitDetailsArgs, gitDetails: EntityG
     getRepoIdentifierName(gitDetails),
     gitDetails.branch || ''
   )
-  const isUpdated = !isEqual(originalPipeline, pipeline)
+  const isUpdated = comparePipelines(originalPipeline, pipeline)
   try {
     if (IdbPipeline) {
       const payload: PipelinePayload = {
@@ -902,7 +902,7 @@ const _updatePipeline = async (
     }
   }
   // lodash.isEqual() gives wrong output some times, hence using fast-json-stable-stringify
-  const isUpdated = stableStringify(omit(originalPipeline, 'repo', 'branch')) !== stableStringify(pipeline)
+  const isUpdated = comparePipelines(omit(originalPipeline, 'repo', 'branch'), pipeline as PipelineInfoConfig)
   const payload: PipelinePayload = {
     [KeyPath]: id,
     pipeline: pipeline as PipelineInfoConfig,

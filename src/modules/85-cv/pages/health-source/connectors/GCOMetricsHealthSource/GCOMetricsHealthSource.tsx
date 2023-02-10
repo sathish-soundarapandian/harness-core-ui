@@ -333,7 +333,7 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                     </Heading>
 
                     <MetricErrorAndLoading isEmpty={isEmpty(metricFormData)} loading={loadingDashBoardData}>
-                      <>
+                      <Container padding={{ left: 'large' }}>
                         <Container className={css.nameAndMetricTagContainer}>
                           <FormInput.KVTagInput
                             label={getString('cv.monitoringSources.gco.mapMetricsToServicesPage.metricTagsLabel')}
@@ -449,7 +449,7 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                           />
                         )}
                         <FormInput.Text name={OVERALL} className={css.hiddenField} />
-                      </>
+                      </Container>
                     </MetricErrorAndLoading>
 
                     <DrawerFooter

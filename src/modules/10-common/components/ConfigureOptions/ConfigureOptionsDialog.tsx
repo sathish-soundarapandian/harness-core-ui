@@ -157,6 +157,12 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
           )
           return
         }
+        if (
+          (type === 'Number' && isNaN(data.defaultValue as number)) ||
+          (type !== 'Number' && isEmpty(data.defaultValue as string))
+        ) {
+          data.defaultValue = undefined
+        }
         data.allowedValues = formAllowedValues
         const inputStr = getInputStr(data, !!NG_EXECUTION_INPUT)
         setInput(inputStr)

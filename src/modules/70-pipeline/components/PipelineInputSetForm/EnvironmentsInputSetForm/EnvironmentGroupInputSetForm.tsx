@@ -36,7 +36,7 @@ export function EnvironmentGroupInputSetForm({
   viewType,
   stageIdentifier,
   allowableTypes
-}: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier'>): React.ReactElement | null {
+}: Omit<StageInputSetFormProps, 'formik' | 'executionIdentifier' | 'stageType'>): React.ReactElement | null {
   const { getString } = useStrings()
   const { NG_SVC_ENV_REDESIGN: isSvcEnvEntityEnabled } = useFeatureFlags()
   const formik = useFormikContext<DeploymentStageConfig>()

@@ -25,7 +25,8 @@ const ManifestCommonRuntimeFields = ({
   fromTrigger,
   readonly,
   formik,
-  stageIdentifier
+  stageIdentifier,
+  fileUsage
 }: ManifestSourceRenderProps): React.ReactElement => {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -58,6 +59,7 @@ const ManifestCommonRuntimeFields = ({
             type={SELECT_FILES_TYPE.FILE_STORE}
             formik={formik}
             allowOnlyOne={shouldAllowOnlyOneFilePath(manifest?.type as ManifestTypes)}
+            fileUsage={fileUsage}
           />
         </div>
       )}

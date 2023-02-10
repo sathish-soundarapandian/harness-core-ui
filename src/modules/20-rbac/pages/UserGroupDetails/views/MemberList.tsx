@@ -254,6 +254,7 @@ const MemberList: React.FC<MemberListProps> = ({
           sortOptions={[...sortByName, ...sortByEmail]}
           onChange={option => setSort(option.value as string)}
           totalCount={data?.data?.totalItems}
+          className={css.listHeader}
         />
         <TableV2<UserInfo>
           data={users}

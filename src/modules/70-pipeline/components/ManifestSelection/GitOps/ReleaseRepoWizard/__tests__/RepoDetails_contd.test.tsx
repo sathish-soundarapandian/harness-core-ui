@@ -14,7 +14,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import RepoDetails from '../RepoDetails'
 
 describe('RepoDetails contd testing', () => {
-  test(`on submit when runtime values for branch and paths`, async () => {
+  test(`on submit when runtime values for repoName, branch and paths`, async () => {
     const submitFn = jest.fn()
     const { container } = render(
       <TestWrapper>
@@ -28,11 +28,13 @@ describe('RepoDetails contd testing', () => {
             connectorRef: RUNTIME_INPUT_VALUE,
             gitFetchType: 'Branch',
             identifier: 'test',
+            repoName: RUNTIME_INPUT_VALUE,
             paths: RUNTIME_INPUT_VALUE,
             branch: RUNTIME_INPUT_VALUE
           }}
           initialValues={{
             identifier: 'test',
+            repoName: RUNTIME_INPUT_VALUE,
             branch: RUNTIME_INPUT_VALUE,
             gitFetchType: 'Branch',
             paths: RUNTIME_INPUT_VALUE
@@ -45,6 +47,7 @@ describe('RepoDetails contd testing', () => {
                 type: 'Git',
                 spec: {
                   connectorRef: RUNTIME_INPUT_VALUE,
+                  repoName: RUNTIME_INPUT_VALUE,
                   gitFetchType: 'Branch',
                   paths: RUNTIME_INPUT_VALUE,
                   branch: RUNTIME_INPUT_VALUE

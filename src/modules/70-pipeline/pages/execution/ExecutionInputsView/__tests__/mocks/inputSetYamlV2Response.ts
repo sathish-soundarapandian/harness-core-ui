@@ -7,9 +7,9 @@
 
 export const inputSetYamlResponse = {
   inputSetTemplateYaml:
-    'pipeline:\n  identifier: "PL_Cleanup_POC"\n  variables:\n  - name: "Delegate"\n    type: "String"\n    value: "<+input>.allowedValues(pie-play-acc,pl-play-acc,ci-play-accnt,cd-play-acc,ff-play-acc,sto-play-acc,spg-play-acc,scm-play-acc,del-play-acc,gitops-play-acc,ccm-play-acc,chi-play-acc,bt-play-accnt,smp-play-acc,hce-play-acc,plg-play-acc,idp-play-acc,et-play-acc,sscs-play-acc,product-mngt-play-acc)"\n',
+    'pipeline:\n  identifier: "PL_Cleanup_POC"\n  variables:\n  - name: "Delegate"\n    type: "String"\n    value: "<+input>.allowedValues(pie-play-acc,pl-play-acc,ci-play-accnt,cd-play-acc,ff-play-acc,sto-play-acc,spg-play-acc,scm-play-acc,del-play-acc,gitops-play-acc,ccm-play-acc,chi-play-acc,bt-play-accnt,smp-play-acc,hce-play-acc,plg-play-acc,idp-play-acc,et-play-acc,ssca-play-acc,product-mngt-play-acc)"\n',
   inputSetYaml:
     'pipeline:\n  identifier: "PL_Cleanup_POC"\n  variables:\n  - name: "Delegate"\n    type: "String"\n    value: "chi-play-acc"\n',
   latestTemplateYaml:
-    'pipeline:\n  identifier: "PL_Cleanup_POC"\n  variables:\n  - name: "Delegate"\n    type: "String"\n    value: "<+input>.allowedValues(pie-play-acc,pl-play-acc,ci-play-accnt,cd-play-acc,ff-play-acc,sto-play-acc,spg-play-acc,scm-play-acc,del-play-acc,gitops-play-acc,ccm-play-acc,chi-play-acc,bt-play-accnt,smp-play-acc,hce-play-acc,plg-play-acc,idp-play-acc,et-play-acc,sscs-play-acc,product-mngt-play-acc)"\n'
+    'pipeline:\n  identifier: "PL_Cleanup_POC"\n  variables:\n  - name: "Delegate"\n    type: "String"\n    value: "<+input>.allowedValues(pie-play-acc,pl-play-acc,ci-play-accnt,cd-play-acc,ff-play-acc,sto-play-acc,spg-play-acc,scm-play-acc,del-play-acc,gitops-play-acc,ccm-play-acc,chi-play-acc,bt-play-accnt,smp-play-acc,hce-play-acc,plg-play-acc,idp-play-acc,et-play-acc,ssca-play-acc,product-mngt-play-acc)"\n'
 }

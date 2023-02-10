@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { isEmpty } from 'lodash-es'
 import { AllowedTypes, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
 import { String, useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
@@ -55,10 +56,12 @@ function GitRepositoryName({
         )}
       </div>
 
-      <div className={helmcss.halfWidth}>
-        <String stringID="common.git.gitAccountUrl" className={css.accountUrl} />:
-        <span className={css.repoNameUrl}>{`${accountUrl}`}</span>
-      </div>
+      {!isEmpty(accountUrl) && (
+        <div className={helmcss.halfWidth}>
+          <String stringID="common.git.gitAccountUrl" className={css.accountUrl} />:
+          <span className={css.repoNameUrl}>{`${accountUrl}`}</span>
+        </div>
+      )}
     </div>
   )
 }

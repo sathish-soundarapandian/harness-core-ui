@@ -4,7 +4,7 @@
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
-import React, { useContext, useMemo, useState, useCallback } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import {
   Container,
   ExpandingSearchInput,
@@ -18,17 +18,20 @@ import {
   FormInput,
   SelectOption
 } from '@harness/uicore'
-import { useHistory, useParams } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 import type { CellProps, Column, Renderer } from 'react-table'
 import { Color } from '@harness/design-system'
 import ReactTimeago from 'react-timeago'
 
 import routes from '@common/RouteDefinitions'
-import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FileStoreContext } from '@filestore/components/FileStoreContext/FileStoreContext'
 import { useStrings } from 'framework/strings'
 import { EntityDetail, EntitySetupUsageDTO, Error, useGetReferencedBy } from 'services/cd-ng'
+import {
+  EntitySetupUsageDTOColumnData,
+  RenderScope
+} from '@common/pages/entityUsage/views/EntityUsageListView/EntityUsageList'
 import css from './ReferencedBy.module.scss'
 
 export const getIconByType = (type: EntityDetail['type'] | undefined): IconName => {
@@ -49,7 +52,6 @@ export default function ReferencedBy(): React.ReactElement {
   const [searchTerm, setSearchTerm] = useState<string | undefined>()
   const [page, setPage] = useState(0)
 
-  const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const history = useHistory()
 
   const {
@@ -109,32 +111,30 @@ export default function ReferencedBy(): React.ReactElement {
     ) : null
   }
 
-  const columns: Column<EntitySetupUsageDTO>[] = useMemo(
+  const columns: Column<EntitySetupUsageDTOColumnData>[] = useMemo(
     () => [
       {
         Header: getString('entity'),
         accessor: row => row.referredByEntity?.name,
         id: 'entity',
-        width: '50%',
+        width: '40%',
         Cell: RenderColumnEntity
       },
       {
         Header: getString('lastActivity'),
         accessor: row => row.createdAt,
         id: 'activity',
-        width: '50%',
+        width: '40%',
         Cell: RenderColumnActivity
+      },
+      {
+        Header: getString('common.scopeLabel'),
+        width: '20%',
+        Cell: RenderScope,
+        getString: getString
       }
     ],
     [getString]
-  )
-
-  const goToServiceDetails = useCallback(
-    (serviceId: string): void => {
-      history.push(routes.toServiceStudio({ accountId, orgIdentifier, projectIdentifier, serviceId, module }))
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [accountId, orgIdentifier, projectIdentifier, module]
   )
 
   return (
@@ -173,14 +173,21 @@ export default function ReferencedBy(): React.ReactElement {
           />
         </div>
       ) : !referencesResponse?.data?.empty ? (
-        <TableV2<EntitySetupUsageDTO>
+        <TableV2<EntitySetupUsageDTOColumnData>
           className={css.table}
           columns={columns}
           data={data}
           name="ReferenceByView"
           onRowClick={node => {
             if (node?.referredByEntity?.entityRef?.identifier) {
-              goToServiceDetails(node.referredByEntity.entityRef?.identifier)
+              history.push(
+                routes.toServiceStudio({
+                  accountId: node?.referredByEntity?.entityRef?.accountIdentifier || '',
+                  orgIdentifier: node?.referredByEntity?.entityRef?.orgIdentifier,
+                  projectIdentifier: node?.referredByEntity?.entityRef?.projectIdentifier,
+                  serviceId: node?.referredByEntity?.entityRef?.identifier
+                })
+              )
             }
           }}
           pagination={{

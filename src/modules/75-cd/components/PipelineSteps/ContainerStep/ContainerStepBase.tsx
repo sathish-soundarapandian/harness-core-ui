@@ -84,7 +84,7 @@ export const ContainerStepBase = (
               <FormMultiTypeConnectorField
                 name="spec.connectorRef"
                 label={getString('pipelineSteps.connectorLabel')}
-                type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER, Connectors.AZURE]}
+                type={Connectors.DOCKER}
                 placeholder={getString('select')}
                 disabled={readonly}
                 accountIdentifier={accountId}

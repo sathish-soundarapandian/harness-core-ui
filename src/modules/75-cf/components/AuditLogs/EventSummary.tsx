@@ -9,7 +9,6 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { Drawer, IDrawerProps, Classes } from '@blueprintjs/core'
 import { get } from 'lodash-es'
 import cx from 'classnames'
-import { MonacoDiffEditor } from 'react-monaco-editor'
 import { Layout, Container, Text, Button, useToggle, Heading, PageError } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import {
@@ -21,6 +20,7 @@ import {
   ADIT_LOG_EMPTY_ENTRY_ID,
   getErrorMessage
 } from '@cf/utils/CFUtils'
+import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import { useLocalStorage } from '@common/hooks'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
 import { useStrings } from 'framework/strings'

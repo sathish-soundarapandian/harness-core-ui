@@ -33,7 +33,7 @@ module.exports = ({
   enableCIUI,
   enableTIUI,
   enableIACM,
-  enableSSCS,
+  enableSSCA,
   enableIDP
 }) => {
   const remotes = {}
@@ -92,8 +92,8 @@ module.exports = ({
     remotes.errortracking = "errortracking@[window.getApiBaseUrl('et/remoteEntry.js')]"
   }
 
-  if (enableSSCS) {
-    remotes.sscs = "sscs@[window.getApiBaseUrl('sscs/remoteEntry.js')]"
+  if (enableSSCA) {
+    remotes.ssca = "ssca@[window.getApiBaseUrl('ssca/remoteEntry.js')]"
   }
 
   const shared = {

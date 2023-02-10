@@ -22,6 +22,7 @@ import {
   ENABLED_ARTIFACT_TYPES
 } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import type { TriggerCatalogItem } from 'services/pipeline-ng'
+import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { TriggerTypes, AWS_CODECOMMIT, AwsCodeCommit } from './TriggersWizardPageUtils'
 
 export const GitSourceProviders: Record<
@@ -62,20 +63,7 @@ export const getTriggerIcon = ({
       return manifestTypeIcons.HelmChart
     }
   } else if (type === TriggerTypes.ARTIFACT && buildType) {
-    switch (buildType) {
-      case ENABLED_ARTIFACT_TYPES.Gcr:
-        return ArtifactIconByType.Gcr
-      case ENABLED_ARTIFACT_TYPES.Ecr:
-        return ArtifactIconByType.Ecr
-      case ENABLED_ARTIFACT_TYPES.DockerRegistry:
-        return ArtifactIconByType.DockerRegistry
-      case ENABLED_ARTIFACT_TYPES.Acr:
-        return ArtifactIconByType.Acr
-      case ENABLED_ARTIFACT_TYPES.AmazonS3:
-        return ArtifactIconByType.AmazonS3
-      case ENABLED_ARTIFACT_TYPES.Jenkins:
-        return ArtifactIconByType.Jenkins
-    }
+    return ArtifactIconByType[buildType as ArtifactType]
   }
   return 'yaml-builder-trigger'
 }
@@ -83,7 +71,8 @@ export const getTriggerIcon = ({
 const triggerDrawerMap = (
   getString: (key: StringKeys) => string,
   isNewService: boolean,
-  allowV2Artifacts: boolean | undefined
+  allowV2Artifacts: boolean | undefined,
+  isGoogleCloudStorageEnabled: boolean | undefined
 ): AddDrawerMapInterface => ({
   drawerLabel: getString('common.triggersLabel'),
   showAllLabel: getString('triggers.showAllTriggers'),
@@ -212,6 +201,16 @@ const triggerDrawerMap = (
                 disabled: isNewService
               }
             ]
+          : []),
+        ...(isGoogleCloudStorageEnabled
+          ? [
+              {
+                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.GoogleCloudStorage]),
+                value: ENABLED_ARTIFACT_TYPES.GoogleCloudStorage,
+                iconName: ArtifactIconByType.GoogleCloudStorage as IconName,
+                disabled: isNewService
+              }
+            ]
           : [])
       ]
     },
@@ -268,8 +267,9 @@ export const getSourceRepoOptions = (getString: (str: StringKeys) => string): { 
 export const getCategoryItems = (
   getString: (key: StringKeys) => string,
   isNewService: boolean,
-  allowV2Artifacts: boolean | undefined
-): AddDrawerMapInterface => triggerDrawerMap(getString, isNewService, allowV2Artifacts)
+  allowV2Artifacts: boolean | undefined,
+  isGoogleCloudStorageEnabled: boolean | undefined
+): AddDrawerMapInterface => triggerDrawerMap(getString, isNewService, allowV2Artifacts, isGoogleCloudStorageEnabled)
 
 export interface ItemInterface {
   itemLabel: string

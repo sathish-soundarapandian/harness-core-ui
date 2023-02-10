@@ -28,7 +28,7 @@ import routes from '@common/RouteDefinitions'
 import type { ExecutionPathProps, PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
 
-import { NodeType } from '@pipeline/utils/executionUtils'
+import { StepNodeType } from '@pipeline/utils/executionUtils'
 import GitOpsExecutionSummary from './GitOpsExecutionSummary'
 import { CDExecutionSummary } from './CDExecutionSummary'
 
@@ -84,7 +84,7 @@ export function ExecutionStage(props: ExecutionStageProps): React.ReactElement {
   const cdStageInfo = (stage.data as PipelineExecutionSummary)?.moduleInfo?.cd || {}
   const stoStageInfo = (stage.data as PipelineExecutionSummary)?.moduleInfo?.sto || {}
   const stoInfo = executionFactory.getCardInfo(StageType.SECURITY)
-  const selectedNodeId = stage?.data?.nodeType === NodeType.RUNTIME_INPUT ? stage.identifier : stage.id
+  const selectedNodeId = stage?.data?.nodeType === StepNodeType.RUNTIME_INPUT ? stage.identifier : stage.id
   const {
     accountId,
     orgIdentifier,

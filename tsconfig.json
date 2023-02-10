@@ -55,7 +55,7 @@
       "@ce/*": ["modules/75-ce/*"],
       "@gitops/*": ["modules/90-gitops/*"],
       "@iacm/*": ["modules/85-iacm/*"],
-      "@sscs/*": ["modules/75-sscs/*"],
+      "@ssca/*": ["modules/75-ssca/*"],
       "@idp/*": ["modules/75-idp/*"]
     }
   },

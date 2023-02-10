@@ -92,6 +92,7 @@ export function CommonManifestDetails({
             : specValues.paths?.map((path: string) => ({ path, uuid: uuid(path, nameSpace()) }))
       }
     }
+
     return {
       identifier: '',
       branch: undefined,
@@ -123,6 +124,7 @@ export function CommonManifestDetails({
         }
       }
     }
+
     if (connectionType === GitRepoName.Account) {
       set(manifestObj, 'manifest.spec.store.spec.repoName', formData?.repoName)
     }

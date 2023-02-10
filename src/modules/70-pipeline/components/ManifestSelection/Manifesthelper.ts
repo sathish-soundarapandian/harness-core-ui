@@ -7,6 +7,7 @@
 
 import type { Schema } from 'yup'
 import { getMultiTypeFromValue, IconName, MultiTypeInputType } from '@harness/uicore'
+import { isBoolean } from 'lodash-es'
 import { Connectors } from '@connectors/constants'
 import type { ConnectorConfigDTO, ConnectorInfoDTO, ServiceDefinition } from 'services/cd-ng'
 import type { PipelineInfoConfig } from 'services/pipeline-ng'
@@ -407,6 +408,9 @@ export function getManifestLocation(manifestType: ManifestTypes, manifestStore: 
       ManifestDataType.AsgConfiguration,
       ManifestDataType.AsgScalingPolicy,
       ManifestDataType.AsgScheduledUpdateGroupAction,
+      ManifestDataType.TasManifest,
+      ManifestDataType.TasAutoScaler,
+      ManifestDataType.TasVars,
       ManifestDataType.GoogleCloudFunctionDefinition
     ].includes(manifestType):
       return 'store.spec.paths'
@@ -467,3 +471,15 @@ export const getConnectorRefOrConnectorId = (prevStepData?: ConnectorConfigDTO):
 export const allowedOverrideManfests: Record<keyof Pick<typeof ManifestDataType, 'HelmRepoOverride'>, number> = {
   HelmRepoOverride: 1
 }
+
+export const getSkipResourceVersioningBasedOnDeclarativeRollback = (
+  skipResourceVersioning?: boolean,
+  enableDeclarativeRollback?: boolean
+): boolean | undefined => {
+  return !(isBoolean(enableDeclarativeRollback) && enableDeclarativeRollback) ? skipResourceVersioning : false
+}
+
+export const allowedManifestForDeclarativeRollback = (selectedManifest?: ManifestTypes | null): boolean =>
+  [ManifestDataType.K8sManifest, ManifestDataType.HelmChart, ManifestDataType.OpenshiftTemplate].includes(
+    selectedManifest as ManifestTypes
+  )

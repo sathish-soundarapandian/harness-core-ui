@@ -122,9 +122,9 @@ export const NGBreadcrumbs: React.FC<Partial<NGBreadcrumbsProps>> = ({
         url = paths.toIACM(params)
         label = getString('common.iacm')
         break
-      case ModuleName.SSCS:
-        url = paths.toSSCS(params)
-        label = getString('common.sscsText')
+      case ModuleName.SSCA:
+        url = paths.toSSCA(params)
+        label = getString('common.sscaText')
         break
       case ModuleName.IDP:
         url = paths.toIDP(params)
