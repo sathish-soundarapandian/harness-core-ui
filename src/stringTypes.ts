@@ -4551,6 +4551,7 @@ export interface StringsMap {
   'pipeline.stepDescription.Run': string
   'pipeline.stepDescription.RunTests': string
   'pipeline.stepDescription.S3': string
+  'pipeline.stepDescription.SCSSGeneration': string
   'pipeline.stepDescription.SHELLSCRIPT': string
   'pipeline.stepDescription.SaveCacheGCS': string
   'pipeline.stepDescription.SaveCacheS3': string
@@ -7664,6 +7665,10 @@ export interface StringsMap {
   'ci.runTestsStep.validation.namespacesRequiredWhenCsharp': string
   'ci.save': string
   'ci.secrets': string
+  'ci.sscs.generationType': string
+  'ci.sscs.sbomFormat': string
+  'ci.sscs.sbomGenerationTool': string
+  'ci.sscs.signed': string
   'ci.successful': string
   'ci.templates': string
   'ci.testSummary': string
