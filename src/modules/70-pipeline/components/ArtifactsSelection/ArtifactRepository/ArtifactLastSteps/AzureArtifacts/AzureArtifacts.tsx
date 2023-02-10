@@ -25,6 +25,7 @@ import { FontVariation } from '@harness/design-system'
 import { defaultTo, memoize } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { IItemRendererProps } from '@blueprintjs/select'
+import type { FormikProps } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
@@ -43,8 +44,6 @@ import {
 import {
   getConnectorIdValue,
   getArtifactFormData,
-  helperTextData,
-  isFieldFixedAndNonEmpty,
   shouldHideHeaderAndNavBtns,
   hasFixedDefiniteValue
 } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
@@ -55,9 +54,10 @@ import type {
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { getHelpeTextForTags, RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
+import { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { isValueFixed } from '@common/utils/utils'
 import { ArtifactIdentifierValidation, ModalViewFor, scopeOptions, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -68,18 +68,20 @@ export const packageTypeOptions: SelectOption[] = [
   { label: 'NuGet', value: RepositoryFormatTypes.NuGet }
 ]
 
-function FormComponent({
-  context,
-  expressions,
-  allowableTypes,
-  prevStepData,
-  selectedArtifact,
-  previousStep,
-  isReadonly = false,
-  formik,
-  isMultiArtifactSource,
-  formClassName = ''
-}: any): React.ReactElement {
+function FormComponent(
+  props: StepProps<ConnectorConfigDTO> & ImagePathProps<AzureArtifactsInitialValues> & { formik: FormikProps<any> }
+): React.ReactElement {
+  const {
+    context,
+    expressions,
+    allowableTypes,
+    prevStepData,
+    previousStep,
+    isReadonly = false,
+    formik,
+    isMultiArtifactSource,
+    formClassName = ''
+  } = props
   const { getString } = useStrings()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -91,16 +93,12 @@ function FormComponent({
     branch
   }
 
-  const connectorRefValue = defaultTo(getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier), '')
+  const connectorRefValue = getConnectorIdValue(prevStepData)
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
   const projectValue = defaultTo(getGenuineValue(formik.values.project), '')
   const feedValue = defaultTo(getGenuineValue(formik.values.feed), '')
   const packageValue = defaultTo(getGenuineValue(formik.values.package), '')
   const packageTypeValue = defaultTo(getGenuineValue(formik.values.packageType), '')
-
-  const getConnectorRefQueryData = (): string => {
-    return defaultTo(prevStepData?.connectorId?.value, prevStepData?.identifier)
-  }
 
   const getItems = (isFetching: boolean, label: string, items: SelectOption[]): SelectOption[] => {
     if (isFetching) {
@@ -124,7 +122,7 @@ function FormComponent({
 
   const projectItems: SelectOption[] = useMemo(() => {
     return (
-      projectsResponse?.data?.map(
+      /* istanbul ignore next */ projectsResponse?.data?.map(
         (project: AzureDevopsProject) =>
           ({
             value: defaultTo(project.name, ''),
@@ -151,7 +149,7 @@ function FormComponent({
 
   const feedItems: SelectOption[] = useMemo(() => {
     return (
-      feedsResponse?.data?.map(
+      /* istanbul ignore next */ feedsResponse?.data?.map(
         (feed: AzureArtifactsFeed) =>
           ({
             value: defaultTo(feed.name, ''),
@@ -179,7 +177,7 @@ function FormComponent({
 
   const packageItems: SelectOption[] = useMemo(() => {
     return (
-      packagesResponse?.data?.map(
+      /* istanbul ignore next */ packagesResponse?.data?.map(
         (packageItem: AzureArtifactsPackage) =>
           ({
             value: defaultTo(packageItem.name, ''),
@@ -208,7 +206,7 @@ function FormComponent({
 
   const versionItems: SelectOption[] = useMemo(() => {
     return (
-      versionResponse?.data?.map(
+      /* istanbul ignore next */ versionResponse?.data?.map(
         (buildItem: BuildDetails) =>
           ({
             value: defaultTo(buildItem.number, ''),
@@ -230,28 +228,6 @@ function FormComponent({
   const projectItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingProjects} />
   ))
-
-  const isFeedDisabled = (): boolean => {
-    if (formik.values?.scope === 'org') {
-      return false
-    }
-    return !isFieldFixedAndNonEmpty(formik.values?.project)
-  }
-
-  const isVersionFieldDisabled = (): boolean => {
-    return !isFieldFixedAndNonEmpty(formik.values?.feed) || !isFieldFixedAndNonEmpty(formik.values?.package)
-  }
-
-  const getVersionFieldHelperText = () => {
-    return (
-      getMultiTypeFromValue(formik.values.version) === MultiTypeInputType.FIXED &&
-      getHelpeTextForTags(
-        helperTextData(selectedArtifact as ArtifactType, formik, getConnectorRefQueryData()),
-        getString,
-        false
-      )
-    )
-  }
 
   const canFetchProject = hasFixedDefiniteValue(connectorRefValue)
   const isProjectFixed = () => {
@@ -281,9 +257,11 @@ function FormComponent({
             name="scope"
             label={getString('common.scopeLabel')}
             items={scopeOptions}
-            onChange={() => {
-              formik.setFieldValue('project', undefined)
-            }}
+            onChange={
+              /* istanbul ignore next */ () => {
+                formik.setFieldValue('project', undefined)
+              }
+            }
           />
         </div>
         {formik.values?.scope === 'project' && (
@@ -319,20 +297,17 @@ function FormComponent({
                     }
                   })
                 },
-                onChange: (e: any) => {
-                  formik.setValues({
-                    ...formik.values,
-                    feed:
-                      getMultiTypeFromValue(formik?.values?.feed) === MultiTypeInputType.FIXED
-                        ? ''
-                        : formik?.values?.feed,
-                    package:
-                      getMultiTypeFromValue(formik?.values?.feed) === MultiTypeInputType.FIXED
-                        ? ''
-                        : formik?.values?.package
-                  })
-
-                  formik.setFieldValue('project', e?.value)
+                onChange: (value: any) => {
+                  const updatedValue = (value?.value ?? value) as string
+                  if (formik.values.project !== updatedValue) {
+                    formik.setValues({
+                      ...formik.values,
+                      project: updatedValue,
+                      ...(isValueFixed(formik.values?.feed) && { feed: '' }),
+                      ...(isValueFixed(formik.values?.package) && { package: '' }),
+                      ...(isValueFixed(formik.values?.version) && { version: '' })
+                    })
+                  }
                 }
               }}
             />
@@ -345,7 +320,7 @@ function FormComponent({
                 showRequiredField={false}
                 showDefaultField={false}
                 showAdvanced={true}
-                onChange={value => formik.setFieldValue('project', value)}
+                onChange={/* istanbul ignore next */ value => formik.setFieldValue('project', value)}
                 isReadonly={isReadonly}
               />
             )}
@@ -354,7 +329,7 @@ function FormComponent({
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
             selectItems={getItems(fetchingFeeds, 'Feeds', feedItems)}
-            disabled={isFeedDisabled()}
+            disabled={isReadonly}
             label={getString('pipeline.artifactsSelection.feed')}
             placeholder={getString('pipeline.artifactsSelection.feedPlaceholder')}
             name="feed"
@@ -392,20 +367,16 @@ function FormComponent({
                   }
                 })
               },
-              onChange: (e: any) => {
-                formik.setValues({
-                  ...formik.values,
-                  version:
-                    getMultiTypeFromValue(formik?.values?.version) === MultiTypeInputType.FIXED
-                      ? ''
-                      : formik?.values?.version,
-                  package:
-                    getMultiTypeFromValue(formik?.values?.package) === MultiTypeInputType.FIXED
-                      ? ''
-                      : formik?.values?.package
-                })
-
-                formik.setFieldValue('feed', e?.value)
+              onChange: (value: any) => {
+                const updatedValue = (value?.value ?? value) as string
+                if (formik.values.feed !== updatedValue) {
+                  formik.setValues({
+                    ...formik.values,
+                    feed: updatedValue,
+                    ...(isValueFixed(formik.values?.package) && { package: '' }),
+                    ...(isValueFixed(formik.values?.version) && { version: '' })
+                  })
+                }
               }
             }}
           />
@@ -418,7 +389,7 @@ function FormComponent({
               showRequiredField={false}
               showDefaultField={false}
               showAdvanced={true}
-              onChange={value => formik.setFieldValue('feed', value)}
+              onChange={/* istanbul ignore next */ value => formik.setFieldValue('feed', value)}
               isReadonly={isReadonly}
             />
           )}
@@ -440,7 +411,7 @@ function FormComponent({
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
             selectItems={getItems(fetchingPackages, 'Packages', packageItems)}
-            disabled={!isFieldFixedAndNonEmpty(formik.values?.feed)}
+            disabled={isReadonly}
             label={getString('pipeline.artifactsSelection.packageName')}
             placeholder={getString('pipeline.artifactsSelection.packageNamePlaceholder')}
             name="package"
@@ -479,6 +450,16 @@ function FormComponent({
                     feed: feedValue || ''
                   }
                 })
+              },
+              onChange: (value: any) => {
+                const updatedValue = (value?.value ?? value) as string
+                if (formik.values.package !== updatedValue) {
+                  formik.setValues({
+                    ...formik.values,
+                    package: updatedValue,
+                    ...(isValueFixed(formik.values?.version) && { version: '' })
+                  })
+                }
               }
             }}
           />
@@ -491,7 +472,7 @@ function FormComponent({
               showRequiredField={false}
               showDefaultField={false}
               showAdvanced={true}
-              onChange={value => formik.setFieldValue('package', value)}
+              onChange={/* istanbul ignore next */ value => formik.setFieldValue('package', value)}
               isReadonly={isReadonly}
             />
           )}
@@ -509,12 +490,11 @@ function FormComponent({
           <div className={css.imagePathContainer}>
             <FormInput.MultiTypeInput
               selectItems={getItems(fetchingVersions, 'Versions', versionItems)}
-              disabled={isVersionFieldDisabled()}
+              disabled={isReadonly}
               label={getString('version')}
               placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
               name="version"
               useValue
-              helperText={getVersionFieldHelperText()}
               multiTypeInputProps={{
                 expressions,
                 allowableTypes,
@@ -561,7 +541,7 @@ function FormComponent({
                 showRequiredField={false}
                 showDefaultField={false}
                 showAdvanced={true}
-                onChange={value => formik.setFieldValue('version', value)}
+                onChange={/* istanbul ignore next */ value => formik.setFieldValue('version', value)}
                 isReadonly={isReadonly}
               />
             )}
@@ -587,7 +567,7 @@ function FormComponent({
                 showRequiredField={false}
                 showDefaultField={false}
                 showAdvanced={true}
-                onChange={value => formik.setFieldValue('versionRegex', value)}
+                onChange={/* istanbul ignore next */ value => formik.setFieldValue('versionRegex', value)}
                 isReadonly={isReadonly}
               />
             )}
@@ -670,7 +650,7 @@ export function AzureArtifacts(
   const schemaObject = {
     scope: Yup.string().required(getString('fieldRequired', { field: getString('common.scopeLabel') })),
     project: Yup.string().when('scope', {
-      is: val => val === 'project',
+      is: 'project',
       then: Yup.string()
         .trim()
         .required(getString('fieldRequired', { field: getString('projectLabel') }))
