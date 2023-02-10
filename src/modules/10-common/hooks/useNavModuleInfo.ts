@@ -159,7 +159,7 @@ export interface GroupConfig {
 export const moduleGroupConfig: GroupConfig[] = [
   {
     label: 'common.moduleList.buildAndTest',
-    items: [ModuleName.CI, ModuleName.CHAOS, ModuleName.STO, ModuleName.IACM, ModuleName.SSCS]
+    items: [ModuleName.CI, ModuleName.CHAOS, ModuleName.STO, ModuleName.IACM]
   },
   {
     label: 'common.moduleList.deployChanges',
