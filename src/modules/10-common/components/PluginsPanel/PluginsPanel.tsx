@@ -161,6 +161,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
 
   const getPluginIconForKind = useCallback((pluginKind: string): IconName => {
     switch (pluginKind) {
+      case PluginKind.HARNESS_NATIVE:
       case PluginKind.HARNESS:
         return 'harness'
       case PluginKind.BITRISE:
@@ -174,9 +175,10 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
 
   const getCertificationLabelForKind = useCallback((_kindOfPlugin: string): string => {
     switch (_kindOfPlugin) {
+      case PluginKind.HARNESS_NATIVE:
+        return `by ${capitalize(PluginKind.HARNESS)}`
       case PluginKind.HARNESS:
       case PluginKind.BITRISE:
-        return `by ${capitalize(_kindOfPlugin)}`
       case PluginKind.ACTION:
         return `by ${getString('common.repo_provider.githubLabel')} ${capitalize(_kindOfPlugin)}`
       default:
