@@ -710,6 +710,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
             name={`${prefix}spec.sbom.format`}
             label={getString('ci.ssca.sbomFormat')}
             disabled={readonly}
+            radioGroup={{ inline: true }}
           />
         </Container>
       ) : null}
@@ -741,7 +742,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
       {get(enableFields, 'spec.attestation.tool') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           <FormInput.Select
-            items={attestationTypeOptions}
+            items={attestationToolOptions}
             name={`${prefix}spec.attestation.tool`}
             label={getString('ci.ssca.attestation.tool')}
             placeholder={getString('select')}
