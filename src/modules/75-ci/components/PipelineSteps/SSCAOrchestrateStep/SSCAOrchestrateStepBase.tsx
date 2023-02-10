@@ -102,7 +102,8 @@ export const SSCAOrchestrateStepBase = (
                 'spec.sbom.format': {},
                 'spec.sbomTarget.type': {},
                 'spec.attestation.type': {},
-                'spec.attestation.tool': {}
+                'spec.attestation.tool': {},
+                'spec.attestation.privateKey': {}
               }}
               formik={formik}
             />

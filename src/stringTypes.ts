@@ -7666,6 +7666,10 @@ export interface StringsMap {
   'ci.runTestsStep.validation.namespacesRequiredWhenCsharp': string
   'ci.save': string
   'ci.secrets': string
+  'ci.ssca.abort.sbomComponentPartOfDenyList': string
+  'ci.ssca.abort.sbomPartOfDenyList': string
+  'ci.ssca.abort.signatureVerificaionFailure': string
+  'ci.ssca.abort.sourceNotPartOfAllowList': string
   'ci.ssca.attestation.tool': string
   'ci.ssca.sbomFormat': string
   'ci.ssca.sbomTool': string

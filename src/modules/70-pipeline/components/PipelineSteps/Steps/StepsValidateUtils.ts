@@ -43,7 +43,8 @@ export enum Types {
   BuildEnvironment,
   FrameworkVersion,
   BuildTool,
-  NotIn
+  NotIn,
+  Secret
 }
 
 interface Field {
@@ -432,6 +433,10 @@ export function generateSchemaFields(
     const { name, type, label, isRequired, isActive } = field
 
     let validationRule
+
+    if (type === Types.Secret) {
+      validationRule = yup.string()
+    }
 
     if (type === Types.List) {
       validationRule = generateSchemaForList(field, { getString })

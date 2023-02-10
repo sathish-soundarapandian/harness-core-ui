@@ -36,6 +36,26 @@ export const transformValuesFieldsConfig = [
   {
     name: 'spec.signed',
     type: TransformValuesTypes.Boolean
+  },
+  {
+    name: 'spec.publicKey',
+    type: ValidationFieldTypes.Secret
+  },
+  {
+    name: 'spec.abort.signatureVerificaionFailure',
+    type: ValidationFieldTypes.Boolean
+  },
+  {
+    name: 'spec.abort.sbomPartOfDenyList',
+    type: ValidationFieldTypes.Boolean
+  },
+  {
+    name: 'spec.abort.sbomComponentPartOfDenyList',
+    type: ValidationFieldTypes.Boolean
+  },
+  {
+    name: 'spec.abort.sourceNotPartOfAllowList',
+    type: ValidationFieldTypes.Boolean
   }
 ]
 
@@ -53,33 +73,30 @@ export const editViewValidateFieldsConfig = [
     isRequired: true
   },
   {
-    name: 'spec.generationType',
-    type: ValidationFieldTypes.List,
-    label: 'ci.ssca.generationType',
+    name: 'spec.publicKey',
+    type: ValidationFieldTypes.Secret,
+    label: 'connectors.serviceNow.privateKey',
     isRequired: true
   },
   {
-    name: 'spec.artifactType',
-    type: ValidationFieldTypes.List,
-    label: 'pipeline.artifactsSelection.artifactType',
-    isRequired: true
-  },
-  {
-    name: 'spec.sbomGenerationTool',
-    type: ValidationFieldTypes.List,
-    label: 'ci.ssca.sbomGenerationTool',
-    isRequired: true
-  },
-  {
-    name: 'spec.sbomFormat',
-    type: ValidationFieldTypes.List,
-    label: 'ci.ssca.sbomFormat',
-    isRequired: true
-  },
-  {
-    name: 'spec.signed',
+    name: 'spec.abort.signatureVerificaionFailure',
     type: ValidationFieldTypes.Boolean,
-    label: 'ci.ssca.signed'
+    label: 'ci.sscs.abort.signatureVerificaionFailure'
+  },
+  {
+    name: 'spec.abort.sbomPartOfDenyList',
+    type: ValidationFieldTypes.Boolean,
+    label: 'ci.sscs.abort.sbomPartOfDenyList'
+  },
+  {
+    name: 'spec.abort.sbomComponentPartOfDenyList',
+    type: ValidationFieldTypes.Boolean,
+    label: 'ci.sscs.abort.sbomComponentPartOfDenyList'
+  },
+  {
+    name: 'spec.abort.sourceNotPartOfAllowList',
+    type: ValidationFieldTypes.Boolean,
+    label: 'ci.sscs.abort.sourceNotPartOfAllowList'
   }
 ]
 
@@ -100,33 +117,30 @@ export function getInputSetViewValidateFieldsConfig(
       isRequired
     },
     {
-      name: 'spec.generationType',
-      type: ValidationFieldTypes.List,
-      label: 'ci.ssca.generationType',
-      isRequired
+      name: 'spec.publicKey',
+      type: ValidationFieldTypes.Secret,
+      label: 'connectors.serviceNow.privateKey',
+      isRequired: true
     },
     {
-      name: 'spec.artifactType',
-      type: ValidationFieldTypes.List,
-      label: 'pipeline.artifactsSelection.artifactType',
-      isRequired
-    },
-    {
-      name: 'spec.sbomGenerationTool',
-      type: ValidationFieldTypes.List,
-      label: 'ci.ssca.sbomGenerationTool',
-      isRequired
-    },
-    {
-      name: 'spec.sbomFormat',
-      type: ValidationFieldTypes.List,
-      label: 'ci.ssca.sbomFormat',
-      isRequired
-    },
-    {
-      name: 'spec.signed',
+      name: 'spec.abort.signatureVerificaionFailure',
       type: ValidationFieldTypes.Boolean,
-      label: 'ci.ssca.signed'
+      label: 'ci.sscs.abort.signatureVerificaionFailure'
+    },
+    {
+      name: 'spec.abort.sbomPartOfDenyList',
+      type: ValidationFieldTypes.Boolean,
+      label: 'ci.sscs.abort.sbomPartOfDenyList'
+    },
+    {
+      name: 'spec.abort.sbomComponentPartOfDenyList',
+      type: ValidationFieldTypes.Boolean,
+      label: 'ci.sscs.abort.sbomComponentPartOfDenyList'
+    },
+    {
+      name: 'spec.abort.sourceNotPartOfAllowList',
+      type: ValidationFieldTypes.Boolean,
+      label: 'ci.sscs.abort.sourceNotPartOfAllowList'
     }
   ]
 }

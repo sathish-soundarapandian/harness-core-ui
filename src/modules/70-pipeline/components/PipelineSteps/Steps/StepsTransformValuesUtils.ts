@@ -38,7 +38,8 @@ export enum Types {
   FrameworkVersion,
   JobParameter,
   Numeric,
-  BuildType
+  BuildType,
+  Secret
 }
 
 interface Field {

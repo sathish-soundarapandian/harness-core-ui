@@ -96,31 +96,14 @@ export const SSCAEnforceStepBase = (
               enableFields={{
                 name: {},
                 description: {},
-                'spec.generationType': {},
-                'spec.artifactType': {},
-                'spec.source': {},
-                'spec.sbomGenerationTool': {},
-                'spec.sbomFormat': {}
+                'spec.publicKey': {},
+                'spec.abort.signatureVerificaionFailure': {},
+                'spec.abort.sbomPartOfDenyList': {},
+                'spec.abort.sbomComponentPartOfDenyList': {},
+                'spec.abort.sourceNotPartOfAllowList': {}
               }}
               formik={formik}
             />
-            <Accordion className={css.accordion}>
-              <Accordion.Panel
-                id="optional-config"
-                summary={getString('common.optionalConfig')}
-                details={
-                  <Container margin={{ top: 'medium' }}>
-                    <CIStepOptionalConfig
-                      stepViewType={stepViewType}
-                      readonly={readonly}
-                      enableFields={{
-                        'spec.signed': {}
-                      }}
-                    />
-                  </Container>
-                }
-              />
-            </Accordion>
           </FormikForm>
         )
       }}

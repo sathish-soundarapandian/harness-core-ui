@@ -30,21 +30,12 @@ import { SSCAEnforceStepVariables, SSCAEnforceStepVariablesProps } from './SSCAE
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SSCAEnforceStepFunctionConfigs'
 
 export interface SSCAEnforceStepSpec {
-  step: {
-    type: string
-  }
-  sbom: {
-    tool: string
-    format: string
-  }
-  sbomTarget: {
-    artifactType: string
-    connectorRef: string
-  }
-  attestation: {
-    type: string
-    tool: string
-    privateKey: string
+  publicKey: string
+  abort: {
+    signatureVerificaionFailure: boolean
+    sbomPartOfDenyList: boolean
+    sbomComponentPartOfDenyList: boolean
+    sourceNotPartOfAllowList: boolean
   }
 }
 
@@ -55,11 +46,8 @@ export interface SSCAEnforceStepData {
   spec: SSCAEnforceStepSpec
 }
 
-export interface SSCAEnforceStepSpecUI
-  extends Omit<SSCAEnforceStepSpec, 'generationType' | 'artifactType' | 'sbomGenerationTool'> {
-  generationType?: MultiTypeListUIType
-  artifactType?: MultiTypeListUIType
-  sbomGenerationTool?: MultiTypeListUIType
+export interface SSCAEnforceStepSpecUI extends Omit<SSCAEnforceStepSpec, 'abort'> {
+  test?: MultiTypeListUIType
 }
 
 // Interface for the form
@@ -98,11 +86,13 @@ export class SSCAEnforceStep extends PipelineStep<SSCAEnforceStepData> {
     identifier: '',
     type: StepType.SSCAEnforce as string,
     spec: {
-      generationType: 'Orchestrated',
-      artifactType: 'image',
-      sbomGenerationTool: 'Syft',
-      sbomFormat: 'SPDX v2.2',
-      signed: false
+      publicKey: '',
+      abort: {
+        signatureVerificaionFailure: true,
+        sbomPartOfDenyList: true,
+        sbomComponentPartOfDenyList: true,
+        sourceNotPartOfAllowList: true
+      }
     }
   }
 

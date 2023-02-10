@@ -14,7 +14,7 @@ import { FormInput, Text, Container, AllowedTypes, SelectOption } from '@harness
 import { Color } from '@harness/design-system'
 import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
-import { FormMultiTypeTextAreaField } from '@common/components'
+import { FormMultiTypeCheckboxField, FormMultiTypeTextAreaField } from '@common/components'
 import {
   useGitScope,
   shouldRenderRunTimeInputViewWithAllowedValues,
@@ -43,6 +43,7 @@ import {
 } from './StepUtils'
 import { renderMultiTypeInputWithAllowedValues, renderMultiTypeListInputSet } from './CIStepOptionalConfig'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
+import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 
 export const sscaTypeOptions: SelectOption[] = [{ label: 'Orchestrated', value: 'Orchestrated' }]
 
@@ -750,6 +751,86 @@ export const CIStep: React.FC<CIStepProps> = props => {
           />
         </Container>
       ) : null}
+
+      {get(enableFields, 'spec.attestation.privateKey') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <MultiTypeSecretInput
+            type={'SSHKey'}
+            name="spec.attestation.privateKey"
+            label={getString('connectors.serviceNow.privateKey')}
+            expressions={expressions}
+            disabled={readonly}
+          />
+        </Container>
+      ) : null}
+
+      {get(enableFields, 'spec.publicKey') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <MultiTypeSecretInput
+            type={'SSHKey'}
+            name="spec.publicKey"
+            label="Public Key"
+            expressions={expressions}
+            disabled={readonly}
+          />
+        </Container>
+      ) : null}
+
+      {get(enableFields, 'spec.abort.signatureVerificaionFailure') && (
+        <div className={cx(css.formGroup)}>
+          <FormMultiTypeCheckboxField
+            name="spec.abort.signatureVerificaionFailure"
+            label={getString('ci.ssca.abort.signatureVerificaionFailure')}
+            multiTypeTextbox={{
+              expressions,
+              disabled: readonly
+            }}
+            disabled={readonly}
+          />
+        </div>
+      )}
+
+      {get(enableFields, 'spec.abort.sbomPartOfDenyList') && (
+        <div className={cx(css.formGroup)}>
+          <FormMultiTypeCheckboxField
+            name="spec.abort.sbomPartOfDenyList"
+            label={getString('ci.ssca.abort.sbomPartOfDenyList')}
+            multiTypeTextbox={{
+              expressions,
+              disabled: readonly
+            }}
+            disabled={readonly}
+          />
+        </div>
+      )}
+
+      {get(enableFields, 'spec.abort.sbomComponentPartOfDenyList') && (
+        <div className={cx(css.formGroup)}>
+          <FormMultiTypeCheckboxField
+            name="spec.abort.sbomComponentPartOfDenyList"
+            label={getString('ci.ssca.abort.sbomComponentPartOfDenyList')}
+            multiTypeTextbox={{
+              expressions,
+              disabled: readonly
+            }}
+            disabled={readonly}
+          />
+        </div>
+      )}
+
+      {get(enableFields, 'spec.abort.sourceNotPartOfAllowList') && (
+        <div className={cx(css.formGroup)}>
+          <FormMultiTypeCheckboxField
+            name="spec.abort.sourceNotPartOfAllowList"
+            label={getString('ci.ssca.abort.sourceNotPartOfAllowList')}
+            multiTypeTextbox={{
+              expressions,
+              disabled: readonly
+            }}
+            disabled={readonly}
+          />
+        </div>
+      )}
     </>
   )
 }

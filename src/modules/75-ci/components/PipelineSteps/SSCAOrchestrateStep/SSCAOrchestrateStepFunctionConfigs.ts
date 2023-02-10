@@ -40,6 +40,10 @@ export const transformValuesFieldsConfig = [
   {
     name: 'spec.attestation.tool',
     type: TransformValuesTypes.List
+  },
+  {
+    name: 'spec.attestation.privateKey',
+    type: TransformValuesTypes.Secret
   }
 ]
 
@@ -90,6 +94,12 @@ export const editViewValidateFieldsConfig = [
     name: 'spec.attestation.tool',
     type: ValidationFieldTypes.List,
     label: 'sss.tool',
+    isRequired: true
+  },
+  {
+    name: 'spec.attestation.privateKey',
+    type: ValidationFieldTypes.Secret,
+    label: 'connectors.serviceNow.privateKey',
     isRequired: true
   }
 ]
@@ -144,6 +154,12 @@ export function getInputSetViewValidateFieldsConfig(
       name: 'spec.attestation.tool',
       type: ValidationFieldTypes.List,
       label: 'ci.ssca.attestaion.tool',
+      isRequired: true
+    },
+    {
+      name: 'spec.attestation.privateKey',
+      type: ValidationFieldTypes.Secret,
+      label: 'connectors.serviceNow.privateKey',
       isRequired: true
     }
   ]
