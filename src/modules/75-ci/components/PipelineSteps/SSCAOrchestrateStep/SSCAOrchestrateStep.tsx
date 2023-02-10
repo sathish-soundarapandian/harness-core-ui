@@ -30,12 +30,22 @@ import { SSCAOrchestrateStepVariables, SSCAOrchestrateStepVariablesProps } from 
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SSCAOrchestrateStepFunctionConfigs'
 
 export interface SSCAOrchestrateStepSpec {
-  generationType: string
-  artifactType: string
-  sbomGenerationTool: string
-  sbomFormat: string
-  signed?: boolean
-  signSecret?: string
+  step: {
+    type: string
+  }
+  sbom: {
+    tool: string
+    format: string
+  }
+  sbomTarget: {
+    type: string
+    connectorRef: string
+  }
+  attestation: {
+    type: string
+    tool: string
+    privateKey: string
+  }
 }
 
 export interface SSCAOrchestrateStepData {
@@ -45,14 +55,16 @@ export interface SSCAOrchestrateStepData {
   spec: SSCAOrchestrateStepSpec
 }
 
-export interface SSCAOrchestrateStepSpecUI
-  extends Omit<SSCAOrchestrateStepSpec, 'generationType' | 'artifactType' | 'sbomGenerationTool'> {
-  generationType?: MultiTypeListUIType
-  artifactType?: MultiTypeListUIType
-  sbomGenerationTool?: MultiTypeListUIType
+export interface SSCAOrchestrateStepSpecUI {
+  stepType?: MultiTypeListUIType
+  sbomTool?: MultiTypeListUIType
+  sbomFormat?: MultiTypeListUIType
+  sbomTargetType?: MultiTypeListUIType
+  attestationType?: MultiTypeListUIType
+  attestationTool?: MultiTypeListUIType
+  attestationPrivateKey?: string
 }
 
-// Interface for the form
 export interface SSCAOrchestrateStepDataUI extends Omit<SSCAOrchestrateStepData, 'spec'> {
   spec: SSCAOrchestrateStepSpecUI
 }
@@ -88,11 +100,22 @@ export class SSCAOrchestrateStep extends PipelineStep<SSCAOrchestrateStepData> {
     identifier: '',
     type: StepType.SSCAOrchestrate as string,
     spec: {
-      generationType: 'Orchestrated',
-      sbomGenerationTool: 'Syft',
-      sbomFormat: 'SPDX v2.2',
-      artifactType: 'image',
-      signed: false
+      step: {
+        type: 'Orchestrated'
+      },
+      sbom: {
+        tool: 'Syft',
+        format: 'SPDX v2.2'
+      },
+      sbomTarget: {
+        type: 'Image',
+        connectorRef: ''
+      },
+      attestation: {
+        type: 'in-toto',
+        tool: 'Cosign',
+        privateKey: ''
+      }
     }
   }
 

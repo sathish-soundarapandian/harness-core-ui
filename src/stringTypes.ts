@@ -7666,10 +7666,9 @@ export interface StringsMap {
   'ci.runTestsStep.validation.namespacesRequiredWhenCsharp': string
   'ci.save': string
   'ci.secrets': string
-  'ci.sscs.generationType': string
-  'ci.sscs.sbomFormat': string
-  'ci.sscs.sbomGenerationTool': string
-  'ci.sscs.signed': string
+  'ci.ssca.attestation.tool': string
+  'ci.ssca.sbomFormat': string
+  'ci.ssca.sbomTool': string
   'ci.successful': string
   'ci.templates': string
   'ci.testSummary': string

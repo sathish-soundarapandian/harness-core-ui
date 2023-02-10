@@ -47,11 +47,8 @@ export const SSCAOrchestrateStepBase = (
   } = usePipelineContext()
 
   const { getString } = useStrings()
-  const { expressions } = useVariablesExpression()
 
   const currentStage = useGetPropagatedStageById(selectedStageId || '')
-
-  const buildInfrastructureType: CIBuildInfrastructureType = get(currentStage, 'stage.spec.infrastructure.type')
 
   return (
     <Formik
@@ -100,31 +97,15 @@ export const SSCAOrchestrateStepBase = (
               enableFields={{
                 name: {},
                 description: {},
-                'spec.generationType': {},
-                'spec.artifactType': {},
-                'spec.source': {},
-                'spec.sbomGenerationTool': {},
-                'spec.sbomFormat': {}
+                'spec.step.type': {},
+                'spec.sbom.tool': {},
+                'spec.sbom.format': {},
+                'spec.sbomTarget.type': {},
+                'spec.attestation.type': {},
+                'spec.attestation.tool': {}
               }}
               formik={formik}
             />
-            <Accordion className={css.accordion}>
-              <Accordion.Panel
-                id="optional-config"
-                summary={getString('common.optionalConfig')}
-                details={
-                  <Container margin={{ top: 'medium' }}>
-                    <CIStepOptionalConfig
-                      stepViewType={stepViewType}
-                      readonly={readonly}
-                      enableFields={{
-                        'spec.signed': {}
-                      }}
-                    />
-                  </Container>
-                }
-              />
-            </Accordion>
           </FormikForm>
         )
       }}

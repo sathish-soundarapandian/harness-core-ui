@@ -30,12 +30,22 @@ import { SSCAEnforceStepVariables, SSCAEnforceStepVariablesProps } from './SSCAE
 import { getInputSetViewValidateFieldsConfig, transformValuesFieldsConfig } from './SSCAEnforceStepFunctionConfigs'
 
 export interface SSCAEnforceStepSpec {
-  generationType: string
-  artifactType: string
-  sbomGenerationTool: string
-  sbomFormat: string
-  signed?: boolean
-  signSecret?: string
+  step: {
+    type: string
+  }
+  sbom: {
+    tool: string
+    format: string
+  }
+  sbomTarget: {
+    artifactType: string
+    connectorRef: string
+  }
+  attestation: {
+    type: string
+    tool: string
+    privateKey: string
+  }
 }
 
 export interface SSCAEnforceStepData {

@@ -44,17 +44,22 @@ import {
 import { renderMultiTypeInputWithAllowedValues, renderMultiTypeListInputSet } from './CIStepOptionalConfig'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
-export const generationTypeOptions: SelectOption[] = [{ label: 'Orchestrated', value: 'Orchestrated' }]
+export const sscaTypeOptions: SelectOption[] = [{ label: 'Orchestrated', value: 'Orchestrated' }]
 
-export const artifactTypeOptions: SelectOption[] = [{ label: 'Repository', value: 'Repository' }]
+export const artifactTypeOptions: SelectOption[] = [{ label: 'Image', value: 'Image' }]
 
 export const sbomGenerationToolOptions: SelectOption[] = [{ label: 'Syft', value: 'Syft' }]
+
+export const attestationTypeOptions: SelectOption[] = [{ label: 'in-toto', value: 'in-toto' }]
+
+export const attestationToolOptions: SelectOption[] = [{ label: 'Cosign', value: 'Cosign' }]
 
 export const sbomFormatOptions = [
   { label: 'SPDX v2.2', value: 'SPDX v2.2' },
   { label: 'CycloneDX v1.3', value: 'CycloneDX v1.3' },
   { label: 'CycloneDX v1.4', value: 'CycloneDX v1.4' }
 ]
+
 interface CIStepProps {
   isNewStep?: boolean
   readonly?: boolean
@@ -673,47 +678,74 @@ export const CIStep: React.FC<CIStepProps> = props => {
             : null}
         </Container>
       ) : null}
-      {get(enableFields, 'spec.generationType') ? (
+
+      {get(enableFields, 'spec.step.type') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           <FormInput.Select
-            items={generationTypeOptions}
-            name={`${prefix}spec.generationType`}
-            label={getString('ci.sscs.generationType')}
-            placeholder={getString('ci.sscs.generationType')}
+            items={sscaTypeOptions}
+            name={`${prefix}spec.step.type`}
+            label={getString('stepType')}
+            placeholder={getString('select')}
             disabled={readonly}
           />
         </Container>
       ) : null}
-      {get(enableFields, 'spec.artifactType') ? (
-        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
-          <FormInput.Select
-            items={artifactTypeOptions}
-            name={`${prefix}spec.artifactType`}
-            label={getString('pipeline.artifactsSelection.artifactType')}
-            placeholder={getString('pipeline.artifactsSelection.artifactType')}
-            disabled={readonly}
-          />
-        </Container>
-      ) : null}
-      {get(enableFields, 'spec.generationType') ? (
+
+      {get(enableFields, 'spec.sbom.tool') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           <FormInput.Select
             items={sbomGenerationToolOptions}
-            name={`${prefix}spec.sbomGenerationTool`}
-            label={getString('ci.sscs.sbomGenerationTool')}
-            placeholder={getString('ci.sscs.sbomGenerationTool')}
+            name={`${prefix}spec.sbom.tool`}
+            label={getString('ci.ssca.sbomTool')}
+            placeholder={getString('select')}
             disabled={readonly}
           />
         </Container>
       ) : null}
-      {get(enableFields, 'spec.sbomFormat') ? (
+
+      {get(enableFields, 'spec.sbom.format') ? (
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           <FormInput.RadioGroup
             items={sbomFormatOptions}
-            name={`${prefix}spec.sbomFormat`}
-            label={getString('ci.sscs.sbomFormat')}
+            name={`${prefix}spec.sbom.format`}
+            label={getString('ci.ssca.sbomFormat')}
             disabled={readonly}
-            radioGroup={{ inline: true }}
+          />
+        </Container>
+      ) : null}
+
+      {get(enableFields, 'spec.sbomTarget.type') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <FormInput.Select
+            items={artifactTypeOptions}
+            name={`${prefix}spec.sbomTarget.type`}
+            label={getString('pipeline.artifactsSelection.artifactType')}
+            placeholder={getString('select')}
+            disabled={readonly}
+          />
+        </Container>
+      ) : null}
+
+      {get(enableFields, 'spec.attestation.type') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <FormInput.Select
+            items={attestationTypeOptions}
+            name={`${prefix}spec.attestation.type`}
+            label={getString('typeLabel')}
+            placeholder={getString('select')}
+            disabled={readonly}
+          />
+        </Container>
+      ) : null}
+
+      {get(enableFields, 'spec.attestation.tool') ? (
+        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+          <FormInput.Select
+            items={attestationTypeOptions}
+            name={`${prefix}spec.attestation.tool`}
+            label={getString('ci.ssca.attestation.tool')}
+            placeholder={getString('select')}
+            disabled={readonly}
           />
         </Container>
       ) : null}

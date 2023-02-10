@@ -18,24 +18,28 @@ export const transformValuesFieldsConfig = [
     type: TransformValuesTypes.Text
   },
   {
-    name: 'spec.generationType',
+    name: 'spec.step.type',
     type: TransformValuesTypes.List
   },
   {
-    name: 'spec.artifactType',
+    name: 'spec.sbom.tool',
     type: TransformValuesTypes.List
   },
   {
-    name: 'spec.sbomGenerationTool',
+    name: 'spec.sbom.format',
     type: TransformValuesTypes.List
   },
   {
-    name: 'spec.sbomFormat',
+    name: 'spec.sbomTarget.type',
     type: TransformValuesTypes.List
   },
   {
-    name: 'spec.signed',
-    type: TransformValuesTypes.Boolean
+    name: 'spec.attestation.type',
+    type: TransformValuesTypes.List
+  },
+  {
+    name: 'spec.attestation.tool',
+    type: TransformValuesTypes.List
   }
 ]
 
@@ -53,33 +57,40 @@ export const editViewValidateFieldsConfig = [
     isRequired: true
   },
   {
-    name: 'spec.generationType',
+    name: 'spec.step.type',
     type: ValidationFieldTypes.List,
-    label: 'ci.ssca.generationType',
+    label: 'stepType',
     isRequired: true
   },
   {
-    name: 'spec.artifactType',
+    name: 'spec.sbom.tool',
     type: ValidationFieldTypes.List,
-    label: 'pipeline.artifactsSelection.artifactType',
+    label: 'ci.ssca.sbomTool',
     isRequired: true
   },
   {
-    name: 'spec.sbomGenerationTool',
-    type: ValidationFieldTypes.List,
-    label: 'ci.ssca.sbomGenerationTool',
-    isRequired: true
-  },
-  {
-    name: 'spec.sbomFormat',
+    name: 'spec.sbom.format',
     type: ValidationFieldTypes.List,
     label: 'ci.ssca.sbomFormat',
     isRequired: true
   },
   {
-    name: 'spec.signed',
-    type: ValidationFieldTypes.Boolean,
-    label: 'ci.ssca.signed'
+    name: 'spec.sbomTarget.type',
+    type: ValidationFieldTypes.List,
+    label: 'pipeline.artifactsSelection.artifactType',
+    isRequired: true
+  },
+  {
+    name: 'spec.attestation.type',
+    type: ValidationFieldTypes.List,
+    label: 'typeLabel',
+    isRequired: true
+  },
+  {
+    name: 'spec.attestation.tool',
+    type: ValidationFieldTypes.List,
+    label: 'sss.tool',
+    isRequired: true
   }
 ]
 
@@ -100,33 +111,40 @@ export function getInputSetViewValidateFieldsConfig(
       isRequired
     },
     {
-      name: 'spec.generationType',
+      name: 'spec.step.type',
       type: ValidationFieldTypes.List,
-      label: 'ci.ssca.generationType',
-      isRequired
+      label: 'stepType',
+      isRequired: true
     },
     {
-      name: 'spec.artifactType',
+      name: 'spec.sbom.tool',
       type: ValidationFieldTypes.List,
-      label: 'pipeline.artifactsSelection.artifactType',
-      isRequired
+      label: 'ci.ssca.sbomTool',
+      isRequired: true
     },
     {
-      name: 'spec.sbomGenerationTool',
-      type: ValidationFieldTypes.List,
-      label: 'ci.ssca.sbomGenerationTool',
-      isRequired
-    },
-    {
-      name: 'spec.sbomFormat',
+      name: 'spec.sbom.format',
       type: ValidationFieldTypes.List,
       label: 'ci.ssca.sbomFormat',
-      isRequired
+      isRequired: true
     },
     {
-      name: 'spec.signed',
-      type: ValidationFieldTypes.Boolean,
-      label: 'ci.ssca.signed'
+      name: 'spec.sbomTarget.type',
+      type: ValidationFieldTypes.List,
+      label: 'pipeline.artifactsSelection.artifactType',
+      isRequired: true
+    },
+    {
+      name: 'spec.attestation.type',
+      type: ValidationFieldTypes.List,
+      label: 'typeLabel',
+      isRequired: true
+    },
+    {
+      name: 'spec.attestation.tool',
+      type: ValidationFieldTypes.List,
+      label: 'ci.ssca.attestaion.tool',
+      isRequired: true
     }
   ]
 }
