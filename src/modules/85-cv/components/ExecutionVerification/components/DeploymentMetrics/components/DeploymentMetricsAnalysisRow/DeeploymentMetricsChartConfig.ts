@@ -108,7 +108,12 @@ export function chartsConfig(
       },
       positioner: (_, __, point) => {
         const { plotX } = point || {}
-        const xPosition = plotX > 900 ? plotX - 200 : plotX - 100
+        let xPosition = plotX - 100
+        if (xPosition > 700) {
+          xPosition = plotX - 200
+        } else if (xPosition < 30) {
+          xPosition = xPosition + 100
+        }
         return {
           x: xPosition,
           y: -70
