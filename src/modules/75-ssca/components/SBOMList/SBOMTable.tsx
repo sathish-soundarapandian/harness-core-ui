@@ -22,19 +22,19 @@ export const SBOMTable: FC<{ data: PackageReferenceResponseBody[] }> = ({ data }
         Cell: ExecutionCell
       },
       {
-        Header: 'Name',
+        Header: 'Tool',
+        accessor: 'Tool',
+        width: '25%',
+        Cell: OriginatorCell
+      },
+      {
+        Header: 'Package name',
         accessor: 'Package name',
         width: '25%',
         Cell: NameCell
       },
       {
-        Header: 'Origin',
-        accessor: 'Origin',
-        width: '25%',
-        Cell: OriginatorCell
-      },
-      {
-        Header: 'StageName',
+        Header: 'Stage',
         accessor: 'Stage',
         width: '20%',
         Cell: StageNameCell

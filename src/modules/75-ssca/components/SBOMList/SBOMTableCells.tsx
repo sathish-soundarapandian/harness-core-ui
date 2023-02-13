@@ -32,7 +32,7 @@ export const ExecutionCell: CellType = ({ row }) => {
   const { getString } = useStrings()
 
   return (
-    <Layout.Vertical spacing="lg">
+    <Layout.Vertical spacing="xsmall">
         <Link to={toExecutionPipelineView}>
           <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
             {data.PipelineIdentifier}
@@ -62,14 +62,17 @@ export const OriginatorCell: CellType = ({ row }) => {
 
 
   return (
-    <Layout.Vertical spacing="lg">
+    <Layout.Horizontal spacing="xsmall">
       <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_700}>
         {data.Originator}
+      </Text>
+      <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500}>
+        |
       </Text>
       <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_700}>
         {data.VersionInfo}
       </Text>
-    </Layout.Vertical>
+    </Layout.Horizontal>
   )
 }
 
