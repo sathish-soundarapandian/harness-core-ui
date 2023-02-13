@@ -18,7 +18,7 @@ export const SBOMTable: FC<{ data: PackageReferenceResponseBody[] }> = ({ data }
       {
         Header: 'Execution',
         accessor: 'SequenceId',
-        width: '25%',
+        width: '30%',
         Cell: ExecutionCell
       },
       {
@@ -36,7 +36,7 @@ export const SBOMTable: FC<{ data: PackageReferenceResponseBody[] }> = ({ data }
       {
         Header: 'StageName',
         accessor: 'Stage',
-        width: '25%',
+        width: '20%',
         Cell: StageNameCell
       }
     ] as unknown as Column<PackageReferenceResponseBody>[]
