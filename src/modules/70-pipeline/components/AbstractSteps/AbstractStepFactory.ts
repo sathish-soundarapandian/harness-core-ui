@@ -96,6 +96,7 @@ export abstract class AbstractStepFactory {
     return this.stepBank.get(type)?.getReferenceId()
   }
   getStepIcon(type: string): IconName {
+    if (type === 'IACMTerraformPlan') return 'service-terraform'
     return this.stepBank.get(type)?.getIconName() || 'disable'
   }
 
