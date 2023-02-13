@@ -55,7 +55,7 @@ export default function GetStartedWithCI(): React.ReactElement {
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { getString } = useStrings()
   const { CIE_HOSTED_VMS } = useFeatureFlags()
-  const [showWizard, setShowWizard] = useState<boolean>(true)
+  const [showWizard, setShowWizard] = useState<boolean>(false)
   const [showProvisioningCarousel, setShowProvisioningCarousel] = useState<boolean>(false)
   const { initiateProvisioning, delegateProvisioningStatus, fetchingDelegateDetails } =
     useProvisionDelegateForHostedBuilds()
@@ -231,7 +231,6 @@ export default function GetStartedWithCI(): React.ReactElement {
             preSelectedGitConnector
               ? InfraProvisiongWizardStepId.SelectRepository
               : InfraProvisiongWizardStepId.SelectGitProvider
-            // InfraProvisiongWizardStepId.ConfigurePipeline
           }
         />
       ) : (
