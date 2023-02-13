@@ -107,7 +107,7 @@ export function getValidationSchema(getString: UseStringsReturn['getString']): Y
 }
 
 export function getAllFixedServices(data: DeployServiceEntityData): string[] {
-  if (data.service && getMultiTypeFromValue(data.service.serviceRef) === MultiTypeInputType.FIXED) {
+  if (data.service?.serviceRef && getMultiTypeFromValue(data.service.serviceRef) === MultiTypeInputType.FIXED) {
     return [data.service.serviceRef as string]
   } else if (data.services && Array.isArray(data.services.values)) {
     return data.services.values.map(svc => svc.serviceRef).filter(Boolean) as string[]
