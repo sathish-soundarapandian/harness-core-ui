@@ -74,8 +74,8 @@ export function StepPalette({ onSelect, stepsFactory, stepPaletteModuleInfos }: 
     const message = stepsDataLoading
       ? getString('stepPalette.loadingSteps')
       : isEmpty(stepCategories)
-      ? getString('stepPalette.noSearchResultsFound')
-      : ''
+        ? getString('stepPalette.noSearchResultsFound')
+        : ''
     // Only render this section if we're loading or if we do not have any steps
     return message ? (
       <section style={{ paddingTop: '50%', justifyContent: 'center', textAlign: 'center' }}>{message}</section>
@@ -103,7 +103,7 @@ export function StepPalette({ onSelect, stepsFactory, stepPaletteModuleInfos }: 
           featureRestrictionName: undefined
         },
         {
-          name: 'SSCA Orchestrate',
+          name: 'SSCA Enforce',
           type: 'SSCAEnforce',
           disabled: false,
           featureRestrictionName: undefined

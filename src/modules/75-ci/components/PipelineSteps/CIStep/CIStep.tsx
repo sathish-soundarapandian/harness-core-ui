@@ -31,6 +31,7 @@ import {
   renderConnectorAndRepoName,
   runtimeInputGearWidth
 } from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
+import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 import {
   AllMultiTypeInputTypesForInputSet,
   AllMultiTypeInputTypesForStep,
@@ -43,7 +44,6 @@ import {
 } from './StepUtils'
 import { renderMultiTypeInputWithAllowedValues, renderMultiTypeListInputSet } from './CIStepOptionalConfig'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import MultiTypeSecretInput from '@secrets/components/MutiTypeSecretInput/MultiTypeSecretInput'
 
 export const sscaTypeOptions: SelectOption[] = [{ label: 'Orchestrated', value: 'Orchestrated' }]
 
@@ -830,6 +830,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
                 disabled: readonly
               }}
               disabled={readonly}
+
             />
           </div>
         </>
