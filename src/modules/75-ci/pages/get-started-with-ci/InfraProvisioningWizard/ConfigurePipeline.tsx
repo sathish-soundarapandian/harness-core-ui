@@ -352,16 +352,20 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
             }
           } else {
             setShowAdvancedOptions(true)
+            saveToGitFormikRef.current?.setFieldTouched('branch', true)
           }
           setIsFetchingDefaultBranch(false)
+          saveToGitFormikRef.current?.setFieldTouched('branch', true)
         })
         .catch((_e: unknown) => {
           setIsFetchingDefaultBranch(false)
           setShowAdvancedOptions(true)
+          saveToGitFormikRef.current?.setFieldTouched('branch', true)
         })
     } catch (e) {
       setIsFetchingDefaultBranch(false)
       setShowAdvancedOptions(true)
+      saveToGitFormikRef.current?.setFieldTouched('branch', true)
     }
     enableNextBtn()
   }, [configuredGitConnector?.type, saveToGitFormikRef.current])
