@@ -18,7 +18,9 @@ import {
   getOAuthConnectorPayload,
   getPayloadForPipelineCreation,
   getPRTriggerActions,
-  sortConnectorsByLastConnectedAtTsDescOrder
+  getValidRepoName,
+  sortConnectorsByLastConnectedAtTsDescOrder,
+  updateUrlAndRepoInGitRepoConnector
 } from '../HostedBuildsUtils'
 import {
   GitHubPRTriggerActions,
@@ -254,5 +256,86 @@ describe('Test HostedBuildsUtils methods', () => {
         spec: { identifier: 'k8s-hosted-infra' }
       })
     )
+  })
+
+  test('Test getValidRepoName method', () => {
+    expect(getValidRepoName('')).toBe('')
+    expect(getValidRepoName('test-namespace/test-repo')).toBe('test-repo')
+    expect(getValidRepoName('test-namespace/test-repo.git')).toBe('test-repo')
+    expect(getValidRepoName('test-repo')).toBe('test-repo')
+    expect(getValidRepoName('test-namespace/')).toBe('')
+  })
+
+  test('Test updateUrlAndRepoInGitRepoConnector method', () => {
+    let updatedConnector = updateUrlAndRepoInGitRepoConnector(
+      {
+        name: 'Github',
+        identifier: 'Github',
+        type: 'Github',
+        spec: {
+          url: 'https://github.com',
+          authentication: {
+            type: 'Http',
+            spec: {
+              type: 'UsernameToken',
+              spec: {
+                username: 'test-user',
+                tokenRef: 'account.pat'
+              }
+            }
+          },
+          apiAccess: {
+            type: 'Token',
+            spec: {
+              tokenRef: 'account.pat'
+            }
+          },
+          executeOnDelegate: false,
+          type: 'Account'
+        }
+      },
+      {
+        namespace: 'test-namespace',
+        name: 'test-repo'
+      }
+    )
+    expect(updatedConnector).toBeDefined()
+    expect(get(updatedConnector, 'spec.url')).toBe('https://github.com/test-namespace')
+    expect(get(updatedConnector, 'spec.validationRepo')).toBe('test-repo')
+
+    updatedConnector = updateUrlAndRepoInGitRepoConnector(
+      {
+        name: 'Github',
+        identifier: 'Github',
+        type: 'Github',
+        spec: {
+          url: 'https://github.com/test-namespace',
+          authentication: {
+            type: 'Http',
+            spec: {
+              type: 'UsernameToken',
+              spec: {
+                username: 'test-user',
+                tokenRef: 'account.pat'
+              }
+            }
+          },
+          apiAccess: {
+            type: 'Token',
+            spec: {
+              tokenRef: 'account.pat'
+            }
+          },
+          executeOnDelegate: false,
+          type: 'Account'
+        }
+      },
+      {
+        name: 'test-repo'
+      }
+    )
+    expect(updatedConnector).toBeDefined()
+    expect(get(updatedConnector, 'spec.url')).toBe('https://github.com/test-namespace')
+    expect(get(updatedConnector, 'spec.validationRepo')).toBe('test-repo')
   })
 })
