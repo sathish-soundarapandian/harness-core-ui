@@ -200,543 +200,6 @@ export interface DevLoginUnauthorizedResponseBody {
 }
 
 /**
- * A pullrequest of value stream data
- */
-export interface Pullrequest {
-  /**
-   * Harness account ID associated with this pullrequest
-   */
-  account_id: string
-  /**
-   * author of the pullrequest
-   */
-  author: string
-  /**
-   * Time the commit was authored
-   */
-  authored_date: number
-  /**
-   * Time the pullrequest was closed
-   */
-  closed_at: number
-  /**
-   * the hash of the commit
-   */
-  commit_hash: string
-  /**
-   * The ID of the commit
-   */
-  commit_id: string
-  /**
-   * Time the commit was created
-   */
-  committed_date: number
-  /**
-   * Time the pullrequest was last created
-   */
-  created: number
-  /**
-   * Time the pullrequest was created
-   */
-  created_at: number
-  /**
-   * Time the pullrequest was merged
-   */
-  merged_at: number
-  /**
-   * Number of the pullrequest
-   */
-  number: number
-  /**
-   * id of the pullrequest
-   */
-  pr_id: string
-  /**
-   * Time the pullrequest was published
-   */
-  published_at: number
-  /**
-   * Time of the first review activity on the pullrequest was created
-   */
-  review_first_activity_at: number
-  /**
-   * Time of the last review activity on the pullrequest was created
-   */
-  review_last_approval_at: number
-  /**
-   * Source ID associated with this connection source
-   */
-  source_id: number
-  /**
-   * state of the pullrequest
-   */
-  state: string
-  /**
-   * title of the pullrequest
-   */
-  title: string
-  /**
-   * Time the pullrequest was last updated
-   */
-  updated: number
-  /**
-   * Time the pullrequest was updated
-   */
-  updated_at: number
-  /**
-   * url of the pullrequest
-   */
-  url: string
-}
-
-/**
- * find_BadGateway_response_body result type (default view)
- */
-export interface PullrequestsFindBadGatewayResponseBody {
-  /**
-   * Is the error a server-side fault?
-   */
-  fault: boolean
-  /**
-   * ID is a unique identifier for this particular occurrence of the problem.
-   */
-  id: string
-  /**
-   * Message is a human-readable explanation specific to this occurrence of the problem.
-   */
-  message: string
-  /**
-   * Name is the name of this class of errors.
-   */
-  name: string
-  /**
-   * Is the error temporary?
-   */
-  temporary: boolean
-  /**
-   * Is the error a timeout?
-   */
-  timeout: boolean
-}
-
-/**
- * find_BadRequest_response_body result type (default view)
- */
-export interface PullrequestsFindBadRequestResponseBody {
-  /**
-   * Is the error a server-side fault?
-   */
-  fault: boolean
-  /**
-   * ID is a unique identifier for this particular occurrence of the problem.
-   */
-  id: string
-  /**
-   * Message is a human-readable explanation specific to this occurrence of the problem.
-   */
-  message: string
-  /**
-   * Name is the name of this class of errors.
-   */
-  name: string
-  /**
-   * Is the error temporary?
-   */
-  temporary: boolean
-  /**
-   * Is the error a timeout?
-   */
-  timeout: boolean
-}
-
-/**
- * find_Forbidden_response_body result type (default view)
- */
-export interface PullrequestsFindForbiddenResponseBody {
-  /**
-   * Is the error a server-side fault?
-   */
-  fault: boolean
-  /**
-   * ID is a unique identifier for this particular occurrence of the problem.
-   */
-  id: string
-  /**
-   * Message is a human-readable explanation specific to this occurrence of the problem.
-   */
-  message: string
-  /**
-   * Name is the name of this class of errors.
-   */
-  name: string
-  /**
-   * Is the error temporary?
-   */
-  temporary: boolean
-  /**
-   * Is the error a timeout?
-   */
-  timeout: boolean
-}
-
-/**
- * find_InternalServer_response_body result type (default view)
- */
-export interface PullrequestsFindInternalServerResponseBody {
-  /**
-   * Is the error a server-side fault?
-   */
-  fault: boolean
-  /**
-   * ID is a unique identifier for this particular occurrence of the problem.
-   */
-  id: string
-  /**
-   * Message is a human-readable explanation specific to this occurrence of the problem.
-   */
-  message: string
-  /**
-   * Name is the name of this class of errors.
-   */
-  name: string
-  /**
-   * Is the error temporary?
-   */
-  temporary: boolean
-  /**
-   * Is the error a timeout?
-   */
-  timeout: boolean
-}
-
-/**
- * find_NotFound_response_body result type (default view)
- */
-export interface PullrequestsFindNotFoundResponseBody {
-  /**
-   * Is the error a server-side fault?
-   */
-  fault: boolean
-  /**
-   * ID is a unique identifier for this particular occurrence of the problem.
-   */
-  id: string
-  /**
-   * Message is a human-readable explanation specific to this occurrence of the problem.
-   */
-  message: string
-  /**
-   * Name is the name of this class of errors.
-   */
-  name: string
-  /**
-   * Is the error temporary?
-   */
-  temporary: boolean
-  /**
-   * Is the error a timeout?
-   */
-  timeout: boolean
-}
-
-export interface PullrequestsFindResponseBody {
-  /**
-   * Harness account ID associated with this pullrequest
-   */
-  account_id: string
-  /**
-   * author of the pullrequest
-   */
-  author: string
-  /**
-   * Time the commit was authored
-   */
-  authored_date: number
-  /**
-   * Time the pullrequest was closed
-   */
-  closed_at: number
-  /**
-   * the hash of the commit
-   */
-  commit_hash: string
-  /**
-   * The ID of the commit
-   */
-  commit_id: string
-  /**
-   * Time the commit was created
-   */
-  committed_date: number
-  /**
-   * Time the pullrequest was last created
-   */
-  created: number
-  /**
-   * Time the pullrequest was created
-   */
-  created_at: number
-  /**
-   * Time the pullrequest was merged
-   */
-  merged_at: number
-  /**
-   * Number of the pullrequest
-   */
-  number: number
-  /**
-   * id of the pullrequest
-   */
-  pr_id: string
-  /**
-   * Time the pullrequest was published
-   */
-  published_at: number
-  /**
-   * Time of the first review activity on the pullrequest was created
-   */
-  review_first_activity_at: number
-  /**
-   * Time of the last review activity on the pullrequest was created
-   */
-  review_last_approval_at: number
-  /**
-   * Source ID associated with this connection source
-   */
-  source_id: number
-  /**
-   * state of the pullrequest
-   */
-  state: string
-  /**
-   * title of the pullrequest
-   */
-  title: string
-  /**
-   * Time the pullrequest was last updated
-   */
-  updated: number
-  /**
-   * Time the pullrequest was updated
-   */
-  updated_at: number
-  /**
-   * url of the pullrequest
-   */
-  url: string
-}
-
-/**
- * find_Unauthorized_response_body result type (default view)
- */
-export interface PullrequestsFindUnauthorizedResponseBody {
-  /**
-   * Is the error a server-side fault?
-   */
-  fault: boolean
-  /**
-   * ID is a unique identifier for this particular occurrence of the problem.
-   */
-  id: string
-  /**
-   * Message is a human-readable explanation specific to this occurrence of the problem.
-   */
-  message: string
-  /**
-   * Name is the name of this class of errors.
-   */
-  name: string
-  /**
-   * Is the error temporary?
-   */
-  temporary: boolean
-  /**
-   * Is the error a timeout?
-   */
-  timeout: boolean
-}
-
-/**
- * list_BadGateway_response_body result type (default view)
- */
-export interface PullrequestsListBadGatewayResponseBody {
-  /**
-   * Is the error a server-side fault?
-   */
-  fault: boolean
-  /**
-   * ID is a unique identifier for this particular occurrence of the problem.
-   */
-  id: string
-  /**
-   * Message is a human-readable explanation specific to this occurrence of the problem.
-   */
-  message: string
-  /**
-   * Name is the name of this class of errors.
-   */
-  name: string
-  /**
-   * Is the error temporary?
-   */
-  temporary: boolean
-  /**
-   * Is the error a timeout?
-   */
-  timeout: boolean
-}
-
-/**
- * list_BadRequest_response_body result type (default view)
- */
-export interface PullrequestsListBadRequestResponseBody {
-  /**
-   * Is the error a server-side fault?
-   */
-  fault: boolean
-  /**
-   * ID is a unique identifier for this particular occurrence of the problem.
-   */
-  id: string
-  /**
-   * Message is a human-readable explanation specific to this occurrence of the problem.
-   */
-  message: string
-  /**
-   * Name is the name of this class of errors.
-   */
-  name: string
-  /**
-   * Is the error temporary?
-   */
-  temporary: boolean
-  /**
-   * Is the error a timeout?
-   */
-  timeout: boolean
-}
-
-/**
- * list_Forbidden_response_body result type (default view)
- */
-export interface PullrequestsListForbiddenResponseBody {
-  /**
-   * Is the error a server-side fault?
-   */
-  fault: boolean
-  /**
-   * ID is a unique identifier for this particular occurrence of the problem.
-   */
-  id: string
-  /**
-   * Message is a human-readable explanation specific to this occurrence of the problem.
-   */
-  message: string
-  /**
-   * Name is the name of this class of errors.
-   */
-  name: string
-  /**
-   * Is the error temporary?
-   */
-  temporary: boolean
-  /**
-   * Is the error a timeout?
-   */
-  timeout: boolean
-}
-
-/**
- * list_InternalServer_response_body result type (default view)
- */
-export interface PullrequestsListInternalServerResponseBody {
-  /**
-   * Is the error a server-side fault?
-   */
-  fault: boolean
-  /**
-   * ID is a unique identifier for this particular occurrence of the problem.
-   */
-  id: string
-  /**
-   * Message is a human-readable explanation specific to this occurrence of the problem.
-   */
-  message: string
-  /**
-   * Name is the name of this class of errors.
-   */
-  name: string
-  /**
-   * Is the error temporary?
-   */
-  temporary: boolean
-  /**
-   * Is the error a timeout?
-   */
-  timeout: boolean
-}
-
-/**
- * list_NotFound_response_body result type (default view)
- */
-export interface PullrequestsListNotFoundResponseBody {
-  /**
-   * Is the error a server-side fault?
-   */
-  fault: boolean
-  /**
-   * ID is a unique identifier for this particular occurrence of the problem.
-   */
-  id: string
-  /**
-   * Message is a human-readable explanation specific to this occurrence of the problem.
-   */
-  message: string
-  /**
-   * Name is the name of this class of errors.
-   */
-  name: string
-  /**
-   * Is the error temporary?
-   */
-  temporary: boolean
-  /**
-   * Is the error a timeout?
-   */
-  timeout: boolean
-}
-
-/**
- * list_Unauthorized_response_body result type (default view)
- */
-export interface PullrequestsListUnauthorizedResponseBody {
-  /**
-   * Is the error a server-side fault?
-   */
-  fault: boolean
-  /**
-   * ID is a unique identifier for this particular occurrence of the problem.
-   */
-  id: string
-  /**
-   * Message is a human-readable explanation specific to this occurrence of the problem.
-   */
-  message: string
-  /**
-   * Name is the name of this class of errors.
-   */
-  name: string
-  /**
-   * Is the error temporary?
-   */
-  temporary: boolean
-  /**
-   * Is the error a timeout?
-   */
-  timeout: boolean
-}
-
-/**
  * processsbom_BadGateway_response_body result type (default view)
  */
 export interface SbomprocessorProcesssbomBadGatewayResponseBody {
@@ -887,7 +350,7 @@ export interface SbomprocessorProcesssbomNotFoundResponseBody {
 }
 
 /**
- * A sbom process request on ssca
+ * A sbom process request on sscs
  */
 export interface SbomprocessorProcesssbomRequestBody {
   /**
@@ -898,6 +361,10 @@ export interface SbomprocessorProcesssbomRequestBody {
    * name of the package
    */
   ArtifactID?: string
+  /**
+   * BuildURL
+   */
+  BuildURL?: string
   /**
    * stage name where sbom is generated
    */
@@ -911,13 +378,21 @@ export interface SbomprocessorProcesssbomRequestBody {
    */
   PipelineIdentifier?: string
   /**
+   * name of the Project
+   */
+  ProjectIdentifier?: string
+  /**
    * name of the package
    */
   SbomUrl?: string
   /**
    * name of the package
    */
-  SequenceId?: number
+  SequenceId?: string
+  /**
+   * name of the Stage
+   */
+  StageIdentifier?: string
   /**
    * name of the package
    */
@@ -1139,6 +614,202 @@ export interface SearchFindUnauthorizedResponseBody {
 }
 
 /**
+ * findany_BadGateway_response_body result type (default view)
+ */
+export interface SearchFindanyBadGatewayResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * findany_BadRequest_response_body result type (default view)
+ */
+export interface SearchFindanyBadRequestResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * findany_Forbidden_response_body result type (default view)
+ */
+export interface SearchFindanyForbiddenResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * findany_InternalServer_response_body result type (default view)
+ */
+export interface SearchFindanyInternalServerResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
+ * findany_NotFound_response_body result type (default view)
+ */
+export interface SearchFindanyNotFoundResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+export interface SearchFindanyRequestBody {
+  /**
+   * Harness ExecutionIdentifier ID
+   */
+  ExecutionIdentifier?: string
+  /**
+   * Harness pipeline ID
+   */
+  PipelineIdentifier?: string
+  packageIdentifiers: PackageIdentifierRequestBody[]
+}
+
+export interface SearchFindanyResponseBody {
+  packageReferences: PackageReferenceResponseBody[]
+}
+
+/**
+ * findany_Unauthorized_response_body result type (default view)
+ */
+export interface SearchFindanyUnauthorizedResponseBody {
+  /**
+   * Is the error a server-side fault?
+   */
+  fault: boolean
+  /**
+   * ID is a unique identifier for this particular occurrence of the problem.
+   */
+  id: string
+  /**
+   * Message is a human-readable explanation specific to this occurrence of the problem.
+   */
+  message: string
+  /**
+   * Name is the name of this class of errors.
+   */
+  name: string
+  /**
+   * Is the error temporary?
+   */
+  temporary: boolean
+  /**
+   * Is the error a timeout?
+   */
+  timeout: boolean
+}
+
+/**
  * health_BadGateway_response_body result type (default view)
  */
 export interface SystemHealthBadGatewayResponseBody {
@@ -1270,13 +941,31 @@ export interface SystemVersionResponseBody {
 }
 
 /**
- * A package search request on ssca
+ * A package identifier
+ */
+export interface PackageIdentifierRequestBody {
+  /**
+   * name of the package
+   */
+  name?: string
+}
+
+/**
+ * A package search request on sscs
  */
 export interface PackageReferenceResponseBody {
   /**
    * name of the package
    */
   AccountName?: string
+  /**
+   * Source ID associated with this connection source
+   */
+  ArtifactName?: string
+  /**
+   * Source ID associated with this connection source
+   */
+  BuildURL?: string
   /**
    * name of the package
    */
@@ -1286,9 +975,13 @@ export interface PackageReferenceResponseBody {
    */
   PipelineIdentifier?: string
   /**
+   * Source ID associated with this connection source
+   */
+  SBOMURL?: string
+  /**
    * name of the package
    */
-  SequenceId?: number
+  SequenceId?: string
   /**
    * stage name where sbom is generated
    */
@@ -1384,199 +1077,6 @@ export const useDevLogin = (props: UseDevLoginProps) =>
     void
   >('POST', `/api/login`, { base: getConfig('ssca/api/v1'), ...props })
 
-export interface PullrequestsListQueryParams {
-  /**
-   * Harness account ID
-   */
-  accountIdentifier: string
-  /**
-   * Harness organization ID
-   */
-  orgIdentifier: string
-  /**
-   * Harness project ID
-   */
-  projectIdentifier: string
-}
-
-export type PullrequestsListProps = Omit<
-  GetProps<
-    Pullrequest[],
-    | PullrequestsListBadRequestResponseBody
-    | PullrequestsListUnauthorizedResponseBody
-    | PullrequestsListForbiddenResponseBody
-    | PullrequestsListNotFoundResponseBody
-    | PullrequestsListInternalServerResponseBody
-    | PullrequestsListBadGatewayResponseBody,
-    PullrequestsListQueryParams,
-    void
-  >,
-  'path'
->
-
-/**
- * List all pullrequests
- *
- * **Required security scopes for jwt**:
- *   * `core_project_view`
- */
-export const PullrequestsList = (props: PullrequestsListProps) => (
-  <Get<
-    Pullrequest[],
-    | PullrequestsListBadRequestResponseBody
-    | PullrequestsListUnauthorizedResponseBody
-    | PullrequestsListForbiddenResponseBody
-    | PullrequestsListNotFoundResponseBody
-    | PullrequestsListInternalServerResponseBody
-    | PullrequestsListBadGatewayResponseBody,
-    PullrequestsListQueryParams,
-    void
-  >
-    path={`/api/v1/pullrequests`}
-    base={getConfig('ssca/api/v1')}
-    {...props}
-  />
-)
-
-export type UsePullrequestsListProps = Omit<
-  UseGetProps<
-    Pullrequest[],
-    | PullrequestsListBadRequestResponseBody
-    | PullrequestsListUnauthorizedResponseBody
-    | PullrequestsListForbiddenResponseBody
-    | PullrequestsListNotFoundResponseBody
-    | PullrequestsListInternalServerResponseBody
-    | PullrequestsListBadGatewayResponseBody,
-    PullrequestsListQueryParams,
-    void
-  >,
-  'path'
->
-
-/**
- * List all pullrequests
- *
- * **Required security scopes for jwt**:
- *   * `core_project_view`
- */
-export const usePullrequestsList = (props: UsePullrequestsListProps) =>
-  useGet<
-    Pullrequest[],
-    | PullrequestsListBadRequestResponseBody
-    | PullrequestsListUnauthorizedResponseBody
-    | PullrequestsListForbiddenResponseBody
-    | PullrequestsListNotFoundResponseBody
-    | PullrequestsListInternalServerResponseBody
-    | PullrequestsListBadGatewayResponseBody,
-    PullrequestsListQueryParams,
-    void
-  >(`/api/v1/pullrequests`, { base: getConfig('ssca/api/v1'), ...props })
-
-export interface PullrequestsFindQueryParams {
-  /**
-   * Harness account ID
-   */
-  accountIdentifier: string
-  /**
-   * Harness organization ID
-   */
-  orgIdentifier: string
-  /**
-   * Harness project ID
-   */
-  projectIdentifier: string
-}
-
-export interface PullrequestsFindPathParams {
-  /**
-   * Source ID associated with this connection source
-   */
-  source_identifier: string
-  /**
-   * Number associated with the Pull Request
-   */
-  number: number
-}
-
-export type PullrequestsFindProps = Omit<
-  GetProps<
-    PullrequestsFindResponseBody,
-    | PullrequestsFindBadRequestResponseBody
-    | PullrequestsFindUnauthorizedResponseBody
-    | PullrequestsFindForbiddenResponseBody
-    | PullrequestsFindNotFoundResponseBody
-    | PullrequestsFindInternalServerResponseBody
-    | PullrequestsFindBadGatewayResponseBody,
-    PullrequestsFindQueryParams,
-    PullrequestsFindPathParams
-  >,
-  'path'
-> &
-  PullrequestsFindPathParams
-
-/**
- * Find a pullrequest by identifier
- *
- * **Required security scopes for jwt**:
- *   * `core_project_view`
- */
-export const PullrequestsFind = ({ source_identifier, number, ...props }: PullrequestsFindProps) => (
-  <Get<
-    PullrequestsFindResponseBody,
-    | PullrequestsFindBadRequestResponseBody
-    | PullrequestsFindUnauthorizedResponseBody
-    | PullrequestsFindForbiddenResponseBody
-    | PullrequestsFindNotFoundResponseBody
-    | PullrequestsFindInternalServerResponseBody
-    | PullrequestsFindBadGatewayResponseBody,
-    PullrequestsFindQueryParams,
-    PullrequestsFindPathParams
-  >
-    path={`/api/v1/pullrequests/${source_identifier}/${number}`}
-    base={getConfig('ssca/api/v1')}
-    {...props}
-  />
-)
-
-export type UsePullrequestsFindProps = Omit<
-  UseGetProps<
-    PullrequestsFindResponseBody,
-    | PullrequestsFindBadRequestResponseBody
-    | PullrequestsFindUnauthorizedResponseBody
-    | PullrequestsFindForbiddenResponseBody
-    | PullrequestsFindNotFoundResponseBody
-    | PullrequestsFindInternalServerResponseBody
-    | PullrequestsFindBadGatewayResponseBody,
-    PullrequestsFindQueryParams,
-    PullrequestsFindPathParams
-  >,
-  'path'
-> &
-  PullrequestsFindPathParams
-
-/**
- * Find a pullrequest by identifier
- *
- * **Required security scopes for jwt**:
- *   * `core_project_view`
- */
-export const usePullrequestsFind = ({ source_identifier, number, ...props }: UsePullrequestsFindProps) =>
-  useGet<
-    PullrequestsFindResponseBody,
-    | PullrequestsFindBadRequestResponseBody
-    | PullrequestsFindUnauthorizedResponseBody
-    | PullrequestsFindForbiddenResponseBody
-    | PullrequestsFindNotFoundResponseBody
-    | PullrequestsFindInternalServerResponseBody
-    | PullrequestsFindBadGatewayResponseBody,
-    PullrequestsFindQueryParams,
-    PullrequestsFindPathParams
-  >(
-    (paramsInPath: PullrequestsFindPathParams) =>
-      `/api/v1/pullrequests/${paramsInPath.source_identifier}/${paramsInPath.number}`,
-    { base: getConfig('ssca/api/v1'), pathParams: { source_identifier, number }, ...props }
-  )
-
 export type SbomprocessorProcesssbomProps = Omit<
   MutateProps<
     void,
@@ -1649,6 +1149,99 @@ export const useSbomprocessorProcesssbom = (props: UseSbomprocessorProcesssbomPr
     void
   >('POST', `/api/v1/sbomprocessor`, { base: getConfig('ssca/api/v1'), ...props })
 
+export interface SearchFindanyQueryParams {
+  /**
+   * Harness account ID
+   */
+  accountIdentifier: string
+  /**
+   * Harness organization ID
+   */
+  orgIdentifier: string
+  /**
+   * Harness project ID
+   */
+  projectIdentifier: string
+}
+
+export type SearchFindanyProps = Omit<
+  MutateProps<
+    SearchFindanyResponseBody,
+    | SearchFindanyBadRequestResponseBody
+    | SearchFindanyUnauthorizedResponseBody
+    | SearchFindanyForbiddenResponseBody
+    | SearchFindanyNotFoundResponseBody
+    | SearchFindanyInternalServerResponseBody
+    | SearchFindanyBadGatewayResponseBody,
+    SearchFindanyQueryParams,
+    SearchFindanyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Find a package references by name
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
+ */
+export const SearchFindany = (props: SearchFindanyProps) => (
+  <Mutate<
+    SearchFindanyResponseBody,
+    | SearchFindanyBadRequestResponseBody
+    | SearchFindanyUnauthorizedResponseBody
+    | SearchFindanyForbiddenResponseBody
+    | SearchFindanyNotFoundResponseBody
+    | SearchFindanyInternalServerResponseBody
+    | SearchFindanyBadGatewayResponseBody,
+    SearchFindanyQueryParams,
+    SearchFindanyRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/api/v1/search/findany`}
+    base={getConfig('ssca/api/v1')}
+    {...props}
+  />
+)
+
+export type UseSearchFindanyProps = Omit<
+  UseMutateProps<
+    SearchFindanyResponseBody,
+    | SearchFindanyBadRequestResponseBody
+    | SearchFindanyUnauthorizedResponseBody
+    | SearchFindanyForbiddenResponseBody
+    | SearchFindanyNotFoundResponseBody
+    | SearchFindanyInternalServerResponseBody
+    | SearchFindanyBadGatewayResponseBody,
+    SearchFindanyQueryParams,
+    SearchFindanyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Find a package references by name
+ *
+ * **Required security scopes for jwt**:
+ *   * `core_project_view`
+ */
+export const useSearchFindany = (props: UseSearchFindanyProps) =>
+  useMutate<
+    SearchFindanyResponseBody,
+    | SearchFindanyBadRequestResponseBody
+    | SearchFindanyUnauthorizedResponseBody
+    | SearchFindanyForbiddenResponseBody
+    | SearchFindanyNotFoundResponseBody
+    | SearchFindanyInternalServerResponseBody
+    | SearchFindanyBadGatewayResponseBody,
+    SearchFindanyQueryParams,
+    SearchFindanyRequestBody,
+    void
+  >('POST', `/api/v1/search/findany`, { base: getConfig('ssca/api/v1'), ...props })
+
 export interface SearchFindQueryParams {
   /**
    * Harness account ID
@@ -1706,7 +1299,7 @@ export const SearchFind = ({ packagename, ...props }: SearchFindProps) => (
     SearchFindPathParams
   >
     path={`/api/v1/search/${packagename}`}
-    base={getConfig('ssca/api')}
+    base={getConfig('ssca/api/v1')}
     {...props}
   />
 )

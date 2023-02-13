@@ -8,13 +8,13 @@ import React, { FC, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
 import { ExpandingSearchInput, ExpandingSearchInputHandle, Layout, Page, Text } from '@harness/uicore'
-import css from './SBOMList.module.scss'
-import { SBOMTable } from './SBOMTable'
 import { useSearchFind } from 'services/ssca'
 import { useQueryParams, useUpdateQueryParams } from '@common/hooks'
 import { useStrings } from 'framework/strings'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import type { PipelineType, PipelinePathProps } from '@common/interfaces/RouteInterfaces'
+import { SBOMTable } from './SBOMTable'
+import css from './SBOMList.module.scss'
 
 export const SBOMList: FC = () => {
   const { getString } = useStrings()
