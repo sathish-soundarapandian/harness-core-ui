@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom'
 import cx from 'classnames'
 import type { FormikProps } from 'formik'
 import { FormInput, Text, Container, AllowedTypes, SelectOption } from '@harness/uicore'
-import { Color } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import { MultiTypeTextField, MultiTypeTextProps } from '@common/components/MultiTypeText/MultiTypeText'
 import MultiTypeList from '@common/components/MultiTypeList/MultiTypeList'
 import { FormMultiTypeCheckboxField, FormMultiTypeTextAreaField } from '@common/components'
@@ -142,10 +142,10 @@ export const CIStep: React.FC<CIStepProps> = props => {
                 {...(optional
                   ? {}
                   : {
-                      tooltipProps: {
-                        dataTooltipId: tooltipId
-                      }
-                    })}
+                    tooltipProps: {
+                      dataTooltipId: tooltipId
+                    }
+                  })}
               >
                 {getString(labelKey)}
               </Text>
@@ -659,11 +659,11 @@ export const CIStep: React.FC<CIStepProps> = props => {
           {/* Corresponding input set view is handled in ArtifactStepCommon.tsx */}
           {!isInputSetView
             ? renderMultiTypeList({
-                name: `${prefix}spec.tags`,
-                labelKey: 'tagsLabel',
-                allowedTypes: SupportedInputTypesForListTypeField,
-                allowedTypesForEntries: SupportedInputTypesForListItems
-              })
+              name: `${prefix}spec.tags`,
+              labelKey: 'tagsLabel',
+              allowedTypes: SupportedInputTypesForListTypeField,
+              allowedTypesForEntries: SupportedInputTypesForListItems
+            })
             : null}
         </Container>
       ) : null}
@@ -671,37 +671,47 @@ export const CIStep: React.FC<CIStepProps> = props => {
         <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
           {!isInputSetView
             ? renderMultiTypeList({
-                name: `${prefix}spec.depth`,
-                labelKey: 'pipeline.depth',
-                allowedTypes: SupportedInputTypesForListTypeField,
-                allowedTypesForEntries: SupportedInputTypesForListItems
-              })
+              name: `${prefix}spec.depth`,
+              labelKey: 'pipeline.depth',
+              allowedTypes: SupportedInputTypesForListTypeField,
+              allowedTypesForEntries: SupportedInputTypesForListItems
+            })
             : null}
         </Container>
       ) : null}
 
       {get(enableFields, 'spec.step.type') ? (
-        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
-          <FormInput.Select
-            items={sscaTypeOptions}
-            name={`${prefix}spec.step.type`}
-            label={getString('stepType')}
-            placeholder={getString('select')}
-            disabled={readonly}
-          />
-        </Container>
+        <>
+          <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_900} margin={{ top: 'large', bottom: 'small' }}>
+            Step Type
+          </Text>
+          <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+            <FormInput.Select
+              items={sscaTypeOptions}
+              name={`${prefix}spec.step.type`}
+              label={getString('stepType')}
+              placeholder={getString('select')}
+              disabled={readonly}
+            />
+          </Container>
+        </>
       ) : null}
 
       {get(enableFields, 'spec.sbom.tool') ? (
-        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
-          <FormInput.Select
-            items={sbomGenerationToolOptions}
-            name={`${prefix}spec.sbom.tool`}
-            label={getString('ci.ssca.sbomTool')}
-            placeholder={getString('select')}
-            disabled={readonly}
-          />
-        </Container>
+        <>
+          <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_900} margin={{ top: 'large', bottom: 'small' }}>
+            Generation Type
+          </Text>
+          <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+            <FormInput.Select
+              items={sbomGenerationToolOptions}
+              name={`${prefix}spec.sbom.tool`}
+              label={getString('ci.ssca.sbomTool')}
+              placeholder={getString('select')}
+              disabled={readonly}
+            />
+          </Container>
+        </>
       ) : null}
 
       {get(enableFields, 'spec.sbom.format') ? (
@@ -717,27 +727,37 @@ export const CIStep: React.FC<CIStepProps> = props => {
       ) : null}
 
       {get(enableFields, 'spec.sbomTarget.type') ? (
-        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
-          <FormInput.Select
-            items={artifactTypeOptions}
-            name={`${prefix}spec.sbomTarget.type`}
-            label={getString('pipeline.artifactsSelection.artifactType')}
-            placeholder={getString('select')}
-            disabled={readonly}
-          />
-        </Container>
+        <>
+          <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_900} margin={{ top: 'large', bottom: 'small' }}>
+            SBOM Target
+          </Text>
+          <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+            <FormInput.Select
+              items={artifactTypeOptions}
+              name={`${prefix}spec.sbomTarget.type`}
+              label={getString('pipeline.artifactsSelection.artifactType')}
+              placeholder={getString('select')}
+              disabled={readonly}
+            />
+          </Container>
+        </>
       ) : null}
 
       {get(enableFields, 'spec.attestation.type') ? (
-        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
-          <FormInput.Select
-            items={attestationTypeOptions}
-            name={`${prefix}spec.attestation.type`}
-            label={getString('typeLabel')}
-            placeholder={getString('select')}
-            disabled={readonly}
-          />
-        </Container>
+        <>
+          <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_900} margin={{ top: 'large', bottom: 'small' }}>
+            SBOM Attestation
+          </Text>
+          <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+            <FormInput.Select
+              items={attestationTypeOptions}
+              name={`${prefix}spec.attestation.type`}
+              label={getString('typeLabel')}
+              placeholder={getString('select')}
+              disabled={readonly}
+            />
+          </Container>
+        </>
       ) : null}
 
       {get(enableFields, 'spec.attestation.tool') ? (
@@ -765,15 +785,21 @@ export const CIStep: React.FC<CIStepProps> = props => {
       ) : null}
 
       {get(enableFields, 'spec.publicKey') ? (
-        <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
-          <MultiTypeSecretInput
-            type={'SSHKey'}
-            name="spec.publicKey"
-            label="Public Key"
-            expressions={expressions}
-            disabled={readonly}
-          />
-        </Container>
+        <>
+          <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_900} margin={{ top: 'large', bottom: 'small' }}>
+            Verify Attestation
+          </Text>
+          <Container className={cx(css.formGroup, stepCss, css.bottomMargin5)}>
+            <MultiTypeSecretInput
+              type={'SSHKey'}
+              name="spec.publicKey"
+              label="Public Key"
+              expressions={expressions}
+              disabled={readonly}
+            />
+          </Container>
+        </>
+
       ) : null}
 
       {get(enableFields, 'spec.abort.signatureVerificaionFailure') && (
@@ -791,17 +817,22 @@ export const CIStep: React.FC<CIStepProps> = props => {
       )}
 
       {get(enableFields, 'spec.abort.sbomPartOfDenyList') && (
-        <div className={cx(css.formGroup)}>
-          <FormMultiTypeCheckboxField
-            name="spec.abort.sbomPartOfDenyList"
-            label={getString('ci.ssca.abort.sbomPartOfDenyList')}
-            multiTypeTextbox={{
-              expressions,
-              disabled: readonly
-            }}
-            disabled={readonly}
-          />
-        </div>
+        <>
+          <Text font={{ variation: FontVariation.LEAD }} color={Color.GREY_900} margin={{ top: 'large', bottom: 'small' }}>
+            Policies
+          </Text>
+          <div className={cx(css.formGroup)}>
+            <FormMultiTypeCheckboxField
+              name="spec.abort.sbomPartOfDenyList"
+              label={getString('ci.ssca.abort.sbomPartOfDenyList')}
+              multiTypeTextbox={{
+                expressions,
+                disabled: readonly
+              }}
+              disabled={readonly}
+            />
+          </div>
+        </>
       )}
 
       {get(enableFields, 'spec.abort.sbomComponentPartOfDenyList') && (
