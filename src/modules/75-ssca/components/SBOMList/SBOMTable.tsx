@@ -22,7 +22,7 @@ export const SBOMTable: FC<{ data: PackageReferenceResponseBody[] }> = ({ data }
         Cell: ExecutionCell
       },
       {
-        Header: 'Tool',
+        Header: 'SBOM Tool',
         accessor: 'Tool',
         width: '25%',
         Cell: OriginatorCell
