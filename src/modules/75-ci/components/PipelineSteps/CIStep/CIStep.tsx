@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { isEmpty, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import cx from 'classnames'
@@ -91,6 +91,11 @@ export const CIStep: React.FC<CIStepProps> = props => {
 
   const stepCss = stepViewType === StepViewType.DeploymentForm ? css.sm : css.lg
   // connectorAndRepoName inherently has margin
+
+  useEffect(() => {
+    formik?.setFieldValue('spec.abort.sbomComponentPartOfDenyList', true)
+  }, [])
+
   const connectorAndRepoNameCss =
     isRuntimeInput(formik?.values?.spec?.connectorRef) || isRuntimeInput(formik?.values?.spec?.repoName)
       ? css.bottomMargin2
