@@ -28,16 +28,16 @@ type CellType = Renderer<CellTypeWithActions<PackageReferenceResponseBody>>
 export const ExecutionCell: CellType = ({ row }) => {
   const data = row.original
   const pathParams = useParams<PipelineType<PipelinePathProps>>()
-  const toExecutionPipelineView = getExecutionPipelineViewLink(data, pathParams, {})
+  // const toExecutionPipelineView = getExecutionPipelineViewLink(data, pathParams, {})
   const { getString } = useStrings()
 
   return (
     <Layout.Vertical spacing="xsmall">
-        <Link to={toExecutionPipelineView}>
-          <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
-            {data.PipelineIdentifier}
-          </Text>
-        </Link>
+      <Link to={data.BuildURL?.split('#')?.[1] || ''}>
+        <Text font={{ variation: FontVariation.LEAD }} color={Color.PRIMARY_7} lineClamp={1}>
+          {data.PipelineIdentifier}
+        </Text>
+      </Link>
       <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_500} lineClamp={1}>
         {`${getString('pipeline.executionId')}: ${data.SequenceId}`}
       </Text>
