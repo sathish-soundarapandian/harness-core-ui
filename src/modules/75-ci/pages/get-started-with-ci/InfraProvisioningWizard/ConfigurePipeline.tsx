@@ -350,14 +350,18 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
                 })
               )
             }
+          } else {
+            setShowAdvancedOptions(true)
           }
           setIsFetchingDefaultBranch(false)
         })
         .catch((_e: unknown) => {
           setIsFetchingDefaultBranch(false)
+          setShowAdvancedOptions(true)
         })
     } catch (e) {
       setIsFetchingDefaultBranch(false)
+      setShowAdvancedOptions(true)
     }
     enableNextBtn()
   }, [configuredGitConnector?.type, saveToGitFormikRef.current])
