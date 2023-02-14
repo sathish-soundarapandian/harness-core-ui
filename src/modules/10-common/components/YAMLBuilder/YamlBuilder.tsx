@@ -167,7 +167,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const [selectedPlugin, setSelectedPlugin] = useState<Record<string, any>>()
   const [pluginAddUpdateOpnStatus, setPluginAddUpdateOpnStatus] = useState<Status>()
   const stepMatchRegex = 'steps:\\n(\\s*)-(\\s*)name:'
-  const stageMatchRegex = 'spec:\\n(\\s*)steps:\\n(\\s*)-(\\s*)name:'
+  const stageMatchRegex = 'steps:'
   const [isEditorExpanded, setIsEditorExpanded] = useState<boolean>(true)
   const { module } = useParams<{
     module: Module
