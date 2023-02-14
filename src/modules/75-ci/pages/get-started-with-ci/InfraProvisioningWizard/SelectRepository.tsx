@@ -75,6 +75,7 @@ const SelectRepositoryRef = (
   const [repository, setRepository] = useState<UserRepoResponse | undefined>()
   const [repositories, setRepositories] = useState<UserRepoResponse[]>()
   const [selectedConnectorOption, setSelectedConnectorOption] = useState<SelectOption>()
+  const [query, setQuery] = useState<string>()
   const {
     data: repoData,
     loading: fetchingRepositories,
@@ -153,6 +154,7 @@ const SelectRepositoryRef = (
 
   useEffect(() => {
     if (selectedConnectorOption) {
+      setQuery('')
       getRepositories(selectedConnectorOption.value as string)
     }
   }, [selectedConnectorOption])
@@ -288,9 +290,12 @@ const SelectRepositoryRef = (
                 className={css.repositorySearch}
                 leftIconProps={{ name: 'search', size: 18, padding: 'xsmall' }}
                 onChange={e => {
-                  debouncedRepositorySearch((e.currentTarget as HTMLInputElement).value)
+                  const repoSearched = (e.currentTarget as HTMLInputElement).value
+                  setQuery(repoSearched)
+                  debouncedRepositorySearch(repoSearched)
                 }}
                 disabled={fetchingRepositories}
+                value={query}
               />
               <Select
                 items={ConnectorSelectionItems}
