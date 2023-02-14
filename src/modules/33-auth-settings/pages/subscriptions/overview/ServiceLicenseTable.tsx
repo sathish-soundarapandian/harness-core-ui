@@ -8,21 +8,16 @@
 import React, { useMemo, useState, useEffect } from 'react'
 import type { Column } from 'react-table'
 import cx from 'classnames'
+import { useParams } from 'react-router-dom'
 import { Text, TableV2, Layout, Card, Heading, NoDataCard, SelectOption, PageSpinner } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import moment from 'moment'
 import { String, useStrings, StringKeys } from 'framework/strings'
-import { PageActiveServiceDTO, LicenseUsageDTO } from 'services/cd-ng'
 import OrgDropdown from '../../../../10-common/OrgDropdown/OrgDropdown'
+import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import ProjectDropdown from '../../../../10-common/ProjectDropdown/ProjectDropdown'
 import ServiceDropdown from '../../../../10-common/ServiceDropdown/ServiceDropdown'
-import {
-  PageActiveServiceDTO,
-  LicenseUsageDTO,
-  useGetProjectList,
-  useGetOrganizationList,
-  useDownloadActiveServiceCSVReport
-} from 'services/cd-ng'
+import { PageActiveServiceDTO, LicenseUsageDTO, useDownloadActiveServiceCSVReport } from 'services/cd-ng'
 import type { SortBy } from './types'
 import {
   ServiceNameCell,
@@ -142,7 +137,7 @@ export function ServiceLicenseTable({
       }
     ] as unknown as Column<LicenseUsageDTO>[]
   }, [currentOrder, currentSort])
-
+  const { accountId } = useParams<AccountPathProps>()
   const [selectedOrg, setSelectedOrg] = useState<SelectOption | undefined>()
   const [selectedProj, setSelectedProj] = useState<SelectOption | undefined>()
   const [selectedService, setSelectedService] = useState<SelectOption | undefined>()

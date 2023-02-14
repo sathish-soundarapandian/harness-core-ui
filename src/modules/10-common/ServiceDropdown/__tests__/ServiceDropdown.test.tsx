@@ -76,7 +76,7 @@ let serviceListPromiseMock = jest.fn().mockImplementation(() => {
 })
 
 jest.mock('services/cd-ng', () => ({
-  getServiceListPromise: jest.fn().mockImplementation(() => {
+  getServiceListPromise2: jest.fn().mockImplementation(() => {
     return serviceListPromiseMock()
   })
 }))

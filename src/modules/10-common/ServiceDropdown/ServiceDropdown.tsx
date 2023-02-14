@@ -8,7 +8,7 @@
 import { DropDown, SelectOption } from '@harness/uicore'
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getServiceListPromise, ServiceResponse } from 'services/cd-ng'
+import { getServiceList2Promise, ServiceResponse } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 
 interface ServiceDropdownProps {
@@ -23,7 +23,7 @@ const ServiceDropdown: React.FC<ServiceDropdownProps> = props => {
 
   function serviceListPromise(): Promise<SelectOption[]> {
     return new Promise<SelectOption[]>(resolve => {
-      getServiceListPromise({ queryParams: { accountIdentifier: accountId, searchTerm: query } })
+      getServiceList2Promise({ queryParams: { accountIdentifier: accountId, searchTerm: query } })
         .then(result => {
           let selectItems: Array<SelectOption> = []
           if (result?.data?.content?.length) {
