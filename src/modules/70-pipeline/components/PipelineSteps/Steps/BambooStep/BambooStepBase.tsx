@@ -82,7 +82,8 @@ function FormContent({
     }
   })
 
-  // console.log(plansResponse, 'plans response api', refetchPlans)
+  // eslint-disable-next-line no-console
+  console.log(plansResponse, 'plans response api', refetchPlans)
 
   return (
     <React.Fragment>

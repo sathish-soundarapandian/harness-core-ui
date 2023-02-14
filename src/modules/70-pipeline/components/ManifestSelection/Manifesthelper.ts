@@ -141,6 +141,7 @@ export const allowedManifestTypes: Record<ServiceDefinition['type'], Array<Manif
   WinRm: [],
   AzureWebApp: [],
   AwsLambda: [],
+  AWS_SAM: [],
   ECS: [
     ManifestDataType.EcsTaskDefinition,
     ManifestDataType.EcsServiceDefinition,
