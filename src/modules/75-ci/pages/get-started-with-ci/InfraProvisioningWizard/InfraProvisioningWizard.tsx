@@ -86,7 +86,6 @@ import {
   getFullRepoName,
   getPayloadForPipelineCreation,
   addDetailsToPipeline,
-  getScmConnectorPrefix,
   updateUrlAndRepoInGitRepoConnector as updateUrlAndRepoInGitConnector,
   DefaultCIPipelineName
 } from '../../../utils/HostedBuildsUtils'
@@ -279,9 +278,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             spec: {
               type: eventType,
               spec: {
-                connectorRef: configuredGitConnector?.identifier
-                  ? `${getScmConnectorPrefix(configuredGitConnector)}${configuredGitConnector.identifier}`
-                  : null,
+                connectorRef: configuredGitConnector ? getScopedValueFromDTO(configuredGitConnector) : '',
                 repoName: selectRepositoryRef.current?.repository
                   ? getFullRepoName(selectRepositoryRef.current?.repository)
                   : '',
@@ -610,7 +607,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
           <SelectRepository
             ref={selectRepositoryRef}
             showError={showError}
-            validatedConnector={configuredGitConnector}
+            validatedPreSelectedConnector={configuredGitConnector}
             connectorsEligibleForPreSelection={connectorsEligibleForPreSelection}
             onConnectorSelect={(connector: ConnectorInfoDTO) => {
               setConfiguredGitConnector(connector)

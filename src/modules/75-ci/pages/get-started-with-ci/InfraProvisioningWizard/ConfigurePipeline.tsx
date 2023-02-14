@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
 import * as Yup from 'yup'
@@ -39,7 +39,7 @@ import { getScopedValueFromDTO, ScopedValueObjectDTO } from '@common/components/
 import { Status } from '@common/utils/Constants'
 import { getIdentifierFromValue } from '@common/components/EntityReference/EntityReference'
 import { Connectors } from '@connectors/constants'
-import { getScmConnectorPrefix, getValidRepoName } from '../../../utils/HostedBuildsUtils'
+import { getValidRepoName } from '../../../utils/HostedBuildsUtils'
 
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -144,14 +144,6 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
   const [isFetchingDefaultBranch, setIsFetchingDefaultBranch] = useState<boolean>(false)
   const saveToGitFormikRef = useRef<FormikContextType<SavePipelineToRemoteInterface>>()
 
-  const configuredGitConnectorIdentifier = useMemo(
-    (): string =>
-      configuredGitConnector?.identifier
-        ? `${getScmConnectorPrefix(configuredGitConnector)}${configuredGitConnector.identifier}`
-        : '',
-    [configuredGitConnector]
-  )
-
   const markFieldsTouchedToShowValidationErrors = React.useCallback((): void => {
     if (
       [PipelineConfigurationOption.StarterPipeline, PipelineConfigurationOption.GenerateYAML].includes(
@@ -198,14 +190,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
       setForwardRef({ configuredOption: selectedConfigOption })
       setPipelineName(selectedConfigOption.name)
     }
-  }, [
-    selectedConfigOption,
-    pipelineNameToSpecify,
-    orgIdentifier,
-    projectIdentifier,
-    configuredGitConnectorIdentifier,
-    repoName
-  ])
+  }, [selectedConfigOption, pipelineNameToSpecify, orgIdentifier, projectIdentifier, configuredGitConnector, repoName])
 
   const renderCard = useCallback(
     (item: StarterTemplate): JSX.Element => {
@@ -265,7 +250,9 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
                                   <RepoBranchSelectV2
                                     name="branch"
                                     noLabel={true}
-                                    connectorIdentifierRef={configuredGitConnectorIdentifier}
+                                    connectorIdentifierRef={
+                                      configuredGitConnector ? getScopedValueFromDTO(configuredGitConnector) : ''
+                                    }
                                     repoName={repoName}
                                     onChange={(selected: SelectOption) => {
                                       if (formikProps.values.branch !== selected.value) {

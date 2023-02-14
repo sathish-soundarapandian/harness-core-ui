@@ -11,11 +11,10 @@ import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorResponse, UserRep
 import type { PipelineConfig } from 'services/pipeline-ng'
 import type { UseStringsReturn } from 'framework/strings'
 import { StringUtils } from '@common/exports'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { Connectors } from '@connectors/constants'
 import { GIT_EXTENSION } from '@pipeline/utils/CIUtils'
 import {
-  ACCOUNT_SCOPE_PREFIX,
-  ORG_SCOPE_PREFIX,
   BitbucketPRTriggerActions,
   getCloudPipelinePayloadWithCodebase,
   getPipelinePayloadWithCodebase,
@@ -155,16 +154,6 @@ export const getFullRepoName = (repository: UserRepoResponse): string => {
   return namespace && repositoryName ? `${namespace}/${repositoryName}` : repositoryName ?? ''
 }
 
-export const getScmConnectorPrefix = ({ orgIdentifier, projectIdentifier }: ConnectorInfoDTO): string => {
-  if (orgIdentifier && projectIdentifier) {
-    return ''
-  }
-  if (orgIdentifier) {
-    return ORG_SCOPE_PREFIX
-  }
-  return ACCOUNT_SCOPE_PREFIX
-}
-
 export const getPayloadForPipelineCreation = ({
   pipelineYaml,
   pipelineName,
@@ -201,7 +190,7 @@ export const getPayloadForPipelineCreation = ({
     }_${UNIQUE_PIPELINE_ID}`,
     projectIdentifier,
     orgIdentifier,
-    connectorRef: `${getScmConnectorPrefix(configuredGitConnector)}${configuredGitConnector?.identifier}`,
+    connectorRef: getScopedValueFromDTO(configuredGitConnector),
     repoName: getFullRepoName(repository)
   })
 }
