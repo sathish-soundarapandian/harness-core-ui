@@ -9,6 +9,7 @@
 declare const styles: {
   readonly borderBottomClass: string
   readonly container: string
+  readonly infoText: string
   readonly successImage: string
 }
 export default styles

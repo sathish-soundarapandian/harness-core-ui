@@ -282,6 +282,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
               setCurrentWizardStepId(DeployProvisiongWizardStepId.Configure)
               updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)
             }}
+            setSelectedSectionId={setSelectedSectionId}
           />
         ),
         showFooter: false,
