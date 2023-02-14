@@ -1132,6 +1132,7 @@ stepDescription:
   RestoreCacheS3: Restore saved files and directories between builds using AWS S3.
   DockerHub: Build a Docker image from a Dockerfile and push it to a Docker registry.
   Jenkins: Jenkins Description.
+  Bamboo: Bamboo Description
   GCS: Upload artifacts to Google Cloud Storage (GCS).
   S3: Upload artifacts to AWS S3.
   JFrogArtifactory: Upload artifacts to JFrog Artifactory.

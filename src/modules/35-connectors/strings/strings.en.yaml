@@ -347,6 +347,7 @@ helmRepo:
 bamboo:
   bamboo: 'Bamboo'
   bambooUrlRequired: 'Bamboo URL is required'
+  bambooConnectorLabel: 'Bamboo Connector'
 aws:
   awsAccessKey: AWS Access Key
   accessKey: '{{ $.common.accessKey }}'

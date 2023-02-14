@@ -2218,6 +2218,7 @@ export interface StringsMap {
   'connectors.azureKeyVault.validation.tenantId': string
   'connectors.azureKeyVault.validation.vaultName': string
   'connectors.bamboo.bamboo': string
+  'connectors.bamboo.bambooConnectorLabel': string
   'connectors.bamboo.bambooUrlRequired': string
   'connectors.baseURL': string
   'connectors.bearerToken': string
@@ -4504,6 +4505,7 @@ export interface StringsMap {
   'pipeline.stepDescription.AzureSlotDeployment': string
   'pipeline.stepDescription.AzureTrafficShift': string
   'pipeline.stepDescription.Background': string
+  'pipeline.stepDescription.Bamboo': string
   'pipeline.stepDescription.Barrier': string
   'pipeline.stepDescription.BitrisePlugin': string
   'pipeline.stepDescription.Container': string
