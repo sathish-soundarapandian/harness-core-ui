@@ -126,7 +126,9 @@ const SelectRepositoryRef = (
   useEffect(() => {
     if (validatedPreSelectedConnector && ConnectorSelectionItems.length > 0) {
       setSelectedConnectorOption(
-        ConnectorSelectionItems.find((item: SelectOption) => item.value === validatedPreSelectedConnector.identifier)
+        ConnectorSelectionItems.find(
+          (item: SelectOption) => item.value === getScopedValueFromDTO(validatedPreSelectedConnector)
+        )
       )
     }
   }, [ConnectorSelectionItems, validatedPreSelectedConnector])
