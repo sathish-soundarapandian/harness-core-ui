@@ -109,6 +109,7 @@ function CICodebaseInputSetFormV1Internal({
   const codebaseTypeError = get(formik?.errors, codeBaseTypePath)
   const [codebaseConnector, setCodebaseConnector] = useState<ConnectorInfoDTO>()
   const [connectorId, setConnectorId] = useState<string>('')
+  const [connectorReference, setConnectorReference] = useState<string>('')
 
   const inputLabels = getBuildTypeInputLabels(getString)
 
@@ -123,7 +124,9 @@ function CICodebaseInputSetFormV1Internal({
     if (type) {
       setCodeBaseType(type)
     }
-    setConnectorId(getIdentifierFromValue(connectorRef || ''))
+    const ctrRef = connectorRef ?? (get(originalPipeline, 'repository.connector') as string)
+    setConnectorReference(ctrRef)
+    setConnectorId(getIdentifierFromValue(ctrRef))
   }, [formik?.values])
 
   useEffect(() => {
@@ -175,7 +178,7 @@ function CICodebaseInputSetFormV1Internal({
 
   useEffect(() => {
     if (connectorId) {
-      const connectorScope = getScopeFromValue(connectorRef || '')
+      const connectorScope = getScopeFromValue(connectorReference)
       getConnectorDetails({
         pathParams: {
           identifier: connectorId
@@ -212,16 +215,16 @@ function CICodebaseInputSetFormV1Internal({
         if (!get(codebaseConnector, 'spec.apiAccess')) {
           return
         }
-        const connectorReference = connectorRef?.includes(RUNTIME_INPUT_VALUE)
+        const ctrRef = connectorReference?.includes(RUNTIME_INPUT_VALUE)
           ? codebaseConnector && getReference(getScopeFromDTO(codebaseConnector), codebaseConnector.identifier)
-          : connectorRef
+          : connectorReference
 
         if (repoName) {
           try {
             setIsFetchingBranches(true)
             getListOfBranchesByRefConnectorV2Promise({
               queryParams: {
-                connectorRef: connectorReference,
+                connectorRef: ctrRef,
                 accountIdentifier: accountId,
                 orgIdentifier,
                 projectIdentifier,
@@ -263,7 +266,7 @@ function CICodebaseInputSetFormV1Internal({
         codebaseConnectorConnectionType === ConnectionType.Account &&
         !get(originalPipeline, 'repository.name', '').includes(RUNTIME_INPUT_VALUE)
       ) {
-        fetchBranchesForRepo(repoIdentifier || '')
+        fetchBranchesForRepo(repoIdentifier ?? get(originalPipeline, 'repository.name', ''))
       }
     }
   }, [codebaseConnector, originalPipeline])

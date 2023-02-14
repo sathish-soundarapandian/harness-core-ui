@@ -32,7 +32,6 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { killEvent } from '@common/utils/eventUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
@@ -347,8 +346,8 @@ export const MenuCell: CellType = ({ row, column }) => {
     stagesExecuted: data.stagesExecuted,
     isDebugMode: hasCI
   })
-  const { CI_REMOTE_DEBUG } = useFeatureFlags()
-  const { CI_YAML_VERSIONING } = useFeatureFlags()
+
+  const { CI_YAML_VERSIONING, CI_REMOTE_DEBUG } = useFeatureFlags()
 
   const { openRunPipelineModalV1 } = useRunPipelineModalV1({
     pipelineIdentifier: data.pipelineIdentifier || pipelineIdentifier,
