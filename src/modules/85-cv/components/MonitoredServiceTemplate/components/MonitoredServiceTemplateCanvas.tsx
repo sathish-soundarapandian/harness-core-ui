@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { isEqual } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -23,6 +23,10 @@ const MonitoredServiceTemplateCanvas = (_props: unknown, formikRef: TemplateForm
     state: { template },
     updateTemplate
   } = React.useContext(TemplateContext)
+
+  useEffect(() => {
+    updateTemplate({ spec: {} } as NGTemplateInfoConfig)
+  }, [])
 
   const onUpdate = useCallback(
     (formikValue: MonitoredServiceForm) => {
