@@ -49,7 +49,6 @@ interface NexusAuthenticationProps {
   orgIdentifier: string
   projectIdentifier: string
   helpPanelReferenceId?: string
-  selectedArtifact?: 'Nexus2Registry' | 'Nexus3Registry'
 }
 
 interface NexusFormInterface {
@@ -73,22 +72,12 @@ const nexusVersions = [
   { label: '3.x', value: '3.x' }
 ]
 
-const getVersion = (selectedArtifact: 'Nexus2Registry' | 'Nexus3Registry'): string => {
-  if (selectedArtifact === 'Nexus2Registry') {
-    return '2.x'
-  } else if (selectedArtifact === 'Nexus3Registry') {
-    return '3.x'
-  }
-  return '2.x'
-}
-
 const StepNexusAuthentication: React.FC<StepProps<StepNexusAuthenticationProps> & NexusAuthenticationProps> = props => {
-  const { prevStepData, nextStep, accountId, selectedArtifact } = props
+  const { prevStepData, nextStep, accountId } = props
   const [initialValues, setInitialValues] = useState(defaultInitialFormData)
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(true && props.isEditMode)
   const { getString } = useStrings()
 
-  const version = selectedArtifact ? getVersion(selectedArtifact) : '2.x'
   const authOptions: SelectOption[] = [
     {
       label: getString('usernamePassword'),
@@ -143,8 +132,7 @@ const StepNexusAuthentication: React.FC<StepProps<StepNexusAuthenticationProps> 
       <Formik
         initialValues={{
           ...initialValues,
-          ...prevStepData,
-          nexusVersion: version
+          ...prevStepData
         }}
         formName="nexusAuth"
         validationSchema={Yup.object().shape({

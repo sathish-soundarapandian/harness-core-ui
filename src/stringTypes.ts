@@ -2221,6 +2221,9 @@ export interface StringsMap {
   'connectors.azureKeyVault.validation.subscription': string
   'connectors.azureKeyVault.validation.tenantId': string
   'connectors.azureKeyVault.validation.vaultName': string
+  'connectors.bamboo.bamboo': string
+  'connectors.bamboo.bambooUrl': string
+  'connectors.bamboo.bambooUrlRequired': string
   'connectors.baseURL': string
   'connectors.bearerToken': string
   'connectors.cdng.artifactTag': string

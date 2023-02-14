@@ -343,6 +343,10 @@ azureArtifacts:
   azureArtifactsUrl: Azure Artifacts URL
 helmRepo:
   helmRepoUrl: 'Helm Repository URL'
+bamboo:
+  bamboo: 'Bamboo'
+  bambooUrl: 'Bamboo URL'
+  bambooUrlRequired: 'Bamboo URL is required'
 aws:
   awsAccessKey: AWS Access Key
   accessKey: '{{ $.common.accessKey }}'
