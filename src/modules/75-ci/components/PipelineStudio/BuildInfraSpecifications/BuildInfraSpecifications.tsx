@@ -81,6 +81,7 @@ import type {
 } from 'services/ci'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { k8sLabelRegex, k8sAnnotationRegex } from '@common/utils/StringUtils'
+import { isOnPrem } from '@common/utils/utils'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { Connectors } from '@connectors/constants'
 import { OsTypes, ArchTypes, CIBuildInfrastructureType } from '@pipeline/utils/constants'
@@ -406,7 +407,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           } as Item
         ]
       : []),
-    ...(!isFreeEdition
+    ...(!isFreeEdition || isOnPrem()
       ? [
           {
             label: getString('pipeline.serviceDeploymentTypes.kubernetes'),
@@ -424,7 +425,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
           } as Item
         ]
       : []),
-    ...(!isFreeEdition
+    ...(!isFreeEdition || isOnPrem()
       ? [
           {
             label: getString('ci.buildInfra.vMs'),
