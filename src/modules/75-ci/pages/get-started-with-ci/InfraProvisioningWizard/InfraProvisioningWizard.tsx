@@ -146,6 +146,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     if (
       configuredGitConnector &&
       configurePipelineRef.current?.configuredOption &&
+      selectRepositoryRef.current?.repository &&
       StarterConfigIdToOptionMap[configurePipelineRef.current?.configuredOption.id] ===
         PipelineConfigurationOption.GenerateYAML
     ) {
@@ -156,7 +157,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             accountIdentifier: accountId,
             projectIdentifier,
             orgIdentifier,
-            connectorIdentifier: getScopedValueFromDTO(configuredGitConnector)
+            connectorIdentifier: getScopedValueFromDTO(configuredGitConnector),
+            repo: getFullRepoName(selectRepositoryRef.current.repository)
           }
         }).then((response: ResponseString) => {
           const { status, data } = response || {}
@@ -180,7 +182,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     accountId,
     projectIdentifier,
     orgIdentifier,
-    configurePipelineRef.current?.configuredOption
+    configurePipelineRef.current?.configuredOption,
+    selectRepositoryRef.current?.repository
   ])
 
   const constructPipelinePayloadWithCodebase = React.useCallback(
