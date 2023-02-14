@@ -55863,6 +55863,7 @@ export interface GenerateYamlQueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   connectorIdentifier?: string
+  repo?: string
 }
 
 export type GenerateYamlProps = Omit<GetProps<ResponseString, Failure | Error, GenerateYamlQueryParams, void>, 'path'>

@@ -26,7 +26,7 @@ import { StoreType } from '@common/constants/GitSyncTypes'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { TagsPopover } from '@common/components'
-
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { hasCIStage } from '@pipeline/utils/stageHelpers'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RetryHistory from '@pipeline/components/RetryPipeline/RetryHistory/RetryHistory'
@@ -39,7 +39,6 @@ import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYam
 import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import type { PipelineExecutionSummary, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './ExecutionHeader.module.scss'
 
 export interface ExecutionHeaderProps {

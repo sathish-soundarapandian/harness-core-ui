@@ -67,7 +67,8 @@ import {
   GitAuthenticationMethod,
   NonGitOption,
   getCloudPipelinePayloadWithoutCodebase,
-  getCIStarterPipelineV1
+  getCIStarterPipelineV1,
+  addRepositoryInfoToPipeline
 } from './Constants'
 import { SelectGitProvider, SelectGitProviderRef } from './SelectGitProvider'
 import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
@@ -145,6 +146,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     if (
       configuredGitConnector &&
       configurePipelineRef.current?.configuredOption &&
+      selectRepositoryRef.current?.repository &&
       StarterConfigIdToOptionMap[configurePipelineRef.current?.configuredOption.id] ===
         PipelineConfigurationOption.GenerateYAML
     ) {
@@ -155,7 +157,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             accountIdentifier: accountId,
             projectIdentifier,
             orgIdentifier,
-            connectorIdentifier: getScopedValueFromDTO(configuredGitConnector)
+            connectorIdentifier: getScopedValueFromDTO(configuredGitConnector),
+            repo: getFullRepoName(selectRepositoryRef.current.repository)
           }
         }).then((response: ResponseString) => {
           const { status, data } = response || {}
@@ -179,7 +182,8 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     accountId,
     projectIdentifier,
     orgIdentifier,
-    configurePipelineRef.current?.configuredOption
+    configurePipelineRef.current?.configuredOption,
+    selectRepositoryRef.current?.repository
   ])
 
   const constructPipelinePayloadWithCodebase = React.useCallback(
@@ -332,15 +336,28 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         branch,
         repoName: selectRepositoryRef.current?.repository?.name
       }
+      const existingGitConnectorUrl: string = get(configuredGitConnector, 'spec.url')
       if (selectRepositoryRef.current?.repository) {
         const { configuredOption } = configurePipelineRef.current || {}
+        const v1YAMLAsJSON =
+          configuredOption &&
+          StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.GenerateYAML
+            ? generatedYAMLAsJSON
+            : getCIStarterPipelineV1()
         return createPipelineV2Promise({
           body: CI_YAML_VERSIONING
             ? yamlStringify(
-                configuredOption &&
-                  StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.GenerateYAML
-                  ? generatedYAMLAsJSON
-                  : getCIStarterPipelineV1()
+                storeInGit
+                  ? v1YAMLAsJSON
+                  : addRepositoryInfoToPipeline({
+                      currentPipeline: v1YAMLAsJSON,
+                      connectorRef,
+                      repoName:
+                        (selectRepositoryRef.current?.repository?.namespace &&
+                        existingGitConnectorUrl.endsWith(selectRepositoryRef.current.repository.namespace)
+                          ? selectRepositoryRef.current?.repository?.name
+                          : getFullRepoName(selectRepositoryRef.current?.repository)) || ''
+                    })
               )
             : constructPipelinePayloadWithCodebase(selectRepositoryRef.current.repository),
           queryParams: {
