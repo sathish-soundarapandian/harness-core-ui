@@ -6,11 +6,23 @@
  */
 
 import React from 'react'
-import { Formik, FormikForm, FormInput, getMultiTypeFromValue, MultiTypeInputType } from '@harness/uicore'
-import type { FormikProps } from 'formik'
+import {
+  Button,
+  ButtonVariation,
+  Formik,
+  FormikForm,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  SelectOption
+} from '@harness/uicore'
+import { FieldArray, FormikProps } from 'formik'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
+import { isArray, memoize } from 'lodash-es'
+import type { IItemRendererProps } from '@blueprintjs/select'
+
 import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
@@ -31,12 +43,14 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfigureOptions/ConnectorConfigureOptions'
 import { Connectors } from '@connectors/constants'
-// import { NoTagResults } from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
-// import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 
-// import { getGenuineValue } from '../JiraApproval/helper'
-import type { BambooFormContentInterface, BambooStepData } from './types'
-import { variableSchema } from './helper'
+import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
+
+import type { BambooFormContentInterface, BambooStepData, jobParameterInterface } from './types'
+import { scriptInputType, variableSchema } from './helper'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
 import type { BambooStepProps } from './BambooStep'
 import { getGenuineValue } from '../JiraApproval/helper'
@@ -53,7 +67,6 @@ function FormContent({
 }: BambooFormContentInterface): React.ReactElement {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
-  // const { values: formValues } = formik
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
@@ -81,6 +94,10 @@ function FormContent({
       connectorRef: ''
     }
   })
+
+  const planPathItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={loadingPlans} />
+  ))
 
   // eslint-disable-next-line no-console
   console.log(plansResponse, 'plans response api', refetchPlans)
@@ -128,18 +145,6 @@ function FormContent({
           type="Bamboo"
           enableConfigureOptions={false}
           selected={formik?.values?.spec.connectorRef as string}
-          // onChange={(value: any, _unused) => {
-          //   if (value?.record?.identifier !== connectorRefFixedValue) {
-          //     resetForm(
-          //       formik,
-          //       'connectorRef',
-          //       '',
-          //       !(getMultiTypeFromValue(formik.values.spec.planName) === MultiTypeInputType.RUNTIME)
-          //     )
-          //     setJobDetails([])
-          //   }
-          //   lastOpenedJob.current = null
-          // }}
           disabled={readonly}
           gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
         />
@@ -182,27 +187,34 @@ function FormContent({
                 : getString('pipeline.planNamePlaceholder')
               : getString('select')
           }
-          // multiTypeInputProps={{
-          //   onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.planName', type),
-          //   expressions,
-          //   selectProps: {
-          //     allowCreatingNewItems: true,
-          //     addClearBtn: true,
-          //     items: [],
-          //     loadingItems: loadingPlans,
-          //     itemRenderer: planPathItemRenderer
-          //   },
-          //   onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-          //     if (
-          //       e?.target?.type !== 'text' ||
-          //       (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
-          //     ) {
-          //       return
-          //     }
-          //     refetchPlans()
-          //   },
-          //   allowableTypes
-          // }}
+          multiTypeInputProps={{
+            onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.planName', type),
+            expressions,
+            selectProps: {
+              allowCreatingNewItems: true,
+              addClearBtn: true,
+              items: [],
+              loadingItems: loadingPlans,
+              itemRenderer: planPathItemRenderer,
+              noResults: (
+                <NoTagResults
+                  tagError={plansError}
+                  isServerlessDeploymentTypeSelected={false}
+                  defaultErrorText={getString('pipeline.bambooStep.noPlans')}
+                />
+              )
+            },
+            onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+              if (
+                e?.target?.type !== 'text' ||
+                (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING)
+              ) {
+                return
+              }
+              refetchPlans()
+            },
+            allowableTypes
+          }}
         />
         {getMultiTypeFromValue(formik.values.spec.planName) === MultiTypeInputType.RUNTIME && (
           <ConfigureOptions
@@ -214,6 +226,102 @@ function FormContent({
             showDefaultField={false}
             showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.planName', value)}
+            isReadonly={readonly}
+          />
+        )}
+      </div>
+
+      <div className={stepCss.formGroup}>
+        <MultiTypeFieldSelector
+          name="spec.planParameter"
+          key={getMultiTypeFromValue(formik.values.spec.planParameter as string)}
+          label={getString('pipeline.bambooStep.planParameter')}
+          isOptional
+          allowedTypes={allowableTypes}
+          optionalLabel={getString('titleOptional')}
+          defaultValueToReset={[]}
+          disableTypeSelection={false}
+        >
+          <FieldArray
+            name="spec.planParameter"
+            render={({ push, remove }) => {
+              return (
+                <div className={css.panel}>
+                  <div className={css.jobParameter}>
+                    <span className={css.label}>Name</span>
+                    <span className={css.label}>Type</span>
+                    <span className={css.label}>Value</span>
+                  </div>
+
+                  {isArray(formik.values.spec.planParameter) &&
+                    formik.values.spec.planParameter?.map((type: jobParameterInterface, i: number) => {
+                      return (
+                        <div className={css.jobParameter} key={type.id}>
+                          <FormInput.Text
+                            name={`spec.planParameter.[${i}].name`}
+                            placeholder={getString('name')}
+                            disabled={readonly}
+                          />
+                          <FormInput.Select
+                            items={scriptInputType}
+                            name={`spec.planParameter.[${i}].type`}
+                            placeholder={getString('typeLabel')}
+                            disabled={readonly}
+                          />
+                          <FormInput.MultiTextInput
+                            name={`spec.planParameter.[${i}].value`}
+                            placeholder={getString('valueLabel')}
+                            multiTextInputProps={{
+                              allowableTypes,
+                              expressions,
+                              disabled: readonly
+                            }}
+                            label=""
+                            disabled={readonly}
+                          />
+                          <Button
+                            variation={ButtonVariation.ICON}
+                            icon="main-trash"
+                            data-testid={`remove-planParameter-${i}`}
+                            onClick={() => remove(i)}
+                            disabled={readonly}
+                          />
+                        </div>
+                      )
+                    })}
+                  <Button
+                    icon="plus"
+                    variation={ButtonVariation.LINK}
+                    data-testid="add-planParameter"
+                    disabled={readonly}
+                    onClick={() => push({ name: '', type: 'String', value: '' })}
+                    className={css.addButton}
+                  >
+                    {getString('pipeline.bambooStep.addPlanParameters')}
+                  </Button>
+                </div>
+              )
+            }}
+          />
+        </MultiTypeFieldSelector>
+        {getMultiTypeFromValue(formik.values?.spec?.planParameter as string) === MultiTypeInputType.RUNTIME && (
+          <ConfigureOptions
+            value={formik.values?.spec?.planParameter as string}
+            type="String"
+            variableName="spec.planParameter"
+            className={css.minConfigBtn}
+            showRequiredField={false}
+            showDefaultField={false}
+            showAdvanced={true}
+            onChange={value => {
+              formik.setValues({
+                ...formik.values,
+                spec: {
+                  ...formik.values.spec,
+                  planParameter: value
+                }
+              })
+            }}
             isReadonly={readonly}
           />
         )}

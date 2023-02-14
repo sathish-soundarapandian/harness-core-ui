@@ -159,6 +159,9 @@ jenkinsStep:
 bambooStep:
   validations:
     planName: Planname is a required field
+  planParameter: Plan Parameters
+  addPlanParameters: Add Plan Parameter
+  noPlans: No Plans Defined
 jiraApprovalStep:
   connectToJira: Connect to Jira
   connectorRef: Jira Connector

@@ -3566,6 +3566,9 @@ export interface StringsMap {
   'pipeline.bamboo.fetchingPlans': string
   'pipeline.bamboo.planName': string
   'pipeline.bambooBuilds': string
+  'pipeline.bambooStep.addPlanParameters': string
+  'pipeline.bambooStep.noPlans': string
+  'pipeline.bambooStep.planParameter': string
   'pipeline.bambooStep.validations.planName': string
   'pipeline.barrierStep.barrierReference': string
   'pipeline.barrierStep.barrierReferencePlaceholder': string
