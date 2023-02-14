@@ -30,15 +30,14 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { hasCIStage } from '@pipeline/utils/stageHelpers'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import RetryHistory from '@pipeline/components/RetryPipeline/RetryHistory/RetryHistory'
-import { PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED } from '@pipeline/utils/constants'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import GitRemoteDetails from '@common/components/GitRemoteDetails/GitRemoteDetails'
 import { ExecutionCompiledYaml } from '@pipeline/components/ExecutionCompiledYaml/ExecutionCompiledYaml'
-import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import type { PipelineExecutionSummary, ResponsePMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
+import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import css from './ExecutionHeader.module.scss'
 
 export interface ExecutionHeaderProps {
@@ -62,6 +61,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
   } = useAppStore()
   const { getString } = useStrings()
   const { pipelineExecutionSummary = {} } = pipelineExecutionDetail || {}
+  const { CI_REMOTE_DEBUG } = useFeatureFlags()
   const [canView, canEdit, canExecute] = usePermission(
     {
       resourceScope: {
@@ -120,6 +120,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
     storeType: pipelineMetadata?.data?.storeType,
     isDebugMode: hasCI
   })
+
   const { CI_YAML_VERSIONING } = useFeatureFlags()
 
   const pipelineStudioRoutingProps = {
@@ -232,7 +233,7 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
             canRetry={pipelineExecutionSummary.canRetry}
             modules={pipelineExecutionSummary.modules}
             onReRunInDebugMode={
-              hasCI && PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED.includes(accountId)
+              hasCI && CI_REMOTE_DEBUG
                 ? CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
                   ? openRunPipelineModalV1()
                   : openRunPipelineModal()

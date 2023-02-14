@@ -33,12 +33,13 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
 import { killEvent } from '@common/utils/eventUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
 import { TimePopoverWithLocal } from '@pipeline/components/ExecutionCard/TimePopoverWithLocal'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRunPipelineModal'
-import { PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED, AUTO_TRIGGERS } from '@pipeline/utils/constants'
+import { AUTO_TRIGGERS } from '@pipeline/utils/constants'
 import { hasCIStage } from '@pipeline/utils/stageHelpers'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { mapTriggerTypeToIconAndExecutionText, mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
@@ -51,7 +52,6 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
 import type { PipelineExecutionSummary, PipelineStageInfo } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { CITriggerInfo, CITriggerInfoProps } from './CITriggerInfoCell'
 import type { ExecutionListColumnActions } from './ExecutionListTable'
 import css from './ExecutionListTable.module.scss'
@@ -346,7 +346,8 @@ export const MenuCell: CellType = ({ row, column }) => {
     stagesExecuted: data.stagesExecuted,
     isDebugMode: hasCI
   })
-  const { CI_YAML_VERSIONING } = useFeatureFlags()
+
+  const { CI_YAML_VERSIONING, CI_REMOTE_DEBUG } = useFeatureFlags()
 
   const { openRunPipelineModalV1 } = useRunPipelineModalV1({
     pipelineIdentifier: data.pipelineIdentifier || pipelineIdentifier,
@@ -357,7 +358,6 @@ export const MenuCell: CellType = ({ row, column }) => {
     storeType: data.storeType as StoreType,
     isDebugMode: hasCI
   })
-
   const [canEdit, canExecute] = usePermission(
     {
       resourceScope: {
@@ -397,7 +397,7 @@ export const MenuCell: CellType = ({ row, column }) => {
         onViewCompiledYaml={() => onViewCompiledYaml(data)}
         onCompareExecutions={() => addToCompare(data)}
         onReRunInDebugMode={
-          hasCI && PROD_ACCOUNT_IDS_FOR_REMOTE_DEBUGGING_ENABLED.includes(accountId)
+          hasCI && CI_REMOTE_DEBUG
             ? CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
               ? openRunPipelineModalV1()
               : openRunPipelineModal()
