@@ -67,7 +67,8 @@ import {
   GitAuthenticationMethod,
   NonGitOption,
   getCloudPipelinePayloadWithoutCodebase,
-  getCIStarterPipelineV1
+  getCIStarterPipelineV1,
+  addRepositoryInfoToPipeline
 } from './Constants'
 import { SelectGitProvider, SelectGitProviderRef } from './SelectGitProvider'
 import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
@@ -332,15 +333,28 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
         branch,
         repoName: selectRepositoryRef.current?.repository?.name
       }
+      const existingGitConnectorUrl: string = get(configuredGitConnector, 'spec.url')
       if (selectRepositoryRef.current?.repository) {
         const { configuredOption } = configurePipelineRef.current || {}
+        const v1YAMLAsJSON =
+          configuredOption &&
+          StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.GenerateYAML
+            ? generatedYAMLAsJSON
+            : getCIStarterPipelineV1()
         return createPipelineV2Promise({
           body: CI_YAML_VERSIONING
             ? yamlStringify(
-                configuredOption &&
-                  StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.GenerateYAML
-                  ? generatedYAMLAsJSON
-                  : getCIStarterPipelineV1()
+                storeInGit
+                  ? v1YAMLAsJSON
+                  : addRepositoryInfoToPipeline({
+                      currentPipeline: v1YAMLAsJSON,
+                      connectorRef,
+                      repoName:
+                        (selectRepositoryRef.current?.repository?.namespace &&
+                        existingGitConnectorUrl.endsWith(selectRepositoryRef.current.repository.namespace)
+                          ? selectRepositoryRef.current?.repository?.name
+                          : getFullRepoName(selectRepositoryRef.current?.repository)) || ''
+                    })
               )
             : constructPipelinePayloadWithCodebase(selectRepositoryRef.current.repository),
           queryParams: {

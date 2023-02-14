@@ -266,6 +266,18 @@ export const getPipelinePayloadWithoutCodebase = (): Record<string, any> => {
   }
 }
 
+export const addRepositoryInfoToPipeline = ({
+  currentPipeline,
+  connectorRef,
+  repoName
+}: {
+  currentPipeline: Record<string, any>
+  connectorRef: string
+  repoName: string
+}): Record<string, any> => {
+  return set(currentPipeline, 'repository', { connector: connectorRef, name: repoName })
+}
+
 export const getCIStarterPipelineV1 = (): Record<string, any> => {
   return {
     version: 1,
