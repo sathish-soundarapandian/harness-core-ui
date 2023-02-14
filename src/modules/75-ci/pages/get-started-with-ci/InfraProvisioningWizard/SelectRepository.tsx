@@ -31,8 +31,9 @@ import { ConnectorInfoDTO, useGetListOfAllReposByRefConnector, UserRepoResponse,
 import { useStrings } from 'framework/strings'
 import { Connectors } from '@connectors/constants'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { getScopedValueFromDTO } from '@common/components/EntityReference/EntityReference.types'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
-import { getFullRepoName, getScmConnectorPrefix } from '../../../utils/HostedBuildsUtils'
+import { getFullRepoName } from '../../../utils/HostedBuildsUtils'
 
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -48,7 +49,7 @@ export type SelectRepositoryForwardRef =
 
 interface SelectRepositoryProps {
   showError?: boolean
-  validatedConnector?: ConnectorInfoDTO
+  validatedPreSelectedConnector?: ConnectorInfoDTO
   connectorsEligibleForPreSelection?: ConnectorInfoDTO[]
   onConnectorSelect?: (connector: ConnectorInfoDTO) => void
   disableNextBtn: () => void
@@ -62,7 +63,7 @@ const SelectRepositoryRef = (
 ): React.ReactElement => {
   const {
     showError,
-    validatedConnector,
+    validatedPreSelectedConnector,
     disableNextBtn,
     enableNextBtn,
     connectorsEligibleForPreSelection,
@@ -105,44 +106,54 @@ const SelectRepositoryRef = (
   }, [])
 
   const ConnectorSelectionItems = useMemo((): SelectOption[] => {
-    if (!validatedConnector) {
+    if (!validatedPreSelectedConnector) {
       return []
     }
     const items: ConnectorInfoDTO[] =
       Array.isArray(connectorsEligibleForPreSelection) && connectorsEligibleForPreSelection?.length > 0
         ? connectorsEligibleForPreSelection
-        : [validatedConnector]
+        : [validatedPreSelectedConnector]
     return items?.map((item: ConnectorInfoDTO) => {
-      const { type, name, identifier } = item
+      const { type, name } = item
       return {
         icon: { name: getIcon(type), className: css.listIcon } as IconProps,
         label: name,
-        value: identifier
+        value: getScopedValueFromDTO(item)
       }
     }) as SelectOption[]
-  }, [connectorsEligibleForPreSelection, validatedConnector])
+  }, [connectorsEligibleForPreSelection, validatedPreSelectedConnector])
 
   useEffect(() => {
-    if (validatedConnector && ConnectorSelectionItems.length > 0) {
+    if (validatedPreSelectedConnector && ConnectorSelectionItems.length > 0) {
       setSelectedConnectorOption(
-        ConnectorSelectionItems.find((item: SelectOption) => item.value === validatedConnector.identifier)
+        ConnectorSelectionItems.find((item: SelectOption) => item.value === validatedPreSelectedConnector.identifier)
       )
     }
-  }, [ConnectorSelectionItems, validatedConnector])
+  }, [ConnectorSelectionItems, validatedPreSelectedConnector])
+
+  const getRepositories = useCallback((connectorRef: string): void => {
+    cancelRepositoriesFetch()
+    fetchRepositories({
+      queryParams: {
+        accountIdentifier: accountId,
+        projectIdentifier,
+        orgIdentifier,
+        connectorRef
+      }
+    })
+  }, [])
 
   useEffect(() => {
-    cancelRepositoriesFetch()
-    if (validatedConnector) {
-      fetchRepositories({
-        queryParams: {
-          accountIdentifier: accountId,
-          projectIdentifier,
-          orgIdentifier,
-          connectorRef: `${getScmConnectorPrefix(validatedConnector)}${validatedConnector.identifier}`
-        }
-      })
+    if (validatedPreSelectedConnector) {
+      getRepositories(getScopedValueFromDTO(validatedPreSelectedConnector))
     }
-  }, [validatedConnector])
+  }, [validatedPreSelectedConnector])
+
+  useEffect(() => {
+    if (selectedConnectorOption) {
+      getRepositories(selectedConnectorOption.value as string)
+    }
+  }, [selectedConnectorOption])
 
   useEffect(() => {
     if (selectedConnectorOption) {
