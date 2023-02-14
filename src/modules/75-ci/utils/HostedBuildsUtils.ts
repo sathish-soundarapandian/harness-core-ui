@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { get, set } from 'lodash-es'
+import { get, omit, set } from 'lodash-es'
 import { parse } from 'yaml'
 import type { ConnectorInfoDTO, ConnectorRequestBody, ConnectorResponse, UserRepoResponse } from 'services/cd-ng'
 import type { PipelineConfig } from 'services/pipeline-ng'
@@ -16,10 +16,13 @@ import { Connectors } from '@connectors/constants'
 import { GIT_EXTENSION } from '@pipeline/utils/CIUtils'
 import {
   BitbucketPRTriggerActions,
-  getCloudPipelinePayloadWithCodebase,
-  getPipelinePayloadWithCodebase,
   GitHubPRTriggerActions,
-  GitlabPRTriggerActions
+  GitlabPRTriggerActions,
+  DEFAULT_STAGE_ID,
+  KUBERNETES_HOSTED_INFRA_ID,
+  DOCKER_REGISTRY_CONNECTOR_REF,
+  ACCOUNT_SCOPE_PREFIX,
+  CodebaseProperties
 } from '../pages/get-started-with-ci/InfraProvisioningWizard/Constants'
 
 export const DELEGATE_SELECTOR_FOR_HARNESS_PROVISIONED_DELEGATE = 'harness-kubernetes-delegate'
@@ -207,7 +210,7 @@ export const getValidRepoName = (repositoryName: string): string => {
   return encodeURI(repoName.endsWith(GIT_EXTENSION) ? repoName.replace(/\.[^/.]+$/, '') : repoName)
 }
 
-export const updateUrlAndRepoInGitRepoConnector = (
+export const updateUrlAndRepoInGitConnector = (
   existingConnector: ConnectorInfoDTO,
   repository?: UserRepoResponse
 ): ConnectorInfoDTO => {
@@ -223,3 +226,117 @@ export const updateUrlAndRepoInGitRepoConnector = (
 }
 
 export const DefaultCIPipelineName = 'Sample Pipeline'
+
+export const getPipelinePayloadWithoutCodebase = (): Record<string, any> => {
+  return {
+    pipeline: {
+      name: '',
+      identifier: '',
+      projectIdentifier: '',
+      orgIdentifier: '',
+      stages: [
+        {
+          stage: {
+            name: DEFAULT_STAGE_ID,
+            identifier: DEFAULT_STAGE_ID,
+            type: 'CI',
+            spec: {
+              cloneCodebase: false,
+              infrastructure: {
+                type: 'KubernetesHosted',
+                spec: {
+                  identifier: KUBERNETES_HOSTED_INFRA_ID
+                }
+              },
+              execution: {
+                steps: [
+                  {
+                    step: {
+                      type: 'Run',
+                      name: 'Echo Welcome Message',
+                      identifier: 'Echo_Welcome_Message',
+                      spec: {
+                        connectorRef: ACCOUNT_SCOPE_PREFIX.concat(DOCKER_REGISTRY_CONNECTOR_REF),
+                        image: 'alpine',
+                        shell: 'Sh',
+                        command: 'echo "Welcome to Harness CI"'
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
+export const addRepositoryInfoToPipeline = ({
+  currentPipeline,
+  connectorRef,
+  repoName
+}: {
+  currentPipeline: Record<string, any>
+  connectorRef: string
+  repoName: string
+}): Record<string, any> => {
+  return set(currentPipeline, 'repository', { connector: connectorRef, name: repoName })
+}
+
+export const getCIStarterPipelineV1 = (): Record<string, any> => {
+  return {
+    version: 1,
+    name: `HelloWorld CI ${new Date().getTime().toString()}`,
+    stages: [
+      {
+        name: 'build',
+        type: 'ci',
+        spec: {
+          steps: [
+            {
+              name: 'Run echo',
+              type: 'script',
+              spec: {
+                run: 'echo "Hello Harness CI!"'
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+
+export const getPipelinePayloadWithCodebase = (): Record<string, any> => {
+  const originalPipeline = getPipelinePayloadWithoutCodebase()
+  return set(
+    set(originalPipeline, 'pipeline.properties', CodebaseProperties),
+    'pipeline.stages.0.stage.spec.cloneCodebase',
+    true
+  )
+}
+
+export const getCloudPipelinePayloadWithoutCodebase = (): PipelineConfig => {
+  const originalPipeline = getPipelinePayloadWithoutCodebase()
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.infrastructure', undefined)
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.execution.steps.0.step.spec.image', undefined)
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.execution.steps.0.step.spec.connectorRef', undefined)
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.platform', { os: 'Linux', arch: 'Amd64' })
+  set(originalPipeline, 'pipeline.stages.0.stage.spec.runtime', { type: 'Cloud', spec: {} })
+  return originalPipeline
+}
+
+export const getCloudPipelinePayloadWithCodebase = (): PipelineConfig => {
+  const originalPipeline = getCloudPipelinePayloadWithoutCodebase()
+  return set(
+    set(originalPipeline, 'pipeline.properties', CodebaseProperties),
+    'pipeline.stages.0.stage.spec.cloneCodebase',
+    true
+  )
+}
+
+export const moveVersionFieldToTheTop = (existingPipeline: Record<string, any>) => {
+  return { name: get(existingPipeline, 'name'), version: 1, ...omit(existingPipeline, 'version') }
+}
