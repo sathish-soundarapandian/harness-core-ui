@@ -462,12 +462,6 @@ export function PipelineCanvasV1({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [executionId])
 
-  function onCloseRunPipelineModal(): void {
-    closeRunPipelineModal()
-    setInputSetYaml('')
-    replaceQueryParams({ repoIdentifier, branch, connectorRef, storeType, repoName }, { skipNulls: true }, true)
-  }
-
   const allowOpeningRunPipelineModal: boolean = React.useMemo(() => {
     /**
      * This is done because Run Pipeline modal was opening twice for Remote Pipelines.
@@ -515,7 +509,7 @@ export function PipelineCanvasV1({
               repoIdentifier={isPipelineRemote ? repoName : repoIdentifier}
               branch={branch}
               source="executions"
-              onClose={onCloseRunPipelineModal}
+              onClose={closeRunPipelineModal}
               storeType={storeType}
               storeMetadata={storeMetadata}
             />
@@ -523,7 +517,7 @@ export function PipelineCanvasV1({
               aria-label="close modal"
               icon="cross"
               variation={ButtonVariation.ICON}
-              onClick={onCloseRunPipelineModal}
+              onClick={closeRunPipelineModal}
               className={css.crossIcon}
             />
           </Layout.Vertical>
