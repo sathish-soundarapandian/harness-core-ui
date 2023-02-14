@@ -125,7 +125,8 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
   const { getString } = useStrings()
   const [pipelineName, setPipelineName] = useState<string>()
   const pipelineNameToSpecify = `Build ${pipelineName}`
-  const formikRef = useRef<FormikContextType<ImportPipelineYAMLInterface>>()
+  const importYAMLFormikRef = useRef<FormikContextType<ImportPipelineYAMLInterface>>()
+  const saveToGitFormikRef = useRef<FormikContextType<SavePipelineToRemoteInterface>>()
   const generatePipelineConfig: StarterTemplate = {
     name: getString('ci.getStartedWithCI.generatePipelineConfig'),
     description: getString('ci.getStartedWithCI.starterPipelineHelptext'),
@@ -142,7 +143,6 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
   const [selectedConfigOption, setSelectedConfigOption] = useState<StarterTemplate>(generatePipelineConfig)
   const [showAdvancedOptions, setShowAdvancedOptions] = useState<boolean>(false)
   const [isFetchingDefaultBranch, setIsFetchingDefaultBranch] = useState<boolean>(false)
-  const saveToGitFormikRef = useRef<FormikContextType<SavePipelineToRemoteInterface>>()
 
   const markFieldsTouchedToShowValidationErrors = React.useCallback((): void => {
     if (
@@ -162,7 +162,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
         setFieldTouched?.('yamlPath', true)
       }
     } else if (StarterConfigIdToOptionMap[selectedConfigOption.id] === PipelineConfigurationOption.ChooseExistingYAML) {
-      const { values, setFieldTouched } = formikRef.current || {}
+      const { values, setFieldTouched } = importYAMLFormikRef.current || {}
       const { branch, yamlPath } = values || {}
       if (!branch) {
         setFieldTouched?.('branch', true)
@@ -171,7 +171,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
         setFieldTouched?.('yamlPath', true)
       }
     }
-  }, [formikRef.current, saveToGitFormikRef.current, selectedConfigOption])
+  }, [importYAMLFormikRef.current, saveToGitFormikRef.current, selectedConfigOption])
 
   const setForwardRef = ({ values, configuredOption }: Omit<ConfigurePipelineRef, 'showValidationErrors'>): void => {
     if (!forwardRef || typeof forwardRef === 'function') {
@@ -187,10 +187,26 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
 
   useEffect(() => {
     if (selectedConfigOption) {
-      setForwardRef({ configuredOption: selectedConfigOption })
+      // add importYAMLFormikRef when import yaml is integrated
+      setForwardRef({
+        configuredOption: selectedConfigOption,
+        values: [PipelineConfigurationOption.StarterPipeline, PipelineConfigurationOption.GenerateYAML].includes(
+          StarterConfigIdToOptionMap[selectedConfigOption.id]
+        )
+          ? saveToGitFormikRef.current?.values
+          : {}
+      })
       setPipelineName(selectedConfigOption.name)
     }
-  }, [selectedConfigOption, pipelineNameToSpecify, orgIdentifier, projectIdentifier, configuredGitConnector, repoName])
+  }, [
+    selectedConfigOption,
+    pipelineNameToSpecify,
+    orgIdentifier,
+    projectIdentifier,
+    configuredGitConnector,
+    repoName,
+    saveToGitFormikRef.current
+  ])
 
   const renderCard = useCallback(
     (item: StarterTemplate): JSX.Element => {
@@ -232,7 +248,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
                         })}
                       >
                         {formikProps => {
-                          formikRef.current = formikProps
+                          importYAMLFormikRef.current = formikProps
                           setForwardRef({
                             values: formikProps.values,
                             configuredOption: selectedConfigOption
