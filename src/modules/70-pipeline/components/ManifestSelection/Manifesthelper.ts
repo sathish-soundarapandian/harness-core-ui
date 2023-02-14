@@ -277,7 +277,7 @@ export const ManifestIconByType: Record<ManifestStores, IconName> = {
   Git: 'service-github',
   Github: 'github',
   GitLab: 'service-gotlab',
-  Bitbucket: 'bitbucket',
+  Bitbucket: 'bitbucket-selected',
   Http: 'service-helm',
   OciHelmChart: 'helm-oci',
   S3: 'service-service-s3',
