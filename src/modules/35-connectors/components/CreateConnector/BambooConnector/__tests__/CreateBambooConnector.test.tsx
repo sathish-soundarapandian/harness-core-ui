@@ -108,4 +108,52 @@ describe('Create Bamboo connector wizard', () => {
       { queryParams: {} }
     )
   })
+
+  test('click on back button', async () => {
+    const { container } = render(
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+        <CreateBambooConnector {...bambooProps} isEditMode={true} />
+      </TestWrapper>
+    )
+
+    const updatedName = 'dummy name'
+    // editing connector name
+    await act(async () => {
+      fireEvent.change(container.querySelector('input[name="name"]')!, {
+        target: { value: updatedName }
+      })
+    })
+    expect(container).toMatchSnapshot()
+    await act(async () => {
+      fireEvent.click(container.querySelector('button[type="submit"]')!)
+    })
+
+    // step 2
+    expect(queryByText(container, 'Bamboo URL')).toBeDefined()
+    expect(container).toMatchSnapshot()
+
+    const backBtn = container.querySelector('[data-name="bambooBackButton"]')
+    await act(async () => {
+      fireEvent.click(backBtn!)
+    })
+    expect(container).toMatchSnapshot()
+  })
+
+  test('when connectorInfo is not present', async () => {
+    const { container } = render(
+      <TestWrapper path="/account/:accountId/resources/connectors" pathParams={{ accountId: 'dummy' }}>
+        <CreateBambooConnector {...bambooProps} connectorInfo={undefined} isEditMode={true} />
+      </TestWrapper>
+    )
+    await act(async () => {
+      fireEvent.change(container.querySelector('input[name="name"]')!, {
+        target: { value: 'dummy name' }
+      })
+    })
+    expect(container).toMatchSnapshot()
+
+    fireEvent.click(container.querySelector('button[type="submit"]')!)
+
+    expect(container).toMatchSnapshot()
+  })
 })
