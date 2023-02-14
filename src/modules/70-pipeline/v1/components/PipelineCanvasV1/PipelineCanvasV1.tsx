@@ -134,7 +134,7 @@ export function PipelineCanvasV1({
     connectorRef,
     storeType
   } = useQueryParams<GitQueryParams & RunPipelineQueryParams>()
-  const { updateQueryParams, replaceQueryParams } = useUpdateQueryParams<PipelineStudioQueryParams>()
+  const { updateQueryParams } = useUpdateQueryParams<PipelineStudioQueryParams>()
   const {
     pipeline,
     isUpdated,
