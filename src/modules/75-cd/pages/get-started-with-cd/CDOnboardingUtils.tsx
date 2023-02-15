@@ -43,6 +43,7 @@ import type {
   ApplicationsApplicationSyncRequest,
   ApplicationsRetryStrategy,
   ApplicationsSyncPolicyAutomated,
+  RepositoriesRepoAppDetailsResponse,
   Servicev1Application
 } from 'services/gitops'
 import type { SelectAuthenticationMethodInterface } from './SelectInfrastructure/SelectAuthenticationMethod'
@@ -87,7 +88,8 @@ export const SAMPLE_MANIFEST_FOLDER = 'Sample Manifest Onboarding'
 export const DEFAULT_PIPELINE_NAME = 'Sample Pipeline'
 export const EMPTY_STRING = ''
 export const ONBOARDING_PREFIX = 'onboarding'
-export const DEFAULT_SAMPLE_REPO = 'https://github.com/argoproj/argoproj-deployments'
+export const DEFAULT_SAMPLE_REPO = 'https://github.com/harness-apps/hosted-gitops-example-apps'
+// export const DEFAULT_SAMPLE_REPO = 'https://github.com/argoproj/argoproj-deployments'
 
 const DEFAULT_STAGE_ID = 'Stage'
 const DEFAULT_STAGE_TYPE = 'Deployment'
@@ -536,11 +538,23 @@ export interface PayloadInterface {
   repositoryData?: RepositoryInterface
   clusterData?: ClusterInterface
   name?: string
+  appDetails?: RepositoriesRepoAppDetailsResponse
+}
+
+export enum ParameterType {
+  Directory = 'Directory',
+  Helm = 'Helm',
+  Kustomize = 'Kustomize',
+  Ksonnet = 'Ksonnet'
 }
 
 export const getAppPayload = (props: PayloadInterface) => {
-  const { repositoryData, clusterData, name } = props
-  return {
+  const { repositoryData, clusterData, name, appDetails } = props
+  const imagesArr = defaultTo(appDetails?.kustomize?.images, [])
+  const helmParameters: string[] = []
+  const helmValueFiles: string[] = appDetails?.helm?.valueFiles || []
+
+  const payload: any = {
     application: {
       kind: 'Application',
       apiVersion: 'argoproj.io/v1alpha1',
@@ -570,7 +584,11 @@ export const getAppPayload = (props: PayloadInterface) => {
           repoURL: repositoryData?.repo,
           path: repositoryData?.path,
           kustomize: {
-            images: ['quay.io/dexidp/dex:v2.23.0']
+            images: imagesArr
+          },
+          helm: {
+            valueFiles: helmValueFiles,
+            parameters: helmParameters
           },
           repoId: repositoryData?.identifier
         },
@@ -581,6 +599,19 @@ export const getAppPayload = (props: PayloadInterface) => {
       }
     }
   }
+
+  if (appDetails?.type === ParameterType.Directory) {
+    delete payload.application.spec.source.helm
+  }
+  if (appDetails?.type === ParameterType.Helm) {
+    delete payload.application.spec.source.directory
+    delete payload.application.spec.source.kustomize
+  }
+  if (appDetails?.type === ParameterType.Kustomize) {
+    delete payload.application.spec.source.directory
+    delete payload.application.spec.source.helm
+  }
+  return payload
 }
 
 export const DEFAULT_PIPELINE_PAYLOAD = {

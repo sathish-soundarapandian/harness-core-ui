@@ -31,7 +31,7 @@ import { Color, FontVariation, PopoverProps } from '@harness/design-system'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import type { FormikContextType } from 'formik'
-import { defaultTo, get, noop } from 'lodash-es'
+import { defaultTo, get, isEmpty, noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { FormGroup, Label } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -41,10 +41,12 @@ import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   RepositoriesRefs,
+  RepositoriesRepoAppDetailsResponse,
   RepositoriesRepoAppsResponse,
   Servicev1Repository,
   useAgentRepositoryServiceCreateRepository,
   useAgentRepositoryServiceGet,
+  useAgentRepositoryServiceGetAppDetails,
   useAgentRepositoryServiceListApps,
   useAgentRepositoryServiceListRefs,
   useRepositoryServiceListRepositories
@@ -217,6 +219,11 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
     queryRepo: ''
   }
 
+  const defaultAppDetailsParams = {
+    agentIdentifier: fullAgentName,
+    querySourceRepoUrl: ''
+  }
+
   const {
     data: revisions,
     loading: loadingRevisions,
@@ -241,6 +248,30 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
     ...defaultPathParams,
     lazy: true
   })
+
+  const {
+    data: appDetails,
+    error: appDetailsFetchError,
+    refetch: fetchAppDetails
+  } = useAgentRepositoryServiceGetAppDetails({
+    queryParams: defaultQueryParams,
+    identifier: getLastURLPathParam(defaultTo(repoURL, '')),
+    ...defaultAppDetailsParams,
+    lazy: true
+  })
+
+  useEffect(() => {
+    if (!isEmpty(appDetails)) {
+      props?.setAppDetails(appDetails as RepositoriesRepoAppDetailsResponse)
+    }
+  }, [appDetails])
+
+  useEffect(() => {
+    if (appDetailsFetchError) {
+      toast.showError(`Failed loading app details: ${(appDetailsFetchError as APIError).data.error}`)
+    }
+  }, [appDetailsFetchError])
+
   useEffect(() => {
     if (revisionsLoadingError) {
       toast.showError(`Failed loading revisions: ${(revisionsLoadingError as APIError).data.error}`)
@@ -453,8 +484,8 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
     } else {
       return [
         {
-          label: getString('cd.getStartedWithCD.master'),
-          value: getString('cd.getStartedWithCD.master')
+          label: getString('cd.getStartedWithCD.main'),
+          value: getString('cd.getStartedWithCD.main')
         }
       ]
     }
@@ -940,6 +971,20 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                               onChange={item => {
                                                 if (item.value !== formikProps?.values?.path) {
                                                   formikProps.setFieldValue('path', item.value)
+                                                }
+                                                if (item.value) {
+                                                  fetchAppDetails({
+                                                    pathParams: {
+                                                      agentIdentifier: fullAgentName,
+                                                      querySourceRepoUrl: encodeURIComponent(defaultTo(repoURL, '')),
+                                                      identifier: getLastURLPathParam(defaultTo(repoURL, ''))
+                                                    },
+                                                    queryParams: {
+                                                      ...defaultQueryParams,
+                                                      'query.source.path': item.value as string,
+                                                      'query.source.targetRevision': formikProps?.values?.targetRevision
+                                                    }
+                                                  })
                                                 }
                                               }}
                                             />

@@ -25,6 +25,7 @@ import routes from '@common/RouteDefinitions'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
+import type { RepositoriesRepoAppDetailsResponse } from 'services/gitops'
 import { WizardStep, StepStatus, DeployProvisiongWizardStepId, DeployProvisioningWizardProps } from './Constants'
 import { SelectDeploymentType, SelectDeploymentTypeRefInstance } from '../SelectWorkload/SelectDeploymentType'
 import type { SelectInfrastructureRefInstance } from '../SelectInfrastructure/SelectInfrastructure'
@@ -58,6 +59,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
   const history = useHistory()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const selectedDeploymentType: string | undefined = get(serviceData, 'serviceDefinition.type')
+  const [appDetails, setAppDetails] = React.useState<RepositoriesRepoAppDetailsResponse>()
 
   const [selectedSectionId, setSelectedSectionId] = React.useState<DeployProvisiongWizardStepId>(
     DeployProvisiongWizardStepId.SelectDeploymentType
@@ -249,6 +251,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       {
         stepRender: (
           <ConfigureGitops
+            setAppDetails={setAppDetails}
             disableNextBtn={() => setDisableBtn(true)}
             enableNextBtn={() => setDisableBtn(false)}
             ref={delegateSelectorRef}
@@ -278,6 +281,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
       {
         stepRender: (
           <Deploy
+            appDetails={appDetails}
             onBack={() => {
               setCurrentWizardStepId(DeployProvisiongWizardStepId.Configure)
               updateStepStatus([DeployProvisiongWizardStepId.Deploy], StepStatus.ToDo)

@@ -581,6 +581,8 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  creatingApp: Creating Application in progress
+  main: main
   clusterRepo: Cluster Repo
   destinationDetails: Destination Details
   gitURL: Git URL
