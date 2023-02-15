@@ -589,6 +589,7 @@ getStartedWithCD:
   hostedGitopsAgent: Hosted GitOps Agent
   applicationDetails: Application Details
   syncCompleteMessage: Application sync has been triggered successfully
+  failedToCreateApp: Failed to create application
   provisionedSuccessfully: provisioned successfully
   selectAuthenticationType: Select Authentication Type
   failedToProvisionCluster: Failed to provision cluster

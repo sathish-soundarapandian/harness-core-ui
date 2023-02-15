@@ -8,7 +8,18 @@
 import React, { useRef } from 'react'
 import { capitalize, defaultTo, noop, snakeCase, sortBy } from 'lodash-es'
 import { useHistory, useParams } from 'react-router-dom'
-import { Text, Formik, FormikForm, Layout, Container, Button, ButtonVariation, useToaster, Icon } from '@harness/uicore'
+import {
+  Text,
+  Formik,
+  FormikForm,
+  Layout,
+  Container,
+  Button,
+  ButtonVariation,
+  useToaster,
+  Icon,
+  getErrorInfoFromErrorObject
+} from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import type { FormikContextType } from 'formik'
 import routes from '@common/RouteDefinitions'
@@ -85,47 +96,51 @@ export const Deploy = ({ onBack, setSelectedSectionId }: DeployProps) => {
         accountIdentifier: accountId,
         repoIdentifier: `account.${repositoryData?.identifier}`
       }
-    }).then(applicationResponse => {
-      toast.showSuccess(
-        getString('common.entitycreatedSuccessfully', {
-          entity: getString('common.application'),
-          name: applicationResponse?.name
-        }),
-        undefined
-      )
-      saveApplicationData(applicationResponse)
-      const sortedResources = new Map(
-        sortBy(
-          applicationResponse?.app?.status?.resources || [],
-          resource => resourceStatusSortOrder[(resource.status as SyncStatus) || SyncStatus.Unknown]
-        ).map(resource => [snakeCase(getResourceKey(resource)), resource])
-      )
-      const formData = getApplicationPayloadForSync(
-        defaultTo(applicationResponse?.app, {}),
-        [...sortedResources.keys()],
-        defaultTo(applicationResponse?.app?.spec?.source?.targetRevision, 'HEAD')
-      )
-
-      const body = getSyncBody(formData, sortedResources, defaultTo(applicationResponse?.app, {}))
-
-      syncApp(body, {
-        pathParams: { requestName: defaultTo(applicationResponse?.name, ''), agentIdentifier: fullAgentName }
-      }).then(() => {
-        if (!syncError) {
-          toast.showSuccess(getString('cd.getStartedWithCD.syncCompleteMessage'))
-        }
-        history.push(
-          routes.toGitOpsApplication({
-            orgIdentifier: applicationResponse?.orgIdentifier || '',
-            projectIdentifier: applicationResponse?.projectIdentifier || '',
-            accountId: applicationResponse?.accountIdentifier || '',
-            module: 'cd',
-            applicationId: applicationResponse?.name || '',
-            agentId: applicationResponse?.agentIdentifier || ''
-          })
-        )
-      })
     })
+      .then(applicationResponse => {
+        toast.showSuccess(
+          getString('common.entitycreatedSuccessfully', {
+            entity: getString('common.application'),
+            name: applicationResponse?.name
+          }),
+          undefined
+        )
+        saveApplicationData(applicationResponse)
+        const sortedResources = new Map(
+          sortBy(
+            applicationResponse?.app?.status?.resources || [],
+            resource => resourceStatusSortOrder[(resource.status as SyncStatus) || SyncStatus.Unknown]
+          ).map(resource => [snakeCase(getResourceKey(resource)), resource])
+        )
+        const formData = getApplicationPayloadForSync(
+          defaultTo(applicationResponse?.app, {}),
+          [...sortedResources.keys()],
+          defaultTo(applicationResponse?.app?.spec?.source?.targetRevision, 'HEAD')
+        )
+
+        const body = getSyncBody(formData, sortedResources, defaultTo(applicationResponse?.app, {}))
+
+        syncApp(body, {
+          pathParams: { requestName: defaultTo(applicationResponse?.name, ''), agentIdentifier: fullAgentName }
+        }).then(() => {
+          if (!syncError) {
+            toast.showSuccess(getString('cd.getStartedWithCD.syncCompleteMessage'))
+          }
+          history.push(
+            routes.toGitOpsApplication({
+              orgIdentifier: applicationResponse?.orgIdentifier || '',
+              projectIdentifier: applicationResponse?.projectIdentifier || '',
+              accountId: applicationResponse?.accountIdentifier || '',
+              module: 'cd',
+              applicationId: applicationResponse?.name || '',
+              agentId: applicationResponse?.agentIdentifier || ''
+            })
+          )
+        })
+      })
+      .catch(err => {
+        toast.showError(getErrorInfoFromErrorObject(err) || getString('cd.getStartedWithCD.failedToCreateApp'))
+      })
   }
 
   const successsFullConfiguration = (
