@@ -11,7 +11,7 @@
 
 .search {
   border: 1px solid var(--grey-100);
-  padding: var(--spacing-6) var(--spacing-large) !important;
+  padding: var(--spacing-medium) var(--spacing-large) !important;
 }
 
 .mainTabPanel {
@@ -22,6 +22,7 @@
 }
 
 .plugin {
+  padding: var(--spacing-5) var(--spacing-xlarge) var(--spacing-5) var(--spacing-xlarge) !important;
   border-bottom: 1px solid var(--grey-100);
   cursor: pointer;
 }
