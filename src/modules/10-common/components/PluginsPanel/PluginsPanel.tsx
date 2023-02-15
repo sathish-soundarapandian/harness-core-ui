@@ -79,20 +79,20 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   const [query, setQuery] = useState<string>()
   const [isPluginUpdateAction, setIsPluginUpdateAction] = useState<boolean>(false)
   const defaultQueryParams = { pageIndex: 0, pageSize: 200 }
-  const { data, loading, error, refetch } = useListPlugins({ queryParams: defaultQueryParams })
+  const { data, loading, error, refetch: fetchPlugins } = useListPlugins({ queryParams: defaultQueryParams })
   const fixedStepsToBeAlwaysShownOnPluginsPanel = [
     {
-      name: 'Run',
-      inputs: [{ name: 'command', type: 'textarea' }],
+      name: 'Script',
+      inputs: [{ name: 'runs', type: 'textarea' }],
       kind: PluginKind.HARNESS_NATIVE,
       description: 'Run a script on macOS, Linux, or Windows'
-    },
-    {
-      name: 'Run test(Test Intelligence)',
-      inputs: [{ name: 'command', type: 'textarea' }],
-      kind: PluginKind.HARNESS_NATIVE,
-      description: 'Run only impacted tests as part of your pipeline'
     }
+    // {
+    //   name: 'Run test(Test Intelligence)',
+    //   inputs: [{ name: 'command', type: 'textarea' }],
+    //   kind: PluginKind.HARNESS_NATIVE,
+    //   description: 'Run only impacted tests as part of your pipeline'
+    // }
   ]
 
   useEffect(() => {
@@ -115,8 +115,10 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
 
   useEffect(() => {
     if (!error && !loading) {
-      const pluginsFromApiResponse = data?.data?.content || []
-      setPlugins([...fixedStepsToBeAlwaysShownOnPluginsPanel, ...pluginsFromApiResponse])
+      const pluginsFromApiResponse = data?.data?.content
+      if (pluginsFromApiResponse && pluginsFromApiResponse.length > 0) {
+        setPlugins([...fixedStepsToBeAlwaysShownOnPluginsPanel, ...pluginsFromApiResponse])
+      }
     }
   }, [data, loading, error])
 
@@ -158,7 +160,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   }, [])
 
   const searchPlugins = useCallback((searchTerm: string) => {
-    refetch({ queryParams: { ...defaultQueryParams, searchTerm } })
+    fetchPlugins({ queryParams: { ...defaultQueryParams, searchTerm } })
   }, [])
 
   const getPluginIconForKind = useCallback((pluginKind: string): IconName => {
