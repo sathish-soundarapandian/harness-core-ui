@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { capitalize, get, isEmpty } from 'lodash-es'
+import { capitalize, get } from 'lodash-es'
 import { Classes, PopoverInteractionKind, PopoverPosition } from '@blueprintjs/core'
 import * as Yup from 'yup'
 import { Color, FontVariation } from '@harness/design-system'
@@ -80,13 +80,14 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   const [isPluginUpdateAction, setIsPluginUpdateAction] = useState<boolean>(false)
   const defaultQueryParams = { pageIndex: 0, pageSize: 200 }
   const { data, loading, error, refetch: fetchPlugins } = useListPlugins({ queryParams: defaultQueryParams })
+  const scriptPlugin = {
+    name: 'Script',
+    inputs: [{ name: 'run', type: 'textarea' }],
+    kind: PluginKind.HARNESS_NATIVE,
+    description: 'Run a script on macOS, Linux, or Windows'
+  }
   const fixedStepsToBeAlwaysShownOnPluginsPanel = [
-    {
-      name: 'Script',
-      inputs: [{ name: 'runs', type: 'textarea' }],
-      kind: PluginKind.HARNESS_NATIVE,
-      description: 'Run a script on macOS, Linux, or Windows'
-    }
+    scriptPlugin
     // {
     //   name: 'Run test(Test Intelligence)',
     //   inputs: [{ name: 'command', type: 'textarea' }],
@@ -94,24 +95,33 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     //   description: 'Run only impacted tests as part of your pipeline'
     // }
   ]
+  const selectedPluginName: string = get(selectedPluginFromYAMLView, 'name', '')
+  const selectedPluginType: PluginType = get(selectedPluginFromYAMLView, 'type', '')
+
+  const searchPlugins = useCallback((searchTerm: string) => {
+    fetchPlugins({ queryParams: { ...defaultQueryParams, searchTerm } })
+  }, [])
 
   useEffect(() => {
-    if (!isEmpty(selectedPluginFromYAMLView)) {
+    if (selectedPluginType === PluginType.SCRIPT) {
+      setPlugin(scriptPlugin)
+    }
+  }, [selectedPluginType])
+
+  useEffect(() => {
+    if (selectedPluginName) {
       setIsPluginUpdateAction(true)
-      const pluginNameFromYAML = get(selectedPluginFromYAMLView, 'name', '')
-      if (pluginNameFromYAML) {
-        // first look up for matching plugin names in existing plugins list
-        const matchingPlugin = plugins.filter((item: PluginMetadataResponse) => item.name === pluginNameFromYAML)?.[0]
-        if (matchingPlugin) {
-          setPlugin(matchingPlugin)
-          setQuery(pluginNameFromYAML)
-        } else {
-          // if not found, make an api call to fetch it
-          searchPlugins(pluginNameFromYAML)
-        }
+      // first look up for matching plugin names in existing plugins list
+      const matchingPlugin = plugins.filter((item: PluginMetadataResponse) => item.name === selectedPluginName)?.[0]
+      if (matchingPlugin) {
+        setPlugin(matchingPlugin)
+        setQuery(selectedPluginName)
+      } else {
+        // if not found, make an api call to fetch it
+        searchPlugins(selectedPluginName)
       }
     }
-  }, [selectedPluginFromYAMLView])
+  }, [selectedPluginName])
 
   useEffect(() => {
     if (!error && !loading) {
@@ -123,12 +133,11 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   }, [data, loading, error])
 
   useEffect(() => {
-    if (!isEmpty(selectedPluginFromYAMLView)) {
-      const pluginNameFromYAML = get(selectedPluginFromYAMLView, 'name', '')
-      const matchingPlugin = plugins.filter((item: PluginMetadataResponse) => item.name === pluginNameFromYAML)?.[0]
+    if (selectedPluginName) {
+      const matchingPlugin = plugins.filter((item: PluginMetadataResponse) => item.name === selectedPluginName)?.[0]
       if (matchingPlugin) {
         setPlugin(matchingPlugin)
-        setQuery(pluginNameFromYAML)
+        setQuery(selectedPluginName)
       }
     }
   }, [plugins])
@@ -159,10 +168,6 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     searchPlugins('')
   }, [])
 
-  const searchPlugins = useCallback((searchTerm: string) => {
-    fetchPlugins({ queryParams: { ...defaultQueryParams, searchTerm } })
-  }, [])
-
   const getPluginIconForKind = useCallback((pluginKind: string): IconName => {
     switch (pluginKind) {
       case PluginKind.HARNESS_NATIVE:
@@ -188,6 +193,21 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
         return `by ${getString('common.repo_provider.githubLabel')} ${capitalize(_kindOfPlugin)}`
       default:
         return ''
+    }
+  }, [])
+
+  const getPluginTypeFromKind = useCallback((kindOfPlugin: string): PluginType => {
+    switch (kindOfPlugin) {
+      case PluginKind.HARNESS_NATIVE:
+        return PluginType.SCRIPT
+      case PluginKind.HARNESS:
+        return PluginType.PLUGIN
+      case PluginKind.BITRISE:
+        return PluginType.BITRISE
+      case PluginKind.ACTION:
+        return PluginType.ACTION
+      default:
+        return PluginType.PLUGIN
     }
   }, [])
 
@@ -320,21 +340,6 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     return <></>
   }, [loading, plugins, error, query])
 
-  const getPluginTypeFromKind = useCallback((kindOfPlugin: string): PluginType => {
-    switch (kindOfPlugin) {
-      case PluginKind.HARNESS_NATIVE:
-        return PluginType.SCRIPT
-      case PluginKind.HARNESS:
-        return PluginType.PLUGIN
-      case PluginKind.BITRISE:
-        return PluginType.BITRISE
-      case PluginKind.ACTION:
-        return PluginType.ACTION
-      default:
-        return PluginType.PLUGIN
-    }
-  }, [])
-
   const renderPluginAddUpdateOpnStatus = useCallback((): React.ReactElement => {
     switch (pluginCrudOpnStatus) {
       case Status.SUCCESS:
@@ -388,7 +393,13 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                   </Layout.Horizontal>
                   <Container className={css.form}>
                     <Formik
-                      initialValues={isPluginUpdateAction ? get(selectedPluginFromYAMLView, 'spec.with') : {}}
+                      initialValues={
+                        isPluginUpdateAction
+                          ? kind === PluginKind.HARNESS_NATIVE
+                            ? get(selectedPluginFromYAMLView, 'spec')
+                            : get(selectedPluginFromYAMLView, 'spec.with')
+                          : {}
+                      }
                       validationSchema={formFields ? generateValidationSchema(formFields) : {}}
                       enableReinitialize={true}
                       formName="pluginsForm"
@@ -396,7 +407,7 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                         try {
                           onPluginAddUpdate(
                             {
-                              pluginName,
+                              pluginName: kind === PluginKind.HARNESS_NATIVE ? selectedPluginName : pluginName,
                               pluginData: formValues,
                               shouldInsertYAML: true,
                               pluginType: getPluginTypeFromKind(kind),

@@ -83,7 +83,7 @@ import {
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
-import { PluginAddUpdateMetadata, PluginsPanel } from '../PluginsPanel/PluginsPanel'
+import { PluginAddUpdateMetadata, PluginsPanel, PluginType } from '../PluginsPanel/PluginsPanel'
 
 import css from './YamlBuilder.module.scss'
 import './resizer.scss'
@@ -936,8 +936,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     const { pluginData, pluginType, pluginName, pluginUses } = pluginMetadata
     return {
       name: pluginName,
-      type: pluginType,
-      spec: { with: sanitizePluginValues(pluginData), uses: pluginUses }
+      spec:
+        pluginType === PluginType.SCRIPT
+          ? sanitizePluginValues(pluginData)
+          : { with: sanitizePluginValues(pluginData), uses: pluginUses },
+      type: pluginType
     }
   }, [])
 
