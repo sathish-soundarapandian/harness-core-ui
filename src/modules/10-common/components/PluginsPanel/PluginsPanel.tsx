@@ -407,7 +407,10 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
                         try {
                           onPluginAddUpdate(
                             {
-                              pluginName: kind === PluginKind.HARNESS_NATIVE ? selectedPluginName : pluginName,
+                              pluginName:
+                                kind === PluginKind.HARNESS_NATIVE && selectedPluginName
+                                  ? selectedPluginName
+                                  : pluginName,
                               pluginData: formValues,
                               shouldInsertYAML: true,
                               pluginType: getPluginTypeFromKind(kind),
