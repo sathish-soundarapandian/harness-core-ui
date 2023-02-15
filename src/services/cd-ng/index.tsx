@@ -17398,6 +17398,12 @@ export type DeleteManyFreezesBodyRequestBody = string[]
 
 export type GetAzureSubscriptionsForAcrArtifactWithYamlBodyRequestBody = string
 
+export type GetAzureSubscriptionsForAcrArtifactRequestBody = string
+
+export type GetACRRegistriesForServiceRequestBody = string
+
+export type GetACRRepositoriesForServiceRequestBody = string
+
 export type ListTagsForAMIArtifactBodyRequestBody = string
 
 export type UpdateWhitelistedDomainsBodyRequestBody = string[]
@@ -20493,53 +20499,77 @@ export interface GetAzureSubscriptionsForAcrArtifactQueryParams {
 }
 
 export type GetAzureSubscriptionsForAcrArtifactProps = Omit<
-  GetProps<ResponseAzureSubscriptionsDTO, Failure | Error, GetAzureSubscriptionsForAcrArtifactQueryParams, void>,
-  'path'
+  MutateProps<
+    ResponseAzureSubscriptionsDTO,
+    Failure | Error,
+    GetAzureSubscriptionsForAcrArtifactQueryParams,
+    GetAzureSubscriptionsForAcrArtifactRequestBody,
+    void
+  >,
+  'path' | 'verb'
 >
 
 /**
  * Gets azure subscriptions for ACR artifact
  */
 export const GetAzureSubscriptionsForAcrArtifact = (props: GetAzureSubscriptionsForAcrArtifactProps) => (
-  <Get<ResponseAzureSubscriptionsDTO, Failure | Error, GetAzureSubscriptionsForAcrArtifactQueryParams, void>
-    path={`/artifacts/acr/subscriptions`}
+  <Mutate<
+    ResponseAzureSubscriptionsDTO,
+    Failure | Error,
+    GetAzureSubscriptionsForAcrArtifactQueryParams,
+    GetAzureSubscriptionsForAcrArtifactRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/artifacts/acr/v2/subscriptions`}
     base={getConfig('ng/api')}
     {...props}
   />
 )
 
 export type UseGetAzureSubscriptionsForAcrArtifactProps = Omit<
-  UseGetProps<ResponseAzureSubscriptionsDTO, Failure | Error, GetAzureSubscriptionsForAcrArtifactQueryParams, void>,
-  'path'
+  UseMutateProps<
+    ResponseAzureSubscriptionsDTO,
+    Failure | Error,
+    GetAzureSubscriptionsForAcrArtifactQueryParams,
+    GetAzureSubscriptionsForAcrArtifactRequestBody,
+    void
+  >,
+  'path' | 'verb'
 >
 
 /**
  * Gets azure subscriptions for ACR artifact
  */
 export const useGetAzureSubscriptionsForAcrArtifact = (props: UseGetAzureSubscriptionsForAcrArtifactProps) =>
-  useGet<ResponseAzureSubscriptionsDTO, Failure | Error, GetAzureSubscriptionsForAcrArtifactQueryParams, void>(
-    `/artifacts/acr/subscriptions`,
-    { base: getConfig('ng/api'), ...props }
-  )
+  useMutate<
+    ResponseAzureSubscriptionsDTO,
+    Failure | Error,
+    GetAzureSubscriptionsForAcrArtifactQueryParams,
+    GetAzureSubscriptionsForAcrArtifactRequestBody,
+    void
+  >('POST', `/artifacts/acr/v2/subscriptions`, { base: getConfig('ng/api'), ...props })
 
 /**
  * Gets azure subscriptions for ACR artifact
  */
 export const getAzureSubscriptionsForAcrArtifactPromise = (
-  props: GetUsingFetchProps<
+  props: MutateUsingFetchProps<
     ResponseAzureSubscriptionsDTO,
     Failure | Error,
     GetAzureSubscriptionsForAcrArtifactQueryParams,
+    GetAzureSubscriptionsForAcrArtifactRequestBody,
     void
   >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseAzureSubscriptionsDTO, Failure | Error, GetAzureSubscriptionsForAcrArtifactQueryParams, void>(
-    getConfig('ng/api'),
-    `/artifacts/acr/subscriptions`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponseAzureSubscriptionsDTO,
+    Failure | Error,
+    GetAzureSubscriptionsForAcrArtifactQueryParams,
+    GetAzureSubscriptionsForAcrArtifactRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/acr/v2/subscriptions`, props, signal)
 
 export interface GetACRRegistriesForServiceQueryParams {
   connectorRef?: string
@@ -20552,48 +20582,77 @@ export interface GetACRRegistriesForServiceQueryParams {
 }
 
 export type GetACRRegistriesForServiceProps = Omit<
-  GetProps<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>,
-  'path'
+  MutateProps<
+    ResponseAcrRegistriesDTO,
+    Failure | Error,
+    GetACRRegistriesForServiceQueryParams,
+    GetACRRegistriesForServiceRequestBody,
+    void
+  >,
+  'path' | 'verb'
 >
 
 /**
  * Gets ACR registries
  */
 export const GetACRRegistriesForService = (props: GetACRRegistriesForServiceProps) => (
-  <Get<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>
-    path={`/artifacts/acr/v2/container-registries`}
+  <Mutate<
+    ResponseAcrRegistriesDTO,
+    Failure | Error,
+    GetACRRegistriesForServiceQueryParams,
+    GetACRRegistriesForServiceRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/artifacts/acr/v3/container-registries`}
     base={getConfig('ng/api')}
     {...props}
   />
 )
 
 export type UseGetACRRegistriesForServiceProps = Omit<
-  UseGetProps<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>,
-  'path'
+  UseMutateProps<
+    ResponseAcrRegistriesDTO,
+    Failure | Error,
+    GetACRRegistriesForServiceQueryParams,
+    GetACRRepositoriesForServiceRequestBody,
+    void
+  >,
+  'path' | 'verb'
 >
 
 /**
  * Gets ACR registries
  */
 export const useGetACRRegistriesForService = (props: UseGetACRRegistriesForServiceProps) =>
-  useGet<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>(
-    `/artifacts/acr/v2/container-registries`,
-    { base: getConfig('ng/api'), ...props }
-  )
+  useMutate<
+    ResponseAcrRegistriesDTO,
+    Failure | Error,
+    GetACRRegistriesForServiceQueryParams,
+    GetACRRegistriesForServiceRequestBody,
+    void
+  >('POST', `/artifacts/acr/v3/container-registries`, { base: getConfig('ng/api'), ...props })
 
 /**
  * Gets ACR registries
  */
 export const getACRRegistriesForServicePromise = (
-  props: GetUsingFetchProps<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>,
+  props: MutateUsingFetchProps<
+    ResponseAcrRegistriesDTO,
+    Failure | Error,
+    GetACRRegistriesForServiceQueryParams,
+    GetACRRegistriesForServiceRequestBody,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseAcrRegistriesDTO, Failure | Error, GetACRRegistriesForServiceQueryParams, void>(
-    getConfig('ng/api'),
-    `/artifacts/acr/v2/container-registries`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponseAcrRegistriesDTO,
+    Failure | Error,
+    GetACRRegistriesForServiceQueryParams,
+    GetACRRegistriesForServiceRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/acr/v3/container-registries`, props, signal)
 
 export interface GetACRRepositoriesForServiceQueryParams {
   connectorRef?: string
@@ -20607,48 +20666,77 @@ export interface GetACRRepositoriesForServiceQueryParams {
 }
 
 export type GetACRRepositoriesForServiceProps = Omit<
-  GetProps<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>,
-  'path'
+  MutateProps<
+    ResponseAcrRepositoriesDTO,
+    Failure | Error,
+    GetACRRepositoriesForServiceQueryParams,
+    GetACRRepositoriesForServiceRequestBody,
+    void
+  >,
+  'path' | 'verb'
 >
 
 /**
  * Gets ACR repositories
  */
 export const GetACRRepositoriesForService = (props: GetACRRepositoriesForServiceProps) => (
-  <Get<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>
-    path={`/artifacts/acr/v2/repositories`}
+  <Mutate<
+    ResponseAcrRepositoriesDTO,
+    Failure | Error,
+    GetACRRepositoriesForServiceQueryParams,
+    GetACRRepositoriesForServiceRequestBody,
+    void
+  >
+    verb={'POST'}
+    path={`/artifacts/acr/v3/repositories`}
     base={getConfig('ng/api')}
     {...props}
   />
 )
 
 export type UseGetACRRepositoriesForServiceProps = Omit<
-  UseGetProps<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>,
-  'path'
+  UseMutateProps<
+    ResponseAcrRepositoriesDTO,
+    Failure | Error,
+    GetACRRepositoriesForServiceQueryParams,
+    GetACRRepositoriesForServiceRequestBody,
+    void
+  >,
+  'path' | 'verb'
 >
 
 /**
  * Gets ACR repositories
  */
 export const useGetACRRepositoriesForService = (props: UseGetACRRepositoriesForServiceProps) =>
-  useGet<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>(
-    `/artifacts/acr/v2/repositories`,
-    { base: getConfig('ng/api'), ...props }
-  )
+  useMutate<
+    ResponseAcrRepositoriesDTO,
+    Failure | Error,
+    GetACRRepositoriesForServiceQueryParams,
+    GetACRRepositoriesForServiceRequestBody,
+    void
+  >('POST', `/artifacts/acr/v3/repositories`, { base: getConfig('ng/api'), ...props })
 
 /**
  * Gets ACR repositories
  */
 export const getACRRepositoriesForServicePromise = (
-  props: GetUsingFetchProps<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>,
+  props: MutateUsingFetchProps<
+    ResponseAcrRepositoriesDTO,
+    Failure | Error,
+    GetACRRepositoriesForServiceQueryParams,
+    GetACRRepositoriesForServiceRequestBody,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseAcrRepositoriesDTO, Failure | Error, GetACRRepositoriesForServiceQueryParams, void>(
-    getConfig('ng/api'),
-    `/artifacts/acr/v2/repositories`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponseAcrRepositoriesDTO,
+    Failure | Error,
+    GetACRRepositoriesForServiceQueryParams,
+    GetACRRepositoriesForServiceRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/acr/v2/repositories`, props, signal)
 
 export interface GetAzureSubscriptionsForAcrArtifactWithYamlQueryParams {
   connectorRef?: string
