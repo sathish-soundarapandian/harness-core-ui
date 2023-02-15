@@ -78,20 +78,33 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
   const [plugins, setPlugins] = useState<PluginMetadataResponse[]>([])
   const [query, setQuery] = useState<string>()
   const [isPluginUpdateAction, setIsPluginUpdateAction] = useState<boolean>(false)
-
   const defaultQueryParams = { pageIndex: 0, pageSize: 200 }
   const { data, loading, error, refetch } = useListPlugins({ queryParams: defaultQueryParams })
+  const fixedStepsToBeAlwaysShownOnPluginsPanel = [
+    {
+      name: 'Run',
+      inputs: [{ name: 'command', type: 'textarea' }],
+      kind: PluginKind.HARNESS_NATIVE,
+      description: 'Run a script on macOS, Linux, or Windows'
+    },
+    {
+      name: 'Run test(Test Intelligence)',
+      inputs: [{ name: 'command', type: 'textarea' }],
+      kind: PluginKind.HARNESS_NATIVE,
+      description: 'Run only impacted tests as part of your pipeline'
+    }
+  ]
 
   useEffect(() => {
     if (!isEmpty(selectedPluginFromYAMLView)) {
       setIsPluginUpdateAction(true)
       const pluginNameFromYAML = get(selectedPluginFromYAMLView, 'name', '')
       if (pluginNameFromYAML) {
-        setQuery(pluginNameFromYAML)
         // first look up for matching plugin names in existing plugins list
         const matchingPlugin = plugins.filter((item: PluginMetadataResponse) => item.name === pluginNameFromYAML)?.[0]
         if (matchingPlugin) {
           setPlugin(matchingPlugin)
+          setQuery(pluginNameFromYAML)
         } else {
           // if not found, make an api call to fetch it
           searchPlugins(pluginNameFromYAML)
@@ -100,34 +113,23 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     }
   }, [selectedPluginFromYAMLView])
 
-  const runStepAsPlugin: PluginMetadataResponse = {
-    name: 'Run',
-    inputs: [{ name: 'command', type: 'textarea' }],
-    kind: PluginKind.HARNESS_NATIVE,
-    description: 'Run a script on macOS, Linux, or Windows'
-  }
-
-  const runTestStepAsPlugin: PluginMetadataResponse = {
-    name: 'Run test(Test Intelligence)',
-    inputs: [{ name: 'command', type: 'textarea' }],
-    kind: PluginKind.HARNESS_NATIVE,
-    description: 'Run only impacted tests as part of your pipeline'
-  }
-
   useEffect(() => {
     if (!error && !loading) {
       const pluginsFromApiResponse = data?.data?.content || []
-      setPlugins([runStepAsPlugin, runTestStepAsPlugin, ...pluginsFromApiResponse])
+      setPlugins([...fixedStepsToBeAlwaysShownOnPluginsPanel, ...pluginsFromApiResponse])
     }
   }, [data, loading, error])
 
   useEffect(() => {
-    if (query && !isEmpty(selectedPluginFromYAMLView)) {
+    if (!isEmpty(selectedPluginFromYAMLView)) {
       const pluginNameFromYAML = get(selectedPluginFromYAMLView, 'name', '')
       const matchingPlugin = plugins.filter((item: PluginMetadataResponse) => item.name === pluginNameFromYAML)?.[0]
-      setPlugin(matchingPlugin)
+      if (matchingPlugin) {
+        setPlugin(matchingPlugin)
+        setQuery(pluginNameFromYAML)
+      }
     }
-  }, [query, plugins, selectedPluginFromYAMLView])
+  }, [plugins])
 
   const { name: pluginName, repo: pluginDocumentationLink, inputs: formFields, kind, uses } = plugin || {}
 
