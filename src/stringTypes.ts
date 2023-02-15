@@ -55,6 +55,7 @@ export interface StringsMap {
   'common.allEnvironments': string
   'common.allErrors': string
   'common.allServices': string
+  'common.allowFirstGenAccess': string
   'common.and': string
   'common.andCaps': string
   'common.annually': string
