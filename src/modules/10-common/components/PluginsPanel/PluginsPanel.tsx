@@ -215,7 +215,6 @@ export function PluginsPanel(props: PluginsPanelInterface): React.ReactElement {
     const { name, description, kind: pluginKind } = _plugin
     return (
       <Layout.Horizontal
-        padding={{ top: 'large', bottom: 'large', right: 'xlarge', left: 'xlarge' }}
         className={css.plugin}
         width="100%"
         flex={{ justifyContent: 'space-between' }}
