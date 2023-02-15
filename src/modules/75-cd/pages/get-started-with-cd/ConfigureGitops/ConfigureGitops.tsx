@@ -156,7 +156,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
 
   const { getString } = useStrings()
   const formikRef = useRef<FormikContextType<RepositoryInterface>>()
-  const { accountId } = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const repoURL = formikRef.current?.values?.repo
   const repoId = selectedRepo?.identifier
   const defaultQueryParams = {
@@ -187,6 +187,8 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
       {
         queryParams: {
           accountIdentifier: accountId,
+          projectIdentifier,
+          orgIdentifier,
           identifier: getLastURLPathParam(defaultTo(data?.repo, ''))
         },
         pathParams: {
@@ -230,7 +232,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
     refetch: fetchRevisions,
     error: revisionsLoadingError
   } = useAgentRepositoryServiceListRefs({
-    queryParams: defaultQueryParams,
+    queryParams: { ...defaultQueryParams, projectIdentifier, orgIdentifier },
     identifier: getLastURLPathParam(defaultTo(repoURL, '')),
     ...defaultRevisionsParams,
     lazy: true
@@ -279,7 +281,12 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
   }, [revisionsLoadingError])
 
   useEffect(() => {
-    getRepositories({ accountIdentifier: accountId, agentIdentifier: fullAgentName }).then(response => {
+    getRepositories({
+      accountIdentifier: accountId,
+      agentIdentifier: fullAgentName,
+      projectIdentifier,
+      orgIdentifier
+    }).then(response => {
       setRepositoryListData(defaultTo(response?.content, []))
       if (!response?.content?.length) {
         formikRef.current?.setFieldValue('isNewRepository', true)
@@ -321,7 +328,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
       setTestConnectionStatus(TestStatus.SUCCESS)
       if (formikRef.current?.values?.repo && formikRef.current?.values?.sourceCodeType !== SourceCodeType.USE_SAMPLE) {
         fetchRevisions({
-          queryParams: defaultQueryParams,
+          queryParams: { ...defaultQueryParams, projectIdentifier, orgIdentifier },
           pathParams: {
             identifier: repository?.identifier,
             ...defaultRevisionsParams
@@ -351,6 +358,8 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
       pathParams: { agentIdentifier: fullAgentName, identifier: repoId }, // TODO: remove this later
       queryParams: {
         accountIdentifier: accountId,
+        projectIdentifier,
+        orgIdentifier,
         'query.repo': repoId,
         'query.forceRefresh': true
       }
@@ -916,6 +925,8 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                                         },
                                                         queryParams: {
                                                           ...defaultQueryParams,
+                                                          projectIdentifier,
+                                                          orgIdentifier,
                                                           'query.revision': item.value as string
                                                         }
                                                       })
@@ -981,6 +992,8 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                                     },
                                                     queryParams: {
                                                       ...defaultQueryParams,
+                                                      projectIdentifier,
+                                                      orgIdentifier,
                                                       'query.source.path': item.value as string,
                                                       'query.source.targetRevision': formikProps?.values?.targetRevision
                                                     }
