@@ -83,7 +83,7 @@ import {
 } from './YAMLBuilderConstants'
 import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
-import { PluginAddUpdateMetadata, PluginsPanel } from '../PluginsPanel/PluginsPanel'
+import { PluginAddUpdateMetadata, PluginsPanel, PluginType } from '../PluginsPanel/PluginsPanel'
 
 import css from './YamlBuilder.module.scss'
 import './resizer.scss'
@@ -166,7 +166,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const codeLensRegistrations = useRef<Map<number, IDisposable>>(new Map<number, IDisposable>())
   const [selectedPlugin, setSelectedPlugin] = useState<Record<string, any>>()
   const [pluginAddUpdateOpnStatus, setPluginAddUpdateOpnStatus] = useState<Status>()
-  const stepMatchRegex = 'steps:\\n(\\s*)-(\\s*)name:'
+  const stepMatchRegex = '-\\sname:'
   const stageMatchRegex = 'steps:'
   const [isEditorExpanded, setIsEditorExpanded] = useState<boolean>(true)
   const { module } = useParams<{
@@ -749,7 +749,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
       if (editor) {
         const { lineNumber: currentCursorLineNum } = sourcePosition || {}
         if (currentCursorLineNum) {
-          const allMatchesFound = findPositionsForMatchingKeys(editor, searchToken)
+          let allMatchesFound = findPositionsForMatchingKeys(editor, searchToken)
+          if (searchToken === stepMatchRegex) {
+            allMatchesFound = allMatchesFound.slice(1) // remove one entry from every stage, from it's respective location
+          }
           const relevantMatches = (
             startIdxForLookup && noOfResultsToBeIncludedInLookup
               ? allMatchesFound.slice(startIdxForLookup, noOfResultsToBeIncludedInLookup)
@@ -818,7 +821,8 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
         let position: Position
         if (isPluginUpdate) {
           const allMatches = findPositionsForMatchingKeys(editor, stepMatchRegex) || []
-          const allMatchesInClosestStageIndex = allMatches.slice(startStepIndex)
+          const stepMatchingPositions = allMatches.slice(1) // remove one entry from every stage, from it's respective location
+          const allMatchesInClosestStageIndex = stepMatchingPositions.slice(startStepIndex)
           position = allMatchesInClosestStageIndex[closestStepIndex]
           const { lineNumber: startingLineNum } = position
           const endingLineNum = startingLineNum + noOflinesInserted > 0 ? startingLineNum + noOflinesInserted - 1 : 0
@@ -890,8 +894,9 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     const editor = editorRef.current?.editor
     if (shouldShowPluginsPanel && editor) {
       const matchingPositions = findPositionsForMatchingKeys(editor, stepMatchRegex)
-      if (matchingPositions.length) {
-        matchingPositions.map((matchingPosition: Position) => {
+      const stepMatchingPositions = matchingPositions.slice(1) // remove one entry from every stage, from it's respective location
+      if (stepMatchingPositions.length) {
+        stepMatchingPositions.map((matchingPosition: Position) => {
           const { lineNumber } = matchingPosition
           if (codeLensRegistrations.current.has(lineNumber)) {
             const existingRegistrationId = codeLensRegistrations.current.get(lineNumber)
@@ -936,8 +941,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     const { pluginData, pluginType, pluginName, pluginUses } = pluginMetadata
     return {
       name: pluginName,
-      type: pluginType,
-      spec: { with: sanitizePluginValues(pluginData), uses: pluginUses }
+      spec:
+        pluginType === PluginType.SCRIPT
+          ? sanitizePluginValues(pluginData)
+          : { with: sanitizePluginValues(pluginData), uses: pluginUses },
+      type: pluginType
     }
   }, [])
 
