@@ -409,16 +409,15 @@ export function BambooArtifact(props: StepProps<ConnectorConfigDTO> & BambooArti
   }
 
   const submitFormData = (formData: BambooArtifactType, connectorId?: string): void => {
+    const planKey = formData.spec?.planName
+
     handleSubmit({
       identifier: formData.identifier,
       spec: {
         connectorRef: connectorId,
         artifactPaths: formData.spec.artifactPaths,
         build: formData.spec.build,
-        planName:
-          getMultiTypeFromValue(formData.spec?.planName) === MultiTypeInputType.FIXED
-            ? (formData.spec?.planName as SelectOption).label
-            : formData.spec?.planName
+        planKey
       }
     })
   }

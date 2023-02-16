@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   ButtonVariation,
@@ -26,7 +26,7 @@ import type { IItemRendererProps } from '@blueprintjs/select'
 import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
-import { useGetPlansKey } from 'services/cd-ng'
+import { BambooPlanNames, useGetPlansKey } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
 import type {
@@ -70,7 +70,7 @@ function FormContent({
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  // const [planDetails, setPlanDetails] = useState<SelectOption[]>([])
+  const [planDetails, setPlanDetails] = useState<SelectOption[]>([])
 
   const connectorRefFixedValue = getGenuineValue(formik.values.spec.connectorRef)
 
@@ -91,16 +91,30 @@ function FormContent({
     lazy: true,
     queryParams: {
       ...commonParams,
-      connectorRef: ''
+      connectorRef: connectorRefFixedValue
     }
   })
+
+  useEffect(() => {
+    if (plansResponse?.data?.planKeys) {
+      const planOptions: SelectOption[] = (plansResponse?.data?.planKeys || [])?.map((plan: BambooPlanNames) => {
+        return {
+          label: plan.name,
+          value: plan.name
+        } as SelectOption
+      }) || [
+        {
+          label: 'Loading plans ...',
+          value: 'Loading plans ...'
+        }
+      ]
+      setPlanDetails(planOptions)
+    }
+  }, [plansResponse?.data?.planKeys])
 
   const planPathItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={loadingPlans} />
   ))
-
-  // eslint-disable-next-line no-console
-  console.log(plansResponse, 'plans response api', refetchPlans)
 
   return (
     <React.Fragment>
@@ -177,7 +191,7 @@ function FormContent({
           label={getString('pipeline.bamboo.planName')}
           name="spec.planName"
           useValue
-          selectItems={[]}
+          selectItems={planDetails}
           placeholder={
             connectorRefFixedValue && getMultiTypeFromValue(connectorRefFixedValue) === MultiTypeInputType.FIXED
               ? loadingPlans
@@ -193,7 +207,7 @@ function FormContent({
             selectProps: {
               allowCreatingNewItems: true,
               addClearBtn: true,
-              items: [],
+              items: planDetails,
               loadingItems: loadingPlans,
               itemRenderer: planPathItemRenderer,
               noResults: (
