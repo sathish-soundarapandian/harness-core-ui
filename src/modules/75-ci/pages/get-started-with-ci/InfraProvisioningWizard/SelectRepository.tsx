@@ -162,7 +162,7 @@ const SelectRepositoryRef = (
   useEffect(() => {
     if (selectedConnectorOption) {
       const matchingConnector = connectorsEligibleForPreSelection?.find(
-        (item: ConnectorInfoDTO) => item.identifier === selectedConnectorOption?.value
+        (item: ConnectorInfoDTO) => selectedConnectorOption?.value === getScopedValueFromDTO(item)
       )
       if (matchingConnector) {
         onConnectorSelect?.(matchingConnector)

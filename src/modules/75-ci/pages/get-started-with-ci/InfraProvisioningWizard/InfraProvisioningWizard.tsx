@@ -65,10 +65,7 @@ import {
   OAUTH2_USER_NAME,
   Hosting,
   GitAuthenticationMethod,
-  NonGitOption,
-  getCloudPipelinePayloadWithoutCodebase,
-  getCIStarterPipelineV1,
-  addRepositoryInfoToPipeline
+  NonGitOption
 } from './Constants'
 import { SelectGitProvider, SelectGitProviderRef } from './SelectGitProvider'
 import { SelectRepository, SelectRepositoryRef } from './SelectRepository'
@@ -86,8 +83,11 @@ import {
   getFullRepoName,
   getPayloadForPipelineCreation,
   addDetailsToPipeline,
-  updateUrlAndRepoInGitRepoConnector as updateUrlAndRepoInGitConnector,
-  DefaultCIPipelineName
+  updateUrlAndRepoInGitConnector,
+  DefaultCIPipelineName,
+  getCloudPipelinePayloadWithoutCodebase,
+  getCIStarterPipelineV1,
+  addRepositoryInfoToPipeline
 } from '../../../utils/HostedBuildsUtils'
 import css from './InfraProvisioningWizard.module.scss'
 
@@ -336,7 +336,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       const existingGitConnectorUrl: string = get(configuredGitConnector, 'spec.url')
       if (selectRepositoryRef.current?.repository) {
         const { configuredOption } = configurePipelineRef.current || {}
-        const v1YAMLAsJSON =
+        const v1YAMLAsJSON: Record<string, any> =
           configuredOption &&
           StarterConfigIdToOptionMap[configuredOption.id] === PipelineConfigurationOption.GenerateYAML
             ? generatedYAMLAsJSON

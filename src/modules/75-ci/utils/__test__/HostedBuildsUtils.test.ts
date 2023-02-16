@@ -20,7 +20,7 @@ import {
   getPRTriggerActions,
   getValidRepoName,
   sortConnectorsByLastConnectedAtTsDescOrder,
-  updateUrlAndRepoInGitRepoConnector
+  updateUrlAndRepoInGitConnector
 } from '../HostedBuildsUtils'
 import {
   GitHubPRTriggerActions,
@@ -267,7 +267,7 @@ describe('Test HostedBuildsUtils methods', () => {
   })
 
   test('Test updateUrlAndRepoInGitRepoConnector method', () => {
-    let updatedConnector = updateUrlAndRepoInGitRepoConnector(
+    let updatedConnector = updateUrlAndRepoInGitConnector(
       {
         name: 'Github',
         identifier: 'Github',
@@ -303,7 +303,7 @@ describe('Test HostedBuildsUtils methods', () => {
     expect(get(updatedConnector, 'spec.url')).toBe('https://github.com/test-namespace')
     expect(get(updatedConnector, 'spec.validationRepo')).toBe('test-repo')
 
-    updatedConnector = updateUrlAndRepoInGitRepoConnector(
+    updatedConnector = updateUrlAndRepoInGitConnector(
       {
         name: 'Github',
         identifier: 'Github',
