@@ -20,6 +20,8 @@ import {
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
 // import { setupJenkinsFormData } from '@connectors/pages/connectors/utils/ConnectorUtils'
+import { get } from 'lodash-es'
+
 import type { SecretReferenceInterface } from '@secrets/utils/SecretField'
 import type { ConnectorConfigDTO, ConnectorRequestBody, ConnectorInfoDTO } from 'services/cd-ng'
 
@@ -88,8 +90,8 @@ const StepBambooAuthentication: React.FC<StepProps<StepBambooAuthenticationProps
 
     const scope: ScopedObjectDTO | undefined = props.isEditMode
       ? {
-          orgIdentifier: prevStepData?.orgIdentifier,
-          projectIdentifier: prevStepData?.projectIdentifier
+          orgIdentifier: get(prevStepData, 'orgIdentifier', ''),
+          projectIdentifier: get(prevStepData, 'projectIdentifier', '')
         }
       : undefined
 
@@ -134,7 +136,7 @@ const StepBambooAuthentication: React.FC<StepProps<StepBambooAuthenticationProps
                   <TextReference
                     name="username"
                     stringId="username"
-                    type={formikProps.values.username ? formikProps.values.username?.type : ValueType.TEXT}
+                    type={formikProps.values.username ? get(formikProps.values.username, 'type', '') : ValueType.TEXT}
                   />
                   <SecretInput
                     name={'password'}
@@ -147,7 +149,7 @@ const StepBambooAuthentication: React.FC<StepProps<StepBambooAuthenticationProps
                 <Button
                   text={getString('back')}
                   icon="chevron-left"
-                  onClick={() => props?.previousStep?.(props?.prevStepData)}
+                  onClick={() => props?.previousStep?.(get(props, 'prevStepData', undefined))}
                   data-name="bambooBackButton"
                   variation={ButtonVariation.SECONDARY}
                 />
