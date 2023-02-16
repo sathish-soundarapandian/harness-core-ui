@@ -148,14 +148,14 @@ function FormComponent({
   }
 
   useEffect(() => {
-    if (!isTagsLoading && tagsData && !tags) {
+    if (!isTagsLoading && tagsData && tagsData?.data) {
       const tagOption = get(tagsData, 'data', []).map((tagItem: string) => ({
         value: tagItem,
         label: tagItem
       }))
       setTags(tagOption)
     }
-  }, [tagsData, isTagsLoading])
+  }, [tagsData, isTagsLoading, tagsData?.data])
 
   useEffect(() => {
     if (
@@ -167,7 +167,7 @@ function FormComponent({
   }, [formik.values?.spec?.region])
 
   useEffect(() => {
-    if (!fetchingRegions && regionData?.resource && !regions) {
+    if (!fetchingRegions && regionData?.resource && !regions.length) {
       const regionValues = defaultTo(regionData?.resource, []).map(region => ({
         value: region.value,
         label: region.name
