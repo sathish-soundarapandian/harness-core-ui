@@ -3,7 +3,7 @@
   "private": "true",
   "scripts": {
     "prepare": "cypress install",
-    "cypress:ci": "cypress run --config videoUploadOnPasses=false --browser chrome",
+    "cypress:ci": "cypress run --config videoUploadOnPasses=false --browser chrome --reporter junit",
     "cypress:open": "cypress open",
     "server": "node server.js",
     "cypress:openCoverage": "CYPRESS_COVERAGE=true cypress open",
