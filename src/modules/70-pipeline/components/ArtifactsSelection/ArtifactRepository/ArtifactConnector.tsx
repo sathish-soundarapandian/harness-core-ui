@@ -46,7 +46,6 @@ interface ArtifactConnectorProps {
   initialValues: InitialArtifactDataType
   selectedArtifact: ArtifactType | null
   allowableTypes: AllowedTypes
-  showArtifactSelectionStep: boolean
 }
 
 export function ArtifactConnector(props: StepProps<ConnectorConfigDTO> & ArtifactConnectorProps): React.ReactElement {
@@ -60,8 +59,7 @@ export function ArtifactConnector(props: StepProps<ConnectorConfigDTO> & Artifac
     selectedArtifact,
     isReadonly,
     handleViewChange,
-    allowableTypes,
-    showArtifactSelectionStep
+    allowableTypes
   } = props
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
@@ -181,14 +179,12 @@ export function ArtifactConnector(props: StepProps<ConnectorConfigDTO> & Artifac
               </Layout.Horizontal>
             </div>
             <Layout.Horizontal spacing="medium">
-              {showArtifactSelectionStep && (
-                <Button
-                  variation={ButtonVariation.SECONDARY}
-                  text={getString('back')}
-                  icon="chevron-left"
-                  onClick={() => previousStep?.(prevStepData)}
-                />
-              )}
+              <Button
+                variation={ButtonVariation.SECONDARY}
+                text={getString('back')}
+                icon="chevron-left"
+                onClick={() => previousStep?.(prevStepData)}
+              />
               <Button
                 variation={ButtonVariation.PRIMARY}
                 type="submit"

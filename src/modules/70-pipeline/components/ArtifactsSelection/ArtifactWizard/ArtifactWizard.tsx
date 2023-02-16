@@ -64,8 +64,12 @@ interface ArtifactWizardProps {
   allowableTypes: AllowedTypes
   showConnectorStep: boolean
   newConnectorProps: any
-  artifactWizardInitialStep: number
-  showArtifactSelectionStep: boolean
+  artifactWizardInitialStep?: any
+  showArtifactSelectionStep?: boolean
+}
+
+const showArtifactStoreStepDirectly = (selectedArtifact: ArtifactType | null): boolean => {
+  return !!(selectedArtifact && [ENABLED_ARTIFACT_TYPES.GoogleCloudStorage].includes(selectedArtifact))
 }
 
 function ArtifactWizard({
@@ -82,9 +86,7 @@ function ArtifactWizard({
   lastSteps,
   iconsProps,
   showConnectorStep,
-  isReadonly,
-  artifactWizardInitialStep,
-  showArtifactSelectionStep
+  isReadonly
 }: ArtifactWizardProps): React.ReactElement {
   const { getString } = useStrings()
 
@@ -126,13 +128,7 @@ function ArtifactWizard({
         return <StepAWSAuthentication name={getString('credentials')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
       case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
-        return (
-          <StepNexusAuthentication
-            name={getString('details')}
-            {...newConnectorProps.auth}
-            selectedArtifact={selectedArtifact}
-          />
-        )
+        return <StepNexusAuthentication name={getString('details')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
         return <StepArtifactoryAuthentication name={getString('details')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.Acr:
@@ -218,18 +214,16 @@ function ArtifactWizard({
       className={css.existingDocker}
       subtitle={renderSubtitle()}
       onStepChange={onStepChange}
-      initialStep={artifactWizardInitialStep}
+      initialStep={showArtifactStoreStepDirectly(selectedArtifact) ? 2 : undefined}
     >
-      {showArtifactSelectionStep ? (
-        <ArtifactoryRepoType
-          artifactTypes={types}
-          name={getString('connectors.artifactRepoType')}
-          stepName={labels.firstStepName}
-          selectedArtifact={selectedArtifact}
-          artifactInitialValue={artifactInitialValue}
-          changeArtifactType={changeArtifactType}
-        />
-      ) : null}
+      <ArtifactoryRepoType
+        artifactTypes={types}
+        name={getString('connectors.artifactRepoType')}
+        stepName={labels.firstStepName}
+        selectedArtifact={selectedArtifact}
+        artifactInitialValue={artifactInitialValue}
+        changeArtifactType={changeArtifactType}
+      />
       {showConnectorStep ? (
         <ArtifactConnector
           name={getString('connectors.artifactRepository')}
@@ -240,7 +234,6 @@ function ArtifactWizard({
           initialValues={artifactInitialValue}
           selectedArtifact={selectedArtifact}
           allowableTypes={allowableTypes}
-          showArtifactSelectionStep={showArtifactSelectionStep}
         />
       ) : null}
 
@@ -265,7 +258,6 @@ function ArtifactWizard({
           <ConnectorTestConnection type={ArtifactToConnectorMap[selectedArtifact]} {...newConnectorProps.verify} />
         </StepWizard>
       ) : null}
-
       {lastSteps}
     </StepWizard>
   )

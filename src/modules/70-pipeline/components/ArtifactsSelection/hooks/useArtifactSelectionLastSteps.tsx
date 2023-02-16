@@ -37,6 +37,7 @@ import { AmazonMachineImage } from '../ArtifactRepository/ArtifactLastSteps/Amaz
 import { AzureArtifacts } from '../ArtifactRepository/ArtifactLastSteps/AzureArtifacts/AzureArtifacts'
 import { GoogleCloudStorage } from '../ArtifactRepository/ArtifactLastSteps/GoogleCloudStorageArtifact/GoogleCloudStorage'
 import { GoogleCloudSourceRepositories } from '../ArtifactRepository/ArtifactLastSteps/GoogleCloudSourceRepositoriesArtifact/GoogleCloudSourceRepositoriesArtifact'
+import { BambooArtifact } from '../ArtifactRepository/ArtifactLastSteps/BambooArtifact/BambooArtifact'
 
 export type ArtifactLastStepProps = ImagePathProps<
   ImagePathTypes &
@@ -80,6 +81,8 @@ export function useArtifactSelectionLastSteps(params: ArtifactSelectionLastSteps
       return <ACRArtifact {...artifactLastStepProps} />
     case ENABLED_ARTIFACT_TYPES.Jenkins:
       return <JenkinsArtifact {...artifactLastStepProps} />
+    case ENABLED_ARTIFACT_TYPES.Bamboo:
+      return <BambooArtifact {...artifactLastStepProps} />
     case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
       return <GoogleArtifactRegistry {...artifactLastStepProps} />
     case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
