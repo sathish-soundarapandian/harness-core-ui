@@ -83,7 +83,7 @@ function FormComponent({
   }
 
   const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
-  const planNameValue = formik.values?.spec?.planName
+  const planNameValue = formik.values?.spec?.planKey
   // const artifactValue = getGenuineValue(formik.values?.spec?.artifactPaths)
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
@@ -199,7 +199,7 @@ function FormComponent({
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
             label={getString('pipeline.bamboo.planName')}
-            name="spec.planName"
+            name="spec.planKey"
             useValue
             selectItems={planDetails}
             placeholder={
@@ -245,11 +245,11 @@ function FormComponent({
               value={formik.values?.spec?.jobName as string}
               style={{ marginTop: 22 }}
               type="String"
-              variableName="spec.planName"
+              variableName="spec.planKey"
               showRequiredField={false}
               showDefaultField={false}
               showAdvanced={true}
-              onChange={value => formik.setFieldValue('spec.planName', value)}
+              onChange={value => formik.setFieldValue('spec.planKey', value)}
               isReadonly={isReadonly}
             />
           )}

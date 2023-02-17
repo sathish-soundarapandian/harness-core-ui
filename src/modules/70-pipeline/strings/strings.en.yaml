@@ -146,6 +146,9 @@ jenkinsStep:
   unstableStatusAsSuccess: Treat unstable Job status as success
   useConnectorUrlForJobExecution: Use Connector URL for job execution
   captureEnvironmentVariable: Capture environment variables from Jenkins build
+bambooStep:
+  validations:
+    planName: Planname is a required field
 jiraApprovalStep:
   connectToJira: Connect to Jira
   connectorRef: Jira Connector
@@ -661,9 +664,11 @@ gitDetails: git details
 runtimeInputs: Runtime Inputs
 approveOrReject: Approve or Reject
 jenkinsBuild: Jenkins Builds
+bambooBuilds: Bamboo Builds
 enterBuildRegex: Enter Build Regex
 buildRegex: Build Regex
 selectJenkinsBuildsPlaceholder: Select Jenkins Build
+selectBambooBuildsPlaceholder: Select Bamboo Build
 releaseRepo: Release Repo
 deploymentRepo: Deployment Repo
 addReleaseRepo: + Add Release Repo Manifest
@@ -886,6 +891,7 @@ digest: Digest
 artifactPathLabel: Artifact Path
 artifactImagePathLabel: Artifact/Image Path
 selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
+planNamePlaceholder: Select or Enter Plan Name
 artifactPathFilterLabel: Artifact Path Filter
 artifactsSelection:
   loadingRepository: Loading Repository...
@@ -1627,3 +1633,6 @@ lastDeployed: 'Last deployed'
 prTitle: PR Title
 ServiceDetail:
   envCardEmptyStateMsg: 'There are no environments with instances in this service.'
+bamboo:
+  fetchingPlans: 'Fetching Plans ...'
+  planName: 'Plan Name'
