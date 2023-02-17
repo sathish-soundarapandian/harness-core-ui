@@ -8,16 +8,24 @@
 import React from 'react'
 import { render, fireEvent, waitFor } from '@testing-library/react'
 import { TestWrapper, queryByNameAttribute } from '@common/utils/testUtils'
-import { useGetAccountNG, useUpdateAccountDefaultExperienceNG, useUpdateAccountNameNG } from 'services/cd-ng'
+import {
+  useGetAccountNG,
+  useUpdateAccountDefaultExperienceNG,
+  useUpdateAccountNameNG,
+  useUpdateAccountCrossGenerationAccessEnabledNG
+} from 'services/cd-ng'
 import { communityLicenseStoreValues } from '@common/utils/DefaultAppStoreData'
 import AccountDetails from '../views/AccountDetails'
 
 jest.mock('services/cd-ng')
 const useGetAccountNGMock = useGetAccountNG as jest.MockedFunction<any>
 const useUpdateAccountDefaultExperienceNGMock = useUpdateAccountDefaultExperienceNG as jest.MockedFunction<any>
+const useUpdateAccountCrossGenerationAccessEnabledNGMock =
+  useUpdateAccountCrossGenerationAccessEnabledNG as jest.MockedFunction<any>
 const updateAccountNameNGMock = useUpdateAccountNameNG as jest.MockedFunction<any>
 
 const updateAcctDefaultExperienceMock = jest.fn()
+const updateAccountCrossGenerationAccessEnabledNGMock = jest.fn()
 const updateAcctNameMock = jest.fn()
 
 beforeEach(() => {
@@ -28,7 +36,8 @@ beforeEach(() => {
           name: 'account name',
           identifier: 'id1',
           cluster: 'free',
-          defaultExperience: 'NG'
+          defaultExperience: 'NG',
+          crossGenerationAccessEnabled: true
         }
       },
       refetch: jest.fn()
@@ -38,6 +47,12 @@ beforeEach(() => {
   useUpdateAccountDefaultExperienceNGMock.mockImplementation(() => {
     return {
       mutate: updateAcctDefaultExperienceMock,
+      loading: false
+    }
+  })
+  useUpdateAccountCrossGenerationAccessEnabledNGMock.mockImplementation(() => {
+    return {
+      mutate: updateAccountCrossGenerationAccessEnabledNGMock,
       loading: false
     }
   })

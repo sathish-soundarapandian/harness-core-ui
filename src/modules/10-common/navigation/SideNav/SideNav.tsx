@@ -16,8 +16,8 @@ import { returnLaunchUrl } from '@common/utils/routeUtils'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps, AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import css from './SideNav.module.scss'
 import { useGetAccountNG } from 'services/cd-ng'
+import css from './SideNav.module.scss'
 
 export interface SideNavProps {
   subtitle?: string
