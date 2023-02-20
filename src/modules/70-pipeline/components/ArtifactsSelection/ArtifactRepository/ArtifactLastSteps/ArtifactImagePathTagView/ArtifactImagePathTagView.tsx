@@ -238,7 +238,7 @@ function ArtifactImagePathTagView({
                 addTooltip: true
               },
               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                if (canFetchTags() || !canFetchTags) {
+                if (!canFetchTags || canFetchTags()) {
                   onTagInputFocus(e, formik, fetchTags, isArtifactPath, isServerlessDeploymentTypeSelected)
                 }
               }

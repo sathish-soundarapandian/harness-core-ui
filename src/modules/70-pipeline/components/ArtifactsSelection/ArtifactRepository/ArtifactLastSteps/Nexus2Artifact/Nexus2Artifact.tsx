@@ -597,13 +597,13 @@ export function Nexus2Artifact({
                 tagDisabled={isTagDisabled(formik?.values)}
                 isArtifactPath={false}
                 isImagePath={false}
-                canFetchTags={() => {
+                canFetchTags={() =>
                   canFetchAMITags(
                     formik?.values?.repository,
                     formik?.values?.spec?.groupId,
                     formik?.values?.spec?.artifactId
                   )
-                }}
+                }
               />
             </div>
             {!hideHeaderAndNavBtns && (

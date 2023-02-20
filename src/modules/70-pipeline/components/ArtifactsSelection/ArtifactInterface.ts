@@ -366,7 +366,7 @@ export interface ArtifactImagePathTagViewProps {
   isArtifactPath?: boolean
   isImagePath?: boolean
   isServerlessDeploymentTypeSelected?: boolean
-  canFetchTags?: any
+  canFetchTags?: () => boolean
 }
 
 export interface ACRArtifactType {
