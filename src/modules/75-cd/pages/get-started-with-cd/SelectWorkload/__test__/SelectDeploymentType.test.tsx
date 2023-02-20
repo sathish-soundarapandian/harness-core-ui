@@ -7,8 +7,9 @@
 
 /* eslint-disable jest/no-commented-out-tests */
 import React from 'react'
-import { act, render } from '@testing-library/react'
-import { TestWrapper } from '@common/utils/testUtils'
+import { act, queryByText, render } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 import { modulePathProps, pipelinePathProps, projectPathProps } from '@common/utils/routeUtils'
@@ -60,5 +61,15 @@ describe('SelectDeployment Type Onboarding Wizard Step 1', () => {
 
     const chooseOtherDeploymentTypes = getByText('cd.getStartedWithCD.clickForOtherDeploymentTypes')!
     expect(chooseOtherDeploymentTypes).toBeInTheDocument()
+    await act(async () => {
+      userEvent.click(chooseOtherDeploymentTypes)
+    })
+    const confirmDisableDialog = findDialogContainer()
+    expect(confirmDisableDialog).toBeTruthy()
+
+    const confirmDialog = queryByText(confirmDisableDialog!, 'confirm')
+    await act(async () => {
+      userEvent.click(confirmDialog!)
+    })
   })
 })

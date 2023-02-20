@@ -162,6 +162,7 @@ export const DeployProvisioningWizard: React.FC<DeployProvisioningWizardProps> =
     intent: Intent.WARNING,
     onCloseDialog: async (isConfirmed: boolean) => {
       if (isConfirmed) {
+        trackEvent(CDOnboardingActions.MovetoConfigureEnvironmentWithDelegateNotConnected, {})
         moveToConfigureService()
       }
     }

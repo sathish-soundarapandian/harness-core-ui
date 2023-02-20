@@ -9,7 +9,7 @@ import React from 'react'
 import { capitalize, get, isEmpty, unset } from 'lodash-es'
 import cx from 'classnames'
 import { IconName, Intent } from '@blueprintjs/core'
-import { Button, Container, Icon, Layout, Text } from '@harness/uicore'
+import { Button, Container, HarnessDocTooltip, Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useFormikContext } from 'formik'
 import produce from 'immer'
@@ -136,8 +136,14 @@ const ArtifactSelection = ({ enableNextBtn, disableNextBtn }: ArtifactSelectionP
         <>
           {/* ARTIFACT TYPE SELECTION */}
           <Layout.Vertical padding={{ top: 'xxlarge' }}>
-            <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'xxlarge' }} color={Color.GREY_600}>
+            <Text
+              font={{ variation: FontVariation.H4 }}
+              padding={{ bottom: 'xxlarge' }}
+              color={Color.GREY_600}
+              data-tooltip-id="cdOnboardingSelectArtifactRepo"
+            >
               {getString('cd.getStartedWithCD.selectArtifactRepo')}
+              <HarnessDocTooltip tooltipId="cdOnboardingSelectArtifactRepo" useStandAlone={true} />
             </Text>
             <Layout.Horizontal>
               {supportedArtifactTypes.map(option => {

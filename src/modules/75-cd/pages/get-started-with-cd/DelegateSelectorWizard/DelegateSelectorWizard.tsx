@@ -7,7 +7,7 @@
 
 import React, { useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-import { Button, Container, HarnessDocTooltip, Layout, Tabs, Text, useToaster } from '@harness/uicore'
+import { Button, ButtonSize, Container, HarnessDocTooltip, Layout, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import produce from 'immer'
@@ -19,23 +19,19 @@ import {
   InfrastructureRequestDTO,
   InfrastructureRequestDTORequestBody,
   useCreateEnvironmentV2,
-  useCreateInfrastructure
+  useCreateInfrastructure,
+  useUpdateInfrastructure,
+  useUpsertEnvironmentV2
 } from 'services/cd-ng'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import useCreateEditConnector, { BuildPayloadProps } from '@connectors/hooks/useCreateEditConnector'
 import { buildKubPayload } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
-import { DelegateTypes } from '@delegates/constants'
-import type { RestResponseDelegateSetupDetails } from 'services/portal'
+import { DelegateTypes, KubernetesType } from '@delegates/constants'
 import { StringUtils } from '@common/exports'
 import { useTelemetry } from '@common/hooks/useTelemetry'
-import { CDOnboardingActions } from '@common/constants/TrackingConstants'
-import { CreateK8sDelegate } from '../CreateKubernetesDelegateWizard/CreateK8sDelegate'
+import { CDOnboardingActions, DelegateActions } from '@common/constants/TrackingConstants'
 import { CreateDockerDelegate } from '../CreateDockerDelegateWizard/CreateDockerDelegate'
-import { GoogleK8sService } from '../HelpTexts/GoogleK8sService'
-import { AmazonElasticK8sService } from '../HelpTexts/AmazonElasticK8sService'
-import { AzureK8sService } from '../HelpTexts/AzureK8sService'
-import { Minikube } from '../HelpTexts/Minikube'
 import {
   cleanEnvironmentDataUtil,
   DelegateSuccessHandler,
@@ -45,9 +41,8 @@ import {
   newEnvironmentState
 } from '../CDOnboardingUtils'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
-import { RightDrawer } from '../ConfigureService/ManifestRepoTypes/RightDrawer/RightDrawer'
-import DelegateDetailsCard from './DelegateDetailsCard'
 import InfoContainer from '../InfoContainer/InfoContainer'
+import { CreateK8sDelegateV2 } from '../CreateKubernetesDelegateWizard/CreateK8sDelegateV2'
 import css from '../CreateKubernetesDelegateWizard/CreateK8sDelegate.module.scss'
 import moduleCss from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
@@ -80,52 +75,58 @@ const DelegateSelectorWizardRef = (
     saveEnvironmentData,
     saveInfrastructureData,
     saveDelegateData,
-    state: { delegate: delegateData, service: serviceData }
+    state: {
+      delegate: delegateData,
+      service: serviceData,
+      environment: environmentData,
+      infrastructure: infrastructureData
+    }
   } = useCDOnboardingContext()
 
   const { trackEvent } = useTelemetry()
+  const { getString } = useStrings()
+  const { showError, clear } = useToaster()
+  const { getRBACErrorMessage } = useRBACError()
+
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
+  const successRefHandler = useRef<(() => void) | null>(null)
+  const delegateName = useRef<string>()
+  const isEditMode = !isEmpty(delegateData?.delegateIdentifier)
+
   const [delegateType, setDelegateType] = React.useState<string | undefined>(
     delegateData?.delegateType || DelegateTypes.KUBERNETES_CLUSTER
   )
+  const [kubernetesType, setkubernetesType] = React.useState<KubernetesType | undefined>(KubernetesType.HELM_CHART)
   const [disableBtn, setDisableBtn] = React.useState<boolean>(true)
   const [isDelegateInstalled, setIsDelegateInstalled] = React.useState<boolean>(
     defaultTo(delegateData?.delegateInstalled, false)
   )
   const [helpPanelVisible, setHelpPanelVisible] = React.useState<boolean>(false)
-  const [showDelegateOverview, setShowDelegateOverview] = React.useState<boolean>(false)
-  const { getString } = useStrings()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<Record<string, string>>()
-  const successRefHandler = useRef<(() => void) | null>(null)
-  const delegateName = useRef<string>()
-  const { showError, clear } = useToaster()
-  const { getRBACErrorMessage } = useRBACError()
 
   const [environmentEntities, setEnvironmentEntities] = React.useState<EnvironmentEntities>(
     defaultTo(delegateData?.environmentEntities, {})
   )
 
   useEffect(() => {
-    if (isDelegateInstalled) {
-      if (!forwardRef) {
-        return
-      }
-      if (typeof forwardRef === 'function') {
-        return
-      }
-      forwardRef.current = { isDelegateInstalled }
+    if (!forwardRef) {
+      return
     }
+    if (typeof forwardRef === 'function') {
+      return
+    }
+    forwardRef.current = { isDelegateInstalled }
   }, [isDelegateInstalled, forwardRef])
 
   const onSuccessHandler = React.useCallback(
-    ({ delegateCreated, delegateInstalled, delegateYamlResponse }: DelegateSuccessHandler): void => {
-      setDisableBtn(!delegateCreated)
+    ({ delegateCreated, delegateInstalled }: DelegateSuccessHandler): void => {
+      setDisableBtn(!delegateCreated) // not created, verifying started
       setIsDelegateInstalled(Boolean(delegateInstalled))
 
-      if (delegateData?.delegateYAMLResponse) {
+      if (delegateInstalled) {
         // if delegate flow already created, proceed to next
         enableNextBtn()
       } else {
-        handleSubmit(delegateYamlResponse)
+        handleSubmit()
       }
     },
     [delegateType]
@@ -149,11 +150,13 @@ const DelegateSelectorWizardRef = (
     switch (delegateType) {
       case DelegateTypes.KUBERNETES_CLUSTER:
         return (
-          <CreateK8sDelegate
+          <CreateK8sDelegateV2
             onSuccessHandler={onSuccessHandler}
             handleHelpPanel={isHelpPanelVisible}
             successRef={successRefHandler}
             delegateNameRef={delegateName}
+            disableNextBtn={disableNextBtn}
+            enableNextBtn={enableNextBtn}
           />
         )
       case DelegateTypes.DOCKER:
@@ -175,14 +178,25 @@ const DelegateSelectorWizardRef = (
     }
   })
 
+  const { mutate: updateEnvironment } = useUpsertEnvironmentV2({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+
   const { mutate: createInfrastructure } = useCreateInfrastructure({
+    queryParams: {
+      accountIdentifier: accountId
+    }
+  })
+  const { mutate: updateInfrastructure } = useUpdateInfrastructure({
     queryParams: {
       accountIdentifier: accountId
     }
   })
   const { onInitiate } = useCreateEditConnector<DelegateSelectorStepData>({
     accountId,
-    isEditMode: false,
+    isEditMode: isEditMode,
     isGitSyncEnabled: false,
     afterSuccessHandler: noop,
     skipGovernanceCheck: true,
@@ -200,135 +214,149 @@ const DelegateSelectorWizardRef = (
     saveDelegateData(updatedContextDelegate)
   }, [delegateType, isDelegateInstalled, saveDelegateData])
 
-  const handleSubmit = React.useCallback(
-    async (yamlResponse?: RestResponseDelegateSetupDetails): Promise<void> => {
-      const connectorIdentifier = getUniqueEntityIdentifier(newEnvironmentState.connector.name)
-      const environmentIdentifier = getUniqueEntityIdentifier(ENV_ID)
-      const infraIdentifier = getUniqueEntityIdentifier(INFRASTRUCTURE_ID)
-      const updatedContextEnvironment = produce(newEnvironmentState.environment, draft => {
-        set(draft, 'name', ENV_ID)
-        set(draft, 'identifier', environmentIdentifier)
-      })
-      try {
-        // Connector Creation
-        const connectorData = {
-          ...newEnvironmentState.connector,
-          identifier: connectorIdentifier,
-          projectIdentifier: projectIdentifier,
-          orgIdentifier: orgIdentifier,
-          delegateSelectors: [delegateName.current as string]
-        }
+  const handleSubmit = React.useCallback(async (): Promise<void> => {
+    const connectorIdentifier = !isEmpty(infrastructureData?.infrastructureDefinition?.spec?.connectorRef)
+      ? infrastructureData?.infrastructureDefinition?.spec?.connectorRef
+      : getUniqueEntityIdentifier(newEnvironmentState.connector.name)
+    const environmentIdentifier = !isEmpty(environmentData?.identifier)
+      ? environmentData?.identifier
+      : getUniqueEntityIdentifier(ENV_ID)
+    const infraIdentifier = !isEmpty(infrastructureData?.identifier)
+      ? infrastructureData?.identifier
+      : getUniqueEntityIdentifier(INFRASTRUCTURE_ID)
+    const updatedContextEnvironment = produce(newEnvironmentState.environment, draft => {
+      set(draft, 'name', ENV_ID)
+      set(draft, 'identifier', environmentIdentifier)
+    })
+    try {
+      // Connector Creation
+      const connectorData = {
+        ...newEnvironmentState.connector,
+        identifier: connectorIdentifier,
+        projectIdentifier: projectIdentifier,
+        orgIdentifier: orgIdentifier,
+        delegateSelectors: [delegateName.current as string]
+      }
 
-        onInitiate({
-          connectorFormData: connectorData,
-          buildPayload: buildKubPayload
+      onInitiate({
+        connectorFormData: connectorData,
+        buildPayload: buildKubPayload
+      })
+
+      const cleanEnvironmentData = cleanEnvironmentDataUtil(updatedContextEnvironment as EnvironmentRequestDTO)
+      // Environment Creation
+      const environmentRequest = isEditMode ? updateEnvironment : createEnvironment
+      const response = await environmentRequest({ ...cleanEnvironmentData, orgIdentifier, projectIdentifier })
+      if (response.status === 'SUCCESS') {
+        clear()
+        ENV_ID && saveEnvironmentData(updatedContextEnvironment)
+        const updatedContextInfra = produce(newEnvironmentState.infrastructure, draft => {
+          set(draft, 'name', INFRASTRUCTURE_ID)
+          set(draft, 'identifier', infraIdentifier)
+          set(draft, 'type', INFRASTRUCTURE_TYPE)
+          set(draft, 'environmentRef', ENV_ID)
+          set(draft, 'infrastructureDefinition.spec.namespace', NAMESPACE)
+          set(draft, 'infrastructureDefinition.spec.connectorRef', connectorIdentifier)
         })
 
-        const cleanEnvironmentData = cleanEnvironmentDataUtil(updatedContextEnvironment as EnvironmentRequestDTO)
-        // Environment Creation
-        const response = await createEnvironment({ ...cleanEnvironmentData, orgIdentifier, projectIdentifier })
-        if (response.status === 'SUCCESS') {
-          clear()
-          ENV_ID && saveEnvironmentData(updatedContextEnvironment)
-          const updatedContextInfra = produce(newEnvironmentState.infrastructure, draft => {
-            set(draft, 'name', INFRASTRUCTURE_ID)
-            set(draft, 'identifier', infraIdentifier)
-            set(draft, 'type', INFRASTRUCTURE_TYPE)
-            set(draft, 'environmentRef', ENV_ID)
-            set(draft, 'infrastructureDefinition.spec.namespace', NAMESPACE)
-            set(draft, 'infrastructureDefinition.spec.connectorRef', connectorIdentifier)
-          })
-
-          const body: InfrastructureRequestDTORequestBody = {
-            name: INFRASTRUCTURE_ID,
-            identifier: infraIdentifier,
-            description: '',
-            tags: {},
-            orgIdentifier,
-            projectIdentifier,
-            type: INFRASTRUCTURE_TYPE as InfrastructureRequestDTO['type'],
-            environmentRef: environmentIdentifier
-          }
-          // Infrastructure Creation
-          createInfrastructure({
-            ...body,
-            yaml: yamlStringify({
-              infrastructureDefinition: {
-                ...body,
-                deploymentType: get(serviceData, 'serviceDefinition.type'),
-                spec: get(updatedContextInfra, 'infrastructureDefinition.spec'),
-                allowSimultaneousDeployments: false
-              }
-            })
-          })
-            .then(infraResponse => {
-              if (infraResponse.status === 'SUCCESS') {
-                return Promise.resolve()
-              } else {
-                throw infraResponse
-              }
-            })
-            .catch(e => {
-              throw e
-            })
-          const envEntites = {
-            connector: newEnvironmentState.connector.name,
-            delegate: delegateName.current as string,
-            environment: ENV_ID,
-            infrastructure: INFRASTRUCTURE_ID,
-            namespace: NAMESPACE
-          }
-          setEnvironmentEntities(envEntites)
-
-          const updatedContextDelegate = produce(newDelegateState.delegate, draft => {
-            set(draft, 'delegateType', delegateType)
-            set(draft, 'delegateInstalled', isDelegateInstalled)
-            set(draft, 'environmentEntities.connector', newEnvironmentState.connector.name)
-            set(draft, 'environmentEntities.delegate', delegateName.current as string)
-            set(draft, 'environmentEntities.environment', ENV_ID)
-            set(draft, 'environmentEntities.infrastructure', INFRASTRUCTURE_ID)
-            set(draft, 'environmentEntities.namespace', NAMESPACE)
-            set(draft, 'delegateYAMLResponse', yamlResponse)
-            set(draft, 'delegateIdentifier', StringUtils.getIdentifierFromName(delegateName.current as string))
-          })
-          saveInfrastructureData(updatedContextInfra)
-          saveDelegateData(updatedContextDelegate)
-          trackEvent(CDOnboardingActions.EnvironmentEntitiesCreation, envEntites)
-          enableNextBtn()
-          return Promise.resolve()
-        } else {
-          throw response
+        const body: InfrastructureRequestDTORequestBody = {
+          name: INFRASTRUCTURE_ID,
+          identifier: infraIdentifier,
+          description: '',
+          tags: {},
+          orgIdentifier,
+          projectIdentifier,
+          type: INFRASTRUCTURE_TYPE as InfrastructureRequestDTO['type'],
+          environmentRef: environmentIdentifier
         }
-      } catch (error: any) {
-        showError(getRBACErrorMessage(error))
+        // Infrastructure Creation/Updation
+        const infrastructureRequest = isEditMode ? updateInfrastructure : createInfrastructure
+        infrastructureRequest({
+          ...body,
+          yaml: yamlStringify({
+            infrastructureDefinition: {
+              ...body,
+              deploymentType: get(serviceData, 'serviceDefinition.type'),
+              spec: get(updatedContextInfra, 'infrastructureDefinition.spec'),
+              allowSimultaneousDeployments: false
+            }
+          })
+        })
+          .then(infraResponse => {
+            if (infraResponse.status === 'SUCCESS') {
+              return Promise.resolve()
+            } else {
+              throw infraResponse
+            }
+          })
+          .catch(e => {
+            throw e
+          })
+        const envEntites = {
+          connector: newEnvironmentState.connector.name,
+          delegate: delegateName.current as string,
+          environment: ENV_ID,
+          infrastructure: INFRASTRUCTURE_ID,
+          namespace: NAMESPACE
+        }
+        setEnvironmentEntities(envEntites)
+
+        const updatedContextDelegate = produce(newDelegateState.delegate, draft => {
+          set(draft, 'delegateType', delegateType)
+          set(draft, 'delegateInstalled', isDelegateInstalled)
+          set(draft, 'environmentEntities.connector', newEnvironmentState.connector.name)
+          set(draft, 'environmentEntities.delegate', delegateName.current as string)
+          set(draft, 'environmentEntities.environment', ENV_ID)
+          set(draft, 'environmentEntities.infrastructure', INFRASTRUCTURE_ID)
+          set(draft, 'environmentEntities.namespace', NAMESPACE)
+          set(draft, 'delegateIdentifier', StringUtils.getIdentifierFromName(delegateName.current as string))
+        })
+        saveInfrastructureData(updatedContextInfra)
+        saveDelegateData(updatedContextDelegate)
+        trackEvent(CDOnboardingActions.EnvironmentEntitiesCreation, envEntites)
+        enableNextBtn()
         return Promise.resolve()
+      } else {
+        throw response
       }
-    },
-    [
-      clear,
-      createEnvironment,
-      createInfrastructure,
-      delegateType,
-      enableNextBtn,
-      getRBACErrorMessage,
-      isDelegateInstalled,
-      onInitiate,
-      orgIdentifier,
-      projectIdentifier,
-      saveDelegateData,
-      saveEnvironmentData,
-      saveInfrastructureData,
-      serviceData,
-      showError,
-      trackEvent
-    ]
-  )
+    } catch (error: any) {
+      showError(getRBACErrorMessage(error))
+      return Promise.resolve()
+    }
+  }, [
+    clear,
+    createEnvironment,
+    createInfrastructure,
+    delegateType,
+    enableNextBtn,
+    environmentData?.identifier,
+    getRBACErrorMessage,
+    infrastructureData,
+    isDelegateInstalled,
+    isEditMode,
+    onInitiate,
+    orgIdentifier,
+    projectIdentifier,
+    saveDelegateData,
+    saveEnvironmentData,
+    saveInfrastructureData,
+    serviceData,
+    showError,
+    trackEvent,
+    updateEnvironment,
+    updateInfrastructure
+  ])
 
   const environmentEntitiesData = React.useMemo(() => {
     return (
       <Layout.Vertical padding={{ top: 'large' }}>
-        <Text font={{ variation: FontVariation.H4, weight: 'semi-bold' }} padding={{ bottom: 'small' }}>
+        <Text
+          font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
+          padding={{ bottom: 'small' }}
+          data-tooltip-id="cdOnboardingEnvironmentDetails"
+        >
           {getString('cd.getStartedWithCD.environmentDetails')}
+          <HarnessDocTooltip tooltipId="cdOnboardingEnvironmentDetails" useStandAlone={true} />
         </Text>
         <Text font={{ weight: 'light', size: 'normal' }} color={Color.GREY_600} padding={{ top: 'small' }}>
           {getString('cd.getStartedWithCD.entityCreationTitle')}
@@ -353,13 +381,15 @@ const DelegateSelectorWizardRef = (
   }
 
   const handleDelegateTypeChange = (type: string): void => {
-    setDelegateType(type)
-    setHelpPanelVisible(false)
-    disableNextBtn()
-    // reset context data and environmentEntities
-    resetContextDelegateData(type)
-    setEnvironmentEntities({})
-    delegateName.current = undefined
+    if (type !== delegateType) {
+      setDelegateType(type)
+      setHelpPanelVisible(false)
+      disableNextBtn()
+      // reset context data and environmentEntities
+      resetContextDelegateData(type)
+      setEnvironmentEntities({})
+      delegateName.current = undefined
+    }
   }
 
   return (
@@ -391,19 +421,40 @@ const DelegateSelectorWizardRef = (
               {getString('cd.getStartedWithCD.runDelegateSubtitle')}
             </Text>
             <Button
-              onClick={() => handleDelegateTypeChange(DelegateTypes.KUBERNETES_CLUSTER)}
               className={cx(css.kubernetes, delegateType === DelegateTypes.KUBERNETES_CLUSTER ? css.active : undefined)}
-            >
-              {getString('kubernetesText')}
-            </Button>
-            <Button
               onClick={() => {
-                handleDelegateTypeChange(DelegateTypes.DOCKER)
+                handleDelegateTypeChange(DelegateTypes.KUBERNETES_CLUSTER)
+                trackEvent(DelegateActions.DelegateCommandLineKubernetes, {})
               }}
-              className={cx(css.docker, delegateType === DelegateTypes.DOCKER ? css.active : undefined)}
-            >
-              {getString('delegate.cardData.docker.name')}
-            </Button>
+              text={getString('kubernetesText')}
+              round
+              intent={delegateType === DelegateTypes.KUBERNETES_CLUSTER ? 'primary' : 'none'}
+            ></Button>
+
+            <div className={css.borderBottomClass} />
+            {delegateType && (
+              <Text
+                font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
+                color={Color.GREY_600}
+                className={css.marginBottomClass}
+                data-tooltip-id="cdOnboardingInstallDelegate"
+              >
+                {getString('delegates.commandLineCreation.installYourDelegate')}
+              </Text>
+            )}
+
+            <Layout.Horizontal spacing="none" margin={{ bottom: 'xlarge', top: 'none' }}>
+              <Button
+                size={ButtonSize.SMALL}
+                round
+                onClick={() => {
+                  setkubernetesType(KubernetesType.HELM_CHART)
+                  trackEvent(DelegateActions.DelegateCommandLineHelm, {})
+                }}
+                text={getString('common.HelmChartLabel')}
+                intent={kubernetesType === KubernetesType.HELM_CHART ? 'primary' : 'none'}
+              ></Button>
+            </Layout.Horizontal>
             <div className={css.marginTopClass} />
           </Container>
           <Layout.Vertical>
@@ -413,72 +464,12 @@ const DelegateSelectorWizardRef = (
 
           {delegateName?.current && !isEmpty(delegateData?.delegateType) && (
             <>
-              <Text
-                color={Color.PRIMARY_7}
-                font={{ size: 'normal' }}
-                padding={{ top: 'medium', bottom: 'medium' }}
-                onClick={() => setShowDelegateOverview(!showDelegateOverview)}
-                icon={showDelegateOverview ? 'minus' : 'plus'}
-                iconProps={{ color: Color.PRIMARY_7 }}
-                className={css.cursor}
-              >
-                {showDelegateOverview
-                  ? getString('cd.getStartedWithCD.hideDelegateDetails')
-                  : getString('cd.getStartedWithCD.viewDelegateDetails')}
-              </Text>
-              {showDelegateOverview && delegateName?.current && (
-                <Layout.Vertical padding={{ bottom: 'xlarge', right: 'large' }}>
-                  <DelegateDetailsCard
-                    delegateIdentifier={StringUtils.getIdentifierFromName(
-                      delegateName.current || (delegateData?.environmentEntities?.delegate as string)
-                    )}
-                  />
-                </Layout.Vertical>
-              )}
               <Container className={css.borderBottomClass} />
               {!isEmpty(environmentEntities?.connector) ? environmentEntitiesData : null}
             </>
           )}
         </Layout.Vertical>
-        {helpPanelVisible && (
-          <RightDrawer isOpen={helpPanelVisible} setIsOpen={isHelpPanelVisible}>
-            <Container
-              flex={{ alignItems: 'center', justifyContent: 'space-between' }}
-              margin={{ bottom: 'medium' }}
-              padding={'medium'}
-              className={css.troubleShootTitle}
-            >
-              <Layout.Horizontal flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
-                <Text lineClamp={1} color={Color.BLACK} font={{ variation: FontVariation.H4 }}>
-                  {getString('cd.getStartedWithCD.helpAndTroubleshoot')}
-                </Text>
-              </Layout.Horizontal>
-            </Container>
-            <Container className={css.tabsContainer}>
-              <Text
-                font={{ variation: FontVariation.H4, weight: 'semi-bold' }}
-                margin={{ bottom: 'small' }}
-                color={Color.GREY_600}
-              >
-                {getString('cd.instructionsCluster')}
-              </Text>
-              <Tabs
-                id={'horizontalTabs'}
-                defaultSelectedTabId={'googleK8sService'}
-                tabList={[
-                  { id: 'googleK8sService', title: getString('cd.googleK8sService'), panel: <GoogleK8sService /> },
-                  {
-                    id: 'amazonElasticK8sService',
-                    title: getString('cd.amazonElasticK8sService'),
-                    panel: <AmazonElasticK8sService />
-                  },
-                  { id: 'azureK8sService', title: getString('cd.azureK8sService'), panel: <AzureK8sService /> },
-                  { id: 'minikube', title: getString('cd.minikube'), panel: <Minikube /> }
-                ]}
-              />
-            </Container>
-          </RightDrawer>
-        )}
+
         <Container className={moduleCss.helpPanelContainer}>
           <HelpPanel referenceId="cdOnboardConnecttoEnvironment" />
         </Container>

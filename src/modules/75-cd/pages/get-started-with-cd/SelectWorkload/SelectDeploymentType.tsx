@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import {
   Text,
   Layout,
@@ -16,10 +16,12 @@ import {
   Formik,
   FormikForm,
   FormError,
-  HarnessDocTooltip
+  HarnessDocTooltip,
+  useConfirmationDialog,
+  Button
 } from '@harness/uicore'
 
-import { Color, FontVariation } from '@harness/design-system'
+import { Color, FontVariation, Intent } from '@harness/design-system'
 import type { FormikContextType, FormikProps } from 'formik'
 import { defaultTo, get, set } from 'lodash-es'
 import produce from 'immer'
@@ -63,6 +65,7 @@ const SelectDeploymentTypeRef = (
 ): React.ReactElement => {
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
+  const history = useHistory()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { disableNextBtn, enableNextBtn, onSuccess } = props
   const { GITOPS_HOSTED } = useFeatureFlags()
@@ -126,6 +129,20 @@ const SelectDeploymentTypeRef = (
     onSuccess()
   }
 
+  const { openDialog: otherDeploymentTypesWarning } = useConfirmationDialog({
+    contentText: getString('cd.getStartedWithCD.closeOnboarding.subtitle'),
+    titleText: getString('cd.getStartedWithCD.closeOnboarding.title'),
+    confirmButtonText: getString('confirm'),
+    cancelButtonText: getString('cancel'),
+    intent: Intent.WARNING,
+    onCloseDialog: async (isConfirmed: boolean) => {
+      if (isConfirmed) {
+        trackEvent(CDOnboardingActions.MoveToOtherDeploymentTypes, {})
+        history.push(routes.toPipelines({ accountId, orgIdentifier, projectIdentifier, module: 'cd' }))
+      }
+    }
+  })
+
   return (
     <Container flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
       <Layout.Vertical width="70%">
@@ -157,7 +174,7 @@ const SelectDeploymentTypeRef = (
               <FormikForm>
                 <Layout.Horizontal>
                   <Container padding={{ bottom: 'xxlarge' }}>
-                    <Container padding={{ top: 'xxlarge', bottom: 'xxlarge' }}>
+                    <Container padding={{ top: 'xxlarge', bottom: 'xxlarge', left: 'large' }}>
                       <CardSelect
                         data={ngSupportedDeploymentTypes as DeploymentTypeItem[]}
                         cornerSelected={true}
@@ -200,18 +217,14 @@ const SelectDeploymentTypeRef = (
                         />
                       ) : null}
                     </Container>
-                    <Link to={routes.toPipelines({ orgIdentifier, projectIdentifier, accountId, module: 'cd' })}>
-                      <Text
-                        color={Color.PRIMARY_7}
-                        font={{ variation: FontVariation.BODY2 }}
-                        margin={{ top: 'huge' }}
-                        padding={{ top: 'small' }}
-                        data-tooltip-id="cdOnboardingOtherDeploymentTypes"
-                      >
-                        {getString('cd.getStartedWithCD.clickForOtherDeploymentTypes')}
-                        <HarnessDocTooltip tooltipId="cdOnboardingOtherDeploymentTypes" useStandAlone={true} />
-                      </Text>
-                    </Link>
+                    <Container margin={{ top: 'huge' }}>
+                      <Button
+                        text={getString('cd.getStartedWithCD.clickForOtherDeploymentTypes')}
+                        tooltipProps={{ dataTooltipId: 'cdOnboardingOtherDeploymentTypes' }}
+                        onClick={otherDeploymentTypesWarning}
+                        className={css.linkWrapper}
+                      />
+                    </Container>
                   </Container>
                 </Layout.Horizontal>
               </FormikForm>

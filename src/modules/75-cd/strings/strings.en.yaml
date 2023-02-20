@@ -583,6 +583,7 @@ k8sDryRunStepDescription: Perform a dry run on the manifests configured for this
 getStartedWithCD:
   creatingApp: Creating Application in progress
   main: main
+  installationInstructions: Installation Instructions
   clusterRepo: Cluster Repo
   destinationDetails: Destination Details
   gitURL: Git URL
@@ -702,6 +703,8 @@ getStartedWithCD:
   checkDelegateInstalled: Checking for the delegate. Installation takes a minute or two.
   testConnection: Test connection
   harnessFileStore: Harness Filestore
+  sampleManifest: Sample manifest
+  sampleManifests: Sample Manifests
   delegateSuccess: The delegate is installed. Next you can configure the service.
   connectHarnessEnv: Connect Harness to your environment
   installDelegateToTargetEnv: Install a Harness Delegate in your target environment.

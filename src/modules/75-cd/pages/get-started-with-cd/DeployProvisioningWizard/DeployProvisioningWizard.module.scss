@@ -415,3 +415,12 @@
 .width70 {
   width: 70% !important;
 }
+
+.linkWrapper {
+  box-shadow: none !important;
+  background: none !important;
+  &:focus,
+  &:hover {
+    text-decoration: underline !important;
+  }
+}

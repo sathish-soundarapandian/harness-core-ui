@@ -38,6 +38,7 @@ declare const styles: {
   readonly icons: string
   readonly keyTextArea: string
   readonly learnMore: string
+  readonly linkWrapper: string
   readonly main: string
   readonly marginBottom20: string
   readonly marginBottom25: string

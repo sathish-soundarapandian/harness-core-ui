@@ -398,14 +398,14 @@ export const newServiceState = {
 export const newEnvironmentState = {
   environment: {
     name: 'sample_environment',
-    identifier: 'sample_environment',
+    identifier: '',
     description: '',
     tags: {},
     type: 'PreProduction' as 'PreProduction' | 'Production'
   },
   infrastructure: {
     name: 'sample_infrastructure',
-    identifier: 'sample_infrastructure',
+    identifier: '',
     description: '',
     tags: {},
     type: '' as InfrastructureRequestDTO['type'],
@@ -426,7 +426,7 @@ export const newEnvironmentState = {
     description: '',
     projectIdentifier: '',
     orgIdentifier: '',
-    identifier: 'K8s_Cluster',
+    identifier: '',
     tags: {},
     type: 'K8sCluster',
     delegateType: 'InheritFromDelegate',
