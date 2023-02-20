@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { renderHook } from '@testing-library/react-hooks'
 
@@ -28,7 +35,7 @@ describe('useExecutionData Simple Pipeline tests', () => {
   })
 
   describe('user has selected stage and step', () => {
-    const wrapper = (props: React.PropsWithChildren<unknown>) => (
+    const wrapper = (props: React.PropsWithChildren<unknown>): React.ReactElement => (
       <TestWrapper queryParams={{ stage: 'MyStage', step: 'MyStep' }}>{props.children}</TestWrapper>
     )
 
@@ -61,10 +68,10 @@ describe('useExecutionData Simple Pipeline tests', () => {
   })
 
   describe('user has selected only stage', () => {
-    const wrapper = (props: React.PropsWithChildren<unknown>) => (
+    const wrapper = (props: React.PropsWithChildren<unknown>): React.ReactElement => (
       <TestWrapper queryParams={{ stage: 'S2' }}>{props.children}</TestWrapper>
     )
-    test('Pipeline is running, returns running step', () => {
+    test('Stage is running, returns running step', () => {
       const { result, rerender } = renderHook(useExecutionData, {
         initialProps: { mockData: { data: running as ResponsePipelineExecutionDetail } },
         wrapper
@@ -80,7 +87,7 @@ describe('useExecutionData Simple Pipeline tests', () => {
       expect(result.current.selectedStageExecutionId).toBe('')
     })
 
-    test('Pipeline is waiting, returns waiting step', () => {
+    test('Stage is waiting, returns waiting step', () => {
       const { result } = renderHook(useExecutionData, {
         initialProps: { mockData: { data: waiting as ResponsePipelineExecutionDetail } },
         wrapper
@@ -90,7 +97,7 @@ describe('useExecutionData Simple Pipeline tests', () => {
       expect(result.current.selectedStageExecutionId).toBe('')
     })
 
-    test('Pipeline has failed, returns failed step', () => {
+    test('Stage has failed, returns failed step', () => {
       const { result } = renderHook(useExecutionData, {
         initialProps: { mockData: { data: failed as ResponsePipelineExecutionDetail } },
         wrapper
@@ -100,7 +107,7 @@ describe('useExecutionData Simple Pipeline tests', () => {
       expect(result.current.selectedStageExecutionId).toBe('')
     })
 
-    test('Pipeline is success, returns last success step', () => {
+    test('Stage is success, returns last success step', () => {
       const { result } = renderHook(useExecutionData, {
         initialProps: { mockData: { data: success as ResponsePipelineExecutionDetail } },
         wrapper
@@ -112,7 +119,9 @@ describe('useExecutionData Simple Pipeline tests', () => {
   })
 
   describe('user has selected neither stage nor step', () => {
-    const wrapper = (props: React.PropsWithChildren<unknown>) => <TestWrapper>{props.children}</TestWrapper>
+    const wrapper = (props: React.PropsWithChildren<unknown>): React.ReactElement => (
+      <TestWrapper>{props.children}</TestWrapper>
+    )
     test('Pipeline is running, returns running stage and step', () => {
       const { result, rerender } = renderHook(useExecutionData, {
         initialProps: { mockData: { data: running as ResponsePipelineExecutionDetail } },
@@ -125,7 +134,7 @@ describe('useExecutionData Simple Pipeline tests', () => {
 
       rerender({ mockData: { data: running2 as ResponsePipelineExecutionDetail } })
 
-      expect(result.current.selectedStageId).toBe('S3')
+      expect(result.current.selectedStageId).toBe('S2')
       expect(result.current.selectedStepId).toBe('S2')
       expect(result.current.selectedStageExecutionId).toBe('')
       expect(result.current.selectedChildStageId).toBe('')

@@ -69,7 +69,8 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
     DynamicPopoverHandlerBinding<unknown> | undefined
   >()
   const [stageSetupId, setStageSetupIdId] = React.useState('')
-  const { pipelineExecutionDetail, selectedStageId, selectedChildStageId } = useExecutionContext()
+  const { pipelineExecutionDetail, selectedStageId, selectedStageExecutionId, selectedChildStageId } =
+    useExecutionContext()
 
   const nodeData = useMemo(
     () => processLayoutNodeMapV1(pipelineExecutionDetail?.pipelineExecutionSummary),
@@ -136,6 +137,18 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
   } = useGetBarriersExecutionInfo({
     lazy: true
   })
+
+  const selectedNodeId = React.useMemo(() => {
+    if (!isEmpty(childNodeData) && !isEmpty(selectedChildStageId)) {
+      return selectedChildStageId
+    }
+
+    if (!isEmpty(selectedStageExecutionId)) {
+      return selectedStageExecutionId
+    }
+
+    return selectedStageId
+  }, [selectedStageId, selectedChildStageId, childNodeData, selectedStageExecutionId])
 
   React.useEffect(() => {
     diagram.registerListeners(
@@ -249,9 +262,7 @@ export default function ExecutionGraph(props: ExecutionGraphProps): React.ReactE
             readonly
             loaderComponent={DiagramLoader}
             data={data.items as PipelineGraphState[]}
-            selectedNodeId={
-              isEmpty(childNodeData) || isEmpty(selectedChildStageId) ? selectedStageId : selectedChildStageId
-            }
+            selectedNodeId={selectedNodeId}
             panZoom={false}
             parentSelector=".Pane1"
             {...(!isMatrixNodeOrChainedPipeline() && {

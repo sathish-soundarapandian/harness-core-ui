@@ -122,7 +122,14 @@ export default function ExecutionGraphView(): React.ReactElement {
     delete params.step
     delete params.retryStep
     delete params.collapsedNode
-    if (!parentStageId && params?.childStage) delete params.childStage
+
+    if (!parentStageId && params?.childStage) {
+      delete params.childStage
+    }
+
+    if (!stageExecId) {
+      delete params.stageExecId
+    }
 
     replaceQueryParams(params)
   }
