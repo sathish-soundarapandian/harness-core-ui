@@ -33,13 +33,20 @@ jest.mock('services/cd-ng', () => {
             name: 'account name',
             identifier: 'id1',
             cluster: 'free',
-            defaultExperience: 'NG'
+            defaultExperience: 'NG',
+            crossGenerationAccessEnabled: true
           }
         },
         refetch: jest.fn()
       }
     }),
     useUpdateAccountDefaultExperienceNG: jest.fn().mockImplementation(() => {
+      return {
+        mutate: jest.fn(),
+        loading: false
+      }
+    }),
+    useUpdateAccountCrossGenerationAccessEnabledNG: jest.fn().mockImplementation(() => {
       return {
         mutate: jest.fn(),
         loading: false

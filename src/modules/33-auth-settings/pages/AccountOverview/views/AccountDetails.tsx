@@ -5,15 +5,15 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { Button, ButtonVariation, Container, Layout, Text, PageError, PageSpinner } from '@harness/uicore'
+import React, { useEffect } from 'react'
+import { Button, ButtonVariation, Container, Layout, Text, PageError, PageSpinner, Switch } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { StringsMap } from 'stringTypes'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDefaultExperienceModal } from '@common/modals/DefaultVersion/DefaultExperience'
-import { useGetAccountNG } from 'services/cd-ng'
+import { useGetAccountNG, useUpdateAccountCrossGenerationAccessEnabledNG } from 'services/cd-ng'
 import type { Experiences } from '@common/constants/Utils'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -37,6 +37,9 @@ const AccountDetails: React.FC = () => {
     refetch: refetchAcct,
     error
   } = useGetAccountNG({ accountIdentifier: accountId, queryParams: { accountIdentifier: accountId } })
+  const { mutate: updateAcctUpdate } = useUpdateAccountCrossGenerationAccessEnabledNG({
+    accountIdentifier: accountId
+  })
   const [updateAccountName, setUpdateAccountName] = React.useState(false)
 
   const { openDefaultExperienceModal } = useDefaultExperienceModal({ refetchAcct })
@@ -44,7 +47,10 @@ const AccountDetails: React.FC = () => {
   const isCommunity = useGetCommunity()
 
   const accountData = data?.data
-
+  const [crossAccessVariable, setCrossAccessVariable] = React.useState(false)
+  useEffect(() => {
+    setCrossAccessVariable(accountData?.crossGenerationAccessEnabled || false)
+  }, [accountData])
   const accountNameComponent = updateAccountName ? (
     <AccountNameForm
       name={accountData?.name || ''}
@@ -94,7 +100,8 @@ const AccountDetails: React.FC = () => {
       </Container>
     )
   }
-
+  const accountData2 = { ...accountData } || {}
+  accountData2.crossGenerationAccessEnabled = !accountData2?.crossGenerationAccessEnabled
   return (
     <Container margin="xlarge" padding="xlarge" className={css.container} background="white">
       <Text color={Color.BLACK} font={{ weight: 'semi-bold', size: 'medium' }} margin={{ bottom: 'xlarge' }}>
@@ -119,25 +126,38 @@ const AccountDetails: React.FC = () => {
           {accountData?.cluster}
         </Text>
       </Layout.Horizontal>
-
-      <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-        <Text className={css.minWidth}>{getString('common.defaultExperience')}</Text>
-        <Text color={Color.GREY_800}>{defaultExperienceStr}</Text>
-        {!isCommunity && (
-          <RbacButton
-            variation={ButtonVariation.LINK}
-            padding="none"
-            text={getString('change')}
-            onClick={() => openDefaultExperienceModal(accountData?.defaultExperience as Experiences)}
-            permission={{
-              permission: PermissionIdentifier.EDIT_ACCOUNT,
-              resource: {
-                resourceType: ResourceType.ACCOUNT
-              }
-            }}
-          />
-        )}
+      <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} margin={{ bottom: 'large' }}>
+        <Text className={css.minWidth}>{getString('common.allowFirstGenAccess')}</Text>
+        <Switch
+          disabled={PermissionIdentifier.EDIT_ACCOUNT ? false : true}
+          onChange={async () => {
+            setCrossAccessVariable(!crossAccessVariable)
+            await updateAcctUpdate({ ...accountData2 })
+          }}
+          className={css.switch}
+          checked={crossAccessVariable}
+        />
       </Layout.Horizontal>
+      {crossAccessVariable ? (
+        <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+          <Text className={css.minWidth}>{getString('common.defaultExperience')}</Text>
+          <Text color={Color.GREY_800}>{defaultExperienceStr}</Text>
+          {!isCommunity && (
+            <RbacButton
+              variation={ButtonVariation.LINK}
+              padding="none"
+              text={getString('change')}
+              onClick={() => openDefaultExperienceModal(accountData?.defaultExperience as Experiences)}
+              permission={{
+                permission: PermissionIdentifier.EDIT_ACCOUNT,
+                resource: {
+                  resourceType: ResourceType.ACCOUNT
+                }
+              }}
+            />
+          )}
+        </Layout.Horizontal>
+      ) : null}
     </Container>
   )
 }
