@@ -11,8 +11,10 @@ import type { FormikContextType } from 'formik'
 import {
   DataTooltipInterface,
   ExpressionAndRuntimeTypeProps,
+  FormInput,
   getMultiTypeFromValue,
-  MultiTypeInputType
+  MultiTypeInputType,
+  MultiTypeInputValue
 } from '@harness/uicore'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { ExpressionsListInput } from '@common/components/ExpressionsListInput/ExpressionsListInput'
@@ -64,6 +66,28 @@ export const FormMultiTypeUserGroupInput: React.FC<Extended> = props => {
       []
     )
   }, [templateProps?.isTemplatizedView, templateProps?.templateValue])
+
+  if (!Array.isArray(value) && multiType === MultiTypeInputType.EXPRESSION) {
+    return (
+      <FormInput.MultiTextInput
+        name={name}
+        label={label}
+        disabled={disabled}
+        tooltipProps={tooltipProps}
+        multiTextInputProps={{
+          allowableTypes,
+          expressions
+        }}
+        onChange={(
+          _value: ExpressionAndRuntimeTypeProps['value'],
+          _valueType: MultiTypeInputValue,
+          type: MultiTypeInputType
+        ) => {
+          setMultiType(type)
+        }}
+      />
+    )
+  }
 
   return (
     <MultiTypeFieldSelector

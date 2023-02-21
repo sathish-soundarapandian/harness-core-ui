@@ -294,7 +294,11 @@ function HarnessApprovalStepMode(
           approvalMessage: Yup.string().trim().required(getString('pipeline.approvalStep.validation.approvalMessage')),
           approvers: Yup.object().shape({
             userGroups: Yup.mixed()
-              .required(getString('pipeline.approvalStep.validation.userGroups'))
+              .required(
+                getString('common.validation.fieldIsRequired', {
+                  name: getString('common.userGroups')
+                })
+              )
               .test({
                 test(value: string | string[]) {
                   if (Array.isArray(value) && isEmpty(compact(value))) {
