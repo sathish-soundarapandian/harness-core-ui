@@ -142,7 +142,7 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
     }
   }, [service])
 
-  const { mutate: runPipeline } = usePostPipelineExecuteWithInputSetYaml({
+  const { mutate: runPipeline, error: executePipelineError } = usePostPipelineExecuteWithInputSetYaml({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
@@ -155,6 +155,12 @@ const RunPipelineSummary = ({ onSuccess, setSelectedSectionId, setLoader }: RunP
       }
     }
   })
+
+  React.useEffect(() => {
+    if (executePipelineError) {
+      showError(getErrorInfoFromErrorObject(executePipelineError))
+    }
+  }, [executePipelineError, showError])
 
   const constructPipelinePayload = React.useCallback(
     (data: PipelineRefPayload, repository = { name: DEFAULT_PIPELINE_NAME } as UserRepoResponse): string => {

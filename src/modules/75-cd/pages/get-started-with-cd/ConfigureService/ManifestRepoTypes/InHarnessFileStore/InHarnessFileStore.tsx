@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { Container, Icon, Layout, PageSpinner, Text, useToaster } from '@harness/uicore'
+import { Container, HarnessDocTooltip, Icon, Layout, PageSpinner, Text, useToaster } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import { get, isEmpty, set } from 'lodash-es'
@@ -236,8 +236,14 @@ const InHarnessFileStore = ({
           <Layout.Horizontal flex={{ justifyContent: 'flex-start' }}>
             <Icon name={'harness'} size={28} padding={{ right: 'medium' }} />
             <Layout.Vertical>
-              <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'small' }} color={Color.GREY_600}>
-                {getString('cd.steps.commands.locationFileStore')}
+              <Text
+                font={{ variation: FontVariation.H4 }}
+                padding={{ bottom: 'small' }}
+                color={Color.GREY_600}
+                data-tooltip-id="cdOnboardingSampleManifest"
+              >
+                {getString('cd.getStartedWithCD.sampleManifests')}
+                <HarnessDocTooltip tooltipId="cdOnboardingSampleManifest" useStandAlone={true} />
               </Text>
 
               <Text font={{ variation: FontVariation.BODY2 }} color={Color.GREY_500}>

@@ -12,7 +12,12 @@ import { Text, Formik, FormikForm, Layout, Container, Button, ButtonVariation, u
 import { Color, FontVariation } from '@harness/design-system'
 import type { FormikContextType } from 'formik'
 import routes from '@common/RouteDefinitions'
-import { Servicev1Application, useAgentApplicationServiceCreate, useAgentApplicationServiceSync } from 'services/gitops'
+import {
+  RepositoriesRepoAppDetailsResponse,
+  Servicev1Application,
+  useAgentApplicationServiceCreate,
+  useAgentApplicationServiceSync
+} from 'services/gitops'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
@@ -32,11 +37,12 @@ import css from '../RunPipelineSummary/RunPipelineSummary.module.scss'
 import deployCSS from '../DeployProvisioningWizard/DeployProvisioningWizard.module.scss'
 
 interface DeployProps {
+  appDetails?: RepositoriesRepoAppDetailsResponse
   onBack: () => void
   setSelectedSectionId: React.Dispatch<React.SetStateAction<DeployProvisiongWizardStepId>>
 }
 
-export const Deploy = ({ onBack, setSelectedSectionId }: DeployProps) => {
+export const Deploy = ({ onBack, setSelectedSectionId, appDetails }: DeployProps) => {
   const {
     saveApplicationData,
     state: { service, cluster: clusterData, repository: repositoryData, agent: agentData, application: applicationData }
@@ -48,7 +54,7 @@ export const Deploy = ({ onBack, setSelectedSectionId }: DeployProps) => {
   const toast = useToaster()
   const fullAgentName = getFullAgentWithScope(defaultTo(agentData?.identifier, ''), Scope.ACCOUNT)
   const formikRef = useRef<FormikContextType<Servicev1Application>>()
-  const { mutate: createApplication } = useAgentApplicationServiceCreate({
+  const { mutate: createApplication, loading: creatingApp } = useAgentApplicationServiceCreate({
     agentIdentifier: fullAgentName,
     queryParams: {
       projectIdentifier,
@@ -68,7 +74,8 @@ export const Deploy = ({ onBack, setSelectedSectionId }: DeployProps) => {
     const payload = getAppPayload({
       repositoryData,
       clusterData,
-      name: formikRef?.current?.values?.name
+      name: 'hostedapp',
+      appDetails
     })
     const data: any = {
       ...payload,
@@ -85,47 +92,51 @@ export const Deploy = ({ onBack, setSelectedSectionId }: DeployProps) => {
         accountIdentifier: accountId,
         repoIdentifier: `account.${repositoryData?.identifier}`
       }
-    }).then(applicationResponse => {
-      toast.showSuccess(
-        getString('common.entitycreatedSuccessfully', {
-          entity: getString('common.application'),
-          name: applicationResponse?.name
-        }),
-        undefined
-      )
-      saveApplicationData(applicationResponse)
-      const sortedResources = new Map(
-        sortBy(
-          applicationResponse?.app?.status?.resources || [],
-          resource => resourceStatusSortOrder[(resource.status as SyncStatus) || SyncStatus.Unknown]
-        ).map(resource => [snakeCase(getResourceKey(resource)), resource])
-      )
-      const formData = getApplicationPayloadForSync(
-        defaultTo(applicationResponse?.app, {}),
-        [...sortedResources.keys()],
-        defaultTo(applicationResponse?.app?.spec?.source?.targetRevision, 'HEAD')
-      )
-
-      const body = getSyncBody(formData, sortedResources, defaultTo(applicationResponse?.app, {}))
-
-      syncApp(body, {
-        pathParams: { requestName: defaultTo(applicationResponse?.name, ''), agentIdentifier: fullAgentName }
-      }).then(() => {
-        if (!syncError) {
-          toast.showSuccess(getString('cd.getStartedWithCD.syncCompleteMessage'))
-        }
-        history.push(
-          routes.toGitOpsApplication({
-            orgIdentifier: applicationResponse?.orgIdentifier || '',
-            projectIdentifier: applicationResponse?.projectIdentifier || '',
-            accountId: applicationResponse?.accountIdentifier || '',
-            module: 'cd',
-            applicationId: applicationResponse?.name || '',
-            agentId: applicationResponse?.agentIdentifier || ''
-          })
-        )
-      })
     })
+      .then(applicationResponse => {
+        toast.showSuccess(
+          getString('common.entitycreatedSuccessfully', {
+            entity: getString('common.application'),
+            name: applicationResponse?.name
+          }),
+          undefined
+        )
+        saveApplicationData(applicationResponse)
+        const sortedResources = new Map(
+          sortBy(
+            applicationResponse?.app?.status?.resources || [],
+            resource => resourceStatusSortOrder[(resource.status as SyncStatus) || SyncStatus.Unknown]
+          ).map(resource => [snakeCase(getResourceKey(resource)), resource])
+        )
+        const formData = getApplicationPayloadForSync(
+          defaultTo(applicationResponse?.app, {}),
+          [...sortedResources.keys()],
+          defaultTo(applicationResponse?.app?.spec?.source?.targetRevision, 'HEAD')
+        )
+
+        const body = getSyncBody(formData, sortedResources, defaultTo(applicationResponse?.app, {}))
+
+        syncApp(body, {
+          pathParams: { requestName: defaultTo(applicationResponse?.name, ''), agentIdentifier: fullAgentName }
+        }).then(() => {
+          if (!syncError) {
+            toast.showSuccess(getString('cd.getStartedWithCD.syncCompleteMessage'))
+          }
+          history.push(
+            routes.toGitOpsApplication({
+              orgIdentifier: applicationResponse?.orgIdentifier || '',
+              projectIdentifier: applicationResponse?.projectIdentifier || '',
+              accountId: applicationResponse?.accountIdentifier || '',
+              module: 'cd',
+              applicationId: applicationResponse?.name || '',
+              agentId: applicationResponse?.agentIdentifier || ''
+            })
+          )
+        })
+      })
+      .catch(err => {
+        toast.showError(err?.data?.message || err?.message)
+      })
   }
 
   const successsFullConfiguration = (
@@ -343,6 +354,7 @@ export const Deploy = ({ onBack, setSelectedSectionId }: DeployProps) => {
             text={getString('cd.getStartedWithCD.syncApplication')}
             variation={ButtonVariation.PRIMARY}
             onClick={goToAppDetailPage}
+            loading={creatingApp}
           />
         </Layout.Horizontal>
       </Layout.Vertical>

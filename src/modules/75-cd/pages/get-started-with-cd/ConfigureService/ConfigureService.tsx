@@ -18,7 +18,8 @@ import {
   RadioButtonGroup,
   IconName,
   Icon,
-  FormikForm
+  FormikForm,
+  HarnessDocTooltip
 } from '@harness/uicore'
 
 import { FontVariation, Color } from '@harness/design-system'
@@ -362,8 +363,14 @@ const ConfigureServiceRef = (
     return (
       <>
         <Layout.Vertical padding={{ top: 'xxlarge' }}>
-          <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'large' }} color={Color.GREY_600}>
+          <Text
+            font={{ variation: FontVariation.H4 }}
+            padding={{ bottom: 'large' }}
+            color={Color.GREY_600}
+            data-tooltip-id="cdOnboardingManifestType"
+          >
             {getString('cd.getStartedWithCD.manifestTypeSelection')}
+            <HarnessDocTooltip tooltipId="cdOnboardingManifestType" useStandAlone={true} />
           </Text>
           <RadioButtonGroup
             name="manifest-type-selection"
@@ -409,14 +416,20 @@ const ConfigureServiceRef = (
   const selectManifestStore = (formikProps: FormikProps<ConfigureServiceInterface>): JSX.Element | null => {
     return (
       <Layout.Vertical padding={{ top: 'xxlarge', bottom: 'xxlarge' }}>
-        <Text font={{ variation: FontVariation.H4 }} padding={{ bottom: 'large' }} color={Color.GREY_600}>
+        <Text
+          font={{ variation: FontVariation.H4 }}
+          padding={{ bottom: 'large' }}
+          color={Color.GREY_600}
+          data-tooltip-id="cdOnboardingManifestLocation"
+        >
           {getString('cd.getStartedWithCD.manifestStoreLabel')}
+          <HarnessDocTooltip tooltipId="cdOnboardingManifestLocation" useStandAlone={true} />
         </Text>
         <Layout.Horizontal>
           <Button
             className={css.authMethodBtn}
             round
-            text={getString('cd.getStartedWithCD.harnessFileStore')}
+            text={getString('cd.getStartedWithCD.sampleManifest')}
             onClick={() => {
               onManifestStoreSelection(ManifestStoreMap.Harness)
               formikProps?.setFieldValue('artifactToDeploy', BinaryValue.YES)
@@ -538,8 +551,13 @@ const ConfigureServiceRef = (
               <FormikForm>
                 <Layout.Vertical width="70%">
                   <Layout.Horizontal flex={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Text font={{ variation: FontVariation.H3 }} color={Color.GREY_600}>
+                    <Text
+                      font={{ variation: FontVariation.H3 }}
+                      color={Color.GREY_600}
+                      data-tooltip-id="cdOnboardingConfigureService"
+                    >
                       {getString('common.configureService')}
+                      <HarnessDocTooltip tooltipId="cdOnboardingConfigureService" useStandAlone={true} />
                     </Text>
                     <Layout.Horizontal flex={{ alignItems: 'center' }}>
                       {editService ? (

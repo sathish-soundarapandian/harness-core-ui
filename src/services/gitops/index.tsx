@@ -1657,3 +1657,195 @@ export const useAgentClusterServiceCreateHosted = ({
       `/api/v1/agents/${paramsInPath.agentIdentifier}/hosted/cluster`,
     { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier }, ...props }
   )
+
+export interface AgentRepositoryServiceGetAppDetailsQueryParams {
+  /**
+   * Account Identifier for the Entity.
+   */
+  accountIdentifier?: string
+  /**
+   * Organization Identifier for the Entity.
+   */
+  orgIdentifier?: string
+  /**
+   * Project Identifier for the Entity.
+   */
+  projectIdentifier?: string
+  /**
+   * RepoURL is the URL to the repository (Git or Helm) that contains the application manifests.
+   */
+  'query.source.repoURL'?: string
+  /**
+   * Path is a directory path within the Git repository, and is only valid for applications sourced from Git.
+   */
+  'query.source.path'?: string
+  /**
+   * TargetRevision defines the revision of the source to sync the application to.
+   * In case of Git, this can be commit, tag, or branch. If omitted, will equal to HEAD.
+   * In case of Helm, this is a semver tag for the Chart's version.
+   */
+  'query.source.targetRevision'?: string
+  /**
+   * ValuesFiles is a list of Helm value files to use when generating a template.
+   */
+  'query.source.helm.valueFiles'?: string[]
+  /**
+   * ReleaseName is the Helm release name to use. If omitted it will use the application name.
+   */
+  'query.source.helm.releaseName'?: string
+  /**
+   * Values specifies Helm values to be passed to helm template, typically defined as a block.
+   */
+  'query.source.helm.values'?: string
+  /**
+   * Version is the Helm version to use for templating (either "2" or "3").
+   */
+  'query.source.helm.version'?: string
+  /**
+   * PassCredentials pass credentials to all domains (Helm's --pass-credentials).
+   */
+  'query.source.helm.passCredentials'?: boolean
+  /**
+   * NamePrefix is a prefix appended to resources for Kustomize apps.
+   */
+  'query.source.kustomize.namePrefix'?: string
+  /**
+   * NameSuffix is a suffix appended to resources for Kustomize apps.
+   */
+  'query.source.kustomize.nameSuffix'?: string
+  /**
+   * Images is a list of Kustomize image override specifications.
+   */
+  'query.source.kustomize.images'?: string[]
+  /**
+   * Version controls which version of Kustomize to use for rendering manifests.
+   */
+  'query.source.kustomize.version'?: string
+  /**
+   * ForceCommonLabels specifies whether to force applying common labels to resources for Kustomize apps.
+   */
+  'query.source.kustomize.forceCommonLabels'?: boolean
+  /**
+   * ForceCommonAnnotations specifies whether to force applying common annotations to resources for Kustomize apps.
+   */
+  'query.source.kustomize.forceCommonAnnotations'?: boolean
+  /**
+   * Environment is a ksonnet application environment name.
+   */
+  'query.source.ksonnet.environment'?: string
+  /**
+   * Recurse specifies whether to scan a directory recursively for manifests.
+   */
+  'query.source.directory.recurse'?: boolean
+  /**
+   * Additional library search dirs.
+   */
+  'query.source.directory.jsonnet.libs'?: string[]
+  /**
+   * Exclude contains a glob pattern to match paths against that should be explicitly excluded from being used during manifest generation.
+   */
+  'query.source.directory.exclude'?: string
+  /**
+   * Include contains a glob pattern to match paths against that should be explicitly included during manifest generation.
+   */
+  'query.source.directory.include'?: string
+  'query.source.plugin.name'?: string
+  /**
+   * Chart is a Helm chart name, and must be specified for applications sourced from a Helm repo.
+   */
+  'query.source.chart'?: string
+  'query.appName'?: string
+  'query.appProject'?: string
+}
+
+export interface RepositoriesDirectoryAppSpec {
+  [key: string]: any
+}
+
+export interface RepositoriesHelmAppSpec {
+  fileParameters?: ApplicationsHelmFileParameter[]
+  name?: string
+  parameters?: ApplicationsHelmParameter[]
+  valueFiles?: string[]
+  values?: string
+}
+
+export interface RepositoriesKsonnetEnvironmentDestination {
+  namespace?: string
+  /**
+   * Server is the Kubernetes server that the cluster is running on.
+   */
+  server?: string
+}
+
+export interface RepositoriesKsonnetEnvironment {
+  destination?: RepositoriesKsonnetEnvironmentDestination
+  /**
+   * KubernetesVersion is the kubernetes version the targeted cluster is running on.
+   */
+  k8sVersion?: string
+  name?: string
+}
+
+export interface RepositoriesKsonnetAppSpec {
+  environments?: {
+    [key: string]: RepositoriesKsonnetEnvironment
+  }
+  name?: string
+  parameters?: ApplicationsKsonnetParameter[]
+}
+
+export interface RepositoriesKustomizeAppSpec {
+  /**
+   * images is a list of available images.
+   */
+  images?: string[]
+}
+
+export interface RepositoriesRepoAppDetailsResponse {
+  directory?: RepositoriesDirectoryAppSpec
+  helm?: RepositoriesHelmAppSpec
+  ksonnet?: RepositoriesKsonnetAppSpec
+  kustomize?: RepositoriesKustomizeAppSpec
+  type?: string
+}
+
+export interface AgentRepositoryServiceGetAppDetailsPathParams {
+  /**
+   * Agent identifier for entity.
+   */
+  agentIdentifier: string
+  identifier: string
+}
+
+export type UseAgentRepositoryServiceGetAppDetailsProps = Omit<
+  UseGetProps<
+    RepositoriesRepoAppDetailsResponse,
+    GatewayruntimeError,
+    AgentRepositoryServiceGetAppDetailsQueryParams,
+    AgentRepositoryServiceGetAppDetailsPathParams
+  >,
+  'path'
+> &
+  AgentRepositoryServiceGetAppDetailsPathParams
+
+/**
+ * GetAppDetails returns application details by given path
+ *
+ * GetAppDetails returns application details by given path.
+ */
+export const useAgentRepositoryServiceGetAppDetails = ({
+  agentIdentifier,
+  identifier,
+  ...props
+}: UseAgentRepositoryServiceGetAppDetailsProps) =>
+  useGet<
+    RepositoriesRepoAppDetailsResponse,
+    GatewayruntimeError,
+    AgentRepositoryServiceGetAppDetailsQueryParams,
+    AgentRepositoryServiceGetAppDetailsPathParams
+  >(
+    (paramsInPath: AgentRepositoryServiceGetAppDetailsPathParams) =>
+      `/api/v1/agents/${paramsInPath.agentIdentifier}/repositories/${paramsInPath.identifier}/appdetails`,
+    { base: window.getApiBaseUrl('gitops'), pathParams: { agentIdentifier, identifier }, ...props }
+  )

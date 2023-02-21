@@ -5244,6 +5244,7 @@ export interface StringsMap {
   'cd.getStartedWithCD.createCluster': string
   'cd.getStartedWithCD.createHostedCluster': string
   'cd.getStartedWithCD.createdSuccessfully': string
+  'cd.getStartedWithCD.creatingApp': string
   'cd.getStartedWithCD.delegateDescription': string
   'cd.getStartedWithCD.delegateInfo1': string
   'cd.getStartedWithCD.delegateInfo2': string
@@ -5300,7 +5301,9 @@ export interface StringsMap {
   'cd.getStartedWithCD.inManifestContent': string
   'cd.getStartedWithCD.infraName': string
   'cd.getStartedWithCD.installDelegateToTargetEnv': string
+  'cd.getStartedWithCD.installationInstructions': string
   'cd.getStartedWithCD.ipWhitelist': string
+  'cd.getStartedWithCD.main': string
   'cd.getStartedWithCD.managedCluster': string
   'cd.getStartedWithCD.manifestFile': string
   'cd.getStartedWithCD.manifestStorage': string
@@ -5323,6 +5326,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.reposubheading': string
   'cd.getStartedWithCD.retryProvisioningHostedCluster': string
   'cd.getStartedWithCD.runDelegateSubtitle': string
+  'cd.getStartedWithCD.sampleManifest': string
+  'cd.getStartedWithCD.sampleManifests': string
   'cd.getStartedWithCD.sampleRepoLink': string
   'cd.getStartedWithCD.sampleRule1': string
   'cd.getStartedWithCD.sampleRule2': string
