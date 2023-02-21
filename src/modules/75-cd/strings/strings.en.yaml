@@ -259,6 +259,7 @@ pipelineSteps:
     environmentGroupConfirmationText: Are you sure you want to switch to deploying to a single environment group? If you choose to proceed, your existing environments will be lost.
     multiEnvironmentsDialogTitleText: Deploy to multiple environments or infrastructures?
     multiEnvironmentsConfirmationText: Are you sure you want to switch to deploying multiple environments or infrastructures? If you choose to proceed, your existing environment will be migrated automatically.
+    multiEnvironmentsClearConfirmationText: Are you sure you want to switch to deploying multiple environments or infrastructures? If you choose to proceed, your existing environment will be lost.
     singleEnvironmentDialogTitleText: Deploy to single environment?
     singleEnvironmentConfirmationText: Are you sure you want to switch to deploying to a single environment? If you choose to proceed, your existing environments will be lost.
     deleteEnvironmentFromListDialogTitleText: Remove Environment from list?

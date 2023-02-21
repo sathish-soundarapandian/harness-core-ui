@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { useFormikContext } from 'formik'
-import { defaultTo, get, isEmpty, isNil, omit, pick, set } from 'lodash-es'
+import { get, isEmpty, isNil, omit, pick, set } from 'lodash-es'
 
 import { Container, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -15,7 +15,6 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { DeploymentStageConfig, EnvironmentYamlV2, Infrastructure, ServiceSpec } from 'services/cd-ng'
 
-import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { isMultiTypeExpression, isValueExpression, isValueFixed, isValueRuntimeInput } from '@common/utils/utils'
 
 import {
@@ -273,7 +272,6 @@ export default function SingleEnvironmentInputSetForm({
                 customStepProps={{
                   deploymentType,
                   environmentIdentifier,
-                  scope: getScopeFromValue(defaultTo(environmentIdentifier, '')),
                   isMultipleInfrastructure: false,
                   customDeploymentRef: deploymentStage?.customDeploymentRef,
                   showEnvironmentsSelectionInputField,

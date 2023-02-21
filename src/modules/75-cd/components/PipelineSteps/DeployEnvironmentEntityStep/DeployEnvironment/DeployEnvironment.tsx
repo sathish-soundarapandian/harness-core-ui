@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { MutableRefObject, useEffect, useMemo, useState } from 'react'
 import { unstable_batchedUpdates } from 'react-dom'
 import { defaultTo, get, isEmpty, isNil, set } from 'lodash-es'
 import { useFormikContext } from 'formik'
@@ -83,6 +83,7 @@ interface DeployEnvironmentProps extends Required<DeployEnvironmentEntityCustomS
   /** env group specific props */
   isUnderEnvGroup?: boolean
   envGroupIdentifier?: string
+  environmentsTypeRef?: MutableRefObject<MultiTypeInputType | null>
 }
 
 export function getAllFixedEnvironments(data: DeployEnvironmentEntityFormState): string[] {
@@ -118,7 +119,8 @@ export default function DeployEnvironment({
   stageIdentifier,
   deploymentType,
   customDeploymentRef,
-  gitOpsEnabled
+  gitOpsEnabled,
+  environmentsTypeRef
 }: DeployEnvironmentProps): JSX.Element {
   const { values, setFieldValue, setValues, errors, setFieldError, setFieldTouched } =
     useFormikContext<DeployEnvironmentEntityFormState>()
@@ -163,6 +165,21 @@ export default function DeployEnvironment({
     envGroupIdentifier,
     serviceIdentifiers
   })
+
+  useEffect(() => {
+    // do this only on mount of mulit env component
+    if (isMultiTypeExpression(environmentsTypeRef?.current as MultiTypeInputType) && isMultiEnvironment) {
+      setEnvironmentsType(MultiTypeInputType.FIXED)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    if (environmentsTypeRef?.current === null || environmentsTypeRef?.current) {
+      environmentsTypeRef.current = environmentsType
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [environmentsType])
 
   useEffect(() => {
     /**

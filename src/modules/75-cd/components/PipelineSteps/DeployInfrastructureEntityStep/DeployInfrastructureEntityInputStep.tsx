@@ -31,7 +31,6 @@ import { useDeepCompareEffect } from '@common/hooks'
 import { FormMultiTypeMultiSelectDropDown } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDown'
 import { SELECT_ALL_OPTION } from '@common/components/MultiTypeMultiSelectDropDown/MultiTypeMultiSelectDropDownUtils'
 import { isMultiTypeExpression, isValueExpression, isValueRuntimeInput } from '@common/utils/utils'
-import { getScopeAppendedToIdentifier } from '@common/utils/StringUtils'
 
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
@@ -55,6 +54,7 @@ export interface DeployInfrastructureEntityInputStepProps
     path?: string
     readonly?: boolean
   }
+  scopePrefix?: string
 }
 
 export default function DeployInfrastructureEntityInputStep({
@@ -66,10 +66,10 @@ export default function DeployInfrastructureEntityInputStep({
   environmentIdentifier,
   isMultipleInfrastructure,
   deployToAllInfrastructures,
-  scope,
   stepViewType,
   areEnvironmentFiltersAdded,
-  lazyInfrastructure
+  lazyInfrastructure,
+  scopePrefix
 }: DeployInfrastructureEntityInputStepProps): React.ReactElement {
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
@@ -133,7 +133,7 @@ export default function DeployInfrastructureEntityInputStep({
       infrastructuresSelectedType === 'expression' || isValueExpression(infrastructureIdentifiers[0])
         ? []
         : infrastructureIdentifiers,
-    environmentIdentifier: getScopeAppendedToIdentifier(environmentIdentifier, scope),
+    environmentIdentifier: defaultTo(scopePrefix, '') + environmentIdentifier,
     deploymentType,
     ...(shouldAddCustomDeploymentData && {
       deploymentTemplateIdentifier,

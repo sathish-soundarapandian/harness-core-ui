@@ -5477,6 +5477,7 @@ export interface StringsMap {
   'cd.pipelineSteps.environmentTab.infrastructureIsRequired': string
   'cd.pipelineSteps.environmentTab.infrastructuresAreRequired': string
   'cd.pipelineSteps.environmentTab.multiEnvToggleText': string
+  'cd.pipelineSteps.environmentTab.multiEnvironmentsClearConfirmationText': string
   'cd.pipelineSteps.environmentTab.multiEnvironmentsConfirmationText': string
   'cd.pipelineSteps.environmentTab.multiEnvironmentsDialogTitleText': string
   'cd.pipelineSteps.environmentTab.multiEnvironmentsParallelDeployLabel': string

@@ -333,7 +333,7 @@ export function MultiEnvironmentsInputSetForm({
                           customStepProps={{
                             deploymentType,
                             environmentIdentifier: environment.environmentRef,
-                            scope: getScopeFromValue(defaultTo(envGroupRef, '')),
+                            scopePrefix: getScopeFromValue(defaultTo(envGroupRef, '')),
                             isMultipleInfrastructure: true,
                             customDeploymentRef: deploymentStage?.customDeploymentRef,
                             deployToAllInfrastructures: environmentInDeploymentStage?.deployToAll,
