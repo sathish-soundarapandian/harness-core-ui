@@ -64,6 +64,14 @@ function getStringByModuleProps(module: ModuleName): StringByModuleProps {
       documentURL = 'https://docs.harness.io/article/knunou9j30-kubernetes-cd-quickstart'
       break
     }
+    case ModuleName.STO: {
+      title = 'sto.continuous'
+      subTitle = 'sto.dashboard.subHeading'
+      documentText = 'sto.learnMore'
+      documentURL =
+        'https://developer.harness.io/docs/security-testing-orchestration/onboard-sto/security-testing-orchestration-basics/'
+      break
+    }
   }
 
   return {

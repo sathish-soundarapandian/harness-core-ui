@@ -73,3 +73,6 @@ Unassigned: Unassigned
 continuous: '{{$.common.purpose.sto.continuous}}'
 stoExemption: Exemption
 gettingStarted: Getting Started
+dashboard:
+  subHeading: Deliver highly secure applications while maintaining deployment velocity and minimizing rework.
+learnMore: Learn more about Security Testing Orchestration

@@ -58,6 +58,9 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { RedirectToModuleTrialHomeFactory, RedirectToSubscriptionsFactory } from '@common/Redirects'
 import { ModuleName } from 'framework/types/ModuleName'
+import HomePageByModule from '@pipeline/components/HomePageByModule/HomePageByModule'
+import { useSTOTrialModal } from '@pipeline/components/PipelineStudio/STOTrial/useSTOTrialModal'
+import bgImageURL from '@pipeline/components/PipelineStudio/STOTrial/sto.svg'
 
 const STOSideNavProps: SidebarContext = {
   navComponent: STOSideNav,
@@ -279,6 +282,7 @@ const RemoteSTOApp = lazy(() => import(`stoV2/App`))
 
 const RouteDestinations: React.FC = () => {
   const { NG_SETTINGS } = useFeatureFlags()
+  const { selectedProject } = useAppStore()
 
   return (
     <>
@@ -295,7 +299,11 @@ const RouteDestinations: React.FC = () => {
           routes.toSTOProjectOverview({ ...accountPathProps, ...projectPathProps })
         ]}
       >
-        <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ ExecutionCard, CardRailView }} />
+        {!selectedProject?.identifier ? (
+          <HomePageByModule moduleName={ModuleName.STO} bgImageURL={bgImageURL} useTrialModal={useSTOTrialModal} />
+        ) : (
+          <ChildAppMounter ChildApp={RemoteSTOApp} customComponents={{ ExecutionCard, CardRailView }} />
+        )}
       </RouteWithLayout>
 
       <RouteWithLayout

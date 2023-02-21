@@ -8825,10 +8825,12 @@ export interface StringsMap {
   'sto.Info': string
   'sto.Unassigned': string
   'sto.continuous': string
+  'sto.dashboard.subHeading': string
   'sto.exemptions': string
   'sto.failedToGetIssueCounts': string
   'sto.gettingStarted': string
   'sto.issues': string
+  'sto.learnMore': string
   'sto.noSecurityIssues': string
   'sto.noSecurityResults': string
   'sto.scans': string

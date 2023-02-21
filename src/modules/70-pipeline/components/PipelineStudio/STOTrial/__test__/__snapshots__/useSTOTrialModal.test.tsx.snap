@@ -1,0 +1,725 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`STOTrial Modal Rendering should open STOTrial 1`] = `
+<div
+  class="bp3-dialog Dialog--dialog dialog stoTrial"
+>
+  <span
+    class="bp3-icon StyledProps--main Dialog--close"
+    data-icon="Stroke"
+  >
+    <svg
+      fill="none"
+      height="15"
+      width="15"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1 .8l6 6 6-6-12 12 6-6 6 6"
+        stroke="#8F90A6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </span>
+  <div
+    class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
+  >
+    <div
+      class="Layout--vertical StyledProps--main StyledProps--padding-top-large StyledProps--padding-right-xxxlarge StyledProps--padding-bottom-xxxlarge"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--padding-top-large"
+      >
+        <div
+          class="StyledProps--font StyledProps--main left"
+          style="background: transparent url(test-file-stub) no-repeat; width: 50%;"
+        />
+        <div
+          class="StyledProps--font StyledProps--main setupForm StyledProps--padding-left-xxxlarge"
+          style="width: 50%;"
+        >
+          <div
+            class="OverlaySpinner--overlaySpinner"
+          >
+            <form
+              action="#"
+              class="FormikForm--main"
+            >
+              <div>
+                <p
+                  class="StyledProps--font StyledProps--main"
+                  style="color: black; padding-bottom: 8px; font-weight: 600; font-size: large;"
+                >
+                  pipeline.createPipeline.setupHeader
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main"
+                  style="color: black; padding-bottom: 36px;"
+                >
+                  pipeline.createPipeline.setupSubtitle
+                </p>
+                <div
+                  class="StyledProps--font StyledProps--main main createPipelineNameIdDescriptionTags"
+                >
+                  <div
+                    class="InputWithIdentifier--txtNameContainer TextInput--main"
+                  >
+                    <div
+                      class="Layout--horizontal Layout--layout-spacing-xsmall StyledProps--main InputWithIdentifier--txtIdContainer"
+                    >
+                      <div
+                        class="Text--withDocsTooltip"
+                        data-tooltip-id="universalInputNameWithId"
+                      >
+                        <p
+                          class="StyledProps--font StyledProps--main"
+                        >
+                          Id
+                        </p>
+                      </div>
+                      <p
+                        class="StyledProps--font StyledProps--main"
+                      >
+                        :
+                      </p>
+                      <span
+                        class="bp3-popover-wrapper"
+                      >
+                        <span
+                          class="bp3-popover-target"
+                        >
+                          <div
+                            class="bp3-editable-text bp3-editable-text-placeholder InputWithIdentifier--idValue"
+                            tabindex="0"
+                          >
+                            <span
+                              class="bp3-editable-text-content"
+                              style="height: 1px; line-height: 1px; min-width: 0;"
+                            />
+                          </div>
+                        </span>
+                      </span>
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="Edit"
+                        style="vertical-align: middle; cursor: pointer;"
+                      >
+                        <svg
+                          height="12"
+                          viewBox="0 0 16 16"
+                          width="12"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            clip-rule="evenodd"
+                            d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                          />
+                          <path
+                            clip-rule="evenodd"
+                            d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                            opacity="0.3"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                    <div
+                      class="bp3-form-group"
+                      data-id="name-0"
+                    >
+                      <label
+                        class="bp3-label"
+                        for="name"
+                      >
+                        <span
+                          class="Tooltip--acenter"
+                          data-tooltip-id="createPipeline_name"
+                        >
+                          name
+                        </span>
+                         
+                        <span
+                          class="bp3-text-muted"
+                        />
+                      </label>
+                      <div
+                        class="bp3-form-content"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="name"
+                            placeholder="common.namePlaceholder"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    <label
+                      class="Label--main bp3-label descriptionLabel"
+                    >
+                      optionalField
+                      <span
+                        class="bp3-icon StyledProps--main editOpen"
+                        data-icon="Edit"
+                        data-name="edit"
+                        data-testid="description-edit"
+                      >
+                        <svg
+                          height="12"
+                          viewBox="0 0 16 16"
+                          width="12"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            clip-rule="evenodd"
+                            d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                          />
+                          <path
+                            clip-rule="evenodd"
+                            d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                            opacity="0.3"
+                          />
+                        </svg>
+                      </span>
+                    </label>
+                  </div>
+                  <div
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    <label
+                      class="Label--main bp3-label descriptionLabel"
+                    >
+                      optionalField
+                      <span
+                        class="bp3-icon StyledProps--main editOpen"
+                        data-icon="Edit"
+                        data-name="edit"
+                        data-testid="tags-edit"
+                      >
+                        <svg
+                          height="12"
+                          viewBox="0 0 16 16"
+                          width="12"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            clip-rule="evenodd"
+                            d="M11.207.485a.5.5 0 01.354-.146 3.5 3.5 0 013.5 3.5.5.5 0 01-.146.353l-11 11a.5.5 0 01-.354.147h-3a.5.5 0 01-.5-.5v-3a.5.5 0 01.146-.354l11-11zm.553.862L1.061 12.046v2.293h2.293l10.7-10.7a2.5 2.5 0 00-2.294-2.292z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                          />
+                          <path
+                            clip-rule="evenodd"
+                            d="M11.89 2.646a.5.5 0 010 .708L8.353 6.889a.5.5 0 01-.708-.707l3.536-3.536a.5.5 0 01.707 0z"
+                            fill="currentColor"
+                            fill-rule="evenodd"
+                            opacity="0.3"
+                          />
+                        </svg>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-large"
+                >
+                  <button
+                    aria-label="start"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+                    type="submit"
+                  >
+                    <span
+                      class="bp3-button-text"
+                    >
+                      start
+                    </span>
+                  </button>
+                  <button
+                    aria-label="pipeline.createPipeline.setupLater"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
+                    type="reset"
+                  >
+                    <span
+                      class="bp3-button-text"
+                    >
+                      pipeline.createPipeline.setupLater
+                    </span>
+                  </button>
+                </div>
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--padding-top-large"
+                >
+                  <a
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    pipeline.createPipeline.learnMore
+                    <span
+                      class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                      icon="chevron-right"
+                    >
+                      <svg
+                        data-icon="chevron-right"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        width="16"
+                      >
+                        <desc>
+                          chevron-right
+                        </desc>
+                        <path
+                          d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer />
+</div>
+`;
+
+exports[`STOTrial Modal trial type create or select pipeline modal 1`] = `
+<div
+  class="bp3-dialog Dialog--dialog dialog stoTrial"
+>
+  <span
+    class="bp3-icon StyledProps--main Dialog--close"
+    data-icon="Stroke"
+  >
+    <svg
+      fill="none"
+      height="15"
+      width="15"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1 .8l6 6 6-6-12 12 6-6 6 6"
+        stroke="#8F90A6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </span>
+  <div
+    class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
+  >
+    <div
+      class="Layout--vertical StyledProps--main StyledProps--padding-top-large StyledProps--padding-right-xxxlarge StyledProps--padding-bottom-xxxlarge"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--padding-top-large"
+      >
+        <div
+          class="StyledProps--font StyledProps--main left"
+          style="background: transparent url(test-file-stub) no-repeat; width: 50%;"
+        />
+        <div
+          class="StyledProps--font StyledProps--main setupForm StyledProps--padding-left-xxxlarge"
+          style="width: 50%;"
+        >
+          <div
+            class="OverlaySpinner--overlaySpinner"
+          >
+            <form
+              action="#"
+              class="FormikForm--main"
+            >
+              <div>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large"
+                >
+                  pipeline.selectOrCreatePipeline.setupHeader
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
+                >
+                  common.letsGetYouStarted
+                </p>
+                <div
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-large StyledProps--padding-bottom-small"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
+                  >
+                    pipeline.selectOrCreatePipeline.selectAPipeline
+                  </p>
+                  <div
+                    class="bp3-popover-wrapper select"
+                  >
+                    <div
+                      class="bp3-popover-target"
+                    >
+                      <div
+                        class=""
+                      >
+                        <button
+                          class="bp3-button main"
+                          data-testid="pipeline-select"
+                          type="button"
+                        >
+                          <span
+                            class="bp3-button-text"
+                          >
+                             
+                          </span>
+                          <span
+                            class="bp3-icon bp3-icon-chevron-down"
+                            icon="chevron-down"
+                          >
+                            <svg
+                              data-icon="chevron-down"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              width="16"
+                            >
+                              <desc>
+                                chevron-down
+                              </desc>
+                              <path
+                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="bp3-form-group pipelineRequired"
+                    data-id="pipelineRequired-0"
+                  >
+                    <div
+                      class="bp3-form-content"
+                    >
+                      <div
+                        class="bp3-input-group"
+                      >
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          name="pipelineRequired"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-large"
+                >
+                  <button
+                    aria-label="continue"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+                    type="submit"
+                  >
+                    <span
+                      class="bp3-button-text"
+                    >
+                      continue
+                    </span>
+                  </button>
+                  <button
+                    aria-label="pipeline.createANewPipeline"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--padding-small StyledProps--inline StyledProps--border Button--with-current-color"
+                    style="width: 200px; height: 33px;"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-button-text"
+                    >
+                      pipeline.createANewPipeline
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer />
+</div>
+`;
+
+exports[`STOTrial Modal trial type create or select project modal 1`] = `
+<div
+  class="bp3-dialog Dialog--dialog dialog stoTrial"
+>
+  <span
+    class="bp3-icon StyledProps--main Dialog--close"
+    data-icon="Stroke"
+  >
+    <svg
+      fill="none"
+      height="15"
+      width="15"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1 .8l6 6 6-6-12 12 6-6 6 6"
+        stroke="#8F90A6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </span>
+  <div
+    class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
+  >
+    <div
+      class="Layout--vertical StyledProps--main StyledProps--padding-top-large StyledProps--padding-right-xxxlarge StyledProps--padding-bottom-xxxlarge"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--padding-top-large"
+      >
+        <div
+          class="StyledProps--font StyledProps--main left"
+          style="background: transparent url(test-file-stub) no-repeat; width: 50%;"
+        />
+        <div
+          class="StyledProps--font StyledProps--main setupForm StyledProps--padding-left-xxxlarge"
+          style="width: 50%;"
+        >
+          <div
+            class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+              style="color: black; font-size: large; font-weight: bold;"
+            >
+              projectsOrgs.createOrSelectAProject
+            </p>
+            <p
+              class="StyledProps--font StyledProps--main"
+              style="color: black; font-size: small;"
+            >
+              projectsOrgs.getStarted
+            </p>
+            <div
+              class="Layout--horizontal Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-large"
+            >
+              <button
+                aria-label="projectsOrgs.selectAnExistingProject"
+                class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+                type="button"
+              >
+                <span
+                  class="bp3-button-text"
+                >
+                  projectsOrgs.selectAnExistingProject
+                </span>
+              </button>
+              <button
+                aria-label="projectsOrgs.createANewProject"
+                class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
+                type="button"
+              >
+                <span
+                  class="bp3-button-text"
+                >
+                  projectsOrgs.createANewProject
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer />
+</div>
+`;
+
+exports[`STOTrial Modal trial type function getSTOTrialDialog 1`] = `
+<div
+  class="bp3-dialog Dialog--dialog dialog stoTrial"
+>
+  <span
+    class="bp3-icon StyledProps--main Dialog--close"
+    data-icon="Stroke"
+  >
+    <svg
+      fill="none"
+      height="15"
+      width="15"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1 .8l6 6 6-6-12 12 6-6 6 6"
+        stroke="#8F90A6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </span>
+  <div
+    class="StyledProps--font StyledProps--main Dialog--children StyledProps--padding-none"
+  >
+    <div
+      class="Layout--vertical StyledProps--main StyledProps--padding-top-large StyledProps--padding-right-xxxlarge StyledProps--padding-bottom-xxxlarge"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--padding-top-large"
+      >
+        <div
+          class="StyledProps--font StyledProps--main left"
+          style="background: transparent url(test-file-stub) no-repeat; width: 50%;"
+        />
+        <div
+          class="StyledProps--font StyledProps--main setupForm StyledProps--padding-left-xxxlarge"
+          style="width: 50%;"
+        >
+          <div
+            class="OverlaySpinner--overlaySpinner"
+          >
+            <form
+              action="#"
+              class="FormikForm--main"
+            >
+              <div>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--color StyledProps--color-black StyledProps--font-weight-bold StyledProps--font-size-large"
+                >
+                  pipeline.selectOrCreatePipeline.setupHeader
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
+                >
+                  common.letsGetYouStarted
+                </p>
+                <div
+                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main StyledProps--padding-top-large StyledProps--padding-bottom-small"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-size-normal StyledProps--color StyledProps--color-black"
+                  >
+                    pipeline.selectOrCreatePipeline.selectAPipeline
+                  </p>
+                  <div
+                    class="bp3-popover-wrapper select"
+                  >
+                    <div
+                      class="bp3-popover-target"
+                    >
+                      <div
+                        class=""
+                      >
+                        <button
+                          class="bp3-button main"
+                          data-testid="pipeline-select"
+                          type="button"
+                        >
+                          <span
+                            class="bp3-button-text"
+                          >
+                             
+                          </span>
+                          <span
+                            class="bp3-icon bp3-icon-chevron-down"
+                            icon="chevron-down"
+                          >
+                            <svg
+                              data-icon="chevron-down"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              width="16"
+                            >
+                              <desc>
+                                chevron-down
+                              </desc>
+                              <path
+                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="bp3-form-group pipelineRequired"
+                    data-id="pipelineRequired-0"
+                  >
+                    <div
+                      class="bp3-form-content"
+                    >
+                      <div
+                        class="bp3-input-group"
+                      >
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          name="pipelineRequired"
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--padding-top-large"
+                >
+                  <button
+                    aria-label="continue"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+                    type="submit"
+                  >
+                    <span
+                      class="bp3-button-text"
+                    >
+                      continue
+                    </span>
+                  </button>
+                  <button
+                    aria-label="pipeline.createANewPipeline"
+                    class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--padding-small StyledProps--inline StyledProps--border Button--with-current-color"
+                    style="width: 200px; height: 33px;"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-button-text"
+                    >
+                      pipeline.createANewPipeline
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer />
+</div>
+`;
