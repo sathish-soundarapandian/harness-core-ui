@@ -27,6 +27,7 @@ export interface VisualViewProps {
   resolvedPipeline?: PipelineConfig
   connectorRef?: string
   repoIdentifier?: string
+  formik: any
 }
 
 export default function VisualView(props: VisualViewProps): React.ReactElement {
@@ -42,7 +43,8 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
     inputSetsError,
     resolvedPipeline,
     connectorRef,
-    repoIdentifier
+    repoIdentifier,
+    formik
   } = props
   const { getString } = useStrings()
 
@@ -84,6 +86,7 @@ export default function VisualView(props: VisualViewProps): React.ReactElement {
                 resolvedPipeline={resolvedPipeline}
                 connectorRef={connectorRef}
                 repoIdentifier={repoIdentifier}
+                formik={formik}
               />
             ) : null}
           </>
@@ -102,6 +105,7 @@ export interface PipelineInputSetFormWrapperProps {
   resolvedPipeline?: PipelineConfig
   connectorRef?: string
   repoIdentifier?: string
+  formik: any
 }
 
 function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): React.ReactElement | null {
@@ -113,7 +117,8 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
     inputSets,
     resolvedPipeline,
     connectorRef,
-    repoIdentifier
+    repoIdentifier,
+    formik
   } = props
 
   if (hasRuntimeInputs || hasCodebaseInputs || executionView) {
@@ -131,6 +136,7 @@ function PipelineInputSetFormWrapper(props: PipelineInputSetFormWrapperProps): R
           disableRuntimeInputConfigureOptions
           connectorRef={connectorRef}
           repoIdentifier={repoIdentifier}
+          formik={formik}
         />
       </>
     )

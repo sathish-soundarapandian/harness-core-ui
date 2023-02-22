@@ -18,7 +18,7 @@ export interface useInputSetsV1Props {
 }
 
 export type pipelineInputsV1 = { [key: string]: string }
-export interface inputsYaml {
+export interface InputsYaml {
   inputs?: pipelineInputsV1
   repository?: {
     reference: { [key: string]: any }
@@ -52,7 +52,7 @@ export function useInputSetsV1(props: useInputSetsV1Props) {
   const hasRuntimeInputs = !isEmpty(pipelineInputs?.inputs)
   const hasCodebaseInputs = !isEmpty(pipelineInputs?.repository)
 
-  const inputSetYaml: inputsYaml = {}
+  const inputSetYaml: InputsYaml = {}
 
   if (!isEmpty(pipelineInputs?.inputs)) {
     inputSetYaml.inputs = {}

@@ -13,6 +13,7 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ConfigureOptionsContextProvider } from '@common/components/ConfigureOptions/ConfigureOptionsContext'
 import type { ResponseInputs, PipelineConfig } from 'services/pipeline-ng'
 import { CICodebaseInputSetFormV1 } from './CICodebaseInputSetFormV1'
+import { PipelineInputParametersV1 } from './PipelineInputParamsV1/PipelineInputParametersV1'
 import css from '../../../components/PipelineInputSetForm/PipelineInputSetForm.module.scss'
 
 export interface PipelineInputSetFormV1Props {
@@ -32,6 +33,7 @@ export interface PipelineInputSetFormV1Props {
   originalPipeline?: PipelineConfig
   connectorRef?: string
   repoIdentifier?: string
+  formik: any
 }
 
 export function PipelineInputSetFormV1Internal(props: PipelineInputSetFormV1Props): React.ReactElement {
@@ -42,8 +44,11 @@ export function PipelineInputSetFormV1Internal(props: PipelineInputSetFormV1Prop
     viewTypeMetadata,
     hideTitle,
     hasCodebaseInputs,
+    hasRuntimeInputs,
     connectorRef,
-    repoIdentifier
+    repoIdentifier,
+    inputSets,
+    formik
   } = props
 
   return (
@@ -61,6 +66,7 @@ export function PipelineInputSetFormV1Internal(props: PipelineInputSetFormV1Prop
           repoIdentifier={repoIdentifier}
         />
       ) : null}
+      {hasRuntimeInputs ? <PipelineInputParametersV1 pipelineInputsMetadata={inputSets} formik={formik} /> : null}
     </Layout.Vertical>
   )
 }

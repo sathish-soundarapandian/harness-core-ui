@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<RunPipelineForm should should have the values prefilled 1`] = `
+<div>
+  <div
+    class="runFormExecutionView"
+  >
+    <div
+      class="OverlaySpinner--overlaySpinner"
+    >
+      <div
+        class="OverlaySpinner--overlaySpinner"
+      >
+        <div
+          class="Layout--vertical StyledProps--main"
+        >
+          <div
+            class="runModalFormContentExecutionView"
+            data-testid="runPipelineVisualView"
+          >
+            <form
+              action="#"
+              class="FormikForm--main"
+            >
+              <div>
+                <div
+                  class="Layout--horizontal StyledProps--main StyledProps--padding-medium StyledProps--margin-medium"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main"
+                  >
+                    runPipelineForm.noRuntimeInput
+                  </p>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

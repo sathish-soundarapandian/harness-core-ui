@@ -63,7 +63,7 @@ import { PipelineInvalidRequestContent } from '../../../components/RunPipelineMo
 import RunModalHeaderV1 from './RunModalHeaderV1'
 import CheckBoxActions from '../../../components/RunPipelineModal/CheckBoxActions'
 import VisualViewV1 from './VisualViewV1'
-import { useInputSetsV1, inputsYaml } from './useInputSetsV1'
+import { useInputSetsV1, InputsYaml } from './useInputSetsV1'
 import { ActiveFreezeWarning } from '../../../components/RunPipelineModal/ActiveFreezeWarning'
 import css from '../../../components/RunPipelineModal/RunPipelineForm.module.scss'
 
@@ -100,7 +100,7 @@ function RunPipelineFormV1Basic({
   const [formErrors] = useState<FormikErrors<InputSetDTO>>({})
   const { trackEvent } = useTelemetry()
   const { showError, showSuccess, showWarning } = useToaster()
-  const formikRef = React.useRef<FormikProps<inputsYaml>>()
+  const formikRef = React.useRef<FormikProps<InputsYaml>>()
   const history = useHistory()
   const { getString } = useStrings()
   const { getRBACErrorMessage } = useRBACError()
@@ -404,6 +404,7 @@ function RunPipelineFormV1Basic({
                     resolvedPipeline={resolvedPipeline}
                     connectorRef={connectorRef}
                     repoIdentifier={repoIdentifier}
+                    formik={formik}
                   />
                   <CheckBoxActions
                     executionView={executionView}
