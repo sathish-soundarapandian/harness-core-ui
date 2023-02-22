@@ -9,7 +9,7 @@ export default defineConfig({
     fixturesFolder: 'fixtures',
     videoUploadOnPasses: false
   },
-  projectId: 'Pipeline',
+  projectId: 'harness-core-ui',
   viewportWidth: 1500,
   viewportHeight: 1000,
   retries: {
@@ -18,7 +18,7 @@ export default defineConfig({
   },
   fixturesFolder: 'fixtures',
   env: {
-    projectId: 'Pipeline',
+    projectId: 'harness-core-ui',
     // since urls need addHashInCypressURLBasedOnBrowserRouter function to create urls with hash and
     // without hash and inorder to decide if the browserRouterEnabeld  is true or not in app's window object,
     //Cypress does not have access to the app intially so injecting the browserRouterEnabled flag inside cypress env
