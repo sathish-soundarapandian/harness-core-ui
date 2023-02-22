@@ -158,28 +158,35 @@ export const getPipelineWithoutCodebaseInputs = (values: { [key: string]: any })
   }
 }
 
-export const getCodebaseRepoNameFromConnector = (
-  codebaseConnector: ConnectorInfoDTO,
-  getString: UseStringsReturn['getString']
-): string => {
+export const getCodebaseRepoNameFromConnector = (codebaseConnector: ConnectorInfoDTO): string => {
   let repoName = ''
   const connectorGitScope = get(codebaseConnector, 'spec.type', '')
   if (connectorGitScope === connectorUrlType.REPO) {
     const repoURL: string = get(codebaseConnector, 'spec.url')
-    const gitProviderURL = getGitUrl(getString, get(codebaseConnector, 'type'))
-    repoName = gitProviderURL ? extractRepoNameFromUrl(repoURL.split(gitProviderURL)?.[1]) : ''
+    repoName = extractRepoNameFromUrl(repoURL)
   } else if (connectorGitScope === connectorUrlType.ACCOUNT || connectorGitScope === connectorUrlType.PROJECT) {
     repoName = get(codebaseConnector, 'spec.validationRepo', '')
   }
   return repoName
 }
 
-const extractRepoNameFromUrl = (repoURL: string): string => {
+export const extractRepoNameFromUrl = (repoURL: string): string => {
   if (!repoURL) {
     return ''
   }
-  const tokens = repoURL.split('/')
-  return tokens.length > 0 ? tokens[tokens.length - 1] : ''
+  if (!repoURL.includes('://')) {
+    // proper git repo url should have a protocol
+    return ''
+  }
+  const repoURLWithoutProtocol = repoURL.split('://')[1] // remove (git://) / (https://) / (ssh://) from git repo url
+  if (repoURLWithoutProtocol.includes('/')) {
+    // remaining url should have a namespace/project and actual repo name, separated by a '/'
+    // some git providers can have other metadata in the middle as well, but the last token has to be repo name for a valid git repo url
+    const tokens = repoURLWithoutProtocol.split('/')
+    const repoName = tokens.length > 0 ? tokens[tokens.length - 1] : ''
+    return repoName.endsWith('.git') ? repoName.replace('.git', '') : repoName
+  }
+  return ''
 }
 
 export const getGitUrl = (

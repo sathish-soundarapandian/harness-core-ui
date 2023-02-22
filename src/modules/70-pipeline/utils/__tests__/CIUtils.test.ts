@@ -5,18 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { StringKeys } from 'framework/strings'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
 import {
   shouldRenderRunTimeInputView,
   shouldRenderRunTimeInputViewWithAllowedValues,
   getAllowedValuesFromTemplate,
-  getCodebaseRepoNameFromConnector
+  getCodebaseRepoNameFromConnector,
+  extractRepoNameFromUrl
 } from '../CIUtils'
-
-function getString(key: StringKeys): StringKeys | string {
-  return key === 'connectors.gitProviderURLs.github' ? 'https://github.com' : key
-}
 
 describe('Test CIUtils', () => {
   test('Test shouldRenderRunTimeInputView method', () => {
@@ -107,11 +103,31 @@ describe('Test CIUtils', () => {
         type: 'Repo'
       }
     }
-    expect(getCodebaseRepoNameFromConnector(codebaseConnector, getString)).toBe('test-repo')
+    expect(getCodebaseRepoNameFromConnector(codebaseConnector)).toBe('test-repo')
     codebaseConnector = {
       ...codebaseConnector,
       spec: { type: 'Account', url: 'https://github.com', validationRepo: 'test-repo2' }
     }
-    expect(getCodebaseRepoNameFromConnector(codebaseConnector, getString)).toBe('test-repo2')
+    expect(getCodebaseRepoNameFromConnector(codebaseConnector)).toBe('test-repo2')
+    codebaseConnector = {
+      ...codebaseConnector,
+      spec: { type: 'Account', url: 'https://bitbucket.dev.harness.io/scm/~harnessadmin', validationRepo: 'test-repo3' }
+    }
+    expect(getCodebaseRepoNameFromConnector(codebaseConnector)).toBe('test-repo3')
+  })
+
+  test('Test extractRepoNameFromUrl method', () => {
+    expect(extractRepoNameFromUrl('https://github.com')).toBe('')
+    expect(extractRepoNameFromUrl('https://github.com/springboot.git')).toBe('springboot')
+    // SaaS
+    expect(extractRepoNameFromUrl('https://github.com/harness/springboot')).toBe('springboot')
+    // SaaS
+    expect(extractRepoNameFromUrl('https://github.com/harness/springboot')).toBe('springboot')
+    expect(extractRepoNameFromUrl('https://github.com/harness/springboot.git')).toBe('springboot')
+    expect(extractRepoNameFromUrl('https://gitlab.com/autouser1/springboot.git')).toBe('springboot')
+    // Onprem
+    expect(extractRepoNameFromUrl('https://bitbucket.dev.harness.io/scm/~harnessadmin/springboot.git')).toBe(
+      'springboot'
+    )
   })
 })
