@@ -2,7 +2,8 @@ import { defineConfig } from 'cypress'
 
 export default defineConfig({
   e2e: {
-    baseUrl: 'https://localhost:8181',
+    //baseUrl: 'https://localhost:8181',
+    baseUrl: 'http://35.230.103.199/director',
     specPattern: 'integration/**/*.spec.{ts,tsx}',
     supportFile: 'support/index.ts',
     fixturesFolder: 'fixtures',
