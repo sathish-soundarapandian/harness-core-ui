@@ -8,7 +8,7 @@ export default defineConfig({
     fixturesFolder: 'fixtures',
     videoUploadOnPasses: false
   },
-  projectId: 'if5p69',
+  projectId: 'Pipeline',
   viewportWidth: 1500,
   viewportHeight: 1000,
   retries: {
