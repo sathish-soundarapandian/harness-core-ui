@@ -38,7 +38,6 @@ interface StepNexusAuthenticationProps extends ConnectorInfoDTO {
   name: string
   isEditMode?: boolean
 }
-
 interface NexusAuthenticationProps {
   onConnectorCreated?: (data?: ConnectorRequestBody) => void | Promise<void>
   isEditMode: boolean
@@ -53,19 +52,23 @@ interface NexusAuthenticationProps {
 }
 
 interface NexusFormInterface {
-  nexusServerUrl: ''
-  nexusVersion: ''
+  nexusServerUrl: string
+  nexusVersion: string
   authType: string
   username: TextReferenceInterface | void
   password: SecretReferenceInterface | void
 }
 
-const defaultInitialFormData: NexusFormInterface = {
-  nexusServerUrl: '',
-  nexusVersion: '',
-  authType: AuthTypes.USER_PASSWORD,
-  username: undefined,
-  password: undefined
+const getDefaultInitialFormData = (
+  selectedArtifact?: NexusAuthenticationProps['selectedArtifact']
+): NexusFormInterface => {
+  return {
+    nexusServerUrl: '',
+    nexusVersion: getVersion(selectedArtifact),
+    authType: AuthTypes.USER_PASSWORD,
+    username: undefined,
+    password: undefined
+  }
 }
 
 const nexusVersions = [
@@ -73,22 +76,21 @@ const nexusVersions = [
   { label: '3.x', value: '3.x' }
 ]
 
-const getVersion = (selectedArtifact: 'Nexus2Registry' | 'Nexus3Registry'): string => {
+const getVersion = (selectedArtifact?: NexusAuthenticationProps['selectedArtifact']): string => {
   if (selectedArtifact === 'Nexus2Registry') {
     return '2.x'
   } else if (selectedArtifact === 'Nexus3Registry') {
     return '3.x'
   }
-  return '2.x'
+  return ''
 }
 
 const StepNexusAuthentication: React.FC<StepProps<StepNexusAuthenticationProps> & NexusAuthenticationProps> = props => {
   const { prevStepData, nextStep, accountId, selectedArtifact } = props
-  const [initialValues, setInitialValues] = useState(defaultInitialFormData)
+  const [initialValues, setInitialValues] = useState(getDefaultInitialFormData(selectedArtifact))
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = useState(true && props.isEditMode)
   const { getString } = useStrings()
 
-  const version = selectedArtifact ? getVersion(selectedArtifact) : '2.x'
   const authOptions: SelectOption[] = [
     {
       label: getString('usernamePassword'),
@@ -143,8 +145,7 @@ const StepNexusAuthentication: React.FC<StepProps<StepNexusAuthenticationProps> 
       <Formik
         initialValues={{
           ...initialValues,
-          ...prevStepData,
-          nexusVersion: version
+          ...prevStepData
         }}
         formName="nexusAuth"
         validationSchema={Yup.object().shape({
@@ -181,6 +182,7 @@ const StepNexusAuthentication: React.FC<StepProps<StepNexusAuthenticationProps> 
                   label={getString('version')}
                   items={nexusVersions}
                   style={{ width: 120 }}
+                  disabled={Boolean(selectedArtifact)}
                 />
               </Container>
 
