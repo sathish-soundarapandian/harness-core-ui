@@ -12,10 +12,12 @@ import {
   Container,
   Heading,
   Icon,
+  ModalDialog,
   PopoverProps,
   SplitButton,
   SplitButtonOption,
   useToaster,
+  useToggleOpen,
   VisualYamlSelectedView as SelectedView
 } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
@@ -62,6 +64,8 @@ import { TemplateErrorEntity } from '@pipeline/components/TemplateLibraryErrorHa
 import { hasChainedPipelineStage } from '@pipeline/utils/stageHelpers'
 import usePipelineErrors from '../PipelineCanvas/PipelineErrors/usePipelineErrors'
 import css from './SavePipelinePopover.module.scss'
+import { CopyToClipBoard } from '@common/components'
+import CopyButton from '@common/utils/CopyButton'
 
 export default interface SavePipelinePopoverProps extends PopoverProps {
   toPipelineStudio: PathFn<PipelineType<PipelinePathProps> & PipelineStudioQueryParams>
@@ -108,6 +112,7 @@ function SavePipelinePopover(
   const [governanceMetadata, setGovernanceMetadata] = React.useState<GovernanceMetadata>()
   const isPipelineRemote = supportingGitSimplification && storeType === StoreType.REMOTE
   const isPipelineInline = supportingGitSimplification && storeType === StoreType.INLINE
+  const { open: openRestModal, close: closeRestModal, isOpen: isRestModalOpen } = useToggleOpen(false)
 
   const [showOPAErrorModal, closeOPAErrorModal] = useModalHook(
     () => (
@@ -508,21 +513,45 @@ function SavePipelinePopover(
     }
   }
 
+  const restRequest = `PUT ${window.origin}/pipeline/api/pipelines/v2/${
+    pipeline.identifier
+  }?accountIdentifier=${accountId}&projectIdentifier=${pipeline.projectIdentifier}&orgIdentifier=${
+    pipeline.orgIdentifier
+  }\n${JSON.stringify(pipeline, null, 4)}`
+
   return (
-    <SplitButton
-      disabled={isSaveDisabled}
-      variation={ButtonVariation.PRIMARY}
-      text={saveText}
-      loading={loading}
-      onClick={saveAndPublish}
-      tooltip={tooltip}
-    >
-      <SplitButtonOption
-        onClick={save}
-        disabled={isIntermittentLoading || _hasChainedPipelineStage}
-        text={getString('common.saveAsTemplate')}
-      />
-    </SplitButton>
+    <>
+      <SplitButton
+        disabled={isSaveDisabled}
+        variation={ButtonVariation.PRIMARY}
+        text={saveText}
+        loading={loading}
+        onClick={saveAndPublish}
+        tooltip={tooltip}
+      >
+        <SplitButtonOption
+          onClick={save}
+          disabled={isIntermittentLoading || _hasChainedPipelineStage}
+          text={getString('common.saveAsTemplate')}
+        />
+        <SplitButtonOption
+          onClick={openRestModal}
+          disabled={isIntermittentLoading || _hasChainedPipelineStage}
+          text={'Copy as REST'}
+        />
+      </SplitButton>
+      <ModalDialog
+        enforceFocus={false}
+        isOpen={isRestModalOpen}
+        title={<span>Equivalent REST Request</span>}
+        footer={<CopyButton textToCopy={restRequest} />}
+        isCloseButtonShown={true}
+        onClose={closeRestModal}
+        className={css.restRequestModal}
+      >
+        <pre>{restRequest}</pre>
+      </ModalDialog>
+    </>
   )
 }
 

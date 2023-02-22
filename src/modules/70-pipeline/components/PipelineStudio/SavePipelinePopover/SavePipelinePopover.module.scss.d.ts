@@ -7,8 +7,10 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly copyButton: string
   readonly policyEvaluationDialog: string
   readonly readonlyAccessTag: string
   readonly readonlyAccessText: string
+  readonly restRequestModal: string
 }
 export default styles
