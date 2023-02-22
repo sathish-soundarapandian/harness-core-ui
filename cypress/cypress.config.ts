@@ -3,7 +3,7 @@ import { defineConfig } from 'cypress'
 export default defineConfig({
   e2e: {
     //baseUrl: 'https://localhost:8181',
-    baseUrl: 'http://director-cy.qa.harness.io/',
+    baseUrl: 'https://director-cy.qa.harness.io/',
     specPattern: 'integration/**/*.spec.{ts,tsx}',
     supportFile: 'support/index.ts',
     fixturesFolder: 'fixtures',
