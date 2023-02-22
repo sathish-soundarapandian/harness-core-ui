@@ -9,7 +9,7 @@ export default defineConfig({
     fixturesFolder: 'fixtures',
     videoUploadOnPasses: false
   },
-  projectId: 'Pipeline',
+  projectId: 'sorrycypress',
   viewportWidth: 1500,
   viewportHeight: 1000,
   retries: {
