@@ -282,6 +282,8 @@ export function DeployServiceEntityInputStep({
               placeholder={getString('services')}
               isMultiSelect={true}
               onMultiSelectChange={handleServicesChange}
+              // This is required to update values when the type has changed
+              onChange={item => handleServicesChange(item as SelectOption[])}
               width={300}
               isNewConnectorLabelVisible={false}
               multiTypeProps={{

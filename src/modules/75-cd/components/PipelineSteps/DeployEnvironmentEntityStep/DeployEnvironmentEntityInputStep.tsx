@@ -407,6 +407,8 @@ export default function DeployEnvironmentEntityInputStep({
               placeholder={placeHolderForEnvironments}
               isMultiSelect
               onMultiSelectChange={handleEnvironmentsChange}
+              // This is required to update values when the type has changed
+              onChange={item => handleEnvironmentsChange(item as SelectOption[])}
               isNewConnectorLabelVisible={false}
               width={300}
               multiTypeProps={{

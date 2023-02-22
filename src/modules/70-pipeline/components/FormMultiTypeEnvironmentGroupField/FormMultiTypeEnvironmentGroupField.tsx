@@ -225,6 +225,7 @@ export function MultiTypeEnvironmentGroupField(props: EnvironmentGroupReferenceF
           }}
           value={Array.isArray(selectedValue) ? '' : selectedValue}
           multitypeInputValue={multitypeInputValue}
+          resetExpressionOnFixedTypeChange
           {...multiTypeProps}
         />
       </FormGroup>

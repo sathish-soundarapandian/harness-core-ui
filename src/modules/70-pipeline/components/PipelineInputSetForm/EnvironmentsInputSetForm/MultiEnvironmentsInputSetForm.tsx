@@ -8,7 +8,7 @@
 import React from 'react'
 import { unstable_batchedUpdates } from 'react-dom'
 import { useFormikContext } from 'formik'
-import { defaultTo, get, isBoolean, isEmpty, isNil, omit, pick, set } from 'lodash-es'
+import { get, isBoolean, isEmpty, isNil, omit, pick, set } from 'lodash-es'
 
 import { Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -17,6 +17,7 @@ import { useStrings } from 'framework/strings'
 import type { DeploymentStageConfig, EnvironmentYamlV2, Infrastructure, ServiceSpec } from 'services/cd-ng'
 
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { Scope } from '@common/interfaces/SecretsInterface'
 
 import {
   getCustomStepProps,
@@ -188,6 +189,9 @@ export function MultiEnvironmentsInputSetForm({
               const areEnvironmentFiltersAdded = !isEmpty(environmentInDeploymentStage.filters)
               const areEnvironmentFiltersRuntime = !isEmpty(environmentTemplate.filters)
 
+              const envGroupScope = envGroupRef ? getScopeFromValue(envGroupRef) : null
+              const scopePrefix = envGroupScope && envGroupScope !== Scope.PROJECT ? `${envGroupScope}.` : ''
+
               return (
                 deploymentType &&
                 environment.environmentRef && (
@@ -333,7 +337,7 @@ export function MultiEnvironmentsInputSetForm({
                           customStepProps={{
                             deploymentType,
                             environmentIdentifier: environment.environmentRef,
-                            scopePrefix: getScopeFromValue(defaultTo(envGroupRef, '')),
+                            scopePrefix,
                             isMultipleInfrastructure: true,
                             customDeploymentRef: deploymentStage?.customDeploymentRef,
                             deployToAllInfrastructures: environmentInDeploymentStage?.deployToAll,

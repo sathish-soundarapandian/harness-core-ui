@@ -141,7 +141,7 @@ export const createEnvValues = (
         ? newEnvironmentObject?.infrastructureDefinitions
         : isValueRuntimeInput(newEnvironmentObject?.infrastructureDefinitions as any)
         ? (RUNTIME_INPUT_VALUE as any)
-        : clearRuntimeInput(newEnvironmentObject?.infrastructureDefinitions)
+        : newEnvironmentObject?.infrastructureDefinitions
       : undefined
 
     const gitOpsClusters = !isEmpty(newEnvironmentObject?.gitOpsClusters)
@@ -150,7 +150,7 @@ export const createEnvValues = (
         ? newEnvironmentObject?.gitOpsClusters
         : isValueRuntimeInput(newEnvironmentObject?.infrastructureDefinitions as any)
         ? (RUNTIME_INPUT_VALUE as any)
-        : clearRuntimeInput(newEnvironmentObject?.gitOpsClusters)
+        : newEnvironmentObject?.gitOpsClusters
       : undefined
 
     // End - Retain form values
