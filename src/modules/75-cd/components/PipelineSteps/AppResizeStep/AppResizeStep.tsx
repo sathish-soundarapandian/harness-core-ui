@@ -228,10 +228,11 @@ const AppResizeInputStep: React.FC<AppResizeProps> = ({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const prefix = isEmpty(path) ? '' : `${path}.`
+  const isTemplateUsageView = stepViewType === StepViewType.TemplateUsage
   return (
     <>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeDurationField
             multiTypeDurationProps={{
               configureOptionsProps: {
@@ -248,7 +249,7 @@ const AppResizeInputStep: React.FC<AppResizeProps> = ({
         </div>
       ) : null}
       {getMultiTypeFromValue(template?.spec?.newAppInstances?.spec?.value) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup)}>
+        <div className={cx(stepCss.formGroup, { [stepCss.md]: !isTemplateUsageView })}>
           <FormInstanceDropdown
             expressions={expressions}
             label={getString('cd.steps.tas.totalInstances')}
@@ -265,7 +266,7 @@ const AppResizeInputStep: React.FC<AppResizeProps> = ({
       )}
 
       {getMultiTypeFromValue(template?.spec?.oldAppInstances?.spec?.value) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup)}>
+        <div className={cx(stepCss.formGroup, { [stepCss.md]: !isTemplateUsageView })}>
           <FormInstanceDropdown
             expressions={expressions}
             label={getString('cd.steps.tas.oldAppInstances')}

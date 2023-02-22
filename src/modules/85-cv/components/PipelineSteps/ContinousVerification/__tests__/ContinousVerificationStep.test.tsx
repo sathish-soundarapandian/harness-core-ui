@@ -14,6 +14,7 @@ import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
 import { useGetMonitoredServiceFromServiceAndEnvironment } from 'services/cv'
+import type { UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
 import { ContinousVerificationStep } from '../ContinousVerificationStep'
 import {
   mockedMonitoredService,
@@ -22,9 +23,17 @@ import {
   verifyStepInitialValues,
   verifyStepInitialValuesWithRunTimeFields,
   mockedCreatedMonitoredService,
-  monitoredServiceYamlData
+  monitoredServiceYamlData,
+  mockedHealthSource
 } from './ContinousVerificationMocks'
-import { getSpecYamlData, getMonitoredServiceYamlData, validateMonitoredService } from '../utils'
+import {
+  getSpecYamlData,
+  getMonitoredServiceYamlData,
+  validateMonitoredService,
+  setCommaSeperatedList,
+  enrichHealthSourceWithVersionForHealthsourceType,
+  getMetricDefinitionData
+} from '../utils'
 import { MONITORED_SERVICE_TYPE } from '../components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/SelectMonitoredServiceType.constants'
 
 jest.mock('services/cv', () => ({
@@ -529,5 +538,47 @@ describe('Test ContinousVerificationStep Step', () => {
     set(monitoredService, 'spec.monitoredServiceRef', 'ms101')
     validateMonitoredService(data as any, noError, str => str, true, monitoredService as any)
     expect(noError).toEqual({})
+  })
+
+  test('should validate setCommaSeperatedList', () => {
+    const value = 'a,b,c'
+    const onChange = jest.fn()
+    const path = 'spec.'
+    setCommaSeperatedList(value, onChange, path)
+    expect(onChange).toHaveBeenCalledWith('spec.', ['a', 'b', 'c'])
+  })
+
+  test('should validate enrichHealthSourceWithVersionForHealthsourceType', () => {
+    expect(
+      enrichHealthSourceWithVersionForHealthsourceType(mockedHealthSource as UpdatedHealthSourceWithAllSpecs)
+    ).toEqual({
+      ...mockedHealthSource,
+      version: 'v2'
+    })
+  })
+
+  test('should validate getMetricDefinitionData', () => {
+    const path = 'spec.'
+    expect(getMetricDefinitionData(mockedHealthSource as UpdatedHealthSourceWithAllSpecs, path)).toEqual({
+      metricDefinitionInptsetFormPath: 'spec..queryDefinitions',
+      metricDefinitions: [
+        {
+          continuousVerificationEnabled: false,
+          groupName: 'g1',
+          identifier: 'M1',
+          liveMonitoringEnabled: false,
+          metricThresholds: [],
+          name: 'M1',
+          query: '<+input>',
+          queryParams: {
+            serviceInstanceField: '<+input>'
+          },
+          riskProfile: {
+            thresholdTypes: []
+          },
+          sliEnabled: true
+        }
+      ]
+    })
   })
 })

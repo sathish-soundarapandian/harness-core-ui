@@ -31,7 +31,6 @@ export interface GetMultiTypeRecordInitialValueParams {
 
 export interface CustomMetricFormContainerProps {
   connectorIdentifier: string
-  isMetricThresholdEnabled: boolean
   mappedMetrics: CustomSelectedAndMappedMetrics['mappedMetrics']
   selectedMetric: CustomSelectedAndMappedMetrics['selectedMetric']
   createdMetrics: CreatedMetricsWithSelectedIndex['createdMetrics']

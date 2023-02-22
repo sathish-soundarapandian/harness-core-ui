@@ -220,7 +220,7 @@ const ElastigroupInfraSpecEditable: React.FC<ElastigroupInfraSpecEditableProps> 
                       {getString('connector')}
                     </Text>
                   }
-                  placeholder={getString('connectors.selectConnector')}
+                  placeholder={getString('common.entityPlaceholderText')}
                   disabled={readonly}
                   accountIdentifier={accountId}
                   multiTypeProps={{ expressions, allowableTypes }}

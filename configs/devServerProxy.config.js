@@ -175,7 +175,7 @@ module.exports = {
   },
   '/iacm/api': {
     pathRewrite: { '^/iacm': '' },
-    target: targetLocalHost ? process.env.IAC_API_URL || 'http://localhost:8185' : `${baseUrl}/iacm`
+    target: targetLocalHost ? process.env.IAC_API_URL || 'https://localhost:8185' : `${baseUrl}/iacm`
   },
   '/iacm': {
     pathRewrite: { '^/iacm': '' },

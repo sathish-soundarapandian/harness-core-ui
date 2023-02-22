@@ -174,7 +174,7 @@ export default function ContainerStepInputSet(props: ContainerStepProps): React.
             orgIdentifier={orgIdentifier}
             name={`${path}.spec.infrastructure.spec.connectorRef`}
             label={getString('connector')}
-            placeholder={getString('connectors.selectConnector')}
+            placeholder={getString('common.entityPlaceholderText')}
             disabled={readonly}
             multiTypeProps={{ allowableTypes, expressions }}
             type={Connectors.K8sCluster}

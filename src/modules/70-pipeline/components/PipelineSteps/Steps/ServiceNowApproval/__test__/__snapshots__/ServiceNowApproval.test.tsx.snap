@@ -45,7 +45,7 @@ exports[`ServiceNow Approval tests Basic snapshot - deploymentform mode: service
                   <span
                     class="placeholder"
                   >
-                    connectors.selectConnector
+                    common.entityPlaceholderText
                   </span>
                 </span>
                 <span
@@ -646,7 +646,7 @@ exports[`ServiceNow Approval tests Basic snapshot - inputset mode: input set wit
                   <span
                     class="placeholder"
                   >
-                    connectors.selectConnector
+                    common.entityPlaceholderText
                   </span>
                 </span>
                 <span
@@ -2936,7 +2936,7 @@ exports[`ServiceNow Approval tests deploymentform mode - readonly: serviceNow-ap
                   <span
                     class="placeholder"
                   >
-                    connectors.selectConnector
+                    common.entityPlaceholderText
                   </span>
                 </span>
                 <span

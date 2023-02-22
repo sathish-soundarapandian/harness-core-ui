@@ -117,8 +117,14 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
     lazy: !selectedStageData.selectedStageItems.length
   })
 
+  const isRuntimeInputsPresent =
+    !!inputSetYamlResponse && !loadingTemplate && !!inputSetYamlResponse?.data?.inputSetTemplateYaml
+
+  // merge should be called on re-run / input set selection / selectiveStageExecution with atleast one stage with runtime inputs
   const shouldMergeTemplateWithInputSetYAML =
-    rerunInputSetYaml || !isUndefined(currentYAML) || (Array.isArray(inputSetSelected) && inputSetSelected.length > 0)
+    rerunInputSetYaml ||
+    (Array.isArray(inputSetSelected) && inputSetSelected.length > 0) ||
+    (!isUndefined(currentYAML) && isRuntimeInputsPresent)
 
   // Reason for sending repoIdentifier and pipelineRepoID both as same values
   // input sets are only saved in same repo and same branch that of pipeline's or default branch of other repos

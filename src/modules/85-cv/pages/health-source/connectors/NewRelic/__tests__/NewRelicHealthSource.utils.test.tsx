@@ -31,13 +31,13 @@ describe('Test Newrelic Utils', () => {
   })
 
   test('Verify validate function', () => {
-    expect(validateMapping(validationMissingApplication, [], 0, getString, false)).toEqual({
+    expect(validateMapping(validationMissingApplication, [], 0, getString)).toEqual({
       newRelicApplication: 'cv.healthSource.connectors.NewRelic.validations.application'
     })
-    expect(validateMapping(validationMissingMetricData, [], 0, getString, false)).toEqual({
+    expect(validateMapping(validationMissingMetricData, [], 0, getString)).toEqual({
       metricData: 'cv.monitoringSources.appD.validations.selectMetricPack'
     })
-    expect(validateMapping(validationValidPayload, [], 0, getString, false)).toEqual({})
+    expect(validateMapping(validationValidPayload, [], 0, getString)).toEqual({})
   })
 
   test('Verify initializeSelectedMetricsMap method', () => {
@@ -57,12 +57,10 @@ describe('Test Newrelic Utils', () => {
   test('Verify validateMapping method, that is no errors should be thrown when all the validation passes.', () => {
     const createdMetrics = ['New Relic Metric']
     const selectedMetricIndex = 0
-    expect(validateMapping(mockedNewRelicFormikValues, createdMetrics, selectedMetricIndex, getString, false)).toEqual(
-      {}
-    )
+    expect(validateMapping(mockedNewRelicFormikValues, createdMetrics, selectedMetricIndex, getString)).toEqual({})
   })
 
   test('should validate createNewRelicPayload', () => {
-    expect(createNewRelicPayload(newRelicPayload, true)).toEqual(newRelicExpectedPayload)
+    expect(createNewRelicPayload(newRelicPayload)).toEqual(newRelicExpectedPayload)
   })
 })

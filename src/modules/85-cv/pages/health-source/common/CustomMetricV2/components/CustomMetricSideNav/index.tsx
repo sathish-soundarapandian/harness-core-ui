@@ -9,7 +9,6 @@ import AddCustomMetricButton from '../AddCustomMetricsButton'
 import { getCurrentSelectedMetricName, getGroupedCustomMetrics } from '../../CustomMetric.utils'
 import type { CommonCustomMetricPropertyType } from '../../CustomMetric.types'
 import { selectedIndexFormikPropertyName } from '../../CustomMetricV2.constants'
-import useCustomMetricV2HelperContext from '../../hooks/useCustomMetricV2HelperContext'
 import css from '@cv/components/MultiItemsSideNav/components/SelectedAppsSideNav/SelectedAppsSideNav.module.scss'
 import customCSS from '../../CustomMetricV2.module.scss'
 
@@ -22,10 +21,6 @@ export default function CustomMetricSideNav<T extends CommonCustomMetricProperty
   props: CustomMetricSideNavProps
 ): JSX.Element {
   const { onAddMetric, onDeleteMetric } = props
-
-  const { isTemplate } = useCustomMetricV2HelperContext()
-
-  const isMetricThresholdEnabled = !isTemplate
 
   const { getString } = useStrings()
 
@@ -63,7 +58,6 @@ export default function CustomMetricSideNav<T extends CommonCustomMetricProperty
         selectedItem={currentSelectedMetricName}
         onRemoveItem={onDeleteMetric}
         groupedSelectedAppsList={groupedEntries as [string, GroupedMetric[]][]}
-        isMetricThresholdEnabled={isMetricThresholdEnabled}
       />
     </Layout.Vertical>
   )

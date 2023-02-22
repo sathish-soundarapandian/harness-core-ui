@@ -20,13 +20,13 @@ import {
 
 describe('CloudWatch utils', () => {
   test('getFormikInitialValue should return default values, if it is not edit', () => {
-    const result = getFormikInitialValue(initialValueMock as unknown as CloudWatchSetupSource, false)
+    const result = getFormikInitialValue(initialValueMock as unknown as CloudWatchSetupSource)
 
     expect(result).toEqual(defaultFormikValue)
   })
 
   test('getFormikInitialValue should return default values, if it is not edit and contains metric thresholds', () => {
-    const result = getFormikInitialValue(healthSourceWithMetricThresholds as unknown as CloudWatchSetupSource, true)
+    const result = getFormikInitialValue(healthSourceWithMetricThresholds as unknown as CloudWatchSetupSource)
 
     expect(result).toEqual(expectedInitialValueWithMetricThresholds)
   })

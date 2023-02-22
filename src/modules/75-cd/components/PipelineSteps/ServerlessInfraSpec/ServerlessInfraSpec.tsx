@@ -122,7 +122,7 @@ export const ServerlessSpecEditable: React.FC<ServerlessSpecEditableProps> = ({
                 <FormMultiTypeConnectorField
                   name="connectorRef"
                   label={getString('connector')}
-                  placeholder={getString('connectors.selectConnector')}
+                  placeholder={getString('common.entityPlaceholderText')}
                   disabled={readonly}
                   accountIdentifier={accountId}
                   tooltipProps={{
@@ -285,7 +285,7 @@ export const ServerlessInputForm: React.FC<ServerlessSpecEditableProps & { path:
             name={`${path}.connectorRef`}
             label={getString('connector')}
             enableConfigureOptions={false}
-            placeholder={getString('connectors.selectConnector')}
+            placeholder={getString('common.entityPlaceholderText')}
             disabled={readonly}
             multiTypeProps={{ allowableTypes, expressions }}
             type={formInfo?.type}

@@ -178,10 +178,11 @@ const K8CanaryDeployInputStep: React.FC<K8sCanaryDeployProps> = ({
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const prefix = isEmpty(path) ? '' : `${path}.`
+  const isTemplateUsageView = stepViewType === StepViewType.TemplateUsage
   return (
     <>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeDurationField
             multiTypeDurationProps={{
               configureOptionsProps: {
@@ -198,7 +199,7 @@ const K8CanaryDeployInputStep: React.FC<K8sCanaryDeployProps> = ({
         </div>
       ) : null}
       {getMultiTypeFromValue(template?.spec?.skipDryRun) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeCheckboxField
             multiTypeTextbox={{
               expressions,
@@ -213,7 +214,7 @@ const K8CanaryDeployInputStep: React.FC<K8sCanaryDeployProps> = ({
       )}
       {(getMultiTypeFromValue(template?.spec?.instanceSelection?.spec?.count) === MultiTypeInputType.RUNTIME ||
         getMultiTypeFromValue(template?.spec?.instanceSelection?.spec?.percentage) === MultiTypeInputType.RUNTIME) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
+        <div className={cx(stepCss.formGroup, { [stepCss.md]: !isTemplateUsageView })}>
           <FormInstanceDropdown
             expressions={expressions}
             label={getString('common.instanceLabel')}
@@ -347,7 +348,7 @@ export class K8sCanaryDeployStep extends PipelineStep<K8sCanaryDeployData> {
       })
 
       try {
-        timeout.validateSync(data.spec)
+        timeout.validateSync(data)
       } catch (e) {
         /* istanbul ignore else */
         if (e instanceof Yup.ValidationError) {

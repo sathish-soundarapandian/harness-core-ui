@@ -12,7 +12,7 @@ exports[`Test K8sCanaryDeleteStep inputset with path 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="fieldAndOptions formGroup sm"
+      class="fieldAndOptions formGroup md"
     >
       <div
         class="bp3-form-group"
@@ -535,7 +535,7 @@ exports[`Test K8sCanaryDeleteStep should render edit view for inputset 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="fieldAndOptions formGroup sm"
+      class="fieldAndOptions formGroup md"
     >
       <div
         class="bp3-form-group"

@@ -269,6 +269,7 @@ export interface StringsMap {
   'common.editYaml': string
   'common.enableGitSyncPipeline': string
   'common.endTime': string
+  'common.entityPlaceholderText': string
   'common.entityReferenceSubTitle': string
   'common.entityReferenceTitle': string
   'common.entityType': string

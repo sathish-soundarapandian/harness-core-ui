@@ -29,7 +29,6 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
     initCustomForm,
     isPrimaryMetric,
     shouldBeAbleToDeleteLastMetric,
-    isMetricThresholdEnabled,
     filterRemovedMetricNameThresholds,
     openEditMetricModal,
     defaultServiceInstance
@@ -109,11 +108,11 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
 
       updateParentFormikWithLatestData(updateParentFormik, commonUpdatedMap, updatedMetric)
 
-      if (isMetricThresholdEnabled && filterRemovedMetricNameThresholds && removedMetric) {
+      if (filterRemovedMetricNameThresholds && removedMetric) {
         filterRemovedMetricNameThresholds(removedMetric)
       }
     },
-    [formikValues, isMetricThresholdEnabled, mappedMetrics, selectedMetric, filterRemovedMetricNameThresholds]
+    [formikValues, mappedMetrics, selectedMetric, filterRemovedMetricNameThresholds]
   )
 
   const selectMetric = useCallback(
@@ -148,7 +147,6 @@ export default function CommonCustomMetric(props: CommonCustomMetricInterface): 
           }}
           onSelectMetric={newMetric => selectMetric(newMetric)}
           shouldBeAbleToDeleteLastMetric={shouldBeAbleToDeleteLastMetric}
-          isMetricThresholdEnabled={isMetricThresholdEnabled}
           openEditMetricModal={openEditMetricModal}
         />
       }

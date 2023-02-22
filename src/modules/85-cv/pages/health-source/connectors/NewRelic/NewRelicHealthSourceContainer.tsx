@@ -22,11 +22,9 @@ export default function NewrelicMonitoredSourceContainer(props: NewRelicHealthSo
   const { data: sourceData, onSubmit, isTemplate, expressions } = props
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
-  const isMetricThresholdEnabled = !isTemplate
-
   const handleSubmit = useCallback(
     async (formValues: UpdatedHealthSource) => {
-      const newRelicPayload = createNewRelicPayload(formValues, isMetricThresholdEnabled)
+      const newRelicPayload = createNewRelicPayload(formValues)
       if (newRelicPayload) {
         await onSubmit(sourceData, newRelicPayload)
       }

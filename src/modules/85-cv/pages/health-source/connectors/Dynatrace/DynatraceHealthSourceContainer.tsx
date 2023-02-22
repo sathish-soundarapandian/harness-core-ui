@@ -21,19 +21,17 @@ export default function DynatraceHealthSourceContainer(props: DynatraceHealthSou
   const { data: sourceData, onSubmit, isTemplate, expressions } = props
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
-  const isMetricThresholdEnabled = !isTemplate
-
   const handleSubmit = useCallback(
     async (dynatraceMetric: DynatraceMetricData) => {
-      const dynatracePayload = mapDynatraceMetricDataToHealthSource(dynatraceMetric, isMetricThresholdEnabled)
+      const dynatracePayload = mapDynatraceMetricDataToHealthSource(dynatraceMetric)
       await onSubmit(sourceData, dynatracePayload)
     },
-    [isMetricThresholdEnabled, onSubmit, sourceData]
+    [onSubmit, sourceData]
   )
 
   const dynatraceMetricData: DynatraceMetricData = useMemo(() => {
-    return mapHealthSourceToDynatraceMetricData(sourceData, isMetricThresholdEnabled)
-  }, [isMetricThresholdEnabled, sourceData])
+    return mapHealthSourceToDynatraceMetricData(sourceData)
+  }, [sourceData])
 
   return (
     <DynatraceHealthSource

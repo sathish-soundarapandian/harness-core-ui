@@ -48,7 +48,7 @@ exports[`Test ServerlessAwsLambdaSpec snapshot should render edit view for input
                     <span
                       class="placeholder"
                     >
-                      connectors.selectConnector
+                      common.entityPlaceholderText
                     </span>
                   </span>
                   <span

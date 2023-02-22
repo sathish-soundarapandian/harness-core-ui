@@ -12,7 +12,6 @@ export const mockedCustomMetricFormContainerData = {
   mappedMetrics: new Map(),
   selectedMetric: 'HealthSource Metric',
   connectorIdentifier: 'Sumo_logic',
-  isMetricThresholdEnabled: false,
   nonCustomFeilds: {
     appdApplication: '',
     appDTier: '',
@@ -72,7 +71,6 @@ export const mockedCustomMetricsFormForLogsTable = {
   mappedMetrics,
   selectedMetric: 'dasdaa',
   connectorIdentifier: 'Sumo_logic',
-  isMetricThresholdEnabled: true,
   createdMetrics: [],
   isTemplate: false,
   expressions: [],

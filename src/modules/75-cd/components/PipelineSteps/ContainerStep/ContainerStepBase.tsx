@@ -84,7 +84,7 @@ export const ContainerStepBase = (
               <FormMultiTypeConnectorField
                 name="spec.connectorRef"
                 label={getString('pipelineSteps.connectorLabel')}
-                type={Connectors.DOCKER}
+                type={[Connectors.GCP, Connectors.AWS, Connectors.DOCKER]}
                 placeholder={getString('select')}
                 disabled={readonly}
                 accountIdentifier={accountId}
@@ -226,7 +226,7 @@ export const ContainerStepBase = (
                 <FormMultiTypeConnectorField
                   name="spec.infrastructure.spec.connectorRef"
                   label={getString('connector')}
-                  placeholder={getString('connectors.selectConnector')}
+                  placeholder={getString('common.entityPlaceholderText')}
                   disabled={readonly}
                   accountIdentifier={accountId}
                   multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}

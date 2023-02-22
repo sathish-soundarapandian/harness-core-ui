@@ -192,14 +192,14 @@ export function FailureStrategyPanel(props: FailureStrategyPanelProps): React.Re
       {hasFailureStrategies ? (
         <React.Fragment>
           <FailureTypeMultiSelect
-            name={`failureStrategies[${selectedStrategyNum}].onFailure.errors`}
+            name={`${path}[${selectedStrategyNum}].onFailure.errors`}
             label={getString('pipeline.failureStrategies.onFailureOfType')}
             filterTypes={filterTypes}
             stageType={stageType}
             disabled={isReadonly}
           />
           <StrategySelection
-            name={`failureStrategies[${selectedStrategyNum}].onFailure.action`}
+            name={`${path}[${selectedStrategyNum}].onFailure.action`}
             label={getString('pipeline.failureStrategies.performAction')}
             allowedStrategies={allowedStrategies}
             disabled={isReadonly}

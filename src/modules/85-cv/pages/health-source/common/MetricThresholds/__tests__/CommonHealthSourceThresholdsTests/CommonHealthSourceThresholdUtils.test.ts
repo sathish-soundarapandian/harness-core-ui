@@ -18,15 +18,9 @@ import {
 describe('CommonHealthSourceThresholdUtils', () => {
   describe('getMetricPacksForPayloadV2', () => {
     test('getMetricPacksForPayloadV2 should generate correct payload for metric packs', () => {
-      const result = getMetricPacksForPayloadV2(formDataMock, true)
+      const result = getMetricPacksForPayloadV2(formDataMock)
 
       expect(result).toEqual(expectedThresholdsMock)
-    })
-
-    test('getMetricPacksForPayloadV2 should generate correct payload for metric packs when metric thresholds is disabled', () => {
-      const result = getMetricPacksForPayloadV2(formDataMock, false)
-
-      expect(result).toEqual([{ identifier: 'Performance', metricThresholds: [] }])
     })
   })
 
@@ -37,8 +31,7 @@ describe('CommonHealthSourceThresholdUtils', () => {
         metricThresholds: [
           ...formDataMock.ignoreThresholds,
           ...formDataMock.failFastThresholds
-        ] as MetricThresholdType[],
-        isMetricThresholdEnabled: true
+        ] as MetricThresholdType[]
       })
 
       expect(result).toEqual(expectedValueForCustomMetricThresholds)
@@ -50,8 +43,7 @@ describe('CommonHealthSourceThresholdUtils', () => {
         metricThresholds: [
           ...formDataMock.ignoreThresholds,
           ...formDataMock.failFastThresholds
-        ] as MetricThresholdType[],
-        isMetricThresholdEnabled: true
+        ] as MetricThresholdType[]
       })
 
       expect(result).toEqual([])
@@ -61,16 +53,14 @@ describe('CommonHealthSourceThresholdUtils', () => {
         metricThresholds: [
           ...formDataMock.ignoreThresholds,
           ...formDataMock.failFastThresholds
-        ] as MetricThresholdType[],
-        isMetricThresholdEnabled: true
+        ] as MetricThresholdType[]
       })
 
       expect(result2).toEqual([])
 
       const result3 = getMetricThresholdsForCustomMetric({
         metricName: 'abc',
-        metricThresholds: [],
-        isMetricThresholdEnabled: true
+        metricThresholds: []
       })
 
       expect(result3).toEqual([])
@@ -80,8 +70,7 @@ describe('CommonHealthSourceThresholdUtils', () => {
         metricThresholds: [
           ...formDataMock.ignoreThresholds,
           ...formDataMock.failFastThresholds
-        ] as MetricThresholdType[],
-        isMetricThresholdEnabled: false
+        ] as MetricThresholdType[]
       })
 
       expect(result4).toEqual([])
@@ -128,7 +117,6 @@ describe('CommonHealthSourceThresholdUtils', () => {
   describe('getCanShowMetricThresholds', () => {
     test('getCanShowMetricThresholds should return true if user have atleast one custom metric with CV enabled', () => {
       const result = getCanShowMetricThresholds({
-        isMetricThresholdEnabled: true,
         isMetricPacksEnabled: false,
         isMetricThresholdConfigEnabled: true,
         groupedCreatedMetrics: groupedCreatedMetricsForPassCVEnableTest
@@ -139,7 +127,6 @@ describe('CommonHealthSourceThresholdUtils', () => {
 
     test('getCanShowMetricThresholds should return true if user have atleast one custom metric with CV enabled and metric packs are enabled', () => {
       const result = getCanShowMetricThresholds({
-        isMetricThresholdEnabled: true,
         isMetricPacksEnabled: true,
         isMetricThresholdConfigEnabled: true,
         groupedCreatedMetrics: groupedCreatedMetricsForFailCVEnableTest,
@@ -151,7 +138,6 @@ describe('CommonHealthSourceThresholdUtils', () => {
 
     test('getCanShowMetricThresholds should return false if user have atleast one custom metric with CV disabled and metric packs are enabled with all false', () => {
       const result = getCanShowMetricThresholds({
-        isMetricThresholdEnabled: true,
         isMetricPacksEnabled: true,
         isMetricThresholdConfigEnabled: true,
         groupedCreatedMetrics: groupedCreatedMetricsForFailCVEnableTest,
@@ -163,7 +149,6 @@ describe('CommonHealthSourceThresholdUtils', () => {
 
     test('getCanShowMetricThresholds should return false if user have atleast one custom metric with CV disabled and metric packs are disabled', () => {
       const result = getCanShowMetricThresholds({
-        isMetricThresholdEnabled: true,
         isMetricPacksEnabled: false,
         isMetricThresholdConfigEnabled: true,
         groupedCreatedMetrics: groupedCreatedMetricsForFailCVEnableTest
@@ -174,21 +159,8 @@ describe('CommonHealthSourceThresholdUtils', () => {
 
     test('getCanShowMetricThresholds should return false if config value for metric thresholds are disabled', () => {
       const result = getCanShowMetricThresholds({
-        isMetricThresholdEnabled: true,
         isMetricPacksEnabled: true,
         isMetricThresholdConfigEnabled: false,
-        groupedCreatedMetrics: groupedCreatedMetricsForFailCVEnableTest,
-        metricData: { Performance: true }
-      })
-
-      expect(result).toBe(false)
-    })
-
-    test('getCanShowMetricThresholds should return false if feature flag value for metric thresholds are disabled', () => {
-      const result = getCanShowMetricThresholds({
-        isMetricThresholdEnabled: false,
-        isMetricPacksEnabled: true,
-        isMetricThresholdConfigEnabled: true,
         groupedCreatedMetrics: groupedCreatedMetricsForFailCVEnableTest,
         metricData: { Performance: true }
       })

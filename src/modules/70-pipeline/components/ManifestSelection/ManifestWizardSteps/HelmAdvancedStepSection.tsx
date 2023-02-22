@@ -30,6 +30,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { useHelmCmdFlags } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { CommandFlags, HelmOCIVersionOptions, HelmVersionOptions } from '../ManifestInterface'
 
 import helmcss from './HelmWithGIT/HelmWithGIT.module.scss'
@@ -93,32 +94,34 @@ function HelmAdvancedStepSection({
 
   return (
     <div className={helmcss.helmAdvancedSteps}>
-      <Layout.Horizontal
-        width={'90%'}
-        flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
-        margin={{ bottom: 'small' }}
-      >
-        <FormMultiTypeCheckboxField
-          name="enableDeclarativeRollback"
-          label={getString('pipeline.manifestType.enableDeclarativeRollback')}
-          className={cx(helmcss.checkbox, helmcss.halfWidth)}
-          multiTypeTextbox={{ expressions, allowableTypes }}
-        />
-        {getMultiTypeFromValue(formik.values?.enableDeclarativeRollback) === MultiTypeInputType.RUNTIME && (
-          <ConfigureOptions
-            value={(formik.values?.enableDeclarativeRollback || '') as string}
-            type="String"
-            variableName="enableDeclarativeRollback"
-            showRequiredField={false}
-            showDefaultField={false}
-            showAdvanced={true}
-            onChange={value => formik.setFieldValue('enableDeclarativeRollback', value)}
-            style={{ alignSelf: 'center', marginTop: 11 }}
-            className={cx(css.addmarginTop)}
-            isReadonly={isReadonly}
+      {deploymentType === ServiceDeploymentType.Kubernetes && (
+        <Layout.Horizontal
+          width={'90%'}
+          flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
+          margin={{ bottom: 'small' }}
+        >
+          <FormMultiTypeCheckboxField
+            name="enableDeclarativeRollback"
+            label={getString('pipeline.manifestType.enableDeclarativeRollback')}
+            className={cx(helmcss.checkbox, helmcss.halfWidth)}
+            multiTypeTextbox={{ expressions, allowableTypes }}
           />
-        )}
-      </Layout.Horizontal>
+          {getMultiTypeFromValue(formik.values?.enableDeclarativeRollback) === MultiTypeInputType.RUNTIME && (
+            <ConfigureOptions
+              value={(formik.values?.enableDeclarativeRollback || '') as string}
+              type="String"
+              variableName="enableDeclarativeRollback"
+              showRequiredField={false}
+              showDefaultField={false}
+              showAdvanced={true}
+              onChange={value => formik.setFieldValue('enableDeclarativeRollback', value)}
+              style={{ alignSelf: 'center', marginTop: 11 }}
+              className={cx(css.addmarginTop)}
+              isReadonly={isReadonly}
+            />
+          )}
+        </Layout.Horizontal>
+      )}
       <Layout.Horizontal width={'90%'} flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
         <FormMultiTypeCheckboxField
           key={isSkipVersioningDisabled.toString()}

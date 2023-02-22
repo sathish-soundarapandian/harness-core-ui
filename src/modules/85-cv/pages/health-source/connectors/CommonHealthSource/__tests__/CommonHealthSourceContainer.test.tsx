@@ -93,14 +93,14 @@ describe('Unit tests for CommonHealthSourceContainer', () => {
       failFastThresholds: []
     }
 
-    expect(createHealthSourcePayload(mockedDefineHealthSourcedata, consfigureHealthSourceData, false)).toEqual(
+    expect(createHealthSourcePayload(mockedDefineHealthSourcedata, consfigureHealthSourceData)).toEqual(
       metricThresholdDisabledPayloadResult
     )
   })
 
   test('should validate createHealthSourcePayload with metric thresholds enabled', () => {
     expect(
-      createHealthSourcePayload(mockedDefineHealthSourcedata, consfigureHealthSourceDataWithMetricThresholds, false)
+      createHealthSourcePayload(mockedDefineHealthSourcedata, consfigureHealthSourceDataWithMetricThresholds)
     ).toEqual(payloadMockWithMetricThresholdsMock)
   })
 

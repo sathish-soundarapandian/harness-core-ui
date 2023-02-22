@@ -35,7 +35,6 @@ export default function CustomMetric(props: CustomMetricInterface): JSX.Element 
     initCustomForm,
     isPrimaryMetric,
     shouldBeAbleToDeleteLastMetric,
-    isMetricThresholdEnabled,
     filterRemovedMetricNameThresholds
   } = props
   const { getString } = useStrings()
@@ -87,7 +86,7 @@ export default function CustomMetric(props: CustomMetricInterface): JSX.Element 
         setCreatedMetrics,
         setMappedMetrics
       })
-      if (isMetricThresholdEnabled && filterRemovedMetricNameThresholds && removedMetric) {
+      if (filterRemovedMetricNameThresholds && removedMetric) {
         filterRemovedMetricNameThresholds(removedMetric)
       }
     },
@@ -126,7 +125,6 @@ export default function CustomMetric(props: CustomMetricInterface): JSX.Element 
           }
           onSelectMetric={(newMetric, updatedList, smIndex) => selectMetric(newMetric, updatedList, smIndex)}
           shouldBeAbleToDeleteLastMetric={shouldBeAbleToDeleteLastMetric}
-          isMetricThresholdEnabled={isMetricThresholdEnabled}
         />
       }
       content={children}

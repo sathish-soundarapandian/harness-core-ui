@@ -55,7 +55,6 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
   const {
     mappedMetrics,
     selectedMetric,
-    isMetricThresholdEnabled,
     createdMetrics,
     healthSourceConfig,
     groupedCreatedMetrics,
@@ -218,7 +217,6 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
             })}
             initCustomForm={initHealthSourceCustomFormValue()}
             shouldBeAbleToDeleteLastMetric={shouldBeAbleToDeleteLastMetric}
-            isMetricThresholdEnabled={isMetricThresholdEnabled}
             filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
             openEditMetricModal={openModal}
             defaultServiceInstance={healthSourceConfig.customMetrics?.assign?.defaultServiceInstance}

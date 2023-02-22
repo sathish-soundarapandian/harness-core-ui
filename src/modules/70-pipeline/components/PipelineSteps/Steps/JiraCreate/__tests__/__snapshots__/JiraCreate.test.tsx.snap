@@ -2074,7 +2074,7 @@ exports[`Jira Create tests Edit Stage - readonly view: edit-stage-readonly 1`] =
                       <span
                         class="placeholder"
                       >
-                        connectors.selectConnector
+                        common.entityPlaceholderText
                       </span>
                     </span>
                     <span

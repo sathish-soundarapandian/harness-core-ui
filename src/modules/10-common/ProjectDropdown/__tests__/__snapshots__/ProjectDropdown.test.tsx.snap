@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`project dropdown test render 1`] = `
+<div>
+  <div>
+    projectDropdown
+    <button
+      data-testid="onChangeBtn"
+    />
+    <div
+      data-testid="dropdownItems"
+    />
+  </div>
+</div>
+`;

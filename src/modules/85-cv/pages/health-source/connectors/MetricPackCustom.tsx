@@ -25,8 +25,7 @@ export default function MetricPackCustom({
   metricPackValue,
   onChange,
   setMetricDataValue,
-  setSelectedMetricPacks,
-  isMetricThresholdEnabled
+  setSelectedMetricPacks
 }: {
   connector: GetMetricPacksQueryParams['dataSourceType']
   metricPackValue: MetricPackDTO[] | undefined
@@ -34,7 +33,6 @@ export default function MetricPackCustom({
   onChange: (identifier: string, updatedValue: boolean) => void
   setMetricDataValue: (value: { [key: string]: boolean }) => void
   setSelectedMetricPacks: React.Dispatch<React.SetStateAction<TimeSeriesMetricPackDTO[]>>
-  isMetricThresholdEnabled?: boolean
 }): JSX.Element {
   const { getString } = useStrings()
 
@@ -68,11 +66,10 @@ export default function MetricPackCustom({
 
   const getShowPromptOnUnCheck = (metricPackIdentifier: string): boolean => {
     return Boolean(
-      isMetricThresholdEnabled &&
-        isGivenMetricPackContainsThresholds(
-          formValues as Record<ThresholdsPropertyNames, MetricThresholdType[]>,
-          metricPackIdentifier
-        )
+      isGivenMetricPackContainsThresholds(
+        formValues as Record<ThresholdsPropertyNames, MetricThresholdType[]>,
+        metricPackIdentifier
+      )
     )
   }
 

@@ -86,10 +86,7 @@ export const getSelectedDashboards = (sourceData: any) => {
   return selectedDashboards
 }
 
-export function transformGCOMetricHealthSourceToGCOMetricSetupSource(
-  sourceData: any,
-  isMetricThresholdEnabled: boolean
-): GCOMetricSetupSource {
+export function transformGCOMetricHealthSourceToGCOMetricSetupSource(sourceData: any): GCOMetricSetupSource {
   const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
     (source: UpdatedHealthSource) => source.name === sourceData.healthSourceName
   )
@@ -155,25 +152,20 @@ export function transformGCOMetricHealthSourceToGCOMetricSetupSource(
   }
 
   // Update spec type after swagger update, backend is not ready yet
-  if (isMetricThresholdEnabled) {
-    setupSource.ignoreThresholds = getFilteredMetricThresholdValues(
-      MetricThresholdTypes.IgnoreThreshold,
-      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
-    )
+  setupSource.ignoreThresholds = getFilteredMetricThresholdValues(
+    MetricThresholdTypes.IgnoreThreshold,
+    (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
+  )
 
-    setupSource.failFastThresholds = getFilteredMetricThresholdValues(
-      MetricThresholdTypes.FailImmediately,
-      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
-    )
-  }
+  setupSource.failFastThresholds = getFilteredMetricThresholdValues(
+    MetricThresholdTypes.FailImmediately,
+    (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks
+  )
 
   return setupSource
 }
 
-export function transformGCOMetricSetupSourceToGCOHealthSource(
-  setupSource: GCOMetricSetupSource,
-  isMetricThresholdEnabled: boolean
-): UpdatedHealthSource {
+export function transformGCOMetricSetupSourceToGCOHealthSource(setupSource: GCOMetricSetupSource): UpdatedHealthSource {
   const healthSource: UpdatedHealthSource = {
     type: HealthSourceTypes.StackdriverMetrics as UpdatedHealthSource['type'],
     identifier: setupSource.healthSourceIdentifier,
@@ -223,13 +215,11 @@ export function transformGCOMetricSetupSourceToGCOHealthSource(
     } as StackdriverDefinition)
   }
 
-  if (isMetricThresholdEnabled) {
-    // Needs to be updated with GCO's spec once the swagger is ready
-    ;(healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks?.push({
-      identifier: MetricTypeValues.Custom,
-      metricThresholds: [...setupSource.ignoreThresholds, ...setupSource.failFastThresholds]
-    })
-  }
+  // Needs to be updated with GCO's spec once the swagger is ready
+  ;(healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks?.push({
+    identifier: MetricTypeValues.Custom,
+    metricThresholds: [...setupSource.ignoreThresholds, ...setupSource.failFastThresholds]
+  })
 
   return healthSource
 }
@@ -325,14 +315,11 @@ const validateMetricThresholds = (
 export function validate(
   values: GCOMetricInfo,
   selectedMetrics: Map<string, GCOMetricInfo>,
-  getString: (key: StringKeys) => string,
-  isMetricThresholdEnabled: boolean
+  getString: (key: StringKeys) => string
 ): { [key: string]: string } | undefined {
   const errors = ensureFieldsAreFilled(values, getString, selectedMetrics)
 
-  if (isMetricThresholdEnabled) {
-    validateMetricThresholds(errors, values, getString)
-  }
+  validateMetricThresholds(errors, values, getString)
 
   if (selectedMetrics.size === 1) {
     return errors

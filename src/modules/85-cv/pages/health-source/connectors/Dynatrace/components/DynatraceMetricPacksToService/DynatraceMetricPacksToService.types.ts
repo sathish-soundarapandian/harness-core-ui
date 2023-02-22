@@ -19,5 +19,4 @@ export interface DynatraceMetricPacksToServiceProps {
   isTemplate?: boolean
   expressions?: string[]
   metricErrors?: FormikErrors<DynatraceFormDataInterface & { dynatraceService?: string }>
-  isMetricThresholdEnabled: boolean
 }

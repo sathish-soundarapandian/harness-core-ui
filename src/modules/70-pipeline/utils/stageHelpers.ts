@@ -34,6 +34,7 @@ import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/Artif
 import type { InputSetDTO } from './types'
 import type { DeploymentStageElementConfig, PipelineStageWrapper, StageElementWrapper } from './pipelineTypes'
 import type { TemplateServiceDataType } from './templateUtils'
+import type { ExecutionStatus } from './statusHelpers'
 
 export enum StageType {
   DEPLOY = 'Deployment',
@@ -780,4 +781,33 @@ export function hasChainedPipelineStage(stages?: StageElementWrapperConfig[]): b
     }
   }
   return containsChainedPipelineStage
+}
+
+export const PriorityByStageStatus: Record<ExecutionStatus, number> = {
+  Success: 1,
+  Running: 2,
+  AsyncWaiting: 2,
+  TaskWaiting: 2,
+  TimedWaiting: 2,
+  Failed: 20,
+  Errored: 20,
+  IgnoreFailed: 20,
+  Expired: 18,
+  Aborted: 19,
+  AbortedByFreeze: 19,
+  Discontinuing: 19,
+  Suspended: 17,
+  Queued: 0,
+  NotStarted: 0,
+  Paused: 24,
+  ResourceWaiting: 25,
+  Skipped: 15,
+  ApprovalRejected: 22,
+  ApprovalWaiting: 26,
+  InterventionWaiting: 27,
+  Pausing: 23,
+  InputWaiting: 0,
+  WaitStepRunning: 2,
+  QueuedLicenseLimitReached: 0,
+  QueuedExecutionConcurrencyReached: 0
 }

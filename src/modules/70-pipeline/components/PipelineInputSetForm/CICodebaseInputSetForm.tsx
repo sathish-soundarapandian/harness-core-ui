@@ -692,7 +692,7 @@ function CICodebaseInputSetFormInternal({
                         ]}
                         label={<Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('connector')}</Text>}
                         placeholder={
-                          loadingConnectorDetails ? getString('loading') : getString('connectors.selectConnector')
+                          loadingConnectorDetails ? getString('loading') : getString('common.entityPlaceholderText')
                         }
                         accountIdentifier={accountId}
                         projectIdentifier={projectIdentifier}

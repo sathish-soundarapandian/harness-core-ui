@@ -172,11 +172,11 @@ const K8RolloutDeployInputStep: React.FC<K8RolloutDeployProps> = ({ inputSetData
           fieldPath={'timeout'}
           template={inputSetData?.template}
           disabled={inputSetData?.readonly}
-          className={cx(stepCss.formGroup, stepCss.sm)}
+          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
       {getMultiTypeFromValue(inputSetData?.template?.spec?.skipDryRun) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeCheckboxField
             multiTypeTextbox={{
               expressions,

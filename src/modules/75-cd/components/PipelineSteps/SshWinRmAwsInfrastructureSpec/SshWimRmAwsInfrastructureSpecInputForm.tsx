@@ -137,7 +137,7 @@ export const SshWimRmAwsInfrastructureSpecInputForm: React.FC<AwsInfrastructureS
             }}
             label={getString('connector')}
             enableConfigureOptions={false}
-            placeholder={getString('connectors.selectConnector')}
+            placeholder={getString('common.entityPlaceholderText')}
             disabled={readonly}
             multiTypeProps={{ allowableTypes, expressions }}
             type={Connectors.AWS}

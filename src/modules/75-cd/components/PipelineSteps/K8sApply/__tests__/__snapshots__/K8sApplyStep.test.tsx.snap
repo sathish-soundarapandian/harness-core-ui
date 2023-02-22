@@ -31,7 +31,7 @@ exports[`Test K8sApplyStep should render edit view 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="fieldAndOptions formGroup sm"
+      class="fieldAndOptions formGroup md"
     >
       <div
         class="bp3-form-group"
@@ -302,7 +302,7 @@ exports[`Test K8sApplyStep should render edit view 1`] = `
       class="formGroup md"
     >
       <div
-        class="bp3-form-group multiTypeCheckbox checkbox"
+        class="bp3-form-group multiTypeCheckbox"
       >
         <label
           class="bp3-label"
@@ -417,7 +417,7 @@ exports[`Test K8sApplyStep should render edit view 1`] = `
       class="formGroup md"
     >
       <div
-        class="bp3-form-group multiTypeCheckbox checkbox"
+        class="bp3-form-group multiTypeCheckbox"
       >
         <div
           class="bp3-form-content"
@@ -483,7 +483,7 @@ exports[`Test K8sApplyStep should render edit view 1`] = `
       class="formGroup md"
     >
       <div
-        class="bp3-form-group multiTypeCheckbox checkbox"
+        class="bp3-form-group multiTypeCheckbox"
       >
         <div
           class="bp3-form-content"
@@ -2610,7 +2610,7 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="fieldAndOptions formGroup sm"
+      class="fieldAndOptions formGroup md"
     >
       <div
         class="bp3-form-group"
@@ -2799,7 +2799,7 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
       class="formGroup md"
     >
       <div
-        class="bp3-form-group multiTypeCheckbox checkbox"
+        class="bp3-form-group multiTypeCheckbox"
       >
         <div
           class="bp3-form-content"
@@ -2865,7 +2865,7 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
       class="formGroup md"
     >
       <div
-        class="bp3-form-group multiTypeCheckbox checkbox"
+        class="bp3-form-group multiTypeCheckbox"
       >
         <div
           class="bp3-form-content"
@@ -2931,7 +2931,7 @@ exports[`Test K8sApplyStep should render edit view with path and inputSet 1`] = 
       class="formGroup md"
     >
       <div
-        class="bp3-form-group multiTypeCheckbox checkbox"
+        class="bp3-form-group multiTypeCheckbox"
       >
         <div
           class="bp3-form-content"

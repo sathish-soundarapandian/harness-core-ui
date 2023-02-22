@@ -193,7 +193,7 @@ export const TASInfrastructureSpecInputForm: React.FC<TASInfrastructureSpecEdita
             }}
             label={getString('connector')}
             enableConfigureOptions={false}
-            placeholder={getString('connectors.selectConnector')}
+            placeholder={getString('common.entityPlaceholderText')}
             disabled={readonly}
             multiTypeProps={{ allowableTypes, expressions }}
             type={Connectors.TAS}

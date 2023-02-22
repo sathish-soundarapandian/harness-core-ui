@@ -9,7 +9,6 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import moment from 'moment'
 import { Card, Container, Layout } from '@harness/uicore'
-import { ActiveServiceInstances } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstances'
 import { ActiveServiceInstancesV2 } from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstancesV2'
 import {
   startOfDay,
@@ -24,8 +23,6 @@ import { InstanceCountHistory } from '@cd/components/ServiceDetails/InstanceCoun
 import { PipelineExecutions } from '@cd/components/ServiceDetails/PipelineExecutions/PipelineExecutions'
 import { useLocalStorage } from '@common/hooks/useLocalStorage'
 import { convertStringToDateTimeRange } from '@cd/pages/dashboard/dashboardUtils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import css from '@cd/components/ServiceDetails/ServiceDetailsContent/ServicesDetailsContent.module.scss'
 
 const ServiceDetailsSummary: React.FC = () => {
@@ -53,11 +50,7 @@ const ServiceDetailsSummary: React.FC = () => {
         >
           <Layout.Vertical margin={{ right: 'xlarge' }}>
             <Layout.Horizontal margin={{ bottom: 'medium' }}>
-              {useFeatureFlag(FeatureFlag.SERVICE_DASHBOARD_V2) ? (
-                <ActiveServiceInstancesV2 />
-              ) : (
-                <ActiveServiceInstances />
-              )}
+              <ActiveServiceInstancesV2 />
             </Layout.Horizontal>
             <InstanceCountHistory />
           </Layout.Vertical>

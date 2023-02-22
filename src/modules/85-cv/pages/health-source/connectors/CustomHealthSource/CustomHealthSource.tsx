@@ -43,14 +43,9 @@ export function CustomHealthSource(props: CustomHealthSourceProps): JSX.Element 
   const { getString } = useStrings()
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
-  const { data: sourceData, onSubmit, isTemplate } = props
+  const { data: sourceData, onSubmit } = props
 
-  const isMetricThresholdEnabled = !isTemplate
-
-  const transformedSourceData = useMemo(
-    () => transformCustomHealthSourceToSetupSource(sourceData, isMetricThresholdEnabled),
-    [isMetricThresholdEnabled, sourceData]
-  )
+  const transformedSourceData = useMemo(() => transformCustomHealthSourceToSetupSource(sourceData), [sourceData])
 
   const [metricThresholds, setMetricThresholds] = useState<MetricThresholdsState>({
     ignoreThresholds: transformedSourceData.ignoreThresholds,
@@ -74,9 +69,8 @@ export function CustomHealthSource(props: CustomHealthSourceProps): JSX.Element 
 
   const filterRemovedMetricNameThresholds = useCallback(
     (deletedMetricName: string) => {
-      if (isMetricThresholdEnabled && deletedMetricName) {
+      if (deletedMetricName) {
         const updatedMetricThresholds = getMetricNameFilteredNonCustomFields<MetricThresholdsState>(
-          isMetricThresholdEnabled,
           metricThresholds,
           deletedMetricName
         )
@@ -84,7 +78,7 @@ export function CustomHealthSource(props: CustomHealthSourceProps): JSX.Element 
         setMetricThresholds(updatedMetricThresholds)
       }
     },
-    [isMetricThresholdEnabled, metricThresholds]
+    [metricThresholds]
   )
 
   const initialFormValues = {
@@ -102,8 +96,7 @@ export function CustomHealthSource(props: CustomHealthSourceProps): JSX.Element 
             getString,
             groupedCreatedMetricsList,
             groupedCreatedMetricsList.indexOf(selectedMetric),
-            args.initialValues,
-            isMetricThresholdEnabled
+            args.initialValues
           )
         ).length === 0
       }
@@ -114,8 +107,7 @@ export function CustomHealthSource(props: CustomHealthSourceProps): JSX.Element 
           getString,
           groupedCreatedMetricsList,
           groupedCreatedMetricsList.indexOf(selectedMetric),
-          values,
-          isMetricThresholdEnabled
+          values
         )
       }}
     >
@@ -143,7 +135,6 @@ export function CustomHealthSource(props: CustomHealthSourceProps): JSX.Element 
               initCustomForm={getInitCustomMetricData(formikProps.values.baseURL) as any}
               groupedCreatedMetrics={groupedCreatedMetrics}
               setGroupedCreatedMetrics={setGroupedCreatedMetrics}
-              isMetricThresholdEnabled={isMetricThresholdEnabled}
               filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
             >
               <CustomHealthSourceForm
@@ -169,13 +160,12 @@ export function CustomHealthSource(props: CustomHealthSourceProps): JSX.Element 
                     onSubmit,
                     sourceData,
                     transformedSourceData,
-                    isMetricThresholdEnabled,
                     metricThresholds
                   })
                 }
               }}
             />
-            {isMetricThresholdEnabled && Boolean(getCustomMetricGroupNames(groupedCreatedMetrics).length) && (
+            {Boolean(getCustomMetricGroupNames(groupedCreatedMetrics).length) && (
               <MetricThresholdProvider
                 formikValues={formikProps.values}
                 setThresholdState={setMetricThresholds}

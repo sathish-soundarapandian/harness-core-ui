@@ -13,7 +13,7 @@ import { FormInstanceDropdown } from '@common/components'
 import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useStrings } from 'framework/strings'
-import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { ElastigroupDeployStepInfoData } from './ElastigroupDeployInterface'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -40,6 +40,7 @@ export const ElastigroupDeployInputStep: React.FC<ElastigroupDeployInputStepProp
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const prefix = isEmpty(path) ? '' : `${path}.`
+  const isTemplateUsageView = stepViewType === StepViewType.TemplateUsage
   return (
     <>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
@@ -61,7 +62,7 @@ export const ElastigroupDeployInputStep: React.FC<ElastigroupDeployInputStepProp
       ) : null}
       {(getMultiTypeFromValue(template?.spec?.newService?.spec?.count) === MultiTypeInputType.RUNTIME ||
         getMultiTypeFromValue(template?.spec?.newService?.spec?.percentage) === MultiTypeInputType.RUNTIME) && (
-        <div className={classNames(stepCss.formGroup, stepCss.md)}>
+        <div className={classNames(stepCss.formGroup, { [stepCss.md]: !isTemplateUsageView })}>
           <FormInstanceDropdown
             expressions={expressions}
             label={getString('common.instanceLabel')}
@@ -78,7 +79,7 @@ export const ElastigroupDeployInputStep: React.FC<ElastigroupDeployInputStepProp
       )}
       {(getMultiTypeFromValue(template?.spec?.oldService?.spec?.count) === MultiTypeInputType.RUNTIME ||
         getMultiTypeFromValue(template?.spec?.oldService?.spec?.percentage) === MultiTypeInputType.RUNTIME) && (
-        <div className={classNames(stepCss.formGroup, stepCss.md)}>
+        <div className={classNames(stepCss.formGroup, { [stepCss.md]: !isTemplateUsageView })}>
           <FormInstanceDropdown
             expressions={expressions}
             label={getString('common.instanceLabel')}

@@ -13,8 +13,7 @@ describe('CommonHealthSource utils tests', () => {
     const result = handleValidateHealthSourceConfigurationsForm({
       formValues,
       getString: c => c,
-      healthSourceConfig: { metricPacks: { enabled: false } } as HealthSourceConfig,
-      isTemplate: false
+      healthSourceConfig: { metricPacks: { enabled: false } } as HealthSourceConfig
     })
 
     expect(result).toEqual({})
@@ -44,8 +43,7 @@ describe('CommonHealthSource utils tests', () => {
     const result = handleValidateHealthSourceConfigurationsForm({
       formValues,
       getString: c => c,
-      healthSourceConfig: { metricPacks: { enabled: false } } as HealthSourceConfig,
-      isTemplate: false
+      healthSourceConfig: { metricPacks: { enabled: false } } as HealthSourceConfig
     })
 
     expect(result).toEqual(metricThresholdsValidationMock)
@@ -69,8 +67,7 @@ describe('CommonHealthSource utils tests', () => {
     const result = handleValidateHealthSourceConfigurationsForm({
       formValues,
       getString: c => c,
-      healthSourceConfig: { metricPacks: { enabled: false } } as HealthSourceConfig,
-      isTemplate: false
+      healthSourceConfig: { metricPacks: { enabled: false } } as HealthSourceConfig
     })
 
     expect(result).toEqual({})

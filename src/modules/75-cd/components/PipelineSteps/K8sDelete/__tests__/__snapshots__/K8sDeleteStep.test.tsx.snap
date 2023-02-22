@@ -1603,7 +1603,7 @@ exports[`Test K8sDeleteStep validate input set in deployment form - only timeout
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="fieldAndOptions formGroup sm"
+      class="fieldAndOptions formGroup md"
     >
       <div
         class="bp3-form-group bp3-intent-danger"

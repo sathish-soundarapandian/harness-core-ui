@@ -371,7 +371,7 @@ describe('ServerlessAwsLambda as deployment type', () => {
     cy.contains('span', 'Confirm').click()
     cy.wait(1000)
     cy.contains('span', 'Continue').click()
-    cy.contains('span', 'Select Connector').click()
+    cy.contains('span', 'Select').click()
     cy.contains('p', 'dynatrace').click()
     cy.wait(500)
     cy.contains('span', 'Apply Selected').click()

@@ -173,7 +173,7 @@ const TasRollingDeploymentInputStep: React.FC<TasRollingDeploymentProps> = ({
           disabled={readonly}
           fieldPath={'timeout'}
           template={template}
-          className={cx(stepCss.formGroup, stepCss.sm)}
+          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
       {getMultiTypeFromValue((template?.spec as any)?.additionalRoutes) === MultiTypeInputType.RUNTIME && (

@@ -143,7 +143,7 @@ function FormContent(formContentProps: SnowApprovalDeploymentModeProps): JSX.Ele
           name={`${prefix}spec.connectorRef`}
           label={getString('pipeline.serviceNowApprovalStep.connectorRef')}
           selected={(initialValues?.spec?.connectorRef as string) || ''}
-          placeholder={getString('connectors.selectConnector')}
+          placeholder={getString('common.entityPlaceholderText')}
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}

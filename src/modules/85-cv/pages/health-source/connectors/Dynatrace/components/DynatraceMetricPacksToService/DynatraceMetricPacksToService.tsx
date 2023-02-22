@@ -57,8 +57,7 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
     metricValues,
     isTemplate,
     expressions,
-    metricErrors,
-    isMetricThresholdEnabled
+    metricErrors
   } = props
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
@@ -197,7 +196,6 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
     async (metricPackIdentifier: string, updatedValue: boolean) => {
       if (typeof metricPackIdentifier === 'string') {
         const updatedNonCustomFields = getUpdatedNonCustomFields<DynatraceMetricData>(
-          isMetricThresholdEnabled,
           dynatraceMetricData,
           metricPackIdentifier,
           updatedValue
@@ -208,7 +206,7 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
         await onValidate(metricValues.serviceMethods || [], updatedNonCustomFields.metricData)
       }
     },
-    [dynatraceMetricData, isMetricThresholdEnabled, metricValues.serviceMethods]
+    [dynatraceMetricData, metricValues.serviceMethods]
   )
 
   return (
@@ -303,7 +301,6 @@ export default function DynatraceMetricPacksToService(props: DynatraceMetricPack
               }
               connector={HealthSoureSupportedConnectorTypes.DYNATRACE}
               onChange={onChangeMetricPack}
-              isMetricThresholdEnabled={isMetricThresholdEnabled}
             />
             {validationResultData && (
               <MetricsVerificationModal

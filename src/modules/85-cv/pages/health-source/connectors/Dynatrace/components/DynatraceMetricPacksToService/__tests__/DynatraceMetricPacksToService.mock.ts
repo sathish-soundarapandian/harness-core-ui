@@ -13,8 +13,7 @@ export const DynatraceMetricPacksToServicePropsMock: DynatraceMetricPacksToServi
   connectorIdentifier: 'mock_connector_identifier',
   dynatraceMetricData: MockDynatraceMetricData,
   setDynatraceMetricData: jest.fn(),
-  metricValues: MockDynatraceMetricData,
-  isMetricThresholdEnabled: false
+  metricValues: MockDynatraceMetricData
 }
 
 export const EXPECTED_SERVICE_METHODS = ['1', '2', '3']

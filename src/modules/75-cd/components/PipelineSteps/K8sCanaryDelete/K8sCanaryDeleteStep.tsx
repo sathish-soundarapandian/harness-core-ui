@@ -140,7 +140,7 @@ const K8sCanaryDeleteInputWidget: React.FC<K8sCanaryDeployProps> = ({ inputSetDa
           disabled={inputSetData?.readonly}
           fieldPath={'timeout'}
           template={inputSetData?.template}
-          className={cx(stepCss.formGroup, stepCss.sm)}
+          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
     </>

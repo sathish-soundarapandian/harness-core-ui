@@ -1197,7 +1197,7 @@ exports[`Test K8sCanaryDeployStep should render input set view 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="formGroup sm"
+      class="formGroup md"
     >
       <div
         class="bp3-form-group multiTypeCheckbox"
@@ -1411,7 +1411,7 @@ exports[`Test K8sCanaryDeployStep should render input set with percentage and ti
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="formGroup sm"
+      class="formGroup md"
     >
       <div
         class="bp3-form-group"
@@ -1487,7 +1487,7 @@ exports[`Test K8sCanaryDeployStep should render input set with percentage and ti
       </div>
     </div>
     <div
-      class="formGroup sm"
+      class="formGroup md"
     >
       <div
         class="bp3-form-group multiTypeCheckbox"
@@ -3165,7 +3165,7 @@ exports[`Test K8sCanaryDeployStep should throw validation error without instance
 
 exports[`Test K8sCanaryDeployStep validate time to not be less than 10s 1`] = `
 Object {
-  "timeout": "timeout is a required field",
+  "timeout": "Value must be greater than or equal to \\"10s\\"",
 }
 `;
 

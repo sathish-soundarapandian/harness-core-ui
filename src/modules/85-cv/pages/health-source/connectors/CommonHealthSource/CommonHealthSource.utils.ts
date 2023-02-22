@@ -350,38 +350,33 @@ export const validateAssignComponent = (
 export const handleValidateHealthSourceConfigurationsForm = ({
   formValues,
   healthSourceConfig,
-  isTemplate,
   getString
 }: {
   formValues: CommonHealthSourceConfigurations
   getString: UseStringsReturn['getString']
   healthSourceConfig?: HealthSourceConfig
-  isTemplate?: boolean
 }): FormikErrors<CommonHealthSourceConfigurations> => {
   const errors: FormikErrors<CommonHealthSourceConfigurations> = {}
 
   const isMetricThresholdsGroupEnabled = healthSourceConfig?.metricPacks?.enabled
-  const isMetricThresholdEnabled = !isTemplate
 
-  if (isMetricThresholdEnabled) {
-    // ignoreThresholds Validation
-    validateMetricThresholds({
-      thresholdName: MetricThresholdPropertyName.IgnoreThreshold,
-      errors: errors as Record<string, string>,
-      thresholdValues: formValues[MetricThresholdPropertyName.IgnoreThreshold],
-      getString,
-      isValidateGroup: Boolean(isMetricThresholdsGroupEnabled)
-    })
+  // ignoreThresholds Validation
+  validateMetricThresholds({
+    thresholdName: MetricThresholdPropertyName.IgnoreThreshold,
+    errors: errors as Record<string, string>,
+    thresholdValues: formValues[MetricThresholdPropertyName.IgnoreThreshold],
+    getString,
+    isValidateGroup: Boolean(isMetricThresholdsGroupEnabled)
+  })
 
-    // failFastThresholds Validation
-    validateMetricThresholds({
-      thresholdName: MetricThresholdPropertyName.FailFastThresholds,
-      errors: errors as Record<string, string>,
-      thresholdValues: formValues[MetricThresholdPropertyName.FailFastThresholds],
-      getString,
-      isValidateGroup: Boolean(isMetricThresholdsGroupEnabled)
-    })
-  }
+  // failFastThresholds Validation
+  validateMetricThresholds({
+    thresholdName: MetricThresholdPropertyName.FailFastThresholds,
+    errors: errors as Record<string, string>,
+    thresholdValues: formValues[MetricThresholdPropertyName.FailFastThresholds],
+    getString,
+    isValidateGroup: Boolean(isMetricThresholdsGroupEnabled)
+  })
 
   return errors
 }
@@ -400,10 +395,8 @@ export const createHealthSourcePayload = (
     healthSourceName: string
     connectorRef: string
   },
-  configureHealthSourceData: CommonHealthSourceConfigurations,
-  isTemplate?: boolean
+  configureHealthSourceData: CommonHealthSourceConfigurations
 ): UpdatedHealthSource => {
-  const isMetricThresholdEnabled = !isTemplate
   const { product, healthSourceName, healthSourceIdentifier, connectorRef } = defineHealthSourcedata
   const productValue = (product?.value ?? product) as string
   const healthSourceType = getHealthSourceType(productValue)
@@ -460,7 +453,6 @@ export const createHealthSourcePayload = (
           Array.isArray(ignoreThresholds) && Array.isArray(failFastThresholds)
             ? getMetricThresholdsForCustomMetric({
                 metricName,
-                isMetricThresholdEnabled,
                 metricThresholds: [...ignoreThresholds, ...failFastThresholds]
               })
             : [],
@@ -484,10 +476,7 @@ export const getHealthSourceType = (productValue: string): UpdatedHealthSource['
   }
 }
 
-export function createHealthSourceConfigurationsData(
-  sourceData: any,
-  isTemplate?: boolean
-): CommonHealthSourceConfigurations {
+export function createHealthSourceConfigurationsData(sourceData: any): CommonHealthSourceConfigurations {
   const {
     healthSourceList = [],
     isEdit = false,
@@ -508,26 +497,18 @@ export function createHealthSourceConfigurationsData(
     if (queryMetricsMap.size === 0) {
       queryMetricsMapData = cloneDeep(getUpdatedCustomMetrics(queryDefinitions))
     }
-    if (!isTemplate) {
-      if (!sourceData?.ignoreThresholds?.length && !sourceData?.failFastThresholds?.length) {
-        ignoreThresholds = getFilteredMetricThresholdValuesV2(
-          MetricThresholdTypes.IgnoreThreshold,
-          [],
-          queryDefinitions
-        )
-        failFastThresholds = getFilteredMetricThresholdValuesV2(
-          MetricThresholdTypes.FailImmediately,
-          [],
-          queryDefinitions
-        )
-      } else {
-        ignoreThresholds = sourceData?.ignoreThresholds || []
-        failFastThresholds = sourceData?.failFastThresholds || []
-      }
+
+    if (!sourceData?.ignoreThresholds?.length && !sourceData?.failFastThresholds?.length) {
+      ignoreThresholds = getFilteredMetricThresholdValuesV2(MetricThresholdTypes.IgnoreThreshold, [], queryDefinitions)
+      failFastThresholds = getFilteredMetricThresholdValuesV2(
+        MetricThresholdTypes.FailImmediately,
+        [],
+        queryDefinitions
+      )
+    } else {
+      ignoreThresholds = sourceData?.ignoreThresholds || []
+      failFastThresholds = sourceData?.failFastThresholds || []
     }
-  } else {
-    ignoreThresholds = sourceData?.ignoreThresholds || []
-    failFastThresholds = sourceData?.failFastThresholds || []
   }
 
   return {

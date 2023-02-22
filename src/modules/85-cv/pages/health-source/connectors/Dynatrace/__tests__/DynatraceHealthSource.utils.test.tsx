@@ -26,9 +26,9 @@ import type { UpdatedHealthSource } from '@cv/pages/health-source/HealthSourceDr
 describe('Validate DynatraceHealthSource Utils', () => {
   test('validate mapping health source data to Dynatrace mapping', () => {
     // with list of metrics
-    expect(
-      DynatraceHealthSourceUtils.mapHealthSourceToDynatraceMetricData(DynatraceMockHealthSourceData, false)
-    ).toEqual(MockDynatraceMetricData)
+    expect(DynatraceHealthSourceUtils.mapHealthSourceToDynatraceMetricData(DynatraceMockHealthSourceData)).toEqual(
+      MockDynatraceMetricData
+    )
     const propsWithoutMetrics = {
       ...DynatraceMockHealthSourceData,
       healthSourceList: [
@@ -49,23 +49,41 @@ describe('Validate DynatraceHealthSource Utils', () => {
       selectedService: { label: '', value: '' }
     }
     // without metrics and without service name and id
-    expect(DynatraceHealthSourceUtils.mapHealthSourceToDynatraceMetricData(propsWithoutMetrics, false)).toEqual(
+    expect(DynatraceHealthSourceUtils.mapHealthSourceToDynatraceMetricData(propsWithoutMetrics)).toEqual(
       metricDataWithoutCustomMetrics
     )
   })
 
   test('validate mapping Dynatrace data to health source', () => {
-    expect(DynatraceHealthSourceUtils.mapDynatraceMetricDataToHealthSource(MockDynatraceMetricData, false)).toEqual(
-      DynatraceUpdatedHealthSourceMock
-    )
+    expect(DynatraceHealthSourceUtils.mapDynatraceMetricDataToHealthSource(MockDynatraceMetricData)).toEqual({
+      ...DynatraceUpdatedHealthSourceMock,
+      spec: {
+        ...DynatraceUpdatedHealthSourceMock.spec,
+        metricPacks: [
+          {
+            identifier: 'Performance',
+            metricThresholds: []
+          }
+        ]
+      }
+    })
     const metricDataWithoutCustomMetrics = { ...MockDynatraceMetricData, customMetrics: new Map() }
     const metricHealthSourceWithoutMetricDefinitions: UpdatedHealthSource = {
       ...DynatraceUpdatedHealthSourceMock,
       spec: { ...DynatraceUpdatedHealthSourceMock.spec, metricDefinitions: [] }
     }
-    expect(
-      DynatraceHealthSourceUtils.mapDynatraceMetricDataToHealthSource(metricDataWithoutCustomMetrics, false)
-    ).toEqual(metricHealthSourceWithoutMetricDefinitions)
+    expect(DynatraceHealthSourceUtils.mapDynatraceMetricDataToHealthSource(metricDataWithoutCustomMetrics)).toEqual({
+      ...metricHealthSourceWithoutMetricDefinitions,
+      spec: {
+        ...metricHealthSourceWithoutMetricDefinitions.spec,
+        metricPacks: [
+          {
+            identifier: 'Performance',
+            metricThresholds: []
+          }
+        ]
+      }
+    })
   })
 
   test('validate mapping services to select options', () => {
@@ -97,14 +115,7 @@ describe('Validate DynatraceHealthSource Utils', () => {
       selectedService: { label: '', value: '' }
     }
     expect(
-      DynatraceHealthSourceUtils.validateMapping(
-        dataWithNoMetricPackSelected,
-        ['a', 'b'],
-        0,
-        val => val,
-        new Map(),
-        false
-      )
+      DynatraceHealthSourceUtils.validateMapping(dataWithNoMetricPackSelected, ['a', 'b'], 0, val => val, new Map())
     ).toEqual(expectedErrors)
 
     // no errors when there is no metric packs, but custom metric is added
@@ -119,7 +130,7 @@ describe('Validate DynatraceHealthSource Utils', () => {
       metricSelector: 'builtin:service.mock'
     }
     expect(
-      DynatraceHealthSourceUtils.validateMapping(dataWithCustomMetrics, ['a', 'b'], 0, val => val, new Map(), false)
+      DynatraceHealthSourceUtils.validateMapping(dataWithCustomMetrics, ['a', 'b'], 0, val => val, new Map())
     ).toEqual(customMetricsErrorWithoutMetricPacks)
   })
 
@@ -141,7 +152,7 @@ describe('Validate DynatraceHealthSource Utils', () => {
       sli: false
     }
     expect(
-      DynatraceHealthSourceUtils.validateMapping(dataWithNoMetricPackSelected, [], 0, val => val, new Map(), false)
+      DynatraceHealthSourceUtils.validateMapping(dataWithNoMetricPackSelected, [], 0, val => val, new Map())
     ).toEqual(expectedErrors)
   })
 

@@ -460,3 +460,36 @@ export const emptyCustomMetricData = {
     }
   ]
 }
+
+export const expectedParameter = {
+  identifier: 'prometheus',
+  name: 'prometheus',
+  spec: {
+    connectorRef: '<+input>',
+    feature: 'apm',
+    metricDefinitions: [
+      {
+        additionalFilters: [],
+        analysis: {
+          deploymentVerification: {
+            enabled: true,
+            serviceInstanceFieldName: '<+monitoredService.variables.serviceLabelInstance>'
+          },
+          liveMonitoring: { enabled: true },
+          riskProfile: { riskCategory: 'Performance/ERROR', thresholdTypes: ['ACT_WHEN_HIGHER'] }
+        },
+        envFilter: [],
+        groupName: 'g1',
+        identifier: 'prometheus_metric',
+        isManualQuery: true,
+        metricName: 'Prometheus Metric',
+        prometheusMetric: undefined,
+        query: '<+input>',
+        serviceFilter: [],
+        sli: { enabled: true }
+      }
+    ],
+    metricPacks: [{ identifier: 'Custom', metricThresholds: [] }]
+  },
+  type: 'Prometheus'
+}

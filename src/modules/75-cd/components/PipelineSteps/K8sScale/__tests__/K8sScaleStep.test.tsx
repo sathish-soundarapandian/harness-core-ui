@@ -129,7 +129,7 @@ describe('Test K8sBlueGreenDeployStep', () => {
       />
     )
 
-    await ref.current?.submitForm()
+    await act(() => ref.current?.submitForm()!)
 
     await waitFor(() => Promise.resolve())
     await waitFor(() => Promise.resolve())
@@ -159,7 +159,7 @@ describe('Test K8sBlueGreenDeployStep', () => {
         ref={ref}
       />
     )
-    await ref.current?.submitForm()
+    await act(() => ref.current?.submitForm()!)
 
     await waitFor(() =>
       expect(onUpdate).toHaveBeenCalledWith({
@@ -209,7 +209,7 @@ describe('Test K8sBlueGreenDeployStep', () => {
         ref={ref}
       />
     )
-    await ref.current?.submitForm()
+    await act(() => ref.current?.submitForm()!)
 
     await waitFor(() =>
       expect(onUpdate).toHaveBeenCalledWith({
@@ -259,7 +259,7 @@ describe('Test K8sBlueGreenDeployStep', () => {
         ref={ref}
       />
     )
-    await ref.current?.submitForm()
+    await act(() => ref.current?.submitForm()!)
 
     await waitFor(() =>
       expect(onUpdate).toHaveBeenCalledWith({
@@ -311,7 +311,7 @@ describe('Test K8sBlueGreenDeployStep', () => {
       />
     )
 
-    await ref.current?.submitForm()
+    await act(() => ref.current?.submitForm()!)
 
     await waitFor(() =>
       expect(onUpdate).toHaveBeenCalledWith({
@@ -358,7 +358,7 @@ describe('Test K8sBlueGreenDeployStep', () => {
         ref={ref}
       />
     )
-    await ref.current?.submitForm()
+    await act(() => ref.current?.submitForm()!)
 
     await waitFor(() =>
       expect(onUpdate).toHaveBeenCalledWith({

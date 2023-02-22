@@ -81,7 +81,7 @@ export const SetUpYourApplicationView: React.FC<SetUpYourApplicationViewProps> =
       )}
 
       {selectedEnvironment && language && apiKey && (
-        <SetUpYourCodeView apiKey={apiKey} language={language} flagName={flagInfo.name} />
+        <SetUpYourCodeView apiKey={apiKey} language={language} flagIdentifier={flagInfo.identifier} />
       )}
     </Layout.Vertical>
   )

@@ -224,11 +224,11 @@ pipelineSteps:
     specifyEnvironmentOrGroup: Specify environment or environment group
     specifyGitOpsCluster: Specify GitOps Cluster
     specifyGitOpsClusters: Specify GitOps Clusters
-    selectEnvironment: '- Select Environment -'
-    selectEnvironments: '- Select Environments -'
-    selectEnvironmentGroup: '- Select Environment Group -'
-    selectInfrastructure: '- Select Infrastructure -'
-    selectInfrastructures: '- Select Infrastructures -'
+    selectEnvironment: '{{$.common.entityPlaceholderText}}'
+    selectEnvironments: '{{$.common.entityPlaceholderText}}'
+    selectEnvironmentGroup: '{{$.common.entityPlaceholderText}}'
+    selectInfrastructure: '{{$.common.entityPlaceholderText}}'
+    selectInfrastructures: '{{$.common.entityPlaceholderText}}'
     allInfrastructures: 'All Infrastructures'
     selectInfrastructureType: 'Select Infrastructure Type'
     plusNewEnvironment: '+ {{$.newEnvironment}}'
@@ -278,8 +278,8 @@ pipelineSteps:
     differentService: Deploy different Service
     specifyYourService: '{{$.common.selectService}}'
     specifyYourServices: '{{$.common.selectServices}}'
-    selectService: '- Select Service -'
-    selectServices: '- Select Services -'
+    selectService: '{{$.common.entityPlaceholderText}}'
+    selectServices: '{{$.common.entityPlaceholderText}}'
     newService: '{{$.newService}}'
     plusNewService: '+ {{$.newService}}'
     serviceIsRequired: Service is required

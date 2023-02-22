@@ -79,8 +79,6 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
     sourceData: { existingMetricDetails }
   } = useContext(SetupSourceTabsContext)
 
-  const isMetricThresholdEnabled = !isTemplate
-
   const metricDefinitions = existingMetricDetails?.spec?.metricDefinitions
 
   const { getString } = useStrings()
@@ -119,7 +117,7 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
   })
 
   const transformedSourceData = useMemo(
-    () => transformPrometheusHealthSourceToSetupSource(sourceData, getString, isTemplate, isMetricThresholdEnabled),
+    () => transformPrometheusHealthSourceToSetupSource(sourceData, getString, isTemplate),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [sourceData]
   )
@@ -131,9 +129,8 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
 
   const filterRemovedMetricNameThresholds = useCallback(
     (deletedMetricName: string) => {
-      if (isMetricThresholdEnabled && deletedMetricName) {
+      if (deletedMetricName) {
         const updatedMetricThresholds = getMetricNameFilteredNonCustomFields<MetricThresholdsState>(
-          isMetricThresholdEnabled,
           metricThresholds,
           deletedMetricName
         )
@@ -141,7 +138,7 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
         setMetricThresholds(updatedMetricThresholds)
       }
     },
-    [isMetricThresholdEnabled, metricThresholds]
+    [metricThresholds]
   )
 
   const {
@@ -176,8 +173,7 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
             groupedCreatedMetricsList,
             groupedCreatedMetricsList.indexOf(selectedMetric),
             args.initialValues,
-            mappedMetrics,
-            isMetricThresholdEnabled
+            mappedMetrics
           )
         ).length === 0
       }
@@ -190,8 +186,7 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
           groupedCreatedMetricsList,
           groupedCreatedMetricsList.indexOf(selectedMetric),
           values,
-          mappedMetrics,
-          isMetricThresholdEnabled
+          mappedMetrics
         )
       }}
     >
@@ -241,7 +236,6 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
               }
               groupedCreatedMetrics={groupedCreatedMetrics}
               setGroupedCreatedMetrics={setGroupedCreatedMetrics}
-              isMetricThresholdEnabled={isMetricThresholdEnabled}
               filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
             >
               <Container className={css.main}>
@@ -373,7 +367,7 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
               </Container>
             </CustomMetric>
             {/* Metric thresholds feature flag must be true and atleast one group must be present */}
-            {isMetricThresholdEnabled && Boolean(getCustomMetricGroupNames(groupedCreatedMetrics).length) && (
+            {Boolean(getCustomMetricGroupNames(groupedCreatedMetrics).length) && (
               <PrometheusMetricThreshold
                 formikValues={formikProps.values}
                 groupedCreatedMetrics={groupedCreatedMetrics}
@@ -402,17 +396,14 @@ export function PrometheusHealthSource(props: PrometheusHealthSourceProps): JSX.
 
                   await onSubmit(
                     sourceData,
-                    transformPrometheusSetupSourceToHealthSource(
-                      {
-                        ...transformedSourceData,
-                        ...filteredCVDisabledMetricThresholds,
-                        mappedServicesAndEnvs: mappedMetrics as Map<string, MapPrometheusQueryToService>,
-                        dataSourceType,
-                        region,
-                        workspaceId
-                      },
-                      isMetricThresholdEnabled
-                    )
+                    transformPrometheusSetupSourceToHealthSource({
+                      ...transformedSourceData,
+                      ...filteredCVDisabledMetricThresholds,
+                      mappedServicesAndEnvs: mappedMetrics as Map<string, MapPrometheusQueryToService>,
+                      dataSourceType,
+                      region,
+                      workspaceId
+                    })
                   )
                 }
               }}

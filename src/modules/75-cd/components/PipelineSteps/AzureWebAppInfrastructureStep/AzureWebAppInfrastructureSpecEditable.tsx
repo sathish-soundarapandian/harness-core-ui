@@ -245,7 +245,7 @@ const AzureWebAppInfrastructureSpecEditableNew: React.FC<AzureWebAppInfrastructu
                 <FormMultiTypeConnectorField
                   name="connectorRef"
                   label={getString('connector')}
-                  placeholder={getString('connectors.selectConnector')}
+                  placeholder={getString('common.entityPlaceholderText')}
                   disabled={readonly}
                   accountIdentifier={accountId}
                   multiTypeProps={{ expressions, allowableTypes }}

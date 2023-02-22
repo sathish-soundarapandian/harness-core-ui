@@ -31,6 +31,7 @@ jest.mock('services/cv', () => ({
   useGetAnomaliesSummary: jest.fn().mockImplementation(() => mockAPI),
   useChangeEventListForAccount: jest.fn().mockImplementation(() => mockAPI),
   useChangeEventList: jest.fn().mockImplementation(() => mockAPI),
+  useGetUnavailabilityInstances: jest.fn().mockImplementation(() => mockAPI),
   useGetMonitoredServiceChangeTimeline: jest.fn().mockImplementation(() => {
     return {
       data: {

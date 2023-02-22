@@ -587,7 +587,7 @@ const PDCInfrastructureSpecEditable: React.FC<PDCInfrastructureSpecEditableProps
                           name="connectorRef"
                           className={css.connectorRef}
                           label={getString('connector')}
-                          placeholder={getString('connectors.selectConnector')}
+                          placeholder={getString('common.entityPlaceholderText')}
                           disabled={readonly}
                           accountIdentifier={accountId}
                           projectIdentifier={projectIdentifier}

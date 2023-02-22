@@ -167,7 +167,7 @@ const SwapRollbackInputStep: React.FC<SwapRollbackProps> = ({ inputSetData, allo
           disabled={inputSetData?.readonly}
           fieldPath={'timeout'}
           template={inputSetData?.template}
-          className={cx(stepCss.formGroup, stepCss.sm)}
+          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
 

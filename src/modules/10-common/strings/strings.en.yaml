@@ -84,6 +84,7 @@ successfullUpdate: '{{entity}} {{name}} updated successfully'
 dataSubmitSuccess: 'Data has been submitted successfully'
 entityType: Entity Type
 cantDeleteEntity: Can't delete {{entity}}
+entityPlaceholderText: '- Select -' #used at placeholder places to select Svc, Infra, Env, Connector
 approve: Approve
 reject: Reject
 disable: Disable

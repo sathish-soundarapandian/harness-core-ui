@@ -540,7 +540,7 @@ exports[`TriggersWizardPage Triggers tests Initial Renders/snapshots Initial Ren
                                   <span
                                     class="placeholder"
                                   >
-                                    connectors.selectConnector
+                                    common.entityPlaceholderText
                                   </span>
                                 </span>
                                 <span
@@ -1311,7 +1311,7 @@ exports[`TriggersWizardPage Triggers tests Initial Renders/snapshots Initial Ren
                                   <span
                                     class="placeholder"
                                   >
-                                    connectors.selectConnector
+                                    common.entityPlaceholderText
                                   </span>
                                 </span>
                                 <span

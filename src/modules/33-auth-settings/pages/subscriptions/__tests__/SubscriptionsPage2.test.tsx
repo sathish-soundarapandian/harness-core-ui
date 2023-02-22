@@ -14,31 +14,53 @@ import {
   useGetModuleLicensesByAccountAndModuleType,
   useExtendTrialLicense,
   useSaveFeedback,
-  useGetOrganizationList,
-  useGetProjectList,
+  getOrganizationListPromise,
+  getProjectListPromise,
+  getAllServicesPromise,
   useDownloadActiveServiceCSVReport
 } from 'services/cd-ng'
 import { Editions } from '@common/constants/SubscriptionTypes'
 import SubscriptionsPage from '../SubscriptionsPage'
 import orgMockData from './mocks/orgMockData.json'
 import projMockData from './mocks/projMockData.json'
+import serviceMockData from './mocks/serviceMockData.json'
 jest.mock('services/cd-ng')
+const getOrganizationListPromiseMock = getOrganizationListPromise as jest.MockedFunction<any>
+const getProjectListPromiseMock = getProjectListPromise as jest.MockedFunction<any>
+const getServiceListPromiseMock = getAllServicesPromise as jest.MockedFunction<any>
 const useGetModuleLicenseInfoMock = useGetModuleLicensesByAccountAndModuleType as jest.MockedFunction<any>
 const useDownloadActiveServiceCSVReportMock = useDownloadActiveServiceCSVReport as jest.MockedFunction<any>
 const useGetAccountMock = useGetAccountNG as jest.MockedFunction<any>
 const useExtendTrialLicenseMock = useExtendTrialLicense as jest.MockedFunction<any>
+const orgListPromiseMock = jest.fn().mockImplementation(() => {
+  return Promise.resolve({
+    orgMockData
+  })
+})
+const projListPromiseMock = jest.fn().mockImplementation(() => {
+  return Promise.resolve({
+    projMockData
+  })
+})
+const serviceListPromiseMock = jest.fn().mockImplementation(() => {
+  return Promise.resolve({
+    serviceMockData
+  })
+})
+
 useExtendTrialLicenseMock.mockImplementation(() => {
   return {
     mutate: jest.fn()
   }
 })
-const useGetOrganizationListMock = useGetOrganizationList as jest.MockedFunction<any>
-useGetOrganizationListMock.mockImplementation(() => {
-  return { ...orgMockData, refetch: jest.fn(), error: null }
+getOrganizationListPromiseMock.mockImplementation(() => {
+  return orgListPromiseMock()
 })
-const useGetProjectListMock = useGetProjectList as jest.MockedFunction<any>
-useGetProjectListMock.mockImplementation(() => {
-  return { ...projMockData, refetch: jest.fn(), error: null }
+getProjectListPromiseMock.mockImplementation(() => {
+  return projListPromiseMock()
+})
+getServiceListPromiseMock.mockImplementation(() => {
+  return serviceListPromiseMock()
 })
 const useSaveFeedbackMock = useSaveFeedback as jest.MockedFunction<any>
 useSaveFeedbackMock.mockImplementation(() => {
@@ -46,18 +68,13 @@ useSaveFeedbackMock.mockImplementation(() => {
     mutate: jest.fn()
   }
 })
+
 jest.mock('@common/hooks', () => ({
   ...(jest.requireActual('@common/hooks') as any),
   useMutateAsGet: jest.fn().mockImplementation(() => {
     return { data: {}, refetch: jest.fn(), error: null, loading: false }
   })
 }))
-useDownloadActiveServiceCSVReportMock.mockImplementation(() => {
-  return {
-    data: '',
-    refetch: jest.fn()
-  }
-})
 moment.now = jest.fn(() => 1482363367071)
 
 const featureFlags = {
@@ -70,6 +87,12 @@ const featureFlags = {
 }
 
 describe('Subscriptions Page', () => {
+  useDownloadActiveServiceCSVReportMock.mockImplementation(() => {
+    return {
+      data: '',
+      refetch: jest.fn()
+    }
+  })
   test('it renders the subscriptions page with no data service table', async () => {
     useGetModuleLicenseInfoMock.mockImplementation(() => {
       return {

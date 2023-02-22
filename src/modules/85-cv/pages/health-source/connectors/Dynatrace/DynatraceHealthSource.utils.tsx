@@ -46,10 +46,7 @@ import {
 } from '../../common/MetricThresholds/MetricThresholds.constants'
 import type { CustomSelectedAndMappedMetrics } from '../../common/CustomMetric/CustomMetric.types'
 
-export const mapDynatraceMetricDataToHealthSource = (
-  dynatraceMetricData: DynatraceMetricData,
-  isMetricThresholdEnabled: boolean
-): UpdatedHealthSource => {
+export const mapDynatraceMetricDataToHealthSource = (dynatraceMetricData: DynatraceMetricData): UpdatedHealthSource => {
   const dynatraceMetricDataSelectedServiceValue =
     typeof dynatraceMetricData.selectedService !== 'string'
       ? dynatraceMetricData?.selectedService?.value
@@ -66,7 +63,7 @@ export const mapDynatraceMetricDataToHealthSource = (
     serviceId: dynatraceMetricDataSelectedServiceValue as string,
     serviceName: dynatraceMetricDataSelectedServiceLabel as string,
     feature: DynatraceProductNames.APM,
-    metricPacks: getMetricPacksForPayload(dynatraceMetricData, isMetricThresholdEnabled),
+    metricPacks: getMetricPacksForPayload(dynatraceMetricData),
     metricDefinitions: [],
     serviceMethodIds: dynatraceMetricData.serviceMethods
   }
@@ -82,10 +79,7 @@ export const mapDynatraceMetricDataToHealthSource = (
     spec: specPayload
   }
 }
-export const mapHealthSourceToDynatraceMetricData = (
-  sourceData: SourceDataInterface,
-  isMetricThresholdEnabled: boolean
-): DynatraceMetricData => {
+export const mapHealthSourceToDynatraceMetricData = (sourceData: SourceDataInterface): DynatraceMetricData => {
   const healthSource: UpdatedHealthSource = (sourceData.healthSourceList as RowData[]).find(
     (source: UpdatedHealthSource) => source.identifier === sourceData.healthSourceIdentifier
   ) as UpdatedHealthSource
@@ -104,12 +98,8 @@ export const mapHealthSourceToDynatraceMetricData = (
     metricData: convertMetricPackToMetricData(metricPacks),
     serviceMethods: serviceMethodIds,
     customMetrics: new Map(),
-    ignoreThresholds: isMetricThresholdEnabled
-      ? getFilteredMetricThresholdValues(MetricThresholdTypes.IgnoreThreshold, metricPacks)
-      : [],
-    failFastThresholds: isMetricThresholdEnabled
-      ? getFilteredMetricThresholdValues(MetricThresholdTypes.FailImmediately, metricPacks)
-      : []
+    ignoreThresholds: getFilteredMetricThresholdValues(MetricThresholdTypes.IgnoreThreshold, metricPacks),
+    failFastThresholds: getFilteredMetricThresholdValues(MetricThresholdTypes.FailImmediately, metricPacks)
   }
 
   for (const metricDefinition of metricDefinitions) {
@@ -181,8 +171,7 @@ export const validateMapping = (
   createdMetrics: string[],
   selectedMetricIndex: number,
   getString: (key: StringKeys) => string,
-  mappedMetrics: Map<string, DynatraceMetricInfo>,
-  isMetricThresholdEnabled: boolean
+  mappedMetrics: Map<string, DynatraceMetricInfo>
 ): ((key: string) => string) => {
   let errors = {} as any
 
@@ -210,9 +199,7 @@ export const validateMapping = (
     )
   }
 
-  if (isMetricThresholdEnabled) {
-    validateMetricThresholds(errors, dynatraceMetricData, getString)
-  }
+  validateMetricThresholds(errors, dynatraceMetricData, getString)
 
   return errors
 }

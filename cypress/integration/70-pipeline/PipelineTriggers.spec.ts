@@ -128,7 +128,7 @@ describe('Triggers for Pipeline', () => {
       .within(() => {
         cy.findByText('No Input Sets created').should('exist')
       })
-    cy.get('input[placeholder*="Select Service"]').should('be.visible').click({ force: true })
+    cy.get('input[placeholder*="Select"]').should('be.visible').click({ force: true })
     cy.contains('p', 'testService').click({ force: true })
 
     // Toggle to YAML view

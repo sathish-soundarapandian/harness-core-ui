@@ -21,7 +21,6 @@ interface GroupedSideNavInterface {
   selectedItem?: string
   onRemoveItem?: (removedItem: string, index: number) => void
   groupedSelectedAppsList: [string, GroupedMetric[]][]
-  isMetricThresholdEnabled?: boolean
   openEditMetricModal: () => void
   hideDeleteIcon?: boolean
 }

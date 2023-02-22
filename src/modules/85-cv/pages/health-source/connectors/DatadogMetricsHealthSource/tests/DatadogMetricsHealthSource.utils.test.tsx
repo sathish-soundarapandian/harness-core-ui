@@ -28,12 +28,12 @@ import type { DatadogMetricInfo } from '@cv/pages/health-source/connectors/Datad
 
 describe('Validate DatadogMetricsHealthSource Utils', () => {
   test('validate health source data to DatadogSetupSource mapping', () => {
-    expect(mapDatadogMetricHealthSourceToDatadogMetricSetupSource(DatadogMetricsMockHealthSourceData, false)).toEqual(
+    expect(mapDatadogMetricHealthSourceToDatadogMetricSetupSource(DatadogMetricsMockHealthSourceData)).toEqual(
       DatadogMetricsSetupSource
     )
   })
   test('validate DatadogSetupSource to HealthSource mapping', () => {
-    expect(mapDatadogMetricSetupSourceToDatadogHealthSource(DatadogMetricsSetupSource, false)).toEqual(
+    expect(mapDatadogMetricSetupSourceToDatadogHealthSource(DatadogMetricsSetupSource)).toEqual(
       DatadogMetricsHealthSourceMock
     )
   })
@@ -103,7 +103,7 @@ describe('Validate DatadogMetricsHealthSource Utils', () => {
     const allSelectedMetrics = DatadogMetricsSetupSource.metricDefinition
     allSelectedMetrics.set('mock_metric_path_changed', metricToCheck)
     // should give us error for empty query
-    expect(validate(metricToCheck, allSelectedMetrics, getStringMock, false)).toEqual({
+    expect(validate(metricToCheck, allSelectedMetrics, getStringMock)).toEqual({
       ...METRIC_VALIDATION_RESULT,
       query: 'query not valid',
       sli: 'SLI, CV or HealthScore must be selected',

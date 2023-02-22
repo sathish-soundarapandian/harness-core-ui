@@ -38,6 +38,7 @@ import {
   QUERY_DEFINITIONS,
   V2
 } from './components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/SelectMonitoredServiceType/components/MonitoredServiceInputTemplatesHealthSources/MonitoredServiceInputTemplatesHealthSources.constants'
+import { isAnExpression } from './components/ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/MonitoredService/MonitoredService.utils'
 
 /**
  * checks if a field is a runtime input.
@@ -241,15 +242,14 @@ export function getSpecFormData(specInfo: spec | undefined): spec {
  */
 export function setFieldData(validspec: spec | undefined, field: string, fieldOptions: SelectOption[]): void {
   //finding the complete option if the field is fixed input
-  if (validspec && validspec[field] && validspec[field] !== RUNTIME_INPUT_VALUE) {
+  if (validspec && validspec[field] && validspec[field] !== RUNTIME_INPUT_VALUE && !isAnExpression(validspec[field])) {
     //TODO logic in if block will be removed once backend api is fixed : https://harness.atlassian.net/browse/CVNG-2481
     if (field === 'sensitivity') {
       validspec[field] = fieldOptions.find(
-        (el: SelectOption) =>
-          SensitivityTypes[el.value as keyof typeof SensitivityTypes] === (validspec && validspec[field])
+        (el: SelectOption) => SensitivityTypes[el.value as keyof typeof SensitivityTypes] === validspec[field]
       )
     } else {
-      validspec[field] = fieldOptions.find((el: SelectOption) => el.value === (validspec && validspec[field]))
+      validspec[field] = fieldOptions.find((el: SelectOption) => el.value === validspec[field])
     }
   }
 }
@@ -276,7 +276,7 @@ export function isTemplatisedMonitoredService(type: string): boolean {
   return type === MONITORED_SERVICE_TYPE.TEMPLATE
 }
 
-export function doesHealthSourceHasQueries(healthSource: any) {
+export function doesHealthSourceHasQueries(healthSource: any): boolean {
   return healthSource?.spec?.queries !== undefined
 }
 
@@ -287,7 +287,7 @@ export const setCommaSeperatedList = (
   value: string,
   onChange: (field: string, value: any, shouldValidate?: boolean | undefined) => void,
   path: string
-) => {
+): void => {
   let actualValue: string | string[] = value
   const isFixedValue = getMultiTypeFromValue(value) === MultiTypeInputType.FIXED
   if (isFixedValue) {

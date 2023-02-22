@@ -114,7 +114,7 @@ describe('Health Source - Prometheus', () => {
     cy.contains('span', 'Deviation Compared to Baseline is required.').should('not.exist')
 
     cy.get('input[name="serviceInstance"]').click()
-    cy.contains('p', '__name__').click()
+    cy.contains('p', '__name__').scrollIntoView().click({ force: true })
 
     cy.findByRole('button', { name: /Add Metric/i }).click()
 

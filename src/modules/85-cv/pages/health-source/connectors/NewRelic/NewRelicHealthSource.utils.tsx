@@ -58,8 +58,7 @@ export const validateMapping = (
   values: any,
   createdMetrics: string[],
   selectedMetricIndex: number,
-  getString: (key: StringKeys) => string,
-  isMetricThresholdEnabled: boolean
+  getString: (key: StringKeys) => string
 ): ((key: string | boolean | string[]) => string) => {
   let errors = {} as any
 
@@ -81,9 +80,7 @@ export const validateMapping = (
     errors = validateCustomMetricFields(values, createdMetrics, selectedMetricIndex, errors, getString)
   }
 
-  if (isMetricThresholdEnabled) {
-    validateMetricThresholds(errors, values, getString)
-  }
+  validateMetricThresholds(errors, values, getString)
 
   return errors
 }
@@ -204,17 +201,16 @@ export const convertMetricPackToMetricData = (value?: MetricPackDTO[]) => {
   return dataObject
 }
 
-export const initializeNonCustomFields = (
-  newRelicData: NewRelicData,
-  isMetricThresholdEnabled: boolean
-): NonCustomMetricFields => {
-  const ignoreThresholds = isMetricThresholdEnabled
-    ? getFilteredMetricThresholdValues(MetricThresholdTypes.IgnoreThreshold, newRelicData?.metricPacks)
-    : []
+export const initializeNonCustomFields = (newRelicData: NewRelicData): NonCustomMetricFields => {
+  const ignoreThresholds = getFilteredMetricThresholdValues(
+    MetricThresholdTypes.IgnoreThreshold,
+    newRelicData?.metricPacks
+  )
 
-  const failFastThresholds = isMetricThresholdEnabled
-    ? getFilteredMetricThresholdValues(MetricThresholdTypes.FailImmediately, newRelicData?.metricPacks)
-    : []
+  const failFastThresholds = getFilteredMetricThresholdValues(
+    MetricThresholdTypes.FailImmediately,
+    newRelicData?.metricPacks
+  )
 
   return {
     newRelicApplication:

@@ -87,8 +87,6 @@ export default function AppDMonitoredSource({
   const { getString } = useStrings()
   const { showError, clear } = useToaster()
 
-  const isMetricThresholdEnabled = !isTemplate
-
   const [selectedMetricPacks, setSelectedMetricPacks] = useState<TimeSeriesMetricPackDTO[]>([])
   const [validationResultData, setValidationResultData] = useState<AppdynamicsValidationResponse[]>()
   const [appDValidation, setAppDValidation] = useState<{
@@ -237,9 +235,7 @@ export default function AppDMonitoredSource({
     mappedServicesAndEnvs: showCustomMetric ? appDynamicsData?.mappedServicesAndEnvs : new Map()
   })
 
-  const [nonCustomFeilds, setNonCustomFeilds] = useState(() =>
-    initializeNonCustomFields(appDynamicsData, isMetricThresholdEnabled)
-  )
+  const [nonCustomFeilds, setNonCustomFeilds] = useState(() => initializeNonCustomFields(appDynamicsData))
 
   const initPayload = useMemo(
     () =>
@@ -267,12 +263,7 @@ export default function AppDMonitoredSource({
   const handleMetricPackUpdate = useCallback(
     async (metricPackIdentifier: string, updatedValue: boolean, appdApplication: string, appDTier: string) => {
       if (typeof metricPackIdentifier === 'string') {
-        const updatedNonCustomFields = getUpdatedNonCustomFields(
-          isMetricThresholdEnabled,
-          nonCustomFeilds,
-          metricPackIdentifier,
-          updatedValue
-        )
+        const updatedNonCustomFields = getUpdatedNonCustomFields(nonCustomFeilds, metricPackIdentifier, updatedValue)
 
         setNonCustomFeilds(updatedNonCustomFields as NonCustomFeildsInterface)
 
@@ -281,14 +272,13 @@ export default function AppDMonitoredSource({
         }
       }
     },
-    [isMetricThresholdEnabled, nonCustomFeilds, onValidate]
+    [nonCustomFeilds, onValidate]
   )
 
   const filterRemovedMetricNameThresholds = useCallback(
     (deletedMetricName: string) => {
-      if (isMetricThresholdEnabled && deletedMetricName) {
+      if (deletedMetricName) {
         const updatedNonCustomFields = getMetricNameFilteredNonCustomFields<NonCustomFeildsInterface>(
-          isMetricThresholdEnabled,
           nonCustomFeilds,
           deletedMetricName
         )
@@ -296,7 +286,7 @@ export default function AppDMonitoredSource({
         setNonCustomFeilds(updatedNonCustomFields)
       }
     },
-    [isMetricThresholdEnabled, nonCustomFeilds]
+    [nonCustomFeilds]
   )
 
   const [tierMultiType, setTierMultiType] = useState(() => getMultiTypeFromValue(initPayload?.appDTier))
@@ -320,8 +310,7 @@ export default function AppDMonitoredSource({
             createdMetrics: groupedCreatedMetricsList,
             selectedMetricIndex: groupedCreatedMetricsList.indexOf(selectedMetric),
             getString,
-            mappedMetrics,
-            isMetricThresholdEnabled
+            mappedMetrics
           })
         ).length === 0
       }
@@ -331,8 +320,7 @@ export default function AppDMonitoredSource({
           createdMetrics: groupedCreatedMetricsList,
           selectedMetricIndex: groupedCreatedMetricsList.indexOf(selectedMetric),
           getString,
-          mappedMetrics,
-          isMetricThresholdEnabled
+          mappedMetrics
         })
       }}
       initialValues={initPayload}
@@ -423,7 +411,6 @@ export default function AppDMonitoredSource({
                     metricDataValue={formik.values.metricData}
                     setSelectedMetricPacks={setSelectedMetricPacks}
                     connector={HealthSoureSupportedConnectorTypes.APP_DYNAMICS}
-                    isMetricThresholdEnabled={isMetricThresholdEnabled}
                     onChange={(metricPackIdentifier, updatedValue) =>
                       handleMetricPackUpdate(
                         metricPackIdentifier,
@@ -461,7 +448,6 @@ export default function AppDMonitoredSource({
                   addFieldLabel={getString('cv.monitoringSources.addMetric')}
                   initCustomForm={initAppDCustomFormValue()}
                   shouldBeAbleToDeleteLastMetric
-                  isMetricThresholdEnabled={isMetricThresholdEnabled}
                   filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
                 >
                   <AppDCustomMetricForm
@@ -492,15 +478,14 @@ export default function AppDMonitoredSource({
                 </Button>
               </CardWithOuterTitle>
             )}
-            {isMetricThresholdEnabled &&
-              getIsMetricThresholdCanBeShown(formik.values.metricData, groupedCreatedMetrics) && (
-                <AppDMetricThreshold
-                  formikValues={formik.values}
-                  groupedCreatedMetrics={groupedCreatedMetrics}
-                  metricPacks={selectedMetricPacks}
-                  setNonCustomFeilds={setNonCustomFeilds}
-                />
-              )}
+            {getIsMetricThresholdCanBeShown(formik.values.metricData, groupedCreatedMetrics) && (
+              <AppDMetricThreshold
+                formikValues={formik.values}
+                groupedCreatedMetrics={groupedCreatedMetrics}
+                metricPacks={selectedMetricPacks}
+                setNonCustomFeilds={setNonCustomFeilds}
+              />
+            )}
 
             <DrawerFooter
               isSubmit

@@ -25,6 +25,14 @@ jest.mock('@cv/pages/slos/CVSLODetailsPage/DetailsPanel/views/ServiceDetails', (
   }
 }))
 
+const mockAPI = {
+  data: {},
+  refetch: jest.fn(),
+  error: null,
+  loading: false,
+  cancel: jest.fn()
+}
+
 jest.mock('services/cv', () => {
   return {
     useGetSLODetails: jest.fn().mockImplementation(() => ({
@@ -54,33 +62,9 @@ jest.mock('services/cv', () => {
     useGetMonitoredServiceChangeEventSummary: jest
       .fn()
       .mockImplementation(() => ({ data: null, loading: false, error: null, refetch: jest.fn() })),
-    useChangeEventTimelineForAccount: jest.fn().mockImplementation(() => {
-      return {
-        data: {},
-        refetch: jest.fn(),
-        error: null,
-        loading: false,
-        cancel: jest.fn()
-      }
-    }),
-    useChangeEventListForAccount: jest.fn().mockImplementation(() => {
-      return {
-        data: {},
-        refetch: jest.fn(),
-        error: null,
-        loading: false,
-        cancel: jest.fn()
-      }
-    }),
-    useGetUnavailabilityInstances: jest.fn().mockImplementation(() => {
-      return {
-        data: {},
-        refetch: jest.fn(),
-        error: null,
-        loading: false,
-        cancel: jest.fn()
-      }
-    })
+    useChangeEventTimelineForAccount: jest.fn().mockImplementation(() => mockAPI),
+    useChangeEventListForAccount: jest.fn().mockImplementation(() => mockAPI),
+    useGetUnavailabilityInstances: jest.fn().mockImplementation(() => mockAPI)
   }
 })
 

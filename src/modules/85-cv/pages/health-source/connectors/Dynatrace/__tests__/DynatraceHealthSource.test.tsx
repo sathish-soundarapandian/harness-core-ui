@@ -164,20 +164,5 @@ describe('Validate DynatraceHealthSource', () => {
 
       expect(screen.getByText('cv.monitoringSources.appD.ignoreThresholds (1)')).toBeInTheDocument()
     })
-    test('should not render metric thresholds, if it is a template', async () => {
-      render(
-        <TestWrapper>
-          <DynatraceHealthSource
-            dynatraceFormData={MockDynatraceMetricDataWithCustomMetric}
-            onSubmit={jest.fn()}
-            onPrevious={jest.fn()}
-            connectorIdentifier="dynatrace"
-            isTemplate
-          />
-        </TestWrapper>
-      )
-      expect(screen.queryByText('cv.monitoringSources.appD.ignoreThresholds (0)')).not.toBeInTheDocument()
-      expect(screen.queryByText('cv.monitoringSources.appD.failFastThresholds (0)')).not.toBeInTheDocument()
-    })
   })
 })

@@ -207,7 +207,7 @@ export const AzureWebAppInfrastructureSpecInputForm: React.FC<
             }}
             label={getString('connector')}
             enableConfigureOptions={false}
-            placeholder={getString('connectors.selectConnector')}
+            placeholder={getString('common.entityPlaceholderText')}
             disabled={readonly}
             multiTypeProps={{ allowableTypes, expressions }}
             type={Connectors.AZURE}

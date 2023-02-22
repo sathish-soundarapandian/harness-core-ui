@@ -391,7 +391,7 @@ function FormContent({
           className={css.connector}
           connectorLabelClass={css.connectorLabel}
           width={372}
-          placeholder={getString('connectors.selectConnector')}
+          placeholder={getString('common.entityPlaceholderText')}
           accountIdentifier={accountId}
           projectIdentifier={projectIdentifier}
           orgIdentifier={orgIdentifier}

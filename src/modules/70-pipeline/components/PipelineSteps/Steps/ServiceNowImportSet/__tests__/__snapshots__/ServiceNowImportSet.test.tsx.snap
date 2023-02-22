@@ -121,7 +121,7 @@ exports[`ServiceNowImportSet Step Test Basic Snapshot -> Deploymentform Mode: se
                   <span
                     class="placeholder"
                   >
-                    connectors.selectConnector
+                    common.entityPlaceholderText
                   </span>
                 </span>
                 <span
@@ -525,7 +525,7 @@ exports[`ServiceNowImportSet Step Test Basic Snapshot -> Inputset Mode: input se
                   <span
                     class="placeholder"
                   >
-                    connectors.selectConnector
+                    common.entityPlaceholderText
                   </span>
                 </span>
                 <span
@@ -960,7 +960,7 @@ exports[`ServiceNowImportSet Step Test DeploymentForm -> StagingTable Loading Tr
                   <span
                     class="placeholder"
                   >
-                    connectors.selectConnector
+                    common.entityPlaceholderText
                   </span>
                 </span>
                 <span
@@ -1350,7 +1350,7 @@ exports[`ServiceNowImportSet Step Test DeploymentForm Readonly Mode: serviceNow-
                   <span
                     class="placeholder"
                   >
-                    connectors.selectConnector
+                    common.entityPlaceholderText
                   </span>
                 </span>
                 <span

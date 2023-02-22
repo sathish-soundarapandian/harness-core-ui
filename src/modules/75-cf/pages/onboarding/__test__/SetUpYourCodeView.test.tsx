@@ -27,7 +27,7 @@ const renderComponent = (props?: Partial<SetUpYourCodeViewProps>): RenderResult 
           identifier: 'xxx-xxx-xxx',
           type: 'server'
         }}
-        flagName="foobar"
+        flagIdentifier="foobar"
         {...props}
       />
     </TestWrapper>

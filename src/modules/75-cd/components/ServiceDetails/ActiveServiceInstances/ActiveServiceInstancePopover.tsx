@@ -413,8 +413,8 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     envId,
     infraIdentifier,
     clusterIdentifier: clusterId,
-    pipelineExecutionId: pipelineExecutionId,
-    buildId: buildId
+    pipelineExecutionId: pipelineExecutionId || '',
+    buildId: buildId || ''
   }
 
   const { loading, data, error } = useGetActiveInstancesByServiceIdEnvIdAndBuildIds({
