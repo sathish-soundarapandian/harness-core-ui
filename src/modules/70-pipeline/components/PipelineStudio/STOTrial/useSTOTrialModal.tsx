@@ -8,15 +8,15 @@
 import React from 'react'
 import { Dialog } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
-
 import cx from 'classnames'
-
 import { TrialModalTemplate } from '@pipeline/components/TrialModalTemplate/TrialModalTemplate'
 import { useGetCommunity } from '@common/utils/utils'
 import type { UseTrialModalProps, UseTrialModalReturns } from '@pipeline/components/TrialModalTemplate/trialModalUtils'
 import { useGetFormPropsByTrialType } from '@pipeline/components/TrialModalTemplate/trialModalUtils'
 import stoImage from './sto.svg'
 import css from './useSTOTrialModal.module.scss'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { TrialActions, PageNames, Category } from '@common/constants/TrackingConstants'
 
 interface STOTrialTemplateData {
   children: React.ReactElement
@@ -42,9 +42,21 @@ function STOTrial({ trialType, actionProps, onCloseModal }: UseTrialModalProps):
 }
 
 function STOTrialDialog({ actionProps, trialType, onCloseModal }: UseTrialModalProps): React.ReactElement {
+  const { trackEvent } = useTelemetry()
+
+  const handleClose = (): void => {
+    onCloseModal?.()
+    trackEvent(TrialActions.TrialModalPipelineSetupCancel, { category: Category.SIGNUP, module: 'sto' })
+  }
+
+  useTelemetry({
+    pageName: PageNames.TrialSetupPipelineModal,
+    properties: { module: 'sto' }
+  })
+
   return (
     <Dialog isOpen={true} enforceFocus={false} onClose={onCloseModal} className={cx(css.dialog, css.stoTrial)}>
-      <STOTrial trialType={trialType} actionProps={actionProps} onCloseModal={onCloseModal} />
+      <STOTrial trialType={trialType} actionProps={actionProps} onCloseModal={handleClose} />
     </Dialog>
   )
 }
