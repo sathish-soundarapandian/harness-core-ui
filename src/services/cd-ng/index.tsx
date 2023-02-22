@@ -17767,6 +17767,99 @@ export const getAccountNGPromise = (
     signal
   )
 
+export interface UpdateAccountCrossGenerationAccessEnabledNGPathParams {
+  accountIdentifier: string
+}
+
+export type UpdateAccountCrossGenerationAccessEnabledNGProps = Omit<
+  MutateProps<
+    ResponseAccountDTO,
+    Failure | Error,
+    void,
+    AccountDTORequestBody,
+    UpdateAccountCrossGenerationAccessEnabledNGPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateAccountCrossGenerationAccessEnabledNGPathParams
+
+/**
+ * Update Cross Generation Access Enabled
+ */
+export const UpdateAccountCrossGenerationAccessEnabledNG = ({
+  accountIdentifier,
+  ...props
+}: UpdateAccountCrossGenerationAccessEnabledNGProps) => (
+  <Mutate<
+    ResponseAccountDTO,
+    Failure | Error,
+    void,
+    AccountDTORequestBody,
+    UpdateAccountCrossGenerationAccessEnabledNGPathParams
+  >
+    verb="PUT"
+    path={`/accounts/${accountIdentifier}/cross-generation-access`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseUpdateAccountCrossGenerationAccessEnabledNGProps = Omit<
+  UseMutateProps<
+    ResponseAccountDTO,
+    Failure | Error,
+    void,
+    AccountDTORequestBody,
+    UpdateAccountCrossGenerationAccessEnabledNGPathParams
+  >,
+  'path' | 'verb'
+> &
+  UpdateAccountCrossGenerationAccessEnabledNGPathParams
+
+/**
+ * Update Cross Generation Access Enabled
+ */
+export const useUpdateAccountCrossGenerationAccessEnabledNG = ({
+  accountIdentifier,
+  ...props
+}: UseUpdateAccountCrossGenerationAccessEnabledNGProps) =>
+  useMutate<
+    ResponseAccountDTO,
+    Failure | Error,
+    void,
+    AccountDTORequestBody,
+    UpdateAccountCrossGenerationAccessEnabledNGPathParams
+  >(
+    'PUT',
+    (paramsInPath: UpdateAccountCrossGenerationAccessEnabledNGPathParams) =>
+      `/accounts/${paramsInPath.accountIdentifier}/cross-generation-access`,
+    { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
+  )
+
+/**
+ * Update Cross Generation Access Enabled
+ */
+export const updateAccountCrossGenerationAccessEnabledNGPromise = (
+  {
+    accountIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseAccountDTO,
+    Failure | Error,
+    void,
+    AccountDTORequestBody,
+    UpdateAccountCrossGenerationAccessEnabledNGPathParams
+  > & { accountIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseAccountDTO,
+    Failure | Error,
+    void,
+    AccountDTORequestBody,
+    UpdateAccountCrossGenerationAccessEnabledNGPathParams
+  >('PUT', getConfig('ng/api'), `/accounts/${accountIdentifier}/cross-generation-access`, props, signal)
+
 export interface UpdateAccountDefaultExperienceNGPathParams {
   accountIdentifier: string
 }
@@ -17971,99 +18064,6 @@ export const updateAccountNameNGPromise = (
     props,
     signal
   )
-
-export interface UpdateAccountCrossGenerationAccessEnabledNGPathParams {
-  accountIdentifier: string
-}
-
-export type UpdateAccountCrossGenerationAccessEnabledNGProps = Omit<
-  MutateProps<
-    ResponseAccountDTO,
-    Failure | Error,
-    void,
-    AccountDTORequestBody,
-    UpdateAccountCrossGenerationAccessEnabledNGPathParams
-  >,
-  'path' | 'verb'
-> &
-  UpdateAccountCrossGenerationAccessEnabledNGPathParams
-
-/**
- * Update Cross Generation Access Enabled
- */
-export const UpdateAccountCrossGenerationAccessEnabledNG = ({
-  accountIdentifier,
-  ...props
-}: UpdateAccountCrossGenerationAccessEnabledNGProps) => (
-  <Mutate<
-    ResponseAccountDTO,
-    Failure | Error,
-    void,
-    AccountDTORequestBody,
-    UpdateAccountCrossGenerationAccessEnabledNGPathParams
-  >
-    verb="PUT"
-    path={`/accounts/${accountIdentifier}/update-cross-generation-access-enabled`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseUpdateAccountCrossGenerationAccessEnabledNGProps = Omit<
-  UseMutateProps<
-    ResponseAccountDTO,
-    Failure | Error,
-    void,
-    AccountDTORequestBody,
-    UpdateAccountCrossGenerationAccessEnabledNGPathParams
-  >,
-  'path' | 'verb'
-> &
-  UpdateAccountCrossGenerationAccessEnabledNGPathParams
-
-/**
- * Update Cross Generation Access Enabled
- */
-export const useUpdateAccountCrossGenerationAccessEnabledNG = ({
-  accountIdentifier,
-  ...props
-}: UseUpdateAccountCrossGenerationAccessEnabledNGProps) =>
-  useMutate<
-    ResponseAccountDTO,
-    Failure | Error,
-    void,
-    AccountDTORequestBody,
-    UpdateAccountCrossGenerationAccessEnabledNGPathParams
-  >(
-    'PUT',
-    (paramsInPath: UpdateAccountCrossGenerationAccessEnabledNGPathParams) =>
-      `/accounts/${paramsInPath.accountIdentifier}/update-cross-generation-access-enabled`,
-    { base: getConfig('ng/api'), pathParams: { accountIdentifier }, ...props }
-  )
-
-/**
- * Update Cross Generation Access Enabled
- */
-export const updateAccountCrossGenerationAccessEnabledNGPromise = (
-  {
-    accountIdentifier,
-    ...props
-  }: MutateUsingFetchProps<
-    ResponseAccountDTO,
-    Failure | Error,
-    void,
-    AccountDTORequestBody,
-    UpdateAccountCrossGenerationAccessEnabledNGPathParams
-  > & { accountIdentifier: string },
-  signal?: RequestInit['signal']
-) =>
-  mutateUsingFetch<
-    ResponseAccountDTO,
-    Failure | Error,
-    void,
-    AccountDTORequestBody,
-    UpdateAccountCrossGenerationAccessEnabledNGPathParams
-  >('PUT', getConfig('ng/api'), `/accounts/${accountIdentifier}/update-cross-generation-access-enabled`, props, signal)
 
 export interface ListActivitiesQueryParams {
   pageIndex?: number
@@ -32151,8 +32151,8 @@ export interface GetInstancesDetailsQueryParams {
   envId: string
   infraIdentifier?: string
   clusterIdentifier?: string
-  pipelineExecutionId: string
-  buildId: string
+  pipelineExecutionId?: string
+  buildId?: string
 }
 
 export type GetInstancesDetailsProps = Omit<
