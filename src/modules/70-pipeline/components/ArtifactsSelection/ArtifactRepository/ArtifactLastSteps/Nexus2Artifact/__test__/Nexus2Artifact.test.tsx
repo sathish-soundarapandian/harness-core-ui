@@ -334,19 +334,20 @@ describe('Nexus Artifact tests', () => {
 
   test(`able to submit form when the form is non empty`, async () => {
     const defaultValues: Nexus2InitialValuesType = {
-      connectorRef: '<+input>',
-      repository: 'cdp-test-group2',
-      repositoryFormat: RepositoryFormatTypes.Maven,
-      tag: '<+input>',
-      type: 'Nexus2Registry',
       spec: {
-        groupId: 'test-groupId',
-        artifactId: 'test-artifactId',
-        extension: 'test-extension',
-        classifier: 'test-classifer'
+        connectorRef: '<+input>',
+        repository: 'cdp-test-group2',
+        repositoryFormat: RepositoryFormatTypes.Maven,
+        tag: '<+input>',
+
+        spec: {
+          groupId: 'test-groupId',
+          artifactId: 'test-artifactId',
+          extension: 'test-extension',
+          classifier: 'test-classifer'
+        }
       },
-      tagType: TagTypes.Regex,
-      tagRegex: '<+input>',
+      type: 'Nexus2Registry',
       identifier: 'testidentifier'
     } as any
     const { container } = render(
@@ -398,19 +399,19 @@ describe('Nexus Artifact tests', () => {
 
   test(`not able to submit and throw errors for fields which are required `, async () => {
     const defaultValues: Nexus2InitialValuesType = {
-      connectorRef: '<+input>',
-      repository: 'cdp-test-group2',
-      repositoryFormat: RepositoryFormatTypes.Maven,
-      tag: '<+input>',
-      type: 'Nexus2Registry',
       spec: {
-        groupId: '',
-        artifactId: '',
-        extension: 'test-extension',
-        classifier: 'test-classifer'
+        connectorRef: '<+input>',
+        repository: 'cdp-test-group2',
+        repositoryFormat: RepositoryFormatTypes.Maven,
+        tagRegex: '<+input>',
+        spec: {
+          groupId: '',
+          artifactId: '',
+          extension: 'test-extension',
+          classifier: 'test-classifer'
+        }
       },
-      tagType: TagTypes.Regex,
-      tagRegex: '<+input>',
+      type: 'Nexus2Registry',
       identifier: 'testidentifier'
     } as any
     const { container, getByText } = render(

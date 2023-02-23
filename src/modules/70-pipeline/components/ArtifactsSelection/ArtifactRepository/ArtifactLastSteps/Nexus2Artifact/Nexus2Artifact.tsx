@@ -50,6 +50,7 @@ import type {
 import { nexus2RepositoryFormatTypes, RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 
@@ -274,7 +275,7 @@ export function Nexus2Artifact({
       : !checkIfQueryParamsisNotEmpty([
           formikValue.repositoryFormat,
           formikValue.repository,
-          formikValue.spec.packageName
+          formikValue?.spec?.packageName
         ])
   }, [])
 
@@ -441,7 +442,9 @@ export function Nexus2Artifact({
                 />
                 {getMultiTypeFromValue(formik.values?.repository) === MultiTypeInputType.RUNTIME && (
                   <div className={css.configureOptions}>
-                    <ConfigureOptions
+                    <SelectConfigureOptions
+                      options={getRepository()}
+                      loading={fetchingRepository}
                       style={{ alignSelf: 'center' }}
                       value={formik.values?.repository as string}
                       type={getString('string')}
