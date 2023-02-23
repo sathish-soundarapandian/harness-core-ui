@@ -67,7 +67,7 @@ module.exports = ({
   }
 
   if (enableCODE) {
-    remotes.code = "codeRemote@[window.getApiBaseUrl('code/remoteEntry.js')]"
+    remotes.code = "codeui@[window.getApiBaseUrl('code/remoteEntry.js')]"
   }
 
   if (enableFFUI) {
