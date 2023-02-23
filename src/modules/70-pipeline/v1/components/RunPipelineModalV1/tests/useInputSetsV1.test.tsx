@@ -9,12 +9,12 @@ import { renderHook } from '@testing-library/react-hooks'
 import { waitFor } from '@testing-library/react'
 import { useGetPipelineInputs } from 'services/pipeline-ng'
 import { useInputSetsV1 } from '../useInputSetsV1'
-import type { useInputSetsV1Props } from '../useInputSetsV1'
+import type { useInputSetsProps } from '../useInputSetsV1'
 jest.mock('services/pipeline-ng', () => ({
   useGetPipelineInputs: jest.fn(() => ({}))
 }))
 
-const getInitialProps = (): useInputSetsV1Props => ({
+const getInitialProps = (): useInputSetsProps => ({
   accountId: 'TEST_ACCOUNT',
   orgIdentifier: 'TEST_ORG',
   pipelineIdentifier: 'TEST_PIPELINE',

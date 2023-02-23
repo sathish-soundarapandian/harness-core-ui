@@ -23,14 +23,14 @@ export interface RunPipelineModalV1Params {
   isDebugMode?: boolean
 }
 
-export interface useRunPipelineModalV1Return {
+export interface useRunPipelineModalReturn {
   openRunPipelineModalV1: () => void
   closeRunPipelineModalV1: () => void
 }
 
 export const useRunPipelineModalV1 = (
   runPipelineModalParams: RunPipelineModalV1Params & Omit<GitQueryParams, 'repoName'>
-): useRunPipelineModalV1Return => {
+): useRunPipelineModalReturn => {
   const {
     inputSetSelected,
     pipelineIdentifier,

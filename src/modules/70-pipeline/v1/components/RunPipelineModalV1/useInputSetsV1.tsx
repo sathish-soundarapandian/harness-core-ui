@@ -7,7 +7,7 @@
 import { isEmpty } from 'lodash-es'
 import { useGetPipelineInputs } from 'services/pipeline-ng'
 
-export interface useInputSetsV1Props {
+export interface useInputSetsProps {
   projectIdentifier: string
   orgIdentifier: string
   pipelineIdentifier: string
@@ -25,7 +25,7 @@ export interface InputsYaml {
   }
 }
 
-export function useInputSetsV1(props: useInputSetsV1Props) {
+export function useInputSetsV1(props: useInputSetsProps) {
   const { branch, repoIdentifier, orgIdentifier, accountId, connectorRef, projectIdentifier, pipelineIdentifier } =
     props
   const {
