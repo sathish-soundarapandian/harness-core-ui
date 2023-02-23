@@ -45,7 +45,7 @@ export function PipelineInputParametersV1Internal(props: PipelineInputParameters
         <div className={css.accordionSummary}>
           <div className={css.nestedAccordions}>
             <Layout.Vertical spacing="small">
-              {Object.entries(formik?.values.inputs).map((input, index) => {
+              {Object.entries(formik?.values?.inputs).map((input, index) => {
                 return (
                   <div className={cx(css.group, css.withoutAligning)} key={index}>
                     <div>
@@ -56,7 +56,7 @@ export function PipelineInputParametersV1Internal(props: PipelineInputParameters
                         name={`inputs.${input[1]}`}
                         value={`${input[1]}`}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChange(input[0], e.target.value)}
-                        required={pipelineInputsMetadata?.inputs?.input[0].required}
+                        required={pipelineInputsMetadata?.inputs && pipelineInputsMetadata?.inputs[input[0]].required}
                       />
                     </div>
                   </div>

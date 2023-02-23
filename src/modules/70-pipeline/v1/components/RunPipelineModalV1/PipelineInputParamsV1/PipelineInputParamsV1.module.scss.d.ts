@@ -7,12 +7,12 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly accordionSummary: string
   readonly group: string
   readonly minimalCard: string
+  readonly nestedAccordions: string
+  readonly topAccordion: string
   readonly withoutAligning: string
   readonly withoutSpacing: string
-  readonly topAccordion: string
-  readonly nestedAccordions: string
-  readonly accordionSummary: string
 }
 export default styles
