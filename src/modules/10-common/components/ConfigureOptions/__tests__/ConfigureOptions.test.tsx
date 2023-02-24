@@ -366,7 +366,7 @@ describe('Test ConfigureOptions', () => {
     const submitBtn = getByTextBody(dialog, 'submit')
     fireEvent.click(submitBtn)
     await waitFor(() => expect(onChange).toBeCalledTimes(1))
-    expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}.default(123)`, 123, true)
+    expect(onChange).toBeCalledWith(`${RUNTIME_INPUT_VALUE}.default(123)`, '123', true)
   })
 
   test('default value should be undefined when value is not provided', async () => {

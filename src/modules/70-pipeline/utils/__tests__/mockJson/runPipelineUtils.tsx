@@ -40,6 +40,7 @@ export const inputSetInput = {
             {
               name: 'stringVar2',
               type: 'String',
+              default: 'Test1',
               value: '<+input>'
             }
           ]

@@ -75,7 +75,7 @@ describe('ConfigureOptionsUtils tests', () => {
           allowedValues: null,
           executionInput: false,
           regex: null,
-          default: 2
+          default: '2'
         })
       })
 
@@ -84,7 +84,7 @@ describe('ConfigureOptionsUtils tests', () => {
           allowedValues: null,
           executionInput: false,
           regex: null,
-          default: ['a', 'b', 'c']
+          default: '[a,b,c]'
         })
       })
 
