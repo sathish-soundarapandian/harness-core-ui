@@ -83,7 +83,7 @@ function FormComponent({
   }
 
   const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
-  const planNameValue = formik.values?.spec?.planName
+  const planNameValue = formik.values?.spec?.planKey
   // const artifactValue = getGenuineValue(formik.values?.spec?.artifactPaths)
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
@@ -199,7 +199,7 @@ function FormComponent({
         <div className={css.imagePathContainer}>
           <FormInput.MultiTypeInput
             label={getString('pipeline.bamboo.planName')}
-            name="spec.planName"
+            name="spec.planKey"
             useValue
             selectItems={planDetails}
             placeholder={
@@ -212,7 +212,7 @@ function FormComponent({
                 : getString('select')
             }
             multiTypeInputProps={{
-              onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.planName', type),
+              onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.planKey', type),
               expressions,
               selectProps: {
                 allowCreatingNewItems: true,
@@ -245,11 +245,11 @@ function FormComponent({
               value={formik.values?.spec?.jobName as string}
               style={{ marginTop: 22 }}
               type="String"
-              variableName="spec.planName"
+              variableName="spec.planKey"
               showRequiredField={false}
               showDefaultField={false}
               showAdvanced={true}
-              onChange={value => formik.setFieldValue('spec.planName', value)}
+              onChange={value => formik.setFieldValue('spec.planKey', value)}
               isReadonly={isReadonly}
             />
           )}
@@ -409,7 +409,7 @@ export function BambooArtifact(props: StepProps<ConnectorConfigDTO> & BambooArti
   }
 
   const submitFormData = (formData: BambooArtifactType, connectorId?: string): void => {
-    const planKey = formData.spec?.planName
+    const planKey = formData.spec?.planKey
 
     handleSubmit({
       identifier: formData.identifier,
@@ -435,7 +435,7 @@ export function BambooArtifact(props: StepProps<ConnectorConfigDTO> & BambooArti
 
   const schemaObject = {
     spec: Yup.object().shape({
-      planName: Yup.lazy(value =>
+      planKey: Yup.lazy(value =>
         typeof value === 'object'
           ? Yup.object().required(getString('pipeline.bambooStep.validations.planName')) // typeError is necessary here, otherwise we get a bad-looking yup error
           : Yup.string().required(getString('pipeline.bambooStep.validations.planName'))

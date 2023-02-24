@@ -320,6 +320,7 @@ export const getArtifactFormData = (
   switch (selectedArtifact) {
     case ENABLED_ARTIFACT_TYPES.CustomArtifact:
     case ENABLED_ARTIFACT_TYPES.Jenkins:
+    case ENABLED_ARTIFACT_TYPES.Bamboo:
       values = initialValues
       break
     case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:

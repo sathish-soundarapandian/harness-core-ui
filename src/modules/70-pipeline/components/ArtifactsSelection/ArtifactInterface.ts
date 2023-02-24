@@ -343,7 +343,7 @@ export interface BambooArtifactType {
     connectorRef?: string
     artifactPaths?: SelectOption | string
     build?: SelectOption | string
-    planName?: SelectOption | string
+    planKey?: SelectOption | string
   }
 }
 
