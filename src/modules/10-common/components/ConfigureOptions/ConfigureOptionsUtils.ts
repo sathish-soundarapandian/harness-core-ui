@@ -9,7 +9,6 @@ import { isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
 import { EXECUTION_TIME_INPUT_VALUE, MultiSelectOption, RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import type { StringKeys } from 'framework/strings'
-import { yamlParse } from '@common/utils/YamlHelperMethods'
 
 export enum Validation {
   None = 'None',
@@ -193,11 +192,7 @@ export function parseInput(input: string): ParsedInput | null {
       // slice the function name along with surrounding parenthesis
       const fnArgs = fn.slice(InputSetFunction.DEFAULT.length + 1).slice(0, -1)
 
-      try {
-        parsedInput[InputSetFunction.DEFAULT] = yamlParse(fnArgs)
-      } catch (_) {
-        parsedInput[InputSetFunction.DEFAULT] = fnArgs
-      }
+      parsedInput[InputSetFunction.DEFAULT] = fnArgs
     }
   })
 
