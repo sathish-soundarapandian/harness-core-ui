@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
  * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
@@ -6,8 +5,6 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-=======
->>>>>>> a9286df3224c ([FFM-6971]: Adding jira issues to feature flag detail)
 import { Heading, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import React, { FC } from 'react'
