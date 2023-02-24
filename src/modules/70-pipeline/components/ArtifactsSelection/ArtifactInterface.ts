@@ -339,6 +339,7 @@ export interface JenkinsArtifactType {
 
 export interface BambooArtifactType {
   identifier: string
+  type?: string
   spec: {
     connectorRef?: string
     artifactPaths?: SelectOption | string

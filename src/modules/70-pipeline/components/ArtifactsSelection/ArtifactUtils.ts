@@ -23,7 +23,8 @@ import {
   RepositoryPortOrServer,
   TagTypes,
   AmazonMachineImageInitialValuesType,
-  AzureArtifactsInitialValues
+  AzureArtifactsInitialValues,
+  BambooArtifactType
 } from './ArtifactInterface'
 
 export const shellScriptType: SelectOption[] = [
@@ -303,6 +304,7 @@ export type artifactInitialValueTypes =
   | JenkinsArtifactType
   | AmazonMachineImageInitialValuesType
   | AzureArtifactsInitialValues
+  | BambooArtifactType
 
 export const getArtifactFormData = (
   initialValues: artifactInitialValueTypes,
