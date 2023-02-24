@@ -41,7 +41,8 @@ export function walkObjectRecursively(
       get(obj, 'value')?.startsWith(RUNTIME_INPUT_VALUE) &&
       !get(obj, 'value')?.includes('default')
     ) {
-      set(obj, 'value', get(obj, 'default'))
+      set(obj, 'value', get(obj, 'default').toString())
+      unset(obj, 'default')
     }
 
     Object.entries(obj).forEach(([key, value]) => {
@@ -79,7 +80,7 @@ export function clearRuntimeInput<T = PipelineInfoConfig>(template: T, shouldAls
         }
 
         if (parsed.default !== null) {
-          set(draft as any, path, parsed.default)
+          set(draft as any, path, parsed.default.toString())
           return
         }
 
