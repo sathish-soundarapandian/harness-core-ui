@@ -84,7 +84,6 @@ function FormComponent({
 
   const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
   const planNameValue = formik.values?.spec?.planKey
-  // const artifactValue = getGenuineValue(formik.values?.spec?.artifactPaths)
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const {
@@ -203,13 +202,7 @@ function FormComponent({
             useValue
             selectItems={planDetails}
             placeholder={
-              connectorRefValue && getMultiTypeFromValue(connectorRefValue) === MultiTypeInputType.FIXED
-                ? loadingPlans
-                  ? getString('pipeline.bamboo.fetchingPlans')
-                  : plansError?.message
-                  ? plansError?.message
-                  : getString('pipeline.planNamePlaceholder')
-                : getString('select')
+              loadingPlans ? getString('pipeline.bamboo.fetchingPlans') : getString('pipeline.planNamePlaceholder')
             }
             multiTypeInputProps={{
               onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.planKey', type),
