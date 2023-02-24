@@ -135,7 +135,10 @@ export default function CreatePipelines({
 
   useEffect(() => {
     if (!isEdit) {
-      updateQueryParams({ storeType: defaultStoreType })
+      // Intitially setting INLINE storeType in queryParam forGitX
+      if (supportingGitSimplification && initialValues?.identifier === DefaultNewPipelineId) {
+        updateQueryParams({ storeType: defaultStoreType })
+      }
       trackEvent(PipelineActions.LoadCreateNewPipeline, {
         category: Category.PIPELINE
       })
