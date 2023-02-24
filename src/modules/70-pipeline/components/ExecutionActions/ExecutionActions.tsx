@@ -79,7 +79,7 @@ export interface ExecutionActionsProps {
   source: ExecutionPathProps['source']
   onViewCompiledYaml?: () => void
   onCompareExecutions?: () => void
-  onReRunInDebugMode?: any
+  onReRunInDebugMode?: (() => void) | undefined
   menuOnlyActions?: boolean
   isExecutionListView?: boolean
 }

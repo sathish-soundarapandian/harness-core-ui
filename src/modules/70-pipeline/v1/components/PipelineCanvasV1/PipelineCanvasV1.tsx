@@ -70,11 +70,6 @@ interface PipelineWithGitContextFormProps extends PipelineInfoConfig {
   storeType?: string
 }
 
-// interface InputSetValue extends SelectOption {
-//   type: InputSetSummaryResponse['inputSetType']
-//   gitDetails?: EntityGitDetails
-// }
-
 const runModalProps: IDialogProps = {
   isOpen: true,
   // usePortal: true,
@@ -428,24 +423,6 @@ export function PipelineCanvasV1({
       }
     }
   })
-
-  // const getInputSetSelected = (): InputSetValue[] => {
-  //   if (inputSetType) {
-  //     const inputSetSelected: InputSetValue[] = [
-  //       {
-  //         type: inputSetType as InputSetSummaryResponse['inputSetType'],
-  //         value: inputSetValue ?? '',
-  //         label: inputSetLabel ?? '',
-  //         gitDetails: {
-  //           repoIdentifier: inputSetRepoIdentifier,
-  //           branch: inputSetBranch
-  //         }
-  //       }
-  //     ]
-  //     return inputSetSelected
-  //   }
-  //   return []
-  // }
 
   React.useEffect(() => {
     if (data) {

@@ -464,7 +464,7 @@ function CICodebaseInputSetFormInternal({
   }, [connectorId])
 
   useEffect(() => {
-    if (!loadingConnectorDetails && !isUndefined(connectorDetails)) {
+    if (!loadingConnectorDetails && connectorDetails) {
       setCodebaseConnector(connectorDetails?.data?.connector)
       setConnectorType(get(connectorDetails, 'data.connector.type', '') as ConnectorInfoDTO['type'])
     }

@@ -105,9 +105,6 @@ export const useRunPipelineModalV1 = (
   )
 
   const open = useCallback(() => {
-    // if (planExecutionId) {
-    //   fetchExecutionData()
-    // }
     showRunPipelineModal()
   }, [showRunPipelineModal])
 

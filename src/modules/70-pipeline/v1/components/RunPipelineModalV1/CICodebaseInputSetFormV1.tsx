@@ -7,18 +7,9 @@
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { get, isEmpty, set, isUndefined } from 'lodash-es'
+import { get, isEmpty, set } from 'lodash-es'
 import produce from 'immer'
-import {
-  FormInput,
-  MultiTypeInputType,
-  Container,
-  Layout,
-  Text,
-  Radio,
-  RUNTIME_INPUT_VALUE,
-  Icon
-} from '@harness/uicore'
+import { FormInput, MultiTypeInputType, Container, Layout, Text, Radio, Icon } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { connect } from 'formik'
 import {
@@ -41,6 +32,8 @@ import {
 import { StepViewType } from '../../../components/AbstractSteps/Step'
 import css from '../../../components/PipelineInputSetForm/CICodebaseInputSetForm.module.scss'
 import pipelineInputSetCss from '../../../components/PipelineInputSetForm/PipelineInputSetForm.module.scss'
+
+export const RUNTIME_INPUT_VALUE_V1 = '<+input.'
 
 export interface CICodebaseInputSetFormV1Props {
   readonly?: boolean
@@ -112,6 +105,14 @@ function CICodebaseInputSetFormV1Internal({
   const [connectorReference, setConnectorReference] = useState<string>('')
 
   const inputLabels = getBuildTypeInputLabels(getString)
+  const {
+    data: connectorDetails,
+    loading: loadingConnectorDetails,
+    refetch: getConnectorDetails
+  } = useGetConnector({
+    identifier: connectorId,
+    lazy: true
+  })
 
   useEffect(() => {
     if (viewType === StepViewType.DeploymentForm && !isEmpty(formik?.values) && !get(formik?.values, buildPath)) {
@@ -141,6 +142,42 @@ function CICodebaseInputSetFormV1Internal({
     }
   }, [codeBaseType])
 
+  useEffect(() => {
+    if (connectorId) {
+      const connectorScope = getScopeFromValue(connectorReference)
+      getConnectorDetails({
+        pathParams: {
+          identifier: connectorId
+        },
+        queryParams: {
+          accountIdentifier: accountId,
+          orgIdentifier: connectorScope === Scope.ORG || connectorScope === Scope.PROJECT ? orgIdentifier : undefined,
+          projectIdentifier: connectorScope === Scope.PROJECT ? projectIdentifier : undefined
+        }
+      })
+    }
+  }, [connectorId])
+
+  useEffect(() => {
+    if (!loadingConnectorDetails && connectorDetails) {
+      setCodebaseConnector(connectorDetails?.data?.connector)
+    }
+  }, [loadingConnectorDetails, connectorDetails])
+
+  useEffect(() => {
+    if (codebaseConnector) {
+      const codebaseConnectorConnectionType = get(codebaseConnector, 'spec.type')
+      if (codebaseConnectorConnectionType === ConnectionType.Repo) {
+        fetchBranchesForRepo(getCodebaseRepoNameFromConnector(codebaseConnector, getString))
+      } else if (
+        codebaseConnectorConnectionType === ConnectionType.Account &&
+        !get(originalPipeline, 'repository.name', '').includes(RUNTIME_INPUT_VALUE_V1)
+      ) {
+        fetchBranchesForRepo(repoIdentifier ?? get(originalPipeline, 'repository.name', ''))
+      }
+    }
+  }, [codebaseConnector, originalPipeline])
+
   const handleTypeChange = (newType: CodebaseTypes): void => {
     formik?.setFieldValue(codeBaseTypePath, newType)
   }
@@ -167,62 +204,31 @@ function CICodebaseInputSetFormV1Internal({
     )
   }
 
-  const {
-    data: connectorDetails,
-    loading: loadingConnectorDetails,
-    refetch: getConnectorDetails
-  } = useGetConnector({
-    identifier: connectorId,
-    lazy: true
-  })
-
-  useEffect(() => {
-    if (connectorId) {
-      const connectorScope = getScopeFromValue(connectorReference)
-      getConnectorDetails({
-        pathParams: {
-          identifier: connectorId
-        },
-        queryParams: {
-          accountIdentifier: accountId,
-          orgIdentifier: connectorScope === Scope.ORG || connectorScope === Scope.PROJECT ? orgIdentifier : undefined,
-          projectIdentifier: connectorScope === Scope.PROJECT ? projectIdentifier : undefined
-        }
-      })
-    }
-  }, [connectorId])
-
-  useEffect(() => {
-    if (!loadingConnectorDetails && !isUndefined(connectorDetails)) {
-      setCodebaseConnector(connectorDetails?.data?.connector)
-    }
-  }, [loadingConnectorDetails, connectorDetails])
-
   const shouldAllowRepoFetch = useMemo((): boolean => {
     return (
       viewType === StepViewType.DeploymentForm &&
       codeBaseType === CodebaseTypes.BRANCH &&
       !get(formik?.values, codeBaseInputFieldFormName) &&
       !isDefaultBranchSet &&
-      !isUndefined(codebaseConnector)
+      codebaseConnector !== undefined
     )
   }, [viewType, codeBaseType, get(formik?.values, codeBaseInputFieldFormName), isDefaultBranchSet, codebaseConnector])
 
   const fetchBranchesForRepo = useCallback(
-    (repoName: string) => {
+    async (repoName: string) => {
       if (shouldAllowRepoFetch) {
         // Default branch needs to be set only if not specified by the user already for "branch" type build, only on Run Pipeline form
         if (!get(codebaseConnector, 'spec.apiAccess')) {
           return
         }
-        const ctrRef = connectorReference?.includes(RUNTIME_INPUT_VALUE)
+        const ctrRef = connectorReference?.includes(RUNTIME_INPUT_VALUE_V1)
           ? codebaseConnector && getReference(getScopeFromDTO(codebaseConnector), codebaseConnector.identifier)
           : connectorReference
 
         if (repoName) {
           try {
             setIsFetchingBranches(true)
-            getListOfBranchesByRefConnectorV2Promise({
+            const result: ResponseGitBranchesResponseDTO = await getListOfBranchesByRefConnectorV2Promise({
               queryParams: {
                 connectorRef: ctrRef,
                 accountIdentifier: accountId,
@@ -232,23 +238,20 @@ function CICodebaseInputSetFormV1Internal({
                 size: 1
               }
             })
-              .then((result: ResponseGitBranchesResponseDTO) => {
-                setIsFetchingBranches(false)
-                const branchName = result.data?.defaultBranch?.name || ''
-                formik?.setValues(
-                  produce(formik?.values, (draft: any) => {
-                    set(set(draft, codeBaseTypePath, codeBaseType), codeBaseInputFieldFormName, branchName)
-                  })
-                )
-                savedValues.current.branch = branchName as string
+            if (result) {
+              setIsFetchingBranches(false)
+              const branchName = result.data?.defaultBranch?.name || ''
+              formik?.setValues(
+                produce(formik?.values, (draft: any) => {
+                  set(set(draft, codeBaseTypePath, codeBaseType), codeBaseInputFieldFormName, branchName)
+                })
+              )
+              savedValues.current.branch = branchName as string
 
-                if (result.data?.defaultBranch?.name) {
-                  setIsDefaultBranchSet(true)
-                }
-              })
-              .catch(_e => {
-                setIsFetchingBranches(false)
-              })
+              if (result.data?.defaultBranch?.name) {
+                setIsDefaultBranchSet(true)
+              }
+            }
           } catch (e) {
             setIsFetchingBranches(false)
           }
@@ -257,19 +260,6 @@ function CICodebaseInputSetFormV1Internal({
     },
     [shouldAllowRepoFetch, originalPipeline, codeBaseType]
   )
-  useEffect(() => {
-    if (codebaseConnector) {
-      const codebaseConnectorConnectionType = get(codebaseConnector, 'spec.type')
-      if (codebaseConnectorConnectionType === ConnectionType.Repo) {
-        fetchBranchesForRepo(getCodebaseRepoNameFromConnector(codebaseConnector, getString))
-      } else if (
-        codebaseConnectorConnectionType === ConnectionType.Account &&
-        !get(originalPipeline, 'repository.name', '').includes(RUNTIME_INPUT_VALUE)
-      ) {
-        fetchBranchesForRepo(repoIdentifier ?? get(originalPipeline, 'repository.name', ''))
-      }
-    }
-  }, [codebaseConnector, originalPipeline])
 
   const disableBuildRadioBtnSelection = useMemo(() => {
     return readonly || (codeBaseType === CodebaseTypes.BRANCH && isFetchingBranches)

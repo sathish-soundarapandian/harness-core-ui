@@ -107,6 +107,16 @@ function RunPipelineFormV1Basic({
   const { supportingGitSimplification } = useAppStore()
   const [runClicked, setRunClicked] = useState(false)
   const [resolvedPipeline, setResolvedPipeline] = useState<PipelineConfig | undefined>()
+  const formRefDom = React.useRef<HTMLElement | undefined>()
+  const valuesPipelineRef = useRef<PipelineInfoConfig>()
+  const { executionId } = useQueryParams<{ executionId?: string }>()
+  const pipelineExecutionId = executionIdentifier ?? executionId
+  const isRerunPipeline = !isEmpty(pipelineExecutionId)
+  const formTitleText = isDebugMode
+    ? getString('pipeline.execution.actions.reRunInDebugMode')
+    : isRerunPipeline
+    ? getString('pipeline.execution.actions.rerunPipeline')
+    : getString('runPipeline')
 
   const { data: shouldDisableDeploymentData, loading: loadingShouldDisableDeployment } = useShouldDisableDeployment({
     queryParams: {
@@ -137,10 +147,6 @@ function RunPipelineFormV1Basic({
     [pipelineResponse?.data?.yamlPipeline]
   )
 
-  useEffect(() => {
-    setResolvedPipeline(yamlParse<PipelineConfig>(defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, '')))
-  }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
-
   const {
     inputSets,
     inputSetYaml,
@@ -158,7 +164,16 @@ function RunPipelineFormV1Basic({
     connectorRef
   })
 
-  const formRefDom = React.useRef<HTMLElement | undefined>()
+  useEffect(() => {
+    setResolvedPipeline(yamlParse<PipelineConfig>(defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, '')))
+  }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
+
+  useEffect(() => {
+    if (inputSetsError) {
+      showError(getRBACErrorMessage(inputSetsError))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputSetsError])
 
   const { mutate: runPipeline, loading: runPipelineLoading } = usePostPipelineExecuteWithInputSetYaml({
     queryParams: {
@@ -179,16 +194,6 @@ function RunPipelineFormV1Basic({
       }
     }
   })
-
-  const { executionId } = useQueryParams<{ executionId?: string }>()
-
-  const pipelineExecutionId = executionIdentifier ?? executionId
-  const isRerunPipeline = !isEmpty(pipelineExecutionId)
-  const formTitleText = isDebugMode
-    ? getString('pipeline.execution.actions.reRunInDebugMode')
-    : isRerunPipeline
-    ? getString('pipeline.execution.actions.rerunPipeline')
-    : getString('runPipeline')
 
   const { mutate: reRunPipeline, loading: reRunPipelineLoading } = useRePostPipelineExecuteWithInputSetYaml({
     queryParams: {
@@ -226,8 +231,6 @@ function RunPipelineFormV1Basic({
     }
   })
 
-  const valuesPipelineRef = useRef<PipelineInfoConfig>()
-
   const [showPreflightCheckModal, hidePreflightCheckModal] = useModalHook(() => {
     return (
       <Dialog
@@ -253,13 +256,6 @@ function RunPipelineFormV1Basic({
       </Dialog>
     )
   }, [notifyOnlyMe])
-
-  useEffect(() => {
-    if (inputSetsError) {
-      showError(getRBACErrorMessage(inputSetsError))
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inputSetsError])
 
   const isExecutingPipeline = runPipelineLoading || reRunPipelineLoading || reRunDebugModeLoading
 

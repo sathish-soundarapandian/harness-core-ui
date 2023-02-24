@@ -229,8 +229,8 @@ export function ExecutionHeader({ pipelineMetadata }: ExecutionHeaderProps): Rea
             onReRunInDebugMode={
               hasCI && CI_REMOTE_DEBUG
                 ? CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
-                  ? openRunPipelineModalV1()
-                  : openRunPipelineModal()
+                  ? openRunPipelineModalV1
+                  : openRunPipelineModal
                 : undefined
             }
             onViewCompiledYaml={() => setViewCompiledYaml(pipelineExecutionSummary)}
