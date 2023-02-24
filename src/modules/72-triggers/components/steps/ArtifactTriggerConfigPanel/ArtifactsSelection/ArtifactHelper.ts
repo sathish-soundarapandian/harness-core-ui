@@ -142,6 +142,7 @@ export const allowedArtifactTypes: Record<ServiceDefinition['type'], Array<Artif
     ENABLED_ARTIFACT_TYPES.Acr
   ],
   AwsLambda: [],
+  AWS_SAM: [],
   NativeHelm: [
     ENABLED_ARTIFACT_TYPES.DockerRegistry,
     ENABLED_ARTIFACT_TYPES.Gcr,

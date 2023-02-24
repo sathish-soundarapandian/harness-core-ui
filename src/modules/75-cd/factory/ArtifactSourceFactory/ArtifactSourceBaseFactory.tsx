@@ -10,6 +10,7 @@ import { AmazonMachineImageSource } from '@cd/components/PipelineSteps/K8sServic
 import { AmazonS3ArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/AmazonS3ArtifactSource/AmazonS3ArtifactSource'
 import { ArtifactoryArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/ArtifactoryArtifactSource/ArtifactoryArtifactSource'
 import { AzureArtifactsSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/AzureArtifactsSource/AzureArtifactsSource'
+import { BambooArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/BambooArtifactSource/BambooArtifactSource'
 import { CustomArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/CustomArtifactSource/CustomArtifactSource'
 import { DockerArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/DockerArtifactSource/DockerArtifactSource'
 import { ECRArtifactSource } from '@cd/components/PipelineSteps/K8sServiceSpec/ArtifactSource/ECRArtifactSource/ECRArtifactSource'
@@ -62,5 +63,6 @@ artifactSourceBaseFactory.registerArtifactSource(new GithubPackageRegistrySource
 artifactSourceBaseFactory.registerArtifactSource(new AmazonMachineImageSource())
 artifactSourceBaseFactory.registerArtifactSource(new GoogleCloudStorageArtifactSource())
 artifactSourceBaseFactory.registerArtifactSource(new GoogleCloudSourceRepositoriesArtifactSource())
+artifactSourceBaseFactory.registerArtifactSource(new BambooArtifactSource())
 
 export default artifactSourceBaseFactory

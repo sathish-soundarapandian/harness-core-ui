@@ -85,7 +85,7 @@ function BambooStepInputSet(formContentProps: any): JSX.Element {
         {getMultiTypeFromValue(template?.spec?.connectorRef) === MultiTypeInputType.RUNTIME ? (
           <FormMultiTypeConnectorField
             name={`${prefix}spec.connectorRef`}
-            label={getString('connectors.bamboo.bambooConnectorLabel')}
+            label={getString('connectors.bamboo.bamboo')}
             selected={(initialValues?.spec?.connectorRef as string) || ''}
             placeholder={getString('connectors.selectConnector')}
             accountIdentifier={accountId}

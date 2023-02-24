@@ -147,7 +147,7 @@ function FormContent({
       <div className={cx(stepCss.formGroup, stepCss.lg)}>
         <FormMultiTypeConnectorField
           name="spec.connectorRef"
-          label={getString('connectors.bamboo.bambooConnectorLabel')}
+          label={getString('connectors.bamboo.bamboo')}
           width={390}
           className={css.connector}
           connectorLabelClass={css.connectorLabel}
@@ -178,7 +178,7 @@ function FormContent({
               projectIdentifier,
               orgIdentifier,
               type: Connectors.Bamboo,
-              label: getString('connectors.bamboo.bambooConnectorLabel'),
+              label: getString('connectors.bamboo.bamboo'),
               disabled: readonly,
               gitScope: { repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }
             }}
