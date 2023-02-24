@@ -157,6 +157,12 @@ jenkinsStep:
   unstableStatusAsSuccess: Treat unstable Job status as success
   useConnectorUrlForJobExecution: Use Connector URL for job execution
   captureEnvironmentVariable: Capture environment variables from Jenkins build
+bambooStep:
+  validations:
+    planName: Planname is a required field
+  planParameter: Plan Parameters
+  addPlanParameters: Add Plan Parameter
+  noPlans: No Plans Defined
 jiraApprovalStep:
   connectToJira: Connect to Jira
   connectorRef: Jira Connector
@@ -677,9 +683,11 @@ gitDetails: git details
 runtimeInputs: Runtime Inputs
 approveOrReject: Approve or Reject
 jenkinsBuild: Jenkins Builds
+bambooBuilds: Bamboo Builds
 enterBuildRegex: Enter Build Regex
 buildRegex: Build Regex
 selectJenkinsBuildsPlaceholder: Select Jenkins Build
+selectBambooBuildsPlaceholder: Select Bamboo Build
 releaseRepo: Release Repo
 deploymentRepo: Deployment Repo
 addReleaseRepo: + Add Release Repo Manifest
@@ -904,6 +912,7 @@ digest: Digest
 artifactPathLabel: Artifact Path
 artifactImagePathLabel: Artifact/Image Path
 selectArtifactPathPlaceholder: Select or Enter an Artifact Path (Optional)
+planNamePlaceholder: Select or Enter Plan Name
 artifactPathFilterLabel: Artifact Path Filter
 artifactsSelection:
   loadingRepository: Loading Repository...
@@ -1145,6 +1154,7 @@ stepDescription:
   RestoreCacheS3: Restore saved files and directories between builds using AWS S3.
   DockerHub: Build a Docker image from a Dockerfile and push it to a Docker registry.
   Jenkins: Jenkins Description.
+  Bamboo: Bamboo Description
   GCS: Upload artifacts to Google Cloud Storage (GCS).
   S3: Upload artifacts to AWS S3.
   JFrogArtifactory: Upload artifacts to JFrog Artifactory.

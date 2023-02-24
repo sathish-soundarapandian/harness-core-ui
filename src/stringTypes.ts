@@ -3574,6 +3574,13 @@ export interface StringsMap {
   'pipeline.azureWebApp.strategy.basic': string
   'pipeline.azureWebApp.strategy.blueGreen': string
   'pipeline.azureWebApp.strategy.canary': string
+  'pipeline.bamboo.fetchingPlans': string
+  'pipeline.bamboo.planName': string
+  'pipeline.bambooBuilds': string
+  'pipeline.bambooStep.addPlanParameters': string
+  'pipeline.bambooStep.noPlans': string
+  'pipeline.bambooStep.planParameter': string
+  'pipeline.bambooStep.validations.planName': string
   'pipeline.barrierStep.barrierReference': string
   'pipeline.barrierStep.barrierReferencePlaceholder': string
   'pipeline.barrierStep.barrierReferenceRequired': string
@@ -4365,6 +4372,7 @@ export interface StringsMap {
   'pipeline.pipelineTimeoutHelpText': string
   'pipeline.pipelineTimeoutSettings': string
   'pipeline.piplineDiffTitle': string
+  'pipeline.planNamePlaceholder': string
   'pipeline.policyEnforcement.description': string
   'pipeline.policyEnforcement.title': string
   'pipeline.policyEvaluations.emptyPolicySet': string
@@ -4440,6 +4448,7 @@ export interface StringsMap {
   'pipeline.scriptInputVariables': string
   'pipeline.scriptOutputVariables': string
   'pipeline.selectArtifactPathPlaceholder': string
+  'pipeline.selectBambooBuildsPlaceholder': string
   'pipeline.selectJenkinsBuildsPlaceholder': string
   'pipeline.selectOrCreateForm.description': string
   'pipeline.selectOrCreatePipeline.pipelineNameRequired': string
@@ -4569,6 +4578,7 @@ export interface StringsMap {
   'pipeline.stepDescription.AzureSlotDeployment': string
   'pipeline.stepDescription.AzureTrafficShift': string
   'pipeline.stepDescription.Background': string
+  'pipeline.stepDescription.Bamboo': string
   'pipeline.stepDescription.Barrier': string
   'pipeline.stepDescription.BitrisePlugin': string
   'pipeline.stepDescription.Container': string
