@@ -59,6 +59,7 @@ import type {
   ArtifactType,
   ACRArtifactProps
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import css from '../../ArtifactConnector.module.scss'
@@ -591,7 +592,9 @@ export function ACRArtifact({
 
                   {getMultiTypeFromValue(getValue(formik.values.subscriptionId)) === MultiTypeInputType.RUNTIME && (
                     <div className={css.configureOptions}>
-                      <ConfigureOptions
+                      <SelectConfigureOptions
+                        options={subscriptions}
+                        loading={loadingSubscriptions}
                         value={formik.values?.subscriptionId as string}
                         type="String"
                         variableName="subscriptionId"
@@ -678,7 +681,9 @@ export function ACRArtifact({
                   />
                   {getMultiTypeFromValue(getValue(formik.values.registry)) === MultiTypeInputType.RUNTIME && (
                     <div className={css.configureOptions}>
-                      <ConfigureOptions
+                      <SelectConfigureOptions
+                        options={registries}
+                        loading={loadingRegistries}
                         value={formik.values.registry as string}
                         type="String"
                         variableName="registry"
@@ -762,7 +767,9 @@ export function ACRArtifact({
                   />
                   {getMultiTypeFromValue(getValue(formik.values.repository)) === MultiTypeInputType.RUNTIME && (
                     <div className={css.configureOptions}>
-                      <ConfigureOptions
+                      <SelectConfigureOptions
+                        options={repositories}
+                        loading={loadingRepositories}
                         value={formik.values.repository as string}
                         type="String"
                         variableName="repository"
@@ -835,7 +842,9 @@ export function ACRArtifact({
 
                     {getMultiTypeFromValue(formik.values.tag) === MultiTypeInputType.RUNTIME && (
                       <div className={css.configureOptions}>
-                        <ConfigureOptions
+                        <SelectConfigureOptions
+                          options={tags}
+                          loading={acrBuildDetailsLoading}
                           value={formik.values.tag as string}
                           type="String"
                           variableName="tag"

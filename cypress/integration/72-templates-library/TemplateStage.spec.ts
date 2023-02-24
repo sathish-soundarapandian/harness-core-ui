@@ -18,11 +18,6 @@ describe('Template Stage Selection', () => {
 
   describe('Tests template stage configuration', () => {
     beforeEach(() => {
-      cy.on('uncaught:exception', () => {
-        // returning false here prevents Cypress from
-        // failing the test
-        return false
-      })
       cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
       cy.intercept('POST', templateMetadataCall, { fixture: 'template/api/templatesList' })
       cy.login('test', 'test')

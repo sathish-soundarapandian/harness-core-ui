@@ -28,6 +28,7 @@ import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureO
 import { ManifestConfig, useHelmCmdFlags } from 'services/cd-ng'
 import { useDeepCompareEffect } from '@common/hooks'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
+import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import type { CommandFlags, HelmVersionOptions, ManifestTypes } from '../../ManifestInterface'
 import { allowedManifestForDeclarativeRollback, helmVersions, ManifestDataType } from '../../Manifesthelper'
 import helmcss from '../HelmWithGIT/HelmWithGIT.module.scss'
@@ -59,7 +60,7 @@ function CustomRemoteAdvancedStepSection({
   const defaultValueToReset = [{ commandType: '', flag: '', id: uuid('', nameSpace()) }]
   const [commandFlagOptions, setCommandFlagOptions] = useState<Record<string, SelectOption[]>>({ V2: [], V3: [] })
 
-  const [selectedHelmVersion, setHelmVersion] = useState(get(initialValues, 'spec.helmVersion') ?? 'V2')
+  const [selectedHelmVersion, setHelmVersion] = useState(get(initialValues, 'spec.helmVersion') ?? 'V3')
   const isSkipVersioningDisabled =
     isBoolean(formik?.values?.enableDeclarativeRollback) && !!formik?.values?.enableDeclarativeRollback
   const { data: commandFlags, refetch: refetchCommandFlags } = useHelmCmdFlags({
@@ -95,7 +96,7 @@ function CustomRemoteAdvancedStepSection({
 
   return (
     <div className={helmcss.helmAdvancedSteps}>
-      {allowedManifestForDeclarativeRollback(selectedManifest) && (
+      {allowedManifestForDeclarativeRollback(selectedManifest) && deploymentType === ServiceDeploymentType.Kubernetes && (
         <Layout.Horizontal
           flex={{ justifyContent: 'flex-start', alignItems: 'center' }}
           width={'90%'}

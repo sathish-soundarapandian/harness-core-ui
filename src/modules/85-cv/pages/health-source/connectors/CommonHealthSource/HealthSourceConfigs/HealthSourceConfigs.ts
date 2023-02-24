@@ -6,7 +6,7 @@
  */
 
 import { HealthSourceTypes } from '@cv/pages/health-source/types'
-import { CHART_VISIBILITY_ENUM, FIELD_ENUM } from '../CommonHealthSource.constants'
+import { CHART_VISIBILITY_ENUM, CustomMetricFormFieldNames, FIELD_ENUM } from '../CommonHealthSource.constants'
 import type { HealthSourcesConfig } from '../CommonHealthSource.types'
 
 export const healthSourcesConfig: HealthSourcesConfig = {
@@ -54,16 +54,81 @@ export const healthSourcesConfig: HealthSourcesConfig = {
         {
           type: 'JsonSelector' as FIELD_ENUM.JSON_SELECTOR,
           label: 'Service Instance Identifier',
-          identifier: 'serviceInstance',
-          defaultValue: '_sourcehost'
+          identifier: 'serviceInstanceField',
+          defaultValue: '_sourcehost',
+          isTemplateSupportEnabled: true
         }
       ],
       logsTable: {
-        enabled: true
+        enabled: true,
+        selectOnlyLastKey: true
       },
       queryAndRecords: {
         enabled: true,
         titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQueryDescriptionMetrics'
+      },
+      assign: {
+        enabled: false,
+        defaultServiceInstance: ''
+      }
+    },
+    sideNav: {
+      shouldBeAbleToDeleteLastMetric: false
+    },
+    metricPacks: {
+      enabled: false
+    },
+    metricThresholds: {
+      enabled: false
+    }
+  },
+  [HealthSourceTypes.ElasticSearch_Logs]: {
+    addQuery: {
+      label: 'Query',
+      enableDefaultGroupName: true
+    },
+    customMetrics: {
+      enabled: true,
+      queryAndRecords: {
+        enabled: true,
+        titleStringKey: 'cv.monitoringSources.commonHealthSource.defineQueryDescriptionMetrics',
+        queryField: {
+          type: FIELD_ENUM.DROPDOWN,
+          label: 'Log Indexes',
+          identifier: CustomMetricFormFieldNames.INDEX,
+          placeholder: 'Select Log Index',
+          isTemplateSupportEnabled: true
+        }
+      },
+      fieldMappings: [
+        {
+          type: 'JsonSelector' as FIELD_ENUM.JSON_SELECTOR,
+          label: 'Timestamp Identifier',
+          identifier: CustomMetricFormFieldNames.TIMESTAMP_IDENTIFIER,
+          defaultValue: "['_source'].@timestamp",
+          isTemplateSupportEnabled: true
+        },
+        {
+          type: 'JsonSelector' as FIELD_ENUM.JSON_SELECTOR,
+          label: 'Service Instance Identifier',
+          identifier: CustomMetricFormFieldNames.SERVICE_INSTANCE,
+          isTemplateSupportEnabled: true
+        },
+        {
+          type: 'JsonSelector' as FIELD_ENUM.JSON_SELECTOR,
+          label: 'Message Identifier',
+          identifier: CustomMetricFormFieldNames.MESSAGE_IDENTIFIER,
+          isTemplateSupportEnabled: true
+        },
+        {
+          type: 'Dropdown' as FIELD_ENUM.DROPDOWN,
+          label: 'Timestamp Format',
+          identifier: CustomMetricFormFieldNames.TIMESTAMP_FORMAT,
+          isTemplateSupportEnabled: false
+        }
+      ],
+      logsTable: {
+        enabled: true
       },
       assign: {
         enabled: false,

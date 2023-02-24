@@ -6,6 +6,7 @@
  */
 
 import type { UseGovernanceModalProps } from '@governance/hooks/useGovernanceMetaDataModal'
+import { Scope } from '@common/interfaces/SecretsInterface'
 
 export const connectorGovernanceModalProps = (): UseGovernanceModalProps => {
   return {
@@ -14,4 +15,8 @@ export const connectorGovernanceModalProps = (): UseGovernanceModalProps => {
     considerWarningAsError: false,
     skipGovernanceCheck: false
   }
+}
+
+export const getConnectorIdentifierWithScope = (scope: Scope, identifier: string): string => {
+  return scope === Scope.ORG || scope === Scope.ACCOUNT ? `${scope}.${identifier}` : identifier
 }

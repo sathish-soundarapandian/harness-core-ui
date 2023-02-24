@@ -25,6 +25,7 @@ declare const styles: {
   readonly envColumnStyle: string
   readonly environmentType: string
   readonly fullViewTableStyle: string
+  readonly hoverUnderline: string
   readonly instanceCountStyle: string
   readonly instanceDetail: string
   readonly instanceDetailTitle: string
@@ -33,8 +34,14 @@ declare const styles: {
   readonly marginBottom12: string
   readonly nextButton: string
   readonly openExecBtn: string
+  readonly openTaskBannerStyle: string
+  readonly openTaskCardStyle: string
+  readonly openTaskEmptyState: string
+  readonly openTasksBgColor: string
   readonly overflow: string
+  readonly overflowOpenTasks: string
   readonly overflowScroll: string
+  readonly overflowScrollPipelineIdList: string
   readonly paddingLeft12: string
   readonly pillToggle: string
   readonly pipelineExecCardStyle: string

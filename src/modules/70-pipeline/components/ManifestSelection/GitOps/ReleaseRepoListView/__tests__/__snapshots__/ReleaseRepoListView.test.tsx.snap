@@ -496,7 +496,21 @@ exports[`Release repo list view  edit release repo manifest works correctly 1`] 
     </div>
     <div
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-    />
+    >
+      <button
+        aria-label="pipeline.addDeploymenteRepo"
+        class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+        data-test-id="add-deployment-repo"
+        id="add-deployment-repo"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          pipeline.addDeploymenteRepo
+        </span>
+      </button>
+    </div>
   </div>
 </div>
 `;
@@ -701,7 +715,21 @@ exports[`Release repo list view  initial render with manifests 1`] = `
     </div>
     <div
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-    />
+    >
+      <button
+        aria-label="pipeline.addDeploymenteRepo"
+        class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+        data-test-id="add-deployment-repo"
+        id="add-deployment-repo"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          pipeline.addDeploymenteRepo
+        </span>
+      </button>
+    </div>
   </div>
 </div>
 `;
@@ -1153,7 +1181,21 @@ exports[`Release repo list view  remove manifest 1`] = `
     </div>
     <div
       class="Layout--vertical Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start"
-    />
+    >
+      <button
+        aria-label="pipeline.addDeploymenteRepo"
+        class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+        data-test-id="add-deployment-repo"
+        id="add-deployment-repo"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          pipeline.addDeploymenteRepo
+        </span>
+      </button>
+    </div>
   </div>
 </div>
 `;
@@ -1187,6 +1229,19 @@ exports[`Release repo list view  render with no manifests 1`] = `
           class="bp3-button-text"
         >
           pipeline.addReleaseRepo
+        </span>
+      </button>
+      <button
+        aria-label="pipeline.addDeploymenteRepo"
+        class="bp3-button Button--button StyledProps--font StyledProps--main addManifest Button--with-current-color Button--variation Button--variation-link Button--size Button--small"
+        data-test-id="add-deployment-repo"
+        id="add-deployment-repo"
+        type="button"
+      >
+        <span
+          class="bp3-button-text"
+        >
+          pipeline.addDeploymenteRepo
         </span>
       </button>
     </div>

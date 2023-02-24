@@ -21,6 +21,7 @@ import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import RbacAvatarGroup from '@rbac/components/RbacAvatarGroup/RbacAvatarGroup'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { DeleteProjectOrgButtons } from '@projects-orgs/pages/projects/DeleteProject'
 import css from './OrganizationCard.module.scss'
 
 interface OrganizationCardProps {
@@ -64,23 +65,33 @@ export const OrganizationCard: React.FC<OrganizationCardProps> = props => {
     },
     permission: PermissionIdentifier.INVITE_USER
   }
-
-  const { openDialog } = useConfirmationDialog({
+  const onDeleteAction = async () => {
+    try {
+      const deleted = await deleteOrg(data.identifier, { headers: { 'content-type': 'application/json' } })
+      /* istanbul ignore else */ if (deleted)
+        showSuccess(getString('projectsOrgs.orgDeletedMessage', { name: data.name }))
+      reloadOrgs?.()
+    } catch (err) {
+      showError(getRBACErrorMessage(err))
+    } finally {
+      closeDialog()
+    }
+  }
+  const { openDialog, closeDialog } = useConfirmationDialog({
     contentText: getString('projectsOrgs.confirmDelete', { name: data.name }),
     titleText: getString('projectsOrgs.confirmDeleteTitle'),
-    confirmButtonText: getString('delete'),
-    cancelButtonText: getString('cancel'),
-    intent: Intent.WARNING,
+    intent: Intent.DANGER,
+    customButtons: (
+      <DeleteProjectOrgButtons
+        onCancel={() => {
+          closeDialog()
+        }}
+        onDelete={onDeleteAction}
+      />
+    ),
     onCloseDialog: async (isConfirmed: boolean) => {
       /* istanbul ignore else */ if (isConfirmed) {
-        try {
-          const deleted = await deleteOrg(data.identifier, { headers: { 'content-type': 'application/json' } })
-          /* istanbul ignore else */ if (deleted)
-            showSuccess(getString('projectsOrgs.orgDeletedMessage', { name: data.name }))
-          reloadOrgs?.()
-        } catch (err) {
-          showError(getRBACErrorMessage(err))
-        }
+        onDeleteAction()
       }
     }
   })

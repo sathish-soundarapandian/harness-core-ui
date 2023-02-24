@@ -749,6 +749,8 @@ export interface ClusterHostFrequencyData {
 export interface ClusterSummary {
   clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
+  feedback?: LogFeedback
+  feedbackApplied?: LogFeedback
   frequencyData?: HostFrequencyData[]
   label?: number
   risk?: number
@@ -1370,7 +1372,7 @@ export interface EntityDetails {
 }
 
 export type EntityIdentifiersRule = EntitiesRule & {
-  entityIdentifiers?: EntityDetails[]
+  entityIdentifiers: EntityDetails[]
 }
 
 export interface EnvironmentResponse {
@@ -1751,6 +1753,7 @@ export interface Error {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -2181,6 +2184,7 @@ export interface Failure {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -2555,7 +2559,26 @@ export interface HealthSourceRecordsRequest {
   endTime: number
   healthSourceParams?: HealthSourceParamsDTO
   healthSourceQueryParams?: QueryParamsDTO
-  providerType:
+  healthSourceType?:
+    | 'AppDynamics'
+    | 'NewRelic'
+    | 'StackdriverLog'
+    | 'Stackdriver'
+    | 'Prometheus'
+    | 'Splunk'
+    | 'DatadogMetrics'
+    | 'DatadogLog'
+    | 'Dynatrace'
+    | 'ErrorTracking'
+    | 'CustomHealthMetric'
+    | 'CustomHealthLog'
+    | 'SplunkMetric'
+    | 'ElasticSearch'
+    | 'CloudWatchMetrics'
+    | 'AwsPrometheus'
+    | 'SumologicMetrics'
+    | 'SumologicLogs'
+  providerType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
     | 'SPLUNK_METRIC'
@@ -2770,9 +2793,25 @@ export type JenkinsUserNamePasswordDTO = JenkinsAuthCredentialsDTO & {
   usernameRef?: string
 }
 
+export interface JiraAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface JiraAuthenticationDTO {
+  spec: JiraAuthCredentialsDTO
+  type: 'UsernamePassword'
+}
+
 export type JiraConnector = ConnectorConfigDTO & {
+  auth?: JiraAuthenticationDTO
   delegateSelectors?: string[]
   jiraUrl: string
+  passwordRef: string
+  username?: string
+  usernameRef?: string
+}
+
+export type JiraUserNamePasswordDTO = JiraAuthCredentialsDTO & {
   passwordRef: string
   username?: string
   usernameRef?: string
@@ -3018,9 +3057,13 @@ export interface LogAnalysisRadarChartListDTO {
   clusterId?: string
   clusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
   count?: number
+  feedback?: LogFeedback
+  feedbackApplied?: LogFeedback
   hasControlData?: boolean
   label?: number
   message?: string
+  previousClusterType?: 'BASELINE' | 'KNOWN_EVENT' | 'UNEXPECTED_FREQUENCY' | 'UNKNOWN_EVENT'
+  previousRisk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
   risk?: 'NO_DATA' | 'NO_ANALYSIS' | 'HEALTHY' | 'OBSERVE' | 'NEED_ATTENTION' | 'UNHEALTHY'
   testHostFrequencyData?: HostFrequencyData[]
   totalTestFrequencyData?: TimestampFrequencyCount[]
@@ -3080,6 +3123,27 @@ export interface LogData {
   tag?: 'KNOWN' | 'UNEXPECTED' | 'UNKNOWN'
   text?: string
   trend?: FrequencyDTO[]
+}
+
+export interface LogFeedback {
+  clusterId?: string
+  createdAt?: number
+  createdBy?: string
+  description?: string
+  environmentIdentifier?: string
+  feedbackId?: string
+  feedbackScore?: 'NO_RISK_IGNORE_FREQUENCY' | 'NO_RISK_CONSIDER_FREQUENCY' | 'MEDIUM_RISK' | 'HIGH_RISK' | 'DEFAULT'
+  lastUpdatedAt?: number
+  lastUpdatedBy?: string
+  sampleMessage?: string
+  serviceIdentifier?: string
+  verificationJobInstanceId?: string
+}
+
+export interface LogFeedbackHistory {
+  createdBy?: string
+  logFeedback?: LogFeedback
+  updatedBy?: string
 }
 
 export interface LogRecord {
@@ -4045,7 +4109,26 @@ export interface QueryRecordsRequest {
   endTime: number
   healthSourceParams?: HealthSourceParamsDTO
   healthSourceQueryParams?: QueryParamsDTO
-  providerType:
+  healthSourceType?:
+    | 'AppDynamics'
+    | 'NewRelic'
+    | 'StackdriverLog'
+    | 'Stackdriver'
+    | 'Prometheus'
+    | 'Splunk'
+    | 'DatadogMetrics'
+    | 'DatadogLog'
+    | 'Dynatrace'
+    | 'ErrorTracking'
+    | 'CustomHealthMetric'
+    | 'CustomHealthLog'
+    | 'SplunkMetric'
+    | 'ElasticSearch'
+    | 'CloudWatchMetrics'
+    | 'AwsPrometheus'
+    | 'SumologicMetrics'
+    | 'SumologicLogs'
+  providerType?:
     | 'APP_DYNAMICS'
     | 'SPLUNK'
     | 'SPLUNK_METRIC'
@@ -4629,6 +4712,7 @@ export interface ResponseMessage {
     | 'ADFS_ERROR'
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -5069,6 +5153,22 @@ export interface RestResponseListLogClusterDTO {
   responseMessages?: ResponseMessage[]
 }
 
+export interface RestResponseListLogFeedback {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: LogFeedback[]
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseListLogFeedbackHistory {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: LogFeedbackHistory[]
+  responseMessages?: ResponseMessage[]
+}
+
 export interface RestResponseListMetricDTO {
   metaData?: {
     [key: string]: { [key: string]: any }
@@ -5194,6 +5294,14 @@ export interface RestResponseLogAnalysisRadarChartListWithCountDTO {
     [key: string]: { [key: string]: any }
   }
   resource?: LogAnalysisRadarChartListWithCountDTO
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponseLogFeedback {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: LogFeedback
   responseMessages?: ResponseMessage[]
 }
 
@@ -6157,6 +6265,25 @@ export interface TimeSeriesMetricDataDTO {
   metricDataList?: MetricData[]
   metricName?: string
   metricType?: 'INFRA' | 'RESP_TIME' | 'THROUGHPUT' | 'ERROR' | 'APDEX' | 'OTHER'
+  monitoredServiceDataSourceType?:
+    | 'AppDynamics'
+    | 'NewRelic'
+    | 'StackdriverLog'
+    | 'Stackdriver'
+    | 'Prometheus'
+    | 'Splunk'
+    | 'DatadogMetrics'
+    | 'DatadogLog'
+    | 'Dynatrace'
+    | 'ErrorTracking'
+    | 'CustomHealthMetric'
+    | 'CustomHealthLog'
+    | 'SplunkMetric'
+    | 'ElasticSearch'
+    | 'CloudWatchMetrics'
+    | 'AwsPrometheus'
+    | 'SumologicMetrics'
+    | 'SumologicLogs'
   monitoredServiceIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -6572,6 +6699,8 @@ export type ChangeEventDTORequestBody = ChangeEventDTO
 export type CompositeServiceLevelObjectiveSpecRequestBody = CompositeServiceLevelObjectiveSpec
 
 export type DowntimeDTORequestBody = DowntimeDTO
+
+export type LogFeedbackRequestBody = LogFeedback
 
 export type LogSampleRequestDTORequestBody = LogSampleRequestDTO
 
@@ -7153,6 +7282,125 @@ export const saveDowntimePromise = (
     signal
   )
 
+export interface EnablesDisablesDowntimeQueryParams {
+  enable: boolean
+}
+
+export interface EnablesDisablesDowntimePathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  identifier: string
+}
+
+export type EnablesDisablesDowntimeProps = Omit<
+  MutateProps<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  >,
+  'path' | 'verb'
+> &
+  EnablesDisablesDowntimePathParams
+
+/**
+ * Enables disables downtime
+ */
+export const EnablesDisablesDowntime = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: EnablesDisablesDowntimeProps) => (
+  <Mutate<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  >
+    verb="PUT"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/flag/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseEnablesDisablesDowntimeProps = Omit<
+  UseMutateProps<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  >,
+  'path' | 'verb'
+> &
+  EnablesDisablesDowntimePathParams
+
+/**
+ * Enables disables downtime
+ */
+export const useEnablesDisablesDowntime = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: UseEnablesDisablesDowntimeProps) =>
+  useMutate<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  >(
+    'PUT',
+    (paramsInPath: EnablesDisablesDowntimePathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/downtime/flag/${paramsInPath.identifier}`,
+    {
+      base: getConfig('cv/api'),
+      pathParams: { accountIdentifier, orgIdentifier, projectIdentifier, identifier },
+      ...props
+    }
+  )
+
+/**
+ * Enables disables downtime
+ */
+export const enablesDisablesDowntimePromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    identifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string; identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseDowntimeResponse,
+    unknown,
+    EnablesDisablesDowntimeQueryParams,
+    void,
+    EnablesDisablesDowntimePathParams
+  >(
+    'PUT',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/flag/${identifier}`,
+    props,
+    signal
+  )
+
 export interface GetHistoryQueryParams {
   pageNumber?: number
   pageSize?: number
@@ -7542,54 +7790,157 @@ export const listDowntimesPromise = (
     signal
   )
 
+export interface GetDowntimeAssociatedMonitoredServicesQueryParams {
+  pageNumber?: number
+  pageSize?: number
+}
+
 export interface GetDowntimeAssociatedMonitoredServicesPathParams {
   accountIdentifier: string
   orgIdentifier: string
   projectIdentifier: string
-  identifier: string
 }
 
 export type GetDowntimeAssociatedMonitoredServicesProps = Omit<
-  GetProps<RestResponseListMonitoredServiceDetail, unknown, void, GetDowntimeAssociatedMonitoredServicesPathParams>,
+  GetProps<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  >,
   'path'
 > &
   GetDowntimeAssociatedMonitoredServicesPathParams
 
 /**
- * get associated Monitored Services
+ * get all monitored services associated with the downtime
  */
 export const GetDowntimeAssociatedMonitoredServices = ({
   accountIdentifier,
   orgIdentifier,
   projectIdentifier,
-  identifier,
   ...props
 }: GetDowntimeAssociatedMonitoredServicesProps) => (
-  <Get<RestResponseListMonitoredServiceDetail, unknown, void, GetDowntimeAssociatedMonitoredServicesPathParams>
-    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/monitored-services/${identifier}`}
+  <Get<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  >
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/monitored-services`}
     base={getConfig('cv/api')}
     {...props}
   />
 )
 
 export type UseGetDowntimeAssociatedMonitoredServicesProps = Omit<
-  UseGetProps<RestResponseListMonitoredServiceDetail, unknown, void, GetDowntimeAssociatedMonitoredServicesPathParams>,
+  UseGetProps<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  >,
   'path'
 > &
   GetDowntimeAssociatedMonitoredServicesPathParams
 
 /**
- * get associated Monitored Services
+ * get all monitored services associated with the downtime
  */
 export const useGetDowntimeAssociatedMonitoredServices = ({
   accountIdentifier,
   orgIdentifier,
   projectIdentifier,
-  identifier,
   ...props
 }: UseGetDowntimeAssociatedMonitoredServicesProps) =>
-  useGet<RestResponseListMonitoredServiceDetail, unknown, void, GetDowntimeAssociatedMonitoredServicesPathParams>(
+  useGet<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  >(
     (paramsInPath: GetDowntimeAssociatedMonitoredServicesPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/downtime/monitored-services`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * get all monitored services associated with the downtime
+ */
+export const getDowntimeAssociatedMonitoredServicesPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePageMSDropdownResponse,
+    unknown,
+    GetDowntimeAssociatedMonitoredServicesQueryParams,
+    GetDowntimeAssociatedMonitoredServicesPathParams
+  >(
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/monitored-services`,
+    props,
+    signal
+  )
+
+export interface GetAssociatedMonitoredServicesPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+  identifier: string
+}
+
+export type GetAssociatedMonitoredServicesProps = Omit<
+  GetProps<RestResponseListMonitoredServiceDetail, unknown, void, GetAssociatedMonitoredServicesPathParams>,
+  'path'
+> &
+  GetAssociatedMonitoredServicesPathParams
+
+/**
+ * get associated Monitored Services
+ */
+export const GetAssociatedMonitoredServices = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: GetAssociatedMonitoredServicesProps) => (
+  <Get<RestResponseListMonitoredServiceDetail, unknown, void, GetAssociatedMonitoredServicesPathParams>
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/monitored-services/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetAssociatedMonitoredServicesProps = Omit<
+  UseGetProps<RestResponseListMonitoredServiceDetail, unknown, void, GetAssociatedMonitoredServicesPathParams>,
+  'path'
+> &
+  GetAssociatedMonitoredServicesPathParams
+
+/**
+ * get associated Monitored Services
+ */
+export const useGetAssociatedMonitoredServices = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  identifier,
+  ...props
+}: UseGetAssociatedMonitoredServicesProps) =>
+  useGet<RestResponseListMonitoredServiceDetail, unknown, void, GetAssociatedMonitoredServicesPathParams>(
+    (paramsInPath: GetAssociatedMonitoredServicesPathParams) =>
       `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/downtime/monitored-services/${paramsInPath.identifier}`,
     {
       base: getConfig('cv/api'),
@@ -7601,7 +7952,7 @@ export const useGetDowntimeAssociatedMonitoredServices = ({
 /**
  * get associated Monitored Services
  */
-export const getDowntimeAssociatedMonitoredServicesPromise = (
+export const getAssociatedMonitoredServicesPromise = (
   {
     accountIdentifier,
     orgIdentifier,
@@ -7612,16 +7963,11 @@ export const getDowntimeAssociatedMonitoredServicesPromise = (
     RestResponseListMonitoredServiceDetail,
     unknown,
     void,
-    GetDowntimeAssociatedMonitoredServicesPathParams
+    GetAssociatedMonitoredServicesPathParams
   > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string; identifier: string },
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<
-    RestResponseListMonitoredServiceDetail,
-    unknown,
-    void,
-    GetDowntimeAssociatedMonitoredServicesPathParams
-  >(
+  getUsingFetch<RestResponseListMonitoredServiceDetail, unknown, void, GetAssociatedMonitoredServicesPathParams>(
     getConfig('cv/api'),
     `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/downtime/monitored-services/${identifier}`,
     props,
@@ -7826,6 +8172,113 @@ export const getSampleMetricDataPromise = (
     'POST',
     getConfig('cv/api'),
     `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/metric-records`,
+    props,
+    signal
+  )
+
+export interface GetParamValuesPathParams {
+  accountIdentifier: string
+  orgIdentifier: string
+  projectIdentifier: string
+}
+
+export type GetParamValuesProps = Omit<
+  MutateProps<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetParamValuesPathParams
+
+/**
+ * Fetch possible values for healthSourceParams and healthSourceQueryParams
+ */
+export const GetParamValues = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: GetParamValuesProps) => (
+  <Mutate<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  >
+    verb="POST"
+    path={`/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/param-values`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetParamValuesProps = Omit<
+  UseMutateProps<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  >,
+  'path' | 'verb'
+> &
+  GetParamValuesPathParams
+
+/**
+ * Fetch possible values for healthSourceParams and healthSourceQueryParams
+ */
+export const useGetParamValues = ({
+  accountIdentifier,
+  orgIdentifier,
+  projectIdentifier,
+  ...props
+}: UseGetParamValuesProps) =>
+  useMutate<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  >(
+    'POST',
+    (paramsInPath: GetParamValuesPathParams) =>
+      `/account/${paramsInPath.accountIdentifier}/org/${paramsInPath.orgIdentifier}/project/${paramsInPath.projectIdentifier}/health-source/param-values`,
+    { base: getConfig('cv/api'), pathParams: { accountIdentifier, orgIdentifier, projectIdentifier }, ...props }
+  )
+
+/**
+ * Fetch possible values for healthSourceParams and healthSourceQueryParams
+ */
+export const getParamValuesPromise = (
+  {
+    accountIdentifier,
+    orgIdentifier,
+    projectIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  > & { accountIdentifier: string; orgIdentifier: string; projectIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    RestResponseHealthSourceParamValuesResponse,
+    unknown,
+    void,
+    HealthSourceParamValuesRequest,
+    GetParamValuesPathParams
+  >(
+    'POST',
+    getConfig('cv/api'),
+    `/account/${accountIdentifier}/org/${orgIdentifier}/project/${projectIdentifier}/health-source/param-values`,
     props,
     signal
   )
@@ -14106,6 +14559,93 @@ export const getServiceLevelObjectivesRiskCountPromise = (
     props,
     signal
   )
+
+export interface GetUnavailabilityInstancesQueryParams {
+  startTime: number
+  endTime: number
+  accountId: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+}
+
+export interface GetUnavailabilityInstancesPathParams {
+  identifier: string
+}
+
+export type GetUnavailabilityInstancesProps = Omit<
+  GetProps<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  >,
+  'path'
+> &
+  GetUnavailabilityInstancesPathParams
+
+/**
+ * Get Unavailability Instances for SLO
+ */
+export const GetUnavailabilityInstances = ({ identifier, ...props }: GetUnavailabilityInstancesProps) => (
+  <Get<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  >
+    path={`/slo-dashboard/unavailable-instances/${identifier}`}
+    base={getConfig('cv/api')}
+    {...props}
+  />
+)
+
+export type UseGetUnavailabilityInstancesProps = Omit<
+  UseGetProps<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  >,
+  'path'
+> &
+  GetUnavailabilityInstancesPathParams
+
+/**
+ * Get Unavailability Instances for SLO
+ */
+export const useGetUnavailabilityInstances = ({ identifier, ...props }: UseGetUnavailabilityInstancesProps) =>
+  useGet<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  >(
+    (paramsInPath: GetUnavailabilityInstancesPathParams) =>
+      `/slo-dashboard/unavailable-instances/${paramsInPath.identifier}`,
+    { base: getConfig('cv/api'), pathParams: { identifier }, ...props }
+  )
+
+/**
+ * Get Unavailability Instances for SLO
+ */
+export const getUnavailabilityInstancesPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  > & { identifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseListUnavailabilityInstancesResponse,
+    unknown,
+    GetUnavailabilityInstancesQueryParams,
+    GetUnavailabilityInstancesPathParams
+  >(getConfig('cv/api'), `/slo-dashboard/unavailable-instances/${identifier}`, props, signal)
 
 export interface GetSLODetailsQueryParams {
   startTime?: number

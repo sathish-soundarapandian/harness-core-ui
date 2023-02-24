@@ -22,6 +22,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import MonacoEditor from '@common/components/MonacoEditor/__mocks__/MonacoEditor'
 import { GetInputSetYamlDiffInline } from '@pipeline/components/InputSetErrorHandling/__tests__/InputSetErrorHandlingMocks'
 import { useShouldDisableDeployment } from 'services/cd-ng'
+import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import { RunPipelineForm } from '../RunPipelineForm'
 import {
   getMockFor_Generic_useMutate,
@@ -218,11 +219,45 @@ describe('STUDIO MODE', () => {
     // Verify the ErrorStrip is present and submit is disabled
     await waitFor(() => expect(queryByText('common.errorCount')).toBeTruthy())
     await waitFor(() => expect(queryByText('common.seeDetails')).toBeTruthy())
+    await waitFor(() => expect(queryByText('fieldRequired')).toBeTruthy())
     const buttonShouldBeDisabled = container.querySelector('.bp3-disabled')
     expect(buttonShouldBeDisabled).toBeTruthy()
   })
 
+  test('should allow submit if form is incomplete as variable values are optional', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      FF_ALLOW_OPTIONAL_VARIABLE: true
+    })
+    const { findByText, queryByText, getByRole } = render(
+      <TestWrapper>
+        <RunPipelineForm {...commonProps} source="executions" />
+      </TestWrapper>
+    )
+
+    const provideValues = await findByText('pipeline.pipelineInputPanel.provide')
+    // Navigate to 'Provide Values'
+    fireEvent.click(provideValues)
+    await waitFor(() => expect(queryByText('customVariables.pipelineVariablesTitle')).toBeTruthy())
+
+    // Submit the incomplete form
+    const runPipelineButton = getByRole('button', {
+      name: 'runPipeline'
+    })
+    act(() => {
+      fireEvent.click(runPipelineButton)
+    })
+
+    // Allowing empty value of variable so ErrorStrip is not present and submit button is not disabled
+    await waitFor(() => expect(queryByText('common.errorCount')).toBeFalsy())
+    await waitFor(() => expect(queryByText('common.seeDetails')).toBeFalsy())
+    await waitFor(() => expect(queryByText('fieldRequired')).toBeFalsy())
+    expect(runPipelineButton).toBeEnabled()
+  })
+
   test('should not allow submit if form is incomplete and enter key pressed', async () => {
+    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
+      FF_ALLOW_OPTIONAL_VARIABLE: false
+    })
     const { container, findByText, queryByText, getByTestId } = render(
       <TestWrapper>
         <RunPipelineForm {...commonProps} source="executions" />
@@ -241,6 +276,7 @@ describe('STUDIO MODE', () => {
     // Verify the ErrorStrip is present and submit is disabled
     await waitFor(() => expect(queryByText('common.errorCount')).toBeTruthy())
     await waitFor(() => expect(queryByText('common.seeDetails')).toBeTruthy())
+    await waitFor(() => expect(queryByText('fieldRequired')).toBeTruthy())
     const buttonShouldBeDisabled = container.querySelector('.bp3-disabled')
     expect(buttonShouldBeDisabled).toBeTruthy()
   })

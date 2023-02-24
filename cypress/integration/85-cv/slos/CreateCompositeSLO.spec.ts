@@ -33,11 +33,6 @@ import {
 
 describe('Create Composite SLO', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.login('test', 'test')
 
     cy.intercept('GET', listSLOsCall, sloListCallResponseWithCompositeSLO).as('updatedListSLOsCallResponse')
@@ -203,11 +198,6 @@ describe('Create Composite SLO', () => {
 
 describe('Create account level SLO', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.login('test', 'test')
     cy.visitPageAssertion('[class^=SideNav-module_main]')
     cy.contains('span', 'Service Reliability').click()

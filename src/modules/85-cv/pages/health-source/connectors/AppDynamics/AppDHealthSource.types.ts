@@ -114,7 +114,6 @@ export interface ValidateMappingInterface {
   selectedMetricIndex: number
   getString: (key: StringKeys) => string
   mappedMetrics?: Map<string, CustomMappedMetric>
-  isMetricThresholdEnabled: boolean
 }
 
 export interface NonCustomFeildsInterface {

@@ -145,3 +145,29 @@
   font-weight: 600;
   margin-bottom: var(--spacing-2);
 }
+
+.popoverContent {
+  max-width: 400px;
+  padding: var(--spacing-small) var(--spacing-medium);
+}
+
+.childPipelineLink {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.middleStageIcon {
+  position: relative;
+  left: calc(-1 * (var(--spacing-3)));
+}
+
+.childPipelineStageIcon {
+  position: relative;
+  left: calc(-1 * (var(--spacing-5)));
+}
+
+.childPipelineStageName {
+  position: relative;
+  left: calc(-1 * (var(--spacing-6)));
+}

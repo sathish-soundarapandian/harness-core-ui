@@ -53,7 +53,7 @@ export default function CommonHealthSource({
   connectorRef
 }: CommonHealthSourceProps): JSX.Element {
   const { getString } = useStrings()
-  const isMetricThresholdEnabled = !isTemplate
+
   const healthSourceConfigurationsInitialValues = getInitialValuesForHealthSourceConfigurations(configurationsPageData)
   const customMetricFormRef = useRef<FormikProps<CommonCustomMetricFormikInterface>>()
 
@@ -66,7 +66,6 @@ export default function CommonHealthSource({
         handleValidateHealthSourceConfigurationsForm({
           formValues,
           healthSourceConfig,
-          isTemplate,
           getString
         })
       }
@@ -86,14 +85,13 @@ export default function CommonHealthSource({
         cleanUpMappedMetrics(queryMetricsMap)
 
         const filterRemovedMetricNameThresholds = (deletedMetricName: string): void => {
-          if (isMetricThresholdEnabled && deletedMetricName) {
+          if (deletedMetricName) {
             const metricThresholds = {
               ignoreThresholds,
               failFastThresholds
             }
 
             const updatedMetricThresholds = getMetricNameFilteredMetricThresholds({
-              isMetricThresholdEnabled,
               metricThresholds,
               metricName: deletedMetricName
             })
@@ -135,7 +133,6 @@ export default function CommonHealthSource({
                           mappedMetrics={queryMetricsMap}
                           selectedMetric={currentSelectedMetric}
                           connectorIdentifier={connectorRef}
-                          isMetricThresholdEnabled={isMetricThresholdEnabled}
                           createdMetrics={createdMetrics}
                           isTemplate={isTemplate}
                           expressions={expressions}
@@ -150,7 +147,6 @@ export default function CommonHealthSource({
                 <MetricThresholdContainer
                   healthSourceConfig={healthSourceConfig}
                   groupedCreatedMetrics={groupedCreatedMetrics}
-                  isMetricThresholdEnabled={isMetricThresholdEnabled}
                 />
               </FormikForm>
               <Container height={120} />

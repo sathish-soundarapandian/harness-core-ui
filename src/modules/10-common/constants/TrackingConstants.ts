@@ -311,6 +311,7 @@ export enum CIOnboardingActions {
 export enum CDOnboardingActions {
   GetStartedClicked = 'Clicked on Get Started for CD',
   ExitCDOnboarding = 'Exited CD Get Started',
+  MoveToOtherDeploymentTypes = 'Exit for other deployment types',
   StartOnboardingDelegateCreation = 'Start onboarding Delegate creation',
   SetupOnboardingDelegate = 'Setup onboarding Delegate',
   SaveCreateOnboardingDelegate = 'Save create onboarding Delegate',
@@ -323,6 +324,7 @@ export enum CDOnboardingActions {
   SelectManifestStore = 'Manifest store selection',
   SelectArtifactType = 'Select artifact type',
   MovetoConfigureEnvironment = 'Move to Configure Environment Step',
+  MovetoConfigureEnvironmentWithDelegateNotConnected = 'Move to Configure Environment Step with delegate status not successful',
   SelectDeploymentType = 'Select deployment type',
   MoveToServiceSelection = 'Move to Service Selection Step',
   MoveToDeploymentSelection = 'Move to Deployment type',

@@ -28,7 +28,6 @@ import { useStrings } from 'framework/strings'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { usePermission } from '@rbac/hooks/usePermission'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useFeature } from '@common/hooks/useFeatures'
 import { savePipeline, usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { SaveToGitFormInterface } from '@common/components/SaveToGitForm/SaveToGitForm'
@@ -101,7 +100,6 @@ function SavePipelinePopover(
   const { showSuccess, showError, clear } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
-  const { OPA_PIPELINE_GOVERNANCE } = useFeatureFlags()
   const history = useHistory()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } =
     useParams<PipelineType<PipelinePathProps>>()
@@ -249,8 +247,7 @@ function SavePipelinePopover(
           : {})
       },
       omit(latestPipeline, 'repo', 'branch'),
-      isEdit,
-      !!OPA_PIPELINE_GOVERNANCE
+      isEdit
     )
     setLoading(false)
     const newPipelineId = latestPipeline?.identifier
@@ -258,7 +255,7 @@ function SavePipelinePopover(
     if (response && response.status === 'SUCCESS') {
       const governanceData: GovernanceMetadata | undefined = get(response, 'data.governanceMetadata')
       setGovernanceMetadata({ ...governanceData, newPipelineId, updatedGitDetails })
-      if (OPA_PIPELINE_GOVERNANCE && (governanceData?.status === 'error' || governanceData?.status === 'warning')) {
+      if (governanceData?.status === 'error' || governanceData?.status === 'warning') {
         showOPAErrorModal()
         return { status: 'FAILURE', governanceMetaData: { ...governanceData, newPipelineId, updatedGitDetails } }
       }

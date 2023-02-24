@@ -326,4 +326,51 @@ describe('ExecutionUtils tests', () => {
 
     expect(filteredInterruptHistories.length).toBe(1)
   })
+
+  describe('sortNodeIdsByStatus', () => {
+    test('sortNodeIdsByStatus sorts based on the priority of status', () => {
+      const unsortedIds = ['s1', 's2', 's3']
+      const sortedIds = utils.sortNodeIdsByStatus(unsortedIds, {
+        s1: {
+          status: 'Success'
+        },
+        s2: {
+          status: 'Failed'
+        },
+        s3: {
+          status: 'Failed'
+        }
+      })
+
+      expect(sortedIds).toEqual(['s2', 's3', 's1'])
+    })
+
+    test('sorts ids with falsy status to the end', () => {
+      const unsortedIds = ['s1', 's2', 's3']
+
+      expect(
+        utils.sortNodeIdsByStatus(unsortedIds, {
+          s1: {
+            status: 'Success'
+          },
+          s2: {
+            status: 'Failed'
+          },
+          s3: {
+            status: undefined
+          }
+        })
+      ).toEqual(['s2', 's1', 's3'])
+      expect(
+        utils.sortNodeIdsByStatus(unsortedIds, {
+          s1: {
+            status: 'Success'
+          },
+          s3: {
+            status: 'Failed'
+          }
+        })
+      ).toEqual(['s3', 's1', 's2'])
+    })
+  })
 })

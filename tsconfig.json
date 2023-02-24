@@ -26,7 +26,6 @@
     "noUnusedParameters": true,
     "paths": {
       "@common/*": ["modules/10-common/*"],
-      "@audit-trail/*": ["modules/38-audit-trail/*"],
       "@rbac/*": ["modules/20-rbac/*"],
       "@default-settings/*": ["modules/23-default-settings/*"],
       "@governance/*": ["modules/25-governance/*"],
@@ -38,6 +37,7 @@
       "@variables/*": ["modules/31-variables/*"],
       "@connectors/*": ["modules/35-connectors/*"],
       "@user-profile/*": ["modules/35-user-profile/*"],
+      "@audit-trail/*": ["modules/38-audit-trail/*"],
       "@projects-orgs/*": ["modules/45-projects-orgs/*"],
       "@delegates/*": ["modules/30-delegates/*"],
       "@dashboards/*": ["modules/45-dashboards/*"],

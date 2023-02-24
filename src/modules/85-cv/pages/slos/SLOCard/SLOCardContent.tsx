@@ -116,7 +116,12 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
                   <Text font={{ variation: FontVariation.FORM_LABEL }} tooltipProps={{ dataTooltipId: 'SLO' }}>
                     {getString('cv.SLO')}
                   </Text>
-                  <Heading level={2} color={Color.GREY_800} font={{ variation: FontVariation.H4 }}>
+                  <Heading
+                    level={2}
+                    color={Color.GREY_800}
+                    font={{ variation: FontVariation.H4 }}
+                    data-testid="sloTargetPercentage"
+                  >
                     {(Number(sloTargetPercentage) || 0).toFixed(2)}%
                   </Heading>
                 </Container>
@@ -124,12 +129,18 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
                   <Text font={{ variation: FontVariation.FORM_LABEL }} tooltipProps={{ dataTooltipId: 'SLI' }}>
                     {getString('cv.slos.sli')}
                   </Text>
-                  <Heading inline level={2} color={Color.GREY_800} font={{ variation: FontVariation.H4 }}>
+                  <Heading
+                    inline
+                    level={2}
+                    color={Color.GREY_800}
+                    font={{ variation: FontVariation.H4 }}
+                    data-testid="sloPerformanceTrendSLI"
+                  >
                     {sloPerformanceTrend[sloPerformanceTrend.length - 1]?.value?.toFixed(2) ?? 0}%
                   </Heading>
                 </Container>
               </Layout.Vertical>
-              <Container style={{ overflow: 'auto' }} className={css.flexGrowOne}>
+              <Container className={css.flexGrowOne}>
                 {showUserHint && (
                   <UserHint userMessage={getString('cv.sloGraphUserHint')} dataTestId="SLOCard_UserHint_SLO" />
                 )}
@@ -154,7 +165,12 @@ const SLOCardContent: React.FC<SLOCardContentProps> = props => {
                 {getString('cv.errorBudgetRemainingWithMins')}
               </Heading>
               <ErrorBudgetGauge customChartOptions={getErrorBudgetGaugeOptions(serviceLevelObjective)} />
-              <Text font={{ variation: FontVariation.SMALL }} className={css.errorBudgetRemaining} width={175}>
+              <Text
+                font={{ variation: FontVariation.SMALL }}
+                className={css.errorBudgetRemaining}
+                width={175}
+                data-testid="errorBudgetRemaining"
+              >
                 {serviceLevelObjective.errorBudgetRemaining}
                 <span style={{ display: 'block' }}>{getString('cv.minutesRemaining')}</span>
               </Text>

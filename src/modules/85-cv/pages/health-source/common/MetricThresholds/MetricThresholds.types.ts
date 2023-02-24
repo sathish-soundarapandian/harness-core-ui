@@ -107,5 +107,4 @@ export interface HandleCriteriaPercentageUpdateParams {
 export interface MetricThresholdsForCustomMetricProps {
   metricName: string
   metricThresholds: MetricThresholdType[]
-  isMetricThresholdEnabled: boolean
 }

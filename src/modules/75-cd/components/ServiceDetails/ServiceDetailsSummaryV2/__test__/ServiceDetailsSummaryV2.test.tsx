@@ -1,5 +1,12 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
-import { findByText, getAllByText, render, waitFor, getByText } from '@testing-library/react'
+import { findByText, getAllByText, render, waitFor, getByText, screen } from '@testing-library/react'
 import * as routerMock from 'react-router-dom'
 import userEvent from '@testing-library/user-event'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
@@ -20,7 +27,9 @@ import {
   activeInstanceDetail,
   activeInstanceGroupByEnv,
   artifactInstanceDetailsMock,
-  envInstanceDetailsMock
+  artifactTableMock,
+  envInstanceDetailsMock,
+  openTaskMock
 } from './ServiceDetailsMocks'
 
 const mockGetCallFunction = jest.fn()
@@ -46,10 +55,16 @@ jest.mock('services/cd-ng', () => ({
   useGetActiveInstanceGroupedByEnvironment: jest.fn().mockImplementation(() => {
     return { data: activeInstanceGroupByEnv, refetch: jest.fn(), loading: false, error: false }
   }),
+  useGetActiveInstanceGroupedByArtifact: jest.fn().mockImplementation(() => {
+    return { data: artifactTableMock, refetch: jest.fn(), loading: false, error: false }
+  }),
   useGetActiveServiceInstanceDetailsGroupedByPipelineExecution: jest.fn().mockImplementation(() => {
     return { data: activeInstanceDetail, refetch: jest.fn(), loading: false, error: false }
   }),
-  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false })
+  useGetGlobalFreezeWithBannerDetails: jest.fn().mockReturnValue({ data: null, loading: false }),
+  useGetOpenTasks: jest.fn().mockImplementation(() => {
+    return { data: openTaskMock, refetch: jest.fn(), loading: false, error: false }
+  })
 }))
 
 jest.mock('services/cd-ng-rq', () => ({
@@ -115,6 +130,13 @@ const configurations = (): void => {
   })
 }
 
+const toggleToArtifact = (container: HTMLElement): void => {
+  //toggle to artifact view
+  const artifactTab = container.querySelector('[data-name="toggle-option-two"]')
+  expect(artifactTab).toBeInTheDocument()
+  userEvent.click(artifactTab!)
+}
+
 describe('Service Detail Summary - ', () => {
   configurations()
   test('Initial render - basic snapshot', () => {
@@ -149,9 +171,8 @@ describe('Service Detail Summary - ', () => {
     expect(getAllByText(fullTableDialog!, 'cd.preProductionType')[0]).toBeInTheDocument()
 
     //assert - ServiceInstanceView
-    const pipelineId = getByText(fullTableDialog!, 'testPipelineId')
-    expect(pipelineId).toBeInTheDocument()
-    userEvent.click(pipelineId)
+    const pipelineId = getAllByText(fullTableDialog!, 'testPipelineId')
+    userEvent.click(pipelineId[0])
     const instanceRow = getByText(fullTableDialog!, 'Instance - 1')
     userEvent.click(instanceRow)
 
@@ -226,17 +247,50 @@ describe('Service Detail Summary - ', () => {
     )
 
     //toggle to artifact view
-    const artifactTab = container.querySelector('[data-name="toggle-option-two"]')
-    expect(artifactTab).toBeInTheDocument()
-    userEvent.click(artifactTab!)
+    toggleToArtifact(container)
 
     // artifact card click and check for execution list call
     const artifactName = getByText(container, 'testArtifactDisplayName')
     expect(artifactName).toBeInTheDocument()
     expect(artifactName.parentElement).not.toHaveClass('Card--selected')
-    userEvent.click(artifactName)
+    userEvent.click(artifactName.parentElement!)
     expect(artifactName.parentElement).toHaveClass('Card--selected')
     expect(useGetListOfExecutions).toHaveBeenCalled()
+  })
+
+  test('Test ServiceDetailsArtifactTable', async () => {
+    const { container } = render(
+      <TestWrapper path={TEST_PATH} pathParams={getModuleParams()}>
+        <ServiceDetailsSummaryV2 />
+      </TestWrapper>
+    )
+
+    toggleToArtifact(container)
+
+    const viewInTableBtn = container.querySelector(
+      'button[aria-label="cd.environmentDetailPage.viewInTable"]'
+    ) as HTMLButtonElement
+    userEvent.click(viewInTableBtn)
+    const fullTableDialog = findDialogContainer()
+    expect(fullTableDialog).toBeTruthy()
+
+    //row click and check if the instanceview is updated
+    const artifactName = getByText(fullTableDialog!, 'testArtifactName2')
+    expect(artifactName).toBeInTheDocument()
+    userEvent.click(artifactName)
+
+    await waitFor(() => expect(useGetActiveServiceInstanceDetailsGroupedByPipelineExecution).toHaveBeenCalled())
+  })
+
+  test('Test OpenTasks', async () => {
+    render(
+      <TestWrapper path={TEST_PATH} pathParams={getModuleParams()}>
+        <ServiceDetailsSummaryV2 />
+      </TestWrapper>
+    )
+
+    //banner visible
+    expect(screen.getByText('cd.openTask.seeOpenTask')).toBeInTheDocument()
   })
 })
 
@@ -399,5 +453,113 @@ describe('Service Detail Summary - other states (empty, loading, error)', () => 
     )
 
     expect(getByText(container, 'pipeline.ServiceDetail.envCardEmptyStateMsg')).toBeTruthy()
+  })
+
+  test('Test ServiceArtifactTable - empty states', () => {
+    jest.spyOn(cdng, 'useGetActiveInstanceGroupedByArtifact').mockImplementation(() => {
+      return {
+        data: null,
+        loading: false,
+        error: false,
+        refetch: jest.fn()
+      } as any
+    })
+    jest.spyOn(cdng, 'useGetActiveServiceInstanceDetailsGroupedByPipelineExecution').mockImplementation(() => {
+      return {
+        data: null,
+        loading: false,
+        error: false,
+        refetch: jest.fn()
+      } as any
+    })
+    const { container } = render(
+      <TestWrapper path={TEST_PATH} pathParams={getModuleParams()}>
+        <ServiceDetailsSummaryV2 />
+      </TestWrapper>
+    )
+
+    toggleToArtifact(container)
+
+    const viewInTableBtn = container.querySelector(
+      'button[aria-label="cd.environmentDetailPage.viewInTable"]'
+    ) as HTMLButtonElement
+    userEvent.click(viewInTableBtn)
+    const fullTableDialog = findDialogContainer()
+
+    expect(findByText(fullTableDialog!, 'cd.environmentDetailPage.noServiceArtifactMsg')).toBeTruthy()
+    expect(findByText(fullTableDialog!, 'cd.environmentDetailPage.selectArtifactMsg')).toBeTruthy()
+  })
+
+  test('Test ServiceArtifactTable - error states', () => {
+    jest.spyOn(cdng, 'useGetActiveInstanceGroupedByArtifact').mockImplementation(() => {
+      return {
+        data: null,
+        loading: false,
+        error: true,
+        refetch: jest.fn()
+      } as any
+    })
+    jest.spyOn(cdng, 'useGetActiveServiceInstanceDetailsGroupedByPipelineExecution').mockImplementation(() => {
+      return {
+        data: null,
+        loading: false,
+        error: true,
+        refetch: jest.fn()
+      } as any
+    })
+    const { container } = render(
+      <TestWrapper path={TEST_PATH} pathParams={getModuleParams()}>
+        <ServiceDetailsSummaryV2 />
+      </TestWrapper>
+    )
+
+    toggleToArtifact(container)
+
+    const viewInTableBtn = container.querySelector(
+      'button[aria-label="cd.environmentDetailPage.viewInTable"]'
+    ) as HTMLButtonElement
+    userEvent.click(viewInTableBtn)
+    const fullTableDialog = findDialogContainer()
+
+    const retry = fullTableDialog!.querySelectorAll('button[aria-label="Retry"]')
+    userEvent.click(retry[0])
+    userEvent.click(retry[1])
+    expect(fullTableDialog!.querySelector('[data-test="ServiceArtifactTableError"]')).toBeTruthy()
+    expect(fullTableDialog!.querySelector('[data-test="ServiceInstancesError"]')).toBeTruthy()
+  })
+
+  test('Test ServiceArtifactTable - loading states', () => {
+    jest.spyOn(cdng, 'useGetActiveInstanceGroupedByArtifact').mockImplementation(() => {
+      return {
+        data: null,
+        loading: true,
+        error: false,
+        refetch: jest.fn()
+      } as any
+    })
+    jest.spyOn(cdng, 'useGetActiveServiceInstanceDetailsGroupedByPipelineExecution').mockImplementation(() => {
+      return {
+        data: null,
+        loading: true,
+        error: false,
+        refetch: jest.fn()
+      } as any
+    })
+    const { container } = render(
+      <TestWrapper path={TEST_PATH} pathParams={getModuleParams()}>
+        <ServiceDetailsSummaryV2 />
+      </TestWrapper>
+    )
+
+    toggleToArtifact(container)
+
+    const viewInTableBtn = container.querySelector(
+      'button[aria-label="cd.environmentDetailPage.viewInTable"]'
+    ) as HTMLButtonElement
+    userEvent.click(viewInTableBtn)
+    const fullTableDialog = findDialogContainer()
+
+    expect(fullTableDialog!.querySelector('[data-test="ServiceInstancesLoading"]')).toBeTruthy()
+    expect(fullTableDialog!.querySelector('[data-test="ServiceArtifactTableLoading"]')).toBeTruthy()
   })
 })

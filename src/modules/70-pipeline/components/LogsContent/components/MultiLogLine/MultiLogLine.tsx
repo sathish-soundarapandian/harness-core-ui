@@ -106,14 +106,14 @@ export function TextWithSearchMarkersAndLinks(props: TextWithSearchMarkersProps)
         // Change the html entities back to actual characters
         // as we are no longer using dangerouslySetInnerHTML.
         // React will take care of rendering them properly.
-        let content: React.ReactChild = token.content.replace(/&lt;/g, '<').replace(/&amp;/g, '&')
-        const matches = searchText ? defaultTo(content.match(searchRegex), []) : []
+        const updatedTokenContent: React.ReactChild = token.content.replace(/&lt;/g, '<').replace(/&amp;/g, '&')
+        const matches = searchText ? defaultTo(updatedTokenContent.match(searchRegex), []) : []
 
-        content = (
+        let content: React.ReactChild = (
           <TextWithSearchMarkers
             searchText={searchText}
             currentSearchIndex={currentSearchIndex}
-            txt={content}
+            txt={updatedTokenContent}
             searchIndices={searchIndices?.slice(offset)}
           />
         )
@@ -122,7 +122,7 @@ export function TextWithSearchMarkersAndLinks(props: TextWithSearchMarkersProps)
 
         if (token.isLink) {
           content = (
-            <a href={token.content} className="ansi-decoration-link" target="_blank" rel="noreferrer">
+            <a href={updatedTokenContent} className="ansi-decoration-link" target="_blank" rel="noreferrer">
               {content}
             </a>
           )

@@ -1,0 +1,71 @@
+{
+  "status": "SUCCESS",
+  "data": [
+    {
+      "environment": {
+        "accountId": "dummyAcc",
+        "orgIdentifier": "dummyOrg",
+        "projectIdentifier": "dummyProj",
+        "identifier": "env_with_both_inputs",
+        "name": "env with both inputs",
+        "color": "#0063F7",
+        "type": "Production",
+        "deleted": false,
+        "tags": {},
+        "yaml": "environment:\n  orgIdentifier: \"dummyOrg\"\n  projectIdentifier: \"dummyProj\"\n  identifier: \"env_with_both_inputs\"\n  tags: {}\n  name: \"env with both inputs\"\n  type: \"Production\"\n"
+      },
+      "createdAt": 1676259059654,
+      "lastModifiedAt": 1676259059654
+    },
+    {
+      "environment": {
+        "accountId": "dummyAcc",
+        "orgIdentifier": "dummyOrg",
+        "projectIdentifier": "dummyProj",
+        "identifier": "env_with_inputs",
+        "name": "env with inputs",
+        "color": "#0063F7",
+        "type": "Production",
+        "deleted": false,
+        "tags": {},
+        "yaml": "environment:\n  name: env with inputs\n  identifier: env_with_inputs\n  tags: {}\n  type: Production\n  orgIdentifier: dummyOrg\n  projectIdentifier: dummyProj\n  variables:\n    - name: envVar1\n      type: String\n      value: <+input>\n      description: \"\"\n"
+      },
+      "createdAt": 1676258183441,
+      "lastModifiedAt": 1676258201333
+    },
+    {
+      "environment": {
+        "accountId": "dummyAcc",
+        "orgIdentifier": "dummyOrg",
+        "projectIdentifier": "dummyProj",
+        "identifier": "env_with_no_inputs",
+        "name": "env with no inputs",
+        "color": "#0063F7",
+        "type": "PreProduction",
+        "deleted": false,
+        "tags": {},
+        "yaml": "environment:\n  orgIdentifier: \"dummyOrg\"\n  projectIdentifier: \"dummyProj\"\n  identifier: \"env_with_no_inputs\"\n  tags: {}\n  name: \"env with no inputs\"\n  type: \"PreProduction\"\n"
+      },
+      "createdAt": 1676258121534,
+      "lastModifiedAt": 1676258121534
+    },
+    {
+      "environment": {
+        "accountId": "dummyAcc",
+        "orgIdentifier": "dummyOrg",
+        "projectIdentifier": "dummyProj",
+        "identifier": "env_with_svc_override_inputs",
+        "name": "env with svc override inputs",
+        "color": "#0063F7",
+        "type": "PreProduction",
+        "deleted": false,
+        "tags": {},
+        "yaml": "environment:\n  orgIdentifier: \"dummyOrg\"\n  projectIdentifier: \"dummyProj\"\n  identifier: \"env_with_svc_override_inputs\"\n  tags: {}\n  name: \"env with svc override inputs\"\n  type: \"PreProduction\"\n"
+      },
+      "createdAt": 1676258228531,
+      "lastModifiedAt": 1676258228531
+    }
+  ],
+  "metaData": null,
+  "correlationId": "b1417bd2-e99f-44eb-8add-18f70fe6b1fa"
+}

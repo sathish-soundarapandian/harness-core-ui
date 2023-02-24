@@ -400,6 +400,7 @@ describe('process single environment form values', () => {
       environment: {
         environmentRef: '<+input>',
         environmentInputs: '<+input>' as any,
+        serviceOverrideInputs: '<+input>' as any,
         deployToAll: false,
         infrastructureDefinitions: '<+input>' as any
       }
@@ -432,6 +433,7 @@ describe('process single environment form values', () => {
       environment: {
         environmentRef: '<+input>',
         environmentInputs: '<+input>' as any,
+        serviceOverrideInputs: '<+input>' as any,
         deployToAll: false,
         gitOpsClusters: '<+input>' as any
       }

@@ -419,7 +419,7 @@ function CICodebaseInputSetFormInternal({
     if (codebaseConnector) {
       const codebaseConnectorConnectionType = get(codebaseConnector, 'spec.type')
       if (codebaseConnectorConnectionType === ConnectionType.Repo) {
-        fetchBranchesForRepo(getCodebaseRepoNameFromConnector(codebaseConnector, getString))
+        fetchBranchesForRepo(getCodebaseRepoNameFromConnector(codebaseConnector))
       } else if (
         codebaseConnectorConnectionType === ConnectionType.Account &&
         get(originalPipeline, 'properties.ci.codebase.repoName', '') !== RUNTIME_INPUT_VALUE
@@ -626,6 +626,12 @@ function CICodebaseInputSetFormInternal({
       : [MultiTypeInputType.FIXED]
   }, [viewTypeMetadata?.isTemplateBuilder])
 
+  const AllowableTypesForCodebaseRepoName = useMemo((): AllowedTypesWithRunTime[] => {
+    return viewTypeMetadata?.isTemplateBuilder || viewTypeMetadata?.isTemplateDetailDrawer
+      ? [MultiTypeInputType.RUNTIME, MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+      : [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION]
+  }, [viewTypeMetadata?.isTemplateBuilder, viewTypeMetadata?.isTemplateDetailDrawer])
+
   const disableBuildRadioBtnSelection = useMemo(() => {
     return readonly || (codeBaseType === CodebaseTypes.BRANCH && isFetchingBranches)
   }, [readonly, codeBaseType, isFetchingBranches])
@@ -686,7 +692,7 @@ function CICodebaseInputSetFormInternal({
                         ]}
                         label={<Text font={{ variation: FontVariation.FORM_LABEL }}>{getString('connector')}</Text>}
                         placeholder={
-                          loadingConnectorDetails ? getString('loading') : getString('connectors.selectConnector')
+                          loadingConnectorDetails ? getString('loading') : getString('common.entityPlaceholderText')
                         }
                         accountIdentifier={accountId}
                         projectIdentifier={projectIdentifier}
@@ -747,7 +753,7 @@ function CICodebaseInputSetFormInternal({
                             multiTextInputProps={{
                               multiTextInputProps: {
                                 expressions,
-                                allowableTypes: AllowableTypesForCodebaseProperties
+                                allowableTypes: AllowableTypesForCodebaseRepoName
                               },
                               disabled: readonly || isFetchingBranches,
                               onChange: debouncedFetchBranchesForRepo

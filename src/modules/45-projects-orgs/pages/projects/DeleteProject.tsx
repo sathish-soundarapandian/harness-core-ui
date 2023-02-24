@@ -7,7 +7,8 @@
 
 import { Intent } from '@blueprintjs/core'
 import { useParams } from 'react-router-dom'
-import { useToaster, useConfirmationDialog } from '@harness/uicore'
+import { useToaster, useConfirmationDialog, Checkbox, Button, ButtonVariation, Layout } from '@harness/uicore'
+import React, { useState } from 'react'
 import { useStrings } from 'framework/strings'
 import { Project, useDeleteProject } from 'services/cd-ng'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
@@ -18,7 +19,36 @@ import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/P
 interface UseDeleteProjectDialogReturn {
   openDialog: () => void
 }
-
+interface DeleteProjectOrgButtonsProps {
+  onDelete: () => void
+  onCancel: () => void
+}
+export const DeleteProjectOrgButtons: React.FC<DeleteProjectOrgButtonsProps> = ({ onDelete, onCancel }) => {
+  const { getString } = useStrings()
+  const [doubleCheckDelete, setDoubleCheckDelete] = useState<boolean>(false)
+  return (
+    <Layout.Vertical spacing="none">
+      <Checkbox
+        margin={{ top: 'none', bottom: 'medium' }}
+        label={getString('projectsOrgs.yesIamSure')}
+        onChange={(event: React.FormEvent<HTMLInputElement>) => {
+          setDoubleCheckDelete(event.currentTarget.checked)
+        }}
+      />
+      <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'flex-start' }}>
+        <Button
+          disabled={!doubleCheckDelete}
+          text={getString('delete')}
+          intent={Intent.DANGER}
+          onClick={() => {
+            onDelete?.()
+          }}
+        />
+        <Button text={getString('cancel')} variation={ButtonVariation.TERTIARY} onClick={() => onCancel?.()} />
+      </Layout.Horizontal>
+    </Layout.Vertical>
+  )
+}
 const useDeleteProjectDialog = (data: Project, onSuccess: () => void): UseDeleteProjectDialogReturn => {
   const { accountId } = useParams<AccountPathProps>()
   const { updateAppStore, selectedProject: selectedProjectFromAppStore } = useAppStore()
@@ -33,41 +63,51 @@ const useDeleteProjectDialog = (data: Project, onSuccess: () => void): UseDelete
   })
   const { getString } = useStrings()
   const { showSuccess, showError } = useToaster()
-  const { openDialog } = useConfirmationDialog({
+  const onDeleteAction = async () => {
+    try {
+      const deleted = await deleteProject(data.identifier || /* istanbul ignore next */ '', {
+        headers: { 'content-type': 'application/json' }
+      })
+      if (deleted.data) {
+        showSuccess(
+          getString('projectCard.successMessage', { projectName: data.name || /* istanbul ignore next */ '' })
+        )
+        if (savedProjectFromPreferenceStore?.projectIdentifier === data?.identifier) {
+          clearSavedProject()
+        }
+        if (selectedProjectFromAppStore?.identifier === data?.identifier) {
+          updateAppStore({ selectedProject: undefined, selectedOrg: undefined })
+        }
+        onSuccess()
+      } else {
+        showError(
+          getString('projectsOrgs.projectDeleteErrorMessage', {
+            projectName: data.name || /* istanbul ignore next */ ''
+          })
+        )
+      }
+    } catch (err) {
+      /* istanbul ignore next */
+      showError(getRBACErrorMessage(err))
+    } finally {
+      closeDialog()
+    }
+  }
+  const { openDialog, closeDialog } = useConfirmationDialog({
     contentText: getString('projectCard.confirmDelete', { name: data.name }),
     titleText: getString('projectCard.confirmDeleteTitle'),
-    confirmButtonText: getString('delete'),
-    cancelButtonText: getString('cancel'),
     intent: Intent.DANGER,
-    buttonIntent: Intent.DANGER,
+    customButtons: (
+      <DeleteProjectOrgButtons
+        onCancel={() => {
+          closeDialog()
+        }}
+        onDelete={onDeleteAction}
+      />
+    ),
     onCloseDialog: async (isConfirmed: boolean) => {
       if (isConfirmed) {
-        try {
-          const deleted = await deleteProject(data.identifier || /* istanbul ignore next */ '', {
-            headers: { 'content-type': 'application/json' }
-          })
-          if (deleted.data) {
-            showSuccess(
-              getString('projectCard.successMessage', { projectName: data.name || /* istanbul ignore next */ '' })
-            )
-            if (savedProjectFromPreferenceStore?.projectIdentifier === data?.identifier) {
-              clearSavedProject()
-            }
-            if (selectedProjectFromAppStore?.identifier === data?.identifier) {
-              updateAppStore({ selectedProject: undefined, selectedOrg: undefined })
-            }
-            onSuccess()
-          } else {
-            showError(
-              getString('projectsOrgs.projectDeleteErrorMessage', {
-                projectName: data.name || /* istanbul ignore next */ ''
-              })
-            )
-          }
-        } catch (err) {
-          /* istanbul ignore next */
-          showError(getRBACErrorMessage(err))
-        }
+        onDeleteAction()
       }
     }
   })

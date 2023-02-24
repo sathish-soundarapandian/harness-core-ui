@@ -36,8 +36,8 @@ jest.mock('@common/hooks', () => ({
 }))
 
 jest.mock('services/pipeline-ng', () => ({
-  putPipelinePromise: jest.fn().mockImplementation(() => Promise.resolve({ status: 'SUCCESS' })),
-  createPipelinePromise: jest.fn().mockImplementation(() => Promise.resolve({ status: 'SUCCESS' })),
+  putPipelineV2Promise: jest.fn().mockImplementation(() => Promise.resolve({ status: 'SUCCESS' })),
+  createPipelineV2Promise: jest.fn().mockImplementation(() => Promise.resolve({ status: 'SUCCESS' })),
   useGetInputsetYaml: jest.fn(() => ({ data: null })),
   useCreateVariablesV2: jest.fn(() => ({
     mutate: jest.fn(() => Promise.resolve({ data: { yaml: '' } })),
@@ -237,8 +237,8 @@ describe('PipelineCanvas tests', () => {
             expect(saveToGitSaveBtn).toBeInTheDocument()
           })
           fireEvent.click(saveToGitSaveBtn!)
-          await waitFor(() => expect(pipelineNg.putPipelinePromise).toHaveBeenCalled())
-          expect(pipelineNg.putPipelinePromise).toHaveBeenCalledWith(putPipelinePromiseArg)
+          await waitFor(() => expect(pipelineNg.putPipelineV2Promise).toHaveBeenCalled())
+          expect(pipelineNg.putPipelineV2Promise).toHaveBeenCalledWith(putPipelinePromiseArg)
         })
       })
 
@@ -272,7 +272,7 @@ describe('PipelineCanvas tests', () => {
           expect(saveToGitSaveBtn).toBeInTheDocument()
         })
         userEvent.click(saveToGitSaveBtn!)
-        await waitFor(() => expect(pipelineNg.putPipelinePromise).toHaveBeenCalled())
+        await waitFor(() => expect(pipelineNg.putPipelineV2Promise).toHaveBeenCalled())
         const putPipelinePromiseArgNewBranch = {
           ...putPipelinePromiseArg,
           queryParams: {
@@ -283,7 +283,7 @@ describe('PipelineCanvas tests', () => {
             targetBranch: 'feature'
           }
         }
-        expect(pipelineNg.putPipelinePromise).toHaveBeenCalledWith(putPipelinePromiseArgNewBranch)
+        expect(pipelineNg.putPipelineV2Promise).toHaveBeenCalledWith(putPipelinePromiseArgNewBranch)
       })
 
       test('save an existing pipeline and start a PR', async () => {
@@ -324,7 +324,7 @@ describe('PipelineCanvas tests', () => {
         userEvent.click(saveToGitSaveBtn!)
 
         // Check if putPipelinePromise (which makes API call) called with correct arguments
-        await waitFor(() => expect(pipelineNg.putPipelinePromise).toHaveBeenCalled())
+        await waitFor(() => expect(pipelineNg.putPipelineV2Promise).toHaveBeenCalled())
         const putPipelinePromiseArgNewBranch = {
           ...putPipelinePromiseArg,
           queryParams: {
@@ -334,13 +334,13 @@ describe('PipelineCanvas tests', () => {
             targetBranch: 'gitSync'
           }
         }
-        expect(pipelineNg.putPipelinePromise).toHaveBeenCalledWith(putPipelinePromiseArgNewBranch)
+        expect(pipelineNg.putPipelineV2Promise).toHaveBeenCalledWith(putPipelinePromiseArgNewBranch)
         expect(createPullRequest).toBeCalledTimes(1)
         expect(screen.queryByText('common.gitSync.creatingPR')).toBeInTheDocument()
       })
 
       test('should display non schema error in git save progress modal', async () => {
-        jest.spyOn(pipelineNg, 'putPipelinePromise').mockImplementation((): any => {
+        jest.spyOn(pipelineNg, 'putPipelineV2Promise').mockImplementation((): any => {
           return Promise.reject({
             status: 'ERROR',
             code: 'INVALID_REQUEST',
@@ -386,8 +386,8 @@ describe('PipelineCanvas tests', () => {
           expect(saveToGitSaveBtn).toBeInTheDocument()
         })
         fireEvent.click(saveToGitSaveBtn!)
-        await waitFor(() => expect(pipelineNg.putPipelinePromise).toHaveBeenCalled())
-        expect(pipelineNg.putPipelinePromise).toHaveBeenCalledWith(putPipelinePromiseArg)
+        await waitFor(() => expect(pipelineNg.putPipelineV2Promise).toHaveBeenCalled())
+        expect(pipelineNg.putPipelineV2Promise).toHaveBeenCalledWith(putPipelinePromiseArg)
 
         await waitFor(async () => {
           const portalDiv = document.getElementsByClassName('bp3-portal')[0] as HTMLElement
@@ -489,8 +489,8 @@ describe('PipelineCanvas tests', () => {
             expect(saveToGitSaveBtn).toBeInTheDocument()
           })
           fireEvent.click(saveToGitSaveBtn!)
-          await waitFor(() => expect(pipelineNg.createPipelinePromise).toHaveBeenCalled())
-          expect(pipelineNg.createPipelinePromise).toHaveBeenCalledWith(createPipelinePromiseArg)
+          await waitFor(() => expect(pipelineNg.createPipelineV2Promise).toHaveBeenCalled())
+          expect(pipelineNg.createPipelineV2Promise).toHaveBeenCalledWith(createPipelinePromiseArg)
         })
       })
     })

@@ -19,11 +19,6 @@ describe.skip('Jenkins Trigger', () => {
   }
 
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
 
     cy.intercept('GET', pipelineDetails, { fixture: 'pipeline/api/triggers/jenkinsPipelineDetails.json' }).as(

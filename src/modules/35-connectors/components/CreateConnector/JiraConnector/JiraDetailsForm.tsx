@@ -16,7 +16,9 @@ import {
   ModalErrorHandlerBinding,
   StepProps,
   ButtonVariation,
-  PageSpinner
+  PageSpinner,
+  SelectOption,
+  Container
 } from '@harness/uicore'
 import * as Yup from 'yup'
 import { FontVariation } from '@harness/design-system'
@@ -33,10 +35,13 @@ import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 
 import type { ScopedObjectDTO } from '@common/components/EntityReference/EntityReference'
+import { AuthTypes } from '@connectors/pages/connectors/utils/ConnectorHelper'
+import commonStyles from '@connectors/components/CreateConnector/commonSteps/ConnectorCommonStyles.module.scss'
 import css from './JiraConnector.module.scss'
 
 interface JiraFormData {
   jiraUrl: string
+  authType: string
   username: TextReferenceInterface | void
   password: SecretReferenceInterface | void
 }
@@ -58,6 +63,7 @@ interface JiraFormProps extends ConnectorInfoDTO {
 
 const defaultInitialFormData: JiraFormData = {
   jiraUrl: '',
+  authType: AuthTypes.USER_PASSWORD,
   username: undefined,
   password: undefined
 }
@@ -71,6 +77,16 @@ const JiraDetailsForm: React.FC<StepProps<JiraFormProps> & AuthenticationProps> 
   const [loadingConnectorSecrets, setLoadingConnectorSecrets] = React.useState(true && props.isEditMode)
 
   const { getString } = useStrings()
+  const authOptions: SelectOption[] = React.useMemo(
+    () => [
+      {
+        label: getString('connectors.jira.usernameAPIKey'),
+        value: AuthTypes.USER_PASSWORD
+      }
+      // PAT will be added as a second option for authentication support behind FF.
+    ],
+    []
+  )
 
   React.useEffect(() => {
     if (loadingConnectorSecrets) {
@@ -117,9 +133,21 @@ const JiraDetailsForm: React.FC<StepProps<JiraFormProps> & AuthenticationProps> 
         }}
         formName="jiraDetailsForm"
         validationSchema={Yup.object().shape({
-          jiraUrl: Yup.string().trim().required(getString('validation.jiraUrl')),
-          username: Yup.string().required(getString('validation.username')),
-          passwordRef: Yup.object().required(getString('validation.password'))
+          jiraUrl: Yup.string()
+            .trim()
+            .required(getString('validation.jiraUrl'))
+            .url(getString('validation.urlIsNotValid')),
+          authType: Yup.string().trim().required(getString('validation.authType')),
+          username: Yup.string().when('authType', {
+            is: val => val === AuthTypes.USER_PASSWORD,
+            then: Yup.string().trim().required(getString('validation.username')),
+            otherwise: Yup.string().nullable()
+          }),
+          passwordRef: Yup.object().when('authType', {
+            is: val => val === AuthTypes.USER_PASSWORD,
+            then: Yup.object().required(getString('validation.password')),
+            otherwise: Yup.object().nullable()
+          })
         })}
         onSubmit={stepData => {
           trackEvent(ConnectorActions.DetailsStepSubmit, {
@@ -134,14 +162,33 @@ const JiraDetailsForm: React.FC<StepProps<JiraFormProps> & AuthenticationProps> 
             <>
               <ModalErrorHandler bind={setModalErrorHandler} />
               <Layout.Vertical padding={{ top: 'large', bottom: 'large' }} width={'56%'}>
-                <FormInput.Text name="jiraUrl" placeholder={getString('UrlLabel')} label={getString('UrlLabel')} />
-
-                <TextReference
-                  name="username"
-                  stringId="username"
-                  type={formik.values.username ? formik.values.username.type : ValueType.TEXT}
+                <FormInput.Text
+                  name="jiraUrl"
+                  placeholder={getString('UrlLabel')}
+                  label={getString('connectors.jira.jiraUrl')}
                 />
-                <SecretInput name={'passwordRef'} label={getString('connectors.apiKey')} scope={scope} />
+
+                <Container className={css.authContainer}>
+                  <Text font={{ variation: FontVariation.H6 }} inline margin={{ bottom: 'small', right: 'small' }}>
+                    {getString('authentication')}
+                  </Text>
+                  <FormInput.Select
+                    name="authType"
+                    items={authOptions}
+                    disabled={false}
+                    className={commonStyles.authTypeSelectLarge}
+                  />
+                </Container>
+                {formik.values.authType === AuthTypes.USER_PASSWORD ? (
+                  <>
+                    <TextReference
+                      name="username"
+                      stringId="username"
+                      type={formik.values.username ? formik.values.username?.type : ValueType.TEXT}
+                    />
+                    <SecretInput name={'passwordRef'} label={getString('connectors.apiKey')} scope={scope} />
+                  </>
+                ) : null}
               </Layout.Vertical>
 
               <Layout.Horizontal padding={{ top: 'small' }} spacing="medium">

@@ -508,12 +508,14 @@ export const inputSetScanFields = (
     ? {
         ...(shouldRenderRunTimeInputView(template?.spec.mode) && {
           [getInputSetFieldName(prefix, 'spec.mode')]: {
-            label: 'sto.stepField.mode'
+            label: 'sto.stepField.mode',
+            tooltipId: tooltipIds.mode
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.config) && {
           [getInputSetFieldName(prefix, 'spec.config')]: {
-            label: 'sto.stepField.config'
+            label: 'sto.stepField.config',
+            tooltipId: tooltipIds.config
           }
         })
       }
@@ -528,22 +530,26 @@ export const inputSetTargetFields = (
         // Target fields
         ...(shouldRenderRunTimeInputView(template?.spec.target.name) && {
           [getInputSetFieldName(prefix, 'spec.target.name')]: {
-            label: 'name'
+            label: 'name',
+            tooltipId: tooltipIds.targetName
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.target.type) && {
           [getInputSetFieldName(prefix, 'spec.target.type')]: {
-            label: 'typeLabel'
+            label: 'typeLabel',
+            tooltipId: tooltipIds.targetType
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.target.variant) && {
           [getInputSetFieldName(prefix, 'spec.target.variant')]: {
-            label: 'sto.stepField.target.variant'
+            label: 'sto.stepField.target.variant',
+            tooltipId: tooltipIds.targetVariant
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.target.workspace) && {
           [getInputSetFieldName(prefix, 'spec.target.workspace')]: {
-            label: 'pipelineSteps.workspace'
+            label: 'pipelineSteps.workspace',
+            tooltipId: tooltipIds.targetWorkspace
           }
         })
       }
@@ -558,7 +564,8 @@ export const inputSetIngestionFields = (
         // Ingestion fields
         ...(shouldRenderRunTimeInputView(template?.spec.ingestion?.file) && {
           [getInputSetFieldName(prefix, 'spec.ingestion.file')]: {
-            label: 'sto.stepField.ingestion.file'
+            label: 'sto.stepField.ingestion.file',
+            tooltipId: tooltipIds.ingestionFile
           }
         })
       }
@@ -573,37 +580,44 @@ export const inputSetImageFields = (
         // Image fields
         ...(shouldRenderRunTimeInputView(template?.spec.image?.name) && {
           [getInputSetFieldName(prefix, 'spec.image.name')]: {
-            label: 'imageNameLabel'
+            label: 'imageNameLabel',
+            tooltipId: tooltipIds.imageName
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.image?.domain) && {
           [getInputSetFieldName(prefix, 'spec.image.domain')]: {
-            label: 'secrets.winRmAuthFormFields.domain'
+            label: 'secrets.winRmAuthFormFields.domain',
+            tooltipId: tooltipIds.imageDomain
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.image?.access_token) && {
           [getInputSetFieldName(prefix, 'spec.image.access_token')]: {
-            label: 'common.getStarted.accessTokenLabel'
+            label: 'common.getStarted.accessTokenLabel',
+            tooltipId: tooltipIds.imageAccessToken
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.image?.access_id) && {
           [getInputSetFieldName(prefix, 'spec.image.access_id')]: {
-            label: 'sto.stepField.authAccessId'
+            label: 'sto.stepField.authAccessId',
+            tooltipId: tooltipIds.imageAccessId
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.image?.region) && {
           [getInputSetFieldName(prefix, 'spec.image.region')]: {
-            label: 'regionLabel'
+            label: 'regionLabel',
+            tooltipId: tooltipIds.imageRegion
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.image?.type) && {
           [getInputSetFieldName(prefix, 'spec.image.type')]: {
-            label: 'typeLabel'
+            label: 'typeLabel',
+            tooltipId: tooltipIds.imageType
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.image?.tag) && {
           [getInputSetFieldName(prefix, 'spec.image.tag')]: {
-            label: 'tagLabel'
+            label: 'tagLabel',
+            tooltipId: tooltipIds.imageTag
           }
         })
       }
@@ -618,22 +632,26 @@ export const inputSetInstanceFields = (
         // Instance fields
         ...(shouldRenderRunTimeInputView(template?.spec.instance?.domain) && {
           [getInputSetFieldName(prefix, 'spec.instance.domain')]: {
-            label: 'secrets.winRmAuthFormFields.domain'
+            label: 'secrets.winRmAuthFormFields.domain',
+            tooltipId: tooltipIds.instanceDomain
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.instance?.protocol) && {
           [getInputSetFieldName(prefix, 'spec.instance.protocol')]: {
-            label: 'ce.common.protocol'
+            label: 'ce.common.protocol',
+            tooltipId: tooltipIds.instanceProtocol
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.instance?.port) && {
           [getInputSetFieldName(prefix, 'spec.instance.port')]: {
-            label: 'common.smtp.port'
+            label: 'common.smtp.port',
+            tooltipId: tooltipIds.instancePort
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.instance?.path) && {
           [getInputSetFieldName(prefix, 'spec.instance.path')]: {
-            label: 'common.path'
+            label: 'common.path',
+            tooltipId: tooltipIds.instancePath
           }
         })
       }
@@ -648,62 +666,74 @@ export const inputSetToolFields = (
         // Tool fields
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.include) && {
           [getInputSetFieldName(prefix, 'spec.tool.include')]: {
-            label: 'sto.stepField.toolInclude'
+            label: 'sto.stepField.toolInclude',
+            tooltipId: tooltipIds.toolInclude
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.java?.libraries) && {
           [getInputSetFieldName(prefix, 'spec.tool.java.libraries')]: {
-            label: 'sto.stepField.tool.javaLibraries'
+            label: 'sto.stepField.tool.javaLibraries',
+            tooltipId: tooltipIds.toolJavaLibraries
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.java?.binaries) && {
           [getInputSetFieldName(prefix, 'spec.tool.java.binaries')]: {
-            label: 'sto.stepField.tool.javaBinaries'
+            label: 'sto.stepField.tool.javaBinaries',
+            tooltipId: tooltipIds.toolJavaBinaries
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.context) && {
           [getInputSetFieldName(prefix, 'spec.tool.context')]: {
-            label: 'sto.stepField.tool.context'
+            label: 'sto.stepField.tool.context',
+            tooltipId: tooltipIds.toolContext
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.port) && {
           [getInputSetFieldName(prefix, 'spec.tool.port')]: {
-            label: 'common.smtp.port'
+            label: 'common.smtp.port',
+            tooltipId: tooltipIds.toolPort
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.image_name) && {
           [getInputSetFieldName(prefix, 'spec.tool.image_name')]: {
-            label: 'imageNameLabel'
+            label: 'imageNameLabel',
+            tooltipId: tooltipIds.toolImageName
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.project_name) && {
           [getInputSetFieldName(prefix, 'spec.tool.project_name')]: {
-            label: 'projectCard.projectName'
+            label: 'projectCard.projectName',
+            tooltipId: tooltipIds.toolProjectName
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.project_version) && {
           [getInputSetFieldName(prefix, 'spec.tool.project_version')]: {
-            label: 'sto.stepField.tool.projectVersion'
+            label: 'sto.stepField.tool.projectVersion',
+            tooltipId: tooltipIds.toolProjectVersion
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.team_name) && {
           [getInputSetFieldName(prefix, 'spec.tool.team_name')]: {
-            label: 'sto.stepField.tool.teamName'
+            label: 'sto.stepField.tool.teamName',
+            tooltipId: tooltipIds.toolTeamName
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.product_token) && {
           [getInputSetFieldName(prefix, 'spec.tool.product_token')]: {
-            label: 'sto.stepField.tool.productToken'
+            label: 'sto.stepField.tool.productToken',
+            tooltipId: tooltipIds.toolProductToken
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.product_name) && {
           [getInputSetFieldName(prefix, 'spec.tool.product_name')]: {
-            label: 'name'
+            label: 'name',
+            tooltipId: tooltipIds.toolProductName
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.tool?.project_token) && {
           [getInputSetFieldName(prefix, 'spec.tool.project_token')]: {
-            label: 'sto.stepField.tool.projectToken'
+            label: 'sto.stepField.tool.projectToken',
+            tooltipId: tooltipIds.toolProjectToken
           }
         })
       }
@@ -718,33 +748,39 @@ export const inputSetAuthFields = (
         // Auth fields
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.access_token) && {
           [getInputSetFieldName(prefix, 'spec.auth.access_token')]: {
-            label: 'common.getStarted.accessTokenLabel'
+            label: 'common.getStarted.accessTokenLabel',
+            tooltipId: tooltipIds.authAccessToken
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.domain) && {
           [getInputSetFieldName(prefix, 'spec.auth.domain')]: {
-            label: 'secrets.winRmAuthFormFields.domain'
+            label: 'secrets.winRmAuthFormFields.domain',
+            tooltipId: tooltipIds.authDomain
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.access_id) && {
           [getInputSetFieldName(prefix, 'spec.auth.access_id')]: {
-            label: 'sto.stepField.authAccessId'
+            label: 'sto.stepField.authAccessId',
+            tooltipId: tooltipIds.authAccessId
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.type) && {
           [getInputSetFieldName(prefix, 'spec.auth.type')]: {
-            label: 'typeLabel'
+            label: 'typeLabel',
+            tooltipId: tooltipIds.authType
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.version) && {
           [getInputSetFieldName(prefix, 'spec.auth.version')]: {
-            label: 'sto.stepField.authVersion'
+            label: 'sto.stepField.authVersion',
+            tooltipId: tooltipIds.authVersion
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.auth?.ssl) && {
           [getInputSetFieldName(prefix, 'spec.auth.ssl')]: {
             label: 'sto.stepField.authSsl',
-            fieldType: 'checkbox'
+            fieldType: 'checkbox',
+            tooltipId: tooltipIds.authSSL
           }
         })
       }
@@ -762,30 +798,83 @@ export const inputSetAdvancedFields = (
           [getInputSetFieldName(prefix, 'spec.advanced.log.level')]: {
             label: 'sto.stepField.advanced.logLevel',
             fieldType: 'dropdown',
-            selectItems: logLevelOptions(getString)
+            selectItems: logLevelOptions(getString),
+            tooltipId: tooltipIds.logLevel
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.advanced?.log?.serializer) && {
           [getInputSetFieldName(prefix, 'spec.advanced.log.serializer')]: {
-            label: 'ce.common.protocol'
+            label: 'ce.common.protocol',
+            tooltipId: tooltipIds.logSerializer
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.advanced?.args?.cli) && {
           [getInputSetFieldName(prefix, 'spec.advanced.args.cli')]: {
-            label: 'sto.stepField.advanced.cli'
+            label: 'sto.stepField.advanced.cli',
+            tooltipId: tooltipIds.argsCli
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.advanced?.fail_on_severity) && {
           [getInputSetFieldName(prefix, 'spec.advanced.fail_on_severity')]: {
             label: 'sto.stepField.advanced.failOnSeverity',
             selectItems: severityOptions(getString),
-            fieldType: 'dropdown'
+            fieldType: 'dropdown',
+            tooltipId: tooltipIds.failOnSeverity
           }
         }),
         ...(shouldRenderRunTimeInputView(template?.spec.advanced?.include_raw) && {
           [getInputSetFieldName(prefix, 'spec.advanced.include_raw')]: {
-            label: 'sto.stepField.advanced.includeRaw'
+            label: 'sto.stepField.advanced.includeRaw',
+            tooltipId: tooltipIds.includeRaw
           }
         })
       }
     : {}
+
+const tooltipPrefix = 'securityStep'
+
+export const tooltipIds = {
+  mode: `${tooltipPrefix}Mode`,
+  config: `${tooltipPrefix}Config`,
+  targetType: `${tooltipPrefix}TargetType`,
+  targetName: `${tooltipPrefix}TargetName`,
+  targetVariant: `${tooltipPrefix}TargetVariant`,
+  targetWorkspace: `${tooltipPrefix}TargetWorkspace`,
+  ingestionFile: `${tooltipPrefix}IngestionFile`,
+  logLevel: `${tooltipPrefix}LogLevel`,
+  logSerializer: `${tooltipPrefix}LogSerializer`,
+  argsCli: `${tooltipPrefix}ArgsCli`,
+  failOnSeverity: `${tooltipPrefix}FailOnSeverity`,
+  includeRaw: `${tooltipPrefix}IncludeRaw`,
+  authDomain: `${tooltipPrefix}AuthDomain`,
+  authSSL: `${tooltipPrefix}AuthSSL`,
+  authVersion: `${tooltipPrefix}AuthVersion`,
+  authType: `${tooltipPrefix}AuthType`,
+  authAccessId: `${tooltipPrefix}AuthAccessId`,
+  authAccessToken: `${tooltipPrefix}AuthAccessToken`,
+  imageType: `${tooltipPrefix}ImageType`,
+  imageDomain: `${tooltipPrefix}ImageDomain`,
+  imageName: `${tooltipPrefix}ImageName`,
+  imageTag: `${tooltipPrefix}ImageTag`,
+  imageAccessId: `${tooltipPrefix}ImageAccessId`,
+  imageAccessToken: `${tooltipPrefix}ImageAccessToken`,
+  imageRegion: `${tooltipPrefix}ImageRegion`,
+  instanceDomain: `${tooltipPrefix}InstanceDomain`,
+  instanceProtocol: `${tooltipPrefix}InstanceProtocol`,
+  instancePort: `${tooltipPrefix}InstancePort`,
+  instancePath: `${tooltipPrefix}InstancePath`,
+  toolContext: `${tooltipPrefix}ToolContext`,
+  toolPort: `${tooltipPrefix}ToolPort`,
+  toolInclude: `${tooltipPrefix}ToolInclude`,
+  toolJavaLibraries: `${tooltipPrefix}ToolJavaLibraries`,
+  toolJavaBinaries: `${tooltipPrefix}ToolJavaBinaries`,
+  toolImageName: `${tooltipPrefix}ToolImageName`,
+  toolProductLookupType: `${tooltipPrefix}ToolProductLookupType`,
+  toolProductName: `${tooltipPrefix}ToolProductName`,
+  toolProductToken: `${tooltipPrefix}ToolProductToken`,
+  toolProjectName: `${tooltipPrefix}ToolProjectName`,
+  toolProjectToken: `${tooltipPrefix}ToolProjectToken`,
+  toolProjectVersion: `${tooltipPrefix}ToolProjectVersion`,
+  toolExclude: `${tooltipPrefix}ToolExclude`,
+  toolTeamName: `${tooltipPrefix}ToolTeamName`
+}

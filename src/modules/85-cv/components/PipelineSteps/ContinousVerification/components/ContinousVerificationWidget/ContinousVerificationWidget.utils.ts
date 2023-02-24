@@ -127,11 +127,12 @@ export function validateMonitoredService(
   getString: (key: StringKeys) => string,
   monitoredServiceTemplateRef: string,
   templateInputsToValidate: unknown,
-  templateInputs: unknown
+  templateInputs: unknown,
+  isMultiServiesOrEnvs: boolean
 ): FormikErrors<ContinousVerificationData> {
   let spec = {}
   // no validation for default monitored service when stepViewType is Template
-  if (type === MONITORED_SERVICE_TYPE.DEFAULT && stepViewType !== 'Template') {
+  if (type === MONITORED_SERVICE_TYPE.DEFAULT && stepViewType !== 'Template' && !isMultiServiesOrEnvs) {
     spec = monitoredServiceRefValidation(monitoredServiceRef, spec, errors)
     spec = healthSourcesValidation(monitoredServiceRef, healthSources, spec, getString, errors)
   } else if (type === MONITORED_SERVICE_TYPE.CONFIGURED) {
@@ -290,6 +291,7 @@ export function resetFormik(
     spec?: spec | undefined
     monitoredService: VerifyStepMonitoredService
     initialMonitoredService?: VerifyStepMonitoredService | undefined
+    isMultiServicesOrEnvs: boolean
   },
   formik: FormikProps<ContinousVerificationData>
 ): void {
@@ -313,6 +315,7 @@ export function resetFormikIfNeededForDefaultMonitoredService({
     spec?: spec
     monitoredService: VerifyStepMonitoredService
     initialMonitoredService?: VerifyStepMonitoredService
+    isMultiServicesOrEnvs: boolean
   }
   formik: FormikProps<ContinousVerificationData>
 }): void {
@@ -334,6 +337,7 @@ export function resetFormikWhenNoChange(
     spec?: spec
     monitoredService: VerifyStepMonitoredService
     initialMonitoredService?: VerifyStepMonitoredService
+    isMultiServicesOrEnvs: boolean
   },
   formik: FormikProps<ContinousVerificationData>
 ): void {

@@ -5,12 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Card, Container, Heading, Page, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import { useGetSLODetails } from 'services/cv'
+import { useGetSLODetails, useGetUnavailabilityInstances } from 'services/cv'
 import { useQueryParams } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getMonitoredServiceIdentifiers } from '@cv/utils/CommonUtils'
@@ -21,6 +21,8 @@ import type { DetailsPanelProps } from './DetailsPanel.types'
 import SLOCardContent from '../../SLOCard/SLOCardContent'
 import CompositeSLOConsumption from './views/CompositeSLOConsumption/CompositeSLOConsumption'
 import { SLOType } from '../../components/CVCreateSLOV2/CVCreateSLOV2.constants'
+import { TWENTY_FOUR_HOURS } from './DetailsPanel.constants'
+import DowntimeBanner from './views/DowntimeBanner'
 import css from './DetailsPanel.module.scss'
 
 const DetailsPanel: React.FC<DetailsPanelProps> = ({
@@ -42,6 +44,7 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
   const { currentPeriodStartTime = 0, currentPeriodEndTime = 0, monitoredServiceDetails } = sloDashboardWidget ?? {}
   const [chartTimeRange, setChartTimeRange] = useState<{ startTime: number; endTime: number }>()
   const [sliderTimeRange, setSliderTimeRange] = useState<{ startTime: number; endTime: number }>()
+  const [showDowntimeBanner, setShowDowntimeBanner] = useState(true)
 
   const { startTime = currentPeriodStartTime, endTime = currentPeriodEndTime } = sliderTimeRange ?? chartTimeRange ?? {}
 
@@ -64,6 +67,33 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
     [isAccountLevel, sloDashboardWidget?.monitoredServiceDetails]
   )
 
+  const { data: downtimeInstanceUnavailability, refetch: unavailabilityRefetch } = useGetUnavailabilityInstances({
+    identifier,
+    lazy: true
+  })
+
+  const downtimeStartTime = chartTimeRange?.startTime || sloDashboardWidget?.currentPeriodStartTime || 0
+  const downtimeEndTime = chartTimeRange?.endTime || sloDashboardWidget?.currentPeriodEndTime || 0
+
+  useEffect(() => {
+    if (identifier && sloDashboardWidget && sloType === SLOType.SIMPLE) {
+      unavailabilityRefetch({
+        queryParams: {
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          startTime: downtimeStartTime,
+          endTime: new Date(downtimeEndTime + TWENTY_FOUR_HOURS).getTime()
+        }
+      })
+    }
+  }, [identifier, downtimeEndTime, downtimeStartTime])
+
+  const bannerData = useMemo(
+    () => downtimeInstanceUnavailability?.data?.filter(instance => (instance?.startTime || 0) > downtimeEndTime / 1000),
+    [downtimeInstanceUnavailability, downtimeEndTime]
+  )
+
   return (
     <Page.Body
       loading={loading}
@@ -74,61 +104,67 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
       }}
     >
       {sloDashboardWidget && (
-        <Container padding="xlarge">
-          <ServiceDetails sloDashboardWidget={sloDashboardWidget} />
-          <SLOCardContent
-            isCardView
-            chartTimeRange={chartTimeRange}
-            setChartTimeRange={setChartTimeRange}
-            sliderTimeRange={sliderTimeRange}
-            setSliderTimeRange={setSliderTimeRange}
-            serviceLevelObjective={sloDashboardWidget}
-            filteredServiceLevelObjective={data?.data?.sloDashboardWidget}
-            timeRangeFilters={timeRangeFilters}
-            showUserHint
-          />
-          <Container padding={{ bottom: 'xlarge' }} />
-          {isCompositeSLO && (
-            <>
-              <CompositeSLOConsumption startTime={consumptionStartTime} endTime={consumptionEndTime} />
-              <Container padding={{ bottom: 'xlarge' }} />
-            </>
+        <>
+          {showDowntimeBanner && !!bannerData?.length && (
+            <DowntimeBanner showBanner={setShowDowntimeBanner} bannerData={bannerData} />
           )}
+          <Container padding="xlarge">
+            <ServiceDetails sloDashboardWidget={sloDashboardWidget} />
+            <SLOCardContent
+              isCardView
+              chartTimeRange={chartTimeRange}
+              setChartTimeRange={setChartTimeRange}
+              sliderTimeRange={sliderTimeRange}
+              setSliderTimeRange={setSliderTimeRange}
+              serviceLevelObjective={sloDashboardWidget}
+              filteredServiceLevelObjective={data?.data?.sloDashboardWidget}
+              timeRangeFilters={timeRangeFilters}
+              showUserHint
+              downtimeInstanceUnavailability={downtimeInstanceUnavailability?.data}
+            />
+            <Container padding={{ bottom: 'xlarge' }} />
+            {isCompositeSLO && (
+              <>
+                <CompositeSLOConsumption startTime={consumptionStartTime} endTime={consumptionEndTime} />
+                <Container padding={{ bottom: 'xlarge' }} />
+              </>
+            )}
 
-          <Card className={css.changesCard}>
-            <Heading
-              level={2}
-              color={Color.GREY_800}
-              padding={{ bottom: 'medium' }}
-              font={{ variation: FontVariation.CARD_TITLE }}
-            >
-              {getString('changes')}
-            </Heading>
-            <ChangesSourceCard
-              startTime={startTime}
-              endTime={endTime}
-              monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
-              monitoredServiceIdentifiers={monitoredServiceIdentifiers}
-            />
-            <Text
-              icon="info"
-              color={Color.GREY_600}
-              iconProps={{ size: 12, color: Color.PRIMARY_7 }}
-              font={{ variation: FontVariation.SMALL }}
-              padding={{ top: 'small', bottom: 'small' }}
-            >
-              {getString('cv.theTrendIsDeterminedForTheSelectedPeriodOverPeriod')}
-            </Text>
-            <ChangesTable
-              isCardView={false}
-              hasChangeSource
-              startTime={startTime}
-              endTime={endTime}
-              monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
-              monitoredServiceDetails={monitoredServiceDetails || []}
-            />
-          </Card>
-        </Container>
+            <Card className={css.changesCard}>
+              <Heading
+                level={2}
+                color={Color.GREY_800}
+                padding={{ bottom: 'medium' }}
+                font={{ variation: FontVariation.CARD_TITLE }}
+              >
+                {getString('changes')}
+              </Heading>
+              <ChangesSourceCard
+                startTime={startTime}
+                endTime={endTime}
+                monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
+                monitoredServiceIdentifiers={monitoredServiceIdentifiers}
+              />
+              <Text
+                icon="info"
+                color={Color.GREY_600}
+                iconProps={{ size: 12, color: Color.PRIMARY_7 }}
+                font={{ variation: FontVariation.SMALL }}
+                padding={{ top: 'small', bottom: 'small' }}
+              >
+                {getString('cv.theTrendIsDeterminedForTheSelectedPeriodOverPeriod')}
+              </Text>
+              <ChangesTable
+                isCardView={false}
+                hasChangeSource
+                startTime={startTime}
+                endTime={endTime}
+                monitoredServiceIdentifier={sloDashboardWidget.monitoredServiceIdentifier}
+                monitoredServiceDetails={monitoredServiceDetails || []}
+              />
+            </Card>
+          </Container>
+        </>
       )}
     </Page.Body>
   )

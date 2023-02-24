@@ -29,6 +29,7 @@ import { Intent } from '@harness/design-system'
 import { StringKeys, useStrings } from 'framework/strings'
 
 import { Scope } from '@common/interfaces/SecretsInterface'
+import { isMultiTypeExpression } from '@common/utils/utils'
 
 import { useStageErrorContext } from '@pipeline/context/StageErrorContext'
 import { DeployTabs } from '@pipeline/components/PipelineStudio/CommonUtils/DeployStageSetupShellUtils'
@@ -81,11 +82,18 @@ export default function DeployEnvironmentEntityWidget({
   const { scope } = usePipelineContext()
 
   const formikRef = useRef<FormikProps<DeployEnvironmentEntityFormState> | null>(null)
+  const environmentsTypeRef = useRef<MultiTypeInputType | null>(null)
 
   const {
     isOpen: isSwitchToMultiEnvironmentDialogOpen,
     open: openSwitchToMultiEnvironmentDialog,
     close: closeSwitchToMultiEnvironmentDialog
+  } = useToggleOpen()
+
+  const {
+    isOpen: isSwitchToMultiEnvironmentClearDialogOpen,
+    open: openSwitchToMultiEnvironmentClearDialog,
+    close: closeSwitchToMultiEnvironmentClearDialog
   } = useToggleOpen()
 
   const {
@@ -184,6 +192,34 @@ export default function DeployEnvironmentEntityWidget({
     closeSwitchToMultiEnvironmentDialog()
   }
 
+  function handleSwitchToMultiEnvironmentClearConfirmation(confirmed: boolean): void {
+    /* istanbul ignore else */
+    if (formikRef.current && confirmed) {
+      const newValues = produce(formikRef.current.values, draft => {
+        draft.category = 'multi'
+        draft.parallel = true
+
+        draft.environments = []
+
+        draft.environmentFilters = {}
+
+        delete draft.environment
+        delete draft.environmentGroup
+
+        delete draft.infrastructure
+        delete draft.infrastructures
+
+        delete draft.cluster
+        delete draft.clusters
+      })
+
+      updateValuesInFormikAndPropogate(newValues)
+      setRadioValue(getString('environments'))
+    }
+
+    closeSwitchToMultiEnvironmentClearDialog()
+  }
+
   function handleSwitchToSingleEnvironmentConfirmation(confirmed: boolean): void {
     /* istanbul ignore else */
     if (formikRef.current && confirmed) {
@@ -238,7 +274,12 @@ export default function DeployEnvironmentEntityWidget({
       const formValues = formikRef.current.values
       if (checked) {
         if (formValues.environment && scope === Scope.PROJECT) {
-          openSwitchToMultiEnvironmentDialog()
+          if (isMultiTypeExpression(environmentsTypeRef.current as MultiTypeInputType)) {
+            // We need to clear the data in case of expressions as multi environments do not support it
+            openSwitchToMultiEnvironmentClearDialog()
+          } else {
+            openSwitchToMultiEnvironmentDialog()
+          }
         } else {
           handleSwitchToMultiEnvironmentConfirmation(true)
         }
@@ -366,6 +407,7 @@ export default function DeployEnvironmentEntityWidget({
                           deploymentType={deploymentType}
                           customDeploymentRef={customDeploymentRef}
                           gitOpsEnabled={gitOpsEnabled}
+                          environmentsTypeRef={environmentsTypeRef}
                         />
                       ),
                       entityFilterProps: {
@@ -388,6 +430,7 @@ export default function DeployEnvironmentEntityWidget({
                     deploymentType={deploymentType}
                     customDeploymentRef={customDeploymentRef}
                     gitOpsEnabled={gitOpsEnabled}
+                    environmentsTypeRef={environmentsTypeRef}
                   />
                 )}
               </div>
@@ -403,6 +446,16 @@ export default function DeployEnvironmentEntityWidget({
         confirmButtonText={getString('applyChanges')}
         cancelButtonText={getString('cancel')}
         onClose={handleSwitchToMultiEnvironmentConfirmation}
+        intent={Intent.WARNING}
+      />
+
+      <ConfirmationDialog
+        isOpen={isSwitchToMultiEnvironmentClearDialogOpen}
+        titleText={getString('cd.pipelineSteps.environmentTab.multiEnvironmentsDialogTitleText')}
+        contentText={getString('cd.pipelineSteps.environmentTab.multiEnvironmentsClearConfirmationText')}
+        confirmButtonText={getString('applyChanges')}
+        cancelButtonText={getString('cancel')}
+        onClose={handleSwitchToMultiEnvironmentClearConfirmation}
         intent={Intent.WARNING}
       />
 

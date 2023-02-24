@@ -78,6 +78,12 @@ export interface ResourcesInterface {
   freezeWindowLevel: FreezeWindowLevels
   projectsByOrgId: Record<string, ProjctsByOrgId>
   fetchProjectsForOrgId: (orgId: string) => void
+  fetchProjectsByQuery: (query: string, orgId: string) => void
+  fetchOrgByQuery: (query: string) => void
+  loadingOrgs: boolean
+  loadingProjects: boolean
+  fetchOrgResetQuery: () => void
+  fetchProjectsResetQuery: (orgId: string) => void
 }
 
 type OptionalFreezeListUrlQueryParams = Pick<GetFreezeListQueryParams, 'page' | 'size'> &

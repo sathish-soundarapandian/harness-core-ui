@@ -19,7 +19,6 @@ import MultiTypeFieldScriptSelector, {
 import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { FormMultiTypeDurationField } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import { scriptInputType } from '@cd/components/PipelineSteps/ShellScriptStep/shellScriptTypes'
 import { BuildDetails, SidecarArtifact, useGetJobDetailsForCustom } from 'services/cd-ng'
@@ -30,6 +29,9 @@ import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import {
   getFqnPath,
   getValidInitialValuePath,
@@ -198,7 +200,7 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
         <Layout.Vertical key={artifactPath} className={css.inputWidth}>
           <div className={cx(stepCss.formGroup, stepCss.md)}>
             {isFieldRuntime(`artifacts.${artifactPath}.spec.timeout`, template) && (
-              <FormMultiTypeDurationField
+              <TimeoutFieldInputSetView
                 name={`${path}.artifacts.${artifactPath}.spec.timeout`}
                 label={getString('pipelineSteps.timeoutLabel')}
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.timeout`)}
@@ -208,6 +210,8 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
                   enableConfigureOptions: false,
                   allowableTypes
                 }}
+                fieldPath={`artifacts.${artifactPath}.spec.timeout`}
+                template={template}
               />
             )}
           </div>
@@ -251,7 +255,7 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
               `artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`,
               template
             ) && (
-              <FormInput.MultiTextInput
+              <TextFieldInputSetView
                 name={`${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`}
                 label={getString('pipeline.artifactsSelection.artifactsArrayPath')}
                 placeholder={getString('pipeline.artifactsSelection.artifactPathPlaceholder')}
@@ -263,12 +267,14 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
                   expressions,
                   allowableTypes
                 }}
+                fieldPath={`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.artifactsArrayPath`}
+                template={template}
               />
             )}
           </div>
           <div className={cx(stepCss.formGroup, stepCss.md)}>
             {isFieldRuntime(`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`, template) && (
-              <FormInput.MultiTextInput
+              <TextFieldInputSetView
                 name={`${path}.artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`}
                 label={getString('pipeline.artifactsSelection.versionPath')}
                 placeholder={getString('pipeline.artifactsSelection.versionPathPlaceholder')}
@@ -278,19 +284,23 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
                   expressions,
                   allowableTypes
                 }}
+                fieldPath={`artifacts.${artifactPath}.spec.scripts.fetchAllArtifacts.versionPath`}
+                template={template}
               />
             )}
           </div>
 
           <div className={cx(cx(stepCss.formGroup, stepCss.md))}>
             {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
-              <FormInput.MultiTypeInput
+              <SelectInputSetView
                 selectItems={getBuildDetails()}
                 label={getString('version')}
                 name={`${path}.artifacts.${artifactPath}.spec.version`}
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.version`)}
                 placeholder={getString('pipeline.artifactsSelection.versionPlaceholder')}
                 useValue
+                fieldPath={`artifacts.${artifactPath}.spec.version`}
+                template={template}
                 multiTypeInputProps={{
                   width: 391,
                   expressions,
@@ -321,7 +331,7 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
             )}
           </div>
           {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
               label={getString('version')}
               multiTextInputProps={{
                 width: 391,
@@ -331,6 +341,8 @@ const Content = (props: CustomArtifactRenderContent): React.ReactElement => {
               }}
               disabled={true}
               name={`${path}.artifacts.${artifactPath}.spec.version`}
+              fieldPath={`artifacts.${artifactPath}.spec.version`}
+              template={template}
             />
           )}
 

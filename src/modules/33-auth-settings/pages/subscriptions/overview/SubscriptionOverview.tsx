@@ -7,7 +7,7 @@
 
 import React, { useMemo, useState } from 'react'
 
-import { Layout } from '@harness/uicore'
+import { Layout, SelectOption } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { ModuleLicenseDTO } from 'services/cd-ng'
@@ -59,6 +59,7 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
   const { page, size } = queryParams
   const [orgName, setOrgName] = useState<string>('')
   const [projName, setProjName] = useState<string>('')
+  const [serviceName, setServiceName] = useState<string>('')
 
   const sort = useMemo(
     () => (sortingPreference ? JSON.parse(sortingPreference) : queryParams.sort),
@@ -67,7 +68,8 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
   const { data: activeServiceList, loading } = useMutateAsGet(useLisCDActiveServices, {
     body: {
       orgIdentifier: orgName,
-      projectIdentifier: projName
+      projectIdentifier: projName,
+      serviceIdentifier: serviceName
     },
     queryParams: {
       accountIdentifier: accountId,
@@ -77,15 +79,14 @@ const SubscriptionOverview: React.FC<SubscriptionOverviewProps> = props => {
     },
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
-  const updateFilters = (orgId: string, projId: string) => {
-    if (orgId === '$$ALL$$') {
-      orgId = ''
-    }
-    if (projId === '$$ALL$$') {
-      projId = ''
-    }
-    setOrgName(orgId)
-    setProjName(projId)
+  const updateFilters = (
+    orgId: SelectOption | undefined,
+    projId: SelectOption | undefined,
+    serviceId: SelectOption | undefined
+  ) => {
+    setOrgName(orgId?.value as string)
+    setProjName(projId?.value as string)
+    setServiceName(serviceId?.value as string)
   }
   return (
     <Layout.Vertical spacing="large" width={'90%'}>

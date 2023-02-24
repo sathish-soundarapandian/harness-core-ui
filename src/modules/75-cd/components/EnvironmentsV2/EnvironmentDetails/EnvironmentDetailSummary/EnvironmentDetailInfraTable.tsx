@@ -207,7 +207,7 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
               margin={{ left: 'xsmall', right: 'xsmall', top: 'xsmall', bottom: 'xsmall' }}
             />
             <ActiveServiceInstancePopover
-              buildId={buildId}
+              buildId={!buildId ? undefined : buildId}
               envId={envId}
               instanceNum={index}
               serviceIdentifier={serviceFilter}

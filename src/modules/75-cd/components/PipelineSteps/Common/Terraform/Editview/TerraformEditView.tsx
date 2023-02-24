@@ -1,5 +1,5 @@
 /*
- * Copyrig as MultiInputht 2022 Harness Inc. All rights reserved.
+ * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -28,10 +28,9 @@ import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { cloneDeep, set, unset, get } from 'lodash-es'
-
 import type { FormikProps } from 'formik'
-
 import { Classes, Dialog, IDialogProps } from '@blueprintjs/core'
+import type { TerraformVarFileWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
@@ -66,8 +65,6 @@ import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { TFMonaco } from './TFMonacoEditor'
 
-import TfVarFileList from './TFVarFileList'
-import { TFArtifactoryForm } from './TerraformArtifactoryForm'
 import {
   BackendConfigurationTypes,
   ConfigurationTypes,
@@ -84,9 +81,11 @@ import {
   getConfigFilePath,
   getPath
 } from '../../ConfigFileStore/ConfigFileStoreHelper'
-import { formatArtifactoryData } from './TerraformArtifactoryFormHelper'
+import { ArtifactoryForm } from '../../VarFile/ArtifactoryForm'
+import VarFileList from '../../VarFile/VarFileList'
+import { formatArtifactoryData } from '../../VarFile/helper'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import css from './TerraformVarfile.module.scss'
+import css from '../TerraformStep.module.scss'
 
 const setInitialValues = (data: TFFormData): TFFormData => {
   return data
@@ -292,7 +291,7 @@ export default function TerraformEditView(
 
   const getTitle = (isBackendConfig: boolean): React.ReactElement => (
     <Layout.Vertical flex style={{ justifyContent: 'center', alignItems: 'center' }} margin={{ bottom: 'xlarge' }}>
-      <Icon name="service-terraform" className={css.remoteIcon} size={50} padding={{ bottom: 'large' }} />
+      <Icon name="service-terraform" size={50} padding={{ bottom: 'large' }} />
       <Text color={Color.WHITE}>
         {isBackendConfig ? getString('cd.backendConfigFileStoreTitle') : getString('cd.terraformConfigFileStore')}
       </Text>
@@ -358,7 +357,7 @@ export default function TerraformEditView(
         />
         {connectorView ? getNewConnectorSteps() : null}
         {selectedConnector === 'Artifactory' ? (
-          <TFArtifactoryForm
+          <ArtifactoryForm
             isConfig={isConfig}
             isTerraformPlan={false}
             isBackendConfig={isBackendConfig}
@@ -652,13 +651,14 @@ export default function TerraformEditView(
                             </div>
                           )}
                           <div className={cx(css.divider, css.addMarginBottom)} />
-                          <TfVarFileList
+                          <VarFileList<TerraformData, TerraformVarFileWrapper>
                             formik={formik as FormikProps<TerraformData>}
                             isReadonly={readonly}
                             allowableTypes={allowableTypes}
                             setSelectedConnector={setSelectedConnector}
                             getNewConnectorSteps={getNewConnectorSteps}
                             selectedConnector={selectedConnector}
+                            varFilePath={'spec.configuration.spec.varFiles'}
                           />
                           <div className={css.divider} />
                           {TERRAFORM_REMOTE_BACKEND_CONFIG && initialValues?.type !== 'TerraformDestroy' ? (

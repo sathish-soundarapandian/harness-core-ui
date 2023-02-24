@@ -6,7 +6,13 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import { VisualYamlToggle, VisualYamlSelectedView as SelectedView, Tag, ButtonVariation } from '@harness/uicore'
+import {
+  VisualYamlToggle,
+  VisualYamlSelectedView as SelectedView,
+  Tag,
+  ButtonVariation,
+  Container
+} from '@harness/uicore'
 import { cloneDeep, defaultTo, isEmpty, isEqual, set } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { parse } from 'yaml'
@@ -37,7 +43,6 @@ const yamlBuilderReadOnlyModeProps: YamlBuilderProps = {
   fileName: `service.yaml`,
   entityType: 'Service',
   width: '100%',
-  height: 'calc(100vh - 250px)',
   yamlSanityConfig: {
     removeEmptyString: false,
     removeEmptyObject: false,
@@ -61,7 +66,7 @@ function ServiceConfiguration({
     setView,
     isReadonly
   } = usePipelineContext()
-  const { isServiceCreateModalView } = useServiceContext()
+  const { isServiceCreateModalView, isServiceEntityModalView } = useServiceContext()
   const { getString } = useStrings()
 
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
@@ -130,7 +135,7 @@ function ServiceConfiguration({
     return null
   }
   return (
-    <div className={css.serviceEntity}>
+    <Container className={css.serviceEntity} padding={{ left: isServiceEntityModalView ? 'xsmall' : 'xxlarge' }}>
       <div className={css.optionBtns}>
         <VisualYamlToggle
           selectedView={selectedView}
@@ -160,6 +165,7 @@ function ServiceConfiguration({
             existingJSON={serviceData}
             bind={setYamlHandler}
             schema={serviceSchema?.data}
+            height={isServiceEntityModalView ? 540 : 700}
           />
           {isReadonly || !isYamlEditable ? (
             <div className={css.buttonsWrapper}>
@@ -182,7 +188,7 @@ function ServiceConfiguration({
           ) : null}
         </div>
       )}
-    </div>
+    </Container>
   )
 }
 

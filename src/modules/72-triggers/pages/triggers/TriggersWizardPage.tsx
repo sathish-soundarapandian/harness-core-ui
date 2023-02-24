@@ -72,8 +72,7 @@ import { memoizedParse, yamlParse, yamlStringify } from '@common/utils/YamlHelpe
 import { useConfirmAction, useMutateAsGet, useDeepCompareEffect, useQueryParams } from '@common/hooks'
 import type { FormikEffectProps } from '@common/components/FormikEffect/FormikEffect'
 import type { InputSetValue } from '@pipeline/components/InputSetSelector/utils'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import useIsNewGitSyncRemotePipeline from '@triggers/components/Triggers/useIsNewGitSyncRemotePipeline'
 import useIsGithubWebhookAuthenticationEnabled from '@triggers/components/Triggers/WebhookTrigger/useIsGithubWebhookAuthenticationEnabled'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
@@ -201,7 +200,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     }
   })
 
-  const isGitWebhookPollingEnabled = useFeatureFlag(FeatureFlag.CD_GIT_WEBHOOK_POLLING)
+  const { CD_GIT_WEBHOOK_POLLING: isGitWebhookPollingEnabled, FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed } =
+    useFeatureFlags()
 
   const isNewGitSyncRemotePipeline = useIsNewGitSyncRemotePipeline()
 
@@ -1217,7 +1217,8 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
                 resolvedPipeline: resolvedMergedPipeline,
                 getString,
                 viewType: StepViewType.TriggerForm,
-                viewTypeMetadata: { isTrigger: true }
+                viewTypeMetadata: { isTrigger: true },
+                isOptionalVariableAllowed
               }) as any) || formErrors
             resolve(validatedErrors)
           } catch (e) {

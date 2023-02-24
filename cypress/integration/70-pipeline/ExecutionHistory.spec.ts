@@ -20,11 +20,6 @@ import {
 
 describe('Pipeline Execution History', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
     cy.visit(`${executionHistoryRoute}?listview=true`, {
       timeout: 30000

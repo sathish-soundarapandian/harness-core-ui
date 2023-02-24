@@ -75,6 +75,8 @@ export const yamlFileExtension = '.yaml'
 
 export const yamlPathRegex = /.*\.ya?ml$/
 
+export const fullYamlPathRegex = /^[\w\d./][\w\d\s\-_./]*\.{1}ya?ml$/
+
 export const carriageReturnRegex = /(?:\\[rn])+/g
 
 export const cpuLimitRegex = /^\d+(\.\d+)?$|^\d+m$|^$/

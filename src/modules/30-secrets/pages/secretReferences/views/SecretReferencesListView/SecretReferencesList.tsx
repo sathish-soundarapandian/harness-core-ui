@@ -96,10 +96,10 @@ const SecretReferencesList: React.FC<SecretsListProps> = ({ secrets, gotoPage })
       //   history.push(`${pathname}/${secret.secret?.identifier}`)
       // }}
       pagination={{
-        itemCount: secrets?.totalElements || 0,
-        pageSize: secrets?.size || 10,
+        itemCount: secrets?.totalItems || 0,
+        pageSize: secrets?.pageSize || 10,
         pageCount: secrets?.totalPages || 0,
-        pageIndex: secrets?.pageable?.pageNumber || 0,
+        pageIndex: secrets?.pageIndex || 0,
         gotoPage
       }}
     />

@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useMemo } from 'react'
 import { Formik } from '@harness/uicore'
 
 import * as Yup from 'yup'
@@ -17,10 +17,13 @@ import { useStrings } from 'framework/strings'
 
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
+import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
+import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import type { ContinousVerificationData } from '../../types'
 import type { ContinousVerificationWidgetProps } from './types'
 import { ContinousVerificationWidgetSections } from './components/ContinousVerificationWidgetSections/ContinousVerificationWidgetSections'
 import { getMonitoredServiceRefFromType, validateMonitoredService } from './ContinousVerificationWidget.utils'
+import { getIsMultiServiceOrEnvs } from '../../utils'
 
 /**
  * Spec
@@ -31,17 +34,31 @@ export function ContinousVerificationWidget(
   { initialValues, onUpdate, isNewStep, stepViewType, onChange, allowableTypes }: ContinousVerificationWidgetProps,
   formikRef: StepFormikFowardRef
 ): JSX.Element {
+  const { getString } = useStrings()
+  const {
+    state: {
+      selectionState: { selectedStageId }
+    },
+    getStageFromPipeline
+  } = usePipelineContext()
+  const selectedStage = getStageFromPipeline<DeploymentStageElementConfig>(selectedStageId as string)?.stage
+
+  const isMultiServicesOrEnvs = useMemo(() => {
+    return getIsMultiServiceOrEnvs(selectedStage)
+  }, [selectedStage])
+
   const values = {
     ...initialValues,
     spec: {
       ...initialValues.spec,
+      isMultiServicesOrEnvs,
       ...(initialValues?.spec?.monitoredService && { initialMonitoredService: initialValues?.spec?.monitoredService })
     }
   }
-  const { getString } = useStrings()
 
   const validateForm = (formData: ContinousVerificationData): FormikErrors<ContinousVerificationData> => {
     let errors: FormikErrors<ContinousVerificationData> = {}
+    const isMultiServiesOrEnvs = formData?.spec?.isMultiServicesOrEnvs
     const {
       healthSources = [],
       monitoredService: { type },
@@ -53,6 +70,7 @@ export function ContinousVerificationWidget(
     const { monitoredServiceTemplateRef = '', templateInputs = {} as unknown } = monitoredService?.spec || {}
     const { templateInputs: initialTemplateInputs = {} } = initialMonitoredService?.spec || {}
     const templateInputsToValidate = (!isEmpty(initialTemplateInputs) ? initialTemplateInputs : templateInputs) as any
+
     errors = validateMonitoredService(
       type,
       stepViewType,
@@ -62,8 +80,10 @@ export function ContinousVerificationWidget(
       getString,
       monitoredServiceTemplateRef,
       templateInputsToValidate,
-      templateInputs
+      templateInputs,
+      isMultiServiesOrEnvs
     )
+
     return errors
   }
 

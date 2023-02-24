@@ -1,9 +1,15 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { findAllByText, findByText, fireEvent, getAllByText, render, waitFor, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
 import pipelineList from '@pipeline/pages/execution-list/__tests__/mocks/pipeline-list.json'
-import * as FeatureFlag from '@common/hooks/useFeatureFlag'
 import * as pipelineNg from 'services/pipeline-ng'
 import * as cdng from 'services/cd-ng'
 import { sourceCodeManagers } from '@connectors/mocks/mock'
@@ -106,11 +112,6 @@ const getModuleParams = (module = 'cd') => ({
 const TEST_PATH = routes.toDeployments({ ...accountPathProps, ...pipelinePathProps, ...pipelineModuleParams })
 
 describe('Environment Detail Summary', () => {
-  beforeEach(() => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      CDC_ENVIRONMENT_DASHBOARD_NG: true
-    })
-  })
   beforeAll(() => {
     jest.spyOn(global.Date, 'now').mockReturnValue(1603645966706)
   })

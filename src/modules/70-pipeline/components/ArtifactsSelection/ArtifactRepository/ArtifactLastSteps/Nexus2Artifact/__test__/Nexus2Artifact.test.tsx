@@ -127,7 +127,9 @@ describe('Nexus Artifact tests', () => {
         artifactPath: '',
         repositoryPortorRepositoryURL: RepositoryPortOrServer.RepositoryPort,
         repositoryUrl: '',
-        repositoryPort: ''
+        repositoryPort: '',
+        classifier: 'Test-classifier',
+        extension: 'test-extension'
       }
     } as Nexus2InitialValuesType
     const { container, getByText } = render(
@@ -135,7 +137,12 @@ describe('Nexus Artifact tests', () => {
         <Nexus2Artifact key={'key'} initialValues={defaultValues} {...props} />
       </TestWrapper>
     )
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    await act(async () => {
+      fireEvent.change(queryByNameAttribute('spec.classifier')!, { target: { value: 'test-classifier' } })
 
+      fireEvent.change(queryByNameAttribute('spec.extension')!, { target: { value: 'test-extension' } })
+    })
     const repoFormatDropdown = container.querySelector('input[name="repositoryFormat"]') as HTMLInputElement
     const repoFormatCaret = container
       .querySelector(`input[name="repositoryFormat"] + [class*="bp3-input-action"]`)
@@ -251,7 +258,7 @@ describe('Nexus Artifact tests', () => {
     const defaultValues: Nexus2InitialValuesType = {
       connectorRef: '<+input>',
       repository: '<+input>',
-      repositoryFormat: 'Maven',
+      repositoryFormat: 'maven',
       tag: '<+input>',
       type: 'Nexus2Registry',
       spec: {
@@ -327,19 +334,20 @@ describe('Nexus Artifact tests', () => {
 
   test(`able to submit form when the form is non empty`, async () => {
     const defaultValues: Nexus2InitialValuesType = {
-      connectorRef: '<+input>',
-      repository: 'cdp-test-group2',
-      repositoryFormat: RepositoryFormatTypes.Maven,
-      tag: '<+input>',
-      type: 'Nexus2Registry',
       spec: {
-        groupId: 'test-groupId',
-        artifactId: 'test-artifactId',
-        extension: 'test-extension',
-        classifier: 'test-classifer'
+        connectorRef: '<+input>',
+        repository: 'cdp-test-group2',
+        repositoryFormat: RepositoryFormatTypes.Maven,
+        tag: '<+input>',
+
+        spec: {
+          groupId: 'test-groupId',
+          artifactId: 'test-artifactId',
+          extension: 'test-extension',
+          classifier: 'test-classifer'
+        }
       },
-      tagType: TagTypes.Regex,
-      tagRegex: '<+input>',
+      type: 'Nexus2Registry',
       identifier: 'testidentifier'
     } as any
     const { container } = render(
@@ -387,5 +395,55 @@ describe('Nexus Artifact tests', () => {
         }
       })
     })
+  })
+
+  test(`not able to submit and throw errors for fields which are required `, async () => {
+    const defaultValues: Nexus2InitialValuesType = {
+      spec: {
+        connectorRef: '<+input>',
+        repository: 'cdp-test-group2',
+        repositoryFormat: RepositoryFormatTypes.Maven,
+        tagRegex: '<+input>',
+        spec: {
+          groupId: '',
+          artifactId: '',
+          extension: 'test-extension',
+          classifier: 'test-classifer'
+        }
+      },
+      type: 'Nexus2Registry',
+      identifier: 'testidentifier'
+    } as any
+    const { container, getByText } = render(
+      <TestWrapper>
+        <Nexus2Artifact key={'key'} initialValues={defaultValues} {...props} />
+      </TestWrapper>
+    )
+    const submitBtn = container.querySelector('button[type="submit"]')!
+    fireEvent.click(submitBtn)
+
+    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
+    const portalDivs = document.getElementsByClassName('bp3-portal')
+    expect(portalDivs.length).toBe(0)
+    // Select repository from dropdown
+    const repositoryDropDownButton = container.querySelectorAll('[data-icon="chevron-down"]')[1]
+    fireEvent.click(repositoryDropDownButton!)
+    expect(portalDivs.length).toBe(1)
+    const dropdownPortalDiv = portalDivs[0]
+    const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
+    const selectItem = await findByText(selectListMenu as HTMLElement, 'cdp-test-group2')
+    act(() => {
+      fireEvent.click(selectItem)
+    })
+    const repositorySelect = queryByNameAttribute('repository') as HTMLInputElement
+    expect(repositorySelect.value).toBe('cdp-test-group2')
+
+    fireEvent.click(submitBtn)
+
+    expect(container).toMatchSnapshot()
+
+    expect(props.handleSubmit).toBeCalled()
+
+    expect(getByText('pipeline.artifactsSelection.validation.artifactId')).toBeDefined()
   })
 })

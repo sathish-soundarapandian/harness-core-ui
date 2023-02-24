@@ -195,6 +195,18 @@ function AttachPathYamlFlow({
   )
   const hideAddManifest = (allowOnlyOneFilePath && valuesPaths?.length === 1) || isReadonly
   const valuesPathsIcon = defaultTo(valuesIcon, 'valuesFIle')
+  const editDeleteButtons = (index: number): JSX.Element => {
+    return (
+      <>
+        {!isReadonly && (
+          <Layout.Horizontal inline>
+            <Button icon="Edit" iconProps={{ size: 14 }} onClick={showModal} minimal />
+            <Button iconProps={{ size: 14 }} icon="main-trash" onClick={() => removeValuesYaml(index)} minimal />
+          </Layout.Horizontal>
+        )}
+      </>
+    )
+  }
 
   return (
     <section className={css.valuesList}>
@@ -215,26 +227,19 @@ function AttachPathYamlFlow({
                 />
               </Layout.Horizontal>
               {renderConnectorField}
-              {!isReadonly && (
-                <span>
-                  <Layout.Horizontal>
-                    <Button icon="Edit" iconProps={{ size: 14 }} onClick={showModal} minimal />
-                    <Button
-                      iconProps={{ size: 14 }}
-                      icon="main-trash"
-                      onClick={() => removeValuesYaml(index)}
-                      minimal
-                    />
-                  </Layout.Horizontal>
-                </span>
-              )}
+              {editDeleteButtons(index)}
             </div>
           </section>
         ))
       ) : (
-        <div className={css.valuesPathList}>
-          {`${ManifestToPathLabelMap[manifestType] && getString(ManifestToPathLabelMap[manifestType])}: ${valuesPaths}`}
-        </div>
+        <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'space-between' }}>
+          <Text inline>
+            {`${
+              ManifestToPathLabelMap[manifestType] && getString(ManifestToPathLabelMap[manifestType])
+            }: ${valuesPaths}`}
+          </Text>
+          {editDeleteButtons(0)}
+        </Layout.Horizontal>
       )}
       {!hideAddManifest && (
         <Button

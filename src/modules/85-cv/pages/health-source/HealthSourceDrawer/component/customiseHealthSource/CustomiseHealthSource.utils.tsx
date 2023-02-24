@@ -57,6 +57,7 @@ export const LoadSourceByType = ({
 }): JSX.Element | null => {
   const isSplunkMetricEnabled = useFeatureFlag(FeatureFlag.CVNG_SPLUNK_METRICS)
   const isSumoLogicEnabled = useFeatureFlag(FeatureFlag.SRM_SUMO)
+  const isELKEnabled = useFeatureFlag(FeatureFlag.SRM_ELK_LOGS_V2)
   const selectedProduct = data?.product?.value || data?.existingMetricDetails?.type
   const healthSourceConfig = healthSourcesConfig[selectedProduct]
 
@@ -138,8 +139,6 @@ export const LoadSourceByType = ({
       } else {
         return <SplunkHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
       }
-    case HealthSourceTypes.Elk:
-      return <ElkHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
 
     case HealthSourceTypes.SplunkMetric:
       if (!isSplunkMetricEnabled) {
@@ -173,6 +172,20 @@ export const LoadSourceByType = ({
           onSubmit={onSubmit}
         />
       )
+    case HealthSourceTypes.Elk:
+      if (!isELKEnabled) {
+        return <ElkHealthSource data={data} isTemplate={isTemplate} expressions={expressions} onSubmit={onSubmit} />
+      } else {
+        return (
+          <CommonHealthSourceContainer
+            data={data}
+            healthSourceConfig={healthSourceConfig}
+            isTemplate={isTemplate}
+            expressions={expressions}
+            onSubmit={onSubmit}
+          />
+        )
+      }
     default:
       return null
   }

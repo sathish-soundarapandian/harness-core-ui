@@ -6,39 +6,61 @@
  */
 
 import React, { useState } from 'react'
-import { Container, getMultiTypeFromValue, HarnessDocTooltip, MultiTypeInputType } from '@harness/uicore'
+import {
+  Container,
+  getMultiTypeFromValue,
+  HarnessDocTooltip,
+  MultiTypeInputType,
+  RUNTIME_INPUT_VALUE
+} from '@harness/uicore'
 import { Checkbox } from '@blueprintjs/core'
-import type { FormikProps } from 'formik'
 import cx from 'classnames'
+import { useFormikContext } from 'formik'
+import { get, isNil } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { MultiTypeExecutionCondition } from '@common/components/MultiTypeExecutionCondition/MultiTypeExecutionCondition'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import type { StepMode as Modes } from '@pipeline/utils/stepUtils'
-import type { ConditionalExecutionOption } from './ConditionalExecutionPanelUtils'
-import { ModeEntityNameMap } from './ConditionalExecutionPanelUtils'
+import { isMultiTypeRuntime } from '@common/utils/utils'
+import { ModeEntityNameMap, PipelineOrStageStatus } from './ConditionalExecutionPanelUtils'
 import css from './ConditionalExecutionPanel.module.scss'
 
 interface ConditionalExecutionConditionProps {
-  formikProps: FormikProps<ConditionalExecutionOption>
+  path?: string
   mode: Modes
   isReadonly: boolean
+  statusPath: 'pipelineStatus' | 'stageStatus'
 }
 
 export default function ConditionalExecutionCondition(props: ConditionalExecutionConditionProps): React.ReactElement {
+  const { mode, isReadonly, path = 'when', statusPath } = props
   const { getString } = useStrings()
-  const { formikProps, mode, isReadonly } = props
-  const conditionValue = formikProps.values?.condition
+  const formik = useFormikContext()
+  const conditionValue = get(formik.values, `${path}.condition`)
+  const statusValue = get(formik.values, `${path}.${statusPath}`, PipelineOrStageStatus.SUCCESS)
+  const [enableJEXL, setEnableJEXL] = React.useState(!isNil(conditionValue))
   const [multiType, setMultiType] = useState<MultiTypeInputType>(getMultiTypeFromValue(conditionValue))
-  const isInputDisabled = !formikProps.values.enableJEXL || isReadonly
+  const isInputDisabled = !enableJEXL || isReadonly
   const { expressions } = useVariablesExpression()
 
+  React.useEffect(() => {
+    setEnableJEXL(!isNil(conditionValue))
+  }, [conditionValue])
+
+  React.useEffect(() => {
+    if (isMultiTypeRuntime(multiType)) {
+      formik.setFieldValue(path, { [statusPath]: statusValue, condition: RUNTIME_INPUT_VALUE })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [multiType])
+
   return (
-    <>
+    <div>
       <Checkbox
         name="enableJEXL"
-        checked={formikProps.values.enableJEXL}
+        checked={enableJEXL}
         disabled={isReadonly}
-        className={cx(css.blackText, { [css.active]: formikProps.values.enableJEXL })}
+        className={cx(css.blackText, { [css.active]: enableJEXL })}
         labelElement={
           <span data-tooltip-id="conditionalExecution">
             {getString('pipeline.conditionalExecution.condition', { entity: ModeEntityNameMap[mode] })}
@@ -47,16 +69,16 @@ export default function ConditionalExecutionCondition(props: ConditionalExecutio
         }
         onChange={e => {
           const isChecked = e.currentTarget.checked
-          formikProps.setFieldValue('enableJEXL', isChecked)
+          setEnableJEXL(isChecked)
+          formik.setFieldValue(path, { [statusPath]: statusValue })
           if (!isChecked) {
-            formikProps.setFieldValue('condition', null)
             setMultiType(MultiTypeInputType.FIXED)
           }
         }}
       />
       <Container padding={{ top: 'small', left: 'large' }}>
         <MultiTypeExecutionCondition
-          path={'condition'}
+          path={`${path}.condition`}
           allowableTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
           isInputDisabled={isInputDisabled}
           multiType={multiType}
@@ -64,6 +86,6 @@ export default function ConditionalExecutionCondition(props: ConditionalExecutio
           expressions={expressions}
         />
       </Container>
-    </>
+    </div>
   )
 }

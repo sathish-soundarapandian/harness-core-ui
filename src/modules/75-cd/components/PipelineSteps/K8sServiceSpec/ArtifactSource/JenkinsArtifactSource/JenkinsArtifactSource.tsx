@@ -40,6 +40,7 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -512,7 +513,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.artifactPath`, template) && (
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.artifactPath`}
+              template={template}
               label={getString('pipeline.artifactPathLabel')}
               name={`${path}.artifacts.${artifactPath}.spec.artifactPath`}
               useValue
@@ -549,7 +552,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.build`, template) && (
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.build`}
+              template={template}
               label={getString('pipeline.jenkinsBuild')}
               name={`${path}.artifacts.${artifactPath}.spec.build`}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.build`)}

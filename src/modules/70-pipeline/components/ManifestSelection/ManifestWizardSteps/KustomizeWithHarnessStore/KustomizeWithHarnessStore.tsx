@@ -37,6 +37,7 @@ import {
   ManifestStoreMap
 } from '../../Manifesthelper'
 import type { KustomizeWithHarnessStorePropTypeDataType, ManifestTypes } from '../../ManifestInterface'
+import { removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface KustomizeWithHarnessStorePropType {
@@ -73,7 +74,8 @@ function KustomizeWithHarnessStore({
         ...specValues,
         identifier: initialValues.identifier,
         overlayConfiguration,
-        patchesPaths,
+        patchesPaths:
+          typeof patchesPaths === 'string' ? patchesPaths : removeEmptyFieldsFromStringArray(patchesPaths, true),
         pluginPath: get(initialValues, 'spec.pluginPath'),
         skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning'),
         enableDeclarativeRollback: get(initialValues, 'spec.enableDeclarativeRollback')
@@ -106,7 +108,10 @@ function KustomizeWithHarnessStore({
                   kustomizeYamlFolderPath: formData.overlayConfiguration
                 }
               : undefined,
-            patchesPaths: formData.patchesPaths,
+            patchesPaths:
+              typeof formData.patchesPaths === 'string'
+                ? formData.patchesPaths
+                : removeEmptyFieldsFromStringArray(formData.patchesPaths),
             pluginPath: formData?.pluginPath,
             skipResourceVersioning: getSkipResourceVersioningBasedOnDeclarativeRollback(
               formData?.skipResourceVersioning,

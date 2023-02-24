@@ -174,7 +174,7 @@ export const ECSInfraSpecEditable: React.FC<ECSInfraSpecEditableProps> = ({
                 <FormMultiTypeConnectorField
                   name="connectorRef"
                   label={getString('connector')}
-                  placeholder={getString('connectors.selectConnector')}
+                  placeholder={getString('common.entityPlaceholderText')}
                   disabled={readonly}
                   accountIdentifier={accountId}
                   tooltipProps={{

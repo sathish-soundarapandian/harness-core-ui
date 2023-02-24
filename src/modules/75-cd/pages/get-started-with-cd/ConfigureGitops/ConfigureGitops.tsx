@@ -31,7 +31,7 @@ import { Color, FontVariation, PopoverProps } from '@harness/design-system'
 import cx from 'classnames'
 import * as Yup from 'yup'
 import type { FormikContextType } from 'formik'
-import { defaultTo, get, noop } from 'lodash-es'
+import { defaultTo, get, isEmpty, noop } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { FormGroup, Label } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -41,10 +41,12 @@ import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   RepositoriesRefs,
+  RepositoriesRepoAppDetailsResponse,
   RepositoriesRepoAppsResponse,
   Servicev1Repository,
   useAgentRepositoryServiceCreateRepository,
   useAgentRepositoryServiceGet,
+  useAgentRepositoryServiceGetAppDetails,
   useAgentRepositoryServiceListApps,
   useAgentRepositoryServiceListRefs,
   useRepositoryServiceListRepositories
@@ -154,7 +156,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
 
   const { getString } = useStrings()
   const formikRef = useRef<FormikContextType<RepositoryInterface>>()
-  const { accountId } = useParams<ProjectPathProps>()
+  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const repoURL = formikRef.current?.values?.repo
   const repoId = selectedRepo?.identifier
   const defaultQueryParams = {
@@ -185,6 +187,8 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
       {
         queryParams: {
           accountIdentifier: accountId,
+          projectIdentifier,
+          orgIdentifier,
           identifier: getLastURLPathParam(defaultTo(data?.repo, ''))
         },
         pathParams: {
@@ -217,13 +221,18 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
     queryRepo: ''
   }
 
+  const defaultAppDetailsParams = {
+    agentIdentifier: fullAgentName,
+    querySourceRepoUrl: ''
+  }
+
   const {
     data: revisions,
     loading: loadingRevisions,
     refetch: fetchRevisions,
     error: revisionsLoadingError
   } = useAgentRepositoryServiceListRefs({
-    queryParams: defaultQueryParams,
+    queryParams: { ...defaultQueryParams, projectIdentifier, orgIdentifier },
     identifier: getLastURLPathParam(defaultTo(repoURL, '')),
     ...defaultRevisionsParams,
     lazy: true
@@ -241,6 +250,30 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
     ...defaultPathParams,
     lazy: true
   })
+
+  const {
+    data: appDetails,
+    error: appDetailsFetchError,
+    refetch: fetchAppDetails
+  } = useAgentRepositoryServiceGetAppDetails({
+    queryParams: defaultQueryParams,
+    identifier: getLastURLPathParam(defaultTo(repoURL, '')),
+    ...defaultAppDetailsParams,
+    lazy: true
+  })
+
+  useEffect(() => {
+    if (!isEmpty(appDetails)) {
+      props?.setAppDetails(appDetails as RepositoriesRepoAppDetailsResponse)
+    }
+  }, [appDetails])
+
+  useEffect(() => {
+    if (appDetailsFetchError) {
+      toast.showError(`Failed loading app details: ${(appDetailsFetchError as APIError).data.error}`)
+    }
+  }, [appDetailsFetchError])
+
   useEffect(() => {
     if (revisionsLoadingError) {
       toast.showError(`Failed loading revisions: ${(revisionsLoadingError as APIError).data.error}`)
@@ -248,7 +281,12 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
   }, [revisionsLoadingError])
 
   useEffect(() => {
-    getRepositories({ accountIdentifier: accountId, agentIdentifier: fullAgentName }).then(response => {
+    getRepositories({
+      accountIdentifier: accountId,
+      agentIdentifier: fullAgentName,
+      projectIdentifier,
+      orgIdentifier
+    }).then(response => {
       setRepositoryListData(defaultTo(response?.content, []))
       if (!response?.content?.length) {
         formikRef.current?.setFieldValue('isNewRepository', true)
@@ -290,7 +328,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
       setTestConnectionStatus(TestStatus.SUCCESS)
       if (formikRef.current?.values?.repo && formikRef.current?.values?.sourceCodeType !== SourceCodeType.USE_SAMPLE) {
         fetchRevisions({
-          queryParams: defaultQueryParams,
+          queryParams: { ...defaultQueryParams, projectIdentifier, orgIdentifier },
           pathParams: {
             identifier: repository?.identifier,
             ...defaultRevisionsParams
@@ -320,6 +358,8 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
       pathParams: { agentIdentifier: fullAgentName, identifier: repoId }, // TODO: remove this later
       queryParams: {
         accountIdentifier: accountId,
+        projectIdentifier,
+        orgIdentifier,
         'query.repo': repoId,
         'query.forceRefresh': true
       }
@@ -453,8 +493,8 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
     } else {
       return [
         {
-          label: getString('cd.getStartedWithCD.master'),
-          value: getString('cd.getStartedWithCD.master')
+          label: getString('cd.getStartedWithCD.main'),
+          value: getString('cd.getStartedWithCD.main')
         }
       ]
     }
@@ -885,6 +925,8 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                                         },
                                                         queryParams: {
                                                           ...defaultQueryParams,
+                                                          projectIdentifier,
+                                                          orgIdentifier,
                                                           'query.revision': item.value as string
                                                         }
                                                       })
@@ -940,6 +982,22 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                               onChange={item => {
                                                 if (item.value !== formikProps?.values?.path) {
                                                   formikProps.setFieldValue('path', item.value)
+                                                }
+                                                if (item.value) {
+                                                  fetchAppDetails({
+                                                    pathParams: {
+                                                      agentIdentifier: fullAgentName,
+                                                      querySourceRepoUrl: encodeURIComponent(defaultTo(repoURL, '')),
+                                                      identifier: getLastURLPathParam(defaultTo(repoURL, ''))
+                                                    },
+                                                    queryParams: {
+                                                      ...defaultQueryParams,
+                                                      projectIdentifier,
+                                                      orgIdentifier,
+                                                      'query.source.path': item.value as string,
+                                                      'query.source.targetRevision': formikProps?.values?.targetRevision
+                                                    }
+                                                  })
                                                 }
                                               }}
                                             />

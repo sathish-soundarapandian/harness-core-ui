@@ -147,9 +147,7 @@ exports[`Entity Usage render for connector data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/AaTestOrg/projects/dev7/pipelines/test2/pipeline-studio/"
                     rel="noreferrer"
-                    target="_blank"
                   >
                     test2
                   </a>
@@ -243,9 +241,7 @@ exports[`Entity Usage render for connector data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/AaTestOrg/projects/dev7/pipelines/test2/pipeline-studio/"
                     rel="noreferrer"
-                    target="_blank"
                   >
                     dev7
                   </a>
@@ -280,9 +276,7 @@ exports[`Entity Usage render for connector data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/AaTestOrg/projects/dev7/pipelines/test/pipeline-studio/"
                     rel="noreferrer"
-                    target="_blank"
                   >
                     test
                   </a>
@@ -376,9 +370,7 @@ exports[`Entity Usage render for connector data with gitSync 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    href="/account/px7xd_BFRCi-pfWPYXVjvw/home/orgs/AaTestOrg/projects/dev7/pipelines/test/pipeline-studio/"
                     rel="noreferrer"
-                    target="_blank"
                   >
                     dev7
                   </a>
@@ -534,9 +526,7 @@ exports[`Entity Usage render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    href="/account/nqqlJ_62S0q7wFnYSmwNpQ/home/orgs/default/projects/YNC_Project/setup/resources/connectors/harnessImage"
                     rel="noreferrer"
-                    target="_blank"
                   >
                     Harness Docker Connector
                   </a>
@@ -578,9 +568,7 @@ exports[`Entity Usage render for data 1`] = `
                   style="--text-line-clamp: 1;"
                 >
                   <a
-                    href="/account/nqqlJ_62S0q7wFnYSmwNpQ/home/orgs/default/projects/YNC_Project/setup/resources/connectors/harnessImage"
                     rel="noreferrer"
-                    target="_blank"
                   >
                     YNC_Project
                   </a>

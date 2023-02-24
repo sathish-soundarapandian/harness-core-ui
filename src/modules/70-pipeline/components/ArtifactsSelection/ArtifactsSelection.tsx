@@ -581,7 +581,6 @@ export default function ArtifactsSelection({
 
   return (
     <ArtifactListView
-      stage={stage}
       primaryArtifact={primaryArtifact}
       sideCarArtifact={sideCarArtifact}
       addNewArtifact={addNewArtifact}

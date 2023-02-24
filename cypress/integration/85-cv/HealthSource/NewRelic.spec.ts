@@ -32,9 +32,6 @@ import { Connectors } from '../../../utils/connctors-utils'
 
 describe('Create empty monitored service', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      return false
-    })
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
     cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })
@@ -200,9 +197,7 @@ describe('Create empty monitored service', () => {
           ]
         })
       })
-      cy.on('uncaught:exception', () => {
-        return false
-      })
+
       cy.login('test', 'test')
       cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
       cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })

@@ -51,10 +51,6 @@ export const visitExecutionStageWithAssertion = (): void => {
 }
 
 export const setupBasePipeline = (type: BasePipelineTypeValues): void => {
-  cy.on('uncaught:exception', () => {
-    // returning false here prevents Cypress from failing the test
-    return false
-  })
   // sets token
   cy.initializeRoute()
 
@@ -203,9 +199,6 @@ export const inputSetPipelineMocks = (type: BasePipelineTypeValues) => {
 }
 
 export const visitInputSetsPage = (type: BasePipelineTypeValues): void => {
-  cy.on('uncaught:exception', () => {
-    return false
-  })
   cy.initializeRoute()
   cy.intercept('GET', inputSetsCall, { fixture: 'pipeline/api/inputSet/emptyInputSetsList' }).as('emptyInputSetList')
   switch (type) {
@@ -247,11 +240,6 @@ export const addInputSet = () => {
 }
 
 export const visitTriggersPage = (type: BasePipelineTypeValues): void => {
-  cy.on('uncaught:exception', () => {
-    // returning false here prevents Cypress from
-    // failing the test
-    return false
-  })
   cy.initializeRoute()
   cy.intercept('GET', getTriggerListAPI, { fixture: 'pipeline/api/triggers/emptyTriggersList' }).as('emptyTriggersList')
   switch (type) {
@@ -292,11 +280,6 @@ export const addTrigger = () => {
 }
 
 export const visitTemplatesPage = () => {
-  cy.on('uncaught:exception', () => {
-    // returning false here prevents Cypress from
-    // failing the test
-    return false
-  })
   cy.initializeRoute()
   cy.intercept('GET', templatesListCall, { fixture: 'template/api/emptyTemplatesList' }).as('emptyTemplatesList')
   cy.intercept('POST', stepLibrary, { fixture: 'ci/api/common/stepLibraryResponse.json' }).as('stepLibrary')

@@ -141,7 +141,7 @@ function K8sValuesManifest({
           valuesPaths:
             typeof formData?.valuesPaths === 'string'
               ? formData?.valuesPaths
-              : formData?.valuesPaths?.map((path: { path: string }) => path.path)
+              : removeEmptyFieldsFromStringArray(formData?.valuesPaths?.map((path: { path: string }) => path.path))
         }
       }
     }

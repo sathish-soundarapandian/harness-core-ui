@@ -19,11 +19,6 @@ describe('RUN PIPELINE MODAL - approval stage', () => {
   const accountLicense = 'ng/api/licenses/account?routingId=accountId&accountIdentifier=accountId'
 
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', gitSyncCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.intercept('GET', yamlSnippetCall, { fixture: 'pipeline/api/approvals/stageYamlSnippet' })
     cy.intercept('GET', userGroupCall, { fixture: 'pipeline/api/approvals/userGroup' })

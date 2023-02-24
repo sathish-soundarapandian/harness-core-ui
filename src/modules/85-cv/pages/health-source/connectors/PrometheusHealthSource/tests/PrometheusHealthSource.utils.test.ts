@@ -51,25 +51,14 @@ describe('Validate Prometheus Utils', () => {
   })
 
   test('prometheus payload with metric thresholds', () => {
-    expect(
-      transformPrometheusSetupSourceToHealthSource(sourceDataPrometheusPayload as PrometheusSetupSource, true)
-    ).toEqual(expectedResultPrometheusPayload)
-  })
-
-  test('prometheus payload with data source type as AWS Prometheus', () => {
-    expect(transformPrometheusSetupSourceToHealthSource(dataSourceTypePayloadMock, true)).toEqual(
-      expectedAWSPrometheusPayload
+    expect(transformPrometheusSetupSourceToHealthSource(sourceDataPrometheusPayload as PrometheusSetupSource)).toEqual(
+      expectedResultPrometheusPayload
     )
   })
 
-  test('prometheus payload without metric thresholds', () => {
-    expect(
-      transformPrometheusSetupSourceToHealthSource(sourceDataPrometheusPayload as PrometheusSetupSource, false)
-    ).toEqual({
-      identifier: 'test',
-      name: 'test',
-      spec: { connectorRef: 'testprometheus2', feature: 'apm', metricDefinitions: [], metricPacks: [] },
-      type: 'Prometheus'
-    })
+  test('prometheus payload with data source type as AWS Prometheus', () => {
+    expect(transformPrometheusSetupSourceToHealthSource(dataSourceTypePayloadMock)).toEqual(
+      expectedAWSPrometheusPayload
+    )
   })
 })

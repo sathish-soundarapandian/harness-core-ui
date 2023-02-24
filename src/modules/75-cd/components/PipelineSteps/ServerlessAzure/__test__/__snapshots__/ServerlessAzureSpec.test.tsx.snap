@@ -48,7 +48,7 @@ exports[`Test ServerlessAzureSpec snapshot should render edit view for inputset 
                     <span
                       class="placeholder"
                     >
-                      connectors.selectConnector
+                      common.entityPlaceholderText
                     </span>
                   </span>
                   <span

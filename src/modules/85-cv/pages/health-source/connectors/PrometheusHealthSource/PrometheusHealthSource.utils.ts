@@ -167,8 +167,7 @@ export function validateMappings(
   createdMetrics: string[],
   selectedMetricIndex: number,
   values?: MapPrometheusQueryToService,
-  mappedMetrics?: Map<string, CustomMappedMetric>,
-  isMetricThresholdEnabled?: boolean
+  mappedMetrics?: Map<string, CustomMappedMetric>
 ): { [fieldName: string]: string } {
   let requiredFieldErrors = {
     [PrometheusMonitoringSourceFieldNames.ENVIRONMENT_FILTER]: getString(
@@ -264,9 +263,7 @@ export function validateMappings(
 
   requiredFieldErrors = validateAssginComponent(values, { ...requiredFieldErrors }, getString)
 
-  if (isMetricThresholdEnabled) {
-    validateMetricThresholds(requiredFieldErrors, values, getString)
-  }
+  validateMetricThresholds(requiredFieldErrors, values, getString)
 
   return requiredFieldErrors
 }
@@ -330,8 +327,7 @@ function generateMultiSelectOptionListFromPrometheusFilter(filters?: PrometheusF
 export function transformPrometheusHealthSourceToSetupSource(
   sourceData: any,
   getString: (key: keyof StringsMap, vars?: Record<string, any> | undefined) => string,
-  isTemplate?: boolean,
-  isMetricThresholdEnabled?: boolean
+  isTemplate?: boolean
 ): PrometheusSetupSource {
   const healthSource: UpdatedHealthSource = sourceData?.healthSourceList?.find(
     (source: UpdatedHealthSource) => source.name === sourceData.healthSourceName
@@ -367,18 +363,14 @@ export function transformPrometheusHealthSourceToSetupSource(
     healthSourceName: sourceData.healthSourceName,
     product: sourceData.product,
     connectorRef: sourceData.connectorRef,
-    ignoreThresholds: isMetricThresholdEnabled
-      ? getFilteredMetricThresholdValues(
-          MetricThresholdTypes.IgnoreThreshold,
-          (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks || []
-        )
-      : [],
-    failFastThresholds: isMetricThresholdEnabled
-      ? getFilteredMetricThresholdValues(
-          MetricThresholdTypes.FailImmediately,
-          (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks || []
-        )
-      : []
+    ignoreThresholds: getFilteredMetricThresholdValues(
+      MetricThresholdTypes.IgnoreThreshold,
+      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks || []
+    ),
+    failFastThresholds: getFilteredMetricThresholdValues(
+      MetricThresholdTypes.FailImmediately,
+      (healthSource.spec as PrometheusHealthSourceSpec)?.metricPacks || []
+    )
   }
 
   for (const metricDefinition of (healthSource?.spec as PrometheusHealthSourceSpec)?.metricDefinitions || []) {
@@ -425,8 +417,7 @@ function getHealthSourceType(dataSourceType?: string): UpdatedHealthSource['type
 }
 
 export function transformPrometheusSetupSourceToHealthSource(
-  setupSource: PrometheusSetupSource,
-  isMetricThresholdEnabled: boolean
+  setupSource: PrometheusSetupSource
 ): PrometheusHealthSourceType | AwsPrometheusHealthSourceType {
   const { dataSourceType, region, workspaceId } = setupSource || {}
 
@@ -507,12 +498,10 @@ export function transformPrometheusSetupSourceToHealthSource(
     })
   }
 
-  if (isMetricThresholdEnabled) {
-    dsConfig.spec?.metricPacks?.push({
-      identifier: MetricTypeValues.Custom,
-      metricThresholds: [...setupSource.ignoreThresholds, ...setupSource.failFastThresholds]
-    })
-  }
+  dsConfig.spec?.metricPacks?.push({
+    identifier: MetricTypeValues.Custom,
+    metricThresholds: [...setupSource.ignoreThresholds, ...setupSource.failFastThresholds]
+  })
 
   return dsConfig
 }

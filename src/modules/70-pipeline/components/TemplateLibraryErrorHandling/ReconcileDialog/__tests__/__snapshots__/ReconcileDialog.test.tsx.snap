@@ -222,8 +222,7 @@ exports[`<ReconcileDialog /> tests initial render with children 1`] = `
             style="flex: 1;"
           >
             <div
-              class="StyledProps--font StyledProps--main mainContainer StyledProps--background-white StyledProps--border"
-              style="height: 100%;"
+              class="StyledProps--font StyledProps--main mainContainer"
             >
               <div
                 class="StyledProps--font StyledProps--main PageError--pageError StyledProps--flex StyledProps--flex-align-center-center"
@@ -340,8 +339,7 @@ exports[`<ReconcileDialog /> tests initial render without children 1`] = `
             style="flex: 1;"
           >
             <div
-              class="StyledProps--font StyledProps--main mainContainer StyledProps--background-white StyledProps--border"
-              style="height: 100%;"
+              class="StyledProps--font StyledProps--main mainContainer"
             >
               <div
                 class="StyledProps--font StyledProps--main PageSpinner--spinner StyledProps--flex StyledProps--flex-align-center-center"

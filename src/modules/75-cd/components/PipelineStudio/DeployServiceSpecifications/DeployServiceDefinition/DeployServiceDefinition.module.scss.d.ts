@@ -8,8 +8,6 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly contentSection: string
-  readonly editServiceModal: string
-  readonly nonModalView: string
   readonly tabHeading: string
 }
 export default styles

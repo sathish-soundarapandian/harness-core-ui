@@ -201,11 +201,16 @@ exports[`Checkmarx Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -304,11 +309,16 @@ exports[`Checkmarx Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -376,11 +386,16 @@ exports[`Checkmarx Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -473,11 +488,16 @@ exports[`Checkmarx Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -543,11 +563,16 @@ exports[`Checkmarx Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -622,12 +647,17 @@ exports[`Checkmarx Step Edit View edit mode works 1`] = `
                 pipelineSteps.workspace
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepTargetWorkspace"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -703,11 +733,16 @@ exports[`Checkmarx Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthDomain"
             >
-              secrets.winRmAuthFormFields.domain
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                secrets.winRmAuthFormFields.domain
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -831,7 +866,7 @@ exports[`Checkmarx Step Edit View edit mode works 1`] = `
                 </div>
                 <span
                   class="Tooltip--acenter tooltip"
-                  data-tooltip-id="CheckmarxStep_spec.auth.ssl"
+                  data-tooltip-id="securityStepAuthSSL"
                 />
               </div>
             </div>
@@ -841,11 +876,16 @@ exports[`Checkmarx Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthAccessId"
             >
-              sto.stepField.authAccessId
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.authAccessId
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -912,11 +952,16 @@ exports[`Checkmarx Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthAccessToken"
             >
-              common.getStarted.accessTokenLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                common.getStarted.accessTokenLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -1000,12 +1045,17 @@ exports[`Checkmarx Step Edit View edit mode works 1`] = `
                 sto.stepField.tool.teamName
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepToolTeamName"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -1081,12 +1131,17 @@ exports[`Checkmarx Step Edit View edit mode works 1`] = `
                 projectCard.projectName
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepToolProjectName"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -1165,12 +1220,17 @@ exports[`Checkmarx Step Edit View edit mode works 1`] = `
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -1279,12 +1339,17 @@ exports[`Checkmarx Step Edit View edit mode works 1`] = `
                 sto.stepField.advanced.cli
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepArgsCli"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -1360,12 +1425,17 @@ exports[`Checkmarx Step Edit View edit mode works 1`] = `
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -2091,11 +2161,16 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Ingestion repository 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2194,11 +2269,16 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Ingestion repository 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2266,11 +2346,16 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Ingestion repository 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2363,11 +2448,16 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Ingestion repository 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2473,11 +2563,16 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Ingestion repository 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2586,11 +2681,16 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Ingestion repository 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepIngestionFile"
             >
-              sto.stepField.ingestion.file
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.ingestion.file
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2668,12 +2768,17 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Ingestion repository 
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -2789,12 +2894,17 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Ingestion repository 
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -3317,11 +3427,16 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3420,11 +3535,16 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3492,11 +3612,16 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3589,11 +3714,16 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3699,11 +3829,16 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3818,12 +3953,17 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Orchestration Reposit
                 pipelineSteps.workspace
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepTargetWorkspace"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -3938,11 +4078,16 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthDomain"
             >
-              secrets.winRmAuthFormFields.domain
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                secrets.winRmAuthFormFields.domain
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -4057,7 +4202,7 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Orchestration Reposit
             >
               <span
                 class="Tooltip--acenter"
-                data-tooltip-id="CheckmarxStep_spec.auth.ssl"
+                data-tooltip-id="securityStepAuthSSL"
               >
                 sto.stepField.authSsl
               </span>
@@ -4130,11 +4275,16 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthAccessId"
             >
-              sto.stepField.authAccessId
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.authAccessId
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -4240,11 +4390,16 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Orchestration Reposit
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthAccessToken"
             >
-              common.getStarted.accessTokenLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                common.getStarted.accessTokenLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -4367,12 +4522,17 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Orchestration Reposit
                 sto.stepField.tool.teamName
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepToolTeamName"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -4488,12 +4648,17 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Orchestration Reposit
                 projectCard.projectName
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepToolProjectName"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -4612,12 +4777,17 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Orchestration Reposit
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -4733,12 +4903,17 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Orchestration Reposit
                 sto.stepField.advanced.cli
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepArgsCli"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -4854,12 +5029,17 @@ exports[`Checkmarx Step Edit View renders runtime inputs - Orchestration Reposit
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -5333,11 +5513,16 @@ exports[`Checkmarx Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -5436,11 +5621,16 @@ exports[`Checkmarx Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -5508,11 +5698,16 @@ exports[`Checkmarx Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -5605,11 +5800,16 @@ exports[`Checkmarx Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -5675,11 +5875,16 @@ exports[`Checkmarx Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -5754,12 +5959,17 @@ exports[`Checkmarx Step Edit View should render properly 1`] = `
                 pipelineSteps.workspace
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepTargetWorkspace"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -5835,11 +6045,16 @@ exports[`Checkmarx Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthDomain"
             >
-              secrets.winRmAuthFormFields.domain
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                secrets.winRmAuthFormFields.domain
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -5963,7 +6178,7 @@ exports[`Checkmarx Step Edit View should render properly 1`] = `
                 </div>
                 <span
                   class="Tooltip--acenter tooltip"
-                  data-tooltip-id="CheckmarxStep_spec.auth.ssl"
+                  data-tooltip-id="securityStepAuthSSL"
                 />
               </div>
             </div>
@@ -5973,11 +6188,16 @@ exports[`Checkmarx Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthAccessId"
             >
-              sto.stepField.authAccessId
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.authAccessId
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -6044,11 +6264,16 @@ exports[`Checkmarx Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthAccessToken"
             >
-              common.getStarted.accessTokenLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                common.getStarted.accessTokenLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -6132,12 +6357,17 @@ exports[`Checkmarx Step Edit View should render properly 1`] = `
                 sto.stepField.tool.teamName
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepToolTeamName"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -6213,12 +6443,17 @@ exports[`Checkmarx Step Edit View should render properly 1`] = `
                 projectCard.projectName
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepToolProjectName"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -6297,12 +6532,17 @@ exports[`Checkmarx Step Edit View should render properly 1`] = `
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -6411,12 +6651,17 @@ exports[`Checkmarx Step Edit View should render properly 1`] = `
                 sto.stepField.advanced.cli
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepArgsCli"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -6492,12 +6737,17 @@ exports[`Checkmarx Step Edit View should render properly 1`] = `
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -6863,11 +7113,16 @@ exports[`Checkmarx Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -6933,11 +7188,16 @@ exports[`Checkmarx Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7008,11 +7268,16 @@ exports[`Checkmarx Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7078,11 +7343,16 @@ exports[`Checkmarx Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7148,11 +7418,16 @@ exports[`Checkmarx Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetWorkspace"
             >
-              pipelineSteps.workspace
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                pipelineSteps.workspace
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7223,11 +7498,16 @@ exports[`Checkmarx Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthAccessToken"
             >
-              common.getStarted.accessTokenLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                common.getStarted.accessTokenLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7293,11 +7573,16 @@ exports[`Checkmarx Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepAuthDomain"
             >
-              secrets.winRmAuthFormFields.domain
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                secrets.winRmAuthFormFields.domain
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7420,7 +7705,7 @@ exports[`Checkmarx Step InputSet View should render all fields 1`] = `
                 </div>
                 <span
                   class="Tooltip--acenter tooltip"
-                  data-tooltip-id="stepTestUtilForm_spec.auth.ssl"
+                  data-tooltip-id="securityStepAuthSSL"
                 />
               </div>
             </div>
@@ -7430,11 +7715,16 @@ exports[`Checkmarx Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepLogLevel"
             >
-              sto.stepField.advanced.logLevel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.advanced.logLevel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7533,11 +7823,16 @@ exports[`Checkmarx Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepLogSerializer"
             >
-              ce.common.protocol
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                ce.common.protocol
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >

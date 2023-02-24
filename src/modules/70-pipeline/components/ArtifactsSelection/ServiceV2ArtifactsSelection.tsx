@@ -234,6 +234,10 @@ export default function ServiceV2ArtifactsSelection({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage])
 
+  const [primaryArtifactRef, updatePrimaryArtifactRef] = useState<string>(
+    get(artifacts, 'primary.primaryArtifactRef', '')
+  )
+
   const artifactsList = useMemo(() => {
     if (!isEmpty(artifacts)) {
       if (artifactContext === ModalViewFor.PRIMARY) {
@@ -340,16 +344,42 @@ export default function ServiceV2ArtifactsSelection({
   }, [artifactIndex, artifactsList?.length, trackEvent, artifactContext])
 
   const setPrimaryArtifactData = useCallback(
-    (artifactObj: PrimaryArtifact): void => {
+    (artifactObj: ArtifactSource): void => {
       const artifactObject = get(artifacts, getArtifactsPath(artifactContext))
       if (artifactObject?.length) {
         artifactObject.splice(artifactIndex, 1, artifactObj)
       } else {
-        set(artifacts, 'primary.primaryArtifactRef', RUNTIME_INPUT_VALUE)
+        setPrimaryArtifactRef(artifactObj.identifier, false)
         set(artifacts, 'primary.sources', [artifactObj])
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [artifactContext, artifactIndex, artifacts, getArtifactsPath]
+  )
+
+  const setPrimaryArtifactRef = useCallback(
+    (primaryArtifactRefValue: string, shouldUpdateStage = true): void => {
+      primaryArtifactRefValue =
+        primaryArtifactRefValue ?? get(artifacts, 'primary.sources[0].identifier', RUNTIME_INPUT_VALUE)
+
+      updatePrimaryArtifactRef(primaryArtifactRefValue)
+      set(artifacts, 'primary.primaryArtifactRef', primaryArtifactRefValue)
+
+      if (shouldUpdateStage && stage) {
+        const newStage = produce(stage, draft => {
+          set(
+            draft,
+            `stage.spec.serviceConfig.serviceDefinition.spec.artifacts.primary.primaryArtifactRef`,
+            primaryArtifactRefValue
+          )
+        }).stage
+
+        if (newStage) {
+          updateStage(newStage)
+        }
+      }
+    },
+    [artifacts, stage, updateStage]
   )
 
   const setSidecarArtifactData = useCallback(
@@ -718,7 +748,6 @@ export default function ServiceV2ArtifactsSelection({
   return (
     <>
       <ArtifactListView
-        stage={stage}
         primaryArtifact={artifacts?.primary?.sources as ArtifactSource[]}
         sideCarArtifact={artifacts?.sidecars}
         addNewArtifact={addNewArtifact}
@@ -732,6 +761,8 @@ export default function ServiceV2ArtifactsSelection({
         isReadonly={readonly}
         isSidecarAllowed={isSidecarAllowed(deploymentType, readonly)}
         isMultiArtifactSource
+        primaryArtifactRef={primaryArtifactRef}
+        setPrimaryArtifactRef={setPrimaryArtifactRef}
       />
       <ArtifactConfigDrawer
         onCloseDrawer={handleCloseDrawer}

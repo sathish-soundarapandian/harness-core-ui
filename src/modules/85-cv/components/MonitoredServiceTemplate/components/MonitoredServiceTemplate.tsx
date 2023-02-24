@@ -25,7 +25,7 @@ export class MonitoredServiceTemplate extends Template {
     stroke: '#D4E7D1',
     fill: '#E4F7E1'
   }
-  protected isRemoteEnabled = false
+  protected isRemoteEnabled = true
 
   renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
     return <MonitoredTemplateCanvasWithRef ref={formikRef} />

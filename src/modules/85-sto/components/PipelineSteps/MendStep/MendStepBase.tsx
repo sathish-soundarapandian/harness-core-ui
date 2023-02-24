@@ -37,7 +37,8 @@ import {
   EXTRACTION_SCAN_MODE,
   REPOSITORY_TARGET_TYPE,
   dividerBottomMargin,
-  CONTAINER_TARGET_TYPE
+  CONTAINER_TARGET_TYPE,
+  tooltipIds
 } from '../constants'
 import SecurityField from '../SecurityField'
 
@@ -208,33 +209,40 @@ export const MendStepBase = (
                     fieldType: 'dropdown',
                     selectItems:
                       formik.values.spec.mode === 'orchestration' ? orchestrationLookupTypes : extractionLookupTypes,
-                    hide: formik.values.spec.mode === 'ingestion'
+                    hide: formik.values.spec.mode === 'ingestion',
+                    tooltipId: tooltipIds.toolProductLookupType
                   },
                   'spec.tool.product_token': {
                     label: 'sto.stepField.tool.productToken',
-                    hide: !show_product_token_field
+                    hide: !show_product_token_field,
+                    tooltipId: tooltipIds.toolProductToken
                   },
                   'spec.tool.product_name': {
                     label: 'name',
-                    hide: !show_product_name_field
+                    hide: !show_product_name_field,
+                    tooltipId: tooltipIds.toolProductName
                   },
                   'spec.tool.project_token': {
                     label: 'sto.stepField.tool.projectToken',
-                    hide: !show_project_token_field
+                    hide: !show_project_token_field,
+                    tooltipId: tooltipIds.toolProjectToken
                   },
                   'spec.tool.project_name': {
                     label: 'projectCard.projectName',
-                    hide: !show_project_name_field
+                    hide: !show_project_name_field,
+                    tooltipId: tooltipIds.toolProjectName
                   },
                   'spec.tool.include': {
                     label: 'sto.stepField.toolInclude',
                     optional: true,
-                    hide: !(formik.values.spec.mode === 'orchestration' || formik.values.spec.mode === 'extraction')
+                    hide: !(formik.values.spec.mode === 'orchestration' || formik.values.spec.mode === 'extraction'),
+                    tooltipId: tooltipIds.toolInclude
                   },
                   'spec.tool.exclude': {
                     label: 'sto.stepField.tool.exclude',
                     optional: true,
-                    hide: !(formik.values.spec.mode === 'orchestration' || formik.values.spec.mode === 'extraction')
+                    hide: !(formik.values.spec.mode === 'orchestration' || formik.values.spec.mode === 'extraction'),
+                    tooltipId: tooltipIds.toolExclude
                   }
                 }}
               />

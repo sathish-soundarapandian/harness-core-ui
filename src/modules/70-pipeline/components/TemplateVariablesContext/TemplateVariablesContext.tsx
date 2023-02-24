@@ -93,7 +93,8 @@ export function TemplateVariablesContextProvider(
     body: yamlStringify({ template: resolvedTemplate }) as unknown as void,
     requestOptions: {
       headers: {
-        'content-type': 'application/yaml'
+        'content-type': 'application/yaml',
+        ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {})
       }
     },
     queryParams: {

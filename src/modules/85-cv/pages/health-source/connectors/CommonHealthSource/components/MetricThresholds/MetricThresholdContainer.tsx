@@ -11,17 +11,15 @@ import MetricThresholdProvider from './MetricThresholdProvider'
 export interface MetricThresholdContainerProps {
   healthSourceConfig: HealthSourceConfig
   groupedCreatedMetrics: GroupedCreatedMetrics
-  isMetricThresholdEnabled: boolean
 }
 
 export default function MetricThresholdContainer(props: MetricThresholdContainerProps): JSX.Element {
-  const { healthSourceConfig, groupedCreatedMetrics, isMetricThresholdEnabled } = props
+  const { healthSourceConfig, groupedCreatedMetrics } = props
   const { values: formValues } = useFormikContext<CommonHealthSourceConfigurations>()
   const isShowMetricThreshold = getCanShowMetricThresholds({
     isMetricThresholdConfigEnabled: Boolean(healthSourceConfig?.metricThresholds?.enabled),
     isMetricPacksEnabled: Boolean(healthSourceConfig?.metricPacks?.enabled),
-    groupedCreatedMetrics,
-    isMetricThresholdEnabled
+    groupedCreatedMetrics
   })
 
   if (isShowMetricThreshold) {

@@ -119,6 +119,25 @@ describe('Test AppResizeStep', () => {
     expect(container).toMatchSnapshot()
   })
 
+  test('should show warning message if old instance are downsized to zero', async () => {
+    const { findByText } = render(
+      <TestStepWidget
+        initialValues={{
+          identifier: 'App_Resize_Step',
+          type: 'AppResize',
+          spec: {
+            timeout: '10m',
+            newAppInstances: { type: InstanceTypes.Count, spec: { value: 15 } },
+            oldAppInstances: { type: InstanceTypes.Count, spec: { value: 0 } }
+          }
+        }}
+        type={StepType.AppResize}
+        stepViewType={StepViewType.Edit}
+      />
+    )
+    expect(await findByText('cd.steps.tas.zeroOldInstancesWarning')).toBeInTheDocument()
+  })
+
   test('should submit with valid paylod for instace type count', async () => {
     const onUpdate = jest.fn()
     const ref = React.createRef<StepFormikRef<unknown>>()

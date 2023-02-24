@@ -30,19 +30,19 @@ jest.mock('@harness/uicore', () => ({
 const WrapperComponent = ({
   data,
   isTemplate,
-  serviceInstance,
+  serviceInstanceField,
   continuousVerificationEnabled,
   isQueryRuntimeOrExpression
 }: {
   data: ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>
   isTemplate?: boolean
-  serviceInstance?: string
+  serviceInstanceField?: string
   continuousVerificationEnabled?: boolean
   isQueryRuntimeOrExpression?: boolean
 }): JSX.Element => {
   return (
     <TestWrapper>
-      <Formik initialValues={{ serviceInstance }} onSubmit={noop} formName="">
+      <Formik initialValues={{ serviceInstanceField }} onSubmit={noop} formName="">
         {() => (
           <SetupSourceTabsContext.Provider
             value={{ isTemplate, expression: ['expression 1'], sourceData: { connectorRef: 'sumologic' } } as any}
@@ -55,7 +55,7 @@ const WrapperComponent = ({
               <FormikForm>
                 <RiskProfile
                   riskProfileResponse={data}
-                  serviceInstance={serviceInstance}
+                  serviceInstanceField={serviceInstanceField}
                   continuousVerificationEnabled={continuousVerificationEnabled}
                 />
               </FormikForm>
@@ -89,12 +89,12 @@ describe('Unit tests for RiskProfile', () => {
     const { container } = render(
       <WrapperComponent
         data={riskProfileResponse as unknown as ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>}
-        serviceInstance={'sourceHost'}
+        serviceInstanceField={'sourceHost'}
         continuousVerificationEnabled
       />
     )
 
-    await waitFor(() => expect(container.querySelector('[name="serviceInstance"]')).toHaveValue('sourceHost'))
+    await waitFor(() => expect(container.querySelector('[name="serviceInstanceField"]')).toHaveValue('sourceHost'))
   })
 
   test('Ensure form errors are visible', async () => {
@@ -148,7 +148,7 @@ describe('Unit tests for RiskProfile', () => {
         data={{} as unknown as ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>}
         isTemplate
         continuousVerificationEnabled
-        serviceInstance=""
+        serviceInstanceField=""
         isQueryRuntimeOrExpression
       />
     )
@@ -168,12 +168,12 @@ describe('Unit tests for RiskProfile', () => {
       <WrapperComponent
         data={{} as unknown as ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>}
         isTemplate
-        serviceInstance="<+input>"
+        serviceInstanceField="<+input>"
         isQueryRuntimeOrExpression
         continuousVerificationEnabled
       />
     )
-    expect(container.querySelector('[name="serviceInstance"]')).toHaveValue('<+input>')
+    expect(container.querySelector('[name="serviceInstanceField"]')).toHaveValue('<+input>')
   })
 
   test('validate getRiskCategoryOptionsV2', () => {

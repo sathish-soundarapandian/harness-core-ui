@@ -36,6 +36,7 @@ import {
 import type { HarnessFileStoreDataType, HarnessFileStoreFormData, ManifestTypes } from '../../ManifestInterface'
 import { ManifestDetailsAdvancedSection } from '../CommonManifestDetails/ManifestDetailsAdvancedSection'
 import { shouldAllowOnlyOneFilePath } from '../CommonManifestDetails/utils'
+import { removeEmptyFieldsFromStringArray } from '../ManifestUtils'
 import css from '../CommonManifestDetails/CommonManifestDetails.module.scss'
 
 interface HarnessFileStorePropType {
@@ -75,6 +76,7 @@ function HarnessFileStore({
   showIdentifierField = true
 }: StepProps<ConnectorConfigDTO> & HarnessFileStorePropType): React.ReactElement {
   const { getString } = useStrings()
+  const isOnlyFileTypeManifest = selectedManifest && [ManifestDataType.Values].includes(selectedManifest)
 
   const getInitialValues = (): HarnessFileStoreDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
@@ -84,8 +86,9 @@ function HarnessFileStore({
       return {
         ...specValues,
         identifier: initialValues.identifier,
-        valuesPaths,
-        paramsPaths,
+        valuesPaths:
+          typeof valuesPaths === 'string' ? valuesPaths : removeEmptyFieldsFromStringArray(valuesPaths, true),
+        paramsPaths: typeof paramsPaths === 'string' ? paramsPaths : removeEmptyFieldsFromStringArray(paramsPaths),
         skipResourceVersioning: get(initialValues, 'spec.skipResourceVersioning'),
         enableDeclarativeRollback: get(initialValues, 'spec.enableDeclarativeRollback')
       }
@@ -118,10 +121,22 @@ function HarnessFileStore({
         }
       }
       if (showValuesPaths(selectedManifest as ManifestTypes)) {
-        set(manifestObj, 'manifest.spec.valuesPaths', formData.valuesPaths)
+        set(
+          manifestObj,
+          'manifest.spec.valuesPaths',
+          typeof formData?.valuesPaths === 'string'
+            ? formData?.valuesPaths
+            : removeEmptyFieldsFromStringArray(formData.valuesPaths)
+        )
       }
       if (showParamsPaths(selectedManifest as ManifestTypes)) {
-        set(manifestObj, 'manifest.spec.paramsPaths', formData.paramsPaths)
+        set(
+          manifestObj,
+          'manifest.spec.paramsPaths',
+          typeof formData?.paramsPaths === 'string'
+            ? formData?.paramsPaths
+            : removeEmptyFieldsFromStringArray(formData.paramsPaths)
+        )
       }
       if (showSkipResourceVersion(selectedManifest as ManifestTypes)) {
         set(
@@ -201,7 +216,9 @@ function HarnessFileStore({
                         disableTypeSelection: false,
                         label: (
                           <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_600}>
-                            {getString('fileFolderPathText')}
+                            {isOnlyFileTypeManifest
+                              ? getString('common.git.filePath')
+                              : getString('fileFolderPathText')}
                           </Text>
                         )
                       }}

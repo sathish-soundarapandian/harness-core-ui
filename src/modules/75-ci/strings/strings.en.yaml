@@ -79,7 +79,6 @@ runTestsMavenSetupSample: |
       </configuration>
   </plugin>
 commitMessage: Commit Message
-prTitle: PR Title
 gradleNotesTitle: 'The following needs to be added to a build.gradle to make it compatible with test intelligence:'
 gradleNote1: |
   // This adds HARNESS_JAVA_AGENT to the testing command if it's

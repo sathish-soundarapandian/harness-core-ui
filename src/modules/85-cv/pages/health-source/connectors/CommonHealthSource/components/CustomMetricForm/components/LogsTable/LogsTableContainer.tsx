@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
 import { Button, ButtonVariation, Container, Layout, Text } from '@harness/uicore'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { LogRecord, QueryRecordsRequest, useGetSampleLogData } from 'services/cv'
+import { HealthSourceParamValuesRequest, LogRecord, QueryRecordsRequest, useGetSampleLogData } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import {
   getFieldsDefaultValuesFromConfig,
@@ -24,26 +24,44 @@ import { useCommonHealthSource } from '../CommonHealthSourceContext/useCommonHea
 import { getCanShowSampleLogButton } from '../CommonCustomMetricFormContainer/CommonCustomMetricFormContainerLayout/CommonCustomMetricFormContainer.utils'
 import type { LogFieldsMultiTypeState } from '../../CustomMetricForm.types'
 import { getMultiTypeRecordInitialValue } from './components/JsonSelectorWithDrawer.utils'
+import CommonHealthSourceField from '../CommonCustomMetricFormContainer/CommonCustomMetricFormContainerLayout/components/CommonHealthSourceField/CommonHealthSourceField'
 
 interface CommonHealthSourceLogsTable {
   connectorIdentifier: string
-  providerType: QueryRecordsRequest['providerType']
+  providerTypeForRecords: QueryRecordsRequest['providerType']
+  providerType: HealthSourceParamValuesRequest['providerType']
   fieldMappings?: FieldMapping[]
+  queryField?: FieldMapping
   isRecordsLoading?: boolean
   disableLogFields?: boolean
   sampleRecords: Record<string, any>[]
+  selectOnlyLastKey?: boolean
+  showExactJsonPath?: boolean
 }
 
 export default function LogsTableContainer(props: CommonHealthSourceLogsTable): JSX.Element {
-  const { fieldMappings, connectorIdentifier, providerType, sampleRecords, disableLogFields, isRecordsLoading } = props
+  const {
+    fieldMappings,
+    queryField,
+    connectorIdentifier,
+    providerType,
+    providerTypeForRecords,
+    sampleRecords,
+    disableLogFields,
+    isRecordsLoading,
+    selectOnlyLastKey,
+    showExactJsonPath
+  } = props
   const { values, setValues } = useFormikContext<CommonCustomMetricFormikInterface>()
-  const { query, serviceInstance } = values
+  const { query } = values
   const [logsSampleData, setLogsSampleData] = useState<LogRecord[] | null>(null)
   const { isTemplate } = useContext(SetupSourceTabsContext)
   const { isQueryRuntimeOrExpression } = useCommonHealthSource()
   const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(connectorIdentifier)
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-
+  const { getString } = useStrings()
+  const jsonSelectorFields = fieldMappings?.filter(field => field.type === FIELD_ENUM.JSON_SELECTOR)
+  const dropdownFields = fieldMappings?.filter(field => field.type === FIELD_ENUM.DROPDOWN)
   const {
     loading: logsLoading,
     error: logsError,
@@ -53,28 +71,22 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
     orgIdentifier,
     projectIdentifier
   })
+  const [multiTypeRecord, setMultiTypeRecord] = useState<LogFieldsMultiTypeState | null>(
+    (): LogFieldsMultiTypeState | null => {
+      return getMultiTypeRecordInitialValue({
+        jsonSelectorFields,
+        isTemplate,
+        formValues: values
+      })
+    }
+  )
+  const isLogFieldsDisabled = disableLogFields || !query || isEmpty(sampleRecords) || logsLoading
 
   useEffect(() => {
     if (isRecordsLoading || logsLoading) {
       setLogsSampleData(null)
     }
   }, [isRecordsLoading, logsLoading])
-
-  const isLogFieldsDisabled = disableLogFields || !query || isEmpty(sampleRecords) || logsLoading
-
-  const { getString } = useStrings()
-
-  const filteredFieldsMapping = fieldMappings?.filter(field => field.type === FIELD_ENUM.JSON_SELECTOR)
-
-  const [multiTypeRecord, setMultiTypeRecord] = useState<LogFieldsMultiTypeState | null>(
-    (): LogFieldsMultiTypeState | null => {
-      return getMultiTypeRecordInitialValue({
-        filteredFieldsMapping,
-        isTemplate,
-        formValues: values
-      })
-    }
-  )
 
   useEffect(() => {
     if (!isTemplate || (isTemplate && (!isQueryRuntimeOrExpression || !isConnectorRuntimeOrExpression))) {
@@ -90,11 +102,13 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
     }
   }, [values, isQueryRuntimeOrExpression, isConnectorRuntimeOrExpression, multiTypeRecord])
 
-  const handleFetchSampleLogs = () => {
-    const fetchSampleLogsPayload = getRequestBodyForSampleLogs(providerType, {
+  const handleFetchSampleLogs = (): void => {
+    const fetchSampleLogsPayload = getRequestBodyForSampleLogs(providerTypeForRecords, {
       connectorIdentifier,
       query,
-      serviceInstance: serviceInstance as string
+      fieldMappings,
+      queryField,
+      formValues: values
     })
 
     fetchSampleLogs(fetchSampleLogsPayload as QueryRecordsRequest).then(sampleData => {
@@ -111,16 +125,32 @@ export default function LogsTableContainer(props: CommonHealthSourceLogsTable): 
         sectionSubTitle={getString('cv.monitoringSources.commonHealthSource.logsTable.subTitle')}
       />
 
-      <Container width={300}>
+      <Container width={350}>
         <JsonSelectorWithDrawer
-          fieldMappings={fieldMappings}
-          jsonData={sampleRecords}
+          fieldMappings={jsonSelectorFields}
+          jsonData={sampleRecords[0]}
           disableFields={isLogFieldsDisabled}
           multiTypeRecord={multiTypeRecord}
           setMultiTypeRecord={setMultiTypeRecord}
+          selectOnlyLastKey={selectOnlyLastKey}
+          showExactJsonPath={showExactJsonPath}
         />
       </Container>
-
+      <Container width={350}>
+        {dropdownFields?.length
+          ? dropdownFields.map(field => {
+              return (
+                <CommonHealthSourceField
+                  key={field?.identifier}
+                  field={field}
+                  isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+                  connectorIdentifier={connectorIdentifier}
+                  providerType={providerType as HealthSourceParamValuesRequest['providerType']}
+                />
+              )
+            })
+          : null}
+      </Container>
       {getCanShowSampleLogButton({
         isQueryRuntimeOrExpression,
         isConnectorRuntimeOrExpression,

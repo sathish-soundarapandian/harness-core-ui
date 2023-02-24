@@ -19,6 +19,7 @@ import UserTagRenderer from '@common/components/UserTagRenderer/UserTagRenderer'
 import AuditTrailFactory from 'framework/AuditTrail/AuditTrailFactory'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
+import { sortByName } from '@common/utils/sortUtils'
 import type { AuditTrailFormType } from './FilterDrawer'
 
 interface AuditTrailFormProps {
@@ -34,7 +35,8 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
   const { getString } = useStrings()
 
   const { data: userData } = useMutateAsGet(useGetUsers, {
-    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier },
+    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier, sortOrders: [sortByName[0].value] },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     body: {
       searchTerm: userQuery
     },
@@ -42,7 +44,13 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
   })
 
   const { data } = useGetOrganizationAggregateDTOList({
-    queryParams: { accountIdentifier: accountId, searchTerm: orgQuery },
+    queryParams: {
+      accountIdentifier: accountId,
+      searchTerm: orgQuery,
+      sortOrders: [sortByName[0].value as string],
+      pageSize: 100
+    },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: 300
   })
 
@@ -69,7 +77,8 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
       accountIdentifier: accountId,
       searchTerm: projectsQuery,
       orgIdentifiers: getOrgs(),
-      pageSize: 10
+      pageSize: 100,
+      sortOrders: [sortByName[0].value as string]
     },
     queryParamStringifyOptions: {
       arrayFormat: 'repeat'
@@ -78,10 +87,12 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
   })
 
   const getOptionsForMultiSelect = (map: Record<any, StringKeys>): MultiSelectOption[] => {
-    return Object.keys(map).map(key => ({
-      label: getString(map[key]),
-      value: key
-    }))
+    return Object.keys(map)
+      .sort()
+      .map(key => ({
+        label: getString(map[key]),
+        value: key
+      }))
   }
 
   let auditActions = getOptionsForMultiSelect(actionToLabelMap)

@@ -31,9 +31,7 @@ describe('Cloud watch health source', () => {
         ]
       })
     })
-    cy.on('uncaught:exception', () => {
-      return false
-    })
+
     cy.login('test', 'test')
     cy.intercept('GET', monitoredServiceListCall, monitoredServiceListResponse)
     cy.intercept('GET', countOfServiceAPI, { allServicesCount: 1, servicesAtRiskCount: 0 })

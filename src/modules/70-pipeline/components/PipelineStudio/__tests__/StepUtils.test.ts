@@ -7,8 +7,8 @@
 
 import { isMatch, has, get } from 'lodash-es'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
-import type { PipelineInfoConfig } from 'services/pipeline-ng'
-import { validateCICodebase, validatePipeline } from '../StepUtil'
+import type { PipelineInfoConfig, StageElementConfig } from 'services/pipeline-ng'
+import { validateCICodebase, validatePipeline, validateStage } from '../StepUtil'
 import {
   pipelineTemplateWithRuntimeInput,
   pipelineWithNoBuildInfo,
@@ -19,7 +19,13 @@ import {
   pipelineTemplateOriginalPipeline,
   pipelineTemplateTemplate,
   pipelineTemplateResolvedPipeline,
-  pipelineWithPRBuild
+  pipelineWithPRBuild,
+  pipelineWithVariables,
+  templatePipelineWithVariables,
+  resolvedPipelineWithVariables,
+  stageWithVariables,
+  templateStageWithVariables,
+  originalStageWithVariables
 } from './mock'
 
 jest.mock('@common/utils/YamlUtils', () => ({
@@ -216,5 +222,37 @@ describe('Test StepUtils', () => {
     expect(errorKeys).toContain('build')
     expect(errorKeys).toContain('prCloneStrategy')
     expect(errorKeys).toContain('resources')
+  })
+  test('Test validatePipeline method with optional variable support', () => {
+    const errors = validatePipeline({
+      pipeline: pipelineWithVariables as unknown as PipelineInfoConfig,
+      originalPipeline: resolvedPipelineWithVariables as PipelineInfoConfig,
+      template: templatePipelineWithVariables as unknown as PipelineInfoConfig,
+      resolvedPipeline: resolvedPipelineWithVariables as PipelineInfoConfig,
+      viewType: StepViewType.DeploymentForm,
+      isOptionalVariableAllowed: true
+    })
+    expect(has(errors, 'variables')).toBeFalsy()
+  })
+  test('Test validatePipeline method without optional variable support', () => {
+    const errors = validatePipeline({
+      pipeline: pipelineWithVariables as unknown as PipelineInfoConfig,
+      originalPipeline: resolvedPipelineWithVariables as PipelineInfoConfig,
+      template: templatePipelineWithVariables as unknown as PipelineInfoConfig,
+      resolvedPipeline: resolvedPipelineWithVariables as PipelineInfoConfig,
+      viewType: StepViewType.DeploymentForm,
+      isOptionalVariableAllowed: false
+    })
+    expect(has(errors, 'variables')).toBeTruthy()
+  })
+  test('Test validateStage method with optional variable support', () => {
+    const errors = validateStage({
+      stage: stageWithVariables as unknown as StageElementConfig,
+      template: templateStageWithVariables as unknown as StageElementConfig,
+      originalStage: originalStageWithVariables as StageElementConfig,
+      viewType: StepViewType.InputSet,
+      isOptionalVariableAllowed: true
+    })
+    expect(has(errors, 'variables')).toBeFalsy()
   })
 })

@@ -4,6 +4,7 @@ noCollaborators: No Collaborators
 moduleSuccess: '{{$.common.purpose.moduleSuccess}}'
 placeholder: '23'
 confirmDeleteTitle: Delete organization
+yesIamSure: Yes, I am very sure
 orgDeletedMessage: Organization '{{name}}' is deleted
 orgName: Organization Name
 purposeList:
@@ -46,7 +47,7 @@ searchPlaceHolder: 'Search organizations by name and tags'
 aboutTitle: 'About the organization'
 collaboratorsTitle: 'Invite Members'
 saveAndClose: '{{$.common.saveAndClose}}'
-confirmDelete: Deleting the organization '{{name}}' would mean that you are also deleting all the projects and the resources associated with it. Are you sure you want to delete the organization?
+confirmDelete: Deleting the Organization '{{name}}' will also permanently delete all the projects and the resources associated with it. Are you sure you want to delete the Organization?
 aboutProject: 'About the Project'
 gotoCV: 'Go to Service Reliability Management'
 gotoCD: 'Go to Continuous Delivery'

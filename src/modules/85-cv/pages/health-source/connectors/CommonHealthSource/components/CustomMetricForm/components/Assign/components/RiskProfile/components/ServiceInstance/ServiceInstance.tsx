@@ -19,13 +19,13 @@ import { getIsConnectorRuntimeOrExpression } from '@cv/pages/health-source/conne
 import { getTypeOfInput } from '@cv/utils/CommonUtils'
 
 interface ServiceInstanceProps {
-  serviceInstance?: string
+  serviceInstanceField?: string
   defaultServiceInstance?: string
   continuousVerificationEnabled?: boolean
 }
 
 export default function ServiceInstance({
-  serviceInstance,
+  serviceInstanceField,
   defaultServiceInstance,
   continuousVerificationEnabled
 }: ServiceInstanceProps): JSX.Element {
@@ -36,14 +36,14 @@ export default function ServiceInstance({
   const isConnectorRuntimeOrExpression = getIsConnectorRuntimeOrExpression(sourceData.connectorRef)
 
   const [metricInstanceMultiType, setMetricPathMultiType] = useState<MultiTypeInputType>(() =>
-    getMultiTypeFromValue(serviceInstance)
+    getMultiTypeFromValue(serviceInstanceField)
   )
 
   useEffect(() => {
-    if (isTemplate && serviceInstance && metricInstanceMultiType === MultiTypeInputType.FIXED) {
-      setMetricPathMultiType(getTypeOfInput(serviceInstance))
+    if (isTemplate && serviceInstanceField && metricInstanceMultiType === MultiTypeInputType.FIXED) {
+      setMetricPathMultiType(getTypeOfInput(serviceInstanceField))
     }
-  }, [serviceInstance])
+  }, [serviceInstanceField])
 
   return (
     <Container>
@@ -71,7 +71,7 @@ export default function ServiceInstance({
                   }
                 }}
                 multiTextInputProps={{
-                  value: serviceInstance,
+                  value: serviceInstanceField,
                   expressions,
                   multitypeInputValue: metricInstanceMultiType,
                   allowableTypes:

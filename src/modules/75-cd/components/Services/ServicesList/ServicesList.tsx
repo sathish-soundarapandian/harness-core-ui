@@ -19,7 +19,8 @@ import {
   useConfirmationDialog,
   useToaster,
   Dialog,
-  Icon
+  Icon,
+  getErrorInfoFromErrorObject
 } from '@harness/uicore'
 import { Color, FontVariation, Intent } from '@harness/design-system'
 import { Classes, Menu, Position } from '@blueprintjs/core'
@@ -377,7 +378,8 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
   const history = useHistory()
   const isSvcEnvEntityEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
   const { CDS_FORCE_DELETE_ENTITIES } = useFeatureFlags()
-  const [serviceInstance, setServiceInstance] = useState(false)
+  const [hideReferencedByButton, setHideReferencedByButton] = useState(false)
+  const [customErrorMessage, setCustomErrorMessage] = useState<string | undefined>()
 
   const { mutate: deleteService } = useDeleteServiceV2({})
 
@@ -425,9 +427,11 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
       }
     } catch (err: any) {
       if (err?.data?.code === 'ENTITY_REFERENCE_EXCEPTION') {
+        setCustomErrorMessage(undefined)
         openReferenceErrorDialog()
       } else if (err?.data?.code === 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION') {
-        setServiceInstance(true)
+        setCustomErrorMessage(getErrorInfoFromErrorObject(err))
+        setHideReferencedByButton(true)
         openReferenceErrorDialog()
       } else {
         showError(getRBACErrorMessage(err as RBACError))
@@ -467,8 +471,9 @@ const RenderColumnMenu: Renderer<CellProps<any>> = ({ row, column }) => {
       name: defaultTo(data?.name, '')
     },
     redirectToReferencedBy,
-    hideReferencedByButton: serviceInstance,
-    forceDeleteCallback: CDS_FORCE_DELETE_ENTITIES ? () => deleteHandler(true) : undefined
+    hideReferencedByButton,
+    forceDeleteCallback: CDS_FORCE_DELETE_ENTITIES ? () => deleteHandler(true) : undefined,
+    customErrorMessage
   })
 
   const handleEdit = (e: React.MouseEvent<HTMLElement, MouseEvent>): void => {

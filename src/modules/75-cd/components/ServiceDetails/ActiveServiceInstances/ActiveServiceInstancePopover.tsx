@@ -35,7 +35,7 @@ import {
 } from 'services/cd-ng'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { getReadableDateTime } from '@common/utils/dateUtils'
-import { useStrings } from 'framework/strings'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import css from '@cd/components/ServiceDetails/ActiveServiceInstances/ActiveServiceInstances.module.scss'
 
@@ -124,8 +124,10 @@ const Section: React.FC<{ data: SectionProps[] }> = props => {
   )
 }
 
-export const CommonActiveInstanceData = (instanceData: InstanceDetailsDTO): SectionProps[] => {
-  const { getString } = useStrings()
+export const commonActiveInstanceData = (
+  instanceData: InstanceDetailsDTO,
+  getString: UseStringsReturn['getString']
+): SectionProps[] => {
   const instanceInfoDTOProperties = (instanceData?.instanceInfoDTO as CustomDeploymentInstanceInfoDTO)?.properties || {}
   const defaultInstanceInfoData = [
     {
@@ -379,7 +381,7 @@ export const CommonActiveInstanceData = (instanceData: InstanceDetailsDTO): Sect
 
 export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopoverProps> = props => {
   const {
-    buildId = '',
+    buildId,
     envId = '',
     instanceNum = 0,
     serviceIdentifier = '',
@@ -397,7 +399,7 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     projectIdentifier,
     serviceId: serviceId || serviceIdentifier,
     envId,
-    buildIds: [buildId],
+    buildIds: [defaultTo(buildId, '')],
     clusterIdentifier: clusterId,
     infraIdentifier,
     pipelineExecutionId
@@ -411,8 +413,8 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     envId,
     infraIdentifier,
     clusterIdentifier: clusterId,
-    pipelineExecutionId: defaultTo(pipelineExecutionId, ''),
-    buildId: buildId
+    pipelineExecutionId: pipelineExecutionId || '',
+    buildId: buildId || ''
   }
 
   const { loading, data, error } = useGetActiveInstancesByServiceIdEnvIdAndBuildIds({
@@ -468,5 +470,5 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
       ? envData?.data?.instances?.[instanceNum]
       : data?.data?.instancesByBuildIdList?.[0]?.instances?.[instanceNum]) || {}
 
-  return <Section data={CommonActiveInstanceData(instanceData)}></Section>
+  return <Section data={commonActiveInstanceData(instanceData, getString)}></Section>
 }

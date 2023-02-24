@@ -32,6 +32,9 @@ exports[`GCR Artifact Source tests snapshot test for Sidecar GCR artifact source
           </button>
         </div>
         <div
+          class="inputFieldLayout"
+        />
+        <div
           class="fieldAndOptions"
         >
           <div
@@ -97,9 +100,6 @@ exports[`GCR Artifact Source tests snapshot test for Sidecar GCR artifact source
             </div>
           </div>
         </div>
-        <div
-          class="inputFieldLayout"
-        />
         <div
           class="inputFieldLayout"
         >

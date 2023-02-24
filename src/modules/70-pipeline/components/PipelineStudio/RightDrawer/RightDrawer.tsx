@@ -32,7 +32,7 @@ import { usePipelineVariables } from '@pipeline/components/PipelineVariablesCont
 import { PipelineGovernanceView } from '@governance/PipelineGovernanceView'
 import { getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import { createTemplate } from '@pipeline/utils/templateUtils'
-import type { ExecutionWrapperConfig, PmsAbstractStepNode, TemplateStepNode } from 'services/pipeline-ng'
+import type { ExecutionWrapperConfig, TemplateStepNode } from 'services/pipeline-ng'
 import type { StringsMap } from 'stringTypes'
 import type { TemplateSummaryResponse } from 'services/template-ng'
 import { useTemplateSelector } from 'framework/Templates/TemplateSelectorContext/useTemplateSelector'
@@ -40,6 +40,7 @@ import type { ECSRollingDeployStepInitialValues } from '@pipeline/utils/types'
 import type { CommandFlags } from '@pipeline/components/ManifestSelection/ManifestInterface'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { usePrevious } from '@common/hooks/usePrevious'
 import { usePipelineContext } from '../PipelineContext/PipelineContext'
 import { DrawerData, DrawerSizes, DrawerTypes, PipelineViewData } from '../PipelineContext/PipelineActions'
 import { StepCommandsWithRef as StepCommands, StepFormikRef } from '../StepCommands/StepCommands'
@@ -182,129 +183,125 @@ const processNodeImpl = (
   item: Partial<Values>,
   data: any,
   trackEvent: TrackEvent
-): StepElementConfig & TemplateStepNode & StepGroupElementConfig & PmsAbstractStepNode => {
-  return produce(
-    data.stepConfig.node as StepElementConfig & TemplateStepNode & StepGroupElementConfig & PmsAbstractStepNode,
-    node => {
-      // Add/replace values only if they are presented
-      addReplace(item, node)
+): StepElementConfig & TemplateStepNode & StepGroupElementConfig => {
+  return produce(data.stepConfig.node as StepElementConfig & TemplateStepNode & StepGroupElementConfig, node => {
+    // Add/replace values only if they are presented
+    addReplace(item, node)
 
-      // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.
-      if (Array.isArray(item.failureStrategies) || isValueRuntimeInput(item.failureStrategies as any)) {
-        node.failureStrategies = item.failureStrategies
+    // default strategies can be present without having the need to click on Advanced Tab. For eg. in CV step.
+    if (Array.isArray(item.failureStrategies) || isValueRuntimeInput(item.failureStrategies as any)) {
+      node.failureStrategies = item.failureStrategies
 
-        if (Array.isArray(item.failureStrategies)) {
-          const telemetryData = item.failureStrategies.map(strategy => ({
-            onError: strategy.onFailure?.errors?.join(', '),
-            action: strategy.onFailure?.action?.type
-          }))
-          telemetryData.length &&
-            trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
-        }
-      }
-      if (!data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
-        set(node, 'spec.delegateSelectors', item.delegateSelectors)
-      } else if (data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
-        set(node, 'delegateSelectors', item.delegateSelectors)
-      }
-      if ((item as StepElementConfig)?.spec?.commandOptions && item.tab !== TabTypes.Advanced) {
-        set(node, 'spec.commandOptions', (item as StepElementConfig)?.spec?.commandOptions)
-      }
-
-      // Looping strategies which are found in Advanced tab of steps
-      // Step group which has all of its steps as Command steps will have repeat looping strategy as default strategy
-      if (isEmpty(item.strategy)) {
-        delete (node as any).strategy
-      } else {
-        set(node, 'strategy', item.strategy)
-      }
-
-      if (item?.policySets && item.tab === TabTypes.Advanced) {
-        set(node, 'enforce.policySets', item.policySets)
-      }
-
-      if (item.commandFlags && item.tab === TabTypes.Advanced) {
-        const commandFlags = item.commandFlags.map((commandFlag: CommandFlags) =>
-          commandFlag.commandType && commandFlag.flag
-            ? {
-                commandType: commandFlag.commandType,
-                flag: commandFlag.flag
-              }
-            : {}
-        )
-        const filteredCommandFlags = commandFlags.filter((currFlag: CommandFlags) => !isEmpty(currFlag))
-        set(node, 'spec.commandFlags', filteredCommandFlags)
-      }
-
-      // Delete values if they were already added and now removed
-      if (node.timeout && !(item as StepElementConfig).timeout && item.tab !== TabTypes.Advanced) delete node.timeout
-      if (node.description && !(item as StepElementConfig).description && item.tab !== TabTypes.Advanced)
-        delete node.description
-      if (
-        (node as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances &&
-        !(item as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances &&
-        item.tab !== TabTypes.Advanced
-      ) {
-        delete (node as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances
-      }
-      if (
-        (node as ECSRollingDeployStepInitialValues).forceNewDeployment &&
-        !(item as ECSRollingDeployStepInitialValues).forceNewDeployment &&
-        item.tab !== TabTypes.Advanced
-      ) {
-        delete (node as ECSRollingDeployStepInitialValues).forceNewDeployment
-      }
-      if (node.failureStrategies && !item.failureStrategies && item.tab === TabTypes.Advanced)
-        delete node.failureStrategies
-      if (
-        node.enforce?.policySets &&
-        (!item?.policySets || item.policySets?.length === 0) &&
-        item.tab === TabTypes.Advanced
-      ) {
-        delete node.enforce
-      }
-      if (
-        !data.stepConfig?.isStepGroup &&
-        node.spec?.delegateSelectors &&
-        (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
-        item.tab === TabTypes.Advanced
-      ) {
-        delete node.spec.delegateSelectors
-      }
-      if (
-        node.spec?.commandFlags &&
-        (!item.commandFlags || item.commandFlags?.length === 0) &&
-        item.tab === TabTypes.Advanced
-      ) {
-        delete node.spec.commandFlags
-      }
-      if (
-        data.stepConfig?.isStepGroup &&
-        node.delegateSelectors &&
-        (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
-        item.tab === TabTypes.Advanced
-      ) {
-        delete node.delegateSelectors
-      }
-
-      if (
-        node.spec?.commandOptions &&
-        (!(item as StepElementConfig)?.spec?.commandOptions ||
-          (item as StepElementConfig)?.spec?.commandOptions?.length === 0) &&
-        item.tab !== TabTypes.Advanced
-      ) {
-        delete (item as StepElementConfig)?.spec?.commandOptions
-        delete node.spec.commandOptions
-      }
-
-      if (item.template) {
-        node.template = item.template
-      }
-      if ((item as StepElementConfig).spec && item.tab !== TabTypes.Advanced) {
-        node.spec = { ...(item as StepElementConfig).spec }
+      if (Array.isArray(item.failureStrategies)) {
+        const telemetryData = item.failureStrategies.map(strategy => ({
+          onError: strategy.onFailure?.errors?.join(', '),
+          action: strategy.onFailure?.action?.type
+        }))
+        telemetryData.length && trackEvent(StepActions.AddEditFailureStrategy, { data: JSON.stringify(telemetryData) })
       }
     }
-  )
+    if (!data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
+      set(node, 'spec.delegateSelectors', item.delegateSelectors)
+    } else if (data.stepConfig?.isStepGroup && item.delegateSelectors && item.tab === TabTypes.Advanced) {
+      set(node, 'delegateSelectors', item.delegateSelectors)
+    }
+    if ((item as StepElementConfig)?.spec?.commandOptions && item.tab !== TabTypes.Advanced) {
+      set(node, 'spec.commandOptions', (item as StepElementConfig)?.spec?.commandOptions)
+    }
+
+    // Looping strategies which are found in Advanced tab of steps
+    // Step group which has all of its steps as Command steps will have repeat looping strategy as default strategy
+    if (isEmpty(item.strategy)) {
+      delete (node as any).strategy
+    } else {
+      set(node, 'strategy', item.strategy)
+    }
+
+    if (item?.policySets && item.tab === TabTypes.Advanced) {
+      set(node, 'enforce.policySets', item.policySets)
+    }
+
+    if (item.commandFlags && item.tab === TabTypes.Advanced) {
+      const commandFlags = item.commandFlags.map((commandFlag: CommandFlags) =>
+        commandFlag.commandType && commandFlag.flag
+          ? {
+              commandType: commandFlag.commandType,
+              flag: commandFlag.flag
+            }
+          : {}
+      )
+      const filteredCommandFlags = commandFlags.filter((currFlag: CommandFlags) => !isEmpty(currFlag))
+      set(node, 'spec.commandFlags', filteredCommandFlags)
+    }
+
+    // Delete values if they were already added and now removed
+    if (node.timeout && !(item as StepElementConfig).timeout && item.tab !== TabTypes.Advanced) delete node.timeout
+    if (node.description && !(item as StepElementConfig).description && item.tab !== TabTypes.Advanced)
+      delete node.description
+    if (
+      (node as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances &&
+      !(item as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances &&
+      item.tab !== TabTypes.Advanced
+    ) {
+      delete (node as ECSRollingDeployStepInitialValues).sameAsAlreadyRunningInstances
+    }
+    if (
+      (node as ECSRollingDeployStepInitialValues).forceNewDeployment &&
+      !(item as ECSRollingDeployStepInitialValues).forceNewDeployment &&
+      item.tab !== TabTypes.Advanced
+    ) {
+      delete (node as ECSRollingDeployStepInitialValues).forceNewDeployment
+    }
+    if (node.failureStrategies && !item.failureStrategies && item.tab === TabTypes.Advanced)
+      delete node.failureStrategies
+    if (
+      node.enforce?.policySets &&
+      (!item?.policySets || item.policySets?.length === 0) &&
+      item.tab === TabTypes.Advanced
+    ) {
+      delete node.enforce
+    }
+    if (
+      !data.stepConfig?.isStepGroup &&
+      node.spec?.delegateSelectors &&
+      (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
+      item.tab === TabTypes.Advanced
+    ) {
+      delete node.spec.delegateSelectors
+    }
+    if (
+      node.spec?.commandFlags &&
+      (!item.commandFlags || item.commandFlags?.length === 0) &&
+      item.tab === TabTypes.Advanced
+    ) {
+      delete node.spec.commandFlags
+    }
+    if (
+      data.stepConfig?.isStepGroup &&
+      node.delegateSelectors &&
+      (!item.delegateSelectors || item.delegateSelectors?.length === 0) &&
+      item.tab === TabTypes.Advanced
+    ) {
+      delete node.delegateSelectors
+    }
+
+    if (
+      node.spec?.commandOptions &&
+      (!(item as StepElementConfig)?.spec?.commandOptions ||
+        (item as StepElementConfig)?.spec?.commandOptions?.length === 0) &&
+      item.tab !== TabTypes.Advanced
+    ) {
+      delete (item as StepElementConfig)?.spec?.commandOptions
+      delete node.spec.commandOptions
+    }
+
+    if (item.template) {
+      node.template = item.template
+    }
+    if ((item as StepElementConfig).spec && item.tab !== TabTypes.Advanced) {
+      node.spec = { ...(item as StepElementConfig).spec }
+    }
+  })
 }
 
 const updateWithNodeIdentifier = async (
@@ -773,11 +770,11 @@ export function RightDrawer(): React.ReactElement {
 
   const { onSearchInputChange } = usePipelineVariables()
 
-  const getStepNameSuffix = (stepType: string, stepName: string, isProvisioner: boolean): string => {
+  const getStepNameSuffix = (stepType: string, isProvisioner: boolean): string => {
     let maxId = 0
     const suffixNameArray: string[] = []
     const stepsMap = data?.paletteData?.stepsMap
-    const _stepName = stepName.split(' ').join('')
+    const _stepName = stepType.split(' ').join('')
     stepsMap?.forEach((_value, key: string) => {
       const stepDetails = getStepFromId(
         isProvisioner
@@ -812,7 +809,7 @@ export function RightDrawer(): React.ReactElement {
 
   const onStepSelection = async (item: StepData): Promise<void> => {
     const paletteData = data?.paletteData
-    const suffixString = getStepNameSuffix(item.type, item.name, false)
+    const suffixString = getStepNameSuffix(item.type, false)
     const stepName = `${item.name}${suffixString}`
     if (paletteData?.entity) {
       const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(defaultTo(selectedStageId, '')))
@@ -904,7 +901,8 @@ export function RightDrawer(): React.ReactElement {
     try {
       const stepType =
         (data?.stepConfig?.node as StepElementConfig)?.type ||
-        get(templateTypes, (data?.stepConfig?.node as TemplateStepNode).template.templateRef)
+        get(templateTypes, (data?.stepConfig?.node as TemplateStepNode).template.templateRef) ||
+        (stageType as string)
 
       const { template, isCopied } = await getTemplate({
         templateType: 'Step',
@@ -941,7 +939,8 @@ export function RightDrawer(): React.ReactElement {
     await updateNode(processNode, drawerType, isRollback)
   }
 
-  const onDiscard = (): void => {
+  const previousStepId = usePrevious(selectedStepId)
+  const onDiscard = React.useCallback((): void => {
     updatePipelineView({
       ...pipelineView,
       isDrawerOpened: false,
@@ -949,7 +948,13 @@ export function RightDrawer(): React.ReactElement {
         type: DrawerTypes.AddStep
       }
     })
-  }
+  }, [pipelineView, updatePipelineView])
+
+  React.useEffect(() => {
+    if (!selectedStepId && previousStepId) {
+      onDiscard()
+    }
+  }, [previousStepId, selectedStepId, onDiscard])
 
   const showHelpPanel = () => {
     setHelpPanel(!helpPanelVisible)
@@ -1113,7 +1118,7 @@ export function RightDrawer(): React.ReactElement {
             const paletteData = data.paletteData
             if (paletteData?.entity) {
               const { stage: pipelineStage } = cloneDeep(getStageFromPipeline(selectedStageId))
-              const suffixString = getStepNameSuffix(item.type, item.name, true)
+              const suffixString = getStepNameSuffix(item.type, true)
               const stepName = `${item.name}${suffixString}`
               const newStepData = {
                 step: {

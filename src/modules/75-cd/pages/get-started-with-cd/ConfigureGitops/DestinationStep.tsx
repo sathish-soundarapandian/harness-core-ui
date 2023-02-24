@@ -130,7 +130,7 @@ export const DestinationStep = (props: any) => {
         setTestConnectionErrors([
           {
             level: 'ERROR',
-            message: (testConnectionData as any)?.message
+            message: (testConnectionData as any)?.message || testConnectionData?.cluster?.connectionState?.message
           }
         ])
       }

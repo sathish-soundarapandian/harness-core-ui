@@ -28,7 +28,7 @@ exports[`TAS BasicAppSetupStep - runtime view and validation test runtime view i
     >
       <div>
         <div
-          class="fieldAndOptions formGroup sm"
+          class="fieldAndOptions formGroup md"
         >
           <div
             class="bp3-form-group"

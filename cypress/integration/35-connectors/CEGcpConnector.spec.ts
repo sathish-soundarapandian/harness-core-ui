@@ -9,12 +9,6 @@ import { featureFlagsCall, pageHeaderClassName } from '../../support/70-pipeline
 
 describe('CE GCP Connector', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
-
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
       const chooseGcpRequirements = []
 

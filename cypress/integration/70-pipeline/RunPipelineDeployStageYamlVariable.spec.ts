@@ -12,11 +12,6 @@ import {
 
 describe('Checks visual to YAML and visual to variable view parity', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', servicesCallRunPipeline, { fixture: 'ng/api/servicesV2/serviceYamlVariable' })
     cy.intercept('GET', environmentsCallRunPipeline, { fixture: 'ng/api/environmentsV2Access' }).as('environmentCall')
     cy.intercept('GET', connectorsCall, { fixture: 'ng/api/connectors' })

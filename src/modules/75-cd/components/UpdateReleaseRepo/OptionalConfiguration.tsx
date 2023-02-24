@@ -7,13 +7,23 @@
 
 import React from 'react'
 import { FormikProps, FieldArray } from 'formik'
-import { AllowedTypes, Button, ButtonVariation, FormikForm, FormInput, SelectOption } from '@harness/uicore'
+import {
+  AllowedTypes,
+  Button,
+  ButtonVariation,
+  FormikForm,
+  FormInput,
+  getMultiTypeFromValue,
+  MultiTypeInputType,
+  SelectOption
+} from '@harness/uicore'
 import { v4 as uuid } from 'uuid'
 
 import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
+import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { ReleaseRepoVariable, UpdateReleaseRepoFormData } from './UpdateReleaseRepo'
 import css from './OptionalConfig.module.scss'
 
@@ -31,12 +41,35 @@ export default function OptionalConfiguration(props: {
   enableOutputVar?: boolean
 }): React.ReactElement {
   const { formik, readonly, allowableTypes } = props
-  const { values: formValues } = formik
+  const { values: formValues, setFieldValue } = formik
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   return (
     <FormikForm>
       <div className={stepCss.stepPanel}>
+        <div className={stepCss.formGroup}>
+          <FormInput.MultiTextInput
+            name="spec.prTitle"
+            placeholder={getString('pipeline.prTitle')}
+            label={getString('pipeline.prTitle')}
+            isOptional
+            optionalLabel={getString('common.optionalLabel')}
+            disabled={readonly}
+            multiTextInputProps={{ expressions, disabled: readonly, allowableTypes }}
+          />
+          {getMultiTypeFromValue(formValues.spec.prTitle) === MultiTypeInputType.RUNTIME && (
+            <ConfigureOptions
+              value={formValues.spec.prTitle || ''}
+              type="String"
+              variableName="spec.prTitle"
+              showRequiredField={false}
+              showDefaultField={false}
+              showAdvanced={true}
+              onChange={value => setFieldValue('spec.prTitle', value)}
+              isReadonly={readonly}
+            />
+          )}
+        </div>
         <div className={stepCss.formGroup}>
           <MultiTypeFieldSelector
             name="spec.variables"

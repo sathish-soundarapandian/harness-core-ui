@@ -23,9 +23,6 @@ import { Connectors } from '../../../utils/connctors-utils'
 
 describe('Health Source - Google Cloud Operations', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      return false
-    })
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
       cy.intercept('GET', featureFlagsCall, {
         ...featureFlagsData,
@@ -127,7 +124,7 @@ describe('Health Source - Google Cloud Operations', () => {
     cy.findByText('Template published successfully').should('be.visible')
   })
 
-  it.only('should be able to add GCO Health Source with manual runtime query', () => {
+  it('should be able to add GCO Health Source with manual runtime query', () => {
     cy.addNewSRMTemplate()
     cy.populateTemplateDetails('AppD Template', '1')
     // set rutime

@@ -12,6 +12,9 @@ console.log('\nProxy env vars')
 console.table({ baseUrl, targetLocalHost })
 
 module.exports = {
+  '/v1': {
+    target: `${baseUrl}` // localhost is not supported for OpenAPI yet
+  },
   '/ng/api': {
     pathRewrite: { '^/ng/api': '' },
     target: targetLocalHost ? 'https://localhost:7090' : `${baseUrl}/ng/api`
@@ -169,6 +172,10 @@ module.exports = {
   '/tiui': {
     pathRewrite: { '^/tiui': '' },
     target: process.env.TI_UI_URL || 'https://localhost:9200'
+  },
+  '/iacm/api': {
+    pathRewrite: { '^/iacm': '' },
+    target: targetLocalHost ? process.env.IAC_API_URL || 'https://localhost:8185' : `${baseUrl}/iacm`
   },
   '/iacm': {
     pathRewrite: { '^/iacm': '' },

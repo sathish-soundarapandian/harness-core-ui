@@ -37,6 +37,7 @@ import {
   logLevelOptions,
   ORCHESTRATION_SCAN_MODE,
   severityOptions,
+  tooltipIds,
   ZAP_ATTACK_CONFIG,
   ZAP_DEFAULT_CONFIG,
   ZAP_QUICK_CONFIG,
@@ -125,12 +126,14 @@ export const ZapStepBase = (
                     inputProps: {
                       disabled: scanModeSelectItems.length === 1
                     },
-                    selectItems: scanModeSelectItems
+                    selectItems: scanModeSelectItems,
+                    tooltipId: tooltipIds.mode
                   },
                   'spec.config': {
                     label: 'sto.stepField.config',
                     fieldType: 'dropdown',
-                    selectItems: [ZAP_DEFAULT_CONFIG, ZAP_STANDARD_CONFIG, ZAP_ATTACK_CONFIG, ZAP_QUICK_CONFIG]
+                    selectItems: [ZAP_DEFAULT_CONFIG, ZAP_STANDARD_CONFIG, ZAP_ATTACK_CONFIG, ZAP_QUICK_CONFIG],
+                    tooltipId: tooltipIds.config
                   }
                 }}
               />
@@ -163,12 +166,14 @@ export const ZapStepBase = (
                     },
                     'spec.tool.context': {
                       label: 'sto.stepField.tool.context',
-                      optional: true
+                      optional: true,
+                      tooltipId: tooltipIds.toolContext
                     },
                     'spec.tool.port': {
                       label: 'common.smtp.port',
                       optional: true,
-                      inputProps: { placeholder: '8981' }
+                      inputProps: { placeholder: '8981' },
+                      tooltipId: tooltipIds.toolPort
                     }
                   }}
                 />
@@ -186,13 +191,15 @@ export const ZapStepBase = (
                     optional: true,
                     fieldType: 'dropdown',
                     label: 'sto.stepField.advanced.logLevel',
-                    selectItems: logLevelOptions(getString)
+                    selectItems: logLevelOptions(getString),
+                    tooltipId: tooltipIds.logLevel
                   },
                   'spec.advanced.fail_on_severity': {
                     optional: true,
                     fieldType: 'dropdown',
                     label: 'sto.stepField.advanced.failOnSeverity',
-                    selectItems: severityOptions(getString)
+                    selectItems: severityOptions(getString),
+                    tooltipId: tooltipIds.failOnSeverity
                   }
                 }}
               />

@@ -36,14 +36,11 @@ import DetailsBreadcrumb from '@cv/pages/monitored-service/views/DetailsBreadcru
 import { Scope } from '@common/interfaces/SecretsInterface'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { getScopeBasedProjectPathParams } from '@common/components/EntityReference/EntityReference'
 import ServiceEnvironmentInputSet from './components/ServiceEnvironmentInputSet/ServiceEnvironmentInputSet'
 import HealthSourceInputset from './components/HealthSourceInputset/HealthSourceInputset'
 import MonitoredServiceInputsetVariables from './components/MonitoredServiceInputsetVariables/MonitoredServiceInputsetVariables'
-import {
-  getPopulateSource,
-  getQueryParamsForTemplateInputSetYaml,
-  validateInputSet
-} from './MonitoredServiceInputSetsTemplate.utils'
+import { getPopulateSource, validateInputSet } from './MonitoredServiceInputSetsTemplate.utils'
 import type {
   TemplateDataInterface,
   MonitoredServiceInputSetInterface
@@ -73,6 +70,12 @@ export default function MonitoredServiceInputSetsTemplate({
 
   const [showLoading, setShowLoading] = React.useState(false)
 
+  const {
+    accountId: templateAccountId,
+    projectIdentifier: templateProjectId,
+    orgIdentifier: templateOrgId
+  } = templateRefData || {}
+
   // InputSet Yaml
   const {
     data: templateInputYaml,
@@ -83,7 +86,10 @@ export default function MonitoredServiceInputSetsTemplate({
     lazy: true,
     templateIdentifier: defaultTo(templateRefData?.identifier, ''),
     queryParams: {
-      ...getQueryParamsForTemplateInputSetYaml(templateRefData),
+      ...getScopeBasedProjectPathParams(
+        { accountId: templateAccountId, orgIdentifier: templateOrgId, projectIdentifier: templateProjectId },
+        Scope.PROJECT
+      ),
       versionLabel: defaultTo(templateRefData?.versionLabel, ''),
       getDefaultFromOtherRepo: true
     },
@@ -98,7 +104,10 @@ export default function MonitoredServiceInputSetsTemplate({
   } = useGetTemplate({
     templateIdentifier: templateRefData?.identifier,
     queryParams: {
-      ...getQueryParamsForTemplateInputSetYaml(templateRefData),
+      ...getScopeBasedProjectPathParams(
+        { accountId: templateAccountId, orgIdentifier: templateOrgId, projectIdentifier: templateProjectId },
+        Scope.PROJECT
+      ),
       versionLabel: defaultTo(templateRefData?.versionLabel, ''),
       getDefaultFromOtherRepo: true
     }
@@ -144,6 +153,7 @@ export default function MonitoredServiceInputSetsTemplate({
     if (monitoredServiceInputSet?.serviceRef !== undefined) {
       monitoredServiceInputSet.serviceRef = value.serviceRef
     }
+
     if (monitoredServiceInputSet?.environmentRef !== undefined) {
       monitoredServiceInputSet.environmentRef = value.environmentRef
     }

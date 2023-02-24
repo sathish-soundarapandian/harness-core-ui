@@ -54,7 +54,6 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
   const location = useLocation()
   const { view } = useQueryParams<ExecutionQueryParams>()
   const { updateQueryParams } = useUpdateQueryParams<ExecutionQueryParams>()
-  const opaBasedGovernanceEnabled = useFeatureFlag(FeatureFlag.OPA_PIPELINE_GOVERNANCE)
   const { licenseInformation } = useLicenseStore()
   const isSecurityEnabled = licenseInformation['STO']?.status === 'ACTIVE'
   const isErrorTrackingEnabled = useFeatureFlag(FeatureFlag.CVNG_ENABLED)
@@ -185,7 +184,7 @@ export default function ExecutionTabs(props: ExecutionTabsProps): React.ReactEle
     })
   }
 
-  if (canUsePolicyEngine && opaBasedGovernanceEnabled) {
+  if (canUsePolicyEngine) {
     tabList.push({
       id: TAB_ID_MAP.POLICY_EVALUATIONS,
       title: (

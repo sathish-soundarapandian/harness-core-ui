@@ -51,7 +51,7 @@ exports[`Test GcpInfrastructureSpec snapshot should render edit view for inputse
                       <span
                         class="placeholder"
                       >
-                        connectors.selectConnector
+                        common.entityPlaceholderText
                       </span>
                     </span>
                     <span

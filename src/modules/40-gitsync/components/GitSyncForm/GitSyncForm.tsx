@@ -26,6 +26,7 @@ import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import RepoBranchSelectV2 from '@common/components/RepoBranchSelectV2/RepoBranchSelectV2'
 import { ErrorHandler, ResponseMessage } from '@common/components/ErrorHandler/ErrorHandler'
 import { Connectors } from '@connectors/constants'
+import { getConnectorIdentifierWithScope } from '@connectors/utils/utils'
 import { yamlPathRegex } from '@common/utils/StringUtils'
 import css from './GitSyncForm.module.scss'
 
@@ -81,10 +82,6 @@ export const gitSyncFormSchema = (
       .matches(yamlPathRegex, getString('gitsync.gitSyncForm.yamlPathInvalid'))
   })
 })
-
-const getConnectorIdentifierWithScope = (scope: Scope, identifier: string): string => {
-  return scope === Scope.ORG || scope === Scope.ACCOUNT ? `${scope}.${identifier}` : identifier
-}
 
 const getSupportedProviders = () => {
   const supportedRepoProviders = [Connectors.GITHUB, Connectors.BITBUCKET, Connectors.AZURE_REPO]

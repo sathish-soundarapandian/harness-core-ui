@@ -56,7 +56,7 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
               </div>
             </div>
             <div
-              class="bp3-form-group"
+              class="bp3-form-group tagInputStyle"
               data-id="entity[0].Org-1"
             >
               <label
@@ -166,7 +166,7 @@ exports[`Freeze Window Studio Config Section it should render Config section in 
               </div>
             </div>
             <div
-              class="bp3-form-group bp3-disabled"
+              class="bp3-form-group bp3-disabled tagInputStyle"
               data-id="entity[0].Project-3"
             >
               <label

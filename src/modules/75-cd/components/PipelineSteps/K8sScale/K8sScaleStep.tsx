@@ -217,6 +217,7 @@ const K8ScaleInputStep: React.FC<K8sScaleProps> = ({ template, readonly, path, a
   const { getString } = useStrings()
   const prefix = isEmpty(path) ? '' : `${path}.`
   const { expressions } = useVariablesExpression()
+  const isTemplateUsageView = stepViewType === StepViewType.TemplateUsage
   return (
     <>
       {getMultiTypeFromValue(template?.spec?.workload) === MultiTypeInputType.RUNTIME && (
@@ -253,7 +254,7 @@ const K8ScaleInputStep: React.FC<K8sScaleProps> = ({ template, readonly, path, a
           label={getString('pipelineSteps.timeoutLabel')}
           name={`${prefix}timeout`}
           disabled={readonly}
-          className={cx(stepCss.formGroup, stepCss.sm)}
+          className={cx(stepCss.formGroup, stepCss.md)}
         />
       ) : null}
       {(getMultiTypeFromValue(
@@ -262,7 +263,7 @@ const K8ScaleInputStep: React.FC<K8sScaleProps> = ({ template, readonly, path, a
         getMultiTypeFromValue(
           (template?.spec?.instanceSelection?.spec as PercentageInstanceSelectionK8 | undefined)?.percentage
         ) === MultiTypeInputType.RUNTIME) && (
-        <div className={cx(stepCss.formGroup, stepCss.md)}>
+        <div className={cx(stepCss.formGroup, { [stepCss.md]: !isTemplateUsageView })}>
           <FormInstanceDropdown
             label={getString('common.instanceLabel')}
             name={`${prefix}spec.instanceSelection`}
@@ -278,12 +279,22 @@ const K8ScaleInputStep: React.FC<K8sScaleProps> = ({ template, readonly, path, a
         </div>
       )}
       {getMultiTypeFromValue(template?.spec?.skipSteadyStateCheck) === MultiTypeInputType.RUNTIME && (
-        <FormInput.CheckBox
-          name={`${prefix}spec.skipSteadyStateCheck`}
-          className={stepCss.checkbox}
-          label={getString('pipelineSteps.skipSteadyStateCheck')}
-          disabled={readonly}
-        />
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
+          <FormMultiTypeCheckboxField
+            multiTypeTextbox={{
+              expressions,
+              allowableTypes,
+              disabled: readonly
+            }}
+            enableConfigureOptions={true}
+            configureOptionsProps={{
+              isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+            }}
+            disabled={readonly}
+            name={`${prefix}spec.skipSteadyStateCheck`}
+            label={getString('pipelineSteps.skipSteadyStateCheck')}
+          />
+        </div>
       )}
     </>
   )

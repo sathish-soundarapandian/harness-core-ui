@@ -23,7 +23,7 @@ export const AsgSwapServiceInputStep: React.FC<AsgSwapServiceProps> = ({
   return (
     <>
       {getMultiTypeFromValue(template?.timeout) === MultiTypeInputType.RUNTIME ? (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeDurationField
             multiTypeDurationProps={{
               configureOptionsProps: {
@@ -40,7 +40,7 @@ export const AsgSwapServiceInputStep: React.FC<AsgSwapServiceProps> = ({
         </div>
       ) : null}
       {getMultiTypeFromValue(template?.spec?.downsizeOldAsg) === MultiTypeInputType.RUNTIME && (
-        <div className={cx(stepCss.formGroup, stepCss.sm)}>
+        <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeCheckboxField
             multiTypeTextbox={{
               expressions,

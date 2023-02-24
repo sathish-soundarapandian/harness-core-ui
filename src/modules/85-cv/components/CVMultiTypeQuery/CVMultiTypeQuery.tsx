@@ -18,7 +18,8 @@ export default function CVMultiTypeQuery({
   fetchRecords,
   allowedTypes,
   onTypeChange,
-  fetchButtonProps = {}
+  fetchButtonProps = {},
+  runQueryBtnTooltip
 }: {
   name: string
   disableFetchButton?: boolean
@@ -27,6 +28,7 @@ export default function CVMultiTypeQuery({
   fetchRecords?: () => void
   onTypeChange?: (type: MultiTypeInputType) => void
   fetchButtonProps?: Partial<ButtonProps>
+  runQueryBtnTooltip?: string
 }): JSX.Element {
   const { getString } = useStrings()
 
@@ -63,6 +65,7 @@ export default function CVMultiTypeQuery({
         margin={{ top: 'medium' }}
         disabled={disableFetchButton}
         {...fetchButtonProps}
+        tooltip={runQueryBtnTooltip}
       />
     </MultiTypeFieldSelector>
   )

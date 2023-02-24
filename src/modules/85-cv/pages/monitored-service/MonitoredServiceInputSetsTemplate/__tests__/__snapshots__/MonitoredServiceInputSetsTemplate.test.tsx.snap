@@ -172,7 +172,7 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                       class="Layout--horizontal StyledProps--main"
                     >
                       <span
-                        class="bp3-icon StyledProps--main StyledProps--margin-right-medium"
+                        class="bp3-icon StyledProps--main StyledProps--padding-right-small"
                         data-icon="service-appdynamics"
                       >
                         <svg
@@ -193,7 +193,8 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                         </svg>
                       </span>
                       <p
-                        class="StyledProps--font StyledProps--main"
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1;"
                       >
                         AppD default metrics runtime connector
                       </p>
@@ -205,7 +206,8 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main healthSourceInputsetTable"
+                      class="StyledProps--font Text--lineclamp StyledProps--main healthSourceInputsetTable StyledProps--padding-right-small"
+                      style="--text-line-clamp: 1;"
                     >
                       &lt;+input&gt;
                     </p>
@@ -216,7 +218,8 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="--text-line-clamp: 1;"
                     >
                       Application Monitoring
                     </p>
@@ -239,7 +242,7 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                       class="Layout--horizontal StyledProps--main"
                     >
                       <span
-                        class="bp3-icon StyledProps--main StyledProps--margin-right-medium"
+                        class="bp3-icon StyledProps--main StyledProps--padding-right-small"
                         data-icon="service-appdynamics"
                       >
                         <svg
@@ -260,7 +263,8 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                         </svg>
                       </span>
                       <p
-                        class="StyledProps--font StyledProps--main"
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1;"
                       >
                         Appd with custom and runtime connector
                       </p>
@@ -272,7 +276,8 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main healthSourceInputsetTable"
+                      class="StyledProps--font Text--lineclamp StyledProps--main healthSourceInputsetTable StyledProps--padding-right-small"
+                      style="--text-line-clamp: 1;"
                     >
                       &lt;+input&gt;
                     </p>
@@ -283,7 +288,8 @@ exports[`Test MonitoredServiceInputSetsTemplate Should render when props are pas
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="--text-line-clamp: 1;"
                     >
                       Application Monitoring
                     </p>
@@ -1681,7 +1687,7 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                       class="Layout--horizontal StyledProps--main"
                     >
                       <span
-                        class="bp3-icon StyledProps--main StyledProps--margin-right-medium"
+                        class="bp3-icon StyledProps--main StyledProps--padding-right-small"
                         data-icon="service-appdynamics"
                       >
                         <svg
@@ -1702,7 +1708,8 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                         </svg>
                       </span>
                       <p
-                        class="StyledProps--font StyledProps--main"
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1;"
                       >
                         AppD default metrics runtime connector
                       </p>
@@ -1714,7 +1721,8 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main healthSourceInputsetTable"
+                      class="StyledProps--font Text--lineclamp StyledProps--main healthSourceInputsetTable StyledProps--padding-right-small"
+                      style="--text-line-clamp: 1;"
                     >
                       &lt;+input&gt;
                     </p>
@@ -1725,7 +1733,8 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="--text-line-clamp: 1;"
                     >
                       Application Monitoring
                     </p>
@@ -1748,7 +1757,7 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                       class="Layout--horizontal StyledProps--main"
                     >
                       <span
-                        class="bp3-icon StyledProps--main StyledProps--margin-right-medium"
+                        class="bp3-icon StyledProps--main StyledProps--padding-right-small"
                         data-icon="service-appdynamics"
                       >
                         <svg
@@ -1769,7 +1778,8 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                         </svg>
                       </span>
                       <p
-                        class="StyledProps--font StyledProps--main"
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1;"
                       >
                         Appd with custom and runtime connector
                       </p>
@@ -1781,7 +1791,8 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main healthSourceInputsetTable"
+                      class="StyledProps--font Text--lineclamp StyledProps--main healthSourceInputsetTable StyledProps--padding-right-small"
+                      style="--text-line-clamp: 1;"
                     >
                       &lt;+input&gt;
                     </p>
@@ -1792,7 +1803,8 @@ exports[`Test MonitoredServiceInputSetsTemplate should render with ms inputset 1
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="--text-line-clamp: 1;"
                     >
                       Application Monitoring
                     </p>
@@ -2648,7 +2660,7 @@ exports[`Test MonitoredServiceInputSetsTemplate with GCO should render with ms i
                       class="Layout--horizontal StyledProps--main"
                     >
                       <span
-                        class="bp3-icon StyledProps--main StyledProps--margin-right-medium"
+                        class="bp3-icon StyledProps--main StyledProps--padding-right-small"
                         data-icon="service-stackdriver"
                       >
                         <svg
@@ -2676,7 +2688,8 @@ exports[`Test MonitoredServiceInputSetsTemplate with GCO should render with ms i
                         </svg>
                       </span>
                       <p
-                        class="StyledProps--font StyledProps--main"
+                        class="StyledProps--font Text--lineclamp StyledProps--main"
+                        style="--text-line-clamp: 1;"
                       >
                         metric
                       </p>
@@ -2688,7 +2701,8 @@ exports[`Test MonitoredServiceInputSetsTemplate with GCO should render with ms i
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main healthSourceInputsetTable"
+                      class="StyledProps--font Text--lineclamp StyledProps--main healthSourceInputsetTable StyledProps--padding-right-small"
+                      style="--text-line-clamp: 1;"
                     >
                       &lt;+input&gt;
                     </p>
@@ -2699,7 +2713,8 @@ exports[`Test MonitoredServiceInputSetsTemplate with GCO should render with ms i
                     style="width: 150px;"
                   >
                     <p
-                      class="StyledProps--font StyledProps--main"
+                      class="StyledProps--font Text--lineclamp StyledProps--main"
+                      style="--text-line-clamp: 1;"
                     >
                       Cloud Metrics
                     </p>

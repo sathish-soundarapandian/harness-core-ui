@@ -208,7 +208,9 @@ export function StageSelection(props: StageSelectionProps): React.ReactElement {
         detailsClassName={css.accordionDetails}
       >
         {stageEntries.map(([identifier, stage]) => {
-          const newIdentifier = stage?.strategyMetadata ? [stage.nodeUuid, stage.nodeExecutionId].join('|') : identifier
+          const newIdentifier = stage?.strategyMetadata
+            ? [stage.nodeUuid, stage.nodeExecutionId].join('|')
+            : defaultTo(stage.nodeUuid, identifier)
           const isChainedPipelineStage = stage.nodeType === 'Pipeline'
           const shouldShowExecutionInputs =
             !!stage?.executionInputConfigured && isExecutionWaitingForInput(stage.status) && !!selectedStageId

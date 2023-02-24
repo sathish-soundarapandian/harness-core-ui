@@ -28,7 +28,7 @@ exports[`TAS CanaryAppSetupStep - runtime view and validation test runtime view 
     >
       <div>
         <div
-          class="fieldAndOptions formGroup sm"
+          class="fieldAndOptions formGroup md"
         >
           <div
             class="bp3-form-group"

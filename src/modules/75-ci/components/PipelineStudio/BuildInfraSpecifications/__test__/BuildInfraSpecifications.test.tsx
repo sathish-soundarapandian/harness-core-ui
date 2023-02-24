@@ -8,6 +8,7 @@
 import React from 'react'
 import { waitFor, act, fireEvent, findByText, findAllByText, render } from '@testing-library/react'
 import { cloneDeep, set } from 'lodash-es'
+import mockImport from 'framework/utils/mockImport'
 import * as featureFlags from '@common/hooks/useFeatureFlag'
 import * as hostedBuilds from '@common/hooks/useHostedBuild'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -106,6 +107,7 @@ describe('BuildInfraSpecifications snapshot tests for K8s Build Infra', () => {
         <BuildInfraSpecifications />
       </TestWrapper>
     )
+    expect(container.querySelector('[data-icon="service-kubernetes"]')).toBeInTheDocument()
     expect(container).toMatchSnapshot()
   })
 
@@ -530,5 +532,60 @@ describe('Hosted by Harness', () => {
     expect(buildInfraTypeTiles.length).toBe(4)
     fireEvent.click(buildInfraTypeTiles[0])
     expect(getByText('ci.getStartedWithCI.provisioningHelpText')).toBeTruthy()
+  })
+})
+
+describe('Test feature enablement for different license and FFs', () => {
+  test('K8s/VMs Build Infra is not visible for CI Free edition', async () => {
+    mockImport('framework/LicenseStore/LicenseStoreContext', {
+      useLicenseStore: jest.fn().mockImplementation(() => ({
+        licenseInformation: { CI: { edition: 'FREE', status: 'ACTIVE' } }
+      }))
+    })
+    const { container } = render(
+      <TestWrapper pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}>
+        <BuildInfraSpecifications />
+      </TestWrapper>
+    )
+    expect(container.querySelector('[data-icon="service-kubernetes"]')).not.toBeInTheDocument()
+    expect(container.querySelector('[data-icon="service-vm"]')).not.toBeInTheDocument()
+  })
+
+  test('K8s/VMs Build Infra is visible for STO Enterprise edition', async () => {
+    mockImport('framework/LicenseStore/LicenseStoreContext', {
+      useLicenseStore: jest.fn().mockImplementation(() => ({
+        licenseInformation: { STO: { edition: 'ENTERPRISE', status: 'ACTIVE' } }
+      }))
+    })
+    const { container } = render(
+      <TestWrapper pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}>
+        <BuildInfraSpecifications />
+      </TestWrapper>
+    )
+    expect(container.querySelector('[data-icon="service-kubernetes"]')).toBeInTheDocument()
+    expect(container.querySelector('[data-icon="service-vm"]')).toBeInTheDocument()
+  })
+
+  test('K8s Build Infra is visible for ENABLE_K8_BUILDS enabled', async () => {
+    jest.spyOn(featureFlags, 'useFeatureFlags').mockImplementation(() => ({
+      ENABLE_K8_BUILDS: true
+    }))
+    const { container } = render(
+      <TestWrapper pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}>
+        <BuildInfraSpecifications />
+      </TestWrapper>
+    )
+    expect(container.querySelector('[data-icon="service-kubernetes"]')).toBeInTheDocument()
+  })
+
+  test('K8s/VMs Build Infra is visible for On-prem', async () => {
+    window.deploymentType = 'ON_PREM'
+    const { container } = render(
+      <TestWrapper pathParams={{ accountId: 'dummy', orgIdentifier: 'dummy', projectIdentifier: 'dummy' }}>
+        <BuildInfraSpecifications />
+      </TestWrapper>
+    )
+    expect(container.querySelector('[data-icon="service-kubernetes"]')).toBeInTheDocument()
+    expect(container.querySelector('[data-icon="service-vm"]')).toBeInTheDocument()
   })
 })

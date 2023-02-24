@@ -333,7 +333,7 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
 
           <div className={css.inputFieldLayout}>
             {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
-              <FormInput.MultiTextInput
+              <TextFieldInputSetView
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
                 multiTextInputProps={{
                   expressions,
@@ -341,6 +341,8 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
                 }}
                 label={getString('tagRegex')}
                 name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
+                fieldPath={`artifacts.${artifactPath}.spec.tagRegex`}
+                template={template}
               />
             )}
             {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.tagRegex`)) ===

@@ -25,7 +25,7 @@ const OrgDropdown: React.FC<OrgDropdownProps> = props => {
 
   function orgListPromise(): Promise<SelectOption[]> {
     return new Promise<SelectOption[]>(resolve => {
-      getOrganizationListPromise({ queryParams: { accountIdentifier: accountId, searchTerm: query, pageSize: 100 } })
+      getOrganizationListPromise({ queryParams: { accountIdentifier: accountId, searchTerm: query } })
         .then(result => {
           let selectItems: Array<SelectOption> = []
 

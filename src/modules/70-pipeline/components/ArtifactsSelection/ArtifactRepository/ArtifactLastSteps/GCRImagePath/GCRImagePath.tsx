@@ -27,8 +27,6 @@ import * as Yup from 'yup'
 import { memoize, merge } from 'lodash-es'
 import { ConnectorConfigDTO, useGetBuildDetailsForGcr } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import {
@@ -46,6 +44,7 @@ import type {
   ImagePathProps,
   ImagePathTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import ArtifactImagePathTagView from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
@@ -236,9 +235,11 @@ export function GCRImagePath({
                 />
                 {getMultiTypeFromValue(formik.values.registryHostname) === MultiTypeInputType.RUNTIME && (
                   <div className={css.configureOptions}>
-                    <ConfigureOptions
-                      value={formik.values.imagePath as string}
+                    <SelectConfigureOptions
+                      value={formik.values.registryHostname as string}
                       type="String"
+                      options={gcrUrlList}
+                      loading={false}
                       variableName="registryHostname"
                       showRequiredField={false}
                       showDefaultField={false}

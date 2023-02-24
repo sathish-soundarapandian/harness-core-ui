@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Container, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -37,20 +37,26 @@ export default function ChangeSourceCard(props: ChangeSourceCardInterface): JSX.
     ? { monitoredServiceIdentifier: monitoredServiceIdentifier }
     : { monitoredServiceIdentifiers }
 
-  const { data, loading, error } = useGetMonitoredServiceChangeEventSummary({
-    queryParams: {
-      accountId,
-      orgIdentifier,
-      projectIdentifier,
-      ...monitoredServiceParams,
-      startTime,
-      endTime,
-      isMonitoredServiceIdentifierScoped: isAccountLevel
-    },
-    queryParamStringifyOptions: {
-      arrayFormat: 'repeat'
+  const { data, loading, error, refetch } = useGetMonitoredServiceChangeEventSummary({ lazy: true })
+
+  useEffect(() => {
+    if (monitoredServiceIdentifiers?.length || monitoredServiceIdentifier) {
+      refetch({
+        queryParams: {
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          ...monitoredServiceParams,
+          startTime,
+          endTime,
+          isMonitoredServiceIdentifierScoped: isAccountLevel
+        },
+        queryParamStringifyOptions: {
+          arrayFormat: 'repeat'
+        }
+      })
     }
-  })
+  }, [monitoredServiceIdentifier, monitoredServiceIdentifiers])
 
   const changeSummaryList = useMemo(
     () => calculateChangePercentage(getString, ffIntegration, data?.resource),
@@ -91,6 +97,7 @@ export default function ChangeSourceCard(props: ChangeSourceCardInterface): JSX.
                 color={Color.BLACK}
                 font={{ weight: 'bold', size: 'large' }}
                 margin={{ right: 'small' }}
+                data-testid={ticker.id}
               >
                 {numberFormatter(Math.abs(ticker.count), {
                   truncate: true

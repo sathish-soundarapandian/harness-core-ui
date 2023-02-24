@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, screen, act } from '@testing-library/react'
+import { render, waitFor, screen, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
@@ -35,7 +35,7 @@ jest.mock(
 )
 
 jest.mock('services/cv', () => ({
-  useGetDowntimeAssociatedMonitoredServices: jest.fn().mockImplementation(() => ({
+  useGetAssociatedMonitoredServices: jest.fn().mockImplementation(() => ({
     error: null,
     loading: false,
     data: downtimeAssociatedMSs,
@@ -51,12 +51,13 @@ describe('CVCreateDowntime', () => {
     jest.clearAllMocks()
   })
 
-  test('should render CVCreateDowntime and show validations', async () => {
+  test('should render create flow', async () => {
     const { container, getByText } = render(
       <TestWrapper>
         <CVCreateDowntime />
       </TestWrapper>
     )
+
     await waitFor(() => {
       expect(getByText('cv.sloDowntime.addDowntime')).toBeInTheDocument()
       expect(getByText('cv.sloDowntime.steps.identification')).toBeInTheDocument()
@@ -67,6 +68,65 @@ describe('CVCreateDowntime', () => {
     })
 
     expect(container).toMatchSnapshot()
+
+    act(() => {
+      userEvent.click(getByText('next'))
+    })
+  })
+
+  test('should render validations for all steps', async () => {
+    const createDowntime = jest.fn()
+    jest
+      .spyOn(cvServices, 'useSaveDowntime')
+      .mockReturnValue({ data: oneTimeDurationBasedDowntimeResponse, mutate: createDowntime } as any)
+    jest.spyOn(cvServices, 'useGetAssociatedMonitoredServices').mockReturnValue({
+      data: {},
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    } as any)
+
+    const { getByText, getAllByText, getByPlaceholderText } = render(
+      <TestWrapper>
+        <CVCreateDowntime />
+      </TestWrapper>
+    )
+
+    userEvent.click(getByText('next'))
+
+    await waitFor(() => {
+      expect(getAllByText('cv.sloDowntime.validations.nameValidation')).toHaveLength(2)
+      expect(getAllByText('cv.sloDowntime.validations.categoryValidation')).toHaveLength(2)
+    })
+
+    act(() => {
+      fireEvent.change(getByPlaceholderText('common.namePlaceholder')!, { target: { value: 'Weekly downtime' } })
+      userEvent.click(getByText('cv.sloDowntime.scheduledMaintenance'))
+    })
+
+    userEvent.click(getByText('next'))
+
+    await waitFor(() => {
+      expect(getByText('common.occurrence.oneTime')).toBeInTheDocument()
+      expect(getByText('common.occurrence.recurring')).toBeInTheDocument()
+      expect(getByText('Timezone')).toBeInTheDocument()
+      expect(getByText('pipeline.startTime')).toBeInTheDocument()
+      expect(getByText('cv.dateAndTimeLabel')).toBeInTheDocument()
+      expect(getByText('cv.sloDowntime.durationText')).toBeInTheDocument()
+    })
+
+    userEvent.click(getByText('next'))
+
+    await waitFor(() => {
+      expect(getByText('cv.sloDowntime.selectMonitoredServices')).toBeInTheDocument()
+      expect(getByText('cv.sloDowntime.selectAllMonitoredServices')).toBeInTheDocument()
+    })
+
+    userEvent.click(getByText('save'))
+
+    await waitFor(() => {
+      expect(getByText('cv.sloDowntime.validations.msListValidation')).toBeInTheDocument()
+    })
   })
 
   test('should render error on edit page', async () => {
@@ -79,7 +139,7 @@ describe('CVCreateDowntime', () => {
           loading: false
         } as any)
     )
-    jest.spyOn(cvServices, 'useGetDowntimeAssociatedMonitoredServices').mockImplementationOnce(
+    jest.spyOn(cvServices, 'useGetAssociatedMonitoredServices').mockImplementationOnce(
       () =>
         ({
           data: null,
@@ -113,6 +173,12 @@ describe('CVCreateDowntime', () => {
           loading: false
         } as any)
     )
+    jest.spyOn(cvServices, 'useGetAssociatedMonitoredServices').mockReturnValue({
+      data: downtimeAssociatedMSs,
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    } as any)
     jest
       .spyOn(cvServices, 'useUpdateDowntimeData')
       .mockReturnValue({ data: oneTimeEndTimeBasedDowntimeResponse, mutate: updateDowntime } as any)
@@ -132,7 +198,7 @@ describe('CVCreateDowntime', () => {
       userEvent.click(getByText('next'))
     })
 
-    expect(getByText('Asia/Calcutta')).toBeInTheDocument()
+    expect(getByText('Asia/Calcutta (GMT+5.5)')).toBeInTheDocument()
     expect(getByText('cv.dateAndTimeLabel')).toBeInTheDocument()
     expect(getByText('pipeline.startTime')).toBeInTheDocument()
     expect(getByText('common.endTime')).toBeInTheDocument()
@@ -147,7 +213,7 @@ describe('CVCreateDowntime', () => {
 
     expect(container).toMatchSnapshot()
 
-    await act(() => {
+    act(() => {
       userEvent.click(getByText('save'))
       waitFor(() => expect(getByText('cv.sloDowntime.downtimeUpdated')).toBeInTheDocument())
     })
@@ -207,7 +273,7 @@ describe('CVCreateDowntime', () => {
       userEvent.click(getByTestId(/nextButton/i))
     })
 
-    expect(getByText('Asia/Bangkok')).toBeInTheDocument()
+    expect(getByText('Asia/Bangkok (GMT+7)')).toBeInTheDocument()
     expect(getByText('cv.dateAndTimeLabel')).toBeInTheDocument()
     expect(getByText('pipeline.startTime')).toBeInTheDocument()
     expect(getByText('pipeline.duration')).toBeInTheDocument()

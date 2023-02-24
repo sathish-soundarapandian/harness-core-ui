@@ -8,7 +8,6 @@
 import React, { useCallback } from 'react'
 import { Card, Formik, FormikForm } from '@harness/uicore'
 import { debounce, isEmpty, noop } from 'lodash-es'
-import cx from 'classnames'
 import * as Yup from 'yup'
 import { NameIdDescriptionTags } from '@common/components'
 import { NameSchema } from '@common/utils/Validation'
@@ -27,7 +26,7 @@ function ServiceStepBasicInfo(): React.ReactElement {
     updatePipeline
   } = usePipelineContext()
 
-  const { isServiceEntityModalView, isServiceCreateModalView } = useServiceContext()
+  const { isServiceCreateModalView } = useServiceContext()
 
   const onUpdate = useCallback(
     (value: NGServiceV2InfoConfig): void => {
@@ -38,7 +37,7 @@ function ServiceStepBasicInfo(): React.ReactElement {
   const delayedOnUpdate = React.useRef(debounce(onUpdate || noop, 1000)).current
 
   return (
-    <div className={cx(css.serviceStepBasicInfo, isServiceEntityModalView ? css.serviceModal : css.nonModalView)}>
+    <div className={css.serviceStepBasicInfo}>
       <Formik
         enableReinitialize
         initialValues={pipeline}

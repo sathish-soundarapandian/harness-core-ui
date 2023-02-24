@@ -182,7 +182,7 @@ describe('helm with GIT tests', () => {
             },
             subChartName: '',
             valuesPaths: undefined,
-            helmVersion: 'V2',
+            helmVersion: 'V3',
             skipResourceVersioning: false,
             enableDeclarativeRollback: false
           }

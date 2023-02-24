@@ -61,17 +61,17 @@ export const getRiskColorValue = (
   switch (riskStatus) {
     case RiskValues.HEALTHY:
     case RiskValues.PASSED:
-      return realCSSColor ? Utils.getRealCSSColor(Color.GREEN_500) : Color.GREEN_500
+      return realCSSColor ? Utils.getRealCSSColor(Color.GREEN_700) : Color.GREEN_700
     case RiskValues.OBSERVE:
     case RiskValues.WARNING:
-      return realCSSColor ? Utils.getRealCSSColor(Color.YELLOW_800) : Color.YELLOW_800
+      return realCSSColor ? Utils.getRealCSSColor(Color.YELLOW_900) : Color.YELLOW_900
     case RiskValues.NEED_ATTENTION:
-      return realCSSColor ? Utils.getRealCSSColor(Color.ORANGE_600) : Color.ORANGE_600
+      return realCSSColor ? Utils.getRealCSSColor(Color.ORANGE_700) : Color.ORANGE_700
     case RiskValues.UNHEALTHY:
     case RiskValues.FAILED:
-      return realCSSColor ? Utils.getRealCSSColor(Color.RED_600) : Color.RED_600
+      return realCSSColor ? Utils.getRealCSSColor(Color.RED_900) : Color.RED_900
     case SLOErrorBudget.EXHAUSTED:
-      return realCSSColor ? Utils.getRealCSSColor(Color.RED_800) : Color.RED_800
+      return realCSSColor ? Utils.getRealCSSColor(Color.RED_900) : Color.RED_900
     default:
       return realCSSColor ? Utils.getRealCSSColor(COLOR_NO_DATA) : COLOR_NO_DATA
   }
@@ -102,13 +102,12 @@ export function getSecondaryRiskColorValue(
     case RiskValues.HEALTHY:
       return realCSSColor ? Utils.getRealCSSColor(Color.GREEN_50) : Color.GREEN_50
     case RiskValues.OBSERVE:
-      return realCSSColor ? Utils.getRealCSSColor(Color.YELLOW_50) : Color.YELLOW_50
+      return realCSSColor ? Utils.getRealCSSColor(Color.YELLOW_100) : Color.YELLOW_100
     case RiskValues.NEED_ATTENTION:
-      return realCSSColor ? Utils.getRealCSSColor(Color.ORANGE_50) : Color.ORANGE_50
+      return realCSSColor ? Utils.getRealCSSColor(Color.ORANGE_100) : Color.ORANGE_100
     case RiskValues.UNHEALTHY:
-      return realCSSColor ? Utils.getRealCSSColor(Color.RED_50) : Color.RED_50
     case SLOErrorBudget.EXHAUSTED:
-      return realCSSColor ? Utils.getRealCSSColor(Color.RED_100) : Color.RED_100
+      return realCSSColor ? Utils.getRealCSSColor(Color.RED_50) : Color.RED_50
     default:
       return realCSSColor ? Utils.getRealCSSColor(Color.GREY_50) : Color.GREY_50
   }

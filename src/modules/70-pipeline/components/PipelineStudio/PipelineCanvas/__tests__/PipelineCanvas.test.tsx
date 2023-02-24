@@ -8,7 +8,7 @@
 import React from 'react'
 import { render, act, fireEvent, waitFor, screen } from '@testing-library/react'
 import { set } from 'lodash-es'
-import { putPipelinePromise, createPipelinePromise, PipelineInfoConfig } from 'services/pipeline-ng'
+import { putPipelinePromise, createPipelineV2Promise, PipelineInfoConfig } from 'services/pipeline-ng'
 import { TestWrapper, TestWrapperProps } from '@common/utils/testUtils'
 import { useMutateAsGet } from '@common/hooks'
 import routes from '@common/RouteDefinitions'
@@ -57,7 +57,7 @@ jest.mock('framework/GitRepoStore/GitSyncStoreContext', () => ({
 
 jest.mock('services/pipeline-ng', () => ({
   putPipelinePromise: jest.fn(),
-  createPipelinePromise: jest.fn(),
+  createPipelineV2Promise: jest.fn(),
   useGetInputsetYaml: () => jest.fn(),
   useGetTemplateFromPipeline: jest.fn()
 }))
@@ -126,7 +126,7 @@ describe('Pipeline Canvas - new pipeline', () => {
       fireEvent.click(getByText('save'))
     })
     // isUpdated - false disables save button
-    expect(createPipelinePromise).not.toBeCalled()
+    expect(createPipelineV2Promise).not.toBeCalled()
   })
 
   test('function calls on switch to YAML mode and back to VISUAL', async () => {
@@ -135,7 +135,7 @@ describe('Pipeline Canvas - new pipeline', () => {
     putPipelinePromise.mockResolvedValue(mockApiDataEmpty)
     // eslint-disable-next-line
     // @ts-ignore
-    createPipelinePromise.mockResolvedValue(mockApiDataEmpty)
+    createPipelineV2Promise.mockResolvedValue(mockApiDataEmpty)
 
     const props = getProps()
     const contextValue = getDummyPipelineCanvasContextValue({ isLoading: false, isUpdated: true })
@@ -190,7 +190,7 @@ describe('Pipeline Canvas - new pipeline', () => {
     putPipelinePromise.mockResolvedValue(mockApiDataEmpty)
     // eslint-disable-next-line
     // @ts-ignore
-    createPipelinePromise.mockResolvedValue(mockApiDataEmpty)
+    createPipelineV2Promise.mockResolvedValue(mockApiDataEmpty)
     const props = getProps()
     const contextValue = getDummyPipelineCanvasContextValue({ isLoading: false, isUpdated: true })
     const { getByText } = render(
@@ -329,7 +329,7 @@ describe('Pipeline Canvas - new pipeline', () => {
     putPipelinePromise.mockResolvedValue(mockApiDataEmpty)
     // eslint-disable-next-line
     // @ts-ignore
-    createPipelinePromise.mockResolvedValue(mockApiDataEmpty)
+    createPipelineV2Promise.mockResolvedValue(mockApiDataEmpty)
 
     const props = getProps()
     const contextValue = getDummyPipelineCanvasContextValue({ isLoading: false, isUpdated: true })

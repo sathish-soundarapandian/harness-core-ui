@@ -7,7 +7,7 @@
 
 import { getMultiTypeFromValue, MultiTypeInputType, RUNTIME_INPUT_VALUE, SelectOption } from '@harness/uicore'
 import type { FormikValues } from 'formik'
-import { defaultTo, get, isEmpty, merge } from 'lodash-es'
+import { defaultTo, get, isEmpty, isObject, merge } from 'lodash-es'
 import { RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import type { ArtifactConfig, ConnectorConfigDTO, PrimaryArtifact, SidecarArtifact } from 'services/cd-ng'
 import { ENABLED_ARTIFACT_TYPES, ModalViewFor } from './ArtifactHelper'
@@ -23,8 +23,7 @@ import {
   RepositoryPortOrServer,
   TagTypes,
   AmazonMachineImageInitialValuesType,
-  AzureArtifactsInitialValues,
-  NexusSpecType
+  AzureArtifactsInitialValues
 } from './ArtifactInterface'
 
 export const shellScriptType: SelectOption[] = [
@@ -335,7 +334,7 @@ export const getArtifactFormData = (
       values = getRepoValues(specValues)
       break
     case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
-      values = getRepoValuesForNexus2(initialValues as any, specValues)
+      values = getRepoValuesForNexus2(specValues)
       break
     default:
       values = getTagValues(specValues, isServerlessDeploymentTypeSelected)
@@ -394,19 +393,14 @@ const getRepoValues = (specValues: Nexus2InitialValuesType): Nexus2InitialValues
   return formikInitialValues
 }
 
-const getRepoValuesForNexus2 = (
-  initValues: Nexus2InitialValuesType,
-  specValues: NexusSpecType
-): Nexus2InitialValuesType => {
+const getRepoValuesForNexus2 = (specValues: Nexus2InitialValuesType): Nexus2InitialValuesType => {
   const formikInitialValues: Nexus2InitialValuesType = {
-    ...initValues,
-    tagType: initValues?.tag ? TagTypes.Value : TagTypes.Regex,
-    spec: {
-      ...specValues
-    }
+    ...specValues,
+    tagType: specValues?.tag ? TagTypes.Value : TagTypes.Regex,
+    ...specValues
   }
-  if (initValues?.tag && getMultiTypeFromValue(initValues?.tag) === MultiTypeInputType.FIXED) {
-    formikInitialValues.tag = { label: initValues?.tag, value: initValues?.tag } as any
+  if (specValues?.tag && getMultiTypeFromValue(specValues?.tag) === MultiTypeInputType.FIXED) {
+    formikInitialValues.tag = { label: specValues?.tag, value: specValues?.tag } as any
   }
   return formikInitialValues
 }
@@ -649,15 +643,16 @@ export const amiFilters = [
   }
 ]
 
-export const getInSelectOptionForm = (data: { [key: string]: any } | string) => {
-  return getMultiTypeFromValue(data as string) === MultiTypeInputType.RUNTIME
-    ? data
-    : data
-    ? Object.keys(data || {})?.map((key: string | number) => {
-        return { name: key, value: (data as { [key: string]: any })?.[key as any] }
-      })
-    : data
+export const getInSelectOptionForm = (data?: { [key: string]: string } | string) => {
+  if (isObject(data)) {
+    return Object.entries(data)
+      .filter(([_, value]) => Boolean(value))
+      .map(([name, value]) => ({ name, value }))
+  }
+
+  return data
 }
+
 export const shouldHideHeaderAndNavBtns = (context: number): boolean =>
   [ModalViewFor.Template, ModalViewFor.CD_Onboarding].includes(context)
 
@@ -665,10 +660,10 @@ export const hasFixedDefiniteValue = (value: any) => {
   return getMultiTypeFromValue(value) === MultiTypeInputType.RUNTIME || !value
 }
 
-export const resetFieldValue = (formik: FormikValues, fieldPath: string): void => {
+export const resetFieldValue = (formik: FormikValues, fieldPath: string, resetValue: string | object = ''): void => {
   const fieldValue = get(formik.values, fieldPath, '')
   if (!isEmpty(fieldValue) && getMultiTypeFromValue(fieldValue) === MultiTypeInputType.FIXED) {
-    formik.setFieldValue(fieldPath, '')
+    formik.setFieldValue(fieldPath, resetValue)
   }
 }
 

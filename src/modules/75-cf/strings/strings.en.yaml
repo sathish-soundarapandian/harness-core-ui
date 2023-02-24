@@ -619,7 +619,7 @@ onboarding:
           private static String apiKey = "{{apiKey}}";
 
           // Flag Identifier
-          private static String flagName = "{{flagName}}";
+          private static String flagIdentifier = "{{flagIdentifier}}";
 
           private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
@@ -641,7 +641,7 @@ onboarding:
                   // Loop forever reporting the state of the flag
                   scheduler.scheduleAtFixedRate(
                           () -> {
-                              boolean result = cfClient.boolVariation(flagName, target, false);
+                              boolean result = cfClient.boolVariation(flagIdentifier, target, false);
                               System.out.println("Boolean variation is " + result);
                           },
                           0,
@@ -691,32 +691,42 @@ onboarding:
           <title>Feature Flags</title>
         </head>
         <body>
-          <script type="module">
+          <p>The value of flag "{{flagIdentifier}}" is: <pre>...</pre></p>
 
+          <script type="module">
             import {
               initialize,
-              Event as SDKEvent,
-            } from "https://unpkg.com/@harnessio/ff-javascript-client-sdk@1.4.14/dist/sdk.client.js";
+              Event as SDKEvent
+            } from 'https://unpkg.com/@harnessio/ff-javascript-client-sdk/dist/sdk.client.js'
 
             const target = {
-              identifier: "MyTargetID",
-              name: "MyTargetName",
-            };
+              identifier: 'MyTargetID',
+              name: 'MyTargetName'
+            }
 
-            const client = initialize("{{apiKey}}", target);
+            const client = initialize('{{apiKey}}', target)
 
             // Listen for events
-
             // Event happens when connection to server is established
             client.on(SDKEvent.READY, (flags) => {
-              console.log("READY", flags);
-            });
+              console.log('READY', flags)
+
+              // update the value on screen every 5 seconds
+              const updateValue = () => {
+                document.querySelector('pre').innerText = JSON.stringify(
+                  client.variation('{{flagIdentifier}}', 'DEFAULT')
+                )
+
+                setTimeout(updateValue, 5000)
+              }
+
+              updateValue()
+            })
 
             // Event happens when a changed event is pushed
             client.on(SDKEvent.CHANGED, (changeInfo) => {
-              console.log("CHANGED", changeInfo);
-            });
-            
+              console.log('CHANGED', changeInfo)
+            })
           </script>
         </body>
       </html>
@@ -756,7 +766,7 @@ onboarding:
       )
 
       var (
-        flagName string = "{{flagName}}"
+        flagIdentifier string = "{{flagIdentifier}}"
         sdkKey   string = "{{apiKey}}"
       )
 
@@ -779,7 +789,7 @@ onboarding:
 
         // Loop forever reporting the state of the flag
         for {
-          resultBool, err := client.BoolVariation(flagName, &target, false)
+          resultBool, err := client.BoolVariation(flagIdentifier, &target, false)
           if err != nil {
             log.Fatal("failed to get evaluation: ", err)
           }
@@ -1346,8 +1356,8 @@ onboarding:
       // set apiKey to your SDK API Key
       const apiKey = '{{apiKey}}';
 
-      // set flagName to your flag identifier from the UI
-      const flagName = '{{flagName}}';
+      // set flagIdentifier to your flag identifier from the UI
+      const flagIdentifier = '{{flagIdentifier}}';
 
       // Create Client
       const client = new Client(apiKey);
@@ -1359,8 +1369,8 @@ onboarding:
       };
 
       client.waitForInitialization()
-        .then(() => client.boolVariation(flagName, target))
-        .then(value => console.log(`${flagName} is ${value}`))
+        .then(() => client.boolVariation(flagIdentifier, target))
+        .then(value => console.log(`${flagIdentifier} is ${value}`))
         .finally(() => process.exit(0))
 
       ```
@@ -1508,7 +1518,7 @@ onboarding:
       use OpenAPI\Client\Model\Target;
 
       $SDK_KEY = '{{apiKey}}';
-      $FLAG_NAME = '{{flagName}}';
+      $FLAG_IDENTIFIER = '{{flagIdentifier}}';
 
       $client = new Client(
           $SDK_KEY,
@@ -1519,8 +1529,8 @@ onboarding:
           ]
       );
 
-      $result = $client->evaluate($FLAG_NAME, false);
-      echo "Evaluation value for flag '$FLAG_NAME' with target 'harness': " . json_encode($result);
+      $result = $client->evaluate($FLAG_IDENTIFIER, false);
+      echo "Evaluation value for flag '$FLAG_IDENTIFIER' with target 'harness': " . json_encode($result);
       ```
 
       # Test your application 
@@ -1568,8 +1578,8 @@ onboarding:
         # API Key
         apiKey = '{{apiKey}}''
 
-        # Flag Name
-        flagName = '{{flagName}}'
+        # Flag Identifier
+        flagIdentifier = '{{flagIdentifier}}'
 
         # Create a Feature Flag Client and wait for it to initialize
         client = CfClient.instance
@@ -1582,7 +1592,7 @@ onboarding:
 
         # Loop forever reporting the state of the flag
         loop do
-          result = client.bool_variation(flagName, target, false)
+          result = client.bool_variation(flagIdentifier, target, false)
           logger.info "Flag variation:  #{result}"
           sleep 10
         end
@@ -1772,10 +1782,10 @@ onboarding:
 
       # Code Sample
 
-      The following is a complete code example that you can use to test {{flagName}} you have just created on the Harness Platform. When you run the code it will:
+      The following is a complete code example that you can use to test {{flagIdentifier}} you have just created on the Harness Platform. When you run the code it will:
 
       1. Connect to the FF service.
-      2. Report the value of the Flag every 10 seconds until the connection is closed. Every time {{flagName}} is toggled on 
+      2. Report the value of the Flag every 10 seconds until the connection is closed. Every time {{flagIdentifier}} is toggled on 
          or off on the Harness Platform, the updated value is reported.
       3. Close the SDK.
 
@@ -1790,8 +1800,8 @@ onboarding:
       // The SDK API Key to use for authentication.  
       const apiKey = '{{apiKey}}'
 
-      // The flag name
-      const flagName = '{{flagName}}';
+      // The flag identifier
+      const flagIdentifier = '{{flagIdentifier}}';
 
       void main() => runApp(MyApp());
 
@@ -1830,8 +1840,8 @@ onboarding:
               print("Successfully initialized client");
 
               // Evaluate flag and set initial state
-              CfClient.getInstance().boolVariation(flagName, false).then((value) {
-                print("$flagName: $value");
+              CfClient.getInstance().boolVariation(flagIdentifier, false).then((value) {
+                print("$flagIdentifier: $value");
                 setState(() {
                   _flagValue = value;
                 });
@@ -1845,7 +1855,7 @@ onboarding:
                           String flag = (data as EvaluationResponse).flag;
                           dynamic value = (data as EvaluationResponse).value;
                           // If the change concerns the flag we care about, then update the state
-                          if ( flag == flagName ) {
+                          if ( flag == flagIdentifier ) {
                               setState(() {
                                   _flagValue = value.toLowerCase() == 'true';
                               });
@@ -1865,7 +1875,7 @@ onboarding:
             ),
             body: Container(
               child: Center(
-                child: new Text("${flagName} : ${_flagValue}", style: TextStyle(fontSize: 25)),
+                child: new Text("${flagIdentifier} : ${_flagValue}", style: TextStyle(fontSize: 25)),
               ),
             ),
           );
@@ -1956,10 +1966,10 @@ onboarding:
       }
 
       function SingleFeatureFlag() {
-        const flagValue = useFeatureFlag('{{flagName}}')
+        const flagValue = useFeatureFlag('{{flagIdentifier}}')
 
         return (
-          <p>The value of {{flagName}} is {JSON.stringify(flagValue)}</p>
+          <p>The value of {{flagIdentifier}} is {JSON.stringify(flagValue)}</p>
         )
       }
 
@@ -2000,7 +2010,7 @@ onboarding:
       ```
       # Code Sample
 
-      The following is a complete code example with a fresh React-Native project that you can use to test the {{flagName}} Flag you 
+      The following is a complete code example with a fresh React-Native project that you can use to test the {{flagIdentifier}} Flag you 
       created on the Harness Platform. When you run the code it will:
 
       Connect to the FF service.
@@ -2028,7 +2038,7 @@ onboarding:
       import cfClientInstance, {CfConfiguration, CfTarget} from '@harnessio/ff-react-native-client-sdk';
           
       export default function App() {
-        const flagName = '{{flagName}}';
+        const flagIdentifier = '{{flagIdentifier}}';
 
         const [client, setClient] = useState(null);
         const [flagValue, setFlagValue] = useState(null);
@@ -2052,7 +2062,7 @@ onboarding:
         }
         
         async function evalFlag() {
-          let res = await client.boolVariation(flagName, false);
+          let res = await client.boolVariation(flagIdentifier, false);
           setFlagValue(res.value);
         }
 
@@ -2067,7 +2077,7 @@ onboarding:
         return (
           <View style={styles.container}>
             <Text>
-              Feature flag '{{flagName}}' is {JSON.stringify(flagValue)}
+              Feature flag '{{flagIdentifier}}' is {JSON.stringify(flagValue)}
             </Text>
           </View>
         );

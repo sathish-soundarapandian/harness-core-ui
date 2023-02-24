@@ -140,6 +140,7 @@ allowpaths:
   - /slo-dashboard/widgets
   - /slo-dashboard/widgets/list
   - /slo-dashboard/widget/{identifier}
+  - /slo-dashboard/unavailable-instances/{identifier}
   - /slo-dashboard/monitored-services
   - /monitored-service/all/time-series-health-sources
   - /monitored-service/{monitoredServiceIdentifier}/health-source/{healthSourceIdentifier}/slo-metrics
@@ -189,9 +190,13 @@ allowpaths:
   - /account/{accountIdentifier}/orgs/{orgIdentifier}/projects/{projectIdentifier}/verifications/{verifyStepExecutionId}/transaction-groups
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/identifier/{identifier}
+  - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/flag/{identifier}
+  - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/monitored-services
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/monitored-services/{identifier}
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/list
   - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/downtime/history
+  - /slo-dashboard/unavailable-instances/{identifier}
+  - /account/{accountIdentifier}/org/{orgIdentifier}/project/{projectIdentifier}/health-source/param-values
 
 operationIdOverrides:
   /appdynamics/applications.get: getAppDynamicsApplications

@@ -18,6 +18,7 @@ import {
   pathParams,
   responseSLODashboardDetail2
 } from './CVSLODetailsPage.mock'
+import DowntimeBanner from '../DetailsPanel/views/DowntimeBanner'
 
 jest.mock('@cv/pages/slos/components/CVCreateSLOV2/CVCreateSLOV2', () => ({
   __esModule: true,
@@ -146,5 +147,22 @@ describe('Test cases for CVSLODetailsPage', () => {
     renderComponent()
 
     expect(screen.getByText('cv.slos.slis.type.availability')).toBeInTheDocument()
+  })
+})
+
+describe('DowntimeBanner', () => {
+  test('should render when theres data', async () => {
+    const { getByText, getByTestId } = render(
+      <TestWrapper>
+        <DowntimeBanner showBanner={jest.fn()} bannerData={[{}]} />
+      </TestWrapper>
+    )
+
+    expect(getByText('CV.SLODOWNTIME.LABEL')).toBeInTheDocument()
+    expect(getByText('cv.sloDowntime.bannerText')).toBeInTheDocument()
+
+    const crossButton = getByTestId('downtime-banner-dismiss')
+    await expect(crossButton).toBeInTheDocument()
+    userEvent.click(crossButton!)
   })
 })

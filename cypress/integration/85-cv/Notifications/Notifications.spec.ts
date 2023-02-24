@@ -24,11 +24,6 @@ import {
 
 describe('Create SLO with Notifications', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.login('test', 'test')
 
     cy.visitChangeIntelligence()

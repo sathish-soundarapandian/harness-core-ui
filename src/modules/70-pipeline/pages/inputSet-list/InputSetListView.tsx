@@ -41,7 +41,6 @@ import css from './InputSetList.module.scss'
 interface InputSetListViewProps {
   data?: PageInputSetSummaryResponse
   goToInputSetDetail?: (inputSet?: InputSetSummaryResponse) => void
-  cloneInputSet?: (identifier?: string) => void
   refetchInputSet?: () => void
   gotoPage: (pageNumber: number) => void
   canUpdate?: boolean
@@ -62,7 +61,6 @@ export interface InputSetLocal extends InputSetSummaryResponse {
 
 type CustomColumn<T extends Record<string, any>> = Column<T> & {
   goToInputSetDetail?: (inputSet?: InputSetSummaryResponse) => void
-  cloneInputSet?: (identifier?: string) => void
   refetchInputSet?: () => void
   onDeleteInputSet?: (commitMsg: string) => Promise<void>
   onDelete?: (inputSet: InputSetSummaryResponse) => void
@@ -198,20 +196,6 @@ const RenderColumnMenu: Renderer<CellProps<InputSetLocal>> = ({ row, column }) =
             }}
             disabled={!(column as any).canUpdate || isPipelineInvalid}
           />
-          <Menu.Item
-            icon="duplicate"
-            disabled
-            text={getString('projectCard.clone')}
-            onClick={
-              /* istanbul ignore next */
-              (e: React.MouseEvent) => {
-                e.stopPropagation()
-                ;(column as any).cloneInputSet?.(data.identifier)
-                setMenuOpen(false)
-              }
-            }
-          />
-          <Menu.Divider />
           {showMoveToGitOption(pipelineStoreType, data.storeType) ? (
             <Menu.Item
               icon="git-merge"
@@ -340,7 +324,6 @@ export function InputSetListView({
   gotoPage,
   goToInputSetDetail,
   refetchInputSet,
-  cloneInputSet,
   canUpdate = true,
   pipelineHasRuntimeInputs,
   isPipelineInvalid,
@@ -402,14 +385,13 @@ export function InputSetListView({
         pipelineStoreType,
         goToInputSetDetail,
         refetchInputSet,
-        cloneInputSet,
         canUpdate,
         onDeleteInputSet,
         onDelete
       }
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [goToInputSetDetail, refetchInputSet, cloneInputSet, pipelineStoreType, pipelineHasRuntimeInputs, data]
+    [goToInputSetDetail, refetchInputSet, pipelineStoreType, pipelineHasRuntimeInputs, data]
   )
 
   if (!isGitSyncEnabled) {

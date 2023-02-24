@@ -13,6 +13,7 @@ import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import { useMutateAsGet } from '@common/hooks'
 import {
+  NotificationRuleResponse,
   SLOTargetFilterDTO,
   useGetNotificationRuleData,
   useGetOnboardingGraph,
@@ -51,6 +52,7 @@ export const CreateCompositeSloForm = ({
   const { getString } = useStrings()
   const formikProps = useFormikContext<SLOV2Form>()
   const [notificationPage, setNotificationPage] = useState(0)
+  const [notificationsInTable, setNotificationsInTable] = useState<NotificationRuleResponse[]>([])
   const isStepValid = useCallback(
     (stepId: string) => isFormDataValid(formikProps, stepId as CreateCompositeSLOSteps),
     [formikProps.values, formikProps.errors]
@@ -256,6 +258,8 @@ export const CreateCompositeSloForm = ({
                         loading={notificationLoading}
                         error={notificationError}
                         getNotifications={getNotifications}
+                        notificationsInTable={notificationsInTable}
+                        setNotificationsInTable={setNotificationsInTable}
                       />
                     </CompositeSLOContext.Provider>
                   ),

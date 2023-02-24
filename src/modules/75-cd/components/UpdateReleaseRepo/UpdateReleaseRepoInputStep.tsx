@@ -18,6 +18,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
 import type { UpdateReleaseRepoFormData, UpdateReleaseRepoStepData } from './UpdateReleaseRepo'
@@ -66,6 +67,23 @@ export default function UpdateReleaseRepoInputStep(props: UpdateReleaseRepoInput
           className={cx(stepCss.formGroup, stepCss.sm)}
         />
       )}
+
+      {getMultiTypeFromValue(get(template, 'spec.prTitle', '')) === MultiTypeInputType.RUNTIME ? (
+        <TextFieldInputSetView
+          label={getString('pipeline.prTitle')}
+          name={`${prefix}spec.prTitle`}
+          multiTextInputProps={{
+            placeholder: getString('pipeline.prTitle'),
+            expressions,
+            disabled: readonly,
+            allowableTypes
+          }}
+          configureOptionsProps={{ isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType) }}
+          fieldPath={'spec.prTitle'}
+          template={template}
+          className={cx(stepCss.formGroup, stepCss.sm)}
+        />
+      ) : null}
 
       {isArray(get(template, 'spec.variables', [])) && get(template, 'spec.variables', []).length ? (
         <div className={stepCss.formGroup}>

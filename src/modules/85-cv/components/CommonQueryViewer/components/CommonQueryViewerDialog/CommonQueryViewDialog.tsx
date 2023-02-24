@@ -8,7 +8,6 @@
 import { Drawer } from '@blueprintjs/core'
 import { Button, ButtonVariation, Container, FormInput, Layout, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
-import { isEmpty } from 'lodash-es'
 import React from 'react'
 import { useStrings } from 'framework/strings'
 import { CommonRecords } from '@cv/components/CommonRecords/CommonRecords'
@@ -17,8 +16,20 @@ import { CommonQueryViewDialogProps, DrawerProps } from '../../types'
 import css from './CommonQueryViewDialog.module.scss'
 
 export function CommonQueryViewDialog(props: CommonQueryViewDialogProps): JSX.Element {
-  const { onHide, query, loading, data, error, fetchRecords, isOpen, isQueryExecuted } = props
+  const {
+    onHide,
+    query,
+    loading,
+    data,
+    error,
+    fetchRecords,
+    isOpen,
+    isQueryExecuted,
+    isQueryButtonDisabled,
+    runQueryBtnTooltip
+  } = props
   const { getString } = useStrings()
+
   return (
     <Drawer {...DrawerProps} isOpen={isOpen} onClose={onHide} className={css.queryViewDialog}>
       <Container className={css.queryContainer}>
@@ -50,7 +61,8 @@ export function CommonQueryViewDialog(props: CommonQueryViewDialogProps): JSX.El
             variation={ButtonVariation.SECONDARY}
             text={getString('cv.monitoringSources.commonHealthSource.runQuery')}
             onClick={fetchRecords}
-            disabled={isEmpty(query) || loading}
+            disabled={isQueryButtonDisabled}
+            tooltip={runQueryBtnTooltip}
             margin={{ right: 'small' }}
             className={css.runQueryButton}
           />

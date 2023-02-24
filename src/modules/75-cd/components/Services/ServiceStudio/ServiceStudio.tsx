@@ -61,7 +61,6 @@ function ServiceStudio(): React.ReactElement | null {
 
   return (
     <Layout.Vertical>
-      <ServiceDetailHeaderRef ref={refetch} />
       <ServiceContextProvider
         serviceResponse={serviceResponse?.data?.service as ServiceResponseDTO}
         isServiceEntityModalView={false}
@@ -75,6 +74,7 @@ function ServiceStudio(): React.ReactElement | null {
         isDeploymentTypeDisabled={isDeploymentTypeDisabled}
         setIsDeploymentTypeDisabled={setIsDeploymentTypeDisabled}
       >
+        <ServiceDetailHeaderRef ref={refetch} />
         <ServiceConfigurationWrapper
           summaryPanel={isServiceDetailSummaryV2 ? <ServiceDetailsSummaryV2 /> : <ServiceDetailsSummary />}
           refercedByPanel={<EntitySetupUsage entityType={EntityType.Service} entityIdentifier={serviceId} />}

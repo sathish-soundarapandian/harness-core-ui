@@ -112,7 +112,7 @@ const WebhookConditionsPanel: React.FC<WebhookConditionsPanelPropsInterface> = (
           errors={errors}
         />
       </Layout.Vertical>
-      <Layout.Vertical className={css.formContent}>
+      <Layout.Vertical className={cx(css.formContent, css.marginBottom)}>
         <Text className={css.sectionHeader}>
           {getString('triggers.conditionsPanel.jexlCondition')}
           <HarnessDocTooltip tooltipId="jexlCondition" useStandAlone={true} />

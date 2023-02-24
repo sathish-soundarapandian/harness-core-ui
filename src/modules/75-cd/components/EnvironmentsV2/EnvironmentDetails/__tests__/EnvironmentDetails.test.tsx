@@ -15,56 +15,70 @@ import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { environmentPathProps, modulePathProps, projectPathProps } from '@common/utils/routeUtils'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
+import { sourceCodeManagers } from '@connectors/mocks/mock'
 import EnvironmentDetails from '../EnvironmentDetails'
-
-import mockEnvironmentDetail from './__mocks__/mockEnvironmentDetail.json'
 import mockEnvironmentDetailMismatchedDTOYaml from './__mocks__/mockEnvironmentDetailMismatchedDTOYaml.json'
+import { activeInstanceAPI, envAPI } from '../EnvironmentDetailSummary/__test__/EnvDetailSummary.mock'
 
-jest.spyOn(cdNgServices, 'useGetYamlSchema').mockReturnValue({
-  data: {
-    name: 'testenv',
-    identifier: 'test-env',
-    lastModifiedAt: ''
-  },
-  refetch: jest.fn()
-} as any)
-
-jest.spyOn(cdNgServices, 'useGetClusterList').mockReturnValue({
-  data: {
+jest.mock('services/cd-ng', () => ({
+  useListGitSync: jest.fn().mockImplementation(() => {
+    return { data: null, refetch: jest.fn(), loading: false, error: false }
+  }),
+  useGetClusterList: jest.fn().mockReturnValue({
     data: {
-      content: [
-        {
-          clusterRef: 'test-cluster-a',
-          linkedAt: '123'
-        },
-        {
-          clusterRef: 'test-cluster-b',
-          linkedAt: '2'
-        }
-      ]
-    }
-  },
-  refetch: jest.fn()
-} as any)
-
-jest.spyOn(cdNgServices, 'useDeleteCluster').mockReturnValue({} as any)
-
-jest.spyOn(cdNgServices, 'useGetConnectorListV2').mockReturnValue({
-  mutate: async () => {
-    return {
-      status: 'SUCCESS',
       data: {
-        pageItemCount: 0,
-        content: []
+        content: [
+          {
+            clusterRef: 'test-cluster-a',
+            linkedAt: '123'
+          },
+          {
+            clusterRef: 'test-cluster-b',
+            linkedAt: '2'
+          }
+        ]
+      }
+    },
+    refetch: jest.fn()
+  } as any),
+  useDeleteCluster: jest.fn().mockReturnValue({} as any),
+  useGetConnectorListV2: jest.fn().mockReturnValue({
+    mutate: async () => {
+      return {
+        status: 'SUCCESS',
+        data: {
+          pageItemCount: 0,
+          content: []
+        }
       }
     }
-  }
-} as any)
+  } as any),
+  useGetYamlSchema: jest.fn().mockReturnValue({
+    data: {
+      name: 'testenv',
+      identifier: 'test-env',
+      lastModifiedAt: ''
+    },
+    refetch: jest.fn()
+  } as any),
+  useGetActiveServiceInstancesForEnvironment: jest.fn().mockImplementation(() => {
+    return { data: activeInstanceAPI, refetch: jest.fn(), loading: false, error: false }
+  }),
+  useGetEnvironmentV2: jest.fn().mockImplementation(() => {
+    return {
+      data: envAPI,
+      refetch: jest.fn(),
+      loading: false,
+      error: false
+    }
+  })
+}))
 
-jest.spyOn(cdNgServices, 'useGetEnvironmentV2').mockReturnValue({
-  data: mockEnvironmentDetail,
-  refetch: jest.fn()
-} as any)
+jest.mock('services/cd-ng-rq', () => ({
+  useGetSourceCodeManagersQuery: jest.fn().mockImplementation(() => {
+    return { data: sourceCodeManagers, refetch: jest.fn() }
+  })
+}))
 
 describe('EnvironmentDetails tests', () => {
   test('initial render', async () => {
@@ -135,7 +149,7 @@ describe('EnvironmentDetails tests', () => {
       refetch: jest.fn()
     } as any)
 
-    render(
+    const { getByText } = render(
       <TestWrapper
         path={routes.toEnvironmentDetails({
           ...projectPathProps,
@@ -147,14 +161,15 @@ describe('EnvironmentDetails tests', () => {
           projectIdentifier: 'dummy',
           orgIdentifier: 'dummy',
           module: 'cd',
-          environmentIdentifier: 'Env_1',
-          sectionId: 'CONFIGURATION'
+          environmentIdentifier: 'Env_1'
         }}
       >
         <EnvironmentDetails />
       </TestWrapper>
     )
 
+    //Go to Configuration Tab as Now Summary Tab is default (Project Level)
+    userEvent.click(getByText('configuration'))
     await waitFor(() => expect(screen.getAllByText('description should come')).toHaveLength(2))
   })
 })

@@ -11,7 +11,7 @@ exports[`Test SLI component should render SLI component 1`] = `
         class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-start StyledProps--flex-alignItems-flex-start"
       >
         <div
-          class="StyledProps--font StyledProps--main StyledProps--padding-right-xlarge StyledProps--border StyledProps--border-right"
+          class="StyledProps--font StyledProps--main StyledProps--padding-right-xlarge"
           style="width: 50%;"
         >
           <div
@@ -682,7 +682,7 @@ exports[`Test SLI component should render SLI component 1`] = `
           </div>
         </div>
         <div
-          class="StyledProps--font StyledProps--main StyledProps--padding-left-xxlarge StyledProps--flex StyledProps--flex-alignItems-center"
+          class="StyledProps--font StyledProps--main StyledProps--padding-left-xxlarge StyledProps--flex StyledProps--flex-alignItems-center StyledProps--border StyledProps--border-left"
           style="width: 50%;"
         >
           <span

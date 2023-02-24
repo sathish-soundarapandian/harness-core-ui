@@ -51,6 +51,8 @@ import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { getYamlFileName } from '@pipeline/utils/yamlUtils'
 import { parse } from '@common/utils/YamlHelperMethods'
 import { hasStoreTypeMismatch } from '@pipeline/utils/inputSetUtils'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import { PipelineInputSetForm } from '../PipelineInputSetForm/PipelineInputSetForm'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import factory from '../PipelineSteps/PipelineStepFactory'
@@ -142,6 +144,7 @@ function useValidateValues({
   validateValues: (values: InputSetDTO & GitContextProps & StoreMetadata) => Promise<FormikErrors<InputSetDTO>>
 } {
   const { getString } = useStrings()
+  const isOptionalVariableAllowed = useFeatureFlag(FeatureFlag.FF_ALLOW_OPTIONAL_VARIABLE)
   const NameIdSchema = Yup.object({
     name: NameSchema(getString),
     identifier: IdentifierSchema(getString)
@@ -166,7 +169,8 @@ function useValidateValues({
           getString,
           viewType: StepViewType.InputSet,
           viewTypeMetadata: { isInputSet: true },
-          resolvedPipeline
+          resolvedPipeline,
+          isOptionalVariableAllowed
         }) as any
 
         /* istanbul ignore else */ if (isEmpty(errors.pipeline)) {

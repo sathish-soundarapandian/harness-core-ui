@@ -497,7 +497,8 @@ const FeatureFlagsPage: React.FC = () => {
     refetch: refetchEnvironments,
     environments
   } = useEnvironmentSelectV2({
-    selectedEnvironmentIdentifier: environmentIdentifier
+    selectedEnvironmentIdentifier: environmentIdentifier,
+    allowAllOption: true
   })
 
   const toggleFeatureFlag = useToggleFeatureFlag({

@@ -9,7 +9,7 @@ import React, { useEffect, useRef } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
 import { Container, FlexExpander, Page, Tabs } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
-import { useDeleteSLOData, useDeleteSLOV2Data, useGetSLODetails, useResetErrorBudget } from 'services/cv'
+import { useDeleteSLOV2Data, useGetSLODetails, useResetErrorBudget } from 'services/cv'
 import routes from '@common/RouteDefinitions'
 import { useQueryParams } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -80,14 +80,6 @@ const CVSLODetailsPage: React.FC = () => {
     }
   })
 
-  const { mutate: deleteSLO, loading: deleteSLOLoading } = useDeleteSLOData({
-    queryParams: {
-      accountId,
-      orgIdentifier,
-      projectIdentifier
-    }
-  })
-
   const { mutate: deleteSLOV2, loading: deleteSLOV2Loading } = useDeleteSLOV2Data({
     queryParams: {
       ...pathQueryParams
@@ -117,7 +109,7 @@ const CVSLODetailsPage: React.FC = () => {
   }
 
   const { description, createdAt, lastModifiedAt, sloDashboardWidget, timeRangeFilters } = data?.data ?? {}
-  const loading = sloDetailsLoading || resetErrorBudgetLoading || deleteSLOLoading || deleteSLOV2Loading
+  const loading = sloDetailsLoading || resetErrorBudgetLoading || deleteSLOV2Loading
 
   const breadcrumbLinks = [
     {
@@ -176,7 +168,7 @@ const CVSLODetailsPage: React.FC = () => {
             <TabToolbar
               sloDashboardWidget={sloDashboardWidget}
               resetErrorBudget={resetErrorBudget}
-              deleteSLO={isCompositeSLO ? deleteSLOV2 : deleteSLO}
+              deleteSLO={deleteSLOV2}
               refetchSLODetails={refetch}
               onTabChange={onTabChange}
               isCompositeSLO={isCompositeSLO}

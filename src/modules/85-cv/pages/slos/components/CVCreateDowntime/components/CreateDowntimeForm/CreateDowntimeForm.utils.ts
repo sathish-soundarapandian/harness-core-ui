@@ -10,7 +10,7 @@ import type { FormikProps } from 'formik'
 import { isEmpty } from 'lodash-es'
 import moment from 'moment'
 import type { UseStringsReturn } from 'framework/strings'
-import { DowntimeForm, DowntimeFormFields, EndTimeMode } from '../../CVCreateDowntime.types'
+import { DowntimeForm, DowntimeFormFields, EndTimeMode, EntitiesRuleType } from '../../CVCreateDowntime.types'
 import { CreateDowntimeSteps, DowntimeWindowToggleViews } from './CreateDowntimeForm.types'
 
 export const getDurationOptions = (getString: UseStringsReturn['getString']): SelectOption[] => [
@@ -55,12 +55,16 @@ export const validateDefineDowntimeSection = (formikProps: FormikProps<DowntimeF
   return true
 }
 
+const getEndTimeValidation = (startTime: string | number, endTime?: string | number): boolean => {
+  return !endTime || moment(endTime).isBefore(moment(startTime)) || moment(endTime) > moment(startTime).add(3, 'y')
+}
+
 export const validateSelectDowntimeWindowSection = (formikProps: FormikProps<DowntimeForm>): boolean => {
   formikProps.setFieldTouched(DowntimeFormFields.TIMEZONE, true)
   formikProps.setFieldTouched(DowntimeFormFields.START_TIME, true)
 
   const { timezone, startTime, type, endTimeMode } = formikProps.values
-  if (!timezone || !startTime || moment(startTime).isBefore(moment())) {
+  if (!timezone || !startTime) {
     return false
   }
 
@@ -77,7 +81,7 @@ export const validateSelectDowntimeWindowSection = (formikProps: FormikProps<Dow
       formikProps.setFieldTouched(DowntimeFormFields.END_TIME, true)
 
       const { endTime } = formikProps.values
-      if (!endTime || moment(endTime).isBefore(moment(startTime))) {
+      if (getEndTimeValidation(startTime, endTime)) {
         return false
       }
     }
@@ -94,8 +98,7 @@ export const validateSelectDowntimeWindowSection = (formikProps: FormikProps<Dow
       !durationType ||
       !recurrenceValue ||
       !recurrenceType ||
-      !recurrenceEndTime ||
-      moment(recurrenceEndTime).isBefore(moment(startTime))
+      getEndTimeValidation(startTime, recurrenceEndTime)
     ) {
       return false
     }
@@ -105,8 +108,12 @@ export const validateSelectDowntimeWindowSection = (formikProps: FormikProps<Dow
 
 export const validateSelectMonitoredServicesSection = (formikProps: FormikProps<DowntimeForm>): boolean => {
   formikProps.setFieldTouched(DowntimeFormFields.MS_LIST, true)
-  const { msList } = formikProps.values
-  return !isEmpty(msList)
+  const { msList, entitiesRuleType } = formikProps.values
+
+  if (entitiesRuleType === EntitiesRuleType.IDENTIFIERS) {
+    return !isEmpty(msList)
+  }
+  return true
 }
 
 export const getErrorMessageByTabId = (

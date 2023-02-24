@@ -7,11 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
-  readonly diffContainer: string
   readonly diffContentContainer: string
-  readonly leftHeader: string
   readonly mainContainer: string
   readonly reconcileDialog: string
-  readonly refreshedHeader: string
 }
 export default styles

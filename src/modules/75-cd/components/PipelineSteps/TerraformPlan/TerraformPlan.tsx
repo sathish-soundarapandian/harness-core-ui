@@ -63,7 +63,7 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { useQueryParams } from '@common/hooks'
 import type { GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import type { StringNGVariable } from 'services/cd-ng'
+import type { StringNGVariable, TerraformVarFileWrapper } from 'services/cd-ng'
 
 import type { StringsMap } from 'stringTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
@@ -90,12 +90,8 @@ import {
   TerraformPlanVariableStepProps,
   TFPlanFormData
 } from '../Common/Terraform/TerraformInterfaces'
-import TfVarFileList from './TfPlanVarFileList'
-
 import TerraformInputStep from './TfPlanInputStep'
 import { TerraformVariableStep } from './TfPlanVariableView'
-import { TFArtifactoryForm } from '../Common/Terraform/Editview/TerraformArtifactoryForm'
-import { formatArtifactoryData } from '../Common/Terraform/Editview/TerraformArtifactoryFormHelper'
 import { TFMonaco } from '../Common/Terraform/Editview/TFMonacoEditor'
 import {
   ConnectorMap,
@@ -106,8 +102,11 @@ import {
 } from '../Common/ConfigFileStore/ConfigFileStoreHelper'
 import { ConfigFileStoreStepTwo } from '../Common/ConfigFileStore/ConfigFileStoreStepTwo'
 import { ConfigFileStoreStepOne } from '../Common/ConfigFileStore/ConfigFileStoreStepOne'
+import { ArtifactoryForm } from '../Common/VarFile/ArtifactoryForm'
+import { formatArtifactoryData } from '../Common/VarFile/helper'
+import VarFileList from '../Common/VarFile/VarFileList'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import css from '../Common/Terraform/Editview/TerraformVarfile.module.scss'
+import css from '../Common/Terraform/TerraformStep.module.scss'
 
 const setInitialValues = (data: TFPlanFormData): TFPlanFormData => {
   return data
@@ -314,7 +313,7 @@ function TerraformPlanWidget(
 
   const getTitle = (isBackendConfig: boolean): React.ReactElement => (
     <Layout.Vertical flex style={{ justifyContent: 'center', alignItems: 'center' }} margin={{ bottom: 'xlarge' }}>
-      <Icon name="service-terraform" className={css.remoteIcon} size={50} padding={{ bottom: 'large' }} />
+      <Icon name="service-terraform" size={50} padding={{ bottom: 'large' }} />
       <Text color={Color.WHITE}>
         {isBackendConfig ? getString('cd.backendConfigFileStoreTitle') : getString('cd.configFileStoreTitle')}
       </Text>
@@ -345,7 +344,7 @@ function TerraformPlanWidget(
         {connectorView ? getNewConnectorSteps() : null}
         {
           /* istanbul ignore next */ selectedConnector === Connectors.ARTIFACTORY ? (
-            <TFArtifactoryForm
+            <ArtifactoryForm
               isConfig={isConfig}
               isTerraformPlan
               isBackendConfig={isBackendConfig}
@@ -666,13 +665,15 @@ function TerraformPlanWidget(
                         )}
                       </div>
                       <div className={css.divider} />
-                      <TfVarFileList
+                      <VarFileList<TFPlanFormData, TerraformVarFileWrapper>
                         formik={formik}
                         isReadonly={readonly}
                         allowableTypes={allowableTypes}
                         selectedConnector={selectedConnector}
                         setSelectedConnector={setSelectedConnector}
                         getNewConnectorSteps={getNewConnectorSteps}
+                        varFilePath={'spec.configuration.varFiles'}
+                        isTerraformPlan
                       />
                       <div className={cx(css.divider, css.addMarginBottom)} />
                       {TERRAFORM_REMOTE_BACKEND_CONFIG ? (

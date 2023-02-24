@@ -7,7 +7,7 @@
 
 import React, { useState } from 'react'
 import { useFormikContext } from 'formik'
-import { defaultTo, get, isEmpty, isNil, omit, pick, set } from 'lodash-es'
+import { get, isEmpty, isNil, omit, pick, set } from 'lodash-es'
 
 import { Container, getMultiTypeFromValue, MultiTypeInputType, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
@@ -15,7 +15,6 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import type { DeploymentStageConfig, EnvironmentYamlV2, Infrastructure, ServiceSpec } from 'services/cd-ng'
 
-import { getScopeFromValue } from '@common/components/EntityReference/EntityReference'
 import { isMultiTypeExpression, isValueExpression, isValueFixed, isValueRuntimeInput } from '@common/utils/utils'
 
 import {
@@ -52,6 +51,13 @@ export default function SingleEnvironmentInputSetForm({
   const deploymentStageInputSet = get(formik?.values, path, {})
   const environment: EnvironmentYamlV2 = get(deploymentStageInputSet, `environment`, {})
 
+  const originalService = deploymentStage?.service
+  const serviceInForm = deploymentStageInputSet?.service
+
+  const singleServiceIdentifier = isValueRuntimeInput(originalService?.serviceRef)
+    ? serviceInForm?.serviceRef
+    : originalService?.serviceRef
+
   const [environmentRefType, setEnvironmentRefType] = useState<MultiTypeInputType>(
     getMultiTypeFromValue(environment.environmentRef)
   )
@@ -69,6 +75,11 @@ export default function SingleEnvironmentInputSetForm({
 
   const showEnvironmentVariables = Array.isArray(environmentTemplate?.environmentInputs?.variables)
   const showEnvironmentOverrides = !isEmpty(environmentTemplate?.environmentInputs?.overrides)
+
+  const showServiceOverrides =
+    !isEmpty(environmentTemplate?.serviceOverrideInputs) &&
+    !isValueRuntimeInput(environmentTemplate?.serviceOverrideInputs as unknown as string)
+
   /** Show the infrastructures selection field in the following scenarios
    * 1. environmentTemplate.infrastructureDefinitions is a runtime value - condition 1
    * 2. When 1 is true and the user selects the infrastructures, we need to still continue to show it - condition 2
@@ -99,6 +110,7 @@ export default function SingleEnvironmentInputSetForm({
     !isValueRuntimeInput(environmentIdentifier) &&
     (showEnvironmentVariables ||
       showEnvironmentOverrides ||
+      showServiceOverrides ||
       showClustersSelectionInputField ||
       showInfrastructuresSelectionInputField ||
       showInfrastructuresInputSetForm)
@@ -119,10 +131,14 @@ export default function SingleEnvironmentInputSetForm({
             gitOpsEnabled: deploymentStage?.gitOpsEnabled,
             pathToEnvironments: 'environment',
             isMultiEnvironment: false,
-            setEnvironmentRefType
+            setEnvironmentRefType,
+            serviceIdentifiers: singleServiceIdentifier ? [singleServiceIdentifier] : []
           }}
           onUpdate={data => {
-            formik.setFieldValue(`${path}.environment`, get(data, 'environment'))
+            formik.setFieldValue(
+              `${path}.environment`,
+              omit(get(data, 'environment'), ['envIdForValues', 'deployToAll'])
+            )
 
             setIsEnvironmentLoading(false)
           }}
@@ -191,6 +207,31 @@ export default function SingleEnvironmentInputSetForm({
               </>
             )}
 
+            {showServiceOverrides && (
+              <>
+                {isValueFixed(singleServiceIdentifier) && (
+                  <Text font={{ size: 'normal', weight: 'bold' }} padding={{ bottom: 'medium' }} color={Color.GREY_600}>
+                    {getString('common.serviceOverridePrefix', { name: singleServiceIdentifier })}
+                  </Text>
+                )}
+                <Container padding={{ left: 'medium' }}>
+                  <StepWidget<ServiceSpec>
+                    factory={factory}
+                    initialValues={get(deploymentStageInputSet, `environment.serviceOverrideInputs`, {})}
+                    allowableTypes={allowableTypes}
+                    template={get(deploymentStageTemplate, `environment.serviceOverrideInputs`, {})}
+                    type={getStepTypeByDeploymentType(deploymentType)}
+                    stepViewType={viewType}
+                    path={`${path}.environment.serviceOverrideInputs`}
+                    readonly={readonly}
+                    customStepProps={{
+                      stageIdentifier
+                    }}
+                  />
+                </Container>
+              </>
+            )}
+
             {showClustersSelectionInputField && (
               <StepWidget
                 factory={factory}
@@ -231,18 +272,19 @@ export default function SingleEnvironmentInputSetForm({
                 customStepProps={{
                   deploymentType,
                   environmentIdentifier,
-                  scope: getScopeFromValue(defaultTo(environmentIdentifier, '')),
                   isMultipleInfrastructure: false,
                   customDeploymentRef: deploymentStage?.customDeploymentRef,
                   showEnvironmentsSelectionInputField,
-                  lazyInfrastructure: isMultiTypeExpression(environmentRefType)
+                  lazyInfrastructure:
+                    isMultiTypeExpression(environmentRefType) ||
+                    isValueExpression(environmentInDeploymentStage?.environmentRef)
                 }}
                 onUpdate={data => {
                   const environmentAtIndex = get(formik.values, `${path}.environment`)
 
                   formik.setFieldValue(`${path}.environment`, {
                     ...omit(environmentAtIndex, ['deployToAll', 'infrastructureDefinitions']),
-                    ...pick(data, ['deployToAll', 'infrastructureDefinitions'])
+                    ...pick(data, 'infrastructureDefinitions')
                   })
                 }}
               />
@@ -253,7 +295,7 @@ export default function SingleEnvironmentInputSetForm({
                   const infraInputs = infrastructureDefinitionTemplate.inputs
 
                   return infraInputs?.identifier ? (
-                    <>
+                    <React.Fragment key={infraInputs.identifier}>
                       <Text font={{ size: 'normal', weight: 'bold' }} color={Color.GREY_700}>
                         {getString('common.infrastructurePrefix', {
                           name: infraInputs.identifier
@@ -303,7 +345,7 @@ export default function SingleEnvironmentInputSetForm({
                           }}
                         />
                       </Container>
-                    </>
+                    </React.Fragment>
                   ) : null
                 })
               : null}

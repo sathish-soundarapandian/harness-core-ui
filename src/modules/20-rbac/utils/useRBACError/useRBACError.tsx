@@ -31,7 +31,7 @@ export type RBACError =
   | ErrorHandlerProps
   | GetDataError<FailureCDNG | FailurePipeline | AccessControlCheckError | ErrorCDNG | ErrorPipeline>
 export interface RbacErrorReturn {
-  getRBACErrorMessage: (error: RBACError) => React.ReactElement | string
+  getRBACErrorMessage: (error: RBACError, allowMultiple?: boolean) => React.ReactElement | string
 }
 
 const useRBACError = (): RbacErrorReturn => {
@@ -63,53 +63,100 @@ const useRBACError = (): RbacErrorReturn => {
     }
   }
 
-  const getRBACErrorMessage = (error: RBACError): React.ReactElement | string => {
+  const getRBACErrorMessage = (error: RBACError, allowMultiple?: boolean): React.ReactElement | string => {
     const err = error?.data
     if (
       err &&
       (err as AccessControlCheckError).code === 'NG_ACCESS_DENIED' &&
       (err as AccessControlCheckError)?.failedPermissionChecks
     ) {
-      const { permission, resourceType, resourceScope } =
-        (err as AccessControlCheckError)?.failedPermissionChecks?.[0] || {}
-      /* istanbul ignore else */
-      if (permission && resourceType && resourceScope) {
-        const resourceTypeHandler = RbacFactory.getResourceTypeHandler(resourceType as ResourceType)
-        const currentScope = getScopeFromDTO(
-          defaultTo(resourceScope, {
-            projectIdentifier,
-            orgIdentifier,
-            accountIdentifier: accountId
-          })
-        )
-        let permissionLabel = resourceTypeHandler?.permissionLabels?.[permission as PermissionIdentifier] || permission
-        /* istanbul ignore else */
-        if (typeof permissionLabel !== 'string') {
-          permissionLabel = getString(permissionLabel.props.stringID)
-        }
+      if (allowMultiple) {
         return (
-          <Layout.Vertical padding="small" spacing="small" className={css.main}>
+          <Layout.Vertical>
             <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_800}>
-              {`${getString('rbac.youAreNotAuthorizedTo')} `}
-              <span className={css.textToLowercase}>{permissionLabel}</span>
-              <span className={css.textToLowercase}>
-                {` ${resourceTypeHandler?.label && getString(resourceTypeHandler?.label)}.`}
-              </span>
+              {`${getString('rbac.unauthorizedText')} `}
             </Text>
-            <Text font={{ size: 'small' }} color={Color.GREY_800}>
-              {getString('rbac.youAreMissingTheFollowingPermission')}
-            </Text>
-            <Text font={{ size: 'small' }} color={Color.GREY_800}>
-              {'"'}
-              {permissionLabel}
-              <span className={css.textToLowercase}>
-                {` ${resourceTypeHandler?.label && getString(resourceTypeHandler?.label)}`}
-              </span>
-              {'"'}
-              <span>{` ${getString('rbac.in')} ${getScopeSuffix(currentScope, resourceScope)}`}</span>
-            </Text>
+            {(err as AccessControlCheckError)?.failedPermissionChecks?.map((failedPermissionCheck, index) => {
+              const { permission, resourceType, resourceScope } = failedPermissionCheck
+              if (permission && resourceType && resourceScope) {
+                const resourceTypeHandler = RbacFactory.getResourceTypeHandler(resourceType as ResourceType)
+                const currentScope = getScopeFromDTO(
+                  defaultTo(resourceScope, {
+                    projectIdentifier,
+                    orgIdentifier,
+                    accountIdentifier: accountId
+                  })
+                )
+                let permissionLabel =
+                  resourceTypeHandler?.permissionLabels?.[permission as PermissionIdentifier] || permission
+                /* istanbul ignore else */
+                if (typeof permissionLabel !== 'string') {
+                  permissionLabel = getString(permissionLabel.props.stringID)
+                }
+                return (
+                  <Layout.Vertical
+                    padding="small"
+                    spacing="small"
+                    className={css.main}
+                    key={`${permissionLabel}-${resourceType}`}
+                  >
+                    <Text font={{ size: 'small' }} color={Color.GREY_800}>
+                      {`${index + 1}. "${permissionLabel}" ${getString('rbac.permissionOn')} `}
+                      <span className={css.textToLowercase}>
+                        {` ${resourceTypeHandler?.label && getString(resourceTypeHandler?.label)}`}
+                      </span>
+                      <span>{` ${getString('rbac.in')} ${getScopeSuffix(currentScope, resourceScope)}`}</span>
+                    </Text>
+                  </Layout.Vertical>
+                )
+              }
+              return <></>
+            })}
           </Layout.Vertical>
         )
+      } else {
+        const { permission, resourceType, resourceScope } =
+          (err as AccessControlCheckError)?.failedPermissionChecks?.[0] || {}
+        /* istanbul ignore else */
+        if (permission && resourceType && resourceScope) {
+          const resourceTypeHandler = RbacFactory.getResourceTypeHandler(resourceType as ResourceType)
+          const currentScope = getScopeFromDTO(
+            defaultTo(resourceScope, {
+              projectIdentifier,
+              orgIdentifier,
+              accountIdentifier: accountId
+            })
+          )
+          let permissionLabel =
+            resourceTypeHandler?.permissionLabels?.[permission as PermissionIdentifier] || permission
+          /* istanbul ignore else */
+          if (typeof permissionLabel !== 'string') {
+            permissionLabel = getString(permissionLabel.props.stringID)
+          }
+          return (
+            <Layout.Vertical padding="small" spacing="small" className={css.main}>
+              <Text font={{ size: 'small', weight: 'semi-bold' }} color={Color.GREY_800}>
+                {`${getString('rbac.youAreNotAuthorizedTo')} `}
+                <span className={css.textToLowercase}>{permissionLabel}</span>
+                <span className={css.textToLowercase}>
+                  {` ${resourceTypeHandler?.label && getString(resourceTypeHandler?.label)}.`}
+                </span>
+              </Text>
+              <Text font={{ size: 'small' }} color={Color.GREY_800}>
+                {getString('rbac.youAreMissingTheFollowingPermission')}
+              </Text>
+              <Text font={{ size: 'small' }} color={Color.GREY_800}>
+                {'"'}
+                {permissionLabel}
+                <span className={css.textToLowercase}>
+                  {` ${resourceTypeHandler?.label && getString(resourceTypeHandler?.label)}`}
+                </span>
+                {'"'}
+                <span>{` ${getString('rbac.in')} ${getScopeSuffix(currentScope, resourceScope)}`}</span>
+              </Text>
+            </Layout.Vertical>
+          )
+        }
       }
     }
     return getErrorInfoFromErrorObject(error)

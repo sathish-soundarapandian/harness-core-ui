@@ -11,6 +11,7 @@ import moment from 'moment'
 import type { UseStringsReturn } from 'framework/strings'
 import type {
   DowntimeDTO,
+  EntitiesRule,
   EntityDetails,
   EntityIdentifiersRule,
   MonitoredServiceDetail,
@@ -20,54 +21,123 @@ import type {
   OnetimeSpec,
   RecurringDowntimeSpec
 } from 'services/cv'
-import { DowntimeCategory, DowntimeForm, DowntimeFormFields, EndTimeMode } from './CVCreateDowntime.types'
+import { timezoneToOffsetObject } from '@cv/utils/dateUtils'
+import {
+  DowntimeCategory,
+  DowntimeForm,
+  DowntimeFormFields,
+  EndTimeMode,
+  EntitiesRuleType
+} from './CVCreateDowntime.types'
 import { DATE_PARSE_FORMAT } from './CVCreateDowntime.constants'
 import { DowntimeWindowToggleViews } from './components/CreateDowntimeForm/CreateDowntimeForm.types'
 
-export const getFormattedTime = (field: DowntimeFormFields, time?: number): string => {
-  if (time) {
-    return moment(time * 1000).format(DATE_PARSE_FORMAT)
-  } else if (field === DowntimeFormFields.END_TIME) {
-    return moment().add(30, 'm').format(DATE_PARSE_FORMAT)
-  } else if (field === DowntimeFormFields.RECURRENCE_END_TIME) {
-    return moment().add(1, 'y').format(DATE_PARSE_FORMAT)
+const getTimeRoundedOffToNext30Minutes = (): number => {
+  const date = new Date()
+  return date.getTime() + (30 - (date.getMinutes() % 30)) * 60 * 1000
+}
+
+export const getFormattedTime = ({
+  field,
+  time,
+  timezone,
+  format = DATE_PARSE_FORMAT
+}: {
+  field?: DowntimeFormFields
+  time?: number
+  timezone?: string
+  format?: string
+}): string => {
+  if (time && timezone) {
+    const offsetFromLocal = new Date(time).getTimezoneOffset()
+    const offsetFromSelectedTimezone =
+      Number(timezoneToOffsetObject[timezone as keyof typeof timezoneToOffsetObject]) * 60
+
+    return moment(time * 1000)
+      .add(offsetFromSelectedTimezone + offsetFromLocal, 'minutes')
+      .format(format)
   }
-  return moment().format(DATE_PARSE_FORMAT)
+  time = getTimeRoundedOffToNext30Minutes()
+  if (field === DowntimeFormFields.END_TIME) {
+    return moment(time).add(30, 'm').format(format)
+  } else if (field === DowntimeFormFields.RECURRENCE_END_TIME) {
+    return moment(time).add(1, 'y').format(format)
+  }
+  return moment(time).format(format)
 }
 
 export const getDowntimeInitialFormData = (sloDowntime?: DowntimeDTO): DowntimeForm => {
+  const { type = DowntimeWindowToggleViews.ONE_TIME } = sloDowntime?.spec || {}
   const onetimeDowntimeSpec = sloDowntime?.spec?.spec as OnetimeDowntimeSpec
   const onetimeDurationBasedSpec = onetimeDowntimeSpec?.spec as OnetimeDurationBasedSpec
   const onetimeEndTimeBasedSpec = onetimeDowntimeSpec?.spec as OnetimeEndTimeBasedSpec
   const recurringDowntimeSpec = sloDowntime?.spec?.spec as RecurringDowntimeSpec
-  return {
+
+  const downtimeForm = {
     [DowntimeFormFields.NAME]: sloDowntime?.name || '',
     [DowntimeFormFields.IDENTIFIER]: sloDowntime?.identifier || '',
     [DowntimeFormFields.TAGS]: sloDowntime?.tags,
     [DowntimeFormFields.DESCRIPTION]: sloDowntime?.description,
     [DowntimeFormFields.CATEGORY]: sloDowntime?.category || ('' as DowntimeDTO['category']),
-    [DowntimeFormFields.TYPE]: sloDowntime?.spec?.type || DowntimeWindowToggleViews.ONE_TIME,
+    [DowntimeFormFields.TYPE]: type,
     [DowntimeFormFields.TIMEZONE]:
       sloDowntime?.spec?.spec?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
-    [DowntimeFormFields.START_TIME]: getFormattedTime(
-      DowntimeFormFields.START_TIME,
-      sloDowntime?.spec?.spec?.startTime
-    ),
+    [DowntimeFormFields.START_TIME]: getFormattedTime({
+      field: DowntimeFormFields.START_TIME,
+      time: sloDowntime?.spec?.spec?.startTime,
+      timezone: sloDowntime?.spec?.spec?.timezone
+    }),
     [DowntimeFormFields.END_TIME_MODE]: onetimeDowntimeSpec?.type || EndTimeMode.DURATION,
-    [DowntimeFormFields.DURATION_VALUE]: onetimeDurationBasedSpec?.downtimeDuration?.durationValue || 30,
-    [DowntimeFormFields.DURATION_TYPE]: onetimeDurationBasedSpec?.downtimeDuration?.durationType || 'Minutes',
-    [DowntimeFormFields.END_TIME]: getFormattedTime(DowntimeFormFields.END_TIME, onetimeEndTimeBasedSpec?.endTime),
+    [DowntimeFormFields.END_TIME]: getFormattedTime({
+      field: DowntimeFormFields.END_TIME,
+      time: onetimeEndTimeBasedSpec?.endTime,
+      timezone: sloDowntime?.spec?.spec?.timezone
+    }),
     [DowntimeFormFields.RECURRENCE_VALUE]: recurringDowntimeSpec?.downtimeRecurrence?.recurrenceValue || 2,
     [DowntimeFormFields.RECURRENCE_TYPE]: recurringDowntimeSpec?.downtimeRecurrence?.recurrenceType || 'Week',
-    [DowntimeFormFields.RECURRENCE_END_TIME]: getFormattedTime(
-      DowntimeFormFields.RECURRENCE_END_TIME,
-      recurringDowntimeSpec?.recurrenceEndTime
-    ),
+    [DowntimeFormFields.RECURRENCE_END_TIME]: getFormattedTime({
+      field: DowntimeFormFields.RECURRENCE_END_TIME,
+      time: recurringDowntimeSpec?.recurrenceEndTime,
+      timezone: sloDowntime?.spec?.spec?.timezone
+    }),
+    [DowntimeFormFields.ENTITIES_RULE_TYPE]: sloDowntime?.entitiesRule.type || EntitiesRuleType.IDENTIFIERS,
     [DowntimeFormFields.MS_LIST]: []
+  }
+
+  if (type === DowntimeWindowToggleViews.ONE_TIME) {
+    return {
+      ...downtimeForm,
+      [DowntimeFormFields.DURATION_VALUE]: onetimeDurationBasedSpec?.downtimeDuration?.durationValue || 30,
+      [DowntimeFormFields.DURATION_TYPE]: onetimeDurationBasedSpec?.downtimeDuration?.durationType || 'Minutes'
+    }
+  } else {
+    return {
+      ...downtimeForm,
+      [DowntimeFormFields.DURATION_VALUE]: recurringDowntimeSpec?.downtimeDuration?.durationValue || 30,
+      [DowntimeFormFields.DURATION_TYPE]: recurringDowntimeSpec?.downtimeDuration?.durationType || 'Minutes'
+    }
   }
 }
 
 export const getDowntimeFormValidationSchema = (getString: UseStringsReturn['getString']): any => {
+  const endTimeValidation = Yup.string()
+    .nullable()
+    .required(getString('cv.sloDowntime.validations.endTimeValidation'))
+    .test(
+      'endTimeGreaterThanStartTime',
+      getString('cv.sloDowntime.validations.endTimeGreaterThanStartTime'),
+      function (endTime) {
+        return moment(endTime).unix() > moment(this.parent.startTime).unix()
+      }
+    )
+    .test(
+      'endTimeLessThan3YearsFromStartTime',
+      getString('cv.sloDowntime.validations.endTimeNotMoreThan3Years'),
+      function (endTime) {
+        return moment(endTime).unix() <= moment(this.parent.startTime).add(3, 'y').unix()
+      }
+    )
+
   return Yup.object().shape({
     [DowntimeFormFields.NAME]: Yup.string()
       .trim()
@@ -79,7 +149,22 @@ export const getDowntimeFormValidationSchema = (getString: UseStringsReturn['get
     }),
     [DowntimeFormFields.CATEGORY]: Yup.string()
       .trim()
-      .required(getString('cv.sloDowntime.validations.categoryValidation'))
+      .required(getString('cv.sloDowntime.validations.categoryValidation')),
+    [DowntimeFormFields.TIMEZONE]: Yup.string()
+      .trim()
+      .required(getString('cv.sloDowntime.validations.timezoneValidation')),
+    [DowntimeFormFields.END_TIME]: Yup.string().when([DowntimeFormFields.END_TIME_MODE, DowntimeFormFields.TYPE], {
+      is: (endTimeMode, type) => endTimeMode === EndTimeMode.END_TIME && type === DowntimeWindowToggleViews.ONE_TIME,
+      then: endTimeValidation
+    }),
+    [DowntimeFormFields.RECURRENCE_END_TIME]: Yup.string().when([DowntimeFormFields.TYPE], {
+      is: type => type === DowntimeWindowToggleViews.RECURRING,
+      then: endTimeValidation
+    }),
+    [DowntimeFormFields.MS_LIST]: Yup.array().when([DowntimeFormFields.ENTITIES_RULE_TYPE], {
+      is: entitiesRuleType => entitiesRuleType === EntitiesRuleType.IDENTIFIERS,
+      then: Yup.array().nullable().required(getString('cv.sloDowntime.validations.msListValidation'))
+    })
   })
 }
 
@@ -117,7 +202,7 @@ export const getDowntimeCategoryLabel = (
 }
 
 const getOneTimeBasedDowntimeSpec = (values: DowntimeForm): OnetimeSpec => {
-  const { endTimeMode } = values
+  const { endTimeMode, timezone } = values
   if (endTimeMode === EndTimeMode.DURATION) {
     const { durationValue, durationType } = values
     return {
@@ -129,7 +214,7 @@ const getOneTimeBasedDowntimeSpec = (values: DowntimeForm): OnetimeSpec => {
   } else {
     const { endTime } = values
     return {
-      endTime: moment(endTime).unix()
+      endTime: getEpochTime(endTime as string, timezone)
     }
   }
 }
@@ -137,17 +222,45 @@ const getOneTimeBasedDowntimeSpec = (values: DowntimeForm): OnetimeSpec => {
 const getEntityDetails = (msList: MonitoredServiceDetail[]): EntityDetails[] =>
   msList.map(msDetail => ({ entityRef: msDetail.monitoredServiceIdentifier || '', enabled: true }))
 
-const getEntitiesRule = (msList: MonitoredServiceDetail[]): EntityIdentifiersRule => ({
-  type: 'Identifiers',
-  entityIdentifiers: getEntityDetails(msList)
-})
+const getEntitiesRule = (msList: MonitoredServiceDetail[], entitiesRuleType: EntitiesRule['type']): EntitiesRule => {
+  if (entitiesRuleType === EntitiesRuleType.ALL) {
+    return {
+      type: EntitiesRuleType.ALL
+    }
+  } else {
+    return {
+      type: EntitiesRuleType.IDENTIFIERS,
+      entityIdentifiers: getEntityDetails(msList)
+    } as EntityIdentifiersRule
+  }
+}
+
+const getEpochTime = (time: string, timezone: string): number => {
+  const offsetFromLocal = new Date(time).getTimezoneOffset()
+  const offsetFromSelectedTimezone =
+    Number(timezoneToOffsetObject[timezone as keyof typeof timezoneToOffsetObject]) * 60
+
+  return moment(time).unix() - (offsetFromSelectedTimezone + offsetFromLocal) * 60
+}
 
 export const createSLODowntimeRequestPayload = (
   values: DowntimeForm,
   orgIdentifier: string,
   projectIdentifier: string
 ): DowntimeDTO => {
-  const { name, identifier, description, tags, category, msList, type, startTime, timezone, endTimeMode } = values
+  const {
+    name,
+    identifier,
+    description,
+    tags,
+    category,
+    msList,
+    type,
+    startTime,
+    timezone,
+    endTimeMode,
+    entitiesRuleType
+  } = values
   if (values.type === DowntimeWindowToggleViews.ONE_TIME) {
     return {
       name,
@@ -159,12 +272,12 @@ export const createSLODowntimeRequestPayload = (
       category,
       scope: 'Project',
       enabled: true,
-      entitiesRule: getEntitiesRule(msList),
+      entitiesRule: getEntitiesRule(msList, entitiesRuleType),
       spec: {
         type,
         spec: {
           timezone,
-          startTime: moment(startTime).unix(),
+          startTime: getEpochTime(startTime as string, timezone),
           type: endTimeMode,
           spec: getOneTimeBasedDowntimeSpec(values)
         } as OnetimeDowntimeSpec
@@ -182,12 +295,12 @@ export const createSLODowntimeRequestPayload = (
       category,
       scope: 'Project',
       enabled: true,
-      entitiesRule: getEntitiesRule(msList),
+      entitiesRule: getEntitiesRule(msList, entitiesRuleType),
       spec: {
         type,
         spec: {
           timezone,
-          startTime: moment(startTime).unix(),
+          startTime: getEpochTime(startTime as string, timezone),
           downtimeDuration: {
             durationValue,
             durationType
@@ -196,7 +309,7 @@ export const createSLODowntimeRequestPayload = (
             recurrenceValue,
             recurrenceType
           },
-          recurrenceEndTime: moment(recurrenceEndTime).unix()
+          recurrenceEndTime: getEpochTime(recurrenceEndTime as string, timezone)
         } as RecurringDowntimeSpec
       }
     }

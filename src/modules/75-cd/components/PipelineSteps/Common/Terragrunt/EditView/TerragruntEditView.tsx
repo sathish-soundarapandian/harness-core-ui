@@ -1,5 +1,5 @@
 /*
- * Copyrig as MultiInputht 2022 Harness Inc. All rights reserved.
+ * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -28,9 +28,9 @@ import { Color } from '@harness/design-system'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { cloneDeep, set, unset, get } from 'lodash-es'
-
 import type { FormikProps } from 'formik'
 import { Classes, Dialog } from '@blueprintjs/core'
+import type { TerragruntVarFileWrapper } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import {
   FormMultiTypeDurationField,
@@ -70,9 +70,9 @@ import { BackendConfigurationTypes, ConfigurationTypes } from '../../Terraform/T
 import type { TerragruntData, TerragruntProps } from '../TerragruntInterface'
 import { ConfigFileStoreStepOne } from '../../ConfigFileStore/ConfigFileStoreStepOne'
 import { ConfigFileStoreStepTwo } from '../../ConfigFileStore/ConfigFileStoreStepTwo'
-import TgVarFileList from './TGVarFileList'
 import { DIALOG_PROPS } from '../TerragruntHelper'
-import css from '../../Terraform/Editview/TerraformVarfile.module.scss'
+import VarFileList from '../../VarFile/VarFileList'
+import css from '../../Terraform/TerraformStep.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 interface StepChangeData<SharedObject> {
@@ -244,7 +244,6 @@ export default function TerragruntEditView(
     <Layout.Vertical flex style={{ justifyContent: 'center', alignItems: 'center' }} margin={{ bottom: 'xlarge' }}>
       <Icon
         name={isBackendConfig ? 'service-terraform' : 'service-terragrunt'}
-        className={css.remoteIcon}
         size={50}
         padding={{ bottom: 'large' }}
       />
@@ -624,14 +623,17 @@ export default function TerragruntEditView(
                             </div>
                           )}
                           <div className={cx(css.divider, css.addMarginBottom)} />
-                          <TgVarFileList
-                            formik={formik as FormikProps<TerragruntData>}
+                          <VarFileList<TerragruntData, TerragruntVarFileWrapper>
+                            formik={formik}
                             isReadonly={readonly}
                             allowableTypes={allowableTypes}
                             setSelectedConnector={setSelectedConnector}
                             getNewConnectorSteps={getNewConnectorSteps}
                             selectedConnector={selectedConnector}
+                            varFilePath={'spec.configuration.spec.varFiles'}
+                            isTerragrunt
                           />
+
                           <div className={css.divider} />
                           <>
                             <Layout.Horizontal flex={{ alignItems: 'flex-start' }}>

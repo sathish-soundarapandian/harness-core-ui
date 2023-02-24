@@ -1068,9 +1068,11 @@ exports[`Delegate Command line creation failure troubleShoot click for docker 1`
               </div>
               <div
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                style="width: 100%;"
               >
                 <div
                   class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+                  style="width: 85%;"
                 >
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-small"
@@ -2063,9 +2065,11 @@ exports[`Delegate Command line creation failure troubleShoot click for helm 1`] 
               </div>
               <div
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                style="width: 100%;"
               >
                 <div
                   class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+                  style="width: 85%;"
                 >
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-small"
@@ -3108,9 +3112,11 @@ exports[`Delegate Command line creation failure troubleShoot click for terraform
               </div>
               <div
                 class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center"
+                style="width: 100%;"
               >
                 <div
                   class="Layout--vertical Layout--layout-spacing-medium StyledProps--main"
+                  style="width: 85%;"
                 >
                   <p
                     class="StyledProps--font StyledProps--main StyledProps--font-variation-small"

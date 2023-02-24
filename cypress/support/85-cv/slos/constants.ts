@@ -32,7 +32,7 @@ export const listMonitoredServices = `/cv/api/monitored-service/all/time-series-
 export const listMonitoredServicesForSLOs = `/cv/api/slo-dashboard/monitored-services?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const listMonitoredServicesForNewerProject = `/cv/api/monitored-service/all/time-series-health-sources?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${newOrgIdentifier}&projectIdentifier=${newProjectIdentifier}`
 export const getSLOMetrics = `/cv/api/monitored-service/cvng_prod/health-source/${healthSource}/slo-metrics?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
-export const getSliGraph = `/cv/api/monitored-service/cvng_prod/sli/onboarding-graph?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
+export const getSliGraph = `/cv/api/monitored-service/cvng_prod/sli/onboarding-graphs?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getAccountLevelOnboardingGraph = `/cv/api/slo/v2/composite-slo/onboarding-graph?*`
 export const getServiceLevelObjective = `/cv/api/slo/v2/SLO1?routingId=${accountId}&accountId=${accountId}&orgIdentifier=${orgIdentifier}&projectIdentifier=${projectIdentifier}`
 export const getServiceLevelObjectiveV2 = `cv/api/slo/v2/Composite_SLO_1?routingId=accountId&accountId=accountId&orgIdentifier=default&projectIdentifier=project1`

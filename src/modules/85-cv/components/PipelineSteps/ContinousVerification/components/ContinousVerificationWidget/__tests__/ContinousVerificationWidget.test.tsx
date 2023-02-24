@@ -23,6 +23,7 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
   const monitoredServiceTemplateRef = ''
   const templateInputsToValidate = {}
   const templateInputs = {}
+  const isMultiServiesOrEnvs = false
 
   test('if validateMonitoredService function validates the default monitored service correctly when no monitored service is present', async () => {
     const expectedErrors = {
@@ -40,7 +41,8 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
         getString,
         monitoredServiceTemplateRef,
         templateInputsToValidate,
-        templateInputs
+        templateInputs,
+        isMultiServiesOrEnvs
       )
     ).toEqual(expectedErrors)
   })
@@ -62,7 +64,8 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
         getString,
         monitoredServiceTemplateRef,
         templateInputsToValidate,
-        templateInputs
+        templateInputs,
+        isMultiServiesOrEnvs
       )
     ).toEqual(expectedErrors)
   })
@@ -88,7 +91,8 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
         getString,
         monitoredServiceTemplateRef,
         templateInputsToValidate,
-        templateInputs
+        templateInputs,
+        isMultiServiesOrEnvs
       )
     ).toEqual(expectedErrors)
   })
@@ -110,7 +114,8 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
         getString,
         monitoredServiceTemplateRef,
         templateInputsToValidate,
-        templateInputs
+        templateInputs,
+        isMultiServiesOrEnvs
       )
     ).toEqual(expectedErrors)
   })
@@ -134,7 +139,8 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
         getString,
         monitoredServiceTemplateRef,
         templateInputsToValidate,
-        templateInputs
+        templateInputs,
+        isMultiServiesOrEnvs
       )
     ).toEqual(expectedErrors)
   })
@@ -151,7 +157,8 @@ describe('Unit tests for ContinousVerificationWidget Utils', () => {
         getString,
         monitoredServiceTemplateRef,
         mockedTemplateInputsToValidate,
-        mockedTemplateInputs
+        mockedTemplateInputs,
+        isMultiServiesOrEnvs
       )
     ).toEqual(expectedErrorsForEmptyTemplateInputs)
   })

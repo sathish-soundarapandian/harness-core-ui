@@ -214,22 +214,6 @@ const triggerDrawerMap = (
           : [])
       ]
     },
-    ...(!isNewService
-      ? [
-          {
-            categoryLabel: getString('common.comingSoon'),
-            categoryValue: 'ArtifactComingSoon',
-            items: [
-              {
-                itemLabel: getString(ArtifactTitleIdByType[ENABLED_ARTIFACT_TYPES.Nexus3Registry]),
-                value: ENABLED_ARTIFACT_TYPES.Nexus3Registry,
-                iconName: ArtifactIconByType.Nexus3Registry as IconName,
-                disabled: true
-              }
-            ]
-          }
-        ]
-      : []),
     {
       categoryLabel: getString('manifestsText'),
       categoryValue: 'Manifest',

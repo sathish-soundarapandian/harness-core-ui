@@ -609,7 +609,7 @@ inputTypes:
 projectCard:
   clone: 'Clone'
   projectName: 'Project Name'
-  confirmDelete: Deleting the Project '{{name}}' will delete its resources also. Are you sure you want to delete the Project?
+  confirmDelete: Deleting Project '{{name}}' will also permanently delete all resources under this Project. Are you sure you want to delete this Project?
   confirmDeleteTitle: 'Delete Project'
   successMessage: 'Project {{projectName}} is deleted'
   cdRendererText: 'Deployments in last 7 days'

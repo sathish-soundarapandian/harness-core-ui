@@ -1721,10 +1721,10 @@
     "@contentful/rich-text-react-renderer" "^15.12.0"
     contentful "^9.1.20"
 
-"@harness/icons@^1.107.0":
-  version "1.107.0"
-  resolved "https://npm.pkg.github.com/download/@harness/icons/1.107.0/4002bfd38f3f947dae8bc98001b4b67472c892dc#4002bfd38f3f947dae8bc98001b4b67472c892dc"
-  integrity sha512-rSSHLTY4TjXv0CQJwjGaAFUWqOPEk8TpcqPVimGSpVVntRAAr6vosTI4kSKhBBHKQ9ebSJKbYxBLdlol5VLlpA==
+"@harness/icons@1.110.3":
+  version "1.110.3"
+  resolved "https://npm.pkg.github.com/download/@harness/icons/1.110.3/2f612c8188b5f5909b81576307812b7957d3d415#2f612c8188b5f5909b81576307812b7957d3d415"
+  integrity sha512-dV3lK2HVth49C8h7gBaSaFr16GDr4OuyJNx4NV1RNxLGBvSlXSGRa8iy9jU3337Ls60g+8JNfMqZ+Ehpb77j8Q==
 
 "@harness/jarvis@0.16.0":
   version "0.16.0"
@@ -1766,10 +1766,10 @@
   resolved "https://npm.pkg.github.com/download/@harness/telemetry/1.0.42/60bc34c133bb40f0e0aa08f80620a1b23f3f089070e8550767e9d3fce8ca6e25#4d3f71026a03c898992d902f13a6c6d9cb0edac6"
   integrity sha512-pwjPYnQ8du1UswlX7A/apewGVDmbmaKKWTQSXtSHhKf9ekZ8WCwVvFcrM8ZIq/QbTn7Z8BXFYtMJdSG25oNtOg==
 
-"@harness/uicore@^3.110.1":
-  version "3.110.1"
-  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.110.1/51aa4436618d903650d8e6c6140fba0c757da9c4#51aa4436618d903650d8e6c6140fba0c757da9c4"
-  integrity sha512-xioViCKC3tfdVWyHQY2i7ld0SOFgY/Jph2CGAZfaZ178gm5f/J2+Say5OAZKLN4q8wkOEBsSUoGCWtnRnYVBYQ==
+"@harness/uicore@3.112.0":
+  version "3.112.0"
+  resolved "https://npm.pkg.github.com/download/@harness/uicore/3.112.0/179f2bc3994a883a72e67d914fed83cf0272bfa9#179f2bc3994a883a72e67d914fed83cf0272bfa9"
+  integrity sha512-fvWIzB0OLRrLBEg2AuealdNMk9chIHXN1hhP+ilh9opOe/7FOcNiRBItfYmvbZ3PZB8uFKDO8uk7bSiDoVoyQA==
 
 "@harness/use-modal@1.1.0":
   version "1.1.0"
@@ -1820,6 +1820,15 @@
     liquidjs "^9.42.1"
     openapi-types "^12.0.2"
     zod "^3.19.1"
+
+"@harnessio/react-audit-service-client@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@harnessio/react-audit-service-client/-/react-audit-service-client-0.1.5.tgz#acd3c9c198d69b7f63b3c07759f31f28cf3b80ad"
+  integrity sha512-zdTQ51Ou+RJn80C8R4mXjUaLvD/Nt0iUQ+uUNX51JgUh8GTjFooqcheNoGAud1vo9L35fI8XwS1keOtU048ptw==
+  dependencies:
+    "@tanstack/react-query" "^4.20.4"
+    "@types/qs" "^6.9.7"
+    qs "^6.9.4"
 
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.5"
@@ -3688,7 +3697,7 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.3.tgz#2ab0d5da2e5815f94b0b9d4b95d1e5f243ab2ca7"
   integrity "sha1-KrDV2i5YFflLC51LldHl8kOrLKc= sha512-KfRL3PuHmqQLOG+2tGpRO26Ctg+Cq1E01D2DMriKEATHgWLfeNDmq9e29Q9WIky0dQ3NPkd1mzYH8Lm936Z9qw=="
 
-"@types/qs@*", "@types/qs@^6.9.4", "@types/qs@^6.9.5":
+"@types/qs@*", "@types/qs@^6.9.4", "@types/qs@^6.9.5", "@types/qs@^6.9.7":
   version "6.9.7"
   resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.9.7.tgz#63bb7d067db107cc1e457c303bc25d511febf6cb"
   integrity sha512-FGa1F62FT09qcrueBA6qYTrJPVDzah9a+493+o2PCXsesWHIn27G98TsSMs3WPNbZIEj4+VJf6saSFpvD+3Zsw==

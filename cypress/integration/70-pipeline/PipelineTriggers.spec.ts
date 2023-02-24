@@ -1,5 +1,5 @@
 import {
-  inputSetListAPI,
+  inputSetListAPIWithoutSort,
   inputSetsTemplateCall,
   pipelineSummaryCallAPI,
   routingDataAPI,
@@ -20,11 +20,6 @@ describe('Triggers for Pipeline', () => {
     cy.visitPageAssertion()
   }
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
 
     cy.intercept('GET', routingDataAPI, { fixture: 'ng/api/routingData' }).as('routingData')
@@ -114,7 +109,7 @@ describe('Triggers for Pipeline', () => {
     cy.contains('span', 'triggerTag').should('be.visible')
     cy.contains('span', 'Continue').should('be.visible').click()
 
-    cy.intercept('GET', inputSetListAPI, { fixture: 'pipeline/api/inputSet/emptyInputSetsList' })
+    cy.intercept('GET', inputSetListAPIWithoutSort, { fixture: 'pipeline/api/inputSet/emptyInputSetsList' })
     cy.intercept('GET', servicesCallV2, servicesV2AccessResponse).as('servicesCallV2')
 
     // Schedule Tab
@@ -133,7 +128,7 @@ describe('Triggers for Pipeline', () => {
       .within(() => {
         cy.findByText('No Input Sets created').should('exist')
       })
-    cy.get('input[placeholder*="Select Service"]').should('be.visible').click({ force: true })
+    cy.get('input[placeholder*="Select"]').should('be.visible').click({ force: true })
     cy.contains('p', 'testService').click({ force: true })
 
     // Toggle to YAML view

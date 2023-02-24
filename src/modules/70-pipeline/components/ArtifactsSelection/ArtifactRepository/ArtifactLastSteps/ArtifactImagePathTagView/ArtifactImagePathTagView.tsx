@@ -14,7 +14,7 @@ import type { GetDataError } from 'restful-react'
 
 import type { Failure, Error, ArtifactoryBuildDetailsDTO, DockerBuildDetailsDTO } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
@@ -43,7 +43,7 @@ export function NoTagResults({
   }, [isServerlessDeploymentTypeSelected, getString])
 
   return (
-    <Text lineClamp={1} width={400}>
+    <Text lineClamp={1} width={384} margin="small">
       {get(tagError, 'data.message', null) || getErrorText()}
     </Text>
   )
@@ -161,6 +161,7 @@ function ArtifactImagePathTagView({
                   formik.setFieldValue('artifactPath', value)
                 }}
                 isReadonly={isReadonly}
+                allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
               />
             </div>
           )}
@@ -189,6 +190,7 @@ function ArtifactImagePathTagView({
                     formik.setFieldValue('imagePath', value)
                   }}
                   isReadonly={isReadonly}
+                  allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
                 />
               </div>
             )}
@@ -238,7 +240,7 @@ function ArtifactImagePathTagView({
                 addTooltip: true
               },
               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                if (canFetchTags() || !canFetchTags) {
+                if (!canFetchTags || canFetchTags()) {
                   onTagInputFocus(e, formik, fetchTags, isArtifactPath, isServerlessDeploymentTypeSelected)
                 }
               }

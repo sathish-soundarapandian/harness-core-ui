@@ -22,11 +22,9 @@ export default function AppDHealthSourceContainer(props: AppDynamicsHealthSource
   const { data: sourceData, onSubmit, isTemplate, expressions } = props
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
-  const isMetricThresholdEnabled = !isTemplate
-
   const handleSubmit = useCallback(
     async (value: UpdatedHealthSource) => {
-      const appDynamicsPayload = createAppDynamicsPayload(value, isMetricThresholdEnabled)
+      const appDynamicsPayload = createAppDynamicsPayload(value)
       appDynamicsPayload && (await onSubmit(sourceData, appDynamicsPayload))
     },
     [sourceData]

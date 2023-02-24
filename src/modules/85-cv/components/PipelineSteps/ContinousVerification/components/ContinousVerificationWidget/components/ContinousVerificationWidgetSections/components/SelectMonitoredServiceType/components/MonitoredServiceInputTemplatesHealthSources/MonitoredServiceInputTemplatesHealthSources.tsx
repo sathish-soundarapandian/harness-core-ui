@@ -11,10 +11,7 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
-import {
-  getFieldLabelForVerifyTemplate,
-  getNestedFields
-} from '@cv/pages/monitored-service/CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
+import { getNestedFields } from '@cv/pages/monitored-service/CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
@@ -29,6 +26,7 @@ import {
 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import type { UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
+import { getLabelByName } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import { CONNECTOR_REF, IDENTIFIER, INDEXES, NAME } from './MonitoredServiceInputTemplatesHealthSources.constants'
 
 interface MonitoredServiceInputTemplatesHealthSourcesProps {
@@ -94,7 +92,7 @@ export default function MonitoredServiceInputTemplatesHealthSources(
                       <FormInput.MultiTextInput
                         key={input.name}
                         name={`spec.monitoredService.spec.templateInputs.${input.path}`}
-                        label={getFieldLabelForVerifyTemplate(input.name, getString)}
+                        label={getLabelByName(input.name, getString)}
                         multiTextInputProps={{
                           expressions,
                           allowableTypes
@@ -122,7 +120,7 @@ export default function MonitoredServiceInputTemplatesHealthSources(
                             <FormInput.MultiTextInput
                               key={input.name}
                               name={`spec.monitoredService.spec.templateInputs.${input.path}`}
-                              label={getFieldLabelForVerifyTemplate(input.name, getString)}
+                              label={getLabelByName(input.name, getString)}
                               onChange={value =>
                                 setCommaSeperatedList(
                                   value as string,
@@ -141,7 +139,7 @@ export default function MonitoredServiceInputTemplatesHealthSources(
                             <FormInput.MultiTextInput
                               key={input.name}
                               name={`spec.monitoredService.spec.templateInputs.${input.path}`}
-                              label={getFieldLabelForVerifyTemplate(input.name, getString)}
+                              label={getLabelByName(input.name, getString)}
                               multiTextInputProps={{
                                 expressions,
                                 allowableTypes

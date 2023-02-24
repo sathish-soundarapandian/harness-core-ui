@@ -113,7 +113,7 @@ describe('Nexus Artifact tests', () => {
   })
 
   // eslint-disable-next-line jest/no-disabled-tests
-  test.skip(`unable to submit the form when either of imagename, repository and repositoryUrl are empty`, async () => {
+  test(`unable to submit the form when either of imagename, repository and repositoryUrl are empty`, async () => {
     const { container } = render(
       <TestWrapper>
         <Nexus3Artifact key={'key'} initialValues={initialValues} {...props} />
@@ -135,7 +135,7 @@ describe('Nexus Artifact tests', () => {
   })
 
   // eslint-disable-next-line jest/no-disabled-tests
-  test.skip(`get RepositoryPort error, when repositoryPortorRepositoryURL is of type Repository port`, async () => {
+  test(`get RepositoryPort error, when repositoryPortorRepositoryURL is of type Repository port`, async () => {
     const { container, getByText } = render(
       <TestWrapper>
         <Nexus3Artifact key={'key'} initialValues={initialValues} {...props} />

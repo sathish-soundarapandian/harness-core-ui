@@ -59,7 +59,9 @@ export function ManifestDetailsCoreSection({
 
   const isOnlyFileTypeManifest =
     selectedManifest &&
-    [ManifestDataType.AsgConfiguration, ManifestDataType.AsgLaunchTemplate].includes(selectedManifest)
+    [ManifestDataType.AsgConfiguration, ManifestDataType.AsgLaunchTemplate, ManifestDataType.Values].includes(
+      selectedManifest
+    )
 
   return (
     <>

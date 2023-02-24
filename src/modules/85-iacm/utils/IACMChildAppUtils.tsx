@@ -31,6 +31,8 @@ import RbacButton from '@rbac/components/Button/Button'
 import RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import { usePermission } from '@rbac/hooks/usePermission'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
+import { useGetConnector, useGetListOfBranchesByRefConnectorV2, useGetListOfReposByRefConnector } from 'services/cd-ng'
 
 const customComponents: IACMCustomMicroFrontendProps['customComponents'] = {
   ApprovalStageOverview,
@@ -42,7 +44,8 @@ const customComponents: IACMCustomMicroFrontendProps['customComponents'] = {
   ExecutionGraph,
   RbacOptionsMenuButton,
   RbacButton,
-  RbacMenuItem
+  RbacMenuItem,
+  ConnectorReferenceField
 }
 
 const customFunctions: IACMCustomMicroFrontendProps['customFunctions'] = {
@@ -56,7 +59,10 @@ const customHooks: IACMCustomMicroFrontendProps['customHooks'] = {
   usePipelineContext,
   useLocation,
   useVariablesExpression,
-  usePermission
+  usePermission,
+  useGetListOfReposByRefConnector,
+  useGetListOfBranchesByRefConnectorV2,
+  useGetConnector
 }
 
 const IACMSideNavProps: SidebarContext = {

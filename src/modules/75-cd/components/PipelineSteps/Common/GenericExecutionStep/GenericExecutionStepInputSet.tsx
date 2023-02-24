@@ -52,7 +52,7 @@ export const GenericExecutionStepInputSet: React.FC<GenericExecutionStepInputSet
           disabled={inputSetData.readonly}
           fieldPath={'timeout'}
           template={inputSetData.template}
-          className={cx(stepCss.formGroup, stepCss.sm)}
+          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
     </>

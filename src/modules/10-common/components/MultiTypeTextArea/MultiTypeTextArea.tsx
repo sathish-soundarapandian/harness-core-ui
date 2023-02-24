@@ -76,7 +76,8 @@ export const MultiTypeTextArea: React.FC<MultiTypeTextAreaProps> = props => {
       fixedTypeComponent={MultiTypeTextAreaFixedTypeComponent}
       style={{ flexGrow: 1 }}
       onTypeChange={setMultiType}
-      btnClassName={multiType === MultiTypeInputType.FIXED ? css.multiButtonForFixedType : ''}
+      btnClassName={!isMultiTypeRuntime(multiType) ? css.multiButtonForFixedType : ''}
+      showFixedComponentOnExpressionType
     />
   )
   return (
@@ -116,6 +117,7 @@ export interface FormMultiTypeTextAreaProps extends Omit<IFormGroupProps, 'label
   onChange?: MultiTypeTextAreaProps['onChange']
   isOptional?: boolean
   tooltipProps?: DataTooltipInterface
+  configureOptionsProps?: MultiTypeTextAreaConfigureOptionsProps
 }
 
 export const FormMultiTypeTextArea: React.FC<FormMultiTypeTextAreaProps> = props => {
@@ -128,6 +130,7 @@ export const FormMultiTypeTextArea: React.FC<FormMultiTypeTextAreaProps> = props
     onChange,
     isOptional = false,
     tooltipProps,
+    configureOptionsProps,
     ...restProps
   } = props
   const hasError = errorCheck(name, formik)
@@ -174,6 +177,7 @@ export const FormMultiTypeTextArea: React.FC<FormMultiTypeTextAreaProps> = props
           formik?.setFieldValue(name, val)
           onChange?.(val, valueType, type)
         }}
+        configureOptionsProps={configureOptionsProps}
       />
     </FormGroup>
   )

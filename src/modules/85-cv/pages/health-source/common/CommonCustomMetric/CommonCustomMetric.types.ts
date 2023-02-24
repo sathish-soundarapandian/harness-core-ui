@@ -47,7 +47,6 @@ export interface CommonCustomMetricInterface {
   groupedCreatedMetrics?: GroupedCreatedMetrics
   shouldBeAbleToDeleteLastMetric?: boolean
   isPrimaryMetric?: boolean
-  isMetricThresholdEnabled?: boolean
   filterRemovedMetricNameThresholds?: (metricName: string) => void
   openEditMetricModal: () => void
   defaultServiceInstance?: string

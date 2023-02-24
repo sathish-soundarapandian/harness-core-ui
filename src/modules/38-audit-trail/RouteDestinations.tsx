@@ -6,11 +6,28 @@
  */
 
 import React from 'react'
+
 import { RouteWithLayout } from '@common/router'
 import { AccountSideNavProps } from '@common/RouteDestinations'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps } from '@common/utils/routeUtils'
+import RbacFactory from '@rbac/factories/RbacFactory'
+import { ResourceType, ResourceCategory } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { String } from 'framework/strings'
 import AuditTrailsPage from './pages/AuditTrails/AuditTrailsPage'
+
+RbacFactory.registerResourceTypeHandler(ResourceType.STREAMING_DESTINATION, {
+  icon: 'audit-log-created',
+  label: 'auditTrail.streamingDestination',
+  labelSingular: 'auditTrail.streamingDestination',
+  category: ResourceCategory.ADMINSTRATIVE_FUNCTIONS,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_STREAMING_DESTINATION]: <String stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.CREATE_OR_EDIT_STREAMING_DESTINATION]: <String stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.DELETE_STREAMING_DESTINATION]: <String stringID="rbac.permissionLabels.delete" />
+  }
+})
 
 export default (
   <>

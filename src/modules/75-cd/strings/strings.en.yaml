@@ -152,6 +152,7 @@ steps:
     tempRouteMandatory: Temp route is mandatory
     upscaleNewFirstLabel: Add new instances first, then downsize old instances
     downScaleOldFirstLabel: Downsize old instances first, then add new instances
+    zeroOldInstancesWarning: There can be a downtime as the old instances are downsized first with instance value as zero
   googleCloudFunctionCommon:
     fieldMask: Field Mask
     fieldMaskPlaceholder: Enter Field Mask
@@ -223,11 +224,11 @@ pipelineSteps:
     specifyEnvironmentOrGroup: Specify environment or environment group
     specifyGitOpsCluster: Specify GitOps Cluster
     specifyGitOpsClusters: Specify GitOps Clusters
-    selectEnvironment: '- Select Environment -'
-    selectEnvironments: '- Select Environments -'
-    selectEnvironmentGroup: '- Select Environment Group -'
-    selectInfrastructure: '- Select Infrastructure -'
-    selectInfrastructures: '- Select Infrastructures -'
+    selectEnvironment: '{{$.common.entityPlaceholderText}}'
+    selectEnvironments: '{{$.common.entityPlaceholderText}}'
+    selectEnvironmentGroup: '{{$.common.entityPlaceholderText}}'
+    selectInfrastructure: '{{$.common.entityPlaceholderText}}'
+    selectInfrastructures: '{{$.common.entityPlaceholderText}}'
     allInfrastructures: 'All Infrastructures'
     selectInfrastructureType: 'Select Infrastructure Type'
     plusNewEnvironment: '+ {{$.newEnvironment}}'
@@ -258,6 +259,7 @@ pipelineSteps:
     environmentGroupConfirmationText: Are you sure you want to switch to deploying to a single environment group? If you choose to proceed, your existing environments will be lost.
     multiEnvironmentsDialogTitleText: Deploy to multiple environments or infrastructures?
     multiEnvironmentsConfirmationText: Are you sure you want to switch to deploying multiple environments or infrastructures? If you choose to proceed, your existing environment will be migrated automatically.
+    multiEnvironmentsClearConfirmationText: Are you sure you want to switch to deploying multiple environments or infrastructures? If you choose to proceed, your existing environment will be lost.
     singleEnvironmentDialogTitleText: Deploy to single environment?
     singleEnvironmentConfirmationText: Are you sure you want to switch to deploying to a single environment? If you choose to proceed, your existing environments will be lost.
     deleteEnvironmentFromListDialogTitleText: Remove Environment from list?
@@ -276,8 +278,8 @@ pipelineSteps:
     differentService: Deploy different Service
     specifyYourService: '{{$.common.selectService}}'
     specifyYourServices: '{{$.common.selectServices}}'
-    selectService: '- Select Service -'
-    selectServices: '- Select Services -'
+    selectService: '{{$.common.entityPlaceholderText}}'
+    selectServices: '{{$.common.entityPlaceholderText}}'
     newService: '{{$.newService}}'
     plusNewService: '+ {{$.newService}}'
     serviceIsRequired: Service is required
@@ -581,6 +583,15 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  creatingApp: Creating Application in progress
+  main: main
+  installationInstructions: Installation Instructions
+  clusterRepo: Cluster Repo
+  destinationDetails: Destination Details
+  gitURL: Git URL
+  sourceDetails: Source Details
+  hostedGitopsAgent: Hosted GitOps Agent
+  applicationDetails: Application Details
   syncCompleteMessage: Application sync has been triggered successfully
   provisionedSuccessfully: provisioned successfully
   selectAuthenticationType: Select Authentication Type
@@ -694,6 +705,8 @@ getStartedWithCD:
   checkDelegateInstalled: Checking for the delegate. Installation takes a minute or two.
   testConnection: Test connection
   harnessFileStore: Harness Filestore
+  sampleManifest: Sample manifest
+  sampleManifests: Sample Manifests
   delegateSuccess: The delegate is installed. Next you can configure the service.
   connectHarnessEnv: Connect Harness to your environment
   installDelegateToTargetEnv: Install a Harness Delegate in your target environment.
@@ -887,3 +900,18 @@ valuesYamlValidation: 'Values.yaml file path cannot be empty'
 infra: infra
 pipelineId: 'Pipeline ID: '
 openExecution: 'Open Execution'
+openTask:
+  notificationImgAlt: Notification Image
+  notificationPopoverExpression: Psst!
+  notificationPopoverMsg: You can still access and manage your open tasks here.
+  notificationPopoverBtn: Got it
+  bannerMsg: '{{count}} Open tasks requiring your attention.'
+  seeOpenTask: See Open Tasks
+  title: Open Tasks
+  openTaskEmptyStateMsg: Hurray! You have no open tasks.
+  openTaskStatusMsgFailed: 'deployment failed'
+  openTaskStatusMsgExpired: 'deployment expired'
+  openTaskStatusMsgAbortedByFreeze: 'deployment aborted by freeze'
+  openTaskStatusMsgAborted: 'deployment aborted'
+  openTaskStatusMsgApprovalWaiting: 'deployment waiting for approval'
+since: Since

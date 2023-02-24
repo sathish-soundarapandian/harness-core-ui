@@ -19,6 +19,7 @@ import {
 } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { Color, FontVariation } from '@harness/design-system'
+import { defaultTo } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import routes from '@common/RouteDefinitions'
 import type { ModulePathParams } from '@common/interfaces/RouteInterfaces'
@@ -42,7 +43,9 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
     state: { freezeObj },
     updateFreeze,
     isReadOnly,
-    isActiveFreeze
+    isActiveFreeze,
+    setFreezeFormError,
+    freezeFormError
   } = React.useContext(FreezeWindowContext)
   const history = useHistory()
   const { view } = React.useContext(FreezeWindowContext)
@@ -125,6 +128,12 @@ export const FreezeWindowStudioSubHeader: React.FC<FreezeWindowStudioSubHeaderPr
             selectedView={isYaml || isVisualViewDisabled ? SelectedView.YAML : SelectedView.VISUAL}
             onChange={
               /* istanbul ignore next */ nextMode => {
+                //this is done as we dont want to control the save button and formError while in Yaml view, BE API will take care of that.
+                if (nextMode === SelectedView.YAML) {
+                  setFreezeFormError?.({})
+                } else {
+                  setFreezeFormError?.(defaultTo(freezeFormError, {}))
+                }
                 onViewChange(nextMode)
               }
             }

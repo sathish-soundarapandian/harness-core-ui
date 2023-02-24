@@ -7,7 +7,7 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { connect, FormikContextType } from 'formik'
+import { useFormikContext } from 'formik'
 import { filter, get } from 'lodash-es'
 import { AllowedTypes, Container, ExpressionAndRuntimeType, MultiTypeInputType } from '@harness/uicore'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
@@ -17,7 +17,6 @@ import css from './MultiTypeExecutionCondition.module.scss'
 interface MultiTypeExecutionConditionProps {
   path: string
   allowableTypes?: AllowedTypes
-  formik?: FormikContextType<any>
   isInputDisabled?: boolean
   readonly?: boolean
   multiType?: MultiTypeInputType
@@ -39,10 +38,11 @@ function MultiTypeMonacoTextFieldFixedTypeComponent(props: {
   )
 }
 
-function MultiTypeExecutionConditionInternal(props: MultiTypeExecutionConditionProps): React.ReactElement {
-  const { path, formik, allowableTypes, isInputDisabled, readonly, multiType, setMultiType, expressions } = props
+export function MultiTypeExecutionCondition(props: MultiTypeExecutionConditionProps): React.ReactElement {
+  const { path, allowableTypes, isInputDisabled, readonly, multiType, setMultiType, expressions } = props
+  const formik = useFormikContext()
 
-  const conditionValue = get(formik?.values, path)
+  const conditionValue = get(formik.values, path)
   const allowableTypesExceptExpression = filter(
     allowableTypes,
     type => type !== MultiTypeInputType.EXPRESSION
@@ -70,5 +70,3 @@ function MultiTypeExecutionConditionInternal(props: MultiTypeExecutionConditionP
     </Container>
   )
 }
-
-export const MultiTypeExecutionCondition = connect(MultiTypeExecutionConditionInternal)

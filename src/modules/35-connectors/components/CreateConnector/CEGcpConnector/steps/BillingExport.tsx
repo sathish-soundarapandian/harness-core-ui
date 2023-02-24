@@ -32,7 +32,7 @@ import { useStepLoadTelemetry } from '@connectors/common/useTrackStepLoad/useSte
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import type { CEGcpConnectorDTO, ExistingCURDetails } from './OverviewStep'
-import BillingExportExtention from './BillingExportExtention'
+import { renderBillingExportExtension } from './BillingExportExtension'
 import css from '../CreateCeGcpConnector.module.scss'
 
 interface CostUsageReportExistingProps {
@@ -43,7 +43,7 @@ const CostUsageReportExisting: React.FC<CostUsageReportExistingProps> = props =>
   const { getString } = useStrings()
   const [curReports, setCurReports] = useState(props.existingCurReports)
 
-  const onChange = (searchVal: string) => {
+  const onChange = (searchVal: string): void => {
     let filteredReports = props.existingCurReports
     if (searchVal) {
       filteredReports = filteredReports.filter(item => item.projectId.includes(searchVal))
@@ -125,8 +125,8 @@ const BillingExport: React.FC<StepProps<CEGcpConnectorDTO>> = props => {
   }
 
   useEffect(() => {
-    !isExistingCostUsageReport && triggerExtension(BillingExportExtention)
-  }, [])
+    !isExistingCostUsageReport && triggerExtension(renderBillingExportExtension(getString))
+  }, [getString, triggerExtension])
 
   const handlePrev = () => {
     closeExtension()
@@ -201,7 +201,7 @@ const BillingExport: React.FC<StepProps<CEGcpConnectorDTO>> = props => {
                             text={getString('connectors.ceGcp.billingExport.setupNew')}
                             onClick={() => {
                               setIsExistingCostUsageReport(false)
-                              triggerExtension(BillingExportExtention)
+                              triggerExtension(renderBillingExportExtension(getString))
                             }}
                             size={ButtonSize.SMALL}
                             variation={ButtonVariation.SECONDARY}

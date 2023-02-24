@@ -115,3 +115,44 @@ export const templateYamlDataGCO = {
   metaData: null,
   correlationId: '458ea1a0-c04d-4180-8e22-5fa4a2511cb8'
 }
+
+export const payloadParameter = {
+  type: 'Application',
+  serviceRef: 'app_service_uf2e4s3KFc',
+  environmentRef: 'prod',
+  sources: {
+    healthSources: [
+      {
+        identifier: 'testGCP',
+        type: 'Stackdriver',
+        spec: {
+          metricDefinitions: [
+            {
+              identifier: 'logging.googleapis.com/user/service_startup_time',
+              jsonMetricDefinitionString: '{"a": 1, "b": 2}'
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
+
+export const expectedOutput = {
+  sources: {
+    healthSources: [
+      {
+        identifier: 'testGCP',
+        spec: {
+          metricDefinitions: [
+            {
+              identifier: 'logging.googleapis.com/user/service_startup_time',
+              jsonMetricDefinitionString: '{"a": 1, "b": 2}'
+            }
+          ]
+        },
+        type: 'Stackdriver'
+      }
+    ]
+  }
+}

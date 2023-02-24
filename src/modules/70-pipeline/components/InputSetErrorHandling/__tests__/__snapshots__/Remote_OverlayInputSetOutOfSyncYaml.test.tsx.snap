@@ -182,8 +182,7 @@ exports[`Remote Git Sync Input Set Error Exp should open reconcile dialog on cli
                         style="height: 100%;"
                       >
                         <div
-                          class="StyledProps--font StyledProps--main StyledProps--border StyledProps--border-right"
-                          style="width: 604px;"
+                          class="StyledProps--font StyledProps--main leftHeader StyledProps--border StyledProps--border-right"
                         >
                           <div
                             class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-space-between StyledProps--flex-alignItems-center StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge"
@@ -192,7 +191,7 @@ exports[`Remote Git Sync Input Set Error Exp should open reconcile dialog on cli
                             <p
                               class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
                             >
-                              pipeline.inputSetErrorStrip.existingYaml
+                              common.yamlDiffView.originalYamlLabel
                             </p>
                           </div>
                         </div>
@@ -206,7 +205,7 @@ exports[`Remote Git Sync Input Set Error Exp should open reconcile dialog on cli
                             <p
                               class="StyledProps--font StyledProps--main StyledProps--font-variation-h6"
                             >
-                              pipeline.inputSetErrorStrip.validYaml
+                              common.yamlDiffView.refreshedYamlLabel
                             </p>
                             <span
                               class="bp3-popover-wrapper"

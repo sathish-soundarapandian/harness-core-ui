@@ -132,7 +132,7 @@ function HelmWithGIT({
       gitFetchType: 'Branch',
       folderPath: '/',
       subChartName: '',
-      helmVersion: 'V2',
+      helmVersion: 'V3',
       skipResourceVersioning: false,
       enableDeclarativeRollback: false,
       commandFlags: [{ commandType: undefined, flag: undefined, id: uuid('', nameSpace()) }],
@@ -158,7 +158,7 @@ function HelmWithGIT({
           valuesPaths:
             typeof formData?.valuesPaths === 'string'
               ? formData?.valuesPaths
-              : formData?.valuesPaths?.map((path: { path: string }) => path.path),
+              : removeEmptyFieldsFromStringArray(formData?.valuesPaths?.map((path: { path: string }) => path.path)),
           skipResourceVersioning: getSkipResourceVersioningBasedOnDeclarativeRollback(
             formData?.skipResourceVersioning,
             formData?.enableDeclarativeRollback
@@ -238,7 +238,7 @@ function HelmWithGIT({
           commandFlags: Yup.array().of(
             Yup.object().shape({
               flag: Yup.string().when('commandType', {
-                is: val => !isEmpty(val?.value),
+                is: val => !isEmpty(val),
                 then: Yup.string().required(getString('pipeline.manifestType.commandFlagRequired'))
               })
             })

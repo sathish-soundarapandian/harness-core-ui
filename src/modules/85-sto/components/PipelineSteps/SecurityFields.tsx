@@ -40,6 +40,7 @@ import {
   LOCAL_IMAGE_CONTAINER_TYPE,
   logLevelOptions,
   severityOptions,
+  tooltipIds,
   USER_PASSWORD_AUTH_TYPE
 } from './constants'
 import css from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -78,11 +79,13 @@ export function SecurityScanFields(props: ISecurityScanFields) {
             inputProps: {
               disabled: scanModeSelectItems.length === 1
             },
-            selectItems: scanModeSelectItems
+            selectItems: scanModeSelectItems,
+            tooltipId: tooltipIds.mode
           },
           'spec.config': {
             label: 'sto.stepField.config',
-            inputProps: { disabled: scanConfigReadonly }
+            inputProps: { disabled: scanConfigReadonly },
+            tooltipId: tooltipIds.config
           }
         }}
       />
@@ -107,19 +110,23 @@ export function SecurityTargetFields(props: ISecurityTargetFields) {
             fieldType: 'dropdown',
             label: 'typeLabel',
             selectItems: targetTypeSelectItems,
-            inputProps: { disabled: targetTypeSelectItems.length === 1 }
+            inputProps: { disabled: targetTypeSelectItems.length === 1 },
+            tooltipId: tooltipIds.targetType
           },
           'spec.target.name': {
-            label: 'name'
+            label: 'name',
+            tooltipId: tooltipIds.targetName
           },
           'spec.target.variant': {
-            label: 'sto.stepField.target.variant'
+            label: 'sto.stepField.target.variant',
+            tooltipId: tooltipIds.targetVariant
           },
           'spec.target.workspace': {
             optional: true,
             label: 'pipelineSteps.workspace',
             hide: formik.values.spec.target.type === 'container' || formik.values.spec.mode === 'ingestion',
-            inputProps: { placeholder: '/harness' }
+            inputProps: { placeholder: '/harness' },
+            tooltipId: tooltipIds.targetWorkspace
           }
         }}
       />
@@ -139,7 +146,8 @@ export function SecurityIngestionFields(props: SecurityFieldsProps<SecurityStepD
         formik={formik as unknown as FormikProps<SecurityFieldsProps<SecurityStepData<SecurityStepSpec>>>}
         enableFields={{
           'spec.ingestion.file': {
-            label: 'sto.stepField.ingestion.file'
+            label: 'sto.stepField.ingestion.file',
+            tooltipId: tooltipIds.ingestionFile
           }
         }}
       />
@@ -163,18 +171,21 @@ export function SecurityAdvancedFields(props: SecurityFieldsProps<SecurityStepDa
             optional: true,
             fieldType: 'dropdown',
             label: 'sto.stepField.advanced.logLevel',
-            selectItems: logLevelOptions(getString)
+            selectItems: logLevelOptions(getString),
+            tooltipId: tooltipIds.logLevel
           },
           'spec.advanced.args.cli': {
             optional: true,
             label: 'sto.stepField.advanced.cli',
-            hide: formik.values.spec.mode !== 'orchestration'
+            hide: formik.values.spec.mode !== 'orchestration',
+            tooltipId: tooltipIds.argsCli
           },
           'spec.advanced.fail_on_severity': {
             optional: true,
             fieldType: 'dropdown',
             label: 'sto.stepField.advanced.failOnSeverity',
-            selectItems: severityOptions(getString)
+            selectItems: severityOptions(getString),
+            tooltipId: tooltipIds.failOnSeverity
           }
         }}
       />
@@ -211,36 +222,42 @@ export function SecurityAuthFields(props: ISecurityAuthFields) {
           'spec.auth.domain': {
             label: 'secrets.winRmAuthFormFields.domain',
             hide: !showFields?.domain,
-            inputProps: { placeholder: authDomainPlaceHolder }
+            inputProps: { placeholder: authDomainPlaceHolder },
+            tooltipId: tooltipIds.authDomain
           },
           'spec.auth.ssl': {
             label: 'sto.stepField.authSsl',
             fieldType: 'checkbox',
             hide:
               !showFields?.ssl ||
-              (!isEmpty(formik.values.spec.auth?.domain) && formik.values.spec.auth?.domain === initialAuthDomain)
+              (!isEmpty(formik.values.spec.auth?.domain) && formik.values.spec.auth?.domain === initialAuthDomain),
+            tooltipId: tooltipIds.authSSL
           },
           'spec.auth.version': {
             label: 'sto.stepField.authVersion',
             fieldType: 'dropdown',
             optional: false,
             hide: !showFields?.version,
-            selectItems: [API_VERSION_5_0_2, API_VERSION_4_2_0, API_VERSION_4_1_0]
+            selectItems: [API_VERSION_5_0_2, API_VERSION_4_2_0, API_VERSION_4_1_0],
+            tooltipId: tooltipIds.authVersion
           },
           'spec.auth.type': {
             label: 'typeLabel',
             hide: !showFields?.type,
             fieldType: 'dropdown',
-            selectItems: [API_KEY_AUTH_TYPE, USER_PASSWORD_AUTH_TYPE]
+            selectItems: [API_KEY_AUTH_TYPE, USER_PASSWORD_AUTH_TYPE],
+            tooltipId: tooltipIds.authType
           },
           'spec.auth.access_id': {
             label: 'sto.stepField.authAccessId',
             hide: !(showFields?.access_id && formik.values.spec.auth?.type !== API_KEY_AUTH_TYPE.value),
-            inputProps: { placeholder: '<+secrets.getValue("project.access_id")>' }
+            inputProps: { placeholder: '<+secrets.getValue("project.access_id")>' },
+            tooltipId: tooltipIds.authAccessId
           },
           'spec.auth.access_token': {
             label: 'common.getStarted.accessTokenLabel',
-            inputProps: { placeholder: '<+secrets.getValue("project.access_token")>' }
+            inputProps: { placeholder: '<+secrets.getValue("project.access_token")>' },
+            tooltipId: tooltipIds.authAccessToken
           }
         }}
       />
@@ -275,37 +292,44 @@ export function SecurityImageFields(props: SecurityFieldsProps<SecurityStepData<
               DOCKER_V2_CONTAINER_TYPE,
               JFROG_ARTIFACTORY_CONTAINER_TYPE,
               AWS_ECR_CONTAINER_TYPE
-            ]
+            ],
+            tooltipId: tooltipIds.imageType
           },
           'spec.image.domain': {
             label: 'secrets.winRmAuthFormFields.domain',
             optional: true,
-            inputProps: { placeholder: 'docker.io' }
+            inputProps: { placeholder: 'docker.io' },
+            tooltipId: tooltipIds.imageDomain
           },
           'spec.image.name': {
             label: 'name',
-            inputProps: { placeholder: 'harness/todolist-sample' }
+            inputProps: { placeholder: 'harness/todolist-sample' },
+            tooltipId: tooltipIds.imageName
           },
           'spec.image.tag': {
             label: 'tagLabel',
-            inputProps: { placeholder: 'latest' }
+            inputProps: { placeholder: 'latest' },
+            tooltipId: tooltipIds.imageTag
           },
           'spec.image.access_id': {
             label: 'sto.stepField.authAccessId',
             optional: true,
             hide: hideNonLocalImageFields,
-            inputProps: { placeholder: '<+secrets.getValue("project.access_id")>' }
+            inputProps: { placeholder: '<+secrets.getValue("project.access_id")>' },
+            tooltipId: tooltipIds.imageAccessId
           },
           'spec.image.access_token': {
             label: 'common.getStarted.accessTokenLabel',
             hide: hideNonLocalImageFields,
             optional: true,
-            inputProps: { placeholder: '<+secrets.getValue("project.access_token")>' }
+            inputProps: { placeholder: '<+secrets.getValue("project.access_token")>' },
+            tooltipId: tooltipIds.imageAccessToken
           },
           'spec.image.region': {
             label: 'regionLabel',
             hide: formik.values.spec.image?.type !== 'aws_ecr',
-            inputProps: { placeholder: 'us-east-1' }
+            inputProps: { placeholder: 'us-east-1' },
+            tooltipId: tooltipIds.imageRegion
           }
         }}
       />
@@ -391,21 +415,25 @@ export function SecurityInstanceFields(props: SecurityFieldsProps<SecurityStepDa
           },
           'spec.instance.domain': {
             label: 'secrets.winRmAuthFormFields.domain',
-            inputProps: { placeholder: 'app.harness.io' }
+            inputProps: { placeholder: 'app.harness.io' },
+            tooltipId: tooltipIds.instanceDomain
           },
           'spec.instance.protocol': {
             label: 'ce.common.protocol',
             fieldType: 'dropdown',
-            selectItems: instanceProtocolSelectItems
+            selectItems: instanceProtocolSelectItems,
+            tooltipId: tooltipIds.instanceProtocol
           },
           'spec.instance.port': {
             label: 'common.smtp.port',
             optional: true,
-            inputProps: { placeholder: '443' }
+            inputProps: { placeholder: '443' },
+            tooltipId: tooltipIds.instancePort
           },
           'spec.instance.path': {
             label: 'common.path',
-            optional: true
+            optional: true,
+            tooltipId: tooltipIds.instancePath
           }
         }}
       />

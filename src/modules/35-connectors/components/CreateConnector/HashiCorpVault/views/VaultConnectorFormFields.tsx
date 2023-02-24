@@ -99,7 +99,10 @@ const VaultConnectorFormFields: React.FC<VaultConnectorFormFieldsProps> = ({ for
         </>
       ) : formik?.values['accessType'] === HashiCorpVaultAccessTypes.AWS_IAM ? (
         <>
-          <SecretInput name="xvaultAwsIamServerId" label={getString('connectors.hashiCorpVault.serverIdHeader')} />
+          <SecretInput
+            name="xvaultAwsIamServerId"
+            label={getString('optionalField', { name: getString('connectors.hashiCorpVault.serverIdHeader') })}
+          />
           <FormInput.Text name="vaultAwsIamRole" label={getString('common.role')} />
           {loading ? (
             <Icon margin="medium" name="spinner" size={15} color={Color.BLUE_500} />

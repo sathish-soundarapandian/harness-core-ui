@@ -15,7 +15,6 @@ import { PageNames } from '@common/constants/TrackingConstants'
 import type { Module } from '@common/interfaces/RouteInterfaces'
 
 import SelectModuleList from './SelectModuleList'
-import bgImageUrl from './images/background.svg'
 import ribbon from './images/ribbon.svg'
 import ribbon_ff from './images/ribbon_ff.svg'
 import ribbon_ci from './images/ribbon_ci.svg'
@@ -34,9 +33,9 @@ interface ModuleProps {
 }
 
 const WelcomePage: React.FC = () => {
-  const HarnessLogo = HarnessIcons['harness-logo-white']
+  const HarnessLogo = HarnessIcons['harness-logo-black']
   const { getString } = useStrings()
-  const [ribbonImg, setRibbonImg] = useState<string>(ribbon)
+  const [ribbonImg, setRibbonImg] = useState<string>(ribbon_cd)
 
   const { CVNG_ENABLED, CING_ENABLED, CFNG_ENABLED, CENG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
   const CDNG_OPTIONS: ModuleProps = {
@@ -123,10 +122,10 @@ const WelcomePage: React.FC = () => {
 
   const body = (
     <Layout.Vertical width={'80vw'}>
-      <Heading color={Color.WHITE} font={{ size: 'large', weight: 'bold' }} padding={{ top: 'xxlarge' }}>
+      <Heading color={Color.BLACK} font={{ size: 'large', weight: 'bold' }} padding={{ top: 'xxlarge' }}>
         {getString('common.purpose.welcome')}
       </Heading>
-      <Text padding={{ top: 'small', bottom: 'xxxlarge' }} color={Color.WHITE}>
+      <Text padding={{ top: 'small', bottom: 'xxxlarge' }} color={Color.BLACK}>
         {getString('common.purpose.selectAModule')}
       </Text>
       <SelectModuleList
@@ -152,7 +151,7 @@ const WelcomePage: React.FC = () => {
       padding={{ left: 'xxxlarge', top: 'xxxlarge' }}
       flex={{ alignItems: 'start' }}
       style={{
-        backgroundImage: `url(${ribbonImg}), url(${bgImageUrl})`,
+        backgroundImage: `url(${ribbonImg})`,
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center',
         backgroundSize: 'cover , cover'

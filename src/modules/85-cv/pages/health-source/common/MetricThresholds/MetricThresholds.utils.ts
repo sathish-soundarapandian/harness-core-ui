@@ -459,7 +459,7 @@ export const getFilteredMetricThresholdValues = (
   thresholdType: AvailableThresholdTypes,
   metricPacks?: TimeSeriesMetricPackDTO[]
 ): MetricThresholdType[] => {
-  if (!metricPacks?.length) {
+  if (!metricPacks?.length || !Array.isArray(metricPacks)) {
     return []
   }
 
@@ -494,7 +494,7 @@ const getMetricThresholdsForPayload = (
   ignoreThresholds: MetricThresholdType[],
   failFastThresholds: MetricThresholdType[]
 ): MetricThreshold[] => {
-  if (!metricPacksIdentifier) {
+  if (!metricPacksIdentifier || !Array.isArray(ignoreThresholds) || !Array.isArray(failFastThresholds)) {
     return []
   }
 
@@ -503,31 +503,24 @@ const getMetricThresholdsForPayload = (
   return metricThresholds.filter(metricThreshold => metricThreshold.metricType === metricPacksIdentifier)
 }
 
-export const getMetricPacksForPayload = (
-  formData: any,
-  isMetricThresholdEnabled: boolean
-): TimeSeriesMetricPackDTO[] => {
+export const getMetricPacksForPayload = (formData: any): TimeSeriesMetricPackDTO[] => {
   const { metricData, ignoreThresholds, failFastThresholds } = formData
 
   const metricPacks = Object.entries(metricData).map(item => {
     return item[1] && item[0] !== MetricTypeValues.Custom
       ? {
           identifier: item[0] as string,
-          metricThresholds: isMetricThresholdEnabled
-            ? getMetricThresholdsForPayload(item[0], ignoreThresholds, failFastThresholds)
-            : undefined
+          metricThresholds: getMetricThresholdsForPayload(item[0], ignoreThresholds, failFastThresholds)
         }
       : {}
   })
 
   const filteredMetricPacks = metricPacks.filter(item => !isEmpty(item)) as TimeSeriesMetricPackDTO[]
 
-  if (isMetricThresholdEnabled) {
-    const customMetricThresholds = getMetricPacksOfCustomMetrics(ignoreThresholds, failFastThresholds)
+  const customMetricThresholds = getMetricPacksOfCustomMetrics(ignoreThresholds, failFastThresholds)
 
-    if (customMetricThresholds) {
-      filteredMetricPacks.push(customMetricThresholds)
-    }
+  if (customMetricThresholds) {
+    filteredMetricPacks.push(customMetricThresholds)
   }
 
   return filteredMetricPacks
@@ -666,11 +659,10 @@ const getAllAvailableMetricThresholds = (
 }
 
 const isAnyRequiredValueNotPresentForMetricPrompt = (
-  isMetricThresholdEnabled: boolean,
   metricThresholds: Record<ThresholdsPropertyNames, MetricThresholdType[]>,
   metricPackName: string
 ): boolean => {
-  return Boolean(isMetricThresholdEnabled && metricPackName && isMetricThresholdsPresent(metricThresholds))
+  return Boolean(metricPackName && isMetricThresholdsPresent(metricThresholds))
 }
 
 export const isGivenMetricPackContainsThresholds = (
@@ -700,15 +692,11 @@ export const isGivenMetricNameContainsThresholds = (
 }
 
 export const getIsRemovedMetricPackContainsMetricThresholds = (
-  isMetricThresholdEnabled: boolean,
   metricThresholds: Record<ThresholdsPropertyNames, MetricThresholdType[]>,
   metricPackName: string,
   isMetricPackAdded: boolean
 ): boolean => {
-  if (
-    isMetricPackAdded ||
-    !isAnyRequiredValueNotPresentForMetricPrompt(isMetricThresholdEnabled, metricThresholds, metricPackName)
-  ) {
+  if (isMetricPackAdded || !isAnyRequiredValueNotPresentForMetricPrompt(metricThresholds, metricPackName)) {
     return false
   }
 
@@ -716,11 +704,10 @@ export const getIsRemovedMetricPackContainsMetricThresholds = (
 }
 
 export const getIsRemovedMetricNameContainsMetricThresholds = (
-  isMetricThresholdEnabled: boolean,
   metricThresholds: Record<ThresholdsPropertyNames, MetricThresholdType[]>,
   metricName: string
 ): boolean => {
-  if (!isAnyRequiredValueNotPresentForMetricPrompt(isMetricThresholdEnabled, metricThresholds, metricName)) {
+  if (!isAnyRequiredValueNotPresentForMetricPrompt(metricThresholds, metricName)) {
     return false
   }
 
@@ -782,19 +769,14 @@ export const handleCriteriaPercentageUpdate = ({
 /**
  * Generates metric packs payload from metricData.
  */
-export const getMetricPacksForPayloadV2 = (
-  formData: any,
-  isMetricThresholdEnabled: boolean
-): TimeSeriesMetricPackDTO[] => {
+export const getMetricPacksForPayloadV2 = (formData: any): TimeSeriesMetricPackDTO[] => {
   const { metricData, ignoreThresholds, failFastThresholds } = formData
 
   const metricPacks = Object.entries(metricData).map(item => {
     return item[1] && item[0] !== MetricTypeValues.Custom
       ? {
           identifier: item[0] as string,
-          metricThresholds: isMetricThresholdEnabled
-            ? getMetricThresholdsForPayload(item[0], ignoreThresholds, failFastThresholds)
-            : []
+          metricThresholds: getMetricThresholdsForPayload(item[0], ignoreThresholds, failFastThresholds)
         }
       : {}
   })
@@ -806,20 +788,18 @@ export const getMetricPacksForPayloadV2 = (
 
 const isAllRequiredValuesPresentForPayload = ({
   metricName,
-  metricThresholds,
-  isMetricThresholdEnabled
+  metricThresholds
 }: MetricThresholdsForCustomMetricProps): boolean =>
-  Boolean(isMetricThresholdEnabled && metricName && Array.isArray(metricThresholds) && metricThresholds.length)
+  Boolean(metricName && Array.isArray(metricThresholds) && metricThresholds.length)
 
 /**
  * Generates metric thresholds payload for a custom metric
  */
 export const getMetricThresholdsForCustomMetric = ({
   metricName,
-  metricThresholds,
-  isMetricThresholdEnabled
+  metricThresholds
 }: MetricThresholdsForCustomMetricProps): Array<MetricThresholdType> => {
-  if (!isAllRequiredValuesPresentForPayload({ metricName, metricThresholds, isMetricThresholdEnabled })) {
+  if (!isAllRequiredValuesPresentForPayload({ metricName, metricThresholds })) {
     return []
   }
 
@@ -873,18 +853,16 @@ export const getFilteredMetricThresholdValuesV2 = (
  */
 export const getCanShowMetricThresholds = ({
   isMetricThresholdConfigEnabled,
-  isMetricThresholdEnabled,
   isMetricPacksEnabled,
   groupedCreatedMetrics,
   metricData
 }: {
   isMetricThresholdConfigEnabled: boolean
-  isMetricThresholdEnabled?: boolean
   isMetricPacksEnabled?: boolean
   groupedCreatedMetrics: GroupedCreatedMetrics
   metricData?: { [key: string]: boolean }
 }): boolean => {
-  if (!isMetricThresholdConfigEnabled || !isMetricThresholdEnabled || isEmpty(groupedCreatedMetrics)) {
+  if (!isMetricThresholdConfigEnabled || isEmpty(groupedCreatedMetrics)) {
     return false
   }
 

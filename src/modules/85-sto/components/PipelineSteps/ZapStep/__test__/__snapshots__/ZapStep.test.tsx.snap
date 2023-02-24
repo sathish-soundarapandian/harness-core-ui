@@ -201,11 +201,16 @@ exports[`Zap Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -304,11 +309,16 @@ exports[`Zap Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -415,11 +425,16 @@ exports[`Zap Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -512,11 +527,16 @@ exports[`Zap Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -582,11 +602,16 @@ exports[`Zap Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -661,12 +686,17 @@ exports[`Zap Step Edit View edit mode works 1`] = `
                 pipelineSteps.workspace
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepTargetWorkspace"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -742,11 +772,16 @@ exports[`Zap Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepInstanceDomain"
             >
-              secrets.winRmAuthFormFields.domain
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                secrets.winRmAuthFormFields.domain
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -813,11 +848,16 @@ exports[`Zap Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepInstanceProtocol"
             >
-              ce.common.protocol
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                ce.common.protocol
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -925,12 +965,17 @@ exports[`Zap Step Edit View edit mode works 1`] = `
                 common.smtp.port
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepInstancePort"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -1007,12 +1052,17 @@ exports[`Zap Step Edit View edit mode works 1`] = `
                 common.path
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepInstancePath"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -1096,12 +1146,17 @@ exports[`Zap Step Edit View edit mode works 1`] = `
                 sto.stepField.tool.context
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepToolContext"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -1177,12 +1232,17 @@ exports[`Zap Step Edit View edit mode works 1`] = `
                 common.smtp.port
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepToolPort"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -1262,12 +1322,17 @@ exports[`Zap Step Edit View edit mode works 1`] = `
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -1376,12 +1441,17 @@ exports[`Zap Step Edit View edit mode works 1`] = `
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -2107,11 +2177,16 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2210,11 +2285,16 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2321,11 +2401,16 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2418,11 +2503,16 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2528,11 +2618,16 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2641,11 +2736,16 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepIngestionFile"
             >
-              sto.stepField.ingestion.file
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.ingestion.file
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2759,11 +2859,16 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepInstanceDomain"
             >
-              secrets.winRmAuthFormFields.domain
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                secrets.winRmAuthFormFields.domain
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2830,11 +2935,16 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepInstanceProtocol"
             >
-              ce.common.protocol
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                ce.common.protocol
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2942,12 +3052,17 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
                 common.smtp.port
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepInstancePort"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -3024,12 +3139,17 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
                 common.path
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepInstancePath"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -3108,12 +3228,17 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -3229,12 +3354,17 @@ exports[`Zap Step Edit View renders runtime inputs - Ingestion Instance 1`] = `
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -3757,11 +3887,16 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3860,11 +3995,16 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3971,11 +4111,16 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -4068,11 +4213,16 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -4178,11 +4328,16 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -4297,12 +4452,17 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
                 pipelineSteps.workspace
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepTargetWorkspace"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -4417,11 +4577,16 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepInstanceDomain"
             >
-              secrets.winRmAuthFormFields.domain
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                secrets.winRmAuthFormFields.domain
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -4527,11 +4692,16 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepInstanceProtocol"
             >
-              ce.common.protocol
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                ce.common.protocol
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -4646,12 +4816,17 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
                 common.smtp.port
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepInstancePort"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -4767,12 +4942,17 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
                 common.path
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepInstancePath"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -4896,12 +5076,17 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
                 sto.stepField.tool.context
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepToolContext"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -4977,12 +5162,17 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
                 common.smtp.port
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepToolPort"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -5101,12 +5291,17 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -5222,12 +5417,17 @@ exports[`Zap Step Edit View renders runtime inputs - Orchestration instance 1`] 
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -5701,11 +5901,16 @@ exports[`Zap Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -5804,11 +6009,16 @@ exports[`Zap Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -5915,11 +6125,16 @@ exports[`Zap Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -6012,11 +6227,16 @@ exports[`Zap Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -6082,11 +6302,16 @@ exports[`Zap Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -6161,12 +6386,17 @@ exports[`Zap Step Edit View should render properly 1`] = `
                 pipelineSteps.workspace
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepTargetWorkspace"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -6242,11 +6472,16 @@ exports[`Zap Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepInstanceDomain"
             >
-              secrets.winRmAuthFormFields.domain
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                secrets.winRmAuthFormFields.domain
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -6313,11 +6548,16 @@ exports[`Zap Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepInstanceProtocol"
             >
-              ce.common.protocol
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                ce.common.protocol
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -6425,12 +6665,17 @@ exports[`Zap Step Edit View should render properly 1`] = `
                 common.smtp.port
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepInstancePort"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -6507,12 +6752,17 @@ exports[`Zap Step Edit View should render properly 1`] = `
                 common.path
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepInstancePath"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -6596,12 +6846,17 @@ exports[`Zap Step Edit View should render properly 1`] = `
                 sto.stepField.tool.context
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepToolContext"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -6677,12 +6932,17 @@ exports[`Zap Step Edit View should render properly 1`] = `
                 common.smtp.port
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepToolPort"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -6762,12 +7022,17 @@ exports[`Zap Step Edit View should render properly 1`] = `
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -6876,12 +7141,17 @@ exports[`Zap Step Edit View should render properly 1`] = `
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -7247,11 +7517,16 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7317,11 +7592,16 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7392,11 +7672,16 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7462,11 +7747,16 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7532,11 +7822,16 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetWorkspace"
             >
-              pipelineSteps.workspace
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                pipelineSteps.workspace
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7607,11 +7902,16 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepInstanceDomain"
             >
-              secrets.winRmAuthFormFields.domain
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                secrets.winRmAuthFormFields.domain
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7677,11 +7977,16 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepInstanceProtocol"
             >
-              ce.common.protocol
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                ce.common.protocol
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7747,11 +8052,16 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepInstancePort"
             >
-              common.smtp.port
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                common.smtp.port
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7817,11 +8127,16 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepInstancePath"
             >
-              common.path
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                common.path
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7892,11 +8207,16 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepToolContext"
             >
-              sto.stepField.tool.context
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.tool.context
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -7962,11 +8282,16 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepToolPort"
             >
-              common.smtp.port
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                common.smtp.port
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -8032,11 +8357,16 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepLogLevel"
             >
-              sto.stepField.advanced.logLevel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.advanced.logLevel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -8135,11 +8465,16 @@ exports[`Zap Step InputSet View should render all fields 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepLogSerializer"
             >
-              ce.common.protocol
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                ce.common.protocol
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >

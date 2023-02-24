@@ -9,6 +9,7 @@ import React, { useEffect } from 'react'
 import { defaultTo, get, memoize } from 'lodash-es'
 
 import {
+  ExpressionAndRuntimeTypeProps,
   FormInput,
   getMultiTypeFromValue,
   Layout,
@@ -33,7 +34,8 @@ import {
 } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { getScopeAppendedToIdentifier } from '@common/utils/StringUtils'
 import type { Scope } from '@common/interfaces/SecretsInterface'
-import ExperimentalInput from '../../K8sServiceSpecForms/ExperimentalInput'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -428,17 +430,19 @@ const Content = (props: ACRRenderContent): JSX.Element => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.subscriptionId`, template) && (
-            <ExperimentalInput
+            <SelectInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.subscriptionId`}
+              template={template}
               formik={formik}
               disabled={loadingSubscriptions || isFieldDisabled(`artifacts.${artifactPath}.spec.subscriptionId`)}
               multiTypeInputProps={{
                 onChange: /* istanbul ignore next */ (
-                  value: SelectOption,
+                  value: ExpressionAndRuntimeTypeProps['value'],
                   _typeValue: MultiTypeInputValue,
                   type: MultiTypeInputType
                 ) => {
                   resetTags(formik, `${path}.artifacts.${artifactPath}.spec.tag`)
-                  if (value?.value && type === MultiTypeInputType.FIXED) {
+                  if ((value as SelectOption)?.value && type === MultiTypeInputType.FIXED) {
                     const connectorRef = defaultTo(
                       get(formik?.values, `${path}.artifacts.${artifactPath}.spec.connectorRef`),
                       artifact?.spec?.connectorRef
@@ -487,18 +491,20 @@ const Content = (props: ACRRenderContent): JSX.Element => {
           )}
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.registry`, template) && (
-            <ExperimentalInput
+            <SelectInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.registry`}
+              template={template}
               formik={formik}
               disabled={loadingRegistries || isFieldDisabled(`artifacts.${artifactPath}.spec.registry`)}
               multiTypeInputProps={{
                 onChange: /* istanbul ignore next */ (
-                  value: SelectOption,
+                  value: ExpressionAndRuntimeTypeProps['value'],
                   _typeValue: MultiTypeInputValue,
                   type: MultiTypeInputType
                 ) => {
                   resetTags(formik.values, `${path}.artifacts.${artifactPath}.spec.tag`)
 
-                  if (value?.value && type === MultiTypeInputType.FIXED) {
+                  if ((value as SelectOption)?.value && type === MultiTypeInputType.FIXED) {
                     const connectorRef = defaultTo(
                       get(formik?.values, `${path}.artifacts.${artifactPath}.spec.connectorRef`),
                       artifact?.spec?.connectorRef
@@ -551,7 +557,9 @@ const Content = (props: ACRRenderContent): JSX.Element => {
           )}
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.repository`, template) && (
-            <ExperimentalInput
+            <SelectInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.repository`}
+              template={template}
               formik={formik}
               disabled={loadingRepositories || isFieldDisabled(`artifacts.${artifactPath}.spec.repository`)}
               multiTypeInputProps={{
@@ -610,7 +618,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
           )}
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.tagRegex`, template) && (
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.tagRegex`)}
               multiTextInputProps={{
                 expressions,
@@ -618,6 +626,8 @@ const Content = (props: ACRRenderContent): JSX.Element => {
               }}
               label={getString('tagRegex')}
               name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
+              fieldPath={`artifacts.${artifactPath}.spec.tagRegex`}
+              template={template}
             />
           )}
         </Layout.Vertical>

@@ -8,7 +8,7 @@
 import React from 'react'
 import { Formik, FormikProps } from 'formik'
 import * as Yup from 'yup'
-import { debounce } from 'lodash-es'
+import { debounce, isEqual, noop } from 'lodash-es'
 import type { StageElementWrapperConfig } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import FailureStrategyPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/FailureStrategyPanel'
@@ -16,7 +16,7 @@ import type { AllFailureStrategyConfig } from '@pipeline/components/PipelineStep
 import { getFailureStrategiesValidationSchema } from '@pipeline/components/PipelineSteps/AdvancedSteps/FailureStrategyPanel/validation'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import type { StageType } from '@pipeline/utils/stageHelpers'
-
+import { useDeepCompareEffect } from '@common/hooks'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import type { StepCommandsRef } from '../StepCommands/StepCommands'
 
@@ -32,13 +32,15 @@ export function FailureStrategy(props: FailureStrategyProps, ref: StepCommandsRe
   const { selectedStage, onUpdate, isReadonly, tabName } = props
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedUpdate = React.useCallback(debounce(onUpdate, 300), [onUpdate])
-  const formikRef = React.useRef<FormikProps<unknown> | null>(null)
+  const formikRef = React.useRef<FormikProps<{ failureStrategies: AllFailureStrategyConfig[] }> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
 
   React.useEffect(() => {
-    !!tabName && subscribeForm({ tab: tabName, form: formikRef })
+    !!tabName &&
+      subscribeForm({ tab: tabName, form: formikRef as unknown as React.MutableRefObject<FormikProps<unknown>> })
     return () => {
-      !!tabName && unSubscribeForm({ tab: tabName, form: formikRef })
+      !!tabName &&
+        unSubscribeForm({ tab: tabName, form: formikRef as unknown as React.MutableRefObject<FormikProps<unknown>> })
     }
   }, [subscribeForm, unSubscribeForm, tabName])
 
@@ -84,6 +86,14 @@ export function FailureStrategy(props: FailureStrategyProps, ref: StepCommandsRe
 
   const stageType = selectedStage?.stage?.type as StageType
 
+  useDeepCompareEffect(() => {
+    if (!isEqual(selectedStage?.stage?.failureStrategies, formikRef?.current?.values?.failureStrategies)) {
+      formikRef.current?.setValues({
+        failureStrategies: selectedStage?.stage?.failureStrategies as AllFailureStrategyConfig[]
+      })
+    }
+  }, [selectedStage?.stage?.failureStrategies])
+
   return (
     <Formik
       initialValues={{
@@ -92,12 +102,13 @@ export function FailureStrategy(props: FailureStrategyProps, ref: StepCommandsRe
       validationSchema={Yup.object().shape({
         failureStrategies: getFailureStrategiesValidationSchema(getString)
       })}
-      onSubmit={onUpdate}
+      onSubmit={noop}
       validate={debouncedUpdate}
     >
       {formik => {
         !!tabName && window.dispatchEvent(new CustomEvent('UPDATE_ERRORS_STRIP', { detail: tabName }))
-        formikRef.current = formik as FormikProps<unknown> | null
+        formikRef.current = formik
+
         return (
           <FailureStrategyPanel
             isReadonly={isReadonly}

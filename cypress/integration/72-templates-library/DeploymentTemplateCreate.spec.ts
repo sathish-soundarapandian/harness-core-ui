@@ -26,11 +26,6 @@ describe('Deployment Template creation and assertion', () => {
     '/ng/api/connectors/listV2?accountIdentifier=accountId&searchTerm=&projectIdentifier=project1&orgIdentifier=default&pageIndex=0&pageSize=10'
   const accountLicense = 'ng/api/licenses/account?routingId=accountId&accountIdentifier=accountId'
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.intercept('GET', accountLicense, { fixture: 'pipeline/api/approvals/accountLicense' })
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
@@ -113,8 +108,7 @@ describe('Deployment Template creation and assertion', () => {
     })
     cy.get('button[data-testid="addVariableSave"]').click()
     cy.contains('p', 'description').scrollIntoView().should('be.visible')
-    cy.contains('span', 'Select Connector').should('be.visible')
-    cy.contains('span', 'Select Connector').click()
+    cy.contains('span', 'Select').should('be.visible').click()
     cy.contains('span', 'New Connector').click()
 
     cy.contains('h2', 'Connectors').should('be.visible')

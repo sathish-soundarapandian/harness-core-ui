@@ -156,7 +156,6 @@ const ConnectorDetailsStep: React.FC<StepProps<ConnectorConfigDTO> & ConnectorDe
         {getString(getHeadingIdByType(props.type))}
       </Text>
       <ModalErrorHandler bind={setModalErrorHandler} style={{ maxWidth: '740px' }} />
-
       <Container className={css.connectorForm}>
         <Formik<DetailsForm>
           onSubmit={formData => {

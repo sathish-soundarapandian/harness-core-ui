@@ -139,12 +139,19 @@ describe('UpdateReleaseREpoInput tests', () => {
             type: RUNTIME_INPUT_VALUE,
             value: RUNTIME_INPUT_VALUE
           }
-        ]
+        ],
+        prTitle: RUNTIME_INPUT_VALUE
       }
+    }
+    const template = {
+      identifier: 'GitOpsUpdateReleaseRepo',
+      name: 'UpdateReleaseRepo',
+      timeout: RUNTIME_INPUT_VALUE
     }
     const { container } = render(
       <TestStepWidget
         initialValues={initialValues}
+        template={template}
         type={StepType.GitOpsUpdateReleaseRepo}
         stepViewType={StepViewType.InputSet}
       />

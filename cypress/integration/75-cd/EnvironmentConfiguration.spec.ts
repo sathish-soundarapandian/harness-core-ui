@@ -7,11 +7,6 @@ import {
 const accountLicense = 'ng/api/licenses/account?routingId=accountId&accountIdentifier=accountId'
 describe('EnvironmentsV2 Configuration Page', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', accountLicense, { fixture: 'pipeline/api/approvals/accountLicense' })
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
       cy.intercept('GET', featureFlagsCall, {

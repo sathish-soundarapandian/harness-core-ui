@@ -76,6 +76,9 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                             disabled: readonly,
                             placeholder: getString('cd.steps.commands.destinationPathPlaceholder')
                           }}
+                          configureOptionsProps={{
+                            isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
+                          }}
                           fieldPath={`spec.commandUnits[${i}].spec.destinationPath`}
                           template={template}
                         />
@@ -121,6 +124,7 @@ export function CommandListInputSet(props: CommandListInputSetProps): React.Reac
                           disabled={readonly}
                           allowedTypes={allowableTypes}
                           disableTypeSelection={readonly}
+                          enableConfigureOptions={true}
                           skipRenderValueInExpressionLabel
                           expressionRender={() => {
                             return (

@@ -348,11 +348,10 @@ export const updateResponseForFormik = (customMetrics?: CommonCustomMetricsType[
 }
 
 export const getFilteredMetricThresholds = ({
-  isMetricThresholdEnabled,
   customMetricNameToRemove,
   metricThresholdsToFilter
 }: FilterMetricThresholdsParamsType): MetricThresholdType[] => {
-  if (!isMetricThresholdEnabled || !Array.isArray(metricThresholdsToFilter)) {
+  if (!Array.isArray(metricThresholdsToFilter)) {
     return []
   }
 

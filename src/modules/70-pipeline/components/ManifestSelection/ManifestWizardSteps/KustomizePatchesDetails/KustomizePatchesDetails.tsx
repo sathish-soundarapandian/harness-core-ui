@@ -463,6 +463,7 @@ function KustomizePatchDetails({
                         ))}
                         <span>
                           <Button
+                            icon="plus"
                             text={getString('addFileText')}
                             variation={ButtonVariation.LINK}
                             className={css.addFileButton}

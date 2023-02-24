@@ -45,7 +45,21 @@ describe('Test DeploymentTemplate', () => {
   })
 
   test('call DeploymentTemplate.renderTemplateInputsForm', async () => {
-    const { getByText } = render(deploymentTemplate.renderTemplateInputsForm({ template: {}, accountId: 'accountId' }))
+    const { getByText } = render(
+      deploymentTemplate.renderTemplateInputsForm({
+        template: {},
+        accountId: 'accountId',
+        templateInputSetFetchParams: {
+          data: null,
+          refetch: jest.fn(),
+          error: null,
+          loading: false,
+          absolutePath: '',
+          cancel: jest.fn(),
+          response: null
+        }
+      })
+    )
     expect(getByText('Template inputs section')).toBeDefined()
   })
 })

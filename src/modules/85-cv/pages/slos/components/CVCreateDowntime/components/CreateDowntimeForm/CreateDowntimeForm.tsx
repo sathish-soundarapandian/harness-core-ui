@@ -12,8 +12,7 @@ import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { CVStepper } from '@cv/components/CVStepper/CVStepper'
-import { useGetDowntimeAssociatedMonitoredServices } from 'services/cv'
-import { getErrorMessage } from '@cv/utils/CommonUtils'
+import { useGetAssociatedMonitoredServices } from 'services/cv'
 import { CreateDowntimeFormInterface, CreateDowntimeSteps } from './CreateDowntimeForm.types'
 import { DowntimeForm, DowntimeFormFields } from '../../CVCreateDowntime.types'
 import DowntimeName from './components/DowntimeName/DowntimeName'
@@ -48,7 +47,7 @@ export const CreateDowntimeForm = ({
     loading: msListLoading,
     error: msListError,
     refetch: refetchMsList
-  } = useGetDowntimeAssociatedMonitoredServices({ ...queryParams, lazy: true })
+  } = useGetAssociatedMonitoredServices({ ...queryParams, lazy: true })
 
   useEffect(() => {
     if (identifier) {
@@ -94,7 +93,7 @@ export const CreateDowntimeForm = ({
                 msListData={msListData}
                 msListLoading={msListLoading}
                 refetchMsList={refetchMsList}
-                msListError={getErrorMessage(msListError)}
+                msListError={msListError}
                 isCreateFlow={isCreateFlow}
               />
             ),

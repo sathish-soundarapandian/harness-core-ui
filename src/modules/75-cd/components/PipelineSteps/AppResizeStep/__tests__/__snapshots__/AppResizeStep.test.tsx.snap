@@ -1375,7 +1375,7 @@ exports[`Test AppResizeStep should render input set view 1`] = `
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="formGroup"
+      class="formGroup md"
     >
       <div
         class="StyledProps--font StyledProps--main"
@@ -1495,7 +1495,7 @@ exports[`Test AppResizeStep should render input set view 1`] = `
       </div>
     </div>
     <div
-      class="formGroup"
+      class="formGroup md"
     >
       <div
         class="StyledProps--font StyledProps--main"
@@ -1643,7 +1643,7 @@ exports[`Test AppResizeStep should render input set with percentage and timeout 
     class="OverlaySpinner--overlaySpinner"
   >
     <div
-      class="formGroup sm"
+      class="formGroup md"
     >
       <div
         class="bp3-form-group"
@@ -1719,7 +1719,7 @@ exports[`Test AppResizeStep should render input set with percentage and timeout 
       </div>
     </div>
     <div
-      class="formGroup"
+      class="formGroup md"
     >
       <div
         class="StyledProps--font StyledProps--main"
@@ -1839,7 +1839,7 @@ exports[`Test AppResizeStep should render input set with percentage and timeout 
       </div>
     </div>
     <div
-      class="formGroup"
+      class="formGroup md"
     >
       <div
         class="StyledProps--font StyledProps--main"

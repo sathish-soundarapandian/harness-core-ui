@@ -8,26 +8,25 @@
 import React from 'react'
 import { Radio, RadioGroup } from '@blueprintjs/core'
 import cx from 'classnames'
-import type { FormikProps } from 'formik'
+import { useFormikContext } from 'formik'
+import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import { StepMode as Modes } from '@pipeline/utils/stepUtils'
-import {
-  ConditionalExecutionOption,
-  ModeEntityNameMap,
-  ParentModeEntityNameMap,
-  PipelineOrStageStatus
-} from './ConditionalExecutionPanelUtils'
+import { ModeEntityNameMap, ParentModeEntityNameMap, PipelineOrStageStatus } from './ConditionalExecutionPanelUtils'
 import css from './ConditionalExecutionPanel.module.scss'
 
 interface ConditionalExecutionStatusProps {
-  formikProps: FormikProps<ConditionalExecutionOption>
+  path?: string
   mode: Modes
   isReadonly: boolean
+  statusPath: 'pipelineStatus' | 'stageStatus'
 }
 
 export default function ConditionalExecutionStatus(props: ConditionalExecutionStatusProps): React.ReactElement {
+  const { mode, isReadonly, path = 'when', statusPath } = props
   const { getString } = useStrings()
-  const { formikProps, mode, isReadonly } = props
+  const formik = useFormikContext()
+  const statusValue = get(formik.values, `${path}.${statusPath}`, PipelineOrStageStatus.SUCCESS)
   const strVariables = {
     entity: ModeEntityNameMap[mode],
     parentEntity: ParentModeEntityNameMap[mode]
@@ -35,28 +34,28 @@ export default function ConditionalExecutionStatus(props: ConditionalExecutionSt
 
   return (
     <RadioGroup
-      selectedValue={formikProps.values.status}
+      selectedValue={statusValue}
       disabled={isReadonly}
       onChange={e => {
-        formikProps.setFieldValue('status', e.currentTarget.value)
+        formik.setFieldValue(`${path}.${statusPath}`, e.currentTarget.value)
       }}
     >
       <Radio
         value={PipelineOrStageStatus.SUCCESS}
         label={getString('pipeline.conditionalExecution.statusOption.success', strVariables)}
-        className={cx(css.blackText, { [css.active]: formikProps.values.status === PipelineOrStageStatus.SUCCESS })}
+        className={cx(css.blackText, { [css.active]: statusValue === PipelineOrStageStatus.SUCCESS })}
       />
       {mode === Modes.STAGE && <br />}
       <Radio
         value={PipelineOrStageStatus.ALL}
         label={getString('pipeline.conditionalExecution.statusOption.all', strVariables)}
-        className={cx(css.blackText, { [css.active]: formikProps.values.status === PipelineOrStageStatus.ALL })}
+        className={cx(css.blackText, { [css.active]: statusValue === PipelineOrStageStatus.ALL })}
       />
       {mode === Modes.STAGE && <br />}
       <Radio
         value={PipelineOrStageStatus.FAILURE}
         label={getString('pipeline.conditionalExecution.statusOption.failure', strVariables)}
-        className={cx(css.blackText, { [css.active]: formikProps.values.status === PipelineOrStageStatus.FAILURE })}
+        className={cx(css.blackText, { [css.active]: statusValue === PipelineOrStageStatus.FAILURE })}
       />
     </RadioGroup>
   )

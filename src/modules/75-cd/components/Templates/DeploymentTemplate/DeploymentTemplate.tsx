@@ -31,7 +31,10 @@ export class DeploymentTemplate extends Template {
   renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
     return <DeploymentTemplateCanvasWrapperWithRef ref={formikRef} />
   }
-  renderTemplateInputsForm({ template }: TemplateInputsProps & { accountId: string }): JSX.Element {
-    return <TemplateInputs template={template} />
+  renderTemplateInputsForm({
+    template,
+    templateInputSetFetchParams
+  }: TemplateInputsProps & { accountId: string }): JSX.Element {
+    return <TemplateInputs template={template} templateInputSetFetchParams={templateInputSetFetchParams} />
   }
 }

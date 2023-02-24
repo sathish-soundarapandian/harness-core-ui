@@ -28,7 +28,7 @@ import { get } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
+import { ManifestDataType, ManifestIdentifierValidation, ManifestStoreMap } from '../../Manifesthelper'
 import DragnDropPaths from '../../DragnDropPaths'
 import type { InheritFromManifestDataType, ManifestTypes } from '../../ManifestInterface'
 import { filePathWidth, removeEmptyFieldsFromStringArray } from '../ManifestUtils'
@@ -58,6 +58,7 @@ function InheritFromManifest({
   isReadonly
 }: StepProps<ConnectorConfigDTO> & InheritFromManifestPropType): React.ReactElement {
   const { getString } = useStrings()
+  const isOnlyFileTypeManifest = selectedManifest && [ManifestDataType.Values].includes(selectedManifest)
 
   const getInitialValues = (): InheritFromManifestDataType => {
     const specValues = get(initialValues, 'spec.store.spec', null)
@@ -162,8 +163,14 @@ function InheritFromManifest({
                       expressions={expressions}
                       allowableTypes={allowableTypes}
                       fieldPath="paths"
-                      pathLabel={getString('fileFolderPathText')}
-                      placeholder={getString('pipeline.manifestType.manifestPathPlaceholder')}
+                      pathLabel={
+                        isOnlyFileTypeManifest ? getString('common.git.filePath') : getString('fileFolderPathText')
+                      }
+                      placeholder={
+                        isOnlyFileTypeManifest
+                          ? getString('pipeline.manifestType.pathPlaceholder')
+                          : getString('pipeline.manifestType.manifestPathPlaceholder')
+                      }
                       defaultValue={{ path: '', uuid: uuid('', nameSpace()) }}
                       dragDropFieldWidth={filePathWidth}
                     />

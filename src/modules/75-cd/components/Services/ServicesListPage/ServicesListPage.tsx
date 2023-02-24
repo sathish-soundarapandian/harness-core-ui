@@ -219,7 +219,7 @@ export const ServicesListPage: React.FC = () => {
           margin={{ left: 'xlarge', right: 'xlarge', top: 'large', bottom: 'large' }}
           className={css.container}
         >
-          {serviceList && serviceList.data?.content?.length ? (
+          {(serviceList && serviceList.data?.content?.length) || loading ? (
             view === Views.GRID ? (
               <ServicesGridView
                 data={serviceList}

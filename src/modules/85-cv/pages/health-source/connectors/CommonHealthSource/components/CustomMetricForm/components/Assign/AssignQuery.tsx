@@ -21,7 +21,7 @@ export default function AssignQuery({
   riskProfileResponse,
   defaultServiceInstance
 }: AssignQueryProps): JSX.Element {
-  const { continuousVerification, healthScore, serviceInstance, riskCategory } = values
+  const { continuousVerification, healthScore, serviceInstanceField, riskCategory } = values
 
   return (
     <Container className={css.main}>
@@ -30,7 +30,9 @@ export default function AssignQuery({
         <Card className={css.riskProfile}>
           <RiskProfile
             continuousVerificationEnabled={continuousVerification && !hideServiceIdentifier}
-            serviceInstance={typeof serviceInstance === 'string' ? serviceInstance : (serviceInstance?.value as string)}
+            serviceInstanceField={
+              typeof serviceInstanceField === 'string' ? serviceInstanceField : (serviceInstanceField?.value as string)
+            }
             riskCategory={riskCategory}
             riskProfileResponse={riskProfileResponse}
             defaultServiceInstance={defaultServiceInstance}

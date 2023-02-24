@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useEffect, Suspense } from 'react'
+import React, { useEffect, Suspense, useRef } from 'react'
 
 import { useParams } from 'react-router-dom'
 import { RestfulProvider } from 'restful-react'
@@ -13,6 +13,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { FocusStyleManager } from '@blueprintjs/core'
 import { PageSpinner, useToaster, MULTI_TYPE_INPUT_MENU_LEARN_MORE_STORAGE_KEY } from '@harness/uicore'
 import { HELP_PANEL_STORAGE_KEY } from '@harness/help-panel'
+import { HarnessReactAPIClient as AuditServiceClient } from '@harnessio/react-audit-service-client'
 import { setAutoFreeze, enableMapSet } from 'immer'
 import SessionToken from 'framework/utils/SessionToken'
 import { queryClient } from 'services/queryClient'
@@ -79,6 +80,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
   // if user lands on /, they'll first get redirected to a path with accountId
   const { accountId } = useParams<AccountPathProps>()
   const { forceLogout } = useLogout()
+  const auditServiceClientObjRef = useRef<AuditServiceClient>()
 
   const getQueryParams = React.useCallback(() => {
     return {
@@ -110,6 +112,7 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
     if (refreshTokenResponse?.resource) {
       SecureStorage.set('token', refreshTokenResponse.resource)
       SecureStorage.set('lastTokenSetTime', Date.now())
+      updateHeadersForOpenApiClients({ token: refreshTokenResponse.resource })
     }
   }, [refreshTokenResponse])
 
@@ -177,6 +180,26 @@ export function AppWithAuthentication(props: AppProps): React.ReactElement {
       globalResponseHandler(detail.response)
     }
   })
+
+  const updateHeadersForOpenApiClients = (headers: Record<string, any>): void => {
+    auditServiceClientObjRef.current?.updateHeaders(headers)
+  }
+
+  useEffect(() => {
+    // Initializing open-api clients
+    auditServiceClientObjRef.current = new AuditServiceClient({
+      responseInterceptor: response => {
+        globalResponseHandler(response.clone())
+        return response
+      },
+      urlInterceptor: (url: string) => {
+        return window.getApiBaseUrl(url)
+      },
+      getRequestHeaders: () => {
+        return { token: SessionToken.getToken(), 'Harness-Account': accountId }
+      }
+    })
+  }, [accountId])
 
   return (
     <RestfulProvider

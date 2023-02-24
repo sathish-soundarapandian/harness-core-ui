@@ -41,7 +41,7 @@ import { stagesCollection } from '@pipeline/components/PipelineStudio/Stages/Sta
 import { PipelineGraphState, PipelineGraphType } from '@pipeline/components/PipelineDiagram/types'
 import { getConditionalExecutionFlag } from '@pipeline/components/ExecutionStageDiagram/ExecutionStageDiagramUtils'
 import { isApprovalStep } from './stepUtils'
-import { StageType } from './stageHelpers'
+import { PriorityByStageStatus, StageType } from './stageHelpers'
 
 export const LITE_ENGINE_TASK = 'liteEngineTask'
 export const STATIC_SERVICE_GROUP_NAME = 'static_service_group'
@@ -948,6 +948,15 @@ export const isNodeTypeMatrixOrFor = (nodeType?: string): boolean => {
   return [StageNodeType.Matrix, StageNodeType.Loop, StageNodeType.Parallelism].includes(nodeType as StageNodeType)
 }
 
+export const sortNodeIdsByStatus = (nodeIds: string[], layoutNodeMap: Record<string, GraphLayoutNode>): string[] => {
+  return [...nodeIds].sort((a, b) => {
+    const aNodePriority = PriorityByStageStatus[layoutNodeMap?.[a]?.status as ExecutionStatus] ?? 0
+    const bNodePriority = PriorityByStageStatus[layoutNodeMap?.[b]?.status as ExecutionStatus] ?? 0
+
+    return bNodePriority - aNodePriority
+  })
+}
+
 export function processLayoutNodeMapV1(executionSummary?: PipelineExecutionSummary): PipelineGraphState[] {
   const response: PipelineGraphState[] = []
   if (!executionSummary) {
@@ -1000,8 +1009,9 @@ export const processLayoutNodeMapInternal = (
       const currentNodeChildren: string[] | undefined = nodeDetails?.edgeLayoutList?.currentNodeChildren
       const nextIds: string[] | undefined = nodeDetails?.edgeLayoutList?.nextIds
       if (nodeDetails?.nodeType === StageNodeType.Parallel && currentNodeChildren && currentNodeChildren.length > 1) {
-        const firstParallelNode = layoutNodeMap[currentNodeChildren[0]]
-        const restChildNodes = currentNodeChildren.slice(1)
+        const sortedParallelNodeIds = sortNodeIdsByStatus(currentNodeChildren, layoutNodeMap)
+        const firstParallelNode = layoutNodeMap[sortedParallelNodeIds[0]]
+        const restChildNodes = sortedParallelNodeIds.slice(1)
         const parentNode = {
           id: firstParallelNode?.nodeUuid as string,
           identifier: firstParallelNode?.nodeIdentifier as string,

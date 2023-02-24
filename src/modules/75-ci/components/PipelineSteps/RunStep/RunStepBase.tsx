@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useCallback } from 'react'
 import cx from 'classnames'
 import {
   Text,
@@ -14,7 +14,8 @@ import {
   MultiTypeInputType,
   FormikForm,
   Accordion,
-  Container
+  Container,
+  SelectOption
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { FormikErrors, FormikProps } from 'formik'
@@ -24,9 +25,9 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
-import { ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
+import { ScriptType, ShellScriptMonacoField } from '@common/components/ShellScriptMonaco/ShellScriptMonaco'
 import { getImagePullPolicyOptions } from '@common/utils/ContainerRunStepUtils'
-import { getCIShellOptions } from '@ci/utils/CIShellOptionsUtils'
+import { getCIShellOptions, Shell } from '@ci/utils/CIShellOptionsUtils'
 import StepCommonFields from '@ci/components/PipelineSteps/StepCommonFields/StepCommonFields'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { MultiTypeSelectField } from '@common/components/MultiTypeSelect/MultiTypeSelect'
@@ -66,6 +67,19 @@ export const RunStepBase = (
   const buildInfrastructureType =
     (get(currentStage, 'stage.spec.infrastructure.type') as CIBuildInfrastructureType) ||
     (get(currentStage, 'stage.spec.runtime.type') as CIBuildInfrastructureType)
+
+  const getScriptTypeForShell = useCallback((formik: FormikProps<RunStepData>): ScriptType => {
+    const selectedShell = (formik.values.spec.shell as SelectOption).value as Shell
+    switch (selectedShell) {
+      case Shell.Pwsh:
+      case Shell.Powershell:
+        return 'PowerShell'
+      case Shell.Python:
+        return 'Python'
+      default:
+        return 'Bash'
+    }
+  }, [])
 
   return (
     <Formik
@@ -122,7 +136,7 @@ export const RunStepBase = (
       {(formik: FormikProps<RunStepData>) => {
         // This is required
         setFormikRef?.(formikRef, formik)
-
+        const scriptType = getScriptTypeForShell(formik)
         return (
           <FormikForm>
             <CIStep
@@ -190,7 +204,7 @@ export const RunStepBase = (
                     <ShellScriptMonacoField
                       title={getString('commandLabel')}
                       name="spec.command"
-                      scriptType="Bash"
+                      scriptType={scriptType}
                       expressions={expressions}
                       disabled={readonly}
                     />
@@ -202,7 +216,7 @@ export const RunStepBase = (
                 <ShellScriptMonacoField
                   title={getString('commandLabel')}
                   name="spec.command"
-                  scriptType="Bash"
+                  scriptType={scriptType}
                   disabled={readonly}
                   expressions={expressions}
                 />

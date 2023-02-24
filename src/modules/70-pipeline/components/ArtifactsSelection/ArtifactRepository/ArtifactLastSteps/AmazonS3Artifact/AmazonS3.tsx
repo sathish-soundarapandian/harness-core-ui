@@ -594,7 +594,9 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
 
                 {getMultiTypeFromValue(formik.values.region) === MultiTypeInputType.RUNTIME && (
                   <div className={css.configureOptions}>
-                    <ConfigureOptions
+                    <SelectConfigureOptions
+                      options={regions}
+                      loading={loadingRegions}
                       style={{ alignSelf: 'center' }}
                       value={formik.values?.region as string}
                       type="String"

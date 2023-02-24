@@ -5,7 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useCallback, useEffect, useMemo } from 'react'
+import { debounce, isEqual } from 'lodash-es'
 import { Container, FormInput, Layout, SelectOption, Utils, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { Color } from '@harness/design-system'
@@ -16,6 +17,10 @@ import { useToaster } from '@common/exports'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { FormConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/FormConnectorReferenceField'
+import {
+  renderSearchLoading,
+  setSearchPredicate
+} from '@cv/pages/health-source/connectors/DatadogMetricsHealthSource/components/DatadogMetricsDetailsContent/DatadogMetricsDetailsContent.utils'
 import type { UpdatedChangeSourceDTO } from '../../ChangeSourceDrawer.types'
 import style from './PagerDutyChangeSource.module.scss'
 
@@ -28,7 +33,9 @@ export default function PageDutyChangeSource({
 }): JSX.Element {
   const { getString } = useStrings()
   const { showError, clear } = useToaster()
-  const [query, setQuery] = useState<string>('')
+  const [isDefaultMetricSet, setIsDefaultMetricSet] = useState(false)
+  const [itemList, setItemList] = useState<SelectOption[]>([])
+  const [defaultMetric, setDefaultMetric] = useState<SelectOption[]>()
   const { orgIdentifier, projectIdentifier, accountId } = useParams<ProjectPathProps & { identifier: string }>()
 
   const {
@@ -48,12 +55,29 @@ export default function PageDutyChangeSource({
           projectIdentifier,
           accountId,
           connectorIdentifier: formik?.values?.spec?.connectorRef,
-          requestGuid: Utils.randomId(),
-          ...(query && { query })
+          requestGuid: Utils.randomId()
         }
       })
     }
-  }, [formik?.values?.spec?.connectorRef, query])
+  }, [formik?.values?.spec?.connectorRef])
+
+  const debounceFetchPagerDutyServices = useCallback(
+    debounce(
+      (query?: string) =>
+        fetchPagerDutyServices({
+          queryParams: {
+            orgIdentifier,
+            projectIdentifier,
+            accountId,
+            connectorIdentifier: formik?.values?.spec?.connectorRef,
+            requestGuid: Utils.randomId(),
+            ...(query && { query })
+          }
+        }),
+      1000
+    ),
+    [formik?.values?.spec?.connectorRef]
+  )
 
   if (pagerdutyServicesError) {
     clear()
@@ -71,6 +95,17 @@ export default function PageDutyChangeSource({
       }) || [],
     [pagerdutyServices?.resource]
   )
+
+  useEffect(() => {
+    if (!isDefaultMetricSet && pagerDutyServiceOptions.length) {
+      setIsDefaultMetricSet(true)
+      setDefaultMetric(pagerDutyServiceOptions)
+    }
+
+    if (!isEqual(itemList, pagerDutyServiceOptions)) {
+      setItemList(pagerDutyServiceOptions)
+    }
+  }, [pagerDutyServiceOptions])
 
   return (
     <Layout.Horizontal spacing={'xxlarge'}>
@@ -105,10 +140,19 @@ export default function PageDutyChangeSource({
                 : getString('cv.changeSource.PageDuty.selectPagerDutyService')
             }
             tooltipProps={{ dataTooltipId: 'pagerDutyService' }}
-            items={pagerDutyServiceOptions}
-            onQueryChange={(search: string) => setQuery(search)}
+            selectProps={{
+              whenPopoverClosed: () => defaultMetric && setItemList(defaultMetric),
+              itemListPredicate: search => setSearchPredicate(getString, search, itemList)
+            }}
+            items={itemList}
+            inputGroup={{ rightElement: renderSearchLoading(loadingPagerdutyServices) }}
+            onQueryChange={(search: string) => {
+              if (search) {
+                debounceFetchPagerDutyServices(search)
+              }
+            }}
           />
-          {!pagerDutyServiceOptions.length && !loadingPagerdutyServices && (
+          {!defaultMetric?.length && !loadingPagerdutyServices && (
             <Text font={'xsmall'} color={Color.ERROR}>
               {getString('cv.changeSource.PageDuty.pagerDutyEmptyService', {
                 connector: formik?.values?.spec?.connectorRef

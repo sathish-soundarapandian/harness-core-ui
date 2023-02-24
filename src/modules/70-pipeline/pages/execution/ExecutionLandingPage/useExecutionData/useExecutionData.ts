@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import { defaultTo, get, isEmpty } from 'lodash-es'
 import { unstable_batchedUpdates } from 'react-dom'
@@ -15,8 +22,6 @@ import {
 import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { getActiveStageForPipeline } from './getActiveStageForPipeline'
 import { getActiveStepForStage } from './getActiveStepForStage'
-
-// import { StageType } from '@pipeline/utils/stageHelpers'
 
 export interface UseExecutionDataReturn {
   data: ResponsePipelineExecutionDetail | null
@@ -78,8 +83,6 @@ export function useExecutionData(props: UseExecutionDataProps = {}): UseExecutio
   React.useEffect(() => {
     const { executionGraph, pipelineExecutionSummary, childGraph } = get(data, 'data', {} as PipelineExecutionDetail)
 
-    const status = get(pipelineExecutionSummary, 'status')
-
     // pick default values from query params
     let stageId = defaultTo(queryParams.stage, '')
     let stepId = defaultTo(queryParams.step, '')
@@ -95,8 +98,19 @@ export function useExecutionData(props: UseExecutionDataProps = {}): UseExecutio
     }
 
     // matrix stage selection
-    if (!queryParams.stageExecId && _executionId && !queryParams.collapsedNode) {
+    if (
+      !queryParams.stageExecId && // does not have stageExecId in query params
+      _executionId && // has _executionId
+      _stageId === stageId && // auto selected stage is same as current stage
+      !queryParams.collapsedNode //  does not have collapsedNode in query params
+    ) {
       executionId = _executionId
+    } else if (queryParams.stageExecId) {
+      const stageIdForExecution = get(pipelineExecutionSummary, ['layoutNodeMap', queryParams.stageExecId, 'nodeUuid'])
+
+      if (stageIdForExecution !== stageId) {
+        executionId = ''
+      }
     }
 
     // get stage from child pipeline if it exists
@@ -108,8 +122,14 @@ export function useExecutionData(props: UseExecutionDataProps = {}): UseExecutio
     // step selection
     if (!queryParams.step && !queryParams.collapsedNode) {
       stepId = childGraph
-        ? getActiveStepForStage(childGraph.executionGraph, childGraph.pipelineExecutionSummary?.status)
-        : getActiveStepForStage(executionGraph, status)
+        ? getActiveStepForStage(
+            childGraph.executionGraph,
+            get(childGraph.pipelineExecutionSummary, ['layoutNodeMap', childStageId, 'status'])
+          )
+        : getActiveStepForStage(
+            executionGraph,
+            get(pipelineExecutionSummary, ['layoutNodeMap', executionId || stageId, 'status'])
+          )
     }
 
     unstable_batchedUpdates(() => {

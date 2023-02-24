@@ -4,12 +4,6 @@ describe('RETRY FAILED PIPELINE', () => {
   const gitSyncCall =
     '/ng/api/git-sync/git-sync-enabled?accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
-
     cy.initializeRoute()
     cy.intercept('GET', gitSyncCall, { connectivityMode: null, gitSyncEnabled: false })
 

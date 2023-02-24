@@ -51,7 +51,11 @@
         const matches = window.location.href.match(/\/account\/(.+?)\//)
         return matches && matches.length > 1 ? `&routingId=${matches[1]}` : ''
       }
-      window.getApiBaseUrl = str => {
+      window.getApiBaseUrl = pathSuffix => {
+        let str = pathSuffix
+        if (str.startsWith('/')) {
+          str = str.substring(1)
+        }
         let url = window.apiUrl ? `${window.apiUrl}/${str}` : window.location.pathname.replace('ng/', '') + str
 
         if (window.browserRouterEnabled) {

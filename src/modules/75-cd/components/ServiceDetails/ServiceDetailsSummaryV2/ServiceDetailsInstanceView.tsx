@@ -27,7 +27,7 @@ import {
   useToaster
 } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import { useStrings } from 'framework/strings'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 import {
   GetActiveServiceInstanceDetailsGroupedByPipelineExecutionQueryParams,
   InstanceDetailGroupedByPipelineExecution,
@@ -44,7 +44,7 @@ import type {
 import { DialogEmptyState } from '@cd/components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetailSummary/EnvironmentDetailsUtils'
 import routes from '@common/RouteDefinitions'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
-import { CommonActiveInstanceData } from '../ActiveServiceInstances/ActiveServiceInstancePopover'
+import { commonActiveInstanceData } from '../ActiveServiceInstances/ActiveServiceInstancePopover'
 
 import css from './ServiceDetailsSummaryV2.module.scss'
 
@@ -67,6 +67,7 @@ interface PipelineExecInfoProps {
 
 interface ActiveInstanceInfoProp {
   instanceData: InstanceDetailsDTO
+  getString: UseStringsReturn['getString']
 }
 
 interface InstanceViewProp {
@@ -74,8 +75,8 @@ interface InstanceViewProp {
 }
 
 const ActiveInstanceInfo = (prop: ActiveInstanceInfoProp): React.ReactElement => {
-  const { instanceData } = prop
-  const sectionData = CommonActiveInstanceData(instanceData)
+  const { instanceData, getString } = prop
+  const sectionData = commonActiveInstanceData(instanceData, getString)
 
   return (
     <Layout.Vertical padding={{ top: 'medium' }}>
@@ -185,7 +186,7 @@ function InstanceView(prop: InstanceViewProp): React.ReactElement {
 
   return (
     <Layout.Horizontal className={css.instanceDetail}>
-      <Layout.Vertical className={css.overflowScroll}>
+      <Layout.Vertical className={css.overflowScrollPipelineIdList}>
         {pipelineDetailList.map(card => (
           <Card
             key={makeKey(card)}
@@ -239,10 +240,11 @@ function InstanceView(prop: InstanceViewProp): React.ReactElement {
               collapseHeaderClassName={css.collapseHeader}
               heading={<Text font={{ variation: FontVariation.SMALL }}>{`Instance - ${index + 1}`}</Text>} //todo text to decided later
               expandedHeading={<Text font={{ variation: FontVariation.SMALL }}>{`Instance - ${index + 1}`}</Text>}
+              isOpen={!index}
               collapsedIcon={'main-chevron-right'}
               expandedIcon={'main-chevron-down'}
             >
-              {<ActiveInstanceInfo instanceData={instance} />}
+              {<ActiveInstanceInfo instanceData={instance} getString={getString} />}
             </Collapse>
           ))}
         </div>
@@ -265,14 +267,14 @@ export default function ServiceDetailInstanceView(props: ServiceDetailInstanceVi
     serviceId,
     envId,
     environmentType,
-    artifact,
+    artifact: !isEmpty(artifact) ? artifact : undefined,
     clusterIdentifier,
     infraIdentifier
   }
 
   const { data, loading, error, refetch } = useGetActiveServiceInstanceDetailsGroupedByPipelineExecution({
     queryParams,
-    lazy: !(envId && artifact)
+    lazy: !envId
   })
 
   const instanceDetailData = data?.data?.instanceDetailGroupedByPipelineExecutionList

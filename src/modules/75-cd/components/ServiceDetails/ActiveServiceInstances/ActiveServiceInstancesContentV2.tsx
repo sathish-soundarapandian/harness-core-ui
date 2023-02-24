@@ -69,7 +69,7 @@ export const isClusterData = (data: InstanceGroupedByArtifactV2[]): boolean => {
 export const getFullTableData = (instanceGroupedByArtifactV2?: InstanceGroupedByArtifactV2[]): TableRowData[] => {
   const tableData: TableRowData[] = []
   instanceGroupedByArtifactV2?.forEach(artifact => {
-    if (artifact.artifactVersion && artifact.instanceGroupedByEnvironmentList) {
+    if (artifact.instanceGroupedByEnvironmentList) {
       const artifactVersion = artifact.artifactVersion
       let envShow = true
       artifact.instanceGroupedByEnvironmentList.forEach(env => {
@@ -147,7 +147,7 @@ export const getFullTableData = (instanceGroupedByArtifactV2?: InstanceGroupedBy
 export const getPreviewTableData = (instanceGroupedByArtifactV2?: InstanceGroupedByArtifactV2[]): TableRowData[] => {
   const tableData: TableRowData[] = []
   instanceGroupedByArtifactV2?.forEach(artifact => {
-    if (artifact.artifactVersion && artifact.instanceGroupedByEnvironmentList) {
+    if (artifact.instanceGroupedByEnvironmentList) {
       let envShow = true
       artifact.instanceGroupedByEnvironmentList?.forEach(env => {
         let totalInstancesPerEnv = 0
@@ -201,7 +201,7 @@ export const getSummaryTableData = (instanceGroupedByArtifactV2?: InstanceGroupe
   let totalInstances = 0
   let lastDeployedAt = 0
   instanceGroupedByArtifactV2?.forEach(artifact => {
-    if (artifact.artifactVersion && artifact.instanceGroupedByEnvironmentList) {
+    if (artifact.instanceGroupedByEnvironmentList) {
       artifactVersion ??= artifact.artifactVersion
       artifactPath ??= artifact.artifactPath
       artifact.instanceGroupedByEnvironmentList?.forEach(env => {
@@ -226,7 +226,7 @@ export const getSummaryTableData = (instanceGroupedByArtifactV2?: InstanceGroupe
       })
     }
   })
-  if (totalEnvs && artifactVersion) {
+  if (totalEnvs) {
     tableData.push({
       artifactVersion: artifactVersion,
       artifactPath: defaultTo(artifactPath, ''),
@@ -279,6 +279,7 @@ export const RenderArtifactVersion: Renderer<CellProps<TableRowData>> = ({
   return showArtifact ? (
     <Popover
       interactionKind="hover"
+      disabled={!artifactVersion}
       modifiers={{ preventOverflow: { escapeWithReference: true } }}
       position={Position.RIGHT}
     >
@@ -289,7 +290,7 @@ export const RenderArtifactVersion: Renderer<CellProps<TableRowData>> = ({
         tooltipProps={{ disabled: true }}
         color={Color.GREY_800}
       >
-        {artifactVersion}
+        {artifactVersion ? artifactVersion : '-'}
       </Text>
       {popoverTable}
     </Popover>
@@ -449,6 +450,7 @@ const RenderInstances: Renderer<CellProps<TableRowData>> = ({
               instanceNum={index}
               infraIdentifier={infraId}
               clusterId={clusterId}
+              isEnvDetail={true}
               pipelineExecutionId={pipelineExecutionId}
             />
           </Popover>

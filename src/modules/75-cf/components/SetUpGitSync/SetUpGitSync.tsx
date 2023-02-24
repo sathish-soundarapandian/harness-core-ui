@@ -6,52 +6,35 @@
  */
 
 import React, { useCallback, useState } from 'react'
-import { FontVariation, Color } from '@harness/design-system'
-import { Button, ButtonVariation, Heading, Layout, ModalDialog } from '@harness/uicore'
+import { useHistory, useParams } from 'react-router-dom'
 import GitSyncSetupButton from '@cf/components/GitSyncSetupButton/GitSyncSetupButton'
-import { useStrings } from 'framework/strings'
+import GitSyncSetupModal from '@cf/components/GitSyncSetupModal/GitSyncSetupModal'
+import routes from '@common/RouteDefinitions'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 
-const SetUpGitSync: React.FC = () => {
-  const { getString } = useStrings()
+export const SetUpGitSync: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
-
   const hideModal = useCallback(() => setIsOpen(false), [])
   const openModal = useCallback(() => setIsOpen(true), [])
 
-  const handleSave = useCallback((): void => {
-    hideModal()
-  }, [hideModal])
+  const { accountId, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
+  const history = useHistory()
 
-  const handleCancel = useCallback((): void => {
-    hideModal()
-  }, [hideModal])
+  const GIT_EX_ENABLED = useFeatureFlag(FeatureFlag.FF_FLAG_SYNC_THROUGH_GITEX_ENABLED)
 
   return (
     <>
-      <ModalDialog
-        isOpen={isOpen}
-        enforceFocus={false}
-        title={
-          <Heading level={4} font={{ variation: FontVariation.H4 }} color={Color.GREY_800}>
-            {getString('cf.gitSync.setUpGitConnection')}
-          </Heading>
-        }
-        footer={
-          <Layout.Horizontal spacing="small">
-            <Button
-              variation={ButtonVariation.PRIMARY}
-              text={getString('save')}
-              intent="primary"
-              onClick={handleSave}
-            />
-            <Button variation={ButtonVariation.TERTIARY} text={getString('cancel')} onClick={handleCancel} />
-          </Layout.Horizontal>
-        }
-        onClose={hideModal}
-      >
-        <div>Modal content</div>
-      </ModalDialog>
-      <GitSyncSetupButton showModal={openModal} />
+      {GIT_EX_ENABLED && isOpen && <GitSyncSetupModal hideModal={hideModal} />}
+      <GitSyncSetupButton
+        onClick={() => {
+          if (GIT_EX_ENABLED) {
+            openModal()
+          } else {
+            history.push(routes.toGitSyncAdmin({ accountId, orgIdentifier, projectIdentifier, module: 'cf' }))
+          }
+        }}
+      />
     </>
   )
 }

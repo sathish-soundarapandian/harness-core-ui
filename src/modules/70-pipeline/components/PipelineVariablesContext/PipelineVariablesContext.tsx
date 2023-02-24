@@ -156,7 +156,8 @@ export function PipelineVariablesContextProvider(
     body: yamlStringify({ pipeline: originalPipeline }) as unknown as void,
     requestOptions: {
       headers: {
-        'content-type': 'application/yaml'
+        'content-type': 'application/yaml',
+        ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {})
       }
     },
     queryParams: {

@@ -7,28 +7,18 @@
 
 import React from 'react'
 import { Button, ButtonVariation, Layout } from '@harness/uicore'
-import { useHistory, useParams } from 'react-router-dom'
-import routes from '@common/RouteDefinitions'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useStrings } from 'framework/strings'
 import ServicesGithubIcon from '@cf/images/icons/ServicesGithubIcon'
 
 export interface GitSyncSetupButtonProps {
-  showModal?: () => void
+  onClick?: () => void
 }
 
-const GitSyncSetupButton: React.FC<GitSyncSetupButtonProps> = ({ showModal }) => {
+const GitSyncSetupButton: React.FC<GitSyncSetupButtonProps> = ({ onClick }) => {
   const { getString } = useStrings()
-
-  const { accountId, orgIdentifier, projectIdentifier } = useParams<Record<string, string>>()
-  const history = useHistory()
-
-  const GIT_EX_ENABLED = useFeatureFlag(FeatureFlag.FFM_5332_GIT_EX_ENABLED)
 
   return (
     <Button
-      data-testid="gitSyncSetupRedirect"
       variation={ButtonVariation.TERTIARY}
       text={
         <Layout.Horizontal flex={{ justifyContent: 'space-between' }} spacing="small">
@@ -36,13 +26,7 @@ const GitSyncSetupButton: React.FC<GitSyncSetupButtonProps> = ({ showModal }) =>
           <span>{getString('cf.featureFlags.setupGitSync')}</span>
         </Layout.Horizontal>
       }
-      onClick={() => {
-        if (GIT_EX_ENABLED && showModal) {
-          showModal()
-        } else {
-          history.push(routes.toGitSyncAdmin({ accountId, orgIdentifier, projectIdentifier, module: 'cf' }))
-        }
-      }}
+      onClick={onClick}
     />
   )
 }

@@ -150,6 +150,19 @@ describe('useString tests', () => {
         'No valid template with id "harnes" found in any namespace'
       )
     })
+
+    test('getString should be memoized', () => {
+      const wrapper = ({ children }: React.PropsWithChildren<unknown>): React.ReactElement => (
+        <StringsContext.Provider value={value as any}>{children}</StringsContext.Provider>
+      )
+      const { result, rerender } = renderHook(useStrings, { wrapper })
+      const prevGetString = result.current
+
+      rerender()
+      const nextGetString = result.current
+
+      expect(prevGetString).toEqual(nextGetString)
+    })
   })
 
   test('Works with custom getString', () => {

@@ -10,3 +10,125 @@
   padding-left: 80px !important;
   font-weight: bold !important;
 }
+
+.configField {
+  display: flex;
+  justify-content: space-between;
+  width: 100% !important;
+  height: 32px;
+  background: var(--grey-0);
+  border: 1px solid rgb(228, 228, 235);
+  align-items: center;
+  padding: 10px;
+  margin-top: 10px !important;
+}
+
+.configPlaceHolder {
+  color: var(--primary-7) !important;
+}
+
+.configPlaceHolder:hover {
+  text-decoration: none;
+}
+
+.configFile {
+  display: flex;
+  align-items: center;
+}
+
+.configLabel {
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: var(--grey-900) !important;
+}
+.configFileLabel {
+  color: var(--grey-1000);
+  font-weight: 500;
+  font-size: 12px;
+  margin-top: 10px !important;
+}
+
+.configWizard {
+  width: 100%;
+
+  [class*='stepName'] {
+    word-break: break-word;
+  }
+  [class*='stepDetails'] {
+    background-color: var(--white) !important;
+  }
+  [class*='navBarList'] {
+    grid-template-rows: repeat(auto-fill, var(--spacing-xxxlarge)) !important;
+  }
+
+  div[class*='nestedStep']:nth-of-type(2) {
+    margin-top: var(--spacing-medium) !important;
+  }
+}
+
+.divider {
+  width: 100%;
+  margin-top: var(--spacing-3);
+  margin-bottom: var(--spacing-5);
+  border-top: 0.5px solid var(--grey-200);
+}
+
+.addMarginTop {
+  margin-top: var(--spacing-medium) !important;
+}
+
+.addMarginBottom {
+  margin-bottom: var(--spacing-medium) !important;
+}
+
+.optionalConfigDetails {
+  margin: 0px 6px;
+  margin-top: 4px;
+}
+
+.editBtn {
+  min-width: 24px !important;
+  width: 24px !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.fileSelect {
+  position: absolute;
+  right: 35px;
+}
+
+.fileDropdown {
+  border: none;
+  background-color: unset;
+  font-size: var(--font-size-normal);
+  font-weight: 400 !important;
+  color: var(--grey-900) !important;
+}
+
+.crossIcon {
+  position: absolute;
+  right: var(--spacing-large);
+  top: var(--spacing-large);
+}
+
+.modal {
+  [class*='bp3-dialog-header'] button {
+    z-index: 2;
+  }
+}
+
+.createTfWizard {
+  flex-grow: 1;
+  display: flex;
+}
+
+.radioBtns {
+  > div > div > label {
+    color: var(--grey-1000);
+    font-size: 13px;
+  }
+}

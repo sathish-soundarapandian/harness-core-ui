@@ -138,7 +138,206 @@ export type ConnectorFilterProperties = FilterProperties & {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'TerraformCloud'
   )[]
+}
+
+export interface EntityDetail {
+  entityRef?: EntityReference
+  name?: string
+  type?:
+    | 'CreatePR'
+    | 'GITOPS_MERGE_PR'
+    | 'Projects'
+    | 'Pipelines'
+    | 'PipelineSteps'
+    | 'Http'
+    | 'Email'
+    | 'JiraCreate'
+    | 'JiraUpdate'
+    | 'JiraApproval'
+    | 'HarnessApproval'
+    | 'CustomApproval'
+    | 'Barrier'
+    | 'Queue'
+    | 'FlagConfiguration'
+    | 'ShellScript'
+    | 'K8sCanaryDeploy'
+    | 'K8sApply'
+    | 'K8sBlueGreenDeploy'
+    | 'K8sRollingDeploy'
+    | 'K8sRollingRollback'
+    | 'K8sScale'
+    | 'K8sDelete'
+    | 'K8sBGSwapServices'
+    | 'K8sCanaryDelete'
+    | 'TerraformApply'
+    | 'TerraformPlan'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
+    | 'HelmDeploy'
+    | 'HelmRollback'
+    | 'Connectors'
+    | 'Secrets'
+    | 'Files'
+    | 'Service'
+    | 'Environment'
+    | 'EnvironmentGroup'
+    | 'InputSets'
+    | 'CvConfig'
+    | 'Verify'
+    | 'Delegates'
+    | 'DelegateConfigurations'
+    | 'CvVerificationJob'
+    | 'IntegrationStage'
+    | 'IntegrationSteps'
+    | 'SecurityStage'
+    | 'SecuritySteps'
+    | 'CvKubernetesActivitySource'
+    | 'DeploymentSteps'
+    | 'DeploymentStage'
+    | 'ApprovalStage'
+    | 'PipelineStage'
+    | 'FeatureFlagStage'
+    | 'Template'
+    | 'TemplateStage'
+    | 'CustomDeployment'
+    | 'Triggers'
+    | 'MonitoredService'
+    | 'GitRepositories'
+    | 'FeatureFlags'
+    | 'ServiceNowApproval'
+    | 'ServiceNowCreate'
+    | 'ServiceNowUpdate'
+    | 'ServiceNowImportSet'
+    | 'GovernancePolicies'
+    | 'POLICY_STEP'
+    | 'Run'
+    | 'RunTests'
+    | 'Plugin'
+    | 'RestoreCacheGCS'
+    | 'RestoreCacheS3'
+    | 'SaveCacheGCS'
+    | 'SaveCacheS3'
+    | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
+    | 'GitClone'
+    | 'ArtifactoryUpload'
+    | 'GCSUpload'
+    | 'S3Upload'
+    | 'BuildAndPushGCR'
+    | 'BuildAndPushECR'
+    | 'BuildAndPushDockerRegistry'
+    | 'CreateStack'
+    | 'DeleteStack'
+    | 'ServerlessAwsLambdaDeploy'
+    | 'ServerlessAwsLambdaRollback'
+    | 'CustomStage'
+    | 'RollbackStack'
+    | 'Infrastructure'
+    | 'Command'
+    | 'StrategyNode'
+    | 'AZURE_SLOT_DEPLOYMENT_STEP'
+    | 'AzureTrafficShift'
+    | 'FetchInstanceScript'
+    | 'AzureSwapSlot'
+    | 'AzureWebAppRollback'
+    | 'JenkinsBuild'
+    | 'EcsRollingDeploy'
+    | 'EcsRollingRollback'
+    | 'EcsCanaryDeploy'
+    | 'EcsCanaryDelete'
+    | 'AzureCreateARMResource'
+    | 'BuildAndPushACR'
+    | 'AzureCreateBPResource'
+    | 'AzureARMRollback'
+    | 'Background'
+    | 'Wait'
+    | 'ArtifactSource'
+    | 'EcsBlueGreenCreateService'
+    | 'EcsBlueGreenSwapTargetGroups'
+    | 'EcsBlueGreenRollback'
+    | 'ShellScriptProvision'
+    | 'Freeze'
+    | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
+    | 'EcsRunTask'
+    | 'Chaos'
+    | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
+    | 'IACM'
+    | 'IACM'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
+    | 'AsgCanaryDeploy'
+    | 'AsgCanaryDelete'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
+    | 'DeployCloudFunction'
+    | 'DeployCloudFunctionWithNoTraffic'
+    | 'CloudFunctionTrafficShift'
+    | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
 }
 
 export interface EntityDetailProtoDTO {
@@ -155,6 +354,37 @@ export interface EntityGitDetails {
   repoName?: string
   repoUrl?: string
   rootFolder?: string
+}
+
+export interface EntityReference {
+  accountIdentifier?: string
+  branch?: string
+  default?: boolean
+  identifier?: string
+  metadata?: {
+    [key: string]: string
+  }
+  orgIdentifier?: string
+  projectIdentifier?: string
+  repoIdentifier?: string
+}
+
+export type EntityReferredByInfraSetupUsageDetail = SetupUsageDetail & {
+  environmentIdentifier?: string
+  environmentName?: string
+}
+
+export type EntityReferredByPipelineSetupUsageDetail = SetupUsageDetail & {
+  identifier?: string
+  referenceType?: string
+}
+
+export interface EntitySetupUsageDTO {
+  accountIdentifier?: string
+  createdAt?: number
+  detail?: SetupUsageDetail
+  referredByEntity: EntityDetail
+  referredEntity?: EntityDetail
 }
 
 export interface EntityValidityDetails {
@@ -474,6 +704,7 @@ export interface Error {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -520,6 +751,8 @@ export interface Error {
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -835,6 +1068,7 @@ export interface ErrorMetadata {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -881,6 +1115,8 @@ export interface ErrorMetadata {
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
   errorMessage?: string
 }
 
@@ -1202,6 +1438,7 @@ export interface Failure {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -1248,6 +1485,8 @@ export interface Failure {
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1292,6 +1531,12 @@ export type GitErrorMetadataDTO = ErrorMetadataDTO & {
   branch?: string
 }
 
+export type IdentifierRef = EntityReference & {
+  fullyQualifiedScopeIdentifier?: string
+  isDefault?: boolean
+  scope?: 'account' | 'org' | 'project' | 'unknown'
+}
+
 export interface InputSetError {
   fieldName?: string
   identifierOfErrorSource?: string
@@ -1308,6 +1553,11 @@ export type InputSetErrorWrapper = ErrorMetadataDTO & {
   uuidToErrorResponseMap?: {
     [key: string]: InputSetErrorResponse
   }
+}
+
+export type InputSetReference = EntityReference & {
+  isDefault?: boolean
+  pipelineIdentifier?: string
 }
 
 export type InvalidFieldsDTO = ErrorMetadataDTO & {}
@@ -1347,6 +1597,12 @@ export interface NGTemplateInfoConfig {
     | 'StepGroup'
   variables?: NGVariable[]
   versionLabel: string
+}
+
+export type NGTemplateReference = EntityReference & {
+  isDefault?: boolean
+  scope?: 'account' | 'org' | 'project' | 'unknown'
+  versionLabel?: string
 }
 
 export interface NGVariable {
@@ -1394,6 +1650,16 @@ export interface Page {
   size?: number
   sort?: Sort
   totalElements?: number
+  totalPages?: number
+}
+
+export interface PageEntitySetupUsageDTO {
+  content?: EntitySetupUsageDTO[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
   totalPages?: number
 }
 
@@ -1490,6 +1756,7 @@ export interface ResourceDTO {
     | 'DELEGATE_GROUPS'
     | 'SERVICE'
     | 'ENVIRONMENT'
+    | 'ENVIRONMENT_GROUP'
     | 'DELEGATE'
     | 'SERVICE_ACCOUNT'
     | 'CONNECTOR'
@@ -1877,6 +2144,7 @@ export interface ResponseMessage {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -1923,6 +2191,8 @@ export interface ResponseMessage {
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -1936,6 +2206,7 @@ export interface ResponseMessage {
     | 'POLICY_EVALUATION_FAILURE'
     | 'INPUT_TIMEOUT_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'DELEGATE_RESTART'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -1944,6 +2215,13 @@ export interface ResponseMessage {
 export interface ResponseNGTemplateConfig {
   correlationId?: string
   data?: NGTemplateConfig
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponsePageEntitySetupUsageDTO {
+  correlationId?: string
+  data?: PageEntitySetupUsageDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2000,6 +2278,13 @@ export interface ResponseTemplateListRepoResponse {
 export interface ResponseTemplateMergeResponse {
   correlationId?: string
   data?: TemplateMergeResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseTemplateMoveConfigResponse {
+  correlationId?: string
+  data?: TemplateMoveConfigResponse
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2070,9 +2355,17 @@ export type SecretNGVariable = NGVariable & {
   value: string
 }
 
+export type SecretReferredByConnectorSetupUsageDetail = SetupUsageDetail & {
+  fieldName?: string
+}
+
 export interface ServiceExpressionProperties {
   expression?: string
   serviceName?: string
+}
+
+export interface SetupUsageDetail {
+  [key: string]: any
 }
 
 export interface Sort {
@@ -2224,6 +2517,11 @@ export interface TemplateMetadataSummaryResponse {
     | 'StepGroup'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
+  versionLabel?: string
+}
+
+export interface TemplateMoveConfigResponse {
+  templateIdentifier?: string
   versionLabel?: string
 }
 
@@ -3314,6 +3612,80 @@ export const dummyApiForSwaggerSchemaCheckPromise = (
     signal
   )
 
+export interface ListTemplateUsageQueryParams {
+  pageIndex?: number
+  pageSize?: number
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  versionLabel?: string
+  isStableTemplate?: boolean
+  searchTerm?: string
+}
+
+export interface ListTemplateUsagePathParams {
+  templateIdentifier: string
+}
+
+export type ListTemplateUsageProps = Omit<
+  GetProps<ResponsePageEntitySetupUsageDTO, Failure | Error, ListTemplateUsageQueryParams, ListTemplateUsagePathParams>,
+  'path'
+> &
+  ListTemplateUsagePathParams
+
+/**
+ * Get Entities referring this template
+ */
+export const ListTemplateUsage = ({ templateIdentifier, ...props }: ListTemplateUsageProps) => (
+  <Get<ResponsePageEntitySetupUsageDTO, Failure | Error, ListTemplateUsageQueryParams, ListTemplateUsagePathParams>
+    path={`/templates/entitySetupUsage/${templateIdentifier}`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseListTemplateUsageProps = Omit<
+  UseGetProps<
+    ResponsePageEntitySetupUsageDTO,
+    Failure | Error,
+    ListTemplateUsageQueryParams,
+    ListTemplateUsagePathParams
+  >,
+  'path'
+> &
+  ListTemplateUsagePathParams
+
+/**
+ * Get Entities referring this template
+ */
+export const useListTemplateUsage = ({ templateIdentifier, ...props }: UseListTemplateUsageProps) =>
+  useGet<ResponsePageEntitySetupUsageDTO, Failure | Error, ListTemplateUsageQueryParams, ListTemplateUsagePathParams>(
+    (paramsInPath: ListTemplateUsagePathParams) => `/templates/entitySetupUsage/${paramsInPath.templateIdentifier}`,
+    { base: getConfig('template/api'), pathParams: { templateIdentifier }, ...props }
+  )
+
+/**
+ * Get Entities referring this template
+ */
+export const listTemplateUsagePromise = (
+  {
+    templateIdentifier,
+    ...props
+  }: GetUsingFetchProps<
+    ResponsePageEntitySetupUsageDTO,
+    Failure | Error,
+    ListTemplateUsageQueryParams,
+    ListTemplateUsagePathParams
+  > & { templateIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponsePageEntitySetupUsageDTO,
+    Failure | Error,
+    ListTemplateUsageQueryParams,
+    ListTemplateUsagePathParams
+  >(getConfig('template/api'), `/templates/entitySetupUsage/${templateIdentifier}`, props, signal)
+
 export interface ImportTemplateQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
@@ -3721,6 +4093,107 @@ export const getsMergedTemplateInputYamlPromise = (
     TemplateRetainVariablesRequestDTO,
     void
   >('POST', getConfig('template/api'), `/templates/mergeTemplateInputs`, props, signal)
+
+export interface MoveTemplateConfigsQueryParams {
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  connectorRef?: string
+  repoName?: string
+  branch?: string
+  filePath?: string
+  commitMsg?: string
+  isNewBranch?: boolean
+  baseBranch?: string
+  moveConfigType?: 'INLINE_TO_REMOTE'
+  versionLabel: string
+}
+
+export interface MoveTemplateConfigsPathParams {
+  templateIdentifier: string
+}
+
+export type MoveTemplateConfigsProps = Omit<
+  MutateProps<
+    ResponseTemplateMoveConfigResponse,
+    Failure | Error,
+    MoveTemplateConfigsQueryParams,
+    void,
+    MoveTemplateConfigsPathParams
+  >,
+  'path' | 'verb'
+> &
+  MoveTemplateConfigsPathParams
+
+/**
+ * Move Template YAML from inline to remote
+ */
+export const MoveTemplateConfigs = ({ templateIdentifier, ...props }: MoveTemplateConfigsProps) => (
+  <Mutate<
+    ResponseTemplateMoveConfigResponse,
+    Failure | Error,
+    MoveTemplateConfigsQueryParams,
+    void,
+    MoveTemplateConfigsPathParams
+  >
+    verb="POST"
+    path={`/templates/move-config/${templateIdentifier}`}
+    base={getConfig('template/api')}
+    {...props}
+  />
+)
+
+export type UseMoveTemplateConfigsProps = Omit<
+  UseMutateProps<
+    ResponseTemplateMoveConfigResponse,
+    Failure | Error,
+    MoveTemplateConfigsQueryParams,
+    void,
+    MoveTemplateConfigsPathParams
+  >,
+  'path' | 'verb'
+> &
+  MoveTemplateConfigsPathParams
+
+/**
+ * Move Template YAML from inline to remote
+ */
+export const useMoveTemplateConfigs = ({ templateIdentifier, ...props }: UseMoveTemplateConfigsProps) =>
+  useMutate<
+    ResponseTemplateMoveConfigResponse,
+    Failure | Error,
+    MoveTemplateConfigsQueryParams,
+    void,
+    MoveTemplateConfigsPathParams
+  >(
+    'POST',
+    (paramsInPath: MoveTemplateConfigsPathParams) => `/templates/move-config/${paramsInPath.templateIdentifier}`,
+    { base: getConfig('template/api'), pathParams: { templateIdentifier }, ...props }
+  )
+
+/**
+ * Move Template YAML from inline to remote
+ */
+export const moveTemplateConfigsPromise = (
+  {
+    templateIdentifier,
+    ...props
+  }: MutateUsingFetchProps<
+    ResponseTemplateMoveConfigResponse,
+    Failure | Error,
+    MoveTemplateConfigsQueryParams,
+    void,
+    MoveTemplateConfigsPathParams
+  > & { templateIdentifier: string },
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseTemplateMoveConfigResponse,
+    Failure | Error,
+    MoveTemplateConfigsQueryParams,
+    void,
+    MoveTemplateConfigsPathParams
+  >('POST', getConfig('template/api'), `/templates/move-config/${templateIdentifier}`, props, signal)
 
 export interface GetTemplateSchemaQueryParams {
   templateEntityType:

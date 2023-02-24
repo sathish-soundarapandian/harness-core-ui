@@ -195,7 +195,7 @@ export function CustomVariablesEditableStage(props: CustomVariableEditableProps)
                             <FormMultiTypeConnectorField
                               name={`variables[${index}].value`}
                               label=""
-                              placeholder={getString('connectors.selectConnector')}
+                              placeholder={getString('common.entityPlaceholderText')}
                               disabled={readonly}
                               accountIdentifier={accountId}
                               multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}

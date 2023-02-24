@@ -127,7 +127,7 @@ describe('Test MonitoredTemplateCanvasWithRef', () => {
         fill: '#E4F7E1',
         stroke: '#D4E7D1'
       },
-      isRemoteEnabled: false
+      isRemoteEnabled: true
     })
   })
 

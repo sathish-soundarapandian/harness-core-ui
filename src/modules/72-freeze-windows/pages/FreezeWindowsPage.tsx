@@ -157,7 +157,7 @@ function _FreezeWindowsPage(): React.ReactElement {
       <Page.Body
         loading={freezeListLoading}
         error={error?.message}
-        retryOnError={refetch}
+        retryOnError={() => refetch()}
         noData={{
           when: () => !pageFreezeSummaryResponse?.content?.length,
           image: hasFilter ? EmptySearchResults : freezeWindowsIllustration,

@@ -83,7 +83,7 @@ exports[`CICodebaseInputSetForm tests Run Pipeline Form  Initial Render 1`] = `
                               <span
                                 class="placeholder"
                               >
-                                connectors.selectConnector
+                                common.entityPlaceholderText
                               </span>
                             </span>
                             <span
@@ -1725,7 +1725,7 @@ exports[`CICodebaseInputSetForm tests Run Pipeline from Template Form Initial Re
                               <span
                                 class="placeholder"
                               >
-                                connectors.selectConnector
+                                common.entityPlaceholderText
                               </span>
                             </span>
                             <span

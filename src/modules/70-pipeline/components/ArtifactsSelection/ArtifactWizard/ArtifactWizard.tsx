@@ -126,7 +126,13 @@ function ArtifactWizard({
         return <StepAWSAuthentication name={getString('credentials')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.Nexus3Registry:
       case ENABLED_ARTIFACT_TYPES.Nexus2Registry:
-        return <StepNexusAuthentication name={getString('details')} {...newConnectorProps.auth} />
+        return (
+          <StepNexusAuthentication
+            name={getString('details')}
+            {...newConnectorProps.auth}
+            selectedArtifact={selectedArtifact}
+          />
+        )
       case ENABLED_ARTIFACT_TYPES.ArtifactoryRegistry:
         return <StepArtifactoryAuthentication name={getString('details')} {...newConnectorProps.auth} />
       case ENABLED_ARTIFACT_TYPES.Acr:
@@ -259,6 +265,7 @@ function ArtifactWizard({
           <ConnectorTestConnection type={ArtifactToConnectorMap[selectedArtifact]} {...newConnectorProps.verify} />
         </StepWizard>
       ) : null}
+
       {lastSteps}
     </StepWizard>
   )

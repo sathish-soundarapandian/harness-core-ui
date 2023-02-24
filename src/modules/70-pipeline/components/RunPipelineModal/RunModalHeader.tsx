@@ -44,7 +44,7 @@ import css from './RunPipelineForm.module.scss'
 export interface RunModalHeaderProps {
   pipelineExecutionId?: string
   selectedStageData: StageSelectionData
-  setSelectedStageData: Dispatch<SetStateAction<StageSelectionData>>
+  setSelectedStageData: (selectedStages: StageSelectionData) => void
   setSkipPreFlightCheck: Dispatch<SetStateAction<boolean>>
   selectedView: SelectedView
   handleModeSwitch(view: SelectedView): void

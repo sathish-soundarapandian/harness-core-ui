@@ -165,6 +165,7 @@ Cypress.Commands.add('login', (emailValue: string, password: string) => {
   cy.get('[data-id="email-0"] input').clear().type(emailValue)
   cy.get('[data-id="password-1"] input').clear().type(password)
   cy.clickSubmit()
+  cy.initializeRoute()
 })
 
 /**
@@ -224,6 +225,7 @@ Cypress.Commands.add('fillName', (value: string) => {
 
 Cypress.Commands.add('initializeRoute', () => {
   localStorage.setItem('token', 'JTIydG9rZW4lMjI=')
+  localStorage.setItem('email', 'JTIyYWJoaW5hdi5yYXN0b2dpJTQwaGFybmVzcy5pbyUyMg==')
 })
 
 Cypress.Commands.add('visitVerifyStepInPipeline', () => {

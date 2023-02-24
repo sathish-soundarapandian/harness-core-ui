@@ -7,8 +7,11 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly cursor: string
   readonly detailsSection: string
   readonly header: string
+  readonly notificationPopover: string
+  readonly notificationPopoverBtn: string
   readonly serviceDetails: string
   readonly textOverflow: string
 }

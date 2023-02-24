@@ -52,7 +52,6 @@ export interface CloudWatchSetupSource {
 export interface CreatePayloadUtilParams {
   setupSourceData: CloudWatchSetupSource
   formikValues: CloudWatchFormType
-  isMetricThresholdEnabled?: boolean
 }
 
 export interface CloudWatchProps {
@@ -98,5 +97,4 @@ export interface MetricThresholdCommonProps {
 export interface MetricThresholdsForFormParams {
   metricThresholds?: TimeSeriesMetricPackDTO[]
   thresholdType?: AvailableThresholdTypes
-  isMetricThresholdEnabled?: boolean
 }

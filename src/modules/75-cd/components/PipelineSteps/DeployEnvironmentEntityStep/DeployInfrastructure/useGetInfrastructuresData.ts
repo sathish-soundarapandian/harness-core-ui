@@ -7,7 +7,7 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { defaultTo } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 
 import { shouldShowError, useToaster } from '@harness/uicore'
 
@@ -16,8 +16,10 @@ import type { PipelinePathProps } from '@common/interfaces/RouteInterfaces'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
 import {
+  AccessControlCheckError,
   ServiceDefinition,
   TemplateLinkConfig,
   useGetInfrastructureList,
@@ -160,9 +162,20 @@ export function useGetInfrastructuresData({
 
   useEffect(() => {
     /* istanbul ignore else */
-    if (infrastructuresListError?.message) {
-      /* istanbul ignore else */
-      if (shouldShowError(infrastructuresListError)) {
+    if (infrastructuresListError?.message && shouldShowError(infrastructuresListError)) {
+      const { code, failedPermissionChecks } = infrastructuresListError.data as AccessControlCheckError
+
+      const environmentViewFailedPermssionCheck = failedPermissionChecks?.find(
+        failedCheck => failedCheck.permission === PermissionIdentifier.VIEW_ENVIRONMENT
+      )
+      const isRbacError = code === 'NG_ACCESS_DENIED'
+
+      // custom handling for environment view access error till rbac framework supports the change
+      if (isRbacError && !isEmpty(environmentViewFailedPermssionCheck)) {
+        showError(
+          `Unable to list infrastructure(s). Missing view permissions on environment '${environmentViewFailedPermssionCheck?.resourceIdentifier}'`
+        )
+      } else {
         showError(getRBACErrorMessage(infrastructuresListError))
       }
     }

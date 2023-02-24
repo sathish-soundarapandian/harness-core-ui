@@ -2,6 +2,7 @@ import { MultiTypeInputType } from '@harness/uicore'
 import { isEmpty } from 'lodash-es'
 import { CHART_VISIBILITY_ENUM } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.constants'
 import type { HealthSourceRecordsRequest, QueryRecordsRequestRequestBody } from 'services/cv'
+import type { FieldMapping } from '@cv/pages/health-source/connectors/CommonHealthSource/CommonHealthSource.types'
 import type { LogFieldsMultiTypeState } from '../../../CustomMetricForm.types'
 
 export function shouldAutoBuildChart(
@@ -25,16 +26,22 @@ export function shouldShowChartComponent(
 export function getRecordsRequestBody(
   connectorIdentifier: any,
   providerType: string,
-  query: string
+  query: string,
+  queryField?: FieldMapping,
+  queryFieldValue?: string
 ): HealthSourceRecordsRequest | QueryRecordsRequestRequestBody {
   const { endTime, startTime } = getStartAndEndTime()
+  const { identifier } = (queryField || {}) as FieldMapping
 
   const recordsRequestBody = {
     connectorIdentifier: connectorIdentifier?.connector?.identifier ?? connectorIdentifier,
     endTime,
     startTime,
     providerType: providerType as HealthSourceRecordsRequest['providerType'],
-    query
+    query,
+    healthSourceQueryParams: {
+      ...(identifier && { [identifier]: queryFieldValue })
+    }
   }
   return recordsRequestBody
 }

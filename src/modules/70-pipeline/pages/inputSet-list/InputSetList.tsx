@@ -37,12 +37,15 @@ import { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType as ImportResourceType } from '@common/interfaces/GitSyncInterface'
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
+import ListHeader from '@common/components/ListHeader/ListHeader'
+import { sortByCreated, sortByName } from '@common/utils/sortUtils'
 import { InputSetListView } from './InputSetListView'
 import css from './InputSetList.module.scss'
 
 function InputSetList(): React.ReactElement {
   const [searchParam, setSearchParam] = React.useState('')
   const [page, setPage] = React.useState(0)
+  const [sort, setSort] = useState<string>(sortByCreated[0].value as string)
   const { connectorRef, repoIdentifier, repoName, branch, storeType } = useQueryParams<GitQueryParams>()
   const { projectIdentifier, orgIdentifier, accountId, pipelineIdentifier, module } = useParams<
     PipelineType<PipelinePathProps> & { accountId: string }
@@ -73,8 +76,10 @@ function InputSetList(): React.ReactElement {
             branch,
             getDefaultFromOtherRepo: true
           }
-        : {})
+        : {}),
+      sortOrders: [sort]
     },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' },
     debounce: !isEmpty(searchParam) ? 300 : false
   })
 
@@ -348,32 +353,41 @@ function InputSetList(): React.ReactElement {
         {pipelineSummaryFetchError ? (
           <NoEntityFound identifier={pipelineIdentifier} entityType={'inputSet'} errorObj={pipelineSummaryFetchError} />
         ) : (
-          <InputSetListView
-            data={inputSet?.data}
-            gotoPage={setPage}
-            pipelineHasRuntimeInputs={pipelineHasRuntimeInputs}
-            isPipelineInvalid={isPipelineInvalid}
-            pipelineStoreType={pipelineMetadata?.data?.storeType as StoreType}
-            goToInputSetDetail={inputSetTemp => {
-              setSelectedInputSet({
-                identifier: inputSetTemp?.identifier,
-                repoIdentifier: inputSetTemp?.gitDetails?.repoIdentifier,
-                branch: inputSetTemp?.gitDetails?.branch
-              })
-              if (inputSetTemp?.inputSetType === 'INPUT_SET') {
-                goToInputSetForm(inputSetTemp)
-              } else {
-                showOverlayInputSetForm()
-              }
-            }}
-            refetchInputSet={refetch}
-            template={template}
-            canUpdate={canUpdateInputSet}
-            onDeleteInputSet={onDeleteInputSet}
-            onDelete={(inputSetSelected: InputSetSummaryResponse) => {
-              setInputSetToDelete(inputSetSelected)
-            }}
-          />
+          <>
+            <ListHeader
+              value={sort}
+              sortOptions={[...sortByCreated, ...sortByName]}
+              onChange={option => setSort(option.value as string)}
+              totalCount={inputSet?.data?.totalItems}
+              className={css.listHeader}
+            />
+            <InputSetListView
+              data={inputSet?.data}
+              gotoPage={setPage}
+              pipelineHasRuntimeInputs={pipelineHasRuntimeInputs}
+              isPipelineInvalid={isPipelineInvalid}
+              pipelineStoreType={pipelineMetadata?.data?.storeType as StoreType}
+              goToInputSetDetail={inputSetTemp => {
+                setSelectedInputSet({
+                  identifier: inputSetTemp?.identifier,
+                  repoIdentifier: inputSetTemp?.gitDetails?.repoIdentifier,
+                  branch: inputSetTemp?.gitDetails?.branch
+                })
+                if (inputSetTemp?.inputSetType === 'INPUT_SET') {
+                  goToInputSetForm(inputSetTemp)
+                } else {
+                  showOverlayInputSetForm()
+                }
+              }}
+              refetchInputSet={refetch}
+              template={template}
+              canUpdate={canUpdateInputSet}
+              onDeleteInputSet={onDeleteInputSet}
+              onDelete={(inputSetSelected: InputSetSummaryResponse) => {
+                setInputSetToDelete(inputSetSelected)
+              }}
+            />
+          </>
         )}
       </Page.Body>
     </>

@@ -481,7 +481,7 @@ const K8sDeleteInputStep: React.FC<K8sDeleteProps> = ({ inputSetData, readonly, 
           label={getString('pipelineSteps.timeoutLabel')}
           name={`${isEmpty(inputSetData?.path) ? '' : `${inputSetData?.path}.`}timeout`}
           disabled={readonly}
-          className={cx(stepCss.formGroup, stepCss.sm)}
+          className={cx(stepCss.formGroup, stepCss.md)}
         />
       )}
       {getMultiTypeFromValue(inputSetData?.template?.spec?.deleteResources?.spec?.manifestPaths as string) ===

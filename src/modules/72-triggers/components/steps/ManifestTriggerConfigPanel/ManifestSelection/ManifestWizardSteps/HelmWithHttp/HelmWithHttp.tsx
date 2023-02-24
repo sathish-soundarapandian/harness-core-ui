@@ -34,7 +34,7 @@ function HelmWithHttp({
   const getInitialValues = (): HelmManifestSpec => {
     const { spec } = initialValues
     return {
-      helmVersion: spec.helmVersion ?? 'V2',
+      helmVersion: spec.helmVersion ?? 'V3',
       chartName: spec.chartName as string
     }
   }

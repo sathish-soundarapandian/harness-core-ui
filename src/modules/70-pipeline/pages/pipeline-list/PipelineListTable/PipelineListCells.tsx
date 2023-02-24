@@ -40,16 +40,18 @@ import { useStrings } from 'framework/strings'
 import { Badge } from '@pipeline/pages/utils/Badge/Badge'
 import { getReadableDateTime } from '@common/utils/dateUtils'
 import { ResourceType as GitResourceType } from '@common/interfaces/GitSyncInterface'
-import type { PMSPipelineSummaryResponse, RecentExecutionInfoDTO } from 'services/pipeline-ng'
+import type { PipelineStageInfo, PMSPipelineSummaryResponse, RecentExecutionInfoDTO } from 'services/pipeline-ng'
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { ExecutionStatus, ExecutionStatusEnum } from '@pipeline/utils/statusHelpers'
-import type { PipelineType } from '@common/interfaces/RouteInterfaces'
+import type { GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
 import { AUTO_TRIGGERS } from '@pipeline/utils/constants'
 import { killEvent } from '@common/utils/eventUtils'
 import RbacButton from '@rbac/components/Button/Button'
 import useMigrateResource from '@pipeline/components/MigrateResource/useMigrateResource'
 import { MigrationType } from '@pipeline/components/MigrateResource/MigrateUtils'
+import { getChildExecutionPipelineViewLink } from '@pipeline/pages/execution-list/ExecutionListTable/ExecutionListCells'
+import { useQueryParams } from '@common/hooks/useQueryParams'
 import { getRouteProps } from '../PipelineListUtils'
 import type { PipelineListPagePathParams } from '../types'
 import type { PipelineListColumnActions } from './PipelineListTable'
@@ -185,17 +187,31 @@ export const CodeSourceCell: CellType = ({ row }) => {
 export const LastExecutionCell: CellType = ({ row }) => {
   const { getString } = useStrings()
   const pathParams = useParams<PipelineType<PipelineListPagePathParams>>()
+  const queryParams = useQueryParams<GitQueryParams>()
   const data = row.original
   const recentExecution: RecentExecutionInfoDTO = data.recentExecutionsInfo?.[0] || {}
-  const { startTs, executorInfo } = recentExecution
+  const { startTs, executorInfo, parentStageInfo } = recentExecution
   const executor = executorInfo?.email || executorInfo?.username
   const isAutoTrigger = AUTO_TRIGGERS.includes(executorInfo?.triggerType)
+  const { hasparentpipeline = false, identifier: pipelineIdentifier } = defaultTo(
+    parentStageInfo,
+    {} as PipelineStageInfo
+  )
+  const toChildExecutionPipelineView = getChildExecutionPipelineViewLink<PMSPipelineSummaryResponse>(
+    data,
+    pathParams,
+    queryParams
+  )
 
   return (
     <Layout.Horizontal spacing="small" style={{ alignItems: 'center' }}>
       <div>
-        <div className={cx(css.avatar, executor ? css.trigger : css.neverRan)} onClick={killEvent}>
-          {executor ? (
+        <div className={cx(css.avatar, executor || hasparentpipeline ? css.trigger : css.neverRan)} onClick={killEvent}>
+          {hasparentpipeline ? (
+            <Link to={toChildExecutionPipelineView}>
+              <Icon size={12} name={'chained-pipeline'} className={css.icon} />
+            </Link>
+          ) : executor ? (
             isAutoTrigger ? (
               <Link
                 to={routes.toTriggersDetailPage({
@@ -219,7 +235,29 @@ export const LastExecutionCell: CellType = ({ row }) => {
         </div>
       </div>
 
-      {executor && startTs ? (
+      {hasparentpipeline && startTs ? (
+        <div>
+          <Layout.Horizontal>
+            <Link to={toChildExecutionPipelineView} onClick={killEvent}>
+              <Text
+                font={{ variation: FontVariation.SMALL_SEMI }}
+                color={Color.PRIMARY_7}
+                lineClamp={1}
+                style={{ maxWidth: '150px' }}
+                margin={{ right: 'xsmall' }}
+              >
+                {`${pipelineIdentifier}`}
+              </Text>
+            </Link>
+            <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
+              | {getString('common.pipeline')}
+            </Text>
+          </Layout.Horizontal>
+          <Text color={Color.GREY_600} font={{ variation: FontVariation.TINY }} className={css.timeAgo}>
+            <ReactTimeago date={startTs} />
+          </Text>
+        </div>
+      ) : executor && startTs ? (
         <div>
           <Text color={Color.GREY_900} font={{ variation: FontVariation.SMALL }} lineClamp={1}>
             {executor}

@@ -19,13 +19,11 @@ import css from './CloudWatch.module.scss'
 export default function CloudWatch({ data, onSubmit, isTemplate, expressions }: CloudWatchProps): JSX.Element | null {
   const { onPrevious } = useContext(SetupSourceTabsContext)
 
-  const isMetricThresholdEnabled = !isTemplate
-
   const { getString } = useStrings()
 
   const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
 
-  const initialValues = getFormikInitialValue(data, isMetricThresholdEnabled)
+  const initialValues = getFormikInitialValue(data)
 
   const connectorIdentifier = getConnectorRef(data?.connectorRef)
   const isConnectorRuntimeOrExpression = getMultiTypeFromValue(connectorIdentifier) !== MultiTypeInputType.FIXED
@@ -47,7 +45,7 @@ export default function CloudWatch({ data, onSubmit, isTemplate, expressions }: 
         formName="cloudWatch"
         validateOnMount
         initialValues={initialValues}
-        validate={values => validateForm(values, getString, isMetricThresholdEnabled)}
+        validate={values => validateForm(values, getString)}
         onSubmit={noop}
       >
         {formikProps => {
@@ -58,7 +56,7 @@ export default function CloudWatch({ data, onSubmit, isTemplate, expressions }: 
               <CustomMetricsV2HelperContext.Provider value={customMetricHelperContextValue}>
                 <CloudWatchContent />
 
-                {isMetricThresholdEnabled && Boolean(getCustomMetricGroupNames(groupedCreatedMetrics).length) && (
+                {Boolean(getCustomMetricGroupNames(groupedCreatedMetrics).length) && (
                   <MetricThresholdProvider
                     formikValues={formikProps.values}
                     groupedCreatedMetrics={groupedCreatedMetrics}
@@ -75,8 +73,7 @@ export default function CloudWatch({ data, onSubmit, isTemplate, expressions }: 
                     if (formikProps.isValid) {
                       const payload = createPayloadForCloudWatch({
                         setupSourceData: data,
-                        formikValues: formikProps.values,
-                        isMetricThresholdEnabled
+                        formikValues: formikProps.values
                       })
 
                       await onSubmit(data, payload)

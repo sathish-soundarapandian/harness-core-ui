@@ -45,11 +45,12 @@ export function SelectInputSet(props: SelectInputSetViewProps): JSX.Element {
     name,
     labelKey: label,
     placeholderKey: placeholder,
-    fieldPath: fieldPath,
+    fieldPath,
     allowedTypes: defaultTo(multiTypeInputProps?.allowableTypes, [MultiTypeInputType.FIXED]),
     template,
     readonly: disabled,
-    tooltipProps
+    tooltipProps,
+    onChange: multiTypeInputProps?.onChange
   })
 
   const inputField = shouldRenderRunTimeInputViewWithAllowedValues(fieldPath, template) ? (

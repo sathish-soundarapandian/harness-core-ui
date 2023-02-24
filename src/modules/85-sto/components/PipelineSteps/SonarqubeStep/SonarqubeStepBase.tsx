@@ -36,7 +36,8 @@ import {
   ORCHESTRATION_SCAN_MODE,
   EXTRACTION_SCAN_MODE,
   REPOSITORY_TARGET_TYPE,
-  dividerBottomMargin
+  dividerBottomMargin,
+  tooltipIds
 } from '../constants'
 import SecurityField from '../SecurityField'
 
@@ -155,15 +156,18 @@ export const SonarqubeStepBase = (
                     },
                     'spec.tool.include': {
                       label: 'sto.stepField.toolInclude',
-                      optional: true
+                      optional: true,
+                      tooltipId: tooltipIds.toolInclude
                     },
                     'spec.tool.java.libraries': {
                       label: 'sto.stepField.tool.javaLibraries',
-                      optional: true
+                      optional: true,
+                      tooltipId: tooltipIds.toolJavaLibraries
                     },
                     'spec.tool.java.binaries': {
                       label: 'sto.stepField.tool.javaBinaries',
-                      optional: true
+                      optional: true,
+                      tooltipId: tooltipIds.toolJavaBinaries
                     }
                   }}
                 />

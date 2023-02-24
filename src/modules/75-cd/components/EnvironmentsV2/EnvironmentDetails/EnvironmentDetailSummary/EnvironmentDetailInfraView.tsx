@@ -87,7 +87,7 @@ export default function EnvironmentDetailInfraView(props: EnvironmentDetailInfra
         {capitalize(getString('cd.serviceDashboard.artifact')) + ':'}
       </Text>
       <Text font={{ variation: FontVariation.BODY2 }} lineClamp={1}>
-        {artifactVersion}
+        {artifactVersion ? artifactVersion : '-'}
       </Text>
     </Layout.Horizontal>
   )

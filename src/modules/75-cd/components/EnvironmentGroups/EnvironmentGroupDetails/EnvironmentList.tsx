@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { FormEvent, useMemo, useState } from 'react'
+import React, { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Column } from 'react-table'
 import { defaultTo } from 'lodash-es'
 
@@ -26,6 +26,8 @@ import { LastUpdatedBy } from '../EnvironmentGroupsList/EnvironmentGroupsListCol
 
 import EmptyEnvironmentGroup from '../images/EmptyEnvironmentGroup.svg'
 
+type CustomColumn<T extends Record<string, any>> = Column<T>
+
 export function EnvironmentList({
   list,
   showModal,
@@ -34,28 +36,30 @@ export function EnvironmentList({
   list: EnvironmentResponse[]
   showModal: () => void
   onDeleteEnvironments: (environmentsToRemove: EnvironmentResponse[]) => void
-}) {
+}): JSX.Element {
   const { getString } = useStrings()
   const [environmentsToRemove, setEnvironmentsToRemove] = useState<EnvironmentResponse[]>([])
 
-  type CustomColumn<T extends Record<string, any>> = Column<T>
-
-  const onCheckboxSelect = (event: FormEvent<HTMLInputElement>, item: EnvironmentResponse) => {
+  const onCheckboxSelect = useCallback((event: FormEvent<HTMLInputElement>, item: EnvironmentResponse): void => {
     const identifier = item.environment?.identifier
     if ((event.target as any).checked && identifier) {
-      setEnvironmentsToRemove([...defaultTo(environmentsToRemove, []), item])
+      setEnvironmentsToRemove(prevEnvs => [...defaultTo(prevEnvs, []), item])
     } else {
-      setEnvironmentsToRemove([
-        ...environmentsToRemove.filter(
-          (selectedEnv: EnvironmentResponse) => selectedEnv.environment?.identifier !== identifier
-        )
-      ])
+      setEnvironmentsToRemove(prevEnvs =>
+        prevEnvs.filter((selectedEnv: EnvironmentResponse) => selectedEnv.environment?.identifier !== identifier)
+      )
     }
-  }
+  }, [])
 
   useDeepCompareEffect(() => {
     setEnvironmentsToRemove([])
   }, [list])
+
+  const onDeleteEnvironmentsRef = useRef(onDeleteEnvironments)
+
+  useEffect(() => {
+    onDeleteEnvironmentsRef.current = onDeleteEnvironments
+  }, [onDeleteEnvironments])
 
   const envColumns: CustomColumn<EnvironmentResponse>[] = useMemo(
     () => [
@@ -81,7 +85,7 @@ export function EnvironmentList({
         Header: (
           <Icon
             name={'main-trash'}
-            onClick={() => onDeleteEnvironments(environmentsToRemove)}
+            onClick={() => onDeleteEnvironmentsRef.current(environmentsToRemove)}
             style={{ cursor: 'pointer' }}
           />
         ),
@@ -92,7 +96,7 @@ export function EnvironmentList({
         environmentsToRemove
       }
     ],
-    [getString]
+    [environmentsToRemove, getString, onCheckboxSelect]
   )
 
   const hasEnvs = Boolean(list.length)

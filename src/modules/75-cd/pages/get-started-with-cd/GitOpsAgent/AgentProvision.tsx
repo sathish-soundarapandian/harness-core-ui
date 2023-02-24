@@ -1,3 +1,10 @@
+/*
+ * Copyright 2023 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 import React from 'react'
 import classnames from 'classnames'
 import { noop } from 'lodash-es'
@@ -30,15 +37,14 @@ export const AgentProvision = ({
     identifier: agent?.identifier || '',
     queryParams: {
       accountIdentifier: agent?.accountIdentifier || ''
-      // projectIdentifier: projectIdentifier,
-      // orgIdentifier: orgIdentifier
-    }
+    },
+    lazy: true
   })
 
   const isHealthy = data?.health?.harnessGitopsAgent?.status === 'HEALTHY'
 
   React.useEffect(() => {
-    if (agentCreateLoading || agentCreateError || isHealthy) return
+    if (agentCreateLoading || agentCreateError || isHealthy || !agent?.identifier) return
     let id: number | null
 
     if (retryCount >= maxRetryCount) {
@@ -55,7 +61,7 @@ export const AgentProvision = ({
         window.clearTimeout(id)
       }
     }
-  }, [loading, data, agentCreateLoading, agentCreateError])
+  }, [loading, data, agentCreateLoading, agentCreateError, agent?.identifier])
 
   React.useEffect(() => {
     if (agentCreateError) {

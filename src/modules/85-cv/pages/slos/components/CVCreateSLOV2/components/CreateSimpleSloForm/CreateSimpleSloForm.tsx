@@ -14,6 +14,8 @@ import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import { useMutateAsGet } from '@common/hooks'
 import {
+  NotificationRuleResponse,
+  ServiceLevelIndicatorDTO,
   useGetAllMonitoredServicesWithTimeSeriesHealthSources,
   useGetNotificationRuleData,
   useGetSliOnboardingGraphs
@@ -63,6 +65,7 @@ export default function CreateSimpleSLOForm({
   >()
   const compositeSloPayloadRef = useRef<SLOV2Form | null>()
   const prevStepDataRef = useRef<SLOV2Form | null>()
+  const [notificationsInTable, setNotificationsInTable] = useState<NotificationRuleResponse[]>([])
 
   const [openSaveCancelModal] = useCreateCompositeSloWarningModal({
     handleRedirect,
@@ -153,6 +156,21 @@ export default function CreateSimpleSLOForm({
     error: sliGraphError
   } = useMutateAsGet(useGetSliOnboardingGraphs, { lazy: true })
 
+  const retryfetchSliGraphData = (
+    serviceLevelIndicator: ServiceLevelIndicatorDTO,
+    monitoredServiceIdentifier?: string
+  ): void => {
+    fetchSliGraphData({
+      body: serviceLevelIndicator,
+      queryParams: {
+        accountId,
+        orgIdentifier,
+        projectIdentifier
+      },
+      pathParams: { monitoredServiceIdentifier }
+    })
+  }
+
   const debounceFetchSliGraphData = useCallback(debounce(fetchSliGraphData, 2000), [])
 
   const notificationsTableData = useMemo(
@@ -170,6 +188,7 @@ export default function CreateSimpleSLOForm({
 
   const serviceLevelIndicator = convertSLOFormDataToServiceLevelIndicatorDTO(formikProps.values)
   const {
+    eventType,
     healthSourceRef,
     SLIMetricType,
     validRequestMetric,
@@ -181,7 +200,7 @@ export default function CreateSimpleSLOForm({
   } = formikProps.values
 
   const isRatioBased = SLIMetricType === SLIMetricTypes.RATIO
-  const metricList = isRatioBased ? [validRequestMetric, goodRequestMetric] : [validRequestMetric]
+  const metricList = isRatioBased ? [eventType, validRequestMetric, goodRequestMetric] : [validRequestMetric]
 
   const valuesToDetermineReload = [
     healthSourceRef,
@@ -200,17 +219,6 @@ export default function CreateSimpleSLOForm({
   useEffect(() => {
     if (showChart) {
       debounceFetchSliGraphData({
-        body: serviceLevelIndicator,
-        queryParams: {
-          accountId,
-          orgIdentifier,
-          projectIdentifier
-        },
-        pathParams: {
-          monitoredServiceIdentifier: formikProps.values.monitoredServiceRef as string
-        }
-      })
-      debounceFetchSliGraphData?.({
         body: serviceLevelIndicator,
         queryParams: {
           accountId,
@@ -277,10 +285,12 @@ export default function CreateSimpleSLOForm({
                     <SLI
                       formikProps={formikProps}
                       sliGraphData={sliGraphData?.resource?.sliGraph}
+                      metricGraphData={sliGraphData?.resource?.metricGraphs}
                       loading={sliGraphLoading}
                       error={getErrorMessage(sliGraphError)}
-                      retryOnError={fetchSliGraphData}
+                      retryOnError={retryfetchSliGraphData}
                       showChart={showChart}
+                      showMetricChart
                     />
                   ),
                   errorMessage: getErrorMessageByTabId(
@@ -303,8 +313,9 @@ export default function CreateSimpleSLOForm({
                       formikProps={formikProps}
                       loading={sliGraphLoading}
                       error={getErrorMessage(sliGraphError)}
-                      retryOnError={fetchSliGraphData}
+                      retryOnError={retryfetchSliGraphData}
                       sliGraphData={sliGraphData?.resource?.sliGraph}
+                      showMetricChart={false}
                     />
                   ),
                   errorMessage: getErrorMessageByTabId(formikProps, CreateSimpleSLOSteps.Set_SLO),
@@ -325,6 +336,8 @@ export default function CreateSimpleSLOForm({
                         loading={notificationLoading}
                         error={notificationError}
                         getNotifications={getNotifications}
+                        notificationsInTable={notificationsInTable}
+                        setNotificationsInTable={setNotificationsInTable}
                       />
                     </CompositeSLOContext.Provider>
                   ),

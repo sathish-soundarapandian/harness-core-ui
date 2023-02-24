@@ -6,70 +6,42 @@
  */
 
 import React from 'react'
-import { Container, Formik } from '@harness/uicore'
-import { debounce, noop } from 'lodash-es'
-import type { FormikProps } from 'formik'
-import { Color } from '@harness/design-system'
-import type { StepMode as Modes } from '@pipeline/utils/stepUtils'
-import type { Values } from '../../../PipelineStudio/StepCommands/StepCommandTypes'
+import { FormInput } from '@harness/uicore'
+import { useFormikContext } from 'formik'
+import { get } from 'lodash-es'
+import { StepMode as Modes } from '@pipeline/utils/stepUtils'
+import { isValueRuntimeInput } from '@common/utils/utils'
 import ConditionalExecutionPanelHeader from './ConditionalExecutionHeader'
 import ConditionalExecutionPanelStatus from './ConditionalExecutionStatus'
 import ConditionalExecutionPanelCondition from './ConditionalExecutionCondition'
-import { ConditionalExecutionOption, PipelineOrStageStatus } from './ConditionalExecutionPanelUtils'
+
+import css from './ConditionalExecutionPanel.module.scss'
 
 export interface ConditionalExecutionPanelProps {
-  formikProps: FormikProps<Pick<Values, 'when'>>
+  path: string
   mode: Modes
   isReadonly: boolean
 }
 
 export default function ConditionalExecutionPanel(props: ConditionalExecutionPanelProps): React.ReactElement {
-  const { formikProps, mode, isReadonly } = props
+  const { mode, isReadonly, path = 'when' } = props
+  const formik = useFormikContext()
+  const statusPath = mode === Modes.STAGE ? 'pipelineStatus' : 'stageStatus'
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedUpdate = React.useCallback(
-    debounce(({ status, enableJEXL, condition }: ConditionalExecutionOption): void => {
-      formikProps.setFieldValue('when', {
-        stageStatus: status,
-        ...(enableJEXL &&
-          !!condition?.trim() && {
-            condition: condition?.trim()
-          })
-      })
-    }, 300),
-    [formikProps]
-  )
+  const value = get(formik.values, path)
 
   return (
-    <Formik
-      initialValues={
-        {
-          status: formikProps.values.when?.stageStatus || PipelineOrStageStatus.SUCCESS,
-          enableJEXL: !!formikProps.values.when?.condition,
-          condition: formikProps.values.when?.condition
-        } as ConditionalExecutionOption
-      }
-      formName="conditionalExecution"
-      onSubmit={noop}
-      validate={debouncedUpdate}
-    >
-      {(panelFormikProps: FormikProps<ConditionalExecutionOption>) => {
-        return (
-          <>
-            <ConditionalExecutionPanelHeader mode={mode} />
-            <Container
-              border={{ top: true, bottom: true, color: Color.GREY_200 }}
-              padding={{ bottom: 'small', top: 'medium' }}
-              margin={{ top: 'medium' }}
-            >
-              <ConditionalExecutionPanelStatus formikProps={panelFormikProps} isReadonly={isReadonly} mode={mode} />
-            </Container>
-            <Container padding={{ top: 'medium' }}>
-              <ConditionalExecutionPanelCondition formikProps={panelFormikProps} isReadonly={isReadonly} mode={mode} />
-            </Container>
-          </>
-        )
-      }}
-    </Formik>
+    <div className={css.main}>
+      <ConditionalExecutionPanelHeader mode={mode} />
+      {isValueRuntimeInput(value) ? (
+        <FormInput.Text className={css.runtimeInput} name={path} disabled />
+      ) : (
+        <div className={css.panel}>
+          <ConditionalExecutionPanelStatus path={path} statusPath={statusPath} isReadonly={isReadonly} mode={mode} />
+          <div className={css.divider} />
+          <ConditionalExecutionPanelCondition path={path} statusPath={statusPath} isReadonly={isReadonly} mode={mode} />
+        </div>
+      )}
+    </div>
   )
 }

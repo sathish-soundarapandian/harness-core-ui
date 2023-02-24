@@ -5,24 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState } from 'react'
-import {
-  Text,
-  HarnessDocTooltip,
-  Layout,
-  Container,
-  MultiTypeInputType,
-  getMultiTypeFromValue,
-  AllowedTypes
-} from '@harness/uicore'
+import React from 'react'
+import { Text, Layout, Container, AllowedTypes } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { isEmpty, get, set } from 'lodash-es'
 import produce from 'immer'
 import { connect, FormikContextType } from 'formik'
 import cx from 'classnames'
 import type { StageElementConfig } from 'services/pipeline-ng'
-import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
-import { MultiTypeExecutionCondition } from '@common/components/MultiTypeExecutionCondition/MultiTypeExecutionCondition'
 import DelegateSelectorPanel from '@pipeline/components/PipelineSteps/AdvancedSteps/DelegateSelectorPanel/DelegateSelectorPanel'
 import SkipInstancesField from '@pipeline/components/PipelineStudio/SkipInstances/SkipInstances'
 
@@ -32,6 +22,8 @@ import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
 import { yamlParse, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { StepMode } from '@pipeline/utils/stepUtils'
+import { ConditionalExecutionForm } from './ConditionalExecutionForm'
 import { FailureStrategiesInputSetForm } from './FailureStrategiesInputSetForm'
 import css from '../PipelineInputSetForm.module.scss'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
@@ -47,52 +39,6 @@ interface StageAdvancedInputSetFormProps {
   stageType: StageType
   viewType?: StepViewType
 }
-
-interface ConditionalExecutionFormProps {
-  readonly?: boolean
-  path: string
-  allowableTypes?: AllowedTypes
-  formik?: FormikContextType<any>
-}
-
-function ConditionalExecutionFormInternal(props: ConditionalExecutionFormProps): React.ReactElement {
-  const { readonly, path, allowableTypes, formik } = props
-  const { getString } = useStrings()
-  const conditionValue = get(formik?.values, path)
-  const { expressions } = useVariablesExpression()
-  const [multiType, setMultiType] = useState<MultiTypeInputType>(getMultiTypeFromValue(conditionValue))
-
-  return (
-    <Container margin={{ bottom: 'medium' }}>
-      <Layout.Vertical flex={{ alignItems: 'flex-start' }}>
-        <Text
-          color={Color.GREY_600}
-          margin={{ bottom: 'small' }}
-          className={css.conditionalExecutionTitle}
-          font={{ weight: 'semi-bold' }}
-        >
-          {getString('pipeline.conditionalExecution.title')}
-        </Text>
-        <Text width="85%" color={Color.GREY_500} margin={{ bottom: 'small' }} font={{ size: 'small' }}>
-          {getString('pipeline.conditionalExecution.conditionLabel')}
-          <HarnessDocTooltip tooltipId="conditionalExecution" useStandAlone={true} />
-        </Text>
-        <Container width="100%">
-          <MultiTypeExecutionCondition
-            path={path}
-            allowableTypes={allowableTypes}
-            multiType={multiType}
-            setMultiType={setMultiType}
-            readonly={readonly}
-            expressions={expressions}
-          />
-        </Container>
-      </Layout.Vertical>
-    </Container>
-  )
-}
-
-export const ConditionalExecutionForm = connect(ConditionalExecutionFormInternal)
 
 interface SkipInstancesFormProps {
   readonly?: boolean
@@ -220,12 +166,15 @@ export function StageAdvancedInputSetForm({
           </div>
         )}
 
-        {!isEmpty(/* istanbul ignore next */ deploymentStageTemplate?.when?.condition) && (
-          <div className={cx(css.nestedAccordions, stepCss.formGroup, css.runTimeWidth)}>
+        {!isEmpty(deploymentStageTemplate?.when) && (
+          <div className={cx(css.nestedAccordions, stepCss.formGroup)}>
             <ConditionalExecutionForm
-              readonly={readonly}
-              path={`${path}.when.condition`}
+              isReadonly={!!readonly}
+              path={`${path}.when`}
               allowableTypes={allowableTypes}
+              viewType={viewType}
+              template={deploymentStageTemplate?.when}
+              mode={StepMode.STAGE}
             />
           </div>
         )}

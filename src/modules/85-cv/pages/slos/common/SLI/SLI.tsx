@@ -152,18 +152,18 @@ const SLI: React.FC<SLIProps> = ({ children, showChart, formikProps, ...rest }) 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [monitoredService, serviceRef, environmentRef, healthSources, changeSources, formikProps])
 
-  const sliContainerBorder = values.healthSourceRef ? { border: { right: true } } : undefined
-  const chartContainerBorder = !values.healthSourceRef ? { border: { left: true } } : undefined
+  const chartContainerBorder = { border: { left: true } }
   const chartPositionProp = !showChart ? { flex: { alignItems: 'center' as any } } : undefined
   const sliFormContainerRef: LegacyRef<HTMLDivElement> = useRef(null)
   const sliFormContainerHeight = parseInt(
     defaultTo(sliFormContainerRef.current?.getClientRects()?.[0]?.height, 0).toFixed(0)
   )
+  const containerHeight = isRatioBasedMetric ? sliFormContainerHeight : sliFormContainerHeight + 150
 
   return (
     <>
       <Layout.Horizontal flex={{ justifyContent: FLEX_START, alignItems: FLEX_START }}>
-        <Container width="50%" padding={{ right: 'xlarge' }} ref={sliFormContainerRef} {...sliContainerBorder}>
+        <Container width="50%" padding={{ right: 'xlarge' }} ref={sliFormContainerRef}>
           {/* Select Healthsource start */}
           <Layout.Vertical spacing="xsmall">
             <Text color={Color.PRIMARY_10} font={{ size: 'normal', weight: 'semi-bold' }}>
@@ -239,7 +239,7 @@ const SLI: React.FC<SLIProps> = ({ children, showChart, formikProps, ...rest }) 
           )}
         </Container>
         <Container
-          height={sliFormContainerHeight}
+          height={containerHeight}
           width="50%"
           padding={{ left: 'xxlarge' }}
           {...chartPositionProp}
@@ -255,7 +255,7 @@ const SLI: React.FC<SLIProps> = ({ children, showChart, formikProps, ...rest }) 
               </Text>
             }
             customChartOptions={{
-              chart: { height: isRatioBasedMetric ? 420 : 350 },
+              chart: { height: 200 },
               yAxis: { min: 0, max: 100, tickInterval: 25 }
             }}
           />

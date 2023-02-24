@@ -24,9 +24,9 @@ export interface ReleaseRepoListViewProps {
 
 export const RepoStoreIcons: Record<string, IconName> = {
   Github: 'github',
-
   AzureRepo: 'service-azure',
-  GitLab: 'gitlab'
+  GitLab: 'gitlab',
+  Bitbucket: 'bitbucket-selected'
 }
 export type ReleaseRepoManifestTypes = 'ReleaseRepo'
 export type DeploymentRepoManifestTypes = 'DeploymentRepo'
@@ -44,17 +44,20 @@ export type ReleaseRepoManifestStores = 'Git' | 'Github' | 'GitLab' | 'Bitbucket
 export const ReleaseRepoManifestStoreMap: { [key: string]: ReleaseRepoManifestStores } = {
   Github: 'Github',
   AzureRepo: 'AzureRepo',
-  GitLab: 'GitLab'
+  GitLab: 'GitLab',
+  Bitbucket: 'Bitbucket'
 }
 
 export const releaseRepoManifestStoreTypes: Array<ReleaseRepoManifestStores> = [
   ReleaseRepoManifestStoreMap.Github,
   ReleaseRepoManifestStoreMap.AzureRepo,
-  ReleaseRepoManifestStoreMap.GitLab
+  ReleaseRepoManifestStoreMap.GitLab,
+  ReleaseRepoManifestStoreMap.Bitbucket
 ]
 
 export const ReleaseRepoManifestToConnectorMap: Record<ReleaseRepoManifestStores | string, ConnectorInfoDTO['type']> = {
   Github: Connectors.GITHUB,
   AzureRepo: Connectors.AZURE_REPO,
-  GitLab: Connectors.GITLAB
+  GitLab: Connectors.GITLAB,
+  Bitbucket: Connectors.BITBUCKET
 }

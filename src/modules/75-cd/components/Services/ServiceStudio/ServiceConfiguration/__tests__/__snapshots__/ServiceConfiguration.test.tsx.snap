@@ -3,7 +3,7 @@
 exports[`Service Configuration handle switch from visual to yaml 1`] = `
 <div>
   <div
-    class="serviceEntity"
+    class="StyledProps--font StyledProps--main serviceEntity StyledProps--padding-left-xxlarge"
   >
     <div
       class="optionBtns"
@@ -71,7 +71,7 @@ exports[`Service Configuration null renders correctly 1`] = `<div />`;
 exports[`Service Configuration renders correctly 1`] = `
 <div>
   <div
-    class="serviceEntity"
+    class="StyledProps--font StyledProps--main serviceEntity StyledProps--padding-left-xxlarge"
   >
     <div
       class="optionBtns"
@@ -98,7 +98,7 @@ exports[`Service Configuration renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="serviceStepBasicInfo nonModalView"
+      class="serviceStepBasicInfo"
     >
       <div
         class="OverlaySpinner--overlaySpinner"
@@ -275,7 +275,7 @@ exports[`Service Configuration renders correctly 1`] = `
       </div>
     </div>
     <div
-      class="contentSection nonModalView"
+      class="contentSection"
     >
       <div
         class="tabHeading"
@@ -522,7 +522,7 @@ exports[`Service Configuration renders correctly 1`] = `
 exports[`Service Configuration test the rbac functionality to update readonly context value 1`] = `
 <div>
   <div
-    class="serviceEntity"
+    class="StyledProps--font StyledProps--main serviceEntity StyledProps--padding-left-xxlarge"
   >
     <div
       class="optionBtns"

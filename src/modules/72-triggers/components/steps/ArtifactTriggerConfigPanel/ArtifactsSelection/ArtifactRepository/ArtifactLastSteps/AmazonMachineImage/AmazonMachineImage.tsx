@@ -16,7 +16,6 @@ import {
   ButtonVariation,
   MultiTypeInputType,
   SelectOption,
-  getMultiTypeFromValue,
   FormInput,
   FormikForm
 } from '@harness/uicore'
@@ -26,12 +25,14 @@ import { defaultTo, get } from 'lodash-es'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-
-import { ConnectorConfigDTO, useTags } from 'services/cd-ng'
-import { getConnectorIdValue, amiFilters } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { getConnectorIdValue, amiFilters, resetFieldValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
 import { useListAwsRegions } from 'services/portal'
 import MultiTypeTagSelector from '@common/components/MultiTypeTagSelector/MultiTypeTagSelector'
 import type { AMIRegistrySpec } from 'services/pipeline-ng'
+import { useListTagsForAmiArtifactMutation } from 'services/cd-ng-rq'
+import type { AMITagObject, ConnectorConfigDTO } from 'services/cd-ng'
+import type { RBACError } from '@rbac/utils/useRBACError/useRBACError'
+import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import type { ImagePathProps } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
 
@@ -44,58 +45,64 @@ function FormComponent({
   formClassName = ''
 }: any): React.ReactElement {
   const { getString } = useStrings()
+  const { getRBACErrorMessage } = useRBACError()
   const [regions, setRegions] = React.useState<SelectOption[]>([])
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const [tags, setTags] = useState<SelectOption[]>([])
+  const connectorRefValue = getConnectorIdValue(prevStepData)
 
-  const { data: regionData } = useListAwsRegions({
+  const {
+    data: regionData,
+    loading: fetchingRegions,
+    error: awsRegionsError
+  } = useListAwsRegions({
     queryParams: {
       accountId
     }
   })
 
-  const connectorRefValue = getConnectorIdValue(prevStepData)
+  useEffect(() => {
+    if (!fetchingRegions && regionData?.resource) {
+      const regionValues = defaultTo(regionData?.resource, []).map(region => ({
+        value: region.value,
+        label: region.name
+      }))
+      setRegions(regionValues as SelectOption[])
+    }
+  }, [regionData?.resource, fetchingRegions])
 
   const {
     data: tagsData,
-    loading: isTagsLoading,
-    refetch: refetchTags,
+    isLoading: isTagsLoading,
+    mutate: refetchTags,
     error: tagsError
-  } = useTags({
+  } = useListTagsForAmiArtifactMutation({
     queryParams: {
       accountIdentifier: accountId,
       projectIdentifier,
       orgIdentifier,
       region: get(formik, 'values.region'),
-      awsConnectorRef: connectorRefValue || ''
+      connectorRef: connectorRefValue || ''
     },
-    lazy: true
+    body: ''
   })
 
   useEffect(() => {
-    const tagOption = get(tagsData, 'data', []).map((tagItem: string) => ({
-      value: tagItem,
-      label: tagItem
-    }))
-    setTags(tagOption)
-  }, [tagsData])
+    if (!isTagsLoading && tagsData?.data) {
+      const tagOption = get(tagsData, 'data', []).map((tag: AMITagObject) => {
+        const tagName = tag?.tagName as string
+        return { label: tagName, value: tagName }
+      })
+
+      setTags(tagOption)
+    }
+  }, [tagsData?.data, isTagsLoading])
 
   useEffect(() => {
-    if (
-      getMultiTypeFromValue(get(formik, 'values.region')) === MultiTypeInputType.FIXED &&
-      get(formik, 'values.region')
-    ) {
+    if (formik.values?.region) {
       refetchTags()
     }
-  }, [formik.values?.region])
-
-  useEffect(() => {
-    const regionValues = defaultTo(regionData?.resource, []).map(region => ({
-      value: region.value,
-      label: region.name
-    }))
-    setRegions(regionValues as SelectOption[])
-  }, [regionData?.resource])
+  }, [formik.values?.region, refetchTags])
 
   return (
     <FormikForm>
@@ -108,30 +115,44 @@ function FormComponent({
             multiTypeInputProps={{
               allowableTypes: [MultiTypeInputType.FIXED],
               selectProps: {
+                noResults: (
+                  <Text lineClamp={1} margin="small" width={384}>
+                    {fetchingRegions
+                      ? getString('common.loadingFieldOptions', {
+                          fieldName: getString('regionLabel')
+                        })
+                      : getRBACErrorMessage(awsRegionsError as RBACError) || getString('pipeline.noRegions')}
+                  </Text>
+                ),
                 items: regions
+              },
+              onChange: selectedRegion => {
+                const selectedRegionValue = (selectedRegion as unknown as any)?.value ?? selectedRegion
+                if (formik.values?.region !== selectedRegionValue) {
+                  setTags([])
+                  resetFieldValue(formik, 'tags', {})
+                }
               }
             }}
             label={getString('regionLabel')}
-            placeholder={getString('select')}
+            placeholder={getString('common.selectName', { name: getString('regionLabel') })}
           />
         </div>
         <div className={css.jenkinsFieldContainer}>
           <MultiTypeTagSelector
             name="tags"
-            className="tags-select"
             expressions={expressions}
             allowableTypes={[MultiTypeInputType.FIXED]}
             tags={tags}
             label={getString('pipeline.amiTags')}
             isLoadingTags={isTagsLoading}
-            initialTags={initialValues?.tags}
-            errorMessage={get(tagsError, 'data.message', '')}
+            initialTags={formik?.initialValues?.tags || {}}
+            errorMessage={get(tagsError, 'message', getString('common.noTags'))}
           />
         </div>
         <div className={css.jenkinsFieldContainer}>
           <MultiTypeTagSelector
             name="filters"
-            className="tags-select"
             expressions={expressions}
             allowableTypes={[MultiTypeInputType.FIXED]}
             tags={amiFilters}

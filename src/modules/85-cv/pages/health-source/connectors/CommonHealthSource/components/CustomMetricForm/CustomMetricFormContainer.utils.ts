@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { FormikErrors } from 'formik'
+import type { FormikErrors, FormikProps } from 'formik'
 import { cloneDeep, set } from 'lodash-es'
 import type { SelectOption } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
@@ -144,4 +144,27 @@ export function updateParentFormikWithLatestData(
 
 export function checkIfFieldLabelIsMetric(fieldLabel: string): boolean {
   return fieldLabel === 'Metric'
+}
+
+export function setVisibleFieldsTouched(
+  healthSourceConfig: HealthSourceConfig,
+  setFieldTouched: FormikProps<CommonCustomMetricFormikInterface>['setFieldTouched']
+): void {
+  const queryField = healthSourceConfig?.customMetrics?.queryAndRecords?.queryField
+  const isQueryEnabled = healthSourceConfig?.customMetrics?.queryAndRecords?.enabled
+  const fieldMappings = healthSourceConfig?.customMetrics?.fieldMappings
+
+  if (queryField) {
+    setFieldTouched(queryField?.identifier)
+  }
+
+  if (isQueryEnabled) {
+    setFieldTouched(CustomMetricFormFieldNames.QUERY)
+  }
+
+  if (Array.isArray(fieldMappings) && fieldMappings.length) {
+    for (const field of fieldMappings) {
+      setFieldTouched(field?.identifier)
+    }
+  }
 }

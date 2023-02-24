@@ -7,7 +7,9 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly downtimeTabs: string
   readonly info: string
+  readonly infoContainer: string
   readonly links: string
   readonly pageBody: string
 }

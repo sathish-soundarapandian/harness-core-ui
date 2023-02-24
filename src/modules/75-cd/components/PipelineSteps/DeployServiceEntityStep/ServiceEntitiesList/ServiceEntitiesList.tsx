@@ -8,9 +8,10 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import { defaultTo } from 'lodash-es'
-import { useToggleOpen, ConfirmationDialog, Dialog, AllowedTypes } from '@harness/uicore'
+import { useToggleOpen, ConfirmationDialog, AllowedTypes, ModalDialog } from '@harness/uicore'
+import type { ModalDialogProps } from '@harness/uicore/dist/components/ModalDialog/ModalDialog'
 import { Intent } from '@harness/design-system'
-import { IDialogProps, Spinner } from '@blueprintjs/core'
+import { Spinner } from '@blueprintjs/core'
 
 import { useStrings } from 'framework/strings'
 import ServiceEntityEditModal from '@cd/components/Services/ServiceEntityEditModal/ServiceEntityEditModal'
@@ -23,15 +24,16 @@ import type { ServiceData } from '../DeployServiceEntityUtils'
 import { ServiceEntityCard } from './ServiceEntityCard'
 import css from './ServiceEntitiesList.module.scss'
 
-const DIALOG_PROPS: Omit<IDialogProps, 'isOpen'> = {
+const DIALOG_PROPS: Omit<ModalDialogProps, 'isOpen'> = {
   usePortal: true,
   autoFocus: true,
   canEscapeKeyClose: false,
   canOutsideClickClose: false,
   enforceFocus: false,
   lazy: true,
-  style: { width: 1114 },
-  className: css.editServiceDialog
+  className: css.editServiceDialog,
+  height: 840,
+  width: 1114
 }
 
 export interface ServiceEntitiesListProps {
@@ -122,7 +124,12 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
           )
         })}
       </div>
-      <Dialog isOpen={!!serviceToEdit} onClose={onCloseEditModal} title={getString('editService')} {...DIALOG_PROPS}>
+      <ModalDialog
+        isOpen={!!serviceToEdit}
+        onClose={onCloseEditModal}
+        title={getString('editService')}
+        {...DIALOG_PROPS}
+      >
         <ServiceEntityEditModal
           selectedDeploymentType={defaultTo(
             serviceToEdit?.service.serviceDefinition?.type as ServiceDeploymentType,
@@ -134,7 +141,7 @@ export function ServiceEntitiesList(props: ServiceEntitiesListProps): React.Reac
           isServiceCreateModalView={false}
           gitOpsEnabled={gitOpsEnabled}
         />
-      </Dialog>
+      </ModalDialog>
       <ConfirmationDialog
         isOpen={isDeleteConfirmationOpen}
         titleText={getString('cd.pipelineSteps.serviceTab.deleteServiceFromListTitleText')}

@@ -26,7 +26,6 @@ export interface SelectedAppsSideNavProps {
   onRemoveItem?: (removedItem: string, index: number) => void
   onSelect?: (selectedMetric: string, index: number) => void
   groupedSelectedApps?: GroupedCreatedMetrics
-  isMetricThresholdEnabled?: boolean
 }
 
 export function SelectedAppsSideNav(props: SelectedAppsSideNavProps): JSX.Element {
@@ -39,8 +38,7 @@ export function SelectedAppsSideNav(props: SelectedAppsSideNavProps): JSX.Elemen
     headerText,
     onSelect,
     selectedItem,
-    onRemoveItem,
-    isMetricThresholdEnabled
+    onRemoveItem
   } = props
   let content
   if (error?.message) {
@@ -87,7 +85,6 @@ export function SelectedAppsSideNav(props: SelectedAppsSideNavProps): JSX.Elemen
           selectedItem={selectedItem}
           onRemoveItem={onRemoveItem}
           groupedSelectedAppsList={groupedSelectedAppsList}
-          isMetricThresholdEnabled={isMetricThresholdEnabled}
         />
       ) : (
         content

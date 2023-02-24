@@ -16,6 +16,7 @@ import {
   Container,
   Checkbox
 } from '@harness/uicore'
+import { defaultTo } from 'lodash-es'
 import { FontVariation, Intent } from '@harness/design-system'
 import { Callout } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
@@ -31,6 +32,7 @@ interface ContentTextProps {
   forceDeleteCallback?: () => void
   forcedDeleteEnabled: boolean
   setForcedDeleteEnabled: (status: boolean) => void
+  customErrorMessage?: string
 }
 
 interface CustomButtonContainerProps extends Omit<ContentTextProps, 'setForcedDeleteEnabled' | 'entity'> {
@@ -44,10 +46,11 @@ export interface UseEntityDeleteErrorHandlerDialogProps
   titleText?: React.ReactNode
   redirectToReferencedBy: () => void
   hideReferencedByButton?: boolean
+  customErrorMessage?: string
 }
 
 export const ContentText = (props: ContentTextProps): JSX.Element => {
-  const { entity, forcedDeleteEnabled, setForcedDeleteEnabled } = props
+  const { entity, forcedDeleteEnabled, setForcedDeleteEnabled, customErrorMessage } = props
   const { type, name } = entity
   const { getString } = useStrings()
   const typeLabelText = type.toLowerCase()
@@ -59,10 +62,13 @@ export const ContentText = (props: ContentTextProps): JSX.Element => {
   return (
     <Layout.Vertical>
       <Text margin={{ bottom: 'medium' }} font={{ variation: FontVariation.BODY2_SEMI }}>
-        {getString('common.referenceTextWarning', {
-          type: typeLabelText,
-          name
-        })}
+        {defaultTo(
+          customErrorMessage,
+          getString('common.referenceTextWarning', {
+            type: typeLabelText,
+            name
+          })
+        )}
       </Text>
       {props.forceDeleteCallback ? (
         <Checkbox
@@ -126,7 +132,8 @@ export const useEntityDeleteErrorHandlerDialog = (
     }),
     redirectToReferencedBy,
     forceDeleteCallback,
-    hideReferencedByButton
+    hideReferencedByButton,
+    customErrorMessage
   } = props
   const [forcedDeleteEnabled, setForcedDeleteEnabled] = useState<boolean>(false)
   const onClose = (): void => {
@@ -138,6 +145,7 @@ export const useEntityDeleteErrorHandlerDialog = (
     contentText: (
       <ContentText
         entity={entity}
+        customErrorMessage={customErrorMessage}
         forceDeleteCallback={forceDeleteCallback}
         forcedDeleteEnabled={forcedDeleteEnabled}
         setForcedDeleteEnabled={setForcedDeleteEnabled}

@@ -84,6 +84,7 @@ successfullUpdate: '{{entity}} {{name}} updated successfully'
 dataSubmitSuccess: 'Data has been submitted successfully'
 entityType: Entity Type
 cantDeleteEntity: Can't delete {{entity}}
+entityPlaceholderText: '- Select -' #used at placeholder places to select Svc, Infra, Env, Connector
 approve: Approve
 reject: Reject
 disable: Disable
@@ -96,6 +97,7 @@ hideAll: Hide All
 moreInfo: More Info
 moreOptions: More options
 viewText: View
+history: History
 PermissibleActions: Permissible Actions
 My: My
 ok: OK
@@ -622,6 +624,7 @@ filters:
   noMatchingFilterData: No results found matching the filter criteria
   noResultsFound: No results found
   clearFilters: Clear Filters
+  clearFilter: Clear Filter
   noFilterSaved: No Filter Saved
 in: in
 on: on
@@ -1045,6 +1048,9 @@ configureModuleList: Configure Module List
 codeErrorsSettings: Code Error Settings
 cdAndGitops: Continuous Delivery & GitOps
 stoText: Security Testing Orchestration
+yamlDiffView:
+  originalYamlLabel: Original
+  refreshedYamlLabel: Refreshed
 
 # IACM Module
 iacm: IACM
@@ -1110,6 +1116,7 @@ infrastructures: Infrastructures
 infrastructureInputs: Infrastructure inputs
 environmentPrefix: 'Environment: {{ name }}'
 infrastructurePrefix: 'Infrastructure: {{ name }}'
+serviceOverridePrefix: 'Service Override: {{ name }}'
 schedulePanel:
   currentUTCTime: '{{$.common.currentUTCTime}}'
   minutesLabel: 'Minutes'
@@ -1338,6 +1345,7 @@ artifacts:
     sourceDirectoryPlaceholder: Enter Source Directory
 updated: Updated
 python: Python
+bucketName: Bucket Name
 
 # SSCA module
 ssca: SSCA

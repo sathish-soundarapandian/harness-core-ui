@@ -155,10 +155,11 @@ describe('Unit tests for CustomMetricFormContainer', () => {
       setGroupedCreatedMetrics: jest.fn(),
       setNonCustomFeilds: jest.fn()
     } as any
+
     test('should test whether the inputs are disabled if the query is not entered and should take correct default value', async () => {
-      const { container } = render(<WrapperComponent {...mockProps} />)
-      expect(container.querySelector('.jsonSelectorButton')).toBeDisabled()
-      expect(container.querySelector('.jsonSelectorButton')).toHaveTextContent('_sourcehost')
+      const { getByTestId } = render(<WrapperComponent {...mockProps} />)
+      expect(getByTestId('jsonSelectorBtn')).toBeDisabled()
+      expect(getByTestId('jsonSelectorBtn')).toHaveTextContent('_sourcehost')
     })
 
     test('should test whether the inputs are enabled if the query present', async () => {
@@ -182,7 +183,7 @@ describe('Unit tests for CustomMetricFormContainer', () => {
         setGroupedCreatedMetrics: jest.fn(),
         setNonCustomFeilds: jest.fn()
       } as any
-      const { container } = render(<WrapperComponent {...mockProps2} query="select *" />)
+      const { getByTestId } = render(<WrapperComponent {...mockProps2} query="select *" />)
 
       await act(async () => {
         userEvent.click(screen.getByText('cv.monitoringSources.commonHealthSource.runQuery'))
@@ -190,12 +191,12 @@ describe('Unit tests for CustomMetricFormContainer', () => {
 
       await waitFor(() => expect(screen.getAllByText('cv.monitoringSources.gcoLogs.records')).not.toBeNull())
 
-      expect(container.querySelector('.jsonSelectorButton')).toHaveTextContent('_sourcehost')
+      expect(getByTestId('jsonSelectorBtn')).toHaveTextContent('_sourcehost')
 
-      expect(container.querySelector('.jsonSelectorButton')).not.toBeDisabled()
+      expect(getByTestId('jsonSelectorBtn')).not.toBeDisabled()
 
       act(() => {
-        userEvent.click(container.querySelector('.jsonSelectorButton')!)
+        userEvent.click(getByTestId('jsonSelectorBtn')!)
       })
 
       expect(document.body.querySelector('.bp3-drawer-header')?.textContent).toBe(

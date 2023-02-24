@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, ButtonVariation, ExpandingSearchInput } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import { useParams, useHistory } from 'react-router-dom'
@@ -25,6 +25,8 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { getErrorMessage } from '@triggers/components/Triggers/utils'
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from '@pipeline/utils/constants'
+import ListHeader from '@common/components/ListHeader/ListHeader'
+import { sortByCreated, sortByName } from '@common/utils/sortUtils'
 import { TriggersListSection, GoToEditWizardInterface } from './TriggersListSection'
 import { TriggerTypes } from '../utils/TriggersWizardPageUtils'
 import { getCategoryItems, ItemInterface, TriggerDataInterface } from '../utils/TriggersListUtils'
@@ -39,6 +41,7 @@ interface TriggersListPropsInterface {
 
 export default function TriggersList(props: TriggersListPropsInterface & GitQueryParams): JSX.Element {
   const { onNewTriggerClick, isPipelineInvalid, gitAwareForTriggerEnabled } = props
+  const [sort, setSort] = useState<string>(sortByCreated[0].value as string)
   const {
     branch,
     repoIdentifier,
@@ -68,8 +71,10 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
       targetIdentifier: pipelineIdentifier,
       searchTerm,
       size,
-      page
-    }
+      page,
+      sort: [sort]
+    },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' }
   })
 
   const triggerList = triggerListResponse?.data?.content || undefined
@@ -242,6 +247,13 @@ export default function TriggersList(props: TriggersListPropsInterface & GitQuer
               }
         }
       >
+        <ListHeader
+          value={sort}
+          sortOptions={[...sortByCreated, ...sortByName]}
+          onChange={option => setSort(option.value as string)}
+          totalCount={triggerListResponse?.data?.totalItems}
+          className={css.listHeader}
+        />
         <TriggersListSection
           triggerListData={triggerListResponse?.data}
           refetchTriggerList={fetchTriggerList}

@@ -5,69 +5,141 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React from 'react'
-import { ButtonVariation, Layout, Text, Icon, NoDataCard } from '@harness/uicore'
-import { FontVariation, Color } from '@harness/design-system'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Layout, Text, NoDataCard, Container, Tabs, SelectOption } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import { useHistory, useParams } from 'react-router-dom'
 import { Page } from '@common/exports'
 import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import noDowntimeData from '@cv/assets/noDowntimeData.svg'
 import { useStrings } from 'framework/strings'
-import RbacButton from '@rbac/components/Button/Button'
-import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import { ResourceType } from '@rbac/interfaces/ResourceType'
-import routes from '@common/RouteDefinitions'
+import { useQueryParams } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { getErrorMessage, getSearchString } from '@cv/utils/CommonUtils'
+import routes from '@common/RouteDefinitions'
+import { useGetDowntimeAssociatedMonitoredServices, useGetHistory, useListDowntimes } from 'services/cv'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
+import { SLODowntimeTabs } from './SLODowntimePage.types'
+import { getMessageAndAddDowntimeButton, getRedirectLinks, shouldRenderNoDataCard } from './SLODowntimePage.utils'
+import DowntimeList from './components/DowntimeList/DowntimeList'
+import DowntimeHistory from './components/DowntimeHistory/DowntimeHistory'
+import { defaultOption } from './SLODowntimePage.constants'
+import { FiltersContext } from './FiltersContext'
 import css from './SLODowntimePage.module.scss'
 
-export default function SLODowntimePage(): JSX.Element {
+const DowntimeTabsTitle = ({ title }: { title: string }): JSX.Element => (
+  <Text font={{ variation: FontVariation.LEAD }}>{title}</Text>
+)
+
+export const SLODowntimePage = (): JSX.Element => {
   const { getString } = useStrings()
   const history = useHistory()
-
+  useDocumentTitle([getString('cv.srmTitle'), getString('cv.sloDowntime.label')])
+  const { tab = SLODowntimeTabs.DOWNTIME } = useQueryParams<{ tab?: SLODowntimeTabs }>()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const pathParams = { accountId, orgIdentifier, projectIdentifier }
-
-  const learnMoreLink = ''
-
-  const getMessageAndAddDowntimeButton = (): JSX.Element => (
-    <>
-      <Layout.Horizontal spacing="medium">
-        <Text flex className={css.info}>
-          {getString('cv.sloDowntime.info')}
-        </Text>
-      </Layout.Horizontal>
-      <Layout.Horizontal spacing={'xxxlarge'}>
-        <RbacButton
-          icon="plus"
-          text={getString('cv.sloDowntime.label')}
-          variation={ButtonVariation.PRIMARY}
-          onClick={() => history.push(routes.toCVCreateSLODowntime(pathParams))}
-          permission={{
-            permission: PermissionIdentifier.EDIT_SLO_SERVICE,
-            resource: {
-              resourceType: ResourceType.SLO
-            }
-          }}
-        />
-      </Layout.Horizontal>
-    </>
+  const pathParams = useMemo(
+    () => ({ accountIdentifier: accountId, orgIdentifier, projectIdentifier }),
+    [accountId, projectIdentifier, orgIdentifier]
   )
 
-  const RedirectLink = ({ link, text }: { link: string; text: string }): JSX.Element => (
-    <a rel="noreferrer" target="_blank" href={link} className={css.links}>
-      <Text inline color={Color.PRIMARY_7} margin={{ right: 'xsmall' }}>
-        {text}
-      </Text>
-      <Icon color={Color.PRIMARY_7} name="launch" size={12} />
-    </a>
+  const [monitoredServiceOption, setMonitoredServiceOption] = useState<SelectOption>(defaultOption)
+  const [pageNumber, setPageNumber] = useState(0)
+  const [filter, setFilter] = useState('')
+
+  const handleCreateButton = (): void =>
+    history.push(
+      routes.toCVCreateSLODowntime({
+        accountId,
+        orgIdentifier,
+        projectIdentifier
+      })
+    )
+
+  const hideResetFilterButton = useMemo(() => monitoredServiceOption === defaultOption, [monitoredServiceOption])
+
+  const queryParams = useMemo(
+    () => ({
+      pageNumber,
+      filter,
+      monitoredServiceIdentifier:
+        monitoredServiceOption === defaultOption ? undefined : (monitoredServiceOption.value as string)
+    }),
+    [pageNumber, filter, monitoredServiceOption]
   )
 
-  const getRedirectLinks = (): JSX.Element => (
-    <Layout.Horizontal spacing="small" onClick={e => e.stopPropagation()}>
-      <RedirectLink link={learnMoreLink} text={getString('common.learnMore')} />
-      <Text>{getString('or')}</Text>
-      <RedirectLink link={learnMoreLink} text={getString('common.askUs')} />
-    </Layout.Horizontal>
+  const appliedSearchAndFilter = useMemo(
+    () => filter !== '' || monitoredServiceOption !== defaultOption,
+    [monitoredServiceOption, filter]
+  )
+
+  const { data: monitoredServicesData, loading: monitoredServicesLoading } = useGetDowntimeAssociatedMonitoredServices({
+    ...pathParams,
+    queryParams: { pageSize: 100 }
+  })
+
+  const {
+    data: downtimeData,
+    refetch: refetchDowntimes,
+    loading: downtimeDataLoading,
+    error: downtimeError
+  } = useListDowntimes({ ...pathParams, queryParams, lazy: true })
+
+  const {
+    data: downtimeHistoryData,
+    refetch: refetchHistoryData,
+    loading: downtimeHistoryLoading,
+    error: downtimeHistoryError
+  } = useGetHistory({ ...pathParams, queryParams, lazy: true })
+
+  useEffect(() => {
+    if (tab === SLODowntimeTabs.DOWNTIME) {
+      refetchDowntimes({ ...pathParams, queryParams })
+    } else {
+      refetchHistoryData({ ...pathParams, queryParams })
+    }
+  }, [queryParams, pathParams, tab])
+
+  useEffect(() => {
+    if (downtimeData?.data?.content?.length === 0) {
+      refetchHistoryData({ ...pathParams, queryParams })
+    }
+  }, [downtimeData])
+
+  const onTabChange = (nextTab: SLODowntimeTabs): void => {
+    if (nextTab !== tab) {
+      history.push({
+        pathname: routes.toCVSLODowntime({
+          accountId,
+          orgIdentifier,
+          projectIdentifier,
+          module: 'cv'
+        }),
+        search: getSearchString({
+          tab: nextTab
+        })
+      })
+      setMonitoredServiceOption(defaultOption)
+      setPageNumber(0)
+    }
+  }
+
+  const panelDowntime = (
+    <DowntimeList
+      downtimeDataLoading={downtimeDataLoading}
+      downtimeData={downtimeData}
+      refetchDowntimes={refetchDowntimes}
+      downtimeError={getErrorMessage(downtimeError)}
+      handleCreateButton={handleCreateButton}
+    />
+  )
+
+  const panelHistory = (
+    <DowntimeHistory
+      downtimeHistoryLoading={downtimeHistoryLoading}
+      downtimeHistoryData={downtimeHistoryData}
+      refetchHistoryData={refetchHistoryData}
+      downtimeHistoryError={getErrorMessage(downtimeHistoryError)}
+    />
   )
 
   return (
@@ -76,20 +148,61 @@ export default function SLODowntimePage(): JSX.Element {
         breadcrumbs={<NGBreadcrumbs />}
         title={
           <Layout.Vertical>
-            <Text font={{ variation: FontVariation.H4 }} tooltipProps={{ dataTooltipId: 'sloHeader' }}>
+            <Text font={{ variation: FontVariation.H4 }} tooltipProps={{ dataTooltipId: 'downtimeHeader' }}>
               {getString('common.sloDowntimeLabel')}
             </Text>
           </Layout.Vertical>
         }
       />
-      <Page.Body className={css.pageBody}>
-        <NoDataCard
-          image={noDowntimeData}
-          messageTitle={getString('cv.sloDowntime.noData')}
-          message={getMessageAndAddDowntimeButton()}
-          button={getRedirectLinks()}
-        />
-      </Page.Body>
+      <FiltersContext.Provider
+        value={{
+          monitoredServicesData,
+          monitoredServicesLoading,
+          monitoredServiceOption,
+          setMonitoredServiceOption,
+          filter,
+          setFilter,
+          pageNumber,
+          setPageNumber,
+          hideResetFilterButton,
+          queryParams,
+          pathParams,
+          appliedSearchAndFilter
+        }}
+      >
+        <Page.Body className={css.pageBody} loading={!appliedSearchAndFilter && downtimeDataLoading}>
+          {shouldRenderNoDataCard(appliedSearchAndFilter, downtimeData, downtimeHistoryData) ? (
+            <NoDataCard
+              image={noDowntimeData}
+              messageTitle={getString('cv.sloDowntime.noData')}
+              message={getMessageAndAddDowntimeButton(handleCreateButton, getString)}
+              button={getRedirectLinks(getString)}
+            />
+          ) : (
+            <Container className={css.downtimeTabs}>
+              <Tabs
+                id="sloDowntimeTabs"
+                selectedTabId={tab}
+                onChange={onTabChange}
+                tabList={[
+                  {
+                    id: SLODowntimeTabs.DOWNTIME,
+                    title: <DowntimeTabsTitle title={getString('cv.sloDowntime.label')} />,
+                    panel: panelDowntime
+                  },
+                  {
+                    id: SLODowntimeTabs.HISTORY,
+                    title: <DowntimeTabsTitle title={getString('common.history')} />,
+                    panel: panelHistory
+                  }
+                ]}
+              />
+            </Container>
+          )}
+        </Page.Body>
+      </FiltersContext.Provider>
     </>
   )
 }
+
+export default SLODowntimePage

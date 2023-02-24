@@ -9,15 +9,13 @@ import * as React from 'react'
 import cx from 'classnames'
 import { Icon, Layout, Text, Button, ButtonVariation } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { debounce, defaultTo, get, isEmpty, isUndefined } from 'lodash-es'
+import { debounce, defaultTo, get, isUndefined } from 'lodash-es'
 import { isMultiSvcOrMultiEnv, STATIC_SERVICE_GROUP_NAME } from '@pipeline/utils/executionUtils'
 import { useStrings } from 'framework/strings'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
-import { useDeepCompareEffect, useQueryParams } from '@common/hooks'
-import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
+import { useDeepCompareEffect } from '@common/hooks'
 import { isExecutionNotStarted } from '@pipeline/utils/statusHelpers'
-import { useExecutionContext } from '@pipeline/context/ExecutionContext'
 import { StageType } from '@pipeline/utils/stageHelpers'
 import { BaseReactComponentProps, NodeType, PipelineGraphState, PipelineGraphType } from '../../types'
 import {
@@ -82,9 +80,7 @@ export function MatrixNode(props: any): JSX.Element {
   const [layoutStyles, setLayoutStyles] = React.useState<LayoutStyles>({ height: 100, width: 70 })
   const CreateNode: React.FC<any> | undefined = props?.getNode?.(NodeType.CreateNode)?.component
   const DefaultNode: React.FC<any> | undefined = props?.getDefaultNode()?.component
-  const queryParams = useQueryParams<ExecutionPageQueryParams>()
   const defaultNode = props.getDefaultNode()?.component
-  const { selectedStageExecutionId } = useExecutionContext()
   const isNestedStepGroup = Boolean(get(props, 'data.step.data.isNestedGroup'))
   const subType = get(props, 'data.data.moduleInfo.stepParameters.subType')
   const numOfServices = get(
@@ -187,8 +183,8 @@ export function MatrixNode(props: any): JSX.Element {
   }, [state, props?.isNodeCollapsed, showAllNodes, isNodeCollapsed])
 
   const isSelectedNode = React.useMemo(() => {
-    return state.some(node => node?.id && node.id === queryParams?.stageExecId)
-  }, [queryParams?.stageExecId, isNodeCollapsed])
+    return state.some(node => node?.id && node.id === props?.selectedNodeId)
+  }, [props?.selectedNodeId, isNodeCollapsed])
 
   useDeepCompareEffect(() => {
     setShowAllNodes(!maxParallelism && !hasChildrenToBeCollapsed)
@@ -361,11 +357,7 @@ export function MatrixNode(props: any): JSX.Element {
                               nextNode={node.nextNode}
                               updateGraphLinks={node.updateGraphLinks}
                               readonly={props.readonly}
-                              selectedNodeId={
-                                isEmpty(queryParams?.stageExecId)
-                                  ? selectedStageExecutionId
-                                  : queryParams?.stageExecId || props?.selectedNodeId
-                              }
+                              selectedNodeId={props?.selectedNodeId}
                               showMarkers={false}
                               name={node.name}
                               matrixNodeName={node.matrixNodeName}

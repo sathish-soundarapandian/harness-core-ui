@@ -41,7 +41,13 @@ import {
   hasChainedPipelineStage,
   isFixedNonEmptyValue,
   withoutSideCar,
-  hasStageData
+  hasStageData,
+  getAllowedRepoOptions,
+  deleteStageInfo,
+  isServiceEntityPresent,
+  isEnvironmentGroupPresent,
+  isEnvironmentPresent,
+  isExecutionFieldPresent
 } from '../stageHelpers'
 import inputSetPipeline from './inputset-pipeline.json'
 import chainedPipeline from './mockJson/chainedPipeline.json'
@@ -132,6 +138,46 @@ test('isInfraDefinitionPresent', () => {
   ).toBe(true)
 })
 
+test('deleteStageInfo', () => {
+  const deploymentConfig = {
+    identifier: '1',
+    name: 'test',
+    spec: {
+      service: {},
+      environment: {},
+
+      execution: {
+        steps: [],
+        rollbackSteps: [
+          {
+            name: 'step1'
+          }
+        ]
+      },
+      infrastructure: {
+        allowSimultaneousDeployments: false,
+        infrastructureDefinition: {
+          type: 'Pdc',
+          spec: {}
+        }
+      },
+      serviceConfig: {
+        serviceDefinition: {
+          spec: {
+            artifacts: ['test'],
+            manifests: ['test']
+          }
+        }
+      }
+    }
+  }
+  deleteStageInfo(deploymentConfig as unknown as DeploymentStageElementConfig)
+  expect(deleteStageData(undefined)).toBe(undefined)
+  expect(deploymentConfig.spec?.execution?.rollbackSteps).toBeUndefined()
+  expect(deploymentConfig.spec?.execution?.steps).toHaveLength(0)
+  expect(deploymentConfig.spec?.service).toBeUndefined()
+  expect(deploymentConfig.spec?.environment).toBeUndefined()
+})
 test('deleteStageData', () => {
   const deploymentConfig = {
     identifier: '1',
@@ -188,6 +234,8 @@ test('getStepTypeByDeploymentType', () => {
   expect(getStepTypeByDeploymentType(ServiceDeploymentType.GoogleCloudFunctions)).toBe(
     StepType.GoogleCloudFunctionsService
   )
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.AzureWebApp)).toBe(StepType.AzureWebAppServiceSpec)
+  expect(getStepTypeByDeploymentType('')).toBe(StepType.K8sServiceSpec)
 })
 
 test('isServerlessDeploymentType', () => {
@@ -242,10 +290,16 @@ test('isAzureWebAppGenericDeploymentType', () => {
 })
 
 test('isFixedNonEmptyValue', () => {
-  expect(isFixedNonEmptyValue(MultiTypeInputType.RUNTIME)).toBe(true)
+  expect(isFixedNonEmptyValue('<+input>')).toBe(false)
   expect(isFixedNonEmptyValue(MultiTypeInputType.FIXED)).toBe(true)
   expect(isFixedNonEmptyValue('123')).toBe(true)
   expect(isFixedNonEmptyValue('')).toBe(false)
+})
+
+test('getAllowedRepoOptions', () => {
+  expect(getAllowedRepoOptions(ServiceDeploymentType.WinRm, true, true, 'Acr')).toHaveLength(4)
+
+  expect(getAllowedRepoOptions(ServiceDeploymentType.AzureWebApp, true, true, 'Acr')).toHaveLength
 })
 
 test('isAzureWebAppOrSshWinrmGenericDeploymentType', () => {
@@ -454,4 +508,138 @@ test('hasChainedPipelineStage', () => {
 
 test('hasStageData', () => {
   expect(hasStageData()).toBe(false)
+  expect(
+    hasStageData({
+      name: 'test',
+      identifier: 'test',
+      spec: {
+        service: {
+          serviceRef: 'test'
+        },
+        execution: { steps: [] }
+      }
+    })
+  ).toBe(true)
+  expect(
+    hasStageData({
+      name: 'test',
+      identifier: 'test',
+      spec: {
+        environment: {
+          environmentRef: 'test'
+        },
+        execution: { steps: [] }
+      }
+    })
+  ).toBe(true)
+  expect(
+    hasStageData({
+      name: 'test',
+      identifier: 'test',
+      spec: {
+        execution: { steps: [] }
+      }
+    })
+  ).toBe(false)
+})
+
+test('isServiceEntityPresent', () => {
+  expect(
+    isServiceEntityPresent({
+      name: 'test',
+      identifier: 'test',
+      spec: {
+        service: {
+          serviceRef: 'test'
+        },
+        execution: { steps: [] }
+      }
+    })
+  ).toBe(true)
+  expect(
+    isServiceEntityPresent({
+      identifier: 'test',
+      name: 'test',
+      spec: {
+        execution: {
+          steps: []
+        }
+      }
+    })
+  ).toBe(false)
+})
+
+test('isEnvironmentGroupPresent', () => {
+  expect(
+    isEnvironmentGroupPresent({
+      name: 'test',
+      identifier: 'test',
+      spec: {
+        environmentGroup: {
+          envGroupRef: 'test'
+        },
+        execution: { steps: [] }
+      }
+    })
+  ).toBe(true)
+  expect(
+    isEnvironmentGroupPresent({
+      identifier: 'test',
+      name: 'test',
+      spec: {
+        execution: {
+          steps: []
+        }
+      }
+    })
+  ).toBe(false)
+})
+
+test('isEnvironmentPresent', () => {
+  expect(
+    isEnvironmentPresent({
+      name: 'test',
+      identifier: 'test',
+      spec: {
+        environment: {
+          environmentRef: 'test'
+        },
+        execution: { steps: [] }
+      }
+    })
+  ).toBe(true)
+  expect(
+    isEnvironmentPresent({
+      identifier: 'test',
+      name: 'test',
+      spec: {
+        execution: {
+          steps: []
+        }
+      }
+    })
+  ).toBe(false)
+})
+
+test('isExecutionFieldPresent', () => {
+  expect(
+    isExecutionFieldPresent({
+      name: 'test',
+      identifier: 'test',
+      spec: {
+        execution: { steps: [] }
+      }
+    })
+  ).toBe(false)
+  expect(
+    isExecutionFieldPresent({
+      identifier: 'test',
+      name: 'test',
+      spec: {
+        execution: {
+          steps: []
+        }
+      }
+    })
+  ).toBe(false)
 })

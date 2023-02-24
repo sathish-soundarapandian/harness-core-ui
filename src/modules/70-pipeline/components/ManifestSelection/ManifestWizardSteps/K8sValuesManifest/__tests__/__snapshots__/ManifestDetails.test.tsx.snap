@@ -1176,7 +1176,7 @@ exports[`Manifest Details tests initial rendering 1`] = `
                           <p
                             class="StyledProps--font StyledProps--main pathLabel"
                           >
-                            fileFolderPathText
+                            common.git.filePath
                           </p>
                         </span>
                         <div
@@ -1282,7 +1282,7 @@ exports[`Manifest Details tests initial rendering 1`] = `
                                       autocomplete="off"
                                       class="bp3-input"
                                       name="paths[0].path"
-                                      placeholder="pipeline.manifestType.manifestPathPlaceholder"
+                                      placeholder="pipeline.manifestType.pathPlaceholder"
                                       type="text"
                                       value=""
                                     />
@@ -1747,7 +1747,7 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
                           <p
                             class="StyledProps--font StyledProps--main pathLabel"
                           >
-                            fileFolderPathText
+                            common.git.filePath
                           </p>
                         </span>
                         <div
@@ -1853,7 +1853,7 @@ exports[`Manifest Details tests renders form in edit mode - when gitfetchtype is
                                       autocomplete="off"
                                       class="bp3-input"
                                       name="paths[0].path"
-                                      placeholder="pipeline.manifestType.manifestPathPlaceholder"
+                                      placeholder="pipeline.manifestType.pathPlaceholder"
                                       type="text"
                                       value="test-path"
                                     />
@@ -2318,7 +2318,7 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
                           <p
                             class="StyledProps--font StyledProps--main pathLabel"
                           >
-                            fileFolderPathText
+                            common.git.filePath
                           </p>
                         </span>
                         <div
@@ -2424,7 +2424,7 @@ exports[`Manifest Details tests renders form in edit mode 1`] = `
                                       autocomplete="off"
                                       class="bp3-input"
                                       name="paths[0].path"
-                                      placeholder="pipeline.manifestType.manifestPathPlaceholder"
+                                      placeholder="pipeline.manifestType.pathPlaceholder"
                                       type="text"
                                       value="test-path"
                                     />
@@ -2889,7 +2889,7 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
                           <p
                             class="StyledProps--font StyledProps--main pathLabel"
                           >
-                            fileFolderPathText
+                            common.git.filePath
                           </p>
                         </span>
                         <div
@@ -2995,7 +2995,7 @@ exports[`Manifest Details tests runtime value for connector should make runtime 
                                       autocomplete="off"
                                       class="bp3-input"
                                       name="paths[0].path"
-                                      placeholder="pipeline.manifestType.manifestPathPlaceholder"
+                                      placeholder="pipeline.manifestType.pathPlaceholder"
                                       type="text"
                                       value="test-path"
                                     />
@@ -3460,7 +3460,7 @@ exports[`Manifest Details tests when branch is runtime input 1`] = `
                           <p
                             class="StyledProps--font StyledProps--main pathLabel"
                           >
-                            fileFolderPathText
+                            common.git.filePath
                           </p>
                         </span>
                         <div
@@ -3566,7 +3566,7 @@ exports[`Manifest Details tests when branch is runtime input 1`] = `
                                       autocomplete="off"
                                       class="bp3-input"
                                       name="paths[0].path"
-                                      placeholder="pipeline.manifestType.manifestPathPlaceholder"
+                                      placeholder="pipeline.manifestType.pathPlaceholder"
                                       type="text"
                                       value=""
                                     />
@@ -3954,7 +3954,7 @@ exports[`Manifest Details tests when connectionType is of repo 1`] = `
                           <p
                             class="StyledProps--font StyledProps--main pathLabel"
                           >
-                            fileFolderPathText
+                            common.git.filePath
                           </p>
                         </span>
                         <div
@@ -4060,7 +4060,7 @@ exports[`Manifest Details tests when connectionType is of repo 1`] = `
                                       autocomplete="off"
                                       class="bp3-input"
                                       name="paths[0].path"
-                                      placeholder="pipeline.manifestType.manifestPathPlaceholder"
+                                      placeholder="pipeline.manifestType.pathPlaceholder"
                                       type="text"
                                       value="test-path"
                                     />
@@ -4525,7 +4525,7 @@ exports[`Manifest Details tests when scope is of account 1`] = `
                           <p
                             class="StyledProps--font StyledProps--main pathLabel"
                           >
-                            fileFolderPathText
+                            common.git.filePath
                           </p>
                         </span>
                         <div
@@ -4631,7 +4631,7 @@ exports[`Manifest Details tests when scope is of account 1`] = `
                                       autocomplete="off"
                                       class="bp3-input"
                                       name="paths[0].path"
-                                      placeholder="pipeline.manifestType.manifestPathPlaceholder"
+                                      placeholder="pipeline.manifestType.pathPlaceholder"
                                       type="text"
                                       value="test-path"
                                     />

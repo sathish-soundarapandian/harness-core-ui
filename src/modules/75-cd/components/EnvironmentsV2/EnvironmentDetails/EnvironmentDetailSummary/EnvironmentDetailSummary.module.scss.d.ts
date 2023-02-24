@@ -11,6 +11,7 @@ declare const styles: {
   readonly collapseBody: string
   readonly collapseHeader: string
   readonly cursor: string
+  readonly dashCtn: string
   readonly detailSummaryView: string
   readonly dialogBase: string
   readonly dialogWrap: string

@@ -6,11 +6,11 @@
  */
 
 import React from 'react'
-import { act, getByText, render, waitFor } from '@testing-library/react'
-import { fireEvent } from '@testing-library/dom'
+import { act, render, waitFor } from '@testing-library/react'
+import { fireEvent, within } from '@testing-library/dom'
 import produce from 'immer'
 import { set } from 'lodash-es'
-import { findDialogContainer, TestWrapper } from '@common/utils/testUtils'
+import { TestWrapper } from '@common/utils/testUtils'
 import { useSaveTemplateListener } from '@pipeline/components/PipelineStudio/hooks/useSaveTemplateListener'
 import { PipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import pipelineContextMock from '@pipeline/components/PipelineStudio/RightDrawer/__tests__/stateMock'
@@ -28,7 +28,7 @@ describe('useSaveTemplateListener tests', () => {
     const contextMock = produce(pipelineContextMock, draft => {
       set(draft, 'state.pipelineView.drawerData.data.stepConfig.node.identifier', 'step1')
     })
-    render(
+    const { baseElement } = render(
       <TestWrapper>
         <PipelineContext.Provider value={contextMock}>
           <WrappedComponent />
@@ -38,11 +38,11 @@ describe('useSaveTemplateListener tests', () => {
     await act(async () => {
       window.dispatchEvent(new CustomEvent('TEMPLATE_SAVED', { detail: stepTemplate.data }))
     })
-    await waitFor(() => expect(findDialogContainer()).toBeDefined())
-    const dialogContainer = findDialogContainer() as HTMLElement
-    await act(async () => {
-      fireEvent.click(getByText(dialogContainer, 'yes'))
-    })
+
+    const confirmButton = await within(baseElement).findByText('yes')
+    expect(confirmButton).toBeInTheDocument()
+    fireEvent.click(confirmButton)
+
     const updatedStage = produce(contextMock.state.pipeline.stages?.[0].stage as StageElementConfig, draft => {
       set(draft, 'spec.execution.steps[0].step', {
         identifier: 'step1',
@@ -54,7 +54,7 @@ describe('useSaveTemplateListener tests', () => {
   })
 
   test('should call updateStage when stage template is used', async () => {
-    render(
+    const { baseElement } = render(
       <TestWrapper>
         <PipelineContext.Provider value={pipelineContextMock}>
           <WrappedComponent />
@@ -64,11 +64,11 @@ describe('useSaveTemplateListener tests', () => {
     await act(async () => {
       window.dispatchEvent(new CustomEvent('TEMPLATE_SAVED', { detail: stageTemplateVersion1.data }))
     })
-    await waitFor(() => expect(findDialogContainer()).toBeDefined())
-    const dialogContainer = findDialogContainer() as HTMLElement
-    await act(async () => {
-      fireEvent.click(getByText(dialogContainer, 'yes'))
-    })
+
+    const confirmButton = await within(baseElement).findByText('yes')
+    expect(confirmButton).toBeInTheDocument()
+    fireEvent.click(confirmButton)
+
     await waitFor(() =>
       expect(pipelineContextMock.updateStage).toBeCalledWith({
         identifier: 's1',
@@ -79,7 +79,7 @@ describe('useSaveTemplateListener tests', () => {
   })
 
   test('should call updatePipeline when pipeline template is used', async () => {
-    render(
+    const { baseElement } = render(
       <TestWrapper>
         <PipelineContext.Provider value={pipelineContextMock}>
           <WrappedComponent />
@@ -90,10 +90,9 @@ describe('useSaveTemplateListener tests', () => {
       window.dispatchEvent(new CustomEvent('TEMPLATE_SAVED', { detail: pipelineTemplate.data }))
     })
 
-    const dialogContainer = findDialogContainer() as HTMLElement
-    await waitFor(() => expect(findDialogContainer()).toBeDefined())
-
-    fireEvent.click(getByText(dialogContainer, 'yes'))
+    const confirmButton = await within(baseElement).findByText('yes')
+    expect(confirmButton).toBeInTheDocument()
+    fireEvent.click(confirmButton)
 
     await waitFor(() =>
       expect(pipelineContextMock.updatePipeline).toBeCalledWith({

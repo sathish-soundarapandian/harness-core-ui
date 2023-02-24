@@ -60,7 +60,7 @@ selectConnector: Select Connector
 selectConnectors: Select Connectors
 showInstructions: Show instructions
 apiKey: '{{$.common.apikey}}'
-apiKeyOrPassword: Password/Api Key
+apiKeyOrPassword: Password/API Key
 costVisibility: Cost Visibility
 chooseMethodForConnection: 'Choose the method for Harness to use when connecting to {{name}}.'
 k8sConnection: the cluster
@@ -215,8 +215,10 @@ ociHelm:
   ociHelmUrl: 'OCI Helm URL'
 jira:
   jiraUrl: 'Jira URL'
+  usernameAPIKey: 'Username and API Key'
 serviceNow:
   serviceNowUrl: 'ServiceNow URL'
+  usernamePasswordAPIKey: 'Username and Password/API Key'
   adfs: ADFS Client Credentials with Certificate
   adfsUrl: ADFS URL
   resourceID: Resource ID
@@ -275,7 +277,6 @@ hashiCorpVault:
   vaultAgent: Vault Agent
   awsAuth: AWS Auth
   serverIdHeader: Server Id Header
-  serverIdHeaderRequired: Server Id Header is required
   root: '/(Root)'
   sinkPath: Sink Path
   sinkPathIsRequired: Sink Path is required
@@ -344,6 +345,9 @@ azureArtifacts:
   azureArtifactsUrl: Azure Artifacts URL
 helmRepo:
   helmRepoUrl: 'Helm Repository URL'
+bamboo:
+  bamboo: 'Bamboo'
+  bambooUrl: 'Bamboo URL'
 aws:
   awsAccessKey: AWS Access Key
   accessKey: '{{ $.common.accessKey }}'

@@ -36,6 +36,7 @@ import { getTriggerArtifactInitialSpec } from '@triggers/components/Triggers/Art
 import type { ArtifactTriggerConfig, NGTriggerSourceV2 } from 'services/pipeline-ng'
 import ArtifactWizard from '@pipeline/components/ArtifactsSelection/ArtifactWizard/ArtifactWizard'
 import { showConnectorStep } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+
 import { GCRImagePath } from './ArtifactRepository/ArtifactLastSteps/GCRImagePath/GCRImagePath'
 import { ECRArtifact } from './ArtifactRepository/ArtifactLastSteps/ECRArtifact/ECRArtifact'
 import NexusArtifact from './ArtifactRepository/ArtifactLastSteps/NexusArtifact/NexusArtifact'
@@ -181,30 +182,28 @@ export default function ArtifactsSelection({ formikProps }: ArtifactsSelectionPr
     trackEvent(ArtifactActions.SavePrimaryArtifactOnPipelinePage, {})
   }, [trackEvent])
 
-  const addArtifact = useCallback(
-    async (artifactObj: ArtifactTriggerSpec): Promise<void> => {
-      const { type, spec: _triggerSpec } = formikProps.values.source ?? {}
-      const { type: _artifactType } = _triggerSpec ?? {}
+  const addArtifact = async (artifactObj: ArtifactTriggerSpec): Promise<void> => {
+    const { type, spec: _triggerSpec } = formikProps.values.source ?? {}
+    const { type: _artifactType } = _triggerSpec ?? {}
 
-      await formikProps.setValues(
-        merge(formikProps.values, {
-          source: {
-            type,
-            spec: {
-              type: _artifactType,
-              spec: artifactObj
-            }
-          }
-        })
-      )
+    const values = {
+      ...formikProps.values,
+      source: {
+        type,
+        spec: {
+          type: _artifactType,
+          spec: artifactObj
+        }
+      }
+    }
 
-      setPrimaryArtifact(formikProps.values?.source?.spec)
+    await formikProps.setValues(values)
 
-      setTelemetryEvent()
-      hideConnectorModal()
-    },
-    [hideConnectorModal, selectedArtifactType, setTelemetryEvent]
-  )
+    setPrimaryArtifact(values?.source?.spec)
+
+    setTelemetryEvent()
+    hideConnectorModal()
+  }
 
   const getArtifactInitialValues = useCallback((): InitialArtifactDataType => {
     return {

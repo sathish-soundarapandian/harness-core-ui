@@ -363,11 +363,62 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case: CDS_ARTIFACTO
               </div>
             </div>
             <div
+              class="tagGroup marginBottom"
+            >
+              <div
+                class="bp3-form-group radioGroup"
+                data-id="tagType-4"
+              >
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="StyledProps--main"
+                  >
+                    
+                    <div
+                      class="RadioButtonGroup--inline"
+                    >
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="value"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Value
+                      </label>
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="regex"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Regex
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
               class="imagePathContainer"
             >
               <div
                 class="bp3-form-group bp3-disabled tagInputButton"
-                data-id="tag-4"
+                data-id="tag-5"
               >
                 <label
                   class="bp3-label"
@@ -468,57 +519,6 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case: CDS_ARTIFACTO
                     </button>
                   </span>
                 </span>
-              </div>
-            </div>
-            <div
-              class="tagGroup marginBottom"
-            >
-              <div
-                class="bp3-form-group radioGroup"
-                data-id="tagType-5"
-              >
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="StyledProps--main"
-                  >
-                    
-                    <div
-                      class="RadioButtonGroup--inline"
-                    >
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          checked=""
-                          class="RadioButton--input"
-                          name="tagType"
-                          type="radio"
-                          value="value"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        Value
-                      </label>
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          class="RadioButton--input"
-                          name="tagType"
-                          type="radio"
-                          value="regex"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        Regex
-                      </label>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -956,11 +956,62 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case: CDS_ARTIFACTO
               </div>
             </div>
             <div
+              class="tagGroup marginBottom"
+            >
+              <div
+                class="bp3-form-group radioGroup"
+                data-id="tagType-4"
+              >
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="StyledProps--main"
+                  >
+                    
+                    <div
+                      class="RadioButtonGroup--inline"
+                    >
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="value"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Value
+                      </label>
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="regex"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Regex
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
               class="imagePathContainer"
             >
               <div
                 class="bp3-form-group bp3-disabled tagInputButton"
-                data-id="tag-4"
+                data-id="tag-5"
               >
                 <label
                   class="bp3-label"
@@ -1061,57 +1112,6 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case: CDS_ARTIFACTO
                     </button>
                   </span>
                 </span>
-              </div>
-            </div>
-            <div
-              class="tagGroup marginBottom"
-            >
-              <div
-                class="bp3-form-group radioGroup"
-                data-id="tagType-5"
-              >
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="StyledProps--main"
-                  >
-                    
-                    <div
-                      class="RadioButtonGroup--inline"
-                    >
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          checked=""
-                          class="RadioButton--input"
-                          name="tagType"
-                          type="radio"
-                          value="value"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        Value
-                      </label>
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          class="RadioButton--input"
-                          name="tagType"
-                          type="radio"
-                          value="regex"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        Regex
-                      </label>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -1549,11 +1549,62 @@ exports[`Nexus Artifact tests renders without crashing: CDS_ARTIFACTORY_REPOSITO
               </div>
             </div>
             <div
+              class="tagGroup marginBottom"
+            >
+              <div
+                class="bp3-form-group radioGroup"
+                data-id="tagType-4"
+              >
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="StyledProps--main"
+                  >
+                    
+                    <div
+                      class="RadioButtonGroup--inline"
+                    >
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="value"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Value
+                      </label>
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="regex"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Regex
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
               class="imagePathContainer"
             >
               <div
                 class="bp3-form-group bp3-disabled tagInputButton"
-                data-id="tag-4"
+                data-id="tag-5"
               >
                 <label
                   class="bp3-label"
@@ -1654,57 +1705,6 @@ exports[`Nexus Artifact tests renders without crashing: CDS_ARTIFACTORY_REPOSITO
                     </button>
                   </span>
                 </span>
-              </div>
-            </div>
-            <div
-              class="tagGroup marginBottom"
-            >
-              <div
-                class="bp3-form-group radioGroup"
-                data-id="tagType-5"
-              >
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="StyledProps--main"
-                  >
-                    
-                    <div
-                      class="RadioButtonGroup--inline"
-                    >
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          checked=""
-                          class="RadioButton--input"
-                          name="tagType"
-                          type="radio"
-                          value="value"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        Value
-                      </label>
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          class="RadioButton--input"
-                          name="tagType"
-                          type="radio"
-                          value="regex"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        Regex
-                      </label>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -2142,11 +2142,62 @@ exports[`Nexus Artifact tests renders without crashing: CDS_ARTIFACTORY_REPOSITO
               </div>
             </div>
             <div
+              class="tagGroup marginBottom"
+            >
+              <div
+                class="bp3-form-group radioGroup"
+                data-id="tagType-4"
+              >
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="StyledProps--main"
+                  >
+                    
+                    <div
+                      class="RadioButtonGroup--inline"
+                    >
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="value"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Value
+                      </label>
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="regex"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Regex
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
               class="imagePathContainer"
             >
               <div
                 class="bp3-form-group bp3-disabled tagInputButton"
-                data-id="tag-4"
+                data-id="tag-5"
               >
                 <label
                   class="bp3-label"
@@ -2247,57 +2298,6 @@ exports[`Nexus Artifact tests renders without crashing: CDS_ARTIFACTORY_REPOSITO
                     </button>
                   </span>
                 </span>
-              </div>
-            </div>
-            <div
-              class="tagGroup marginBottom"
-            >
-              <div
-                class="bp3-form-group radioGroup"
-                data-id="tagType-5"
-              >
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="StyledProps--main"
-                  >
-                    
-                    <div
-                      class="RadioButtonGroup--inline"
-                    >
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          checked=""
-                          class="RadioButton--input"
-                          name="tagType"
-                          type="radio"
-                          value="value"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        Value
-                      </label>
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          class="RadioButton--input"
-                          name="tagType"
-                          type="radio"
-                          value="regex"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        Regex
-                      </label>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -2572,11 +2572,77 @@ exports[`Serverless artifact ServerlessArtifactoryRepository while fetching repo
               </div>
             </div>
             <div
+              class="tagGroup marginBottom"
+            >
+              <div
+                class="bp3-form-group radioGroup"
+                data-id="tagType-2"
+              >
+                <label
+                  class="bp3-label"
+                  for="tagType"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="artifactoryArtifact_tagType"
+                  >
+                    pipeline.artifactsSelection.artifactDetails
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="StyledProps--main"
+                  >
+                    
+                    <div
+                      class="RadioButtonGroup--inline"
+                    >
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="value"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Value
+                      </label>
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="regex"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Regex
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
               class="imagePathContainer"
             >
               <div
                 class="bp3-form-group bp3-disabled tagInputButton"
-                data-id="tag-2"
+                data-id="tag-3"
               >
                 <label
                   class="bp3-label"
@@ -2677,72 +2743,6 @@ exports[`Serverless artifact ServerlessArtifactoryRepository while fetching repo
                     </button>
                   </span>
                 </span>
-              </div>
-            </div>
-            <div
-              class="tagGroup marginBottom"
-            >
-              <div
-                class="bp3-form-group radioGroup"
-                data-id="tagType-3"
-              >
-                <label
-                  class="bp3-label"
-                  for="tagType"
-                >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="artifactoryArtifact_tagType"
-                  >
-                    pipeline.artifactsSelection.artifactDetails
-                  </span>
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="StyledProps--main"
-                  >
-                    
-                    <div
-                      class="RadioButtonGroup--inline"
-                    >
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          checked=""
-                          class="RadioButton--input"
-                          name="tagType"
-                          type="radio"
-                          value="value"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        Value
-                      </label>
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          class="RadioButton--input"
-                          name="tagType"
-                          type="radio"
-                          value="regex"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        Regex
-                      </label>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -2989,11 +2989,77 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with repository as 
               </div>
             </div>
             <div
+              class="tagGroup marginBottom"
+            >
+              <div
+                class="bp3-form-group radioGroup"
+                data-id="tagType-2"
+              >
+                <label
+                  class="bp3-label"
+                  for="tagType"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="artifactoryArtifact_tagType"
+                  >
+                    pipeline.artifactsSelection.artifactDetails
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="StyledProps--main"
+                  >
+                    
+                    <div
+                      class="RadioButtonGroup--inline"
+                    >
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="value"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Value
+                      </label>
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="regex"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Regex
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
               class="imagePathContainer"
             >
               <div
                 class="bp3-form-group tagInputButton"
-                data-id="tag-2"
+                data-id="tag-3"
               >
                 <label
                   class="bp3-label"
@@ -3101,72 +3167,6 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with repository as 
                     </button>
                   </span>
                 </span>
-              </div>
-            </div>
-            <div
-              class="tagGroup marginBottom"
-            >
-              <div
-                class="bp3-form-group radioGroup"
-                data-id="tagType-3"
-              >
-                <label
-                  class="bp3-label"
-                  for="tagType"
-                >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="artifactoryArtifact_tagType"
-                  >
-                    pipeline.artifactsSelection.artifactDetails
-                  </span>
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="StyledProps--main"
-                  >
-                    
-                    <div
-                      class="RadioButtonGroup--inline"
-                    >
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          checked=""
-                          class="RadioButton--input"
-                          name="tagType"
-                          type="radio"
-                          value="value"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        Value
-                      </label>
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          class="RadioButton--input"
-                          name="tagType"
-                          type="radio"
-                          value="regex"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        Regex
-                      </label>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -3441,11 +3441,77 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with status as erro
               </div>
             </div>
             <div
+              class="tagGroup marginBottom"
+            >
+              <div
+                class="bp3-form-group radioGroup"
+                data-id="tagType-2"
+              >
+                <label
+                  class="bp3-label"
+                  for="tagType"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="artifactoryArtifact_tagType"
+                  >
+                    pipeline.artifactsSelection.artifactDetails
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="StyledProps--main"
+                  >
+                    
+                    <div
+                      class="RadioButtonGroup--inline"
+                    >
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="value"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Value
+                      </label>
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="regex"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Regex
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
               class="imagePathContainer"
             >
               <div
                 class="bp3-form-group bp3-disabled tagInputButton"
-                data-id="tag-2"
+                data-id="tag-3"
               >
                 <label
                   class="bp3-label"
@@ -3546,72 +3612,6 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with status as erro
                     </button>
                   </span>
                 </span>
-              </div>
-            </div>
-            <div
-              class="tagGroup marginBottom"
-            >
-              <div
-                class="bp3-form-group radioGroup"
-                data-id="tagType-3"
-              >
-                <label
-                  class="bp3-label"
-                  for="tagType"
-                >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="artifactoryArtifact_tagType"
-                  >
-                    pipeline.artifactsSelection.artifactDetails
-                  </span>
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="StyledProps--main"
-                  >
-                    
-                    <div
-                      class="RadioButtonGroup--inline"
-                    >
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          checked=""
-                          class="RadioButton--input"
-                          name="tagType"
-                          type="radio"
-                          value="value"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        Value
-                      </label>
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          class="RadioButton--input"
-                          name="tagType"
-                          type="radio"
-                          value="regex"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        Regex
-                      </label>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -3886,11 +3886,77 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with status as fail
               </div>
             </div>
             <div
+              class="tagGroup marginBottom"
+            >
+              <div
+                class="bp3-form-group radioGroup"
+                data-id="tagType-2"
+              >
+                <label
+                  class="bp3-label"
+                  for="tagType"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="artifactoryArtifact_tagType"
+                  >
+                    pipeline.artifactsSelection.artifactDetails
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="StyledProps--main"
+                  >
+                    
+                    <div
+                      class="RadioButtonGroup--inline"
+                    >
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="value"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Value
+                      </label>
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="regex"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Regex
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
               class="imagePathContainer"
             >
               <div
                 class="bp3-form-group bp3-disabled tagInputButton"
-                data-id="tag-2"
+                data-id="tag-3"
               >
                 <label
                   class="bp3-label"
@@ -3991,72 +4057,6 @@ exports[`Serverless artifact ServerlessArtifactoryRepository with status as fail
                     </button>
                   </span>
                 </span>
-              </div>
-            </div>
-            <div
-              class="tagGroup marginBottom"
-            >
-              <div
-                class="bp3-form-group radioGroup"
-                data-id="tagType-3"
-              >
-                <label
-                  class="bp3-label"
-                  for="tagType"
-                >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="artifactoryArtifact_tagType"
-                  >
-                    pipeline.artifactsSelection.artifactDetails
-                  </span>
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
-                <div
-                  class="bp3-form-content"
-                >
-                  <div
-                    class="StyledProps--main"
-                  >
-                    
-                    <div
-                      class="RadioButtonGroup--inline"
-                    >
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          checked=""
-                          class="RadioButton--input"
-                          name="tagType"
-                          type="radio"
-                          value="value"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        Value
-                      </label>
-                      <label
-                        class="RadioButton--radio StyledProps--main"
-                      >
-                        <input
-                          class="RadioButton--input"
-                          name="tagType"
-                          type="radio"
-                          value="regex"
-                        />
-                        <span
-                          class="RadioButton--radioIcon"
-                        />
-                        Regex
-                      </label>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -4331,11 +4331,77 @@ exports[`Serverless artifact renders serverlessArtifactRepository 1`] = `
               </div>
             </div>
             <div
+              class="tagGroup marginBottom"
+            >
+              <div
+                class="bp3-form-group radioGroup"
+                data-id="tagType-2"
+              >
+                <label
+                  class="bp3-label"
+                  for="tagType"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="artifactoryArtifact_tagType"
+                  >
+                    pipeline.artifactsSelection.artifactDetails
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="StyledProps--main"
+                  >
+                    
+                    <div
+                      class="RadioButtonGroup--inline"
+                    >
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          checked=""
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="value"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Value
+                      </label>
+                      <label
+                        class="RadioButton--radio StyledProps--main"
+                      >
+                        <input
+                          class="RadioButton--input"
+                          name="tagType"
+                          type="radio"
+                          value="regex"
+                        />
+                        <span
+                          class="RadioButton--radioIcon"
+                        />
+                        Regex
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
               class="imagePathContainer"
             >
               <div
                 class="bp3-form-group bp3-disabled tagInputButton"
-                data-id="tag-2"
+                data-id="tag-3"
               >
                 <label
                   class="bp3-label"
@@ -4438,6 +4504,476 @@ exports[`Serverless artifact renders serverlessArtifactRepository 1`] = `
                 </span>
               </div>
             </div>
+          </div>
+          <div
+            class="Layout--horizontal Layout--layout-spacing-medium StyledProps--main"
+          >
+            <button
+              aria-label="back"
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withLeftIcon Button--variation Button--variation-secondary"
+              type="button"
+            >
+              <span
+                class="bp3-icon bp3-icon-chevron-left StyledProps--main StyledProps--padding-right-xsmall"
+                icon="chevron-left"
+              >
+                <svg
+                  data-icon="chevron-left"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    chevron-left
+                  </desc>
+                  <path
+                    d="M7.41 8l3.29-3.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71l-4 4C5.11 7.47 5 7.72 5 8c0 .28.11.53.29.71l4 4a1.003 1.003 0 001.42-1.42L7.41 8z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <span
+                class="bp3-button-text"
+              >
+                back
+              </span>
+            </button>
+            <button
+              aria-label="submit"
+              class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--withRightIcon Button--variation Button--variation-primary"
+              type="submit"
+            >
+              <span
+                class="bp3-button-text"
+              >
+                submit
+              </span>
+              <span
+                class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                icon="chevron-right"
+              >
+                <svg
+                  data-icon="chevron-right"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    chevron-right
+                  </desc>
+                  <path
+                    d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`WinRm artifactory artifact render form correctly when tagType is regex 1`] = `
+<div>
+  <div
+    class="Layout--vertical Layout--layout-spacing-medium StyledProps--main firstep"
+  >
+    <p
+      class="StyledProps--font StyledProps--main StyledProps--font-variation-h3 StyledProps--margin-bottom-medium"
+    >
+      pipeline.artifactsSelection.artifactDetails
+    </p>
+    <div
+      class="OverlaySpinner--overlaySpinner"
+    >
+      <form
+        action="#"
+        class="FormikForm--main"
+      >
+        <div>
+          <div
+            class="artifactForm"
+          >
+            <div
+              class="imagePathContainer"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="repositoryFormat-0"
+              >
+                <label
+                  class="bp3-label"
+                  for="repositoryFormat"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="artifactoryArtifact_repositoryFormat"
+                  >
+                    common.repositoryFormat
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="bp3-popover-wrapper Select--main bp3-fill"
+                  >
+                    <div
+                      class="bp3-popover-target"
+                    >
+                      <div
+                        class="bp3-input-group"
+                      >
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          name="repositoryFormat"
+                          placeholder="- Select -"
+                          style="padding-right: 0px;"
+                          type="text"
+                          value=""
+                        />
+                        <span
+                          class="bp3-input-action"
+                        >
+                          <span
+                            class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                            icon="chevron-down"
+                          >
+                            <svg
+                              data-icon="chevron-down"
+                              height="14"
+                              viewBox="0 0 16 16"
+                              width="14"
+                            >
+                              <desc>
+                                chevron-down
+                              </desc>
+                              <path
+                                d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="fieldAndOptions imagePathContainer"
+            >
+              <div
+                class="bp3-form-group"
+                data-id="repository-1"
+              >
+                <label
+                  class="bp3-label"
+                  for="repository"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="artifactoryArtifact_repository"
+                  >
+                    repository
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  >
+                    <div
+                      class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+                    >
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-input-group"
+                        >
+                          <input
+                            autocomplete="off"
+                            class="bp3-input"
+                            name="repository"
+                            placeholder="Search..."
+                            style="padding-right: 0px;"
+                            type="text"
+                            value=""
+                          />
+                          <span
+                            class="bp3-input-action"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                              icon="chevron-down"
+                            >
+                              <svg
+                                data-icon="chevron-down"
+                                height="14"
+                                viewBox="0 0 16 16"
+                                width="14"
+                              >
+                                <desc>
+                                  chevron-down
+                                </desc>
+                                <path
+                                  d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="imagePathContainer"
+            >
+              <div
+                class="bp3-form-group tagInputButton"
+              >
+                <label
+                  class="bp3-label"
+                  for="artifactPath"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="artifactoryArtifact_artifactPath"
+                  >
+                    pipeline.artifactImagePathLabel
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  >
+                    <div
+                      class="bp3-popover-wrapper bp3-fill"
+                    >
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+                        >
+                          <div
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="bp3-input-group"
+                            >
+                              <input
+                                autocomplete="off"
+                                class="bp3-input"
+                                name="artifactPath"
+                                placeholder="pipeline.artifactsSelection.artifactPathPlaceholder"
+                                style="padding-right: 0px;"
+                                type="text"
+                                value="path"
+                              />
+                              <span
+                                class="bp3-input-action"
+                              >
+                                <span
+                                  class="bp3-icon StyledProps--main StyledProps--padding-top-small StyledProps--padding-right-xsmall StyledProps--padding-bottom-small"
+                                  data-icon="main-delete"
+                                >
+                                  <svg
+                                    height="14"
+                                    viewBox="0 0 14 14"
+                                    width="14"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M10.5 4.2c0-.4-.3-.7-.7-.7-.2 0-.4.1-.5.2L7 6 4.7 3.7c-.1-.1-.3-.2-.5-.2-.4 0-.7.3-.7.7 0 .2.1.4.2.5L6 7 3.7 9.3c-.1.1-.2.3-.2.5 0 .4.3.7.7.7.2 0 .4-.1.5-.2L7 8l2.3 2.3c.1.1.3.2.5.2.4 0 .7-.3.7-.7 0-.2-.1-.4-.2-.5L8 7l2.3-2.3c.1-.1.2-.3.2-.5zM7 0C3.1 0 0 3.1 0 7s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm0 12.6c-3.1 0-5.6-2.5-5.6-5.6S3.9 1.4 7 1.4s5.6 2.5 5.6 5.6-2.5 5.6-5.6 5.6z"
+                                      fill="#4d5969"
+                                    />
+                                  </svg>
+                                </span>
+                                <span
+                                  class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                                  icon="chevron-down"
+                                >
+                                  <svg
+                                    data-icon="chevron-down"
+                                    height="14"
+                                    viewBox="0 0 16 16"
+                                    width="14"
+                                  >
+                                    <desc>
+                                      chevron-down
+                                    </desc>
+                                    <path
+                                      d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                      fill-rule="evenodd"
+                                    />
+                                  </svg>
+                                </span>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="imagePathContainer"
+            >
+              <div
+                class="bp3-form-group"
+              >
+                <label
+                  class="bp3-label"
+                  for="repositoryUrl"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="artifactoryArtifact_repositoryUrl"
+                  >
+                    repositoryUrlLabel (optional)
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main"
+                  >
+                    <div
+                      class="bp3-input-group MultiTypeInput--input"
+                    >
+                      <input
+                        autocomplete="off"
+                        class="bp3-input"
+                        name="repositoryUrl"
+                        placeholder="pipeline.repositoryUrlPlaceholder"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                    <span
+                      class="bp3-popover-wrapper MultiTypeInput--wrapper"
+                    >
+                      <span
+                        class="bp3-popover-target"
+                      >
+                        <button
+                          class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                          data-testid="multi-type-button"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main"
+                            data-icon="fixed-input"
+                          >
+                            <svg
+                              height="12"
+                              viewBox="0 0 9 9"
+                              width="12"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div
               class="tagGroup marginBottom"
             >
@@ -4445,21 +4981,6 @@ exports[`Serverless artifact renders serverlessArtifactRepository 1`] = `
                 class="bp3-form-group radioGroup"
                 data-id="tagType-3"
               >
-                <label
-                  class="bp3-label"
-                  for="tagType"
-                >
-                  <span
-                    class="Tooltip--acenter"
-                    data-tooltip-id="artifactoryArtifact_tagType"
-                  >
-                    pipeline.artifactsSelection.artifactDetails
-                  </span>
-                   
-                  <span
-                    class="bp3-text-muted"
-                  />
-                </label>
                 <div
                   class="bp3-form-content"
                 >
@@ -4500,6 +5021,113 @@ exports[`Serverless artifact renders serverlessArtifactRepository 1`] = `
                         Regex
                       </label>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="imagePathContainer"
+            >
+              <div
+                class="bp3-form-group bp3-disabled tagInputButton"
+                data-id="tag-4"
+              >
+                <label
+                  class="bp3-label"
+                  for="tag"
+                >
+                  <span
+                    class="Tooltip--acenter"
+                    data-tooltip-id="artifactoryArtifact_tag"
+                  >
+                    tagLabel
+                  </span>
+                   
+                  <span
+                    class="bp3-text-muted"
+                  />
+                </label>
+                <div
+                  class="bp3-form-content"
+                >
+                  <div
+                    class="Layout--horizontal StyledProps--main MultiTypeInput--main MultiTypeInput--disabled"
+                  >
+                    <div
+                      class="bp3-popover-wrapper bp3-fill"
+                    >
+                      <div
+                        class="bp3-popover-target"
+                      >
+                        <div
+                          class="bp3-popover-wrapper MultiTypeInput--select MultiTypeInput--fixedValueInput Select--main bp3-fill"
+                        >
+                          <div
+                            class="bp3-popover-target"
+                          >
+                            <div
+                              class="bp3-input-group bp3-disabled"
+                            >
+                              <input
+                                autocomplete="off"
+                                class="bp3-input"
+                                disabled=""
+                                name="tag"
+                                placeholder="Search..."
+                                style="padding-right: 0px;"
+                                type="text"
+                                value="path"
+                              />
+                              <span
+                                class="bp3-input-action"
+                              >
+                                <span
+                                  class="bp3-icon bp3-icon-chevron-down StyledProps--main StyledProps--padding-small"
+                                  icon="chevron-down"
+                                >
+                                  <svg
+                                    data-icon="chevron-down"
+                                    height="14"
+                                    viewBox="0 0 16 16"
+                                    width="14"
+                                  >
+                                    <desc>
+                                      chevron-down
+                                    </desc>
+                                    <path
+                                      d="M12 5c-.28 0-.53.11-.71.29L8 8.59l-3.29-3.3a1.003 1.003 0 00-1.42 1.42l4 4c.18.18.43.29.71.29s.53-.11.71-.29l4-4A1.003 1.003 0 0012 5z"
+                                      fill-rule="evenodd"
+                                    />
+                                  </svg>
+                                </span>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      class="MultiTypeInput--btn MultiTypeInput--FIXED"
+                      data-testid="multi-type-button"
+                      disabled=""
+                    >
+                      <span
+                        class="bp3-icon StyledProps--main"
+                        data-icon="fixed-input"
+                      >
+                        <svg
+                          height="12"
+                          viewBox="0 0 9 9"
+                          width="12"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M5.61 7.55c.62-.7.3-1.42.18-2.35a.32.32 0 01.1-.29l1.43-1.42a.76.76 0 01.28-.15c.39-.1 1 0 1.28-.29a.34.34 0 000-.51L6.46.12a.33.33 0 00-.52 0c-.28.29-.2.9-.28 1.3a.53.53 0 01-.13.23L4.09 3.12a.29.29 0 01-.28.09c-.89-.11-1.6-.49-2.27.11-.29.26-.29.43 0 .7l1.31 1.34.15.16-.15.15-2.7 2.69a.36.36 0 000 .54.36.36 0 00.54-.05l2.63-2.68.17-.17.17.16c.45.46.9.91 1.36 1.36.21.21.42.22.59.03z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </span>
+                    </button>
                   </div>
                 </div>
               </div>

@@ -26,7 +26,6 @@ import {
   PipelineInfoConfig,
   StageElementConfig,
   StageElementWrapperConfig,
-  createPipelinePromise,
   CreatePipelineQueryParams,
   createPipelineV2Promise,
   EntityGitDetails,
@@ -36,7 +35,6 @@ import {
   getPipelineSummaryPromise,
   getPipelinePromise,
   GetPipelineQueryParams,
-  putPipelinePromise,
   PutPipelineQueryParams,
   putPipelineV2Promise,
   ResponsePMSPipelineResponseDTO,
@@ -203,16 +201,12 @@ export const getPipelineMetadataByIdentifier = (
 export const savePipeline = (
   params: CreatePipelineQueryParams & PutPipelineQueryParams,
   pipeline: PipelineInfoConfig,
-  isEdit = false,
-  useAPIV2 = false
+  isEdit = false
 ): Promise<Failure | undefined> => {
-  const createPipeline = useAPIV2 ? createPipelineV2Promise : createPipelinePromise
-  const updatePipeline = useAPIV2 ? putPipelineV2Promise : putPipelinePromise
-
   const body = yamlStringify(pipeline)
 
   return isEdit
-    ? updatePipeline({
+    ? putPipelineV2Promise({
         pipelineIdentifier: params.identifier ? params.identifier : pipeline.identifier,
         queryParams: {
           ...params
@@ -230,7 +224,7 @@ export const savePipeline = (
         .catch(err => {
           return err
         })
-    : createPipeline({
+    : createPipelineV2Promise({
         body: body as any,
         queryParams: {
           ...params

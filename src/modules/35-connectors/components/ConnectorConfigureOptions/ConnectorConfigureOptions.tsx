@@ -27,7 +27,7 @@ export const ConnectorConfigureOptions: FC<ConnectorConfigureOptionsProps> = pro
         {...connectorReferenceFieldProps}
         width={430}
         name="allowedValues"
-        placeholder={getString('connectors.selectConnectors')}
+        placeholder={getString('common.entityPlaceholderText')}
         isMultiSelect={true}
       />
     )

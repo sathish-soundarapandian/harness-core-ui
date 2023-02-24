@@ -65,7 +65,7 @@ exports[`Validate HealthSourceInputsetTable should render HealthSourceInputsetTa
               class="Layout--horizontal StyledProps--main"
             >
               <span
-                class="bp3-icon StyledProps--main StyledProps--margin-right-medium"
+                class="bp3-icon StyledProps--main StyledProps--padding-right-small"
                 data-icon="service-appdynamics"
               >
                 <svg
@@ -86,7 +86,8 @@ exports[`Validate HealthSourceInputsetTable should render HealthSourceInputsetTa
                 </svg>
               </span>
               <p
-                class="StyledProps--font StyledProps--main"
+                class="StyledProps--font Text--lineclamp StyledProps--main"
+                style="--text-line-clamp: 1;"
               >
                 AppD default metrics runtime connector
               </p>
@@ -98,7 +99,8 @@ exports[`Validate HealthSourceInputsetTable should render HealthSourceInputsetTa
             style="width: 150px;"
           >
             <p
-              class="StyledProps--font StyledProps--main healthSourceInputsetTable"
+              class="StyledProps--font Text--lineclamp StyledProps--main healthSourceInputsetTable StyledProps--padding-right-small"
+              style="--text-line-clamp: 1;"
             >
               &lt;+input&gt;
             </p>
@@ -109,7 +111,8 @@ exports[`Validate HealthSourceInputsetTable should render HealthSourceInputsetTa
             style="width: 150px;"
           >
             <p
-              class="StyledProps--font StyledProps--main"
+              class="StyledProps--font Text--lineclamp StyledProps--main"
+              style="--text-line-clamp: 1;"
             >
               Application Monitoring
             </p>
@@ -132,7 +135,7 @@ exports[`Validate HealthSourceInputsetTable should render HealthSourceInputsetTa
               class="Layout--horizontal StyledProps--main"
             >
               <span
-                class="bp3-icon StyledProps--main StyledProps--margin-right-medium"
+                class="bp3-icon StyledProps--main StyledProps--padding-right-small"
                 data-icon="service-appdynamics"
               >
                 <svg
@@ -153,7 +156,8 @@ exports[`Validate HealthSourceInputsetTable should render HealthSourceInputsetTa
                 </svg>
               </span>
               <p
-                class="StyledProps--font StyledProps--main"
+                class="StyledProps--font Text--lineclamp StyledProps--main"
+                style="--text-line-clamp: 1;"
               >
                 Appd with custom and runtime connector
               </p>
@@ -165,7 +169,8 @@ exports[`Validate HealthSourceInputsetTable should render HealthSourceInputsetTa
             style="width: 150px;"
           >
             <p
-              class="StyledProps--font StyledProps--main healthSourceInputsetTable"
+              class="StyledProps--font Text--lineclamp StyledProps--main healthSourceInputsetTable StyledProps--padding-right-small"
+              style="--text-line-clamp: 1;"
             >
               &lt;+input&gt;
             </p>
@@ -176,7 +181,8 @@ exports[`Validate HealthSourceInputsetTable should render HealthSourceInputsetTa
             style="width: 150px;"
           >
             <p
-              class="StyledProps--font StyledProps--main"
+              class="StyledProps--font Text--lineclamp StyledProps--main"
+              style="--text-line-clamp: 1;"
             >
               Application Monitoring
             </p>

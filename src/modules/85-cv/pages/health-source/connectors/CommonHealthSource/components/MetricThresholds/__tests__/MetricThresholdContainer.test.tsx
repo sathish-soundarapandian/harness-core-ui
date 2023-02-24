@@ -41,8 +41,7 @@ describe('Metric thresholds', () => {
           continuousVerification: true
         }
       ]
-    },
-    isMetricThresholdEnabled: true
+    }
   }
 
   describe('Metric thresholds config tests', () => {
@@ -50,12 +49,6 @@ describe('Metric thresholds', () => {
       const newProps = { ...props, groupedCreatedMetrics: {} }
       render(<WrapperComponent {...newProps} />)
 
-      expect(screen.queryByTestId(/commonHealthSource_metricThresholds/)).not.toBeInTheDocument()
-    })
-
-    test('should check metric threshold should not get rendered, if it is a template or metric threshold is not enabled', () => {
-      const newProps = { ...props, isMetricThresholdEnabled: false }
-      render(<WrapperComponent {...newProps} />)
       expect(screen.queryByTestId(/commonHealthSource_metricThresholds/)).not.toBeInTheDocument()
     })
 

@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly auditTabs: string
   readonly dateRange: string
   readonly emptyStateImage: string
   readonly launchIcon: string

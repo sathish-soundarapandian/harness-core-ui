@@ -31,6 +31,7 @@ declare const styles: {
   readonly manifestStepNumberContainer: string
   readonly manifestStepTitle: string
   readonly manifestVariablesTable: string
+  readonly marginBottomLarge: string
   readonly mtop: string
   readonly nestedAccordions: string
   readonly nestedSectionCard: string

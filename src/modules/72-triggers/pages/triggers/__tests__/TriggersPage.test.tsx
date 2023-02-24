@@ -176,8 +176,10 @@ describe('TriggersPage Triggers tests', () => {
           targetIdentifier: 'pipelineIdentifier',
           searchTerm,
           page: 0,
-          size: 20
-        }
+          size: 20,
+          sort: ['createdAt,DESC']
+        },
+        queryParamStringifyOptions: { arrayFormat: 'repeat' }
       })
     })
   })

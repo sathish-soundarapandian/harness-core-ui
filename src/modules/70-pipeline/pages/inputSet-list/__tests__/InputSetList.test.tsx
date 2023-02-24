@@ -314,8 +314,10 @@ describe('Input Set List - Actions tests', () => {
         pageSize: 20,
         pipelineIdentifier: 'pipeline',
         projectIdentifier: 'test',
-        searchTerm: 'asd'
-      }
+        searchTerm: 'asd',
+        sortOrders: ['createdAt,DESC']
+      },
+      queryParamStringifyOptions: { arrayFormat: 'repeat' }
     })
   })
 

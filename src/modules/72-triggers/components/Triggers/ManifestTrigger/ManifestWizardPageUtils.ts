@@ -688,7 +688,7 @@ export const getHelmManifestSpec = (): HelmManifestSpec => {
 
   return {
     eventConditions,
-    helmVersion: 'V2',
+    helmVersion: 'V3',
     store: getHelmManifestSpecStore(),
     chartVersion: TriggerDefaultFieldList.chartVersion
   }

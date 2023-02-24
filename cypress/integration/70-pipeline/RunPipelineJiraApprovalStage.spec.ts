@@ -22,11 +22,6 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
     '/ng/api/jira/statuses?routingId=accountId&accountIdentifier=accountId&projectIdentifier=project1&orgIdentifier=default&connectorRef=Jira_cloud'
   const accountLicense = 'ng/api/licenses/account?routingId=accountId&accountIdentifier=accountId'
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', gitSyncCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.intercept('GET', jirayamlSnippetCall, { fixture: 'pipeline/api/jiraStage/stageYamlSnippet' }).as('stageYaml')
     cy.intercept('POST', stepsCall, { fixture: 'pipeline/api/approvals/steps' })
@@ -83,7 +78,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
       cy.wait(4000)
       cy.contains('p', 'Jira Create').click()
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
-      cy.contains('span', 'Select Connector').click({ force: true })
+      cy.contains('span', 'Select').click({ force: true })
       cy.contains('p', 'Jira cloudJira cloudJira cloudJira cloudJira cloudJira cloud').click({ force: true })
       cy.contains('span', 'Apply Selected').click({ force: true })
       cy.wait(1000)
@@ -109,7 +104,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
       cy.wait(3000)
       cy.contains('p', 'Jira Create').click()
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
-      cy.contains('span', 'Select Connector').click({ force: true })
+      cy.contains('span', 'Select').click({ force: true })
       cy.contains('p', 'Jira cloudJira cloudJira cloudJira cloudJira cloudJira cloud').click({ force: true })
       cy.contains('span', 'Apply Selected').click({ force: true })
       cy.wait(1000)
@@ -189,7 +184,7 @@ describe('RUN PIPELINE MODAL - Jira Approval Stage', () => {
       cy.wait(3000)
       cy.contains('p', 'Jira Update').click()
       cy.visitPageAssertion('[class^=StepCommands]') //assert right-drawer opening
-      cy.contains('span', 'Select Connector').click({ force: true })
+      cy.contains('span', 'Select').click({ force: true })
       cy.contains('p', 'Jira cloudJira cloudJira cloudJira cloudJira cloudJira cloud').click({ force: true })
       cy.contains('span', 'Apply Selected').click({ force: true })
       cy.wait(1000)

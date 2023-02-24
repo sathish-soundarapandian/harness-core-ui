@@ -11,7 +11,8 @@ import type {
   RiskCount,
   SLODashboardWidget,
   SLOErrorBudgetResetDTO,
-  TimeRangeFilter
+  TimeRangeFilter,
+  UnavailabilityInstancesResponse
 } from 'services/cv'
 import type { SLOActionTypes } from './CVSLOsListingPage.constants'
 
@@ -40,6 +41,7 @@ export interface SLOCardContentProps {
   setChartTimeRange?: (timeRange?: SLOCardContentProps['chartTimeRange']) => void
   sliderTimeRange?: { startTime: number; endTime: number }
   setSliderTimeRange?: (timeRange?: SLOCardContentProps['sliderTimeRange']) => void
+  downtimeInstanceUnavailability?: UnavailabilityInstancesResponse[]
 }
 
 export interface SLOTargetChartWithChangeTimelineProps extends SLOCardContentProps {

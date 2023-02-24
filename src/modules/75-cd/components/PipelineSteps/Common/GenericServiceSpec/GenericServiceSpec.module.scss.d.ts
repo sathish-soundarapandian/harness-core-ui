@@ -26,6 +26,7 @@ declare const styles: {
   readonly listHeader: string
   readonly listLabel: string
   readonly manifestVariablesTable: string
+  readonly marginBottomLarge: string
   readonly mtop: string
   readonly nestedAccordions: string
   readonly nestedSectionCard: string

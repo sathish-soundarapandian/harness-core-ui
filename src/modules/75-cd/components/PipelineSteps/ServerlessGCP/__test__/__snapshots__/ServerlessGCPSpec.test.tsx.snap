@@ -48,7 +48,7 @@ exports[`Test ServerlessGCPSpec snapshot should render edit view for inputset vi
                     <span
                       class="placeholder"
                     >
-                      connectors.selectConnector
+                      common.entityPlaceholderText
                     </span>
                   </span>
                   <span

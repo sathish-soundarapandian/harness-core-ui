@@ -201,11 +201,16 @@ exports[`Bandit Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -304,11 +309,16 @@ exports[`Bandit Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -376,11 +386,16 @@ exports[`Bandit Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -473,11 +488,16 @@ exports[`Bandit Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -543,11 +563,16 @@ exports[`Bandit Step Edit View edit mode works 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -622,12 +647,17 @@ exports[`Bandit Step Edit View edit mode works 1`] = `
                 pipelineSteps.workspace
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepTargetWorkspace"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -707,12 +737,17 @@ exports[`Bandit Step Edit View edit mode works 1`] = `
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -821,12 +856,17 @@ exports[`Bandit Step Edit View edit mode works 1`] = `
                 sto.stepField.advanced.cli
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepArgsCli"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -902,12 +942,17 @@ exports[`Bandit Step Edit View edit mode works 1`] = `
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -1633,11 +1678,16 @@ exports[`Bandit Step Edit View renders runtime inputs 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -1736,11 +1786,16 @@ exports[`Bandit Step Edit View renders runtime inputs 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -1808,11 +1863,16 @@ exports[`Bandit Step Edit View renders runtime inputs 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -1905,11 +1965,16 @@ exports[`Bandit Step Edit View renders runtime inputs 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2015,11 +2080,16 @@ exports[`Bandit Step Edit View renders runtime inputs 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -2134,12 +2204,17 @@ exports[`Bandit Step Edit View renders runtime inputs 1`] = `
                 pipelineSteps.workspace
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepTargetWorkspace"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -2258,12 +2333,17 @@ exports[`Bandit Step Edit View renders runtime inputs 1`] = `
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -2379,12 +2459,17 @@ exports[`Bandit Step Edit View renders runtime inputs 1`] = `
                 sto.stepField.advanced.cli
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepArgsCli"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -2500,12 +2585,17 @@ exports[`Bandit Step Edit View renders runtime inputs 1`] = `
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -2979,11 +3069,16 @@ exports[`Bandit Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepMode"
             >
-              sto.stepField.mode
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.mode
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3082,11 +3177,16 @@ exports[`Bandit Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepConfig"
             >
-              sto.stepField.config
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.config
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3154,11 +3254,16 @@ exports[`Bandit Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetType"
             >
-              typeLabel
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                typeLabel
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3251,11 +3356,16 @@ exports[`Bandit Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetName"
             >
-              name
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                name
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3321,11 +3431,16 @@ exports[`Bandit Step Edit View should render properly 1`] = `
           class="StyledProps--font StyledProps--main formGroup lg bottomMargin5"
         >
           <div>
-            <p
-              class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+            <div
+              class="Text--withDocsTooltip"
+              data-tooltip-id="securityStepTargetVariant"
             >
-              sto.stepField.target.variant
-            </p>
+              <p
+                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey600 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+              >
+                sto.stepField.target.variant
+              </p>
+            </div>
             <div
               style="display: flex; align-items: center;"
             >
@@ -3400,12 +3515,17 @@ exports[`Bandit Step Edit View should render properly 1`] = `
                 pipelineSteps.workspace
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepTargetWorkspace"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -3485,12 +3605,17 @@ exports[`Bandit Step Edit View should render properly 1`] = `
                 sto.stepField.advanced.logLevel
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepLogLevel"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -3599,12 +3724,17 @@ exports[`Bandit Step Edit View should render properly 1`] = `
                 sto.stepField.advanced.cli
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepArgsCli"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"
@@ -3680,12 +3810,17 @@ exports[`Bandit Step Edit View should render properly 1`] = `
                 sto.stepField.advanced.failOnSeverity
               </p>
                
-              <p
-                class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
-                style="text-transform: capitalize;"
+              <div
+                class="Text--withDocsTooltip"
+                data-tooltip-id="securityStepFailOnSeverity"
               >
-                common.optionalLabel
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main inpLabel StyledProps--color StyledProps--color-grey400 StyledProps--font-size-small StyledProps--font-weight-semi-bold"
+                  style="text-transform: capitalize;"
+                >
+                  common.optionalLabel
+                </p>
+              </div>
             </div>
             <div
               style="display: flex; align-items: center;"

@@ -80,6 +80,8 @@ import type {
 } from '@triggers/pages/triggers/interface/TriggersWizardInterface'
 import type { AddConditionInterface } from '@triggers/pages/triggers/views/AddConditionsSection'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 import {
   getConnectorName,
   getConnectorValue,
@@ -128,6 +130,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
   } = useQueryParams<TriggerGitQueryParams>()
   const history = useHistory()
   const { getString } = useStrings()
+  const isOptionalVariableAllowed = useFeatureFlag(FeatureFlag.FF_ALLOW_OPTIONAL_VARIABLE)
   const { data: template, loading: fetchingTemplate } = useMutateAsGet(useGetTemplateFromPipeline, {
     queryParams: {
       accountIdentifier: accountId,
@@ -551,7 +554,8 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
                 resolvedPipeline: resolvedMergedPipeline,
                 getString,
                 viewType: StepViewType.TriggerForm,
-                viewTypeMetadata: { isTrigger: true }
+                viewTypeMetadata: { isTrigger: true },
+                isOptionalVariableAllowed
               }) as any) || formErrors
             resolve(validatedErrors)
           } catch (e) {

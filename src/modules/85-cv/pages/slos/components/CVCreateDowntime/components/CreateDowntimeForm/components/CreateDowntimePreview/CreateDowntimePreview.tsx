@@ -7,28 +7,22 @@
 
 import React from 'react'
 import { Layout, Text } from '@harness/uicore'
-import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { getDowntimeCategoryLabel } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.utils'
 import { CreateDowntimeSteps } from '../../CreateDowntimeForm.types'
 import type { CreateDowntimePreviewProps, LabelValueProps } from './CreateDowntimePreview.types'
 import { getSummaryData } from './CreateDowntimePreview.utils'
+import css from '../../CreateDowntimeForm.module.scss'
 
 export const LabelAndValue = ({ label, value, recurrenceText }: LabelValueProps): JSX.Element => {
   return (
-    <Layout.Horizontal spacing="small">
-      <Text title={label} font={{ weight: 'semi-bold' }} color={Color.GREY_1000} width={120}>
+    <Layout.Horizontal spacing="small" className={css.previewLabelAndValue}>
+      <Text title={label} width={120} className={css.label}>
         {label}
       </Text>
       <Layout.Vertical spacing={'xsmall'}>
-        <Text font={{ weight: 'light' }} color={Color.GREY_1000}>
-          {value}
-        </Text>
-        {recurrenceText && (
-          <Text font={{ weight: 'light' }} color={Color.GREY_1000}>
-            {recurrenceText}
-          </Text>
-        )}
+        <Text className={css.value}>{value}</Text>
+        {recurrenceText && <Text className={css.value}>{recurrenceText}</Text>}
       </Layout.Vertical>
     </Layout.Horizontal>
   )

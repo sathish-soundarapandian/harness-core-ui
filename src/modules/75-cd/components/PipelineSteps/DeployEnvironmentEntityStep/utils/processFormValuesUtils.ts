@@ -35,6 +35,7 @@ export function processSingleEnvironmentFormValues(
           deployToAll: false,
           ...(!isEmpty(data.provisioner) && { provisioner: data.provisioner }),
           environmentInputs: RUNTIME_INPUT_VALUE as any,
+          serviceOverrideInputs: RUNTIME_INPUT_VALUE as any,
           ...(gitOpsEnabled
             ? { gitOpsClusters: RUNTIME_INPUT_VALUE as any }
             : { infrastructureDefinitions: RUNTIME_INPUT_VALUE as any })

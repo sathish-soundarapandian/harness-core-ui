@@ -26,20 +26,18 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import ResourceCardList, { ResourceOption } from '@common/components/ResourceCardList/ResourceCardList'
 import { useAnyEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import { useProjectModal } from '@projects-orgs/modals/ProjectModal/useProjectModal'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import css from './OrganizationDetailsPage.module.scss'
 
 const OrganizationDetailsPage: React.FC = () => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
-  const { OPA_PIPELINE_GOVERNANCE, OPA_FF_GOVERNANCE, NG_DEPLOYMENT_FREEZE } = useFeatureFlags()
   const history = useHistory()
   const { getString } = useStrings()
-  const canUsePolicyEngine = useAnyEnterpriseLicense()
+  const showGovCard = useAnyEnterpriseLicense()
   const { licenseInformation } = useLicenseStore()
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, ModuleName.CD)
-  const showDeploymentFreeze = isEnterpriseEdition && NG_DEPLOYMENT_FREEZE
+  const showDeploymentFreeze = isEnterpriseEdition
 
   const { data, refetch, loading, error } = useGetOrganizationAggregateDTO({
     identifier: orgIdentifier,
@@ -118,8 +116,6 @@ const OrganizationDetailsPage: React.FC = () => {
       colorClass: css.governance
     }
   ]
-
-  const showGovCard = canUsePolicyEngine && (OPA_PIPELINE_GOVERNANCE || OPA_FF_GOVERNANCE)
 
   return (
     <>

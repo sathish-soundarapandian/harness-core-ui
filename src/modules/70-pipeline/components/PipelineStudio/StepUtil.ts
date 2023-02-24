@@ -91,7 +91,7 @@ export function getStageFromPipeline(
   return
 }
 
-export function getChildPipelineMetadata(pipeline?: PipelineInfoConfig): childPipelineMetadata[] {
+export function getChildPipelinesMetadata(pipeline?: PipelineInfoConfig): childPipelineMetadata[] {
   const childPipelinesMetaData: childPipelineMetadata[] = []
   if (pipeline?.stages) {
     pipeline.stages.forEach(item => {
@@ -302,6 +302,7 @@ interface ValidateStageProps {
   viewType: StepViewType
   originalStage?: StageElementConfig
   getString?: UseStringsReturn['getString']
+  isOptionalVariableAllowed?: boolean
 }
 
 export const validateStage = ({
@@ -309,7 +310,8 @@ export const validateStage = ({
   template,
   viewType,
   originalStage,
-  getString
+  getString,
+  isOptionalVariableAllowed
 }: ValidateStageProps): FormikErrors<StageElementConfig> => {
   if (originalStage?.template) {
     const errors = validateStage({
@@ -317,7 +319,8 @@ export const validateStage = ({
       template: template?.template?.templateInputs as StageElementConfig,
       viewType,
       originalStage: originalStage.template.templateInputs as StageElementConfig,
-      getString
+      getString,
+      isOptionalVariableAllowed
     })
     if (!isEmpty(errors)) {
       return set({}, 'template.templateInputs', errors)
@@ -503,7 +506,7 @@ export const validateStage = ({
       )
     }
 
-    if (stage?.variables) {
+    if (!isOptionalVariableAllowed && stage?.variables) {
       const step = factory.getStep(StepType.CustomVariable)
       const errorsResponse: any = step?.validateInputSet({ data: stage, template, getString, viewType })
 
@@ -579,6 +582,7 @@ interface ValidatePipelineProps {
   path?: string
   viewTypeMetadata?: { [key: string]: boolean }
   selectedStageData?: StageSelectionData
+  isOptionalVariableAllowed?: boolean
 }
 
 /**
@@ -785,7 +789,8 @@ export const validatePipeline = ({
   getString,
   path,
   viewTypeMetadata,
-  selectedStageData
+  selectedStageData,
+  isOptionalVariableAllowed
 }: ValidatePipelineProps): FormikErrors<PipelineInfoConfig> => {
   if (template?.template) {
     const errors = validatePipeline({
@@ -795,7 +800,8 @@ export const validatePipeline = ({
       originalPipeline: originalPipeline?.template?.templateInputs as PipelineInfoConfig,
       resolvedPipeline,
       getString,
-      viewTypeMetadata
+      viewTypeMetadata,
+      isOptionalVariableAllowed
     })
     if (!isEmpty(errors)) {
       return set({}, 'template.templateInputs', errors)
@@ -836,7 +842,7 @@ export const validatePipeline = ({
       }
     }
 
-    if (pipeline?.variables) {
+    if (!isOptionalVariableAllowed && pipeline?.variables) {
       const step = factory.getStep(StepType.CustomVariable)
       const errorsResponse: any = step?.validateInputSet({ data: pipeline, template, getString, viewType })
 
@@ -876,7 +882,8 @@ export const validatePipeline = ({
             getString,
             path,
             viewTypeMetadata,
-            selectedStageData
+            selectedStageData,
+            isOptionalVariableAllowed
           })
           if (!isEmpty(chainedPipelineErrorsResponse)) {
             set(
@@ -891,7 +898,8 @@ export const validatePipeline = ({
             template: template?.stages?.[index]?.stage,
             originalStage: originalStage?.stage,
             getString,
-            viewType
+            viewType,
+            isOptionalVariableAllowed
           })
           if (!isEmpty(errorsResponse)) {
             set(errors, `${isEmpty(path) ? '' : `${path}.`}stages[${index}].stage`, errorsResponse)
@@ -939,7 +947,8 @@ export const validatePipeline = ({
                 getString,
                 path,
                 viewTypeMetadata,
-                selectedStageData
+                selectedStageData,
+                isOptionalVariableAllowed
               })
               if (!isEmpty(chainedPipelineErrorsResponse)) {
                 set(
@@ -954,7 +963,8 @@ export const validatePipeline = ({
                 template: template?.stages?.[index].parallel?.[indexP]?.stage,
                 originalStage: originalStage?.stage,
                 getString,
-                viewType
+                viewType,
+                isOptionalVariableAllowed
               })
               if (!isEmpty(errorsResponse)) {
                 set(

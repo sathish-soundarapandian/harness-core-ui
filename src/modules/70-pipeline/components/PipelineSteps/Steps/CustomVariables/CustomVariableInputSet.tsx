@@ -134,7 +134,7 @@ function CustomVariableInputSetBasic(props: ConectedCustomVariableInputSetProps)
                 <FormMultiTypeConnectorField
                   name={`${basePath}[${index}].value`}
                   label=""
-                  placeholder={getString('connectors.selectConnector')}
+                  placeholder={getString('common.entityPlaceholderText')}
                   disabled={inputSetData?.readonly}
                   accountIdentifier={accountId}
                   multiTypeProps={{ expressions, disabled: inputSetData?.readonly, allowableTypes }}

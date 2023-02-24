@@ -42,8 +42,11 @@ export default function SLOActions(props: SLOActionsProps) {
     <Layout.Horizontal className={css.actions}>
       <Icon
         className={css.actionIcons}
-        padding={'small'}
+        padding={'xsmall'}
+        margin={{ right: 'medium' }}
         name="Edit"
+        title={getString('edit')}
+        size={16}
         onClick={e => {
           e.stopPropagation()
           onEdit(sloIdentifier)
@@ -51,8 +54,10 @@ export default function SLOActions(props: SLOActionsProps) {
       />
       <Icon
         className={css.actionIcons}
-        padding={'small'}
+        padding={'xsmall'}
         name="main-trash"
+        title={getString('delete')}
+        size={16}
         onClick={e => {
           e.stopPropagation()
           openDialog()

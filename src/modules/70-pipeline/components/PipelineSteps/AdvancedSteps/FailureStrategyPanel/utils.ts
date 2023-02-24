@@ -21,7 +21,8 @@ import type {
   FailureStrategyConfig,
   PipelineRollbackFailureActionConfig,
   OnFailureConfig,
-  ProceedWithDefaultValuesFailureActionConfig
+  ProceedWithDefaultValuesFailureActionConfig,
+  MarkAsFailFailureActionConfig
 } from 'services/pipeline-ng'
 
 export type AllActions =
@@ -34,6 +35,7 @@ export type AllActions =
   | StageRollbackFailureActionConfig
   | PipelineRollbackFailureActionConfig
   | ProceedWithDefaultValuesFailureActionConfig
+  | MarkAsFailFailureActionConfig
 
 export interface AllFailureStrategyConfig extends FailureStrategyConfig {
   onFailure: OnFailureConfig & { action: AllActions }

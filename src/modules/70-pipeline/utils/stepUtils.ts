@@ -13,8 +13,7 @@ import type {
   StepPalleteModuleInfo,
   StageElementConfig,
   StageElementWrapperConfig,
-  StepElementConfig,
-  PmsAbstractStepNode
+  StepElementConfig
 } from 'services/pipeline-ng'
 import {
   StepOrStepGroupOrTemplateStepData,
@@ -233,7 +232,7 @@ export function getStepDataFromValues(
   item: Partial<Values>,
   initialValues: StepOrStepGroupOrTemplateStepData
 ): StepElementConfig {
-  const processNode = produce(initialValues as StepElementConfig & PmsAbstractStepNode, node => {
+  const processNode = produce(initialValues as StepElementConfig, node => {
     if (item.tab !== TabTypes.Advanced) {
       if ((item as StepElementConfig).description) {
         node.description = (item as StepElementConfig).description

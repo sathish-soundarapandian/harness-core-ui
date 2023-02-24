@@ -62,7 +62,7 @@ import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/Mu
 import { FormMultiTypeCheckboxField } from '@common/components'
 import { useQueryParams } from '@common/hooks'
 import type { PipelineStudioQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import type { StringNGVariable } from 'services/cd-ng'
+import type { StringNGVariable, TerragruntVarFileWrapper } from 'services/cd-ng'
 
 import type { StringsMap } from 'stringTypes'
 import { getNameAndIdentifierSchema } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
@@ -98,9 +98,9 @@ import { BackendConfigurationTypes, CommandTypes } from '../Common/Terraform/Ter
 import { DIALOG_PROPS, onSubmitTGPlanData } from '../Common/Terragrunt/TerragruntHelper'
 import TerragruntPlanInputStep from './InputSteps/TgPlanInputStep'
 import { TerragruntPlanVariableStep } from './VariableView/TgPlanVariableView'
-import TgPlanVarFileList from './TgPlanVarFileList'
+import VarFileList from '../Common/VarFile/VarFileList'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
-import css from '../Common/Terraform/Editview/TerraformVarfile.module.scss'
+import css from '../Common/Terraform/TerraformStep.module.scss'
 
 interface StepChangeData<SharedObject> {
   prevStep?: number
@@ -289,7 +289,6 @@ function TerragruntPlanWidget(
     <Layout.Vertical flex style={{ justifyContent: 'center', alignItems: 'center' }} margin={{ bottom: 'xlarge' }}>
       <Icon
         name={/* istanbul ignore next*/ isBackendConfig ? 'service-terraform' : 'service-terragrunt'}
-        className={css.remoteIcon}
         size={50}
         padding={{ bottom: 'large' }}
       />
@@ -690,13 +689,15 @@ function TerragruntPlanWidget(
                         }
                       </div>
                       <div className={css.divider} />
-                      <TgPlanVarFileList
+                      <VarFileList<TGPlanFormData, TerragruntVarFileWrapper>
                         formik={formik as FormikProps<TGPlanFormData>}
                         isReadonly={readonly}
                         allowableTypes={allowableTypes}
                         selectedConnector={selectedConnector}
                         setSelectedConnector={setSelectedConnector}
                         getNewConnectorSteps={getNewConnectorSteps}
+                        varFilePath={'spec.configuration.varFiles'}
+                        isTerragrunt
                       />
                       <div className={cx(css.divider, css.addMarginBottom)} />
 

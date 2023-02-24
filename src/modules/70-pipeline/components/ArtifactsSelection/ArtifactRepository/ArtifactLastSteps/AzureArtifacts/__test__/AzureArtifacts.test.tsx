@@ -206,7 +206,7 @@ describe('Azure Artifacts tests', () => {
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
 
-    const loadingBucketsOption = await findByText(selectListMenu as HTMLElement, 'Loading Projects...')
+    const loadingBucketsOption = await findByText(selectListMenu as HTMLElement, 'common.loadingFieldOptions')
     expect(loadingBucketsOption).toBeDefined()
     await waitFor(() => expect(fetchProjects).toHaveBeenCalledTimes(1))
   })
@@ -250,7 +250,7 @@ describe('Azure Artifacts tests', () => {
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
 
-    const loadingBucketsOption = await findByText(selectListMenu as HTMLElement, 'Loading Feeds...')
+    const loadingBucketsOption = await findByText(selectListMenu as HTMLElement, 'common.loadingFieldOptions')
     expect(loadingBucketsOption).toBeDefined()
     await waitFor(() => expect(fetchFeeds).toHaveBeenCalledTimes(1))
   })
@@ -278,7 +278,7 @@ describe('Azure Artifacts tests', () => {
     const dropdownPortalDiv = portalDivs[0]
     const selectListMenu = dropdownPortalDiv.querySelector('.bp3-menu')
 
-    const loadingBucketsOption = await findByText(selectListMenu as HTMLElement, 'Loading Packages...')
+    const loadingBucketsOption = await findByText(selectListMenu as HTMLElement, 'common.loadingFieldOptions')
     expect(loadingBucketsOption).toBeDefined()
     await waitFor(() => expect(fetchPackages).toHaveBeenCalledTimes(1))
   })

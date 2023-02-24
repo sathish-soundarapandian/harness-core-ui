@@ -14,6 +14,7 @@ import { setFieldValue, InputTypes } from '@common/utils/JestFormHelper'
 import { SetupSourceTabs } from '@cv/components/CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { PrometheusHealthSource, PrometheusHealthSourceProps } from '../PrometheusHealthSource'
 import {
+  expectedParameter,
   fixedValuesTemplate,
   MockTemplateQueryData,
   submitTemplateData,
@@ -74,13 +75,13 @@ describe('Unit tests for PrometheusHealthSource', () => {
     const { container, getByText } = render(<WrapperComponent data={MockTemplateQueryData} onSubmit={onSubmitMock} />)
 
     await waitFor(() => expect(getByText('cv.monitoringSources.prometheus.customizeQuery')).not.toBeNull())
-    expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(2)
+    expect(container.querySelectorAll('[class*="Accordion--panel"]').length).toBe(3)
 
     act(() => {
       fireEvent.click(getByText('submit'))
     })
     expect(container).toMatchSnapshot()
-    await waitFor(() => expect(onSubmitMock).toHaveBeenLastCalledWith(submitTemplateData[0], submitTemplateData[1]))
+    await waitFor(() => expect(onSubmitMock).toHaveBeenLastCalledWith(submitTemplateData[0], expectedParameter))
   })
 
   test('load in edit case with fixed values', async () => {

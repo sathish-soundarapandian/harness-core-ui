@@ -93,7 +93,7 @@ function OpenShiftParamWithGit({
         paths:
           typeof specValues.paths === 'string'
             ? specValues.paths
-            : removeEmptyFieldsFromStringArray(specValues.paths)?.map((path: string) => ({
+            : removeEmptyFieldsFromStringArray(specValues.paths, true)?.map((path: string) => ({
                 path,
                 uuid: uuid(path, nameSpace())
               })),
@@ -125,7 +125,7 @@ function OpenShiftParamWithGit({
               paths:
                 typeof formData?.paths === 'string'
                   ? formData?.paths
-                  : formData?.paths?.map((path: { path: string }) => path.path)
+                  : removeEmptyFieldsFromStringArray(formData?.paths?.map((path: { path: string }) => path.path))
             }
           }
         }
@@ -177,6 +177,16 @@ function OpenShiftParamWithGit({
               return true
             }
             return !isEmpty(value) && value?.length > 0
+          }),
+          paths: Yup.lazy((value): Yup.Schema<unknown> => {
+            if (getMultiTypeFromValue(value as any) === MultiTypeInputType.FIXED) {
+              return Yup.array().of(
+                Yup.object().shape({
+                  path: Yup.string().min(1).required(getString('pipeline.manifestType.pathRequired'))
+                })
+              )
+            }
+            return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
           })
         })}
         onSubmit={formData => {

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { act, findByText, fireEvent, queryByAttribute, render, waitFor } from '@testing-library/react'
+import { act, findByText, fireEvent, render, waitFor } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import userEvent from '@testing-library/user-event'
 import { findPopoverContainer, TestWrapper } from '@common/utils/testUtils'
@@ -124,41 +124,6 @@ describe('Nexus Artifact tests', () => {
     expect(repositoryParentFieldsRequiredErr).toBeInTheDocument()
   })
 
-  // eslint-disable-next-line jest/no-disabled-tests
-  test.skip(`able to submit form when the form is non empty`, async () => {
-    const { container } = render(
-      <TestWrapper>
-        <Artifactory key={'key'} initialValues={initialValues} {...props} />
-      </TestWrapper>
-    )
-    const submitBtn = container.querySelector('button[type="submit"]')!
-    fireEvent.click(submitBtn)
-    const repositoryRequiredErr = await findByText(container, 'common.git.validation.repoRequired')
-    expect(repositoryRequiredErr).toBeDefined()
-
-    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
-    await act(async () => {
-      fireEvent.change(queryByNameAttribute('identifier')!, { target: { value: 'testidentifier' } })
-      fireEvent.change(queryByNameAttribute('repository')!, {
-        target: { value: '<+input>' }
-      })
-    })
-    fireEvent.click(submitBtn)
-    await waitFor(() => {
-      expect(props.handleSubmit).toBeCalled()
-      expect(props.handleSubmit).toHaveBeenCalledWith({
-        identifier: 'testidentifier',
-        spec: {
-          connectorRef: '',
-          repository: '<+input>',
-          artifactPath: '<+input>',
-          tag: '<+input>',
-          repositoryFormat: 'docker'
-        }
-      })
-    })
-  })
-
   test(`form renders correctly in Edit Case: CDS_ARTIFACTORY_REPOSITORY_URL_MANDATORY = false`, async () => {
     const filledInValues = {
       identifier: 'nexusSidecarId',
@@ -206,57 +171,6 @@ describe('Nexus Artifact tests', () => {
   })
 
   // eslint-disable-next-line jest/no-disabled-tests
-  test.skip(`submits correctly with tagregex data`, async () => {
-    const defaultValues = {
-      identifier: '',
-      artifactPath: '',
-      tag: '',
-      tagType: TagTypes.Value,
-      tagRegex: '',
-      repository: '',
-      repositoryUrl: ''
-    }
-    const { container } = render(
-      <TestWrapper>
-        <Artifactory key={'key'} initialValues={defaultValues} {...props} />
-      </TestWrapper>
-    )
-    const submitBtn = container.querySelector('button[type="submit"]')!
-    fireEvent.click(submitBtn)
-    const repositoryRequiredErr = await findByText(container, 'common.git.validation.repoRequired')
-    expect(repositoryRequiredErr).toBeDefined()
-
-    const queryByNameAttribute = (name: string): HTMLElement | null => queryByAttribute('name', container, name)
-    await act(async () => {
-      fireEvent.change(queryByNameAttribute('identifier')!, { target: { value: 'testidentifier' } })
-      fireEvent.change(queryByNameAttribute('artifactPath')!, {
-        target: { value: { label: 'artifact-path', value: 'artifact-path' } }
-      })
-      fireEvent.change(queryByNameAttribute('repository')!, {
-        target: { value: { label: 'repository', value: 'repository' } }
-      })
-      fireEvent.change(queryByNameAttribute('repositoryUrl')!, { target: { value: 'repositoryUrl' } })
-    })
-    fireEvent.click(submitBtn)
-
-    await waitFor(() => {
-      expect(props.handleSubmit).toBeCalled()
-      expect(props.handleSubmit).toHaveBeenCalledWith({
-        identifier: 'testidentifier',
-        spec: {
-          connectorRef: '',
-          artifactPath: { label: 'artifact-path', value: 'artifact-path' },
-          repository: { label: 'repository', value: 'repository' },
-          tag: '<+input>',
-          repositoryUrl: 'repositoryUrl',
-          repositoryFormat: 'docker'
-        }
-      })
-    })
-    await waitFor(() => expect(container.querySelector('input[name="repository"]')).toHaveValue('repository'))
-    await waitFor(() => expect(container.querySelector('input[name="artifactPath"]')).toHaveValue('artifact-path'))
-    await waitFor(() => expect(container.querySelector('input[name="repositoryUrl"]')).toHaveValue('repositoryUrl'))
-  })
 })
 
 describe('Serverless artifact', () => {
@@ -432,6 +346,31 @@ describe('SSH artifactory artifact', () => {
     expect(pipelineng.useGetRepositoriesDetailsForArtifactory).toBeCalled()
   })
 
+  test(`change repository type to Docker`, async () => {
+    const { container, getByPlaceholderText } = render(
+      <TestWrapper>
+        <Artifactory key={'key'} initialValues={genericArtifactoryInitialValues} {...sshDeploymentTypeProps} />
+      </TestWrapper>
+    )
+
+    const repositoryFormat = getByPlaceholderText('- Select -')
+    expect(repositoryFormat!).toBeDefined()
+    expect(repositoryFormat!).toHaveAttribute('value', 'Generic')
+
+    const repoFormatDropdown = container.querySelector('input[name="repositoryFormat"]') as HTMLInputElement
+    const repoFormatCaret = container
+      .querySelector(`input[name="repositoryFormat"] + [class*="bp3-input-action"]`)
+      ?.querySelector('[data-icon="chevron-down"]')
+    await waitFor(() => {
+      fireEvent.click(repoFormatCaret!)
+    })
+    const repoFormatSelect = await findByText(container, 'Docker')
+    act(() => {
+      fireEvent.click(repoFormatSelect)
+    })
+    expect(repoFormatDropdown.value).toBe('Docker')
+  })
+
   test(`renders Docker Artifactory view`, () => {
     const { container, getByPlaceholderText } = render(
       <TestWrapper>
@@ -501,5 +440,30 @@ describe('WinRm artifactory artifact', () => {
 
     const repository = container.querySelector('input[name="repository"]')
     expect(repository!).toBeDefined()
+  })
+
+  test('render form correctly when tagType is regex', async () => {
+    const artifactInitValues = {
+      spec: {
+        artifactPath: 'path',
+        tagType: TagTypes.Regex,
+        tagRegex: '<+input>',
+        artifactPathFilter: 'test'
+      },
+
+      type: 'ArtifactoryRegistry',
+
+      identifier: '',
+
+      repository: 'repo',
+      repositoryUrl: 'url',
+      repositoryFormat: 'docker'
+    }
+    const { container } = render(
+      <TestWrapper>
+        <Artifactory key={'key'} initialValues={artifactInitValues as any} {...winRmDeploymentTypeProps} />
+      </TestWrapper>
+    )
+    expect(container).toMatchSnapshot()
   })
 })

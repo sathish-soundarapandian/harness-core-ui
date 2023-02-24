@@ -39,13 +39,14 @@ import {
   getHealthSourceConfigDetails,
   getUpdatedMappedMetricsData,
   initHealthSourceCustomFormValue,
+  setVisibleFieldsTouched,
   updateParentFormikWithLatestData,
   validateAddMetricForm
 } from './CustomMetricFormContainer.utils'
 import { resetShowCustomMetric } from '../../CommonHealthSource.utils'
 import AddMetric from './components/AddMetric/AddMetric'
 import CustomMetricForm from './CustomMetricForm'
-import { CommonConfigurationsFormFieldNames, CustomMetricFormFieldNames } from '../../CommonHealthSource.constants'
+import { CommonConfigurationsFormFieldNames } from '../../CommonHealthSource.constants'
 import { useCommonHealthSource } from './components/CommonHealthSourceContext/useCommonHealthSource'
 import css from './CustomMetricForm.module.scss'
 
@@ -54,7 +55,6 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
   const {
     mappedMetrics,
     selectedMetric,
-    isMetricThresholdEnabled,
     createdMetrics,
     healthSourceConfig,
     groupedCreatedMetrics,
@@ -117,7 +117,7 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
             selectedMetricName,
             formValuesData
           )
-          setFieldTouched(CustomMetricFormFieldNames.QUERY)
+          setVisibleFieldsTouched(healthSourceConfig, setFieldTouched)
           await validateForm()
           updateParentFormikWithLatestData(updateParentFormik, updatedMappedMetricsData, selectedMetricName)
 
@@ -217,7 +217,6 @@ export default function CustomMetricFormContainer(props: CustomMetricFormContain
             })}
             initCustomForm={initHealthSourceCustomFormValue()}
             shouldBeAbleToDeleteLastMetric={shouldBeAbleToDeleteLastMetric}
-            isMetricThresholdEnabled={isMetricThresholdEnabled}
             filterRemovedMetricNameThresholds={filterRemovedMetricNameThresholds}
             openEditMetricModal={openModal}
             defaultServiceInstance={healthSourceConfig.customMetrics?.assign?.defaultServiceInstance}

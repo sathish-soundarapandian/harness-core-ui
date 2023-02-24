@@ -16,7 +16,6 @@ import { initializeSelectedMetricsMap } from '../../common/CommonCustomMetric/Co
 import type { UpdatedHealthSource } from '../../HealthSourceDrawer/HealthSourceDrawerContent.types'
 import {
   initCustomForm,
-  ProviderTypes,
   FIELD_ENUM,
   DEFAULT_HEALTH_SOURCE_QUERY,
   CustomMetricFormFieldNames
@@ -41,6 +40,7 @@ import {
 } from '../../common/MetricThresholds/MetricThresholds.constants'
 import type { MetricThresholdType } from '../../common/MetricThresholds/MetricThresholds.types'
 import type { LogFieldsMultiTypeState } from './components/CustomMetricForm/CustomMetricForm.types'
+import { HealthSourceTypes } from '../../types'
 
 export const initHealthSourceCustomForm = () => {
   return {
@@ -135,13 +135,13 @@ export function getFieldsDefaultValuesFromConfig({
     return {}
   }
 
-  const valuesToUpdate: Partial<CommonCustomMetricFormikInterface> = {}
+  const valuesToUpdate: { [x: string]: string | undefined } = {}
 
   for (const field of fieldMappings) {
     if (canSetDefaultValue({ field, isTemplate, values, multiTypeRecord })) {
-      ;(valuesToUpdate[field.identifier] as string) = field.defaultValue
+      valuesToUpdate[field?.identifier] = field.defaultValue
     } else if (canSetRuntimeInputValue({ field, isTemplate, values, multiTypeRecord })) {
-      ;(valuesToUpdate[field.identifier] as string) = RUNTIME_INPUT_VALUE
+      valuesToUpdate[field.identifier] = RUNTIME_INPUT_VALUE
     }
   }
 
@@ -169,35 +169,38 @@ export function getTemplateValuesForConfigFields(
 }
 
 export function getRequestBodyForSampleLogs(
-  providerType: QueryRecordsRequest['providerType'],
+  providerTypeForRecords: QueryRecordsRequest['providerType'],
   otherValues: {
     query: string
     connectorIdentifier: string | { connector: { identifier: string } }
-    serviceInstance: string
+    fieldMappings?: FieldMapping[]
+    queryField?: FieldMapping
+    formValues: CommonCustomMetricFormikInterface
   }
 ): QueryRecordsRequest | null {
-  switch (providerType) {
-    case ProviderTypes.SUMOLOGIC_LOG: {
-      const currentTime = new Date()
+  const { connectorIdentifier, query, fieldMappings, queryField, formValues } = otherValues
+  const currentTime = new Date()
+  const startTime = currentTime.setHours(currentTime.getHours() - 2)
+  const healthSourceQueryParams: { [x: string]: string } = {}
 
-      const startTime = currentTime.setHours(currentTime.getHours() - 2)
-
-      const { connectorIdentifier, query, serviceInstance } = otherValues
-
-      return {
-        startTime,
-        endTime: Date.now(),
-        providerType,
-        query,
-        connectorIdentifier:
-          typeof connectorIdentifier === 'string' ? connectorIdentifier : connectorIdentifier?.connector?.identifier,
-        healthSourceQueryParams: {
-          serviceInstanceField: serviceInstance
-        }
-      }
+  if (Array.isArray(fieldMappings) && fieldMappings.length) {
+    for (const field of fieldMappings) {
+      const { identifier } = field || {}
+      const fieldValue = formValues[identifier]
+      healthSourceQueryParams[identifier] = fieldValue as string
     }
-    default: {
-      return null
+  }
+
+  return {
+    startTime,
+    endTime: Date.now(),
+    providerType: providerTypeForRecords,
+    query,
+    connectorIdentifier:
+      typeof connectorIdentifier === 'string' ? connectorIdentifier : connectorIdentifier?.connector?.identifier,
+    healthSourceQueryParams: {
+      ...healthSourceQueryParams,
+      ...(queryField && { [queryField?.identifier]: formValues[queryField?.identifier] })
     }
   }
 }
@@ -232,7 +235,7 @@ const validateLogFields = ({
 
   fieldMappings.forEach(field => {
     if (!formData[field.identifier]) {
-      errors[field.identifier] = getString('cv.monitoringSources.commonHealthSource.logsTable.validationMessage')
+      set(errors, field.identifier, getString('fieldRequired', { field: getFieldName(field.identifier, getString) }))
     }
   })
 
@@ -250,23 +253,35 @@ export const handleValidateCustomMetricForm = ({
   customMetricsConfig: HealthSourceConfig['customMetrics']
 }): FormikErrors<CommonCustomMetricFormikInterface> => {
   const isAssignComponentEnabled = customMetricsConfig?.assign?.enabled
-
   const isLogsTableEnabled = customMetricsConfig?.logsTable?.enabled
+  const queryFieldIdentifier = customMetricsConfig?.queryAndRecords?.queryField?.identifier
   let errors: FormikErrors<CommonCustomMetricFormikInterface> = {}
   const { query = '', recordCount } = formData
 
+  // Validate query section
   if (!query) {
     set(errors, CustomMetricFormFieldNames.QUERY, getString('fieldRequired', { field: 'Query' }))
   }
 
+  // validate query section when multiple records are returned
   if (query && isNumber(recordCount) && recordCount > 1) {
     set(errors, CustomMetricFormFieldNames.QUERY, getString('cv.monitoringSources.prometheus.validation.recordCount'))
   }
 
+  if (queryFieldIdentifier && !formData[queryFieldIdentifier as keyof CommonCustomMetricFormikInterface]) {
+    set(
+      errors,
+      queryFieldIdentifier,
+      getString('fieldRequired', { field: getFieldName(queryFieldIdentifier, getString) })
+    )
+  }
+
+  // Validate Assign section
   if (isAssignComponentEnabled) {
     validateAssignComponent(formData, getString, errors)
   }
 
+  // validate Logs mapping section
   if (isLogsTableEnabled) {
     errors = validateLogFields({
       formData,
@@ -291,7 +306,7 @@ export const validateAssignComponent = (
     riskCategory,
     lowerBaselineDeviation,
     higherBaselineDeviation,
-    serviceInstance
+    serviceInstanceField
   } = formData
   const isAssignComponentValid = [sli, continuousVerification, healthScore].find(checked => checked)
   const isRiskCategoryValid = !!riskCategory
@@ -305,7 +320,7 @@ export const validateAssignComponent = (
   } else if (isAssignComponentValid) {
     const eitherCVorHeathScoreEnabled = continuousVerification || healthScore
     const areAllDeviationsFalse = !(lowerBaselineDeviation || higherBaselineDeviation)
-    const isCVEnabledWithEmptyServiceInstace = continuousVerification && !serviceInstance
+    const isCVEnabledWithEmptyServiceInstace = continuousVerification && !serviceInstanceField
     if (eitherCVorHeathScoreEnabled) {
       if (areAllDeviationsFalse) {
         set(
@@ -335,38 +350,33 @@ export const validateAssignComponent = (
 export const handleValidateHealthSourceConfigurationsForm = ({
   formValues,
   healthSourceConfig,
-  isTemplate,
   getString
 }: {
   formValues: CommonHealthSourceConfigurations
   getString: UseStringsReturn['getString']
   healthSourceConfig?: HealthSourceConfig
-  isTemplate?: boolean
 }): FormikErrors<CommonHealthSourceConfigurations> => {
   const errors: FormikErrors<CommonHealthSourceConfigurations> = {}
 
   const isMetricThresholdsGroupEnabled = healthSourceConfig?.metricPacks?.enabled
-  const isMetricThresholdEnabled = !isTemplate
 
-  if (isMetricThresholdEnabled) {
-    // ignoreThresholds Validation
-    validateMetricThresholds({
-      thresholdName: MetricThresholdPropertyName.IgnoreThreshold,
-      errors: errors as Record<string, string>,
-      thresholdValues: formValues[MetricThresholdPropertyName.IgnoreThreshold],
-      getString,
-      isValidateGroup: Boolean(isMetricThresholdsGroupEnabled)
-    })
+  // ignoreThresholds Validation
+  validateMetricThresholds({
+    thresholdName: MetricThresholdPropertyName.IgnoreThreshold,
+    errors: errors as Record<string, string>,
+    thresholdValues: formValues[MetricThresholdPropertyName.IgnoreThreshold],
+    getString,
+    isValidateGroup: Boolean(isMetricThresholdsGroupEnabled)
+  })
 
-    // failFastThresholds Validation
-    validateMetricThresholds({
-      thresholdName: MetricThresholdPropertyName.FailFastThresholds,
-      errors: errors as Record<string, string>,
-      thresholdValues: formValues[MetricThresholdPropertyName.FailFastThresholds],
-      getString,
-      isValidateGroup: Boolean(isMetricThresholdsGroupEnabled)
-    })
-  }
+  // failFastThresholds Validation
+  validateMetricThresholds({
+    thresholdName: MetricThresholdPropertyName.FailFastThresholds,
+    errors: errors as Record<string, string>,
+    thresholdValues: formValues[MetricThresholdPropertyName.FailFastThresholds],
+    getString,
+    isValidateGroup: Boolean(isMetricThresholdsGroupEnabled)
+  })
 
   return errors
 }
@@ -385,16 +395,15 @@ export const createHealthSourcePayload = (
     healthSourceName: string
     connectorRef: string
   },
-  configureHealthSourceData: CommonHealthSourceConfigurations,
-  isTemplate?: boolean
+  configureHealthSourceData: CommonHealthSourceConfigurations
 ): UpdatedHealthSource => {
-  const isMetricThresholdEnabled = !isTemplate
   const { product, healthSourceName, healthSourceIdentifier, connectorRef } = defineHealthSourcedata
   const productValue = (product?.value ?? product) as string
+  const healthSourceType = getHealthSourceType(productValue)
   const { queryMetricsMap = new Map(), ignoreThresholds, failFastThresholds } = configureHealthSourceData
 
   const healthSourcePayload = {
-    type: productValue as UpdatedHealthSource['type'],
+    type: healthSourceType as UpdatedHealthSource['type'],
     identifier: healthSourceIdentifier,
     name: healthSourceName,
     version: V2 as HealthSource['version'],
@@ -409,12 +418,16 @@ export const createHealthSourcePayload = (
       identifier,
       metricName,
       groupName,
+      index,
       query,
       sli,
       continuousVerification,
       healthScore,
       riskCategory,
-      serviceInstance,
+      serviceInstanceField,
+      timeStampIdentifier,
+      timeStampFormat,
+      messageIdentifier,
       lowerBaselineDeviation,
       higherBaselineDeviation
     }: CommonCustomMetricFormikInterface = entry[1]
@@ -427,7 +440,11 @@ export const createHealthSourcePayload = (
         groupName: groupNameValue,
         query,
         queryParams: {
-          ...(serviceInstance && { serviceInstanceField: serviceInstance as string })
+          ...(serviceInstanceField && { serviceInstanceField: serviceInstanceField as string }),
+          ...(timeStampIdentifier && { timeStampIdentifier: timeStampIdentifier as string }),
+          ...(timeStampFormat && { timeStampFormat: timeStampFormat as string }),
+          ...(messageIdentifier && { messageIdentifier: messageIdentifier as string }),
+          ...(index && { index: index as string })
         },
         liveMonitoringEnabled: Boolean(healthScore),
         continuousVerificationEnabled: Boolean(continuousVerification),
@@ -436,7 +453,6 @@ export const createHealthSourcePayload = (
           Array.isArray(ignoreThresholds) && Array.isArray(failFastThresholds)
             ? getMetricThresholdsForCustomMetric({
                 metricName,
-                isMetricThresholdEnabled,
                 metricThresholds: [...ignoreThresholds, ...failFastThresholds]
               })
             : [],
@@ -451,10 +467,16 @@ export const createHealthSourcePayload = (
   return healthSourcePayload
 }
 
-export function createHealthSourceConfigurationsData(
-  sourceData: any,
-  isTemplate?: boolean
-): CommonHealthSourceConfigurations {
+export const getHealthSourceType = (productValue: string): UpdatedHealthSource['type'] => {
+  switch (productValue) {
+    case HealthSourceTypes.ElasticSearch_Logs:
+      return HealthSourceTypes.Elk
+    default:
+      return productValue as UpdatedHealthSource['type']
+  }
+}
+
+export function createHealthSourceConfigurationsData(sourceData: any): CommonHealthSourceConfigurations {
   const {
     healthSourceList = [],
     isEdit = false,
@@ -463,7 +485,6 @@ export function createHealthSourceConfigurationsData(
     selectedMetric = ''
   } = sourceData
   let queryMetricsMapData = cloneDeep(queryMetricsMap)
-
   let ignoreThresholds: MetricThresholdType[] = []
   let failFastThresholds: MetricThresholdType[] = []
 
@@ -476,33 +497,23 @@ export function createHealthSourceConfigurationsData(
     if (queryMetricsMap.size === 0) {
       queryMetricsMapData = cloneDeep(getUpdatedCustomMetrics(queryDefinitions))
     }
-    if (!isTemplate) {
-      if (!sourceData?.ignoreThresholds?.length && !sourceData?.failFastThresholds?.length) {
-        ignoreThresholds = getFilteredMetricThresholdValuesV2(
-          MetricThresholdTypes.IgnoreThreshold,
-          [],
-          queryDefinitions
-        )
-        failFastThresholds = getFilteredMetricThresholdValuesV2(
-          MetricThresholdTypes.FailImmediately,
-          [],
-          queryDefinitions
-        )
-      } else {
-        ignoreThresholds = sourceData?.ignoreThresholds || []
-        failFastThresholds = sourceData?.failFastThresholds || []
-      }
+
+    if (!sourceData?.ignoreThresholds?.length && !sourceData?.failFastThresholds?.length) {
+      ignoreThresholds = getFilteredMetricThresholdValuesV2(MetricThresholdTypes.IgnoreThreshold, [], queryDefinitions)
+      failFastThresholds = getFilteredMetricThresholdValuesV2(
+        MetricThresholdTypes.FailImmediately,
+        [],
+        queryDefinitions
+      )
+    } else {
+      ignoreThresholds = sourceData?.ignoreThresholds || []
+      failFastThresholds = sourceData?.failFastThresholds || []
     }
-  } else {
-    ignoreThresholds = sourceData?.ignoreThresholds || []
-    failFastThresholds = sourceData?.failFastThresholds || []
   }
 
   return {
     queryMetricsMap: queryMetricsMapData,
     selectedMetric: getSelectedMetric(selectedMetric, queryMetricsMapData),
-
-    // metric thresholds section can be updated here.
     ignoreThresholds,
     failFastThresholds
   }
@@ -519,8 +530,8 @@ function getUpdatedCustomMetrics(
           identifier: queryDefinition.identifier,
           metricName: queryDefinition.name,
           query: queryDefinition.query || '',
+          ...(queryDefinition?.queryParams && { ...queryDefinition.queryParams }),
           riskCategory: queryDefinition?.riskProfile?.riskCategory,
-          serviceInstance: queryDefinition?.queryParams?.serviceInstanceField,
           lowerBaselineDeviation: queryDefinition?.riskProfile?.thresholdTypes?.includes('ACT_WHEN_LOWER') || false,
           higherBaselineDeviation: queryDefinition?.riskProfile?.thresholdTypes?.includes('ACT_WHEN_HIGHER') || false,
           groupName: queryDefinition?.groupName
@@ -597,4 +608,26 @@ export function getCurrentQueryData(
       ? queryMetricsMap?.get(currentSelectedMetric)
       : {}
   ) as CommonCustomMetricFormikInterface
+}
+
+export function getFieldName(
+  fieldIdentifier: keyof CommonCustomMetricFormikInterface,
+  getString: UseStringsReturn['getString']
+): string {
+  switch (fieldIdentifier) {
+    case CustomMetricFormFieldNames.QUERY:
+      return getString('cv.query')
+    case CustomMetricFormFieldNames.INDEX:
+      return getString('cv.monitoringSources.elk.logIndexesInputLabel')
+    case CustomMetricFormFieldNames.TIMESTAMP_FORMAT:
+      return getString('cv.monitoringSources.commonHealthSource.fields.timestampFormat')
+    case CustomMetricFormFieldNames.TIMESTAMP_IDENTIFIER:
+      return getString('cv.monitoringSources.commonHealthSource.fields.timestampIdentifier')
+    case CustomMetricFormFieldNames.SERVICE_INSTANCE:
+      return getString('cv.monitoringSources.commonHealthSource.fields.serviceInstance')
+    case CustomMetricFormFieldNames.MESSAGE_IDENTIFIER:
+      return getString('cv.monitoringSources.commonHealthSource.fields.messageIdentifier')
+    default:
+      return ''
+  }
 }

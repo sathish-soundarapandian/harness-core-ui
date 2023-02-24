@@ -718,15 +718,16 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.repositoryUrl`, template) && (
             <div className={css.inputFieldLayout}>
-              <FormInput.MultiTextInput
+              <TextFieldInputSetView
                 label={getString('repositoryUrlLabel')}
                 disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.repositoryUrl`)}
-                isOptional
                 multiTextInputProps={{
                   expressions,
                   allowableTypes
                 }}
                 name={`${path}.artifacts.${artifactPath}.spec.repositoryUrl`}
+                fieldPath={`artifacts.${artifactPath}.spec.repositoryUrl`}
+                template={template}
               />
               {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.repositoryUrl`)) ===
                 MultiTypeInputType.RUNTIME && (

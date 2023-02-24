@@ -35,7 +35,7 @@ import { StepMode as Modes } from '@pipeline/utils/stepUtils'
 import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
 import { getIsFailureStrategyDisabled } from '@pipeline/utils/CIUtils'
 import type { StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
-import type { PmsAbstractStepNode, PolicyConfig, TemplateStepNode } from 'services/pipeline-ng'
+import type { PolicyConfig, TemplateStepNode } from 'services/pipeline-ng'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
@@ -87,8 +87,8 @@ export default function AdvancedSteps(props: AdvancedStepsProps, formikRef: Step
     (step as StepGroupElementConfig)?.delegateSelectors
 
   const policySets =
-    ((step as TemplateStepNode)?.template?.templateInputs as PmsAbstractStepNode)?.enforce?.policySets ||
-    (step as PmsAbstractStepNode)?.enforce?.policySets
+    ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.enforce?.policySets ||
+    (step as StepElementConfig)?.enforce?.policySets
 
   const when = ((step as TemplateStepNode)?.template?.templateInputs as StepElementConfig)?.when || (step as Step)?.when
 
@@ -143,6 +143,7 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
   const { NG_K8_COMMAND_FLAGS } = useFeatureFlags()
   const { expressions } = useVariablesExpression()
   const failureStrategyValues = get(formikProps.values, 'failureStrategies')
+  const whenValues = get(formikProps.values, 'when')
 
   const getActiveId = React.useCallback(
     (factory: AbstractStepFactory): string => {
@@ -204,12 +205,33 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
           {hiddenPanels.includes(AdvancedPanels.ConditionalExecution) ? null : (
             <Accordion.Panel
               id={AdvancedPanels.ConditionalExecution}
-              summary={getString('pipeline.conditionalExecution.title')}
+              summary={
+                <div className={css.titleWrapper}>
+                  <LocaleString stringID="pipeline.conditionalExecution.title" />
+                  <div onClick={e => e.stopPropagation()}>
+                    <MultiTypeSelectorButton
+                      type={getMultiTypeFromValue(whenValues as unknown as string)}
+                      allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+                      onChange={type => {
+                        formikProps.setValues(
+                          produce(formikProps.values, draft => {
+                            if (isMultiTypeRuntime(type)) {
+                              set(draft, 'when', RUNTIME_INPUT_VALUE)
+                            } else {
+                              unset(draft, 'when')
+                            }
+                          })
+                        )
+                      }}
+                    />
+                  </div>
+                </div>
+              }
               details={
                 <ConditionalExecutionPanel
-                  formikProps={formikProps}
                   mode={isStepGroup ? Modes.STEP_GROUP : Modes.STEP}
                   isReadonly={isReadonly}
+                  path="when"
                 />
               }
             />
@@ -222,7 +244,7 @@ export function AdvancedTabForm(props: AdvancedTabFormProps): React.ReactElement
                   <LocaleString stringID="pipeline.failureStrategies.title" />
                   <div onClick={e => e.stopPropagation()}>
                     <MultiTypeSelectorButton
-                      type={getMultiTypeFromValue(failureStrategyValues as any)}
+                      type={getMultiTypeFromValue(failureStrategyValues as unknown as string)}
                       allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
                       onChange={type => {
                         formikProps.setValues(

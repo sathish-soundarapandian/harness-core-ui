@@ -52,8 +52,7 @@ describe('Test Util funcitons', () => {
         values: validateMappingNoError,
         createdMetrics: ['appdMetric Two', 'appdMetric One Updated'],
         selectedMetricIndex: 0,
-        getString: val => val,
-        isMetricThresholdEnabled: false
+        getString: val => val
       })
     ).toEqual({})
   })
@@ -63,8 +62,7 @@ describe('Test Util funcitons', () => {
         values: validateMappingWithErrors,
         createdMetrics: ['appdMetric Two', 'appdMetric One Updated'],
         selectedMetricIndex: 0,
-        getString: val => val,
-        isMetricThresholdEnabled: false
+        getString: val => val
       })
     ).toEqual({
       appDTier: 'cv.healthSource.connectors.AppDynamics.validation.tier',
@@ -82,8 +80,7 @@ describe('Test Util funcitons', () => {
         values: validateMappingWithMetricPathError,
         createdMetrics: ['appdMetric Two', 'appdMetric One Updated'],
         selectedMetricIndex: 0,
-        getString: val => val,
-        isMetricThresholdEnabled: false
+        getString: val => val
       })
     ).toEqual({ metricPath: 'cv.healthSource.connectors.AppDynamics.validation.metricPathWithoutLeafNode' })
 
@@ -95,8 +92,7 @@ describe('Test Util funcitons', () => {
         values: fullPathMissingTierInfo,
         createdMetrics: ['appdMetric Two', 'appdMetric One Updated'],
         selectedMetricIndex: 0,
-        getString: val => val,
-        isMetricThresholdEnabled: false
+        getString: val => val
       })
     ).toEqual({ completeMetricPath: 'cv.healthSource.connectors.AppDynamics.validation.fullPath' })
   })
@@ -141,8 +137,7 @@ describe('Test Util funcitons', () => {
         values: fullPathMissingTierInfo,
         createdMetrics: ['appdMetric Two', 'appdMetric One Updated'],
         selectedMetricIndex: 0,
-        getString: val => val,
-        isMetricThresholdEnabled: true
+        getString: val => val
       })
     ).toEqual({
       completeMetricPath: 'cv.healthSource.connectors.AppDynamics.validation.fullPath',
@@ -159,14 +154,9 @@ describe('Test Util funcitons', () => {
     })
   })
 
-  test('should validate createAppDynamicsPayload', () => {
-    jest.spyOn(uuid, 'v4').mockReturnValue('MockedUUID')
-    expect(createAppDynamicsPayload(formData, false)).toEqual(formDataExpectedOutput)
-  })
-
   test('should validate createAppDynamicsPayload with thresholds', () => {
     jest.spyOn(uuid, 'v4').mockReturnValue('MockedUUID')
-    expect(createAppDynamicsPayload(formData, true)).toEqual(payloadWithThreshold)
+    expect(createAppDynamicsPayload(formData)).toEqual(payloadWithThreshold)
   })
 
   test('should validate createAppDynamicsPayload ifOnlySliIsSelected and no metricPack selected', () => {
@@ -189,7 +179,6 @@ describe('Test Util funcitons', () => {
     formDataExpectedOutput.spec.metricDefinitions[1].sli = { enabled: true }
     formDataExpectedOutput.spec.metricDefinitions[1].analysis.deploymentVerification = { enabled: false }
     formDataExpectedOutput.spec.metricDefinitions[1].analysis.riskProfile = {} as any
-    expect(createAppDynamicsPayload(formData, false)).toEqual(formDataExpectedOutput)
 
     // Metrick packs are not selected
     validateMappingNoError.metricData = { Performance: false, Errors: true }
@@ -201,14 +190,13 @@ describe('Test Util funcitons', () => {
         values: validateMappingNoError,
         createdMetrics: ['appdMetric Two', 'appdMetric One Updated'],
         selectedMetricIndex: 0,
-        getString: val => val,
-        isMetricThresholdEnabled: false
+        getString: val => val
       })
     ).toEqual({})
   })
 
   test('should check initializeNonCustomFields for metric thresholds', () => {
-    expect(initializeNonCustomFields(expectedAppDynamicData as any, true)).toEqual(expectedThresholdsInitialData)
+    expect(initializeNonCustomFields(expectedAppDynamicData as any)).toEqual(expectedThresholdsInitialData)
   })
 
   test('should validate createAppDFormData', () => {

@@ -15,16 +15,18 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useStrings } from 'framework/strings'
 import type { DeploymentStageConfig, ExecutionWrapperConfig, StepElementConfig } from 'services/cd-ng'
 import MultiTypeDelegateSelector from '@common/components/MultiTypeDelegateSelector/MultiTypeDelegateSelector'
-import type { PipelineInfoConfig, PmsAbstractStepNode, TemplateStepNode } from 'services/pipeline-ng'
+import type { PipelineInfoConfig, TemplateStepNode } from 'services/pipeline-ng'
 import { TEMPLATE_INPUT_PATH } from '@pipeline/utils/templateUtils'
 import type { StageType } from '@pipeline/utils/stageHelpers'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import { StepMode } from '@pipeline/utils/stepUtils'
 import { StepViewType } from '../AbstractSteps/Step'
 import type { CommandFlags } from '../ManifestSelection/ManifestInterface'
 import { useVariablesExpression } from '../PipelineStudio/PiplineHooks/useVariablesExpression'
 import { StepWidget } from '../AbstractSteps/StepWidget'
 import type { StepType } from '../PipelineSteps/PipelineStepInterface'
-import { ConditionalExecutionForm, StrategyForm } from './StageAdvancedInputSetForm/StageAdvancedInputSetForm'
+import { StrategyForm } from './StageAdvancedInputSetForm/StageAdvancedInputSetForm'
+import { ConditionalExecutionForm } from './StageAdvancedInputSetForm/ConditionalExecutionForm'
 import factory from '../PipelineSteps/PipelineStepFactory'
 import MultiTypePolicySetSelector from '../PipelineSteps/Common/PolicySets/MultiTypePolicySetSelector/MultiTypePolicySetSelector'
 import { FailureStrategiesInputSetForm } from './StageAdvancedInputSetForm/FailureStrategiesInputSetForm'
@@ -104,7 +106,7 @@ function StepFormInternal({
             : null
         }
       />
-      {isValueRuntimeInput((template?.step as StepElementConfig)?.spec?.delegateSelectors) && (
+      {isValueRuntimeInput(template?.step?.spec?.delegateSelectors) && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <MultiTypeDelegateSelector
             expressions={expressions}
@@ -116,21 +118,24 @@ function StepFormInternal({
           />
         </div>
       )}
-      {isValueRuntimeInput((template?.step as StepElementConfig)?.when?.condition) && (
-        <Container className={cx(stepCss.formGroup, stepCss.md)}>
+      {template?.step?.when && (
+        <Container className={cx(stepCss.formGroup)}>
           <ConditionalExecutionForm
-            readonly={readonly}
-            path={`${path}.when.condition`}
+            isReadonly={!!readonly}
+            path={`${path}.when`}
             allowableTypes={allowableTypes}
+            mode={StepMode.STEP}
+            viewType={viewType}
+            template={template?.step?.when}
           />
         </Container>
       )}
-      {(template?.step as any)?.strategy && (
+      {template?.step?.strategy && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <StrategyForm path={`${path}.strategy`} readonly={readonly} />
         </div>
       )}
-      {isValueRuntimeInput((template?.step as StepElementConfig)?.failureStrategies as any) && (
+      {isValueRuntimeInput(template?.step?.failureStrategies as unknown as string) && (
         <div className={cx(stepCss.formGroup, { [stepCss.md]: viewType !== StepViewType.TemplateUsage })}>
           <FailureStrategiesInputSetForm
             stageType={customStepProps?.stageType as StageType}
@@ -141,7 +146,7 @@ function StepFormInternal({
         </div>
       )}
       {renderCommandFlags('step.spec.commandFlags')}
-      {isValueRuntimeInput((template?.step as PmsAbstractStepNode)?.enforce?.policySets) && (
+      {isValueRuntimeInput((template?.step as StepElementConfig)?.enforce?.policySets) && (
         <Container width={'55%'}>
           <Text
             color={Color.GREY_600}

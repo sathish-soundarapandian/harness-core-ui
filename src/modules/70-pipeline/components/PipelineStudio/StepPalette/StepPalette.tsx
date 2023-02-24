@@ -198,11 +198,11 @@ export function StepPalette({ onSelect, stepsFactory, stepPaletteModuleInfos }: 
                       onClick={() => {
                         if (stepData.type !== 'Placeholder' && !stepData.disabled) {
                           onSelect({
-                            name: stepData.name || '',
+                            name: stepData.type || '',
                             type: stepData.type || '',
                             icon: stepsFactory.getStepIcon(stepData.type || '')
                           })
-                          trackEvent(StepActions.SelectStep, { name: stepData.name || '', type: stepData.type || '' })
+                          trackEvent(StepActions.SelectStep, { name: stepData.type || '', type: stepData.type || '' })
                         }
                       }}
                     >
@@ -223,11 +223,11 @@ export function StepPalette({ onSelect, stepsFactory, stepPaletteModuleInfos }: 
                         onClick={() => {
                           /* istanbul ignore else */ if (stepData.type !== 'Placeholder') {
                             onSelect({
-                              name: stepData.name || /* istanbul ignore next */ '',
+                              name: stepData.type || /* istanbul ignore next */ '',
                               type: stepData.type || /* istanbul ignore next */ '',
                               icon: stepsFactory.getStepIcon(stepData.type || '')
                             })
-                            trackEvent(StepActions.SelectStep, { name: stepData.name || '', type: stepData.type || '' })
+                            trackEvent(StepActions.SelectStep, { name: stepData.type || '', type: stepData.type || '' })
                           }
                         }}
                       >

@@ -54,8 +54,6 @@ import { getOptionalSubLabel } from '@pipeline/components/Volumes/Volumes'
 import { ConnectionType } from '@pipeline/components/PipelineInputSetForm/CICodebaseInputSetForm'
 import type { PipelineType, GitQueryParams } from '@common/interfaces/RouteInterfaces'
 import { Scope } from '@common/interfaces/SecretsInterface'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { Connectors } from '@connectors/constants'
 import { useQueryParams } from '@common/hooks'
 import { useAnyEnterpriseLicense } from '@common/hooks/useModuleLicenses'
@@ -121,7 +119,6 @@ export function RightBar(): JSX.Element {
   } = usePipelineContext()
   const codebase = pipeline?.properties?.ci?.codebase
   const [codebaseStatus, setCodebaseStatus] = React.useState<CodebaseStatuses>(CodebaseStatuses.ZeroState)
-  const enableGovernanceSidebar = useFeatureFlag(FeatureFlag.OPA_PIPELINE_GOVERNANCE)
   const { getString } = useStrings()
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<
@@ -413,7 +410,7 @@ export function RightBar(): JSX.Element {
         />
       )}
 
-      {canUsePolicyEngine && enableGovernanceSidebar && contextType === PipelineContextType.Pipeline && (
+      {canUsePolicyEngine && contextType === PipelineContextType.Pipeline && (
         <Button
           className={cx(css.iconButton, {
             [css.selected]: type === DrawerTypes.PolicySets
@@ -587,7 +584,8 @@ export function RightBar(): JSX.Element {
                         MultiTypeInputType.FIXED,
                         MultiTypeInputType.EXPRESSION,
                         MultiTypeInputType.RUNTIME
-                      ]
+                      ],
+                      configureOptionsProps: { hideExecutionTimeField: true }
                     })}
                     <Accordion>
                       <Accordion.Panel

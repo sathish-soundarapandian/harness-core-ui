@@ -107,6 +107,7 @@ export const verifyStepInitialValues = {
   timeout: '2h',
   spec: {
     monitoredServiceRef: '',
+    isMultiServicesOrEnvs: false,
     type: '',
     healthSources: [],
     spec: {
@@ -150,5 +151,36 @@ export const monitoredServiceYamlData = {
   },
   monitoredServiceRef: '<+input>',
   healthSources: [],
-  initialMonitoredService: { type: 'Default', spec: {} }
+  initialMonitoredService: { type: 'Default', spec: {} },
+  isMultiServicesOrEnvs: false
+}
+
+export const mockedHealthSource = {
+  type: 'SumologicMetrics',
+  identifier: 'sumo_temp',
+  name: 'sumo temp',
+  version: 'v2',
+  spec: {
+    connectorRef: 'Sumo_logic',
+    feature: 'SumologicMetrics',
+    queries: [],
+    queryDefinitions: [
+      {
+        identifier: 'M1',
+        name: 'M1',
+        groupName: 'g1',
+        query: '<+input>',
+        queryParams: {
+          serviceInstanceField: '<+input>'
+        },
+        liveMonitoringEnabled: false,
+        continuousVerificationEnabled: false,
+        sliEnabled: true,
+        metricThresholds: [],
+        riskProfile: {
+          thresholdTypes: []
+        }
+      }
+    ]
+  }
 }

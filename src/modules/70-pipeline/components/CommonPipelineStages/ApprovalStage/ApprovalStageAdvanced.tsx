@@ -27,7 +27,7 @@ import { useStrings } from 'framework/strings'
 import type { ApprovalStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { LoopingStrategy } from '@pipeline/components/PipelineStudio/LoopingStrategy/LoopingStrategy'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
-import { isMultiTypeRuntime } from '@common/utils/utils'
+import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
 
 import css from './ApprovalAdvancedSpecifications.module.scss'
 
@@ -65,8 +65,29 @@ function ApprovalAdvancedSpecifications({
         <div className={css.tabHeading}>
           <span data-tooltip-id={conditionalExecutionTooltipId}>
             {getString('pipeline.conditionalExecution.title')}
-            <HarnessDocTooltip tooltipId={conditionalExecutionTooltipId} useStandAlone={true} />
           </span>
+          <MultiTypeSelectorButton
+            className={css.multiTypeBtn}
+            type={getMultiTypeFromValue(stage?.stage?.when as any)}
+            allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+            onChange={type => {
+              const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
+              if (pipelineStage && pipelineStage.stage) {
+                const stageData = produce(pipelineStage, draft => {
+                  if (isMultiTypeRuntime(type)) {
+                    set(draft, 'stage.when', RUNTIME_INPUT_VALUE)
+                  } else {
+                    unset(draft, 'stage.when')
+                  }
+                })
+
+                if (stageData.stage) {
+                  updateStage(stageData.stage)
+                }
+              }
+            }}
+          />
+          <HarnessDocTooltip tooltipId={conditionalExecutionTooltipId} useStandAlone={true} />
         </div>
         {!!stage && (
           <Card className={css.sectionCard} id="conditionalExecution">
@@ -154,7 +175,10 @@ function ApprovalAdvancedSpecifications({
                   const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
                   if (pipelineStage && pipelineStage.stage) {
                     const stageData = produce(pipelineStage, draft => {
-                      if (Array.isArray(failureStrategies) && failureStrategies.length > 0) {
+                      if (
+                        (Array.isArray(failureStrategies) && failureStrategies.length > 0) ||
+                        isValueRuntimeInput(failureStrategies as any)
+                      ) {
                         set(draft, 'stage.failureStrategies', failureStrategies)
                       } else {
                         unset(draft, 'stage.failureStrategies')
@@ -163,7 +187,7 @@ function ApprovalAdvancedSpecifications({
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     updateStage(stageData.stage!)
                     const errors = formikRef.current?.getErrors()
-                    if (isEmpty(errors)) {
+                    if (isEmpty(errors) && Array.isArray(failureStrategies)) {
                       const telemetryData = failureStrategies.map(strategy => ({
                         onError: strategy.onFailure?.errors?.join(', '),
                         action: strategy.onFailure?.action?.type

@@ -43,44 +43,36 @@ export const mockWidgetSelectedData: SelectedWidgetMetricData = {
 }
 
 export const DatadogMetricsHealthSourceMock = {
-  name: 'datadog',
   identifier: 'datadog',
-  type: 'DatadogMetrics',
+  name: 'datadog',
   spec: {
     connectorRef: 'datadogConnector',
     feature: 'Datadog Cloud Metrics',
-    metricPacks: [],
     metricDefinitions: [
       {
-        identifier: 'mock_identifier',
         aggregation: 'avg',
+        analysis: {
+          deploymentVerification: { enabled: false, serviceInstanceFieldName: '' },
+          liveMonitoring: { enabled: false },
+          riskProfile: { riskCategory: 'Performance/INFRA', thresholdTypes: [] }
+        },
         dashboardId: 'mock_dashboard_id',
         dashboardName: 'mock_dashboard_name',
         groupingQuery: 'mock_grouping_query',
-        isManualQuery: true,
+        identifier: 'mock_identifier',
         isCustomCreatedMetric: true,
-        metricPath: 'mock_metric_path',
+        isManualQuery: true,
         metric: 'mock_active_metric',
         metricName: 'mock_metric_name',
+        metricPath: 'mock_metric_path',
         metricTags: [],
         query: 'mock_query',
-        sli: { enabled: false },
-        analysis: {
-          deploymentVerification: {
-            enabled: false,
-            serviceInstanceFieldName: ''
-          },
-          liveMonitoring: {
-            enabled: false
-          },
-          riskProfile: {
-            riskCategory: 'Performance/INFRA',
-            thresholdTypes: []
-          }
-        }
+        sli: { enabled: false }
       }
-    ]
-  }
+    ],
+    metricPacks: [{ identifier: 'Custom', metricThresholds: [] }]
+  },
+  type: 'DatadogMetrics'
 }
 export const DatadogMetricsMockHealthSourceData = {
   isEdit: true,

@@ -1,0 +1,285 @@
+{
+  "state": {
+    "pipeline": {
+      "identifier": "TestService",
+      "name": "Test-Service",
+      "gitOpsEnabled": false,
+      "stages": [
+        {
+          "stage": {
+            "name": "Stage Name",
+            "identifier": "stage_id",
+            "spec": {
+              "serviceConfig": {
+                "serviceDefinition": {
+                  "type": "Kubernetes",
+                  "spec": {
+                    "artifacts": {
+                      "primary": {
+                        "primaryArtifactRef": "<+input>.allowedValues(test-1,test-2)",
+                        "sources": [
+                          {
+                            "spec": {
+                              "connectorRef": "account.hingerDockerReg",
+                              "imagePath": "library/nginx",
+                              "tag": "<+input>",
+                              "digest": "<+input>"
+                            },
+                            "identifier": "Docker-Registry-Artifact",
+                            "type": "DockerRegistry"
+                          },
+                          {
+                            "spec": {
+                              "connectorRef": "account.testAzureConnectordr0Q9gATlw",
+                              "tag": "<+input>",
+                              "subscriptionId": "12d2db62-5aa9-471d-84bb-faa489b3e319",
+                              "registry": "<+input>",
+                              "repository": "<+input>"
+                            },
+                            "identifier": "ACR-Artifact",
+                            "type": "Acr"
+                          },
+                          {
+                            "name": "Artifact Docker Template",
+                            "identifier": "Artifact Docker Template",
+                            "template": {
+                              "templateRef": "DorcketArtiTemp",
+                              "versionLabel": "V1",
+                              "templateInputs": {
+                                "type": "DockerRegistry",
+                                "spec": {
+                                  "imagePath": "<+input>",
+                                  "tag": "<+input>",
+                                  "digest": "<+input>"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "name": "Artifact-Source-Template",
+                            "identifier": "Artifact-Source-Template",
+                            "template": {
+                              "templateRef": "ArtifactSourceTemplate",
+                              "versionLabel": "V1",
+                              "templateInputs": {
+                                "type": "Acr",
+                                "spec": {
+                                  "tag": "<+input>",
+                                  "registry": "<+input>",
+                                  "repository": "<+input>"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "sidecars": [
+                        {
+                          "sidecar": {
+                            "spec": {
+                              "connectorRef": "account.GCP_XXX",
+                              "imagePath": "<+input>",
+                              "tag": "<+input>",
+                              "registryHostname": "<+input>"
+                            },
+                            "identifier": "GCP-Sidecar",
+                            "type": "Gcr"
+                          }
+                        },
+                        {
+                          "sidecar": {
+                            "spec": {
+                              "connectorRef": "account.harnessmgerync",
+                              "imagePath": "<+input>",
+                              "tag": "<+input>",
+                              "region": "eu-central-1"
+                            },
+                            "identifier": "ECR-Sidecar",
+                            "type": "Ecr"
+                          }
+                        },
+                        {
+                          "sidecar": {
+                            "name": "Sidecar Docker Template",
+                            "identifier": "Sidecar Docker Template",
+                            "template": {
+                              "templateRef": "account.dockerTemp1",
+                              "versionLabel": "v1",
+                              "templateInputs": {
+                                "type": "DockerRegistry",
+                                "spec": {
+                                  "tag": "<+input>"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                "serviceRef": "TestCDS49415"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "originalPipeline": {
+      "identifier": "TestCDS49415",
+      "name": "Test-CDS-49415",
+      "gitOpsEnabled": false,
+      "stages": [
+        {
+          "stage": {
+            "name": "Stage Name",
+            "identifier": "stage_id",
+            "spec": {
+              "serviceConfig": {
+                "serviceDefinition": {
+                  "type": "Kubernetes",
+                  "spec": {
+                    "artifacts": {
+                      "primary": {
+                        "primaryArtifactRef": "<+input>.allowedValues(test-1,test-2)",
+                        "sources": [
+                          {
+                            "spec": {
+                              "connectorRef": "account.hingerDockerReg",
+                              "imagePath": "library/nginx",
+                              "tag": "<+input>",
+                              "digest": "<+input>"
+                            },
+                            "identifier": "Docker-Registry-Artifact",
+                            "type": "DockerRegistry"
+                          },
+                          {
+                            "spec": {
+                              "connectorRef": "account.testAzureConnectordr0Q9gATlw",
+                              "tag": "<+input>",
+                              "subscriptionId": "12d2db62-5aa9-471d-84bb-faa489b3e319",
+                              "registry": "<+input>",
+                              "repository": "<+input>"
+                            },
+                            "identifier": "ACR-Artifact",
+                            "type": "Acr"
+                          },
+                          {
+                            "name": "Artifact Docker Template",
+                            "identifier": "Artifact Docker Template",
+                            "template": {
+                              "templateRef": "DorcketArtiTemp",
+                              "versionLabel": "V1",
+                              "templateInputs": {
+                                "type": "DockerRegistry",
+                                "spec": {
+                                  "imagePath": "<+input>",
+                                  "tag": "<+input>",
+                                  "digest": "<+input>"
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "name": "Artifact-Source-Template",
+                            "identifier": "Artifact-Source-Template",
+                            "template": {
+                              "templateRef": "ArtifactSourceTemplate",
+                              "versionLabel": "V1",
+                              "templateInputs": {
+                                "type": "Acr",
+                                "spec": {
+                                  "tag": "<+input>",
+                                  "registry": "<+input>",
+                                  "repository": "<+input>"
+                                }
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "sidecars": [
+                        {
+                          "sidecar": {
+                            "spec": {
+                              "connectorRef": "account.GCP_XXX",
+                              "imagePath": "<+input>",
+                              "tag": "<+input>",
+                              "registryHostname": "<+input>"
+                            },
+                            "identifier": "GCP-Sidecar",
+                            "type": "Gcr"
+                          }
+                        },
+                        {
+                          "sidecar": {
+                            "spec": {
+                              "connectorRef": "account.harnessmgerync",
+                              "imagePath": "<+input>",
+                              "tag": "<+input>",
+                              "region": "eu-central-1"
+                            },
+                            "identifier": "ECR-Sidecar",
+                            "type": "Ecr"
+                          }
+                        },
+                        {
+                          "sidecar": {
+                            "name": "Sidecar Docker Template",
+                            "identifier": "Sidecar Docker Template",
+                            "template": {
+                              "templateRef": "account.dockerTemp1",
+                              "versionLabel": "v1",
+                              "templateInputs": {
+                                "type": "DockerRegistry",
+                                "spec": {
+                                  "tag": "<+input>"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                "serviceRef": "TestCDS49415"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "pipelineIdentifier": "-1",
+    "pipelineView": {
+      "isSplitViewOpen": false,
+      "isDrawerOpened": false,
+      "isYamlEditable": false,
+      "splitViewData": {},
+      "drawerData": {
+        "type": "AddCommand"
+      }
+    },
+    "schemaErrors": false,
+    "storeMetadata": {},
+    "gitDetails": {},
+    "entityValidityDetails": {},
+    "cacheResponse": {},
+    "templateTypes": {},
+    "templateIcons": {},
+    "templateServiceData": {},
+    "resolvedCustomDeploymentDetailsByRef": {},
+    "isLoading": false,
+    "isIntermittentLoading": false,
+    "isBEPipelineUpdated": false,
+    "isDBInitialized": false,
+    "isDBInitializationFailed": false,
+    "isUpdated": false,
+    "modules": [],
+    "isInitialized": true,
+    "selectionState": {
+      "selectedStageId": "stage_id"
+    },
+    "error": ""
+  }
+}

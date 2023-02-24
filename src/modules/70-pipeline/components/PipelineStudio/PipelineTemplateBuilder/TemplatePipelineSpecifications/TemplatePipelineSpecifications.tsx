@@ -37,8 +37,7 @@ import { useMutateAsGet } from '@common/hooks'
 import { parse, stringify, yamlStringify } from '@common/utils/YamlHelperMethods'
 import type { Pipeline } from '@pipeline/utils/types'
 import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './TemplatePipelineSpecifications.module.scss'
 
 export function TemplatePipelineSpecifications(): JSX.Element {
@@ -50,7 +49,8 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     setIntermittentLoading
   } = usePipelineContext()
   const queryParams = useParams<ProjectPathProps>()
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
+  const { PIE_NG_GITX_CACHING: isGitCacheEnabled, FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed } =
+    useFeatureFlags()
   const templateRef = getIdentifierFromValue(defaultTo(pipeline.template?.templateRef, ''))
   const templateVersionLabel = getIdentifierFromValue(defaultTo(pipeline.template?.versionLabel, ''))
   const templateScope = getScopeFromValue(defaultTo(pipeline.template?.templateRef, ''))
@@ -210,7 +210,8 @@ export function TemplatePipelineSpecifications(): JSX.Element {
         originalPipeline: allValues,
         getString,
         viewType: StepViewType.DeploymentForm,
-        viewTypeMetadata
+        viewTypeMetadata,
+        isOptionalVariableAllowed
       })
       const newFormikErrors = set({}, TEMPLATE_INPUT_PATH, errorsResponse)
       setFormikErrors(newFormikErrors)

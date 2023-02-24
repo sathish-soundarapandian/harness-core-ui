@@ -13,14 +13,17 @@ declare const styles: {
   readonly createSloInMonitoredService: string
   readonly currentTimeRange: string
   readonly errorBudgetGaugeContainer: string
+  readonly errorBudgetParent: string
   readonly errorBudgetRemaining: string
   readonly errorBudgetRemainingContainer: string
   readonly errorBudgetRisk: string
   readonly flexGrowOne: string
+  readonly main: string
   readonly menuIcon: string
   readonly noSloData: string
   readonly pageBody: string
   readonly pillToggle: string
+  readonly slider: string
   readonly sloCard: string
   readonly sloCardContainer: string
   readonly sloCardSpinner: string
@@ -28,6 +31,7 @@ declare const styles: {
   readonly sloFilters: string
   readonly sloFiltersRow1: string
   readonly sloGlanceCard: string
+  readonly sloListingPageHeader: string
   readonly sloRiskFilterCard: string
   readonly sloTags: string
   readonly timelineSlider: string

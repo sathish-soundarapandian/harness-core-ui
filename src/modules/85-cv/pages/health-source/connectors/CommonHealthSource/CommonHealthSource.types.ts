@@ -27,7 +27,9 @@ export interface FieldMapping {
   type: FIELD_ENUM
   label: string
   identifier: keyof CommonCustomMetricFormikInterface
-  defaultValue: string
+  defaultValue?: string
+  placeholder?: string
+  isTemplateSupportEnabled: boolean
 }
 
 export interface HealthSourceConfig {
@@ -40,6 +42,7 @@ export interface HealthSourceConfig {
     queryAndRecords: {
       enabled: boolean
       titleStringKey: StringKeys
+      queryField?: FieldMapping
     }
     fieldMappings?: FieldMapping[]
     metricsChart?: {
@@ -48,6 +51,8 @@ export interface HealthSourceConfig {
     }
     logsTable?: {
       enabled: boolean
+      showExactJsonPath?: boolean
+      selectOnlyLastKey?: boolean
     }
     assign?: {
       enabled: boolean
@@ -114,7 +119,8 @@ export interface CommonCustomMetricFormikInterface {
 
   // Define Query
   query: string
-  recordCount: number
+  index?: string
+  recordCount?: number
 
   //Metric Chart Mapping & Log fields Mappings
   valueJsonPath?: string // for logs its log message and for metrics its metric path
@@ -133,9 +139,10 @@ export interface CommonCustomMetricFormikInterface {
   lowerBaselineDeviation?: boolean
   higherBaselineDeviation?: boolean
 
-  //TODO - figure out how this can be controlled by config to
-  // show dropdown/input/Json path selector
-  serviceInstance?: string | SelectOption
+  serviceInstanceField?: string | SelectOption
+  timeStampIdentifier?: string | SelectOption
+  messageIdentifier?: string | SelectOption
+  timeStampFormat?: string
 }
 
 // Metric Thresholds

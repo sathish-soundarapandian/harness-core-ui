@@ -72,9 +72,9 @@ export default function EnvironmentDetails(): React.ReactElement {
 
   const { getString } = useStrings()
   const { showSuccess, showError, clear } = useToaster()
-  const { GITOPS_ONPREM_ENABLED, CDC_ENVIRONMENT_DASHBOARD_NG } = useFeatureFlags()
+  const { GITOPS_ONPREM_ENABLED } = useFeatureFlags()
   const gitopsOnPremEnabled = GITOPS_ONPREM_ENABLED ? true : false
-  const environmentSummaryEnabled = CDC_ENVIRONMENT_DASHBOARD_NG && projectIdentifier
+  const environmentSummaryEnabled = projectIdentifier
 
   const formikRef = useRef<FormikProps<NGEnvironmentInfoConfig>>()
 

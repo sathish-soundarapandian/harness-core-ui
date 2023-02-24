@@ -304,7 +304,7 @@ export const AzureInfrastructureSpecForm: React.FC<AzureInfrastructureSpecEditab
                   <FormMultiTypeConnectorField
                     name="connectorRef"
                     label={getString('connector')}
-                    placeholder={getString('connectors.selectConnector')}
+                    placeholder={getString('common.entityPlaceholderText')}
                     disabled={readonly}
                     accountIdentifier={accountId}
                     multiTypeProps={{

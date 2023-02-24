@@ -191,10 +191,10 @@ export default function ReferencedBy(): React.ReactElement {
             }
           }}
           pagination={{
-            itemCount: referencesResponse?.data?.totalPages || 0,
-            pageSize: referencesResponse?.data?.size || 10,
+            itemCount: referencesResponse?.data?.totalItems || 0,
+            pageSize: referencesResponse?.data?.pageSize || 10,
             pageCount: referencesResponse?.data?.totalPages || -1,
-            pageIndex: referencesResponse?.data?.number || 0,
+            pageIndex: referencesResponse?.data?.pageIndex || 0,
             gotoPage: setPage
           }}
         />

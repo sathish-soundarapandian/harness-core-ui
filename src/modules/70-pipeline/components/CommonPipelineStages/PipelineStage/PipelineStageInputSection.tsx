@@ -50,6 +50,8 @@ import { useMutateAsGet } from '@common/hooks/useMutateAsGet'
 import { replaceDefaultValues } from '@pipeline/utils/templateUtils'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { PipelineStageTabs } from './utils'
 import css from './PipelineStageAdvancedSpecifications.module.scss'
 
@@ -105,6 +107,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
   const formikRef = useRef<FormikProps<PipelineInfoConfig>>()
   const { getString } = useStrings()
   const { setPipeline: updatePipelineInVariablesContext, selectedInputSetsContext } = usePipelineVariables()
+  const isOptionalVariableAllowed = useFeatureFlag(FeatureFlag.FF_ALLOW_OPTIONAL_VARIABLE)
   const [existingProvide, setExistingProvide] = useState<ExistingProvide>('existing')
   const [inputTabFormValues, setInputTabFormValues] = React.useState<PipelineInfoConfig | undefined>(
     {} as PipelineInfoConfig
@@ -280,7 +283,8 @@ function PipelineInputSetFormBasic(): React.ReactElement {
             resolvedPipeline,
             getString,
             viewType: StepViewType.DeploymentForm,
-            viewTypeMetadata: { isInputSet: true }
+            viewTypeMetadata: { isInputSet: true },
+            isOptionalVariableAllowed
           }) as any) || formErrors
         resolve(validatedErrors)
       })

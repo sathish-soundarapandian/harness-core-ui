@@ -46,6 +46,7 @@ export interface TableRowData {
   showInfra?: boolean
   showEnv?: boolean
   showEnvType?: boolean
+  showArtifact?: boolean
 }
 
 /* istanbul ignore next */
@@ -148,7 +149,7 @@ export const RenderEnvType: Renderer<CellProps<TableRowData>> = ({
   )
 }
 
-const RenderInstanceCount: Renderer<CellProps<TableRowData>> = ({
+export const RenderInstanceCount: Renderer<CellProps<TableRowData>> = ({
   row: {
     original: { instanceCount }
   }
@@ -169,7 +170,7 @@ export const RenderInfra: Renderer<CellProps<TableRowData>> = ({
     original: { showInfra, infrastructureId, infrastructureName, clusterId }
   }
 }) => {
-  const name = !isUndefined(infrastructureId) ? infrastructureName : clusterId
+  const name = !infrastructureId ? clusterId : infrastructureName
   return showInfra ? (
     <Container>
       <Text lineClamp={1} tooltipProps={{ isDark: true }} className={css.envColumnStyle}>
@@ -285,7 +286,7 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
       }
     ]
     return columnsArray as unknown as Column<TableRowData>[]
-  }, [])
+  }, [getString])
 
   if (isUndefined(selectedRow) && tableData.length) {
     setRowClickFilter({
@@ -297,13 +298,7 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
       infraIdentifier: tableData[0].infrastructureId,
       infraName: tableData[0].infrastructureName
     })
-    setSelectedRow(
-      JSON.stringify(tableData[0]) +
-        tableData[0].envId +
-        tableData[0].artifact +
-        tableData[0].infrastructureId +
-        tableData[0].clusterId
-    )
+    setSelectedRow(`${tableData[0].envId}-${0}`)
   }
 
   if (loading) {
@@ -340,7 +335,7 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
       columns={columns}
       data={tableData}
       className={css.fullViewTableStyle}
-      onRowClick={row => {
+      onRowClick={(row, idx) => {
         setRowClickFilter({
           artifact: defaultTo(row.artifact, ''),
           envId: defaultTo(row.envId, ''),
@@ -350,20 +345,9 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
           infraIdentifier: row.infrastructureId,
           infraName: row.infrastructureName
         })
-        setSelectedRow(JSON.stringify(row) + row.envId + row.artifact + row.infrastructureId + row.clusterId)
+        setSelectedRow(`${row.envId}-${idx}`)
       }}
-      getRowClassName={row =>
-        isEqual(
-          JSON.stringify(row.original) +
-            row.original.envId +
-            row.original.artifact +
-            row.original.infrastructureId +
-            row.original.clusterId,
-          selectedRow
-        )
-          ? css.selected
-          : ''
-      }
+      getRowClassName={row => (isEqual(`${row.original.envId}-${row.index}`, selectedRow) ? css.selected : '')}
     />
   )
 }

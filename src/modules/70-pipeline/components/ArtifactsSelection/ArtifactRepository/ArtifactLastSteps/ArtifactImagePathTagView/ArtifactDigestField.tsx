@@ -164,6 +164,7 @@ function ArtifactDigestField({
               value={formik?.values?.digest}
               type="String"
               options={digestItems}
+              loading={loading}
               variableName="digest"
               showRequiredField={false}
               showDefaultField={false}

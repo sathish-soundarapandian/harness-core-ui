@@ -78,7 +78,7 @@ export const getFullViewTableData = (
           let artifactPath: string | undefined
           const infraList: string[] = []
           /* istanbul ignore else */
-          if (artifact.artifactVersion && artifact.instanceGroupedByEnvironmentList) {
+          if (artifact.instanceGroupedByEnvironmentList) {
             artifactVersion ??= artifact.artifactVersion
             artifactPath ??= artifact.artifactPath
             artifact.instanceGroupedByEnvironmentList?.forEach(env => {
@@ -217,7 +217,7 @@ export const RenderArtifactVersion: Renderer<CellProps<TableRowData>> = ({
       {popoverTable}
     </Popover>
   ) : (
-    <></>
+    <span className={css.dashCtn}>{'-'}</span>
   )
 }
 
@@ -430,7 +430,7 @@ export const EnvironmentDetailTable = (
     )
   }
 
-  if (isUndefined(selectedRow) && tableType === TableType.FULL) {
+  if (isUndefined(selectedRow) && tableType === TableType.FULL && tableData.length) {
     setRowClickFilter({
       artifactFilter: {
         artifactVersion: defaultTo(tableData[0].artifactVersion, ''),

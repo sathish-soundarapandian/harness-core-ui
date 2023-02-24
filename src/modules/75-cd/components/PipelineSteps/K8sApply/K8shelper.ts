@@ -22,7 +22,7 @@ export const K8sManifestDataType: Record<K8sManifestTypes, K8sManifestTypes> = {
   KustomizePatches: 'KustomizePatches'
 }
 export const allowedManifestTypes: Record<string, Array<K8sManifestTypes>> = {
-  Kubernetes: [K8sManifestDataType.Values, K8sManifestDataType.OpenshiftParam, K8sManifestDataType.KustomizePatches],
+  Kubernetes: [K8sManifestDataType.Values, K8sManifestDataType.KustomizePatches],
   NativeHelm: [K8sManifestDataType.Values]
 }
 

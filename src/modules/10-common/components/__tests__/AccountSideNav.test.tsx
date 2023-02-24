@@ -50,32 +50,6 @@ describe('AccountSideNav', () => {
   })
 
   test('AccountSideNav test pipeline governance', () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      OPA_PIPELINE_GOVERNANCE: true,
-      OPA_FF_GOVERNANCE: false
-    })
-
-    const renderObj = render(
-      <TestWrapper
-        defaultLicenseStoreValues={{
-          licenseInformation: {
-            CI: { edition: 'ENTERPRISE', status: 'ACTIVE' },
-            CD: { edition: 'FREE', status: 'EXPIRED' }
-          }
-        }}
-      >
-        <AccountSideNav />
-      </TestWrapper>
-    )
-    expect(renderObj.getByText('common.governance')).toBeInTheDocument()
-  })
-
-  test('AccountSideNav test ff governance', () => {
-    jest.spyOn(FeatureFlag, 'useFeatureFlags').mockReturnValue({
-      OPA_PIPELINE_GOVERNANCE: false,
-      OPA_FF_GOVERNANCE: true
-    })
-
     const renderObj = render(
       <TestWrapper
         defaultLicenseStoreValues={{

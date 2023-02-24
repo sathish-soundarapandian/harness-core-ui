@@ -188,7 +188,7 @@ export const MultiTypeMapInputSet = (props: MultiTypeMapProps): React.ReactEleme
       // empty value for the optional field should default to {}
       formik?.setFieldValue(name, {})
     }
-  }, [formik?.values, name])
+  }, [formik?.setFieldValue, name]) // removed formik?.values as it will re-render after every key-press with random uuid for map
 
   React.useEffect(() => {
     const valueInCorrectFormat: MapType = {}

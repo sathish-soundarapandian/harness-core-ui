@@ -79,7 +79,7 @@ function SidecarArtifacts({
           return sidecarConnectorName ?? sidecar?.spec?.connectorRef
         }
 
-        const templateActionBtns = isReadonly ? null : (
+        const templateActionBtn: React.ReactElement | null = isReadonly ? null : (
           <Layout.Horizontal>
             <Button
               icon="Edit"
@@ -98,7 +98,7 @@ function SidecarArtifacts({
         return !isEmpty(artifactSourceTemplate) ? (
           <ArtifactSourceTemplateView
             artifactSourceTemplateData={sidecar as TemplateStepNode}
-            templateActionBtns={templateActionBtns}
+            primaryArtifactActions={templateActionBtn}
           />
         ) : (
           <section className={cx(css.artifactList, css.rowItem)} key={`${sidecar?.identifier}-${index}`}>

@@ -163,14 +163,9 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
 
   const metricDefinitions = existingMetricDetails?.spec?.metricDefinitions
 
-  const isMetricThresholdEnabled = !isTemplate
-
   const { getString } = useStrings()
 
-  const transformedData = useMemo(
-    () => transformGCOMetricHealthSourceToGCOMetricSetupSource(data, isMetricThresholdEnabled),
-    [data, isMetricThresholdEnabled]
-  )
+  const transformedData = useMemo(() => transformGCOMetricHealthSourceToGCOMetricSetupSource(data), [data])
 
   const [metricThresholds, setMetricThresholds] = useState<MetricThresholdsState>({
     ignoreThresholds: transformedData.ignoreThresholds,
@@ -278,7 +273,7 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
           return {}
         }
 
-        return validate(values, newMap, getString, isMetricThresholdEnabled)
+        return validate(values, newMap, getString)
       }}
     >
       {formikProps => {
@@ -468,7 +463,7 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
 
                         formikProps.submitForm()
 
-                        const errors = validate(formikProps.values, updatedData, getString, isMetricThresholdEnabled)
+                        const errors = validate(formikProps.values, updatedData, getString)
                         if (!isEmpty(errors)) {
                           formikProps.setErrors({ ...errors })
                           return
@@ -487,14 +482,11 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
 
                         onSubmit(
                           data,
-                          transformGCOMetricSetupSourceToGCOHealthSource(
-                            {
-                              ...transformedData,
-                              ...metricThresholds,
-                              metricDefinition: filteredData
-                            },
-                            isMetricThresholdEnabled
-                          )
+                          transformGCOMetricSetupSourceToGCOHealthSource({
+                            ...transformedData,
+                            ...metricThresholds,
+                            metricDefinition: filteredData
+                          })
                         )
                       }}
                     />
@@ -535,7 +527,7 @@ export function GCOMetricsHealthSource(props: GCOMetricsHealthSourceProps): JSX.
                   />
                 }
               />
-              {isMetricThresholdEnabled && !isEmpty(groupedCreatedMetrics) && (
+              {!isEmpty(groupedCreatedMetrics) && (
                 <MetricThresholdProvider
                   formikValues={formikProps.values}
                   setThresholdState={setMetricThresholds}

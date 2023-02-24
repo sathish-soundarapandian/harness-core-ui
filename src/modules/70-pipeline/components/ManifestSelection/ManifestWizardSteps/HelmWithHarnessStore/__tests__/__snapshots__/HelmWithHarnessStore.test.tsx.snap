@@ -106,7 +106,7 @@ exports[`Harness File Store with HelmChart Manifest tests initial rendering 1`] 
                             placeholder="- Select -"
                             style="padding-right: 0px;"
                             type="text"
-                            value="Version 2"
+                            value="Version 3"
                           />
                           <span
                             class="bp3-input-action"
@@ -945,7 +945,7 @@ exports[`Harness File Store with HelmChart Manifest tests when fields are runtim
                             placeholder="- Select -"
                             style="padding-right: 0px;"
                             type="text"
-                            value="Version 2"
+                            value="Version 3"
                           />
                           <span
                             class="bp3-input-action"

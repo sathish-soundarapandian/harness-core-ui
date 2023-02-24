@@ -23,10 +23,10 @@ import css from '../DetailsPanel.module.scss'
 export const KeyValuePair: React.FC<KeyValuePairProps> = ({ label, value }) => {
   return (
     <Container>
-      <Text font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_400}>
+      <Text data-testid={label} font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_400}>
         {label}
       </Text>
-      <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_800}>
+      <Text data-testid={`${label}_value`} font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_800}>
         {value}
       </Text>
     </Container>
@@ -58,9 +58,18 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) =
               {getString('connectors.cdng.monitoredService.label')}
             </Text>
             <Link to={monitoredServicePathname}>
-              <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.PRIMARY_7}>
+              <Text
+                font={{ variation: FontVariation.SMALL_BOLD }}
+                color={Color.PRIMARY_7}
+                data-testid="sloDashboardWidgetServiceName"
+              >
                 {sloDashboardWidget.serviceName}
-                <Text tag="span" color={Color.GREY_800} padding={{ left: 'xsmall' }}>
+                <Text
+                  tag="span"
+                  color={Color.GREY_800}
+                  padding={{ left: 'xsmall' }}
+                  data-testid="sloDashboardWidgetEnvironmentName"
+                >
                   /{sloDashboardWidget.environmentName}
                 </Text>
               </Text>
@@ -97,7 +106,7 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) =
           <Text font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_400}>
             {getString('cv.periodLength')}
           </Text>
-          <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_800}>
+          <Text font={{ variation: FontVariation.SMALL_BOLD }} color={Color.GREY_800} data-testid={'periodLength'}>
             {sloDashboardWidget.currentPeriodLengthDays}
             &nbsp;
             {Number(sloDashboardWidget.currentPeriodLengthDays) < 2 ? getString('cv.day') : getString('cv.days')}
@@ -113,7 +122,12 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) =
           <Text font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_600}>
             {getString('cv.errorBudgetRemaining')}
           </Text>
-          <Heading level={2} color={Color.GREY_800} font={{ variation: FontVariation.H4 }}>
+          <Heading
+            level={2}
+            color={Color.GREY_800}
+            font={{ variation: FontVariation.H4 }}
+            data-testid="errorBudgetRemainingPercentage"
+          >
             {Number(sloDashboardWidget.errorBudgetRemainingPercentage).toFixed(2)}%
           </Heading>
         </Container>
@@ -121,11 +135,17 @@ const ServiceDetails: React.FC<ServiceDetailsProps> = ({ sloDashboardWidget }) =
           <Text font={{ variation: FontVariation.TINY_SEMI }} color={Color.GREY_600}>
             {getString('cv.timeRemaining')}
           </Text>
-          <Heading inline level={2} color={Color.GREY_800} font={{ variation: FontVariation.H4 }}>
+          <Heading
+            inline
+            level={2}
+            color={Color.GREY_800}
+            font={{ variation: FontVariation.H4 }}
+            data-testid="timeRemainingDaysValue"
+          >
             {sloDashboardWidget.timeRemainingDays}
           </Heading>
           &nbsp;
-          <Text inline font={{ variation: FontVariation.FORM_HELP }}>
+          <Text inline font={{ variation: FontVariation.FORM_HELP }} data-testid="timeRemainingDaysLabel">
             {Number(sloDashboardWidget.timeRemainingDays) < 2 ? getString('cv.day') : getString('cv.days')}
           </Text>
         </Container>

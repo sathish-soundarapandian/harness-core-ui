@@ -64,6 +64,7 @@ import SpotConnector from '../CreateConnector/SpotConnector/SpotConnector'
 import CreateAzureArtifactsConnector from '../CreateConnector/AzureArtifactConnector/CreateAzureArtifactConnector'
 import TASConnector from '../CreateConnector/TASConnector/TASConnector'
 import TerraformCloudConnector from '../CreateConnector/TerraformCloudConnector/TerraformCloudConnector'
+import CreateBambooConnector from '../CreateConnector/BambooConnector/CreateBambooConnector'
 
 interface CreateConnectorWizardProps {
   accountId: string
@@ -199,6 +200,9 @@ export const ConnectorWizard: React.FC<CreateConnectorWizardProps> = props => {
       return <CreateAzureConnector {...commonProps} />
     case Connectors.JENKINS:
       return <CreateJenkinsConnector {...commonProps} />
+    case Connectors.Bamboo:
+      return <CreateBambooConnector {...commonProps} />
+
     case Connectors.CUSTOM_SECRET_MANAGER:
       return <CreateCustomSMConnector {...commonProps} />
     case Connectors.GcpSecretManager:

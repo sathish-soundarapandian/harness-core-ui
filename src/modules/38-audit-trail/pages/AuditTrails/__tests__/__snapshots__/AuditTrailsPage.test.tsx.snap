@@ -78,268 +78,1532 @@ exports[`Audit trail Page render 1`] = `
     </div>
   </div>
   <div
-    class="Layout--horizontal StyledProps--main PageSubHeader--container subHeaderContainer StyledProps--flex"
-    data-testid="page-subheader"
+    class="StyledProps--font StyledProps--main PageBody--pageBody"
+    data-name="page-body"
+    data-testid="page-body"
   >
     <div
-      class="Layout--horizontal StyledProps--main subHeader StyledProps--flex"
+      class="Layout--horizontal StyledProps--main auditTabs"
     >
       <div
-        class="Layout--horizontal StyledProps--main"
+        class="bp3-tabs Tabs--main Tabs--horizontal"
       >
-        <span
-          class="bp3-popover-wrapper"
+        <div
+          class="bp3-tab-list"
+          role="tablist"
         >
-          <span
-            class="bp3-popover-target"
+          <div
+            class="bp3-tab-indicator-wrapper"
+            style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
           >
-            <button
-              aria-label="common.last7days"
-              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main dateRange Button--with-current-color Button--without-shadow Button--withRightIcon"
-              type="button"
+            <div
+              class="bp3-tab-indicator"
+            />
+          </div>
+          <div
+            aria-controls="bp3-tab-panel_auditTabs_auditLogs"
+            aria-disabled="false"
+            aria-expanded="true"
+            aria-selected="true"
+            class="bp3-tab"
+            data-tab-id="auditLogs"
+            id="bp3-tab-title_auditTabs_auditLogs"
+            role="tab"
+            tabindex="0"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              auditTrail.auditLogs
+            </p>
+          </div>
+          <div
+            aria-controls="bp3-tab-panel_auditTabs_auditLogStreaming"
+            aria-disabled="false"
+            aria-expanded="false"
+            aria-selected="false"
+            class="bp3-tab"
+            data-tab-id="auditLogStreaming"
+            id="bp3-tab-title_auditTabs_auditLogStreaming"
+            role="tab"
+            tabindex="0"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              auditTrail.auditLogStreaming
+            </p>
+          </div>
+        </div>
+        <div
+          aria-hidden="false"
+          aria-labelledby="bp3-tab-title_auditTabs_auditLogs"
+          class="bp3-tab-panel"
+          id="bp3-tab-panel_auditTabs_auditLogs"
+          role="tabpanel"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main PageSubHeader--container subHeaderContainer StyledProps--flex"
+            data-testid="page-subheader"
+          >
+            <div
+              class="Layout--horizontal StyledProps--main subHeader StyledProps--flex"
+            >
+              <div
+                class="Layout--horizontal StyledProps--main"
+              >
+                <span
+                  class="bp3-popover-wrapper"
+                >
+                  <span
+                    class="bp3-popover-target"
+                  >
+                    <button
+                      aria-label="common.last7days"
+                      class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main dateRange Button--with-current-color Button--without-shadow Button--withRightIcon"
+                      type="button"
+                    >
+                      <span
+                        class="bp3-button-text"
+                      >
+                        common.last7days
+                      </span>
+                      <span
+                        class="bp3-icon bp3-icon-calendar StyledProps--main"
+                        icon="calendar"
+                      >
+                        <svg
+                          data-icon="calendar"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          width="16"
+                        >
+                          <desc>
+                            calendar
+                          </desc>
+                          <path
+                            d="M11 3c.6 0 1-.5 1-1V1c0-.6-.4-1-1-1s-1 .4-1 1v1c0 .5.4 1 1 1zm3-2h-1v1c0 1.1-.9 2-2 2s-2-.9-2-2V1H6v1c0 1.1-.9 2-2 2s-2-.9-2-2V1H1c-.6 0-1 .5-1 1v12c0 .6.4 1 1 1h13c.6 0 1-.4 1-1V2c0-.6-.5-1-1-1zM5 13H2v-3h3v3zm0-4H2V6h3v3zm4 4H6v-3h3v3zm0-4H6V6h3v3zm4 4h-3v-3h3v3zm0-4h-3V6h3v3zM4 3c.6 0 1-.5 1-1V1c0-.6-.4-1-1-1S3 .4 3 1v1c0 .5.4 1 1 1z"
+                            fill-rule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+                  </span>
+                </span>
+                <div
+                  class="bp3-popover-wrapper DropDown--main"
+                >
+                  <div
+                    class="bp3-popover-target"
+                  >
+                    <div
+                      class=""
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--withBorder StyledProps--flex"
+                        data-testid="dropdown-button"
+                        style="width: 170px;"
+                      >
+                        <div
+                          class="Layout--horizontal StyledProps--main DropDown--labelWrapper StyledProps--flex"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main DropDown--label"
+                            data-testid="dropdown-value"
+                            style="--text-line-clamp: 1;"
+                          >
+                            auditTrail.allEvents
+                          </p>
+                        </div>
+                        <div
+                          class="Layout--horizontal StyledProps--main DropDown--btnWrapper StyledProps--flex"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
+                            data-icon="main-chevron-down"
+                          >
+                            <svg
+                              height="8"
+                              viewBox="0 0 14 8"
+                              width="8"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
+                                fill="#4d5969"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--flex"
+              >
+                <div
+                  class="bp3-popover-wrapper DropDown--main"
+                >
+                  <div
+                    class="bp3-popover-target"
+                  >
+                    <div
+                      class=""
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--withBorder DropDown--minWidth StyledProps--flex"
+                        data-testid="filter-select"
+                        style="min-width: 220px;"
+                      >
+                        <div
+                          class="Layout--horizontal StyledProps--main DropDown--labelWrapper StyledProps--flex"
+                        >
+                          <p
+                            class="StyledProps--font Text--lineclamp StyledProps--main DropDown--label"
+                            data-testid="dropdown-value"
+                            style="--text-line-clamp: 1;"
+                          >
+                            filters.selectFilter
+                          </p>
+                        </div>
+                        <div
+                          class="Layout--horizontal StyledProps--main DropDown--btnWrapper StyledProps--flex"
+                        >
+                          <span
+                            class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
+                            data-icon="main-chevron-down"
+                          >
+                            <svg
+                              height="8"
+                              viewBox="0 0 14 8"
+                              width="8"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
+                                fill="#4d5969"
+                              />
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="filterButtonContainer"
+                >
+                  <button
+                    class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ngFilter StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
+                    id="ngfilterbtn"
+                    type="button"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main"
+                      data-icon="ng-filter"
+                    >
+                      <svg
+                        height="22"
+                        viewBox="0 0 24 24"
+                        width="22"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M16.5 8V7H19a.5.5 0 000-1h-2.5V5a.5.5 0 00-1 0v1H5a.5.5 0 000 1h10.5v1a.5.5 0 001 0zM5 11.5h3v-1a.5.5 0 011 0v1h10a.5.5 0 010 1H9v1a.5.5 0 01-1 0v-1H5a.5.5 0 010-1zM5 17a.5.5 0 000 1h7v1a.5.5 0 001 0v-1h6a.5.5 0 000-1h-6v-1a.5.5 0 00-1 0v1H5z"
+                          fill="currentColor"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+                <div
+                  class="Layout--horizontal StyledProps--main"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main PageBody--pageBody pageBody"
+            data-name="page-body"
+            data-testid="page-body"
+          >
+            <div
+              class="StyledProps--font StyledProps--main PageSpinner--spinner StyledProps--flex StyledProps--flex-align-center-center"
+              data-testid="page-spinner"
+            >
+              <div
+                class="Layout--vertical Layout--layout-spacing-medium StyledProps--main PageSpinner--content"
+                style="align-items: center; width: 500px;"
+              >
+                <span
+                  class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey600"
+                  data-icon="steps-spinner"
+                >
+                  <svg
+                    height="32"
+                    viewBox="0 0 128 128"
+                    width="32"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g>
+                      <path
+                        d="M122.5 69.25H96.47a33.1 33.1 0 000-10.5h26.05a5.25 5.25 0 010 10.5z"
+                        fill="#ff8e02"
+                      />
+                      <path
+                        d="M112.04 97.83L89.47 84.8a33.1 33.1 0 005.25-9.1l22.57 13.03a5.25 5.25 0 01-5.28 9.1zM88.68 117.35L75.65 94.78a33.1 33.1 0 009.1-5.25l13.02 22.57a5.25 5.25 0 11-9.1 5.25zM58.7 122.57V96.5a33.1 33.1 0 0010.5 0v26.07a5.25 5.25 0 01-10.5 0zM30.1 112.1l13.04-22.57a33.1 33.1 0 009.1 5.25L39.2 117.35a5.25 5.25 0 11-9.1-5.25zM10.6 88.74L33.16 75.7a33.1 33.1 0 005.25 9.1L15.88 97.83a5.25 5.25 0 11-5.25-9.1z"
+                        fill="#ffddb3"
+                        fill-opacity="0.3"
+                      />
+                      <path
+                        d="M5.37 58.75h26.06a33.1 33.1 0 000 10.5H5.37a5.25 5.25 0 010-10.5z"
+                        fill="#ffd29a"
+                        fill-opacity="0.4"
+                      />
+                      <path
+                        d="M15.85 30.17L38.4 43.2a33.1 33.1 0 00-5.24 9.1L10.6 39.25a5.25 5.25 0 115.25-9.1z"
+                        fill="#ffc680"
+                        fill-opacity="0.5"
+                      />
+                      <path
+                        d="M39.2 10.65l13.03 22.57a33.1 33.1 0 00-9.1 5.25l-13-22.57a5.25 5.25 0 119.1-5.25z"
+                        fill="#ffbb67"
+                        fill-opacity="0.6"
+                      />
+                      <path
+                        d="M69.2 5.43V31.5a33.1 33.1 0 00-10.5 0V5.42a5.25 5.25 0 1110.5 0z"
+                        fill="#ffb04d"
+                        fill-opacity="0.7"
+                      />
+                      <path
+                        d="M97.77 15.9L84.75 38.47a33.1 33.1 0 00-9.1-5.25l13.03-22.57a5.25 5.25 0 119.1 5.25z"
+                        fill="#ffa535"
+                        fill-opacity="0.8"
+                      />
+                      <path
+                        d="M117.3 39.26L94.7 52.3a33.1 33.1 0 00-5.25-9.1l22.57-13.03a5.25 5.25 0 015.25 9.1z"
+                        fill="#ff991b"
+                        fill-opacity="0.9"
+                      />
+                      <animatetransform
+                        attributeName="transform"
+                        calcMode="discrete"
+                        dur="1200ms"
+                        repeatCount="indefinite"
+                        type="rotate"
+                        values="0 64 64;30 64 64;60 64 64;90 64 64;120 64 64;150 64 64;180 64 64;210 64 64;240 64 64;270 64 64;300 64 64;330 64 64"
+                      />
+                    </g>
+                  </svg>
+                </span>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--font-align-center StyledProps--color StyledProps--color-grey600"
+                >
+                  Loading, please wait...
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Audit trail Page render AuditLogStreaming Page 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main PageHeader--container PageHeader--standard StyledProps--flex StyledProps--padding-left-xlarge StyledProps--padding-right-xlarge StyledProps--background-white"
+    data-testid="page-header"
+  >
+    <div
+      class="Layout--vertical StyledProps--main"
+    >
+      <div
+        class="PageHeader--breadcrumbsDiv"
+      >
+        <div
+          class="Layout--horizontal StyledProps--main Breadcrumbs--breadcrumbs StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+        >
+          <div
+            class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-justifyContent-flex-start"
+          >
+            <a
+              class="Breadcrumbs--breadcrumb"
+              href="/account/testAcc/settings"
             >
               <span
-                class="bp3-button-text"
-              >
-                common.last7days
-              </span>
-              <span
-                class="bp3-icon bp3-icon-calendar StyledProps--main"
-                icon="calendar"
+                class="bp3-icon bp3-icon-cog StyledProps--main StyledProps--padding-right-xsmall StyledProps--color StyledProps--color-primary7"
+                icon="cog"
               >
                 <svg
-                  data-icon="calendar"
+                  data-icon="cog"
                   height="16"
                   viewBox="0 0 16 16"
                   width="16"
                 >
                   <desc>
-                    calendar
+                    cog
                   </desc>
                   <path
-                    d="M11 3c.6 0 1-.5 1-1V1c0-.6-.4-1-1-1s-1 .4-1 1v1c0 .5.4 1 1 1zm3-2h-1v1c0 1.1-.9 2-2 2s-2-.9-2-2V1H6v1c0 1.1-.9 2-2 2s-2-.9-2-2V1H1c-.6 0-1 .5-1 1v12c0 .6.4 1 1 1h13c.6 0 1-.4 1-1V2c0-.6-.5-1-1-1zM5 13H2v-3h3v3zm0-4H2V6h3v3zm4 4H6v-3h3v3zm0-4H6V6h3v3zm4 4h-3v-3h3v3zm0-4h-3V6h3v3zM4 3c.6 0 1-.5 1-1V1c0-.6-.4-1-1-1S3 .4 3 1v1c0 .5.4 1 1 1z"
+                    d="M15.19 6.39h-1.85c-.11-.37-.27-.71-.45-1.04l1.36-1.36c.31-.31.31-.82 0-1.13l-1.13-1.13a.803.803 0 00-1.13 0l-1.36 1.36c-.33-.17-.67-.33-1.04-.44V.79c0-.44-.36-.8-.8-.8h-1.6c-.44 0-.8.36-.8.8v1.86c-.39.12-.75.28-1.1.47l-1.3-1.3c-.3-.3-.79-.3-1.09 0L1.82 2.91c-.3.3-.3.79 0 1.09l1.3 1.3c-.2.34-.36.7-.48 1.09H.79c-.44 0-.8.36-.8.8v1.6c0 .44.36.8.8.8h1.85c.11.37.27.71.45 1.04l-1.36 1.36c-.31.31-.31.82 0 1.13l1.13 1.13c.31.31.82.31 1.13 0l1.36-1.36c.33.18.67.33 1.04.44v1.86c0 .44.36.8.8.8h1.6c.44 0 .8-.36.8-.8v-1.86c.39-.12.75-.28 1.1-.47l1.3 1.3c.3.3.79.3 1.09 0l1.09-1.09c.3-.3.3-.79 0-1.09l-1.3-1.3c.19-.35.36-.71.48-1.1h1.85c.44 0 .8-.36.8-.8v-1.6a.816.816 0 00-.81-.79zm-7.2 4.6c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"
                     fill-rule="evenodd"
                   />
                 </svg>
               </span>
-            </button>
-          </span>
-        </span>
-        <div
-          class="bp3-popover-wrapper DropDown--main"
-        >
-          <div
-            class="bp3-popover-target"
-          >
-            <div
-              class=""
-            >
-              <div
-                class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--withBorder StyledProps--flex"
-                data-testid="dropdown-button"
-                style="width: 170px;"
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--font-size-small"
               >
-                <div
-                  class="Layout--horizontal StyledProps--main DropDown--labelWrapper StyledProps--flex"
-                >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main DropDown--label"
-                    data-testid="dropdown-value"
-                    style="--text-line-clamp: 1;"
-                  >
-                    auditTrail.allEvents
-                  </p>
-                </div>
-                <div
-                  class="Layout--horizontal StyledProps--main DropDown--btnWrapper StyledProps--flex"
-                >
-                  <span
-                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
-                    data-icon="main-chevron-down"
-                  >
-                    <svg
-                      height="8"
-                      viewBox="0 0 14 8"
-                      width="8"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
-                        fill="#4d5969"
-                      />
-                    </svg>
-                  </span>
-                </div>
-              </div>
-            </div>
+                common.accountSettings
+              </p>
+            </a>
+            <span
+              class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey500 StyledProps--padding-right-xsmall StyledProps--padding-left-xsmall"
+              data-icon="main-chevron-right"
+            >
+              <svg
+                height="8"
+                viewBox="0 0 8 14"
+                width="8"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M7.7 6.3l-6-6C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7L5.6 7 .3 12.3c-.2.2-.3.4-.3.7 0 .6.4 1 1 1 .3 0 .5-.1.7-.3l6-6c.2-.2.3-.4.3-.7s-.1-.5-.3-.7z"
+                  fill="#4d5969"
+                />
+              </svg>
+            </span>
           </div>
         </div>
       </div>
       <div
-        class="Layout--horizontal StyledProps--main StyledProps--flex"
+        class="Layout--horizontal StyledProps--main"
       >
-        <div
-          class="bp3-popover-wrapper DropDown--main"
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-variation-h4"
         >
-          <div
-            class="bp3-popover-target"
-          >
-            <div
-              class=""
-            >
-              <div
-                class="Layout--horizontal StyledProps--main DropDown--dropdownButton DropDown--withBorder DropDown--minWidth StyledProps--flex"
-                data-testid="filter-select"
-                style="min-width: 220px;"
-              >
-                <div
-                  class="Layout--horizontal StyledProps--main DropDown--labelWrapper StyledProps--flex"
-                >
-                  <p
-                    class="StyledProps--font Text--lineclamp StyledProps--main DropDown--label"
-                    data-testid="dropdown-value"
-                    style="--text-line-clamp: 1;"
-                  >
-                    filters.selectFilter
-                  </p>
-                </div>
-                <div
-                  class="Layout--horizontal StyledProps--main DropDown--btnWrapper StyledProps--flex"
-                >
-                  <span
-                    class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey400"
-                    data-icon="main-chevron-down"
-                  >
-                    <svg
-                      height="8"
-                      viewBox="0 0 14 8"
-                      width="8"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M13 0c-.3 0-.5.1-.7.3L7 5.6 1.7.3C1.5.1 1.3 0 1 0 .4 0 0 .4 0 1c0 .3.1.5.3.7l6 6c.2.2.4.3.7.3s.5-.1.7-.3l6-6c.2-.2.3-.4.3-.7 0-.6-.4-1-1-1z"
-                        fill="#4d5969"
-                      />
-                    </svg>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="filterButtonContainer"
-        >
-          <button
-            class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main ngFilter StyledProps--intent-primary Button--with-current-color Button--without-shadow Button--withLeftIcon"
-            id="ngfilterbtn"
-            type="button"
-          >
-            <span
-              class="bp3-icon StyledProps--main"
-              data-icon="ng-filter"
-            >
-              <svg
-                height="22"
-                viewBox="0 0 24 24"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  clip-rule="evenodd"
-                  d="M16.5 8V7H19a.5.5 0 000-1h-2.5V5a.5.5 0 00-1 0v1H5a.5.5 0 000 1h10.5v1a.5.5 0 001 0zM5 11.5h3v-1a.5.5 0 011 0v1h10a.5.5 0 010 1H9v1a.5.5 0 01-1 0v-1H5a.5.5 0 010-1zM5 17a.5.5 0 000 1h7v1a.5.5 0 001 0v-1h6a.5.5 0 000-1h-6v-1a.5.5 0 00-1 0v1H5z"
-                  fill="currentColor"
-                  fill-rule="evenodd"
-                />
-              </svg>
-            </span>
-          </button>
-        </div>
-        <div
-          class="Layout--horizontal StyledProps--main"
-        />
+          account common.auditTrail
+        </p>
       </div>
     </div>
   </div>
   <div
-    class="StyledProps--font StyledProps--main PageBody--pageBody pageBody"
+    class="StyledProps--font StyledProps--main PageBody--pageBody"
     data-name="page-body"
     data-testid="page-body"
   >
     <div
-      class="StyledProps--font StyledProps--main PageSpinner--spinner StyledProps--flex StyledProps--flex-align-center-center"
-      data-testid="page-spinner"
+      class="Layout--horizontal StyledProps--main auditTabs"
     >
       <div
-        class="Layout--vertical Layout--layout-spacing-medium StyledProps--main PageSpinner--content"
-        style="align-items: center; width: 500px;"
+        class="bp3-tabs Tabs--main Tabs--horizontal"
       >
-        <span
-          class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-grey600"
-          data-icon="steps-spinner"
+        <div
+          class="bp3-tab-list"
+          role="tablist"
         >
-          <svg
-            height="32"
-            viewBox="0 0 128 128"
-            width="32"
-            xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="bp3-tab-indicator-wrapper"
+            style="height: 0px; transform: translateX(0px) translateY(0px); width: 0px;"
           >
-            <g>
-              <path
-                d="M122.5 69.25H96.47a33.1 33.1 0 000-10.5h26.05a5.25 5.25 0 010 10.5z"
-                fill="#ff8e02"
-              />
-              <path
-                d="M112.04 97.83L89.47 84.8a33.1 33.1 0 005.25-9.1l22.57 13.03a5.25 5.25 0 01-5.28 9.1zM88.68 117.35L75.65 94.78a33.1 33.1 0 009.1-5.25l13.02 22.57a5.25 5.25 0 11-9.1 5.25zM58.7 122.57V96.5a33.1 33.1 0 0010.5 0v26.07a5.25 5.25 0 01-10.5 0zM30.1 112.1l13.04-22.57a33.1 33.1 0 009.1 5.25L39.2 117.35a5.25 5.25 0 11-9.1-5.25zM10.6 88.74L33.16 75.7a33.1 33.1 0 005.25 9.1L15.88 97.83a5.25 5.25 0 11-5.25-9.1z"
-                fill="#ffddb3"
-                fill-opacity="0.3"
-              />
-              <path
-                d="M5.37 58.75h26.06a33.1 33.1 0 000 10.5H5.37a5.25 5.25 0 010-10.5z"
-                fill="#ffd29a"
-                fill-opacity="0.4"
-              />
-              <path
-                d="M15.85 30.17L38.4 43.2a33.1 33.1 0 00-5.24 9.1L10.6 39.25a5.25 5.25 0 115.25-9.1z"
-                fill="#ffc680"
-                fill-opacity="0.5"
-              />
-              <path
-                d="M39.2 10.65l13.03 22.57a33.1 33.1 0 00-9.1 5.25l-13-22.57a5.25 5.25 0 119.1-5.25z"
-                fill="#ffbb67"
-                fill-opacity="0.6"
-              />
-              <path
-                d="M69.2 5.43V31.5a33.1 33.1 0 00-10.5 0V5.42a5.25 5.25 0 1110.5 0z"
-                fill="#ffb04d"
-                fill-opacity="0.7"
-              />
-              <path
-                d="M97.77 15.9L84.75 38.47a33.1 33.1 0 00-9.1-5.25l13.03-22.57a5.25 5.25 0 119.1 5.25z"
-                fill="#ffa535"
-                fill-opacity="0.8"
-              />
-              <path
-                d="M117.3 39.26L94.7 52.3a33.1 33.1 0 00-5.25-9.1l22.57-13.03a5.25 5.25 0 015.25 9.1z"
-                fill="#ff991b"
-                fill-opacity="0.9"
-              />
-              <animatetransform
-                attributeName="transform"
-                calcMode="discrete"
-                dur="1200ms"
-                repeatCount="indefinite"
-                type="rotate"
-                values="0 64 64;30 64 64;60 64 64;90 64 64;120 64 64;150 64 64;180 64 64;210 64 64;240 64 64;270 64 64;300 64 64;330 64 64"
-              />
-            </g>
-          </svg>
-        </span>
-        <p
-          class="StyledProps--font StyledProps--main StyledProps--font-size-medium StyledProps--font-align-center StyledProps--color StyledProps--color-grey600"
+            <div
+              class="bp3-tab-indicator"
+            />
+          </div>
+          <div
+            aria-controls="bp3-tab-panel_auditTabs_auditLogs"
+            aria-disabled="false"
+            aria-expanded="false"
+            aria-selected="false"
+            class="bp3-tab"
+            data-tab-id="auditLogs"
+            id="bp3-tab-title_auditTabs_auditLogs"
+            role="tab"
+            tabindex="0"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              auditTrail.auditLogs
+            </p>
+          </div>
+          <div
+            aria-controls="bp3-tab-panel_auditTabs_auditLogStreaming"
+            aria-disabled="false"
+            aria-expanded="true"
+            aria-selected="true"
+            class="bp3-tab"
+            data-tab-id="auditLogStreaming"
+            id="bp3-tab-title_auditTabs_auditLogStreaming"
+            role="tab"
+            tabindex="0"
+          >
+            <p
+              class="StyledProps--font StyledProps--main"
+            >
+              auditTrail.auditLogStreaming
+            </p>
+          </div>
+        </div>
+        <div
+          aria-hidden="false"
+          aria-labelledby="bp3-tab-title_auditTabs_auditLogStreaming"
+          class="bp3-tab-panel"
+          id="bp3-tab-panel_auditTabs_auditLogStreaming"
+          role="tabpanel"
         >
-          Loading, please wait...
-        </p>
+          <div
+            class="Layout--horizontal StyledProps--main PageSubHeader--container StyledProps--flex"
+            data-testid="page-subheader"
+          >
+            <button
+              aria-label="auditTrail.logStreaming.newStreamingDestination"
+              class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color Button--withLeftIcon Button--variation Button--variation-primary"
+              type="button"
+            >
+              <span
+                class="bp3-icon bp3-icon-plus StyledProps--main StyledProps--padding-right-xsmall"
+                icon="plus"
+              >
+                <svg
+                  data-icon="plus"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  width="16"
+                >
+                  <desc>
+                    plus
+                  </desc>
+                  <path
+                    d="M13 7H9V3c0-.55-.45-1-1-1s-1 .45-1 1v4H3c-.55 0-1 .45-1 1s.45 1 1 1h4v4c0 .55.45 1 1 1s1-.45 1-1V9h4c.55 0 1-.45 1-1s-.45-1-1-1z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+              </span>
+              <span
+                class="bp3-button-text"
+              >
+                auditTrail.logStreaming.newStreamingDestination
+              </span>
+            </button>
+            <span
+              style="flex-grow: 1;"
+            />
+          </div>
+          <div
+            class="StyledProps--font StyledProps--main PageBody--pageBody"
+            data-name="page-body"
+            data-testid="page-body"
+          >
+            <div
+              class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main paddingCards"
+            >
+              <div
+                class="bp3-card bp3-elevation-0 Card--card cardStyles"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main title StyledProps--font-size-small StyledProps--margin-top-small"
+                >
+                  auditTrail.logStreaming.activeDestinations
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--font-weight-semi-bold"
+                >
+                  1
+                </p>
+              </div>
+              <div
+                class="bp3-card bp3-elevation-0 Card--card cardStyles"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main title StyledProps--font-size-small StyledProps--margin-top-small"
+                >
+                  auditTrail.logStreaming.inactiveDestinations
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--font-weight-semi-bold"
+                >
+                  1
+                </p>
+              </div>
+              <div
+                class="bp3-card bp3-elevation-0 Card--card lastStreamedCard cardStyles"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main title StyledProps--font-size-small StyledProps--margin-top-small"
+                >
+                  auditTrail.logStreaming.lastStreamed
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--font-weight-semi-bold"
+                >
+                  dummy date
+                </p>
+              </div>
+              <div
+                class="bp3-card bp3-elevation-0 Card--card failedStreamingCard cardStyles"
+              >
+                <p
+                  class="StyledProps--font StyledProps--main title StyledProps--font-size-small StyledProps--margin-top-small"
+                >
+                  auditTrail.logStreaming.failedStreaming
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--margin-top-small StyledProps--font-weight-semi-bold"
+                >
+                  <span
+                    class="alignCenter"
+                  >
+                    <span
+                      class="bp3-icon StyledProps--main StyledProps--margin-right-small"
+                      data-icon="danger-icon"
+                    >
+                      <svg
+                        fill="none"
+                        height="25"
+                        viewBox="0 0 32 32"
+                        width="25"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g
+                          clip-rule="evenodd"
+                          fill="#da291d"
+                          fill-rule="evenodd"
+                        >
+                          <path
+                            d="M16.878 4.506a1 1 0 00-1.737 0L3.153 25.505A1 1 0 004.022 27h23.974a1 1 0 00.869-1.495zm.603 17.973c0-.823-.684-1.49-1.527-1.49s-1.527.667-1.527 1.49c0 .822.684 1.49 1.527 1.49s1.527-.668 1.527-1.49zm-1.527-3.486a1 1 0 001-1v-6.997a1 1 0 00-2 0v6.997a1 1 0 001 1z"
+                          />
+                          <path
+                            d="M4.022 26L16.009 5.002 27.996 26zm11.832-6.01a2 2 0 01-1.9-1.997v-6.997a2 2 0 114 0v6.997a2 2 0 01-1.9 1.998c1.328.052 2.427 1.124 2.427 2.488 0 1.398-1.155 2.49-2.527 2.49s-2.527-1.092-2.527-2.49c0-1.364 1.099-2.436 2.427-2.488zM15.14 4.507a1 1 0 011.737 0l11.987 20.999A1 1 0 0127.996 27H4.022a1 1 0 01-.869-1.495L15.141 4.506zm.813 16.483c.843 0 1.527.667 1.527 1.49 0 .822-.684 1.49-1.527 1.49s-1.527-.668-1.527-1.49c0-.823.684-1.49 1.527-1.49zm1-2.996a1 1 0 01-2 0v-6.997a1 1 0 112 0z"
+                          />
+                        </g>
+                      </svg>
+                    </span>
+                    <span>
+                      auditTrail.logStreaming.errorsInDestinations
+                    </span>
+                  </span>
+                </p>
+              </div>
+            </div>
+            <div
+              class="TableV2--table paddingTable"
+            >
+              <div
+                class="TableV2--header"
+                role="row"
+              >
+                <div
+                  class="TableV2--cell"
+                  colspan="1"
+                  role="columnheader"
+                  style="width: 5%;"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                  >
+                    
+                  </p>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  colspan="1"
+                  role="columnheader"
+                  style="width: 15%;"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                  >
+                    status
+                  </p>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  colspan="1"
+                  role="columnheader"
+                  style="width: 25%;"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                  >
+                    auditTrail.logStreaming.destinationName
+                  </p>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  colspan="1"
+                  role="columnheader"
+                  style="width: 25%;"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                  >
+                    auditTrail.logStreaming.streamingConnector
+                  </p>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  colspan="1"
+                  role="columnheader"
+                  style="width: 25%;"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                  >
+                    auditTrail.logStreaming.lastStreamed
+                  </p>
+                </div>
+                <div
+                  class="TableV2--cell"
+                  colspan="1"
+                  role="columnheader"
+                  style="width: 5%;"
+                >
+                  <p
+                    class="StyledProps--font StyledProps--main StyledProps--font-variation-table-headers"
+                  >
+                    
+                  </p>
+                </div>
+              </div>
+              <div
+                class="TableV2--body"
+              >
+                <div
+                  class="TableV2--row TableV2--card"
+                  role="row"
+                >
+                  <div
+                    class="TableV2--cells"
+                  >
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 5%;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main"
+                      >
+                        <button
+                          class="bp3-button Button--button StyledProps--font StyledProps--main toggleAccordion StyledProps--color StyledProps--color-grey600 Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                          data-testid="row-expand-btn"
+                          style="cursor: pointer;"
+                          title="Toggle Row Expanded"
+                          type="button"
+                        >
+                          <span
+                            class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                            icon="chevron-right"
+                          >
+                            <svg
+                              data-icon="chevron-right"
+                              height="19"
+                              viewBox="0 0 16 16"
+                              width="19"
+                            >
+                              <desc>
+                                chevron-right
+                              </desc>
+                              <path
+                                d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
+                    >
+                      <label
+                        class="Toggle--toggle StyledProps--main"
+                        data-testid="toggleStatus"
+                      >
+                        <input
+                          class="Toggle--input"
+                          type="checkbox"
+                          value=""
+                        />
+                        <span
+                          class="Toggle--toggleIcon"
+                        />
+                        INACTIVE
+                      </label>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 25%;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-right-xlarge"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-bottom-small"
+                          style="--text-line-clamp: 1;"
+                        >
+                          theFourth
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 25%;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main alignCenter StyledProps--padding-right-xlarge"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main StyledProps--margin-right-small"
+                          data-icon="service-aws"
+                        >
+                          <svg
+                            height="25"
+                            viewBox="0 0 14 10"
+                            width="25"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M4 3.9v.4c0 .1.1.2.1.3v.1c0 .1 0 .1-.1.1l-.1.2h-.1s-.1 0-.1-.1c-.1.1-.2 0-.2-.1s-.1-.2-.1-.3c-.4.5-.9.7-1.4.7-.4 0-.7-.1-.9-.3S.7 4.3.7 4c0-.4.1-.7.4-.9s.6-.4 1.1-.4h.5c.2 0 .3.1.5.1v-.3c0-.3-.1-.6-.2-.7-.1-.2-.3-.2-.7-.2-.2 0-.3 0-.5.1-.2 0-.3.1-.5.2 0 0-.1 0-.2.1H1v-.5-.2l.1-.1c.3-.1.4-.1.6-.2.3 0 .5-.1.8-.1.5 0 .9.1 1.2.4s.3.6.3 1.1zm-1.8.7c.2 0 .3 0 .5-.1.1-.1.3-.2.4-.3s.1-.2.1-.3V3.3c-.1 0-.2 0-.3-.1h-.4c-.3 0-.5.1-.7.2s-.3.3-.3.5.1.4.2.5.3.2.5.2zm3.6.5h-.2s-.1-.1-.1-.2l-1-3.6v-.2c0-.1 0-.1.1-.1H5.2s.1.1.1.2l.8 3 .7-3c0-.1 0-.1.1-.2h.8s.1.1.1.2l.7 3 .8-3c0-.1 0-.1.1-.2H10c.1 0 .1 0 .1.1v.2L8.8 4.8c0 .1 0 .2-.1.2h-.5c-.1.1-.2.1-.2 0 0 0-.1-.1-.1-.2l-.7-2.9-.7 2.9c0 .1 0 .1-.1.2h-.2zm5.9.1c-.2 0-.5 0-.7-.1s-.4-.1-.5-.2c-.1 0-.1-.1-.1-.1v-.4c0-.1 0-.1.1-.1h.2c.2.1.3.1.5.2.2 0 .4.1.5.1.3 0 .5 0 .7-.1.1-.1.2-.3.2-.4s0-.2-.1-.3-.2-.2-.5-.2l-.7-.2c-.3-.1-.6-.3-.7-.5s-.2-.4-.2-.7c0-.2 0-.3.1-.5.1-.1.2-.3.3-.4s.3-.2.5-.2c.2-.1.4-.1.6-.1h.6c.1 0 .2 0 .3.1.1 0 .1 0 .2.1.1 0 .1.1.1.1V1.6c0 .1 0 .1-.1.1s-.1 0-.2-.1c-.3-.1-.6-.2-.9-.2s-.5 0-.6.1-.2.2-.2.4c0 .1 0 .2.1.3s.3.2.5.2l.6.2c.3.1.6.2.7.4s.2.4.2.6 0 .4-.1.5c-.1.2-.2.3-.3.4-.1.5-.3.5-.5.6s-.4.1-.6.1z"
+                              fill="#252f3e"
+                            />
+                            <g
+                              fill="#f90"
+                            >
+                              <path
+                                d="M12.5 7.4C11 8.5 8.9 9.1 7 9.1c-2.6 0-5-1-6.7-2.6-.1-.1 0-.3.2-.2 1.9 1.1 4.3 1.8 6.7 1.8 1.8 0 3.5-.4 5.1-1.1.2-.1.5.2.2.4z"
+                              />
+                              <path
+                                d="M13.1 6.7c-.2-.2-1.3-.1-1.7-.1-.1 0-.2-.1 0-.2.9-.6 2.3-.4 2.4-.2.2.2 0 1.6-.8 2.3-.1.1-.2 0-.2-.1.1-.5.5-1.5.3-1.7z"
+                              />
+                            </g>
+                          </svg>
+                        </span>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-bottom-small"
+                          style="--text-line-clamp: 1;"
+                        >
+                          conn name 1
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 25%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main alignCenter StyledProps--color StyledProps--color-red600"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main StyledProps--margin-right-small"
+                          data-icon="danger-icon"
+                        >
+                          <svg
+                            fill="none"
+                            height="25"
+                            viewBox="0 0 32 32"
+                            width="25"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g
+                              clip-rule="evenodd"
+                              fill="#da291d"
+                              fill-rule="evenodd"
+                            >
+                              <path
+                                d="M16.878 4.506a1 1 0 00-1.737 0L3.153 25.505A1 1 0 004.022 27h23.974a1 1 0 00.869-1.495zm.603 17.973c0-.823-.684-1.49-1.527-1.49s-1.527.667-1.527 1.49c0 .822.684 1.49 1.527 1.49s1.527-.668 1.527-1.49zm-1.527-3.486a1 1 0 001-1v-6.997a1 1 0 00-2 0v6.997a1 1 0 001 1z"
+                              />
+                              <path
+                                d="M4.022 26L16.009 5.002 27.996 26zm11.832-6.01a2 2 0 01-1.9-1.997v-6.997a2 2 0 114 0v6.997a2 2 0 01-1.9 1.998c1.328.052 2.427 1.124 2.427 2.488 0 1.398-1.155 2.49-2.527 2.49s-2.527-1.092-2.527-2.49c0-1.364 1.099-2.436 2.427-2.488zM15.14 4.507a1 1 0 011.737 0l11.987 20.999A1 1 0 0127.996 27H4.022a1 1 0 01-.869-1.495L15.141 4.506zm.813 16.483c.843 0 1.527.667 1.527 1.49 0 .822-.684 1.49-1.527 1.49s-1.527-.668-1.527-1.49c0-.823.684-1.49 1.527-1.49zm1-2.996a1 1 0 01-2 0v-6.997a1 1 0 112 0z"
+                              />
+                            </g>
+                          </svg>
+                        </span>
+                        dummy date
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 5%;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-end"
+                      >
+                        <span
+                          class="bp3-popover-wrapper bp3-dark"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                              data-testid="menu-idWithNoRelationToName"
+                              type="button"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="Options"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="16"
+                                  viewBox="0 0 4 16"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <circle
+                                    cx="2"
+                                    cy="2"
+                                    r="1.5"
+                                  />
+                                  <circle
+                                    cx="2"
+                                    cy="8"
+                                    r="1.5"
+                                  />
+                                  <circle
+                                    cx="2"
+                                    cy="14"
+                                    r="1.5"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--row TableV2--card"
+                  role="row"
+                >
+                  <div
+                    class="TableV2--cells"
+                  >
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 5%;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main"
+                      >
+                        <button
+                          class="bp3-button Button--button StyledProps--font StyledProps--main toggleAccordion StyledProps--color StyledProps--color-grey600 Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                          data-testid="row-expand-btn"
+                          style="cursor: pointer;"
+                          title="Toggle Row Expanded"
+                          type="button"
+                        >
+                          <span
+                            class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                            icon="chevron-right"
+                          >
+                            <svg
+                              data-icon="chevron-right"
+                              height="19"
+                              viewBox="0 0 16 16"
+                              width="19"
+                            >
+                              <desc>
+                                chevron-right
+                              </desc>
+                              <path
+                                d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
+                    >
+                      <label
+                        class="Toggle--toggle StyledProps--main"
+                        data-testid="toggleStatus"
+                      >
+                        <input
+                          checked=""
+                          class="Toggle--input"
+                          type="checkbox"
+                          value=""
+                        />
+                        <span
+                          class="Toggle--toggleIcon"
+                        />
+                        ACTIVE
+                      </label>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 25%;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-right-xlarge"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-bottom-small"
+                          style="--text-line-clamp: 1;"
+                        >
+                          sd3
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 25%;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main alignCenter StyledProps--padding-right-xlarge"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main StyledProps--margin-right-small"
+                          data-icon="service-aws"
+                        >
+                          <svg
+                            height="25"
+                            viewBox="0 0 14 10"
+                            width="25"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M4 3.9v.4c0 .1.1.2.1.3v.1c0 .1 0 .1-.1.1l-.1.2h-.1s-.1 0-.1-.1c-.1.1-.2 0-.2-.1s-.1-.2-.1-.3c-.4.5-.9.7-1.4.7-.4 0-.7-.1-.9-.3S.7 4.3.7 4c0-.4.1-.7.4-.9s.6-.4 1.1-.4h.5c.2 0 .3.1.5.1v-.3c0-.3-.1-.6-.2-.7-.1-.2-.3-.2-.7-.2-.2 0-.3 0-.5.1-.2 0-.3.1-.5.2 0 0-.1 0-.2.1H1v-.5-.2l.1-.1c.3-.1.4-.1.6-.2.3 0 .5-.1.8-.1.5 0 .9.1 1.2.4s.3.6.3 1.1zm-1.8.7c.2 0 .3 0 .5-.1.1-.1.3-.2.4-.3s.1-.2.1-.3V3.3c-.1 0-.2 0-.3-.1h-.4c-.3 0-.5.1-.7.2s-.3.3-.3.5.1.4.2.5.3.2.5.2zm3.6.5h-.2s-.1-.1-.1-.2l-1-3.6v-.2c0-.1 0-.1.1-.1H5.2s.1.1.1.2l.8 3 .7-3c0-.1 0-.1.1-.2h.8s.1.1.1.2l.7 3 .8-3c0-.1 0-.1.1-.2H10c.1 0 .1 0 .1.1v.2L8.8 4.8c0 .1 0 .2-.1.2h-.5c-.1.1-.2.1-.2 0 0 0-.1-.1-.1-.2l-.7-2.9-.7 2.9c0 .1 0 .1-.1.2h-.2zm5.9.1c-.2 0-.5 0-.7-.1s-.4-.1-.5-.2c-.1 0-.1-.1-.1-.1v-.4c0-.1 0-.1.1-.1h.2c.2.1.3.1.5.2.2 0 .4.1.5.1.3 0 .5 0 .7-.1.1-.1.2-.3.2-.4s0-.2-.1-.3-.2-.2-.5-.2l-.7-.2c-.3-.1-.6-.3-.7-.5s-.2-.4-.2-.7c0-.2 0-.3.1-.5.1-.1.2-.3.3-.4s.3-.2.5-.2c.2-.1.4-.1.6-.1h.6c.1 0 .2 0 .3.1.1 0 .1 0 .2.1.1 0 .1.1.1.1V1.6c0 .1 0 .1-.1.1s-.1 0-.2-.1c-.3-.1-.6-.2-.9-.2s-.5 0-.6.1-.2.2-.2.4c0 .1 0 .2.1.3s.3.2.5.2l.6.2c.3.1.6.2.7.4s.2.4.2.6 0 .4-.1.5c-.1.2-.2.3-.3.4-.1.5-.3.5-.5.6s-.4.1-.6.1z"
+                              fill="#252f3e"
+                            />
+                            <g
+                              fill="#f90"
+                            >
+                              <path
+                                d="M12.5 7.4C11 8.5 8.9 9.1 7 9.1c-2.6 0-5-1-6.7-2.6-.1-.1 0-.3.2-.2 1.9 1.1 4.3 1.8 6.7 1.8 1.8 0 3.5-.4 5.1-1.1.2-.1.5.2.2.4z"
+                              />
+                              <path
+                                d="M13.1 6.7c-.2-.2-1.3-.1-1.7-.1-.1 0-.2-.1 0-.2.9-.6 2.3-.4 2.4-.2.2.2 0 1.6-.8 2.3-.1.1-.2 0-.2-.1.1-.5.5-1.5.3-1.7z"
+                              />
+                            </g>
+                          </svg>
+                        </span>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-bottom-small"
+                          style="--text-line-clamp: 1;"
+                        >
+                          conn name 2
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 25%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main alignCenter StyledProps--color StyledProps--color-red600"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main StyledProps--margin-right-small"
+                          data-icon="danger-icon"
+                        >
+                          <svg
+                            fill="none"
+                            height="25"
+                            viewBox="0 0 32 32"
+                            width="25"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g
+                              clip-rule="evenodd"
+                              fill="#da291d"
+                              fill-rule="evenodd"
+                            >
+                              <path
+                                d="M16.878 4.506a1 1 0 00-1.737 0L3.153 25.505A1 1 0 004.022 27h23.974a1 1 0 00.869-1.495zm.603 17.973c0-.823-.684-1.49-1.527-1.49s-1.527.667-1.527 1.49c0 .822.684 1.49 1.527 1.49s1.527-.668 1.527-1.49zm-1.527-3.486a1 1 0 001-1v-6.997a1 1 0 00-2 0v6.997a1 1 0 001 1z"
+                              />
+                              <path
+                                d="M4.022 26L16.009 5.002 27.996 26zm11.832-6.01a2 2 0 01-1.9-1.997v-6.997a2 2 0 114 0v6.997a2 2 0 01-1.9 1.998c1.328.052 2.427 1.124 2.427 2.488 0 1.398-1.155 2.49-2.527 2.49s-2.527-1.092-2.527-2.49c0-1.364 1.099-2.436 2.427-2.488zM15.14 4.507a1 1 0 011.737 0l11.987 20.999A1 1 0 0127.996 27H4.022a1 1 0 01-.869-1.495L15.141 4.506zm.813 16.483c.843 0 1.527.667 1.527 1.49 0 .822-.684 1.49-1.527 1.49s-1.527-.668-1.527-1.49c0-.823.684-1.49 1.527-1.49zm1-2.996a1 1 0 01-2 0v-6.997a1 1 0 112 0z"
+                              />
+                            </g>
+                          </svg>
+                        </span>
+                        dummy date
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 5%;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-end"
+                      >
+                        <span
+                          class="bp3-popover-wrapper bp3-dark"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                              data-testid="menu-sd3"
+                              type="button"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="Options"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="16"
+                                  viewBox="0 0 4 16"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <circle
+                                    cx="2"
+                                    cy="2"
+                                    r="1.5"
+                                  />
+                                  <circle
+                                    cx="2"
+                                    cy="8"
+                                    r="1.5"
+                                  />
+                                  <circle
+                                    cx="2"
+                                    cy="14"
+                                    r="1.5"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--row TableV2--card"
+                  role="row"
+                >
+                  <div
+                    class="TableV2--cells"
+                  >
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 5%;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main"
+                      >
+                        <button
+                          class="bp3-button Button--button StyledProps--font StyledProps--main toggleAccordion StyledProps--color StyledProps--color-grey600 Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                          data-testid="row-expand-btn"
+                          style="cursor: pointer;"
+                          title="Toggle Row Expanded"
+                          type="button"
+                        >
+                          <span
+                            class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                            icon="chevron-right"
+                          >
+                            <svg
+                              data-icon="chevron-right"
+                              height="19"
+                              viewBox="0 0 16 16"
+                              width="19"
+                            >
+                              <desc>
+                                chevron-right
+                              </desc>
+                              <path
+                                d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
+                    >
+                      <label
+                        class="Toggle--toggle StyledProps--main"
+                        data-testid="toggleStatus"
+                      >
+                        <input
+                          checked=""
+                          class="Toggle--input"
+                          type="checkbox"
+                          value=""
+                        />
+                        <span
+                          class="Toggle--toggleIcon"
+                        />
+                        ACTIVE
+                      </label>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 25%;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-right-xlarge"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-bottom-small"
+                          style="--text-line-clamp: 1;"
+                        >
+                          streaming destination one
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 25%;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main alignCenter StyledProps--padding-right-xlarge"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main StyledProps--margin-right-small"
+                          data-icon="service-aws"
+                        >
+                          <svg
+                            height="25"
+                            viewBox="0 0 14 10"
+                            width="25"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M4 3.9v.4c0 .1.1.2.1.3v.1c0 .1 0 .1-.1.1l-.1.2h-.1s-.1 0-.1-.1c-.1.1-.2 0-.2-.1s-.1-.2-.1-.3c-.4.5-.9.7-1.4.7-.4 0-.7-.1-.9-.3S.7 4.3.7 4c0-.4.1-.7.4-.9s.6-.4 1.1-.4h.5c.2 0 .3.1.5.1v-.3c0-.3-.1-.6-.2-.7-.1-.2-.3-.2-.7-.2-.2 0-.3 0-.5.1-.2 0-.3.1-.5.2 0 0-.1 0-.2.1H1v-.5-.2l.1-.1c.3-.1.4-.1.6-.2.3 0 .5-.1.8-.1.5 0 .9.1 1.2.4s.3.6.3 1.1zm-1.8.7c.2 0 .3 0 .5-.1.1-.1.3-.2.4-.3s.1-.2.1-.3V3.3c-.1 0-.2 0-.3-.1h-.4c-.3 0-.5.1-.7.2s-.3.3-.3.5.1.4.2.5.3.2.5.2zm3.6.5h-.2s-.1-.1-.1-.2l-1-3.6v-.2c0-.1 0-.1.1-.1H5.2s.1.1.1.2l.8 3 .7-3c0-.1 0-.1.1-.2h.8s.1.1.1.2l.7 3 .8-3c0-.1 0-.1.1-.2H10c.1 0 .1 0 .1.1v.2L8.8 4.8c0 .1 0 .2-.1.2h-.5c-.1.1-.2.1-.2 0 0 0-.1-.1-.1-.2l-.7-2.9-.7 2.9c0 .1 0 .1-.1.2h-.2zm5.9.1c-.2 0-.5 0-.7-.1s-.4-.1-.5-.2c-.1 0-.1-.1-.1-.1v-.4c0-.1 0-.1.1-.1h.2c.2.1.3.1.5.2.2 0 .4.1.5.1.3 0 .5 0 .7-.1.1-.1.2-.3.2-.4s0-.2-.1-.3-.2-.2-.5-.2l-.7-.2c-.3-.1-.6-.3-.7-.5s-.2-.4-.2-.7c0-.2 0-.3.1-.5.1-.1.2-.3.3-.4s.3-.2.5-.2c.2-.1.4-.1.6-.1h.6c.1 0 .2 0 .3.1.1 0 .1 0 .2.1.1 0 .1.1.1.1V1.6c0 .1 0 .1-.1.1s-.1 0-.2-.1c-.3-.1-.6-.2-.9-.2s-.5 0-.6.1-.2.2-.2.4c0 .1 0 .2.1.3s.3.2.5.2l.6.2c.3.1.6.2.7.4s.2.4.2.6 0 .4-.1.5c-.1.2-.2.3-.3.4-.1.5-.3.5-.5.6s-.4.1-.6.1z"
+                              fill="#252f3e"
+                            />
+                            <g
+                              fill="#f90"
+                            >
+                              <path
+                                d="M12.5 7.4C11 8.5 8.9 9.1 7 9.1c-2.6 0-5-1-6.7-2.6-.1-.1 0-.3.2-.2 1.9 1.1 4.3 1.8 6.7 1.8 1.8 0 3.5-.4 5.1-1.1.2-.1.5.2.2.4z"
+                              />
+                              <path
+                                d="M13.1 6.7c-.2-.2-1.3-.1-1.7-.1-.1 0-.2-.1 0-.2.9-.6 2.3-.4 2.4-.2.2.2 0 1.6-.8 2.3-.1.1-.2 0-.2-.1.1-.5.5-1.5.3-1.7z"
+                              />
+                            </g>
+                          </svg>
+                        </span>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-bottom-small"
+                          style="--text-line-clamp: 1;"
+                        >
+                          conn name 3
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 25%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main alignCenter StyledProps--color StyledProps--color-grey600"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main StyledProps--margin-right-small"
+                          data-icon="success-tick"
+                        >
+                          <svg
+                            fill="none"
+                            height="25"
+                            viewBox="0 0 32 32"
+                            width="25"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <g
+                              clip-rule="evenodd"
+                              fill="#42ab45"
+                              fill-rule="evenodd"
+                            >
+                              <path
+                                d="M16 28.995c-7.18 0-13-5.82-13-13s5.82-13 13-13 13 5.82 13 13-5.82 13-13 13zm7.261-16.118a1 1 0 10-1.327-1.496l-6.82 6.049-3.242-3.206a1 1 0 10-1.406 1.422l3.909 3.864.665.659.701-.622z"
+                              />
+                              <path
+                                d="M15.004 21.538l8.92-7.913a2 2 0 10-2.653-2.992l.663.748a1 1 0 111.327 1.496l-8.22 7.292-4.575-4.523a1 1 0 111.406-1.422l3.243 3.206 6.82-6.05-.664-.747-6.12 5.427-2.576-2.548a2 2 0 00-2.813 2.845zM16 27.995c-6.627 0-12-5.373-12-12 0-6.628 5.373-12 12-12 6.628 0 12 5.372 12 12 0 6.627-5.372 12-12 12zm-13-12c0 7.18 5.82 13 13 13s13-5.82 13-13-5.82-13-13-13-13 5.82-13 13z"
+                              />
+                            </g>
+                          </svg>
+                        </span>
+                        dummy date
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 5%;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-end"
+                      >
+                        <span
+                          class="bp3-popover-wrapper bp3-dark"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                              data-testid="menu-streaming_destination_one"
+                              type="button"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="Options"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="16"
+                                  viewBox="0 0 4 16"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <circle
+                                    cx="2"
+                                    cy="2"
+                                    r="1.5"
+                                  />
+                                  <circle
+                                    cx="2"
+                                    cy="8"
+                                    r="1.5"
+                                  />
+                                  <circle
+                                    cx="2"
+                                    cy="14"
+                                    r="1.5"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="TableV2--row TableV2--card"
+                  role="row"
+                >
+                  <div
+                    class="TableV2--cells"
+                  >
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 5%;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main"
+                      >
+                        <button
+                          class="bp3-button Button--button StyledProps--font StyledProps--main toggleAccordion StyledProps--color StyledProps--color-grey600 Button--with-current-color Button--iconOnly Button--withLeftIcon Button--variation Button--variation-icon"
+                          data-testid="row-expand-btn"
+                          style="cursor: pointer;"
+                          title="Toggle Row Expanded"
+                          type="button"
+                        >
+                          <span
+                            class="bp3-icon bp3-icon-chevron-right StyledProps--main"
+                            icon="chevron-right"
+                          >
+                            <svg
+                              data-icon="chevron-right"
+                              height="19"
+                              viewBox="0 0 16 16"
+                              width="19"
+                            >
+                              <desc>
+                                chevron-right
+                              </desc>
+                              <path
+                                d="M10.71 7.29l-4-4a1.003 1.003 0 00-1.42 1.42L8.59 8 5.3 11.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71l4-4c.18-.18.29-.43.29-.71 0-.28-.11-.53-.29-.71z"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 15%;"
+                    >
+                      <label
+                        class="Toggle--toggle StyledProps--main"
+                        data-testid="toggleStatus"
+                      >
+                        <input
+                          checked=""
+                          class="Toggle--input"
+                          type="checkbox"
+                          value=""
+                        />
+                        <span
+                          class="Toggle--toggleIcon"
+                        />
+                        ACTIVE
+                      </label>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 25%;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main StyledProps--padding-right-xlarge"
+                      >
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-bottom-small"
+                          style="--text-line-clamp: 1;"
+                        >
+                          streaming destination two
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 25%;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main alignCenter StyledProps--padding-right-xlarge"
+                      >
+                        <span
+                          class="bp3-icon StyledProps--main StyledProps--margin-right-small"
+                          data-icon="service-aws"
+                        >
+                          <svg
+                            height="25"
+                            viewBox="0 0 14 10"
+                            width="25"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M4 3.9v.4c0 .1.1.2.1.3v.1c0 .1 0 .1-.1.1l-.1.2h-.1s-.1 0-.1-.1c-.1.1-.2 0-.2-.1s-.1-.2-.1-.3c-.4.5-.9.7-1.4.7-.4 0-.7-.1-.9-.3S.7 4.3.7 4c0-.4.1-.7.4-.9s.6-.4 1.1-.4h.5c.2 0 .3.1.5.1v-.3c0-.3-.1-.6-.2-.7-.1-.2-.3-.2-.7-.2-.2 0-.3 0-.5.1-.2 0-.3.1-.5.2 0 0-.1 0-.2.1H1v-.5-.2l.1-.1c.3-.1.4-.1.6-.2.3 0 .5-.1.8-.1.5 0 .9.1 1.2.4s.3.6.3 1.1zm-1.8.7c.2 0 .3 0 .5-.1.1-.1.3-.2.4-.3s.1-.2.1-.3V3.3c-.1 0-.2 0-.3-.1h-.4c-.3 0-.5.1-.7.2s-.3.3-.3.5.1.4.2.5.3.2.5.2zm3.6.5h-.2s-.1-.1-.1-.2l-1-3.6v-.2c0-.1 0-.1.1-.1H5.2s.1.1.1.2l.8 3 .7-3c0-.1 0-.1.1-.2h.8s.1.1.1.2l.7 3 .8-3c0-.1 0-.1.1-.2H10c.1 0 .1 0 .1.1v.2L8.8 4.8c0 .1 0 .2-.1.2h-.5c-.1.1-.2.1-.2 0 0 0-.1-.1-.1-.2l-.7-2.9-.7 2.9c0 .1 0 .1-.1.2h-.2zm5.9.1c-.2 0-.5 0-.7-.1s-.4-.1-.5-.2c-.1 0-.1-.1-.1-.1v-.4c0-.1 0-.1.1-.1h.2c.2.1.3.1.5.2.2 0 .4.1.5.1.3 0 .5 0 .7-.1.1-.1.2-.3.2-.4s0-.2-.1-.3-.2-.2-.5-.2l-.7-.2c-.3-.1-.6-.3-.7-.5s-.2-.4-.2-.7c0-.2 0-.3.1-.5.1-.1.2-.3.3-.4s.3-.2.5-.2c.2-.1.4-.1.6-.1h.6c.1 0 .2 0 .3.1.1 0 .1 0 .2.1.1 0 .1.1.1.1V1.6c0 .1 0 .1-.1.1s-.1 0-.2-.1c-.3-.1-.6-.2-.9-.2s-.5 0-.6.1-.2.2-.2.4c0 .1 0 .2.1.3s.3.2.5.2l.6.2c.3.1.6.2.7.4s.2.4.2.6 0 .4-.1.5c-.1.2-.2.3-.3.4-.1.5-.3.5-.5.6s-.4.1-.6.1z"
+                              fill="#252f3e"
+                            />
+                            <g
+                              fill="#f90"
+                            >
+                              <path
+                                d="M12.5 7.4C11 8.5 8.9 9.1 7 9.1c-2.6 0-5-1-6.7-2.6-.1-.1 0-.3.2-.2 1.9 1.1 4.3 1.8 6.7 1.8 1.8 0 3.5-.4 5.1-1.1.2-.1.5.2.2.4z"
+                              />
+                              <path
+                                d="M13.1 6.7c-.2-.2-1.3-.1-1.7-.1-.1 0-.2-.1 0-.2.9-.6 2.3-.4 2.4-.2.2.2 0 1.6-.8 2.3-.1.1-.2 0-.2-.1.1-.5.5-1.5.3-1.7z"
+                              />
+                            </g>
+                          </svg>
+                        </span>
+                        <p
+                          class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-bottom-small"
+                          style="--text-line-clamp: 1;"
+                        >
+                          conn name 4
+                        </p>
+                      </div>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 25%;"
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main alignCenter StyledProps--color StyledProps--color-grey600"
+                      >
+                        auditTrail.logStreaming.notStreamedYet
+                      </p>
+                    </div>
+                    <div
+                      class="TableV2--cell"
+                      role="cell"
+                      style="width: 5%;"
+                    >
+                      <div
+                        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-justifyContent-flex-end"
+                      >
+                        <span
+                          class="bp3-popover-wrapper bp3-dark"
+                        >
+                          <span
+                            class="bp3-popover-target"
+                          >
+                            <button
+                              class="bp3-button bp3-minimal Button--button StyledProps--font StyledProps--main Button--with-current-color Button--iconOnly Button--without-shadow Button--withLeftIcon"
+                              data-testid="menu-streaming_destination_two"
+                              type="button"
+                            >
+                              <span
+                                class="bp3-icon StyledProps--main"
+                                data-icon="Options"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="16"
+                                  viewBox="0 0 4 16"
+                                  width="16"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <circle
+                                    cx="2"
+                                    cy="2"
+                                    r="1.5"
+                                  />
+                                  <circle
+                                    cx="2"
+                                    cy="8"
+                                    r="1.5"
+                                  />
+                                  <circle
+                                    cx="2"
+                                    cy="14"
+                                    r="1.5"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                          </span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

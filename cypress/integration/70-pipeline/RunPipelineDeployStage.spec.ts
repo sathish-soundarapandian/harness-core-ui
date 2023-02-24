@@ -15,11 +15,6 @@ import {
 describe('RUN PIPELINE MODAL - deploy stage', () => {
   const accountLicense = 'ng/api/licenses/account?routingId=accountId&accountIdentifier=accountId'
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
     cy.login('test', 'test')
     cy.intercept('GET', accountLicense, { fixture: 'pipeline/api/approvals/accountLicense' })

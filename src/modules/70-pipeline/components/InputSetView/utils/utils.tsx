@@ -9,6 +9,7 @@ import React from 'react'
 import {
   AllowedTypes,
   DataTooltipInterface,
+  ExpressionAndRuntimeTypeProps,
   FormInput,
   MultiSelectOption,
   MultiTypeInputType,
@@ -29,6 +30,7 @@ interface UseRenderMultiTypeInputWithAllowedValuesArgs {
   allowedTypes: AllowedTypes
   template: any
   readonly?: boolean
+  onChange?: ExpressionAndRuntimeTypeProps['onChange']
 }
 
 export const useRenderMultiTypeInputWithAllowedValues = ({
@@ -39,7 +41,8 @@ export const useRenderMultiTypeInputWithAllowedValues = ({
   fieldPath,
   allowedTypes,
   template,
-  readonly
+  readonly,
+  onChange
 }: UseRenderMultiTypeInputWithAllowedValuesArgs): { getMultiTypeInputWithAllowedValues: () => JSX.Element } => {
   const { expressions } = useVariablesExpression()
 
@@ -55,7 +58,8 @@ export const useRenderMultiTypeInputWithAllowedValues = ({
         multiTypeInputProps={{
           allowableTypes: allowedTypes,
           expressions,
-          selectProps: { disabled: readonly, items }
+          selectProps: { disabled: readonly, items },
+          onChange
         }}
         disabled={readonly}
         tooltipProps={tooltipProps}

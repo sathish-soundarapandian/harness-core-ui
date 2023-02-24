@@ -34,7 +34,7 @@ export default function CFSideNav(): React.ReactElement {
   const events = useFeatureFlagTelemetry()
   const canUsePolicyEngine = useAnyEnterpriseLicense()
 
-  const { FF_GITSYNC, FF_PIPELINE, OPA_FF_GOVERNANCE } = useFeatureFlags()
+  const { FF_GITSYNC, FF_PIPELINE } = useFeatureFlags()
 
   /* istanbul ignore next */
   const projectSelectHandler: ProjectSelectorProps['onSelect'] = data => {
@@ -106,7 +106,7 @@ export default function CFSideNav(): React.ReactElement {
                 </>
               )}
               <SidebarLink label={getString('common.templates')} to={routes.toTemplates({ ...params, module: 'cf' })} />
-              {canUsePolicyEngine && OPA_FF_GOVERNANCE && (
+              {canUsePolicyEngine && (
                 <SidebarLink
                   label={getString('common.governance')}
                   to={routes.toGovernance({ accountId, orgIdentifier, projectIdentifier, module: 'cf' })}

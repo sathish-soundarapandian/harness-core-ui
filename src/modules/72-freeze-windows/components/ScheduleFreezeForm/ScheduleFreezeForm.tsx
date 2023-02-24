@@ -13,6 +13,7 @@ import moment from 'moment'
 import { ALL_TIME_ZONES } from '@common/utils/dateUtils'
 import { DOES_NOT_REPEAT, getMomentFormat, RECURRENCE } from '@freeze-windows/utils/freezeWindowUtils'
 import type { FreezeWindow } from 'services/cd-ng'
+import { useFreezeWindowContext } from '@freeze-windows/context/FreezeWindowContext'
 import { getDurationValidationSchema } from '@common/components/MultiTypeDuration/MultiTypeDuration'
 import { DateTimePicker, DATE_PARSE_FORMAT } from '@common/components/DateTimePicker/DateTimePicker'
 import css from './ScheduleFreezeForm.module.scss'
@@ -143,6 +144,7 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
   formActions,
   isGlobalFreezeForm
 }) => {
+  const { setFreezeFormError } = useFreezeWindowContext()
   return (
     <Formik<FreezeWindowFormData>
       enableReinitialize
@@ -154,6 +156,7 @@ export const ScheduleFreezeForm: React.FC<ScheduleFreezeFormProps> = ({
       validationSchema={validationSchema}
     >
       {formikProps => {
+        setFreezeFormError?.(formikProps.errors)
         return (
           <FormikForm>
             <Layout.Vertical width={'320px'} className={css.scheduleFreezeForm}>

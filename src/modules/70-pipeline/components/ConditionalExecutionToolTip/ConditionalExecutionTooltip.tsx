@@ -8,7 +8,7 @@
 import React from 'react'
 import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { useStrings } from 'framework/strings'
+import { StringKeys, useStrings } from 'framework/strings'
 import {
   ModeEntityNameMap,
   ParentModeEntityNameMap,
@@ -25,14 +25,14 @@ export interface ConditionalExecutionTooltipProps {
   resolvedVariables?: ResolvedVariableInterface[]
 }
 
-const statusMapping: any = {
+const statusMapping: Record<PipelineOrStageStatus, StringKeys> = {
   Success: 'pipeline.conditionalExecution.statusOption.success',
   Failure: 'pipeline.conditionalExecution.statusOption.failure',
   All: 'pipeline.conditionalExecution.statusOption.all'
 }
 
 export default function ConditionalExecutionTooltip(props: ConditionalExecutionTooltipProps): React.ReactElement {
-  const { mode, status = PipelineOrStageStatus.All, condition, resolvedVariables } = props
+  const { mode, status = PipelineOrStageStatus.ALL, condition, resolvedVariables } = props
   const { getString } = useStrings()
   return (
     <Layout.Horizontal
@@ -65,19 +65,29 @@ export default function ConditionalExecutionTooltip(props: ConditionalExecutionT
             entity: ModeEntityNameMap[mode],
             parentEntity: ParentModeEntityNameMap[mode]
           })}
-          {!!condition && (
-            <Text
-              inline={true}
-              color={Color.BLACK}
-              font={{ size: 'xsmall', weight: 'semi-bold' }}
-              padding={{ left: 'xsmall', right: 'xsmall' }}
-              margin={{ left: 'xsmall', right: 'xsmall' }}
-              background={Color.GREY_100}
-              border={{ radius: 3, color: Color.GREY_100 }}
-            >
-              {getString('pipeline.and')}
-            </Text>
-          )}
+        </Text>
+        {!!condition && (
+          <Text
+            inline={true}
+            color={Color.BLACK}
+            font={{ size: 'xsmall', weight: 'semi-bold' }}
+            padding={{ left: 'xsmall', right: 'xsmall' }}
+            margin={{ left: 'xsmall', right: 'xsmall' }}
+            background={Color.GREY_100}
+            border={{ radius: 3, color: Color.GREY_100 }}
+          >
+            {getString('pipeline.and')}
+          </Text>
+        )}
+        <Text
+          padding={{
+            top: condition ? 'xsmall' : 'none',
+            bottom: condition ? 'xsmall' : 'none'
+          }}
+          font={{ size: 'xsmall' }}
+          style={{ lineHeight: '16px' }}
+          color={Color.GREY_900}
+        >
           {!!condition && getString('pipeline.conditionalExecution.belowExpression')}
         </Text>
         {!!condition && (

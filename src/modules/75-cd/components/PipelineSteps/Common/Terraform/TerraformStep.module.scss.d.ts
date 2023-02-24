@@ -7,6 +7,23 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly addMarginBottom: string
+  readonly addMarginTop: string
+  readonly configField: string
+  readonly configFile: string
+  readonly configFileLabel: string
+  readonly configLabel: string
+  readonly configPlaceHolder: string
+  readonly configWizard: string
+  readonly createTfWizard: string
+  readonly crossIcon: string
+  readonly divider: string
+  readonly editBtn: string
+  readonly fileDropdown: string
+  readonly fileSelect: string
+  readonly modal: string
+  readonly optionalConfigDetails: string
+  readonly radioBtns: string
   readonly stepTitle: string
 }
 export default styles

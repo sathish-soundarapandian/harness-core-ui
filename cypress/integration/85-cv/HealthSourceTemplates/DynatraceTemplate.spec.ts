@@ -17,9 +17,6 @@ import { Connectors } from '../../../utils/connctors-utils'
 
 describe('Create empty monitored service', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      return false
-    })
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
       cy.intercept('GET', featureFlagsCall, {
         ...featureFlagsData,

@@ -25,11 +25,6 @@ describe('Connectors list', () => {
   }
 
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
 
     cy.intercept('GET', gitSyncEnabledCall, {

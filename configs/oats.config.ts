@@ -33,7 +33,8 @@ export default defineConfig({
             'getServicesYamlAndRuntimeInputs',
             'getServiceAccessList',
             'listGitSync',
-            'getSourceCodeManagers'
+            'getSourceCodeManagers',
+            'listTagsForAMIArtifact'
           ],
           overrides: {
             getServicesYamlAndRuntimeInputs: {

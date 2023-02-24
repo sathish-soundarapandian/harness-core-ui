@@ -703,7 +703,7 @@ exports[`ServicesList render 1`] = `
                 class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
               >
                 <span
-                  class="bp3-icon StyledProps--main StyledProps--padding-left-xsmall StyledProps--padding-right-xsmall"
+                  class="bp3-icon StyledProps--main"
                   data-icon="service-kubernetes"
                 >
                   <svg

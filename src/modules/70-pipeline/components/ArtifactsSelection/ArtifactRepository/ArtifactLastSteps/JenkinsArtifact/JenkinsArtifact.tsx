@@ -50,9 +50,9 @@ import type {
   JenkinsArtifactType
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 import { getGenuineValue } from '@pipeline/components/PipelineSteps/Steps/JiraApproval/helper'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
 import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -305,7 +305,9 @@ function FormComponent({
             }}
           />
           {getMultiTypeFromValue(formik.values.spec?.jobName) === MultiTypeInputType.RUNTIME && (
-            <ConfigureOptions
+            <SelectConfigureOptions
+              options={jobDetails}
+              loading={fetchingJobs}
               value={formik.values?.spec?.jobName as string}
               style={{ marginTop: 22 }}
               type="String"
@@ -362,7 +364,9 @@ function FormComponent({
           />
           {getMultiTypeFromValue(formik.values?.spec?.artifactPath) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
-              <ConfigureOptions
+              <SelectConfigureOptions
+                options={defaultTo(artifactPath, [])}
+                loading={fetchingArtifacts}
                 value={formik.values?.spec?.artifactPath}
                 type="String"
                 variableName="spec.artifactPath"
@@ -422,7 +426,9 @@ function FormComponent({
           />
           {getMultiTypeFromValue(formik.values?.spec?.build) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
-              <ConfigureOptions
+              <SelectConfigureOptions
+                options={defaultTo(build, [])}
+                loading={fetchingBuild}
                 value={formik.values?.spec?.build}
                 type="String"
                 variableName="spec.build"

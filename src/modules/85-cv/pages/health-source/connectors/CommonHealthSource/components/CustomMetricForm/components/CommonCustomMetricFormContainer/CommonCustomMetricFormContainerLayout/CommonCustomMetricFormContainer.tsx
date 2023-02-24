@@ -14,7 +14,8 @@ import {
   useGetSampleMetricData,
   useGetSampleRawRecord,
   QueryRecordsRequest,
-  useGetRiskCategoryForCustomHealthMetric
+  useGetRiskCategoryForCustomHealthMetric,
+  HealthSourceParamValuesRequest
 } from 'services/cv'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -34,6 +35,7 @@ import {
 import { useCommonHealthSource } from '../../CommonHealthSourceContext/useCommonHealthSource'
 import { HEALTHSOURCE_TYPE_TO_PROVIDER_MAPPING } from './CommonCustomMetricFormContainer.constants'
 import AssignQuery from '../../Assign/AssignQuery'
+import CommonHealthSourceField from './components/CommonHealthSourceField/CommonHealthSourceField'
 
 export default function CommonCustomMetricFormContainer(props: CommonCustomMetricFormContainerProps): JSX.Element {
   const { values, setFieldValue } = useFormikContext<CommonCustomMetricFormikInterface>()
@@ -47,11 +49,14 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   const { isQueryRuntimeOrExpression } = useCommonHealthSource()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
   const chartConfig = healthSourceConfig?.customMetrics?.metricsChart
+  const queryField = healthSourceConfig.customMetrics?.queryAndRecords?.queryField
+  const queryFieldValue = (queryField ? values[queryField.identifier] : '') as string
   const providerType = HEALTHSOURCE_TYPE_TO_PROVIDER_MAPPING[product?.value || sourceType]
+  // TODO - this will not be needed once the backend refactoring for enumns is done.
+  const providerTypeForRecords = providerType?.toLocaleUpperCase()
   const query = useMemo(() => (values?.query?.length ? values.query : ''), [values])
   const isLogsTableVisible = getIsLogsTableVisible(healthSourceConfig)
   const riskProfileResponse = useGetRiskCategoryForCustomHealthMetric({})
-
   const {
     mutate: queryHealthSource,
     loading: fetchingSampleRecordLoading,
@@ -61,6 +66,9 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
     orgIdentifier,
     projectIdentifier
   })
+
+  const isDataAvailableForLogsTable = Boolean(!fetchingSampleRecordLoading && !error && records?.length)
+  const { sli, healthScore, riskCategory, serviceInstanceField, continuousVerification } = values
 
   const {
     mutate: fetchHealthSourceTimeSeriesData,
@@ -88,7 +96,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   }, [values?.identifier])
 
   const handleBuildChart = async (): Promise<void> => {
-    const fetchMetricsRecordsRequestBody = getRecordsRequestBody(connectorIdentifier, providerType, query)
+    const fetchMetricsRecordsRequestBody = getRecordsRequestBody(connectorIdentifier, providerTypeForRecords, query)
     fetchHealthSourceTimeSeriesData(fetchMetricsRecordsRequestBody).then(data => {
       const timeSeriesData = data?.resource?.timeSeriesData || []
       setHealthSourceTimeSeriesData(timeSeriesData)
@@ -99,12 +107,17 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
   const handleFetchRecords = async (): Promise<void> => {
     if (query) {
       setIsQueryExecuted(true)
-      const fetchRecordsRequestBody = getRecordsRequestBody(connectorIdentifier, providerType, query)
+      const fetchRecordsRequestBody = getRecordsRequestBody(
+        connectorIdentifier,
+        providerTypeForRecords,
+        query,
+        queryField,
+        queryFieldValue
+      )
       const recordsInfo = await queryHealthSource(fetchRecordsRequestBody)
       const recordsData = recordsInfo?.resource?.rawRecords || []
       if (recordsData.length) {
         setRecords(recordsData as Record<string, any>[])
-
         if (shouldAutoBuildChart(chartConfig)) {
           handleBuildChart()
         }
@@ -112,11 +125,16 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
     }
   }
 
-  const isDataAvailableForLogsTable = Boolean(!fetchingSampleRecordLoading && !error && records?.length)
-  const { sli, healthScore, riskCategory, serviceInstance, continuousVerification } = values
-
   return (
     <Container key={values?.identifier} padding={'small'} margin={'small'}>
+      {queryField ? (
+        <CommonHealthSourceField
+          field={queryField}
+          isConnectorRuntimeOrExpression={isConnectorRuntimeOrExpression}
+          connectorIdentifier={connectorIdentifier}
+          providerType={providerType as HealthSourceParamValuesRequest['providerType']}
+        />
+      ) : null}
       <CommonQueryViewer
         isQueryExecuted={isQueryExecuted}
         records={records}
@@ -131,6 +149,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
           healthSourceConfig?.customMetrics?.queryAndRecords?.titleStringKey ||
             'cv.monitoringSources.commonHealthSource.querySectionSecondaryTitle'
         )}
+        queryFieldIdentifier={queryField?.identifier}
       />
       {shouldShowChartComponent(chartConfig, isQueryRuntimeOrExpression, isConnectorRuntimeOrExpression) ? (
         <CommonChart
@@ -142,8 +161,12 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
       ) : null}
       {isLogsTableVisible && (
         <LogsTableContainer
+          queryField={healthSourceConfig?.customMetrics?.queryAndRecords?.queryField}
           fieldMappings={healthSourceConfig?.customMetrics?.fieldMappings}
-          providerType={providerType as QueryRecordsRequest['providerType']}
+          selectOnlyLastKey={healthSourceConfig?.customMetrics?.logsTable?.selectOnlyLastKey}
+          showExactJsonPath={healthSourceConfig?.customMetrics?.logsTable?.showExactJsonPath}
+          providerTypeForRecords={providerTypeForRecords as QueryRecordsRequest['providerType']}
+          providerType={providerType as HealthSourceParamValuesRequest['providerType']}
           connectorIdentifier={connectorIdentifier}
           sampleRecords={records}
           isRecordsLoading={fetchingSampleRecordLoading}
@@ -154,7 +177,7 @@ export default function CommonCustomMetricFormContainer(props: CommonCustomMetri
         <AssignQuery
           values={{
             riskCategory,
-            serviceInstance,
+            serviceInstanceField,
             sli: Boolean(sli),
             healthScore: Boolean(healthScore),
             continuousVerification: Boolean(continuousVerification)

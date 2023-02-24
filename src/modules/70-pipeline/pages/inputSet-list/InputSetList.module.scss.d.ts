@@ -10,6 +10,7 @@ declare const styles: {
   readonly actionButton: string
   readonly gitDetails: string
   readonly gitFilter: string
+  readonly listHeader: string
   readonly listItemMenu: string
   readonly menuList: string
   readonly searchWrapper: string

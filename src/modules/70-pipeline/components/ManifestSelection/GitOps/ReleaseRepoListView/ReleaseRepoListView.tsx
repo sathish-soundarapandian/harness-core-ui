@@ -45,7 +45,6 @@ import {
   buildGitlabPayload
 } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { useQueryParams } from '@common/hooks/useQueryParams'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { allowedManifestTypes, gitStoreTypes, showAddManifestBtn } from '../../Manifesthelper'
 
 import type { ManifestStores } from '../../ManifestInterface'
@@ -99,7 +98,6 @@ function ReleaseRepoListView({
 
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const { GITOPS_FETCH_LINKED_APPS } = useFeatureFlags()
 
   const getLabels = (): ConnectorRefLabelType => {
     return {
@@ -546,8 +544,7 @@ function ReleaseRepoListView({
             text={getString('pipeline.addReleaseRepo')}
           />
         ) : null}
-        {GITOPS_FETCH_LINKED_APPS &&
-        showAddManifestBtn(
+        {showAddManifestBtn(
           isReadonly,
           true,
           listOfManifests?.filter(data => data?.manifest?.type === 'DeploymentRepo')

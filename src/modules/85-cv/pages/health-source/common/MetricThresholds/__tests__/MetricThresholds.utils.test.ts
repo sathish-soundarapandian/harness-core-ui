@@ -577,12 +577,12 @@ describe('AppDIgnoreThresholdTabContent', () => {
   })
 
   test('getMetricPacksForPayload should ignore custom, if it is present in metric packs', () => {
-    const result = getMetricPacksForPayload(formDataMock, true)
+    const result = getMetricPacksForPayload(formDataMock)
     expect(result).toEqual(metricThresholdsPayloadMockData)
   })
 
   test('getMetricPacksForPayload should give custom thresholds, though there is no metric pack values selected', () => {
-    const result = getMetricPacksForPayload(formDataMockWithNoMetricData, true)
+    const result = getMetricPacksForPayload(formDataMockWithNoMetricData)
     expect(result).toEqual(expectedCustomOnlyResult)
   })
 
@@ -747,7 +747,7 @@ describe('AppDIgnoreThresholdTabContent', () => {
   })
 
   test('getIsRemovedMetricPackContainsMetricThresholds should return false if a metric pack is added', () => {
-    const result = getIsRemovedMetricPackContainsMetricThresholds(true, metricThresholdsMock, 'test1', true)
+    const result = getIsRemovedMetricPackContainsMetricThresholds(metricThresholdsMock, 'test1', true)
 
     expect(result).toBe(false)
   })
@@ -755,7 +755,6 @@ describe('AppDIgnoreThresholdTabContent', () => {
   test('getIsRemovedMetricPackContainsMetricThresholds should return false if no valid values are passed', () => {
     // ℹ️ Casted to test unexpected scenario, to test function robustness
     const result = getIsRemovedMetricPackContainsMetricThresholds(
-      true,
       null as unknown as Record<ThresholdsPropertyNames, MetricThresholdType[]>,
       'test1',
       false
@@ -765,7 +764,6 @@ describe('AppDIgnoreThresholdTabContent', () => {
 
     // ℹ️ Casted to test unexpected scenario, to test function robustness
     const result2 = getIsRemovedMetricPackContainsMetricThresholds(
-      true,
       metricThresholdsMock,
       null as unknown as string,
       false
@@ -774,20 +772,14 @@ describe('AppDIgnoreThresholdTabContent', () => {
     expect(result2).toBe(false)
   })
 
-  test('getIsRemovedMetricPackContainsMetricThresholds should return false metric thresholds is  disabled', () => {
-    const result = getIsRemovedMetricPackContainsMetricThresholds(false, metricThresholdsMock, 'test1', false)
-
-    expect(result).toBe(false)
-  })
-
   test('getIsRemovedMetricPackContainsMetricThresholds should return true if a metric pack is being removed and that contains any metric thresholds', () => {
-    const result = getIsRemovedMetricPackContainsMetricThresholds(true, metricThresholdsMock, 'test1', false)
+    const result = getIsRemovedMetricPackContainsMetricThresholds(metricThresholdsMock, 'test1', false)
 
     expect(result).toBe(true)
   })
 
   test('getIsRemovedMetricNameContainsMetricThresholds should return true if given metric name contains thresholds', () => {
-    const result = getIsRemovedMetricNameContainsMetricThresholds(true, metricThresholdsMock, 'testMetricName')
+    const result = getIsRemovedMetricNameContainsMetricThresholds(metricThresholdsMock, 'testMetricName')
 
     expect(result).toBe(true)
   })
@@ -795,7 +787,6 @@ describe('AppDIgnoreThresholdTabContent', () => {
   test('getIsRemovedMetricNameContainsMetricThresholds should return false if no valid values are passed', () => {
     // ℹ️ Casted to test unexpected scenario, to test function robustness
     const result = getIsRemovedMetricNameContainsMetricThresholds(
-      true,
       null as unknown as Record<ThresholdsPropertyNames, MetricThresholdType[]>,
       'test1'
     )
@@ -803,17 +794,13 @@ describe('AppDIgnoreThresholdTabContent', () => {
     expect(result).toBe(false)
 
     // ℹ️ Casted to test unexpected scenario, to test function robustness
-    const result2 = getIsRemovedMetricNameContainsMetricThresholds(
-      true,
-      metricThresholdsMock,
-      null as unknown as string
-    )
+    const result2 = getIsRemovedMetricNameContainsMetricThresholds(metricThresholdsMock, null as unknown as string)
 
     expect(result2).toBe(false)
   })
 
   test('getIsRemovedMetricNameContainsMetricThresholds should return false metric thresholds is  disabled', () => {
-    const result = getIsRemovedMetricNameContainsMetricThresholds(false, metricThresholdsMock, 'test1')
+    const result = getIsRemovedMetricNameContainsMetricThresholds(metricThresholdsMock, 'test1')
 
     expect(result).toBe(false)
   })

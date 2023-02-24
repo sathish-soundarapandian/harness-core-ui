@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AuditLogStreamingCards Renders 1`] = `
+<div>
+  <div
+    class="Layout--horizontal Layout--layout-spacing-xxxlarge StyledProps--main"
+  >
+    ALSCard
+    ALSCard
+    ALSCard
+    ALSCard
+  </div>
+</div>
+`;

@@ -9,14 +9,15 @@ import React, { useState } from 'react'
 import { Container, FormInput, Layout, PillToggle, PillToggleProps, SelectOption, Text } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import { useFormikContext } from 'formik'
+import classNames from 'classnames'
 import { useStrings } from 'framework/strings'
-import { ALL_TIME_ZONES } from '@common/utils/dateUtils'
 import { DateTimePicker } from '@common/components/DateTimePicker/DateTimePicker'
 import {
   DowntimeForm,
   DowntimeFormFields,
   EndTimeMode
 } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.types'
+import { timezoneToOffsetObject } from '@cv/utils/dateUtils'
 import { DowntimeWindowToggleViews } from '../../CreateDowntimeForm.types'
 import { getDurationOptions, getRecurrenceTypeOptions } from '../../CreateDowntimeForm.utils'
 import css from '../../CreateDowntimeForm.module.scss'
@@ -33,7 +34,10 @@ const DowntimeWindow = (): JSX.Element => {
       : DowntimeWindowToggleViews.RECURRING
   )
 
-  const timeZoneList: SelectOption[] = ALL_TIME_ZONES.map(timezone => ({ value: timezone, label: timezone }))
+  const timeZoneList: SelectOption[] = Object.entries(timezoneToOffsetObject).map(timezone => ({
+    value: timezone[0],
+    label: `${timezone[0]} (GMT${Number(timezone[1]) >= 0 ? '+' : ''}${timezone[1]})`
+  }))
 
   const toggleProps: PillToggleProps<DowntimeWindowToggleViews> = {
     options: [
@@ -91,7 +95,11 @@ const DowntimeWindow = (): JSX.Element => {
         disabled={text ? endTimeMode === EndTimeMode.END_TIME : false}
         items={recurrenceDuration ? getRecurrenceTypeOptions(getString) : getDurationOptions(getString)}
       />
-      {text && <span className={css.text}>{text}</span>}
+      {text && (
+        <span className={classNames(css.text, { [css.disabledText]: endTimeMode === EndTimeMode.END_TIME })}>
+          {text}
+        </span>
+      )}
     </Layout.Horizontal>
   )
 
@@ -126,6 +134,7 @@ const DowntimeWindow = (): JSX.Element => {
             getString('common.endTime'),
             <FormInput.RadioGroup
               name={DowntimeFormFields.END_TIME_MODE}
+              className={css.radioGroup}
               items={[
                 {
                   label: renderDurationDropdown(false, getString('cv.sloDowntime.durationText')),

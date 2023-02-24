@@ -40,7 +40,7 @@ import {
   GoogleArtifactRegistryInitialValuesType,
   TagTypes
 } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import {
   ConnectorConfigDTO,
   GARBuildDetailsDTO,
@@ -52,6 +52,7 @@ import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteI
 import { useQueryParams } from '@common/hooks'
 import { getHelpeTextForTags } from '@pipeline/utils/stageHelpers'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 import { ArtifactIdentifierValidation, ModalViewFor, tagOptions } from '../../../ArtifactHelper'
 import { NoTagResults } from '../ArtifactImagePathTagView/ArtifactImagePathTagView'
@@ -118,7 +119,7 @@ function FormComponent(
       repositoryName: repositoryNameValue
     }
   })
-  const { data: regionsData } = useGetRegionsForGoogleArtifactRegistry({})
+  const { data: regionsData, loading: loadingRegionsData } = useGetRegionsForGoogleArtifactRegistry({})
 
   useEffect(() => {
     if (regionsData?.data) {
@@ -218,6 +219,7 @@ function FormComponent(
               showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.project', value)}
               isReadonly={isReadonly}
+              allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
             />
           )}
         </div>
@@ -242,7 +244,9 @@ function FormComponent(
           />
           {getMultiTypeFromValue(formik.values.spec.region) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
-              <ConfigureOptions
+              <SelectConfigureOptions
+                options={regions}
+                loading={loadingRegionsData}
                 value={formik.values.spec.region}
                 type="String"
                 variableName="region"
@@ -279,6 +283,7 @@ function FormComponent(
               showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.repositoryName', value)}
               isReadonly={isReadonly}
+              allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
             />
           )}
         </div>
@@ -304,6 +309,7 @@ function FormComponent(
               showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.package', value)}
               isReadonly={isReadonly}
+              allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
             />
           )}
         </div>
@@ -365,7 +371,9 @@ function FormComponent(
               }}
             />
             {getMultiTypeFromValue(formik.values.spec.version) === MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
+              <SelectConfigureOptions
+                options={getBuilds()}
+                loading={fetchingBuilds}
                 style={{ marginTop: 22 }}
                 value={defaultTo(formik.values.spec.version, '')}
                 type="String"
@@ -401,6 +409,7 @@ function FormComponent(
                 showAdvanced={true}
                 onChange={value => formik.setFieldValue('spec.versionRegex', value)}
                 isReadonly={isReadonly}
+                allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
               />
             )}
           </div>

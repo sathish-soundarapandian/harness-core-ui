@@ -30,7 +30,7 @@ import { DelegateSelectorWithRef } from '@pipeline/components/PipelineStudio/Del
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { useValidationErrors } from '@pipeline/components/PipelineStudio/PiplineHooks/useValidationErrors'
 import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinded'
-import { isMultiTypeRuntime } from '@common/utils/utils'
+import { isMultiTypeRuntime, isValueRuntimeInput } from '@common/utils/utils'
 import MultiTypeSelectorButton from '@common/components/MultiTypeSelectorButton/MultiTypeSelectorButton'
 import { PipelineStageTabs } from './utils'
 
@@ -112,8 +112,29 @@ export function PipelineStageAdvancedSpecifications({
         <div className={css.tabHeading}>
           <span data-tooltip-id={conditionalExecutionTooltipId}>
             {getString('pipeline.conditionalExecution.title')}
-            <HarnessDocTooltip tooltipId={conditionalExecutionTooltipId} useStandAlone={true} />
           </span>
+          <MultiTypeSelectorButton
+            className={css.multiTypeBtn}
+            type={getMultiTypeFromValue(stage?.stage?.when as any)}
+            allowedTypes={[MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]}
+            onChange={type => {
+              const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
+              if (pipelineStage && pipelineStage.stage) {
+                const stageData = produce(pipelineStage, draft => {
+                  if (isMultiTypeRuntime(type)) {
+                    set(draft, 'stage.when', RUNTIME_INPUT_VALUE)
+                  } else {
+                    unset(draft, 'stage.when')
+                  }
+                })
+
+                if (stageData.stage) {
+                  updateStage(stageData.stage)
+                }
+              }
+            }}
+          />
+          <HarnessDocTooltip tooltipId={conditionalExecutionTooltipId} useStandAlone={true} />
         </div>
         {!!stage && (
           <Card className={css.sectionCard} id="conditionalExecution">
@@ -175,7 +196,10 @@ export function PipelineStageAdvancedSpecifications({
                   const { stage: pipelineStage } = getStageFromPipeline(selectedStageId || '')
                   if (pipelineStage && pipelineStage.stage) {
                     const stageData = produce(pipelineStage, draft => {
-                      if (Array.isArray(failureStrategies) && failureStrategies.length > 0) {
+                      if (
+                        (Array.isArray(failureStrategies) && failureStrategies.length > 0) ||
+                        isValueRuntimeInput(failureStrategies as any)
+                      ) {
                         set(draft, 'stage.failureStrategies', failureStrategies)
                       } else {
                         unset(draft, 'stage.failureStrategies')
@@ -184,7 +208,7 @@ export function PipelineStageAdvancedSpecifications({
                     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                     updateStage(stageData.stage!)
                     const errors = formikRef.current?.getErrors()
-                    if (isEmpty(errors)) {
+                    if (isEmpty(errors) && Array.isArray(failureStrategies)) {
                       const telemetryData = failureStrategies.map(strategy => ({
                         onError: strategy.onFailure?.errors?.join(', '),
                         action: strategy.onFailure?.action?.type

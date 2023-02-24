@@ -1361,5 +1361,11 @@ k8sQuickCreate:
     retest: Retest Connection
 governance:
   sideNavText: Asset Governance
+  enforcement: Cloud Asset Governance Enforcement
+  enforcements: Cloud Asset Governance Enforcements
+  ruleSet: Cloud Asset Governance Rule Set
+  ruleSets: Cloud Asset Governance Rule Sets
+  rule: Cloud Asset Governance Rule
+  rules: Cloud Asset Governance Rules
 currencyPreferences:
   sideNavText: Currency Preferences

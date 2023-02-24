@@ -18,14 +18,19 @@ import css from './RiskProfile.module.scss'
 interface RiskProfileProps {
   riskProfileResponse?: ReturnType<typeof useGetRiskCategoryForCustomHealthMetric>
   continuousVerificationEnabled?: boolean
-  serviceInstance?: string
+  serviceInstanceField?: string
   riskCategory?: string
   defaultServiceInstance?: string
 }
 
 export function RiskProfile(props: RiskProfileProps): JSX.Element {
-  const { continuousVerificationEnabled, serviceInstance, riskCategory, riskProfileResponse, defaultServiceInstance } =
-    props
+  const {
+    continuousVerificationEnabled,
+    serviceInstanceField,
+    riskCategory,
+    riskProfileResponse,
+    defaultServiceInstance
+  } = props
   const { getString } = useStrings()
   return (
     <>
@@ -37,7 +42,7 @@ export function RiskProfile(props: RiskProfileProps): JSX.Element {
         <RiskProfileCategeory riskCategory={riskCategory} riskProfileResponse={riskProfileResponse} />
         <Deviation />
         <ServiceInstance
-          serviceInstance={serviceInstance}
+          serviceInstanceField={serviceInstanceField}
           defaultServiceInstance={defaultServiceInstance}
           continuousVerificationEnabled={continuousVerificationEnabled}
         />

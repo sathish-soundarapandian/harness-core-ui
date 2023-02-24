@@ -8,7 +8,7 @@ describe('CommonCustomMetricFormContainer utils test', () => {
       isTemplate: true,
       isConnectorRuntimeOrExpression: false,
       isQueryRuntimeOrExpression: false,
-      multiTypeRecord: { serviceInstance: MultiTypeInputType.FIXED } as LogFieldsMultiTypeState
+      multiTypeRecord: { serviceInstanceField: MultiTypeInputType.FIXED } as LogFieldsMultiTypeState
     })
     expect(result).toBe(true)
   })
@@ -18,7 +18,7 @@ describe('CommonCustomMetricFormContainer utils test', () => {
       isTemplate: true,
       isConnectorRuntimeOrExpression: true,
       isQueryRuntimeOrExpression: false,
-      multiTypeRecord: { serviceInstance: MultiTypeInputType.FIXED } as LogFieldsMultiTypeState
+      multiTypeRecord: { serviceInstanceField: MultiTypeInputType.FIXED } as LogFieldsMultiTypeState
     })
     expect(result).toBe(false)
   })
@@ -28,7 +28,7 @@ describe('CommonCustomMetricFormContainer utils test', () => {
       isTemplate: true,
       isConnectorRuntimeOrExpression: false,
       isQueryRuntimeOrExpression: false,
-      multiTypeRecord: { serviceInstance: MultiTypeInputType.RUNTIME } as LogFieldsMultiTypeState
+      multiTypeRecord: { serviceInstanceField: MultiTypeInputType.RUNTIME } as LogFieldsMultiTypeState
     })
     expect(result).toBe(false)
   })
@@ -38,7 +38,7 @@ describe('CommonCustomMetricFormContainer utils test', () => {
       isTemplate: true,
       isConnectorRuntimeOrExpression: false,
       isQueryRuntimeOrExpression: false,
-      multiTypeRecord: { serviceInstance: MultiTypeInputType.EXPRESSION } as LogFieldsMultiTypeState
+      multiTypeRecord: { serviceInstanceField: MultiTypeInputType.EXPRESSION } as LogFieldsMultiTypeState
     })
     expect(result).toBe(false)
   })

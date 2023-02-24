@@ -135,7 +135,7 @@ const KubernetesInfraSpecEditable: React.FC<KubernetesInfraSpecEditableProps> = 
                   tooltipProps={{
                     dataTooltipId: 'k8InfraConnector'
                   }}
-                  placeholder={getString('connectors.selectConnector')}
+                  placeholder={getString('common.entityPlaceholderText')}
                   disabled={readonly}
                   accountIdentifier={accountId}
                   multiTypeProps={{ expressions, disabled: readonly, allowableTypes }}
@@ -299,7 +299,7 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
             name={`${path}.connectorRef`}
             label={getString('connector')}
             gitScope={{ repo: repoIdentifier || '', branch, getDefaultFromOtherRepo: true }}
-            placeholder={getString('connectors.selectConnector')}
+            placeholder={getString('common.entityPlaceholderText')}
             disabled={readonly}
             setRefValue
             className={css.connectorMargin}

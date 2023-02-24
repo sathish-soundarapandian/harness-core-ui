@@ -114,7 +114,6 @@ function Artifactory({
   const { getString } = useStrings()
   const isIdentifierAllowed = context === ModalViewFor.SIDECAR || !!isMultiArtifactSource
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
-
   const [lastQueryData, setLastQueryData] = useState({ artifactPath: '', repository: '' })
   const [tagList, setTagList] = useState<DockerBuildDetailsDTO[] | undefined>([])
   const isServerlessDeploymentTypeSelected = isServerlessDeploymentType(selectedDeploymentType)
@@ -651,6 +650,15 @@ function Artifactory({
                   </div>
                 )}
 
+                <div className={cx(css.tagGroup, css.marginBottom)}>
+                  <FormInput.RadioGroup
+                    label={isGenericArtifactory ? getString('pipeline.artifactsSelection.artifactDetails') : undefined}
+                    name="tagType"
+                    radioGroup={{ inline: true }}
+                    items={tagOptions}
+                    className={css.radioGroup}
+                  />
+                </div>
                 {formik.values?.tagType === 'value' ? (
                   <div className={css.imagePathContainer}>
                     <FormInput.MultiTypeInput
@@ -730,15 +738,6 @@ function Artifactory({
                     )}
                   </div>
                 ) : null}
-                <div className={cx(css.tagGroup, css.marginBottom)}>
-                  <FormInput.RadioGroup
-                    label={isGenericArtifactory ? getString('pipeline.artifactsSelection.artifactDetails') : undefined}
-                    name="tagType"
-                    radioGroup={{ inline: true }}
-                    items={tagOptions}
-                    className={css.radioGroup}
-                  />
-                </div>
               </div>
               {!hideHeaderAndNavBtns && (
                 <Layout.Horizontal spacing="medium">

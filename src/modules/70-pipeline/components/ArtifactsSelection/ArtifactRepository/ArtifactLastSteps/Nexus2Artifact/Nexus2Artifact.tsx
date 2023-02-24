@@ -50,6 +50,7 @@ import type {
 import { nexus2RepositoryFormatTypes, RepositoryFormatTypes } from '@pipeline/utils/stageHelpers'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { SelectConfigureOptions } from '@common/components/ConfigureOptions/SelectConfigureOptions/SelectConfigureOptions'
 import { ArtifactIdentifierValidation, ModalViewFor } from '../../../ArtifactHelper'
 import { ArtifactSourceIdentifier, SideCarArtifactIdentifier } from '../ArtifactIdentifier'
 
@@ -92,20 +93,22 @@ export function Nexus2Artifact({
     repositoryFormat: Yup.string()
       .trim()
       .required(getString('pipeline.artifactsSelection.validation.repositoryFormat')),
-    spec: Yup.object().shape({
-      artifactId: Yup.string().when('repositoryFormat', {
+
+    spec: Yup.object()
+      .when('repositoryFormat', {
         is: RepositoryFormatTypes.Maven,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactId'))
-      }),
-      groupId: Yup.string().when('repositoryFormat', {
-        is: RepositoryFormatTypes.Maven,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.groupId'))
-      }),
-      packageName: Yup.string().when('repositoryFormat', {
-        is: RepositoryFormatTypes.NPM || RepositoryFormatTypes.NuGet,
-        then: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.packageName'))
+        then: Yup.object().shape({
+          artifactId: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.artifactId')),
+          groupId: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.groupId'))
+        })
       })
-    })
+      .when('repositoryFormat', {
+        is: repositoryFormat =>
+          repositoryFormat === RepositoryFormatTypes.NPM || repositoryFormat === RepositoryFormatTypes.NuGet,
+        then: Yup.object().shape({
+          packageName: Yup.string().trim().required(getString('pipeline.artifactsSelection.validation.packageName'))
+        })
+      })
   }
 
   const primarySchema = Yup.object().shape(schemaObject)
@@ -199,7 +202,7 @@ export function Nexus2Artifact({
   useEffect(() => {
     if (nexusTagError) {
       setTagList([])
-    } else if (Array.isArray(data?.data?.buildDetailsList)) {
+    } else if (Array.isArray(data?.data?.buildDetailsList) && !fetchingRepository) {
       setTagList(data?.data?.buildDetailsList)
     }
   }, [data?.data?.buildDetailsList, nexusTagError])
@@ -272,7 +275,7 @@ export function Nexus2Artifact({
       : !checkIfQueryParamsisNotEmpty([
           formikValue.repositoryFormat,
           formikValue.repository,
-          formikValue.spec.packageName
+          formikValue?.spec?.packageName
         ])
   }, [])
 
@@ -356,35 +359,8 @@ export function Nexus2Artifact({
         formName="imagePath"
         validationSchema={isMultiArtifactSource ? sidecarSchema : primarySchema}
         validate={handleValidate}
-        onSubmit={(formData, formikhelper) => {
-          let hasError = false
-          if (formData?.repositoryFormat === RepositoryFormatTypes.Maven) {
-            if (!formData?.spec?.artifactId) {
-              formikhelper.setFieldError(
-                'spec.artifactId',
-                getString('pipeline.artifactsSelection.validation.artifactId')
-              )
-              hasError = true
-            }
-
-            if (!formData?.spec?.groupId) {
-              formikhelper.setFieldError('spec.groupId', getString('pipeline.artifactsSelection.validation.groupId'))
-              hasError = true
-            }
-          } else if (
-            formData?.repositoryFormat === RepositoryFormatTypes.NPM ||
-            formData?.repositoryFormat === RepositoryFormatTypes.NuGet
-          ) {
-            if (!formData?.spec?.packageName) {
-              formikhelper.setFieldError(
-                'spec.packageName',
-                getString('pipeline.artifactsSelection.validation.packageName')
-              )
-              hasError = true
-            }
-          }
-          if (!hasError)
-            submitFormData?.({ ...prevStepData, ...formData, connectorId: getConnectorIdValue(prevStepData) })
+        onSubmit={formData => {
+          submitFormData?.({ ...prevStepData, ...formData, connectorId: getConnectorIdValue(prevStepData) })
         }}
       >
         {formik => (
@@ -466,7 +442,9 @@ export function Nexus2Artifact({
                 />
                 {getMultiTypeFromValue(formik.values?.repository) === MultiTypeInputType.RUNTIME && (
                   <div className={css.configureOptions}>
-                    <ConfigureOptions
+                    <SelectConfigureOptions
+                      options={getRepository()}
+                      loading={fetchingRepository}
                       style={{ alignSelf: 'center' }}
                       value={formik.values?.repository as string}
                       type={getString('string')}
@@ -622,13 +600,13 @@ export function Nexus2Artifact({
                 tagDisabled={isTagDisabled(formik?.values)}
                 isArtifactPath={false}
                 isImagePath={false}
-                canFetchTags={() => {
+                canFetchTags={() =>
                   canFetchAMITags(
                     formik?.values?.repository,
                     formik?.values?.spec?.groupId,
                     formik?.values?.spec?.artifactId
                   )
-                }}
+                }
               />
             </div>
             {!hideHeaderAndNavBtns && (

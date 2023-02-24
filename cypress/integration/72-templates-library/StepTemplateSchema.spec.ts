@@ -8,9 +8,7 @@
 import {
   templatesListRoute,
   gitSyncEnabledCall,
-  templatesListCall,
   templateMetadataCall,
-  templatesListCallWithListType,
   templateListMetaDataWithListType,
   stepLibrary,
   featureFlagsCall,
@@ -19,11 +17,6 @@ import {
 
 describe('Template Schema Validation', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.intercept('GET', gitSyncEnabledCall, {
       connectivityMode: null,
       gitSyncEnabled: false,

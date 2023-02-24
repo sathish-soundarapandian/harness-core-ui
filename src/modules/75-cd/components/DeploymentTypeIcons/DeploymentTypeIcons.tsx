@@ -20,14 +20,7 @@ export const DeploymentTypeIcons: React.FC<DeploymentTypeIconsProps> = props => 
   return (
     <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
       {deploymentTypes.slice(0, limit).map((deploymentType: string) => {
-        return (
-          <Icon
-            key={deploymentType}
-            name={deploymentTypeIcon[deploymentType as ServiceTypes]}
-            size={size}
-            padding={{ left: 'xsmall', right: 'xsmall' }}
-          />
-        )
+        return <Icon key={deploymentType} name={deploymentTypeIcon[deploymentType as ServiceTypes]} size={size} />
       })}
       {deploymentTypes.length > limit ? <Text>{`+ ${deploymentTypes.length - limit}`}</Text> : <></>}
     </Layout.Horizontal>

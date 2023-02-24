@@ -78,8 +78,7 @@ import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { YamlBuilderMemo } from '@common/components/YAMLBuilder/YamlBuilder'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useShouldDisableDeployment } from 'services/cd-ng'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useGetResolvedChildPipeline } from '@pipeline/hooks/useGetResolvedChildPipeline'
 import { validatePipeline } from '../PipelineStudio/StepUtil'
 import { PreFlightCheckModal } from '../PreFlightCheckModal/PreFlightCheckModal'
@@ -145,8 +144,8 @@ function RunPipelineFormBasic({
   executionIdentifier,
   isDebugMode
 }: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
-  const isNgDeploymentFreezeEnabled = useFeatureFlag(FeatureFlag.NG_DEPLOYMENT_FREEZE)
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
+  const { PIE_NG_GITX_CACHING: isGitCacheEnabled, FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed } =
+    useFeatureFlags()
   const [skipPreFlightCheck, setSkipPreFlightCheck] = useState<boolean>(false)
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [notifyOnlyMe, setNotifyOnlyMe] = useState<boolean>(false)
@@ -215,8 +214,7 @@ function RunPipelineFormBasic({
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
-    },
-    lazy: !isNgDeploymentFreezeEnabled
+    }
   })
 
   const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
@@ -433,10 +431,6 @@ function RunPipelineFormBasic({
   }, [inputSetSelected])
 
   useEffect(() => {
-    !isEmpty(formikRef?.current?.values) && setCurrentPipeline(formikRef?.current?.values)
-  }, [selectedStageData])
-
-  useEffect(() => {
     if (inputSetYAML) {
       setExistingProvide('provide')
     } else {
@@ -501,7 +495,7 @@ function RunPipelineFormBasic({
         />
       </Dialog>
     )
-  }, [notifyOnlyMe])
+  }, [notifyOnlyMe, selectedStageData, stageIdentifiers])
 
   const isExecutingPipeline =
     runPipelineLoading || reRunPipelineLoading || runStagesLoading || reRunStagesLoading || reRunDebugModeLoading
@@ -651,6 +645,13 @@ function RunPipelineFormBasic({
     return areDependentStagesSelected
   }, [selectedStageData])
 
+  const selectedStagesHandler = (selectedStages: StageSelectionData): void => {
+    setSelectedStageData(selectedStages)
+
+    // setting up the current pipeline to pass to input sets for merge API call to retain the existing values
+    !isEmpty(formikRef?.current?.values) && setCurrentPipeline(formikRef?.current?.values)
+  }
+
   useEffect(() => {
     if (shouldValidateForm) {
       formikRef.current?.validateForm(inputSet.pipeline)
@@ -701,7 +702,8 @@ function RunPipelineFormBasic({
             resolvedPipeline: resolvedMergedPipeline,
             getString,
             viewType: StepViewType.DeploymentForm,
-            selectedStageData: selectedStages
+            selectedStageData: selectedStages,
+            isOptionalVariableAllowed
           }) as any) || formErrors
         resolve(validatedErrors)
       })
@@ -788,7 +790,7 @@ function RunPipelineFormBasic({
                   <RunModalHeader
                     pipelineExecutionId={pipelineExecutionId}
                     selectedStageData={selectedStageData}
-                    setSelectedStageData={setSelectedStageData}
+                    setSelectedStageData={selectedStagesHandler}
                     setSkipPreFlightCheck={setSkipPreFlightCheck}
                     handleModeSwitch={handleModeSwitch}
                     runClicked={runClicked}

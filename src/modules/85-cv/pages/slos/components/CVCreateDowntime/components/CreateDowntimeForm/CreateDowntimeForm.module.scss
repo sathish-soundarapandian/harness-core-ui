@@ -31,7 +31,22 @@
       .RadioButton--radio .bp3-form-group {
         width: 100%;
       }
+
+      .RadioButton--radio .bp3-disabled input {
+        background-color: var(--grey-50);
+        border: 1px solid var(--grey-200);
+        color: var(--grey-400);
+      }
+
+      .RadioButton--radio .bp3-disabled button {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
     }
+  }
+
+  .radioGroup {
+    margin-bottom: 0 !important;
   }
 
   .cardTitle {
@@ -50,7 +65,25 @@
       white-space: nowrap;
       font-size: 13px;
       margin-bottom: 15px;
+      color: var(--black);
     }
+
+    .disabledText {
+      color: var(--grey-400);
+    }
+  }
+}
+
+.previewLabelAndValue {
+  .label {
+    color: var(--grey-1000) !important;
+    font-weight: 500 !important;
+    font-size: 13.5px !important;
+  }
+
+  .value {
+    color: var(--grey-1000) !important;
+    font-size: 13.5px !important;
   }
 }
 
@@ -61,6 +94,31 @@
       background: var(--grey-100);
       padding: var(--spacing-2) var(--spacing-3);
     }
+  }
+
+  .selectMSButton {
+    margin-top: var(--spacing-small) !important;
+  }
+
+  .serviceName {
+    font-weight: 600;
+  }
+
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+
+  .tagBox {
+    display: flex;
+    flex-wrap: wrap !important;
+    gap: var(--spacing-xsmall);
+    margin-top: var(--spacing-small) !important;
+  }
+
+  .checkbox {
+    margin: var(--spacing-medium) 0 var(--spacing-small) var(--spacing-small) !important;
   }
 }
 

@@ -224,7 +224,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
             name={`${prefix}spec.connectorRef`}
             label={getString('connectors.jenkins.jenkinsConnectorLabel')}
             selected={(initialValues?.spec?.connectorRef as string) || ''}
-            placeholder={getString('connectors.selectConnector')}
+            placeholder={getString('common.entityPlaceholderText')}
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}

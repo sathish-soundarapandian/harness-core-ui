@@ -7,7 +7,6 @@
 
 import React, { useEffect, useState } from 'react'
 import cx from 'classnames'
-
 import moment from 'moment'
 import { useParams, useHistory } from 'react-router-dom'
 import { Card, Container, Icon, IconName, Layout, Heading, PageError } from '@harness/uicore'

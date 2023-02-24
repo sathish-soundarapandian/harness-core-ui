@@ -23,7 +23,7 @@ describe('Validate CVMultiTypeQuery', () => {
       <TestWrapper>
         <Formik formName="" initialValues={{ query: mockQuery }} onSubmit={() => undefined}>
           {_ => {
-            return <CVMultiTypeQuery name={'query'} expressions={[]} disableFetchButton />
+            return <CVMultiTypeQuery runQueryBtnTooltip={''} name={'query'} expressions={[]} disableFetchButton />
           }}
         </Formik>
       </TestWrapper>
@@ -45,6 +45,7 @@ describe('Validate CVMultiTypeQuery', () => {
                 expressions={['exp1']}
                 fetchRecords={fetchRecords}
                 disableFetchButton={false}
+                runQueryBtnTooltip={''}
               />
             )
           }}
@@ -79,6 +80,7 @@ describe('Validate CVMultiTypeQuery', () => {
                   expressions={['exp1']}
                   fetchRecords={jest.fn()}
                   disableFetchButton={false}
+                  runQueryBtnTooltip={''}
                 />
                 <Button
                   onClick={() => {

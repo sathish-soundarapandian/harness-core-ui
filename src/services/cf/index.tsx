@@ -1271,11 +1271,13 @@ export type GitRepoPatchRequestRequestBody = PatchOperation
 
 export interface GitRepoRequestRequestBody {
   autoCommit?: boolean
-  branch: string
+  branch?: string
   filePath: string
   objectId?: string
-  repoIdentifier: string
+  repoIdentifier?: string
   rootFolder: string
+  repoReference?: string
+  connectorReference?: string
 }
 
 export interface ProjectRequestRequestBody {

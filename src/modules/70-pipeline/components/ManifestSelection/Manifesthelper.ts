@@ -85,7 +85,7 @@ export const TASManifestAllowedPaths = [ManifestDataType.TasVars, ManifestDataTy
 export const ManifestToPathMap: Record<PrimaryManifestType, string> = {
   K8sManifest: 'Values',
   HelmChart: 'Values',
-  OpenshiftTemplate: 'OpenshiftParam',
+  OpenshiftTemplate: 'OpenShift Params',
   Kustomize: 'KustomizePatches',
   TasVars: 'Vars',
   TasAutoScaler: 'AutoScaler'
@@ -153,7 +153,9 @@ export const allowedManifestTypes: Record<ServiceDefinition['type'], Array<Manif
   ],
   CustomDeployment: [],
   Elastigroup: [],
-  GoogleCloudFunctions: [ManifestDataType.GoogleCloudFunctionDefinition]
+  GoogleCloudFunctions: [ManifestDataType.GoogleCloudFunctionDefinition],
+  AwsLambda: [],
+  AWS_SAM: []
 }
 
 export const gitStoreTypes: Array<ManifestStores> = [
@@ -276,7 +278,7 @@ export const ManifestIconByType: Record<ManifestStores, IconName> = {
   Git: 'service-github',
   Github: 'github',
   GitLab: 'service-gotlab',
-  Bitbucket: 'bitbucket',
+  Bitbucket: 'bitbucket-selected',
   Http: 'service-helm',
   OciHelmChart: 'helm-oci',
   S3: 'service-service-s3',

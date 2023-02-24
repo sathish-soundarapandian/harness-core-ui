@@ -8,7 +8,7 @@
 import React, { useMemo, useEffect, useState } from 'react'
 import { defaultTo, get, memoize } from 'lodash-es'
 
-import { FormInput, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+import { Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 import { Menu } from '@blueprintjs/core'
 import { ArtifactSourceBase, ArtifactSourceRenderProps } from '@cd/factory/ArtifactSourceFactory/ArtifactSourceBase'
 
@@ -29,6 +29,8 @@ import { TriggerDefaultFieldList } from '@triggers/components/Triggers/utils'
 import { useMutateAsGet } from '@common/hooks'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
+import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -39,6 +41,7 @@ import {
   isFieldfromTriggerTabDisabled,
   isNewServiceEnvEntity
 } from '../artifactSourceUtils'
+import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
 interface JenkinsRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
 }
@@ -234,7 +237,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
   return (
     <>
       {isRuntime && (
-        <Layout.Vertical key={artifactPath}>
+        <Layout.Vertical key={artifactPath} className={css.inputWidth}>
           {isFieldRuntime(`artifacts.${artifactPath}.spec.connectorRef`, template) && (
             <FormMultiTypeConnectorField
               name={`${path}.artifacts.${artifactPath}.spec.connectorRef`}
@@ -260,7 +263,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.project`, template) && (
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.project`}
+              template={template}
               name={`${path}.artifacts.${artifactPath}.spec.project`}
               label={getString('pipelineSteps.projectIDLabel')}
               placeholder={getString('pipeline.artifactsSelection.projectIDPlaceholder')}
@@ -273,7 +278,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.region`, template) && (
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.region`}
+              template={template}
               label={getString('regionLabel')}
               name={`${path}.artifacts.${artifactPath}.spec.region`}
               useValue
@@ -295,7 +302,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.repositoryName`, template) && (
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.repositoryName`}
+              template={template}
               name={`${path}.artifacts.${artifactPath}.spec.repositoryName`}
               label={getString('common.repositoryName')}
               placeholder={getString('pipeline.manifestType.repoNamePlaceholder')}
@@ -308,7 +317,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.package`, template) && (
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.package`}
+              template={template}
               name={`${path}.artifacts.${artifactPath}.spec.package`}
               label={getString('pipeline.testsReports.callgraphField.package')}
               placeholder={getString('pipeline.manifestType.packagePlaceholder')}
@@ -321,7 +332,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
-            <FormInput.MultiTypeInput
+            <SelectInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.version`}
+              template={template}
               selectItems={getBuildDetails()}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.version`)}
               name={`${path}.artifacts.${artifactPath}.spec.version`}
@@ -358,7 +371,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
           )}
 
           {!!fromTrigger && isFieldRuntime(`artifacts.${artifactPath}.spec.version`, template) && (
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.version`}
+              template={template}
               label={getString('version')}
               multiTextInputProps={{
                 width: 391,
@@ -371,7 +386,9 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
             />
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.versionRegex`, template) && (
-            <FormInput.MultiTextInput
+            <TextFieldInputSetView
+              fieldPath={`artifacts.${artifactPath}.spec.versionRegex`}
+              template={template}
               name={`${path}.artifacts.${artifactPath}.spec.versionRegex`}
               label={getString('pipeline.artifactsSelection.versionRegex')}
               placeholder={getString('pipeline.artifactsSelection.versionRegexPlaceholder')}

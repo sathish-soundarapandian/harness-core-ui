@@ -15,7 +15,7 @@
         "S2": {
           "nodeUuid": "S2",
           "nodeType": "Deployment",
-          "status": "Success",
+          "status": "Running",
           "edgeLayoutList": {
             "currentNodeChildren": [],
             "nextIds": ["S3"]

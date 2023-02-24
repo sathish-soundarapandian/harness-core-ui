@@ -20,7 +20,7 @@ import {
   afterFinalSaveConnectorsListResponse
 } from '../../support/70-pipeline/constants'
 
-describe('Service V2', () => {
+describe('Service V2', { defaultCommandTimeout: 10000 }, () => {
   const afterSaveServiceEndpointPOST = '/ng/api/servicesV2?routingId=accountId&accountIdentifier=accountId'
   const afterSaveServiceNameEndpoint =
     '/ng/api/servicesV2/testServiceV2?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
@@ -34,12 +34,6 @@ describe('Service V2', () => {
   const afterFinalSaveConnectorsListEndpoint =
     '/ng/api/connectors/listV2?routingId=accountId&pageIndex=0&pageSize=10&searchTerm=&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1&includeAllConnectorsAvailableAtScope=true'
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
-
     cy.intercept('GET', gitSyncEnabledCall, { connectivityMode: null, gitSyncEnabled: false })
 
     cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
@@ -218,7 +212,7 @@ describe('Service V2', () => {
     cy.contains('p', 'Harness').click()
     cy.clickSubmit()
     cy.get('input[name="identifier"]').type('testConfigFileIdentifier')
-    cy.get('span[data-icon="fixed-input"]').eq(0).click()
+    cy.get('span[data-icon="fixed-input"]').eq(1).click({ force: true })
     cy.contains('span', 'Runtime input').click()
     cy.get('input[value="<+input>"]').should('be.visible')
 
@@ -282,7 +276,7 @@ describe('Service V2', () => {
     cy.contains('p', 'Harness').click()
     cy.clickSubmit()
     cy.get('input[name="identifier"]').type('testConfigFileIdentifier')
-    cy.get('span[data-icon="fixed-input"]').eq(0).click()
+    cy.get('span[data-icon="fixed-input"]').eq(1).click()
     cy.contains('span', 'Runtime input').click()
     cy.get('input[value="<+input>"]').should('be.visible')
 

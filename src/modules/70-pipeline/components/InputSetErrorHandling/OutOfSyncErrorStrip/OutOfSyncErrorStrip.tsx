@@ -20,7 +20,7 @@ import { useModalHook } from '@harness/use-modal'
 import { useHistory, useParams } from 'react-router-dom'
 import { defaultTo, get, isEmpty, isNil, pick } from 'lodash-es'
 import type { InputSetDTO } from '@pipeline/utils/types'
-import { ReconcileDialog } from '@pipeline/components/InputSetErrorHandling/ReconcileDialog/ReconcileDialog'
+import { ReconcileInputSetDialog } from '@pipeline/components/InputSetErrorHandling/ReconcileInputSetDialog/ReconcileInputSetDialog'
 import {
   EntityGitDetails,
   InputSetResponse,
@@ -313,7 +313,7 @@ export function OutOfSyncErrorStrip(props: OutOfSyncErrorStripProps): React.Reac
 
     return (
       <Dialog isOpen={true} onClose={onClose} enforceFocus={false} className={css.reconcileDialog}>
-        <ReconcileDialog
+        <ReconcileInputSetDialog
           inputSet={inputSet}
           overlayInputSetIdentifier={overlayInputSetIdentifier}
           oldYaml={yamlStringify(yamlParse(defaultTo(yamlDiffResponse?.data?.oldYAML, '')))}

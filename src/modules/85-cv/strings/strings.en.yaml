@@ -24,6 +24,7 @@ changeTimeline: Change Timeline
 selectedTimeInterval: Selected time interval
 anomalous: Anomalous
 nonAnomalous: Non-Anomalous
+ends: 'Ends:'
 share: Share
 healthScore: Health Score
 clusterType: Cluster Type
@@ -67,9 +68,11 @@ query: Query
 selectQuery: Select Query (Optional)
 addNew: + Add New
 turnService: Turn service
+affectedServices: Affected services
 showYAMLChange: Show YAML Change
 seeYAML: See full event YAML
 addGroupName: Please Select Group Name
+minimum: Minimum
 serviceDashboardPage:
   fiveMinutes: 5 Minutes
   fifteenMinutes: 15 Minutes
@@ -243,9 +246,18 @@ monitoringSources:
     defineQuerySubDescription: Learn how to find the query to monitor your data source with Harness.
     querySectionSecondaryTitle: Query Section
     noQueries: 'There are no {{name}}'
+    query:
+      enterQuery: Please enter query
+      selectQueryField: 'Please select {{queryFieldIdentifier}}'
+      enterQueryAndQueryField: 'Please enter query and select {{queryFieldIdentifier}}'
     records:
       fetchingRecords: Fetching records ...
       runQueryToSeeRecords: Run query to fetch the records
+    fields:
+      timestampFormat: Timestamp format
+      timestampIdentifier: Timestamp identifier
+      serviceInstance: Service Instance identifer
+      messageIdentifier: Message identifer
     metricsChart:
       fetchingCharts: Fetching charts data ...
       runQueryToFetchResults: Run query to fetch the results
@@ -833,6 +845,9 @@ slos:
   monitoredServiceSubTitle: Monitored Service is a service and environment combination that monitors any changes, such as deployments, infrastructure changes and any health trend deviations using logs and metrics obtained from APM and Logging tools.
   evaluationMethod: Evaluation method
   evaluationMethodSubtitle: The evaluation method will determine how your events are measured
+  goodRequests: Good requests
+  badRequests: Bad requests
+  validRequests: Valid requests
   status: STATUS
   target: TARGET
   burnRate: BURN RATE/DAY
@@ -851,6 +866,8 @@ slos:
   sloDeleted: '{{ name }} successfully deleted'
   sli: SLI
   backToSLI: Back to SLI
+  sliMetricChartRatioBasedHeader: Metric for good requests vs valid requests
+  sliMetricChartSubHeader: Using historical data and current parameters in the last 1 day
   sloTargetAndBudgetPolicy: SLO Target & Error Budget Policy
   sloName: SLO Name
   userJourney: User Journey
@@ -965,27 +982,43 @@ CompositeSLO:
     maxSLOCount: Should have maximum 20 SLOs
     weightMinMax: SLO weight should be between 0.01 to 99.99
 sloDowntime:
+  oneWeek: 1 week
+  oneMinute: 1 minute
   label: Downtime
   downtimeName: Downtime Name
+  downtimeWindow: SLO Downtime Window
   category: Category
   noData: No SLO downtime configured
   addDowntime: Add a SLO Downtime
   info: During downtime, SLO status and error budget calculations will be excluded for that specific time period.
+  bannerText: SLO status and error budget calculations will be excluded from {{ startTime }} until {{ endTime }}
   scheduledMaintenance: Scheduled Maintenance
   selectCategory: Select downtime category
   selectMonitoredServices: Select Monitored Services
+  selectAllMonitoredServices: Apply the downtime to all existing and future services
+  allMonitoredServices: All monitored services
   repeatEvery: Repeat every
   repeatEndsOn: Repeat ends on
   durationText: from start time
   numberOfSLOs: NUMBER OF SLOs ASSIGNED
   downtimeCreated: SLO Downtime created successfully
   downtimeUpdated: SLO Downtime updated successfully
+  downtimeToggle: SLO Downtime {{ name }} turned {{ off }}
+  timeFrame: Every {{ recurrenceType }} at {{ time }} for {{ duration }}
+  recurringDowntime: 'RECURRING: Starts from {{ startTime }} until {{ endTime }}'
   msList: Downtime will be applied to the following monitored services
   NoData: You don’t have any matching monitored services
   NoDataSuggestion: Try changing the filter or clearing your search input.
+  confirmDeleteDowntime: 'Are you sure you want to delete downtime: {{ name }}?'
   validations:
     nameValidation: SLO Downtime is required
     categoryValidation: Category is required
+    timezoneValidation: Timezone is required
+    startTimeValidation: Start time is required
+    endTimeValidation: End time is required
+    endTimeGreaterThanStartTime: End time should be greater than start time
+    endTimeNotMoreThan3Years: End time can't be more than 3 years from start time
+    msListValidation: At least one monitored service should be selected
   steps:
     identification: Define SLO downtime identification
     downtimeWindow: Select the SLO downtime window
@@ -1045,8 +1078,11 @@ mins: mins
 minValueN: 'Min value {{n}}'
 maxValue: 'Max value {{n}}'
 pleaseFillTheRequiredFieldsToSeeTheSLIData: Please fill the required fields to see the SLI data
+month: month
+week: week
 day: day
 oneDay: 1 day
+oneHour: 1 hour
 days: days
 nDays: '{{ n }} days'
 resetErrorBudget: Reset Error Budget

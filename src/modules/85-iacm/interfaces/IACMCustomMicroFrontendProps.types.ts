@@ -23,6 +23,12 @@ import type RbacButton from '@rbac/components/Button/Button'
 import type RbacOptionsMenuButton from '@rbac/components/RbacOptionsMenuButton/RbacOptionsMenuButton'
 import type { usePermission } from '@rbac/hooks/usePermission'
 import type RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
+import type {
+  useGetConnector,
+  useGetListOfBranchesByRefConnectorV2,
+  useGetListOfReposByRefConnector
+} from 'services/cd-ng'
+import type { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 
 export interface IACMCustomMicroFrontendProps {
   customHooks: {
@@ -30,6 +36,9 @@ export interface IACMCustomMicroFrontendProps {
     useVariablesExpression: typeof useVariablesExpression
     useLocation: typeof useLocation
     usePermission: typeof usePermission
+    useGetListOfReposByRefConnector: typeof useGetListOfReposByRefConnector
+    useGetListOfBranchesByRefConnectorV2: typeof useGetListOfBranchesByRefConnectorV2
+    useGetConnector: typeof useGetConnector
   }
   customFunctions: {
     createTemplate: typeof createTemplate
@@ -48,5 +57,6 @@ export interface IACMCustomMicroFrontendProps {
     RbacOptionsMenuButton: typeof RbacOptionsMenuButton
     RbacButton: typeof RbacButton
     RbacMenuItem: typeof RbacMenuItem
+    ConnectorReferenceField: typeof ConnectorReferenceField
   }
 }

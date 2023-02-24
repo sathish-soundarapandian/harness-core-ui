@@ -24,11 +24,14 @@ export function ContinousVerificationWidgetSections({
   const { CVNG_TEMPLATE_VERIFY_STEP } = useFeatureFlags()
 
   const renderMonitoredService = (): JSX.Element => {
-    if (formik?.values?.spec?.monitoredService?.type === MONITORED_SERVICE_TYPE.CONFIGURED) {
+    const { monitoredService, isMultiServicesOrEnvs = false } = formik?.values?.spec || {}
+
+    if (monitoredService?.type === MONITORED_SERVICE_TYPE.CONFIGURED) {
       return <ConfiguredMonitoredService allowableTypes={allowableTypes} formik={formik} />
     } else if (
-      formik?.values?.spec?.monitoredService?.type === MONITORED_SERVICE_TYPE.DEFAULT &&
-      stepViewType !== 'Template'
+      monitoredService?.type === MONITORED_SERVICE_TYPE.DEFAULT &&
+      stepViewType !== 'Template' &&
+      !isMultiServicesOrEnvs
     ) {
       return <MonitoredService formik={formik} />
     } else {

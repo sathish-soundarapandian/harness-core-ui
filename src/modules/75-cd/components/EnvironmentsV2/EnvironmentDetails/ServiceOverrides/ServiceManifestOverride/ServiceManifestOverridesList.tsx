@@ -64,7 +64,7 @@ function ServiceManifestOverridesList({
               getManifestLocation(manifest?.type as OverrideManifestTypes, manifest?.spec?.store?.type)
             )
 
-            const isHarnessStore = manifest?.spec.store.type === ManifestStoreMap.Harness
+            const isHarnessStore = manifest?.spec?.store?.type === ManifestStoreMap.Harness
 
             return (
               <div className={css.rowItem} key={`${manifest?.identifier}-${index}`}>

@@ -50,11 +50,6 @@ describe('Pipeline Studio', () => {
   }
 
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
 
     cy.intercept('GET', gitSyncEnabledCall, {
@@ -150,11 +145,6 @@ describe('Pipeline Studio', () => {
 
 describe('Input Sets', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
     cy.intercept('GET', inputSetsCall, { fixture: 'pipeline/api/inputSet/emptyInputSetsList' }).as('emptyInputSetList')
     cy.intercept('POST', inputSetsTemplateCall, {
@@ -195,11 +185,6 @@ describe('Input Sets', () => {
 
 describe('Triggers', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
     cy.intercept('GET', getTriggerListAPI, { fixture: 'pipeline/api/triggers/emptyTriggersList' }).as(
       'emptyTriggersList'
@@ -240,11 +225,6 @@ describe('Triggers', () => {
 
 describe('Templates', () => {
   beforeEach(() => {
-    cy.on('uncaught:exception', () => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
     cy.initializeRoute()
     cy.intercept('GET', templatesListCall, { fixture: 'template/api/emptyTemplatesList' }).as('emptyTemplatesList')
     cy.intercept('POST', stepLibrary, { fixture: 'ci/api/common/stepLibraryResponse.json' }).as('stepLibrary')

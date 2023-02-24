@@ -58,6 +58,7 @@ export interface ContinousVerificationData extends StepElementConfig {
   spec: {
     monitoredServiceRef?: string
     monitoredServiceName?: string
+    isMultiServicesOrEnvs: boolean
     type?: string
     healthSources?: {
       identifier: string

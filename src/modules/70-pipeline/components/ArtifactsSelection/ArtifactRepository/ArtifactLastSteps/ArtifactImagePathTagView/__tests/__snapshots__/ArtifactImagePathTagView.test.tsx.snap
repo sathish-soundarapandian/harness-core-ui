@@ -3,8 +3,8 @@
 exports[`ArtifactImagePathTagView tests check if NoTagResults renders correctly and custom tagErrorMessage exists in the document 1`] = `
 <div>
   <p
-    class="StyledProps--font Text--lineclamp StyledProps--main"
-    style="--text-line-clamp: 1; width: 400px;"
+    class="StyledProps--font Text--lineclamp StyledProps--main StyledProps--margin-small"
+    style="--text-line-clamp: 1; width: 384px;"
   >
     tagErrorMessage
   </p>

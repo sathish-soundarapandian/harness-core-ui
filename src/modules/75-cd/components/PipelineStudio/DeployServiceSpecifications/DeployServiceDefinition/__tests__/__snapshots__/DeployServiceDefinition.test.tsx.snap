@@ -3,7 +3,7 @@
 exports[`DeployServiceDefinition Changing the deployment type when the stage contains other data should open the confirmation dialogue 1`] = `
 <div>
   <div
-    class="contentSection nonModalView"
+    class="contentSection"
   >
     <div
       class="tabHeading"
@@ -249,7 +249,7 @@ exports[`DeployServiceDefinition Changing the deployment type when the stage con
 exports[`DeployServiceDefinition checking on the gitops with other stage data should render a dialogue confirmation 1`] = `
 <div>
   <div
-    class="contentSection nonModalView"
+    class="contentSection"
   >
     <div
       class="tabHeading"
@@ -495,7 +495,7 @@ exports[`DeployServiceDefinition checking on the gitops with other stage data sh
 exports[`DeployServiceDefinition should render DeployServiceDefinition and switch between deployment type without opening dialog (no manifest/artifact data) 1`] = `
 <div>
   <div
-    class="contentSection nonModalView"
+    class="contentSection"
   >
     <div
       class="tabHeading"

@@ -235,35 +235,39 @@ exports[`ServiceDetailsHeader should render ServiceDetailsHeader 1`] = `
             </p>
           </div>
           <div
-            class="Layout--vertical StyledProps--main"
+            class="Layout--horizontal StyledProps--main"
           >
             <div
-              class="Layout--horizontal StyledProps--main StyledProps--margin-bottom-small"
+              class="Layout--vertical StyledProps--main"
             >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black StyledProps--margin-right-small"
+              <div
+                class="Layout--horizontal StyledProps--main StyledProps--margin-bottom-small"
               >
-                created
-              </p>
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black StyledProps--margin-right-small"
+                >
+                  created
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                >
+                  Feb 12, 2022 06:50 am
+                </p>
+              </div>
+              <div
+                class="Layout--horizontal StyledProps--main"
               >
-                Feb 12, 2022 06:50 am
-              </p>
-            </div>
-            <div
-              class="Layout--horizontal StyledProps--main"
-            >
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black StyledProps--margin-right-small"
-              >
-                lastUpdated
-              </p>
-              <p
-                class="StyledProps--font StyledProps--main StyledProps--font-size-small"
-              >
-                Feb 12, 2022 06:50 am
-              </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small StyledProps--font-weight-semi-bold StyledProps--color StyledProps--color-black StyledProps--margin-right-small"
+                >
+                  lastUpdated
+                </p>
+                <p
+                  class="StyledProps--font StyledProps--main StyledProps--font-size-small"
+                >
+                  Feb 12, 2022 06:50 am
+                </p>
+              </div>
             </div>
           </div>
         </div>

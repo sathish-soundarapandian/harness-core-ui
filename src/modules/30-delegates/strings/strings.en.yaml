@@ -172,7 +172,7 @@ commandLineCreation:
   firstComandHeadingKubernetes: Copy the Kubernetes YAML file where you want to install the delegate
   firstComandKubernetesFirstLine: curl -LO https://raw.githubusercontent.com/harness/delegate-kubernetes-manifest/main/harness-delegate.yaml
   lastCommandKubernetesLastLine: kubectl apply -f harness-delegate.yaml
-  commandsKubernetesHeading: Update your file by replacing the palceholders with your actual values
+  commandsKubernetesHeading: Update your file by replacing the placeholders with your actual values
   kubernetesFirstDirectionPartOne: '"PUT_YOUR_DELEGATE_NAME"'
   kubernetesFirstDirectionPartTwo: with the desired delegate name
   kubernetesSecondDirectionPartOne: '"PUT_YOUR_ACCOUNT_ID"'

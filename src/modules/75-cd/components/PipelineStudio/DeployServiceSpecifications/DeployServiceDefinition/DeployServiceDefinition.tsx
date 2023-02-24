@@ -10,7 +10,6 @@ import { Layout, useConfirmationDialog } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { debounce, defaultTo, get, isEqual, set } from 'lodash-es'
 import produce from 'immer'
-import cx from 'classnames'
 import type { ServiceDefinition, StageElementConfig, TemplateLinkConfig } from 'services/cd-ng'
 import { usePipelineContext } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineContext'
 import { useStrings } from 'framework/strings'
@@ -277,7 +276,7 @@ function DeployServiceDefinition(): React.ReactElement {
   }
 
   return (
-    <div className={cx(css.contentSection, isServiceEntityModalView ? css.editServiceModal : css.nonModalView)}>
+    <div className={css.contentSection}>
       <div className={css.tabHeading} id="serviceDefinition">
         {getString('cd.pipelineSteps.serviceTab.manifest.serviceDefinition')}
       </div>

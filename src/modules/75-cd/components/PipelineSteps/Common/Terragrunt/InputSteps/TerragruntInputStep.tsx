@@ -7,12 +7,12 @@
 
 import React from 'react'
 import cx from 'classnames'
-import { FormikForm, Label, Text, Container } from '@harness/uicore'
+import { FormikForm, Label, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { get } from 'lodash-es'
 import type { FormikContextType } from 'formik'
 import { useStrings } from 'framework/strings'
-import type { TerraformBackendConfigSpec } from 'services/cd-ng'
+import type { TerraformBackendConfigSpec, TerragruntVarFileWrapper } from 'services/cd-ng'
 import List from '@common/components/List/List'
 import { MonacoTextField } from '@common/components/MonacoTextField/MonacoTextField'
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
@@ -25,6 +25,7 @@ import type { TerragruntData, TerragruntProps } from '../TerragruntInterface'
 import ConfigInputs from './ConfigSection'
 import { TerraformStoreTypes } from '../../Terraform/TerraformInterfaces'
 import TgRemoteSection from './TGRemoteSection'
+import InlineVarFileInputSet from '../../VarFile/InlineVarFileInputSet'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 
 export default function TerragruntInputStep<T extends TerragruntData = TerragruntData>(
@@ -108,62 +109,16 @@ export default function TerragruntInputStep<T extends TerragruntData = Terragrun
         </Label>
       )}
 
-      {get(config, 'spec.varFiles')?.map((varFile: any, index: number) => {
+      {get(config, 'spec.varFiles')?.map((varFile: TerragruntVarFileWrapper, index: number) => {
         if (varFile.varFile?.type === TerraformStoreTypes.Inline) {
           return (
-            <React.Fragment key={`${path}.spec.configuration.spec.varFiles[${index}]`}>
-              <Container flex width={120} padding={{ bottom: 'small' }}>
-                <Text font={{ weight: 'bold' }}>{getString('cd.varFile')}:</Text>
-                {varFile.varFile?.identifier}
-              </Container>
-
-              {isValueRuntimeInput(get(varFile.varFile, 'spec.content')) && (
-                <div
-                  className={cx(stepCss.formGroup, stepCss.md)}
-                  // needed to prevent the run pipeline to get triggered on pressing enter within TFMonaco editor
-                  onKeyDown={
-                    /* istanbul ignore next */ e => {
-                      e.stopPropagation()
-                    }
-                  }
-                >
-                  <MultiTypeFieldSelector
-                    name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.content`}
-                    label={getString('pipelineSteps.content')}
-                    defaultValueToReset=""
-                    allowedTypes={allowableTypes}
-                    skipRenderValueInExpressionLabel
-                    disabled={readonly}
-                    configureOptionsProps={{
-                      isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
-                    }}
-                    expressionRender={
-                      /* istanbul ignore next */ () => {
-                        return (
-                          <MonacoTextField
-                            name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.content`}
-                            expressions={expressions}
-                            height={200}
-                            disabled={readonly}
-                            fullScreenAllowed
-                            fullScreenTitle={getString('pipelineSteps.content')}
-                          />
-                        )
-                      }
-                    }
-                  >
-                    <MonacoTextField
-                      name={`${path}.spec.configuration.spec.varFiles[${index}].varFile.spec.content`}
-                      expressions={expressions}
-                      height={200}
-                      disabled={readonly}
-                      fullScreenAllowed
-                      fullScreenTitle={getString('pipelineSteps.content')}
-                    />
-                  </MultiTypeFieldSelector>
-                </div>
-              )}
-            </React.Fragment>
+            <InlineVarFileInputSet<TerragruntVarFileWrapper>
+              readonly={readonly}
+              stepViewType={stepViewType}
+              allowableTypes={allowableTypes}
+              varFilePath={`${path}.spec.configuration.spec.varFiles[${index}]`}
+              inlineVarFile={varFile}
+            />
           )
         } else if (varFile.varFile?.type === TerraformStoreTypes.Remote) {
           return (

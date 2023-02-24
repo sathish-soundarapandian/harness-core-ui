@@ -48,6 +48,7 @@ export interface UpdateReleaseRepoStepData extends StepElementConfig {
 export interface UpdateReleaseRepoFormData extends StepElementConfig {
   spec: {
     variables?: Array<ReleaseRepoVariable>
+    prTitle?: string
   }
 }
 

@@ -31,6 +31,7 @@ import {
   renderConnectorAndRepoName,
   runtimeInputGearWidth
 } from '@pipeline/components/PipelineStudio/RightBar/RightBarUtils'
+import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import {
   AllMultiTypeInputTypesForInputSet,
   AllMultiTypeInputTypesForStep,
@@ -92,7 +93,8 @@ export const CIStep: React.FC<CIStepProps> = props => {
       labelKey,
       inputProps,
       fieldPath,
-      optional
+      optional,
+      configureOptionsProps
     }: {
       name: string
       tooltipId: string
@@ -100,6 +102,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
       inputProps: MultiTypeTextProps['multiTextInputProps']
       fieldPath: string
       optional?: boolean
+      configureOptionsProps?: Partial<ConfigureOptionsProps>
     }) => {
       if (isInputSetView && shouldRenderRunTimeInputViewWithAllowedValues(fieldPath, template)) {
         return renderMultiTypeInputWithAllowedValues({
@@ -138,6 +141,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
             tooltipId
           })}
           multiTextInputProps={inputProps}
+          configureOptionsProps={configureOptionsProps}
         />
       )
     },
@@ -233,6 +237,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
                 allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
                 disabled: readonly
               }}
+              configureOptionsProps={{ hideExecutionTimeField: true }}
             />
           )
         ) : null}
@@ -270,6 +275,7 @@ export const CIStep: React.FC<CIStepProps> = props => {
               }}
               gitScope={gitScope}
               setRefValue
+              configureOptionsProps={{ hideExecutionTimeField: true }}
             />
           </Container>
         )
@@ -302,7 +308,8 @@ export const CIStep: React.FC<CIStepProps> = props => {
             codebaseRuntimeInputs: enableFields['spec.connectorAndRepo'].codebaseRuntimeInputs,
             connectorAndRepoNamePath: `${prefix}spec`,
             allowableTypes: isInputSetView ? AllMultiTypeInputTypesForInputSet : AllMultiTypeInputTypesForStep,
-            codeBaseInputFieldFormName: { repoName: `${prefix}spec.repoName` }
+            codeBaseInputFieldFormName: { repoName: `${prefix}spec.repoName` },
+            configureOptionsProps: { hideExecutionTimeField: true }
           })}
         </Container>
       )}
@@ -330,7 +337,8 @@ export const CIStep: React.FC<CIStepProps> = props => {
             tooltipId: enableFields['spec.image'].tooltipId,
             labelKey: 'imageLabel',
             inputProps: enableFields['spec.image'].multiTextInputProps,
-            fieldPath: 'spec.image'
+            fieldPath: 'spec.image',
+            configureOptionsProps: { hideExecutionTimeField: true }
           })}
         </Container>
       ) : null}
@@ -597,7 +605,8 @@ export const CIStep: React.FC<CIStepProps> = props => {
               },
               disabled: readonly
             },
-            fieldPath: 'spec.imageName'
+            fieldPath: 'spec.imageName',
+            configureOptionsProps: { hideExecutionTimeField: true }
           })}
         </Container>
       ) : null}

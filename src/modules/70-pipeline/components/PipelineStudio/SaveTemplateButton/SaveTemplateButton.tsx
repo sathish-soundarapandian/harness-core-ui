@@ -17,6 +17,7 @@ import type { StepOrStepGroupOrTemplateStepData } from '@pipeline/components/Pip
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { useSaveAsTemplate } from '@pipeline/components/PipelineStudio/SaveTemplateButton/useSaveAsTemplate'
 import type { StoreMetadata } from '@common/constants/GitSyncTypes'
+import { StageType } from '@pipeline/utils/stageHelpers'
 import css from './SaveTemplateButton.module.scss'
 
 export type TemplateData = StepOrStepGroupOrTemplateStepData | StageElementConfig | PipelineInfoConfig
@@ -53,6 +54,7 @@ export function SaveTemplateButton({
       size={ButtonSize.SMALL}
       icon="upload-box"
       iconProps={{ color: Color.PRIMARY_7 }}
+      disabled={type === 'Stage' && (data as StageElementConfig)?.type === StageType.PIPELINE}
       onClick={save}
       permission={{
         permission: PermissionIdentifier.EDIT_TEMPLATE,
