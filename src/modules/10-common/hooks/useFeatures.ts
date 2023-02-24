@@ -100,8 +100,14 @@ export function useFeature(props: FeatureProps): CheckFeatureReturn {
 export function useFeatures(props: FeaturesProps): CheckFeaturesReturn {
   const { requestFeatures, checkFeature, requestLimitFeature, checkLimitFeature, getRestrictionType } =
     useFeaturesContext()
-  const { licenseInformation, CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE } =
-    useLicenseStore()
+  const {
+    licenseInformation,
+    CI_LICENSE_STATE,
+    CD_LICENSE_STATE,
+    FF_LICENSE_STATE,
+    CCM_LICENSE_STATE,
+    CHAOS_LICENSE_STATE
+  } = useLicenseStore()
 
   const featureEnforced = useGetFeatureEnforced()
 
@@ -117,9 +123,10 @@ export function useFeatures(props: FeaturesProps): CheckFeaturesReturn {
       const restrictionType = getRestrictionType({
         featureRequest: { featureName },
         licenseInformation,
-        licenseState: { CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE },
+        licenseState: { CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE, CHAOS_LICENSE_STATE },
         isCommunity
       })
+
       const isLimit = restrictionType && restrictionType !== RestrictionType.AVAILABILITY
       if (isLimit) {
         accLimitFeatures.push(featureName)
@@ -204,8 +211,14 @@ export function useGetFirstDisabledFeature(featuresRequest?: FeaturesRequest): F
 
 export function useFeatureRequiredPlans(featureName?: FeatureIdentifier): string[] {
   const { featureMap, getEdition } = useFeaturesContext()
-  const { licenseInformation, CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE } =
-    useLicenseStore()
+  const {
+    licenseInformation,
+    CI_LICENSE_STATE,
+    CD_LICENSE_STATE,
+    FF_LICENSE_STATE,
+    CCM_LICENSE_STATE,
+    CHAOS_LICENSE_STATE
+  } = useLicenseStore()
   const isCommunity = useGetCommunity()
 
   // for community, do not return plans
@@ -217,7 +230,7 @@ export function useFeatureRequiredPlans(featureName?: FeatureIdentifier): string
   const currentEdition = getEdition({
     moduleType,
     licenseInformation,
-    licenseState: { CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE },
+    licenseState: { CI_LICENSE_STATE, CD_LICENSE_STATE, FF_LICENSE_STATE, CCM_LICENSE_STATE, CHAOS_LICENSE_STATE },
     isCommunity
   })
   const restrictionMetadataMap = featureName && featureMap.get(featureName)?.restrictionMetadataMap

@@ -77,6 +77,10 @@ interface UsageProps {
   cv?: {
     activeServices?: UsageProp
   }
+  chaos?: {
+    totalChaosExperimentRuns?: UsageProp
+    totalChaosInfrastructures?: UsageProp
+  }
 }
 
 interface LimitProps {
@@ -319,6 +323,19 @@ export function useGetUsage(module: ModuleName): UsageReturn {
     },
     lazy: module !== ModuleName.CV
   })
+
+  // const {
+  //   data: chaosUsageData,
+  //   loading: loadingCHAOSUsage,
+  //   error: chaosUsageError,
+  //   refetch: refetchCHAOSUsage
+  // } = useGetCHAOSLicenseUsage({
+  //   queryParams: {
+  //     accountIdentifier: accountId,
+  //     timestamp
+  //   },
+  //   lazy: module !== ModuleName.CHAOS
+  // })
 
   function setUsageByModule(): void {
     switch (module) {

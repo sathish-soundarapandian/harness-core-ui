@@ -162,6 +162,7 @@ export default function FeatureBanner(): React.ReactElement | null {
     {},
     window.sessionStorage
   )
+  // console.log(activeModuleFeatures)
   const features = useFeatures({ featuresRequest: { featureNames: defaultTo(activeModuleFeatures?.features, []) } })
 
   const moduleName: ModuleName = module ? moduleToModuleNameMapping[module] : ModuleName.COMMON

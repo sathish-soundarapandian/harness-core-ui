@@ -77,6 +77,19 @@ import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStor
 import { ModuleName } from 'framework/types/ModuleName'
 import { RedirectToSubscriptionsFactory } from '@common/Redirects'
 import { Duration } from '@common/exports'
+import featureFactory from 'framework/featureStore/FeaturesFactory'
+import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
+import {
+  getActiveUsageNumber,
+  getPercentageNumber,
+  isFeatureCountActive,
+  isFeatureLimitBreachedIncludesExceeding,
+  isFeatureLimitMet,
+  isFeatureOveruseActive,
+  isFeatureWarningActive,
+  isFeatureWarningActiveIncludesLimit
+} from '@common/layouts/FeatureBanner'
+import { BannerType } from '@common/layouts/Constants'
 import ChaosHomePage from './pages/home/ChaosHomePage'
 import type { ChaosCustomMicroFrontendProps } from './interfaces/Chaos.types'
 import ChaosSideNav from './components/ChaosSideNav/ChaosSideNav'
@@ -246,6 +259,108 @@ export default function ChaosRoutes(): React.ReactElement {
       permissionLabels: {
         [PermissionIdentifier.VIEW_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.view" />,
         [PermissionIdentifier.EDIT_CHAOS_GAMEDAY]: <LocaleString stringID="rbac.permissionLabels.createEdit" />
+      }
+    })
+
+    featureFactory.registerFeaturesByModule('chaos', {
+      features: [FeatureIdentifier.MAX_CHAOS_INFRASTRUCTURES, FeatureIdentifier.MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH],
+      renderMessage: (props, _, additionalLicenseProps = {}) => {
+        const { isTeamEdition: isCHAOSTeam, isEnterpriseEdition: isCHAOSEnterprise } = additionalLicenseProps
+        const isTeamOrEnterprise = isCHAOSEnterprise || isCHAOSTeam
+        const featuresMap = props.features
+        const maxTotalChaosInfrastructure = featuresMap.get(FeatureIdentifier.MAX_CHAOS_INFRASTRUCTURES) // tested both
+        const maxTotalChaosExperimentRunsPerMonth = featuresMap.get(
+          FeatureIdentifier.MAX_CHAOS_EXPERIMENT_RUNS_PER_MONTH
+        )
+
+        // Check for limit breach
+        const isMaxExpermentRunPerMonthBreached = isFeatureLimitBreachedIncludesExceeding(
+          maxTotalChaosExperimentRunsPerMonth
+        )
+        let limitBreachMessageString = ''
+        if (isMaxExpermentRunPerMonthBreached) {
+          limitBreachMessageString = 'Limit has been reached, please upgrade'
+        }
+
+        if (limitBreachMessageString) {
+          return {
+            message: () => limitBreachMessageString,
+            bannerType: BannerType.LEVEL_UP
+          }
+        }
+
+        // Checking for limit overuse warning
+        let overuseMessageString = ''
+        const isChaosExperimentLimitOverused = isFeatureOveruseActive(maxTotalChaosExperimentRunsPerMonth)
+
+        if (isChaosExperimentLimitOverused && isTeamOrEnterprise) {
+          overuseMessageString = 'Being overused'
+        }
+        if (overuseMessageString) {
+          return {
+            message: () => overuseMessageString,
+            bannerType: BannerType.OVERUSE
+          }
+        }
+
+        // Checking for limit usage warning
+        let warningMessageString = ''
+        const isMaxChaosInfrastructreWarningActive = isFeatureCountActive(maxTotalChaosInfrastructure)
+        const isMaxTotalChaosExperimentWarningActive = isFeatureWarningActive(maxTotalChaosExperimentRunsPerMonth)
+        const isMaxTotalChaosExperimentLimitMet = isFeatureLimitMet(maxTotalChaosExperimentRunsPerMonth)
+        const isChaosInfrastructureWarningActive = isFeatureWarningActiveIncludesLimit(maxTotalChaosInfrastructure)
+
+        if (
+          isTeamOrEnterprise &&
+          isMaxTotalChaosExperimentWarningActive &&
+          maxTotalChaosExperimentRunsPerMonth?.featureDetail?.count &&
+          maxTotalChaosExperimentRunsPerMonth.featureDetail.limit
+        ) {
+          const usagePercent = getActiveUsageNumber(maxTotalChaosExperimentRunsPerMonth)
+
+          warningMessageString = `Max runs limit almost reached: ${usagePercent}`
+        } else if (
+          isMaxChaosInfrastructreWarningActive &&
+          maxTotalChaosInfrastructure?.featureDetail?.count &&
+          maxTotalChaosInfrastructure.featureDetail.limit &&
+          isTeamOrEnterprise
+        ) {
+          const usagePercent = getPercentageNumber(maxTotalChaosInfrastructure)
+
+          warningMessageString = `Max chaos infrastructure limit almost reached: ${usagePercent}`
+        } else if (
+          isMaxTotalChaosExperimentLimitMet &&
+          maxTotalChaosInfrastructure?.featureDetail?.count &&
+          maxTotalChaosInfrastructure.featureDetail.limit &&
+          isTeamOrEnterprise
+        ) {
+          const usagePercent = getActiveUsageNumber(maxTotalChaosExperimentRunsPerMonth)
+
+          warningMessageString = `Max runs limit has been reached: ${usagePercent}, please upgrade`
+        } else if (
+          isChaosInfrastructureWarningActive &&
+          maxTotalChaosInfrastructure?.featureDetail?.count &&
+          maxTotalChaosInfrastructure.featureDetail.limit &&
+          isTeamOrEnterprise
+        ) {
+          const usagePercent = getActiveUsageNumber(maxTotalChaosInfrastructure)
+
+          warningMessageString = `Max chaos infrastructure limit has been reached: ${usagePercent}, please upgrade`
+        }
+
+        if (warningMessageString) {
+          return {
+            message: () => warningMessageString,
+            bannerType: BannerType.INFO
+          }
+        }
+
+        // If neither of limit breach/ warning/ overuse needs to be shown, return with an empty string.
+        // This will ensure no banner is shown
+        return {
+          message: () => '',
+          bannerType: BannerType.LEVEL_UP
+        }
       }
     })
   }
