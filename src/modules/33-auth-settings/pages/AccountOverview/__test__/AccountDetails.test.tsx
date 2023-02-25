@@ -14,7 +14,8 @@ import {
   useUpdateAccountNameNG,
   useUpdateAccountCrossGenerationAccessEnabledNG
 } from 'services/cd-ng'
-import { communityLicenseStoreValues } from '@common/utils/DefaultAppStoreData'
+
+import { communityLicenseStoreValues, cdLicenseStoreValues } from '@common/utils/DefaultAppStoreData'
 import AccountDetails from '../views/AccountDetails'
 
 jest.mock('services/cd-ng')
@@ -70,7 +71,7 @@ beforeEach(() => {
 describe('AccountDetails', () => {
   test('should render AccountDetails page with values', () => {
     const { container, getByText } = render(
-      <TestWrapper>
+      <TestWrapper defaultLicenseStoreValues={cdLicenseStoreValues}>
         <AccountDetails />
       </TestWrapper>
     )
@@ -81,7 +82,7 @@ describe('AccountDetails', () => {
 
   test('should call update default version when click save from default version form', async () => {
     const { getByText } = render(
-      <TestWrapper>
+      <TestWrapper defaultLicenseStoreValues={cdLicenseStoreValues}>
         <AccountDetails />
       </TestWrapper>
     )
@@ -94,7 +95,7 @@ describe('AccountDetails', () => {
 
   test('should call update account name api when edit name and save', async () => {
     const { getByText, container } = render(
-      <TestWrapper>
+      <TestWrapper defaultLicenseStoreValues={cdLicenseStoreValues}>
         <AccountDetails />
       </TestWrapper>
     )
@@ -119,7 +120,7 @@ describe('AccountDetails', () => {
       }
     })
     const { getByText, container } = render(
-      <TestWrapper>
+      <TestWrapper defaultLicenseStoreValues={cdLicenseStoreValues}>
         <AccountDetails />
       </TestWrapper>
     )
@@ -145,7 +146,7 @@ describe('AccountDetails', () => {
       }
     })
     const { getByText } = render(
-      <TestWrapper>
+      <TestWrapper defaultLicenseStoreValues={cdLicenseStoreValues}>
         <AccountDetails />
       </TestWrapper>
     )

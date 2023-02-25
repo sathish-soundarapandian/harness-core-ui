@@ -20,6 +20,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useSwitchAccountModal from '@common/modals/SwitchAccount/useSwitchAccountModal'
 import { useGetCommunity } from '@common/utils/utils'
+import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import AccountNameForm from './AccountNameForm'
 import css from '../AccountOverview.module.scss'
 
@@ -41,11 +42,11 @@ const AccountDetails: React.FC = () => {
     accountIdentifier: accountId
   })
   const [updateAccountName, setUpdateAccountName] = React.useState(false)
-
+  const { licenseInformation } = useLicenseStore()
   const { openDefaultExperienceModal } = useDefaultExperienceModal({ refetchAcct })
   const { openSwitchAccountModal } = useSwitchAccountModal({})
   const isCommunity = useGetCommunity()
-
+  const isCDActive = licenseInformation?.['CD']?.status === 'ACTIVE'
   const accountData = data?.data
   const [crossAccessVariable, setCrossAccessVariable] = React.useState(false)
   useEffect(() => {
@@ -126,18 +127,21 @@ const AccountDetails: React.FC = () => {
           {accountData?.cluster}
         </Text>
       </Layout.Horizontal>
-      <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} margin={{ bottom: 'large' }}>
-        <Text className={css.minWidth}>{getString('common.allowFirstGenAccess')}</Text>
-        <Switch
-          disabled={PermissionIdentifier.EDIT_ACCOUNT ? false : true}
-          onChange={async () => {
-            setCrossAccessVariable(!crossAccessVariable)
-            await updateAcctUpdate({ ...accountData2 })
-          }}
-          className={css.switch}
-          checked={crossAccessVariable}
-        />
-      </Layout.Horizontal>
+      {isCDActive ? (
+        <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} margin={{ bottom: 'large' }}>
+          <Text className={css.minWidth}>{getString('common.allowFirstGenAccess')}</Text>
+          <Switch
+            disabled={PermissionIdentifier.EDIT_ACCOUNT ? false : true}
+            onChange={async () => {
+              setCrossAccessVariable(!crossAccessVariable)
+              await updateAcctUpdate({ ...accountData2 })
+            }}
+            className={css.switch}
+            checked={crossAccessVariable}
+          />
+        </Layout.Horizontal>
+      ) : null}
+
       {crossAccessVariable ? (
         <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
           <Text className={css.minWidth}>{getString('common.defaultExperience')}</Text>

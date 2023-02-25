@@ -59,3 +59,11 @@ export const communityLicenseStoreValues = {
     }
   }
 }
+export const cdLicenseStoreValues = {
+  licenseInformation: {
+    CD: {
+      edition: Editions.TEAM,
+      status: 'ACTIVE'
+    }
+  }
+}
