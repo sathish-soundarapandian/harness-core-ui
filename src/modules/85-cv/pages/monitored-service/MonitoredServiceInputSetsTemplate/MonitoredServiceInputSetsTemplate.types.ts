@@ -7,6 +7,7 @@
 
 import type { SelectOption } from '@harness/uicore'
 import type { MonitoredServiceDTO } from 'services/cv'
+import type { TemplateSummaryResponse } from 'services/template-ng'
 
 export interface TemplateDataInterface {
   identifier: string
@@ -14,6 +15,7 @@ export interface TemplateDataInterface {
   orgIdentifier: string
   projectIdentifier: string
   versionLabel: string
+  templateScope?: TemplateSummaryResponse['templateScope']
 }
 
 export interface MonitoredServiceInputSetInterface {
