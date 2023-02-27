@@ -21,6 +21,7 @@ import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { PermissionRequest } from '@rbac/hooks/usePermission'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 
 interface ContextMenuProps {
   project: Project
@@ -36,7 +37,7 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
   const { accountId } = useParams<AccountPathProps>()
   const { getString } = useStrings()
   const { project, editProject, collaborators, setMenuOpen, openDialog } = props
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
   const permissionRequest: Optional<PermissionRequest, 'permission'> = {
@@ -149,10 +150,10 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
       })
     )
   }
-
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   return (
     <Menu style={{ minWidth: 'unset' }}>
-      {CDNG_ENABLED && project.modules?.includes(ModuleName.CD) ? (
+      {shouldVisible && project.modules?.includes(ModuleName.CD) ? (
         <Menu.Item
           text={
             <Layout.Horizontal spacing="xsmall">

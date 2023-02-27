@@ -11,6 +11,8 @@ import { useStrings, StringKeys } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { DashboardTags, MappedDashboardTagOptions } from '@dashboards/types/DashboardTypes.types'
+import { ModuleName } from 'framework/types/ModuleName'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import moduleTagCss from '@dashboards/common/ModuleTags.module.scss'
 
 export interface ModuleTagsFilterProps {
@@ -20,8 +22,7 @@ export interface ModuleTagsFilterProps {
 
 const ModuleTagsFilter: React.FC<ModuleTagsFilterProps> = ({ selectedFilter, setPredefinedFilter }) => {
   const { getString } = useStrings()
-  const { CDNG_ENABLED, CENG_ENABLED, CING_ENABLED, CFNG_ENABLED, CUSTOM_DASHBOARD_V2, CI_TI_DASHBOARDS_ENABLED } =
-    useFeatureFlags()
+  const { CENG_ENABLED, CING_ENABLED, CFNG_ENABLED, CUSTOM_DASHBOARD_V2, CI_TI_DASHBOARDS_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
 
   const renderTagsFilter = (
@@ -44,12 +45,13 @@ const ModuleTagsFilter: React.FC<ModuleTagsFilterProps> = ({ selectedFilter, set
       )
     )
   }
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   return (
     <>
       {renderTagsFilter(DashboardTags.HARNESS, moduleTagCss.harnessTag, 'dashboards.modules.harness', true)}
       {renderTagsFilter(DashboardTags.CE, moduleTagCss.ceTag, 'common.purpose.ce.cloudCost', CENG_ENABLED)}
       {renderTagsFilter(DashboardTags.CI, moduleTagCss.ciTag, 'buildsText', CING_ENABLED || CI_TI_DASHBOARDS_ENABLED)}
-      {renderTagsFilter(DashboardTags.CD, moduleTagCss.cdTag, 'deploymentsText', CDNG_ENABLED || CUSTOM_DASHBOARD_V2)}
+      {renderTagsFilter(DashboardTags.CD, moduleTagCss.cdTag, 'deploymentsText', shouldVisible || CUSTOM_DASHBOARD_V2)}
       {renderTagsFilter(DashboardTags.CF, moduleTagCss.cfTag, 'common.purpose.cf.continuous', CFNG_ENABLED)}
       {renderTagsFilter(
         DashboardTags.STO,

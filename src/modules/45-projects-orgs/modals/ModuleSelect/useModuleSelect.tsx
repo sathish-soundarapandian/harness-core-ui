@@ -30,6 +30,7 @@ import ModuleSelectionFactory from '@projects-orgs/factories/ModuleSelectionFact
 import { handleUpdateLicenseStore, useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { Editions, ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import routes from '@common/RouteDefinitions'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import css from './useModuleSelect.module.scss'
 
 export interface UseModuleSelectModalProps {
@@ -245,7 +246,7 @@ export const useModuleSelectModal = ({
   const [selectedModuleName, setSelectedModuleName] = React.useState<ModuleName>()
   const [projectData, setProjectData] = React.useState<Project>()
 
-  const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
   const modalProps: IDialogProps = {
     isOpen: true,
@@ -259,7 +260,8 @@ export const useModuleSelectModal = ({
     }
   }
   const infoCards: InfoCards[] = []
-  if (CDNG_ENABLED) {
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
+  if (shouldVisible) {
     infoCards.push({
       name: ModuleName.CD
     })

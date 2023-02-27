@@ -11,12 +11,13 @@ import { ModalDialog } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import ExecutionGraph, {
   ExecutionGraphAddStepEvent,
   ExecutionGraphEditStepEvent,
   ExecutionGraphRefObj
 } from '@pipeline/components/PipelineStudio/ExecutionGraph/ExecutionGraph'
+import { ModuleName } from 'framework/types/ModuleName'
 import { DrawerTypes } from '@pipeline/components/PipelineStudio/PipelineContext/PipelineActions'
 import {
   usePipelineContext,
@@ -56,20 +57,17 @@ export function StepGroupTemplateDiagram(): React.ReactElement {
 
   const { getString } = useStrings()
   const { licenseInformation } = useLicenseStore()
-  const { CDNG_ENABLED, CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
+  const { CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
   const selectedStage = getStageFromPipeline(selectedStageId).stage
   const originalStage = getStageFromPipeline(selectedStageId, originalPipeline).stage
   const executionRef = React.useRef<ExecutionGraphRefObj | null>(null)
   const [stages, setStages] = React.useState<Array<PipelineStageProps>>([])
 
   const { addTemplate } = useAddStepTemplate({ executionRef: executionRef.current })
-
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   React.useEffect(() => {
     const tempStages: PipelineStageProps[] = []
-    tempStages.push(
-      stagesCollection.getStage(StageType.DEPLOY, !!licenseInformation['CD'] && !!CDNG_ENABLED, getString)
-        ?.props as PipelineStageProps
-    )
+    tempStages.push(stagesCollection.getStage(StageType.DEPLOY, shouldVisible, getString)?.props as PipelineStageProps)
     tempStages.push(
       stagesCollection.getStage(StageType.BUILD, !!licenseInformation['CI'] && !!CING_ENABLED, getString)
         ?.props as PipelineStageProps
