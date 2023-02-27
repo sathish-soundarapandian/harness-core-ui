@@ -21,7 +21,8 @@ import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import routes from '@common/RouteDefinitions'
 import type { PipelineType, ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { TemplateSummaryResponse, useGetTemplate } from 'services/template-ng'
+import { useGetTemplateQuery } from 'services/template-rq'
+import type { TemplateSummaryResponse } from 'services/template-ng'
 import {
   getIdentifierFromValue,
   getScopeBasedProjectPathParams,
@@ -74,16 +75,22 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
 
   const readyOnly = isReadonly || !enabled
 
-  const { data, loading } = useGetTemplate({
-    templateIdentifier: getIdentifierFromValue(templateLinkConfig.templateRef),
-    queryParams: {
-      ...getScopeBasedProjectPathParams(params, scope),
-      versionLabel: defaultTo(templateLinkConfig.versionLabel, ''),
-      ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier, branch })
+  const { data, isLoading: loading } = useGetTemplateQuery(
+    {
+      templateIdentifier: getIdentifierFromValue(templateLinkConfig.templateRef),
+      queryParams: {
+        ...getScopeBasedProjectPathParams(params, scope),
+        versionLabel: defaultTo(templateLinkConfig.versionLabel, ''),
+        ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier, branch })
+      },
+      headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) }
     },
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
-    lazy: storeMetadata?.storeType === StoreType.REMOTE && isEmpty(storeMetadata?.connectorRef)
-  })
+    {
+      enabled: !(storeMetadata?.storeType === StoreType.REMOTE && isEmpty(storeMetadata?.connectorRef)),
+      staleTime: 5 * 60 * 1000,
+      retry: false
+    }
+  )
 
   const selectedTemplate = React.useMemo(
     () => (data?.data ? { ...data.data, versionLabel: templateLinkConfig.versionLabel } : undefined),

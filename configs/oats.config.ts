@@ -61,6 +61,24 @@ export default defineConfig({
           allowedOperationIds: ['getPipelineSummary', 'validateTemplateInputs']
         })
       ]
+    },
+    template: {
+      url: 'https://stress.harness.io/template/api/swagger.json',
+      output: 'src/services/template-rq',
+      fileHeader,
+      genOnlyUsed: true,
+      transformer(spec) {
+        return {
+          ...spec,
+          paths: mapKeys(spec.paths, (_val, key) => `template/api${key}`)
+        }
+      },
+      plugins: [
+        reactQueryPlugin({
+          customFetcher: 'services/fetcher',
+          allowedOperationIds: ['getTemplate', 'getTemplateInputSetYaml']
+        })
+      ]
     }
   }
 })

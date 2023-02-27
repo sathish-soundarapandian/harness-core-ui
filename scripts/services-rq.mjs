@@ -8,7 +8,7 @@
 import prompts from 'prompts'
 import { $ } from 'zx'
 ;(async () => {
-  const services = ['cd-ng', 'pipeline']
+  const services = ['cd-ng', 'pipeline', 'template']
 
   services.sort()
 

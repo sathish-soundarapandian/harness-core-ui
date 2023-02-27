@@ -20,7 +20,8 @@ import { useStrings } from 'framework/strings'
 import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/AbstractStepFactory'
 import type { Error, ExecutionWrapperConfig, StepElementConfig, StepGroupElementConfig } from 'services/cd-ng'
 import type { ProjectPathProps, GitQueryParams } from '@common/interfaces/RouteInterfaces'
-import { getsMergedTemplateInputYamlPromise, useGetTemplate, useGetTemplateInputSetYaml } from 'services/template-ng'
+import { getsMergedTemplateInputYamlPromise } from 'services/template-ng'
+import { useGetTemplateQuery, useGetTemplateInputSetYamlQuery } from 'services/template-rq'
 import { PageSpinner } from '@common/components'
 import {
   getIdentifierFromValue,
@@ -85,18 +86,24 @@ function TemplateStepWidget(
 
   const {
     data: stepTemplateResponse,
+    isLoading: stepTemplateLoading,
     error: stepTemplateError,
-    refetch: refetchStepTemplate,
-    loading: stepTemplateLoading
-  } = useGetTemplate({
-    templateIdentifier: stepTemplateRef,
-    queryParams: {
-      ...getScopeBasedProjectPathParams(queryParams, scope),
-      versionLabel: stepTemplateVersionLabel,
-      ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
+    refetch: refetchStepTemplate
+  } = useGetTemplateQuery(
+    {
+      templateIdentifier: stepTemplateRef,
+      queryParams: {
+        ...getScopeBasedProjectPathParams(queryParams, scope),
+        versionLabel: stepTemplateVersionLabel,
+        ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
+      },
+      headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) }
     },
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
-  })
+    {
+      staleTime: 5 * 60 * 1000,
+      retry: false
+    }
+  )
 
   React.useEffect(() => {
     setAllValues(
@@ -106,18 +113,24 @@ function TemplateStepWidget(
 
   const {
     data: stepTemplateInputSetYaml,
+    isLoading: stepTemplateInputSetLoading,
     error: stepTemplateInputSetError,
-    refetch: refetchStepTemplateInputSet,
-    loading: stepTemplateInputSetLoading
-  } = useGetTemplateInputSetYaml({
-    templateIdentifier: stepTemplateRef,
-    queryParams: {
-      ...getScopeBasedProjectPathParams(queryParams, scope),
-      versionLabel: stepTemplateVersionLabel,
-      ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
+    refetch: refetchStepTemplateInputSet
+  } = useGetTemplateInputSetYamlQuery(
+    {
+      templateIdentifier: stepTemplateRef,
+      queryParams: {
+        ...getScopeBasedProjectPathParams(queryParams, scope),
+        versionLabel: stepTemplateVersionLabel,
+        ...getGitQueryParamsWithParentScope({ storeMetadata, params: queryParams, repoIdentifier, branch })
+      },
+      headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) }
     },
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
-  })
+    {
+      staleTime: 5 * 60 * 1000,
+      retry: false
+    }
+  )
 
   const updateFormValues = (newTemplateInputs?: StepElementConfig) => {
     const updateValues = produce(initialValues, draft => {
@@ -250,8 +263,11 @@ function TemplateStepWidget(
               <Container className={css.inputsContainer}>
                 {isLoading && <PageSpinner />}
                 {!isLoading && error && (
-                  <Container height={isEmpty((error?.data as Error)?.responseMessages) ? 300 : 600}>
-                    <PageError message={getTemplateErrorMessage(error, css.errorHandler)} onClick={() => refetch()} />
+                  <Container height={isEmpty((error as Error)?.responseMessages) ? 300 : 600}>
+                    <PageError
+                      message={getTemplateErrorMessage(error as Error, css.errorHandler)}
+                      onClick={() => refetch()}
+                    />
                   </Container>
                 )}
                 {!isLoading && !error && templateInputs && allValues && (
