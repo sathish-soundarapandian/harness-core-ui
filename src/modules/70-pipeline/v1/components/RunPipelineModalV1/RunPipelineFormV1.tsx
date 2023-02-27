@@ -24,8 +24,7 @@ import { isEmpty, defaultTo } from 'lodash-es'
 import type { FormikErrors, FormikProps } from 'formik'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
 import {
-  PipelineConfig,
-  PipelineInfoConfig,
+  PipelineV1InfoConfig,
   ResponseJsonNode,
   useGetPipeline,
   usePostPipelineExecuteWithInputSetYaml,
@@ -106,9 +105,9 @@ function RunPipelineFormV1Basic({
   const { getRBACErrorMessage } = useRBACError()
   const { supportingGitSimplification } = useAppStore()
   const [runClicked, setRunClicked] = useState(false)
-  const [resolvedPipeline, setResolvedPipeline] = useState<PipelineConfig | undefined>()
+  const [resolvedPipeline, setResolvedPipeline] = useState<PipelineV1InfoConfig | undefined>()
   const formRefDom = React.useRef<HTMLElement | undefined>()
-  const valuesPipelineRef = useRef<PipelineInfoConfig>()
+  const valuesPipelineRef = useRef<PipelineV1InfoConfig>()
   const { executionId } = useQueryParams<{ executionId?: string }>()
   const pipelineExecutionId = executionIdentifier ?? executionId
   const isRerunPipeline = !isEmpty(pipelineExecutionId)
@@ -143,7 +142,7 @@ function RunPipelineFormV1Basic({
   })
 
   const pipeline = React.useMemo(
-    () => yamlParse<PipelineConfig>(defaultTo(pipelineResponse?.data?.yamlPipeline, '')),
+    () => yamlParse<PipelineV1InfoConfig>(defaultTo(pipelineResponse?.data?.yamlPipeline, '')),
     [pipelineResponse?.data?.yamlPipeline]
   )
 
@@ -165,7 +164,9 @@ function RunPipelineFormV1Basic({
   })
 
   useEffect(() => {
-    setResolvedPipeline(yamlParse<PipelineConfig>(defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, '')))
+    setResolvedPipeline(
+      yamlParse<PipelineV1InfoConfig>(defaultTo(pipelineResponse?.data?.resolvedTemplatesPipelineYaml, ''))
+    )
   }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
 
   useEffect(() => {
@@ -491,7 +492,7 @@ function RunPipelineFormV1Basic({
 
 export interface RunPipelineFormV1WrapperProps extends PipelineType<PipelinePathProps> {
   children: React.ReactNode
-  pipeline?: PipelineConfig
+  pipeline?: PipelineV1InfoConfig
 }
 export function RunPipelineFormWrapper(props: RunPipelineFormV1WrapperProps): React.ReactElement {
   const { children } = props

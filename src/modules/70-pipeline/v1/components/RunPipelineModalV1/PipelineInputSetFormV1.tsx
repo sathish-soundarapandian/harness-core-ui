@@ -11,7 +11,7 @@ import cx from 'classnames'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ConfigureOptionsContextProvider } from '@common/components/ConfigureOptions/ConfigureOptionsContext'
-import type { ResponseInputs, PipelineConfig } from 'services/pipeline-ng'
+import type { ResponseInputs, PipelineV1InfoConfig } from 'services/pipeline-ng'
 import { CICodebaseInputSetFormV1 } from './CICodebaseInputSetFormV1'
 import { PipelineInputParametersV1 } from './PipelineInputParamsV1/PipelineInputParametersV1'
 import css from '../../../components/PipelineInputSetForm/PipelineInputSetForm.module.scss'
@@ -30,7 +30,7 @@ export interface PipelineInputSetFormV1Props {
   inputSets?: ResponseInputs | null
   hasRuntimeInputs?: boolean
   hasCodebaseInputs?: boolean
-  originalPipeline?: PipelineConfig
+  originalPipeline?: PipelineV1InfoConfig
   connectorRef?: string
   repoIdentifier?: string
   formik: any

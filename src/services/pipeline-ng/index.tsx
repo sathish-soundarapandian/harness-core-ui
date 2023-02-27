@@ -3810,6 +3810,28 @@ export interface PipelineInfoConfig {
   variables?: NGVariable[]
 }
 
+export interface PipelineV1InfoConfig {
+  allowStageExecutions?: boolean
+  delegateSelectors?: string[]
+  description?: string
+  flowControl?: FlowControlConfig
+  identifier?: string
+  name: string
+  notificationRules?: NotificationRules[]
+  orgIdentifier?: string
+  projectIdentifier?: string
+  inputs?: JsonNode
+  repository?: JsonNode
+  stages?: JsonNode[]
+  tags?: {
+    [key: string]: string
+  }
+  template?: TemplateLinkConfig
+  timeout?: string
+  variables?: NGVariable[]
+  version: number
+}
+
 export interface PipelineInputResponse {
   errorInfo?: PreFlightEntityErrorInfo
   fqn?: string

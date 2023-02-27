@@ -22,7 +22,7 @@ import { getReference } from '@common/utils/utils'
 import { useStrings, UseStringsReturn } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { CodebaseTypes, GIT_EXTENSION, getCodebaseRepoNameFromConnector } from '@pipeline/utils/CIUtils'
-import type { PipelineConfig } from 'services/pipeline-ng'
+import type { PipelineV1InfoConfig } from 'services/pipeline-ng'
 import {
   ConnectorInfoDTO,
   getListOfBranchesByRefConnectorV2Promise,
@@ -40,7 +40,7 @@ export interface CICodebaseInputSetFormV1Props {
   formik?: any
   viewType: StepViewType
   viewTypeMetadata?: Record<string, boolean>
-  originalPipeline?: PipelineConfig
+  originalPipeline?: PipelineV1InfoConfig
   connectorRef?: string
   repoIdentifier?: string
 }

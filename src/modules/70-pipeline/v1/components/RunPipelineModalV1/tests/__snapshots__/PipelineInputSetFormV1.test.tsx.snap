@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CI enabled CI READONLY mode: CI stage readonly mode 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <div
+      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container "
+    />
+  </div>
+</div>
+`;
+
+exports[`CI enabled CI present in one of the stages: CI codebase input set form 1`] = `
+<div>
+  <div
+    class="OverlaySpinner--overlaySpinner"
+  >
+    <div
+      class="Layout--vertical Layout--layout-spacing-medium StyledProps--main container "
+    />
+  </div>
+</div>
+`;
