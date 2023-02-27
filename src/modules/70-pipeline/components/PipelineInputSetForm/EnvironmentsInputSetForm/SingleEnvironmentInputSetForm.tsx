@@ -132,7 +132,7 @@ export default function SingleEnvironmentInputSetForm({
             pathToEnvironments: 'environment',
             isMultiEnvironment: false,
             setEnvironmentRefType,
-            serviceIdentifiers: singleServiceIdentifier ? [singleServiceIdentifier] : []
+            serviceIdentifiers: isValueFixed(singleServiceIdentifier) ? [singleServiceIdentifier] : []
           }}
           onUpdate={data => {
             formik.setFieldValue(
