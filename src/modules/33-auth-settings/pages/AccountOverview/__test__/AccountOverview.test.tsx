@@ -9,7 +9,6 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
-import { cdLicenseStoreValues } from '@common/utils/DefaultAppStoreData'
 import AccountOverview from '../AccountOverview'
 
 jest.mock('services/cd-ng', () => {
@@ -88,7 +87,7 @@ describe('Account Overview Page', () => {
         DISABLE_HARNESS_SM: true
       })
       const { container } = render(
-        <TestWrapper defaultLicenseStoreValues={cdLicenseStoreValues}>
+        <TestWrapper defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: 'TEAM', status: 'ACTIVE' } } }}>
           <AccountOverview />
         </TestWrapper>
       )
