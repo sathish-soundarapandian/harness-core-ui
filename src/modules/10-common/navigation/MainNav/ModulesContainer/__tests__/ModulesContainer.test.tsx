@@ -44,7 +44,7 @@ describe('Modules containter test', () => {
       <TestWrapper
         path={routes.toConnectorDetails({ accountId: 'testId' })}
         defaultFeatureFlagValues={{ CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
-        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } }
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >
         <ModulesContainer />
       </TestWrapper>
@@ -124,7 +124,7 @@ describe('Modules containter test', () => {
       <TestWrapper
         path={routes.toConnectorDetails({ accountId: 'testId' })}
         defaultFeatureFlagValues={{ CING_ENABLED: true, CFNG_ENABLED: true, CHAOS_ENABLED: true }}
-        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } }
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >
         <ModulesContainer />
       </TestWrapper>

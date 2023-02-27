@@ -140,7 +140,7 @@ describe('main nav tests', () => {
           CHAOS_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
-        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } }
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >
         <MainNav />
       </TestWrapper>
@@ -173,7 +173,7 @@ describe('main nav tests', () => {
           CHAOS_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
-        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } }
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >
         <MainNav />
       </TestWrapper>
@@ -239,7 +239,7 @@ describe('main nav tests', () => {
           CHAOS_ENABLED: true,
           NEW_LEFT_NAVBAR_SETTINGS: true
         }}
-        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } }
+        defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >
         <MainNav />
       </TestWrapper>
