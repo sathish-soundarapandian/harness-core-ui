@@ -163,6 +163,7 @@ export const useGetTemplateOrgResult = {
     accountIdentifier: 'accountId',
     getDefaultFromOtherRepo: true,
     orgIdentifier: 'orgIdentifier',
+    projectIdentifier: 'projectIdentifier',
     versionLabel: '1'
   },
   templateIdentifier: 'AppD_default_metrics_runtime_connector'
@@ -182,7 +183,8 @@ export const useGetTemplateInputSetYamlOrgResult = {
     accountIdentifier: 'accountId',
     getDefaultFromOtherRepo: true,
     orgIdentifier: 'orgIdentifier',
-    versionLabel: '1'
+    versionLabel: '1',
+    projectIdentifier: 'projectIdentifier'
   },
   requestOptions: { headers: {} },
   templateIdentifier: 'AppD_default_metrics_runtime_connector'
