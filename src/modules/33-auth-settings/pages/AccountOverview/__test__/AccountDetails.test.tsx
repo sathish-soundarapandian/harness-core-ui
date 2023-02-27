@@ -15,7 +15,7 @@ import {
   useUpdateAccountCrossGenerationAccessEnabledNG
 } from 'services/cd-ng'
 
-import { communityLicenseStoreValues, cdLicenseStoreValues } from '@common/utils/DefaultAppStoreData'
+import { communityLicenseStoreValues } from '@common/utils/DefaultAppStoreData'
 import AccountDetails from '../views/AccountDetails'
 
 jest.mock('services/cd-ng')
@@ -71,9 +71,7 @@ beforeEach(() => {
 describe('AccountDetails', () => {
   test('should render AccountDetails page with values', () => {
     const { container, getByText } = render(
-      <TestWrapper
-        defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: Editions.TEAM, status: 'ACTIVE' } } }}
-      >
+      <TestWrapper defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: 'TEAM', status: 'ACTIVE' } } }}>
         <AccountDetails />
       </TestWrapper>
     )
