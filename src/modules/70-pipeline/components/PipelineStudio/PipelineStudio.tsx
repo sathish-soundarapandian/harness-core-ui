@@ -106,7 +106,7 @@ export default function PipelineStudio(): React.ReactElement {
           getString,
           module,
           isCIEnabled: licenseInformation['CI'] && CING_ENABLED,
-          isCDEnabled: shouldVisible
+          isCDEnabled: shouldVisible,
           isCFEnabled: licenseInformation['CF'] && CFNG_ENABLED,
           isSTOEnabled: licenseInformation['STO']?.status === 'ACTIVE',
           isIACMEnabled: IACM_ENABLED,

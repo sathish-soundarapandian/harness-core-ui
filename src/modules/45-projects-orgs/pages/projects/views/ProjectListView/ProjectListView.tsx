@@ -73,10 +73,9 @@ export const RenderColumnOrganization: Renderer<CellProps<ProjectAggregateDTO>> 
 }
 
 const RenderColumnModules: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) => {
-  const { , CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
+  const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
   const data = row.original
-  const { licenseInformation } = useLicenseStore()
   const shouldShowModules = data.projectResponse.project.modules?.length
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   function getModuleIcons(project: Project): React.ReactElement[] {
