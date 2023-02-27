@@ -5,7 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import {
   Button,
   ButtonVariation,
@@ -13,20 +13,19 @@ import {
   FormikForm,
   FormInput,
   getMultiTypeFromValue,
-  MultiTypeInputType,
-  SelectOption
+  MultiTypeInputType
 } from '@harness/uicore'
 import { FieldArray, FormikProps } from 'formik'
 import * as Yup from 'yup'
 import cx from 'classnames'
 import { useParams } from 'react-router-dom'
-import { isArray, memoize } from 'lodash-es'
-import type { IItemRendererProps } from '@blueprintjs/select'
+import { isArray } from 'lodash-es'
+// import type { IItemRendererProps } from '@blueprintjs/select'
 
 import { StepFormikFowardRef, StepViewType, setFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { useStrings } from 'framework/strings'
 
-import { BambooPlanNames, useGetPlansKey } from 'services/cd-ng'
+// import { BambooPlanNames, useGetPlansKey } from 'services/cd-ng'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useQueryParams } from '@common/hooks'
 import type {
@@ -45,15 +44,15 @@ import { ConnectorConfigureOptions } from '@connectors/components/ConnectorConfi
 import { Connectors } from '@connectors/constants'
 
 import MultiTypeFieldSelector from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
-import { EXPRESSION_STRING } from '@pipeline/utils/constants'
-import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
-import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
+// import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+// import ItemRendererWithMenuItem from '@common/components/ItemRenderer/ItemRendererWithMenuItem'
+// import { NoTagResults } from '@pipeline/components/ArtifactsSelection/ArtifactRepository/ArtifactLastSteps/ArtifactImagePathTagView/ArtifactImagePathTagView'
 
 import type { BambooFormContentInterface, BambooStepData, jobParameterInterface } from './types'
 import { scriptInputType, variableSchema } from './helper'
 import { getNameAndIdentifierSchema } from '../StepsValidateUtils'
 import type { BambooStepProps } from './BambooStep'
-import { getGenuineValue } from '../JiraApproval/helper'
+// import { getGenuineValue } from '../JiraApproval/helper'
 
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './BambooStep.module.scss'
@@ -70,51 +69,51 @@ function FormContent({
   const { accountId, projectIdentifier, orgIdentifier } =
     useParams<PipelineType<PipelinePathProps & AccountPathProps>>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
-  const [planDetails, setPlanDetails] = useState<SelectOption[]>([])
+  // const [planDetails, setPlanDetails] = useState<SelectOption[]>([])
 
-  const connectorRefFixedValue = getGenuineValue(formik.values.spec.connectorRef)
+  // const connectorRefFixedValue = getGenuineValue(formik.values.spec.connectorRef)
 
-  const commonParams = {
-    accountIdentifier: accountId,
-    projectIdentifier,
-    orgIdentifier,
-    repoIdentifier,
-    branch
-  }
+  // const commonParams = {
+  //   accountIdentifier: accountId,
+  //   projectIdentifier,
+  //   orgIdentifier,
+  //   repoIdentifier,
+  //   branch
+  // }
 
-  const {
-    refetch: refetchPlans,
-    data: plansResponse,
-    loading: loadingPlans,
-    error: plansError
-  } = useGetPlansKey({
-    lazy: true,
-    queryParams: {
-      ...commonParams,
-      connectorRef: connectorRefFixedValue
-    }
-  })
+  // const {
+  //   refetch: refetchPlans,
+  //   data: plansResponse,
+  //   loading: loadingPlans,
+  //   error: plansError
+  // } = useGetPlansKey({
+  //   lazy: true,
+  //   queryParams: {
+  //     ...commonParams,
+  //     connectorRef: connectorRefFixedValue
+  //   }
+  // })
 
-  useEffect(() => {
-    if (plansResponse?.data?.planKeys) {
-      const planOptions: SelectOption[] = (plansResponse?.data?.planKeys || [])?.map((plan: BambooPlanNames) => {
-        return {
-          label: plan.name,
-          value: plan.name
-        } as SelectOption
-      }) || [
-        {
-          label: 'Loading plans ...',
-          value: 'Loading plans ...'
-        }
-      ]
-      setPlanDetails(planOptions)
-    }
-  }, [plansResponse?.data?.planKeys])
+  // useEffect(() => {
+  //   if (plansResponse?.data?.planKeys) {
+  //     const planOptions: SelectOption[] = (plansResponse?.data?.planKeys || [])?.map((plan: BambooPlanNames) => {
+  //       return {
+  //         label: plan.name,
+  //         value: plan.name
+  //       } as SelectOption
+  //     }) || [
+  //       {
+  //         label: 'Loading plans ...',
+  //         value: 'Loading plans ...'
+  //       }
+  //     ]
+  //     setPlanDetails(planOptions)
+  //   }
+  // }, [plansResponse?.data?.planKeys])
 
-  const planPathItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
-    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={loadingPlans} />
-  ))
+  // const planPathItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
+  //   <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={loadingPlans} />
+  // ))
 
   return (
     <React.Fragment>
@@ -186,7 +185,7 @@ function FormContent({
         )}
       </div>
 
-      <div className={cx(stepCss.formGroup, stepCss.lg, css.jobDetails)}>
+      {/* <div className={cx(stepCss.formGroup, stepCss.lg, css.jobDetails)}>
         <FormInput.MultiTypeInput
           label={getString('pipeline.bamboo.planName')}
           name="spec.planName"
@@ -243,7 +242,7 @@ function FormContent({
             isReadonly={readonly}
           />
         )}
-      </div>
+      </div> */}
 
       <div className={stepCss.formGroup}>
         <MultiTypeFieldSelector

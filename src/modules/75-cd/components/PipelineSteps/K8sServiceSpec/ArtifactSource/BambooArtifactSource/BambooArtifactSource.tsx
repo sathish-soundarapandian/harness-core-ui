@@ -38,6 +38,9 @@ import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { useMutateAsGet } from '@common/hooks'
+
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -48,8 +51,6 @@ import {
   isFieldfromTriggerTabDisabled
 } from '../artifactSourceUtils'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
-import { useMutateAsGet } from '@common/hooks'
-import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 
 interface BambooRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
@@ -70,22 +71,22 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
     branch,
     stageIdentifier,
     isTagsSelectionDisabled,
-    // serviceIdentifier,
-
+    serviceIdentifier,
+    pipelineIdentifier,
     allowableTypes,
     fromTrigger,
     artifact,
     isSidecar,
     artifactPath,
-    artifacts
-    // stepViewType
+    artifacts,
+    stepViewType
   } = props
 
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const [planDetails, setPlanDetails] = useState<SelectOption[]>([])
   const [artifactPaths, setArtifactPaths] = useState<SelectOption[]>([])
-  const [build, setBambooBuilds] = useState<SelectOption[]>([])
+  const [builds, setBambooBuilds] = useState<SelectOption[]>([])
   // const serviceId = isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined
   const commonParams = {
     accountIdentifier: accountId,
@@ -111,8 +112,8 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
     )
 
   const planFqnPath = getFqnPathForEntity('planKey')
-  // const artifactPathsFqnPath = getFqnPathForEntity('artifactPaths')
-  // const buildsFqnPath = getFqnPathForEntity('builds')
+  const artifactPathsFqnPath = getFqnPathForEntity('artifactPaths')
+  const buildsFqnPath = getFqnPathForEntity('build')
 
   const refetchingAllowedTypes = [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION] as MultiTypeInputType[]
 
@@ -146,31 +147,31 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
     )
   )
 
-  const getEncodedValue = (value: string): string => {
-    return encodeURIComponent(value)
-  }
-
-  // const pipelineRuntimeYaml = getYamlData(formik?.values, stepViewType as StepViewType, path as string)
+  const pipelineRuntimeYaml = getYamlData(formik?.values, stepViewType as StepViewType, path as string)
 
   // v1 tags api is required to fetch tags for artifact source template usage while linking to service
   // Here v2 api cannot be used to get the builds because of unavailability of complete yaml during creation.
 
   const {
-    refetch: refetchPlans,
     data: plansResponse,
     loading: loadingPlans,
+    refetch: refetchPlans,
     error: plansError
-  } = useGetPlansKey({
+  } = useMutateAsGet(useGetPlansKey, {
+    body: {
+      pipelineRuntimeYaml
+    },
     requestOptions: {
       headers: {
         'content-type': 'application/json'
       }
     },
-
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString(),
-      fqnPath: planFqnPath
+      fqnPath: planFqnPath,
+      pipelineIdentifier,
+      serviceId: serviceIdentifier
     },
     lazy: true
   })
@@ -178,29 +179,51 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
   const {
     refetch: refetchArtifactPaths,
     data: artifactPathsResponse,
-    loading: fetchingArtifacts
-    // error: errorFetchingPath
-  } = useGetArtifactPathsForBamboo({
-    lazy: true,
+    loading: loadingArtifacts,
+    error: artifactPathError
+  } = useMutateAsGet(useGetArtifactPathsForBamboo, {
+    body: {
+      pipelineRuntimeYaml
+    },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue?.toString()
+      connectorRef: connectorRefValue?.toString(),
+      fqnPath: artifactPathsFqnPath,
+      pipelineIdentifier,
+      serviceId: serviceIdentifier,
+      planName: get(initialValues?.artifacts, `${artifactPath}.spec.planKey`, '')
     },
-    planName: planKey ? getEncodedValue(planKey) : ''
+    lazy: true
   })
 
   const {
-    refetch: refetchJenkinsBuild,
+    refetch: refetchBambooBuild,
     data: bambooBuildResponse,
-    loading: fetchingBuild
-    //  error: errorFetchingBuild
-  } = useGetBuildsForBamboo({
-    lazy: true,
+    loading: fetchingBuild,
+    error: buildError
+  } = useMutateAsGet(useGetBuildsForBamboo, {
+    body: {
+      pipelineRuntimeYaml
+    },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue?.toString()
+      fqnPath: buildsFqnPath,
+      connectorRef: connectorRefValue?.toString(),
+      pipelineIdentifier,
+      serviceId: serviceIdentifier,
+      planName: get(initialValues?.artifacts, `${artifactPath}.spec.planKey`, '')
     },
-    planName: planKey ? getEncodedValue(planKey) : ''
+    lazy: true
   })
 
   useEffect(() => {
@@ -246,7 +269,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
       ]
       setPlanDetails(planOptions)
     }
-  }, [plansResponse?.data?.planKeys])
+  }, [plansResponse])
 
   const isFieldDisabled = (fieldName: string, isTag = false): boolean => {
     /* instanbul ignore else */
@@ -324,8 +347,8 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                 loadingPlans
                   ? [
                       {
-                        label: getString('pipeline.artifactsSelection.loadingDigest'),
-                        value: getString('pipeline.artifactsSelection.loadingDigest')
+                        label: getString('pipeline.artifactsSelection.loadingPlans'),
+                        value: getString('pipeline.artifactsSelection.loadingPlans')
                       }
                     ]
                   : planDetails
@@ -347,8 +370,8 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                   items: loadingPlans
                     ? [
                         {
-                          label: getString('pipeline.artifactsSelection.loadingDigest'),
-                          value: getString('pipeline.artifactsSelection.loadingDigest')
+                          label: getString('pipeline.artifactsSelection.loadingPlans'),
+                          value: getString('pipeline.artifactsSelection.loadingPlans')
                         }
                       ]
                     : planDetails,
@@ -378,7 +401,9 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
               useValue
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.artifactPaths`)}
               placeholder={
-                fetchingArtifacts ? getString('loading') : getString('pipeline.selectArtifactPathPlaceholder')
+                loadingArtifacts
+                  ? getString('pipeline.artifactsSelection.loadingArtifactPaths')
+                  : getString('pipeline.artifactsSelection.artifactPathPlaceholder')
               }
               multiTypeInputProps={{
                 onTypeChange: (type: MultiTypeInputType) =>
@@ -402,7 +427,17 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                 selectProps: {
                   allowCreatingNewItems: true,
                   addClearBtn: !readonly,
-                  items: defaultTo(artifactPaths, [])
+                  items: defaultTo(artifactPaths, [
+                    {
+                      label: getString('pipeline.artifactsSelection.loadingArtifactPaths'),
+                      value: getString('pipeline.artifactsSelection.loadingArtifactPaths')
+                    }
+                  ]),
+                  noResults: (
+                    <Text lineClamp={1} width={500} height={35} padding="small">
+                      {artifactPathError}
+                    </Text>
+                  )
                 }
               }}
               selectItems={artifactPaths || []}
@@ -416,7 +451,11 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
               name={`${path}.artifacts.${artifactPath}.spec.build`}
               disabled={isFieldDisabled(`artifacts.${artifactPath}.spec.build`)}
               useValue
-              placeholder={fetchingBuild ? getString('loading') : getString('pipeline.selectBambooBuildsPlaceholder')}
+              placeholder={
+                fetchingBuild
+                  ? getString('pipeline.artifactsSelection.loadingBuilds')
+                  : getString('pipeline.selectBambooBuildsPlaceholder')
+              }
               multiTypeInputProps={{
                 onClick: () => {
                   if (
@@ -424,7 +463,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                     refetchingAllowedTypes?.includes(getMultiTypeFromValue(planKey, allowableTypes)) &&
                     refetchingAllowedTypes?.includes(getMultiTypeFromValue(artifactPathValue, allowableTypes))
                   ) {
-                    refetchJenkinsBuild()
+                    refetchBambooBuild()
                   }
                 },
                 onTypeChange: (type: MultiTypeInputType) =>
@@ -435,10 +474,20 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                 selectProps: {
                   allowCreatingNewItems: true,
                   addClearBtn: !readonly,
-                  items: defaultTo(build, [])
+                  items: defaultTo(builds, [
+                    {
+                      label: getString('pipeline.artifactsSelection.loadingBuilds'),
+                      value: getString('pipeline.artifactsSelection.loadingBuilds')
+                    }
+                  ]),
+                  noResults: (
+                    <Text lineClamp={1} width={500} height={35} padding="small">
+                      {buildError}
+                    </Text>
+                  )
                 }
               }}
-              selectItems={build || []}
+              selectItems={builds || []}
             />
           )}
         </Layout.Vertical>

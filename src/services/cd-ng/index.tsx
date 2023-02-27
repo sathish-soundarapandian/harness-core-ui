@@ -1404,6 +1404,10 @@ export type AwsSMCredentialSpecManualConfig = AwsSecretManagerCredentialSpec & {
   secretKey: string
 }
 
+export type AwsSamDeployStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
+}
+
 export type AwsSamDirectoryManifest = ManifestAttributes & {
   metadata?: string
   store?: StoreConfigWrapper
@@ -1413,6 +1417,10 @@ export type AwsSamInfrastructure = Infrastructure & {
   connectorRef: string
   metadata?: string
   region: string
+}
+
+export type AwsSamRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
 }
 
 export type AwsSamServiceSpec = ServiceSpec & {}
@@ -1835,7 +1843,7 @@ export type AzureWebAppTrafficShiftStepInfo = StepSpecType & {
 }
 
 export type BambooArtifactConfig = ArtifactConfig & {
-  artifactPath?: string[]
+  artifactPaths?: string[]
   build?: string
   connectorRef: string
   planKey: string
@@ -3209,6 +3217,7 @@ export interface DelegateTokenDetails {
   createdByNgUser?: Principal
   name?: string
   ownerIdentifier?: string
+  revokeAfter?: number
   status?: 'ACTIVE' | 'REVOKED'
   uuid?: string
   value?: string
@@ -3598,7 +3607,9 @@ export type EcsServiceDefinitionManifest = ManifestAttributes & {
   store?: StoreConfigWrapper
 }
 
-export type EcsServiceSpec = ServiceSpec & {}
+export type EcsServiceSpec = ServiceSpec & {
+  ecsTaskDefinitionArn?: string
+}
 
 export type EcsTaskDefinitionManifest = ManifestAttributes & {
   metadata?: string
@@ -3930,6 +3941,9 @@ export interface EntityDetail {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
 }
 
 export interface EntityDetailProtoDTO {
@@ -6456,6 +6470,9 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
   )[]
   moduleType?:
     | 'CD'
@@ -6671,6 +6688,9 @@ export interface GitEntityFilterProperties {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6963,6 +6983,9 @@ export interface GitFullSyncEntityInfoDTO {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -7172,6 +7195,9 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7502,6 +7528,9 @@ export interface GitSyncEntityDTO {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7705,6 +7734,9 @@ export interface GitSyncEntityListDTO {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7925,6 +7957,9 @@ export interface GitSyncErrorDTO {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -9079,7 +9114,7 @@ export interface JiraFieldNG {
 export interface JiraFieldSchemaNG {
   array?: boolean
   customType?: string
-  type: 'string' | 'number' | 'date' | 'datetime' | 'timetracking' | 'option' | 'user' | 'issuelink'
+  type: 'string' | 'number' | 'date' | 'datetime' | 'timetracking' | 'option' | 'user' | 'issuelink' | 'issuetype'
   typeStr: string
 }
 
@@ -9820,6 +9855,7 @@ export interface NGEnvironmentGlobalOverride {
 export interface NGEnvironmentInfoConfig {
   description?: string
   identifier: string
+  metadata?: string
   name: string
   orgIdentifier?: string
   overrides?: NGEnvironmentGlobalOverride
@@ -11353,6 +11389,9 @@ export interface ReferencedByDTO {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
 }
 
 export interface RefreshResponse {
@@ -11458,6 +11497,7 @@ export interface ResourceDTO {
     | 'CLOUD_ASSET_GOVERNANCE_RULE_ENFORCEMENT'
     | 'TARGET_GROUP'
     | 'FEATURE_FLAG'
+    | 'NG_ACCOUNT_DETAILS'
 }
 
 export interface ResourceGroup {
@@ -12659,6 +12699,9 @@ export interface ResponseListEntityType {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -12917,13 +12960,6 @@ export interface ResponseListSourceCodeManagerDTO {
 export interface ResponseListString {
   correlationId?: string
   data?: string[]
-  metaData?: { [key: string]: any }
-  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
-}
-
-export interface ResponseListSubscriptionDetailDTO {
-  correlationId?: string
-  data?: SubscriptionDetailDTO[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -13910,6 +13946,13 @@ export interface ResponseServiceInputsMergedResponseDto {
 export interface ResponseServiceInstanceUsageDTO {
   correlationId?: string
   data?: ServiceInstanceUsageDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseServiceInstancesDateUsageDTO {
+  correlationId?: string
+  data?: ServiceInstancesDateUsageDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -15299,6 +15342,19 @@ export interface ServiceInstanceUsageDTO {
   timestamp?: number
 }
 
+export interface ServiceInstancesDateUsageDTO {
+  reportType?: 'DAILY' | 'MONTHLY'
+  serviceInstancesUsage?: {
+    [key: string]: number
+  }
+}
+
+export interface ServiceInstancesDateUsageParams {
+  fromDate?: string
+  reportType?: 'DAILY' | 'MONTHLY'
+  toDate?: string
+}
+
 export type ServiceNowADFSDTO = ServiceNowAuthCredentialsDTO & {
   adfsUrl: string
   certificateRef: string
@@ -15948,6 +16004,8 @@ export interface StepData {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
 }
 
 export interface StepElementConfig {
@@ -16111,21 +16169,6 @@ export interface SubscriptionDetailDTO {
   customerId?: string
   latestInvoice?: string
   latestInvoiceDetail?: InvoiceDetailDTO
-  moduletype?:
-    | 'CD'
-    | 'CI'
-    | 'CV'
-    | 'CF'
-    | 'CE'
-    | 'STO'
-    | 'CHAOS'
-    | 'SRM'
-    | 'CODE'
-    | 'CORE'
-    | 'PMS'
-    | 'TEMPLATESERVICE'
-    | 'GOVERNANCE'
-    | 'IACM'
   pendingUpdate?: PendingUpdateDetailDTO
   status?: string
   subscriptionId?: string
@@ -17032,7 +17075,7 @@ export interface UserGroupEntityReference {
 export interface UserGroupFilterDTO {
   accountIdentifier?: string
   databaseIdFilter?: string[]
-  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS'
+  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS' | 'INCLUDE_CHILD_SCOPE_GROUPS'
   identifierFilter?: string[]
   orgIdentifier?: string
   projectIdentifier?: string
@@ -17094,6 +17137,8 @@ export interface UserInfo {
   email?: string
   emailVerified?: boolean
   externallyManaged?: boolean
+  familyName?: string
+  givenName?: string
   intent?: string
   locked?: boolean
   name?: string
@@ -18376,6 +18421,9 @@ export interface ListActivitiesQueryParams {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -18571,6 +18619,9 @@ export interface ListActivitiesQueryParams {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -18870,6 +18921,9 @@ export interface GetActivitiesSummaryQueryParams {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -19065,6 +19119,9 @@ export interface GetActivitiesSummaryQueryParams {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -19679,7 +19736,7 @@ export interface GetUserGroupAggregateListQueryParams {
   pageSize?: number
   sortOrders?: string[]
   searchTerm?: string
-  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS'
+  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS' | 'INCLUDE_CHILD_SCOPE_GROUPS'
   userSize?: number
 }
 
@@ -22774,6 +22831,7 @@ export interface GetBuildsForBambooQueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   pipelineIdentifier?: string
+  planName?: string
   artifactPath?: string[]
   branch?: string
   repoIdentifier?: string
@@ -22788,65 +22846,173 @@ export interface GetBuildsForBambooQueryParams {
   serviceId?: string
 }
 
-export interface GetBuildsForBambooPathParams {
-  planName: string
-}
-
 export type GetBuildsForBambooProps = Omit<
-  GetProps<ResponseListBuildDetails, Failure | Error, GetBuildsForBambooQueryParams, GetBuildsForBambooPathParams>,
-  'path'
-> &
-  GetBuildsForBambooPathParams
+  MutateProps<
+    ResponseListBuildDetails,
+    Failure | Error,
+    GetBuildsForBambooQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
 
 /**
  * Gets Builds details for Bamboo
  */
-export const GetBuildsForBamboo = ({ planName, ...props }: GetBuildsForBambooProps) => (
-  <Get<ResponseListBuildDetails, Failure | Error, GetBuildsForBambooQueryParams, GetBuildsForBambooPathParams>
-    path={`/artifacts/bamboo/plan/${planName}/builds`}
+export const GetBuildsForBamboo = (props: GetBuildsForBambooProps) => (
+  <Mutate<
+    ResponseListBuildDetails,
+    Failure | Error,
+    GetBuildsForBambooQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/artifacts/bamboo/builds`}
     base={getConfig('ng/api')}
     {...props}
   />
 )
 
 export type UseGetBuildsForBambooProps = Omit<
-  UseGetProps<ResponseListBuildDetails, Failure | Error, GetBuildsForBambooQueryParams, GetBuildsForBambooPathParams>,
-  'path'
-> &
-  GetBuildsForBambooPathParams
+  UseMutateProps<
+    ResponseListBuildDetails,
+    Failure | Error,
+    GetBuildsForBambooQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
 
 /**
  * Gets Builds details for Bamboo
  */
-export const useGetBuildsForBamboo = ({ planName, ...props }: UseGetBuildsForBambooProps) =>
-  useGet<ResponseListBuildDetails, Failure | Error, GetBuildsForBambooQueryParams, GetBuildsForBambooPathParams>(
-    (paramsInPath: GetBuildsForBambooPathParams) => `/artifacts/bamboo/plan/${paramsInPath.planName}/builds`,
-    { base: getConfig('ng/api'), pathParams: { planName }, ...props }
-  )
+export const useGetBuildsForBamboo = (props: UseGetBuildsForBambooProps) =>
+  useMutate<
+    ResponseListBuildDetails,
+    Failure | Error,
+    GetBuildsForBambooQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', `/artifacts/bamboo/builds`, { base: getConfig('ng/api'), ...props })
 
 /**
  * Gets Builds details for Bamboo
  */
 export const getBuildsForBambooPromise = (
-  {
-    planName,
-    ...props
-  }: GetUsingFetchProps<
+  props: MutateUsingFetchProps<
     ResponseListBuildDetails,
     Failure | Error,
     GetBuildsForBambooQueryParams,
-    GetBuildsForBambooPathParams
-  > & { planName: string },
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseListBuildDetails, Failure | Error, GetBuildsForBambooQueryParams, GetBuildsForBambooPathParams>(
-    getConfig('ng/api'),
-    `/artifacts/bamboo/plan/${planName}/builds`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponseListBuildDetails,
+    Failure | Error,
+    GetBuildsForBambooQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/bamboo/builds`, props, signal)
 
 export interface GetArtifactPathsForBambooQueryParams {
+  connectorRef?: string
+  accountIdentifier: string
+  orgIdentifier?: string
+  projectIdentifier?: string
+  pipelineIdentifier?: string
+  planName?: string
+  branch?: string
+  repoIdentifier?: string
+  getDefaultFromOtherRepo?: boolean
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
+  parentEntityAccountIdentifier?: string
+  parentEntityOrgIdentifier?: string
+  parentEntityProjectIdentifier?: string
+  repoName?: string
+  fqnPath?: string
+  serviceId?: string
+}
+
+export type GetArtifactPathsForBambooProps = Omit<
+  MutateProps<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathsForBambooQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get Artifact Paths for Bamboo
+ */
+export const GetArtifactPathsForBamboo = (props: GetArtifactPathsForBambooProps) => (
+  <Mutate<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathsForBambooQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >
+    verb="POST"
+    path={`/artifacts/bamboo/paths`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetArtifactPathsForBambooProps = Omit<
+  UseMutateProps<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathsForBambooQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get Artifact Paths for Bamboo
+ */
+export const useGetArtifactPathsForBamboo = (props: UseGetArtifactPathsForBambooProps) =>
+  useMutate<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathsForBambooQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', `/artifacts/bamboo/paths`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Get Artifact Paths for Bamboo
+ */
+export const getArtifactPathsForBambooPromise = (
+  props: MutateUsingFetchProps<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathsForBambooQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseListString,
+    Failure | Error,
+    GetArtifactPathsForBambooQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/bamboo/paths`, props, signal)
+
+export interface GetPlansKeyQueryParams {
   connectorRef?: string
   accountIdentifier: string
   orgIdentifier?: string
@@ -22865,108 +23031,29 @@ export interface GetArtifactPathsForBambooQueryParams {
   serviceId?: string
 }
 
-export interface GetArtifactPathsForBambooPathParams {
-  planName: string
-}
-
-export type GetArtifactPathsForBambooProps = Omit<
-  GetProps<
-    ResponseListString,
-    Failure | Error,
-    GetArtifactPathsForBambooQueryParams,
-    GetArtifactPathsForBambooPathParams
-  >,
-  'path'
-> &
-  GetArtifactPathsForBambooPathParams
-
-/**
- * Get Artifact Paths for Bamboo
- */
-export const GetArtifactPathsForBamboo = ({ planName, ...props }: GetArtifactPathsForBambooProps) => (
-  <Get<ResponseListString, Failure | Error, GetArtifactPathsForBambooQueryParams, GetArtifactPathsForBambooPathParams>
-    path={`/artifacts/bamboo/plan/${planName}/paths`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseGetArtifactPathsForBambooProps = Omit<
-  UseGetProps<
-    ResponseListString,
-    Failure | Error,
-    GetArtifactPathsForBambooQueryParams,
-    GetArtifactPathsForBambooPathParams
-  >,
-  'path'
-> &
-  GetArtifactPathsForBambooPathParams
-
-/**
- * Get Artifact Paths for Bamboo
- */
-export const useGetArtifactPathsForBamboo = ({ planName, ...props }: UseGetArtifactPathsForBambooProps) =>
-  useGet<
-    ResponseListString,
-    Failure | Error,
-    GetArtifactPathsForBambooQueryParams,
-    GetArtifactPathsForBambooPathParams
-  >((paramsInPath: GetArtifactPathsForBambooPathParams) => `/artifacts/bamboo/plan/${paramsInPath.planName}/paths`, {
-    base: getConfig('ng/api'),
-    pathParams: { planName },
-    ...props
-  })
-
-/**
- * Get Artifact Paths for Bamboo
- */
-export const getArtifactPathsForBambooPromise = (
-  {
-    planName,
-    ...props
-  }: GetUsingFetchProps<
-    ResponseListString,
-    Failure | Error,
-    GetArtifactPathsForBambooQueryParams,
-    GetArtifactPathsForBambooPathParams
-  > & { planName: string },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    ResponseListString,
-    Failure | Error,
-    GetArtifactPathsForBambooQueryParams,
-    GetArtifactPathsForBambooPathParams
-  >(getConfig('ng/api'), `/artifacts/bamboo/plan/${planName}/paths`, props, signal)
-
-export interface GetPlansKeyQueryParams {
-  connectorRef?: string
-  accountIdentifier: string
-  orgIdentifier?: string
-  projectIdentifier?: string
-  branch?: string
-  repoIdentifier?: string
-  getDefaultFromOtherRepo?: boolean
-  parentEntityConnectorRef?: string
-  parentEntityRepoName?: string
-  parentEntityAccountIdentifier?: string
-  parentEntityOrgIdentifier?: string
-  parentEntityProjectIdentifier?: string
-  repoName?: string
-  fqnPath?: string
-  serviceId?: string
-}
-
 export type GetPlansKeyProps = Omit<
-  GetProps<ResponseBambooPlanKeysDTO, Failure | Error, GetPlansKeyQueryParams, void>,
-  'path'
+  MutateProps<
+    ResponseBambooPlanKeysDTO,
+    Failure | Error,
+    GetPlansKeyQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
 >
 
 /**
  * Gets Plan Keys for Bamboo
  */
 export const GetPlansKey = (props: GetPlansKeyProps) => (
-  <Get<ResponseBambooPlanKeysDTO, Failure | Error, GetPlansKeyQueryParams, void>
+  <Mutate<
+    ResponseBambooPlanKeysDTO,
+    Failure | Error,
+    GetPlansKeyQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >
+    verb="POST"
     path={`/artifacts/bamboo/plans`}
     base={getConfig('ng/api')}
     {...props}
@@ -22974,32 +23061,48 @@ export const GetPlansKey = (props: GetPlansKeyProps) => (
 )
 
 export type UseGetPlansKeyProps = Omit<
-  UseGetProps<ResponseBambooPlanKeysDTO, Failure | Error, GetPlansKeyQueryParams, void>,
-  'path'
+  UseMutateProps<
+    ResponseBambooPlanKeysDTO,
+    Failure | Error,
+    GetPlansKeyQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
+  'path' | 'verb'
 >
 
 /**
  * Gets Plan Keys for Bamboo
  */
 export const useGetPlansKey = (props: UseGetPlansKeyProps) =>
-  useGet<ResponseBambooPlanKeysDTO, Failure | Error, GetPlansKeyQueryParams, void>(`/artifacts/bamboo/plans`, {
-    base: getConfig('ng/api'),
-    ...props
-  })
+  useMutate<
+    ResponseBambooPlanKeysDTO,
+    Failure | Error,
+    GetPlansKeyQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', `/artifacts/bamboo/plans`, { base: getConfig('ng/api'), ...props })
 
 /**
  * Gets Plan Keys for Bamboo
  */
 export const getPlansKeyPromise = (
-  props: GetUsingFetchProps<ResponseBambooPlanKeysDTO, Failure | Error, GetPlansKeyQueryParams, void>,
+  props: MutateUsingFetchProps<
+    ResponseBambooPlanKeysDTO,
+    Failure | Error,
+    GetPlansKeyQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseBambooPlanKeysDTO, Failure | Error, GetPlansKeyQueryParams, void>(
-    getConfig('ng/api'),
-    `/artifacts/bamboo/plans`,
-    props,
-    signal
-  )
+  mutateUsingFetch<
+    ResponseBambooPlanKeysDTO,
+    Failure | Error,
+    GetPlansKeyQueryParams,
+    ListTagsForAMIArtifactBodyRequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/artifacts/bamboo/plans`, props, signal)
 
 export interface GetJobDetailsForCustomQueryParams {
   accountIdentifier: string
@@ -34253,6 +34356,7 @@ export interface CreateDelegateTokenQueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   tokenName: string
+  revokeAfter?: number
 }
 
 export type CreateDelegateTokenProps = Omit<
@@ -35279,6 +35383,9 @@ export interface ListReferredByEntitiesQueryParams {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -35535,6 +35642,9 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
   searchTerm?: string
 }
 
@@ -38856,6 +38966,9 @@ export interface GetReferencedByQueryParams {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
   searchTerm?: string
 }
 
@@ -41468,6 +41581,9 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -41731,6 +41847,9 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'CloudFunctionRollback'
       | 'BambooBuild'
       | 'AwsLambdaDeploy'
+      | 'AwsSamDeploy'
+      | 'AwsSamRollback'
+      | 'SscaOrchestration'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -42490,7 +42609,7 @@ export interface GetClusterListQueryParams {
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
-  environmentIdentifier?: string
+  environmentIdentifier: string
   searchTerm?: string
   identifiers?: string[]
   sort?: string[]
@@ -42746,6 +42865,7 @@ export interface GetClusterListFromSourceQueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   searchTerm?: string
+  scoped?: boolean
 }
 
 export type GetClusterListFromSourceProps = Omit<
@@ -46274,6 +46394,83 @@ export const getAllServicesPromise = (
     signal
   )
 
+export interface GetServiceInstancesDateUsageQueryParams {
+  accountIdentifier?: string
+}
+
+export type GetServiceInstancesDateUsageProps = Omit<
+  MutateProps<
+    ResponseServiceInstancesDateUsageDTO,
+    Failure | Error,
+    GetServiceInstancesDateUsageQueryParams,
+    ServiceInstancesDateUsageParams,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get Service Instances date usage in CD Module
+ */
+export const GetServiceInstancesDateUsage = (props: GetServiceInstancesDateUsageProps) => (
+  <Mutate<
+    ResponseServiceInstancesDateUsageDTO,
+    Failure | Error,
+    GetServiceInstancesDateUsageQueryParams,
+    ServiceInstancesDateUsageParams,
+    void
+  >
+    verb="POST"
+    path={`/license-usage-cd/si-date`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseGetServiceInstancesDateUsageProps = Omit<
+  UseMutateProps<
+    ResponseServiceInstancesDateUsageDTO,
+    Failure | Error,
+    GetServiceInstancesDateUsageQueryParams,
+    ServiceInstancesDateUsageParams,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Get Service Instances date usage in CD Module
+ */
+export const useGetServiceInstancesDateUsage = (props: UseGetServiceInstancesDateUsageProps) =>
+  useMutate<
+    ResponseServiceInstancesDateUsageDTO,
+    Failure | Error,
+    GetServiceInstancesDateUsageQueryParams,
+    ServiceInstancesDateUsageParams,
+    void
+  >('POST', `/license-usage-cd/si-date`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Get Service Instances date usage in CD Module
+ */
+export const getServiceInstancesDateUsagePromise = (
+  props: MutateUsingFetchProps<
+    ResponseServiceInstancesDateUsageDTO,
+    Failure | Error,
+    GetServiceInstancesDateUsageQueryParams,
+    ServiceInstancesDateUsageParams,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseServiceInstancesDateUsageDTO,
+    Failure | Error,
+    GetServiceInstancesDateUsageQueryParams,
+    ServiceInstancesDateUsageParams,
+    void
+  >('POST', getConfig('ng/api'), `/license-usage-cd/si-date`, props, signal)
+
 export interface GetAccountLicensesQueryParams {
   accountIdentifier?: string
 }
@@ -47750,6 +47947,9 @@ export interface GetStepYamlSchemaQueryParams {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
   yamlGroup?: string
 }
 
@@ -48073,6 +48273,9 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -54848,63 +55051,48 @@ export const updateSourceCodeManagersPromise = (
     UpdateSourceCodeManagersPathParams
   >('PUT', getConfig('ng/api'), `/source-code-manager/${identifier}`, props, signal)
 
-export interface ListSubscriptionsQueryParams {
+export interface RetrieveSubscriptionQueryParams {
   accountIdentifier: string
-  moduleType?:
-    | 'CD'
-    | 'CI'
-    | 'CV'
-    | 'CF'
-    | 'CE'
-    | 'STO'
-    | 'CHAOS'
-    | 'SRM'
-    | 'CODE'
-    | 'CORE'
-    | 'PMS'
-    | 'TEMPLATESERVICE'
-    | 'GOVERNANCE'
-    | 'IACM'
 }
 
-export type ListSubscriptionsProps = Omit<
-  GetProps<ResponseListSubscriptionDetailDTO, Failure | Error, ListSubscriptionsQueryParams, void>,
+export type RetrieveSubscriptionProps = Omit<
+  GetProps<ResponseSubscriptionDetailDTO, Failure | Error, RetrieveSubscriptionQueryParams, void>,
   'path'
 >
 
 /**
- * Lists the subscriptions
+ * Retrieves a subscription
  */
-export const ListSubscriptions = (props: ListSubscriptionsProps) => (
-  <Get<ResponseListSubscriptionDetailDTO, Failure | Error, ListSubscriptionsQueryParams, void>
+export const RetrieveSubscription = (props: RetrieveSubscriptionProps) => (
+  <Get<ResponseSubscriptionDetailDTO, Failure | Error, RetrieveSubscriptionQueryParams, void>
     path={`/subscriptions`}
     base={getConfig('ng/api')}
     {...props}
   />
 )
 
-export type UseListSubscriptionsProps = Omit<
-  UseGetProps<ResponseListSubscriptionDetailDTO, Failure | Error, ListSubscriptionsQueryParams, void>,
+export type UseRetrieveSubscriptionProps = Omit<
+  UseGetProps<ResponseSubscriptionDetailDTO, Failure | Error, RetrieveSubscriptionQueryParams, void>,
   'path'
 >
 
 /**
- * Lists the subscriptions
+ * Retrieves a subscription
  */
-export const useListSubscriptions = (props: UseListSubscriptionsProps) =>
-  useGet<ResponseListSubscriptionDetailDTO, Failure | Error, ListSubscriptionsQueryParams, void>(`/subscriptions`, {
+export const useRetrieveSubscription = (props: UseRetrieveSubscriptionProps) =>
+  useGet<ResponseSubscriptionDetailDTO, Failure | Error, RetrieveSubscriptionQueryParams, void>(`/subscriptions`, {
     base: getConfig('ng/api'),
     ...props
   })
 
 /**
- * Lists the subscriptions
+ * Retrieves a subscription
  */
-export const listSubscriptionsPromise = (
-  props: GetUsingFetchProps<ResponseListSubscriptionDetailDTO, Failure | Error, ListSubscriptionsQueryParams, void>,
+export const retrieveSubscriptionPromise = (
+  props: GetUsingFetchProps<ResponseSubscriptionDetailDTO, Failure | Error, RetrieveSubscriptionQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseListSubscriptionDetailDTO, Failure | Error, ListSubscriptionsQueryParams, void>(
+  getUsingFetch<ResponseSubscriptionDetailDTO, Failure | Error, RetrieveSubscriptionQueryParams, void>(
     getConfig('ng/api'),
     `/subscriptions`,
     props,
@@ -55592,6 +55780,21 @@ export const syncStripeEventPromise = (
 
 export interface CancelSubscriptionQueryParams {
   accountIdentifier: string
+  moduleType:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'SRM'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+    | 'IACM'
 }
 
 export type CancelSubscriptionProps = Omit<
@@ -55639,84 +55842,6 @@ export const cancelSubscriptionPromise = (
     props,
     signal
   )
-
-export interface RetrieveSubscriptionQueryParams {
-  accountIdentifier: string
-}
-
-export interface RetrieveSubscriptionPathParams {
-  subscriptionId: string
-}
-
-export type RetrieveSubscriptionProps = Omit<
-  GetProps<
-    ResponseSubscriptionDetailDTO,
-    Failure | Error,
-    RetrieveSubscriptionQueryParams,
-    RetrieveSubscriptionPathParams
-  >,
-  'path'
-> &
-  RetrieveSubscriptionPathParams
-
-/**
- * Retrieves a subscription
- */
-export const RetrieveSubscription = ({ subscriptionId, ...props }: RetrieveSubscriptionProps) => (
-  <Get<ResponseSubscriptionDetailDTO, Failure | Error, RetrieveSubscriptionQueryParams, RetrieveSubscriptionPathParams>
-    path={`/subscriptions/${subscriptionId}`}
-    base={getConfig('ng/api')}
-    {...props}
-  />
-)
-
-export type UseRetrieveSubscriptionProps = Omit<
-  UseGetProps<
-    ResponseSubscriptionDetailDTO,
-    Failure | Error,
-    RetrieveSubscriptionQueryParams,
-    RetrieveSubscriptionPathParams
-  >,
-  'path'
-> &
-  RetrieveSubscriptionPathParams
-
-/**
- * Retrieves a subscription
- */
-export const useRetrieveSubscription = ({ subscriptionId, ...props }: UseRetrieveSubscriptionProps) =>
-  useGet<
-    ResponseSubscriptionDetailDTO,
-    Failure | Error,
-    RetrieveSubscriptionQueryParams,
-    RetrieveSubscriptionPathParams
-  >((paramsInPath: RetrieveSubscriptionPathParams) => `/subscriptions/${paramsInPath.subscriptionId}`, {
-    base: getConfig('ng/api'),
-    pathParams: { subscriptionId },
-    ...props
-  })
-
-/**
- * Retrieves a subscription
- */
-export const retrieveSubscriptionPromise = (
-  {
-    subscriptionId,
-    ...props
-  }: GetUsingFetchProps<
-    ResponseSubscriptionDetailDTO,
-    Failure | Error,
-    RetrieveSubscriptionQueryParams,
-    RetrieveSubscriptionPathParams
-  > & { subscriptionId: string },
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<
-    ResponseSubscriptionDetailDTO,
-    Failure | Error,
-    RetrieveSubscriptionQueryParams,
-    RetrieveSubscriptionPathParams
-  >(getConfig('ng/api'), `/subscriptions/${subscriptionId}`, props, signal)
 
 export interface UpdateSubscriptionQueryParams {
   accountIdentifier: string
@@ -56987,7 +57112,7 @@ export interface GetUserGroupListQueryParams {
   orgIdentifier?: string
   projectIdentifier?: string
   searchTerm?: string
-  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS'
+  filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS' | 'INCLUDE_CHILD_SCOPE_GROUPS'
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
@@ -61841,6 +61966,9 @@ export interface GetYamlSchemaQueryParams {
     | 'CloudFunctionRollback'
     | 'BambooBuild'
     | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
+    | 'SscaOrchestration'
   subtype?:
     | 'K8sCluster'
     | 'Git'

@@ -14,7 +14,7 @@ import { StringKeys, useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { Editions, TimeType } from '@common/constants/SubscriptionTypes'
-import { ItemDTO, SubscriptionDetailDTO, useListSubscriptions } from 'services/cd-ng'
+import type { ItemDTO, SubscriptionDetailDTO } from 'services/cd-ng'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { openFileATicket } from '@common/components/ResourceCenter/utils'
@@ -23,7 +23,7 @@ import { usePage } from '@common/pages/pageContext/PageProvider'
 import { getSubscriptionByPaymentFrequency } from '@auth-settings/components/Subscription/subscriptionUtils'
 import NoBills from './images/noBills.svg'
 import BillingAdminsCard from './BillingAdminsCard'
-import SubscriptionTable from './SubscriptionTable'
+// import SubscriptionTable from './SubscriptionTable'
 import ActiveSubscriptionCard, { ActiveSubscriptionDetails } from './ActiveSubscriptionCard'
 import PaymentMethods from './PaymentMethods'
 import css from './BillingPage.module.scss'
@@ -63,8 +63,12 @@ export default function BillingPage(_props: { children?: JSX.Element }): JSX.Ele
   const { trackPage, identifyUser } = useTelemetry()
   const history = useHistory()
   const [subscriptions, setsubscriptions] = useState<{ [key: string]: SubscriptionDetailDTO[] }>({})
+  const data = {
+    data: []
+  }
+  const loading = false
 
-  const { data, loading } = useListSubscriptions({ queryParams: { accountIdentifier: accountId } })
+  // const { data, loading } = useListSubscriptions({ queryParams: { accountIdentifier: accountId } })
   useEffect(() => {
     if (pageName) {
       identifyUser(currentUserInfo.email)
@@ -104,12 +108,12 @@ export default function BillingPage(_props: { children?: JSX.Element }): JSX.Ele
             <BillingAdminsCard />
           </Layout.Horizontal>
 
-          {subscriptions[TimeType.YEARLY]?.length > 0 && (
+          {/* {subscriptions[TimeType.YEARLY]?.length > 0 && (
             <SubscriptionTable frequency={TimeType.YEARLY} data={subscriptions[TimeType.YEARLY]} />
           )}
           {subscriptions[TimeType.MONTHLY]?.length > 0 && (
             <SubscriptionTable frequency={TimeType.MONTHLY} data={subscriptions[TimeType.MONTHLY]} />
-          )}
+          )} */}
 
           {!loading && isEmpty(subscriptions[TimeType.YEARLY]) && isEmpty(subscriptions[TimeType.MONTHLY]) && (
             <NoSubscriptionsCard gotoSubscriptions={gotoSubscriptions} getString={getString} />

@@ -28,7 +28,7 @@ import { useParams } from 'react-router-dom'
 import type { IItemRendererProps } from '@blueprintjs/select'
 import { useStrings } from 'framework/strings'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import { useQueryParams } from '@common/hooks'
+import { useMutateAsGet, useQueryParams } from '@common/hooks'
 
 import {
   ConnectorConfigDTO,
@@ -73,7 +73,7 @@ function FormComponent({
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [planDetails, setPlanDetails] = useState<SelectOption[]>([])
   const [artifactPath, setFilePath] = useState<SelectOption[]>([])
-  const [build, setBambooBuilds] = useState<SelectOption[]>([])
+  const [builds, setBambooBuilds] = useState<SelectOption[]>([])
   const commonParams = {
     accountIdentifier: accountId,
     projectIdentifier,
@@ -88,44 +88,50 @@ function FormComponent({
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
   const {
-    refetch: refetchPlans,
     data: plansResponse,
     loading: loadingPlans,
-    error: plansError
-  } = useGetPlansKey({
-    lazy: true,
+    error: plansError,
+    refetch: refetchPlans
+  } = useMutateAsGet(useGetPlansKey, {
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue?.toString()
-    }
+      connectorRef: connectorRefValue?.toString() as string
+    },
+    lazy: true,
+    body: {}
   })
 
   const {
-    refetch: refetchartifactPaths,
+    refetch: refetchArtifactPaths,
     data: artifactPathsResponse,
     loading: fetchingArtifacts,
-    error: errorFetchingPath
-  } = useGetArtifactPathsForBamboo({
-    lazy: true,
+    error: artifactPathError
+  } = useMutateAsGet(useGetArtifactPathsForBamboo, {
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue?.toString()
+      connectorRef: connectorRefValue?.toString(),
+
+      planName: planNameValue
     },
-    planName: planNameValue
+    lazy: true,
+    body: {}
   })
 
   const {
-    refetch: refetchJenkinsBuild,
+    refetch: refetchBambooBuild,
     data: bambooBuildResponse,
     loading: fetchingBuild,
-    error: errorFetchingBuild
-  } = useGetBuildsForBamboo({
-    lazy: true,
+    error: buildError
+  } = useMutateAsGet(useGetBuildsForBamboo, {
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue?.toString()
+
+      connectorRef: connectorRefValue?.toString(),
+
+      planName: planNameValue
     },
-    planName: planNameValue
+    lazy: true,
+    body: {}
   })
 
   useEffect(() => {
@@ -235,6 +241,7 @@ function FormComponent({
                 ) {
                   return
                 }
+
                 refetchPlans()
               },
               allowableTypes
@@ -271,7 +278,7 @@ function FormComponent({
                 ) {
                   return
                 }
-                refetchartifactPaths()
+                refetchArtifactPaths()
               },
               selectProps: {
                 allowCreatingNewItems: true,
@@ -279,7 +286,7 @@ function FormComponent({
                 items: defaultTo(artifactPath, []),
                 noResults: (
                   <NoTagResults
-                    tagError={errorFetchingPath}
+                    tagError={artifactPathError}
                     isServerlessDeploymentTypeSelected={false}
                     defaultErrorText={
                       fetchingArtifacts
@@ -325,12 +332,12 @@ function FormComponent({
               selectProps: {
                 allowCreatingNewItems: true,
                 addClearBtn: !isReadonly,
-                items: defaultTo(build, []),
+                items: defaultTo(builds, []),
                 loadingItems: fetchingBuild,
                 itemRenderer: buildItemRenderer,
                 noResults: (
                   <NoTagResults
-                    tagError={errorFetchingBuild}
+                    tagError={buildError}
                     isServerlessDeploymentTypeSelected={false}
                     defaultErrorText={
                       fetchingBuild
@@ -350,11 +357,11 @@ function FormComponent({
                 ) {
                   return
                 }
-                refetchJenkinsBuild()
+                refetchBambooBuild()
               },
               allowableTypes
             }}
-            selectItems={build || []}
+            selectItems={builds || []}
           />
           {getMultiTypeFromValue(formik.values?.spec?.build) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
