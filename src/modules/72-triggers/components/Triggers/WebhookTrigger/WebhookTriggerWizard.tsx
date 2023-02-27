@@ -1409,7 +1409,7 @@ export default function WebhookTriggerWizard(
       key={wizardKey} // re-renders with yaml to visual initialValues
       wizardType="webhook"
       formikInitialProps={{
-        initialValues,
+        initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
         onSubmit: onSubmit,
         validationSchema: getValidationSchema(
           getString,

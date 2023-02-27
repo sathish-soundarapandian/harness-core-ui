@@ -1857,7 +1857,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       <Wizard
         key={wizardKey} // re-renders with yaml to visual initialValues
         formikInitialProps={{
-          initialValues,
+          initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
           onSubmit: (val: FlatValidWebhookFormikValuesInterface) => handleWebhookSubmit(val),
           validationSchema: getValidationSchema(
             TriggerTypes.WEBHOOK as unknown as NGTriggerSourceV2['type'],
@@ -1915,7 +1915,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
       <Wizard
         key={wizardKey} // re-renders with yaml to visual initialValues
         formikInitialProps={{
-          initialValues,
+          initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
           onSubmit: (val: FlatValidArtifactFormikValuesInterface) => handleArtifactSubmit(val),
           validationSchema: getValidationSchema(
             initialValues.triggerType as unknown as NGTriggerSourceV2['type'],
@@ -1965,7 +1965,7 @@ const TriggersWizardPage = (props: TriggersWizardPageProps): JSX.Element => {
     return (
       <Wizard
         formikInitialProps={{
-          initialValues,
+          initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
           onSubmit: (val: FlatValidScheduleFormikValuesInterface) => handleScheduleSubmit(val),
           validationSchema: getValidationSchema(
             TriggerTypes.SCHEDULE as unknown as NGTriggerSourceV2['type'],
