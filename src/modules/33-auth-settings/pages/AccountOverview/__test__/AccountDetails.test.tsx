@@ -82,9 +82,7 @@ describe('AccountDetails', () => {
 
   test('should call update default version when click save from default version form', async () => {
     const { getByText } = render(
-      <TestWrapper
-        defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: Editions.TEAM, status: 'ACTIVE' } } }}
-      >
+      <TestWrapper defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: 'TEAM', status: 'ACTIVE' } } }}>
         <AccountDetails />
       </TestWrapper>
     )
@@ -97,9 +95,7 @@ describe('AccountDetails', () => {
 
   test('should call update account name api when edit name and save', async () => {
     const { getByText, container } = render(
-      <TestWrapper
-        defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: Editions.TEAM, status: 'ACTIVE' } } }}
-      >
+      <TestWrapper defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: 'TEAM', status: 'ACTIVE' } } }}>
         <AccountDetails />
       </TestWrapper>
     )
@@ -124,9 +120,7 @@ describe('AccountDetails', () => {
       }
     })
     const { getByText, container } = render(
-      <TestWrapper
-        defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: Editions.TEAM, status: 'ACTIVE' } } }}
-      >
+      <TestWrapper defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: 'TEAM', status: 'ACTIVE' } } }}>
         <AccountDetails />
       </TestWrapper>
     )
@@ -152,9 +146,7 @@ describe('AccountDetails', () => {
       }
     })
     const { getByText } = render(
-      <TestWrapper
-        defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: Editions.TEAM, status: 'ACTIVE' } } }}
-      >
+      <TestWrapper defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: 'TEAM', status: 'ACTIVE' } } }}>
         <AccountDetails />
       </TestWrapper>
     )
