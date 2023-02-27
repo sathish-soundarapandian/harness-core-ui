@@ -9,8 +9,8 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { TestWrapper } from '@common/utils/testUtils'
 import * as FeatureFlag from '@common/hooks/useFeatureFlag'
-import AccountOverview from '../AccountOverview'
 import { cdLicenseStoreValues } from '@common/utils/DefaultAppStoreData'
+import AccountOverview from '../AccountOverview'
 
 jest.mock('services/cd-ng', () => {
   return {
