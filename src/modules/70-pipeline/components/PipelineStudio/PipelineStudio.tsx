@@ -26,7 +26,7 @@ import { useQueryParams } from '@common/hooks'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { ModuleLicenseType } from '@common/constants/SubscriptionTypes'
 import { ModuleName } from 'framework/types/ModuleName'
-import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { getCDTrialDialog } from './CDTrial/useCDTrialModal'
 import { getCITrialDialog } from './CITrial/useCITrialModal'
 import { getPipelineStages } from './PipelineStagesUtils'
@@ -85,7 +85,7 @@ export default function PipelineStudio(): React.ReactElement {
   const { CING_ENABLED, CFNG_ENABLED, PIE_NG_GITX_CACHING, PIPELINE_CHAINING, IACM_ENABLED } = useFeatureFlags()
 
   const { getString } = useStrings()
-  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   return (
     <PipelineProvider
       stagesMap={stagesCollection.getAllStagesAttributes(getString)}

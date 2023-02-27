@@ -11,14 +11,14 @@ import { useStrings } from 'framework/strings'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
-import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import css from './ModuleRenderer.module.scss'
 
 const DefaultRenderer: React.FC = () => {
   const { getString } = useStrings()
   const { CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, CHAOS_ENABLED } = useFeatureFlags()
   const { licenseInformation } = useLicenseStore()
-  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   return (
     <Layout.Vertical padding={{ top: 'xlarge' }} className={css.started}>
       <Text font={{ size: 'small', weight: 'semi-bold' }} padding={{ bottom: 'xsmall' }}>

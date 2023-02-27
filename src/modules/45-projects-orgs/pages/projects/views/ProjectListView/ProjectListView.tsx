@@ -24,7 +24,7 @@ import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import DescriptionPopover from '@common/components/DescriptionPopover.tsx/DescriptionPopover'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { useDefaultPaginationProps } from '@common/hooks/useDefaultPaginationProps'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectListView.module.scss'
@@ -77,7 +77,7 @@ const RenderColumnModules: Renderer<CellProps<ProjectAggregateDTO>> = ({ row }) 
   const data = row.original
   const { licenseInformation } = useLicenseStore()
   const shouldShowModules = data.projectResponse.project.modules?.length
-  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   function getModuleIcons(project: Project): React.ReactElement[] {
     const modules = project.modules
     const icons = []

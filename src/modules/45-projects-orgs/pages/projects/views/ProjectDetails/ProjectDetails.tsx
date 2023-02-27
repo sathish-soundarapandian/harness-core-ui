@@ -45,7 +45,7 @@ import {
 } from '@common/factories/LandingDashboardContext'
 import TimeRangeSelect from '@projects-orgs/components/TimeRangeSelect/TimeRangeSelect'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import DeprecatedCallout from '@gitsync/components/DeprecatedCallout/DeprecatedCallout'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectDetails.module.scss'
@@ -117,7 +117,7 @@ const ProjectDetails: React.FC = () => {
   }
   const { openDialog } = useDeleteProjectDialog(projectData || { identifier: '', name: '' }, onDeleted)
   useDocumentTitle(getString('projectsText'))
-  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   const getModuleInfoCards = (): React.ReactElement | React.ReactElement[] => {
     if (!projectData?.modules?.length) {
       return (

@@ -11,7 +11,7 @@ import { ModalDialog } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import ExecutionGraph, {
   ExecutionGraphAddStepEvent,
   ExecutionGraphEditStepEvent,
@@ -64,7 +64,7 @@ export function StepGroupTemplateDiagram(): React.ReactElement {
   const [stages, setStages] = React.useState<Array<PipelineStageProps>>([])
 
   const { addTemplate } = useAddStepTemplate({ executionRef: executionRef.current })
-  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   React.useEffect(() => {
     const tempStages: PipelineStageProps[] = []
     tempStages.push(

@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { Droppable, DragDropContext } from 'react-beautiful-dnd'
-import type { NavModuleName } from '@common/hooks/useGetModuleInfo'
+import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import DraggableModuleItem from './DraggableModuleItem/DraggableModuleItem'
 
 export interface ModuleSortableListProps {

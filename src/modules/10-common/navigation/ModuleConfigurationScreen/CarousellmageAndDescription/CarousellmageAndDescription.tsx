@@ -10,7 +10,7 @@ import type { Asset } from 'contentful'
 import { Layout, Text } from '@harness/uicore'
 import { Icon } from '@harness/icons'
 import { FontVariation, Color } from '@harness/design-system'
-import useGetModuleInfo, { NavModuleName } from '@common/hooks/useGetModuleInfo'
+import useNavModuleInfo, { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import css from './CarousellmageAndDescription.module.scss'
 
 interface CarouselImageAndDescriptionProps {
@@ -26,7 +26,7 @@ const CarouselImageAndDescription: React.FC<CarouselImageAndDescriptionProps> = 
   secondaryText,
   activeModule
 }) => {
-  const { icon } = useGetModuleInfo(activeModule)
+  const { icon } = useNavModuleInfo(activeModule)
 
   return (
     <Layout.Vertical flex={{ justifyContent: 'center' }} height="100%">

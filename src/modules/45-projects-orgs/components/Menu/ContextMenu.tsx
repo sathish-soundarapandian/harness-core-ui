@@ -21,7 +21,7 @@ import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import type { PermissionRequest } from '@rbac/hooks/usePermission'
-import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 interface ContextMenuProps {
   project: Project
   reloadProjects?: () => Promise<unknown>
@@ -149,7 +149,7 @@ const ContextMenu: React.FC<ContextMenuProps> = props => {
       })
     )
   }
-  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   return (
     <Menu style={{ minWidth: 'unset' }}>
       {shouldVisible && project.modules?.includes(ModuleName.CD) ? (

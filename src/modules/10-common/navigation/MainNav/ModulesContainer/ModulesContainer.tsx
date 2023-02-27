@@ -14,7 +14,7 @@ import {
   MODULES_CONFIG_PREFERENCE_STORE_KEY
 } from '@common/navigation/ModuleConfigurationScreen/ModuleConfigurationScreen'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
-import { useNavModuleInfoMap } from '@common/hooks/useGetModuleInfo'
+import { useNavModuleInfoMap } from '@common/hooks/useNavModuleInfo'
 import { filterNavModules, moduleToNavItemsMap } from '../util'
 import css from '../MainNav.module.scss'
 

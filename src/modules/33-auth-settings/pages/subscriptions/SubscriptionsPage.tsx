@@ -16,7 +16,7 @@ import { useQueryParams } from '@common/hooks'
 import { Page } from '@common/exports'
 import routes from '@common/RouteDefinitions'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
-import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import type { AccountPathProps, Module } from '@common/interfaces/RouteInterfaces'
 import { Editions } from '@common/constants/SubscriptionTypes'
@@ -91,7 +91,7 @@ const SubscriptionsPage: React.FC = () => {
   useEffect(() => {
     trackPage(PAGE_NAME.SubscriptionsPage, { module: moduleCard as string })
   }, [])
-  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   const ACTIVE_MODULE_SELECT_CARDS = MODULE_SELECT_CARDS.reduce(
     (accumulator: ModuleSelectCard[], card: ModuleSelectCard) => {
       const { module } = card

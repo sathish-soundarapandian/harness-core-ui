@@ -48,7 +48,7 @@ import type { Module } from '@common/interfaces/RouteInterfaces'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
 import { useStrings } from 'framework/strings'
 import { ModuleName } from 'framework/types/ModuleName'
-import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import { initialState, TemplateReducer, TemplateReducerState, TemplateViewData } from './TemplateReducer'
 import { ActionReturnType, TemplateContextActions } from './TemplateActions'
 
@@ -991,7 +991,7 @@ export const TemplateProvider: React.FC<{
   const setIntermittentLoading = React.useCallback((isIntermittentLoading: boolean) => {
     dispatch(TemplateContextActions.setIntermittentLoading({ isIntermittentLoading }))
   }, [])
-  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   const renderPipelineStage = (args: Omit<PipelineStagesProps, 'children'>) =>
     getPipelineStages({
       args,

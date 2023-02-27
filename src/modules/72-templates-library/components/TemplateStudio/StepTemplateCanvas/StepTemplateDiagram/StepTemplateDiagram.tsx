@@ -26,7 +26,7 @@ import { StageType } from '@pipeline/utils/stageHelpers'
 import { getAllStepPaletteModuleInfos, getStepPaletteModuleInfosFromStage } from '@pipeline/utils/stepUtils'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ModuleName } from 'framework/types/ModuleName'
-import useGetModuleInfo from '@common/hooks/useGetModuleInfo'
+import useNavModuleInfo from '@common/hooks/useNavModuleInfo'
 import css from './StepTemplateDiagram.module.scss'
 
 export const StepTemplateDiagram = (): JSX.Element => {
@@ -40,7 +40,7 @@ export const StepTemplateDiagram = (): JSX.Element => {
   const { module } = useParams<ModulePathParams>()
   const [isStepSelectorOpen, setIsStepSelectorOpen] = React.useState<boolean>()
   const { CING_ENABLED, CFNG_ENABLED } = useFeatureFlags()
-  const { shouldVisible } = useGetModuleInfo(ModuleName.CD)
+  const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   const openStepSelector = React.useCallback(() => {
     setIsStepSelectorOpen(true)
   }, [setIsStepSelectorOpen])

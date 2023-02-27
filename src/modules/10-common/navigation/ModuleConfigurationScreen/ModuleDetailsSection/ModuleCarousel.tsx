@@ -10,7 +10,7 @@ import Lottie from 'react-lottie-player'
 import { Icon } from '@harness/icons'
 import { Container, Layout, Text, Carousel } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
-import useGetModuleInfo, { NavModuleName } from '@common/hooks/useGetModuleInfo'
+import useNavModuleInfo, { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import { MassagedModuleData, ModuleContentType } from '../useGetContentfulModules'
 import CarouselImageAndDescription from '../CarousellmageAndDescription/CarousellmageAndDescription'
 import LottieRenderer from '../LottieRenderer/LottieRenderer'
@@ -30,7 +30,7 @@ const getComponentBasedOnType = (type: ModuleContentType): React.ComponentType<a
 }
 
 const ModuleCarousel: React.FC<ModuleCarouselProps> = ({ module: selectedModule, data: massagedModuleData }) => {
-  const { icon } = useGetModuleInfo(selectedModule)
+  const { icon } = useNavModuleInfo(selectedModule)
   const [defaultLottie, setDefaultLottie] = useState<object | undefined>()
 
   const { label, data = [] } = massagedModuleData || {}

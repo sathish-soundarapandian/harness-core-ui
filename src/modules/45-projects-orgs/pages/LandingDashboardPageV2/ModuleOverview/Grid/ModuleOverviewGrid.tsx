@@ -7,7 +7,7 @@
 
 import { Container } from '@harness/uicore'
 import React, { useState } from 'react'
-import type { NavModuleName } from '@common/hooks/useGetModuleInfo'
+import type { NavModuleName } from '@common/hooks/useNavModuleInfo'
 import { ModuleName } from 'framework/types/ModuleName'
 import type { TimeRangeFilterType } from '@common/types'
 import ModuleOverview from '../ModuleOverview'
