@@ -7,7 +7,6 @@
 
 import type { AppStoreContextProps } from 'framework/AppStore/AppStoreContext'
 import type { Project } from 'services/cd-ng'
-import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
 import { Editions } from '@common/constants/SubscriptionTypes'
 
 export const project: Project = {
@@ -64,7 +63,7 @@ export const cdLicenseStoreValues = {
   licenseInformation: {
     CD: {
       edition: Editions.TEAM,
-      status: LICENSE_STATE_VALUES.ACTIVE
+      status: 'ACTIVE'
     }
   }
 }
