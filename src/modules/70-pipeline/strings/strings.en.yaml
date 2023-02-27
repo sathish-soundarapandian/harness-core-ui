@@ -855,6 +855,8 @@ pipelineChaining:
   selectPipeline: Select Pipeline
   noProjectSelected: Project is not selected
   noPipelineSelected: Pipeline is not selected
+  noPipelinesInSelectedScope: There are no pipelines in the selected scope
+  noPipelinesInSearchCriteria: No pipelines match your search criteria
   pipelineOutputs: Pipeline Outputs
   outputTabSummaryDetail: Define outputs from child pipeline that you can use in other stages in parent pipeline.
   newOutput: New Output

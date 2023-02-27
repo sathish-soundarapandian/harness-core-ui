@@ -52,6 +52,7 @@ import ErrorsStripBinded from '@pipeline/components/ErrorsStrip/ErrorsStripBinde
 import { StageErrorContext } from '@pipeline/context/StageErrorContext'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { PipelineStageTabs } from './utils'
 import css from './PipelineStageAdvancedSpecifications.module.scss'
 
@@ -66,7 +67,7 @@ function PipelineInputSetFormBasic(): React.ReactElement {
       accountId: string
     }>
   >()
-  const { connectorRef, repoIdentifier, repoName, branch } = useQueryParams<GitQueryParams>()
+  const { connectorRef, repoIdentifier: _repoId, repoName, branch } = useQueryParams<GitQueryParams>()
   const {
     state: {
       selectionState: { selectedStageId = '' }
@@ -75,7 +76,10 @@ function PipelineInputSetFormBasic(): React.ReactElement {
     updateStage,
     getStageFromPipeline
   } = usePipelineContext()
+  const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
 
+  const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
+  const repoIdentifier = isGitSyncEnabled ? _repoId : repoName
   const selectedStage = getStageFromPipeline<PipelineStageElementConfig>(selectedStageId).stage
   const pipelineIdentifier = get(selectedStage?.stage as PipelineStageElementConfig, 'spec.pipeline', '')
   const projectIdentifier = get(selectedStage?.stage as PipelineStageElementConfig, 'spec.project', '')

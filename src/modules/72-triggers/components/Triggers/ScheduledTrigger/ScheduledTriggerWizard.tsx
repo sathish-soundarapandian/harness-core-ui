@@ -291,7 +291,12 @@ export default function ScheduledTriggerWizard(
   }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
 
   const { resolvedMergedPipeline } = useGetResolvedChildPipeline(
-    { accountId: accountIdentifier, repoIdentifier, branch, connectorRef: pipelineConnectorRef },
+    {
+      accountId: accountIdentifier,
+      repoIdentifier: defaultTo(pipelineRepoName, repoIdentifier),
+      branch,
+      connectorRef: pipelineConnectorRef
+    },
     originalPipeline,
     resolvedPipeline
   )

@@ -343,7 +343,7 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   }, [pipeline?.data?.resolvedTemplatesPipelineYaml])
 
   const { loadingResolvedChildPipeline, resolvedMergedPipeline } = useGetResolvedChildPipeline(
-    { accountId, repoIdentifier, branch, connectorRef },
+    { accountId, repoIdentifier: defaultTo(repoName, repoIdentifier), branch, connectorRef },
     parsedPipeline,
     resolvedPipeline
   )
