@@ -44,7 +44,7 @@ export function useLogSettings(): LogsSettingsReturn {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [logsInfoViewSettings, logsDateTimeViewSettings, showLogLevel, showDateTimeInformation])
+  }, [logsInfoViewSettings, logsDateTimeViewSettings])
 
   function LogsSettingsPreferenceComp(): JSX.Element {
     return (
