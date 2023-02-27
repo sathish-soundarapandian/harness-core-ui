@@ -78,7 +78,8 @@ export const getAllowedValuesFromTemplate = (template: Record<string, any>, fiel
     return []
   }
   const value = get(template, fieldPath, '')
-  const parsedInput = parseInput(value)
+  const type = get(template, fieldPath.substring(0, fieldPath.lastIndexOf('.')))?.type
+  const parsedInput = parseInput(value, { variableType: type })
   const items: SelectOption[] = defaultTo(parsedInput?.allowedValues?.values, []).map(item => ({
     label: item,
     value: item
@@ -119,7 +120,8 @@ export const shouldRenderRunTimeInputViewWithAllowedValues = (
     return false
   }
   const allowedValues = get(template, fieldPath, '')
-  const parsedInput = parseInput(allowedValues)
+  const type = get(template, fieldPath.substring(0, fieldPath.lastIndexOf('.')))?.type
+  const parsedInput = parseInput(allowedValues, { variableType: type })
   return shouldRenderRunTimeInputView(allowedValues) && !!parsedInput?.allowedValues?.values
 }
 

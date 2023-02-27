@@ -84,7 +84,8 @@ export default function ConfigureOptionsDialog(props: ConfigureOptionsDialogProp
   const { showError } = useToaster()
   const { getString } = useStrings()
   const { NG_EXECUTION_INPUT } = useFeatureFlags()
-  const parsedValues = parseInput(input)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const parsedValues = parseInput(input, { variableType: type as any })
 
   const formikRef = useRef<FormikProps<FormValues>>()
 

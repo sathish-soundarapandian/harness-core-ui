@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
 import { EXECUTION_TIME_INPUT_VALUE, MultiSelectOption, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { NGVariable } from 'services/pipeline-ng'
 import type { StringKeys } from 'framework/strings'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 
@@ -147,10 +148,16 @@ export function isExecutionInput(input: string): boolean {
   return splitData.some(val => val.startsWith(InputSetFunction.EXECUTION_INPUT))
 }
 
-export function parseInput(input: string): ParsedInput | null {
+interface parseInputOptions {
+  variableType?: NGVariable['type']
+}
+
+export function parseInput(input: string, options?: parseInputOptions): ParsedInput | null {
   if (typeof input !== 'string') {
     return null
   }
+
+  const { variableType } = defaultTo(options, {})
 
   const INPUT_EXPRESSION_REGEX = new RegExp(`^${INPUT_EXPRESSION_REGEX_STRING}$`, 'g')
 
@@ -181,7 +188,20 @@ export function parseInput(input: string): ParsedInput | null {
       const jexlMatch = fnArgs.match(JEXL_REGEXP)
 
       parsedInput[InputSetFunction.ALLOWED_VALUES] = {
-        values: jexlMatch ? null : fnArgs.split(','),
+        values: jexlMatch
+          ? null
+          : // do not parse numbers if present under a string variables to support existing pipelines
+            fnArgs.split(',').map(fnArg => {
+              try {
+                if (variableType && variableType === 'Number') {
+                  const value = yamlParse(fnArg)
+                  return value as unknown as string
+                }
+                return fnArg
+              } catch {
+                return fnArg
+              }
+            }),
         jexlExpression: jexlMatch ? jexlMatch[1] : null
       }
     } else if (fn.startsWith(InputSetFunction.REGEX)) {
@@ -194,7 +214,11 @@ export function parseInput(input: string): ParsedInput | null {
       const fnArgs = fn.slice(InputSetFunction.DEFAULT.length + 1).slice(0, -1)
 
       try {
-        parsedInput[InputSetFunction.DEFAULT] = yamlParse(fnArgs)
+        parsedInput[InputSetFunction.DEFAULT] = variableType
+          ? variableType === 'Number'
+            ? yamlParse(fnArgs)
+            : fnArgs
+          : yamlParse(fnArgs)
       } catch (_) {
         parsedInput[InputSetFunction.DEFAULT] = fnArgs
       }

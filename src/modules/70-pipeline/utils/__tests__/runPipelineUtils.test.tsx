@@ -6,6 +6,7 @@
  */
 
 import { MultiTypeInputType } from '@harness/uicore'
+import { set } from 'lodash-es'
 import type { AllNGVariables, Pipeline } from '@pipeline/utils/types'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import {
@@ -18,6 +19,7 @@ import {
 } from '../runPipelineUtils'
 import pipelineTemplate from './mockJson/pipelineTemplate.json'
 import pipelineInputSetPortion from './mockJson/pipelineInputSetPortion.json'
+import { inputSetInput, inputSetOutput } from './mockJson/runPipelineUtils'
 
 describe('mergeTemplateWithInputSetData tests', () => {
   test('mergeTemplateWithInputSetData works as expected', () => {
@@ -544,5 +546,21 @@ describe('getAllowableTypesWithoutExpression tests', () => {
         MultiTypeInputType.EXPRESSION
       ])
     ).toEqual([MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME])
+  })
+})
+
+describe('default behaviour test', () => {
+  test('default values provided as default key value pair should be filled', () => {
+    expect(clearRuntimeInput(inputSetInput)).toEqual(inputSetOutput)
+  })
+
+  test('default as key value pair should not be given preference over <input>.default()', () => {
+    set(
+      inputSetInput,
+      'pipeline.stages[0].stage.variables[0].value',
+      '<+input>.default(test).allowedValues(test1,test,test2)'
+    )
+    set(inputSetOutput, 'pipeline.stages[0].stage.variables[0].value', 'test')
+    expect(clearRuntimeInput(inputSetInput)).toEqual(inputSetOutput)
   })
 })
