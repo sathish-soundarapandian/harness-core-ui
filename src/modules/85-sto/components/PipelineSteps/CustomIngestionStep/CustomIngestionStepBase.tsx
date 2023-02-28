@@ -54,7 +54,7 @@ export const CustomIngestionStepBase = (
 
   const valuesInCorrectFormat = getInitialValuesInCorrectFormat<CustomIngestionStepData, CustomIngestionStepData>(
     initialValues,
-    transformValuesFieldsConfig(initialValues),
+    transformValuesFieldsConfig(),
     { imagePullPolicyOptions: getImagePullPolicyOptions(getString) }
   )
 
@@ -65,7 +65,7 @@ export const CustomIngestionStepBase = (
       validate={valuesToValidate => {
         const schemaValues = getFormValuesInCorrectFormat<CustomIngestionStepData, CustomIngestionStepData>(
           valuesToValidate,
-          transformValuesFieldsConfig(valuesToValidate)
+          transformValuesFieldsConfig()
         )
         onChange?.(schemaValues)
         return validate(
@@ -83,7 +83,7 @@ export const CustomIngestionStepBase = (
       onSubmit={(_values: CustomIngestionStepData) => {
         const schemaValues = getFormValuesInCorrectFormat<CustomIngestionStepData, CustomIngestionStepData>(
           _values,
-          transformValuesFieldsConfig(_values)
+          transformValuesFieldsConfig()
         )
 
         onUpdate?.(schemaValues)
