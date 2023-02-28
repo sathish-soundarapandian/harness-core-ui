@@ -721,6 +721,7 @@ getStartedWithCD:
   repoServer: Repo server
   redisCache: Redis cache
   applicationController: Application controller
+  applicationSetController: Application Set controller
   provisioningText: Provisioning these components will take up to 5 minutes
   setupIPWhiteListing: Set up IP Whitelisting for Harness to connect to your cluster
   agentProvisionedSuccessfully: Your agent has been provisioned successfully
@@ -746,6 +747,7 @@ getStartedWithCD:
   repoServerInstalled: Repo server installed
   redisCacheInstalled: Redis cache installed
   appControllerInstalled: Application controller installed
+  applicationSetControllerInstalled: Application Set controller installed
 ecsRollingDeployStep:
   sameAsAlreadyRunningInstances: Same as already running instances
   forceNewDeployment: Force new deployment

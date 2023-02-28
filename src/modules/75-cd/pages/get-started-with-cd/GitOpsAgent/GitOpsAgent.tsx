@@ -54,6 +54,10 @@ const AgentStaticInfo = ({ getString }: { getString: UseStringsReturn['getString
             <div className={css.blueDot} />
             {getString('cd.getStartedWithCD.applicationController')}
           </div>
+          <div className={css.installedComponent}>
+            <div className={css.blueDot} />
+            {getString('cd.getStartedWithCD.applicationSetController')}
+          </div>
           <div className={classnames(css.installedComponent, css.provisioningText)}>
             {getString('cd.getStartedWithCD.provisioningText')}
           </div>

@@ -5274,6 +5274,8 @@ export interface StringsMap {
   'cd.getStartedWithCD.appControllerInstalled': string
   'cd.getStartedWithCD.applicationController': string
   'cd.getStartedWithCD.applicationDetails': string
+  'cd.getStartedWithCD.applicationSetController': string
+  'cd.getStartedWithCD.applicationSetControllerInstalled': string
   'cd.getStartedWithCD.artifactLocation': string
   'cd.getStartedWithCD.artifactManifest': string
   'cd.getStartedWithCD.artifactManifestContent': string

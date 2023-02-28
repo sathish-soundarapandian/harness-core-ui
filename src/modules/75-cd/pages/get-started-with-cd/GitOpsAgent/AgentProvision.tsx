@@ -107,6 +107,10 @@ export const AgentProvision = ({
         <Icon name={data?.health?.argoAppController?.status === 'HEALTHY' ? depSuccessLegacy : unhealthyIcon} />
         <span className={css.stepDesc}> {getString('cd.getStartedWithCD.appControllerInstalled')}</span>
       </div>
+      <div className={css.verificationStep}>
+        <Icon name={data?.health?.argoAppSetController?.status === 'HEALTHY' ? depSuccessLegacy : unhealthyIcon} />
+        <span className={css.stepDesc}> {getString('cd.getStartedWithCD.applicationSetControllerInstalled')}</span>
+      </div>
     </div>
   )
 }
