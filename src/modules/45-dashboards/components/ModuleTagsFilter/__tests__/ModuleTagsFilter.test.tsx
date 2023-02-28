@@ -63,8 +63,8 @@ describe('ModuleTagsFilter', () => {
     useFeatureFlagsMock.mockReturnValue({
       CENG_ENABLED: true,
       CING_ENABLED: true,
-      CFNG_ENABLED: false,
-      CDNG_ENABLED: false
+      CDNG_ENABLED: false,
+      CFNG_ENABLED: false
     })
     mockImport('framework/LicenseStore/LicenseStoreContext', {
       useLicenseStore: jest.fn().mockImplementation(() => ({

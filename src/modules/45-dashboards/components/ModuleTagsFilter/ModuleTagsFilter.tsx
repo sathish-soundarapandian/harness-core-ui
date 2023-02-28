@@ -44,7 +44,6 @@ const ModuleTagsFilter: React.FC<ModuleTagsFilterProps> = ({ selectedFilter, set
       )
     )
   }
-
   return (
     <>
       {renderTagsFilter(DashboardTags.HARNESS, moduleTagCss.harnessTag, 'dashboards.modules.harness', true)}
