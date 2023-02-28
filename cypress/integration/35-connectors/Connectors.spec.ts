@@ -36,7 +36,7 @@ describe('Connectors list', () => {
 
     cy.contains('p', 'There are no connectors in your project').should('be.visible')
     cy.contains('span', 'Create a Connector').should('be.visible')
-    cy.contains('span', 'Create a Connector').click()
+    cy.contains('span', 'Create a Connectorq').click()
 
     cy.contains('div', 'Cloud Providers').should('be.visible')
     cy.contains('section', 'GCP').should('be.visible')
