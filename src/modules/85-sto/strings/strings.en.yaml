@@ -19,6 +19,7 @@ stepDescription:
   Zap: Use Zap to test for vulnerabilities.
   PrismaCloud: Use Prisma Cloud to test for vulnerabilities.
   Mend: Use Mend to test for vulnerabilities.
+  CustomIngestion: Ingest custom Issues from any scanning tool.
 stepField:
   mode: Scan Mode
   config: Scan Configuration
@@ -53,6 +54,7 @@ stepField:
     includeRaw: Include Raw
   ingestion:
     file: Ingestion File
+    customerArtifactsPath: Customer Artifacts Path
   optionLabels:
     logLevel:
       debug: Debug

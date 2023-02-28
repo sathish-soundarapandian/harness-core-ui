@@ -150,9 +150,9 @@ export const severityOptions = (getString: getStringProp) => [
   }
 ]
 
-const specPrivileged = 'spec.privileged'
-const specSettings = 'spec.settings'
-const specRunAsUser = 'spec.runAsUser'
+export const specPrivileged = 'spec.privileged'
+export const specSettings = 'spec.settings'
+export const specRunAsUser = 'spec.runAsUser'
 
 export const authFieldsTransformConfig = (data: SecurityStepData<SecurityStepSpec>) =>
   data.spec.mode !== 'ingestion'

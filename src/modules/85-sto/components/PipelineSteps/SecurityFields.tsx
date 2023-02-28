@@ -61,6 +61,7 @@ interface ISecurityScanFields extends SecurityFieldsProps<SecurityStepData<Secur
 
 interface ISecurityTargetFields extends SecurityFieldsProps<SecurityStepData<SecurityStepSpec>> {
   targetTypeSelectItems: SelectItems[]
+  ingestionOnly?: boolean
 }
 
 export function SecurityScanFields(props: ISecurityScanFields) {
@@ -95,7 +96,7 @@ export function SecurityScanFields(props: ISecurityScanFields) {
 }
 
 export function SecurityTargetFields(props: ISecurityTargetFields) {
-  const { allowableTypes, formik, stepViewType, targetTypeSelectItems } = props
+  const { allowableTypes, formik, stepViewType, targetTypeSelectItems, ingestionOnly } = props
   return (
     <>
       <SecurityField
@@ -115,11 +116,13 @@ export function SecurityTargetFields(props: ISecurityTargetFields) {
           },
           'spec.target.name': {
             label: 'name',
-            tooltipId: tooltipIds.targetName
+            tooltipId: tooltipIds.targetName,
+            hide: ingestionOnly
           },
           'spec.target.variant': {
             label: 'sto.stepField.target.variant',
-            tooltipId: tooltipIds.targetVariant
+            tooltipId: tooltipIds.targetVariant,
+            hide: ingestionOnly
           },
           'spec.target.workspace': {
             optional: true,

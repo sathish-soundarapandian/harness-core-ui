@@ -8840,6 +8840,7 @@ export interface StringsMap {
   'sto.stepDescription.Brakeman': string
   'sto.stepDescription.Burp': string
   'sto.stepDescription.Checkmarx': string
+  'sto.stepDescription.CustomIngestion': string
   'sto.stepDescription.Fortify': string
   'sto.stepDescription.FortifyOnDemand': string
   'sto.stepDescription.Grype': string
@@ -8867,6 +8868,7 @@ export interface StringsMap {
   'sto.stepField.container.containerAccessToken': string
   'sto.stepField.container.containerRegion': string
   'sto.stepField.image.fieldsHeading': string
+  'sto.stepField.ingestion.customerArtifactsPath': string
   'sto.stepField.ingestion.file': string
   'sto.stepField.mode': string
   'sto.stepField.optionLabels.logLevel.debug': string

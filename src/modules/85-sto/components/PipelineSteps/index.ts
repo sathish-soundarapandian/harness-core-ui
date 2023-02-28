@@ -18,6 +18,7 @@ import { ZapStep } from './ZapStep/ZapStep'
 import { PrismaCloudStep } from './PrismaCloudStep/PrismaCloudStep'
 import { CheckmarxStep } from './CheckmarxStep/CheckmarxStep'
 import { MendStep } from './MendStep/MendStep'
+import { CustomIngestionStep } from './CustomIngestionStep/CustomIngestionStep'
 
 factory.registerStep(new ZeroNorthStep())
 factory.registerStep(new AquatrivyStep())
@@ -30,3 +31,4 @@ factory.registerStep(new ZapStep())
 factory.registerStep(new PrismaCloudStep())
 factory.registerStep(new CheckmarxStep())
 factory.registerStep(new MendStep())
+factory.registerStep(new CustomIngestionStep())

@@ -177,7 +177,8 @@ export enum StepType {
   Mend = 'Mend',
   AsgBlueGreenRollback = 'AsgBlueGreenRollback',
   AsgBlueGreenSwapService = 'AsgBlueGreenSwapService',
-  AsgBlueGreenDeploy = 'AsgBlueGreenDeploy'
+  AsgBlueGreenDeploy = 'AsgBlueGreenDeploy',
+  CustomIngestion = 'CustomIngestion'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {
