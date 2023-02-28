@@ -729,24 +729,6 @@ const Content = (props: ArtifactoryRenderContent): JSX.Element => {
                 fieldPath={`artifacts.${artifactPath}.spec.repositoryUrl`}
                 template={template}
               />
-              {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.repositoryUrl`)) ===
-                MultiTypeInputType.RUNTIME && (
-                <ConfigureOptions
-                  className={css.configureOptions}
-                  style={{ alignSelf: 'center' }}
-                  value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.repositoryUrl`)}
-                  type="String"
-                  variableName="repositoryUrl"
-                  showRequiredField={false}
-                  isReadonly={readonly}
-                  showDefaultField={true}
-                  isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                  showAdvanced={true}
-                  onChange={value => {
-                    formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.repositoryUrl`, value)
-                  }}
-                />
-              )}
             </div>
           )}
           {isFieldRuntime(`artifacts.${artifactPath}.spec.repository`, template) && (

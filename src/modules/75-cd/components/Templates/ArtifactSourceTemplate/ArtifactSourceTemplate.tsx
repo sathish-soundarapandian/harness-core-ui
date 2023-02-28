@@ -30,7 +30,10 @@ export class ArtifactSourceTemplate extends Template {
   renderTemplateCanvas(formikRef: TemplateFormRef): JSX.Element {
     return <ArtifactSourceTemplateCanvasWithRef ref={formikRef} />
   }
-  renderTemplateInputsForm({ template }: TemplateInputsProps & { accountId: string }): JSX.Element {
-    return <TemplateInputs template={template} />
+  renderTemplateInputsForm({
+    template,
+    templateInputSetFetchParams
+  }: TemplateInputsProps & { accountId: string }): JSX.Element {
+    return <TemplateInputs template={template} templateInputSetFetchParams={templateInputSetFetchParams} />
   }
 }

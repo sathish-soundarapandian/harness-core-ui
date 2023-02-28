@@ -499,7 +499,7 @@ exports[`Nexus Artifact tests form renders correctly in Edit Case 1`] = `
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_tag"
+                    data-tooltip-id="nexus3-tag"
                   >
                     tagLabel
                   </span>
@@ -1332,7 +1332,7 @@ exports[`Nexus Artifact tests render form correctly when repositoryFormat is Mav
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_tag"
+                    data-tooltip-id="nexus3-tag"
                   >
                     tagLabel
                   </span>
@@ -1947,7 +1947,7 @@ exports[`Nexus Artifact tests render form correctly when repositoryFormat is NPM
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_tag"
+                    data-tooltip-id="nexus3-tag"
                   >
                     tagLabel
                   </span>
@@ -2562,7 +2562,7 @@ exports[`Nexus Artifact tests render form correctly when repositoryFormat is NuG
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_tag"
+                    data-tooltip-id="nexus3-tag"
                   >
                     tagLabel
                   </span>
@@ -3177,7 +3177,7 @@ exports[`Nexus Artifact tests render form correctly when repositoryFormat is RAW
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_tag"
+                    data-tooltip-id="nexus3-tag"
                   >
                     tagLabel
                   </span>
@@ -4350,7 +4350,7 @@ exports[`Nexus Artifact tests renders without crashing 1`] = `
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_tag"
+                    data-tooltip-id="nexus3-tag"
                   >
                     tagLabel
                   </span>
@@ -5016,7 +5016,7 @@ exports[`Nexus Artifact tests submits correctly with tagRegex data 1`] = `
                 >
                   <span
                     class="Tooltip--acenter"
-                    data-tooltip-id="imagePath_tag"
+                    data-tooltip-id="nexus3-tag"
                   >
                     tagLabel
                   </span>

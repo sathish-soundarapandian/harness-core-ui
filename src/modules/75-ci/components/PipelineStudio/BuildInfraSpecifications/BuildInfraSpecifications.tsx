@@ -960,6 +960,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             ),
             disableTypeSelection: true
           }}
+          configureOptionsProps={{
+            hideExecutionTimeField: true
+          }}
           disabled={isReadonly}
         />
       </Container>
@@ -1001,6 +1004,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                 ),
                 allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
               }}
+              configureOptionsProps={{
+                hideExecutionTimeField: true
+              }}
               disabled={isReadonly}
             />
           </Container>
@@ -1019,6 +1025,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                   </Text>
                 ),
                 allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
+              }}
+              configureOptionsProps={{
+                hideExecutionTimeField: true
               }}
               disabled={isReadonly}
             />
@@ -1050,6 +1059,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                 multiTextInputProps: { expressions, allowableTypes },
                 disabled: isReadonly,
                 placeholder: '1000'
+              }}
+              configureOptionsProps={{
+                hideExecutionTimeField: true
               }}
             />
           </Container>
@@ -1198,7 +1210,7 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
     )
 
   const renderPlatformInfraSection = (formik: FormikProps<BuildInfraFormValues>): React.ReactElement => {
-    let buildInfraSelectOptions = []
+    let buildInfraSelectOptions: { label: string; value: OsTypes }[] = []
     const buildArchSelectOptions = [
       {
         label: getString('pipeline.infraSpecifications.architectureTypes.arm64'),
@@ -1238,15 +1250,6 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             value: OsTypes.Windows
           })
         break
-      case CIBuildInfrastructureType.Docker:
-        buildInfraSelectOptions = [
-          { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
-          {
-            label: getString('pipeline.infraSpecifications.osTypes.macos'),
-            value: OsTypes.MacOS
-          }
-        ]
-        break
       default:
         buildInfraSelectOptions = [
           { label: getString('delegate.cardData.linux.name'), value: OsTypes.Linux },
@@ -1279,6 +1282,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               disabled: isReadonly
             }
           }}
+          configureOptionsProps={{
+            hideExecutionTimeField: true
+          }}
           useValue
         />
         {[CIBuildInfrastructureType.Cloud, CIBuildInfrastructureType.Docker].includes(
@@ -1302,6 +1308,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                 allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME],
                 disabled: isReadonly
               }
+            }}
+            configureOptionsProps={{
+              hideExecutionTimeField: true
             }}
             useValue
           />
@@ -1375,6 +1384,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             disabled: isReadonly,
             allowableTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
           }}
+          configureOptionsProps={{
+            hideExecutionTimeField: true
+          }}
           type={Connectors.DOCKER}
         />
       </div>
@@ -1401,6 +1413,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               multiTextInputProps: { expressions, allowableTypes },
               disabled: isReadonly
             }}
+            configureOptionsProps={{
+              hideExecutionTimeField: true
+            }}
           />
         </div>
         {renderHarnessImageConnectorRefField()}
@@ -1426,6 +1441,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
             orgIdentifier={orgIdentifier}
             gitScope={gitScope}
             multiTypeProps={{ expressions, disabled: isReadonly, allowableTypes }}
+            configureOptionsProps={{
+              hideExecutionTimeField: true
+            }}
           />
         </div>
         <div className={cx(css.fieldsGroup, css.withoutSpacing)}>
@@ -1445,6 +1463,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
               multiTextInputProps: { expressions, allowableTypes },
               disabled: isReadonly,
               placeholder: getString('pipeline.infraSpecifications.namespacePlaceholder')
+            }}
+            configureOptionsProps={{
+              hideExecutionTimeField: true
             }}
           />
         </div>
@@ -1485,6 +1506,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                 disabled: isReadonly,
                 placeholder: getString('pipeline.infraSpecifications.serviceAccountNamePlaceholder')
               }}
+              configureOptionsProps={{
+                hideExecutionTimeField: true
+              }}
             />
           </Container>
           <Container width={300}>
@@ -1524,6 +1548,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                 multiTextInputProps: { expressions, allowableTypes },
                 disabled: isReadonly
               }}
+              configureOptionsProps={{
+                hideExecutionTimeField: true
+              }}
             />
           </Container>
           <Container className={css.bottomMargin7}>
@@ -1559,6 +1586,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                   ),
                   allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
                 }}
+                configureOptionsProps={{
+                  hideExecutionTimeField: true
+                }}
                 disabled={isReadonly}
                 multiTypeMapKeys={[
                   { label: 'Effect', value: 'effect' },
@@ -1583,6 +1613,9 @@ export default function BuildInfraSpecifications({ children }: React.PropsWithCh
                   <Text tooltipProps={{ dataTooltipId: 'hostNames' }}>{getString('ci.buildInfra.hostNames')}</Text>
                 ),
                 allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
+              }}
+              configureOptionsProps={{
+                hideExecutionTimeField: true
               }}
               disabled={isReadonly}
             />

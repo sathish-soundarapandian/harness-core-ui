@@ -24,6 +24,8 @@ export default function CommonHealthSourceField(props: CommonHealthSourceFieldPr
   const { getString } = useStrings()
   const { showError } = useToaster()
   const { label, identifier, placeholder, type, isTemplateSupportEnabled } = field
+  const shouldShowTemplatisedComponent = isTemplate && isTemplateSupportEnabled
+  const shouldFetchDropdownOptions = !(isTemplate && isTemplateSupportEnabled && isConnectorRuntimeOrExpression)
 
   const { mutate: fetchParamValues, loading } = useGetParamValues({
     accountIdentifier: accountId,
@@ -53,24 +55,24 @@ export default function CommonHealthSourceField(props: CommonHealthSourceFieldPr
   }
 
   useEffect(() => {
-    if (type === FIELD_ENUM.DROPDOWN) {
+    if (type === FIELD_ENUM.DROPDOWN && shouldFetchDropdownOptions) {
       fetchParamValuesData()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type])
+  }, [shouldFetchDropdownOptions, type])
 
   const renderField = (): JSX.Element => {
     switch (type) {
       case FIELD_ENUM.DROPDOWN:
         return (
           <>
-            {isTemplate && isTemplateSupportEnabled ? (
+            {shouldShowTemplatisedComponent ? (
               <FormInput.MultiTypeInput
                 label={label}
+                useValue
                 name={identifier}
                 selectItems={listOptions}
                 data-testid={identifier}
-                useValue
                 multiTypeInputProps={{
                   expressions,
                   allowableTypes: isConnectorRuntimeOrExpression

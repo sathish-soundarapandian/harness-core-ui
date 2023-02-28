@@ -291,7 +291,12 @@ export default function ScheduledTriggerWizard(
   }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
 
   const { resolvedMergedPipeline } = useGetResolvedChildPipeline(
-    { accountId: accountIdentifier, repoIdentifier, branch, connectorRef: pipelineConnectorRef },
+    {
+      accountId: accountIdentifier,
+      repoIdentifier: defaultTo(pipelineRepoName, repoIdentifier),
+      branch,
+      connectorRef: pipelineConnectorRef
+    },
     originalPipeline,
     resolvedPipeline
   )
@@ -950,7 +955,7 @@ export default function ScheduledTriggerWizard(
       key={wizardKey} // re-renders with yaml to visual initialValues
       wizardType="scheduled"
       formikInitialProps={{
-        initialValues,
+        initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
         onSubmit: onSubmit,
         validationSchema: getValidationSchema(getString),
         validate: validateTriggerPipeline,

@@ -81,14 +81,18 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
     [type, sloPerformanceTrend, errorBudgetBurndown]
   )
 
-  const downtimeSeries = downtimeInstanceUnavailability?.map(item => {
-    return {
-      x: defaultTo(item?.startTime, 0) * 1000,
-      y: maxXLimit * 0.95,
-      startTime: defaultTo(item?.startTime, 0) * 1000,
-      endTime: defaultTo(item?.endTime, 0) * 1000
-    }
-  })
+  const downtimeSeries = useMemo(
+    () =>
+      downtimeInstanceUnavailability?.map(item => {
+        return {
+          x: defaultTo(item?.startTime, 0) * 1000,
+          y: maxXLimit * 0.95,
+          startTime: defaultTo(item?.startTime, 0) * 1000,
+          endTime: defaultTo(item?.endTime, 0) * 1000
+        }
+      }),
+    [downtimeInstanceUnavailability]
+  )
 
   return (
     <Container

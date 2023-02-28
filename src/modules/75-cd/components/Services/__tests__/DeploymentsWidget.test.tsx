@@ -14,7 +14,7 @@ import * as cdngServices from 'services/cd-ng'
 
 jest.mock('highcharts-react-official', () => () => <></>)
 
-jest.spyOn(cdngServices, 'useGetServiceDeploymentsInfo').mockImplementation(() => {
+jest.spyOn(cdngServices, 'useGetServiceDeploymentsInfoV2').mockImplementation(() => {
   return { loading: false, error: false, data: deploymentsInfo, refetch: jest.fn() } as any
 })
 
@@ -38,7 +38,7 @@ describe('DeploymentsWidget', () => {
   })
 
   test('should display loading state', () => {
-    jest.spyOn(cdngServices, 'useGetServiceDeploymentsInfo').mockImplementation(() => {
+    jest.spyOn(cdngServices, 'useGetServiceDeploymentsInfoV2').mockImplementation(() => {
       return { loading: true, error: false, data: [], refetch: jest.fn() } as any
     })
     const { container } = render(
@@ -56,7 +56,7 @@ describe('DeploymentsWidget', () => {
   })
 
   test('should display error state', () => {
-    jest.spyOn(cdngServices, 'useGetServiceDeploymentsInfo').mockImplementation(() => {
+    jest.spyOn(cdngServices, 'useGetServiceDeploymentsInfoV2').mockImplementation(() => {
       return { loading: false, error: true, data: [], refetch: jest.fn() } as any
     })
     const { container } = render(
@@ -74,7 +74,7 @@ describe('DeploymentsWidget', () => {
   })
 
   test('should display correct data', () => {
-    jest.spyOn(cdngServices, 'useGetServiceDeploymentsInfo').mockImplementation(() => {
+    jest.spyOn(cdngServices, 'useGetServiceDeploymentsInfoV2').mockImplementation(() => {
       return { loading: false, error: false, data: deploymentsInfo, refetch: jest.fn() } as any
     })
     const { container } = render(
@@ -94,26 +94,26 @@ describe('DeploymentsWidget', () => {
     expect(tickers.length).toBe(3)
 
     expect(tickers[0].querySelector('[data-test="tickerText"]')?.textContent).toBe(
-      `${deploymentsInfo.data.totalDeployments}`
+      `${deploymentsInfo.data?.totalDeployments}`
     )
     expect(tickers[0].querySelector('[data-test="tickerValue"]')?.textContent).toBe(
-      `${deploymentsInfo.data.totalDeploymentsChangeRate}%`
+      `${deploymentsInfo.data?.totalDeploymentsChangeRate?.percentChange}%`
     )
     expect(tickers[1].querySelector('[data-test="tickerText"]')?.textContent).toBe(
-      `${deploymentsInfo.data.failureRate}%`
+      `${deploymentsInfo.data?.failureRate}%`
     )
     expect(tickers[1].querySelector('[data-test="tickerValue"]')?.textContent).toBe(
-      `${deploymentsInfo.data.failureRateChangeRate}%`
+      `${deploymentsInfo.data?.failureRateChangeRate?.percentChange}%`
     )
-    expect(tickers[2].querySelector('[data-test="tickerText"]')?.textContent).toBe(`${deploymentsInfo.data.frequency}`)
+    expect(tickers[2].querySelector('[data-test="tickerText"]')?.textContent).toBe(`${deploymentsInfo.data?.frequency}`)
     expect(tickers[2].querySelector('[data-test="tickerValue"]')?.textContent).toBe(
-      `${deploymentsInfo.data.frequencyChangeRate}%`
+      `${deploymentsInfo.data?.frequencyChangeRate?.percentChange}%`
     )
   })
 
   test('should refetch data if time range is changed', () => {
     const refetch = jest.fn()
-    jest.spyOn(cdngServices, 'useGetServiceDeploymentsInfo').mockImplementation(() => {
+    jest.spyOn(cdngServices, 'useGetServiceDeploymentsInfoV2').mockImplementation(() => {
       return { loading: false, error: false, data: [], refetch } as any
     })
     render(

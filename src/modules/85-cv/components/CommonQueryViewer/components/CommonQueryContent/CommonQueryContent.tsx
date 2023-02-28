@@ -6,7 +6,6 @@ import { CustomMetricFormFieldNames } from '@cv/pages/health-source/connectors/C
 import CVMultiTypeQuery from '@cv/components/CVMultiTypeQuery/CVMultiTypeQuery'
 import { useStrings } from 'framework/strings'
 import type { QueryContentProps } from '../../types'
-import { getRunQueryButtonTooltip } from './CommonQueryContent.utils'
 import css from '../../CommonQueryViewer.module.scss'
 
 export function CommonQueryContent(props: QueryContentProps): JSX.Element {
@@ -20,8 +19,7 @@ export function CommonQueryContent(props: QueryContentProps): JSX.Element {
     expressions,
     isConnectorRuntimeOrExpression,
     isQueryButtonDisabled,
-    isQueryFieldNotPresent,
-    queryFieldIdentifier
+    runQueryBtnTooltip
   } = props
   const { getString } = useStrings()
 
@@ -39,6 +37,7 @@ export function CommonQueryContent(props: QueryContentProps): JSX.Element {
                 ? [MultiTypeInputType.EXPRESSION, MultiTypeInputType.RUNTIME]
                 : [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME, MultiTypeInputType.EXPRESSION]
             }
+            runQueryBtnTooltip={runQueryBtnTooltip}
           />
         </>
       ) : (
@@ -64,7 +63,7 @@ export function CommonQueryContent(props: QueryContentProps): JSX.Element {
               text={getString('cv.monitoringSources.commonHealthSource.runQuery')}
               onClick={handleFetchRecords}
               disabled={isQueryButtonDisabled}
-              tooltip={getRunQueryButtonTooltip(query, isQueryFieldNotPresent, queryFieldIdentifier, getString)}
+              tooltip={runQueryBtnTooltip}
             />
           </Layout.Horizontal>
         </>

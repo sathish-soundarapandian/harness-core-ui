@@ -227,7 +227,7 @@ function RetryPipeline({
   })
   const { data: inputSetYamlResponse, loading: loadingInputSetTemplate } = useMutateAsGet(useGetTemplateFromPipeline, {
     body: {
-      stageIdentifiers: []
+      stageIdentifiers: params.stagesExecuted
     },
     queryParams: {
       accountIdentifier: accountId,

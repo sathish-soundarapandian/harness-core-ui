@@ -12,7 +12,18 @@ import { TestWrapper } from '@common/utils/testUtils'
 import * as templateService from 'services/template-ng'
 import * as cvServices from 'services/cv'
 import MonitoredServiceInputSetsTemplate from '../MonitoredServiceInputSetsTemplate'
-import { pathList, spec, templateYamlData, templateYamlDataGCO } from './MonitoredServiceInputSetsTemplate.mock'
+import {
+  orgProps,
+  pathList,
+  projectProps,
+  spec,
+  templateYamlData,
+  templateYamlDataGCO,
+  useGetTemplateInputSetYamlOrgResult,
+  useGetTemplateInputSetYamlProjectResult,
+  useGetTemplateOrgResult,
+  useGetTemplateProjectResult
+} from './MonitoredServiceInputSetsTemplate.mock'
 import { getLabelByName, getNestedRuntimeInputs, getPathForKey } from '../MonitoredServiceInputSetsTemplate.utils'
 import * as InputSetUtils from '../MonitoredServiceInputSetsTemplate.utils'
 
@@ -280,5 +291,72 @@ describe('Test MonitoredServiceInputSetsTemplate with GCO', () => {
       })
       fireEvent.click(submit)
     })
+  })
+  test('should pass correct request payload while calling useGetTemplate and useGetTemplateInputSetYaml with template scope as org', async () => {
+    jest.clearAllMocks()
+    const refetchSaveTemplateYamlGCO = jest.fn().mockResolvedValue({})
+    jest.spyOn(InputSetUtils, 'validateInputSet').mockReturnValue({})
+    jest.spyOn(cvServices, 'useSaveMonitoredServiceFromYaml').mockReturnValue({
+      mutate: refetchSaveTemplateYamlGCO,
+      cancel: jest.fn(),
+      error: null,
+      loading: false
+    })
+    const useGetTemplateInputSetYamlMock = jest.spyOn(templateService, 'useGetTemplateInputSetYaml').mockReturnValue({
+      data: {
+        correlationId: '69e17be6-aa27-4524-820c-79a1831c1cec',
+        data: 'type: "Application"\nserviceRef: "<+input>"\nsources:\n  healthSources:\n  - identifier: "metric"\n    type: "Stackdriver"\n    spec:\n      connectorRef: "<+input>"\n      metricDefinitions:\n      - identifier: "test"\n        jsonMetricDefinition: "<+input>"\n',
+        metaData: null,
+        status: 'SUCCESS'
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false,
+      cancel: jest.fn()
+    } as any)
+    const useGetTemplateSpy = jest.spyOn(templateService, 'useGetTemplate')
+
+    render(
+      <TestWrapper>
+        <MonitoredServiceInputSetsTemplate templateData={orgProps} />
+      </TestWrapper>
+    )
+
+    expect(useGetTemplateSpy).toHaveBeenCalledWith(useGetTemplateOrgResult)
+    expect(useGetTemplateInputSetYamlMock).toHaveBeenCalledWith(useGetTemplateInputSetYamlOrgResult)
+  })
+
+  test('should pass correct request payload while calling useGetTemplate and useGetTemplateInputSetYaml with template scope as project', async () => {
+    jest.clearAllMocks()
+    const refetchSaveTemplateYamlGCO = jest.fn().mockResolvedValue({})
+    jest.spyOn(InputSetUtils, 'validateInputSet').mockReturnValue({})
+    jest.spyOn(cvServices, 'useSaveMonitoredServiceFromYaml').mockReturnValue({
+      mutate: refetchSaveTemplateYamlGCO,
+      cancel: jest.fn(),
+      error: null,
+      loading: false
+    })
+    const useGetTemplateInputSetYamlMock = jest.spyOn(templateService, 'useGetTemplateInputSetYaml').mockReturnValue({
+      data: {
+        correlationId: '69e17be6-aa27-4524-820c-79a1831c1cec',
+        data: 'type: "Application"\nserviceRef: "<+input>"\nsources:\n  healthSources:\n  - identifier: "metric"\n    type: "Stackdriver"\n    spec:\n      connectorRef: "<+input>"\n      metricDefinitions:\n      - identifier: "test"\n        jsonMetricDefinition: "<+input>"\n',
+        metaData: null,
+        status: 'SUCCESS'
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false,
+      cancel: jest.fn()
+    } as any)
+    const useGetTemplateSpy = jest.spyOn(templateService, 'useGetTemplate')
+
+    render(
+      <TestWrapper>
+        <MonitoredServiceInputSetsTemplate templateData={projectProps} />
+      </TestWrapper>
+    )
+
+    expect(useGetTemplateSpy).toHaveBeenCalledWith(useGetTemplateProjectResult)
+    expect(useGetTemplateInputSetYamlMock).toHaveBeenCalledWith(useGetTemplateInputSetYamlProjectResult)
   })
 })

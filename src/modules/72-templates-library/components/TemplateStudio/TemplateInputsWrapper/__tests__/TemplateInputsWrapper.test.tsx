@@ -32,6 +32,11 @@ const templateContext = produce(getTemplateContextMock(TemplateType.Step), draft
   }
 })
 
+jest.mock('services/template-ng', () => ({
+  ...(jest.requireActual('services/template-ng') as any),
+  useGetTemplateInputSetYaml: jest.fn().mockImplementation(() => ({ data: null, error: null, loading: false }))
+}))
+
 describe('<TemplateInputsWrapper /> tests', () => {
   beforeAll(() => {
     templateFactory.registerTemplate(new StepTemplate())
@@ -46,7 +51,16 @@ describe('<TemplateInputsWrapper /> tests', () => {
     )
     expect(TemplateInputsMock).toBeCalledWith(
       {
-        template: { ...stepTemplateMock, repo: 'repoIdentifier', branch: 'branch' }
+        template: {
+          ...stepTemplateMock,
+          repo: 'repoIdentifier',
+          branch: 'branch'
+        },
+        templateInputSetFetchParams: {
+          data: null,
+          error: null,
+          loading: false
+        }
       },
       expect.anything()
     )

@@ -307,7 +307,12 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
   }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
 
   const { loadingResolvedChildPipeline, resolvedMergedPipeline } = useGetResolvedChildPipeline(
-    { accountId, repoIdentifier, branch, connectorRef: pipelineConnectorRef },
+    {
+      accountId,
+      repoIdentifier: defaultTo(pipelineRepoName, repoIdentifier),
+      branch,
+      connectorRef: pipelineConnectorRef
+    },
     originalPipeline,
     resolvedPipeline
   )
@@ -1086,7 +1091,7 @@ const ArtifactTriggerWizard = (props: { children: JSX.Element[] }): JSX.Element 
       <Wizard
         key={wizardKey} // re-renders with yaml to visual initialValues
         formikInitialProps={{
-          initialValues,
+          initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
           onSubmit: (val: FlatValidArtifactFormikValuesInterface) => handleArtifactSubmit(val),
           validationSchema: getValidationSchema(getString),
           validate: validateTriggerPipeline,

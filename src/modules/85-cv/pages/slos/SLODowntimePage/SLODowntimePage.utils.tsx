@@ -9,12 +9,23 @@ import React from 'react'
 import { ButtonVariation, Container, Icon, Layout, SelectOption, Text } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import type { UseStringsReturn } from 'framework/strings'
-import type { ResponsePageMSDropdownResponse } from 'services/cv'
+import type {
+  ResponsePageDowntimeHistoryView,
+  ResponsePageDowntimeListView,
+  ResponsePageMSDropdownResponse
+} from 'services/cv'
 import RbacButton from '@rbac/components/Button/Button'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { defaultOption } from './SLODowntimePage.constants'
 import css from './SLODowntimePage.module.scss'
+
+export const shouldRenderNoDataCard = (
+  appliedSearchAndFilter: boolean,
+  downtimeData: ResponsePageDowntimeListView | null,
+  downtimeHistoryData: ResponsePageDowntimeHistoryView | null
+): boolean =>
+  !downtimeData?.data?.content?.length && !downtimeHistoryData?.data?.content?.length && !appliedSearchAndFilter
 
 export const getMonitoredServicesOptions = (
   monitoredServicesData: ResponsePageMSDropdownResponse | null,

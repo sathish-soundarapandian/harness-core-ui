@@ -85,7 +85,7 @@ export const TASManifestAllowedPaths = [ManifestDataType.TasVars, ManifestDataTy
 export const ManifestToPathMap: Record<PrimaryManifestType, string> = {
   K8sManifest: 'Values',
   HelmChart: 'Values',
-  OpenshiftTemplate: 'OpenshiftParam',
+  OpenshiftTemplate: 'OpenShift Params',
   Kustomize: 'KustomizePatches',
   TasVars: 'Vars',
   TasAutoScaler: 'AutoScaler'

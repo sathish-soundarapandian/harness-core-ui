@@ -289,6 +289,9 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
                   onClick={() => {
                     setVerifyButtonClicked(true)
                     setShowVerifyButton(false)
+                    trackEvent(`${DelegateActions.DelegateCommandLineVerify} ${commonProblemsDelegateType}`, {
+                      category: Category.DELEGATE
+                    })
                   }}
                   margin={{ right: 'xlarge' }}
                 />

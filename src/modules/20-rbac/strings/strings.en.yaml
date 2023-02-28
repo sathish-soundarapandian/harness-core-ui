@@ -128,17 +128,20 @@ usersPage:
   resendInviteSuccess: Invitation has been resent to the user '{{name}}'
   invitationError: Could not Invite this user
   deleteConfirmation: Are you sure you want to delete the User '{{name}}'?
+  resetTwoFactorAuthConfirmation: "Are you sure you want to reset two factor authentication secret for \n the User '{{name}}' ?"
   deleteLastAdminProjectConfirmation: User '{{name}}' is the last admin in this project. If you delete this user, only account or organization admins will be able to manage this project. Are you sure you want to continue?
   deleteLastAdminOrgConfirmation: User '{{name}}' is the last admin in this organization. If you delete this user, only account admins will be able to manage this organization. Are you sure you want to continue?
   deleteLastAdminError: Could not delete the user '{{name}}' as this user is the last admin in this account.
   deleteTitle: Delete User
   deleteSuccessMessage: User '{{name}}' deleted successfully
+  resendTwoFactorEmailSuccess: New Two Factor Authentication secret email sent to user '{{name}}'
   noDataDescription: There are no users in this scope. Click on the button below to start adding them.
   noUsersFound: No Users found
   unlockTitle: Unlock user
   unlockConfirmation: Are you sure you want to unlock the user '{{name}}?'
   unlockSuccessMessage: User '{{name}}' unlocked successfully
   lockedOutLabel: (Locked out)
+  resetTwoFactorAuth: Email new Two Factor Auth secret
 userDetails:
   invalidScopeText: 'You are in the scope: {{scope}}. Please select the organization for which you want to view results. or'
   errorFetchingOrgs: 'An error occurred while fetching organizations.'

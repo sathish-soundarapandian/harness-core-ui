@@ -60,7 +60,7 @@ const getUnlinkedClusters = (
         scopedClusterRef = scopedClusterRef?.split('.')[1]
       }
 
-      return scopedClusterRef === clstr.identifier
+      return scopedClusterRef === clstr.identifier && obj.agentIdentifier === clstr.agentIdentifier
     })
     // istanbul ignore else
     if (!clstrObj) {
@@ -90,7 +90,7 @@ const UnLinkedClstrsList = ({
           <Layout.Vertical ref={attachRefToLastElement(index) ? loadMoreRef : undefined} key={cluster.identifier}>
             <ClusterCard
               cluster={cluster}
-              key={cluster.identifier}
+              key={`${cluster.agentIdentifier}-${cluster.identifier}`}
               setSelectedClusters={setSelectedClusters}
               selectedClusters={selectedClusters}
             />
@@ -260,7 +260,8 @@ const AddCluster = (props: AddClusterProps): React.ReactElement => {
         envRef: props.envRef,
         clusters: selectedClusters.map((clstr: ClusterFromGitops) => ({
           identifier: defaultTo(clstr.identifier, ''),
-          scope: defaultTo(clstr.scopeLevel, '')
+          scope: defaultTo(clstr.scopeLevel, ''),
+          agentIdentifier: defaultTo(clstr.agentIdentifier, '')
         })),
         orgIdentifier,
         projectIdentifier,

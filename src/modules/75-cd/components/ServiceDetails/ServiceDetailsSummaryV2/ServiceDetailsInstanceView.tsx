@@ -186,7 +186,7 @@ function InstanceView(prop: InstanceViewProp): React.ReactElement {
 
   return (
     <Layout.Horizontal className={css.instanceDetail}>
-      <Layout.Vertical className={css.overflowScroll}>
+      <Layout.Vertical className={css.overflowScrollPipelineIdList}>
         {pipelineDetailList.map(card => (
           <Card
             key={makeKey(card)}

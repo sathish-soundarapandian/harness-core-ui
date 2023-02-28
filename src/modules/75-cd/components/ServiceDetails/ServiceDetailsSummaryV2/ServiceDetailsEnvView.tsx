@@ -23,7 +23,7 @@ import {
 import { Color, FontVariation } from '@harness/design-system'
 import { useParams } from 'react-router-dom'
 import ReactTimeago from 'react-timeago'
-import { capitalize, defaultTo, isUndefined } from 'lodash-es'
+import { capitalize, defaultTo, isEmpty, isUndefined } from 'lodash-es'
 import { useStrings } from 'framework/strings'
 import type { ProjectPathProps, ServicePathProps } from '@common/interfaces/RouteInterfaces'
 import { EnvironmentType } from '@common/constants/EnvironmentType'
@@ -112,7 +112,7 @@ function EnvCard({
           lineClamp={1}
           tooltipProps={{ isDark: true }}
         >
-          {envName}
+          {!isEmpty(envName) ? envName : '--'}
         </Text>
       </div>
       {env?.environmentType && (
@@ -216,7 +216,7 @@ function ArtifactCard({
           setIsDetailsDialogOpen(true)
         }}
       >
-        {defaultTo(artifactName, '--')}
+        {!isEmpty(artifactName) ? artifactName : '--'}
       </Text>
       <div className={css.artifactViewEnvList}>
         {envList.map(envInfo => (
@@ -416,8 +416,8 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
             onChange={val => {
               setEnvId(undefined)
               setArtifactName(undefined)
-              setSelectedEnv('')
-              setSelectedArtifact('')
+              setSelectedEnv(undefined)
+              setSelectedArtifact(undefined)
               setCardView(val)
             }}
           />

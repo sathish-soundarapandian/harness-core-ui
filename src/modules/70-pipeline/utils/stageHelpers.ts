@@ -95,10 +95,9 @@ const commonRepoFormatTypes = [
 
 export const nexus2RepositoryFormatTypes = [...commonRepoFormatTypes]
 
-export const nexus3RepositoryFormatTypes = [
-  ...commonRepoFormatTypes,
-  { label: 'Raw', value: RepositoryFormatTypes.Raw }
-]
+export const rawRepoFormat = [{ label: 'Raw', value: RepositoryFormatTypes.Raw }]
+
+export const nexus3RepositoryFormatTypes = [...commonRepoFormatTypes, ...rawRepoFormat]
 
 export const k8sRepositoryFormatTypes = [{ label: 'Docker', value: RepositoryFormatTypes.Docker }]
 

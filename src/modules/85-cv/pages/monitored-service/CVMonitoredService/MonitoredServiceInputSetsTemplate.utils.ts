@@ -82,41 +82,6 @@ export const getLabelByName = (name: string, getString: UseStringsReturn['getStr
   }
 }
 
-export const getFieldLabelForVerifyTemplate = (name: string, getString: UseStringsReturn['getString']): string => {
-  switch (name) {
-    case 'applicationName':
-      return getString('cv.monitoringSources.appD.applicationName')
-    case 'tierName':
-      return getString('cv.monitoringSources.appD.tierName')
-    case 'completeMetricPath':
-      return getString('cv.monitoringSources.appD.completeMetricPath')
-    case 'serviceInstanceMetricPath':
-      return getString('cv.monitoringSources.appD.serviceInstanceMetricPath')
-    case 'serviceInstanceFieldName':
-    case 'serviceInstanceIdentifier':
-    case 'serviceInstanceField':
-      return getString('cv.monitoringSources.appD.serviceInstanceFieldName')
-    case 'indexes':
-      return getString('cv.monitoringSources.datadogLogs.logIndexesLabel')
-    case 'connectorRef':
-      return getString('connector')
-    case 'query':
-      return getString('cv.query')
-    case 'category':
-      return `Category for ${getString('cv.monitoringSources.riskCategoryLabel')}`
-    case 'messageIdentifier':
-      return getString('cv.monitoringSources.gcoLogs.messageIdentifierTitle')
-    case 'metricType':
-      return `Metric type for ${getString('cv.monitoringSources.riskCategoryLabel')}`
-    case 'metricValueJsonPath':
-      return getString('cv.healthSource.connectors.NewRelic.metricFields.metricValueJsonPath.label')
-    case 'timestampJsonPath':
-      return getString('cv.healthSource.connectors.NewRelic.metricFields.timestampJsonPath.label')
-    default:
-      return name
-  }
-}
-
 export const getValidationLabelByNameForTemplateInputs = (
   name: string,
   getString: UseStringsReturn['getString']
@@ -148,7 +113,13 @@ export const getValidationLabelByNameForTemplateInputs = (
     case 'serviceInstanceIdentifier':
       return getString('cv.monitoringSources.prometheus.validation.serviceInstanceIdentifier')
     case 'indexes':
+    case 'index':
       return `${getString('cv.monitoringSources.datadogLogs.logIndexesLabel')} is required`
+    case 'timestampJsonPath':
+    case 'timeStampIdentifier':
+      return `${getString('cv.healthSource.connectors.NewRelic.metricFields.timestampJsonPath.label')} is required`
+    case 'messageIdentifier':
+      return `${getString('cv.monitoringSources.gcoLogs.messageIdentifierTitle')} is required`
     default:
       return `${name} is required`
   }

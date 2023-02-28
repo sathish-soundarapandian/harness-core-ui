@@ -364,7 +364,7 @@ function HelmWithS3({
           commandFlags: Yup.array().of(
             Yup.object().shape({
               flag: Yup.string().when('commandType', {
-                is: val => !isEmpty(val?.value),
+                is: val => !isEmpty(val),
                 then: Yup.string().required(getString('pipeline.manifestType.commandFlagRequired'))
               })
             })

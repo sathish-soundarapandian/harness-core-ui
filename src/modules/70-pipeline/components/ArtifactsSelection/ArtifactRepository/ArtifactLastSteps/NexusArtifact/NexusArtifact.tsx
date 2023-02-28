@@ -838,6 +838,7 @@ export function Nexus3Artifact({
                 tagDisabled={isTagDisabled(formik?.values)}
                 isArtifactPath={false}
                 isImagePath={false}
+                tooltipId="nexus3-tag"
               />
             </div>
             {!hideHeaderAndNavBtns && (

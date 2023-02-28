@@ -6,13 +6,14 @@
  */
 
 import React from 'react'
-import { render, act, fireEvent, waitFor } from '@testing-library/react'
+import { render, act, fireEvent, waitFor, queryByAttribute } from '@testing-library/react'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 import { StepViewType, StepFormikRef } from '@pipeline/components/AbstractSteps/Step'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { findPopoverContainer, UseGetReturnData } from '@common/utils/testUtils'
 import type { ResponseConnectorResponse } from 'services/cd-ng'
 import { factory, TestStepWidget } from '@pipeline/components/PipelineSteps/Steps/__tests__/StepTestUtil'
+import { Shell } from '@ci/utils/CIShellOptionsUtils'
 import { RunStep } from '../RunStep'
 
 jest.mock('@common/components/MonacoEditor/MonacoEditor')
@@ -83,6 +84,44 @@ describe('Run Step', () => {
         expect(menuItemLabels?.[0].innerHTML).toEqual('common.bash')
         expect(menuItemLabels?.[3].innerHTML).toEqual('common.sh')
       })
+    })
+
+    test('Should select correct shell type', async () => {
+      const { container } = render(
+        <TestStepWidget
+          initialValues={{ spec: { shell: Shell.Python } }}
+          type={StepType.Run}
+          stepViewType={StepViewType.Edit}
+        />
+      )
+      expect(queryByAttribute('name', container, 'spec.shell')?.getAttribute('value')).toBe('common.python')
+
+      const { container: container2 } = render(
+        <TestStepWidget
+          initialValues={{ spec: { shell: Shell.Powershell } }}
+          type={StepType.Run}
+          stepViewType={StepViewType.Edit}
+        />
+      )
+      expect(queryByAttribute('name', container2, 'spec.shell')?.getAttribute('value')).toBe('common.powershell')
+
+      const { container: container3 } = render(
+        <TestStepWidget
+          initialValues={{ spec: { shell: Shell.Pwsh } }}
+          type={StepType.Run}
+          stepViewType={StepViewType.Edit}
+        />
+      )
+      expect(queryByAttribute('name', container3, 'spec.shell')?.getAttribute('value')).toBe('common.pwsh')
+
+      const { container: container4 } = render(
+        <TestStepWidget
+          initialValues={{ spec: { shell: Shell.Bash } }}
+          type={StepType.Run}
+          stepViewType={StepViewType.Edit}
+        />
+      )
+      expect(queryByAttribute('name', container4, 'spec.shell')?.getAttribute('value')).toBe('common.bash')
     })
 
     test('renders runtime inputs', async () => {

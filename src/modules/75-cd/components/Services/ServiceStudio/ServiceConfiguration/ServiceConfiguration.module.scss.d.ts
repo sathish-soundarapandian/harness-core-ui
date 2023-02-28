@@ -9,12 +9,10 @@
 declare const styles: {
   readonly buttonsWrapper: string
   readonly nameIdDescriptionTags: string
-  readonly nonModalView: string
   readonly notwide: string
   readonly optionBtns: string
   readonly sectionCard: string
   readonly serviceEntity: string
-  readonly serviceModal: string
   readonly serviceStepBasicInfo: string
   readonly tabHeading: string
   readonly yamlBuilder: string

@@ -452,10 +452,6 @@ exports[`Input Set - error scenarios if API errors are displayed in yellow accor
                           >
                             <div
                               class="accordionSummary"
-                              id="pipeline.stages[0].stage.spec.Environment"
-                            />
-                            <div
-                              class="accordionSummary"
                               id="Stage.asd.Infrastructure"
                             >
                               <div
@@ -470,7 +466,7 @@ exports[`Input Set - error scenarios if API errors are displayed in yellow accor
                                 class="nestedAccordions"
                               >
                                 <div
-                                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main containerPadding StyledProps--padding-medium"
+                                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                                 >
                                   <div
                                     class="formGroup md"

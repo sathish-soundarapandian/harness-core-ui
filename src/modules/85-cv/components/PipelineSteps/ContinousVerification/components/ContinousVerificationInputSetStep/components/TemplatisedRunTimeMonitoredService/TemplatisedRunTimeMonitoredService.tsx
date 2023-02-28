@@ -13,10 +13,7 @@ import { useFormikContext } from 'formik'
 import type { VerifyStepMonitoredService } from '@cv/components/PipelineSteps/ContinousVerification/types'
 import { useStrings } from 'framework/strings'
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
-import {
-  getFieldLabelForVerifyTemplate,
-  getNestedRuntimeInputs
-} from '@cv/pages/monitored-service/CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
+import { getNestedRuntimeInputs } from '@cv/pages/monitored-service/CVMonitoredService/MonitoredServiceInputSetsTemplate.utils'
 import type { PipelineType, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import {
   useGetHarnessEnvironments,
@@ -32,6 +29,7 @@ import {
 } from '@cv/components/PipelineSteps/ContinousVerification/utils'
 import type { UpdatedHealthSourceWithAllSpecs } from '@cv/pages/health-source/types'
 import type { ConnectorInfoDTO } from 'services/cd-ng'
+import { getLabelByName } from '@cv/pages/monitored-service/MonitoredServiceInputSetsTemplate/MonitoredServiceInputSetsTemplate.utils'
 import { getMultiTypeInputProps } from '../../../ContinousVerificationWidget/components/ContinousVerificationWidgetSections/components/VerificationJobFields/VerificationJobFields.utils'
 import { getRunTimeInputsFromHealthSource } from './TemplatisedRunTimeMonitoredService.utils'
 import {
@@ -130,7 +128,7 @@ export default function TemplatisedRunTimeMonitoredService(
                         <FormInput.MultiTextInput
                           key={input.name}
                           name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
-                          label={getFieldLabelForVerifyTemplate(input.name, getString)}
+                          label={getLabelByName(input.name, getString)}
                           multiTextInputProps={{
                             expressions,
                             allowableTypes
@@ -159,7 +157,7 @@ export default function TemplatisedRunTimeMonitoredService(
                             <FormInput.MultiTextInput
                               key={input.name}
                               name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
-                              label={getFieldLabelForVerifyTemplate(input.name, getString)}
+                              label={getLabelByName(input.name, getString)}
                               onChange={value => {
                                 setCommaSeperatedList(
                                   value as string,
@@ -178,7 +176,7 @@ export default function TemplatisedRunTimeMonitoredService(
                             <FormInput.MultiTextInput
                               key={input.name}
                               name={`${prefix}spec.monitoredService.spec.templateInputs.${input.path}`}
-                              label={getFieldLabelForVerifyTemplate(input.name, getString)}
+                              label={getLabelByName(input.name, getString)}
                               multiTextInputProps={{
                                 expressions,
                                 allowableTypes

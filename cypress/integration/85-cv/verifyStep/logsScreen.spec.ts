@@ -7,7 +7,6 @@ import {
 
 import {
   aggregateProjectsCall,
-  deploymentActivitySummaryAPI,
   deploymentTimeseriesDataAPI,
   deploymentTimeseriesDataWithFilters,
   deploymentTimeseriesDataWithNodeFilterAPI,
@@ -23,6 +22,8 @@ import {
   logsRadarChartDataCLusterFilterCall,
   logsRadarChartDataNodeFilterCall,
   nodeNamesFilterAPI,
+  overviewCall,
+  overviewCallResponse,
   pipelinesFetchCall,
   pipelinesSummaryFetchCall,
   pipelinesYamlFetchCall,
@@ -30,7 +31,7 @@ import {
   transactionsFilterAPI
 } from '../../../support/85-cv/verifyStep/constants'
 
-describe.skip('Verify step', () => {
+describe('Verify step', () => {
   beforeEach(() => {
     cy.intercept('POST', pipelineListAPI, { fixture: '/pipeline/api/pipelines/getPipelineList' }).as('pipelineList')
     cy.intercept('GET', pipelinesSummaryFetchCall, { fixture: '/pipeline/api/pipelines/pipelineSummary' }).as(
@@ -48,9 +49,9 @@ describe.skip('Verify step', () => {
     cy.intercept('GET', pipelineExecutionForNodeAPI, { fixture: '/pipeline/api/pipelines/getNodeExecutionDetails' }).as(
       'pipelineExecutionForNode'
     )
-    cy.intercept('GET', deploymentActivitySummaryAPI, { fixture: '/cv/verifyStep/getDeploymentActivitySummary' }).as(
-      'deployment-activity-summary'
-    )
+
+    cy.intercept('GET', overviewCall, overviewCallResponse).as('overviewCall')
+
     cy.intercept('GET', deploymentTimeseriesDataAPI, { fixture: '/cv/verifyStep/getDeploymentTimeseriesData' }).as(
       'deploymentTimeseriesData'
     )
@@ -125,13 +126,11 @@ describe.skip('Verify step', () => {
 
     cy.findByText(/appd_dev/i).click()
 
-    cy.wait('@deployment-activity-summary')
-
     cy.url().should('include', '/pipelines/NG_Docker_Image/executions/')
 
     cy.findByTestId(/Logs/i).click()
 
-    cy.wait('@deployment-activity-summary')
+    cy.wait('@overviewCall')
     cy.wait('@logsListCall')
     cy.wait('@logsRadarChartDataCall')
 

@@ -15,7 +15,6 @@ import { AccessControlRouteDestinations } from '@rbac/RouteDestinations'
 import { TemplateRouteDestinations } from '@templates-library/RouteDestinations'
 import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
 import { VariableRouteDestinations } from '@variables/RouteDestinations'
-import CIPipelineDeploymentList from '@ci/pages/pipeline-deployment-list/CIPipelineDeploymentList'
 import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import { GovernanceRouteDestinations } from '@governance/RouteDestinations'
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
@@ -58,6 +57,7 @@ import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { LICENSE_STATE_NAMES, LicenseRedirectProps } from 'framework/LicenseStore/LicenseStoreContext'
 import { RedirectToModuleTrialHomeFactory, RedirectToSubscriptionsFactory } from '@common/Redirects'
 import { ModuleName } from 'framework/types/ModuleName'
+import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 
 const STOSideNavProps: SidebarContext = {
   navComponent: STOSideNav,
@@ -347,7 +347,7 @@ const RouteDestinations: React.FC = () => {
       <Route path="/account/:accountId/:module(sto)">
         <PipelineRouteDestinations
           pipelineStudioComponent={PipelineStudio}
-          pipelineDeploymentListComponent={CIPipelineDeploymentList}
+          pipelineDeploymentListComponent={PipelineDeploymentList}
           moduleParams={moduleParams}
           licenseRedirectData={licenseRedirectData}
           sidebarProps={STOSideNavProps}

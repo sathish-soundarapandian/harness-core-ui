@@ -208,7 +208,8 @@ function TemplateStepWidget(
 
   const isLoading = stepTemplateLoading || stepTemplateInputSetLoading || loadingMergedTemplateInputs
 
-  const error = defaultTo(stepTemplateInputSetError, stepTemplateError)
+  // When both errors are present, error occurred during template fetch should be given higher priority.
+  const error = defaultTo(stepTemplateError, stepTemplateInputSetError)
 
   /**
    * This effect disables/enables "Apply Changes" button on Pipeline and Template Studio

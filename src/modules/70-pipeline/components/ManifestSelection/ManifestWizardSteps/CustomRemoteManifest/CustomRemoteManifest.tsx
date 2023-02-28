@@ -25,7 +25,7 @@ import { useParams } from 'react-router-dom'
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import cx from 'classnames'
-import { defaultTo, get, set } from 'lodash-es'
+import { defaultTo, get, isEmpty, set } from 'lodash-es'
 import { v4 as nameSpace, v5 as uuid } from 'uuid'
 import { useStrings } from 'framework/strings'
 import type { ConnectorConfigDTO, ManifestConfig, ManifestConfigWrapper } from 'services/cd-ng'
@@ -285,7 +285,15 @@ function CustomRemoteManifest({
               )
             }
             return Yup.string().required(getString('pipeline.manifestType.pathRequired'))
-          })
+          }),
+          commandFlags: Yup.array().of(
+            Yup.object().shape({
+              flag: Yup.string().when('commandType', {
+                is: val => !isEmpty(val),
+                then: Yup.string().required(getString('pipeline.manifestType.commandFlagRequired'))
+              })
+            })
+          )
         })}
         onSubmit={formData => {
           submitFormData({

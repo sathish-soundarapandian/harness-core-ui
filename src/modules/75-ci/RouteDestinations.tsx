@@ -7,7 +7,6 @@
 
 import React from 'react'
 import { Redirect, useParams } from 'react-router-dom'
-import CIPipelineDeploymentList from '@ci/pages/pipeline-deployment-list/CIPipelineDeploymentList'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
 
@@ -52,6 +51,7 @@ import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
 import { VariableRouteDestinations } from '@variables/RouteDestinations'
 import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import PipelineStudioV1 from '@pipeline/v1/components/PipelineStudioV1/PipelineStudioV1'
+import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import featureFactory from 'framework/featureStore/FeaturesFactory'
@@ -324,7 +324,7 @@ export default (
       PipelineRouteDestinations({
         pipelineStudioComponent: PipelineStudio,
         pipelineStudioPageName: PAGE_NAME.CIPipelineStudio,
-        pipelineDeploymentListComponent: CIPipelineDeploymentList,
+        pipelineDeploymentListComponent: PipelineDeploymentList,
         pipelineDeploymentListPageName: PAGE_NAME.CIPipelineDeploymentList,
         moduleParams,
         licenseRedirectData,

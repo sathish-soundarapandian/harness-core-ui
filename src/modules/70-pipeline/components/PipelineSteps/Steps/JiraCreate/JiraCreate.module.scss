@@ -32,15 +32,13 @@
   :global {
     textarea {
       min-height: 75px;
-      max-height: 120px;
-      resize: vertical;
+      max-height: 150px;
     }
     .bp3-input {
-      width: 372px !important;
+      width: 345px !important;
     }
-
-    .MultiTypeInput--btn {
-      height: 30px !important;
+    input[placeholder='<+input>'] {
+      width: 372px !important;
     }
   }
 }

@@ -42,6 +42,7 @@ interface ClusterTableViewProps {
 const RenderClusterRef: Renderer<CellProps<ClusterResponse>> = ({ row }) => {
   const clusterName = row.original.name as string
   const clusterRef = row.original.clusterRef as string
+  const agentName = row.original.agentIdentifier as string
   const { getString } = useStrings()
   return (
     <Layout.Vertical>
@@ -56,8 +57,11 @@ const RenderClusterRef: Renderer<CellProps<ClusterResponse>> = ({ row }) => {
         ) : null}
       </Layout.Horizontal>
 
-      <Text color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
+      <Text margin={{ bottom: 'xsmall' }} color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
         {getString('common.ID')}: {clusterRef}
+      </Text>
+      <Text color={Color.GREY_500} font={{ size: 'small' }} lineClamp={1}>
+        {getString('cd.agentID')}: {agentName}
       </Text>
     </Layout.Vertical>
   )

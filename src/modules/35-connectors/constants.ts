@@ -116,7 +116,8 @@ export const Connectors: ConnectorType = {
   GcpSecretManager: 'GcpSecretManager',
   SPOT: 'Spot',
   TAS: 'Tas',
-  TERRAFORM_CLOUD: 'TerraformCloud'
+  TERRAFORM_CLOUD: 'TerraformCloud',
+  Bamboo: 'Bamboo'
 }
 
 export const ConnectorLabels: Record<ConnectorInfoDTO['type'], string> = {
@@ -126,6 +127,7 @@ export const ConnectorLabels: Record<ConnectorInfoDTO['type'], string> = {
   AppDynamics: 'AppDynamics',
   Prometheus: 'Prometheus',
   Dynatrace: 'Dynatrace',
+  Bamboo: 'Bamboo',
   Vault: 'Vault',
   AzureKeyVault: 'AzureKeyVault',
   DockerRegistry: 'DockerRegistry',

@@ -36,9 +36,12 @@ import { NewTemplatePopover } from '@templates-library/pages/TemplatesPage/views
 import { DeleteTemplateModal } from '@templates-library/components/DeleteTemplateModal/DeleteTemplateModal'
 import routes from '@common/RouteDefinitions'
 import { useMutateAsGet, useQueryParams, useUpdateQueryParams } from '@common/hooks'
+import { MigrationType } from '@pipeline/components/MigrateResource/MigrateUtils'
+
 import NoResultsView from '@templates-library/pages/TemplatesPage/views/NoResultsView/NoResultsView'
 import TemplatesView from '@templates-library/pages/TemplatesPage/views/TemplatesView/TemplatesView'
 import ResultsViewHeader from '@templates-library/pages/TemplatesPage/views/ResultsViewHeader/ResultsViewHeader'
+import useMigrateTemplateResource from '@templates-library/components/MigrateTemplateResource/useMigrateTemplateSource'
 import { GitSyncStoreProvider } from 'framework/GitRepoStore/GitSyncStoreContext'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import GitFilters, { GitFilterScope } from '@common/components/GitFilters/GitFilters'
@@ -77,7 +80,7 @@ export default function TemplatesPage(): React.ReactElement {
   } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
   const scope = getScopeFromDTO({ projectIdentifier, orgIdentifier, accountIdentifier: accountId })
-  const { CVNG_TEMPLATE_MONITORED_SERVICE, NG_SVC_ENV_REDESIGN, CDS_STEPGROUP_TEMPLATE } = useFeatureFlags()
+  const { CVNG_TEMPLATE_MONITORED_SERVICE, NG_SVC_ENV_REDESIGN } = useFeatureFlags()
   const { enabled: templateFeatureEnabled } = useFeature({
     featureRequest: {
       featureName: FeatureIdentifier.TEMPLATE_SERVICE
@@ -85,8 +88,7 @@ export default function TemplatesPage(): React.ReactElement {
   })
   const allowedTemplateTypes = getAllowedTemplateTypes(scope, {
     [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE,
-    [TemplateType.CustomDeployment]: !!NG_SVC_ENV_REDESIGN,
-    [TemplateType.StepGroup]: !!CDS_STEPGROUP_TEMPLATE
+    [TemplateType.CustomDeployment]: !!NG_SVC_ENV_REDESIGN
   }).filter(item => !item.disabled)
 
   useDocumentTitle([getString('common.templates')])
@@ -146,6 +148,17 @@ export default function TemplatesPage(): React.ReactElement {
     updateQueryParams({ templateType: [] as any, repoName: [] as any })
     setGitFilter(null)
   }, [searchRef.current, updateQueryParams, setGitFilter])
+
+  const { showMigrateTemplateResourceModal, moveDataLoading } = useMigrateTemplateResource({
+    resourceType: ResourceType.TEMPLATE,
+    modalTitle: getString('common.moveEntitytoGit', { resourceType: getString('common.template.label') }),
+    migrationType: MigrationType.INLINE_TO_REMOTE,
+    isGitSyncEnabled,
+    supportingTemplatesGitx,
+    onSuccess: () => {
+      reloadTemplates()
+    }
+  })
 
   const [showDeleteTemplatesModal, hideDeleteTemplatesModal] = useModalHook(() => {
     const content = (
@@ -280,7 +293,7 @@ export default function TemplatesPage(): React.ReactElement {
         </Layout.Horizontal>
       </Page.SubHeader>
       <Page.Body
-        loading={loading}
+        loading={loading || moveDataLoading}
         error={(error?.data as Error)?.message || error?.message}
         className={css.templatesPageBody}
         retryOnError={onRetry}
@@ -312,6 +325,9 @@ export default function TemplatesPage(): React.ReactElement {
                 onDelete={template => {
                   setTemplateToDelete(template)
                   showDeleteTemplatesModal()
+                }}
+                onOpenMoveResource={template => {
+                  showMigrateTemplateResourceModal(template)
                 }}
                 view={view}
               />

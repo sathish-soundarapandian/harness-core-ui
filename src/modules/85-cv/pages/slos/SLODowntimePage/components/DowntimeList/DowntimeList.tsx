@@ -5,12 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Container, Text, Icon, Layout, Page, Toggle, TableV2, useToaster, NoDataCard } from '@harness/uicore'
+import { Container, Text, Icon, Layout, Page, Toggle, TableV2, useToaster, NoDataCard, Popover } from '@harness/uicore'
 import React, { useContext } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import moment from 'moment'
 import type { CellProps, Renderer } from 'react-table'
-import { PopoverInteractionKind, Position } from '@blueprintjs/core'
+import cx from 'classnames'
+import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
+import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import {
   AffectedEntity,
@@ -32,9 +34,14 @@ import {
   getFormattedTime
 } from '@cv/pages/slos/components/CVCreateDowntime/CVCreateDowntime.utils'
 import DowntimeActions from './components/DowntimeActions/DowntimeActions'
-import { getDowntimeStatusLabel, getDowntimeWindowInfo, getDuration, getIsSetPreviousPage } from './DowntimeList.utils'
+import {
+  getDowntimeStatusLabel,
+  getDowntimeWindowInfo,
+  getDuration,
+  getIsSetPreviousPage,
+  shouldRenderFilters
+} from './DowntimeList.utils'
 import { DowntimeStatus } from '../../SLODowntimePage.types'
-import { getAddDowntimeButton } from '../../SLODowntimePage.utils'
 import { FiltersContext } from '../../FiltersContext'
 import DowntimeFilters from '../DowntimeFilters/DowntimeFilters'
 import css from './DowntimeList.module.scss'
@@ -44,7 +51,6 @@ interface DowntimeListProps {
   downtimeData: ResponsePageDowntimeListView | null
   refetchDowntimes: (data: UseListDowntimesProps) => void
   downtimeError?: string
-  handleCreateButton: () => void
 }
 
 export const RenderServices = ({
@@ -67,19 +73,37 @@ export const RenderServices = ({
           </Text>
         ) : (
           <>
-            <Text title={serviceName} className={css.firstLine}>
+            <Text title={serviceName} className={cx(css.firstLine, css.affectedServices)}>
               {serviceName}
             </Text>
-            <Text title={envName} font={{ size: 'small' }}>
+            <Text title={envName} font={{ size: 'small' }} className={css.affectedServices}>
               {envName}
             </Text>
           </>
         )}
       </Layout.Vertical>
       {affectedEntities.length > 1 && (
-        <Container padding={'small'} margin={{ right: 'xlarge' }} className={css.msBox}>
-          +{affectedEntities.length - 1}
-        </Container>
+        <Popover
+          interactionKind={PopoverInteractionKind.HOVER}
+          position={Position.BOTTOM_LEFT}
+          className={Classes.DARK}
+          content={
+            <Container padding={'medium'} className={css.popover}>
+              {affectedEntities.slice(1).map(entity => (
+                <Layout.Vertical key={entity.monitoredServiceIdentifier}>
+                  <Text color={Color.GREY_0}>{entity.serviceName}</Text>
+                  <Text color={Color.GREY_400} font={{ size: 'small' }}>
+                    {entity.envName}
+                  </Text>
+                </Layout.Vertical>
+              ))}
+            </Container>
+          }
+        >
+          <Container padding={'small'} margin={{ right: 'xlarge' }} className={css.msBox}>
+            +{affectedEntities.length - 1}
+          </Container>
+        </Popover>
       )}
     </Layout.Horizontal>
   )
@@ -89,8 +113,7 @@ const DowntimeList = ({
   downtimeDataLoading,
   downtimeData,
   refetchDowntimes,
-  downtimeError,
-  handleCreateButton
+  downtimeError
 }: DowntimeListProps): JSX.Element => {
   const { getString } = useStrings()
   const history = useHistory()
@@ -98,7 +121,7 @@ const DowntimeList = ({
 
   const { showSuccess, showError } = useToaster()
 
-  const { setPageNumber, queryParams, pathParams } = useContext(FiltersContext)
+  const { setPageNumber, queryParams, pathParams, appliedSearchAndFilter } = useContext(FiltersContext)
 
   const { mutate: deleteDowntime, loading: deleteDowntimeLoading } = useDeleteDowntimeData(pathParams)
 
@@ -334,9 +357,8 @@ const DowntimeList = ({
 
   return (
     <>
-      <Page.SubHeader>{getAddDowntimeButton(handleCreateButton, getString)}</Page.SubHeader>
       <Container margin={'xlarge'} padding={{ left: 'small', right: 'small' }}>
-        <DowntimeFilters />
+        {shouldRenderFilters(appliedSearchAndFilter, content) && <DowntimeFilters listView />}
         <Page.Body
           loading={deleteDowntimeLoading || toggleDowntimeLoading || downtimeDataLoading}
           error={downtimeError}
@@ -361,7 +383,14 @@ const DowntimeList = ({
               />
             </Container>
           ) : (
-            <NoDataCard image={emptyData} message={getString('common.filters.noMatchingFilterData')} />
+            <NoDataCard
+              image={emptyData}
+              message={
+                appliedSearchAndFilter
+                  ? getString('common.filters.noMatchingFilterData')
+                  : getString('cv.changeSource.noDataAvaiableForCard')
+              }
+            />
           )}
         </Page.Body>
       </Container>

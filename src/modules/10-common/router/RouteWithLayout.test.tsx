@@ -11,6 +11,7 @@ import { Redirect } from 'react-router-dom'
 import { TestWrapper } from '@common/utils/testUtils'
 import { MinimalLayout, EmptyLayout } from '@common/layouts'
 import { defaultAppStoreValues } from '@common/utils/DefaultAppStoreData'
+import { useGetAccountNG } from 'services/cd-ng'
 import routes from '@common/RouteDefinitions'
 import { LicenseRedirectProps, LICENSE_STATE_NAMES } from 'framework/LicenseStore/LicenseStoreContext'
 import { LICENSE_STATE_VALUES } from 'framework/LicenseStore/licenseStoreUtil'
@@ -37,6 +38,26 @@ const useGetUsageAndLimitReturnMock = {
     usage: {}
   }
 }
+jest.mock('services/cd-ng')
+const useGetAccountNGMock = useGetAccountNG as jest.MockedFunction<any>
+
+beforeEach(() => {
+  window.deploymentType = 'SAAS'
+
+  useGetAccountNGMock.mockImplementation(() => {
+    return {
+      data: {
+        data: {
+          name: 'account name',
+          identifier: 'id1',
+          cluster: 'free',
+          defaultExperience: 'NG'
+        }
+      },
+      refetch: jest.fn()
+    }
+  })
+})
 
 describe('RouteWithLayout', () => {
   test('empty', () => {

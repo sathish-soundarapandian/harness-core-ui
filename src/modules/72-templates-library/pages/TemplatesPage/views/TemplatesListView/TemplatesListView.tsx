@@ -31,11 +31,13 @@ type CustomColumn<T extends Record<string, any>> = Column<T> & {
   onOpenEdit?: (template: TemplateSummaryResponse) => void
   onOpenSettings?: (templateIdentifier: string) => void
   onDelete?: (template: TemplateSummaryResponse) => void
+  onOpenMoveResource?: (template: TemplateSummaryResponse) => void
 }
 
 const RenderColumnMenu: Renderer<CellProps<TemplateSummaryResponse>> = ({ row, column }) => {
   const data = row.original
-  const { onPreview, onOpenEdit, onOpenSettings, onDelete } = column as CustomColumn<TemplateSummaryResponse>
+  const { onPreview, onOpenEdit, onOpenSettings, onDelete, onOpenMoveResource } =
+    column as CustomColumn<TemplateSummaryResponse>
   return (
     <Layout.Horizontal style={{ justifyContent: 'flex-end' }}>
       {onPreview && onOpenEdit && onOpenSettings && onDelete && (
@@ -45,6 +47,9 @@ const RenderColumnMenu: Renderer<CellProps<TemplateSummaryResponse>> = ({ row, c
           onOpenEdit={onOpenEdit}
           onOpenSettings={onOpenSettings}
           onDelete={onDelete}
+          onOpenMoveResource={template => {
+            onOpenMoveResource?.(template)
+          }}
         />
       )}
     </Layout.Horizontal>
@@ -193,7 +198,17 @@ export const RenderIcon: Renderer<CellProps<TemplateSummaryResponse>> = ({ row }
 
 export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Element => {
   const { getString } = useStrings()
-  const { data, selectedTemplate, gotoPage, onPreview, onOpenEdit, onOpenSettings, onDelete, onSelect } = props
+  const {
+    data,
+    selectedTemplate,
+    gotoPage,
+    onPreview,
+    onOpenEdit,
+    onOpenSettings,
+    onDelete,
+    onSelect,
+    onOpenMoveResource
+  } = props
   const {
     isGitSyncEnabled: isGitSyncEnabledForProject,
     gitSyncEnabledOnlyForFF,
@@ -267,10 +282,20 @@ export const TemplatesListView: React.FC<TemplatesViewProps> = (props): JSX.Elem
         onPreview,
         onOpenEdit,
         onOpenSettings,
-        onDelete
+        onDelete,
+        onOpenMoveResource
       }
     ],
-    [isGitView, getTemplateNameWidth, supportingTemplatesGitx, onPreview, onOpenEdit, onOpenSettings, onDelete]
+    [
+      isGitView,
+      getTemplateNameWidth,
+      supportingTemplatesGitx,
+      onPreview,
+      onOpenEdit,
+      onOpenSettings,
+      onDelete,
+      onOpenMoveResource
+    ]
   )
 
   if (hideMenu) {

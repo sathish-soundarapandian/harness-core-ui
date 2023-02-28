@@ -226,7 +226,7 @@ export const SSCANavItem = (): JSX.Element => {
     <li className={css.navItem}>
       <Link {...commonLinkProps} to={routes.toSSCA(params)}>
         <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-          <Icon name="sscs-main" size={30} />
+          <Icon name="ssca-main" size={30} />
           <Text
             font={{ weight: 'semi-bold', align: 'center' }}
             padding={{ bottom: 'xsmall' }}

@@ -198,7 +198,7 @@ const StepCommonFields = ({
                 },
                 disabled
               }}
-              configureOptionsProps={{ variableName: 'spec.limit.memory' }}
+              configureOptionsProps={{ variableName: 'spec.limit.memory', hideExecutionTimeField: true }}
               style={{ flexGrow: 1, flexBasis: '50%' }}
             />
             <MultiTypeTextField
@@ -224,7 +224,7 @@ const StepCommonFields = ({
                 multiTextInputProps: { expressions, allowableTypes: AllMultiTypeInputTypesForStep },
                 disabled
               }}
-              configureOptionsProps={{ variableName: 'spec.limit.cpu' }}
+              configureOptionsProps={{ variableName: 'spec.limit.cpu', hideExecutionTimeField: true }}
               style={{ flexGrow: 1, flexBasis: '50%' }}
             />
           </Layout.Horizontal>

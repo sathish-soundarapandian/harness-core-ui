@@ -1,23 +1,8 @@
 import { addHashInCypressURLBasedOnBrowserRouter } from '../../utils/windowLocation'
-import { featureFlagsCall, overviewPage, orgOverviewPage, projectOverviewPage, getOrgCall } from './constants'
+import { overviewPage, orgOverviewPage, projectOverviewPage, getOrgCall } from './constants'
 
 describe('check if Route is available if FF is enabled', () => {
   beforeEach(() => {
-    cy.fixture('api/users/feature-flags/accountId').then(featureFlagsData => {
-      cy.intercept('GET', featureFlagsCall, {
-        ...featureFlagsData,
-        resource: [
-          ...featureFlagsData.resource,
-          {
-            uuid: null,
-            name: 'NG_DEPLOYMENT_FREEZE',
-            enabled: true,
-            lastUpdatedAt: 0
-          }
-        ]
-      })
-    })
-
     cy.intercept('GET', getOrgCall, { fixture: 'pipeline/api/organization/getOrganization' }).as('getOrgCall')
     cy.initializeRoute()
   })

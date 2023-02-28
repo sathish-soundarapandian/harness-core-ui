@@ -41,7 +41,13 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
   const { sloType } = useQueryParams<{ sloType?: string }>()
   const isCompositeSLO = sloType === SLOType.COMPOSITE
 
-  const { currentPeriodStartTime = 0, currentPeriodEndTime = 0, monitoredServiceDetails } = sloDashboardWidget ?? {}
+  const {
+    currentPeriodStartTime = 0,
+    currentPeriodEndTime = 0,
+    monitoredServiceDetails,
+    calculatingSLI,
+    recalculatingSLI
+  } = sloDashboardWidget ?? {}
   const [chartTimeRange, setChartTimeRange] = useState<{ startTime: number; endTime: number }>()
   const [sliderTimeRange, setSliderTimeRange] = useState<{ startTime: number; endTime: number }>()
   const [showDowntimeBanner, setShowDowntimeBanner] = useState(true)
@@ -94,6 +100,8 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
     [downtimeInstanceUnavailability, downtimeEndTime]
   )
 
+  const shouldRenderDowntimeBanner = showDowntimeBanner && !calculatingSLI && !recalculatingSLI
+
   return (
     <Page.Body
       loading={loading}
@@ -105,7 +113,7 @@ const DetailsPanel: React.FC<DetailsPanelProps> = ({
     >
       {sloDashboardWidget && (
         <>
-          {showDowntimeBanner && !!bannerData?.length && (
+          {shouldRenderDowntimeBanner && !!bannerData?.length && (
             <DowntimeBanner showBanner={setShowDowntimeBanner} bannerData={bannerData} />
           )}
           <Container padding="xlarge">

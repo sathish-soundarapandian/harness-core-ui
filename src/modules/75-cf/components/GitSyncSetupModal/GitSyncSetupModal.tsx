@@ -42,9 +42,9 @@ export const GitSyncSetupModal: FC<GitSyncSetupModalProps> = ({ hideModal }) => 
       const yamlFilePath = pathNodes?.length ? '/' + pathNodes?.join('/') + '/' : ''
 
       const requestData = {
-        repoIdentifier: formValues.repo,
+        repoIdentifier: formValues.repo || '',
         repoReference: formValues.repo,
-        branch: formValues.branch,
+        branch: formValues.branch || '',
         filePath: yamlFileName,
         rootFolder: yamlFilePath,
         connectorReference:

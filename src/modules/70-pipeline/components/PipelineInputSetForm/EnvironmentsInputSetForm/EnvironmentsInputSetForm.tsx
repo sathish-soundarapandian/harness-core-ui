@@ -35,15 +35,17 @@ export default function EnvironmentsInputSetForm({
 
   return (
     <>
-      <SingleEnvironmentInputSetForm
-        deploymentStage={deploymentStage}
-        deploymentStageTemplate={deploymentStageTemplate}
-        allowableTypes={allowableTypes}
-        path={path}
-        viewType={viewType}
-        readonly={readonly}
-        stageIdentifier={stageIdentifier}
-      />
+      {isSvcEnvEntityEnabled && deploymentStageTemplate.environment && (
+        <SingleEnvironmentInputSetForm
+          deploymentStage={deploymentStage}
+          deploymentStageTemplate={deploymentStageTemplate}
+          allowableTypes={allowableTypes}
+          path={path}
+          viewType={viewType}
+          readonly={readonly}
+          stageIdentifier={stageIdentifier}
+        />
+      )}
 
       {isSvcEnvEntityEnabled && deploymentStageTemplate.environments && (
         <div id={`Stage.${stageIdentifier}.Environments`} className={cx(css.accordionSummary)}>
@@ -64,15 +66,17 @@ export default function EnvironmentsInputSetForm({
         </div>
       )}
 
-      <EnvironmentGroupInputSetForm
-        deploymentStage={deploymentStage}
-        deploymentStageTemplate={deploymentStageTemplate}
-        allowableTypes={allowableTypes}
-        path={path}
-        viewType={viewType}
-        readonly={readonly}
-        stageIdentifier={stageIdentifier}
-      />
+      {isSvcEnvEntityEnabled && deploymentStageTemplate.environmentGroup && (
+        <EnvironmentGroupInputSetForm
+          deploymentStage={deploymentStage}
+          deploymentStageTemplate={deploymentStageTemplate}
+          allowableTypes={allowableTypes}
+          path={path}
+          viewType={viewType}
+          readonly={readonly}
+          stageIdentifier={stageIdentifier}
+        />
+      )}
     </>
   )
 }

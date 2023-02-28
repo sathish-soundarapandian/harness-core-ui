@@ -189,7 +189,7 @@ datePickerShortcuts:
 validation:
   connectorRef: Connector is a required field
   namePatternIsNotValid: 'Name can only contain alphanumerics, . _ and -'
-  provisionerIdentifierPatternIsNotValid: 'Provisioner Identifier should not contain special characters and spaces'
+  provisionerIdentifierPatternIsNotValid: 'Provisioner Identifier must start with a letter or _ and can then be followed by alphanumerics, _, or $'
   provisionerIdentifierIsRequired: 'Provisioner Identifier is required'
   harnessFolderNamePatternIsNotValid: 'Harness Folder name can only contain alphanumerics, underscore, hyphen or a whitespace'
   nameIsRequired: '{{$.validation.nameRequired}}'
@@ -638,6 +638,7 @@ accountDetails: Account Details
 addAccountName: Add Account Name
 accountId: Account Id
 harnessClusterHostingAccount: Harness Cluster Hosting Account
+allowFirstGenAccess: Allow First Gen Access
 defaultExperience: Default Experience
 selectDefaultExperience: Select the default experience to launch after Sign-in
 harnessFirstGeneration: Harness First Generation

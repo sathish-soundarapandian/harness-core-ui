@@ -27,6 +27,7 @@
 
   &.sideNavExpanded {
     width: 184px;
+    flex-shrink: 0;
     & > * {
       opacity: 1;
       transition: opacity 300ms linear;

@@ -17,9 +17,10 @@ import { useQueryParams } from '@common/hooks'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { getErrorMessage, getSearchString } from '@cv/utils/CommonUtils'
 import routes from '@common/RouteDefinitions'
-import { useGetDowntimeAssociatedMonitoredServices, useListDowntimes } from 'services/cv'
+import { useGetDowntimeAssociatedMonitoredServices, useGetHistory, useListDowntimes } from 'services/cv'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import { SLODowntimeTabs } from './SLODowntimePage.types'
-import { getMessageAndAddDowntimeButton, getRedirectLinks } from './SLODowntimePage.utils'
+import { getMessageAndAddDowntimeButton, getRedirectLinks, shouldRenderNoDataCard } from './SLODowntimePage.utils'
 import DowntimeList from './components/DowntimeList/DowntimeList'
 import DowntimeHistory from './components/DowntimeHistory/DowntimeHistory'
 import { defaultOption } from './SLODowntimePage.constants'
@@ -33,9 +34,13 @@ const DowntimeTabsTitle = ({ title }: { title: string }): JSX.Element => (
 export const SLODowntimePage = (): JSX.Element => {
   const { getString } = useStrings()
   const history = useHistory()
+  useDocumentTitle([getString('cv.srmTitle'), getString('cv.sloDowntime.label')])
   const { tab = SLODowntimeTabs.DOWNTIME } = useQueryParams<{ tab?: SLODowntimeTabs }>()
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
-  const pathParams = { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+  const pathParams = useMemo(
+    () => ({ accountIdentifier: accountId, orgIdentifier, projectIdentifier }),
+    [accountId, projectIdentifier, orgIdentifier]
+  )
 
   const [monitoredServiceOption, setMonitoredServiceOption] = useState<SelectOption>(defaultOption)
   const [pageNumber, setPageNumber] = useState(0)
@@ -74,16 +79,31 @@ export const SLODowntimePage = (): JSX.Element => {
 
   const {
     data: downtimeData,
-    refetch,
+    refetch: refetchDowntimes,
     loading: downtimeDataLoading,
-    error
+    error: downtimeError
   } = useListDowntimes({ ...pathParams, queryParams, lazy: true })
+
+  const {
+    data: downtimeHistoryData,
+    refetch: refetchHistoryData,
+    loading: downtimeHistoryLoading,
+    error: downtimeHistoryError
+  } = useGetHistory({ ...pathParams, queryParams, lazy: true })
 
   useEffect(() => {
     if (tab === SLODowntimeTabs.DOWNTIME) {
-      refetch({ ...pathParams, queryParams })
+      refetchDowntimes({ ...pathParams, queryParams })
+    } else {
+      refetchHistoryData({ ...pathParams, queryParams })
     }
-  }, [queryParams, tab])
+  }, [queryParams, pathParams, tab])
+
+  useEffect(() => {
+    if (downtimeData?.data?.content?.length === 0) {
+      refetchHistoryData({ ...pathParams, queryParams })
+    }
+  }, [downtimeData])
 
   const onTabChange = (nextTab: SLODowntimeTabs): void => {
     if (nextTab !== tab) {
@@ -107,13 +127,19 @@ export const SLODowntimePage = (): JSX.Element => {
     <DowntimeList
       downtimeDataLoading={downtimeDataLoading}
       downtimeData={downtimeData}
-      refetchDowntimes={refetch}
-      downtimeError={getErrorMessage(error)}
-      handleCreateButton={handleCreateButton}
+      refetchDowntimes={refetchDowntimes}
+      downtimeError={getErrorMessage(downtimeError)}
     />
   )
 
-  const panelHistory = <DowntimeHistory />
+  const panelHistory = (
+    <DowntimeHistory
+      downtimeHistoryLoading={downtimeHistoryLoading}
+      downtimeHistoryData={downtimeHistoryData}
+      refetchHistoryData={refetchHistoryData}
+      downtimeHistoryError={getErrorMessage(downtimeHistoryError)}
+    />
+  )
 
   return (
     <>
@@ -140,11 +166,19 @@ export const SLODowntimePage = (): JSX.Element => {
           hideResetFilterButton,
           queryParams,
           pathParams,
-          appliedSearchAndFilter
+          appliedSearchAndFilter,
+          handleCreateButton
         }}
       >
         <Page.Body className={css.pageBody} loading={!appliedSearchAndFilter && downtimeDataLoading}>
-          {downtimeData?.data?.content?.length || error || appliedSearchAndFilter ? (
+          {shouldRenderNoDataCard(appliedSearchAndFilter, downtimeData, downtimeHistoryData) ? (
+            <NoDataCard
+              image={noDowntimeData}
+              messageTitle={getString('cv.sloDowntime.noData')}
+              message={getMessageAndAddDowntimeButton(handleCreateButton, getString)}
+              button={getRedirectLinks(getString)}
+            />
+          ) : (
             <Container className={css.downtimeTabs}>
               <Tabs
                 id="sloDowntimeTabs"
@@ -164,13 +198,6 @@ export const SLODowntimePage = (): JSX.Element => {
                 ]}
               />
             </Container>
-          ) : (
-            <NoDataCard
-              image={noDowntimeData}
-              messageTitle={getString('cv.sloDowntime.noData')}
-              message={getMessageAndAddDowntimeButton(handleCreateButton, getString)}
-              button={getRedirectLinks(getString)}
-            />
           )}
         </Page.Body>
       </FiltersContext.Provider>

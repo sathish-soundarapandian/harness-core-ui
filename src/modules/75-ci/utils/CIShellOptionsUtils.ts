@@ -8,17 +8,25 @@ import { once } from 'lodash-es'
 import type { SelectOption } from '@harness/uicore'
 import type { UseStringsReturn } from 'framework/strings'
 
+export enum Shell {
+  Bash = 'Bash',
+  Powershell = 'Powershell',
+  Pwsh = 'Pwsh',
+  Sh = 'Sh',
+  Python = 'Python'
+}
+
 export const getCIShellOptions = once((getString: UseStringsReturn['getString']): SelectOption[] => [
-  { label: getString('common.bash'), value: 'Bash' },
-  { label: getString('common.powershell'), value: 'Powershell' },
-  { label: getString('common.pwsh'), value: 'Pwsh' },
-  { label: getString('common.sh'), value: 'Sh' },
-  { label: getString('common.python'), value: 'Python' }
+  { label: getString('common.bash'), value: Shell.Bash },
+  { label: getString('common.powershell'), value: Shell.Powershell },
+  { label: getString('common.pwsh'), value: Shell.Pwsh },
+  { label: getString('common.sh'), value: Shell.Sh },
+  { label: getString('common.python'), value: Shell.Python }
 ])
 
 export const getCIRunTestsStepShellOptions = once((getString: UseStringsReturn['getString']): SelectOption[] => [
-  { label: getString('common.bash'), value: 'Bash' },
-  { label: getString('common.powershell'), value: 'Powershell' },
-  { label: getString('common.pwsh'), value: 'Pwsh' },
-  { label: getString('common.sh'), value: 'Sh' }
+  { label: getString('common.bash'), value: Shell.Bash },
+  { label: getString('common.powershell'), value: Shell.Powershell },
+  { label: getString('common.pwsh'), value: Shell.Pwsh },
+  { label: getString('common.sh'), value: Shell.Sh }
 ])

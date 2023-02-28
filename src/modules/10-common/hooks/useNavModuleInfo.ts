@@ -135,7 +135,7 @@ const moduleInfoMap: Record<NavModuleName, ModuleInfo> = {
     color: '--iacm-border'
   },
   [ModuleName.SSCA]: {
-    icon: 'sscs-main',
+    icon: 'ssca-main',
     label: 'common.sscaText',
     getHomePageUrl: (accountId: string) => routes.toSSCA({ accountId }),
     featureFlagName: FeatureFlag.SSCA_ENABLED,

@@ -106,7 +106,7 @@ exports[`ActiveServiceInstancesHeader should render INVALID_CHANGE_RATE 1`] = `
       <p
         class="StyledProps--font StyledProps--main instanceCount StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey800 StyledProps--margin-right-large"
       >
-        0
+        3
       </p>
       <div
         class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
@@ -122,21 +122,18 @@ exports[`ActiveServiceInstancesHeader should render INVALID_CHANGE_RATE 1`] = `
               class="iconContainer"
             >
               <span
-                class="bp3-icon bp3-icon-double-chevron-up StyledProps--main StyledProps--color StyledProps--color-green600"
-                icon="double-chevron-up"
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-green600"
+                data-icon="main-caret-up"
               >
                 <svg
-                  data-icon="double-chevron-up"
-                  height="10"
-                  viewBox="0 0 16 16"
-                  width="10"
+                  height="6"
+                  viewBox="0 0 14 9"
+                  width="6"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <desc>
-                    double-chevron-up
-                  </desc>
                   <path
-                    d="M4 8c.28 0 .53-.11.71-.29L8 4.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71l-4-4C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-4 4A1.003 1.003 0 004 8zm4.71-.71C8.53 7.11 8.28 7 8 7s-.53.11-.71.29l-4 4a1.003 1.003 0 001.42 1.42L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71l-4-4z"
-                    fill-rule="evenodd"
+                    d="M13.7 7.2L7.9.4C7.7.2 7.4 0 7 0s-.7.2-.9.4L.3 7.2c-.2.2-.3.4-.3.7C0 8.5.5 9 1.2 9h11.7c.6 0 1.1-.5 1.1-1.1 0-.3-.1-.5-.3-.7z"
+                    fill="#4d5969"
                   />
                 </svg>
               </span>
@@ -144,7 +141,13 @@ exports[`ActiveServiceInstancesHeader should render INVALID_CHANGE_RATE 1`] = `
             <div
               class="tickerValue"
               data-test="tickerValue"
-            />
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-green600"
+              >
+                5%
+              </p>
+            </div>
           </div>
         </div>
         <p
@@ -156,12 +159,131 @@ exports[`ActiveServiceInstancesHeader should render INVALID_CHANGE_RATE 1`] = `
     </div>
     <div
       class="Layout--horizontal StyledProps--main"
-    />
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-distribution-space-between"
+        style="height: 100%;"
+      >
+        <div
+          class="Layout--vertical StyledProps--main labelStyles"
+        >
+          <ul>
+            <li>
+              <p
+                class="StyledProps--font StyledProps--main listStyles"
+              >
+                cd.serviceDashboard.nonProd (2)
+              </p>
+            </li>
+            <li>
+              <p
+                class="StyledProps--font StyledProps--main listStyles"
+              >
+                cd.serviceDashboard.prod (1)
+              </p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;
 
-exports[`ActiveServiceInstancesHeader should render error 1`] = `<div />`;
+exports[`ActiveServiceInstancesHeader should render error 1`] = `
+<div>
+  <div
+    class="Layout--horizontal StyledProps--main activeServiceInstancesHeader StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-space-between StyledProps--padding-bottom-small"
+  >
+    <div
+      class="Layout--horizontal StyledProps--main"
+    >
+      <p
+        class="StyledProps--font StyledProps--main instanceCount StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey800 StyledProps--margin-right-large"
+      >
+        3
+      </p>
+      <div
+        class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
+      >
+        <div
+          class="tickerContainer"
+          data-test="ticker"
+        >
+          <div
+            class="ticker"
+          >
+            <div
+              class="iconContainer"
+            >
+              <span
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-green600"
+                data-icon="main-caret-up"
+              >
+                <svg
+                  height="6"
+                  viewBox="0 0 14 9"
+                  width="6"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M13.7 7.2L7.9.4C7.7.2 7.4 0 7 0s-.7.2-.9.4L.3 7.2c-.2.2-.3.4-.3.7C0 8.5.5 9 1.2 9h11.7c.6 0 1.1-.5 1.1-1.1 0-.3-.1-.5-.3-.7z"
+                    fill="#4d5969"
+                  />
+                </svg>
+              </span>
+            </div>
+            <div
+              class="tickerValue"
+              data-test="tickerValue"
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-green600"
+              >
+                5%
+              </p>
+            </div>
+          </div>
+        </div>
+        <p
+          class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall"
+        >
+          cd.serviceDashboard.in
+        </p>
+      </div>
+    </div>
+    <div
+      class="Layout--horizontal StyledProps--main"
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-distribution-space-between"
+        style="height: 100%;"
+      >
+        <div
+          class="Layout--vertical StyledProps--main labelStyles"
+        >
+          <ul>
+            <li>
+              <p
+                class="StyledProps--font StyledProps--main listStyles"
+              >
+                cd.serviceDashboard.nonProd (2)
+              </p>
+            </li>
+            <li>
+              <p
+                class="StyledProps--font StyledProps--main listStyles"
+              >
+                cd.serviceDashboard.prod (1)
+              </p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 
 exports[`ActiveServiceInstancesHeader should render no data 1`] = `
 <div>
@@ -174,7 +296,7 @@ exports[`ActiveServiceInstancesHeader should render no data 1`] = `
       <p
         class="StyledProps--font StyledProps--main instanceCount StyledProps--font-weight-bold StyledProps--color StyledProps--color-grey800 StyledProps--margin-right-large"
       >
-        0
+        3
       </p>
       <div
         class="Layout--vertical StyledProps--main StyledProps--flex StyledProps--flex-alignItems-flex-start StyledProps--flex-justifyContent-flex-start"
@@ -190,21 +312,18 @@ exports[`ActiveServiceInstancesHeader should render no data 1`] = `
               class="iconContainer"
             >
               <span
-                class="bp3-icon bp3-icon-double-chevron-up StyledProps--main StyledProps--color StyledProps--color-green600"
-                icon="double-chevron-up"
+                class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-green600"
+                data-icon="main-caret-up"
               >
                 <svg
-                  data-icon="double-chevron-up"
-                  height="10"
-                  viewBox="0 0 16 16"
-                  width="10"
+                  height="6"
+                  viewBox="0 0 14 9"
+                  width="6"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <desc>
-                    double-chevron-up
-                  </desc>
                   <path
-                    d="M4 8c.28 0 .53-.11.71-.29L8 4.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71l-4-4C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-4 4A1.003 1.003 0 004 8zm4.71-.71C8.53 7.11 8.28 7 8 7s-.53.11-.71.29l-4 4a1.003 1.003 0 001.42 1.42L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71l-4-4z"
-                    fill-rule="evenodd"
+                    d="M13.7 7.2L7.9.4C7.7.2 7.4 0 7 0s-.7.2-.9.4L.3 7.2c-.2.2-.3.4-.3.7C0 8.5.5 9 1.2 9h11.7c.6 0 1.1-.5 1.1-1.1 0-.3-.1-.5-.3-.7z"
+                    fill="#4d5969"
                   />
                 </svg>
               </span>
@@ -212,7 +331,13 @@ exports[`ActiveServiceInstancesHeader should render no data 1`] = `
             <div
               class="tickerValue"
               data-test="tickerValue"
-            />
+            >
+              <p
+                class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-green600"
+              >
+                5%
+              </p>
+            </div>
           </div>
         </div>
         <p
@@ -224,7 +349,33 @@ exports[`ActiveServiceInstancesHeader should render no data 1`] = `
     </div>
     <div
       class="Layout--horizontal StyledProps--main"
-    />
+    >
+      <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-align-center-center StyledProps--flex-distribution-space-between"
+        style="height: 100%;"
+      >
+        <div
+          class="Layout--vertical StyledProps--main labelStyles"
+        >
+          <ul>
+            <li>
+              <p
+                class="StyledProps--font StyledProps--main listStyles"
+              >
+                cd.serviceDashboard.nonProd (2)
+              </p>
+            </li>
+            <li>
+              <p
+                class="StyledProps--font StyledProps--main listStyles"
+              >
+                cd.serviceDashboard.prod (1)
+              </p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;

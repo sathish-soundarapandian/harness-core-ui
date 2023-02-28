@@ -50,8 +50,9 @@ import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useStrings } from 'framework/strings'
-import type { PipelineExecutionSummary, PipelineStageInfo } from 'services/pipeline-ng'
+import type { PipelineExecutionSummary, PipelineStageInfo, PMSPipelineSummaryResponse } from 'services/pipeline-ng'
 import { useQueryParams } from '@common/hooks'
+import type { PipelineListPagePathParams } from '@pipeline/pages/pipeline-list/types'
 import { CITriggerInfo, CITriggerInfoProps } from './CITriggerInfoCell'
 import type { ExecutionListColumnActions } from './ExecutionListTable'
 import css from './ExecutionListTable.module.scss'
@@ -84,18 +85,26 @@ export const getExecutionPipelineViewLink = (
   })
 }
 
-export const getChildExecutionPipelineViewLink = (
-  data: PipelineExecutionSummary,
-  pathParams: PipelineType<PipelinePathProps>,
+export function getChildExecutionPipelineViewLink<T>(
+  data: T,
+  pathParams: PipelineType<PipelinePathProps | PipelineListPagePathParams>,
   queryParams: GitQueryParams
-): string => {
+): string {
   const {
     executionid,
     identifier: pipelineIdentifier,
     orgid,
     projectid,
     stagenodeid
-  } = get(data, 'parentStageInfo', {} as PipelineStageInfo)
+  } = get(
+    data,
+    'parentStageInfo',
+    get(
+      (data as unknown as PMSPipelineSummaryResponse)?.recentExecutionsInfo,
+      [0, 'parentStageInfo'],
+      {} as PipelineStageInfo
+    )
+  )
   const { accountId, module } = pathParams
   const { branch, repoIdentifier, repoName, connectorRef, storeType } = queryParams
   const source: ExecutionPathProps['source'] = pipelineIdentifier ? 'executions' : 'deployments'
@@ -109,10 +118,13 @@ export const getChildExecutionPipelineViewLink = (
     module,
     source,
     stage: stagenodeid,
-    connectorRef: data.connectorRef ?? connectorRef,
-    repoName: defaultTo(data.gitDetails?.repoName ?? repoName, data.gitDetails?.repoIdentifier ?? repoIdentifier),
-    branch: data.gitDetails?.branch ?? branch,
-    storeType: data.storeType ?? storeType
+    connectorRef: get(data, 'connectorRef', connectorRef),
+    repoName: defaultTo(
+      get(data, ['gitDetails', 'repoName'], repoName),
+      get(data, ['gitDetails', 'repoIdentifier'], repoIdentifier)
+    ),
+    branch: get(data, ['gitDetails', 'branch'], branch),
+    storeType: get(data, 'storeType', storeType)
   })
 }
 
@@ -233,7 +245,11 @@ export const ExecutionCell: CellType = ({ row }) => {
     {} as PipelineStageInfo
   )
 
-  const toChildExecutionPipelineView = getChildExecutionPipelineViewLink(data, pathParams, queryParams)
+  const toChildExecutionPipelineView = getChildExecutionPipelineViewLink<PipelineExecutionSummary>(
+    data,
+    pathParams,
+    queryParams
+  )
 
   const triggerType = data.executionTriggerInfo?.triggerType
 
@@ -427,7 +443,11 @@ export function DefaultTriggerInfoCell(props: UseTableCellProps<PipelineExecutio
     {} as PipelineStageInfo
   )
 
-  const toChildExecutionPipelineView = getChildExecutionPipelineViewLink(data, pathParams, queryParams)
+  const toChildExecutionPipelineView = getChildExecutionPipelineViewLink<PipelineExecutionSummary>(
+    data,
+    pathParams,
+    queryParams
+  )
   const showCI = hasCIStage(data)
   const ciData = defaultTo(data?.moduleInfo?.ci, {})
   const prOrCommitTitle =

@@ -1,4 +1,5 @@
 import type { QueryRecordsRequest } from 'services/cv'
+import { ElkProduct } from '../../HealthSourceDrawer/component/defineHealthSource/DefineHealthSource.constant'
 import { HealthSourceTypes } from '../../types'
 import type { CommonCustomMetricFormikInterface, HealthSourceProductsType } from './CommonHealthSource.types'
 
@@ -10,6 +11,10 @@ export const HealthSourceProducts: HealthSourceProductsType = {
   [HealthSourceTypes.SumologicLogs]: {
     label: 'SumoLogic Cloud Logs',
     value: HealthSourceTypes.SumologicLogs
+  },
+  [HealthSourceTypes.Elk]: {
+    value: ElkProduct.ELK_LOGS,
+    label: ElkProduct.ELK_LOGS
   }
 }
 

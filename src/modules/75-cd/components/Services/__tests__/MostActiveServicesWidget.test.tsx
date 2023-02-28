@@ -12,7 +12,7 @@ import { MostActiveServicesWidgetRef } from '@cd/components/Services/MostActiveS
 import * as cdngServices from 'services/cd-ng'
 import { mostActiveServiceInfo } from '@cd/mock'
 
-jest.spyOn(cdngServices, 'useGetWorkloads').mockImplementation(() => {
+jest.spyOn(cdngServices, 'useGetWorkloadsV2').mockImplementation(() => {
   return { loading: false, error: false, data: mostActiveServiceInfo, refetch: jest.fn() } as any
 })
 
@@ -50,7 +50,7 @@ describe('MostActiveServicesWidget', () => {
   })
 
   test('should display loading state', () => {
-    jest.spyOn(cdngServices, 'useGetWorkloads').mockImplementation(() => {
+    jest.spyOn(cdngServices, 'useGetWorkloadsV2').mockImplementation(() => {
       return { loading: true, error: false, data: [], refetch: jest.fn() } as any
     })
     const { container } = render(
@@ -65,7 +65,7 @@ describe('MostActiveServicesWidget', () => {
   })
 
   test('should display loading state', () => {
-    jest.spyOn(cdngServices, 'useGetWorkloads').mockImplementation(() => {
+    jest.spyOn(cdngServices, 'useGetWorkloadsV2').mockImplementation(() => {
       return { loading: true, error: false, data: [], refetch: jest.fn() } as any
     })
     const { container } = render(
@@ -83,7 +83,7 @@ describe('MostActiveServicesWidget', () => {
   })
 
   test('should display error state', () => {
-    jest.spyOn(cdngServices, 'useGetWorkloads').mockImplementation(() => {
+    jest.spyOn(cdngServices, 'useGetWorkloadsV2').mockImplementation(() => {
       return { loading: false, error: true, data: [], refetch: jest.fn() } as any
     })
     const { container } = render(
@@ -101,7 +101,7 @@ describe('MostActiveServicesWidget', () => {
   })
 
   test('should fetch data if env changes', async () => {
-    const mockApi = jest.spyOn(cdngServices, 'useGetWorkloads').mockImplementation(() => {
+    const mockApi = jest.spyOn(cdngServices, 'useGetWorkloadsV2').mockImplementation(() => {
       return { loading: false, error: false, data: mostActiveServiceInfo, refetch: jest.fn() } as any
     })
     const { container } = render(
@@ -123,7 +123,7 @@ describe('MostActiveServicesWidget', () => {
   })
 
   test('should be able to switch to different type', async () => {
-    jest.spyOn(cdngServices, 'useGetWorkloads').mockImplementation(() => {
+    jest.spyOn(cdngServices, 'useGetWorkloadsV2').mockImplementation(() => {
       return { loading: false, error: false, data: mostActiveServiceInfo, refetch: jest.fn() } as any
     })
     const { container } = render(

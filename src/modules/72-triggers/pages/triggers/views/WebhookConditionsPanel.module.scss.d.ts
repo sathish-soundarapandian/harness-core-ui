@@ -11,6 +11,7 @@ declare const styles: {
   readonly conditionsRowHeaders: string
   readonly formContent: string
   readonly heading: string
+  readonly marginBottom: string
   readonly operatorContainer: string
   readonly predefinedRows: string
   readonly rowContainer: string

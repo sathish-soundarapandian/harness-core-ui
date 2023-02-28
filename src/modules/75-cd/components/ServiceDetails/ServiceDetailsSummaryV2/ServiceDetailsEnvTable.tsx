@@ -298,13 +298,7 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
       infraIdentifier: tableData[0].infrastructureId,
       infraName: tableData[0].infrastructureName
     })
-    setSelectedRow(
-      JSON.stringify(tableData[0]) +
-        tableData[0].envId +
-        tableData[0].artifact +
-        tableData[0].infrastructureId +
-        tableData[0].clusterId
-    )
+    setSelectedRow(`${tableData[0].envId}-${0}`)
   }
 
   if (loading) {
@@ -341,7 +335,7 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
       columns={columns}
       data={tableData}
       className={css.fullViewTableStyle}
-      onRowClick={row => {
+      onRowClick={(row, idx) => {
         setRowClickFilter({
           artifact: defaultTo(row.artifact, ''),
           envId: defaultTo(row.envId, ''),
@@ -351,20 +345,9 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
           infraIdentifier: row.infrastructureId,
           infraName: row.infrastructureName
         })
-        setSelectedRow(JSON.stringify(row) + row.envId + row.artifact + row.infrastructureId + row.clusterId)
+        setSelectedRow(`${row.envId}-${idx}`)
       }}
-      getRowClassName={row =>
-        isEqual(
-          JSON.stringify(row.original) +
-            row.original.envId +
-            row.original.artifact +
-            row.original.infrastructureId +
-            row.original.clusterId,
-          selectedRow
-        )
-          ? css.selected
-          : ''
-      }
+      getRowClassName={row => (isEqual(`${row.original.envId}-${row.index}`, selectedRow) ? css.selected : '')}
     />
   )
 }

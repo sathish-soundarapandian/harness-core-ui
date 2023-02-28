@@ -91,8 +91,16 @@ function ArtifactImagePathTagView({
   isArtifactPath,
   isImagePath = true,
   isServerlessDeploymentTypeSelected,
-  canFetchTags
+  canFetchTags,
+  tooltipId
 }: ArtifactImagePathTagViewProps): React.ReactElement {
+  const tooltipProps = tooltipId
+    ? {
+        tooltipProps: {
+          dataTooltipId: tooltipId
+        }
+      }
+    : {}
   const { getString } = useStrings()
   const getSelectItems = useCallback(selectItemsMapper.bind(null, tagList, isServerlessDeploymentTypeSelected), [
     tagList,
@@ -248,6 +256,7 @@ function ArtifactImagePathTagView({
             label={isServerlessDeploymentTypeSelected ? getString('pipeline.artifactPathLabel') : getString('tagLabel')}
             name="tag"
             className={css.tagInputButton}
+            {...tooltipProps}
           />
 
           {getMultiTypeFromValue(formik?.values?.tag) === MultiTypeInputType.RUNTIME && (

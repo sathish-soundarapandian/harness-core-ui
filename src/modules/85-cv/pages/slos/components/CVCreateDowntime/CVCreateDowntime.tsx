@@ -15,6 +15,7 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetDowntime, useSaveDowntime, useUpdateDowntimeData } from 'services/cv'
 import { getErrorMessage } from '@cv/utils/CommonUtils'
 import routes from '@common/RouteDefinitions'
+import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import type { DowntimeForm } from './CVCreateDowntime.types'
 import {
   createSLODowntimeRequestPayload,
@@ -26,6 +27,7 @@ import { CreateDowntimeForm } from './components/CreateDowntimeForm/CreateDownti
 const CVCreateDowntime = (): JSX.Element => {
   const { getString } = useStrings()
   const history = useHistory()
+  useDocumentTitle([getString('cv.srmTitle'), getString('cv.sloDowntime.label')])
   const { showSuccess, showError } = useToaster()
 
   const { accountId, orgIdentifier, projectIdentifier, identifier } = useParams<

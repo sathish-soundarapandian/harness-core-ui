@@ -78,7 +78,8 @@ export const getAllowedValuesFromTemplate = (template: Record<string, any>, fiel
     return []
   }
   const value = get(template, fieldPath, '')
-  const parsedInput = parseInput(value)
+  const type = get(template, fieldPath.substring(0, fieldPath.lastIndexOf('.')))?.type
+  const parsedInput = parseInput(value, { variableType: type })
   const items: SelectOption[] = defaultTo(parsedInput?.allowedValues?.values, []).map(item => ({
     label: item,
     value: item
@@ -119,7 +120,8 @@ export const shouldRenderRunTimeInputViewWithAllowedValues = (
     return false
   }
   const allowedValues = get(template, fieldPath, '')
-  const parsedInput = parseInput(allowedValues)
+  const type = get(template, fieldPath.substring(0, fieldPath.lastIndexOf('.')))?.type
+  const parsedInput = parseInput(allowedValues, { variableType: type })
   return shouldRenderRunTimeInputView(allowedValues) && !!parsedInput?.allowedValues?.values
 }
 
@@ -158,28 +160,32 @@ export const getPipelineWithoutCodebaseInputs = (values: { [key: string]: any })
   }
 }
 
-export const getCodebaseRepoNameFromConnector = (
-  codebaseConnector: ConnectorInfoDTO,
-  getString: UseStringsReturn['getString']
-): string => {
+export const getCodebaseRepoNameFromConnector = (codebaseConnector: ConnectorInfoDTO): string => {
   let repoName = ''
   const connectorGitScope = get(codebaseConnector, 'spec.type', '')
   if (connectorGitScope === connectorUrlType.REPO) {
     const repoURL: string = get(codebaseConnector, 'spec.url')
-    const gitProviderURL = getGitUrl(getString, get(codebaseConnector, 'type'))
-    repoName = gitProviderURL ? extractRepoNameFromUrl(repoURL.split(gitProviderURL)?.[1]) : ''
+    repoName = extractRepoNameFromUrl(repoURL)
   } else if (connectorGitScope === connectorUrlType.ACCOUNT || connectorGitScope === connectorUrlType.PROJECT) {
     repoName = get(codebaseConnector, 'spec.validationRepo', '')
   }
   return repoName
 }
 
-const extractRepoNameFromUrl = (repoURL: string): string => {
-  if (!repoURL) {
+const GIT_REPO_URL_REGEX = /(http|https|git|ssh)(:\/\/|@)([^/:]+(:d+)?)[/:](vd\/)?([^/:]+)\/(.+)?(.git)?/gm
+
+export const extractRepoNameFromUrl = (repoURL: string): string => {
+  if (!repoURL || !repoURL.match(GIT_REPO_URL_REGEX)) {
     return ''
   }
-  const tokens = repoURL.split('/')
-  return tokens.length > 0 ? tokens[tokens.length - 1] : ''
+  if (repoURL.includes('/')) {
+    // A valid git repo url should have a protocol, a namespace/project and actual repo name, all separated by '/'.
+    // Some git providers can have other metadata in the middle as well, but the last token has to be repo name if it matches above regex
+    const tokens = repoURL.split('/')
+    const repoName = tokens.length > 0 ? tokens[tokens.length - 1] : ''
+    return repoName.endsWith(GIT_EXTENSION) ? repoName.replace(GIT_EXTENSION, '') : repoName
+  }
+  return ''
 }
 
 export const getGitUrl = (

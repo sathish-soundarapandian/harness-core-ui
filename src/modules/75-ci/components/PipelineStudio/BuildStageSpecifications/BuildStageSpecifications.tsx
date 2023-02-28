@@ -269,6 +269,7 @@ export default function BuildStageSpecifications({ children }: React.PropsWithCh
                         allowedTypes: [MultiTypeInputType.FIXED, MultiTypeInputType.RUNTIME]
                       }}
                       disabled={isReadonly}
+                      configureOptionsProps={{ hideExecutionTimeField: true }}
                     />
                   </FormikForm>
                 </Card>

@@ -328,7 +328,12 @@ export default function ManifestTriggerWizard(
   }, [pipelineResponse?.data?.resolvedTemplatesPipelineYaml])
 
   const { loadingResolvedChildPipeline, resolvedMergedPipeline } = useGetResolvedChildPipeline(
-    { accountId, repoIdentifier, branch, connectorRef: pipelineConnectorRef },
+    {
+      accountId,
+      repoIdentifier: defaultTo(pipelineRepoName, repoIdentifier),
+      branch,
+      connectorRef: pipelineConnectorRef
+    },
     originalPipeline,
     resolvedPipeline
   )
@@ -1073,7 +1078,7 @@ export default function ManifestTriggerWizard(
       <Wizard
         key={wizardKey} // re-renders with yaml to visual initialValues
         formikInitialProps={{
-          initialValues,
+          initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
           onSubmit: (val: FlatValidArtifactFormikValuesInterface) => handleArtifactSubmit(val),
           validationSchema: getValidationSchema(getString),
           validate: validateTriggerPipeline,

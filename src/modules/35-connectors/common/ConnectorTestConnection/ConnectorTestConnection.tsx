@@ -499,8 +499,17 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
           </Container>
         </Layout.Vertical>
         {props.isStep ? (
-          isLastStep ? (
-            <Layout.Horizontal spacing="large" className={css.btnWrapper}>
+          <Layout.Horizontal spacing="large" className={css.btnWrapper}>
+            {stepDetails.status !== 'DONE' && (
+              <Button
+                text={getString('back')}
+                icon="chevron-left"
+                onClick={() => props?.previousStep?.(props?.prevStepData)}
+                data-name="connectionTestBackButton"
+                variation={ButtonVariation.SECONDARY}
+              />
+            )}
+            {isLastStep ? (
               <Button
                 intent="primary"
                 onClick={() => {
@@ -512,9 +521,7 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
                 text={getString('finish')}
                 variation={ButtonVariation.SECONDARY}
               />
-            </Layout.Horizontal>
-          ) : (
-            <Layout.Horizontal spacing="large" className={css.btnWrapper}>
+            ) : (
               <Button
                 variation={ButtonVariation.PRIMARY}
                 onClick={() => {
@@ -522,8 +529,8 @@ const ConnectorTestConnection: React.FC<StepProps<VerifyOutOfClusterStepProps> &
                 }}
                 text={getString('continue')}
               />
-            </Layout.Horizontal>
-          )
+            )}
+          </Layout.Horizontal>
         ) : null}
       </Layout.Vertical>
     )

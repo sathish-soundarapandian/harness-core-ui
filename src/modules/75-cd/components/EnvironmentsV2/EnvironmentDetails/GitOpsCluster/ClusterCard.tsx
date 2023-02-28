@@ -11,6 +11,7 @@ import cx from 'classnames'
 import { defaultTo, isEmpty } from 'lodash-es'
 import React from 'react'
 import type { ClusterFromGitops } from 'services/cd-ng'
+import { useStrings } from 'framework/strings'
 import css from './AddCluster.module.scss'
 
 interface ClusterCardProps {
@@ -21,8 +22,10 @@ interface ClusterCardProps {
 
 const ClusterCard = (props: ClusterCardProps): React.ReactElement => {
   const { cluster, selectedClusters } = props
+  const { getString } = useStrings()
   const isClusterAlreadySelected = selectedClusters.find(
-    (clstr: ClusterFromGitops) => clstr.identifier === cluster.identifier
+    (clstr: ClusterFromGitops) =>
+      clstr.identifier === cluster.identifier && clstr.agentIdentifier === cluster.agentIdentifier
   )
   return (
     <div
@@ -33,7 +36,7 @@ const ClusterCard = (props: ClusterCardProps): React.ReactElement => {
         } else {
           const clustrs = []
           for (const selClstr of selectedClusters) {
-            if (cluster.identifier !== selClstr.identifier) {
+            if (cluster.identifier !== selClstr.identifier || cluster.agentIdentifier !== selClstr.agentIdentifier) {
               clustrs.push(selClstr)
             }
           }
@@ -74,7 +77,18 @@ const ClusterCard = (props: ClusterCardProps): React.ReactElement => {
             margin={{ left: 'small' }}
             width={150}
           >
-            ID: {cluster.identifier}
+            {getString('common.ID')}: {cluster.identifier}
+          </Text>
+          <Text
+            data-id="cluster-agent-id-text"
+            lineClamp={1}
+            font={{ variation: FontVariation.FORM_LABEL }}
+            color={Color.GREY_400}
+            className={css.clusterId}
+            margin={{ left: 'small' }}
+            width={150}
+          >
+            {getString('cd.agentID')}: {cluster.agentIdentifier}
           </Text>
         </Layout.Vertical>
       </div>

@@ -124,7 +124,7 @@ export const AppStoreProvider = withFeatureFlags<React.PropsWithChildren<unknown
 
   const { preference: recentProjects = [], setPreference: setRecentProjects } = usePreferenceStore<
     SavedProjectDetails[]
-  >(PreferenceScope.USER, 'recentProjects')
+  >(PreferenceScope.ACCOUNT, 'recentProjects')
 
   const [state, setState] = React.useState<Omit<AppStoreContextProps, 'updateAppStore' | 'strings'>>({
     featureFlags: {},

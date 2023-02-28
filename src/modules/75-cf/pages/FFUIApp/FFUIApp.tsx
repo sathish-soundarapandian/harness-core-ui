@@ -16,7 +16,7 @@ import {
   useCreateEnvironment as useCDCreateEnvironment
 } from 'services/cd-ng'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
-import { useConfirmAction, useQueryParams } from '@common/hooks'
+import { useConfirmAction, useLocalStorage, useQueryParams } from '@common/hooks'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
@@ -31,7 +31,9 @@ import routes from '@common/RouteDefinitions'
 import { IdentifierSchema, NameSchema } from '@common/utils/Validation'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import { getIdentifierFromName } from '@common/utils/StringUtils'
+import { GitSyncForm } from '@gitsync/components/GitSyncForm/GitSyncForm'
 import * as trackingConstants from '@common/constants/TrackingConstants'
+import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 
 // eslint-disable-next-line import/no-unresolved
 const FFUIMFEApp = lazy(() => import('ffui/MicroFrontendApp'))
@@ -41,15 +43,16 @@ const FFUIApp: FC = () => (
     ChildApp={FFUIMFEApp}
     ffServices={{
       ...ffServices,
-      useCDGetEnvironmentListForProject,
-      useCDGetEnvironment,
+      useCDCreateEnvironment,
       useCDDeleteEnvironment,
-      useCDCreateEnvironment
+      useCDGetEnvironment,
+      useCDGetEnvironmentListForProject
     }}
     customHooks={{
-      useConfirmAction,
       useActiveEnvironment,
+      useConfirmAction,
       useLicenseStore,
+      useLocalStorage,
       useQueryParams,
       useQueryParamsState,
       useSyncedEnvironment,
@@ -60,6 +63,8 @@ const FFUIApp: FC = () => (
       Description,
       EvaluationModal,
       FeatureWarningTooltip,
+      GitSyncForm,
+      MonacoDiffEditor,
       RbacOptionsMenuButton,
       RBACTooltip
     }}

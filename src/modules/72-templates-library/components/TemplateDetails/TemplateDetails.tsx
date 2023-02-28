@@ -42,6 +42,7 @@ import {
   TemplateResponse,
   TemplateSummaryResponse,
   useGetTemplate,
+  useGetTemplateInputSetYaml,
   useGetTemplateList,
   useGetTemplateMetadataList
 } from 'services/template-ng'
@@ -67,6 +68,7 @@ import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { GitPopoverV2 } from '@common/components/GitPopoverV2/GitPopoverV2'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import { PipelineCachedCopy } from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineCachedCopy/PipelineCachedCopy'
+import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
 import { TemplateActivityLog } from '../TemplateActivityLog/TemplateActivityLog'
@@ -125,6 +127,13 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
       ?.versionLabel
   }, [templates])
 
+  const repo =
+    (selectedTemplate as TemplateSummaryResponse)?.gitDetails?.repoIdentifier ||
+    (selectedTemplate as NGTemplateInfoConfigWithGitDetails)?.repo
+  const selectedTemplateBranch =
+    (selectedTemplate as TemplateSummaryResponse)?.gitDetails?.branch ||
+    (selectedTemplate as NGTemplateInfoConfigWithGitDetails)?.branch
+
   const {
     data: templateYamlData,
     refetch: refetchTemplateYaml,
@@ -166,6 +175,25 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
+  const templateInputSetFetchParams = useGetTemplateInputSetYaml({
+    templateIdentifier: defaultTo(selectedTemplate?.identifier, ''),
+    queryParams: {
+      accountIdentifier: defaultTo(selectedTemplate?.accountId, accountId),
+      orgIdentifier: selectedTemplate?.orgIdentifier,
+      projectIdentifier: selectedTemplate?.projectIdentifier,
+      versionLabel: defaultTo(selectedTemplate?.versionLabel, ''),
+      ...getGitQueryParamsWithParentScope({
+        storeMetadata,
+        params,
+        repoIdentifier: repo,
+        branch: selectedTemplateBranch
+      })
+    },
+    lazy: true,
+    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
+  })
+  const { refetch: refetchTemplateInputSetYaml } = templateInputSetFetchParams
+
   const templateIconName = React.useMemo(() => getIconForTemplate(getString, selectedTemplate), [selectedTemplate])
   const templateIconUrl = React.useMemo(() => selectedTemplate?.icon, [selectedTemplate?.icon])
   const templateType = React.useMemo(() => getTypeForTemplate(getString, selectedTemplate), [selectedTemplate])
@@ -198,9 +226,24 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   }, [templates])
 
   React.useEffect(() => {
+    if (
+      templateYamlError &&
+      (selectedTemplate as TemplateResponse).storeType === 'REMOTE' &&
+      !isEmpty((selectedTemplate as TemplateResponse).cacheResponseMetadata)
+    ) {
+      setSelectedTemplate({ ...selectedTemplate, cacheResponseMetadata: undefined } as TemplateResponse)
+    }
+  }, [templateYamlError])
+
+  React.useEffect(() => {
+    if (selectedTemplate) {
+      refetchTemplateInputSetYaml()
+    }
+  }, [selectedTemplate?.identifier, selectedTemplate?.versionLabel])
+
+  React.useEffect(() => {
     if (selectedTemplate) {
       setTemplate?.(selectedTemplate)
-
       if (isEmpty(selectedTemplate?.yaml)) {
         refetchTemplateYaml()
       }
@@ -254,6 +297,15 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
           branch
         }
       })
+      refetchTemplateInputSetYaml({
+        queryParams: {
+          accountIdentifier: defaultTo(selectedTemplate?.accountId, accountId),
+          orgIdentifier: selectedTemplate?.orgIdentifier,
+          projectIdentifier: selectedTemplate?.projectIdentifier,
+          versionLabel: defaultTo(selectedTemplate?.versionLabel, ''),
+          ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier: repo, branch })
+        }
+      })
     }
   }
 
@@ -268,7 +320,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
         templateIdentifier: selectedTemplate.identifier,
         versionLabel: selectedTemplate.versionLabel,
         repoIdentifier: selectedTemplate.gitDetails?.repoIdentifier,
-        branch: !isStandAlone ? selectedTemplate.gitDetails?.branch || selectedBranch : storeMetadata?.branch
+        branch: !isStandAlone ? selectedBranch || selectedTemplate.gitDetails?.branch : storeMetadata?.branch
       })
       if (isStandAlone) {
         window.open(`${windowLocationUrlPartBeforeHash()}#${url}`, '_blank')
@@ -308,7 +360,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
     templateFactory.getTemplate(selectedTemplate.templateEntityType || '')?.renderTemplateInputsForm({
       template: selectedTemplate,
       accountId: defaultTo(template.accountId, ''),
-      storeMetadata
+      templateInputSetFetchParams
     })
   ) : (
     <PageBody className={css.yamlLoader} loading />

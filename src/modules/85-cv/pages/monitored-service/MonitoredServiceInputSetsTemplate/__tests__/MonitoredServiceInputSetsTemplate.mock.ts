@@ -6,6 +6,7 @@
  */
 
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { TemplateSummaryResponse } from 'services/template-ng'
 
 export const spec = {
   applicationName: '<+input>',
@@ -155,4 +156,56 @@ export const expectedOutput = {
       }
     ]
   }
+}
+
+export const useGetTemplateOrgResult = {
+  queryParams: {
+    accountIdentifier: 'accountId',
+    getDefaultFromOtherRepo: true,
+    orgIdentifier: 'orgIdentifier',
+    versionLabel: '1'
+  },
+  templateIdentifier: 'AppD_default_metrics_runtime_connector'
+}
+
+export const useGetTemplateProjectResult = {
+  ...useGetTemplateOrgResult,
+  queryParams: {
+    ...useGetTemplateOrgResult.queryParams,
+    projectIdentifier: 'projectIdentifier'
+  }
+}
+
+export const useGetTemplateInputSetYamlOrgResult = {
+  lazy: true,
+  queryParams: {
+    accountIdentifier: 'accountId',
+    getDefaultFromOtherRepo: true,
+    orgIdentifier: 'orgIdentifier',
+    versionLabel: '1'
+  },
+  requestOptions: { headers: {} },
+  templateIdentifier: 'AppD_default_metrics_runtime_connector'
+}
+
+export const useGetTemplateInputSetYamlProjectResult = {
+  ...useGetTemplateInputSetYamlOrgResult,
+  queryParams: {
+    ...useGetTemplateInputSetYamlOrgResult.queryParams,
+    projectIdentifier: 'projectIdentifier'
+  }
+}
+
+export const orgProps = {
+  identifier: 'AppD_default_metrics_runtime_connector',
+  accountId: 'accountId',
+  orgIdentifier: 'orgIdentifier',
+  projectIdentifier: 'projectIdentifier',
+  versionLabel: '1',
+  templateScope: 'org' as TemplateSummaryResponse['templateScope']
+}
+
+export const projectProps = {
+  ...orgProps,
+  templateScope: 'project' as TemplateSummaryResponse['templateScope']
 }

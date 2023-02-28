@@ -275,7 +275,7 @@ export function Nexus2Artifact({
       : !checkIfQueryParamsisNotEmpty([
           formikValue.repositoryFormat,
           formikValue.repository,
-          formikValue.spec.packageName
+          formikValue?.spec?.packageName
         ])
   }, [])
 
@@ -607,6 +607,7 @@ export function Nexus2Artifact({
                     formik?.values?.spec?.artifactId
                   )
                 }
+                tooltipId="nexus2-tag"
               />
             </div>
             {!hideHeaderAndNavBtns && (

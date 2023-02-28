@@ -38,7 +38,6 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     CVNG_TEMPLATE_MONITORED_SERVICE,
     NG_SETTINGS,
     USE_OLD_GIT_SYNC,
-    NG_DEPLOYMENT_FREEZE,
     SRM_ET_EXPERIMENTAL,
     NEW_LEFT_NAVBAR_SETTINGS,
     SRM_DOWNTIME
@@ -60,7 +59,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
   const isCV = module === 'cv'
   const { licenseInformation } = useLicenseStore()
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, ModuleName.CD)
-  const showDeploymentFreeze = isEnterpriseEdition && NG_DEPLOYMENT_FREEZE && isCD
+  const showDeploymentFreeze = isEnterpriseEdition && isCD
 
   const canUsePolicyEngine = useAnyEnterpriseLicense()
   //Supporting GIT_SIMPLIFICATION by default, old GitSync will be selected only for selected accounts

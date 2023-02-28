@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CVCreateDowntime should render CVCreateDowntime and show validations 1`] = `
+exports[`CVCreateDowntime should render create flow 1`] = `
 <div>
   <div
     class="StyledProps--font StyledProps--main StyledProps--margin-bottom-large"
@@ -867,7 +867,7 @@ exports[`CVCreateDowntime should render one time end time based downtime data on
                       <p
                         class="StyledProps--font StyledProps--main value"
                       >
-                        Starting on 2023-08-11 03:17 PM (Asia/Calcutta) till 2023-11-12 08:17 AM
+                        Starting on 2030-03-26 02:50 PM (Asia/Calcutta) till 2030-03-26 03:07 PM
                       </p>
                     </div>
                   </div>

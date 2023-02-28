@@ -41,11 +41,10 @@ function NewTemplatePopoverWrapper({ onImportTemplateClick }: NewTemplatePopover
   const history = useHistory()
   const { module, ...params } = useParams<ProjectPathProps & ModulePathParams>()
   const { projectIdentifier, orgIdentifier, accountId } = params
-  const { CVNG_TEMPLATE_MONITORED_SERVICE, NG_SVC_ENV_REDESIGN, CDS_STEPGROUP_TEMPLATE } = useFeatureFlags()
+  const { CVNG_TEMPLATE_MONITORED_SERVICE, NG_SVC_ENV_REDESIGN } = useFeatureFlags()
   const allowedTemplateTypes = getAllowedTemplateTypes(getScopeFromDTO(params), {
     [TemplateType.MonitoredService]: !!CVNG_TEMPLATE_MONITORED_SERVICE,
-    [TemplateType.CustomDeployment]: !!NG_SVC_ENV_REDESIGN,
-    [TemplateType.StepGroup]: !!CDS_STEPGROUP_TEMPLATE
+    [TemplateType.CustomDeployment]: !!NG_SVC_ENV_REDESIGN
   })
   const { supportingTemplatesGitx } = useAppStore()
 

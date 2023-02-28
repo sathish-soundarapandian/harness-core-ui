@@ -71,6 +71,7 @@ import type { StepViewType } from '../AbstractSteps/Step'
 import { OsTypes, ArchTypes, CIBuildInfrastructureType } from '../../utils/constants'
 import EnvironmentsInputSetForm from './EnvironmentsInputSetForm/EnvironmentsInputSetForm'
 import { ExecutionWrapperInputSetForm } from './ExecutionWrapperInputSetForm'
+import IACMInputSetForm from './IACMInputSetForm'
 import stepCss from '@pipeline/components/PipelineSteps/Steps/Steps.module.scss'
 import css from './PipelineInputSetForm.module.scss'
 
@@ -167,8 +168,13 @@ export function StageInputSetFormInternal({
     deploymentStageTemplateInfraKeys.includes(field)
   )
   const namePath = isEmpty(path) ? '' : `${path}.`
-  const { NG_SVC_ENV_REDESIGN, CIE_HOSTED_VMS_MAC, CIE_HOSTED_VMS_WINDOWS, CDS_OrgAccountLevelServiceEnvEnvGroup } =
-    useFeatureFlags()
+  const {
+    NG_SVC_ENV_REDESIGN,
+    CIE_HOSTED_VMS_MAC,
+    CIE_HOSTED_VMS_WINDOWS,
+    CDS_OrgAccountLevelServiceEnvEnvGroup,
+    IACM_ENABLED
+  } = useFeatureFlags()
 
   const renderMultiTypeInputWithAllowedValues = React.useCallback(
     ({
@@ -723,6 +729,25 @@ export function StageInputSetFormInternal({
         readonly={readonly}
         stageIdentifier={stageIdentifier}
       />
+
+      {IACM_ENABLED && (
+        <IACMInputSetForm
+          formik={formik}
+          deploymentStage={deploymentStage}
+          deploymentStageTemplate={deploymentStageTemplate}
+          allowableTypes={
+            scope === Scope.PROJECT
+              ? allowableTypes
+              : ((allowableTypes as MultiTypeInputType[])?.filter(
+                  item => item !== MultiTypeInputType.FIXED
+                ) as AllowedTypes)
+          }
+          path={path}
+          viewType={viewType}
+          readonly={readonly}
+          stageIdentifier={stageIdentifier}
+        />
+      )}
 
       {(deploymentStageTemplate.infrastructure || (deploymentStageTemplate as any).platform) && (
         <div id={`Stage.${stageIdentifier}.Infrastructure`} className={cx(css.accordionSummary)}>

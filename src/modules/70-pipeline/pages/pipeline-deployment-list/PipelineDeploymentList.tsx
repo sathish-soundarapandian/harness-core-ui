@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Harness Inc. All rights reserved.
+ * Copyright 2022 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -17,19 +17,14 @@ import { useRunPipelineModal } from '@pipeline/components/RunPipelineModal/useRu
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ExecutionList } from '@pipeline/pages/execution-list/ExecutionList'
 
-export default function CDPipelineDeploymentList(): React.ReactElement {
+export function PipelineDeploymentList(): React.ReactElement {
+  const { getString } = useStrings()
   const { pipelineIdentifier, orgIdentifier, projectIdentifier, accountId } =
     useParams<PipelineType<PipelinePathProps>>()
-
   const { branch, repoIdentifier, storeType, repoName, connectorRef } = useQueryParams<GitQueryParams>()
   const { isGitSyncEnabled: isGitSyncEnabledForProject, gitSyncEnabledOnlyForFF } = useAppStore()
   const isGitSyncEnabled = isGitSyncEnabledForProject && !gitSyncEnabledOnlyForFF
-  const { getString } = useStrings()
-  useDocumentTitle([getString('pipelines'), getString('executionsText')])
 
-  const onRunPipeline = (): void => {
-    openRunPipelineModal()
-  }
   const { openRunPipelineModal } = useRunPipelineModal({
     pipelineIdentifier,
     repoIdentifier: isGitSyncEnabled ? repoIdentifier : repoName,
@@ -63,7 +58,7 @@ export default function CDPipelineDeploymentList(): React.ReactElement {
       <ExecutionList
         showHealthAndExecution
         showBranchFilter
-        onRunPipeline={onRunPipeline}
+        onRunPipeline={openRunPipelineModal}
         isPipelineInvalid={isPipelineInvalid}
       />
     </>

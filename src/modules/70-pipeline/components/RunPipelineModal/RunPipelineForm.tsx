@@ -144,11 +144,8 @@ function RunPipelineFormBasic({
   executionIdentifier,
   isDebugMode
 }: RunPipelineFormProps & InputSetGitQueryParams): React.ReactElement {
-  const {
-    NG_DEPLOYMENT_FREEZE: isNgDeploymentFreezeEnabled,
-    PIE_NG_GITX_CACHING: isGitCacheEnabled,
-    FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed
-  } = useFeatureFlags()
+  const { PIE_NG_GITX_CACHING: isGitCacheEnabled, FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed } =
+    useFeatureFlags()
   const [skipPreFlightCheck, setSkipPreFlightCheck] = useState<boolean>(false)
   const [selectedView, setSelectedView] = useState<SelectedView>(SelectedView.VISUAL)
   const [notifyOnlyMe, setNotifyOnlyMe] = useState<boolean>(false)
@@ -217,8 +214,7 @@ function RunPipelineFormBasic({
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
-    },
-    lazy: !isNgDeploymentFreezeEnabled
+    }
   })
 
   const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
@@ -499,7 +495,7 @@ function RunPipelineFormBasic({
         />
       </Dialog>
     )
-  }, [notifyOnlyMe])
+  }, [notifyOnlyMe, selectedStageData, stageIdentifiers])
 
   const isExecutingPipeline =
     runPipelineLoading || reRunPipelineLoading || runStagesLoading || reRunStagesLoading || reRunDebugModeLoading

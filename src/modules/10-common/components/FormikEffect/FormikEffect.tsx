@@ -5,28 +5,14 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import type { FormikContextType } from 'formik'
+import { usePrevious } from '@common/hooks/usePrevious'
 
 //
 // Global onChange utility for Formik
 // @see https://github.com/formium/formik/issues/1633#issuecomment-520121543
 //
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function usePrevious(value: any): any {
-  // The ref object is a generic container whose current property is mutable ...
-  // ... and can hold any value, similar to an instance property on a class
-  const ref = useRef()
-
-  // Store current value in ref
-  useEffect(() => {
-    ref.current = value
-  }, [value]) // Only re-run if value changes
-
-  // Return previous value (happens before update in useEffect above)
-  return ref.current
-}
 
 export interface FormikEffectOnChangeParams {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

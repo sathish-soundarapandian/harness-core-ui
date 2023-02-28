@@ -13,6 +13,7 @@ import produce from 'immer'
 import { TestWrapper } from '@common/utils/testUtils'
 import { mockTemplates, mockTemplatesSuccessResponse } from '@templates-library/TemplatesTestHelper'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
+import { mockTemplatesInputYaml } from '@pipeline/components/PipelineStudio/PipelineStudioTestHelper'
 import { StepTemplate } from '@templates-library/components/Templates/StepTemplate/StepTemplate'
 import { templatePathProps } from '@common/utils/routeUtils'
 import routes from '@common/RouteDefinitions'
@@ -60,6 +61,9 @@ jest.mock('services/template-ng', () => ({
     useGetTemplateMock(...args)
     return {}
   }),
+  useGetTemplateInputSetYaml: jest
+    .fn()
+    .mockImplementation(() => ({ data: mockTemplatesInputYaml, refetch: jest.fn(), error: null, loading: false })),
   useListTemplateUsage: () => ({
     loading: false,
     data: {},

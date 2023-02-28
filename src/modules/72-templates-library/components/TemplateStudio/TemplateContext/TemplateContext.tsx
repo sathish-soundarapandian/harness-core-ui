@@ -433,7 +433,8 @@ const _fetchTemplateV2 = async (props: FetchTemplateBoundProps, params: FetchTem
                   fileUrl: template.gitDetails?.fileUrl
                 },
                 versions,
-                templateYamlError: error as Error
+                templateYamlError: error as Error,
+                cacheResponseMetadata: undefined
               })
             )
         }

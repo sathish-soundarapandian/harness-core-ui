@@ -27,6 +27,10 @@
       flex-shrink: auto;
     }
 
+    .DropDown--dropdownButton {
+      background-color: var(--grey-0) !important;
+    }
+
     .bp3-form-content {
       .RadioButton--radio .bp3-form-group {
         width: 100%;

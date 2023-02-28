@@ -367,6 +367,7 @@ export interface ArtifactImagePathTagViewProps {
   isImagePath?: boolean
   isServerlessDeploymentTypeSelected?: boolean
   canFetchTags?: () => boolean
+  tooltipId?: string
 }
 
 export interface ACRArtifactType {

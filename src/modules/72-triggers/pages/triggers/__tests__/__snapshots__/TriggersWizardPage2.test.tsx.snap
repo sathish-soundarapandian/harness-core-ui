@@ -1240,10 +1240,6 @@ exports[`Manifest Trigger Tests Check chartVersion to be disabled and default va
                                     </div>
                                   </div>
                                 </div>
-                                <div
-                                  class="accordionSummary"
-                                  id="pipeline.stages[0].stage.spec.Environment"
-                                />
                               </div>
                             </div>
                           </div>

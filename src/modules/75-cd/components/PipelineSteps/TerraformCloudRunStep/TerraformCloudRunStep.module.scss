@@ -1,0 +1,55 @@
+.message {
+  :global {
+    textarea {
+      min-height: 75px;
+      max-height: 150px;
+      resize: vertical;
+    }
+  }
+}
+
+.panel {
+  border: 1px solid var(--form-field-border);
+  border-radius: 4px;
+  padding: var(--spacing-small);
+  margin-top: var(--spacing-small);
+}
+
+.variables {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 2fr 30px;
+  column-gap: var(--spacing-small);
+  margin-bottom: var(--spacing-small);
+  align-items: start;
+
+  :global(.bp3-form-group) {
+    margin: 0;
+  }
+
+  .label {
+    color: var(--grey-400);
+  }
+}
+
+.radioBtns {
+  > div > div > label {
+    color: var(--grey-1000);
+    font-size: 13px;
+  }
+}
+
+.addMarginTop {
+  margin-top: var(--spacing-medium) !important;
+}
+
+.inputWrapper {
+  :global {
+    .bp3-form-group.bp3-disabled .bp3-label {
+      color: var(--grey-500) !important;
+    }
+  }
+}
+
+.deploymentViewMedium {
+  width: 50% !important;
+}

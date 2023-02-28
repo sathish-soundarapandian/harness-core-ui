@@ -111,6 +111,7 @@ export const canvasExecutionPipelineCall =
   '/pipeline/api/pipelines/execution/v2/testParallelNodesPipeline?routingId=accountId&orgIdentifier=default&projectIdentifier=project1&accountIdentifier=accountId'
 export const canvasExecutionStageNodeCall =
   '/pipeline/api/pipelines/execution/v2/testParallelNodesPipeline?routingId=accountId&orgIdentifier=default&projectIdentifier=project1&accountIdentifier=accountId&stageNodeId=y2b4qTE6QPu2wkd4z5vRfg'
+export const saveTemplateCall = `/template/api/templates?accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=default`
 // Routes
 
 export const updatedPipelineExecutionEndpoint = `/pipeline/api/pipeline/execute/${pipelineIdentifier}?routingId=${accountId}&accountIdentifier=${accountId}&projectIdentifier=${projectId}&orgIdentifier=${orgIdentifier}&moduleType=cd&notifyOnlyUser=false`
@@ -137,6 +138,7 @@ export const environmentsCallRunPipeline =
   '/ng/api/environmentsV2/list/access?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
 export const connectorsCall =
   '/ng/api/connectors?accountIdentifier=accountId&type=K8sCluster&searchTerm=&projectIdentifier=project1&orgIdentifier=default'
+
 export interface ValidObject {
   resourceName: StepResourceObject[]
   warningCheck?: boolean

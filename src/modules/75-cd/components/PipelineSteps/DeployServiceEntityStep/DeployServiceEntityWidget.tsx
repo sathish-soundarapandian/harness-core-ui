@@ -12,7 +12,6 @@ import {
   Formik,
   FormInput,
   getMultiTypeFromValue,
-  Dialog,
   Layout,
   MultiTypeInputType,
   FormikForm,
@@ -21,11 +20,13 @@ import {
   useToggleOpen,
   ConfirmationDialog,
   RUNTIME_INPUT_VALUE,
-  SelectOption
+  SelectOption,
+  ModalDialog
 } from '@harness/uicore'
+import type { ModalDialogProps } from '@harness/uicore/dist/components/ModalDialog/ModalDialog'
 import { defaultTo, get, isEmpty, isNil, noop } from 'lodash-es'
 import type { FormikProps } from 'formik'
-import { IDialogProps, Intent } from '@blueprintjs/core'
+import { Intent } from '@blueprintjs/core'
 import produce from 'immer'
 import { useParams } from 'react-router-dom'
 import {
@@ -83,7 +84,7 @@ export interface DeployServiceEntityWidgetProps extends DeployServiceEntityCusto
   onUpdate?(data: DeployServiceEntityData): void
 }
 
-const DIALOG_PROPS: Omit<IDialogProps, 'isOpen'> = {
+const DIALOG_PROPS: Omit<ModalDialogProps, 'isOpen'> = {
   usePortal: true,
   autoFocus: true,
   canEscapeKeyClose: false,
@@ -91,7 +92,8 @@ const DIALOG_PROPS: Omit<IDialogProps, 'isOpen'> = {
   enforceFocus: false,
   className: css.editServiceDialog,
   lazy: true,
-  style: { width: 1114 }
+  height: 840,
+  width: 1114
 }
 
 function getInitialValues(data: DeployServiceEntityData): FormState {
@@ -664,7 +666,12 @@ export default function DeployServiceEntityWidget({
           )
         }}
       </Formik>
-      <Dialog isOpen={isAddNewModalOpen} onClose={closeAddNewModal} title={getString('newService')} {...DIALOG_PROPS}>
+      <ModalDialog
+        isOpen={isAddNewModalOpen}
+        onClose={closeAddNewModal}
+        title={getString('newService')}
+        {...DIALOG_PROPS}
+      >
         <ServiceEntityEditModal
           selectedDeploymentType={deploymentType as ServiceDeploymentType}
           gitOpsEnabled={gitOpsEnabled}
@@ -672,7 +679,7 @@ export default function DeployServiceEntityWidget({
           onServiceCreate={onServiceEntityCreate}
           isServiceCreateModalView={true}
         />
-      </Dialog>
+      </ModalDialog>
       <ConfirmationDialog
         isOpen={isSwitchToMultiSvcDialogOpen}
         titleText={getString('cd.pipelineSteps.serviceTab.multiServicesTitleText')}

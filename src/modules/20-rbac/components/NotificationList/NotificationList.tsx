@@ -142,7 +142,7 @@ const ChannelRow: React.FC<ChannelRow> = ({
       }
 
       if (values.type === 'EMAIL') {
-        notification.sendEmailToAllUsers = values?.sendEmailToAllUsers || true
+        notification.sendEmailToAllUsers = defaultTo(values?.sendEmailToAllUsers, true)
       }
 
       userGroup.notificationConfigs?.push(notification)

@@ -28,6 +28,7 @@ import { isRuntimeInput } from '@pipeline/utils/CIUtils'
 import { Connectors } from '@connectors/constants'
 import { getCompleteConnectorUrl } from '@connectors/pages/connectors/utils/ConnectorUtils'
 import { isMultiTypeRuntime } from '@common/utils/utils'
+import type { ConfigureOptionsProps } from '@common/components/ConfigureOptions/ConfigureOptions'
 import css from './RightBar.module.scss'
 
 const onlyPositiveIntegerKeyRef = 'pipeline.onlyPositiveInteger'
@@ -79,7 +80,8 @@ export const renderConnectorAndRepoName = ({
   onConnectorChange,
   setConnectorType,
   connectorType,
-  fixRepoNameWidth
+  fixRepoNameWidth,
+  configureOptionsProps
 }: {
   values: { [key: string]: any }
   setFieldValue: (field: string, value: any) => void
@@ -108,6 +110,7 @@ export const renderConnectorAndRepoName = ({
   setConnectorType?: Dispatch<SetStateAction<string>>
   connectorType?: string // required for getCompleteConnectorUrl on initial Add CI Stage
   fixRepoNameWidth?: boolean
+  configureOptionsProps?: Partial<ConfigureOptionsProps>
 }): JSX.Element => {
   const connectorFieldName = connectorAndRepoNamePath ? `${connectorAndRepoNamePath}.connectorRef` : 'connectorRef'
   const connectorValue = get(values, connectorFieldName)
@@ -163,6 +166,7 @@ export const renderConnectorAndRepoName = ({
               repoName: isMultiTypeRuntime(connectorRefType)
             })
           }}
+          configureOptionsProps={configureOptionsProps}
         />
       </Container>
 
@@ -202,6 +206,7 @@ export const renderConnectorAndRepoName = ({
                   isReadonly ||
                   (isRuntimeInput(connectorValue) && isRuntimeInput(repoNameValue)) // connector is a runtime input
               }}
+              configureOptionsProps={configureOptionsProps}
             />
           </Container>
           {!isRuntimeInput(connectorValue) && !isRuntimeInput(repoNameValue) && connectorUrl?.length > 0 && (

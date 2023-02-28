@@ -27,6 +27,7 @@ import css from '../UserDetails.module.scss'
 interface UserRoleBindingsProps {
   scopeFilters: ScopeSelector[]
   user: UserAggregate
+  onNewRoleAdded?: () => void
 }
 const RenderColumnRoleAssignments: Renderer<CellProps<RoleAssignmentAggregate>> = ({ row }) => {
   const data = row.original
@@ -121,7 +122,7 @@ const RenderColumnAssignedThrough: Renderer<CellProps<RoleAssignmentAggregate>> 
   )
 }
 
-const UserRoleBindings: React.FC<UserRoleBindingsProps> = ({ user, scopeFilters }) => {
+const UserRoleBindings: React.FC<UserRoleBindingsProps> = ({ user, scopeFilters, onNewRoleAdded }) => {
   const { accountId, orgIdentifier, projectIdentifier, userIdentifier } = useParams<ProjectPathProps & UserPathProps>()
   const [page, setPage] = useState(0)
   const { getString } = useStrings()
@@ -143,7 +144,10 @@ const UserRoleBindings: React.FC<UserRoleBindingsProps> = ({ user, scopeFilters 
   })
 
   const { openRoleAssignmentModal } = useRoleAssignmentModal({
-    onSuccess: refetch
+    onSuccess: () => {
+      refetch()
+      onNewRoleAdded?.()
+    }
   })
 
   const columns: Column<RoleAssignmentAggregate>[] = useMemo(

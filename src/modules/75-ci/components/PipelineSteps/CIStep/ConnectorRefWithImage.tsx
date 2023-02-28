@@ -102,6 +102,9 @@ export const ConnectorRefWithImage: React.FC<ConnectorRefWithImageProps> = props
               }}
               gitScope={gitScope}
               setRefValue
+              configureOptionsProps={{
+                hideExecutionTimeField: true
+              }}
             />
           )}
         </Container>
@@ -148,6 +151,9 @@ export const ConnectorRefWithImage: React.FC<ConnectorRefWithImageProps> = props
                 multiTextInputProps: {
                   allowableTypes: AllMultiTypeInputTypesForStep
                 }
+              }}
+              configureOptionsProps={{
+                hideExecutionTimeField: true
               }}
             />
           )}

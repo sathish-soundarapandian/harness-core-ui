@@ -21,7 +21,7 @@ import services from '@pipeline/pages/pipeline-list/__tests__/mocks/services.jso
 import environments from '@pipeline/pages/pipeline-list/__tests__/mocks/environments.json'
 import { PipelineResponse as PipelineDetailsMockResponse } from '@pipeline/pages/pipeline-details/__tests__/PipelineDetailsMocks'
 import { useGetListOfExecutions } from 'services/pipeline-ng'
-import CDPipelineDeploymentList from '../CDPipelineDeploymentList'
+import { PipelineDeploymentList } from '../PipelineDeploymentList'
 const mockGetCallFunction = jest.fn()
 
 window.IntersectionObserver = jest.fn().mockImplementation(() => ({
@@ -162,11 +162,11 @@ const renderExecutionPage = (): RenderResult =>
       defaultAppStoreValues={defaultAppStoreValues}
       queryParams={{ listview: true }}
     >
-      <CDPipelineDeploymentList />
+      <PipelineDeploymentList />
     </TestWrapper>
   )
 
-describe('CDPipelineDeploymentList', () => {
+describe('PipelineDeploymentList', () => {
   beforeAll(() => {
     jest.spyOn(global.Date, 'now').mockReturnValue(1603645966706)
   })

@@ -35,6 +35,19 @@ const stepTemplateMock = {
   }
 }
 
+const pipelineStageTypeMock = {
+  name: 'stage1',
+  identifier: 'stage1',
+  description: 'dummy',
+  type: 'Pipeline',
+  spec: {
+    org: 'default',
+    pipeline: 'inputSetChildPipeline',
+    project: 'Fardeen',
+    inputSetReferences: ['inp1']
+  }
+}
+
 const baseProps: SaveTemplateButtonProps = {
   data: {
     ...stepTemplateMock.spec,
@@ -87,5 +100,18 @@ describe('<SaveTemplateButton /> tests', () => {
     })
 
     expect(saveMock).toBeCalled()
+  })
+
+  test('SaveTemplate button should be disabled when stage type is PIPELINE', () => {
+    const { getByRole } = render(
+      <TestWrapper path={PATH} pathParams={PATH_PARAMS}>
+        <SaveTemplateButton data={pipelineStageTypeMock as any} type={'Stage'} />
+      </TestWrapper>
+    )
+
+    const saveTemplateBtn = getByRole('button', {
+      name: 'common.saveAsTemplate'
+    })
+    expect(saveTemplateBtn).toBeDisabled()
   })
 })

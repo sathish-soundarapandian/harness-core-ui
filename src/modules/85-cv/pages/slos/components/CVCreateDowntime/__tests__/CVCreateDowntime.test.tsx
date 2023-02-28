@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import { render, waitFor, screen, act } from '@testing-library/react'
+import { render, waitFor, screen, act, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
@@ -51,7 +51,7 @@ describe('CVCreateDowntime', () => {
     jest.clearAllMocks()
   })
 
-  test('should render CVCreateDowntime and show validations', async () => {
+  test('should render create flow', async () => {
     const { container, getByText } = render(
       <TestWrapper>
         <CVCreateDowntime />
@@ -71,6 +71,61 @@ describe('CVCreateDowntime', () => {
 
     act(() => {
       userEvent.click(getByText('next'))
+    })
+  })
+
+  test('should render validations for all steps', async () => {
+    const createDowntime = jest.fn()
+    jest
+      .spyOn(cvServices, 'useSaveDowntime')
+      .mockReturnValue({ data: oneTimeDurationBasedDowntimeResponse, mutate: createDowntime } as any)
+    jest.spyOn(cvServices, 'useGetAssociatedMonitoredServices').mockReturnValue({
+      data: {},
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    } as any)
+
+    const { getByText, getAllByText, getByPlaceholderText } = render(
+      <TestWrapper>
+        <CVCreateDowntime />
+      </TestWrapper>
+    )
+
+    userEvent.click(getByText('next'))
+
+    await waitFor(() => {
+      expect(getAllByText('cv.sloDowntime.validations.nameValidation')).toHaveLength(2)
+      expect(getAllByText('cv.sloDowntime.validations.categoryValidation')).toHaveLength(2)
+    })
+
+    act(() => {
+      fireEvent.change(getByPlaceholderText('common.namePlaceholder')!, { target: { value: 'Weekly downtime' } })
+      userEvent.click(getByText('cv.sloDowntime.scheduledMaintenance'))
+    })
+
+    userEvent.click(getByText('next'))
+
+    await waitFor(() => {
+      expect(getByText('common.occurrence.oneTime')).toBeInTheDocument()
+      expect(getByText('common.occurrence.recurring')).toBeInTheDocument()
+      expect(getByText('Timezone')).toBeInTheDocument()
+      expect(getByText('pipeline.startTime')).toBeInTheDocument()
+      expect(getByText('cv.dateAndTimeLabel')).toBeInTheDocument()
+      expect(getByText('cv.sloDowntime.durationText')).toBeInTheDocument()
+    })
+
+    userEvent.click(getByText('next'))
+
+    await waitFor(() => {
+      expect(getByText('cv.sloDowntime.selectMonitoredServices')).toBeInTheDocument()
+      expect(getByText('cv.sloDowntime.selectAllMonitoredServices')).toBeInTheDocument()
+    })
+
+    userEvent.click(getByText('save'))
+
+    await waitFor(() => {
+      expect(getByText('cv.sloDowntime.validations.msListValidation')).toBeInTheDocument()
     })
   })
 
@@ -118,6 +173,12 @@ describe('CVCreateDowntime', () => {
           loading: false
         } as any)
     )
+    jest.spyOn(cvServices, 'useGetAssociatedMonitoredServices').mockReturnValue({
+      data: downtimeAssociatedMSs,
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    } as any)
     jest
       .spyOn(cvServices, 'useUpdateDowntimeData')
       .mockReturnValue({ data: oneTimeEndTimeBasedDowntimeResponse, mutate: updateDowntime } as any)

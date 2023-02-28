@@ -104,11 +104,10 @@ const DowntimeWindow = (): JSX.Element => {
   )
 
   return (
-    <Layout.Vertical spacing="large" margin={{ top: 'xsmall' }}>
+    <Layout.Vertical spacing="large" margin={{ top: 'xsmall' }} className={css.downtimeWindow}>
       <Container>
         <PillToggle {...toggleProps} />
       </Container>
-
       <Container width={250}>
         <FormInput.DropDown
           label="Timezone"
@@ -120,15 +119,13 @@ const DowntimeWindow = (): JSX.Element => {
           usePortal
         />
       </Container>
-
-      <Layout.Vertical width={412} className={css.downtimeWindow}>
+      <Layout.Vertical width={412}>
         {renderFormInputs(
           getString('pipeline.startTime'),
           null,
           DowntimeFormFields.START_TIME,
           getString('cv.dateAndTimeLabel')
         )}
-
         {toggle === DowntimeWindowToggleViews.ONE_TIME ? (
           renderFormInputs(
             getString('common.endTime'),

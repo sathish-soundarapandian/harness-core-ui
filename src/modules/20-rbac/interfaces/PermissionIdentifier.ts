@@ -213,5 +213,8 @@ export enum PermissionIdentifier {
   // Log Streaming Permissions
   VIEW_STREAMING_DESTINATION = 'core_streamingDestination_view',
   CREATE_OR_EDIT_STREAMING_DESTINATION = 'core_streamingDestination_edit',
-  DELETE_STREAMING_DESTINATION = 'core_streamingDestination_delete'
+  DELETE_STREAMING_DESTINATION = 'core_streamingDestination_delete',
+
+  //IDP Permisssions
+  IDP_SETTINGS_MANAGE = 'idp_idpsettings_manage'
 }

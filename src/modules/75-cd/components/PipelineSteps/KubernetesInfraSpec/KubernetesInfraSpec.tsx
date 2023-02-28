@@ -285,7 +285,7 @@ const KubernetesInfraSpecInputForm: React.FC<KubernetesInfraSpecEditableProps & 
   const { expressions } = useVariablesExpression()
   const { getString } = useStrings()
   return (
-    <Layout.Vertical className={css.containerPadding} padding="medium" spacing="small">
+    <Layout.Vertical spacing="small">
       {getMultiTypeFromValue(template?.connectorRef) === MultiTypeInputType.RUNTIME && (
         <div className={cx(stepCss.formGroup, stepCss.md)}>
           <FormMultiTypeConnectorField

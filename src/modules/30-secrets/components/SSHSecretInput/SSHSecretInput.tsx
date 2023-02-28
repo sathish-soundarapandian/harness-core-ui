@@ -13,7 +13,7 @@ import { FormGroup, Intent } from '@blueprintjs/core'
 import { HarnessDocTooltip, Container, Icon, Text, FormikTooltipContext, DataTooltipInterface } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-import type { ResponsePageSecretResponseWrapper, ConnectorInfoDTO } from 'services/cd-ng'
+import type { ResponsePageSecretResponseWrapper, ConnectorInfoDTO, SecretDTOV2 } from 'services/cd-ng'
 import useCreateOrSelectSecretModal from '@secrets/modals/CreateOrSelectSecretModal/useCreateOrSelectSecretModal'
 import type { SecretReference } from '@secrets/components/CreateOrSelectSecret/CreateOrSelectSecret'
 import useCreateSSHCredModal from '@secrets/modals/CreateSSHCredModal/useCreateSSHCredModal'
@@ -79,7 +79,7 @@ const SSHSecretInput: React.FC<FormikSSHSecretInput> = ({
       },
       secretsListMockData,
       connectorTypeContext: connectorTypeContext,
-      handleInlineSSHSecretCreation: () => openCreateSSHCredModal()
+      handleInlineSSHSecretCreation: (secret?: SecretDTOV2) => openCreateSSHCredModal(secret)
     },
     [name, onSuccess],
     secretReference?.referenceString

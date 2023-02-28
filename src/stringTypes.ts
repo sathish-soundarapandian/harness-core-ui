@@ -55,6 +55,7 @@ export interface StringsMap {
   'common.allEnvironments': string
   'common.allErrors': string
   'common.allServices': string
+  'common.allowFirstGenAccess': string
   'common.and': string
   'common.andCaps': string
   'common.annually': string
@@ -1490,6 +1491,9 @@ export interface StringsMap {
   'rbac.usersPage.pendingInvitation': string
   'rbac.usersPage.resendInvite': string
   'rbac.usersPage.resendInviteSuccess': string
+  'rbac.usersPage.resendTwoFactorEmailSuccess': string
+  'rbac.usersPage.resetTwoFactorAuth': string
+  'rbac.usersPage.resetTwoFactorAuthConfirmation': string
   'rbac.usersPage.roleAssignSuccess': string
   'rbac.usersPage.roleBinding': string
   'rbac.usersPage.search': string
@@ -2225,6 +2229,8 @@ export interface StringsMap {
   'connectors.azureKeyVault.validation.subscription': string
   'connectors.azureKeyVault.validation.tenantId': string
   'connectors.azureKeyVault.validation.vaultName': string
+  'connectors.bamboo.bamboo': string
+  'connectors.bamboo.bambooUrl': string
   'connectors.baseURL': string
   'connectors.bearerToken': string
   'connectors.cdng.artifactTag': string
@@ -3961,6 +3967,8 @@ export interface StringsMap {
   'pipeline.gitPullRequest': string
   'pipeline.gitPullRequestNumber': string
   'pipeline.gitRepo': string
+  'pipeline.iacm.resourceStack': string
+  'pipeline.iacm.workflow': string
   'pipeline.imagePathHelperText': string
   'pipeline.imagePathLabel': string
   'pipeline.imageTag': string
@@ -4307,6 +4315,8 @@ export interface StringsMap {
   'pipeline.pipelineChaining.enterOutputName': string
   'pipeline.pipelineChaining.newOutput': string
   'pipeline.pipelineChaining.noPipelineSelected': string
+  'pipeline.pipelineChaining.noPipelinesInSearchCriteria': string
+  'pipeline.pipelineChaining.noPipelinesInSelectedScope': string
   'pipeline.pipelineChaining.noProjectSelected': string
   'pipeline.pipelineChaining.outputAlreadyExists': string
   'pipeline.pipelineChaining.outputTabSummaryDetail': string
@@ -4606,6 +4616,8 @@ export interface StringsMap {
   'pipeline.stepDescription.TanzuCommandScript': string
   'pipeline.stepDescription.TasRollback': string
   'pipeline.stepDescription.TerraformApply': string
+  'pipeline.stepDescription.TerraformCloudRollback': string
+  'pipeline.stepDescription.TerraformCloudRun': string
   'pipeline.stepDescription.TerraformDestroy': string
   'pipeline.stepDescription.TerraformPlan': string
   'pipeline.stepDescription.TerraformRollback': string
@@ -4625,8 +4637,18 @@ export interface StringsMap {
   'pipeline.targets.title': string
   'pipeline.templateInputs': string
   'pipeline.templateSaved': string
+  'pipeline.terraformStep.discardPendingRuns': string
+  'pipeline.terraformStep.messageLabel': string
+  'pipeline.terraformStep.messagePlaceholder': string
   'pipeline.terraformStep.provisionerIdentifier': string
+  'pipeline.terraformStep.runTypeLabel': string
+  'pipeline.terraformStep.runTypePlaceholder': string
+  'pipeline.terraformStep.terraformVersion': string
+  'pipeline.terraformStep.terraformVersionPlaceholder': string
   'pipeline.terraformStep.workspace': string
+  'pipeline.terraformStep.workspaceError': string
+  'pipeline.terraformStep.workspaceName': string
+  'pipeline.terraformStep.workspacePlaceholder': string
   'pipeline.testsReports.callgraphField.class': string
   'pipeline.testsReports.callgraphField.file': string
   'pipeline.testsReports.callgraphField.method': string
@@ -4847,6 +4869,7 @@ export interface StringsMap {
   'templatesLibrary.editModal.heading': string
   'templatesLibrary.fetchingActivityLogs': string
   'templatesLibrary.inputsCount': string
+  'templatesLibrary.moveTemplateToRemoteWarning': string
   'templatesLibrary.noActivityLogs': string
   'templatesLibrary.noInputsRequired': string
   'templatesLibrary.openEditTemplate': string
@@ -5039,6 +5062,7 @@ export interface StringsMap {
   'cd.addRemote': string
   'cd.addService': string
   'cd.addTFVarFileLabel': string
+  'cd.agentID': string
   'cd.allowSimultaneousDeployments': string
   'cd.amazonElasticCmd': string
   'cd.amazonElasticK8sService': string
@@ -7144,6 +7168,8 @@ export interface StringsMap {
   'cf.environments.noEnvironmentSection.configurations': string
   'cf.environments.noEnvironmentSection.limitation': string
   'cf.environments.noEnvironmentSection.message': string
+  'cf.featureFlagDetail.jiraIssuesDescription': string
+  'cf.featureFlagDetail.jiraIssuesTitle': string
   'cf.featureFlagDetail.noServices': string
   'cf.featureFlagDetail.searchService': string
   'cf.featureFlagDetail.serviceDescription': string

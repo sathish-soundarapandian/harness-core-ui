@@ -33,7 +33,8 @@ import {
   UserMetadataDTO,
   RoleAssignmentMetadataDTO,
   useUnlockUser,
-  checkIfLastAdminPromise
+  checkIfLastAdminPromise,
+  resetTwoFactorAuthPromise
 } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
 import RoleBindingsList from '@rbac/components/RoleBindingsList/RoleBindingsList'
@@ -213,6 +214,32 @@ const RenderColumnMenu: Renderer<CellProps<UserAggregate>> = ({ row, column }) =
     }
   })
 
+  const { openDialog: openReset2FADialog } = useConfirmationDialog({
+    className: css.wordbreak,
+    contentText: getString('rbac.usersPage.resetTwoFactorAuthConfirmation', { name }),
+    canEscapeKeyClose: true,
+    titleText: getString('rbac.usersPage.resetTwoFactorAuth'),
+    confirmButtonText: getString('rbac.notifications.buttonSend'),
+    cancelButtonText: getString('cancel'),
+    intent: Intent.WARNING,
+    onCloseDialog: async didConfirm => {
+      if (didConfirm && data) {
+        try {
+          const sent = await resetTwoFactorAuthPromise({
+            queryParams: {
+              accountIdentifier: accountId
+            },
+            userId: data.uuid
+          })
+          sent && showSuccess(getString('rbac.usersPage.resendTwoFactorEmailSuccess', { name }))
+          ;(column as any).refetchActiveUsers?.()
+        } catch (err) {
+          showError(defaultTo(err?.data?.message, err?.message))
+        }
+      }
+    }
+  })
+
   const { openDialog: openUnlockDialog } = useConfirmationDialog({
     contentText: getString('rbac.usersPage.unlockConfirmation', { name }),
     titleText: getString('rbac.usersPage.unlockTitle'),
@@ -252,6 +279,10 @@ const RenderColumnMenu: Renderer<CellProps<UserAggregate>> = ({ row, column }) =
     } catch (err) {
       showError(defaultTo(err?.data?.message, err?.message))
     }
+  }
+
+  const resendTwoFactorEmail = (): void => {
+    openReset2FADialog()
   }
 
   const permissionRequest = {
@@ -322,6 +353,18 @@ const RenderColumnMenu: Renderer<CellProps<UserAggregate>> = ({ row, column }) =
                 e.stopPropagation()
                 setMenuOpen(false)
                 openUnlockDialog()
+              }}
+              permission={permissionRequest}
+            />
+          ) : null}
+          {data.twoFactorAuthenticationEnabled ? (
+            <RbacMenuItem
+              icon="email-step"
+              text={getString('rbac.usersPage.resetTwoFactorAuth')}
+              onClick={e => {
+                e.stopPropagation()
+                setMenuOpen(false)
+                resendTwoFactorEmail()
               }}
               permission={permissionRequest}
             />

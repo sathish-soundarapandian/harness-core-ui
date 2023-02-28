@@ -73,7 +73,8 @@ export default function MonitoredServiceInputSetsTemplate({
   const {
     accountId: templateAccountId,
     projectIdentifier: templateProjectId,
-    orgIdentifier: templateOrgId
+    orgIdentifier: templateOrgId,
+    templateScope: templateRefScope
   } = templateRefData || {}
 
   // InputSet Yaml
@@ -87,8 +88,12 @@ export default function MonitoredServiceInputSetsTemplate({
     templateIdentifier: defaultTo(templateRefData?.identifier, ''),
     queryParams: {
       ...getScopeBasedProjectPathParams(
-        { accountId: templateAccountId, orgIdentifier: templateOrgId, projectIdentifier: templateProjectId },
-        Scope.PROJECT
+        {
+          accountId: templateAccountId,
+          orgIdentifier: templateOrgId,
+          projectIdentifier: templateProjectId
+        },
+        templateRefScope as Scope
       ),
       versionLabel: defaultTo(templateRefData?.versionLabel, ''),
       getDefaultFromOtherRepo: true
@@ -105,8 +110,12 @@ export default function MonitoredServiceInputSetsTemplate({
     templateIdentifier: templateRefData?.identifier,
     queryParams: {
       ...getScopeBasedProjectPathParams(
-        { accountId: templateAccountId, orgIdentifier: templateOrgId, projectIdentifier: templateProjectId },
-        Scope.PROJECT
+        {
+          accountId: templateAccountId,
+          orgIdentifier: templateOrgId,
+          projectIdentifier: templateProjectId
+        },
+        templateRefScope as Scope
       ),
       versionLabel: defaultTo(templateRefData?.versionLabel, ''),
       getDefaultFromOtherRepo: true

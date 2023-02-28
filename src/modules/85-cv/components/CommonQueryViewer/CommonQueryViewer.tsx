@@ -22,7 +22,7 @@ import { CommonQueryContent } from './components/CommonQueryContent/CommonQueryC
 import { SetupSourceTabsContext } from '../CVSetupSourcesView/SetupSourceTabs/SetupSourceTabs'
 import { CommonRecords } from '../CommonRecords/CommonRecords'
 import type { CommonQueryViewerProps } from './types'
-import { getIsQueryButtonDisabled, getIsQueryFieldNotPresent } from './CommonQueryViewer.utils'
+import { getIsQueryButtonDisabled, getRunQueryBtnTooltip } from './CommonQueryViewer.utils'
 
 export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
   const { values } = useFormikContext<CommonCustomMetricFormikInterface>()
@@ -50,9 +50,11 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
     return getIsQueryButtonDisabled({ query, loading, queryFieldIdentifier, values })
   }, [loading, query, queryFieldIdentifier, values])
 
-  const isQueryFieldNotPresent = useMemo(() => {
-    return getIsQueryFieldNotPresent(queryFieldIdentifier, values)
-  }, [queryFieldIdentifier, values])
+  const runQueryBtnTooltip = useMemo(
+    () => getRunQueryBtnTooltip(queryFieldIdentifier, values, query, getString),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [query, queryFieldIdentifier, values]
+  )
 
   useEffect(() => {
     if (isTemplate) {
@@ -107,6 +109,7 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
             text: getString('cv.monitoringSources.commonHealthSource.runQuery'),
             variation: ButtonVariation.SECONDARY
           }}
+          runQueryBtnTooltip={runQueryBtnTooltip}
         />
       ) : (
         <CommonQueryContent
@@ -116,8 +119,7 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
           loading={loading}
           handleFetchRecords={handleFetchRecords}
           isQueryButtonDisabled={isQueryButtonDisabled}
-          isQueryFieldNotPresent={isQueryFieldNotPresent}
-          queryFieldIdentifier={queryFieldIdentifier}
+          runQueryBtnTooltip={runQueryBtnTooltip}
         />
       )}
       {!(isQueryRuntimeOrExpression || isConnectorRuntimeOrExpression) ? (
@@ -139,9 +141,8 @@ export function CommonQueryViewer(props: CommonQueryViewerProps): JSX.Element {
         data={records}
         error={error}
         isQueryExecuted={isQueryExecuted}
-        isQueryFieldNotPresent={isQueryFieldNotPresent}
         isQueryButtonDisabled={isQueryButtonDisabled}
-        queryFieldIdentifier={queryFieldIdentifier}
+        runQueryBtnTooltip={runQueryBtnTooltip}
       />
     </Container>
   )

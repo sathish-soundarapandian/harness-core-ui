@@ -5,8 +5,12 @@
       box-shadow: var(--elevation-2);
     }
     .bp3-tab-panel {
-      padding: var(--spacing-xxlarge) var(--spacing-huge) !important;
+      padding: var(--spacing-large) var(--spacing-huge) !important;
       width: 50%;
+      margin-top: 0px;
+    }
+    .bp3-tab {
+      margin-left: var(--spacing-5) !important;
     }
   }
 }

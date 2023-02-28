@@ -116,7 +116,7 @@ const UserDetails: React.FC = () => {
         />
       </Layout.Horizontal>
 
-      <ScopeFilter view={view} userData={data.data} />
+      <ScopeFilter view={view} userData={data.data} onNewRoleAdded={() => refetch()} />
     </>
   )
 }

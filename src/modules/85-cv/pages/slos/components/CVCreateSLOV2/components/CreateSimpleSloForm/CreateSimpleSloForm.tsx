@@ -14,6 +14,7 @@ import { useFormikContext } from 'formik'
 import { useStrings } from 'framework/strings'
 import { useMutateAsGet } from '@common/hooks'
 import {
+  NotificationRuleResponse,
   ServiceLevelIndicatorDTO,
   useGetAllMonitoredServicesWithTimeSeriesHealthSources,
   useGetNotificationRuleData,
@@ -64,6 +65,7 @@ export default function CreateSimpleSLOForm({
   >()
   const compositeSloPayloadRef = useRef<SLOV2Form | null>()
   const prevStepDataRef = useRef<SLOV2Form | null>()
+  const [notificationsInTable, setNotificationsInTable] = useState<NotificationRuleResponse[]>([])
 
   const [openSaveCancelModal] = useCreateCompositeSloWarningModal({
     handleRedirect,
@@ -334,6 +336,8 @@ export default function CreateSimpleSLOForm({
                         loading={notificationLoading}
                         error={notificationError}
                         getNotifications={getNotifications}
+                        notificationsInTable={notificationsInTable}
+                        setNotificationsInTable={setNotificationsInTable}
                       />
                     </CompositeSLOContext.Provider>
                   ),

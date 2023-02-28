@@ -8,6 +8,7 @@
 import React from 'react'
 import { render, fireEvent, waitFor, queryByAttribute } from '@testing-library/react'
 
+import { difference } from 'lodash-es'
 import routes from '@common/RouteDefinitions'
 import { useHandleManualInterventionInterrupt } from 'services/pipeline-ng'
 import { TestWrapper } from '@common/utils/testUtils'
@@ -47,6 +48,7 @@ const pathParams = {
 }
 
 const AllStrategies = Object.values(Strategy)
+const allowedStrategies = difference(AllStrategies, [Strategy.ManualIntervention, Strategy.Retry])
 
 describe('<ManualInterventionTab /> tests', () => {
   beforeEach(() => {
@@ -60,7 +62,7 @@ describe('<ManualInterventionTab /> tests', () => {
         <ManualInterventionTab
           step={data as any}
           stageType={StageType.DEPLOY}
-          allowedStrategies={AllStrategies}
+          allowedStrategies={allowedStrategies}
           executionMetadata={executionMetadata}
         />
       </TestWrapper>
@@ -109,7 +111,7 @@ describe('<ManualInterventionTab /> tests', () => {
         <ManualInterventionTab
           step={data as any}
           stageType={StageType.DEPLOY}
-          allowedStrategies={AllStrategies}
+          allowedStrategies={allowedStrategies}
           executionMetadata={executionMetadata}
         />
       </TestWrapper>

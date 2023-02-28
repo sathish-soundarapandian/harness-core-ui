@@ -227,7 +227,7 @@ describe('Step Palette tests', () => {
       fireEvent.click(stepSection!)
     })
     await waitFor(() => expect(props.onSelect).toBeCalled())
-    expect(props.onSelect).toBeCalledWith({ icon: 'cross', name: 's1', type: 'KubernetesDirect' })
+    expect(props.onSelect).toBeCalledWith({ icon: 'cross', name: 'KubernetesDirect', type: 'KubernetesDirect' })
   })
 })
 

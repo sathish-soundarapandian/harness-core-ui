@@ -2127,21 +2127,18 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                       class="iconContainer"
                     >
                       <span
-                        class="bp3-icon bp3-icon-double-chevron-up StyledProps--main StyledProps--color StyledProps--color-green600"
-                        icon="double-chevron-up"
+                        class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-red500"
+                        data-icon="main-caret-up"
                       >
                         <svg
-                          data-icon="double-chevron-up"
-                          height="10"
-                          viewBox="0 0 16 16"
-                          width="10"
+                          height="6"
+                          viewBox="0 0 14 9"
+                          width="6"
+                          xmlns="http://www.w3.org/2000/svg"
                         >
-                          <desc>
-                            double-chevron-up
-                          </desc>
                           <path
-                            d="M4 8c.28 0 .53-.11.71-.29L8 4.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71l-4-4C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-4 4A1.003 1.003 0 004 8zm4.71-.71C8.53 7.11 8.28 7 8 7s-.53.11-.71.29l-4 4a1.003 1.003 0 001.42 1.42L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71l-4-4z"
-                            fill-rule="evenodd"
+                            d="M13.7 7.2L7.9.4C7.7.2 7.4 0 7 0s-.7.2-.9.4L.3 7.2c-.2.2-.3.4-.3.7C0 8.5.5 9 1.2 9h11.7c.6 0 1.1-.5 1.1-1.1 0-.3-.1-.5-.3-.7z"
+                            fill="#4d5969"
                           />
                         </svg>
                       </span>
@@ -2149,7 +2146,13 @@ exports[`ActiveServiceInstancesContent should render ActiveServiceInstancesConte
                     <div
                       class="tickerValue"
                       data-test="tickerValue"
-                    />
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-red500"
+                      >
+                        0%
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <p
@@ -2857,21 +2860,18 @@ exports[`ActiveServiceInstancesContent should render error 1`] = `
                       class="iconContainer"
                     >
                       <span
-                        class="bp3-icon bp3-icon-double-chevron-up StyledProps--main StyledProps--color StyledProps--color-green600"
-                        icon="double-chevron-up"
+                        class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-red500"
+                        data-icon="main-caret-up"
                       >
                         <svg
-                          data-icon="double-chevron-up"
-                          height="10"
-                          viewBox="0 0 16 16"
-                          width="10"
+                          height="6"
+                          viewBox="0 0 14 9"
+                          width="6"
+                          xmlns="http://www.w3.org/2000/svg"
                         >
-                          <desc>
-                            double-chevron-up
-                          </desc>
                           <path
-                            d="M4 8c.28 0 .53-.11.71-.29L8 4.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71l-4-4C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-4 4A1.003 1.003 0 004 8zm4.71-.71C8.53 7.11 8.28 7 8 7s-.53.11-.71.29l-4 4a1.003 1.003 0 001.42 1.42L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71l-4-4z"
-                            fill-rule="evenodd"
+                            d="M13.7 7.2L7.9.4C7.7.2 7.4 0 7 0s-.7.2-.9.4L.3 7.2c-.2.2-.3.4-.3.7C0 8.5.5 9 1.2 9h11.7c.6 0 1.1-.5 1.1-1.1 0-.3-.1-.5-.3-.7z"
+                            fill="#4d5969"
                           />
                         </svg>
                       </span>
@@ -2879,7 +2879,13 @@ exports[`ActiveServiceInstancesContent should render error 1`] = `
                     <div
                       class="tickerValue"
                       data-test="tickerValue"
-                    />
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-red500"
+                      >
+                        0%
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <p
@@ -3034,21 +3040,18 @@ exports[`ActiveServiceInstancesContent should render loading 1`] = `
                       class="iconContainer"
                     >
                       <span
-                        class="bp3-icon bp3-icon-double-chevron-up StyledProps--main StyledProps--color StyledProps--color-green600"
-                        icon="double-chevron-up"
+                        class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-red500"
+                        data-icon="main-caret-up"
                       >
                         <svg
-                          data-icon="double-chevron-up"
-                          height="10"
-                          viewBox="0 0 16 16"
-                          width="10"
+                          height="6"
+                          viewBox="0 0 14 9"
+                          width="6"
+                          xmlns="http://www.w3.org/2000/svg"
                         >
-                          <desc>
-                            double-chevron-up
-                          </desc>
                           <path
-                            d="M4 8c.28 0 .53-.11.71-.29L8 4.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71l-4-4C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-4 4A1.003 1.003 0 004 8zm4.71-.71C8.53 7.11 8.28 7 8 7s-.53.11-.71.29l-4 4a1.003 1.003 0 001.42 1.42L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71l-4-4z"
-                            fill-rule="evenodd"
+                            d="M13.7 7.2L7.9.4C7.7.2 7.4 0 7 0s-.7.2-.9.4L.3 7.2c-.2.2-.3.4-.3.7C0 8.5.5 9 1.2 9h11.7c.6 0 1.1-.5 1.1-1.1 0-.3-.1-.5-.3-.7z"
+                            fill="#4d5969"
                           />
                         </svg>
                       </span>
@@ -3056,7 +3059,13 @@ exports[`ActiveServiceInstancesContent should render loading 1`] = `
                     <div
                       class="tickerValue"
                       data-test="tickerValue"
-                    />
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-red500"
+                      >
+                        0%
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <p
@@ -3241,21 +3250,18 @@ exports[`ActiveServiceInstancesContent should render no data 1`] = `
                       class="iconContainer"
                     >
                       <span
-                        class="bp3-icon bp3-icon-double-chevron-up StyledProps--main StyledProps--color StyledProps--color-green600"
-                        icon="double-chevron-up"
+                        class="bp3-icon StyledProps--main StyledProps--color StyledProps--color-red500"
+                        data-icon="main-caret-up"
                       >
                         <svg
-                          data-icon="double-chevron-up"
-                          height="10"
-                          viewBox="0 0 16 16"
-                          width="10"
+                          height="6"
+                          viewBox="0 0 14 9"
+                          width="6"
+                          xmlns="http://www.w3.org/2000/svg"
                         >
-                          <desc>
-                            double-chevron-up
-                          </desc>
                           <path
-                            d="M4 8c.28 0 .53-.11.71-.29L8 4.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71l-4-4C8.53 2.11 8.28 2 8 2s-.53.11-.71.29l-4 4A1.003 1.003 0 004 8zm4.71-.71C8.53 7.11 8.28 7 8 7s-.53.11-.71.29l-4 4a1.003 1.003 0 001.42 1.42L8 9.41l3.29 3.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71l-4-4z"
-                            fill-rule="evenodd"
+                            d="M13.7 7.2L7.9.4C7.7.2 7.4 0 7 0s-.7.2-.9.4L.3 7.2c-.2.2-.3.4-.3.7C0 8.5.5 9 1.2 9h11.7c.6 0 1.1-.5 1.1-1.1 0-.3-.1-.5-.3-.7z"
+                            fill="#4d5969"
                           />
                         </svg>
                       </span>
@@ -3263,7 +3269,13 @@ exports[`ActiveServiceInstancesContent should render no data 1`] = `
                     <div
                       class="tickerValue"
                       data-test="tickerValue"
-                    />
+                    >
+                      <p
+                        class="StyledProps--font StyledProps--main StyledProps--font-size-xsmall StyledProps--color StyledProps--color-red500"
+                      >
+                        0%
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <p

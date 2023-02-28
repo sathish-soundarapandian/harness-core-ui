@@ -25,7 +25,6 @@ import {
 } from '@pipeline/utils/runPipelineUtils'
 
 import type { Pipeline } from '@pipeline/utils/types'
-import { replaceDefaultValues } from '@pipeline/utils/templateUtils'
 import type { InputSetValue } from '../InputSetSelector/utils'
 
 const memoizedParse = memoize(parse)
@@ -214,7 +213,7 @@ export function useInputSets(props: UseInputSetsProps): UseInputSetsReturn {
       } else {
         // In Normal flow we do not need merge call the template is the source of truth for us
 
-        setInputSet(clearRuntimeInput(replaceDefaultValues(inputSetTemplate)))
+        setInputSet(clearRuntimeInput(inputSetTemplate))
       }
     }
     setIsTemplateMergeComplete(true)

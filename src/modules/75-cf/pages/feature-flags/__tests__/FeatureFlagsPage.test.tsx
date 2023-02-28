@@ -8,6 +8,7 @@
 import React from 'react'
 import { render, fireEvent, getByText, waitFor, RenderResult, screen } from '@testing-library/react'
 import { cloneDeep } from 'lodash-es'
+import userEvent from '@testing-library/user-event'
 import { TestWrapper } from '@common/utils/testUtils'
 import mockImport from 'framework/utils/mockImport'
 import mockEnvironments from '@cf/pages/environments/__tests__/mockEnvironments'
@@ -25,7 +26,8 @@ const renderComponent = (): RenderResult =>
       }}
       defaultFeatureFlagValues={{
         STALE_FLAGS_FFM_1510: true,
-        FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: true
+        FFM_3938_STALE_FLAGS_ACTIVE_CARD_HIDE_SHOW: true,
+        FFM_6683_ALL_ENVIRONMENTS_FLAGS: true
       }}
     >
       <FeatureFlagsPage />
@@ -100,6 +102,21 @@ describe('FeatureFlagsPage', () => {
     expect(screen.getAllByText(mockFeatureFlags.features[0].name)).toBeDefined()
     expect(screen.getAllByText(mockFeatureFlags.features[1].name)).toBeDefined()
     expect(screen.getByRole('button', { name: 'cf.featureFlags.setupGitSync' })).toBeVisible()
+  })
+
+  test('It should have an option for "All Environments" in the EnvironmentSelect dropdown', async () => {
+    renderComponent()
+
+    const environmentSelect = screen.getByRole('textbox', { name: 'cf.shared.selectEnvironment' })
+
+    expect(environmentSelect).toHaveValue('foobar')
+
+    userEvent.click(environmentSelect)
+
+    await waitFor(() => {
+      expect(screen.getByText('common.allEnvironments')).toBeInTheDocument()
+      expect(screen.getByText('QB')).toBeInTheDocument()
+    })
   })
 
   test('It should go to edit page by clicking a row', async () => {

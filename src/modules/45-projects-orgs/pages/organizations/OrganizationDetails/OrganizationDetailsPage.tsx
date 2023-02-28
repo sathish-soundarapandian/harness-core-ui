@@ -26,20 +26,18 @@ import { NGBreadcrumbs } from '@common/components/NGBreadcrumbs/NGBreadcrumbs'
 import ResourceCardList, { ResourceOption } from '@common/components/ResourceCardList/ResourceCardList'
 import { useAnyEnterpriseLicense } from '@common/hooks/useModuleLicenses'
 import { useProjectModal } from '@projects-orgs/modals/ProjectModal/useProjectModal'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import RbacButton from '@rbac/components/Button/Button'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import css from './OrganizationDetailsPage.module.scss'
 
 const OrganizationDetailsPage: React.FC = () => {
   const { accountId, orgIdentifier } = useParams<OrgPathProps>()
-  const { NG_DEPLOYMENT_FREEZE } = useFeatureFlags()
   const history = useHistory()
   const { getString } = useStrings()
   const showGovCard = useAnyEnterpriseLicense()
   const { licenseInformation } = useLicenseStore()
   const isEnterpriseEdition = isEnterprisePlan(licenseInformation, ModuleName.CD)
-  const showDeploymentFreeze = isEnterpriseEdition && NG_DEPLOYMENT_FREEZE
+  const showDeploymentFreeze = isEnterpriseEdition
 
   const { data, refetch, loading, error } = useGetOrganizationAggregateDTO({
     identifier: orgIdentifier,

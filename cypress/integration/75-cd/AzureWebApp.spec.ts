@@ -107,7 +107,9 @@ describe('Azure web app end to end test', () => {
     cy.get('span[data-icon="service-github"]').should('be.visible')
     cy.wait(2000)
     //save services
-    cy.get('[class*="Dialog--children"] > div:nth-child(2) > button:nth-child(1)').contains('Save').click()
+    cy.findByTestId('modaldialog-body').within(() => {
+      cy.findByText(/Save/i).click({ force: true })
+    })
 
     cy.wait(1000)
     //Add Environment

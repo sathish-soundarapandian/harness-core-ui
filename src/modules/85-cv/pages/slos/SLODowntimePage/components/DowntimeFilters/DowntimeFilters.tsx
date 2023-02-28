@@ -7,10 +7,12 @@
 
 import React, { useContext } from 'react'
 import { Button, ButtonVariation, Container, ExpandingSearchInput, Label, Layout, Select } from '@harness/uicore'
+import { Divider } from '@blueprintjs/core'
 import { useStrings } from 'framework/strings'
-import { getMonitoredServicesOptions } from '../../SLODowntimePage.utils'
+import { getAddDowntimeButton, getMonitoredServicesOptions } from '../../SLODowntimePage.utils'
 import { defaultOption } from '../../SLODowntimePage.constants'
 import { FiltersContext } from '../../FiltersContext'
+import css from '../../SLODowntimePage.module.scss'
 
 export const onChange = (
   text: string,
@@ -21,7 +23,7 @@ export const onChange = (
   setFilter(text.trim())
 }
 
-const DowntimeFilters = (): JSX.Element => {
+const DowntimeFilters = ({ listView = false }): JSX.Element => {
   const { getString } = useStrings()
 
   const {
@@ -31,6 +33,7 @@ const DowntimeFilters = (): JSX.Element => {
     setMonitoredServiceOption,
     setPageNumber,
     hideResetFilterButton,
+    handleCreateButton,
     setFilter
   } = useContext(FiltersContext)
 
@@ -41,16 +44,21 @@ const DowntimeFilters = (): JSX.Element => {
 
   return (
     <Layout.Horizontal flex={{ alignItems: 'flex-end' }}>
-      <Layout.Horizontal spacing="xsmall" flex={{ alignItems: 'flex-end' }}>
+      <Layout.Horizontal flex={{ alignItems: 'flex-end' }} spacing={'xxlarge'}>
+        {listView && (
+          <>
+            {getAddDowntimeButton(handleCreateButton, getString)}
+            <Divider className={css.divider} />
+          </>
+        )}
         <Container width={250}>
           <Label>{getString('common.monitoredServices')}</Label>
-          <Layout.Vertical width="240px" margin={{ right: 'small' }} data-testid="monitoredServices-filter">
-            <Select
-              value={monitoredServiceOption}
-              items={getMonitoredServicesOptions(monitoredServicesData, monitoredServicesLoading, getString)}
-              onChange={onOptionChange}
-            />
-          </Layout.Vertical>
+          <Select
+            value={monitoredServiceOption}
+            items={getMonitoredServicesOptions(monitoredServicesData, monitoredServicesLoading, getString)}
+            onChange={onOptionChange}
+            data-testid="monitoredServices-filter"
+          />
         </Container>
         {!hideResetFilterButton && (
           <Button

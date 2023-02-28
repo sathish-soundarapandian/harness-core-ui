@@ -12,6 +12,8 @@ import { useStrings } from 'framework/strings'
 import { EnvironmentResponseDTO, useGetEnvironmentListForProject } from 'services/cd-ng'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { useQueryParamsState } from '@common/hooks/useQueryParamsState'
+import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import css from './useEnvironmentSelectV2.module.scss'
 
 export interface UseEnvironmentSelectV2Params {
@@ -21,6 +23,7 @@ export interface UseEnvironmentSelectV2Params {
   allowCreatingNewItems?: boolean
   showCreateButton?: boolean
   noDefault?: boolean
+  allowAllOption?: boolean
 }
 
 export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => {
@@ -40,7 +43,8 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
     selectedEnvironmentIdentifier,
     allowCreatingNewItems,
     showCreateButton,
-    noDefault
+    noDefault,
+    allowAllOption
   } = params
   const { projectIdentifier, orgIdentifier, accountId } = useParams<Record<string, string>>()
   const { data, loading, error, refetch } = useGetEnvironmentListForProject({
@@ -52,6 +56,8 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
       label: elem.name as string,
       value: elem.identifier as string
     })) || []
+
+  const ALL_ENVIRONMENTS_ENABLED = useFeatureFlag(FeatureFlag.FFM_6683_ALL_ENVIRONMENTS_FLAGS)
 
   useEffect(() => {
     if (typeof selectedEnvironment?.value === 'string' && preferredEnvironment !== selectedEnvironment.value) {
@@ -107,18 +113,27 @@ export const useEnvironmentSelectV2 = (params: UseEnvironmentSelectV2Params) => 
           usePortal={false}
           popoverClassName={!showCreateButton ? css.hideCreateButton : ''}
           value={selectedEnvironment}
-          items={selectOptions}
+          items={
+            ALL_ENVIRONMENTS_ENABLED && allowAllOption && selectOptions.length > 1
+              ? [
+                  { label: getString('common.allEnvironments'), value: getString('common.allEnvironments') },
+                  ...selectOptions
+                ]
+              : selectOptions
+          }
           name="environmentSelectEl"
           allowCreatingNewItems={allowCreatingNewItems}
           onChange={opt => {
             if (selectedEnvironment?.value !== opt.value) {
               setSelectedEnvironment(opt)
-              onChange(
-                opt,
-                data?.data?.content?.find(env => env.identifier === opt.value) as EnvironmentResponseDTO,
-                true
-              )
-              setActiveEnvironment(opt.value as string)
+              if (opt.value !== getString('common.allEnvironments')) {
+                onChange(
+                  opt,
+                  data?.data?.content?.find(env => env.identifier === opt.value) as EnvironmentResponseDTO,
+                  true
+                )
+                setActiveEnvironment(opt.value as string)
+              }
             }
           }}
           inputProps={{

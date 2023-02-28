@@ -567,6 +567,37 @@ export const validateStage = ({
         set(errors, 'spec.execution.rollbackSteps', errorsResponse)
       }
     }
+    // IACM validation
+    if (
+      viewType !== StepViewType.InputSet &&
+      isEmpty((stageConfig as DeploymentStageConfig & { stackID: string; workflow: string })?.workflow) &&
+      getMultiTypeFromValue(
+        (templateStageConfig as DeploymentStageConfig & { stackID: string; workflow: string })?.workflow
+      ) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        'spec.workflow',
+        getString?.('fieldRequired', {
+          field: getString('pipeline.iacm.workflow')
+        })
+      )
+    }
+    if (
+      viewType !== StepViewType.InputSet &&
+      isEmpty((stageConfig as DeploymentStageConfig & { stackID: string; workflow: string })?.stackID) &&
+      getMultiTypeFromValue(
+        (templateStageConfig as DeploymentStageConfig & { stackID: string; workflow: string })?.stackID
+      ) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        'spec.stackID',
+        getString?.('fieldRequired', {
+          field: getString('pipeline.iacm.resourceStack')
+        })
+      )
+    }
 
     return errors
   }
