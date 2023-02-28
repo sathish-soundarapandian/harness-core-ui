@@ -73,7 +73,8 @@ export default function MonitoredServiceInputSetsTemplate({
   const {
     accountId: templateAccountId,
     projectIdentifier: templateProjectId,
-    orgIdentifier: templateOrgId
+    orgIdentifier: templateOrgId,
+    templateScope: templateRefScope
   } = templateRefData || {}
 
   // InputSet Yaml
@@ -92,7 +93,7 @@ export default function MonitoredServiceInputSetsTemplate({
           orgIdentifier: templateOrgId,
           projectIdentifier: templateProjectId
         },
-        templateData?.templateScope as Scope
+        templateRefScope as Scope
       ),
       versionLabel: defaultTo(templateRefData?.versionLabel, ''),
       getDefaultFromOtherRepo: true
@@ -114,7 +115,7 @@ export default function MonitoredServiceInputSetsTemplate({
           orgIdentifier: templateOrgId,
           projectIdentifier: templateProjectId
         },
-        templateData?.templateScope as Scope
+        templateRefScope as Scope
       ),
       versionLabel: defaultTo(templateRefData?.versionLabel, ''),
       getDefaultFromOtherRepo: true
