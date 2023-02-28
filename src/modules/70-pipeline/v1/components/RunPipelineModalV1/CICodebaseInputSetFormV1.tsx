@@ -168,7 +168,7 @@ function CICodebaseInputSetFormV1Internal({
     if (codebaseConnector) {
       const codebaseConnectorConnectionType = get(codebaseConnector, 'spec.type')
       if (codebaseConnectorConnectionType === ConnectionType.Repo) {
-        fetchBranchesForRepo(getCodebaseRepoNameFromConnector(codebaseConnector, getString))
+        fetchBranchesForRepo(getCodebaseRepoNameFromConnector(codebaseConnector))
       } else if (
         codebaseConnectorConnectionType === ConnectionType.Account &&
         !get(originalPipeline, 'repository.name', '').includes(RUNTIME_INPUT_VALUE_V1)

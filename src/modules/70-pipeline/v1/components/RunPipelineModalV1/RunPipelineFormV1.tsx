@@ -54,8 +54,7 @@ import type { InputSetDTO } from '@pipeline/utils/types'
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { getErrorsList } from '@pipeline/utils/errorUtils'
 import { useShouldDisableDeployment } from 'services/cd-ng'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { PreFlightCheckModal } from '../../../components/PreFlightCheckModal/PreFlightCheckModal'
 import { PipelineVariablesContextProvider } from '../../../components/PipelineVariablesContext/PipelineVariablesContext'
 import { PipelineInvalidRequestContent } from '../../../components/RunPipelineModal/PipelineInvalidRequestContent'
@@ -92,8 +91,7 @@ function RunPipelineFormV1Basic({
   executionIdentifier,
   isDebugMode
 }: RunPipelineFormV1Props & InputSetGitQueryParams): React.ReactElement {
-  const isNgDeploymentFreezeEnabled = useFeatureFlag(FeatureFlag.NG_DEPLOYMENT_FREEZE)
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
+  const { PIE_NG_GITX_CACHING: isGitCacheEnabled } = useFeatureFlags()
   const [skipPreFlightCheck, setSkipPreFlightCheck] = useState<boolean>(false)
   const [notifyOnlyMe, setNotifyOnlyMe] = useState<boolean>(false)
   const [formErrors] = useState<FormikErrors<InputSetDTO>>({})
@@ -122,8 +120,7 @@ function RunPipelineFormV1Basic({
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier
-    },
-    lazy: !isNgDeploymentFreezeEnabled
+    }
   })
 
   const { data: pipelineResponse, loading: loadingPipeline } = useGetPipeline({
