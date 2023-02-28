@@ -33,17 +33,21 @@ const MonitoredServiceTemplateCanvas = (_props: unknown, formikRef: TemplateForm
           environmentRef: formikValue?.environmentRef
         })
       ) {
-        updateTemplate({
-          ...template,
-          notificationRuleRefs: formikValue?.notificationRuleRefs,
-          spec: {
-            serviceRef: formikValue?.serviceRef,
-            environmentRef: formikValue?.environmentRef,
-            type: formikValue?.type,
-            sources: formikValue?.sources || {},
-            variables: template?.spec?.variables
-          } as JsonNode
-        } as NGTemplateInfoConfig)
+        const templateValues = JSON.parse(
+          JSON.stringify({
+            ...(template || {}),
+            notificationRuleRefs: formikValue?.notificationRuleRefs,
+            spec: {
+              serviceRef: formikValue?.serviceRef,
+              environmentRef: formikValue?.environmentRef,
+              type: formikValue?.type,
+              sources: formikValue?.sources || {},
+              variables: template?.spec?.variables
+            } as JsonNode
+          } as NGTemplateInfoConfig)
+        )
+
+        updateTemplate(templateValues)
       }
     },
     [template]
