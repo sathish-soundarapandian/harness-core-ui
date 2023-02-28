@@ -36,7 +36,6 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
 
   const {
     CVNG_TEMPLATE_MONITORED_SERVICE,
-    NG_SETTINGS,
     USE_OLD_GIT_SYNC,
     SRM_ET_EXPERIMENTAL,
     NEW_LEFT_NAVBAR_SETTINGS,
@@ -84,9 +83,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
         <SidebarLink to={routes.toAccessControl(params)} label={getString('accessControl')} />
         <SidebarLink label={getString('delegate.delegates')} to={routes.toDelegates(params)} />
 
-        {NG_SETTINGS && (
-          <SidebarLink label={getString('common.defaultSettings')} to={routes.toDefaultSettings(params)} />
-        )}
+        {<SidebarLink label={getString('common.defaultSettings')} to={routes.toDefaultSettings(params)} />}
         {isGitSyncSupported ? (
           <SidebarLink
             label={getString('gitManagement')}

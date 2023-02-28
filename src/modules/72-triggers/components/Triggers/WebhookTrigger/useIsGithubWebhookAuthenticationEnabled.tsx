@@ -19,7 +19,6 @@ const useIsGithubWebhookAuthenticationEnabled = (): {
   isGithubWebhookAuthenticationDataLoading: boolean
 } => {
   const { showError } = useToaster()
-  const { NG_SETTINGS } = useFeatureFlags()
   const { accountId: accountIdentifier, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
 
   const {
@@ -33,7 +32,7 @@ const useIsGithubWebhookAuthenticationEnabled = (): {
       orgIdentifier,
       projectIdentifier
     },
-    lazy: !NG_SETTINGS
+    lazy: false
   })
 
   useEffect(() => {

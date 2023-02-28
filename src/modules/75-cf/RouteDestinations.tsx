@@ -196,7 +196,6 @@ const CFRoutes: FC = () => {
     FF_PIPELINE,
     FFM_1512,
     FFM_1827,
-    NG_SETTINGS,
     FFM_3959_FF_MFE_Environment_Detail,
     FFM_5939_MFE_TARGET_GROUPS_LISTING,
     FFM_6666_FF_MFE_Target_Group_Detail,
@@ -419,13 +418,13 @@ const CFRoutes: FC = () => {
           licenseRedirectData={licenseRedirectData}
           sidebarProps={CFSideNavProps}
         />
-        {NG_SETTINGS && (
+        {
           <DefaultSettingsRouteDestinations
             moduleParams={moduleParams}
             licenseRedirectData={licenseRedirectData}
             sidebarProps={CFSideNavProps}
           />
-        )}
+        }
         <SecretRouteDestinations
           moduleParams={moduleParams}
           licenseRedirectData={licenseRedirectData}

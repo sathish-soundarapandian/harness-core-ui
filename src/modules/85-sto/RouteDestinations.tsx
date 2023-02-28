@@ -278,8 +278,6 @@ const RedirectToProjectOverviewPage = (): React.ReactElement => {
 const RemoteSTOApp = lazy(() => import(`stoV2/App`))
 
 const RouteDestinations: React.FC = () => {
-  const { NG_SETTINGS } = useFeatureFlags()
-
   return (
     <>
       <RouteWithLayout exact licenseRedirectData={licenseRedirectData} path={routes.toSTO({ ...accountPathProps })}>
@@ -362,13 +360,13 @@ const RouteDestinations: React.FC = () => {
           licenseRedirectData={licenseRedirectData}
           sidebarProps={STOSideNavProps}
         />
-        {NG_SETTINGS && (
+        {
           <DefaultSettingsRouteDestinations
             moduleParams={moduleParams}
             licenseRedirectData={licenseRedirectData}
             sidebarProps={STOSideNavProps}
           />
-        )}
+        }
         <SecretRouteDestinations
           moduleParams={moduleParams}
           licenseRedirectData={licenseRedirectData}
