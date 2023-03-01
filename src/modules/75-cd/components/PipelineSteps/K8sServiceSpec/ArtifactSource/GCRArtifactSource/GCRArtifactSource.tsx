@@ -267,7 +267,6 @@ const Content = (props: GCRRenderContent): JSX.Element => {
                 isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.registryHostname`, value)
                 }}
@@ -341,7 +340,6 @@ const Content = (props: GCRRenderContent): JSX.Element => {
                 isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.tagRegex`, value)
                 }}

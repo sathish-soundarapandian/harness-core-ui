@@ -905,10 +905,6 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
                           >
                             <div
                               class="accordionSummary"
-                              id="pipeline.stages[0].stage.spec.Environment"
-                            />
-                            <div
-                              class="accordionSummary"
                               id="Stage.asd.Infrastructure"
                             >
                               <div
@@ -923,7 +919,7 @@ exports[`Render Forms - Snapshot Testing render Edit Input Set Form view: expand
                                 class="nestedAccordions"
                               >
                                 <div
-                                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main containerPadding StyledProps--padding-medium"
+                                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                                 >
                                   <div
                                     class="formGroup md"
@@ -1746,10 +1742,6 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
                           >
                             <div
                               class="accordionSummary"
-                              id="pipeline.stages[0].stage.spec.Environment"
-                            />
-                            <div
-                              class="accordionSummary"
                               id="Stage.asd.Infrastructure"
                             >
                               <div
@@ -1764,7 +1756,7 @@ exports[`Render Forms - Snapshot Testing render Input Set Form view 1`] = `
                                 class="nestedAccordions"
                               >
                                 <div
-                                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main containerPadding StyledProps--padding-medium"
+                                  class="Layout--vertical Layout--layout-spacing-small StyledProps--main"
                                 >
                                   <div
                                     class="formGroup md"

@@ -239,6 +239,8 @@ featureFlagDetail:
   serviceUpdateSuccess: Services updated
   noServices: 'No Monitored Service available'
   searchService: 'Search for Service name'
+  jiraIssuesTitle: Jira Issues
+  jiraIssuesDescription: Jira Issues associated with this Flag
 flagFilters:
   active: Active Flags
   allFlags: All Flags

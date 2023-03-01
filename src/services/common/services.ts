@@ -118,6 +118,9 @@ export const FetchPlansDocument = gql`
       srmPlans {
         ...Plans
       }
+      cePlans {
+        ...Plans
+      }
       ciFeatureCaption {
         ...FeatureCaption
       }
@@ -154,6 +157,12 @@ export const FetchPlansDocument = gql`
       srmFeatureGroup {
         ...FeatureGroup
       }
+      ceFeatureCaption {
+        ...FeatureCaption
+      }
+      ceFeatureGroup {
+        ...FeatureGroup
+      }
       cdFaq {
         ...Faq
       }
@@ -164,6 +173,9 @@ export const FetchPlansDocument = gql`
         ...Faq
       }
       ffFaq {
+        ...Faq
+      }
+      ceFaq {
         ...Faq
       }
       caseStudies {
@@ -451,6 +463,35 @@ export type FetchPlansQuery = {
         link: string | null
       } | null> | null
     } | null> | null
+    cePlans: Array<{
+      __typename?: 'ComponentPricingPagePlansZone'
+      id: string
+      title: string | null
+      desc: string | null
+      price: string | null
+      yearlyPrice: string | null
+      unit: string | null
+      link: string | null
+      buttonText: string | null
+      primaryButton: boolean | null
+      comingSoon: boolean | null
+      priceTips: string | null
+      priceTerm: string | null
+      priceTermTips: string | null
+      yearlyPriceTips: string | null
+      yearlyPriceTerm: string | null
+      yearlyPriceTermTips: string | null
+      support: string | null
+      featureTitle: string | null
+      unitTips: string | null
+      img: { __typename?: 'UploadFile'; url: string; width: number | null; height: number | null } | null
+      featureListZone: Array<{
+        __typename?: 'ComponentPageFeatureLIstZone'
+        id: string
+        title: string | null
+        link: string | null
+      } | null> | null
+    } | null> | null
     ciFeatureCaption: Array<{
       __typename?: 'ComponentPricingPageFeatureCaption'
       id: string
@@ -613,6 +654,33 @@ export type FetchPlansQuery = {
         enterpriseText: string | null
       } | null> | null
     } | null> | null
+    ceFeatureCaption: Array<{
+      __typename?: 'ComponentPricingPageFeatureCaption'
+      id: string
+      title: string | null
+      btnText: string | null
+      btnLink: string | null
+      primaryButton: boolean | null
+    } | null> | null
+    ceFeatureGroup: Array<{
+      __typename?: 'ComponentPricingPageFeatureGroup'
+      id: string
+      title: string | null
+      detailedFeature: Array<{
+        __typename?: 'ComponentPricingPageDetailedFeature'
+        id: string
+        title: string | null
+        link: string | null
+        communityValue: Enum_Componentpricingpagedetailedfeature_Communityvalue | null
+        communityText: string | null
+        freeValue: Enum_Componentpricingpagedetailedfeature_Freevalue | null
+        freeText: string | null
+        teamValue: Enum_Componentpricingpagedetailedfeature_Teamvalue | null
+        teamText: string | null
+        enterpriseValue: Enum_Componentpricingpagedetailedfeature_Enterprisevalue | null
+        enterpriseText: string | null
+      } | null> | null
+    } | null> | null
     cdFaq: Array<{
       __typename?: 'ComponentPricingPageFaq'
       id: string
@@ -635,6 +703,13 @@ export type FetchPlansQuery = {
       anchor: string | null
     } | null> | null
     ffFaq: Array<{
+      __typename?: 'ComponentPricingPageFaq'
+      id: string
+      faqTitle: string | null
+      faqAnswer: string | null
+      anchor: string | null
+    } | null> | null
+    ceFaq: Array<{
       __typename?: 'ComponentPricingPageFaq'
       id: string
       faqTitle: string | null
@@ -4770,9 +4845,10 @@ export type Pricing = {
   cdFeatureCaption: Maybe<Array<Maybe<ComponentPricingPageFeatureCaption>>>
   cdFeatureGroup: Maybe<Array<Maybe<ComponentPricingPageFeatureGroup>>>
   cdPlans: Maybe<Array<Maybe<ComponentPricingPagePlansZone>>>
-  srmFeatureCaption: Maybe<Array<Maybe<ComponentPricingPageFeatureCaption>>>
-  srmFeatureGroup: Maybe<Array<Maybe<ComponentPricingPageFeatureGroup>>>
-  srmPlans: Maybe<Array<Maybe<ComponentPricingPagePlansZone>>>
+  ceFaq: Maybe<Array<Maybe<ComponentPricingPageFaq>>>
+  ceFeatureCaption: Maybe<Array<Maybe<ComponentPricingPageFeatureCaption>>>
+  ceFeatureGroup: Maybe<Array<Maybe<ComponentPricingPageFeatureGroup>>>
+  cePlans: Maybe<Array<Maybe<ComponentPricingPagePlansZone>>>
   ciFaq: Maybe<Array<Maybe<ComponentPricingPageFaq>>>
   ciFeatureCaption: Maybe<Array<Maybe<ComponentPricingPageFeatureCaption>>>
   ciFeatureGroup: Maybe<Array<Maybe<ComponentPricingPageFeatureGroup>>>
@@ -4790,6 +4866,9 @@ export type Pricing = {
   id: Scalars['ID']
   openSource: Maybe<ComponentPricingPageCallOut>
   published_at: Maybe<Scalars['DateTime']>
+  srmFeatureCaption: Maybe<Array<Maybe<ComponentPricingPageFeatureCaption>>>
+  srmFeatureGroup: Maybe<Array<Maybe<ComponentPricingPageFeatureGroup>>>
+  srmPlans: Maybe<Array<Maybe<ComponentPricingPagePlansZone>>>
   tooltips: Maybe<Array<Maybe<ComponentPricingPageTooltipsZone>>>
   updated_at: Scalars['DateTime']
   updated_by: Maybe<AdminUser>
@@ -4805,9 +4884,6 @@ export type PricingInput = {
   cdFeatureCaption: InputMaybe<Array<InputMaybe<ComponentPricingPageFeatureCaptionInput>>>
   cdFeatureGroup: InputMaybe<Array<InputMaybe<ComponentPricingPageFeatureGroupInput>>>
   cdPlans: InputMaybe<Array<InputMaybe<ComponentPricingPagePlansZoneInput>>>
-  srmFeatureCaption: InputMaybe<Array<InputMaybe<ComponentPricingPageFeatureCaptionInput>>>
-  srmFeatureGroup: InputMaybe<Array<InputMaybe<ComponentPricingPageFeatureGroupInput>>>
-  srmPlans: InputMaybe<Array<InputMaybe<ComponentPricingPagePlansZoneInput>>>
   ciFaq: InputMaybe<Array<InputMaybe<ComponentPricingPageFaqInput>>>
   ciFeatureCaption: InputMaybe<Array<InputMaybe<ComponentPricingPageFeatureCaptionInput>>>
   ciFeatureGroup: InputMaybe<Array<InputMaybe<ComponentPricingPageFeatureGroupInput>>>
@@ -4823,6 +4899,9 @@ export type PricingInput = {
   hero: InputMaybe<ComponentPageMiniTitleZoneInput>
   openSource: InputMaybe<ComponentPricingPageCallOutInput>
   published_at: InputMaybe<Scalars['DateTime']>
+  srmFeatureCaption: InputMaybe<Array<InputMaybe<ComponentPricingPageFeatureCaptionInput>>>
+  srmFeatureGroup: InputMaybe<Array<InputMaybe<ComponentPricingPageFeatureGroupInput>>>
+  srmPlans: InputMaybe<Array<InputMaybe<ComponentPricingPagePlansZoneInput>>>
   tooltips: InputMaybe<Array<InputMaybe<ComponentPricingPageTooltipsZoneInput>>>
   updated_by: InputMaybe<Scalars['ID']>
 }
@@ -7644,9 +7723,6 @@ export type EditPricingInput = {
   cdFeatureCaption: InputMaybe<Array<InputMaybe<EditComponentPricingPageFeatureCaptionInput>>>
   cdFeatureGroup: InputMaybe<Array<InputMaybe<EditComponentPricingPageFeatureGroupInput>>>
   cdPlans: InputMaybe<Array<InputMaybe<EditComponentPricingPagePlansZoneInput>>>
-  srmFeatureCaption: InputMaybe<Array<InputMaybe<EditComponentPricingPageFeatureCaptionInput>>>
-  srmFeatureGroup: InputMaybe<Array<InputMaybe<EditComponentPricingPageFeatureGroupInput>>>
-  srmPlans: InputMaybe<Array<InputMaybe<EditComponentPricingPagePlansZoneInput>>>
   ciFaq: InputMaybe<Array<InputMaybe<EditComponentPricingPageFaqInput>>>
   ciFeatureCaption: InputMaybe<Array<InputMaybe<EditComponentPricingPageFeatureCaptionInput>>>
   ciFeatureGroup: InputMaybe<Array<InputMaybe<EditComponentPricingPageFeatureGroupInput>>>
@@ -7662,6 +7738,9 @@ export type EditPricingInput = {
   hero: InputMaybe<EditComponentPageMiniTitleZoneInput>
   openSource: InputMaybe<EditComponentPricingPageCallOutInput>
   published_at: InputMaybe<Scalars['DateTime']>
+  srmFeatureCaption: InputMaybe<Array<InputMaybe<EditComponentPricingPageFeatureCaptionInput>>>
+  srmFeatureGroup: InputMaybe<Array<InputMaybe<EditComponentPricingPageFeatureGroupInput>>>
+  srmPlans: InputMaybe<Array<InputMaybe<EditComponentPricingPagePlansZoneInput>>>
   tooltips: InputMaybe<Array<InputMaybe<EditComponentPricingPageTooltipsZoneInput>>>
   updated_by: InputMaybe<Scalars['ID']>
 }

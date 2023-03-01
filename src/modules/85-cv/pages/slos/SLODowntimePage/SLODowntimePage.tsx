@@ -129,7 +129,6 @@ export const SLODowntimePage = (): JSX.Element => {
       downtimeData={downtimeData}
       refetchDowntimes={refetchDowntimes}
       downtimeError={getErrorMessage(downtimeError)}
-      handleCreateButton={handleCreateButton}
     />
   )
 
@@ -167,7 +166,8 @@ export const SLODowntimePage = (): JSX.Element => {
           hideResetFilterButton,
           queryParams,
           pathParams,
-          appliedSearchAndFilter
+          appliedSearchAndFilter,
+          handleCreateButton
         }}
       >
         <Page.Body className={css.pageBody} loading={!appliedSearchAndFilter && downtimeDataLoading}>

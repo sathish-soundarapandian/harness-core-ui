@@ -94,7 +94,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.folderPath`, value)
             }}
@@ -126,7 +125,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.pluginPath`, value)
             }}
@@ -158,7 +156,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.overlayConfiguration`, value)
             }}
@@ -191,7 +188,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.patchesPaths`, value)
             }}
@@ -224,7 +220,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.overlayConfiguration.kustomizeYamlFolderPath`, value)
             }}
@@ -258,7 +253,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.enableDeclarativeRollback`, value)
             }}
@@ -292,7 +286,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(props.stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.skipResourceVersioning`, value)
             }}

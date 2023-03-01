@@ -16,12 +16,11 @@ import { Classes } from '@blueprintjs/core'
 import { merge, defaultTo, isEmpty, capitalize } from 'lodash-es'
 import moment from 'moment'
 import { useStrings } from 'framework/strings'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { roundNumber, useErrorHandler } from '@pipeline/components/Dashboards/shared'
 import type { DeploymentDateAndCount, ChangeRate } from 'services/cd-ng'
 import { PieChart, PieChartProps } from '@cd/components/PieChart/PieChart'
 import { numberFormatter } from '@common/utils/utils'
-import { calcTrend, calcTrendCaret, calcTrendColor, RateTrend, TrendPopover } from './dashboardUtils'
+import { calcTrendCaret, calcTrendColor, RateTrend, TrendPopover } from './dashboardUtils'
 import styles from './CDDashboardPage.module.scss'
 
 export interface HealthCardProps {
@@ -327,11 +326,9 @@ export function HealthCard({
   isParent = false
 }: HealthCardProps): JSX.Element {
   const isFailed = title === 'Failed'
-  const { CDC_DASHBOARD_ENHANCEMENT_NG } = useFeatureFlags()
 
-  const rateChange = CDC_DASHBOARD_ENHANCEMENT_NG && rate ? (rate as ChangeRate).percentChange : (rate as number)
-  const rateTrend =
-    CDC_DASHBOARD_ENHANCEMENT_NG && rate ? ((rate as ChangeRate).trend as RateTrend) : calcTrend(rate as number)
+  const rateChange = (rate as ChangeRate)?.percentChange
+  const rateTrend = (rate as ChangeRate)?.trend as RateTrend
 
   //sonar recommendation
   const RateStyleChild =

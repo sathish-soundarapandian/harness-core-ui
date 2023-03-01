@@ -535,7 +535,6 @@ function Artifactory({
                           variableName="artifactDirectory"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('artifactDirectory', value)
                           }}
@@ -608,7 +607,6 @@ function Artifactory({
                           variableName="artifactPath"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('artifactPath', value)
                           }}
@@ -639,7 +637,6 @@ function Artifactory({
                           variableName="repositoryUrl"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('repositoryUrl', value)
                           }}
@@ -699,7 +696,6 @@ function Artifactory({
                           variableName="tag"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('tag', value)
                           }}
@@ -728,7 +724,6 @@ function Artifactory({
                           variableName="tagRegex"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('tagRegex', value)
                           }}

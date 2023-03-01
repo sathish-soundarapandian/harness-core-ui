@@ -170,7 +170,6 @@ export const FormMultiTypeCheckbox: React.FC<FormMultiTypeTextboxProps> = props 
             variableName={name}
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={val => formik?.setFieldValue(name, val)}
             style={{ marginLeft: 'var(--spacing-medium)' }}
             {...configureOptionsProps}

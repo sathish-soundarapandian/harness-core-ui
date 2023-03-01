@@ -8,7 +8,7 @@
 import React, { useCallback, useMemo } from 'react'
 import { defaultTo, get, isNil } from 'lodash-es'
 import type { IItemRendererProps } from '@blueprintjs/select'
-import { FormError, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+import { getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 
 import { SidecarArtifact, useGetProjects, useGetGcsBuckets, GetGcsBucketsQueryParams } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -264,14 +264,6 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
   )
 
   const getProjectHelperText = React.useCallback(() => {
-    if (fetchProjectsError) {
-      return (
-        <FormError
-          name={`${path}.artifacts.${artifactPath}.spec.project`}
-          errorMessage={getRBACErrorMessage(fetchProjectsError as RBACError)}
-        />
-      )
-    }
     if (
       getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.project`)) ===
         MultiTypeInputType.FIXED &&
@@ -279,17 +271,9 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     ) {
       return getString('pipeline.projectHelperText')
     }
-  }, [fixedConnectorValue, path, artifactPath, formik.values, fetchProjectsError])
+  }, [fixedConnectorValue, path, artifactPath, formik.values])
 
   const getBucketHelperText = React.useCallback(() => {
-    if (fetchBucketsError) {
-      return (
-        <FormError
-          name={`${path}.artifacts.${artifactPath}.spec.bucket`}
-          errorMessage={getRBACErrorMessage(fetchBucketsError as RBACError)}
-        />
-      )
-    }
     if (
       getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.bucket`)) ===
         MultiTypeInputType.FIXED &&
@@ -297,7 +281,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     ) {
       return getString('pipeline.bucketNameHelperText')
     }
-  }, [fixedConnectorValue, path, artifactPath, formik.values, fetchBucketsError])
+  }, [fixedConnectorValue, path, artifactPath, formik.values])
 
   return (
     <>
@@ -360,8 +344,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
                 selectProps: {
                   items: projectOptions,
                   noResults: (
-                    <Text lineClamp={1} width={400} height={35} padding={'small'}>
-                      {getString('noProjects')}
+                    <Text lineClamp={1} width={400} height={32} padding={'small'}>
+                      {getRBACErrorMessage(fetchProjectsError as RBACError) || getString('noProjects')}
                     </Text>
                   ),
                   allowCreatingNewItems: true
@@ -397,8 +381,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
                 allowableTypes,
                 selectProps: {
                   noResults: (
-                    <Text lineClamp={1} width={400} height={35} padding="small">
-                      {getString('pipeline.noBucketsFound')}
+                    <Text lineClamp={1} width={400} height={32} padding="small">
+                      {getRBACErrorMessage(fetchBucketsError as RBACError) || getString('pipeline.noBucketsFound')}
                     </Text>
                   ),
                   itemRenderer: itemRenderer,

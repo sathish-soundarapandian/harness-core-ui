@@ -163,7 +163,6 @@ function ArtifactImagePathTagView({
                 variableName="artifactPath"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   /* istanbul ignore next */
                   formik.setFieldValue('artifactPath', value)
@@ -192,7 +191,6 @@ function ArtifactImagePathTagView({
                   variableName="imagePath"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => {
                     /* istanbul ignore next */
                     formik.setFieldValue('imagePath', value)
@@ -268,7 +266,6 @@ function ArtifactImagePathTagView({
                 variableName="tag"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   /* istanbul ignore next */
                   formik.setFieldValue('tag', value)
@@ -298,7 +295,6 @@ function ArtifactImagePathTagView({
                 variableName="tagRegex"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('tagRegex', value)
                 }}

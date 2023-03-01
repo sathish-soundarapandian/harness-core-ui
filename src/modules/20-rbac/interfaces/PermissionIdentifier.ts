@@ -108,6 +108,9 @@ export enum PermissionIdentifier {
   VIEW_SLO_SERVICE = 'chi_slo_view',
   EDIT_SLO_SERVICE = 'chi_slo_edit',
   DELETE_SLO_SERVICE = 'chi_slo_delete',
+  VIEW_DOWNTIME = 'chi_downtime_view',
+  EDIT_DOWNTIME = 'chi_downtime_edit',
+  DELETE_DOWNTIME = 'chi_downtime_delete',
 
   // Governance Permissions
   GOV_VIEW_POLICY = 'core_governancePolicy_view',
@@ -213,5 +216,8 @@ export enum PermissionIdentifier {
   // Log Streaming Permissions
   VIEW_STREAMING_DESTINATION = 'core_streamingDestination_view',
   CREATE_OR_EDIT_STREAMING_DESTINATION = 'core_streamingDestination_edit',
-  DELETE_STREAMING_DESTINATION = 'core_streamingDestination_delete'
+  DELETE_STREAMING_DESTINATION = 'core_streamingDestination_delete',
+
+  //IDP Permisssions
+  IDP_SETTINGS_MANAGE = 'idp_idpsettings_manage'
 }

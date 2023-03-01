@@ -249,6 +249,10 @@ export interface Feature {
      */
     environment: string
     /**
+     * An array of Jira Issues linked to this Feature. Returns empty if none exist
+     */
+    jiraIssues?: JiraIssue[]
+    /**
      * The last time the flag was modified in this environment
      */
     modifiedAt?: number
@@ -626,6 +630,37 @@ export type FlagBasicInfos = Pagination & {
   featureFlags?: FlagBasicInfo[]
 }
 
+export interface FlagEnvironment {
+  /**
+   * The name of the environment
+   */
+  name: string
+}
+
+export interface FlagEnvironmentState {
+  /**
+   * Boolean representing whether a flag is enabled in the environment
+   */
+  enabled: boolean
+}
+
+/**
+ * Flag object with its state in each environment
+ */
+export interface FlagState {
+  environments: {
+    [key: string]: FlagEnvironmentState
+  }
+  /**
+   * The flags identifier
+   */
+  identifier: string
+  /**
+   * The flags name
+   */
+  name: string
+}
+
 /**
  * The commit message to use as part of a gitsync operation
  */
@@ -649,6 +684,10 @@ export interface GitRepo {
    */
   branch: string
   /**
+   * Connector reference is a connector id, used to make a request through gitEx.
+   */
+  connectorReference?: string
+  /**
    * Indicates if feature flag changes will be saved to the repository
    */
   enabled?: boolean
@@ -668,6 +707,10 @@ export interface GitRepo {
    * The identifier for the git repository
    */
   repoIdentifier: string
+  /**
+   * Repo reference is a repository id, used to make a request through gitEx.
+   */
+  repoReference?: string
   /**
    * The root folder in the repository where the feature flag yaml will be written
    */
@@ -694,6 +737,20 @@ export interface GitSyncPatchOperation {
   executionTime?: number
   gitDetails?: GitDetails
   instructions: PatchInstruction
+}
+
+/**
+ * A Jira Issue
+ */
+export interface JiraIssue {
+  /**
+   * The Jira Issue key
+   */
+  issueKey: string
+  /**
+   * The jira issue URL
+   */
+  issueURL: string
 }
 
 /**
@@ -797,6 +854,16 @@ export interface Project {
    * A list of tags for this project
    */
   tags?: Tag[]
+}
+
+/**
+ * Returns all the flags in a project and their state in each environment
+ */
+export type ProjectFlags = Pagination & {
+  environments?: {
+    [key: string]: FlagEnvironment
+  }
+  flags?: FlagState[]
 }
 
 /**
@@ -1271,13 +1338,13 @@ export type GitRepoPatchRequestRequestBody = PatchOperation
 
 export interface GitRepoRequestRequestBody {
   autoCommit?: boolean
-  branch?: string
+  branch: string
+  connectorReference?: string
   filePath: string
   objectId?: string
-  repoIdentifier?: string
-  rootFolder: string
+  repoIdentifier: string
   repoReference?: string
-  connectorReference?: string
+  rootFolder: string
 }
 
 export interface ProjectRequestRequestBody {
@@ -1434,6 +1501,11 @@ export interface ObjectSnapshotResponseResponse {
   metaData?: { [key: string]: any }
   status?: Status
 }
+
+/**
+ * OK
+ */
+export type ProjectFlagsResponseResponse = ProjectFlags
 
 /**
  * OK
@@ -5189,6 +5261,122 @@ export const modifyProjectPromise = (
     ProjectRequestRequestBody,
     ModifyProjectPathParams
   >('PUT', getConfig('cf'), `/admin/projects/${identifier}`, props, signal)
+
+export interface GetProjectFlagsQueryParams {
+  /**
+   * Account Identifier
+   */
+  accountIdentifier: string
+  /**
+   * Organization Identifier
+   */
+  orgIdentifier: string
+  /**
+   * PageNumber
+   */
+  pageNumber?: number
+  /**
+   * PageSize
+   */
+  pageSize?: number
+  /**
+   * Name of the field
+   */
+  name?: string
+}
+
+export interface GetProjectFlagsPathParams {
+  /**
+   * Unique identifier for the object in the API.
+   */
+  identifier: string
+}
+
+export type GetProjectFlagsProps = Omit<
+  GetProps<
+    ProjectFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProjectFlagsQueryParams,
+    GetProjectFlagsPathParams
+  >,
+  'path'
+> &
+  GetProjectFlagsPathParams
+
+/**
+ * Returns all flags for a project and their state in each environment
+ *
+ * Returns all flags for a project along with whether or not they are enabled/disabled in each environment
+ */
+export const GetProjectFlags = ({ identifier, ...props }: GetProjectFlagsProps) => (
+  <Get<
+    ProjectFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProjectFlagsQueryParams,
+    GetProjectFlagsPathParams
+  >
+    path={`/admin/projects/${identifier}/flags`}
+    base={getConfig('cf')}
+    {...props}
+  />
+)
+
+export type UseGetProjectFlagsProps = Omit<
+  UseGetProps<
+    ProjectFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProjectFlagsQueryParams,
+    GetProjectFlagsPathParams
+  >,
+  'path'
+> &
+  GetProjectFlagsPathParams
+
+/**
+ * Returns all flags for a project and their state in each environment
+ *
+ * Returns all flags for a project along with whether or not they are enabled/disabled in each environment
+ */
+export const useGetProjectFlags = ({ identifier, ...props }: UseGetProjectFlagsProps) =>
+  useGet<
+    ProjectFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProjectFlagsQueryParams,
+    GetProjectFlagsPathParams
+  >((paramsInPath: GetProjectFlagsPathParams) => `/admin/projects/${paramsInPath.identifier}/flags`, {
+    base: getConfig('cf'),
+    pathParams: { identifier },
+    ...props
+  })
+
+/**
+ * Returns all flags for a project and their state in each environment
+ *
+ * Returns all flags for a project along with whether or not they are enabled/disabled in each environment
+ */
+export const getProjectFlagsPromise = (
+  {
+    identifier,
+    ...props
+  }: GetUsingFetchProps<
+    ProjectFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProjectFlagsQueryParams,
+    GetProjectFlagsPathParams
+  > & {
+    /**
+     * Unique identifier for the object in the API.
+     */
+    identifier: string
+  },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ProjectFlagsResponseResponse,
+    UnauthenticatedResponse | UnauthorizedResponse | NotFoundResponse | InternalServerErrorResponse,
+    GetProjectFlagsQueryParams,
+    GetProjectFlagsPathParams
+  >(getConfig('cf'), `/admin/projects/${identifier}/flags`, props, signal)
 
 export interface DeleteGitRepoQueryParams {
   /**

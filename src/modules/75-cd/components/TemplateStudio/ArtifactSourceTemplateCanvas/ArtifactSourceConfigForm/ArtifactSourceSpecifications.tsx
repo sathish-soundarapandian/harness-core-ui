@@ -185,7 +185,6 @@ function ArtifactSourceConnector(props: ArtifactSourceConnectorProps) {
             variableName="connectorRef"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue('connectorId', value)
             }}

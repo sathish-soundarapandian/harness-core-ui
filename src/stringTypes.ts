@@ -46,6 +46,7 @@ export interface StringsMap {
   'common.addNewCluster': string
   'common.addNewRepo': string
   'common.addVariable': string
+  'common.addedEntityLabel': string
   'common.additionalAttributes': string
   'common.advanced': string
   'common.agent': string
@@ -396,7 +397,9 @@ export interface StringsMap {
   'common.git.azureReposUrlPlaceholderRepoHttp': string
   'common.git.bitbucketAccountUrl': string
   'common.git.bitbucketPlaceholderSSH': string
+  'common.git.bitbucketRepoPlaceholderSSH': string
   'common.git.bitbucketRepoUrl': string
+  'common.git.bitbucketRepoUrlPlaceholder': string
   'common.git.bitbucketUrlPlaceholder': string
   'common.git.branchName': string
   'common.git.branchSelectHeader': string
@@ -412,10 +415,14 @@ export interface StringsMap {
   'common.git.gitHubAccountUrl': string
   'common.git.gitHubApp': string
   'common.git.gitHubRepoUrl': string
+  'common.git.gitHubRepoUrlPlaceholder': string
+  'common.git.gitHubRepoUrlPlaceholderSSH': string
   'common.git.gitHubUrlPlaceholder': string
   'common.git.gitHubUrlPlaceholderSSH': string
   'common.git.gitLabAccountUrl': string
   'common.git.gitLabRepoUrl': string
+  'common.git.gitLabRepoUrlPlaceholder': string
+  'common.git.gitLabRepoUrlPlaceholderSSH': string
   'common.git.gitLabUrlPlaceholder': string
   'common.git.gitLabUrlPlaceholderSSH': string
   'common.git.gitRepoUrl': string
@@ -546,6 +553,7 @@ export interface StringsMap {
   'common.loadingFieldOptions': string
   'common.local': string
   'common.logs.delegateSelectionLogs': string
+  'common.logs.delegateTaskLogs': string
   'common.logs.noLogsText': string
   'common.manage': string
   'common.manageSubscription': string
@@ -911,6 +919,7 @@ export interface StringsMap {
   'common.seconds': string
   'common.secretKey': string
   'common.secrets': string
+  'common.seeAdvancedOptions': string
   'common.seeDetails': string
   'common.seeLess': string
   'common.seeMore': string
@@ -1109,11 +1118,11 @@ export interface StringsMap {
   'common.test.retest': string
   'common.tickets.connector': string
   'common.tickets.defaultProjectName': string
+  'common.tickets.externalTickets': string
   'common.tickets.selectConnector': string
   'common.tickets.selectProjectName': string
   'common.tickets.ticketComment': string
   'common.tickets.ticketExemption': string
-  'common.tickets.tickets': string
   'common.timeRange.calendarMonths': string
   'common.timeRange.recommended': string
   'common.timeRange.relativeDates': string
@@ -3396,6 +3405,7 @@ export interface StringsMap {
   'pipeline.approvalCriteria.allConditions': string
   'pipeline.approvalCriteria.anyCondition': string
   'pipeline.approvalCriteria.approvalCriteria': string
+  'pipeline.approvalCriteria.approvalWindow': string
   'pipeline.approvalCriteria.fetchingFields': string
   'pipeline.approvalCriteria.field': string
   'pipeline.approvalCriteria.jexlExpressionLabelApproval': string
@@ -3620,6 +3630,7 @@ export interface StringsMap {
   'pipeline.commitsTab.youWillSeeYourCommitsHere': string
   'pipeline.commonApprovalStep.execution.allConditionsMsg': string
   'pipeline.commonApprovalStep.execution.anyConditionsMsg': string
+  'pipeline.commonApprovalStep.execution.approvalWindowMsg': string
   'pipeline.conditionalExecution.belowExpression': string
   'pipeline.conditionalExecution.condition': string
   'pipeline.conditionalExecution.conditionLabel': string
@@ -3967,6 +3978,8 @@ export interface StringsMap {
   'pipeline.gitPullRequest': string
   'pipeline.gitPullRequestNumber': string
   'pipeline.gitRepo': string
+  'pipeline.iacm.resourceStack': string
+  'pipeline.iacm.workflow': string
   'pipeline.imagePathHelperText': string
   'pipeline.imagePathLabel': string
   'pipeline.imageTag': string
@@ -4204,6 +4217,8 @@ export interface StringsMap {
   'pipeline.manifestTypeLabels.AsgScalingPolicy': string
   'pipeline.manifestTypeLabels.AsgScheduledUpdateGroupAction': string
   'pipeline.manifestTypeLabels.Autoscaler': string
+  'pipeline.manifestTypeLabels.AwsLambdaFunctionAliasDefinition': string
+  'pipeline.manifestTypeLabels.AwsLambdaFunctionDefinition': string
   'pipeline.manifestTypeLabels.AwsSAM': string
   'pipeline.manifestTypeLabels.AzureFunctions': string
   'pipeline.manifestTypeLabels.EcsScalableTargetDefinition': string
@@ -4313,6 +4328,8 @@ export interface StringsMap {
   'pipeline.pipelineChaining.enterOutputName': string
   'pipeline.pipelineChaining.newOutput': string
   'pipeline.pipelineChaining.noPipelineSelected': string
+  'pipeline.pipelineChaining.noPipelinesInSearchCriteria': string
+  'pipeline.pipelineChaining.noPipelinesInSelectedScope': string
   'pipeline.pipelineChaining.noProjectSelected': string
   'pipeline.pipelineChaining.outputAlreadyExists': string
   'pipeline.pipelineChaining.outputTabSummaryDetail': string
@@ -4533,6 +4550,8 @@ export interface StringsMap {
   'pipeline.stepDescription.ACR': string
   'pipeline.stepDescription.AdvancedCommandFlags': string
   'pipeline.stepDescription.AppResize': string
+  'pipeline.stepDescription.AwsLambdaDeploy': string
+  'pipeline.stepDescription.AwsLambdaDeployRollback': string
   'pipeline.stepDescription.AzureSlotDeployment': string
   'pipeline.stepDescription.AzureTrafficShift': string
   'pipeline.stepDescription.Background': string
@@ -4604,6 +4623,7 @@ export interface StringsMap {
   'pipeline.stepDescription.ServiceNowImportSet': string
   'pipeline.stepDescription.ServiceNowUpdate': string
   'pipeline.stepDescription.ShellScriptProvision': string
+  'pipeline.stepDescription.SscaOrchestration': string
   'pipeline.stepDescription.SwapRollback': string
   'pipeline.stepDescription.SwapRoute': string
   'pipeline.stepDescription.TASBGAppSetup': string
@@ -7164,6 +7184,8 @@ export interface StringsMap {
   'cf.environments.noEnvironmentSection.configurations': string
   'cf.environments.noEnvironmentSection.limitation': string
   'cf.environments.noEnvironmentSection.message': string
+  'cf.featureFlagDetail.jiraIssuesDescription': string
+  'cf.featureFlagDetail.jiraIssuesTitle': string
   'cf.featureFlagDetail.noServices': string
   'cf.featureFlagDetail.searchService': string
   'cf.featureFlagDetail.serviceDescription': string
@@ -7648,8 +7670,6 @@ export interface StringsMap {
   'ci.getStartedWithCI.carousel.labels.useCaching': string
   'ci.getStartedWithCI.carousel.labels.usePlugins': string
   'ci.getStartedWithCI.chooseDiffInfra': string
-  'ci.getStartedWithCI.chooseExistingYAML': string
-  'ci.getStartedWithCI.chooseExistingYAMLHelptext': string
   'ci.getStartedWithCI.chooseStarterConfig': string
   'ci.getStartedWithCI.cloneGitRepo': string
   'ci.getStartedWithCI.cloneGitRepoHelpText': string
@@ -7658,6 +7678,7 @@ export interface StringsMap {
   'ci.getStartedWithCI.configurationOption': string
   'ci.getStartedWithCI.configurePipeline': string
   'ci.getStartedWithCI.configureYourPipeline': string
+  'ci.getStartedWithCI.createBranchIfNotExists': string
   'ci.getStartedWithCI.createPipeline': string
   'ci.getStartedWithCI.createPipelineWithOtherOption': string
   'ci.getStartedWithCI.devFriendly': string
@@ -7665,14 +7686,19 @@ export interface StringsMap {
   'ci.getStartedWithCI.dockerRunner': string
   'ci.getStartedWithCI.dockerRunnerBuildLocation': string
   'ci.getStartedWithCI.duration': string
+  'ci.getStartedWithCI.enterBranch': string
   'ci.getStartedWithCI.fetchingRepos': string
   'ci.getStartedWithCI.fieldIsMissing': string
   'ci.getStartedWithCI.flexibleInfra': string
   'ci.getStartedWithCI.flexibleInfraHelpText': string
+  'ci.getStartedWithCI.generatePipelineConfig': string
+  'ci.getStartedWithCI.generatePipelineHelpText': string
   'ci.getStartedWithCI.genericGit': string
   'ci.getStartedWithCI.hostedByHarness': string
   'ci.getStartedWithCI.hostedByHarnessBuildLocation': string
   'ci.getStartedWithCI.hosting': string
+  'ci.getStartedWithCI.importExistingYAML': string
+  'ci.getStartedWithCI.importExistingYAMLHelptext': string
   'ci.getStartedWithCI.infraProvisioningFailed': string
   'ci.getStartedWithCI.integratedCICD': string
   'ci.getStartedWithCI.integratedCICDHelpText': string
@@ -7699,11 +7725,14 @@ export interface StringsMap {
   'ci.getStartedWithCI.setUpAuth': string
   'ci.getStartedWithCI.settingUpCIPipeline': string
   'ci.getStartedWithCI.starterPipeline': string
-  'ci.getStartedWithCI.starterPipelineHelptext': string
+  'ci.getStartedWithCI.starterPipelineConfig': string
+  'ci.getStartedWithCI.starterPipelineConfigHelptext': string
+  'ci.getStartedWithCI.storeInGit': string
   'ci.getStartedWithCI.takeToTheNextLevel': string
   'ci.getStartedWithCI.ti': string
   'ci.getStartedWithCI.tiHelpText': string
   'ci.getStartedWithCI.troubleShootFailedProvisioning': string
+  'ci.getStartedWithCI.updatingGitConnectorWithRepo': string
   'ci.getStartedWithCI.validYAMLFile': string
   'ci.gradleNote1': string
   'ci.gradleNote2': string
@@ -7762,6 +7791,15 @@ export interface StringsMap {
   'ci.welcome': string
   'idp.idpAdmin': string
   'ssca.allowDenyList': string
+  'ssca.enforcementStep.abortOn.sbomComponentPartOfDenyList': string
+  'ssca.enforcementStep.abortOn.sbomPartOfDenyList': string
+  'ssca.enforcementStep.abortOn.signatureVerificaionFailure': string
+  'ssca.enforcementStep.abortOn.sourceNotPartOfAllowList': string
+  'ssca.orchestrationStep.artifactSource': string
+  'ssca.orchestrationStep.sbomAttestation': string
+  'ssca.orchestrationStep.sbomFormat': string
+  'ssca.orchestrationStep.sbomGeneration': string
+  'ssca.orchestrationStep.sbomTool': string
   'cv.CVStepper.StepError': string
   'cv.CompositeSLO.AddSLO': string
   'cv.CompositeSLO.AddSLOMessage': string
@@ -8492,6 +8530,7 @@ export interface StringsMap {
   'cv.noPreviousErrorBudgetResetHistoryAvailable': string
   'cv.noSLOHasBeenCreated': string
   'cv.nonAnomalous': string
+  'cv.notificationTimestampError': string
   'cv.notifications.changeType': string
   'cv.notifications.condition': string
   'cv.notifications.deleteNotification': string

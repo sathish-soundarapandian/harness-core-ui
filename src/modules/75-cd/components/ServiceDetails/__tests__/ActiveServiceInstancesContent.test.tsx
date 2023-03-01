@@ -31,7 +31,7 @@ const noData = {
   status: 'SUCCESS',
   data: {}
 }
-jest.spyOn(cdngServices, 'useGetActiveServiceInstanceSummary').mockImplementation(() => {
+jest.spyOn(cdngServices, 'useGetActiveServiceInstanceSummaryV2').mockImplementation(() => {
   return {
     loading: false,
     error: false,

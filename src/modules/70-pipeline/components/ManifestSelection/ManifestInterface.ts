@@ -39,6 +39,8 @@ export type ManifestTypes =
   | 'AsgScheduledUpdateGroupAction'
   | 'GoogleCloudFunctionDefinition'
   | 'HelmRepoOverride'
+  | 'AwsLambdaFunctionDefinition'
+  | 'AwsLambdaFunctionAliasDefinition'
 
 export type PrimaryManifestType =
   | 'K8sManifest'

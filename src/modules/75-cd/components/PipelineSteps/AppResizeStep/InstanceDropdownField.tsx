@@ -262,7 +262,6 @@ const FormInstanceDropdownField: React.FC<FormInstanceDropdownFieldProps> = (pro
             variableName={name}
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={
               /* istanbul ignore next */ val => {
                 formik?.setFieldValue(name, { ...value, spec: { value: val } })

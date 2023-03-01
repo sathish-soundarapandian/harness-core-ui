@@ -105,7 +105,6 @@ const ElastigroupDeployStepEdit = (
                     variableName={getString('instanceFieldOptions.instances')}
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
                         setFieldValue('instances', value)
@@ -157,7 +156,6 @@ const ElastigroupDeployStepEdit = (
                             variableName={getString('instanceFieldOptions.instances')}
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={
                               /* istanbul ignore next */ value => {
                                 setFieldValue('instances', value)

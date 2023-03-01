@@ -258,7 +258,6 @@ function HelmWithGcs({
                         variableName="bucketName"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('bucketName', value)}
                         isReadonly={isReadonly}
                       />
@@ -295,7 +294,6 @@ function HelmWithGcs({
                         variableName="bucketName"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('bucketName', value)}
                         isReadonly={isReadonly}
                       />
@@ -325,7 +323,6 @@ function HelmWithGcs({
                       variableName="folderPath"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('folderPath', value)}
                       isReadonly={isReadonly}
                     />
@@ -352,7 +349,6 @@ function HelmWithGcs({
                       variableName="chartName"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('chartName', value)}
                       isReadonly={isReadonly}
                     />
@@ -381,7 +377,6 @@ function HelmWithGcs({
                       variableName="chartVersion"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('chartVersion', value)}
                       isReadonly={isReadonly}
                     />
@@ -427,7 +422,6 @@ function HelmWithGcs({
                         variableName="subChartName"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('subChartName', value)}
                         isReadonly={isReadonly}
                         allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -459,7 +453,6 @@ function HelmWithGcs({
                     variableName={'valuesPaths'}
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={val => formik?.setFieldValue('valuesPaths', val)}
                     isReadonly={isReadonly}
                   />

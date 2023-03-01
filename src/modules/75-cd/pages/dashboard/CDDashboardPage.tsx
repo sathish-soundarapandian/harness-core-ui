@@ -19,15 +19,12 @@ import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import CardRailView from '@pipeline/components/Dashboards/CardRailView/CardRailView'
 import {
-  useGetWorkloads,
   useGetDeployments,
   ExecutionStatusInfo,
   ServiceDeploymentInfo,
   useGetWorkloadsV2,
   WorkloadDeploymentInfoV2,
-  WorkloadDeploymentInfo,
   useGetDeploymentExecution,
-  useGetDeploymentHealth,
   useGetDeploymentHealthV2
 } from 'services/cd-ng'
 import type { CIBuildCommit, CIWebhookInfoDTO } from 'services/ci'
@@ -48,7 +45,6 @@ import {
   TimeRangeSelectorProps
 } from '@common/components/TimeRangeSelector/TimeRangeSelector'
 import { DeploymentsTimeRangeContext } from '@cd/components/Services/common'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { useLocalStorage, useMutateAsGet } from '@common/hooks'
 import PipelineModalListView from '@pipeline/components/PipelineModalListView/PipelineModalListView'
 import { TitleWithToolTipId } from '@common/components/Title/TitleWithToolTipId'
@@ -153,7 +149,6 @@ export const CDDashboardPage: React.FC = () => {
   const { getString } = useStrings()
   const queryParams = useExecutionListQueryParams()
   const { projectIdentifier, orgIdentifier, accountId } = useParams<ProjectPathProps>()
-  const { CDC_DASHBOARD_ENHANCEMENT_NG } = useFeatureFlags()
 
   const [timeRange, setTimeRange] = useLocalStorage<TimeRangeSelectorProps>(
     'timeRangeCDDashboard',
@@ -198,26 +193,10 @@ export const CDDashboardPage: React.FC = () => {
   })
 
   const {
-    data: workloadsData,
-    loading: loadingWorkloads,
-    error: workloadsError,
-    refetch: refetchWorkloads
-  } = useGetWorkloads({
-    queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier,
-      startTime,
-      endTime
-    },
-    lazy: CDC_DASHBOARD_ENHANCEMENT_NG
-  })
-
-  const {
-    data: workloadsDataV2,
-    loading: loadingWorkloadsV2,
-    error: workloadsErrorV2,
-    refetch: refetchWorkloadsV2
+    data: workloadCardData,
+    loading: workloadCardLoading,
+    error: workloadCardError,
+    refetch: workloadCardRefetch
   } = useGetWorkloadsV2({
     queryParams: {
       accountIdentifier: accountId,
@@ -225,14 +204,8 @@ export const CDDashboardPage: React.FC = () => {
       orgIdentifier,
       startTime,
       endTime
-    },
-    lazy: !CDC_DASHBOARD_ENHANCEMENT_NG
+    }
   })
-
-  //workloads data based on FF
-  const [workloadCardLoading, workloadCardData, workloadCardError, workloadCardRefetch] = CDC_DASHBOARD_ENHANCEMENT_NG
-    ? [loadingWorkloadsV2, workloadsDataV2, workloadsErrorV2, refetchWorkloadsV2]
-    : [loadingWorkloads, workloadsData, workloadsError, refetchWorkloads]
 
   useErrorHandler(error)
   useErrorHandler(workloadCardError)
@@ -262,26 +235,10 @@ export const CDDashboardPage: React.FC = () => {
   })
   //Deployments Health Cards properties
   const {
-    data: healthData,
-    loading: healthDataLoading,
-    error: healthDataError,
-    refetch: refetchDeploymentHealth
-  } = useGetDeploymentHealth({
-    queryParams: {
-      accountIdentifier: accountId,
-      projectIdentifier,
-      orgIdentifier,
-      startTime,
-      endTime
-    },
-    lazy: CDC_DASHBOARD_ENHANCEMENT_NG
-  })
-
-  const {
-    data: healthDataV2,
-    loading: healthDataLoadingV2,
-    error: healthDataErrorV2,
-    refetch: refetchDeploymentHealthV2
+    data: dataHealth,
+    loading: loadingHealth,
+    error: errorHealth,
+    refetch: refetchHealth
   } = useGetDeploymentHealthV2({
     queryParams: {
       accountIdentifier: accountId,
@@ -289,13 +246,8 @@ export const CDDashboardPage: React.FC = () => {
       orgIdentifier,
       startTime,
       endTime
-    },
-    lazy: !CDC_DASHBOARD_ENHANCEMENT_NG
+    }
   })
-
-  const [dataHealth, loadingHealth, errorHealth, refetchHealth] = CDC_DASHBOARD_ENHANCEMENT_NG
-    ? [healthDataV2, healthDataLoadingV2, healthDataErrorV2, refetchDeploymentHealthV2]
-    : [healthData, healthDataLoading, healthDataError, refetchDeploymentHealth]
 
   useEffect(() => {
     setShowOverviewDialog(!pipelineExecutionSummary?.content?.length)
@@ -358,20 +310,18 @@ export const CDDashboardPage: React.FC = () => {
                 />
               </Container>
               <CardRailView contentType="WORKLOAD" isLoading={workloadCardLoading}>
-                {workloadCardData?.data?.workloadDeploymentInfoList?.map(
-                  (workload: WorkloadDeploymentInfoV2 | WorkloadDeploymentInfo) => (
-                    <WorkloadCard
-                      key={workload.serviceId}
-                      serviceName={workload.serviceName!}
-                      lastExecuted={workload?.lastExecuted}
-                      totalDeployments={workload.totalDeployments!}
-                      percentSuccess={workload.percentSuccess!}
-                      rateSuccess={workload.rateSuccess!}
-                      workload={workload.workload}
-                      serviceId={workload.serviceId}
-                    />
-                  )
-                )}
+                {workloadCardData?.data?.workloadDeploymentInfoList?.map((workload: WorkloadDeploymentInfoV2) => (
+                  <WorkloadCard
+                    key={workload.serviceId}
+                    serviceName={workload.serviceName!}
+                    lastExecuted={workload?.lastExecuted}
+                    totalDeployments={workload.totalDeployments!}
+                    percentSuccess={workload.percentSuccess!}
+                    rateSuccess={workload.rateSuccess!}
+                    workload={workload.workload}
+                    serviceId={workload.serviceId}
+                  />
+                ))}
               </CardRailView>
               <CardRailView
                 contentType="FAILED_DEPLOYMENT"

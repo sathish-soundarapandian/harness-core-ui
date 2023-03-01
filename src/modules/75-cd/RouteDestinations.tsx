@@ -46,7 +46,6 @@ import { FreezeWindowRouteDestinations } from '@freeze-windows/RouteDestinations
 import { TriggersRouteDestinations } from '@triggers/RouteDestinations'
 import { VariableRouteDestinations } from '@variables/RouteDestinations'
 import { SecretRouteDestinations } from '@secrets/RouteDestinations'
-import CDPipelineDeploymentList from '@cd/pages/pipeline-deployment-list/CDPipelineDeploymentList'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import { Services } from '@cd/components/Services/Services'
@@ -72,6 +71,7 @@ import { AccountSideNavProps, MainDashboardSideNavProps } from '@common/RouteDes
 import { ProjectDetailsSideNavProps } from '@projects-orgs/RouteDestinations'
 import ExecutionLandingPage from '@pipeline/pages/execution/ExecutionLandingPage/ExecutionLandingPage'
 import { BuildCommits } from '@pipeline/pages/execution/ExecutionLandingPage/Commits/BuildCommits'
+import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import { Environments } from './components/Environments/Environments'
 import { Environments as EnvironmentsV2 } from './components/EnvironmentsV2/Environments'
 import EnvironmentDetails from './components/EnvironmentsV2/EnvironmentDetails/EnvironmentDetails'
@@ -660,7 +660,7 @@ export default (
       PipelineRouteDestinations({
         pipelineStudioComponent: PipelineStudio,
         pipelineStudioPageName: PAGE_NAME.CDPipelineStudio,
-        pipelineDeploymentListComponent: CDPipelineDeploymentList,
+        pipelineDeploymentListComponent: PipelineDeploymentList,
         pipelineDeploymentListPageName: PAGE_NAME.CDPipelineDeploymentList,
         moduleParams,
         licenseRedirectData,

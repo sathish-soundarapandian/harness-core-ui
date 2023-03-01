@@ -377,7 +377,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                 variableName="bucketName"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('bucketName', value)}
                 isReadonly={isReadonly}
               />
@@ -436,7 +435,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
               variableName="bucketName"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('bucketName', value)}
               isReadonly={isReadonly}
             />
@@ -473,7 +471,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                 variableName="filePath"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('filePath', value)
                 }}
@@ -530,7 +527,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
               variableName="filePath"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => {
                 formik.setFieldValue('filePath', value)
               }}
@@ -603,7 +599,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                       variableName="region"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('region', value)
                       }}
@@ -662,7 +657,6 @@ export function AmazonS3(props: StepProps<ConnectorConfigDTO> & AmazonS3Artifact
                         variableName="filePathRegex"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => {
                           formik.setFieldValue('filePathRegex', value)
                         }}

@@ -351,7 +351,6 @@ export function ECRArtifact({
                       variableName="region"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('region', value)
                       }}
@@ -412,7 +411,6 @@ export function ECRArtifact({
                       variableName="imagePath"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('imagePath', value)
                       }}

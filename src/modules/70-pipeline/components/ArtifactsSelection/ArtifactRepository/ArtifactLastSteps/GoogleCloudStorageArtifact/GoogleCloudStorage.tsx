@@ -15,7 +15,6 @@ import type { IItemRendererProps } from '@blueprintjs/select'
 import {
   Button,
   ButtonVariation,
-  FormError,
   Formik,
   FormikForm,
   FormInput,
@@ -275,9 +274,6 @@ export function GoogleCloudStorage(
 
   const getProjectHelperText = React.useCallback(
     (formik: FormikProps<GoogleCloudStorageInitialValuesType>) => {
-      if (fetchProjectsError) {
-        return <FormError name={`project`} errorMessage={getRBACErrorMessage(fetchProjectsError as RBACError)} />
-      }
       const prevStepConnectorRef = getConnectorIdValue(prevStepData)
       if (
         getMultiTypeFromValue(get(formik?.values, `project`)) === MultiTypeInputType.FIXED &&
@@ -287,14 +283,11 @@ export function GoogleCloudStorage(
         return getString('pipeline.projectHelperText')
       }
     },
-    [prevStepData, fetchProjectsError]
+    [prevStepData]
   )
 
   const getBucketHelperText = React.useCallback(
     (formik: FormikProps<GoogleCloudStorageInitialValuesType>) => {
-      if (fetchBucketsError) {
-        return <FormError name={`bucket`} errorMessage={getRBACErrorMessage(fetchBucketsError as RBACError)} />
-      }
       const prevStepConnectorRef = getConnectorIdValue(prevStepData)
       if (
         getMultiTypeFromValue(get(formik?.values, `bucket`)) === MultiTypeInputType.FIXED &&
@@ -304,7 +297,7 @@ export function GoogleCloudStorage(
         return getString('pipeline.bucketNameHelperText')
       }
     },
-    [prevStepData, fetchBucketsError]
+    [prevStepData]
   )
 
   const itemRenderer = useCallback(
@@ -359,8 +352,8 @@ export function GoogleCloudStorage(
                     selectProps: {
                       items: projectOptions,
                       noResults: (
-                        <Text lineClamp={1} width={400} height={35} padding="small">
-                          {getString('noProjects')}
+                        <Text lineClamp={1} width={400} height={32} padding="small">
+                          {getRBACErrorMessage(fetchProjectsError as RBACError) || getString('noProjects')}
                         </Text>
                       ),
                       itemRenderer: itemRenderer,
@@ -389,7 +382,6 @@ export function GoogleCloudStorage(
                       variableName="project"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('project', value)
                       }}
@@ -413,8 +405,8 @@ export function GoogleCloudStorage(
                     allowableTypes,
                     selectProps: {
                       noResults: (
-                        <Text lineClamp={1} width={400} height={35} padding="small">
-                          {getString('pipeline.noBucketsFound')}
+                        <Text lineClamp={1} width={400} height={32} padding="small">
+                          {getRBACErrorMessage(fetchBucketsError as RBACError) || getString('pipeline.noBucketsFound')}
                         </Text>
                       ),
                       itemRenderer: itemRenderer,
@@ -444,7 +436,6 @@ export function GoogleCloudStorage(
                       variableName="bucket"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('bucket', value)}
                       isReadonly={isReadonly}
                     />
@@ -472,7 +463,6 @@ export function GoogleCloudStorage(
                       variableName="artifactPath"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('artifactPath', value)
                       }}

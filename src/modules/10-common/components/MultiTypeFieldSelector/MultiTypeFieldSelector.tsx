@@ -155,7 +155,6 @@ export function MultiTypeFieldSelector(props: ConnectedMultiTypeFieldSelectorPro
               variableName={name}
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={val => formik?.setFieldValue(name, val)}
               style={{ marginTop: 'var(--spacing-2)' }}
               {...configureOptionsProps}

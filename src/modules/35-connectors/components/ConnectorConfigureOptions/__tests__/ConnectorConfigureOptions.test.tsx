@@ -25,7 +25,6 @@ const connectorConfigureOptionsProps: ConnectorConfigureOptionsProps = {
   variableName: 'spec.connectorRef',
   showRequiredField: false,
   showDefaultField: false,
-  showAdvanced: true,
   isReadonly: false,
   connectorReferenceFieldProps: {
     accountIdentifier: 'accountIdentifier',

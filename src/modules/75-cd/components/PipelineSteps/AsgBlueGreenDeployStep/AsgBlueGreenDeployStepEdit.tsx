@@ -399,7 +399,6 @@ const AsgBlueGreenDeployStepEdit = (
                     variableName="spec.loadBalancer"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       onLoadBalancerChange(value, formik)
                     }}
@@ -453,7 +452,6 @@ const AsgBlueGreenDeployStepEdit = (
                     variableName="spec.prodListener"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       const updatedValues = produce(formik.values, draft => {
                         draft.spec.prodListener = value
@@ -496,7 +494,6 @@ const AsgBlueGreenDeployStepEdit = (
                     variableName="spec.prodListenerRuleArn"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('spec.prodListenerRuleArn', value)
                     }}
@@ -550,7 +547,6 @@ const AsgBlueGreenDeployStepEdit = (
                     variableName="spec.stageListener"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       const updatedValues = produce(formik.values, draft => {
                         draft.spec.stageListener = value
@@ -593,7 +589,6 @@ const AsgBlueGreenDeployStepEdit = (
                     variableName="spec.stageListenerRuleArn"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       formik.setFieldValue('spec.stageListenerRuleArn', value)
                     }}

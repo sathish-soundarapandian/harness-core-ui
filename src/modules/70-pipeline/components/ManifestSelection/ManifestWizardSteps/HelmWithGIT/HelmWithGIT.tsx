@@ -308,7 +308,6 @@ function HelmWithGIT({
                         variableName="branch"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('branch', value)}
                         isReadonly={isReadonly}
                       />
@@ -337,7 +336,6 @@ function HelmWithGIT({
                         variableName="commitId"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('commitId', value)}
                         isReadonly={isReadonly}
                       />
@@ -367,7 +365,6 @@ function HelmWithGIT({
                       variableName="folderPath"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => formik.setFieldValue('folderPath', value)}
                       isReadonly={isReadonly}
                     />
@@ -400,7 +397,6 @@ function HelmWithGIT({
                         variableName="subChartName"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('subChartName', value)}
                         isReadonly={isReadonly}
                         allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -432,7 +428,6 @@ function HelmWithGIT({
                     variableName={'valuesPaths'}
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={val => formik?.setFieldValue('valuesPaths', val)}
                     isReadonly={isReadonly}
                   />

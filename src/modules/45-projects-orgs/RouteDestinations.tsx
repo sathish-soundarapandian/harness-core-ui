@@ -77,6 +77,8 @@ import VariablesPage from '@variables/pages/variables/VariablesPage'
 import FileStorePage from '@filestore/pages/filestore/FileStorePage'
 import SettingsList from '@default-settings/pages/SettingsList'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
+// eslint-disable-next-line no-restricted-imports
+import ExternalTicketSettings from '@sto/components/ExternalTickets/Settings/ExternalTicketSettings'
 import LandingDashboardPage from './pages/LandingDashboardPage/LandingDashboardPage'
 import LandingDashboardPageV2 from './pages/LandingDashboardPageV2/LandingDashboardPageV2'
 
@@ -734,5 +736,12 @@ export default (
       sidebarProps: AccountSideNavProps,
       pathProps: { ...accountPathProps, ...orgPathProps }
     })}
+    <RouteWithLayout
+      sidebarProps={AccountSideNavProps}
+      path={[routes.toOrganizationTicketSettings({ ...accountPathProps, ...orgPathProps })]}
+      exact
+    >
+      <ExternalTicketSettings />
+    </RouteWithLayout>
   </>
 )

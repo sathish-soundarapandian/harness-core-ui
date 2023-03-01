@@ -33,6 +33,10 @@
       "spec": {
         "expression": "${changes[0].ref.displayId}-${repository.name.substring(${repository.name.indexOf('-')+1})}"
       }
+    },
+    "changeWindowSpec": {
+      "startField": "sys_created_on",
+      "endField": "closed_at"
     }
   }
 }

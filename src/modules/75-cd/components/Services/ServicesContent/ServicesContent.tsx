@@ -15,7 +15,6 @@ import {
   GetServicesGrowthTrendQueryParams,
   ServiceDetailsDTO,
   ServiceDetailsDTOV2,
-  useGetServiceDetails,
   useGetServiceDetailsV2,
   useGetServicesGrowthTrend
 } from 'services/cd-ng'
@@ -29,7 +28,6 @@ import {
   MostActiveServicesWidgetRef
 } from '@cd/components/Services/MostActiveServicesWidget/MostActiveServicesWidget'
 import { DeploymentsWidget } from '@cd/components/Services/DeploymentsWidget/DeploymentsWidget'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ServicesList, ServicesListProps } from '@cd/components/Services/ServicesList/ServicesList'
 import type { ModulePathParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
@@ -42,7 +40,6 @@ import css from '@cd/components/Services/ServicesContent/ServicesContent.module.
 export const ServicesContent: React.FC = () => {
   const { view, fetchDeploymentList } = useServiceStore()
   const { getString } = useStrings()
-  const { CDC_DASHBOARD_ENHANCEMENT_NG } = useFeatureFlags()
 
   const { timeRange, setTimeRange } = useContext(DeploymentsTimeRangeContext)
   const { preference: savedSortOption, setPreference: setSavedSortOption } = usePreferenceStore<string[] | undefined>(
@@ -66,21 +63,14 @@ export const ServicesContent: React.FC = () => {
 
   useDocumentTitle([getString('services')])
 
-  const { loading, data, error, refetch } = useGetServiceDetails({
-    queryParams,
-    queryParamStringifyOptions: { arrayFormat: 'comma' },
-    lazy: CDC_DASHBOARD_ENHANCEMENT_NG
-  })
-
   const {
-    loading: loadingV2,
-    data: dataV2,
-    error: errorV2,
-    refetch: refetchV2
+    loading: serviceDetailsLoading,
+    data: serviceDetails,
+    error: serviceDetailsError,
+    refetch: serviceDetailsRefetch
   } = useGetServiceDetailsV2({
     queryParams,
-    queryParamStringifyOptions: { arrayFormat: 'comma' },
-    lazy: !CDC_DASHBOARD_ENHANCEMENT_NG
+    queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
 
   //Service Growth Trend properties
@@ -103,12 +93,9 @@ export const ServicesContent: React.FC = () => {
     queryParams: servicesGrowthTrendQueryParams
   })
 
-  const [serviceDetailsLoading, serviceDetails, serviceDetailsError, serviceDetailsRefetch] =
-    CDC_DASHBOARD_ENHANCEMENT_NG ? [loadingV2, dataV2, errorV2, refetchV2] : [loading, data, error, refetch]
-
   useEffect(() => {
-    fetchDeploymentList.current = refetch
-  }, [fetchDeploymentList, refetch])
+    fetchDeploymentList.current = serviceDetailsRefetch
+  }, [fetchDeploymentList, serviceDetailsRefetch])
 
   const serviceDeploymentDetailsList = serviceDetails?.data?.serviceDeploymentDetailsList || []
 

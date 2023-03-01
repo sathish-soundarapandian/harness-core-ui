@@ -251,7 +251,6 @@ function OpenShiftParamWithGit({
                         variableName="branch"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('branch', value)}
                         isReadonly={isReadonly}
                       />
@@ -279,7 +278,6 @@ function OpenShiftParamWithGit({
                         variableName="commitId"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('commitId', value)}
                         isReadonly={isReadonly}
                       />
@@ -310,7 +308,6 @@ function OpenShiftParamWithGit({
                     variableName={'paths'}
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={val => formik?.setFieldValue('paths', val)}
                     isReadonly={isReadonly}
                   />

@@ -327,7 +327,6 @@ const SshWinRmAwsInfrastructureSpecEditable: React.FC<SshWinRmAwsInfrastructureS
                           variableName={'region'}
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={val => formik?.setFieldValue('region', val)}
                         />
                       </Container>

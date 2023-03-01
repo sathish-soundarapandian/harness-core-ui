@@ -250,6 +250,17 @@ RbacFactory.registerResourceTypeHandler(ResourceType.SLO, {
   }
 })
 
+RbacFactory.registerResourceTypeHandler(ResourceType.DOWNTIME, {
+  icon: 'cv-main',
+  label: 'cv.sloDowntime.label',
+  category: ResourceCategory.CHANGEINTELLIGENCE_FUNCTION,
+  permissionLabels: {
+    [PermissionIdentifier.VIEW_DOWNTIME]: <String stringID="rbac.permissionLabels.view" />,
+    [PermissionIdentifier.EDIT_DOWNTIME]: <String stringID="rbac.permissionLabels.createEdit" />,
+    [PermissionIdentifier.DELETE_DOWNTIME]: <String stringID="delete" />
+  }
+})
+
 const CVSideNavProps: SidebarContext = {
   navComponent: SideNav,
   subtitle: 'Service',

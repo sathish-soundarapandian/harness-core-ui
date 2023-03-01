@@ -32,8 +32,8 @@ import type {
   PipelineType
 } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { killEvent } from '@common/utils/eventUtils'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import ExecutionActions from '@pipeline/components/ExecutionActions/ExecutionActions'
 import { TimePopoverWithLocal } from '@pipeline/components/ExecutionCard/TimePopoverWithLocal'
 import { useExecutionCompareContext } from '@pipeline/components/ExecutionCompareYaml/ExecutionCompareContext'
@@ -43,7 +43,9 @@ import { AUTO_TRIGGERS } from '@pipeline/utils/constants'
 import { hasCIStage } from '@pipeline/utils/stageHelpers'
 import type { ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { mapTriggerTypeToIconAndExecutionText, mapTriggerTypeToStringID } from '@pipeline/utils/triggerUtils'
+import { useRunPipelineModalV1 } from '@pipeline/v1/components/RunPipelineModalV1/useRunPipelineModalV1'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
+import { moduleToModuleNameMapping } from 'framework/types/ModuleName'
 import { usePermission } from '@rbac/hooks/usePermission'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
@@ -360,8 +362,18 @@ export const MenuCell: CellType = ({ row, column }) => {
     stagesExecuted: data.stagesExecuted,
     isDebugMode: hasCI
   })
-  const { CI_REMOTE_DEBUG } = useFeatureFlags()
 
+  const { CI_YAML_VERSIONING, CI_REMOTE_DEBUG } = useFeatureFlags()
+
+  const { openRunPipelineModalV1 } = useRunPipelineModalV1({
+    pipelineIdentifier: data.pipelineIdentifier || pipelineIdentifier,
+    executionId: defaultTo(data.planExecutionId, ''),
+    repoIdentifier: isGitSyncEnabled ? data.gitDetails?.repoIdentifier : data.gitDetails?.repoName,
+    branch: data.gitDetails?.branch,
+    connectorRef: data.connectorRef,
+    storeType: data.storeType as StoreType,
+    isDebugMode: hasCI
+  })
   const [canEdit, canExecute] = usePermission(
     {
       resourceScope: {
@@ -400,7 +412,13 @@ export const MenuCell: CellType = ({ row, column }) => {
         canEdit={canEdit}
         onViewCompiledYaml={() => onViewCompiledYaml(data)}
         onCompareExecutions={() => addToCompare(data)}
-        onReRunInDebugMode={hasCI && CI_REMOTE_DEBUG ? () => openRunPipelineModal() : undefined}
+        onReRunInDebugMode={
+          hasCI && CI_REMOTE_DEBUG
+            ? CI_YAML_VERSIONING && module?.valueOf().toLowerCase() === moduleToModuleNameMapping.ci.toLowerCase()
+              ? openRunPipelineModalV1
+              : openRunPipelineModal
+            : undefined
+        }
         source={source}
         canExecute={canExecute}
         canRetry={data.canRetry}

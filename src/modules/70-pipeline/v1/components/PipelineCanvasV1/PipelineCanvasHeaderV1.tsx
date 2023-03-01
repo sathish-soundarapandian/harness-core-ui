@@ -40,8 +40,6 @@ import type {
   RunPipelineQueryParams
 } from '@common/interfaces/RouteInterfaces'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { CacheResponseMetadata, Error } from 'services/pipeline-ng'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useQueryParams } from '@common/hooks'
@@ -98,7 +96,6 @@ export function PipelineCanvasHeaderV1(props: PipelineCanvasHeaderProps): React.
   const params = useParams<PipelineType<PipelinePathProps> & GitQueryParams>()
   const { branch, repoName, connectorRef } = useQueryParams<GitQueryParams & RunPipelineQueryParams>()
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier } = params
-  const isPipelineGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const savePipelineHandleRef = React.useRef<SavePipelineHandleV1 | null>(null)
   const pipelineCachedCopyRef = React.useRef<PipelineCachedCopyHandle | null>(null)
 
@@ -135,7 +132,7 @@ export function PipelineCanvasHeaderV1(props: PipelineCanvasHeaderProps): React.
 
   // Need to show reload option only when we are showing a cached response
   function showReloadFromGitoption(): boolean {
-    return Boolean(isPipelineRemote && isPipelineGitCacheEnabled && pipelineCacheResponse)
+    return Boolean(isPipelineRemote && pipelineCacheResponse)
   }
 
   function handleReloadFromGitClick(): void {
@@ -253,7 +250,7 @@ export function PipelineCanvasHeaderV1(props: PipelineCanvasHeaderProps): React.
                     readOnly: pipelineIdentifier === DefaultNewPipelineId
                   }}
                 />
-                {isPipelineGitCacheEnabled && !isEmpty(pipelineCacheResponse) && !remoteFetchError && (
+                {!isEmpty(pipelineCacheResponse) && !remoteFetchError && (
                   <PipelineCachedCopy
                     ref={pipelineCachedCopyRef}
                     reloadContent={getString('common.pipeline')}

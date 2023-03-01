@@ -299,7 +299,6 @@ function FormContent({
             variableName="spec.connectorRef"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.connectorRef', value)}
             isReadonly={readonly}
             connectorReferenceFieldProps={{
@@ -379,7 +378,6 @@ function FormContent({
             variableName="spec.jobName"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.jobName', value)}
             isReadonly={readonly}
           />
@@ -470,7 +468,6 @@ function FormContent({
             className={css.minConfigBtn}
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => {
               formik.setValues({
                 ...formik.values,

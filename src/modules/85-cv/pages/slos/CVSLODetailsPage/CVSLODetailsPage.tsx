@@ -37,8 +37,14 @@ const CVSLODetailsPage: React.FC = () => {
   const {
     tab = SLODetailsPageTabIds.Details,
     monitoredServiceIdentifier,
-    sloType
-  } = useQueryParams<{ tab?: SLODetailsPageTabIds; monitoredServiceIdentifier?: string; sloType?: string }>()
+    sloType,
+    notificationTime
+  } = useQueryParams<{
+    tab?: SLODetailsPageTabIds
+    monitoredServiceIdentifier?: string
+    sloType?: string
+    notificationTime?: number
+  }>()
 
   const projectIdentifierRef = useRef<string>()
   const isCompositeSLO = sloType === SLOType.COMPOSITE
@@ -94,7 +100,7 @@ const CVSLODetailsPage: React.FC = () => {
               identifier,
               accountId
             }),
-            search: getSearchString({ tab: nextTab, sloType })
+            search: getSearchString({ tab: nextTab, sloType, notificationTime })
           })
         : history.push({
             pathname: routes.toCVSLODetailsPage({
@@ -103,7 +109,7 @@ const CVSLODetailsPage: React.FC = () => {
               orgIdentifier,
               projectIdentifier
             }),
-            search: getSearchString({ tab: nextTab, monitoredServiceIdentifier, sloType })
+            search: getSearchString({ tab: nextTab, monitoredServiceIdentifier, sloType, notificationTime })
           })
     }
   }

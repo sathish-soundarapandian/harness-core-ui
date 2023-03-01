@@ -178,8 +178,13 @@ export enum StepType {
   AsgBlueGreenRollback = 'AsgBlueGreenRollback',
   AsgBlueGreenSwapService = 'AsgBlueGreenSwapService',
   AsgBlueGreenDeploy = 'AsgBlueGreenDeploy',
+  AwsLambdaService = 'AwsLambdaService',
+  AwsLambdaInfra = 'AwsLambdaInfra',
+  AwsLambdaDeploy = 'AwsLambdaDeploy',
+  AwsLambdaDeployRollback = 'AwsLambdaDeployRollback',
   TerraformCloudRun = 'TerraformCloudRun',
-  TerraformCloudRollback = 'TerraformCloudRollback'
+  TerraformCloudRollback = 'TerraformCloudRollback',
+  SscaOrchestration = 'SscaOrchestration'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

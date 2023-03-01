@@ -330,7 +330,7 @@ exports[`test should validate edit mode snapshot 1`] = `
         >
           <button
             aria-label="save"
-            class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+            class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-right-medium Button--with-current-color"
             data-id="environment-save"
             type="button"
           >
@@ -340,7 +340,6 @@ exports[`test should validate edit mode snapshot 1`] = `
               save
             </span>
           </button>
-             
           <button
             aria-label="cancel"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
@@ -653,7 +652,7 @@ exports[`test should validate save 1`] = `
         >
           <button
             aria-label="save"
-            class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+            class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-right-medium Button--with-current-color"
             data-id="environment-save"
             type="button"
           >
@@ -663,7 +662,6 @@ exports[`test should validate save 1`] = `
               save
             </span>
           </button>
-             
           <button
             aria-label="cancel"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"
@@ -976,7 +974,7 @@ exports[`test validation are present if submited with empty value  1`] = `
         >
           <button
             aria-label="save"
-            class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary Button--with-current-color"
+            class="bp3-button Button--button StyledProps--font StyledProps--main StyledProps--intent-primary StyledProps--margin-right-medium Button--with-current-color"
             data-id="environment-save"
             type="button"
           >
@@ -986,7 +984,6 @@ exports[`test validation are present if submited with empty value  1`] = `
               save
             </span>
           </button>
-             
           <button
             aria-label="cancel"
             class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color"

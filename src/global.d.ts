@@ -206,6 +206,11 @@ declare module 'iacm/IACMStage' {
   export default ChildApp
 }
 
+declare module 'iacm/IACMStageInputSet' {
+  const ChildApp: ChildAppComponent
+  export default ChildApp
+}
+
 declare module 'iacm/IACMPipelineResources' {
   const ChildApp: ChildAppComponent
   export default ChildApp

@@ -87,6 +87,7 @@ import type {
   GoogleCloudFunctionInfrastructure,
   GoogleCloudFunctionInfraSpec
 } from '@cd/components/PipelineSteps/GoogleCloudFunction/GoogleCloudFunctionInfraSpec/GoogleCloudFunctionInfraSpec'
+import type { AwsLambdaInfraSpec } from '@cd/components/PipelineSteps/AwsLambda/AwsLambdaInfraSpec/AwsLambdaInfraSpec'
 import {
   cleanUpEmptyProvisioner,
   getInfraDefinitionDetailsHeaderTooltipId,
@@ -124,7 +125,8 @@ export const deploymentTypeInfraTypeMap: Record<string, InfraDeploymentType> = {
   CustomDeployment: InfraDeploymentType.CustomDeployment,
   Elastigroup: InfraDeploymentType.Elastigroup,
   TAS: InfraDeploymentType.TAS,
-  GoogleCloudFunctions: InfraDeploymentType.GoogleCloudFunctions
+  GoogleCloudFunctions: InfraDeploymentType.GoogleCloudFunctions,
+  AwsLambda: InfraDeploymentType.AwsLambda
 }
 
 type InfraTypes =
@@ -785,6 +787,29 @@ export default function DeployInfraDefinition(props: React.PropsWithChildren<unk
                   allowSimultaneousDeployments: value.allowSimultaneousDeployments
                 },
                 InfraDeploymentType.GoogleCloudFunctions
+              )
+            }
+          />
+        )
+      }
+      case InfraDeploymentType.AwsLambda: {
+        return (
+          <StepWidget<AwsLambdaInfraSpec>
+            factory={factory}
+            key={stage.stage.identifier}
+            readonly={isReadonly}
+            initialValues={initialInfrastructureDefinitionValues as AwsLambdaInfraSpec}
+            type={StepType.AwsLambdaInfra}
+            stepViewType={StepViewType.Edit}
+            allowableTypes={allowableTypes}
+            onUpdate={value =>
+              onUpdateInfrastructureDefinition(
+                {
+                  connectorRef: value.connectorRef,
+                  region: value.region,
+                  allowSimultaneousDeployments: value.allowSimultaneousDeployments
+                },
+                InfraDeploymentType.AwsLambda
               )
             }
           />

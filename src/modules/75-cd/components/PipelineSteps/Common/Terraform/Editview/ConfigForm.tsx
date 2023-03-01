@@ -125,7 +125,6 @@ export default function ConfigForm(props: ConfigFormProps): React.ReactElement {
                         variableName="configuration.spec.configFiles.store.spec.repoName"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value =>
                           /* istanbul ignore next */
                           formik.setFieldValue('configuration.spec.configFiles.store.spec.repoName', value)
@@ -164,7 +163,6 @@ export default function ConfigForm(props: ConfigFormProps): React.ReactElement {
                         variableName="configuration.spec.configFiles.store.spec.branch"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value =>
                           formik.setFieldValue('configuration.spec.configFiles.store.spec.branch', value)
                         }
@@ -193,7 +191,6 @@ export default function ConfigForm(props: ConfigFormProps): React.ReactElement {
                         variableName="spec.configuration.spec.configFiles.store.spec.commitId"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value =>
                           formik.setFieldValue('spec.configuration.spec.configFiles.spec.store.spec.commitId', value)
                         }
@@ -219,7 +216,6 @@ export default function ConfigForm(props: ConfigFormProps): React.ReactElement {
                       variableName="formik.values.spec?.configuration?.spec?.store.spec?.folderPath"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value =>
                         formik.setFieldValue('formik.values.spec?.configuration?.spec?.store.spec?.folderPath', value)
                       }

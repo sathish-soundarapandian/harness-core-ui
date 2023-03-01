@@ -36,7 +36,6 @@ export function MultiSelectWithSubmenuTypeInput(props: MultiSelectWithSubmenuTyp
             variableName={name}
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             style={{ marginTop: 'var(--spacing-4)' }}
             onChange={val => formik?.setFieldValue(name, val)}
             isReadonly={disabled}

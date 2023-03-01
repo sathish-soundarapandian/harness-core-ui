@@ -28,7 +28,6 @@ const props: SelectConfigureOptionsProps = {
   variableName: 'repository',
   showRequiredField: false,
   showDefaultField: false,
-  showAdvanced: true,
   onChange: onChange,
   isReadonly: false,
   options: listOptions,
@@ -36,7 +35,7 @@ const props: SelectConfigureOptionsProps = {
   error: null
 }
 
-const doConfigureOptionsTesting = async (cogModal: HTMLElement) => {
+const doConfigureOptionsTesting = async (cogModal: HTMLElement): Promise<void> => {
   // No popovers should be opened initially
   const popovers = document.getElementsByClassName('bp3-popover')
   expect(popovers.length).toBe(0)
@@ -44,7 +43,6 @@ const doConfigureOptionsTesting = async (cogModal: HTMLElement) => {
   await waitFor(() => expect(getElementByText(cogModal, 'allowedValues')).toBeInTheDocument())
   const allowedValuesRadio = getElementByText(cogModal, 'allowedValues')
   userEvent.click(allowedValuesRadio)
-  await waitFor(() => expect(getElementByText(cogModal, 'advancedTitle')).toBeInTheDocument())
   const allowedValuesSelect = queryByAttribute('name', cogModal, 'allowedValues')
   userEvent.click(allowedValuesSelect!)
   // 1 popover should be opened which displays list of options

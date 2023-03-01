@@ -379,7 +379,7 @@ export function PipelineRouteDestinations({
   licenseRedirectData,
   sidebarProps,
   pipelineStudioComponentV1: PipelineStudioV1
-}: PipelineRouteDestinationsProps) {
+}: PipelineRouteDestinationsProps): JSX.Element {
   return (
     <>
       <RouteWithLayout

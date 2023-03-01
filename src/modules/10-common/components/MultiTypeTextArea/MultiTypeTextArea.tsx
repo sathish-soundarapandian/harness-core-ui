@@ -92,7 +92,6 @@ export const MultiTypeTextArea: React.FC<MultiTypeTextAreaProps> = props => {
               variableName={name}
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={val => onChange?.(val, MultiTypeInputValue.STRING, MultiTypeInputType.RUNTIME)}
               style={{ marginBottom: 12 }}
               {...configureOptionsProps}

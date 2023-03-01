@@ -10,6 +10,7 @@ import React, { useContext } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import moment from 'moment'
 import type { CellProps, Renderer } from 'react-table'
+import cx from 'classnames'
 import { Classes, PopoverInteractionKind, Position } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
@@ -41,7 +42,6 @@ import {
   shouldRenderFilters
 } from './DowntimeList.utils'
 import { DowntimeStatus } from '../../SLODowntimePage.types'
-import { getAddDowntimeButton } from '../../SLODowntimePage.utils'
 import { FiltersContext } from '../../FiltersContext'
 import DowntimeFilters from '../DowntimeFilters/DowntimeFilters'
 import css from './DowntimeList.module.scss'
@@ -51,7 +51,6 @@ interface DowntimeListProps {
   downtimeData: ResponsePageDowntimeListView | null
   refetchDowntimes: (data: UseListDowntimesProps) => void
   downtimeError?: string
-  handleCreateButton: () => void
 }
 
 export const RenderServices = ({
@@ -74,10 +73,10 @@ export const RenderServices = ({
           </Text>
         ) : (
           <>
-            <Text title={serviceName} className={css.firstLine}>
+            <Text title={serviceName} className={cx(css.firstLine, css.affectedServices)}>
               {serviceName}
             </Text>
-            <Text title={envName} font={{ size: 'small' }}>
+            <Text title={envName} font={{ size: 'small' }} className={css.affectedServices}>
               {envName}
             </Text>
           </>
@@ -114,8 +113,7 @@ const DowntimeList = ({
   downtimeDataLoading,
   downtimeData,
   refetchDowntimes,
-  downtimeError,
-  handleCreateButton
+  downtimeError
 }: DowntimeListProps): JSX.Element => {
   const { getString } = useStrings()
   const history = useHistory()
@@ -359,9 +357,8 @@ const DowntimeList = ({
 
   return (
     <>
-      <Page.SubHeader>{getAddDowntimeButton(handleCreateButton, getString)}</Page.SubHeader>
       <Container margin={'xlarge'} padding={{ left: 'small', right: 'small' }}>
-        {shouldRenderFilters(appliedSearchAndFilter, content) && <DowntimeFilters />}
+        {shouldRenderFilters(appliedSearchAndFilter, content) && <DowntimeFilters listView />}
         <Page.Body
           loading={deleteDowntimeLoading || toggleDowntimeLoading || downtimeDataLoading}
           error={downtimeError}

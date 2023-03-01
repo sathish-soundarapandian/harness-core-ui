@@ -353,7 +353,6 @@ export const CreateStack = (
                     variableName="spec.provisionerIdentifier"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     /* istanbul ignore next */
                     onChange={value => {
                       setFieldValue('spec.provisionerIdentifier', value)
@@ -436,7 +435,6 @@ export const CreateStack = (
                     variableName="spec.configuration.region"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     isReadonly={readonly}
                     onChange={value => formik.setFieldValue('spec.configuration.region', value)}
                   />
@@ -546,7 +544,6 @@ export const CreateStack = (
                       variableName="spec.configuration.templateFile.spec.templateBody"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         setFieldValue('spec.configuration.templateFile.spec.templateBody', value)
                       }}
@@ -591,7 +588,6 @@ export const CreateStack = (
                     variableName="spec.configuration.stackName"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       setFieldValue('spec.configuration.stackName', value)
                     }}
@@ -744,7 +740,6 @@ export const CreateStack = (
                           variableName="spec.configuration.roleArn"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           isReadonly={readonly}
                           onChange={value => formik.setFieldValue('spec.configuration.roleArn', value)}
                         />

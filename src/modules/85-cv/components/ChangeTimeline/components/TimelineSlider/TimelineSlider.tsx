@@ -45,7 +45,8 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({
   maxSliderWidth,
   hideSlider,
   onZoom,
-  setDefaultSlider
+  setDefaultSlider,
+  defaultOffSetPercentage
 }) => {
   const { getString } = useStrings()
   const mainRef = useRef<HTMLDivElement>(null)
@@ -117,7 +118,10 @@ const TimelineSlider: React.FC<TimelineSliderProps> = ({
 
   useEffect(() => {
     if (setDefaultSlider) {
-      const offset = containerWidth - initialSliderWidth
+      const offset =
+        defaultOffSetPercentage && isFinite(defaultOffSetPercentage)
+          ? containerWidth * defaultOffSetPercentage
+          : containerWidth - initialSliderWidth
       setSliderAspects({
         width: initialSliderWidth,
         leftOffset: offset,

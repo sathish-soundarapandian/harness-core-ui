@@ -9,9 +9,8 @@ import React from 'react'
 import * as Yup from 'yup'
 import { noop } from 'lodash-es'
 import { FormikContextType, yupToFormErrors } from 'formik'
-import { Button, ButtonVariation, FormInput, Layout, MultiSelectOption } from '@harness/uicore'
-import { Position } from '@blueprintjs/core'
-import { useStrings, String } from 'framework/strings'
+import { FormInput, MultiSelectOption } from '@harness/uicore'
+import { useStrings } from 'framework/strings'
 import type { StringKeys } from 'framework/strings/StringsContext'
 import { ALLOWED_VALUES_TYPE } from './constants'
 import { VALIDATORS } from './validators'
@@ -20,7 +19,6 @@ import type { AllowedValuesCustomComponentProps, FormValues } from './ConfigureO
 import css from './ConfigureOptions.module.scss'
 
 export interface AllowedValuesFieldsProps {
-  showAdvanced: boolean
   formik: FormikContextType<FormValues>
   isReadonly: boolean
   allowedValuesType?: ALLOWED_VALUES_TYPE
@@ -83,7 +81,7 @@ export const RenderField = ({
   isReadonly,
   formik,
   getAllowedValuesCustomComponent
-}: RenderFieldProps) => {
+}: RenderFieldProps): React.ReactElement => {
   const [inputValue, setInputValue] = React.useState('')
 
   const extraProps = {
@@ -141,55 +139,18 @@ export const RenderField = ({
 }
 
 export default function AllowedValuesFields(props: AllowedValuesFieldsProps): React.ReactElement {
-  const {
-    showAdvanced,
-    isReadonly,
-    allowedValuesType,
-    allowedValuesValidator,
-    formik,
-    getAllowedValuesCustomComponent
-  } = props
-  const values = formik.values
+  const { isReadonly, allowedValuesType, allowedValuesValidator, formik, getAllowedValuesCustomComponent } = props
   const { getString } = useStrings()
   return (
     <div className={css.allowedOptions}>
-      {showAdvanced ? (
-        <span className={css.advancedBtn}>
-          <Button
-            variation={ButtonVariation.LINK}
-            tooltip={
-              values.isAdvanced ? undefined : (
-                <Layout.Horizontal padding="medium">
-                  <String stringID="common.configureOptions.advancedHelp" useRichText={true} />
-                </Layout.Horizontal>
-              )
-            }
-            tooltipProps={{ position: Position.RIGHT }}
-            text={values.isAdvanced ? getString('common.configureOptions.returnToBasic') : getString('advancedTitle')}
-            onClick={() => {
-              formik.setFieldValue('isAdvanced', !values.isAdvanced)
-            }}
-            disabled={isReadonly}
-          />
-        </span>
-      ) : /* istanbul ignore next */ null}
-      {values.isAdvanced ? (
-        <FormInput.TextArea
-          name="advancedValue"
-          label={getString('common.configureOptions.jexlLabel')}
-          placeholder={getString('inputTypes.EXPRESSION')}
-          disabled={isReadonly}
-        />
-      ) : (
-        <RenderField
-          getString={getString}
-          isReadonly={isReadonly}
-          allowedValuesType={allowedValuesType}
-          allowedValuesValidator={allowedValuesValidator}
-          getAllowedValuesCustomComponent={getAllowedValuesCustomComponent}
-          formik={formik}
-        />
-      )}
+      <RenderField
+        getString={getString}
+        isReadonly={isReadonly}
+        allowedValuesType={allowedValuesType}
+        allowedValuesValidator={allowedValuesValidator}
+        getAllowedValuesCustomComponent={getAllowedValuesCustomComponent}
+        formik={formik}
+      />
     </div>
   )
 }

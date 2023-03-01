@@ -31,7 +31,8 @@ export const K8sManifestStoreMap: { [key: string]: K8sManifestStores } = {
   Github: 'Github',
   GitLab: 'GitLab',
   Bitbucket: 'Bitbucket',
-  Inline: 'Inline'
+  Inline: 'Inline',
+  Harness: 'Harness'
 }
 
 export const K8smanifestTypeIcons: Record<K8sManifestTypes, IconName> = {
@@ -58,7 +59,8 @@ export const K8smanifestStoreTypes: Array<K8sManifestStores> = [
   K8sManifestStoreMap.Github,
   K8sManifestStoreMap.GitLab,
   K8sManifestStoreMap.Bitbucket,
-  K8sManifestStoreMap.Inline
+  K8sManifestStoreMap.Inline,
+  K8sManifestStoreMap.Harness
 ]
 export const K8sManifestTypetoStoreMap: Record<K8sManifestTypes, K8sManifestStores[]> = {
   Values: K8smanifestStoreTypes,

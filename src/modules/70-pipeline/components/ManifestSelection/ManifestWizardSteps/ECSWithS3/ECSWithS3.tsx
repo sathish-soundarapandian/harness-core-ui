@@ -300,7 +300,6 @@ export function ECSWithS3({
               variableName="bucketName"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('bucketName', value)}
               isReadonly={isReadonly}
             />
@@ -353,7 +352,6 @@ export function ECSWithS3({
             variableName="bucketName"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('bucketName', value)}
             isReadonly={isReadonly}
           />
@@ -454,7 +452,6 @@ export function ECSWithS3({
                       variableName="region"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('region', value)
                       }}
@@ -489,7 +486,6 @@ export function ECSWithS3({
                       variableName={'paths'}
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={val => formik.setFieldValue('paths', val)}
                       isReadonly={isReadonly}
                     />

@@ -237,7 +237,6 @@ function FormComponent({
               variableName="org"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.org', value)}
               isReadonly={isReadonly}
               allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -305,7 +304,6 @@ function FormComponent({
               variableName="packageName"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.packageName', value)}
               isReadonly={isReadonly}
             />
@@ -365,7 +363,6 @@ function FormComponent({
                 variableName="version"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('spec.version', value)}
                 isReadonly={isReadonly}
               />
@@ -391,7 +388,6 @@ function FormComponent({
                 variableName="versionRegex"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('spec.versionRegex', value)}
                 isReadonly={isReadonly}
                 allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}

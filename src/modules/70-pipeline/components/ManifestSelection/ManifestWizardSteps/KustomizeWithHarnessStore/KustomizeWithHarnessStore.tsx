@@ -211,7 +211,6 @@ function KustomizeWithHarnessStore({
                         variableName="overlayConfiguration"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={
                           /* istanbul ignore next */ value => formik.setFieldValue('overlayConfiguration', value)
                         }
@@ -255,7 +254,6 @@ function KustomizeWithHarnessStore({
                         variableName="pluginPath"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('pluginPath', value)}
                         isReadonly={isReadonly}
                       />
@@ -289,7 +287,6 @@ function KustomizeWithHarnessStore({
                                 variableName="enableDeclarativeRollback"
                                 showRequiredField={false}
                                 showDefaultField={false}
-                                showAdvanced={true}
                                 onChange={value => formik.setFieldValue('enableDeclarativeRollback', value)}
                                 style={{ alignSelf: 'center', marginTop: 11 }}
                                 className={css.addmarginTop}
@@ -314,7 +311,6 @@ function KustomizeWithHarnessStore({
                                 variableName="skipResourceVersioning"
                                 showRequiredField={false}
                                 showDefaultField={false}
-                                showAdvanced={true}
                                 onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
                                 style={{ alignSelf: 'center', marginTop: 11 }}
                                 className={css.addmarginTop}

@@ -181,7 +181,6 @@ function InheritFromManifest({
                         variableName={'paths'}
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={val => formik?.setFieldValue('paths', val)}
                         isReadonly={isReadonly}
                       />

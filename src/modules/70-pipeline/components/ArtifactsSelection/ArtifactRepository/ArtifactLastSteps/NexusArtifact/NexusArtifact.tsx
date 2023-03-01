@@ -565,7 +565,6 @@ export function Nexus3Artifact({
                       variableName="repository"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('repository', value)
                       }}
@@ -591,7 +590,6 @@ export function Nexus3Artifact({
                           variableName="spec.groupId"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('spec.groupId', value)
                           }}
@@ -615,7 +613,6 @@ export function Nexus3Artifact({
                           variableName="spec.artifactId"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('spec.artifactId', value)
                           }}
@@ -639,7 +636,6 @@ export function Nexus3Artifact({
                           variableName="spec.extension"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('spec.extension', value)
                           }}
@@ -663,7 +659,6 @@ export function Nexus3Artifact({
                           variableName="spec.classifier"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('spec.classifier', value)
                           }}
@@ -690,7 +685,6 @@ export function Nexus3Artifact({
                           variableName="spec.artifactPath"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue('spec.artifactPath', value)
                           }}
@@ -729,7 +723,6 @@ export function Nexus3Artifact({
                             variableName="repositoryUrl"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={value => {
                               formik.setFieldValue('spec.repositoryUrl', value)
                             }}
@@ -761,7 +754,6 @@ export function Nexus3Artifact({
                             variableName="repositoryPort"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={value => {
                               formik.setFieldValue('spec.repositoryPort', value)
                             }}
@@ -788,7 +780,6 @@ export function Nexus3Artifact({
                         variableName="spec.group"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => {
                           formik.setFieldValue('spec.group', value)
                         }}
@@ -813,7 +804,6 @@ export function Nexus3Artifact({
                         variableName="spec.packageName"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => {
                           formik.setFieldValue('spec.packageName', value)
                         }}

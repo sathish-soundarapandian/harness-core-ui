@@ -20,6 +20,7 @@ const ExactSharedPackages = [
   '@blueprintjs/select',
   '@blueprintjs/datetime',
   'restful-react',
+  '@tanstack/react-query',
   'urql'
 ]
 

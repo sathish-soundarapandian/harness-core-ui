@@ -159,7 +159,6 @@ export default function OptionalConfiguration(props: {
                   variableName="spec.spec.exportTerraformPlanJson"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={
                     /* istanbul ignore next */ value => formik.setFieldValue('spec.spec.exportTerraformPlanJson', value)
                   }

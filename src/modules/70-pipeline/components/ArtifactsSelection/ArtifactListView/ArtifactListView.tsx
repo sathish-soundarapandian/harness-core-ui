@@ -65,7 +65,8 @@ function ArtifactListView({
   isMultiArtifactSource,
   handleUseArtifactSourceTemplate,
   primaryArtifactRef,
-  setPrimaryArtifactRef
+  setPrimaryArtifactRef,
+  deploymentType
 }: ArtifactListViewProps): React.ReactElement {
   const { getString } = useStrings()
   const commonArtifactProps = {
@@ -107,7 +108,7 @@ function ArtifactListView({
                 {...commonArtifactProps}
               />
             )}
-            {!isReadonly && isPrimaryAdditionAllowed(primaryArtifact, isMultiArtifactSource) && (
+            {!isReadonly && isPrimaryAdditionAllowed(deploymentType, primaryArtifact, isMultiArtifactSource) && (
               <Layout.Horizontal spacing="medium">
                 <Button
                   className={css.addArtifact}

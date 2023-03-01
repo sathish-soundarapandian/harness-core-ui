@@ -15,6 +15,7 @@ declare const styles: {
   readonly tags: string
   readonly textCentered: string
   readonly tooltip: string
+  readonly triggerNameStyle: string
   readonly webhookUrl: string
 }
 export default styles

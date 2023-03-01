@@ -6,7 +6,6 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
 import {
   Text,
   Layout,
@@ -16,12 +15,10 @@ import {
   Formik,
   FormikForm,
   FormError,
-  HarnessDocTooltip,
-  useConfirmationDialog,
-  Button
+  HarnessDocTooltip
 } from '@harness/uicore'
 
-import { Color, FontVariation, Intent } from '@harness/design-system'
+import { Color, FontVariation } from '@harness/design-system'
 import type { FormikContextType, FormikProps } from 'formik'
 import { defaultTo, get, set } from 'lodash-es'
 import produce from 'immer'
@@ -34,8 +31,6 @@ import { getServiceDeploymentTypeSchema } from '@cd/components/PipelineSteps/Pip
 import type { ServiceDefinition } from 'services/cd-ng'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
-import routes from '@common/RouteDefinitions'
 import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import { deploymentTypes } from '../DeployProvisioningWizard/Constants'
 import { useCDOnboardingContext } from '../CDOnboardingStore'
@@ -65,8 +60,6 @@ const SelectDeploymentTypeRef = (
 ): React.ReactElement => {
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
-  const history = useHistory()
-  const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { disableNextBtn, enableNextBtn, onSuccess } = props
   const { GITOPS_HOSTED } = useFeatureFlags()
   const {
@@ -128,20 +121,6 @@ const SelectDeploymentTypeRef = (
     saveServiceData(updatedContextService)
     onSuccess()
   }
-
-  const { openDialog: otherDeploymentTypesWarning } = useConfirmationDialog({
-    contentText: getString('cd.getStartedWithCD.closeOnboarding.subtitle'),
-    titleText: getString('cd.getStartedWithCD.closeOnboarding.title'),
-    confirmButtonText: getString('confirm'),
-    cancelButtonText: getString('cancel'),
-    intent: Intent.WARNING,
-    onCloseDialog: async (isConfirmed: boolean) => {
-      if (isConfirmed) {
-        trackEvent(CDOnboardingActions.MoveToOtherDeploymentTypes, {})
-        history.push(routes.toPipelines({ accountId, orgIdentifier, projectIdentifier, module: 'cd' }))
-      }
-    }
-  })
 
   return (
     <Container flex={{ justifyContent: 'flex-start', alignItems: 'flex-start' }}>
@@ -216,14 +195,6 @@ const SelectDeploymentTypeRef = (
                           })}
                         />
                       ) : null}
-                    </Container>
-                    <Container margin={{ top: 'huge' }}>
-                      <Button
-                        text={getString('cd.getStartedWithCD.clickForOtherDeploymentTypes')}
-                        tooltipProps={{ dataTooltipId: 'cdOnboardingOtherDeploymentTypes' }}
-                        onClick={otherDeploymentTypesWarning}
-                        className={css.linkWrapper}
-                      />
                     </Container>
                   </Container>
                 </Layout.Horizontal>

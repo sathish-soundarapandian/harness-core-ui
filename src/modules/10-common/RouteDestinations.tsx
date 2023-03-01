@@ -12,7 +12,7 @@ import { RouteWithLayout } from '@common/router'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, withAccountId } from '@common/utils/routeUtils'
 // eslint-disable-next-line no-restricted-imports
-import TicketSettings from '@sto/pages/TicketSettings/TicketSettings'
+import ExternalTicketSettings from '@sto/components/ExternalTickets/Settings/ExternalTicketSettings'
 
 import SessionToken from 'framework/utils/SessionToken'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -106,8 +106,12 @@ export default (
         <WelcomePage />
       </ModalProvider>
     </Route>
-    <RouteWithLayout sidebarProps={AccountSideNavProps} path={routes.toTicketSettings({ ...accountPathProps })} exact>
-      <TicketSettings />
+    <RouteWithLayout
+      sidebarProps={AccountSideNavProps}
+      path={routes.toAccountTicketSettings({ ...accountPathProps })}
+      exact
+    >
+      <ExternalTicketSettings />
     </RouteWithLayout>
   </>
 )

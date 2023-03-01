@@ -184,7 +184,7 @@ export const useGetTemplateInputSetYamlOrgResult = {
     orgIdentifier: 'orgIdentifier',
     versionLabel: '1'
   },
-  requestOptions: { headers: {} },
+  requestOptions: { headers: { 'Load-From-Cache': 'true' } },
   templateIdentifier: 'AppD_default_metrics_runtime_connector'
 }
 

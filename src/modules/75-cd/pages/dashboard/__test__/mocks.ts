@@ -5,6 +5,8 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import type { ResponseDashboardWorkloadDeploymentV2 } from 'services/cd-ng'
+
 export const deploymentExecutionMock = {
   data: {
     executionDeploymentList: [
@@ -211,59 +213,55 @@ export const deploymentsMock = {
   }
 }
 
-export const workloadsMock = {
+export const workloadsMock: ResponseDashboardWorkloadDeploymentV2 = {
   data: {
     workloadDeploymentInfoList: [
       {
-        name: 'springboot',
-        buildCount: 7,
-        percentSuccess: 0.0,
-        successRate: -100.0,
-        lastCommit: 'Update test.txt',
+        serviceName: 'k8s-service',
+        serviceId: 'k8sservice',
         lastExecuted: {
-          startTime: 1621555606947,
-          endTime: 1621556205569
+          startTime: 1675936529119,
+          endTime: 1675936561506,
+          deploymentType: 'Kubernetes',
+          status: 'SUCCESS',
+          authorInfo: {
+            name: 'automationPipelinesNg automation',
+            url: undefined
+          },
+          triggerType: 'MANUAL'
         },
-        countList: [
+        deploymentTypeList: ['Ssh', 'WinRm', 'Kubernetes'],
+        totalDeployments: 11,
+        totalDeploymentChangeRate: {
+          percentChange: undefined,
+          trend: 'INVALID'
+        },
+        percentSuccess: 36.36363636363637,
+        rateSuccess: {
+          percentChange: undefined,
+          trend: 'INVALID'
+        },
+        failureRate: 54.54545454545454,
+        failureRateChangeRate: {
+          percentChange: undefined,
+          trend: 'INVALID'
+        },
+        frequency: 0.3548387096774194,
+        frequencyChangeRate: {
+          percentChange: undefined,
+          trend: 'INVALID'
+        },
+        lastPipelineExecutionId: '63e4c3106c3d4b2e73479942',
+        workload: [
           {
-            time: 1621125462238,
-            builds: {
-              count: 3
-            }
-          },
-          {
-            time: 1621125462238,
-            builds: {
+            date: 1674864000000,
+            execution: {
               count: 0
             }
           },
           {
-            time: 1621125462238,
-            builds: {
-              count: 1
-            }
-          },
-          {
-            time: 1621125462238,
-            builds: {
-              count: 0
-            }
-          },
-          {
-            time: 1621125462238,
-            builds: {
-              count: 0
-            }
-          },
-          {
-            time: 1621125462238,
-            builds: {
-              count: 3
-            }
-          },
-          {
-            time: 1621125462238,
-            builds: {
+            date: 1674950400000,
+            execution: {
               count: 0
             }
           }

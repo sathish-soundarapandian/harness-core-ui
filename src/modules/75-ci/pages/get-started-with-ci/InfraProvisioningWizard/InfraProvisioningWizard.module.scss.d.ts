@@ -7,6 +7,8 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly advancedOptionFormFields: string
+  readonly advancedOptions: string
   readonly authMethodBtn: string
   readonly bitbucketIcon: string
   readonly borderBottom: string
@@ -28,14 +30,13 @@ declare const styles: {
   readonly infoIcon: string
   readonly learnMore: string
   readonly listIcon: string
-  readonly main: string
   readonly noCodebaseHelpText: string
   readonly otherGitProviderCard: string
   readonly otherOptionCard: string
   readonly provisioningFailed: string
   readonly provisioningSuccessful: string
+  readonly recommendedTag: string
   readonly repositories: string
-  readonly repositoriesWithError: string
   readonly repositoryRow: string
   readonly repositorySearch: string
   readonly repositoryTable: string
@@ -45,7 +46,6 @@ declare const styles: {
   readonly testConnectionBtn: string
   readonly toggleLabel: string
   readonly toolTipArea: string
-  readonly wizard: string
   readonly yamlPathField: string
 }
 export default styles

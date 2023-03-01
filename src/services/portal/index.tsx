@@ -256,6 +256,7 @@ export interface Account {
   createdAt?: number
   createdBy?: EmbeddedUser
   createdFromNG?: boolean
+  crossGenerationAccessEnabled?: boolean
   dataRetentionDurationMs?: number
   defaultExperience?: 'NG' | 'CG'
   defaults?: {
@@ -285,6 +286,7 @@ export interface Account {
   subdomainUrl?: string
   techStacks?: TechStack[]
   trialSignupOptions?: TrialSignupOptions
+  trustLevel?: number
   twoFactorAdminEnforced?: boolean
   uuid: string
   whitelistedDomains?: string[]
@@ -304,6 +306,7 @@ export interface AccountDetails {
   cluster?: string
   companyName?: string
   createdFromNG?: boolean
+  crossGenerationAccessEnabled?: boolean
   defaultExperience?: 'NG' | 'CG'
   licenseInfo?: LicenseInfo
   licenseModel?: 'SERVICES' | 'SERVICE_INSTANCES'
@@ -358,6 +361,10 @@ export interface AccountIdOrBuilder {
   initializationErrorString?: string
   initialized?: boolean
   unknownFields?: UnknownFieldSet
+}
+
+export interface AccountJobProperties {
+  instanceStatsSnapshotTimeDaysAgo?: number
 }
 
 export interface AccountJoinRequest {
@@ -883,6 +890,7 @@ export interface ApiKeyEntry {
   accountId?: string
   createdAt?: number
   decryptedKey?: string
+  encryptedDataId?: string
   encryptedKey?: string[]
   hashOfKey?: string
   name?: string
@@ -2480,6 +2488,27 @@ export type AzureWebAppInfra = InfraMappingInfrastructureProvider & {
   subscriptionId?: string
 }
 
+export interface BambooAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface BambooAuthenticationDTO {
+  spec?: BambooAuthCredentialsDTO
+  type: 'UsernamePassword' | 'Anonymous' | 'Bearer Token(HTTP Header)'
+}
+
+export type BambooConnectorDTO = ConnectorConfigDTO & {
+  auth?: BambooAuthenticationDTO
+  bambooUrl: string
+  delegateSelectors?: string[]
+}
+
+export type BambooUserNamePasswordDTO = BambooAuthCredentialsDTO & {
+  passwordRef: string
+  username?: string
+  usernameRef?: string
+}
+
 export interface Bar {
   count?: number
   timestamp?: number
@@ -2983,6 +3012,7 @@ export type CFModuleLicenseDTO = ModuleLicenseDTO & {
 }
 
 export type CIModuleLicenseDTO = ModuleLicenseDTO & {
+  cacheAllowance?: number
   hostingCredits?: number
   numberOfCommitters?: number
 }
@@ -3391,6 +3421,11 @@ export interface ChangeSetDTO {
 
 export interface ChangesetInformation {
   [key: string]: any
+}
+
+export type ChaosModuleLicenseDTO = ModuleLicenseDTO & {
+  totalChaosExperimentRuns?: number
+  totalChaosInfrastructures?: number
 }
 
 export interface CloneMetadata {
@@ -4046,6 +4081,7 @@ export interface ConfigFile {
     | 'JIRA'
     | 'SERVICENOW'
     | 'SECRET_TEXT'
+    | 'SECRET_FILE'
     | 'YAML_GIT_SYNC'
     | 'VAULT'
     | 'VAULT_SSH'
@@ -4161,6 +4197,8 @@ export interface ConnectorInfoDTO {
     | 'AzureArtifacts'
     | 'Tas'
     | 'Spot'
+    | 'Bamboo'
+    | 'TerraformCloud'
 }
 
 export interface ConnectorValidationResult {
@@ -5132,6 +5170,7 @@ export interface Delegate {
   createdAt?: number
   currentlyExecutingDelegateTasks?: string[]
   delegateCapacity?: DelegateCapacity
+  delegateConnectionId?: string
   delegateDisconnectDetectorNextIteration?: number
   delegateGroupId?: string
   delegateGroupName?: string
@@ -5141,6 +5180,7 @@ export interface Delegate {
   delegateTokenName?: string
   delegateType?: string
   description?: string
+  disconnected?: boolean
   excludeScopes?: DelegateScope[]
   expirationTime?: number
   heartbeatAsObject?: boolean
@@ -5671,6 +5711,9 @@ export interface DelegateScope {
     | 'GITOPS'
     | 'TAS'
     | 'CONTAINER_PMS'
+    | 'TERRAFORM_CLOUD'
+    | 'GOOGLE_FUNCTION'
+    | 'AWS_LAMBDA_NG'
   )[]
   uuid: string
   valid?: boolean
@@ -5736,6 +5779,23 @@ export interface DelegateSizeDetails {
   ram?: number
   replicas?: number
   size?: 'LAPTOP' | 'SMALL' | 'MEDIUM' | 'LARGE'
+}
+
+export interface DelegateStackDriverLog {
+  accountId?: string
+  app?: string
+  delegateId?: string
+  exception?: string
+  isotime?: string
+  logger?: string
+  managerHost?: string
+  message?: string
+  processId?: string
+  severity?: string
+  source?: string
+  taskId?: string
+  thread?: string
+  version?: string
 }
 
 export interface DelegateStatus {
@@ -6226,6 +6286,27 @@ export interface DelegateTaskPackageV2 {
     | 'AWS_ASG_BLUE_GREEN_PREPARE_ROLLBACK_DATA_TASK_NG'
     | 'AWS_ASG_BLUE_GREEN_DEPLOY_TASK_NG'
     | 'AWS_ASG_BLUE_GREEN_ROLLBACK_TASK_NG'
+    | 'SCM_BATCH_GET_FILE_TASK'
+    | 'TERRAFORM_CLOUD_TASK_NG'
+    | 'GIT_TASK_NG'
+    | 'GOOGLE_CLOUD_STORAGE_ARTIFACT_TASK_NG'
+    | 'GOOGLE_FUNCTION_COMMAND_TASK'
+    | 'GOOGLE_CLOUD_SOURCE_ARTIFACT_TASK_NG'
+    | 'GCP_PROJECTS_TASK_NG'
+    | 'GCS_BUCKETS_TASK_NG'
+    | 'AWS_LAMBDA_DEPLOY_COMMAND_TASK_NG'
+    | 'GOOGLE_FUNCTION_DEPLOY_TASK'
+    | 'GOOGLE_FUNCTION_ROLLBACK_TASK'
+    | 'GOOGLE_FUNCTION_PREPARE_ROLLBACK_TASK'
+    | 'GOOGLE_FUNCTION_DEPLOY_WITHOUT_TRAFFIC_TASK'
+    | 'GOOGLE_FUNCTION_TRAFFIC_SHIFT_TASK'
+    | 'ECS_TASK_ARN_ROLLING_DEPLOY_NG'
+    | 'ECS_TASK_ARN_CANARY_DEPLOY_NG'
+    | 'ECS_TASK_ARN_BLUE_GREEN_CREATE_SERVICE_NG'
+    | 'BAMBOO_CONNECTIVITY_TEST_TASK'
+    | 'BAMBOO_ARTIFACT_TASK_NG'
+    | 'AWS_LAMBDA_PREPARE_ROLLBACK_COMMAND_TASK_NG'
+    | 'AWS_LAMBDA_ROLLBACK_COMMAND_TASK_NG'
 }
 
 export interface DelegateTaskResponse {
@@ -6641,6 +6722,27 @@ export interface DelegateTaskResponse {
     | 'AWS_ASG_BLUE_GREEN_PREPARE_ROLLBACK_DATA_TASK_NG'
     | 'AWS_ASG_BLUE_GREEN_DEPLOY_TASK_NG'
     | 'AWS_ASG_BLUE_GREEN_ROLLBACK_TASK_NG'
+    | 'SCM_BATCH_GET_FILE_TASK'
+    | 'TERRAFORM_CLOUD_TASK_NG'
+    | 'GIT_TASK_NG'
+    | 'GOOGLE_CLOUD_STORAGE_ARTIFACT_TASK_NG'
+    | 'GOOGLE_FUNCTION_COMMAND_TASK'
+    | 'GOOGLE_CLOUD_SOURCE_ARTIFACT_TASK_NG'
+    | 'GCP_PROJECTS_TASK_NG'
+    | 'GCS_BUCKETS_TASK_NG'
+    | 'AWS_LAMBDA_DEPLOY_COMMAND_TASK_NG'
+    | 'GOOGLE_FUNCTION_DEPLOY_TASK'
+    | 'GOOGLE_FUNCTION_ROLLBACK_TASK'
+    | 'GOOGLE_FUNCTION_PREPARE_ROLLBACK_TASK'
+    | 'GOOGLE_FUNCTION_DEPLOY_WITHOUT_TRAFFIC_TASK'
+    | 'GOOGLE_FUNCTION_TRAFFIC_SHIFT_TASK'
+    | 'ECS_TASK_ARN_ROLLING_DEPLOY_NG'
+    | 'ECS_TASK_ARN_CANARY_DEPLOY_NG'
+    | 'ECS_TASK_ARN_BLUE_GREEN_CREATE_SERVICE_NG'
+    | 'BAMBOO_CONNECTIVITY_TEST_TASK'
+    | 'BAMBOO_ARTIFACT_TASK_NG'
+    | 'AWS_LAMBDA_PREPARE_ROLLBACK_COMMAND_TASK_NG'
+    | 'AWS_LAMBDA_ROLLBACK_COMMAND_TASK_NG'
 }
 
 export interface DelegateTaskResponseV2 {
@@ -7055,6 +7157,27 @@ export interface DelegateTaskResponseV2 {
     | 'AWS_ASG_BLUE_GREEN_PREPARE_ROLLBACK_DATA_TASK_NG'
     | 'AWS_ASG_BLUE_GREEN_DEPLOY_TASK_NG'
     | 'AWS_ASG_BLUE_GREEN_ROLLBACK_TASK_NG'
+    | 'SCM_BATCH_GET_FILE_TASK'
+    | 'TERRAFORM_CLOUD_TASK_NG'
+    | 'GIT_TASK_NG'
+    | 'GOOGLE_CLOUD_STORAGE_ARTIFACT_TASK_NG'
+    | 'GOOGLE_FUNCTION_COMMAND_TASK'
+    | 'GOOGLE_CLOUD_SOURCE_ARTIFACT_TASK_NG'
+    | 'GCP_PROJECTS_TASK_NG'
+    | 'GCS_BUCKETS_TASK_NG'
+    | 'AWS_LAMBDA_DEPLOY_COMMAND_TASK_NG'
+    | 'GOOGLE_FUNCTION_DEPLOY_TASK'
+    | 'GOOGLE_FUNCTION_ROLLBACK_TASK'
+    | 'GOOGLE_FUNCTION_PREPARE_ROLLBACK_TASK'
+    | 'GOOGLE_FUNCTION_DEPLOY_WITHOUT_TRAFFIC_TASK'
+    | 'GOOGLE_FUNCTION_TRAFFIC_SHIFT_TASK'
+    | 'ECS_TASK_ARN_ROLLING_DEPLOY_NG'
+    | 'ECS_TASK_ARN_CANARY_DEPLOY_NG'
+    | 'ECS_TASK_ARN_BLUE_GREEN_CREATE_SERVICE_NG'
+    | 'BAMBOO_CONNECTIVITY_TEST_TASK'
+    | 'BAMBOO_ARTIFACT_TASK_NG'
+    | 'AWS_LAMBDA_PREPARE_ROLLBACK_COMMAND_TASK_NG'
+    | 'AWS_LAMBDA_ROLLBACK_COMMAND_TASK_NG'
 }
 
 export interface DelegateTokenDetails {
@@ -7064,6 +7187,7 @@ export interface DelegateTokenDetails {
   createdByNgUser?: Principal
   name?: string
   ownerIdentifier?: string
+  revokeAfter?: number
   status?: 'ACTIVE' | 'REVOKED'
   uuid?: string
   value?: string
@@ -7774,6 +7898,7 @@ export interface EncryptableSetting {
     | 'JIRA'
     | 'SERVICENOW'
     | 'SECRET_TEXT'
+    | 'SECRET_FILE'
     | 'YAML_GIT_SYNC'
     | 'VAULT'
     | 'VAULT_SSH'
@@ -7917,6 +8042,7 @@ export interface EncryptedData {
     | 'JIRA'
     | 'SERVICENOW'
     | 'SECRET_TEXT'
+    | 'SECRET_FILE'
     | 'YAML_GIT_SYNC'
     | 'VAULT'
     | 'VAULT_SSH'
@@ -8013,6 +8139,7 @@ export interface EncryptedDataParent {
     | 'JIRA'
     | 'SERVICENOW'
     | 'SECRET_TEXT'
+    | 'SECRET_FILE'
     | 'YAML_GIT_SYNC'
     | 'VAULT'
     | 'VAULT_SSH'
@@ -8618,6 +8745,7 @@ export interface ExecutionCapability {
     | 'AWS_CLI_INSTALL'
     | 'NG_WINRM_HOST_CONNECTION'
     | 'NG_SSH_HOST_CONNECTION'
+    | 'AWS_SAM_INSTALL'
   maxValidityPeriod?: Duration
   periodUntilNextValidation?: Duration
 }
@@ -9126,6 +9254,7 @@ export interface FailureStrategy {
     | 'POLICY_EVALUATION_FAILURE'
     | 'INPUT_TIMEOUT_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'DELEGATE_RESTART'
   )[]
   manualInterventionTimeout?: number
   repairActionCode?:
@@ -9138,6 +9267,7 @@ export interface FailureStrategy {
     | 'END_EXECUTION'
     | 'CONTINUE_WITH_DEFAULTS'
     | 'ABORT_WORKFLOW_EXECUTION'
+    | 'MARK_AS_FAILURE'
   repairActionCodeAfterRetry?:
     | 'MANUAL_INTERVENTION'
     | 'ROLLBACK_WORKFLOW'
@@ -9148,6 +9278,7 @@ export interface FailureStrategy {
     | 'END_EXECUTION'
     | 'CONTINUE_WITH_DEFAULTS'
     | 'ABORT_WORKFLOW_EXECUTION'
+    | 'MARK_AS_FAILURE'
   retryCount?: number
   retryIntervals?: number[]
   specificSteps?: string[]
@@ -9982,6 +10113,9 @@ export interface GroupIdentifier {
   groupName?: string
 }
 
+/**
+ * This is the change Source entity defined in Harness
+ */
 export interface HarnessCDCurrentGenEventMetadata {
   accountId?: string
   appId?: string
@@ -10756,6 +10890,7 @@ export interface InfrastructureMapping {
     | 'JIRA'
     | 'SERVICENOW'
     | 'SECRET_TEXT'
+    | 'SECRET_FILE'
     | 'YAML_GIT_SYNC'
     | 'VAULT'
     | 'VAULT_SSH'
@@ -11468,6 +11603,7 @@ export interface InstanceExecutionHistory {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -11514,6 +11650,9 @@ export interface InstanceExecutionHistory {
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   executionInterruptType?:
     | 'ABORT'
     | 'ABORT_ALL'
@@ -11788,6 +11927,15 @@ export type JenkinsUserNamePasswordDTO = JenkinsAuthCredentialsDTO & {
   usernameRef?: string
 }
 
+export interface JiraAuthCredentialsDTO {
+  [key: string]: any
+}
+
+export interface JiraAuthenticationDTO {
+  spec: JiraAuthCredentialsDTO
+  type: 'UsernamePassword'
+}
+
 export interface JiraConfig {
   accountId?: string
   baseUrl?: string
@@ -11847,6 +11995,7 @@ export interface JiraConfig {
     | 'JIRA'
     | 'SERVICENOW'
     | 'SECRET_TEXT'
+    | 'SECRET_FILE'
     | 'YAML_GIT_SYNC'
     | 'VAULT'
     | 'VAULT_SSH'
@@ -11877,9 +12026,10 @@ export interface JiraConfig {
 }
 
 export type JiraConnector = ConnectorConfigDTO & {
+  auth: JiraAuthenticationDTO
   delegateSelectors?: string[]
   jiraUrl: string
-  passwordRef: string
+  passwordRef?: string
   username?: string
   usernameRef?: string
 }
@@ -11931,6 +12081,12 @@ export interface JiraTaskParameters {
   useNewMeta?: boolean
   userQuery?: string
   userQueryOffset?: string
+}
+
+export type JiraUserNamePasswordDTO = JiraAuthCredentialsDTO & {
+  passwordRef: string
+  username?: string
+  usernameRef?: string
 }
 
 export interface JobDetails {
@@ -12184,6 +12340,7 @@ export interface LdapConnectionSettings {
     | 'JIRA'
     | 'SERVICENOW'
     | 'SECRET_TEXT'
+    | 'SECRET_FILE'
     | 'YAML_GIT_SYNC'
     | 'VAULT'
     | 'VAULT_SSH'
@@ -14106,6 +14263,7 @@ export interface Page {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -14116,6 +14274,18 @@ export interface PageAccount {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PageDelegateStackDriverLog {
+  content?: DelegateStackDriverLog[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -15580,6 +15750,7 @@ export interface ResponseMessage {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -15626,6 +15797,9 @@ export interface ResponseMessage {
     | 'APPROVAL_REJECTION'
     | 'TERRAGRUNT_EXECUTION_ERROR'
     | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -15639,6 +15813,7 @@ export interface ResponseMessage {
     | 'POLICY_EVALUATION_FAILURE'
     | 'INPUT_TIMEOUT_FAILURE'
     | 'APPROVAL_REJECTION'
+    | 'DELEGATE_RESTART'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
@@ -17631,6 +17806,7 @@ export interface RestResponseMapDeploymentTypeListSettingVariableTypes {
       | 'JIRA'
       | 'SERVICENOW'
       | 'SECRET_TEXT'
+      | 'SECRET_FILE'
       | 'YAML_GIT_SYNC'
       | 'VAULT'
       | 'VAULT_SSH'
@@ -17846,6 +18022,14 @@ export interface RestResponsePageAccount {
     [key: string]: { [key: string]: any }
   }
   resource?: PageAccount
+  responseMessages?: ResponseMessage[]
+}
+
+export interface RestResponsePageDelegateStackDriverLog {
+  metaData?: {
+    [key: string]: { [key: string]: any }
+  }
+  resource?: PageDelegateStackDriverLog
   responseMessages?: ResponseMessage[]
 }
 
@@ -19191,6 +19375,7 @@ export interface RuntimeInputsConfig {
     | 'END_EXECUTION'
     | 'CONTINUE_WITH_DEFAULTS'
     | 'ABORT_WORKFLOW_EXECUTION'
+    | 'MARK_AS_FAILURE'
   userGroupIds?: string[]
 }
 
@@ -19594,6 +19779,7 @@ export interface SecretSetupUsage {
     | 'JIRA'
     | 'SERVICENOW'
     | 'SECRET_TEXT'
+    | 'SECRET_FILE'
     | 'YAML_GIT_SYNC'
     | 'VAULT'
     | 'VAULT_SSH'
@@ -20353,6 +20539,7 @@ export interface ServiceVariable {
     | 'JIRA'
     | 'SERVICENOW'
     | 'SECRET_TEXT'
+    | 'SECRET_FILE'
     | 'YAML_GIT_SYNC'
     | 'VAULT'
     | 'VAULT_SSH'
@@ -20473,6 +20660,7 @@ export interface SettingValue {
     | 'JIRA'
     | 'SERVICENOW'
     | 'SECRET_TEXT'
+    | 'SECRET_FILE'
     | 'YAML_GIT_SYNC'
     | 'VAULT'
     | 'VAULT_SSH'
@@ -21083,6 +21271,7 @@ export interface StateExecutionInstance {
     | 'END_EXECUTION'
     | 'CONTINUE_WITH_DEFAULTS'
     | 'ABORT_WORKFLOW_EXECUTION'
+    | 'MARK_AS_FAILURE'
   appId?: string
   callback?: StateMachineExecutionCallback
   childStateMachineId?: string
@@ -21725,6 +21914,9 @@ export interface TaskSelectorMap {
     | 'GITOPS'
     | 'TAS'
     | 'CONTAINER_PMS'
+    | 'TERRAFORM_CLOUD'
+    | 'GOOGLE_FUNCTION'
+    | 'AWS_LAMBDA_NG'
   uuid: string
 }
 
@@ -21861,6 +22053,26 @@ export interface TemporalUnit {
   duration?: Duration
   durationEstimated?: boolean
   timeBased?: boolean
+}
+
+export type TerraformCloudConnector = ConnectorConfigDTO & {
+  credential: TerraformCloudCredential
+  delegateSelectors?: string[]
+  executeOnDelegate?: boolean
+  terraformCloudUrl: string
+}
+
+export interface TerraformCloudCredential {
+  spec?: TerraformCloudCredentialSpec
+  type: 'ApiToken'
+}
+
+export interface TerraformCloudCredentialSpec {
+  [key: string]: any
+}
+
+export type TerraformCloudTokenCredentials = TerraformCloudCredentialSpec & {
+  apiToken: string
 }
 
 export type TerraformInfrastructureProvisioner = InfrastructureProvisioner & {
@@ -22530,6 +22742,8 @@ export interface UserInvite {
 export interface UserInviteDTO {
   accountId: string
   email: string
+  familyName?: string
+  givenName?: string
   name: string
   token: string
 }
@@ -23427,6 +23641,7 @@ export interface YamlGitConfig {
     | 'JIRA'
     | 'SERVICENOW'
     | 'SECRET_TEXT'
+    | 'SECRET_FILE'
     | 'YAML_GIT_SYNC'
     | 'VAULT'
     | 'VAULT_SSH'
@@ -23661,6 +23876,8 @@ export type GcpBillingAccountRequestBody = GcpBillingAccount
 
 export type GcpOrganizationRequestBody = GcpOrganization
 
+export type GraphQLQueryRequestBody = GraphQLQuery
+
 export type HarnessTagRequestBody = HarnessTag
 
 export type HarnessTagLinkRequestBody = HarnessTagLink
@@ -23783,9 +24000,9 @@ export type GetDelegatePropertiesBodyRequestBody = string[]
 
 export type ImportAccountDataRequestBody = void
 
-export type SaveGcpSecretsManagerConfigRequestBody = void
-
 export type SaveGcpSecretsManagerConfig1RequestBody = void
+
+export type SaveGlobalKmsConfigRequestBody = void
 
 export interface SaveMessageComparisonListBodyRequestBody {
   [key: string]: string
@@ -24295,6 +24512,54 @@ export const getDelegateConfigFromIdPromise = (
     GetDelegateConfigFromIdQueryParams,
     GetDelegateConfigFromIdPathParams
   >(getConfig('api'), `/delegate-profiles/${delegateProfileId}`, props, signal)
+
+export interface GetTasksLogQueryParams {
+  accountId?: string
+  orgId?: string
+  projectId?: string
+  taskIds?: string[]
+  startTime?: number
+  endTime?: number
+  pageIndex?: number
+  pageSize?: number
+  sortOrders?: string[]
+  pageToken?: string
+}
+
+export type GetTasksLogProps = Omit<
+  GetProps<RestResponsePageDelegateStackDriverLog, unknown, GetTasksLogQueryParams, void>,
+  'path'
+>
+
+export const GetTasksLog = (props: GetTasksLogProps) => (
+  <Get<RestResponsePageDelegateStackDriverLog, unknown, GetTasksLogQueryParams, void>
+    path={`/delegate/taskslog`}
+    base={getConfig('api')}
+    {...props}
+  />
+)
+
+export type UseGetTasksLogProps = Omit<
+  UseGetProps<RestResponsePageDelegateStackDriverLog, unknown, GetTasksLogQueryParams, void>,
+  'path'
+>
+
+export const useGetTasksLog = (props: UseGetTasksLogProps) =>
+  useGet<RestResponsePageDelegateStackDriverLog, unknown, GetTasksLogQueryParams, void>(`/delegate/taskslog`, {
+    base: getConfig('api'),
+    ...props
+  })
+
+export const getTasksLogPromise = (
+  props: GetUsingFetchProps<RestResponsePageDelegateStackDriverLog, unknown, GetTasksLogQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponsePageDelegateStackDriverLog, unknown, GetTasksLogQueryParams, void>(
+    getConfig('api'),
+    `/delegate/taskslog`,
+    props,
+    signal
+  )
 
 export interface GetDelegatesHeartbeatDetailsV2QueryParams {
   accountId?: string
@@ -26161,6 +26426,47 @@ export const getUserPromise = (
   signal?: RequestInit['signal']
 ) => getUsingFetch<RestResponseUser, unknown, void, void>(getConfig('api'), `/users/user`, props, signal)
 
+export interface GetUserAccountsQueryParams {
+  pageIndex?: number
+  pageSize?: number
+  searchTerm?: string
+}
+
+export type GetUserAccountsProps = Omit<
+  GetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  'path'
+>
+
+export const GetUserAccounts = (props: GetUserAccountsProps) => (
+  <Get<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>
+    path={`/users/userAccounts`}
+    base={getConfig('api')}
+    {...props}
+  />
+)
+
+export type UseGetUserAccountsProps = Omit<
+  UseGetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  'path'
+>
+
+export const useGetUserAccounts = (props: UseGetUserAccountsProps) =>
+  useGet<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(`/users/userAccounts`, {
+    base: getConfig('api'),
+    ...props
+  })
+
+export const getUserAccountsPromise = (
+  props: GetUsingFetchProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(
+    getConfig('api'),
+    `/users/userAccounts`,
+    props,
+    signal
+  )
+
 export interface Logout1PathParams {
   userId: string
 }
@@ -26201,46 +26507,6 @@ export const logout1Promise = (
     'POST',
     getConfig('api'),
     `/users/${userId}/logout`,
-    props,
-    signal
-  )
-export interface GetUserAccountsQueryParams {
-  pageIndex?: number
-  pageSize?: number
-  searchTerm?: string
-}
-
-export type GetUserAccountsProps = Omit<
-  GetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
-  'path'
->
-
-export const GetUserAccounts = (props: GetUserAccountsProps) => (
-  <Get<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>
-    path={`/users/userAccounts`}
-    base={getConfig('api')}
-    {...props}
-  />
-)
-
-export type UseGetUserAccountsProps = Omit<
-  UseGetProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
-  'path'
->
-
-export const useGetUserAccounts = (props: UseGetUserAccountsProps) =>
-  useGet<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(`/users/userAccounts`, {
-    base: getConfig('api'),
-    ...props
-  })
-
-export const getUserAccountsPromise = (
-  props: GetUsingFetchProps<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>,
-  signal?: RequestInit['signal']
-) =>
-  getUsingFetch<RestResponsePageAccount, unknown, GetUserAccountsQueryParams, void>(
-    getConfig('api'),
-    `/users/userAccounts`,
     props,
     signal
   )

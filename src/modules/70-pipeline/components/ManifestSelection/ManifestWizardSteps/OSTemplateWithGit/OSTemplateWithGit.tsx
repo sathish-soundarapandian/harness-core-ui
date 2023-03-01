@@ -258,7 +258,6 @@ function OpenShiftTemplateWithGit({
                           variableName="branch"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => formik.setFieldValue('branch', value)}
                           isReadonly={isReadonly}
                         />
@@ -286,7 +285,6 @@ function OpenShiftTemplateWithGit({
                           variableName="commitId"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => formik.setFieldValue('commitId', value)}
                           isReadonly={isReadonly}
                         />
@@ -315,7 +313,6 @@ function OpenShiftTemplateWithGit({
                         variableName="path"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('path', value)}
                         isReadonly={isReadonly}
                       />
@@ -345,7 +342,6 @@ function OpenShiftTemplateWithGit({
                       variableName={'paramsPaths'}
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={val => formik?.setFieldValue('paramsPaths', val)}
                       isReadonly={isReadonly}
                     />
@@ -379,7 +375,6 @@ function OpenShiftTemplateWithGit({
                               variableName="enableDeclarativeRollback"
                               showRequiredField={false}
                               showDefaultField={false}
-                              showAdvanced={true}
                               onChange={value => formik.setFieldValue('enableDeclarativeRollback', value)}
                               style={{ alignSelf: 'center', marginTop: 11 }}
                               className={cx(css.addmarginTop)}
@@ -404,7 +399,6 @@ function OpenShiftTemplateWithGit({
                               variableName="skipResourceVersioning"
                               showRequiredField={false}
                               showDefaultField={false}
-                              showAdvanced={true}
                               onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
                               style={{ alignSelf: 'center', marginTop: 11 }}
                               className={css.addmarginTop}

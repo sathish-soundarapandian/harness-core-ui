@@ -743,7 +743,6 @@ gradle.projectsEvaluated {
                             variableName="spec.preCommand"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={value => formik?.setFieldValue('spec.preCommand', value)}
                             isReadonly={readonly}
                           />
@@ -769,7 +768,6 @@ gradle.projectsEvaluated {
                             variableName="spec.postCommand"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={value => formik?.setFieldValue('spec.postCommand', value)}
                             isReadonly={readonly}
                           />

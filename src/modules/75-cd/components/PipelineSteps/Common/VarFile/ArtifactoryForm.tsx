@@ -266,7 +266,6 @@ export const ArtifactoryForm: React.FC<StepProps<any> & ArtifactoryFormProps> = 
                       variableName={tfArtifactoryFormInputNames(isConfig, isBackendConfig).repositoryName}
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value =>
                         /* istanbul ignore next */
                         formik.setFieldValue(

@@ -61,8 +61,6 @@ import {
   PipelineCachedCopyHandle
 } from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineCachedCopy/PipelineCachedCopy'
 import { StoreType } from '@common/constants/GitSyncTypes'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import css from './TemplateStudioSubHeaderLeftView.module.scss'
 
 export interface TemplateStudioSubHeaderLeftViewProps {
@@ -118,7 +116,6 @@ export function TemplateStudioSubHeaderLeftView(
   const { showSuccess, showError } = useToaster()
   const { getRBACErrorMessage } = useRBACError()
   const { getString } = useStrings()
-  const isPipelineGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const pipelineCachedCopyRef = React.useRef<PipelineCachedCopyHandle | null>(null)
 
   const { mutate: updateStableTemplate, loading: updateStableTemplateLoading } = useUpdateStableTemplate({
@@ -380,7 +377,7 @@ export function TemplateStudioSubHeaderLeftView(
                 onGitBranchChange={onGitBranchChange!}
                 btnClassName={css.gitBtn}
                 customIcon={
-                  isPipelineGitCacheEnabled && !isEmpty(cacheResponse) ? (
+                  !isEmpty(cacheResponse) ? (
                     <PipelineCachedCopy
                       ref={pipelineCachedCopyRef}
                       reloadContent={getString('common.template.label')}

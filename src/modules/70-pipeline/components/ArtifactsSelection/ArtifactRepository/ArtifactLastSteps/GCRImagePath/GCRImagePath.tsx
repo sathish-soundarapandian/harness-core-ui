@@ -243,7 +243,6 @@ export function GCRImagePath({
                       variableName="registryHostname"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('registryHostname', value)
                       }}

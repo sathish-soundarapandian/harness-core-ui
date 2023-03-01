@@ -59,9 +59,9 @@ export const getAddDowntimeButton = (
     text={getString('cv.sloDowntime.label')}
     variation={ButtonVariation.PRIMARY}
     permission={{
-      permission: PermissionIdentifier.EDIT_SLO_SERVICE,
+      permission: PermissionIdentifier.EDIT_DOWNTIME,
       resource: {
-        resourceType: ResourceType.SLO
+        resourceType: ResourceType.DOWNTIME
       }
     }}
     onClick={handleCreateButton}

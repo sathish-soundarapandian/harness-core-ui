@@ -158,7 +158,6 @@ export const MultiTypeList = (props: MultiTypeListProps & ConnectorReferenceProp
             variableName={name}
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={val => formik?.setFieldValue(name, val)}
             {...configureOptionsProps}
             isReadonly={props.disabled}

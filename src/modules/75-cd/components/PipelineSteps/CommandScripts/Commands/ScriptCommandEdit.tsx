@@ -156,7 +156,6 @@ export function ScriptCommandEdit(props: ScriptCommandEditProps): React.ReactEle
               className={css.minConfigBtn}
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.source.spec.script', value)}
               isReadonly={readonly}
             />

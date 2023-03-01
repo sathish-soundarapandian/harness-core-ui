@@ -961,34 +961,19 @@ exports[`Test ConfigureOptions test allowed advanced values 1`] = `
               <div
                 class="allowedOptions"
               >
-                <span
-                  class="advancedBtn"
-                >
-                  <button
-                    aria-label="common.configureOptions.returnToBasic"
-                    class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-link"
-                    type="button"
-                  >
-                    <span
-                      class="bp3-button-text"
-                    >
-                      common.configureOptions.returnToBasic
-                    </span>
-                  </button>
-                </span>
                 <div
                   class="bp3-form-group"
-                  data-id="advancedValue-3"
+                  data-id="allowedValues-3"
                 >
                   <label
                     class="bp3-label"
-                    for="advancedValue"
+                    for="allowedValues"
                   >
                     <span
                       class="Tooltip--acenter"
-                      data-tooltip-id="configureOptionsForm_advancedValue"
+                      data-tooltip-id="configureOptionsForm_allowedValues"
                     >
-                      common.configureOptions.jexlLabel
+                      allowedValues
                     </span>
                      
                     <span
@@ -998,15 +983,121 @@ exports[`Test ConfigureOptions test allowed advanced values 1`] = `
                   <div
                     class="bp3-form-content"
                   >
-                    <textarea
-                      autocomplete="off"
-                      class="bp3-input bp3-fill"
-                      maxlength="1024"
-                      name="advancedValue"
-                      placeholder="inputTypes.EXPRESSION"
+                    <div
+                      class="bp3-input bp3-tag-input"
                     >
-                      \${env.type} == “prod” ? aws1, aws2 : aws3, aws4
-                    </textarea>
+                      <div
+                        class="bp3-tag-input-values"
+                      >
+                        <span
+                          class="bp3-tag"
+                          data-tag-index="0"
+                        >
+                          <span
+                            class="bp3-text-overflow-ellipsis bp3-fill"
+                          >
+                            jexl(\${env.type} == “prod” ? aws1
+                          </span>
+                          <button
+                            class="bp3-tag-remove"
+                            type="button"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-small-cross"
+                              icon="small-cross"
+                            >
+                              <svg
+                                data-icon="small-cross"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                width="16"
+                              >
+                                <desc>
+                                  small-cross
+                                </desc>
+                                <path
+                                  d="M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </button>
+                        </span>
+                        <span
+                          class="bp3-tag"
+                          data-tag-index="1"
+                        >
+                          <span
+                            class="bp3-text-overflow-ellipsis bp3-fill"
+                          >
+                             aws2 : aws3
+                          </span>
+                          <button
+                            class="bp3-tag-remove"
+                            type="button"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-small-cross"
+                              icon="small-cross"
+                            >
+                              <svg
+                                data-icon="small-cross"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                width="16"
+                              >
+                                <desc>
+                                  small-cross
+                                </desc>
+                                <path
+                                  d="M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </button>
+                        </span>
+                        <span
+                          class="bp3-tag"
+                          data-tag-index="2"
+                        >
+                          <span
+                            class="bp3-text-overflow-ellipsis bp3-fill"
+                          >
+                             aws4)
+                          </span>
+                          <button
+                            class="bp3-tag-remove"
+                            type="button"
+                          >
+                            <span
+                              class="bp3-icon bp3-icon-small-cross"
+                              icon="small-cross"
+                            >
+                              <svg
+                                data-icon="small-cross"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                width="16"
+                              >
+                                <desc>
+                                  small-cross
+                                </desc>
+                                <path
+                                  d="M9.41 8l2.29-2.29c.19-.18.3-.43.3-.71a1.003 1.003 0 00-1.71-.71L8 6.59l-2.29-2.3a1.003 1.003 0 00-1.42 1.42L6.59 8 4.3 10.29c-.19.18-.3.43-.3.71a1.003 1.003 0 001.71.71L8 9.41l2.29 2.29c.18.19.43.3.71.3a1.003 1.003 0 00.71-1.71L9.41 8z"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </span>
+                          </button>
+                        </span>
+                        <input
+                          class="bp3-input-ghost"
+                          data-mentions="kv-tag-input-allowedValues"
+                          value=""
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1250,30 +1341,6 @@ exports[`Test ConfigureOptions test allowed values 1`] = `
               <div
                 class="allowedOptions"
               >
-                <span
-                  class="advancedBtn"
-                >
-                  <span
-                    class="bp3-popover-wrapper"
-                  >
-                    <span
-                      class="bp3-popover-target"
-                    >
-                      <button
-                        aria-label="advancedTitle"
-                        class="bp3-button Button--button StyledProps--font StyledProps--main Button--with-current-color Button--variation Button--variation-link"
-                        tabindex="0"
-                        type="button"
-                      >
-                        <span
-                          class="bp3-button-text"
-                        >
-                          advancedTitle
-                        </span>
-                      </button>
-                    </span>
-                  </span>
-                </span>
                 <div
                   class="bp3-form-group"
                   data-id="allowedValues-4"

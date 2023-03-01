@@ -5,10 +5,12 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import moment from 'moment'
 import type { SelectOption } from '@harness/uicore'
 import { minBy } from 'lodash-es'
 import type { UseStringsReturn } from 'framework/strings'
 import type { RiskData } from 'services/cv'
+import { TWENTY_FOUR_HOURS } from '@cv/pages/slos/CVSLODetailsPage/DetailsPanel/DetailsPanel.constants'
 import {
   DAYS,
   daysTimeFormat,
@@ -206,4 +208,76 @@ export const getHoursByTimePeriod = (timePeriod: TimePeriodEnum) => {
     default:
       return 4 * hours
   }
+}
+
+export const getTimePeriodFilter = (getString: UseStringsReturn['getString'], notificationTime?: number) => {
+  const list = getTimePeriods(getString)
+  const now = Date.now()
+  const momentDate = moment(Number(notificationTime))
+  const hoursAgo = moment().diff(momentDate, 'hours')
+  if (hoursAgo < 5) {
+    return { option: list.find(item => item.value === TimePeriodEnum.FOUR_HOURS), timeDiff: hoursAgo * 60 * 60 * 1000 }
+  } else if (hoursAgo < 25) {
+    return {
+      option: list.find(item => item.value === TimePeriodEnum.TWENTY_FOUR_HOURS),
+      startTime: now - TWENTY_FOUR_HOURS
+    }
+  } else if (hoursAgo > 25 && hoursAgo <= 72) {
+    return {
+      option: list.find(item => item.value === TimePeriodEnum.THREE_DAYS),
+      startTime: now - 3 * TWENTY_FOUR_HOURS
+    }
+  } else if (hoursAgo > 72 && hoursAgo <= 168) {
+    return {
+      option: list.find(item => item.value === TimePeriodEnum.SEVEN_DAYS),
+      startTime: now - 7 * TWENTY_FOUR_HOURS
+    }
+  } else if (hoursAgo > 168 && hoursAgo < 744) {
+    return {
+      option: list.find(item => item.value === TimePeriodEnum.THREE_DAYS),
+      startTime: now - 30 * TWENTY_FOUR_HOURS
+    }
+  } else {
+    return {
+      option: list.find(item => item.value === TimePeriodEnum.FOUR_HOURS),
+      startTime: now - TWENTY_FOUR_HOURS
+    }
+  }
+}
+
+export const updateFilterByNotificationTime = ({
+  showError,
+  getString,
+  notificationTime,
+  defaultOffset,
+  defaultSelectedTimePeriod,
+  location,
+  history
+}: {
+  getString: UseStringsReturn['getString']
+  notificationTime: number
+  defaultOffset: number
+  defaultSelectedTimePeriod: SelectOption
+  showError: (message: React.ReactNode, timeout?: number | undefined, key?: string | undefined) => void
+  location: any
+  history: any
+}): { defaultOffset: number; defaultSelectedTimePeriod: SelectOption } => {
+  const filterValueByNotificationTime = getTimePeriodFilter(getString, notificationTime)
+  const currTime = Date.now()
+  const startTime = filterValueByNotificationTime.startTime || 0
+  const diffValue = (Number(notificationTime) - startTime) / (currTime - startTime)
+  if (Number(notificationTime) < currTime && Number(notificationTime) > startTime && isFinite(diffValue)) {
+    defaultOffset = diffValue
+    defaultSelectedTimePeriod = filterValueByNotificationTime.option as SelectOption
+  } else {
+    showError(getString('cv.notificationTimestampError'))
+    const queryParams = new URLSearchParams(location.search)
+    if (queryParams.has('notificationTime')) {
+      queryParams.delete('notificationTime')
+      history.replace({
+        search: queryParams.toString()
+      })
+    }
+  }
+  return { defaultOffset, defaultSelectedTimePeriod }
 }

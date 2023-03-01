@@ -125,7 +125,6 @@ const renderBranch = (
           variableName="branch"
           showRequiredField={false}
           showDefaultField={false}
-          showAdvanced={true}
           onChange={value => formik.setFieldValue('branch', value)}
           isReadonly={isReadonly}
         />
@@ -162,7 +161,6 @@ const renderCommitId = (
           variableName="commitId"
           showRequiredField={false}
           showDefaultField={false}
-          showAdvanced={true}
           onChange={value => formik.setFieldValue('commitId', value)}
           isReadonly={isReadonly}
         />

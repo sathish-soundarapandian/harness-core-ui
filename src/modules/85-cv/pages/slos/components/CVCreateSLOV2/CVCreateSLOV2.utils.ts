@@ -252,7 +252,6 @@ export const createSLOV2RequestPayload = (
           {
             name: `${values.monitoredServiceRef}_${values.healthSourceRef}_${values.identifier}_${uuid()}}`,
             identifier: `${values.monitoredServiceRef}_${values.healthSourceRef}_${values.identifier}_${uuid()}`,
-            type: values.serviceLevelIndicatorType,
             spec: {
               type: values.SLIMetricType,
               spec: {

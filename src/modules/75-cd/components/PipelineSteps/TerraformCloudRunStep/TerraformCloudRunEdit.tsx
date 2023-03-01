@@ -194,7 +194,6 @@ export function TerraformCloudRunEdit(
                   variableName="spec.spec.connectorRef"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => {
                     setFieldValue('spec.spec.connectorRef', value)
                   }}
@@ -264,7 +263,6 @@ export function TerraformCloudRunEdit(
                     variableName="spec.spec.organization"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       setFieldValue('spec.spec.organization', value)
                     }}
@@ -323,7 +321,6 @@ export function TerraformCloudRunEdit(
                     variableName="spec.spec.workspace"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
                         setFieldValue('spec.spec.workspace', value)
@@ -356,7 +353,6 @@ export function TerraformCloudRunEdit(
                   variableName="spec.message"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={/* istanbul ignore next */ value => setFieldValue('spec.message', value)}
                   isReadonly={readonly}
                 />
@@ -377,7 +373,6 @@ export function TerraformCloudRunEdit(
                   variableName="spec.spec.discardPenidngRuns"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={/* istanbul ignore next */ value => setFieldValue('spec.spec.discardPenidngRuns', value)}
                   style={{ alignSelf: 'center' }}
                   isReadonly={readonly}
@@ -420,7 +415,6 @@ export function TerraformCloudRunEdit(
                     variableName="spec.spec.terraformVersion"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced
                     onChange={value => {
                       setFieldValue('spec.spec.terraformVersion', value)
                     }}
@@ -446,7 +440,6 @@ export function TerraformCloudRunEdit(
                     variableName="spec.spec.provisionerIdentifier"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced
                     onChange={value => {
                       setFieldValue('spec.spec.provisionerIdentifier', value)
                     }}

@@ -270,7 +270,6 @@ function ServerlessAwsLambdaManifest({
                             variableName="branch"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={value => formik.setFieldValue('branch', value)}
                             isReadonly={isReadonly}
                           />
@@ -299,7 +298,6 @@ function ServerlessAwsLambdaManifest({
                             variableName="commitId"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={value => formik.setFieldValue('commitId', value)}
                             isReadonly={isReadonly}
                           />
@@ -330,7 +328,6 @@ function ServerlessAwsLambdaManifest({
                         variableName={'paths'}
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={val => formik?.setFieldValue('paths', val)}
                         isReadonly={isReadonly}
                       />
@@ -362,7 +359,6 @@ function ServerlessAwsLambdaManifest({
                               variableName="configOverridePath"
                               showRequiredField={false}
                               showDefaultField={false}
-                              showAdvanced={true}
                               onChange={value => formik.setFieldValue('configOverridePath', value)}
                               isReadonly={isReadonly}
                             />

@@ -226,6 +226,7 @@ approvalCriteria:
   match: Match
   approvalCriteria: Approval Criteria
   rejectionCriteria: Rejection Criteria
+  approvalWindow: Approval Window
   rejectionCriteriaOptional: Rejection Criteria (optional)
   validations:
     approvalCriteriaCondition: At least one condition is required
@@ -300,6 +301,7 @@ commonApprovalStep:
   execution:
     allConditionsMsg: 'If all of the following conditions are met:'
     anyConditionsMsg: 'If any of the following conditions is met:'
+    approvalWindowMsg: 'On Approval the execution will be performed within the specified Start and End Time'
 customApprovalStep:
   scriptTimeout: Script Timeout
   retryInterval: Retry interval
@@ -439,6 +441,8 @@ manifestTypeLabels:
   Autoscaler: AutoScaler
   GoogleCloudFunctionDefinition: Google Cloud Function Definition
   HelmRepoOverride: Helm Repo Override
+  AwsLambdaFunctionDefinition: AWS Lambda Function Definition
+  AwsLambdaFunctionAliasDefinition: AWS Lambda Function Alias Definition
 manifestToConnectorLabelMap:
   AWSLabel: '{{ $.common.aws }}'
 failureStrategies:
@@ -865,6 +869,8 @@ pipelineChaining:
   selectPipeline: Select Pipeline
   noProjectSelected: Project is not selected
   noPipelineSelected: Pipeline is not selected
+  noPipelinesInSelectedScope: There are no pipelines in the selected scope
+  noPipelinesInSearchCriteria: No pipelines match your search criteria
   pipelineOutputs: Pipeline Outputs
   outputTabSummaryDetail: Define outputs from child pipeline that you can use in other stages in parent pipeline.
   newOutput: New Output
@@ -1190,7 +1196,6 @@ stepDescription:
   Background: Set commands to run in the background. The execution will immediately proceed to the subsequent step rather than waiting for the background commands to finish.
   ElastigroupRollback: Rollback for the Elastigroup steps
   ElastigroupSetup: Elastigroup setup step
-
   SwapRoute: Swap between Active and InActive TAS Applications
   SwapRollback: Rollback the Swap to Active in Blue Green Deployments
   TasRollback: Rollback to previous deployment during failure
@@ -1207,8 +1212,12 @@ stepDescription:
   ElastigroupSwapRoute: Elastigroup Swap Route
   ElastigroupBGStageSetup: Elastigroup Blue/Green Step
   Container: Execute one or more commands on a container image in a CD stage.
+  AwsLambdaDeploy: Deploy an AWS Lambda function.
+  AwsLambdaDeployRollback: Roll back the AWS Lambda function.
   TerraformCloudRun: Trigger a run in a Terraform Cloud Workspace.
   TerraformCloudRollback: Trigger a rollback of the latest run on your Terraform Cloud Workspace.
+  SscaOrchestration: Orchestrate SBOM generation for your artifacts and repository
+
 executionStrategy:
   executionStrategies: Execution Strategies
   useStrategy: Use Strategy
@@ -1643,3 +1652,6 @@ lastDeployed: 'Last deployed'
 prTitle: PR Title
 ServiceDetail:
   envCardEmptyStateMsg: 'There are no environments with instances in this service.'
+iacm:
+  workflow: Workflow
+  resourceStack: Resource Stack

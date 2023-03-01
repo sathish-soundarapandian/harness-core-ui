@@ -64,7 +64,6 @@ export default function OptionalConfiguration(props: {
               variableName="spec.prTitle"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => setFieldValue('spec.prTitle', value)}
               isReadonly={readonly}
             />

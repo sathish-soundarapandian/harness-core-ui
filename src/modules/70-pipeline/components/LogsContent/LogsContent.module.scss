@@ -207,11 +207,41 @@
       .bp3-tab-list {
         border-bottom: 1px solid var(--grey-200);
         border-left: 1px solid var(--grey-200);
-        padding: 0 var(--spacing-5);
+        padding: 0 0 0 var(--spacing-5);
         height: 59px;
         position: sticky;
         top: 0;
       }
     }
   }
+}
+
+.errorMsgWrapper {
+  background-color: var(--red-100);
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 var(--spacing-5);
+  margin-left: auto;
+  width: 50%;
+  height: 62px;
+}
+
+.errorMsg {
+  padding: var(--spacing-5);
+  max-height: 100%;
+  overflow-y: auto;
+
+  p {
+    font-size: var(--font-size-xsmall);
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+.errorTitle {
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  line-height: 1.33;
+  color: var(--red-600);
+  margin-bottom: var(--spacing-1);
 }

@@ -451,7 +451,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.repository`, value)
                 }}
@@ -484,7 +483,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.spec.groupId`, value)
                 }}
@@ -517,7 +515,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.spec.artifactId`, value)
                 }}
@@ -550,7 +547,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.spec.extension`, value)
                 }}
@@ -583,7 +579,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.spec.classifier`, value)
                 }}
@@ -616,7 +611,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.spec.packageName`, value)
                 }}
@@ -649,7 +643,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.spec.group`, value)
                 }}
@@ -684,7 +677,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.spec.repositoryPort`, value)
                 }}
@@ -718,7 +710,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.spec.repositoryUrl`, value)
                 }}
@@ -794,7 +785,6 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.tagRegex`, value)
                 }}

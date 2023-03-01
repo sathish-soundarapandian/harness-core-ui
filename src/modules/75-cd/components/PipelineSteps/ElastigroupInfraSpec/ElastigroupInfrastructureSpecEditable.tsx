@@ -248,7 +248,6 @@ const ElastigroupInfraSpecEditable: React.FC<ElastigroupInfraSpecEditableProps> 
                     variableName="connectorRef"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
                         formik.setFieldValue('connectorRef', value)

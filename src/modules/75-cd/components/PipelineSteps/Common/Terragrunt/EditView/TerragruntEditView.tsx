@@ -380,7 +380,6 @@ export default function TerragruntEditView(
           variableName="spec.configuration.spec.backendConfig.spec.content"
           showRequiredField={false}
           showDefaultField={false}
-          showAdvanced={true}
           onChange={value => formik.setFieldValue('spec.configuration.spec.backendConfig.spec.content', value)}
           isReadonly={readonly}
         />
@@ -496,7 +495,6 @@ export default function TerragruntEditView(
                     variableName="spec.provisionerIdentifier"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced
                     onChange={value => {
                       setFieldValue('spec.provisionerIdentifier', value)
                     }}
@@ -577,7 +575,6 @@ export default function TerragruntEditView(
                           variableName="spec.configuration.spec.moduleConfig.path"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced
                           onChange={value => {
                             setFieldValue('spec.configuration.spec.moduleConfig.path', value)
                           }}
@@ -612,7 +609,6 @@ export default function TerragruntEditView(
                                   variableName="spec.configuration.spec.workspace"
                                   showRequiredField={false}
                                   showDefaultField={false}
-                                  showAdvanced={true}
                                   onChange={value => {
                                     formik.setFieldValue('spec.configuration.spec.workspace', value)
                                   }}

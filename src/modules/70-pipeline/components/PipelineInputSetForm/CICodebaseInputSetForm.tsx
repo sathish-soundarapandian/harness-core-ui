@@ -92,7 +92,7 @@ export const buildTypeInputNames: Record<string, string> = {
   PR: 'number'
 }
 
-const defaultValues = {
+export const defaultValues = {
   branch: '<+trigger.branch>',
   tag: '<+trigger.tag>',
   PR: '<+trigger.prNumber>'
@@ -464,7 +464,7 @@ function CICodebaseInputSetFormInternal({
   }, [connectorId])
 
   useEffect(() => {
-    if (!loadingConnectorDetails && !isUndefined(connectorDetails)) {
+    if (!loadingConnectorDetails && connectorDetails) {
       setCodebaseConnector(connectorDetails?.data?.connector)
       setConnectorType(get(connectorDetails, 'data.connector.type', '') as ConnectorInfoDTO['type'])
     }

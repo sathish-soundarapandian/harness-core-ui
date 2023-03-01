@@ -388,7 +388,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.repoName`, value)
             }}
@@ -436,7 +435,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.commitId`, value)
             }}
@@ -476,7 +474,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.region`, value)
             }}
@@ -512,7 +509,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.bucketName`, value)
             }}
@@ -544,7 +540,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.basePath`, value)
             }}
@@ -576,7 +571,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.chartName`, value)
             }}
@@ -608,7 +602,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.folderPath`, value)
             }}
@@ -697,7 +690,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.chartVersion`, value)
             }}
@@ -780,7 +772,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.enableDeclarativeRollback`, value)
             }}
@@ -814,7 +805,6 @@ const Content = (props: ManifestSourceRenderProps): React.ReactElement => {
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.skipResourceVersioning`, value)
             }}

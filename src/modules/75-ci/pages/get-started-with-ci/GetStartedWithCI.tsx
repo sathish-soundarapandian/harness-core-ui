@@ -218,8 +218,7 @@ export default function GetStartedWithCI(): React.ReactElement {
   const showPageLoader = fetchingGitConnectors || isFetchingSecret
 
   return (
-    <>
-      {showPageLoader ? <PageSpinner /> : <></>}
+    <Container className={css.main}>
       {showWizard && !showPageLoader ? (
         <InfraProvisioningWizard
           precursorData={{
@@ -381,6 +380,7 @@ export default function GetStartedWithCI(): React.ReactElement {
           </Layout.Vertical>
         </>
       )}
-    </>
+      {showPageLoader ? <PageSpinner /> : <></>}
+    </Container>
   )
 }

@@ -273,7 +273,6 @@ function FormContent({
             variableName="spec.connectorRef"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.connectorRef', value)}
             isReadonly={readonly}
           />
@@ -294,7 +293,6 @@ function FormContent({
             variableName="spec.issueKey"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.issueKey', value)}
             isReadonly={readonly}
           />
@@ -339,7 +337,6 @@ function FormContent({
                     variableName="spec.transitionTo.status"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => formik.setFieldValue('spec.transitionTo.status', value)}
                     isReadonly={readonly}
                   />
@@ -383,7 +380,6 @@ function FormContent({
                     variableName="spec.transitionTo.transitionName"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => formik.setFieldValue('spec.transitionTo.transitionName', value)}
                     isReadonly={readonly}
                   />

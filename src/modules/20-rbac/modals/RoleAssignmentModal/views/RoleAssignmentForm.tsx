@@ -20,6 +20,7 @@ import { getScopeBasedDefaultResourceGroup, isAccountBasicRole, isAssignmentFiel
 import { getScopeFromDTO } from '@common/components/EntityReference/EntityReference'
 import NewUserRoleDropdown from '@rbac/components/NewUserRoleDropdown/NewUserRoleDropdown'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'
+import { sortByName } from '@common/utils/sortUtils'
 import type { Assignment, RoleOption, UserRoleAssignmentValues } from './UserRoleAssigment'
 import type { RoleAssignmentValues } from './RoleAssignment'
 import type { UserGroupRoleAssignmentValues } from './AssignRoles'
@@ -52,11 +53,25 @@ const RoleAssignmentForm: React.FC<RoleAssignmentFormProps> = ({ noRoleAssignmen
     }
   })
   const { data: roleList } = useGetRoleList({
-    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      pageSize: 100,
+      sortOrders: [sortByName[0].value as string]
+    },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' }
   })
 
   const { data: resourceGroupList } = useGetResourceGroupListV2({
-    queryParams: { accountIdentifier: accountId, orgIdentifier, projectIdentifier }
+    queryParams: {
+      accountIdentifier: accountId,
+      orgIdentifier,
+      projectIdentifier,
+      pageSize: 100,
+      sortOrders: [sortByName[0].value as string]
+    },
+    queryParamStringifyOptions: { arrayFormat: 'repeat' }
   })
 
   const roles: RoleOption[] = useMemo(

@@ -10,15 +10,19 @@ import { useLocation } from 'react-router-dom'
 import cx from 'classnames'
 import qs from 'qs'
 
+import { Button, ButtonVariation, useToggleOpen } from '@harness/uicore'
 import type { ResponseMessage } from 'services/cd-ng'
 import type { ExecutionGraph, ExecutionNode } from 'services/pipeline-ng'
-import { String } from 'framework/strings'
+import { String, useStrings } from 'framework/strings'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import { LogsContentWithErrorBoundary as LogsContent } from '@pipeline/components/LogsContent/LogsContent'
 import { isExecutionSkipped, isExecutionCompletedWithBadState } from '@pipeline/utils/statusHelpers'
 import { StepDetails, StepLabels } from '@pipeline/components/execution/StepDetails/common/StepDetails/StepDetails'
 import { useQueryParams } from '@common/hooks'
 import type { ExecutionQueryParams } from '@pipeline/utils/executionUtils'
+import { DelegateTaskLogsModal } from '@common/components/DelegateTaskLogs/DelegateTaskLogs'
+import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import { FeatureFlag } from '@common/featureFlags'
 
 import css from './StepDetailsTab.module.scss'
 
@@ -32,6 +36,9 @@ export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.React
   const { step, executionMetadata, labels } = props
   const { pathname } = useLocation()
   const queryParams = useQueryParams<ExecutionQueryParams>()
+  const { isOpen, open: openDelegateTaskLogsModal, close: closeDelegateTaskLogsModal } = useToggleOpen(false)
+  const { getString } = useStrings()
+  const DELEGATE_TASK_LOGS_ENABLED = useFeatureFlag(FeatureFlag.DEL_FETCH_TASK_LOG_API)
 
   const logUrl = `${pathname}?${qs.stringify({ ...queryParams, view: 'log' })}`
 
@@ -50,6 +57,14 @@ export function StepDetailsTab(props: ExecutionStepDetailsTabProps): React.React
         </div>
       ) : null}
       <StepDetails step={step} labels={labels} executionMetadata={executionMetadata} />
+      {DELEGATE_TASK_LOGS_ENABLED && step.startTs && step.delegateInfoList && step.delegateInfoList.length > 0 ? (
+        <>
+          <Button variation={ButtonVariation.PRIMARY} margin={'small'} onClick={openDelegateTaskLogsModal}>
+            {getString('common.viewText')} {getString('common.logs.delegateTaskLogs')}
+          </Button>
+          <DelegateTaskLogsModal isOpen={isOpen} close={closeDelegateTaskLogsModal} step={step} />
+        </>
+      ) : null}
       <LogsContent mode="step-details" toConsoleView={logUrl} />
     </div>
   )

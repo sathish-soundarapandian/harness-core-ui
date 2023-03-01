@@ -8,6 +8,8 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly applyTopPadding: string
+  readonly approvalWindow: string
+  readonly detailsTable: string
   readonly duration: string
   readonly info: string
   readonly serviceNowApproval: string

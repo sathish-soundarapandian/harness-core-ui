@@ -89,6 +89,9 @@
 .ffColor {
   color: var(--orange-500) !important;
 }
+.chaosColor {
+  color: var(--magenta-700) !important;
+}
 
 .cdBgColor {
   background-color: var(--green-500) !important;
@@ -102,6 +105,9 @@
 .ffBgColor {
   background-color: var(--orange-500) !important;
 }
+.chaosBgColor {
+  background-color: var(--magenta-700) !important;
+}
 
 .cdBorder {
   border: solid 1px var(--green-500) !important;
@@ -114,6 +120,9 @@
 }
 .ffBorder {
   border: solid 1px var(--orange-500) !important;
+}
+.chaosBorder {
+  border: solid 1px var(--magenta-700) !important;
 }
 
 .cdFill {
@@ -145,6 +154,14 @@
     > circle:nth-child(1),
     > path {
       fill: var(--orange-500) !important;
+    }
+  }
+}
+.chaosFill {
+  > svg {
+    > circle:nth-child(1),
+    > path {
+      fill: var(--magenta-700) !important;
     }
   }
 }

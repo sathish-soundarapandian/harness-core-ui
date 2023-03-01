@@ -15,8 +15,6 @@ import { Classes, Dialog, Intent, Menu, Position } from '@blueprintjs/core'
 import cx from 'classnames'
 import { String, useStrings } from 'framework/strings'
 import { getTemplateNameWithLabel } from '@pipeline/utils/templateUtils'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import routes from '@common/RouteDefinitions'
@@ -64,7 +62,6 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
   const { getString } = useStrings()
   const { module, ...params } = useParams<PipelineType<ProjectPathProps>>()
   const { branch, repoIdentifier } = useQueryParams<GitQueryParams>()
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const scope = getScopeFromValue(templateLinkConfig.templateRef)
   const { enabled } = useFeature({
     featureRequest: {
@@ -81,7 +78,7 @@ export function TemplateBar(props: TemplateBarProps): JSX.Element {
       versionLabel: defaultTo(templateLinkConfig.versionLabel, ''),
       ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier, branch })
     },
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: storeMetadata?.storeType === StoreType.REMOTE && isEmpty(storeMetadata?.connectorRef)
   })
 

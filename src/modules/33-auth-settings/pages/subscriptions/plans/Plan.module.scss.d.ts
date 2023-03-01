@@ -18,6 +18,10 @@ declare const styles: {
   readonly cdColor: string
   readonly cdFill: string
   readonly centerText: string
+  readonly chaosBgColor: string
+  readonly chaosBorder: string
+  readonly chaosColor: string
+  readonly chaosFill: string
   readonly ciBgColor: string
   readonly ciBorder: string
   readonly ciColor: string

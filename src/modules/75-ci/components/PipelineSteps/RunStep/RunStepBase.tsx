@@ -229,7 +229,6 @@ export const RunStepBase = (
                   variableName="spec.command"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => formik?.setFieldValue('spec.command', value)}
                   isReadonly={readonly}
                 />
@@ -258,7 +257,6 @@ export const RunStepBase = (
                       enableFields={{
                         'spec.privileged': {
                           shouldHide: [
-                            CIBuildInfrastructureType.Cloud,
                             CIBuildInfrastructureType.VM,
                             CIBuildInfrastructureType.KubernetesHosted,
                             CIBuildInfrastructureType.Docker

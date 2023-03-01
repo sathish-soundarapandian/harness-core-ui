@@ -87,7 +87,7 @@ describe('Account Overview Page', () => {
         DISABLE_HARNESS_SM: true
       })
       const { container } = render(
-        <TestWrapper>
+        <TestWrapper defaultLicenseStoreValues={{ licenseInformation: { CD: { edition: 'TEAM', status: 'ACTIVE' } } }}>
           <AccountOverview />
         </TestWrapper>
       )

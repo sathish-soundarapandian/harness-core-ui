@@ -150,7 +150,7 @@ const routes = {
   toAuthenticationSettings: withAccountId(() => '/settings/authentication'),
   toAccountConfiguration: withAccountId(() => '/settings/authentication/configuration'),
   toAccountActivityLog: withAccountId(() => '/settings/authentication/activity-log'),
-  toTicketSettings: withAccountId(() => `/settings/tickets`),
+  toAccountTicketSettings: withAccountId(() => `/settings/tickets`),
 
   // Governance
   toGovernance: withAccountId(({ orgIdentifier, projectIdentifier, module }: GovernancePathProps) =>
@@ -688,6 +688,9 @@ const routes = {
   toOrganizations: withAccountId(() => `/settings/organizations`),
   toOrganizationDetails: withAccountId(
     ({ orgIdentifier }: OrgPathProps) => `/settings/organizations/${orgIdentifier}/details`
+  ),
+  toOrganizationTicketSettings: withAccountId(
+    ({ orgIdentifier }: OrgPathProps) => `/settings/organizations/${orgIdentifier}/setup/tickets`
   ),
   toCreateSecretFromYaml: withAccountId(
     ({ orgIdentifier, projectIdentifier, module }: Partial<ProjectPathProps & ModulePathParams>) => {
@@ -1947,6 +1950,10 @@ const routes = {
   toSTOProjectTicketSummary: withAccountId(
     ({ orgIdentifier, projectIdentifier, issueId }: ProjectPathProps & { issueId: string }) =>
       `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/ticket-summary/${issueId}`
+  ),
+  toSTOProjectTicketSettings: withAccountId(
+    ({ orgIdentifier, projectIdentifier }: ProjectPathProps) =>
+      `/sto/orgs/${orgIdentifier}/projects/${projectIdentifier}/setup/tickets`
   ),
   /********************************************************************************************************************/
   toOldCustomDashboard: withAccountId(() => '/home/dashboards*'),

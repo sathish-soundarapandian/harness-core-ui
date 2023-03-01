@@ -102,7 +102,6 @@ function FormContent({
             variableName="spec.approvalMessage"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.approvalMessage', value)}
             isReadonly={readonly}
           />
@@ -133,7 +132,6 @@ function FormContent({
               variableName="spec.approvers.userGroups"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.approvers.userGroups', value)}
               isReadonly={readonly}
               userGroupsInputProps={{
@@ -165,7 +163,6 @@ function FormContent({
             variableName="spec.approvers.minimumCount"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.approvers.minimumCount', value)}
             isReadonly={readonly}
             allowedValuesType={ALLOWED_VALUES_TYPE.NUMBER}

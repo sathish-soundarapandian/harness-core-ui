@@ -125,7 +125,6 @@ function FormField({
           value={get(formik.values, fieldName, '')}
           type="String"
           variableName={fieldName}
-          showAdvanced={true}
           onChange={
             /* istanbul ignore next */
             value => {

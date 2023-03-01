@@ -212,7 +212,8 @@ export const getInfrastructureDefaultValue = (
         allowSimultaneousDeployments
       }
     }
-    case InfraDeploymentType.Asg: {
+    case InfraDeploymentType.Asg:
+    case InfraDeploymentType.AwsLambda: {
       const { connectorRef, region } = infrastructure?.spec || {}
       return {
         connectorRef,
@@ -368,6 +369,19 @@ export const getInfraGroups = (
     }
   ]
 
+  const awsLambdaInfraGroups: InfrastructureGroup[] = [
+    {
+      groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
+      items: [
+        {
+          label: getString('common.aws'),
+          icon: 'service-aws',
+          value: InfraDeploymentType.AwsLambda
+        }
+      ]
+    }
+  ]
+
   const kuberntesInfraGroups: InfrastructureGroup[] = [
     {
       groupLabel: getString('pipelineSteps.deploy.infrastructure.directConnection'),
@@ -380,6 +394,8 @@ export const getInfraGroups = (
   ]
 
   switch (true) {
+    case deploymentType === ServiceDeploymentType.AwsLambda:
+      return awsLambdaInfraGroups
     case isServerlessDeploymentType(deploymentType):
       return serverlessInfraGroups
     case isAzureWebAppDeploymentType(deploymentType):

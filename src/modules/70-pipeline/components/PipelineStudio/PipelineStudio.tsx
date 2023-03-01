@@ -82,8 +82,7 @@ export default function PipelineStudio(): React.ReactElement {
     )
   }
   const { licenseInformation } = useLicenseStore()
-  const { CING_ENABLED, CFNG_ENABLED, PIE_NG_GITX_CACHING, PIPELINE_CHAINING, IACM_ENABLED } = useFeatureFlags()
-
+  const { CING_ENABLED, CFNG_ENABLED, PIPELINE_CHAINING, IACM_ENABLED } = useFeatureFlags()
   const { getString } = useStrings()
   const { shouldVisible } = useNavModuleInfo(ModuleName.CD)
   return (
@@ -116,7 +115,6 @@ export default function PipelineStudio(): React.ReactElement {
       }
       stepsFactory={factory}
       runPipeline={handleRunPipeline}
-      isPipelineGitCacheEnabled={!!PIE_NG_GITX_CACHING}
     >
       <PipelineStudioInternal
         className={css.container}

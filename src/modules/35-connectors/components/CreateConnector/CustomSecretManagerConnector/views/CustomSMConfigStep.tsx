@@ -32,8 +32,6 @@ import { useStrings } from 'framework/strings'
 import { useTelemetry, useTrackEvent } from '@common/hooks/useTelemetry'
 import { Category, ConnectorActions } from '@common/constants/TrackingConstants'
 import { VariableSchema } from '@common/utils/Validation'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { Connectors } from '@connectors/constants'
 
 import type {
@@ -76,7 +74,6 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
   getTemplate
 }) => {
   const { getString } = useStrings()
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
 
   const defaultInitialFormData: CustomSMFormInterface = {
     template: undefined,
@@ -141,7 +138,7 @@ const CustomSMConfigStep: React.FC<StepProps<StepCustomSMConfigStepProps> & Step
             projectIdentifier: template.projectIdentifier,
             versionLabel: template.versionLabel || ''
           },
-          requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
+          requestOptions: { headers: { 'Load-From-Cache': 'true' } }
         })
 
         let inputSet: JsonNode = {}

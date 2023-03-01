@@ -291,7 +291,6 @@ export function ServerlessLambdaWithS3({
               variableName="bucketName"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('bucketName', value)}
               isReadonly={isReadonly}
             />
@@ -345,7 +344,6 @@ export function ServerlessLambdaWithS3({
             variableName="bucketName"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('bucketName', value)}
             isReadonly={isReadonly}
           />
@@ -444,7 +442,6 @@ export function ServerlessLambdaWithS3({
                       variableName="region"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('region', value)
                       }}
@@ -479,7 +476,6 @@ export function ServerlessLambdaWithS3({
                       variableName={'paths'}
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={val => formik.setFieldValue('paths', val)}
                       isReadonly={isReadonly}
                     />
@@ -511,7 +507,6 @@ export function ServerlessLambdaWithS3({
                             variableName="configOverridePath"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={value => formik.setFieldValue('configOverridePath', value)}
                             isReadonly={isReadonly}
                           />

@@ -34,7 +34,6 @@ import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import useActiveEnvironment from '@cf/hooks/useActiveEnvironment'
 import { CFSideNavProps } from '@cf/constants'
-import CFPipelineDeploymentList from '@cf/pages/pipeline-deployment-list/CFPipelineDeploymentList'
 import PipelineStudio from '@pipeline/components/PipelineStudio/PipelineStudio'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import { ResourceCategory, ResourceType } from '@rbac/interfaces/ResourceType'
@@ -54,6 +53,7 @@ import { DefaultSettingsRouteDestinations } from '@default-settings/RouteDestina
 import { TemplateStudio } from '@templates-library/components/TemplateStudio/TemplateStudio'
 import type { AuditEventData, ResourceDTO } from 'services/audit'
 import AuditTrailFactory, { ResourceScope } from 'framework/AuditTrail/AuditTrailFactory'
+import { PipelineDeploymentList } from '@pipeline/pages/pipeline-deployment-list/PipelineDeploymentList'
 import { registerFeatureFlagPipelineStage } from './pages/pipeline-studio/views/FeatureFlagStage'
 import { registerFlagConfigurationPipelineStep } from './components/PipelineSteps'
 import { TargetsPage } from './pages/target-management/targets/TargetsPage'
@@ -450,7 +450,7 @@ const CFRoutes: FC = () => {
           <>
             <PipelineRouteDestinations
               pipelineStudioComponent={PipelineStudio}
-              pipelineDeploymentListComponent={CFPipelineDeploymentList}
+              pipelineDeploymentListComponent={PipelineDeploymentList}
               moduleParams={moduleParams}
               licenseRedirectData={licenseRedirectData}
               sidebarProps={CFSideNavProps}

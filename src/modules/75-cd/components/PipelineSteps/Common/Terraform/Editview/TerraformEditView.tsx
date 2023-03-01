@@ -472,7 +472,6 @@ export default function TerraformEditView(
           variableName="spec.configuration.spec.backendConfig.spec.content"
           showRequiredField={false}
           showDefaultField={false}
-          showAdvanced={true}
           onChange={value => formik.setFieldValue('spec.configuration.spec.backendConfig.spec.content', value)}
           isReadonly={readonly}
         />
@@ -562,7 +561,6 @@ export default function TerraformEditView(
                     variableName="spec.provisionerIdentifier"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => {
                       setFieldValue('spec.provisionerIdentifier', value)
                     }}
@@ -640,7 +638,6 @@ export default function TerraformEditView(
                                   variableName="configuration.spec.workspace"
                                   showRequiredField={false}
                                   showDefaultField={false}
-                                  showAdvanced={true}
                                   onChange={value => {
                                     formik.setFieldValue('spec.configuration.spec.workspace', value)
                                   }}

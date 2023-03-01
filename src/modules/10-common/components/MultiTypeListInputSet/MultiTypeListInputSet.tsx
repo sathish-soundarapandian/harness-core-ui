@@ -252,7 +252,6 @@ export const MultiTypeListInputSet = (props: MultiTypeListProps & ConnectorRefer
             variableName={name}
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={val => formik?.setFieldValue(name, val)}
             {...configureOptionsProps}
             isReadonly={props.disabled}

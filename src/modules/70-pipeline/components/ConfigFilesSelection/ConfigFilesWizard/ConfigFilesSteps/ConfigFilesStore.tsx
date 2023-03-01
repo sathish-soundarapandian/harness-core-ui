@@ -212,7 +212,6 @@ function ConfigFileStore({
                         variableName="connectorRef"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => {
                           formik.setFieldValue('connectorRef', value)
                         }}

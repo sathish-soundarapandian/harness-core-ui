@@ -42,7 +42,7 @@ import { StepViewType } from '../AbstractSteps/Step'
 import type { StageSelectionData } from '../../utils/runPipelineUtils'
 import { getSelectedStagesFromPipeline } from './CommonUtils/CommonUtils'
 import type { CustomVariablesData } from '../PipelineSteps/Steps/CustomVariables/CustomVariableInputSet'
-import type { DeployServiceEntityData } from '../PipelineInputSetForm/StageInputSetForm'
+import type { DeployServiceEntityData } from '../PipelineInputSetForm/ServicesInputSetForm/ServicesInputSetForm'
 import { validateOutputPanelInputSet } from '../CommonPipelineStages/PipelineStage/PipelineStageOutputSection/utils'
 
 interface childPipelineMetadata {
@@ -566,6 +566,37 @@ export const validateStage = ({
       if (!isEmpty(errorsResponse)) {
         set(errors, 'spec.execution.rollbackSteps', errorsResponse)
       }
+    }
+    // IACM validation
+    if (
+      viewType !== StepViewType.InputSet &&
+      isEmpty((stageConfig as DeploymentStageConfig & { stackID: string; workflow: string })?.workflow) &&
+      getMultiTypeFromValue(
+        (templateStageConfig as DeploymentStageConfig & { stackID: string; workflow: string })?.workflow
+      ) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        'spec.workflow',
+        getString?.('fieldRequired', {
+          field: getString('pipeline.iacm.workflow')
+        })
+      )
+    }
+    if (
+      viewType !== StepViewType.InputSet &&
+      isEmpty((stageConfig as DeploymentStageConfig & { stackID: string; workflow: string })?.stackID) &&
+      getMultiTypeFromValue(
+        (templateStageConfig as DeploymentStageConfig & { stackID: string; workflow: string })?.stackID
+      ) === MultiTypeInputType.RUNTIME
+    ) {
+      set(
+        errors,
+        'spec.stackID',
+        getString?.('fieldRequired', {
+          field: getString('pipeline.iacm.resourceStack')
+        })
+      )
     }
 
     return errors

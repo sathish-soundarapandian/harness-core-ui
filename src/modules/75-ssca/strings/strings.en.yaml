@@ -1,1 +1,14 @@
 allowDenyList: 'DenyList/AllowList'
+orchestrationStep:
+  sbomGeneration: SBOM Generation
+  sbomTool: SBOM Tool
+  sbomFormat: SBOM Format
+  artifactSource: Artifact Source
+  sbomAttestation: SBOM Attestation
+
+enforcementStep:
+  abortOn:
+    signatureVerificaionFailure: Stop Pipeline if signature verification fails
+    sbomPartOfDenyList: Stop Pipeline if SBOM is part of denylist
+    sbomComponentPartOfDenyList: Stop Pipeline and add SBOM to denylist if any component is part of the denylist
+    sourceNotPartOfAllowList: Stop Pipeline and add SBOM to denylist if any source is not part of the allowlist

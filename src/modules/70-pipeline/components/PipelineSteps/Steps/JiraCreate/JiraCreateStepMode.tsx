@@ -423,7 +423,6 @@ function FormContent({
             variableName="spec.connectorRef"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('spec.connectorRef', value)}
             isReadonly={readonly}
           />
@@ -468,7 +467,6 @@ function FormContent({
               variableName="spec.projectKey"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.projectKey', value)}
               isReadonly={readonly}
             />
@@ -529,7 +527,6 @@ function FormContent({
               variableName="spec.issueType"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.issueType', value)}
               isReadonly={readonly}
             />

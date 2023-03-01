@@ -236,6 +236,7 @@ test('getStepTypeByDeploymentType', () => {
   )
   expect(getStepTypeByDeploymentType(ServiceDeploymentType.AzureWebApp)).toBe(StepType.AzureWebAppServiceSpec)
   expect(getStepTypeByDeploymentType('')).toBe(StepType.K8sServiceSpec)
+  expect(getStepTypeByDeploymentType(ServiceDeploymentType.AwsLambda)).toBe(StepType.AwsLambdaService)
 })
 
 test('isServerlessDeploymentType', () => {

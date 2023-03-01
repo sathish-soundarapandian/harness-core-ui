@@ -69,8 +69,6 @@ import { GitPopoverV2 } from '@common/components/GitPopoverV2/GitPopoverV2'
 import { ImagePreview } from '@common/components/ImagePreview/ImagePreview'
 import { PipelineCachedCopy } from '@pipeline/components/PipelineStudio/PipelineCanvas/PipelineCachedCopy/PipelineCachedCopy'
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { TemplateActivityLog } from '../TemplateActivityLog/TemplateActivityLog'
 import css from './TemplateDetails.module.scss'
 
@@ -120,7 +118,6 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
   const { accountId, module } = params
   const [selectedBranch, setSelectedBranch] = React.useState<string | undefined>()
   const gitPopoverBranch = isStandAlone ? storeMetadata?.branch : selectedBranch
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
 
   const stableVersion = React.useMemo(() => {
     return (templates as TemplateSummaryResponse[])?.find(item => item.stableTemplate && !isEmpty(item.versionLabel))
@@ -148,7 +145,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
       versionLabel: selectedTemplate?.versionLabel,
       ...getGitQueryParamsWithParentScope({ storeMetadata, params, loadFromFallbackBranch })
     },
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     lazy: true
   })
 
@@ -190,7 +187,7 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
       })
     },
     lazy: true,
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
   const { refetch: refetchTemplateInputSetYaml } = templateInputSetFetchParams
 
@@ -417,7 +414,6 @@ export const TemplateDetails: React.FC<TemplateDetailsProps> = props => {
                         forceFetch
                         btnClassName={css.gitBtn}
                         customIcon={
-                          isGitCacheEnabled &&
                           !isEmpty((selectedTemplate as TemplateResponse)?.cacheResponseMetadata) ? (
                             <PipelineCachedCopy
                               reloadContent={getString('common.template.label')}

@@ -131,7 +131,6 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
                           variableName={formikOnChangeNames(path).repoName}
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue(formikOnChangeNames(path).repoName, value)
                           }}
@@ -167,7 +166,6 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
                           variableName={formInputNames(path).branch}
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue(formikOnChangeNames(path).branch, value)
                           }}
@@ -197,7 +195,6 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
                           variableName={formInputNames(path).commitId}
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => {
                             formik.setFieldValue(formikOnChangeNames(path).commitId, value)
                           }}
@@ -226,7 +223,6 @@ export const ConfigFileStoreStepTwo: React.FC<StepProps<any> & ConfigFileStoreSt
                         variableName={formInputNames(path).folderPath}
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => {
                           formik.setFieldValue(formikOnChangeNames(path).folderPath, value)
                         }}

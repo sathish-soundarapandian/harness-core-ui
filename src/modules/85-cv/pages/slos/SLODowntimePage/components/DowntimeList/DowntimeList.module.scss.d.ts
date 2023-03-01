@@ -7,6 +7,7 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly affectedServices: string
   readonly bolder: string
   readonly downtimeList: string
   readonly firstLine: string

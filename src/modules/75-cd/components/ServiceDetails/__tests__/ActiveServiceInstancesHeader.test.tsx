@@ -13,13 +13,16 @@ import * as cdngServices from 'services/cd-ng'
 
 jest.mock('highcharts-react-official', () => () => <></>)
 
-jest.spyOn(cdngServices, 'useGetActiveServiceInstanceSummary').mockImplementation(() => {
+jest.spyOn(cdngServices, 'useGetActiveServiceInstanceSummaryV2').mockImplementation(() => {
   return {
     loading: false,
     error: false,
     data: {
       data: {
-        changeRate: 5,
+        changeRate: {
+          trend: 'UP_TREND',
+          percentChange: 5
+        },
         countDetails: {
           nonProdInstances: 2,
           prodInstances: 1,

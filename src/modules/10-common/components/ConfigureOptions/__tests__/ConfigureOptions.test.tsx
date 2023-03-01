@@ -33,8 +33,7 @@ const getProps = (
   variableName: string,
   isRequired = true,
   defaultValue = '',
-  showDefaultField = true,
-  showAdvanced = true
+  showDefaultField = true
 ): ConfigureOptionsProps => ({
   value,
   isRequired,
@@ -42,7 +41,6 @@ const getProps = (
   variableName,
   type,
   showDefaultField,
-  showAdvanced,
   onChange
 })
 

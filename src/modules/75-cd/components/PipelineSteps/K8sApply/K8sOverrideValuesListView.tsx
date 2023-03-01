@@ -51,6 +51,7 @@ import K8sValuesManifest from '@pipeline/components/ManifestSelection/ManifestWi
 import OpenShiftParamWithGit from '@pipeline/components/ManifestSelection/ManifestWizardSteps/OpenShiftParam/OSWithGit'
 
 import InlineManifest from '@pipeline/components/ManifestSelection/ManifestWizardSteps/InlineManifest/InlineManifest'
+import HarnessFileStore from '@pipeline/components/ManifestSelection/ManifestWizardSteps/HarnessFileStore/HarnessFileStore'
 import {
   allowedManifestTypes,
   getBuildPayload,
@@ -248,6 +249,9 @@ function K8sOverrideValuesListView({
           K8sManifestStoreMap.Bitbucket
         ].includes(manifestStore as K8sManifestStores):
         manifestDetailStep = <K8sValuesManifest {...lastStepProps()} />
+        break
+      case manifestStore === K8sManifestStoreMap.Harness:
+        manifestDetailStep = <HarnessFileStore {...lastStepProps()} />
         break
       default:
         manifestDetailStep = <InlineManifest {...lastStepProps()} />

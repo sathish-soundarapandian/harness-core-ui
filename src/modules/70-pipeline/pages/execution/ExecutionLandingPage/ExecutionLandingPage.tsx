@@ -6,10 +6,10 @@
  */
 
 import React, { useEffect, useCallback, useState } from 'react'
-import { Intent } from '@blueprintjs/core'
+import { Dialog, Intent } from '@blueprintjs/core'
 import { useParams, useLocation, useHistory } from 'react-router-dom'
 import { get, isEmpty, pickBy } from 'lodash-es'
-import { Text, Icon, PageError, PageSpinner, Layout, Container } from '@harness/uicore'
+import { Text, Icon, PageError, PageSpinner, Layout, Container, Heading } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { CIExecutionImages, getCustomerConfigPromise, ResponseCIExecutionImages } from 'services/ci'
 import type { GovernanceMetadata, GraphLayoutNode, ExecutionNode } from 'services/pipeline-ng'
@@ -23,7 +23,6 @@ import type { ExecutionPageQueryParams } from '@pipeline/utils/types'
 import type { ExecutionPathProps, GitQueryParams, PipelineType } from '@common/interfaces/RouteInterfaces'
 import { PipelineExecutionWarning } from '@pipeline/components/PipelineExecutionWarning/PipelineExecutionWarning'
 import { logsCache } from '@pipeline/components/LogsContent/LogsState/utils'
-import { EvaluationModal } from '@governance/EvaluationModal'
 import ExecutionContext from '@pipeline/context/ExecutionContext'
 import { ModuleName } from 'framework/types/ModuleName'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
@@ -34,6 +33,7 @@ import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
 import { useGetPipelineSummaryQuery } from 'services/pipeline-rq'
+import { EvaluationView } from '@governance/EvaluationView'
 import ExecutionTabs from './ExecutionTabs/ExecutionTabs'
 import ExecutionMetadata from './ExecutionMetadata/ExecutionMetadata'
 import { ExecutionPipelineVariables } from './ExecutionPipelineVariables'
@@ -80,6 +80,13 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   const selectedPageTab = locationPathNameArr[locationPathNameArr.length - 1]
   const [deprecatedImageUsageMap, setDeprecatedImageUsageMap] =
     useState<Map<CIBuildInfrastructureType, CIExecutionImages>>()
+  const [governanceEvaluations, setGovernanceEvaluations] = useState<{
+    shouldShowGovernanceEvaluations: boolean
+    governanceMetadata: GovernanceMetadata
+  }>({
+    shouldShowGovernanceEvaluations: !!location?.state?.shouldShowGovernanceEvaluations,
+    governanceMetadata: location?.state?.governanceMetadata
+  })
 
   const { data: pipeline, isLoading: loadingPipeline } = useGetPipelineSummaryQuery(
     {
@@ -147,6 +154,13 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
       })
     }
   }, [data?.data?.pipelineExecutionSummary?.modules?.length])
+
+  useDeepCompareEffect(() => {
+    setGovernanceEvaluations({
+      shouldShowGovernanceEvaluations: !!location?.state?.shouldShowGovernanceEvaluations,
+      governanceMetadata: location?.state?.governanceMetadata
+    })
+  }, [location?.state?.shouldShowGovernanceEvaluations, location?.state?.governanceMetadata])
 
   const getDeprecatedImageUsageSummaryForInfraType = useCallback(
     (buildInfraType: CIBuildInfrastructureType): React.ReactElement => {
@@ -365,9 +379,28 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
               >
                 {props.children}
               </div>
-              {!!location?.state?.shouldShowGovernanceEvaluations && (
-                <EvaluationModal accountId={accountId} metadata={location?.state?.governanceMetadata} />
-              )}
+              <Dialog
+                isOpen={governanceEvaluations.shouldShowGovernanceEvaluations}
+                onClose={() => {
+                  setGovernanceEvaluations({
+                    shouldShowGovernanceEvaluations: false,
+                    governanceMetadata: {} as GovernanceMetadata
+                  })
+                }}
+                title={
+                  <Heading level={3} font={{ variation: FontVariation.H3 }} padding={{ top: 'medium' }}>
+                    {getString('common.policiesSets.evaluations')}
+                  </Heading>
+                }
+                enforceFocus={false}
+                className={css.policyEvaluationDialog}
+              >
+                <EvaluationView
+                  metadata={governanceEvaluations.governanceMetadata}
+                  accountId={accountId}
+                  module={module}
+                />
+              </Dialog>
             </div>
           </main>
         )}

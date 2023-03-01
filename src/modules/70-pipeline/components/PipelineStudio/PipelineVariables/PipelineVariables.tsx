@@ -61,6 +61,7 @@ export function PipelineVariablesWithRef(
     metadataMap,
     error,
     initLoading,
+    setPipeline,
     searchIndex = 0
   } = usePipelineVariables()
   const { getString } = useStrings()
@@ -85,6 +86,11 @@ export function PipelineVariablesWithRef(
   React.useEffect(() => {
     setPipelineAsState(pipeline)
   }, [pipeline])
+
+  React.useEffect(() => {
+    if (!isEqual(originalPipeline, pipelineAsState)) setPipeline(pipelineAsState)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pipelineAsState])
 
   function closeDrawer(): void {
     updatePipelineView({ ...pipelineView, isDrawerOpened: false, drawerData: { type: DrawerTypes.AddStep } })

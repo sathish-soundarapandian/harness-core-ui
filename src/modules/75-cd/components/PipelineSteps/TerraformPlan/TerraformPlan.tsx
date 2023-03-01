@@ -460,7 +460,6 @@ function TerraformPlanWidget(
           variableName="spec.configuration.backendConfig.spec.content"
           showRequiredField={false}
           showDefaultField={false}
-          showAdvanced={true}
           onChange={value => formik.setFieldValue('spec.configuration.backendConfig.spec.content', value)}
           isReadonly={readonly}
         />
@@ -561,7 +560,6 @@ function TerraformPlanWidget(
                     showRequiredField={false}
                     showDefaultField={false}
                     allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
-                    showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
                         setFieldValue('spec.provisionerIdentifier', value)
@@ -655,7 +653,6 @@ function TerraformPlanWidget(
                             showRequiredField={false}
                             showDefaultField={false}
                             allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
-                            showAdvanced={true}
                             onChange={value => {
                               /* istanbul ignore else */
                               formik.setFieldValue('spec.configuration.workspace', value)
@@ -816,7 +813,6 @@ function TerraformPlanWidget(
                             variableName="spec?.configuration?.exportTerraformPlanJson"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={
                               /* istanbul ignore next */ value =>
                                 formik.setFieldValue('spec?.configuration?.exportTerraformPlanJson', value)
@@ -844,7 +840,6 @@ function TerraformPlanWidget(
                             variableName="spec?.configuration?.exportTerraformHumanReadablePlan"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={
                               /* istanbul ignore next */ value =>
                                 formik.setFieldValue('spec?.configuration?.exportTerraformHumanReadablePlan', value)

@@ -44,7 +44,7 @@ describe('Test Pipeline gitx cache Copy', () => {
   }
   test('should render correctly', () => {
     const { container } = render(
-      <TestWrapper defaultFeatureFlagValues={{ PIE_NG_GITX_CACHING: true }}>
+      <TestWrapper>
         <PipelineContext.Provider value={cacheResponseContextValue}>
           <PipelineCachedCopy {...commonProps} />
         </PipelineContext.Provider>
@@ -55,7 +55,7 @@ describe('Test Pipeline gitx cache Copy', () => {
 
   test('should display valid cache icon', async () => {
     const { container } = render(
-      <TestWrapper defaultFeatureFlagValues={{ PIE_NG_GITX_CACHING: true }}>
+      <TestWrapper>
         <PipelineContext.Provider value={cacheResponseContextValue}>
           <PipelineCachedCopy {...commonProps} />
         </PipelineContext.Provider>
@@ -68,7 +68,7 @@ describe('Test Pipeline gitx cache Copy', () => {
 
   test('should show last updated data on hover', async () => {
     const { container } = render(
-      <TestWrapper defaultFeatureFlagValues={{ PIE_NG_GITX_CACHING: true }}>
+      <TestWrapper>
         <PipelineContext.Provider value={cacheResponseContextValue}>
           <PipelineCachedCopy {...commonProps} />
         </PipelineContext.Provider>
@@ -85,7 +85,7 @@ describe('Test Pipeline gitx cache Copy', () => {
     const ref = React.createRef<PipelineCachedCopyHandle>()
 
     render(
-      <TestWrapper defaultFeatureFlagValues={{ PIE_NG_GITX_CACHING: true }}>
+      <TestWrapper>
         <PipelineContext.Provider value={cacheResponseContextValue}>
           <PipelineCachedCopy
             ref={ref}

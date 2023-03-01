@@ -216,7 +216,6 @@ function FormComponent(
               variableName="project"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.project', value)}
               isReadonly={isReadonly}
               allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -252,7 +251,6 @@ function FormComponent(
                 variableName="region"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('spec.region', value)
                 }}
@@ -280,7 +278,6 @@ function FormComponent(
               variableName="repositoryName"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.repositoryName', value)}
               isReadonly={isReadonly}
               allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -306,7 +303,6 @@ function FormComponent(
               variableName="package"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.package', value)}
               isReadonly={isReadonly}
               allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -380,7 +376,6 @@ function FormComponent(
                 variableName="version"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('spec.version', value)}
                 isReadonly={isReadonly}
               />
@@ -406,7 +401,6 @@ function FormComponent(
                 variableName="versionRegex"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('spec.versionRegex', value)}
                 isReadonly={isReadonly}
                 allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}

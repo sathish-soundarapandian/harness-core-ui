@@ -6,9 +6,12 @@
  */
 
 import React from 'react'
-import { Icon, Layout, useConfirmationDialog, Text } from '@harness/uicore'
+import { Layout, useConfirmationDialog, Text, ButtonVariation } from '@harness/uicore'
 import { Color, Intent } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
+import RbacButton from '@rbac/components/Button/Button'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
 import css from '@cv/pages/slos/components/SLOActions/SLOActions.module.scss'
 
 export interface DowntimeActionsProps {
@@ -40,22 +43,42 @@ export default function DowntimeActions(props: DowntimeActionsProps): JSX.Elemen
 
   return (
     <Layout.Horizontal className={css.actions}>
-      <Icon
+      <RbacButton
         className={css.actionIcons}
         padding={'small'}
-        name="Edit"
+        rightIcon="Edit"
+        withoutCurrentColor
+        iconProps={{ color: Color.GREY_500 }}
         onClick={e => {
           e.stopPropagation()
           onEdit(identifier)
         }}
+        variation={ButtonVariation.LINK}
+        permission={{
+          permission: PermissionIdentifier.EDIT_DOWNTIME,
+          resource: {
+            resourceType: ResourceType.DOWNTIME,
+            resourceIdentifier: identifier
+          }
+        }}
       />
-      <Icon
+      <RbacButton
         className={css.actionIcons}
         padding={'small'}
-        name="main-trash"
+        rightIcon="main-trash"
+        withoutCurrentColor
+        iconProps={{ color: Color.GREY_500 }}
         onClick={e => {
           e.stopPropagation()
           openDialog()
+        }}
+        variation={ButtonVariation.LINK}
+        permission={{
+          permission: PermissionIdentifier.DELETE_DOWNTIME,
+          resource: {
+            resourceType: ResourceType.DOWNTIME,
+            resourceIdentifier: identifier
+          }
         }}
       />
     </Layout.Horizontal>

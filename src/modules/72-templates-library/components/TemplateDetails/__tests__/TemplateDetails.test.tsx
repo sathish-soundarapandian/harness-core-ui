@@ -21,9 +21,6 @@ import { mockBranches } from '@gitsync/components/GitSyncForm/__tests__/mockdata
 import { TemplateDetails, TemplateDetailsProps } from '../TemplateDetails'
 
 const gitAppStoreValues = {
-  featureFlags: {
-    PIE_NG_GITX_CACHING: true
-  },
   isGitSyncEnabled: false,
   isGitSimplificationEnabled: true,
   supportingGitSimplification: true,

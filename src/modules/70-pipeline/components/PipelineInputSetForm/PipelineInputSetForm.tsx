@@ -127,7 +127,7 @@ export function StageFormInternal({
       )}
       {template?.stage?.type !== StageType.PIPELINE && template?.stage?.spec && (
         <StageInputSetForm
-          stageIdentifier={allValues?.stage?.identifier}
+          stageIdentifier={defaultTo(allValues?.stage?.identifier, '')}
           stageType={template?.stage?.type as StageType}
           path={`${path}.spec`}
           deploymentStageTemplate={template?.stage?.spec as DeploymentStageConfig}

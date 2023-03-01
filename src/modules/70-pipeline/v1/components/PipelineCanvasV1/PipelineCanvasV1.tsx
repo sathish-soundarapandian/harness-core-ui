@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -14,7 +14,6 @@ import {
   Container,
   Layout,
   PageSpinner,
-  SelectOption,
   useConfirmationDialog,
   useToaster,
   VisualYamlSelectedView as SelectedView
@@ -24,7 +23,7 @@ import { matchPath, useHistory, useParams } from 'react-router-dom'
 import { defaultTo, isEmpty, isEqual } from 'lodash-es'
 import { parse } from '@common/utils/YamlHelperMethods'
 import type { Error, PipelineInfoConfig } from 'services/pipeline-ng'
-import { EntityGitDetails, InputSetSummaryResponse, useGetInputsetYaml } from 'services/pipeline-ng'
+import { EntityGitDetails, useGetInputsetYaml } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import { NavigationCheck } from '@common/components/NavigationCheck/NavigationCheck'
@@ -45,10 +44,9 @@ import type { IGitContextFormProps } from '@common/components/GitContextForm/Git
 import { useDocumentTitle } from '@common/hooks/useDocumentTitle'
 import GenericErrorHandler from '@common/pages/GenericErrorHandler/GenericErrorHandler'
 import NoEntityFound, { handleFetchFailure } from '@pipeline/pages/utils/NoEntityFound/NoEntityFound'
-import { RunPipelineForm } from '@pipeline/components/RunPipelineModal/RunPipelineForm'
-
 import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import type { Pipeline } from '@pipeline/utils/types'
+import { RunPipelineFormV1 } from '../RunPipelineModalV1/RunPipelineFormV1'
 import { DefaultNewPipelineId } from '../../../components/PipelineStudio/PipelineContext/PipelineActions'
 import usePipelineErrors from '../../../components/PipelineStudio/PipelineCanvas/PipelineErrors/usePipelineErrors'
 import CreatePipelinesV1 from '../CreatePipelinesV1/CreatePipelinesV1'
@@ -70,11 +68,6 @@ interface PipelineWithGitContextFormProps extends PipelineInfoConfig {
   connectorRef?: string
   filePath?: string
   storeType?: string
-}
-
-interface InputSetValue extends SelectOption {
-  type: InputSetSummaryResponse['inputSetType']
-  gitDetails?: EntityGitDetails
 }
 
 const runModalProps: IDialogProps = {
@@ -129,11 +122,9 @@ export function PipelineCanvasV1({
     runPipeline,
     executionId,
     inputSetType,
-    inputSetValue,
     inputSetLabel,
     inputSetRepoIdentifier,
     inputSetBranch,
-    stagesExecuted,
     repoName,
     connectorRef,
     storeType
@@ -433,24 +424,6 @@ export function PipelineCanvasV1({
     }
   })
 
-  const getInputSetSelected = (): InputSetValue[] => {
-    if (inputSetType) {
-      const inputSetSelected: InputSetValue[] = [
-        {
-          type: inputSetType as InputSetSummaryResponse['inputSetType'],
-          value: inputSetValue ?? '',
-          label: inputSetLabel ?? '',
-          gitDetails: {
-            repoIdentifier: inputSetRepoIdentifier,
-            branch: inputSetBranch
-          }
-        }
-      ]
-      return inputSetSelected
-    }
-    return []
-  }
-
   React.useEffect(() => {
     if (data) {
       ;(data as unknown as Response).text().then(str => {
@@ -509,20 +482,17 @@ export function PipelineCanvasV1({
       ) : (
         <Dialog {...runModalProps}>
           <Layout.Vertical className={css.modalCard}>
-            <RunPipelineForm
+            <RunPipelineFormV1
               pipelineIdentifier={pipelineIdentifier}
               orgIdentifier={orgIdentifier}
               projectIdentifier={projectIdentifier}
               accountId={accountId}
               module={module}
-              inputSetYAML={defaultTo(inputSetYaml, '')}
-              inputSetSelected={getInputSetSelected()}
               connectorRef={connectorRef}
               repoIdentifier={isPipelineRemote ? repoName : repoIdentifier}
               branch={branch}
               source="executions"
               onClose={onCloseRunPipelineModal}
-              stagesExecuted={stagesExecuted}
               storeType={storeType}
               storeMetadata={storeMetadata}
             />
@@ -544,7 +514,6 @@ export function PipelineCanvasV1({
       branch,
       repoIdentifier,
       inputSetType,
-      inputSetValue,
       inputSetLabel,
       pipelineIdentifier
     ]

@@ -36,7 +36,6 @@ export function ConfigureOptions(props: ConfigureOptionsProps): React.ReactEleme
     variableName,
     type,
     showRequiredField = false,
-    showAdvanced = false,
     hideExecutionTimeField = false,
     isExecutionTimeFieldDisabled = false,
     allowedValuesType,
@@ -106,7 +105,6 @@ export function ConfigureOptions(props: ConfigureOptionsProps): React.ReactEleme
           hideExecutionTimeField={hideExecutionTimeField}
           isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled}
           showRequiredField={showRequiredField}
-          showAdvanced={showAdvanced}
           allowedValuesType={allowedValuesType}
           allowedValuesValidator={allowedValuesValidator}
           getAllowedValuesCustomComponent={getAllowedValuesCustomComponent}

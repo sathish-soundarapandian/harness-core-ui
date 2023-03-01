@@ -8,7 +8,7 @@
 import React, { useCallback } from 'react'
 import { defaultTo, get, isNil } from 'lodash-es'
 import type { IItemRendererProps } from '@blueprintjs/select'
-import { FormError, getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
+import { getMultiTypeFromValue, Layout, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 
 import { SidecarArtifact, useGetProjects } from 'services/cd-ng'
 import { useStrings } from 'framework/strings'
@@ -166,14 +166,6 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
   }
 
   const getProjectHelperText = React.useCallback(() => {
-    if (fetchProjectsError) {
-      return (
-        <FormError
-          name={`${path}.artifacts.${artifactPath}.spec.project`}
-          errorMessage={getRBACErrorMessage(fetchProjectsError as RBACError)}
-        />
-      )
-    }
     if (
       getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.project`)) ===
         MultiTypeInputType.FIXED &&
@@ -181,7 +173,7 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
     ) {
       return getString('pipeline.projectHelperText')
     }
-  }, [fixedConnectorValue, path, artifactPath, formik.values, fetchProjectsError])
+  }, [fixedConnectorValue, path, artifactPath, formik.values])
 
   const isRuntime = isPrimaryArtifactsRuntime || isSidecarRuntime
   const itemRenderer = useCallback(
@@ -251,8 +243,8 @@ const Content = (props: ArtifactSourceRenderProps): JSX.Element => {
                 selectProps: {
                   items: projectOptions,
                   noResults: (
-                    <Text lineClamp={1} width={400} height={35} padding={'small'}>
-                      {getString('noProjects')}
+                    <Text lineClamp={1} width={400} height={32} padding={'small'}>
+                      {getRBACErrorMessage(fetchProjectsError as RBACError) || getString('noProjects')}
                     </Text>
                   ),
                   itemRenderer: itemRenderer,

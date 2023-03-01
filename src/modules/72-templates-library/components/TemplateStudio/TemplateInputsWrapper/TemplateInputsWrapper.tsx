@@ -16,8 +16,6 @@ import { getGitQueryParamsWithParentScope } from '@common/utils/gitSyncUtils'
 import { useStrings } from 'framework/strings'
 import type { NGTemplateInfoConfigWithGitDetails } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
 import templateFactory from '@templates-library/components/Templates/TemplatesFactory'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import css from './TemplateInputsWrapper.module.scss'
 
@@ -28,7 +26,6 @@ export const TemplateInputsWrapper: React.FC = (): JSX.Element => {
   } = React.useContext(TemplateContext)
   const params = useParams<ProjectPathProps>()
   const { accountId } = params
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
 
   const templateWithGitDetails: NGTemplateInfoConfigWithGitDetails = React.useMemo(
     () => ({
@@ -55,7 +52,7 @@ export const TemplateInputsWrapper: React.FC = (): JSX.Element => {
       versionLabel: defaultTo(templateWithGitDetails.versionLabel, ''),
       ...getGitQueryParamsWithParentScope({ storeMetadata, params, repoIdentifier: repo, branch })
     },
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   return (

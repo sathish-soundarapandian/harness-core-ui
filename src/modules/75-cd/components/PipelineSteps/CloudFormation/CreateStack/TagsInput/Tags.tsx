@@ -121,7 +121,6 @@ export const Tags = ({ allowableTypes, readonly = false, formik, regions }: Tags
                 variableName="spec.configuration.tags.spec.content"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   setFieldValue('spec.configuration.tags.spec.content', value)
                 }}

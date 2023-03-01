@@ -357,7 +357,6 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
                 isReadonly={readonly}
                 showDefaultField={true}
                 isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                showAdvanced={true}
                 onChange={value => {
                   /* istanbul ignore next */
                   formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.tagRegex`, value)

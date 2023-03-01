@@ -143,6 +143,7 @@ switchAccountError: Unable to switch accounts. Please try again.
 logs:
   noLogsText: 'No logs found'
   delegateSelectionLogs: Delegate selection logs
+  delegateTaskLogs: Delegate Tasks Logs
 execute: Execute
 commentModal:
   addCommentPlaceholder: Add a comment
@@ -189,7 +190,7 @@ datePickerShortcuts:
 validation:
   connectorRef: Connector is a required field
   namePatternIsNotValid: 'Name can only contain alphanumerics, . _ and -'
-  provisionerIdentifierPatternIsNotValid: 'Provisioner Identifier should not contain special characters and spaces'
+  provisionerIdentifierPatternIsNotValid: 'Provisioner Identifier must start with a letter or _ and can then be followed by alphanumerics, _, or $'
   provisionerIdentifierIsRequired: 'Provisioner Identifier is required'
   harnessFolderNamePatternIsNotValid: 'Harness Folder name can only contain alphanumerics, underscore, hyphen or a whitespace'
   nameIsRequired: '{{$.validation.nameRequired}}'
@@ -407,10 +408,16 @@ git:
   azureReposRepoUrl: 'Azure Repos Repository URL'
   gitHubUrlPlaceholder: 'https://github.com/account/'
   gitHubUrlPlaceholderSSH: 'git@github.com:account/'
+  gitHubRepoUrlPlaceholder: 'https://github.com/account/repo'
+  gitHubRepoUrlPlaceholderSSH: 'git@github.com:account/repo'
+  gitLabRepoUrlPlaceholder: 'https://gitlab.com/account/repo'
+  gitLabRepoUrlPlaceholderSSH: 'git@gitlab.com:account/repo'
   gitLabUrlPlaceholder: 'https://gitlab.com/account/'
   gitLabUrlPlaceholderSSH: 'git@gitlab.com:account/'
   bitbucketUrlPlaceholder: 'https://bitbucket.org/'
-  bitbucketPlaceholderSSH: 'git@bitbucket.org'
+  bitbucketPlaceholderSSH: 'git@bitbucket.org/'
+  bitbucketRepoUrlPlaceholder: 'https://bitbucket.org/repo'
+  bitbucketRepoPlaceholderSSH: 'git@bitbucket.org/repo'
   azureReposUrlPlaceholder: 'https://dev.azure.com/<organizationName>/<projectName>'
   azureReposUrlPlaceholderRepoHttp: 'https://dev.azure.com/<organizationName>/<projectName>/_git/<repositoryName>'
   azureReposPlaceholderSSH: 'git@ssh.dev.azure.com:v3/<organizationName>'
@@ -1346,16 +1353,18 @@ artifacts:
     sourceDirectoryPlaceholder: Enter Source Directory
 updated: Updated
 python: Python
+seeAdvancedOptions: See Advanced Options
+addedEntityLabel: 'Added {{entity}}'
 bucketName: Bucket Name
 
 # SSCA module
-ssca: SSCA
+ssca: Supply Chain Assurance
 sscaText: Software Supply Chain Assurance
 tickets:
   selectConnector: '[Select] Ticket Provider Connector'
   selectProjectName: '[Select] Project Name'
   connector: 'Ticket Provider Connector'
   defaultProjectName: 'Default Project Name'
-  tickets: 'Tickets'
+  externalTickets: 'External Tickets'
   ticketComment: 'Append comment to ticket when Security Issue changes are detected (coming soon)'
   ticketExemption: 'Create a ticket when an Exemption is created (coming soon)'

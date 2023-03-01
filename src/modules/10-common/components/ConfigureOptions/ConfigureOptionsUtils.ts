@@ -5,9 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { isEmpty } from 'lodash-es'
+import { defaultTo, isEmpty } from 'lodash-es'
 import * as Yup from 'yup'
 import { EXECUTION_TIME_INPUT_VALUE, MultiSelectOption, RUNTIME_INPUT_VALUE } from '@harness/uicore'
+import type { NGVariable } from 'services/pipeline-ng'
 import type { StringKeys } from 'framework/strings'
 import { yamlParse } from '@common/utils/YamlHelperMethods'
 
@@ -23,8 +24,6 @@ export interface FormValues {
   allowedValues: string[] | MultiSelectOption[]
   regExValues: string
   validation: Validation
-  isAdvanced: boolean
-  advancedValue: string
   isExecutionInput?: boolean
 }
 
@@ -132,7 +131,6 @@ export const JEXL = 'jexl'
 export interface ParsedInput {
   [InputSetFunction.ALLOWED_VALUES]: {
     values: string[] | null
-    jexlExpression: string | null
   } | null
   [InputSetFunction.EXECUTION_INPUT]: boolean
   [InputSetFunction.REGEX]: string | null
@@ -147,10 +145,16 @@ export function isExecutionInput(input: string): boolean {
   return splitData.some(val => val.startsWith(InputSetFunction.EXECUTION_INPUT))
 }
 
-export function parseInput(input: string): ParsedInput | null {
+interface parseInputOptions {
+  variableType?: NGVariable['type']
+}
+
+export function parseInput(input: string, options?: parseInputOptions): ParsedInput | null {
   if (typeof input !== 'string') {
     return null
   }
+
+  const { variableType } = defaultTo(options, {})
 
   const INPUT_EXPRESSION_REGEX = new RegExp(`^${INPUT_EXPRESSION_REGEX_STRING}$`, 'g')
 
@@ -177,12 +181,20 @@ export function parseInput(input: string): ParsedInput | null {
     } else if (fn.startsWith(InputSetFunction.ALLOWED_VALUES)) {
       // slice the function name along with surrounding parenthesis
       const fnArgs = fn.slice(InputSetFunction.ALLOWED_VALUES.length + 1).slice(0, -1)
-      // check for JEXL expression
-      const jexlMatch = fnArgs.match(JEXL_REGEXP)
 
       parsedInput[InputSetFunction.ALLOWED_VALUES] = {
-        values: jexlMatch ? null : fnArgs.split(','),
-        jexlExpression: jexlMatch ? jexlMatch[1] : null
+        // do not parse numbers if present under a string variables to support existing pipelines
+        values: fnArgs.split(',').map(fnArg => {
+          try {
+            if (variableType && variableType === 'Number') {
+              const value = yamlParse(fnArg)
+              return value as unknown as string
+            }
+            return fnArg
+          } catch {
+            return fnArg
+          }
+        })
       }
     } else if (fn.startsWith(InputSetFunction.REGEX)) {
       // slice the function name along with surrounding parenthesis
@@ -194,7 +206,11 @@ export function parseInput(input: string): ParsedInput | null {
       const fnArgs = fn.slice(InputSetFunction.DEFAULT.length + 1).slice(0, -1)
 
       try {
-        parsedInput[InputSetFunction.DEFAULT] = yamlParse(fnArgs)
+        parsedInput[InputSetFunction.DEFAULT] = variableType
+          ? variableType === 'Number'
+            ? yamlParse(fnArgs)
+            : fnArgs
+          : yamlParse(fnArgs)
       } catch (_) {
         parsedInput[InputSetFunction.DEFAULT] = fnArgs
       }
@@ -215,15 +231,8 @@ export const getInputStr = (data: FormValues, shouldUseNewDefaultFormat: boolean
     inputStr += `.${InputSetFunction.DEFAULT}(${data.defaultValue})`
   }
 
-  if (
-    data.validation === Validation.AllowedValues &&
-    (data.allowedValues?.length > 0 || data.advancedValue.length > 0)
-  ) {
-    if (data.isAdvanced) {
-      inputStr += `.${InputSetFunction.ALLOWED_VALUES}(${JEXL}(${data.advancedValue}))`
-    } else {
-      inputStr += `.${InputSetFunction.ALLOWED_VALUES}(${data.allowedValues.join(',')})`
-    }
+  if (data.validation === Validation.AllowedValues && data.allowedValues?.length > 0) {
+    inputStr += `.${InputSetFunction.ALLOWED_VALUES}(${data.allowedValues.join(',')})`
   } /* istanbul ignore else */ else if (data.validation === Validation.Regex && data.regExValues?.length > 0) {
     inputStr += `.${InputSetFunction.REGEX}(${data.regExValues})`
   }

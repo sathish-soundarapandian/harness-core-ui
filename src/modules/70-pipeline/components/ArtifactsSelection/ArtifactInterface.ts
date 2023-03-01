@@ -43,6 +43,7 @@ export interface ArtifactListViewProps {
   isMultiArtifactSource?: boolean
   primaryArtifactRef?: string
   setPrimaryArtifactRef?: (primaryArtifactRefValue: string) => void
+  deploymentType: ServiceDefinition['type']
 }
 export interface ArtifactsSelectionProps {
   isPropagating?: boolean

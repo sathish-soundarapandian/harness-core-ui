@@ -49,8 +49,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
     setIntermittentLoading
   } = usePipelineContext()
   const queryParams = useParams<ProjectPathProps>()
-  const { PIE_NG_GITX_CACHING: isGitCacheEnabled, FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed } =
-    useFeatureFlags()
+  const { FF_ALLOW_OPTIONAL_VARIABLE: isOptionalVariableAllowed } = useFeatureFlags()
   const templateRef = getIdentifierFromValue(defaultTo(pipeline.template?.templateRef, ''))
   const templateVersionLabel = getIdentifierFromValue(defaultTo(pipeline.template?.versionLabel, ''))
   const templateScope = getScopeFromValue(defaultTo(pipeline.template?.templateRef, ''))
@@ -90,7 +89,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
         branch: gitDetails.branch
       })
     },
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } }
   })
 
   const originalEntityYaml = React.useMemo(() => {
@@ -117,7 +116,7 @@ export function TemplatePipelineSpecifications(): JSX.Element {
         branch: gitDetails.branch
       })
     },
-    requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } },
+    requestOptions: { headers: { 'Load-From-Cache': 'true' } },
     body: { originalEntityYaml },
     lazy: true
   })

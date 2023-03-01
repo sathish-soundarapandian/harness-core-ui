@@ -289,7 +289,6 @@ function K8sValuesManifest({
                           variableName={'valuesPaths'}
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={val => formik?.setFieldValue('valuesPaths', val)}
                           isReadonly={isReadonly}
                         />

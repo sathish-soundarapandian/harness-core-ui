@@ -70,7 +70,6 @@ export function SelectInputSet(props: SelectInputSetViewProps): JSX.Element {
           variableName={name}
           showRequiredField={false}
           showDefaultField={false}
-          showAdvanced={true}
           onChange={val => formik?.setFieldValue(name, val)}
           style={label ? { marginTop: 'var(--spacing-6)' } : undefined}
           {...configureOptionsProps}

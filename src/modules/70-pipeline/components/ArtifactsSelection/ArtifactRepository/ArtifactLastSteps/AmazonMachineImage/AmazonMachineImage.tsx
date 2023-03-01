@@ -225,7 +225,6 @@ function FormComponent({
                 variableName="spec.region"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('spec.region', value)
                 }}
@@ -255,7 +254,6 @@ function FormComponent({
                 variableName="spec.tags"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('spec.tags', value)
                 }}
@@ -284,7 +282,6 @@ function FormComponent({
                 variableName="spec.filters"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('spec.filters', value)
                 }}
@@ -357,7 +354,6 @@ function FormComponent({
                 variableName="spec.version"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('spec.version', value)}
                 isReadonly={isReadonly}
               />
@@ -383,7 +379,6 @@ function FormComponent({
                 variableName="spec.versionRegex"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => formik.setFieldValue('spec.versionRegex', value)}
                 isReadonly={isReadonly}
                 allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}

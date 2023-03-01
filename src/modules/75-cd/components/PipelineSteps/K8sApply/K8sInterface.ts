@@ -55,7 +55,7 @@ export interface K8sApplyProps {
 
 export type K8sManifestTypes = 'Values' | 'OpenshiftParam' | 'KustomizePatches'
 
-export type K8sManifestStores = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Inline'
+export type K8sManifestStores = 'Git' | 'Github' | 'GitLab' | 'Bitbucket' | 'Inline' | 'Harness'
 
 export interface K8sManifestStepInitData {
   connectorRef: string | undefined | ConnectorSelectedValue

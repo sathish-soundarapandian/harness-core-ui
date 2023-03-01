@@ -32,10 +32,6 @@ exports[`stageinputset tests viewType DeploymentForm initial render 1`] = `
       </div>
       <div
         class="accordionSummary"
-        id="stages[0].stage.spec.Environment"
-      />
-      <div
-        class="accordionSummary"
         id="Stage.undefined.Infrastructure"
       >
         <div
@@ -674,10 +670,6 @@ exports[`stageinputset tests viewType DeploymentForm initial render2 1`] = `
           </div>
         </div>
       </div>
-      <div
-        class="accordionSummary"
-        id="stages[0].stage.spec.Environment"
-      />
       <div
         class="accordionSummary"
         id="Stage.undefined.Infrastructure"
@@ -1320,10 +1312,6 @@ exports[`stageinputset tests viewType InputSet initial render 1`] = `
       </div>
       <div
         class="accordionSummary"
-        id="stages[0].stage.spec.Environment"
-      />
-      <div
-        class="accordionSummary"
         id="Stage.undefined.Infrastructure"
       >
         <div
@@ -1962,10 +1950,6 @@ exports[`stageinputset tests viewType InputSet initial render2 1`] = `
           </div>
         </div>
       </div>
-      <div
-        class="accordionSummary"
-        id="stages[0].stage.spec.Environment"
-      />
       <div
         class="accordionSummary"
         id="Stage.undefined.Infrastructure"

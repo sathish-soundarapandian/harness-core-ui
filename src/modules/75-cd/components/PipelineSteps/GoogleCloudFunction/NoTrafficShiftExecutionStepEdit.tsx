@@ -84,6 +84,7 @@ const NoTrafficShiftExecutionStepEdit = (
                   label={getString('cd.steps.googleCloudFunctionCommon.fieldMask')}
                   placeholder={getString('cd.steps.googleCloudFunctionCommon.fieldMaskPlaceholder')}
                   disabled={readonly}
+                  isOptional={true}
                   multiTextInputProps={{
                     expressions,
                     disabled: readonly,
@@ -98,7 +99,6 @@ const NoTrafficShiftExecutionStepEdit = (
                       variableName="spec.updateFieldMask"
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         formik.setFieldValue('spec.updateFieldMask', value)
                       }}

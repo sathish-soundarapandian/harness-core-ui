@@ -121,6 +121,10 @@ import { K8sDryRunStep } from './K8sDryRunStep/K8sDryRunStep'
 import { AsgSwapService } from './AsgSwapServiceStep/AsgSwapServiceStep'
 import { AsgBlueGreenRollbackStep } from './AsgBlueGreenRollbackStep/AsgBlueGreenRollbackStep'
 import { AsgBlueGreenDeployStep } from './AsgBlueGreenDeployStep/AsgBlueGreenDeployStep'
+import { AwsLambdaServiceSpec } from './AwsLambda/AwsLambdaServiceSpec/AwsLambdaServiceSpec'
+import { AwsLambdaInfraSpec } from './AwsLambda/AwsLambdaInfraSpec/AwsLambdaInfraSpec'
+import { AwsLambdaDeployStep } from './AwsLambda/AwsLambdaDeployStep/AwsLambdaDeployStep'
+import { AwsLambdaDeployRollbackStep } from './AwsLambda/AwsLambdaDeployRollbackStep/AwsLambdaDeployRollbackStep'
 import { TerraformCloudRun } from './TerraformCloudRunStep/TerraformCloudRun'
 import { TerraformCloudRollback } from './TerraformCloudRollbackStep/TerraformCloudRollback'
 
@@ -238,5 +242,9 @@ factory.registerStep(new DeployCloudFunctionTrafficShiftStep())
 factory.registerStep(new AsgSwapService())
 factory.registerStep(new AsgBlueGreenRollbackStep())
 factory.registerStep(new AsgBlueGreenDeployStep())
+factory.registerStep(new AwsLambdaServiceSpec())
+factory.registerStep(new AwsLambdaInfraSpec())
+factory.registerStep(new AwsLambdaDeployStep())
+factory.registerStep(new AwsLambdaDeployRollbackStep())
 factory.registerStep(new TerraformCloudRun())
 factory.registerStep(new TerraformCloudRollback())

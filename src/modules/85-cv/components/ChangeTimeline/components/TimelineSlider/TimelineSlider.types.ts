@@ -26,6 +26,7 @@ export interface TimelineSliderProps {
   hideSlider?: boolean
   onZoom?: () => void
   setDefaultSlider?: boolean
+  defaultOffSetPercentage?: number
 }
 
 export type SliderAspects = {

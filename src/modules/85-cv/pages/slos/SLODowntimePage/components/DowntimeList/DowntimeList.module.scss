@@ -31,6 +31,13 @@
     font-size: 11.5px !important;
   }
 
+  .affectedServices {
+    max-width: 120px;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
+    overflow: hidden;
+  }
+
   .statusIcon {
     padding-left: 12px;
   }

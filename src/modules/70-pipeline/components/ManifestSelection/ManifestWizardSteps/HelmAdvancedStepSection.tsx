@@ -113,7 +113,6 @@ function HelmAdvancedStepSection({
               variableName="enableDeclarativeRollback"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('enableDeclarativeRollback', value)}
               style={{ alignSelf: 'center', marginTop: 11 }}
               className={cx(css.addmarginTop)}
@@ -138,7 +137,6 @@ function HelmAdvancedStepSection({
             variableName="skipResourceVersioning"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
             style={{ alignSelf: 'center', marginTop: 11 }}
             className={cx(css.addmarginTop)}

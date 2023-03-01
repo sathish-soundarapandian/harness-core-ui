@@ -87,7 +87,6 @@ export default function BaseScript(props: {
             className={css.minConfigBtn}
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={/* istanbul ignore next */ value => setFieldValue('spec.source.spec.script', value)}
             isReadonly={readonly}
           />

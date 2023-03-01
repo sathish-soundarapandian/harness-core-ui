@@ -103,7 +103,6 @@ export const AzureWebAppSwapSlotRef = (
                   variableName="spec.targetSlot"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={
                     /* istanbul ignore next */ value => {
                       formik?.setFieldValue('spec.targetSlot', value)

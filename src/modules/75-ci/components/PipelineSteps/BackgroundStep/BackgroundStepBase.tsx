@@ -252,7 +252,6 @@ export const BackgroundStepBase = (
                   variableName="spec.command"
                   showRequiredField={false}
                   showDefaultField={false}
-                  showAdvanced={true}
                   onChange={value => formik?.setFieldValue('spec.command', value)}
                   isReadonly={readonly}
                   hideExecutionTimeField={true}

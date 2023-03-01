@@ -210,7 +210,6 @@ export function MultiTypeSecretInput(props: ConnectedMultiTypeSecretInputProps):
             variableName={name}
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced={true}
             onChange={/* istanbul ignore next */ val => formik?.setFieldValue(name, val)}
             {...configureOptionsProps}
             isReadonly={disabled}

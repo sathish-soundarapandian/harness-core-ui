@@ -314,7 +314,6 @@ function TasManifest({
                             variableName="branch"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={/* istanbul ignore next */ value => formik.setFieldValue('branch', value)}
                             isReadonly={isReadonly}
                           />
@@ -343,7 +342,6 @@ function TasManifest({
                             variableName="commitId"
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={/* istanbul ignore next */ value => formik.setFieldValue('commitId', value)}
                             isReadonly={isReadonly}
                           />
@@ -375,7 +373,6 @@ function TasManifest({
                         variableName={'paths'}
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={/* istanbul ignore next */ val => formik?.setFieldValue('paths', val)}
                         isReadonly={isReadonly}
                       />
@@ -405,7 +402,6 @@ function TasManifest({
                         variableName={'varsPaths'}
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={/* istanbul ignore next */ val => formik?.setFieldValue('varsPaths', val)}
                         isReadonly={isReadonly}
                       />
@@ -435,7 +431,6 @@ function TasManifest({
                         variableName={'autoScalerPath'}
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={/* istanbul ignore next */ val => formik?.setFieldValue('autoScalerPath', val)}
                         isReadonly={isReadonly}
                       />

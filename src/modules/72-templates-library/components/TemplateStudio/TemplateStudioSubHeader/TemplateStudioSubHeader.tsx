@@ -37,8 +37,6 @@ import {
 import useDiffDialog from '@common/hooks/useDiffDialog'
 import { stringify } from '@common/utils/YamlHelperMethods'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import { StoreType } from '@common/constants/GitSyncTypes'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -70,7 +68,6 @@ function TemplateStudioSubHeader(
   const isVisualViewDisabled = React.useMemo(() => entityValidityDetails.valid === false, [entityValidityDetails.valid])
   const saveTemplateHandleRef = React.useRef<SaveTemplateHandle | null>(null)
   const templateStudioSubHeaderLeftViewHandleRef = React.useRef<TemplateStudioSubHeaderLeftViewHandle | null>(null)
-  const isPipelineGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const { supportingGitSimplification } = useAppStore()
   const isPipelineRemote = supportingGitSimplification && storeMetadata?.storeType === StoreType.REMOTE
   const isNewTemplate = templateIdentifier === DefaultNewTemplateId
@@ -161,7 +158,7 @@ function TemplateStudioSubHeader(
                         <Popover className={Classes.DARK} position={Position.LEFT}>
                           <Button variation={ButtonVariation.ICON} icon="Options" aria-label="pipeline menu actions" />
                           <Menu style={{ backgroundColor: 'unset' }}>
-                            {isPipelineRemote && isPipelineGitCacheEnabled ? (
+                            {isPipelineRemote ? (
                               <RbacMenuItem
                                 icon="repeat"
                                 text={getString('common.reloadFromGit')}

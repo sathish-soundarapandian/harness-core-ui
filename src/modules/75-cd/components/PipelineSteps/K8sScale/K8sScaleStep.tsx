@@ -162,7 +162,6 @@ function K8ScaleDeployWidget(props: K8sScaleProps, formikRef: StepFormikFowardRe
                       variableName={getString('instanceFieldOptions.instances')}
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         setFieldValue('instances', value)
                       }}
@@ -187,7 +186,6 @@ function K8ScaleDeployWidget(props: K8sScaleProps, formikRef: StepFormikFowardRe
                       variableName={getString('pipelineSteps.workload').toLowerCase()}
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={value => {
                         setFieldValue('spec.workload', value)
                       }}

@@ -77,7 +77,6 @@ const CustomRemoteManifestRuntimeFields = ({
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.${manifestPath}.spec.store.spec.filePath`, value)
             }}
@@ -135,7 +134,6 @@ const CustomRemoteManifestRuntimeFields = ({
             showRequiredField={false}
             showDefaultField={true}
             isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-            showAdvanced={true}
             onChange={value => {
               formik.setFieldValue(`${path}.spec.store.spec.delegateSelectors`, value)
             }}

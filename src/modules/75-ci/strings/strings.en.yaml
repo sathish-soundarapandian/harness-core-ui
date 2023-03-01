@@ -147,7 +147,6 @@ getStartedWithCI:
   learnMoreAboutCI: Learn more about Harness CI
   buildyourOwnPipeline: Build your own Pipeline
   configInfra: Configure Infrastructure
-
   hostedByHarness: Hosted by Harness
   takeToTheNextLevel: Take your software build process to the next level using our Harness Continuous Integration
   ti: Test Intelligence
@@ -192,6 +191,7 @@ getStartedWithCI:
   pleaseChoose: 'Please choose {{field}}'
   fieldIsMissing: '{{field}} is missing'
   provisioningHelpText: Provision the '{{ $.ci.getStartedWithCI.hostedByHarness }}' Infrastructure (~2 mins)
+  updatingGitConnectorWithRepo: Updating your Git connector with repository info...
   settingUpCIPipeline: Just a moment while we set up a CI pipeline for you...
   nonGitCloneOption: Use this option if your Git provider is not supported by Harness or if you have nothing to clone.
   cloneGitRepo: Clone Git Repository
@@ -200,12 +200,18 @@ getStartedWithCI:
   configureYourPipeline: Configure your Pipeline
   configurePipeline: Configure Pipeline
   starterPipeline: Starter Pipeline
-  starterPipelineHelptext: Start with a minimum pipeline that you can build upon
-  chooseExistingYAML: Choose an existing yaml
-  chooseExistingYAMLHelptext: Select an existing pipeline yaml from any branch in the repository
+  starterPipelineConfig: Create empty Pipeline configuration
+  starterPipelineConfigHelptext: Start with a minimal pipeline config
+  generatePipelineConfig: Generate my Pipeline configuration
+  generatePipelineHelpText: Get started with a pipeline customized for your project
+  importExistingYAML: Import existing Yaml
+  importExistingYAMLHelptext: Use the Harness config file in your repository
   chooseStarterConfig: Choose a Starter Configuration
   configurationOption: Configuration Option
   validYAMLFile: YAML Path should end with ".yaml" extension
+  storeInGit: Store in Git
+  enterBranch: Enter branch name
+  createBranchIfNotExists: Create branch if not exists
   carousel:
     labels:
       harnessCIFeatures: Harness CI

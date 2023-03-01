@@ -32,7 +32,8 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
   showTimelineSlider,
   setShowTimelineSlider,
   setCustomTimeFilter,
-  downtimeInstanceUnavailability
+  downtimeInstanceUnavailability,
+  defaultOffSetPercentage
 }) => {
   const {
     sloPerformanceTrend,
@@ -142,6 +143,7 @@ const SLOTargetChartWithChangeTimeline: React.FC<SLOTargetChartWithChangeTimelin
           }
           onSliderDragEnd={onSliderDragEnd}
           onZoom={onZoom}
+          defaultOffSetPercentage={defaultOffSetPercentage}
         />
       )}
       <ChangeTimeline

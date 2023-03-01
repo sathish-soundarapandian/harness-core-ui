@@ -42,8 +42,6 @@ import type {
 } from '@common/interfaces/RouteInterfaces'
 import type { GitFilterScope } from '@common/components/GitFilters/GitFilters'
 import type { Pipeline } from '@pipeline/utils/types'
-import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
-import { FeatureFlag } from '@common/featureFlags'
 import type { CacheResponseMetadata, Error } from 'services/pipeline-ng'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { useValidateTemplateInputsQuery } from 'services/pipeline-rq'
@@ -115,7 +113,6 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
   const { branch, repoName, connectorRef } = useQueryParams<GitQueryParams & RunPipelineQueryParams>()
   const { accountId, projectIdentifier, orgIdentifier, pipelineIdentifier } = params
   const { isYamlEditable } = pipelineView
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
   const [shouldShowOutOfSyncError, setShouldShowOutOfSyncError] = React.useState(false)
 
   const savePipelineHandleRef = React.useRef<SavePipelineHandle | null>(null)
@@ -253,7 +250,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
 
   // Need to show reload option only when we are showing a cached response
   function showReloadFromGitoption(): boolean {
-    return Boolean(isPipelineRemote && isGitCacheEnabled && pipelineCacheResponse)
+    return Boolean(isPipelineRemote && pipelineCacheResponse)
   }
 
   function handleReloadFromGitClick(): void {
@@ -389,7 +386,7 @@ export function PipelineCanvasHeader(props: PipelineCanvasHeaderProps): React.Re
                     readOnly: pipelineIdentifier === DefaultNewPipelineId
                   }}
                 />
-                {isGitCacheEnabled && !isEmpty(pipelineCacheResponse) && !remoteFetchError && (
+                {!isEmpty(pipelineCacheResponse) && !remoteFetchError && (
                   <PipelineCachedCopy
                     ref={pipelineCachedCopyRef}
                     reloadContent={getString('common.pipeline')}

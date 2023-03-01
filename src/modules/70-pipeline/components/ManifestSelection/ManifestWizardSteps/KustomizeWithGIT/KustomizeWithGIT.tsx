@@ -290,7 +290,6 @@ function KustomizeWithGIT({
                           variableName="branch"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => formik.setFieldValue('branch', value)}
                           isReadonly={isReadonly}
                         />
@@ -319,7 +318,6 @@ function KustomizeWithGIT({
                           variableName="commitId"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={value => formik.setFieldValue('commitId', value)}
                           isReadonly={isReadonly}
                         />
@@ -358,7 +356,6 @@ function KustomizeWithGIT({
                         variableName="folderPath"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('folderPath', value)}
                         isReadonly={isReadonly}
                       />
@@ -389,7 +386,6 @@ function KustomizeWithGIT({
                         variableName="pluginPath"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={value => formik.setFieldValue('pluginPath', value)}
                         isReadonly={isReadonly}
                       />
@@ -419,7 +415,6 @@ function KustomizeWithGIT({
                       variableName={'patchesPaths'}
                       showRequiredField={false}
                       showDefaultField={false}
-                      showAdvanced={true}
                       onChange={val => formik?.setFieldValue('patchesPaths', val)}
                       isReadonly={isReadonly}
                     />
@@ -465,7 +460,6 @@ function KustomizeWithGIT({
                                     variableName="kustomizeYamlFolderPath"
                                     showRequiredField={false}
                                     showDefaultField={false}
-                                    showAdvanced={true}
                                     onChange={value => formik.setFieldValue('kustomizeYamlFolderPath', value)}
                                     isReadonly={isReadonly}
                                   />
@@ -496,7 +490,6 @@ function KustomizeWithGIT({
                               variableName="enableDeclarativeRollback"
                               showRequiredField={false}
                               showDefaultField={false}
-                              showAdvanced={true}
                               onChange={value => formik.setFieldValue('enableDeclarativeRollback', value)}
                               style={{ alignSelf: 'center', marginTop: 11 }}
                               className={css.addmarginTop}
@@ -525,7 +518,6 @@ function KustomizeWithGIT({
                               variableName="skipResourceVersioning"
                               showRequiredField={false}
                               showDefaultField={false}
-                              showAdvanced={true}
                               onChange={value => formik.setFieldValue('skipResourceVersioning', value)}
                               style={{ alignSelf: 'center', marginTop: 11 }}
                               className={css.addmarginTop}

@@ -96,7 +96,6 @@ function TerraformCloudRollbackWidget(
                     variableName="spec.message"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={/* istanbul ignore next */ value => setFieldValue('spec.message', value)}
                     isReadonly={readonly}
                   />
@@ -117,7 +116,6 @@ function TerraformCloudRollbackWidget(
                     variableName="spec.discardPendingRuns"
                     showRequiredField={false}
                     showDefaultField={false}
-                    showAdvanced={true}
                     onChange={value => setFieldValue('spec.discardPendingRuns', value)}
                     style={{ alignSelf: 'center', marginTop: 11 }}
                     className={css.addMarginTop}
@@ -143,7 +141,6 @@ function TerraformCloudRollbackWidget(
                     showRequiredField={false}
                     showDefaultField={false}
                     allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
-                    showAdvanced={true}
                     onChange={
                       /* istanbul ignore next */ value => {
                         setFieldValue('spec.provisionerIdentifier', value)

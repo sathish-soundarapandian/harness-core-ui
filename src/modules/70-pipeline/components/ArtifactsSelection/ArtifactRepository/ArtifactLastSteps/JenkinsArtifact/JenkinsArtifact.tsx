@@ -314,7 +314,6 @@ function FormComponent({
               variableName="spec.jobName"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('spec.jobName', value)}
               isReadonly={isReadonly}
             />
@@ -372,7 +371,6 @@ function FormComponent({
                 variableName="spec.artifactPath"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('spec.artifactPath', value)
                 }}
@@ -434,7 +432,6 @@ function FormComponent({
                 variableName="spec.build"
                 showRequiredField={false}
                 showDefaultField={false}
-                showAdvanced={true}
                 onChange={value => {
                   formik.setFieldValue('spec.build', value)
                 }}

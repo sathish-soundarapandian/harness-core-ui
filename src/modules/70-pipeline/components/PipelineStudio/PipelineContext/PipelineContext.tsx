@@ -104,7 +104,6 @@ const remoteFetchErrorGitDetails = (remoteFetchError: ResponsePMSPipelineRespons
 export const getPipelineByIdentifier = (
   params: GetPipelineQueryParams & GitQueryParams,
   identifier: string,
-  isPipelineGitCacheEnabled: boolean,
   loadFromCache?: boolean,
   signal?: AbortSignal
 ): Promise<PipelineInfoConfigWithGitDetails | FetchError> => {
@@ -124,7 +123,7 @@ export const getPipelineByIdentifier = (
       requestOptions: {
         headers: {
           'content-type': 'application/yaml',
-          ...(isPipelineGitCacheEnabled && loadFromCache ? { 'Load-From-Cache': 'true' } : {})
+          ...(loadFromCache ? { 'Load-From-Cache': 'true' } : {})
         }
       }
     },
@@ -336,7 +335,6 @@ export interface FetchPipelineBoundProps {
   queryParams: GetPipelineQueryParams
   pipelineIdentifier: string
   gitDetails: EntityGitDetails
-  isPipelineGitCacheEnabled: boolean
   storeMetadata?: StoreMetadata
   supportingTemplatesGitx?: boolean
 }
@@ -389,7 +387,6 @@ const getTemplateType = (
   queryParams: GetPipelineQueryParams,
   storeMetadata?: StoreMetadata,
   supportingTemplatesGitx?: boolean,
-  isPipelineGitCacheEnabled?: boolean,
   loadFromCache?: boolean
 ): ReturnType<typeof getTemplateTypesByRef> => {
   const templateRefs = uniq(findAllByKey('templateRef', pipeline))
@@ -406,7 +403,6 @@ const getTemplateType = (
     templateRefs,
     storeMetadata,
     supportingTemplatesGitx,
-    isPipelineGitCacheEnabled,
     loadFromCache
   )
 }
@@ -422,8 +418,7 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
     pipelineIdentifier: identifier,
     gitDetails,
     supportingTemplatesGitx,
-    storeMetadata,
-    isPipelineGitCacheEnabled
+    storeMetadata
   } = props
   const {
     forceFetch = false,
@@ -458,7 +453,6 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
     const pipelineByIdPromise = getPipelineByIdentifier(
       { ...queryParams, ...(repoIdentifier ? { repoIdentifier } : {}), ...(branch ? { branch } : {}) },
       pipelineId,
-      isPipelineGitCacheEnabled,
       loadFromCache,
       signal
     )
@@ -572,7 +566,6 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
             templateQueryParams,
             storeMetadata,
             supportingTemplatesGitx,
-            isPipelineGitCacheEnabled,
             loadFromCache
           )
         : { templateTypes: {}, templateServiceData: {}, templateIcons: {} }
@@ -620,7 +613,6 @@ const _fetchPipeline = async (props: FetchPipelineBoundProps, params: FetchPipel
         templateQueryParams,
         storeMetadata,
         supportingTemplatesGitx,
-        isPipelineGitCacheEnabled,
         loadFromCache
       )
       const { resolvedCustomDeploymentDetailsByRef } = await getResolvedCustomDeploymentDetailsMap(
@@ -1059,7 +1051,6 @@ export interface PipelineProviderProps {
   stagesMap: StagesMap
   runPipeline: (identifier: string) => void
   renderPipelineStage: PipelineContextInterface['renderPipelineStage']
-  isPipelineGitCacheEnabled: boolean
 }
 
 export function PipelineProvider({
@@ -1069,8 +1060,7 @@ export function PipelineProvider({
   renderPipelineStage,
   stepsFactory,
   stagesMap,
-  runPipeline,
-  isPipelineGitCacheEnabled
+  runPipeline
 }: React.PropsWithChildren<PipelineProviderProps>): React.ReactElement {
   const contextType = PipelineContextType.Pipeline
   const allowableTypes: AllowedTypesWithRunTime[] = [
@@ -1113,8 +1103,7 @@ export function PipelineProvider({
       branch
     },
     storeMetadata: state.storeMetadata,
-    supportingTemplatesGitx,
-    isPipelineGitCacheEnabled
+    supportingTemplatesGitx
   })
 
   const updatePipelineStoreMetadata = _updateStoreMetadata.bind(null, {
@@ -1237,7 +1226,6 @@ export function PipelineProvider({
           templateRefs,
           state.storeMetadata,
           supportingTemplatesGitx,
-          isPipelineGitCacheEnabled,
           true
         ).then(({ templateTypes, templateServiceData, templateIcons }) => {
           setTemplateTypes(merge(state.templateTypes, templateTypes))

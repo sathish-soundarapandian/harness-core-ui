@@ -14,10 +14,23 @@ import { MinimalLayout } from '@common/layouts'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
 import type { SidebarContext } from '@common/navigation/SidebarProvider'
-import type { IDPCustomMicroFrontendProps } from './interfaces/IDPCustomMicroFrontendProps.types'
-import IDPAdminSideNav from './components/IDPAdminSideNav/IDPAdminSideNav'
 import './idp.module.scss'
+import { ResourceType } from '@rbac/interfaces/ResourceType'
+import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 
+import { String } from 'framework/strings'
+import RbacFactory from '@rbac/factories/RbacFactory'
+import IDPAdminSideNav from './components/IDPAdminSideNav/IDPAdminSideNav'
+import type { IDPCustomMicroFrontendProps } from './interfaces/IDPCustomMicroFrontendProps.types'
+
+RbacFactory.registerResourceTypeHandler(ResourceType.IDP_SETTINGS, {
+  icon: 'idp',
+  label: 'common.purpose.idp.name',
+  labelSingular: 'common.purpose.idp.name',
+  permissionLabels: {
+    [PermissionIdentifier.IDP_SETTINGS_MANAGE]: <String stringID="rbac.permissionLabels.manage" />
+  }
+})
 // eslint-disable-next-line import/no-unresolved
 const IDPMicroFrontend = React.lazy(() => import('idp/MicroFrontendApp'))
 

@@ -39,6 +39,7 @@ import { EditVariationsModal } from '../EditVariationsModal/EditVariationsModal'
 import { FlagPrerequisites } from './FlagPrerequisites'
 import ServicesList from './ServicesList'
 import FlagDetailsOptionsMenuButton from '../FlagDetailsOptionsMenuButton/FlagDetailsOptionsMenuButton'
+import JiraIssueList from './JiraIssueList'
 import css from './FlagActivationDetails.module.scss'
 
 interface FlagActivationDetailsProps {
@@ -132,7 +133,7 @@ const FlagActivationDetails: React.FC<FlagActivationDetailsProps> = props => {
   const { getString } = useStrings()
   const { orgIdentifier, accountId: accountIdentifier, projectIdentifier } = useParams<Record<string, string>>()
   const { withActiveEnvironment } = useActiveEnvironment()
-  const { FFM_4117_INTEGRATE_SRM } = useFeatureFlags()
+  const { FFM_4117_INTEGRATE_SRM, FFM_4737_JIRA_INTEGRATION } = useFeatureFlags()
   const breadcrumbs = [
     {
       label: getString('cf.continuous'),
@@ -248,6 +249,7 @@ const FlagActivationDetails: React.FC<FlagActivationDetailsProps> = props => {
         />
 
         {FFM_4117_INTEGRATE_SRM && <ServicesList featureFlag={featureFlag} refetchFlag={refetchFlag} />}
+        {FFM_4737_JIRA_INTEGRATION && <JiraIssueList jiraIssues={featureFlag.envProperties?.jiraIssues} />}
       </Container>
     </>
   )

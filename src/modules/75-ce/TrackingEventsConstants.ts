@@ -50,7 +50,8 @@ const ANOMALY_EVENTS = {
 
 export const USER_JOURNEY_EVENTS = {
   CCM_FEATURE_NAVIGATION: 'CCM Feature Navigation',
-  ONBOARDING_CONNECTOR_CLICK: 'Onboarding Connector Click',
+  ONBOARDING_CONNECTOR_CLICK: 'Create Connector Intent',
+  ENABLE_CLOUD_COST: 'Enabled Cloud Cost',
   LOAD_AS_LANDING_PAGE: PREFIX_CCM_EVENTS + 'load_as_landing_page',
   CREATE_NEW_AS_CLICK: PREFIX_CCM_EVENTS + 'create_new_as_button_click',
   SELECT_CLOUD_PROVIDER: PREFIX_CCM_EVENTS + 'select_cloud_provider',

@@ -227,7 +227,6 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
                           variableName="repoName"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={/* istanbul ignore next */ value => setFieldValue('repoName', value)}
                           isReadonly={isReadonly}
                           allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -258,7 +257,6 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
                           variableName="branch"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={/* istanbul ignore next */ value => setFieldValue('branch', value)}
                           isReadonly={isReadonly}
                           allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -283,7 +281,6 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
                           variableName="commitId"
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={/* istanbul ignore next */ value => setFieldValue('commitId', value)}
                           isReadonly={isReadonly}
                           allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
@@ -308,7 +305,6 @@ export const ScriptWizardStepTwo: React.FC<StepProps<any> & StartupScriptWizardS
                         variableName={'paths'}
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={
                           /* istanbul ignore next */ value => {
                             setFieldValue('paths', value)

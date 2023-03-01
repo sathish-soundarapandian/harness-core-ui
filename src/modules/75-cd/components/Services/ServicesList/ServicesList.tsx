@@ -45,7 +45,7 @@ import { SortOption } from '@common/components/SortOption/SortOption'
 import { PieChart, PieChartProps } from '@cd/components/PieChart/PieChart'
 import { getFixed, INVALID_CHANGE_RATE } from '@cd/components/Services/common'
 import { numberFormatter } from '@common/utils/utils'
-import { ChangeRate, ServiceDetailsDTO, ServiceDetailsDTOV2, useDeleteServiceV2 } from 'services/cd-ng'
+import { ChangeRate, ServiceDetailsDTOV2, useDeleteServiceV2 } from 'services/cd-ng'
 import { DeploymentTypeIcons } from '@cd/components/DeploymentTypeIcons/DeploymentTypeIcons'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
@@ -57,7 +57,7 @@ import { isExecutionIgnoreFailed, isExecutionNotStarted } from '@pipeline/utils/
 import ExecutionStatusLabel from '@pipeline/components/ExecutionStatusLabel/ExecutionStatusLabel'
 import { mapToExecutionStatus } from '@pipeline/components/Dashboards/shared'
 import { windowLocationUrlPartBeforeHash } from 'framework/utils/WindowLocation'
-import { calcTrend, RateTrend, TrendPopover } from '@cd/pages/dashboard/dashboardUtils'
+import { RateTrend, TrendPopover } from '@cd/pages/dashboard/dashboardUtils'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
 import { ServiceTabs } from '../utils/ServiceUtils'
 import css from '@cd/components/Services/ServicesList/ServiceList.module.scss'
@@ -96,18 +96,15 @@ export interface ServiceListItem {
 export interface ServicesListProps {
   loading: boolean
   error: boolean
-  data: ServiceDetailsDTO[] | ServiceDetailsDTOV2[]
+  data: ServiceDetailsDTOV2[]
   refetch: () => void
   setSavedSortOption: (value: string[] | undefined) => void
   setSort: React.Dispatch<React.SetStateAction<string[]>>
   sort: string[]
 }
 
-const transformServiceDetailsData = (
-  data: ServiceDetailsDTO[] | ServiceDetailsDTOV2[],
-  flag: boolean | undefined
-): ServiceListItem[] => {
-  return data.map((item: ServiceDetailsDTOV2 | ServiceDetailsDTO) => ({
+const transformServiceDetailsData = (data: ServiceDetailsDTOV2[]): ServiceListItem[] => {
+  return data.map((item: ServiceDetailsDTOV2) => ({
     name: defaultTo(item.serviceName, ''),
     identifier: defaultTo(item.serviceIdentifier, ''),
     description: defaultTo(item.description, ''),
@@ -120,42 +117,18 @@ const transformServiceDetailsData = (
     },
     deployments: {
       value: numberFormatter(item.totalDeployments),
-      change: defaultTo(
-        flag && item.totalDeploymentChangeRate
-          ? (item.totalDeploymentChangeRate as ChangeRate).percentChange
-          : (item.totalDeploymentChangeRate as number),
-        0
-      ),
-      trend:
-        flag && item.totalDeploymentChangeRate
-          ? ((item.totalDeploymentChangeRate as ChangeRate).trend as RateTrend)
-          : calcTrend(item.totalDeploymentChangeRate as number)
+      change: defaultTo((item.totalDeploymentChangeRate as ChangeRate)?.percentChange, 0),
+      trend: (item.totalDeploymentChangeRate as ChangeRate)?.trend as RateTrend
     },
     failureRate: {
       value: numberFormatter(item.failureRate),
-      change: defaultTo(
-        flag && item.failureRateChangeRate
-          ? (item.failureRateChangeRate as ChangeRate).percentChange
-          : (item.failureRateChangeRate as number),
-        0
-      ),
-      trend:
-        flag && item.failureRateChangeRate
-          ? ((item.failureRateChangeRate as ChangeRate).trend as RateTrend)
-          : calcTrend(item.failureRateChangeRate as number)
+      change: defaultTo((item.failureRateChangeRate as ChangeRate)?.percentChange, 0),
+      trend: (item.failureRateChangeRate as ChangeRate)?.trend as RateTrend
     },
     frequency: {
       value: numberFormatter(item.frequency),
-      change: defaultTo(
-        flag && item.frequencyChangeRate
-          ? (item.frequencyChangeRate as ChangeRate).percentChange
-          : (item.frequencyChangeRate as number),
-        0
-      ),
-      trend:
-        flag && item.frequencyChangeRate
-          ? ((item.frequencyChangeRate as ChangeRate).trend as RateTrend)
-          : calcTrend(item.frequencyChangeRate as number)
+      change: defaultTo((item.frequencyChangeRate as ChangeRate)?.percentChange, 0),
+      trend: (item.frequencyChangeRate as ChangeRate)?.trend as RateTrend
     },
     lastDeployment: {
       name: defaultTo(item.lastPipelineExecuted?.name, ''),
@@ -572,7 +545,6 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
   const { getString } = useStrings()
   const { accountId, orgIdentifier, projectIdentifier, module } = useParams<ProjectPathProps & ModulePathParams>()
   const history = useHistory()
-  const { CDC_DASHBOARD_ENHANCEMENT_NG } = useFeatureFlags()
 
   const ServiceListHeaderCustomPrimary = useMemo(
     () => (headerProps: { total?: number }) =>
@@ -658,7 +630,7 @@ export const ServicesList: React.FC<ServicesListProps> = props => {
     columns,
     loading,
     error,
-    data: transformServiceDetailsData(data, CDC_DASHBOARD_ENHANCEMENT_NG),
+    data: transformServiceDetailsData(data),
     refetch,
     HeaderCustomPrimary: ServiceListHeaderCustomPrimary,
     onRowClick: goToServiceDetails,

@@ -52,8 +52,7 @@ import type { StepFormikRef } from '@pipeline/components/PipelineStudio/StepComm
 import { ArtifactActions } from '@common/constants/TrackingConstants'
 import type { TemplateStepNode, TemplateLinkConfig } from 'services/pipeline-ng'
 import type { DeploymentStageElementConfig } from '@pipeline/utils/pipelineTypes'
-import { FeatureFlag } from '@common/featureFlags'
-import { useFeatureFlag, useFeatureFlags } from '@common/hooks/useFeatureFlag'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ServiceDeploymentType } from '@pipeline/utils/stageHelpers'
 import ArtifactWizard from './ArtifactWizard/ArtifactWizard'
 import ArtifactListView from './ArtifactListView/ArtifactListView'
@@ -162,7 +161,6 @@ export default function ServiceV2ArtifactsSelection({
   const { getString } = useStrings()
   const { trackEvent } = useTelemetry()
   const { expressions } = useVariablesExpression()
-  const isGitCacheEnabled = useFeatureFlag(FeatureFlag.PIE_NG_GITX_CACHING)
 
   const {
     CUSTOM_ARTIFACT_NG,
@@ -502,7 +500,7 @@ export default function ServiceV2ArtifactsSelection({
           projectIdentifier: template.projectIdentifier,
           versionLabel: template.versionLabel || ''
         },
-        requestOptions: { headers: { ...(isGitCacheEnabled ? { 'Load-From-Cache': 'true' } : {}) } }
+        requestOptions: { headers: { 'Load-From-Cache': 'true' } }
       })
 
       const artifactSourceTemplateInputs = templateInputYaml?.data
@@ -748,6 +746,7 @@ export default function ServiceV2ArtifactsSelection({
   return (
     <>
       <ArtifactListView
+        deploymentType={deploymentType}
         primaryArtifact={artifacts?.primary?.sources as ArtifactSource[]}
         sideCarArtifact={artifacts?.sidecars}
         addNewArtifact={addNewArtifact}

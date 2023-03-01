@@ -204,6 +204,32 @@ describe('StepValidateUtils', () => {
         }
       })
     })
+
+    test('should test Map type field with custom regex if passed', () => {
+      const customRegex = /^([a-zA-Z_])([0-9a-zA-Z_\-$]*)+((\.[0-9a-zA-Z_$]+)*)$/
+      const values = {
+        identifier: 'Identifier',
+        name: 'Step Name',
+        spec: {
+          connectorRef: 'Container',
+          image: 'Image',
+          command: 'Command',
+          envVariables: {
+            'who-to-greet': 'octocat'
+          }
+        }
+      }
+      const result = validate(
+        values,
+        editViewFieldsConfig,
+        { getString: getStringMock },
+        StepViewType.Edit,
+        undefined,
+        customRegex
+      )
+
+      expect(result).toEqual({})
+    })
   })
 
   describe('validateInputSet', () => {

@@ -14,7 +14,7 @@ import {
   queryByAttribute,
   waitFor
 } from '@testing-library/react'
-
+import mockImport from 'framework/utils/mockImport'
 import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
@@ -255,5 +255,28 @@ describe('<ExecutionLandingPage /> tests for CI', () => {
       </TestWrapper>
     )
     await waitFor(() => expect(routesToExecutionTestsSpy).toHaveBeenCalled())
+  })
+
+  const routeToPipelineStudioV1 = jest.spyOn(routes, 'toPipelineStudioV1')
+  test('For CI with FF CI_YAML_VERSIONING ON, on edit, take user to Pipeline Studio V1 route', async () => {
+    mockImport('@common/hooks/useFeatureFlag', {
+      useFeatureFlags: () => ({ CI_YAML_VERSIONING: true })
+    })
+    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
+      refetch: jest.fn(),
+      loading: true,
+      data: null
+    }))
+    const { getByText } = render(
+      <TestWrapper path={TEST_EXECUTION_PATH} pathParams={pathParams as unknown as Record<string, string>}>
+        <ExecutionLandingPage>
+          <div data-testid="children">Execution Landing Page</div>
+        </ExecutionLandingPage>
+      </TestWrapper>
+    )
+    act(() => {
+      fireEvent.click(getByText('editPipeline')!)
+    })
+    expect(routeToPipelineStudioV1).toHaveBeenCalled()
   })
 })

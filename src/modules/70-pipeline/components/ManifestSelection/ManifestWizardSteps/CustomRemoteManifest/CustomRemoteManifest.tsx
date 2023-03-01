@@ -365,7 +365,6 @@ function CustomRemoteManifest({
                         variableName="extractionScript"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={/* istanbul ignore next */ value => formik.setFieldValue('filePath', value)}
                         isReadonly={isReadonly}
                       />
@@ -390,7 +389,6 @@ function CustomRemoteManifest({
                         variableName="filePath"
                         showRequiredField={false}
                         showDefaultField={false}
-                        showAdvanced={true}
                         onChange={/* istanbul ignore next */ value => formik.setFieldValue('filePath', value)}
                         isReadonly={isReadonly}
                       />
@@ -422,7 +420,6 @@ function CustomRemoteManifest({
                             variableName={'varsPaths'}
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={/* istanbul ignore next */ val => formik?.setFieldValue('varsPaths', val)}
                             isReadonly={isReadonly}
                           />
@@ -454,7 +451,6 @@ function CustomRemoteManifest({
                             variableName={'autoScalerPath'}
                             showRequiredField={false}
                             showDefaultField={false}
-                            showAdvanced={true}
                             onChange={/* istanbul ignore next */ val => formik?.setFieldValue('autoScalerPath', val)}
                             isReadonly={isReadonly}
                           />
@@ -496,7 +492,6 @@ function CustomRemoteManifest({
                           variableName={'valuesPaths'}
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={val => formik?.setFieldValue('valuesPaths', val)}
                           isReadonly={isReadonly}
                         />
@@ -527,7 +522,6 @@ function CustomRemoteManifest({
                           variableName={'paramsPaths'}
                           showRequiredField={false}
                           showDefaultField={false}
-                          showAdvanced={true}
                           onChange={val => formik?.setFieldValue('paramsPaths', val)}
                           isReadonly={isReadonly}
                         />

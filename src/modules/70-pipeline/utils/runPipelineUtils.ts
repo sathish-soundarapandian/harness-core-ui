@@ -38,6 +38,7 @@ export function walkObjectRecursively(
     // if we have both default key and <+input>.default() then use the later else use default provided as key
     if (
       get(obj, 'default') &&
+      typeof get(obj, 'value') === 'string' &&
       get(obj, 'value')?.startsWith(RUNTIME_INPUT_VALUE) &&
       !get(obj, 'value')?.includes('default')
     ) {
@@ -68,7 +69,11 @@ export function clearRuntimeInput<T = PipelineInfoConfig>(template: T, shouldAls
           return
         }
 
-        const parsed = parseInput(value)
+        const pathToType = [...path]
+        pathToType[path.length - 1] = 'type'
+        const variableType = get(template, pathToType)
+
+        const parsed = parseInput(value, { variableType })
 
         if (!parsed) {
           return

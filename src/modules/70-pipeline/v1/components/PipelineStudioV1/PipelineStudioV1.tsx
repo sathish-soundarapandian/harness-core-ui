@@ -74,7 +74,7 @@ export default function PipelineStudioV1(): React.ReactElement {
     )
   }
   const { licenseInformation } = useLicenseStore()
-  const { CING_ENABLED, PIE_NG_GITX_CACHING, PIPELINE_CHAINING, IACM_ENABLED } = useFeatureFlags()
+  const { CING_ENABLED, PIPELINE_CHAINING, IACM_ENABLED } = useFeatureFlags()
 
   const { getString } = useStrings()
   return (
@@ -104,7 +104,6 @@ export default function PipelineStudioV1(): React.ReactElement {
       }
       stepsFactory={factory}
       runPipeline={handleRunPipeline}
-      isPipelineGitCacheEnabled={!!PIE_NG_GITX_CACHING}
     >
       <PipelineStudioInternalV1
         className={css.container}

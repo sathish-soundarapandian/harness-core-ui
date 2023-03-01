@@ -115,7 +115,6 @@ function CustomRemoteAdvancedStepSection({
               variableName="enableDeclarativeRollback"
               showRequiredField={false}
               showDefaultField={false}
-              showAdvanced={true}
               onChange={value => formik.setFieldValue('enableDeclarativeRollback', value)}
               style={{ alignSelf: 'center', marginTop: 11 }}
               className={css.addmarginTop}
@@ -140,7 +139,6 @@ function CustomRemoteAdvancedStepSection({
             variableName="skipResourceVersioning"
             showRequiredField={false}
             showDefaultField={false}
-            showAdvanced
             onChange={/* istanbul ignore next */ value => formik.setFieldValue('skipResourceVersioning', value)}
             style={{ alignSelf: 'center', marginTop: 11 }}
             className={cx(css.addmarginTop)}
