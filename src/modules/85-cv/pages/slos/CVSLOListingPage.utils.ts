@@ -63,7 +63,7 @@ export const getSLORiskTypeFilter = (
   }
 
   const totalCountDetail = {
-    displayName: getString('cv.slos.totalServices'),
+    displayName: getString('projectsOrgs.slos.totalServices'),
     identifier: getString('all'),
     displayColor: Color.BLACK,
     count: totalCount

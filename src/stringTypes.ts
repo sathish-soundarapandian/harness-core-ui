@@ -3389,6 +3389,7 @@ export interface StringsMap {
   'projectsOrgs.searchPlaceHolder': string
   'projectsOrgs.searchProjectPlaceHolder': string
   'projectsOrgs.selectAnExistingProject': string
+  'projectsOrgs.slos.totalServices': string
   'projectsOrgs.tabProjects': string
   'projectsOrgs.urlMessageOrg': string
   'projectsOrgs.urlMessageProject': string
@@ -8908,7 +8909,6 @@ export interface StringsMap {
   'cv.slos.subTitle': string
   'cv.slos.target': string
   'cv.slos.title': string
-  'cv.slos.totalServices': string
   'cv.slos.userJourney': string
   'cv.slos.userJourneyCreated': string
   'cv.slos.userJourneyPlaceholder': string

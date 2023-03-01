@@ -11,15 +11,17 @@ import { Container, Icon } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { RiskData, useGetServiceLevelObjectivesRiskCount } from 'services/cv'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
+import { useStrings } from 'framework/strings'
 import type { ModuleOverviewBaseProps } from '../Grid/ModuleOverviewGrid'
 import EmptyStateExpandedView from '../EmptyState/EmptyStateExpandedView'
 import EmptyStateCollapsedView from '../EmptyState/EmptyStateCollapsedView'
-import DefaultFooter from '../EmptyState/DefaultFooter'
 import ModuleSemiCircleChart from '../../ModuleSemiCircleChart/ModuleSemiCircleChart'
 
 interface RiskCountData {
   color: string
 }
+
+const DEFAULT_COLOR = '#D8D8D8'
 
 const riskDataMap: Record<NonNullable<RiskData['riskStatus']>, RiskCountData> = {
   HEALTHY: {
@@ -44,6 +46,7 @@ const riskDataMap: Record<NonNullable<RiskData['riskStatus']>, RiskCountData> = 
 
 const SLOModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEmptyState }) => {
   const { accountId } = useParams<AccountPathProps>()
+  const { getString } = useStrings()
 
   const { data, loading } = useGetServiceLevelObjectivesRiskCount({ queryParams: { accountId } })
 
@@ -59,18 +62,6 @@ const SLOModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEm
     return <EmptyStateCollapsedView description={'common.moduleDetails.slo.collapsed.title'} />
   }
 
-  // if (isExpanded) {
-  //   return (
-  //     <EmptyStateExpandedView
-  //       title={'common.moduleDetails.slo.expanded.title'}
-  //       description={'common.moduleDetails.slo.expanded.description'}
-  //       footer={
-  //         <DefaultFooter learnMoreLink="https://docs.harness.io/category/ko19u4brsv-howtos-service-reliability-management" />
-  //       }
-  //     />
-  //   )
-  // }
-
   if (loading) {
     return (
       <Container flex={{ justifyContent: 'center' }} height="100%">
@@ -79,16 +70,26 @@ const SLOModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEm
     )
   }
 
-  const riskCounts = data?.data?.riskCounts
-  const riskCountData = riskCounts?.map(value => [
-    `${value.count} ${value.displayName}` as string,
-    (value.count as number) + 10
-  ])
-  const colors = riskCounts?.map(value => riskDataMap[value.identifier]?.color)
+  const { riskCounts, totalCount } = data?.data || {}
+  const riskCountData: Array<[string, number]> =
+    riskCounts?.map(value => [`${value.count} ${value.displayName}` as string, value.count as number]) || []
 
-  return <ModuleSemiCircleChart data={riskCountData || []} colors={colors || []} isExpanded={isExpanded} />
+  const colors = riskCounts?.map(value => {
+    return value.identifier
+      ? riskDataMap[value.identifier as NonNullable<RiskData['riskStatus']>]?.color
+      : DEFAULT_COLOR
+  })
 
-  return <EmptyStateCollapsedView description={'common.moduleDetails.slo.collapsed.title'} />
+  return (
+    <ModuleSemiCircleChart
+      data={riskCountData}
+      colors={colors || []}
+      isExpanded={isExpanded}
+      title={
+        isExpanded ? `${getString('projectsOrgs.slos.totalServices', { number: totalCount })}` : totalCount?.toString()
+      }
+    />
+  )
 }
 
 export default SLOModuleOverview

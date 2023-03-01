@@ -872,7 +872,6 @@ slos:
   sloTargetAndBudgetPolicy: SLO Target & Error Budget Policy
   sloName: SLO Name
   userJourney: User Journey
-  totalServices: Total SLOs
   userJourneyPlaceholder: Select or create user journey
   userJourneyCreated: User journey created successfully
   userJourneySubTitle: A user journey is a visualization of a user's interaction with a service to achieve a specific goal over time and across different channels.
