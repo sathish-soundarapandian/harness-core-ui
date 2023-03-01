@@ -80,14 +80,13 @@ const SLOModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEm
   }
 
   const riskCounts = data?.data?.riskCounts
-  const riskCountData = riskCounts?.map(value => [value.displayName as string, (value.count as number) + 10])
+  const riskCountData = riskCounts?.map(value => [
+    `${value.count} ${value.displayName}` as string,
+    (value.count as number) + 10
+  ])
   const colors = riskCounts?.map(value => riskDataMap[value.identifier]?.color)
 
-  return (
-    <Container style={{ height: isExpanded ? '230px' : '85px' }}>
-      <ModuleSemiCircleChart data={riskCountData || []} colors={colors || []} />
-    </Container>
-  )
+  return <ModuleSemiCircleChart data={riskCountData || []} colors={colors || []} isExpanded={isExpanded} />
 
   return <EmptyStateCollapsedView description={'common.moduleDetails.slo.collapsed.title'} />
 }

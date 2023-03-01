@@ -1,4 +1,4 @@
-import { Icon, Layout, Text } from '@harness/uicore'
+import { Container, Icon, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import Highcharts, { SeriesColumnOptions } from 'highcharts'
 import React from 'react'
@@ -16,15 +16,16 @@ interface DeltaProps {
   countChangeInfo: CountChangeAndCountChangeRateInfo
 }
 
-const getConfig = (data: Array<[string, number]>, colors: string[]): Highcharts.Options => ({
+const getConfig = (data: Array<[string, number]>, colors: string[], isExpanded = false): Highcharts.Options => ({
   chart: {
     plotBackgroundColor: undefined,
     plotBorderWidth: 0,
     plotShadow: false,
-    marginBottom: 0,
-    marginTop: 14,
+    marginBottom: isExpanded ? 0 : 0,
+    marginTop: isExpanded ? 28 : 14,
     marginLeft: 0,
-    marginRight: 0
+    marginRight: 0,
+    height: isExpanded ? 220 : 75
   },
   title: {
     text: ''
@@ -42,9 +43,10 @@ const getConfig = (data: Array<[string, number]>, colors: string[]): Highcharts.
           color: 'white'
         }
       },
+      showInLegend: isExpanded,
       startAngle: -90,
       endAngle: 90,
-      size: '300%'
+      size: isExpanded ? '150%' : '300%'
     }
   },
   credits: {
@@ -58,7 +60,12 @@ const getConfig = (data: Array<[string, number]>, colors: string[]): Highcharts.
       colors,
       data
     }
-  ]
+  ],
+  legend: {
+    itemStyle: {
+      fontWeight: 'normal'
+    }
+  }
 })
 
 export const Delta: React.FC<DeltaProps> = ({ countChangeInfo }) => {
@@ -94,14 +101,17 @@ export const Delta: React.FC<DeltaProps> = ({ countChangeInfo }) => {
 
 const ModuleSemiCircleChart: React.FC<ModuleSemiCircleChartProps> = props => {
   const { data, isExpanded } = props
+
   return (
-    <HighchartsReact
-      highcharts={Highcharts}
-      options={{
-        ...getConfig(data, props.colors)
-      }}
-      containerProps={{ style: { height: '90%', zIndex: 1, marginTop: 'var(--spacing-small)' } }}
-    />
+    <Container style={{ marginTop: isExpanded ? 'var(--spacing-huge)' : 0 }}>
+      <HighchartsReact
+        highcharts={Highcharts}
+        options={{
+          ...getConfig(data, props.colors, isExpanded)
+        }}
+        containerProps={{ style: { height: '90%', zIndex: 1, marginTop: 'var(--spacing-small)' } }}
+      />
+    </Container>
   )
 }
 
