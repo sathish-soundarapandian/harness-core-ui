@@ -7,7 +7,7 @@
 
 import React from 'react'
 import { deleteDB, IDBPDatabase, openDB } from 'idb'
-import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick, merge, map, uniq, debounce } from 'lodash-es'
+import { cloneDeep, defaultTo, get, isEmpty, isEqual, isNil, omit, pick, merge, map, uniq } from 'lodash-es'
 import {
   AllowedTypes,
   AllowedTypesWithRunTime,
@@ -1220,43 +1220,31 @@ export function PipelineProvider({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryParamStateSelection.stepId, queryParamStateSelection.stageId, queryParamStateSelection.sectionId])
 
-  const fetchTemplateDebounced = React.useCallback(
-    () => {
-      debounce(() => {
-        const templateRefs = findAllByKey('templateRef', state.pipeline).filter(templateRef =>
-          isEmpty(get(state.templateTypes, templateRef))
-        )
-        getTemplateTypesByRef(
-          {
-            ...queryParams,
-            templateListType: 'Stable',
-            repoIdentifier: state.gitDetails.repoIdentifier,
-            branch: state.gitDetails.branch,
-            getDefaultFromOtherRepo: true
-          },
-          templateRefs,
-          state.storeMetadata,
-          supportingTemplatesGitx,
-          isPipelineGitCacheEnabled,
-          true
-        ).then(({ templateTypes, templateServiceData, templateIcons }) => {
-          setTemplateTypes(merge(state.templateTypes, templateTypes))
-          setTemplateIcons({ ...merge(state.templateIcons, templateIcons) })
-          setTemplateServiceData(merge(state.templateServiceData, templateServiceData))
-        })
-      }, 50)
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [state.pipeline, state.storeMetadata]
-  )
-
   React.useEffect(() => {
     if (state.storeMetadata?.storeType === StoreType.REMOTE && isEmpty(state.storeMetadata?.connectorRef)) {
       return
     }
 
-    // Templates should be fetched using debounce to avoid duplicate API calls
-    fetchTemplateDebounced()
+    const templateRefs = findAllByKey('templateRef', state.pipeline).filter(templateRef =>
+      isEmpty(get(state.templateTypes, templateRef))
+    )
+    getTemplateTypesByRef(
+      {
+        ...queryParams,
+        templateListType: 'Stable',
+        repoIdentifier: state.gitDetails.repoIdentifier,
+        branch: state.gitDetails.branch,
+        getDefaultFromOtherRepo: true
+      },
+      templateRefs,
+      state.storeMetadata,
+      supportingTemplatesGitx,
+      true
+    ).then(({ templateTypes, templateServiceData, templateIcons }) => {
+      setTemplateTypes(merge(state.templateTypes, templateTypes))
+      setTemplateIcons({ ...merge(state.templateIcons, templateIcons) })
+      setTemplateServiceData(merge(state.templateServiceData, templateServiceData))
+    })
 
     const unresolvedCustomDeploymentRefs = map(
       findAllByKey('customDeploymentRef', state.pipeline),
