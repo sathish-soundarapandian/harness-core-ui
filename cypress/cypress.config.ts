@@ -3,6 +3,7 @@ import { defineConfig } from 'cypress'
 export default defineConfig({
   e2e: {
     baseUrl: 'https://localhost:8181',
+    projectId: 'harness-core-ui',
     specPattern: 'integration/**/*.spec.{ts,tsx}',
     supportFile: 'support/index.ts',
     fixturesFolder: 'fixtures',
