@@ -54,8 +54,9 @@
         return matches && matches.length > 1 ? `${matches[1]}` : ''
       }
 
+      const accountId = getAccountId()
+
       const addRoutingIdParam = () => {
-        const accountId = getAccountId()
         return accountId ? `&routingId=${accountId}` : ''
       }
 
@@ -74,8 +75,9 @@
       }
 
       window.getIDPBaseUrl = str => {
-        return window.IDPUrl
-          ? `${window.IDPUrl}/${getAccountId()}/${str}?${addRoutingIdParam()}`
+        window.IDPUrl = 'https://34.71.170.196'
+        return window.IDPUrl && accountId
+          ? `${window.IDPUrl}/${accountId}/${str}?${addRoutingIdParam()}`
           : window.getApiBaseUrl(str)
       }
     </script>
