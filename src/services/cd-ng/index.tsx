@@ -742,6 +742,11 @@ export interface AddressDto {
   state?: string
 }
 
+export interface AgentApplicationTargets {
+  agentId?: string
+  applicationName?: string[]
+}
+
 export interface AgentMtlsEndpointDetails {
   accountId?: string
   caCertificates?: string
@@ -876,8 +881,10 @@ export interface AppPermission {
 
 export interface Application {
   agentIdentifier?: string
+  healthStatus?: string
   identifier?: string
   name?: string
+  syncStatus?: string
   url?: string
 }
 
@@ -1363,6 +1370,10 @@ export type AwsLambdaInfrastructure = Infrastructure & {
 
 export type AwsLambdaInfrastructureDetails = InfrastructureDetails & {
   region?: string
+}
+
+export type AwsLambdaRollbackStepInfo = StepSpecType & {
+  delegateSelectors?: string[]
 }
 
 export type AwsLambdaServiceSpec = ServiceSpec & {}
@@ -3944,6 +3955,8 @@ export interface EntityDetail {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
 }
 
 export interface EntityDetailProtoDTO {
@@ -3956,6 +3969,8 @@ export interface EntityGitDetails {
   filePath?: string
   fileUrl?: string
   objectId?: string
+  parentEntityConnectorRef?: string
+  parentEntityRepoName?: string
   repoIdentifier?: string
   repoName?: string
   repoUrl?: string
@@ -5505,6 +5520,7 @@ export interface FeatureRestrictionDetailListRequestDTO {
     | 'TERRAGRUNT_APPLY'
     | 'TERRAGRUNT_DESTROY'
     | 'TERRAGRUNT_ROLLBACK'
+    | 'BAMBOO_BUILD'
   )[]
 }
 
@@ -5595,6 +5611,7 @@ export interface FeatureRestrictionDetailRequestDTO {
     | 'TERRAGRUNT_APPLY'
     | 'TERRAGRUNT_DESTROY'
     | 'TERRAGRUNT_ROLLBACK'
+    | 'BAMBOO_BUILD'
 }
 
 export interface FeatureRestrictionDetailsDTO {
@@ -5701,6 +5718,7 @@ export interface FeatureRestrictionDetailsDTO {
     | 'TERRAGRUNT_APPLY'
     | 'TERRAGRUNT_DESTROY'
     | 'TERRAGRUNT_ROLLBACK'
+    | 'BAMBOO_BUILD'
   restriction?: RestrictionDTO
   restrictionType?:
     | 'AVAILABILITY'
@@ -5815,6 +5833,7 @@ export interface FeatureRestrictionMetadataDTO {
     | 'TERRAGRUNT_APPLY'
     | 'TERRAGRUNT_DESTROY'
     | 'TERRAGRUNT_ROLLBACK'
+    | 'BAMBOO_BUILD'
   restrictionMetadata?: {
     [key: string]: RestrictionMetadataDTO
   }
@@ -6473,6 +6492,8 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
   )[]
   moduleType?:
     | 'CD'
@@ -6691,6 +6712,8 @@ export interface GitEntityFilterProperties {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -6986,6 +7009,8 @@ export interface GitFullSyncEntityInfoDTO {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -7198,6 +7223,8 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7531,6 +7558,8 @@ export interface GitSyncEntityDTO {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7737,6 +7766,8 @@ export interface GitSyncEntityListDTO {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7960,6 +7991,8 @@ export interface GitSyncErrorDTO {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -10354,6 +10387,7 @@ export interface Page {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10406,6 +10440,7 @@ export interface PageApiKeyAggregateDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10416,6 +10451,7 @@ export interface PageCcmK8sConnectorResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10426,6 +10462,7 @@ export interface PageClusterFromGitops {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10436,6 +10473,7 @@ export interface PageClusterResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10446,6 +10484,7 @@ export interface PageConnectorResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10456,6 +10495,7 @@ export interface PageEntitySetupUsageDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10466,6 +10506,7 @@ export interface PageEnvironmentGroupResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10476,6 +10517,7 @@ export interface PageEnvironmentResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10486,6 +10528,7 @@ export interface PageEnvironmentResponseDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10510,6 +10553,7 @@ export interface PageFilterDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10520,6 +10564,7 @@ export interface PageFreezeSummaryResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10530,6 +10575,7 @@ export interface PageGitBranchDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10540,6 +10586,7 @@ export interface PageGitFullSyncEntityInfoDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10550,6 +10597,7 @@ export interface PageGitSyncEntityListDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10560,6 +10608,7 @@ export interface PageGitSyncErrorAggregateByCommitDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10570,6 +10619,7 @@ export interface PageGitSyncErrorDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10580,6 +10630,7 @@ export interface PageGitopsProviderResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10590,6 +10641,7 @@ export interface PageHostDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10600,6 +10652,7 @@ export interface PageInfrastructureResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10610,6 +10663,7 @@ export interface PageInvite {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10620,6 +10674,7 @@ export interface PageOrganizationAggregateDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10630,6 +10685,7 @@ export interface PageOrganizationResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10640,6 +10696,7 @@ export interface PageProject {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10650,6 +10707,7 @@ export interface PageProjectAggregateDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10660,6 +10718,7 @@ export interface PageProjectResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10670,6 +10729,7 @@ export interface PageRoleAssignmentResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10680,6 +10740,7 @@ export interface PageSecretResponseWrapper {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10690,6 +10751,7 @@ export interface PageServiceAccountAggregateDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10700,6 +10762,7 @@ export interface PageServiceOverrideResponseDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10710,6 +10773,7 @@ export interface PageServiceResponse {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10720,6 +10784,7 @@ export interface PageServiceResponseDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10730,6 +10795,7 @@ export interface PageTokenAggregateDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10740,6 +10806,7 @@ export interface PageUserAggregate {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10750,6 +10817,7 @@ export interface PageUserGroupAggregateDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10760,6 +10828,7 @@ export interface PageUserGroupDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10770,6 +10839,7 @@ export interface PageUserMetadataDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -10780,6 +10850,7 @@ export interface PageVariableResponseDTO {
   pageIndex?: number
   pageItemCount?: number
   pageSize?: number
+  pageToken?: string
   totalItems?: number
   totalPages?: number
 }
@@ -11392,6 +11463,8 @@ export interface ReferencedByDTO {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
 }
 
 export interface RefreshResponse {
@@ -12702,6 +12775,8 @@ export interface ResponseListEntityType {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -12960,6 +13035,13 @@ export interface ResponseListSourceCodeManagerDTO {
 export interface ResponseListString {
   correlationId?: string
   data?: string[]
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseListSubscriptionDetailDTO {
+  correlationId?: string
+  data?: SubscriptionDetailDTO[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -15928,6 +16010,7 @@ export interface StepData {
   type?:
     | 'CreatePR'
     | 'MergePR'
+    | 'GitOpsSync'
     | 'APPLY'
     | 'SCALE'
     | 'STAGE_DEPLOYMENT'
@@ -16002,10 +16085,11 @@ export interface StepData {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
+    | 'AwsLambdaRollback'
+    | 'BambooBuild'
 }
 
 export interface StepElementConfig {
@@ -16169,6 +16253,21 @@ export interface SubscriptionDetailDTO {
   customerId?: string
   latestInvoice?: string
   latestInvoiceDetail?: InvoiceDetailDTO
+  moduletype?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'SRM'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+    | 'IACM'
   pendingUpdate?: PendingUpdateDetailDTO
   status?: string
   subscriptionId?: string
@@ -16254,6 +16353,33 @@ export interface SvcEnvMigrationResponseDto {
   failures?: StageMigrationFailureResponse[]
   migrated?: boolean
   pipelineYaml?: string
+}
+
+export interface SyncOptions {
+  applyOutOfSyncOnly?: boolean
+  autoCreateNamespace?: boolean
+  prunePropagationPolicy?: string
+  pruneResourcesAtLast?: boolean
+  replaceResources?: boolean
+  skipSchemaValidation?: boolean
+}
+
+export interface SyncRetryStrategy {
+  limit?: number
+  maxRetryBackoffDuration?: string
+  retryBackoffBaseDuration?: string
+  waitAfterRetryFactor?: number
+}
+
+export type SyncStepInfo = StepSpecType & {
+  applicationsList?: AgentApplicationTargets[]
+  applyOnly?: boolean
+  delegateSelectors?: string[]
+  dryRun?: boolean
+  forceApply?: boolean
+  prune?: boolean
+  retryStrategy?: SyncRetryStrategy
+  syncOptions?: SyncOptions
 }
 
 export interface TGTGenerationSpecDTO {
@@ -16529,7 +16655,8 @@ export interface TemplateScope {
 }
 
 export type TerraformApplyStepInfo = StepSpecType & {
-  configuration: TerraformStepConfiguration
+  cloudCliConfiguration?: TerraformCloudCliStepConfiguration
+  configuration?: TerraformStepConfiguration
   delegateSelectors?: string[]
   metadata?: string
   provisionerIdentifier: string
@@ -16546,6 +16673,27 @@ export interface TerraformBackendConfigSpec {
 
 export type TerraformCloudApplySpec = TerraformCloudRunExecutionSpec & {
   provisionerIdentifier: string
+}
+
+export interface TerraformCloudCliExecutionData {
+  backendConfig?: TerraformBackendConfig
+  configFiles: TerraformConfigFilesWrapper
+  environmentVariables?: NGVariable[]
+  targets?: string[]
+  varFiles?: TerraformVarFileWrapper[]
+}
+
+export interface TerraformCloudCliPlanExecutionData {
+  backendConfig?: TerraformBackendConfig
+  command: 'Apply' | 'Destroy'
+  configFiles: TerraformConfigFilesWrapper
+  environmentVariables?: NGVariable[]
+  targets?: string[]
+  varFiles?: TerraformVarFileWrapper[]
+}
+
+export interface TerraformCloudCliStepConfiguration {
+  spec?: TerraformCloudCliExecutionData
 }
 
 export type TerraformCloudConnector = ConnectorConfigDTO & {
@@ -16650,7 +16798,8 @@ export interface TerraformConfigFilesWrapper {
 }
 
 export type TerraformDestroyStepInfo = StepSpecType & {
-  configuration: TerraformStepConfiguration
+  cloudCliConfiguration?: TerraformCloudCliStepConfiguration
+  configuration?: TerraformStepConfiguration
   delegateSelectors?: string[]
   metadata?: string
   provisionerIdentifier: string
@@ -16679,7 +16828,8 @@ export interface TerraformPlanExecutionData {
 }
 
 export type TerraformPlanStepInfo = StepSpecType & {
-  configuration: TerraformPlanExecutionData
+  cloudCliConfiguration?: TerraformCloudCliPlanExecutionData
+  configuration?: TerraformPlanExecutionData
   delegateSelectors?: string[]
   provisionerIdentifier: string
 }
@@ -18424,6 +18574,8 @@ export interface ListActivitiesQueryParams {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -18622,6 +18774,8 @@ export interface ListActivitiesQueryParams {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -18924,6 +19078,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -19122,6 +19278,8 @@ export interface GetActivitiesSummaryQueryParams {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -19637,6 +19795,7 @@ export interface GetUserGroupAggregateListByUserQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
   searchTerm?: string
   userSize?: number
 }
@@ -19735,6 +19894,7 @@ export interface GetUserGroupAggregateListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
   searchTerm?: string
   filterType?: 'INCLUDE_INHERITED_GROUPS' | 'EXCLUDE_INHERITED_GROUPS' | 'INCLUDE_CHILD_SCOPE_GROUPS'
   userSize?: number
@@ -19882,6 +20042,7 @@ export interface GetOrganizationAggregateDTOListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetOrganizationAggregateDTOListProps = Omit<
@@ -20039,6 +20200,7 @@ export interface GetProjectAggregateDTOListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetProjectAggregateDTOListProps = Omit<
@@ -20288,6 +20450,7 @@ export interface ListAggregatedApiKeysQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
   searchTerm?: string
 }
 
@@ -35011,6 +35174,7 @@ export interface FetchFeatureRestrictionMetadataPathParams {
     | 'TERRAGRUNT_APPLY'
     | 'TERRAGRUNT_DESTROY'
     | 'TERRAGRUNT_ROLLBACK'
+    | 'BAMBOO_BUILD'
 }
 
 export type FetchFeatureRestrictionMetadataProps = Omit<
@@ -35171,6 +35335,7 @@ export const fetchFeatureRestrictionMetadataPromise = (
       | 'TERRAGRUNT_APPLY'
       | 'TERRAGRUNT_DESTROY'
       | 'TERRAGRUNT_ROLLBACK'
+      | 'BAMBOO_BUILD'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -35386,6 +35551,8 @@ export interface ListReferredByEntitiesQueryParams {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -35645,6 +35812,8 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
   searchTerm?: string
 }
 
@@ -38010,6 +38179,7 @@ export interface ListFilesAndFoldersQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type ListFilesAndFoldersProps = Omit<
@@ -38162,6 +38332,7 @@ export interface ListFilesWithFilterQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
   accountIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -38969,6 +39140,8 @@ export interface GetReferencedByQueryParams {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
   searchTerm?: string
 }
 
@@ -40740,6 +40913,7 @@ export interface ListFullSyncFilesQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
   searchTerm?: string
 }
 
@@ -41584,6 +41758,8 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -41850,6 +42026,8 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'AwsSamDeploy'
       | 'AwsSamRollback'
       | 'SscaOrchestration'
+      | 'AwsLambdaRollback'
+      | 'GITOPS_SYNC'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -41864,6 +42042,7 @@ export interface ListGitSyncErrorsQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
   accountIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -41928,6 +42107,7 @@ export interface ListGitToHarnessErrorsCommitsQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
   accountIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -42007,6 +42187,7 @@ export interface ListGitToHarnessErrorsForCommitQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
   accountIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -43607,6 +43788,7 @@ export interface FilterHostsByConnectorQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
   accountIdentifier?: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -44817,6 +44999,7 @@ export interface GetInvitesQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetInvitesProps = Omit<GetProps<ResponsePageInvite, Failure | Error, GetInvitesQueryParams, void>, 'path'>
@@ -44868,6 +45051,7 @@ export interface GetPendingUsersAggregatedQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetPendingUsersAggregatedProps = Omit<
@@ -47371,6 +47555,7 @@ export interface GetOrganizationListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetOrganizationListProps = Omit<
@@ -47950,6 +48135,8 @@ export interface GetStepYamlSchemaQueryParams {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
   yamlGroup?: string
 }
 
@@ -48276,6 +48463,8 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -48843,6 +49032,7 @@ export interface GetProjectListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetProjectListProps = Omit<
@@ -48971,6 +49161,7 @@ export interface GetProjectListWithMultiOrgFilterQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetProjectListWithMultiOrgFilterProps = Omit<
@@ -49530,6 +49721,7 @@ export interface GetFilteredRoleAssignmentListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
   accountIdentifier: string
   orgIdentifier?: string
   projectIdentifier?: string
@@ -51668,6 +51860,7 @@ export interface ListAggregatedServiceAccountsQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
   searchTerm?: string
 }
 
@@ -55051,48 +55244,63 @@ export const updateSourceCodeManagersPromise = (
     UpdateSourceCodeManagersPathParams
   >('PUT', getConfig('ng/api'), `/source-code-manager/${identifier}`, props, signal)
 
-export interface RetrieveSubscriptionQueryParams {
+export interface ListSubscriptionsQueryParams {
   accountIdentifier: string
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'SRM'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+    | 'IACM'
 }
 
-export type RetrieveSubscriptionProps = Omit<
-  GetProps<ResponseSubscriptionDetailDTO, Failure | Error, RetrieveSubscriptionQueryParams, void>,
+export type ListSubscriptionsProps = Omit<
+  GetProps<ResponseListSubscriptionDetailDTO, Failure | Error, ListSubscriptionsQueryParams, void>,
   'path'
 >
 
 /**
- * Retrieves a subscription
+ * Lists the subscriptions
  */
-export const RetrieveSubscription = (props: RetrieveSubscriptionProps) => (
-  <Get<ResponseSubscriptionDetailDTO, Failure | Error, RetrieveSubscriptionQueryParams, void>
+export const ListSubscriptions = (props: ListSubscriptionsProps) => (
+  <Get<ResponseListSubscriptionDetailDTO, Failure | Error, ListSubscriptionsQueryParams, void>
     path={`/subscriptions`}
     base={getConfig('ng/api')}
     {...props}
   />
 )
 
-export type UseRetrieveSubscriptionProps = Omit<
-  UseGetProps<ResponseSubscriptionDetailDTO, Failure | Error, RetrieveSubscriptionQueryParams, void>,
+export type UseListSubscriptionsProps = Omit<
+  UseGetProps<ResponseListSubscriptionDetailDTO, Failure | Error, ListSubscriptionsQueryParams, void>,
   'path'
 >
 
 /**
- * Retrieves a subscription
+ * Lists the subscriptions
  */
-export const useRetrieveSubscription = (props: UseRetrieveSubscriptionProps) =>
-  useGet<ResponseSubscriptionDetailDTO, Failure | Error, RetrieveSubscriptionQueryParams, void>(`/subscriptions`, {
+export const useListSubscriptions = (props: UseListSubscriptionsProps) =>
+  useGet<ResponseListSubscriptionDetailDTO, Failure | Error, ListSubscriptionsQueryParams, void>(`/subscriptions`, {
     base: getConfig('ng/api'),
     ...props
   })
 
 /**
- * Retrieves a subscription
+ * Lists the subscriptions
  */
-export const retrieveSubscriptionPromise = (
-  props: GetUsingFetchProps<ResponseSubscriptionDetailDTO, Failure | Error, RetrieveSubscriptionQueryParams, void>,
+export const listSubscriptionsPromise = (
+  props: GetUsingFetchProps<ResponseListSubscriptionDetailDTO, Failure | Error, ListSubscriptionsQueryParams, void>,
   signal?: RequestInit['signal']
 ) =>
-  getUsingFetch<ResponseSubscriptionDetailDTO, Failure | Error, RetrieveSubscriptionQueryParams, void>(
+  getUsingFetch<ResponseListSubscriptionDetailDTO, Failure | Error, ListSubscriptionsQueryParams, void>(
     getConfig('ng/api'),
     `/subscriptions`,
     props,
@@ -55780,21 +55988,6 @@ export const syncStripeEventPromise = (
 
 export interface CancelSubscriptionQueryParams {
   accountIdentifier: string
-  moduleType:
-    | 'CD'
-    | 'CI'
-    | 'CV'
-    | 'CF'
-    | 'CE'
-    | 'STO'
-    | 'CHAOS'
-    | 'SRM'
-    | 'CODE'
-    | 'CORE'
-    | 'PMS'
-    | 'TEMPLATESERVICE'
-    | 'GOVERNANCE'
-    | 'IACM'
 }
 
 export type CancelSubscriptionProps = Omit<
@@ -55842,6 +56035,84 @@ export const cancelSubscriptionPromise = (
     props,
     signal
   )
+
+export interface RetrieveSubscriptionQueryParams {
+  accountIdentifier: string
+}
+
+export interface RetrieveSubscriptionPathParams {
+  subscriptionId: string
+}
+
+export type RetrieveSubscriptionProps = Omit<
+  GetProps<
+    ResponseSubscriptionDetailDTO,
+    Failure | Error,
+    RetrieveSubscriptionQueryParams,
+    RetrieveSubscriptionPathParams
+  >,
+  'path'
+> &
+  RetrieveSubscriptionPathParams
+
+/**
+ * Retrieves a subscription
+ */
+export const RetrieveSubscription = ({ subscriptionId, ...props }: RetrieveSubscriptionProps) => (
+  <Get<ResponseSubscriptionDetailDTO, Failure | Error, RetrieveSubscriptionQueryParams, RetrieveSubscriptionPathParams>
+    path={`/subscriptions/${subscriptionId}`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseRetrieveSubscriptionProps = Omit<
+  UseGetProps<
+    ResponseSubscriptionDetailDTO,
+    Failure | Error,
+    RetrieveSubscriptionQueryParams,
+    RetrieveSubscriptionPathParams
+  >,
+  'path'
+> &
+  RetrieveSubscriptionPathParams
+
+/**
+ * Retrieves a subscription
+ */
+export const useRetrieveSubscription = ({ subscriptionId, ...props }: UseRetrieveSubscriptionProps) =>
+  useGet<
+    ResponseSubscriptionDetailDTO,
+    Failure | Error,
+    RetrieveSubscriptionQueryParams,
+    RetrieveSubscriptionPathParams
+  >((paramsInPath: RetrieveSubscriptionPathParams) => `/subscriptions/${paramsInPath.subscriptionId}`, {
+    base: getConfig('ng/api'),
+    pathParams: { subscriptionId },
+    ...props
+  })
+
+/**
+ * Retrieves a subscription
+ */
+export const retrieveSubscriptionPromise = (
+  {
+    subscriptionId,
+    ...props
+  }: GetUsingFetchProps<
+    ResponseSubscriptionDetailDTO,
+    Failure | Error,
+    RetrieveSubscriptionQueryParams,
+    RetrieveSubscriptionPathParams
+  > & { subscriptionId: string },
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<
+    ResponseSubscriptionDetailDTO,
+    Failure | Error,
+    RetrieveSubscriptionQueryParams,
+    RetrieveSubscriptionPathParams
+  >(getConfig('ng/api'), `/subscriptions/${subscriptionId}`, props, signal)
 
 export interface UpdateSubscriptionQueryParams {
   accountIdentifier: string
@@ -56297,6 +56568,7 @@ export interface ListAggregatedTokensQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
   searchTerm?: string
 }
 
@@ -57116,6 +57388,7 @@ export interface GetUserGroupListQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetUserGroupListProps = Omit<
@@ -58045,6 +58318,7 @@ export interface GetUsersInUserGroupQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export interface GetUsersInUserGroupPathParams {
@@ -58424,6 +58698,7 @@ export interface GetAggregatedUsersQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetAggregatedUsersProps = Omit<
@@ -58599,6 +58874,7 @@ export interface GetUsersQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetUsersProps = Omit<
@@ -58708,6 +58984,7 @@ export interface GetCurrentGenUsersQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetCurrentGenUsersProps = Omit<
@@ -58981,6 +59258,7 @@ export interface GetUserProjectInfoQueryParams {
   pageIndex?: number
   pageSize?: number
   sortOrders?: string[]
+  pageToken?: string
 }
 
 export type GetUserProjectInfoProps = Omit<
@@ -61969,6 +62247,8 @@ export interface GetYamlSchemaQueryParams {
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
+    | 'AwsLambdaRollback'
+    | 'GITOPS_SYNC'
   subtype?:
     | 'K8sCluster'
     | 'Git'

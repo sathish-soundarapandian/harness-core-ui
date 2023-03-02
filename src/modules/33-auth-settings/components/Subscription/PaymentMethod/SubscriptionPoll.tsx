@@ -36,7 +36,7 @@ function SubscriptionPoll({
     error,
     refetch: fetchSubscription
   } = useRetrieveSubscription({
-    // subscriptionId: defaultTo(subscriptionProps.subscriptionId, '') as string,
+    subscriptionId: defaultTo(subscriptionProps.subscriptionId, '') as string,
     queryParams: {
       accountIdentifier: accountId
     },
