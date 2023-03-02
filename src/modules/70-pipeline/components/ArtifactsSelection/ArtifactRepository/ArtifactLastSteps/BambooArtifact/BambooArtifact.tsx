@@ -72,7 +72,8 @@ function FormComponent({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [planDetails, setPlanDetails] = useState<SelectOption[]>([])
-  const [artifactPath, setFilePath] = useState<SelectOption[]>([])
+  const [planValue, setPlanValue] = useState<SelectOption>()
+  const [artifactPaths, setFilePath] = useState<SelectOption[]>([])
   const [builds, setBambooBuilds] = useState<SelectOption[]>([])
   const commonParams = {
     accountIdentifier: accountId,
@@ -135,6 +136,12 @@ function FormComponent({
   })
 
   useEffect(() => {
+    if (planValue) {
+      refetchArtifactPaths()
+    }
+  }, [planValue])
+
+  useEffect(() => {
     if (artifactPathsResponse?.data) {
       const artifactPathResponseFormatted: MultiSelectOption[] = artifactPathsResponse?.data?.map(
         (artifactPathVal: string) => {
@@ -147,6 +154,10 @@ function FormComponent({
       setFilePath(artifactPathResponseFormatted)
     }
   }, [artifactPathsResponse])
+
+  useEffect(() => {
+    setFilePath([])
+  }, [artifactPathError])
 
   useEffect(() => {
     if (bambooBuildResponse?.data) {
@@ -183,10 +194,6 @@ function FormComponent({
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={loadingPlans} />
   ))
 
-  const artifactPathItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
-    <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingArtifacts} />
-  ))
-
   const buildItemRenderer = memoize((item: SelectOption, itemProps: IItemRendererProps) => (
     <ItemRendererWithMenuItem item={item} itemProps={itemProps} disabled={fetchingBuild} />
   ))
@@ -218,7 +225,9 @@ function FormComponent({
                 : getString('select')
             }
             multiTypeInputProps={{
-              onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.planKey', type),
+              onTypeChange: (type: MultiTypeInputType) => {
+                formik.setFieldValue('spec.planKey', type)
+              },
               expressions,
               selectProps: {
                 allowCreatingNewItems: true,
@@ -226,6 +235,7 @@ function FormComponent({
                 items: planDetails,
                 loadingItems: loadingPlans,
                 itemRenderer: planPathItemRenderer,
+
                 noResults: (
                   <NoTagResults
                     tagError={plansError}
@@ -233,6 +243,10 @@ function FormComponent({
                     defaultErrorText={loadingPlans ? getString('loading') : getString('common.filters.noResultsFound')}
                   />
                 )
+              },
+              onChange: (val: any) => {
+                //refetchArtifactPaths()
+                setPlanValue(val?.value)
               },
               onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
                 if (
@@ -244,12 +258,13 @@ function FormComponent({
 
                 refetchPlans()
               },
+
               allowableTypes
             }}
           />
-          {getMultiTypeFromValue(formik.values.spec?.planName) === MultiTypeInputType.RUNTIME && (
+          {getMultiTypeFromValue(formik.values.spec?.planKey) === MultiTypeInputType.RUNTIME && (
             <ConfigureOptions
-              value={formik.values?.spec?.jobName as string}
+              value={formik.values?.spec?.planKey as string}
               style={{ marginTop: 22 }}
               type="String"
               variableName="spec.planKey"
@@ -261,46 +276,51 @@ function FormComponent({
           )}
         </div>
         <div className={css.imagePathContainer}>
-          <FormInput.MultiTypeInput
+          <FormInput.MultiSelectTypeInput
+            selectItems={defaultTo(artifactPaths, [])}
             label={getString('pipeline.artifactPathLabel')}
             name="spec.artifactPaths"
-            useValue
             placeholder={fetchingArtifacts ? getString('loading') : getString('pipeline.selectArtifactPathPlaceholder')}
-            multiTypeInputProps={{
-              onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.artifactPath', type),
-              expressions,
-              onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-                if (
-                  e?.target?.type !== 'text' ||
-                  (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
-                  canFetchBuildsOrArtifacts
-                ) {
-                  return
-                }
-                refetchArtifactPaths()
-              },
-              selectProps: {
-                allowCreatingNewItems: true,
-                addClearBtn: !isReadonly,
-                items: defaultTo(artifactPath, []),
-                noResults: (
-                  <NoTagResults
-                    tagError={artifactPathError}
-                    isServerlessDeploymentTypeSelected={false}
-                    defaultErrorText={
-                      fetchingArtifacts
-                        ? getString('loading')
-                        : canFetchBuildsOrArtifacts
-                        ? `${getString('pipeline.artifactsSelection.validation.jobConnectorRequired')} artifactPath`
-                        : getString('common.filters.noResultsFound')
-                    }
-                  />
-                ),
-                itemRenderer: artifactPathItemRenderer
-              },
-              allowableTypes
+            multiSelectTypeInputProps={{
+              onChange: (val: any) => {
+                formik.setFieldValue('artifactPaths', val.value)
+              }
             }}
-            selectItems={artifactPath || []}
+            // multiTypeInputProps={{
+            //   onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.artifactPath', type),
+            //   expressions,
+            //   onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
+            //     if (
+            //       e?.target?.type !== 'text' ||
+            //       (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
+            //       canFetchBuildsOrArtifacts
+            //     ) {
+            //       return
+            //     }
+            //     refetchArtifactPaths()
+            //   },
+            //   selectProps: {
+            //     allowCreatingNewItems: true,
+            //     addClearBtn: !isReadonly,
+            //     items: defaultTo(artifactPath, []),
+            //     noResults: (
+            //       <NoTagResults
+            //         tagError={artifactPathError}
+            //         isServerlessDeploymentTypeSelected={false}
+            //         defaultErrorText={
+            //           fetchingArtifacts
+            //             ? getString('loading')
+            //             : canFetchBuildsOrArtifacts
+            //             ? `${getString('pipeline.artifactsSelection.validation.jobConnectorRequired')} artifactPath`
+            //             : getString('common.filters.noResultsFound')
+            //         }
+            //       />
+            //     ),
+            //     itemRenderer: artifactPathItemRenderer
+            //   },
+            //   allowableTypes
+            // }}
+            // selectItems={artifactPath || []}
           />
           {getMultiTypeFromValue(formik.values?.spec?.artifactPath) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
