@@ -76,7 +76,7 @@ export function ECRArtifact({
         }}
         enableReinitialize={true}
       >
-        {({ setFieldValue }) => (
+        {({ setFieldValue, values }) => (
           <Form>
             <div className={css.connectorForm}>
               <div className={css.imagePathContainer}>
@@ -94,7 +94,11 @@ export function ECRArtifact({
                   placeholder={getString('select')}
                 />
               </div>
-              <ArtifactImagePath />
+              <ArtifactImagePath
+                connectorRef={getConnectorIdValue(prevStepData)}
+                region={values?.region}
+                artifactType="ECR"
+              />
             </div>
 
             <Layout.Horizontal spacing="medium">
