@@ -12,6 +12,7 @@ then
 fi
 
 sed -i "s|<\!-- apiurl -->|<script>window.apiUrl = '$API_URL'</script>|" index.html
+sed -i "s|<\!-- IDPUrl -->|<script>window.IDPUrl = '$IDP_URL'</script>|" index.html
 sed -i "s|HARNESS_ENABLE_NG_AUTH_UI_PLACEHOLDER|$HARNESS_ENABLE_NG_AUTH_UI_PLACEHOLDER|" index.html
 sed -i "s|HARNESS_BROWSER_ROUTER_ENABLED|$HARNESS_BROWSER_ROUTER_ENABLED|" index.html
 sed -i "s|HARNESS_ENABLE_FULL_STORY_PLACEHOLDER|$HARNESS_ENABLE_FULL_STORY_PLACEHOLDER|" index.html

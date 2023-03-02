@@ -33,6 +33,7 @@
       }
     </style>
     <!-- apiurl -->
+    <!-- IDPUrl -->
 
     <% if (!__DEV__) { %>
     <script type="text/javascript">
@@ -47,10 +48,17 @@
     <% } %>
     <script type="text/javascript">
       window.noAuthHeader = window.location.href.toString().includes('noAuthHeader=true')
-      const addRoutingIdParam = () => {
+
+      const getAccountId = () => {
         const matches = window.location.href.match(/\/account\/(.+?)\//)
-        return matches && matches.length > 1 ? `&routingId=${matches[1]}` : ''
+        return matches && matches.length > 1 ? `${matches[1]}` : ''
       }
+
+      const addRoutingIdParam = () => {
+        const accountId = getAccountId()
+        return accountId ? `&routingId=${accountId}` : ''
+      }
+
       window.getApiBaseUrl = pathSuffix => {
         let str = pathSuffix
         if (str.startsWith('/')) {
@@ -63,6 +71,12 @@
         }
 
         return url.includes('remoteEntry.js') ? `${url}?timestamp=${Date.now()}${addRoutingIdParam()}` : url
+      }
+
+      window.getIDPBaseUrl = str => {
+        return window.IDPUrl
+          ? `${window.IDPUrl}/${getAccountId()}/${str}?${addRoutingIdParam()}`
+          : window.getApiBaseUrl(str)
       }
     </script>
     <!-- segmentToken -->
