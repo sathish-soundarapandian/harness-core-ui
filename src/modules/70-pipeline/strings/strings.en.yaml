@@ -941,9 +941,6 @@ artifactsSelection:
   googleArtifactRegistryTitle: Google Artifact Registry
   githubPackageRegistryTitle: Github Package Registry
   AmazonMachineImageTitle: Amazon Machine Image
-  canNotDeletePrimaryArtifact: You can not delete Primary Artifact.
-  selectOtherArtifactPrimary: Select other artifact as Primary or make Primary Artifact runtime.
-  canNotDisablePrimaryArtifact: You can not disable Single Primary Artifact.
   existingDocker:
     sidecarId: Sidecar Name
     sidecarIdPlaceholder: Enter Artifact Name

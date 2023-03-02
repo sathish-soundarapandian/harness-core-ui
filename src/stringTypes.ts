@@ -3470,8 +3470,6 @@ export interface StringsMap {
   'pipeline.artifactsSelection.artifactType': string
   'pipeline.artifactsSelection.artifactTyperequired': string
   'pipeline.artifactsSelection.artifactsArrayPath': string
-  'pipeline.artifactsSelection.canNotDeletePrimaryArtifact': string
-  'pipeline.artifactsSelection.canNotDisablePrimaryArtifact': string
   'pipeline.artifactsSelection.classifier': string
   'pipeline.artifactsSelection.classifierPlaceholder': string
   'pipeline.artifactsSelection.customArtifactManualFill': string
@@ -3508,7 +3506,6 @@ export interface StringsMap {
   'pipeline.artifactsSelection.repositoryPort': string
   'pipeline.artifactsSelection.repositoryPortPlaceholder': string
   'pipeline.artifactsSelection.repositoryTypePlaceholder': string
-  'pipeline.artifactsSelection.selectOtherArtifactPrimary': string
   'pipeline.artifactsSelection.validation.artifactDirectory': string
   'pipeline.artifactsSelection.validation.artifactId': string
   'pipeline.artifactsSelection.validation.artifactPath': string

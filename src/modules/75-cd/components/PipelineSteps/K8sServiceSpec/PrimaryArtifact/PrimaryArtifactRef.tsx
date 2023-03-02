@@ -27,7 +27,7 @@ import { yamlParse } from '@common/utils/YamlHelperMethods'
 import { useStageFormContext } from '@pipeline/context/StageFormContext'
 import { isValueRuntimeInput } from '@common/utils/utils'
 import { clearRuntimeInput } from '@pipeline/utils/runPipelineUtils'
-import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import ExperimentalInput from '../K8sServiceSpecForms/ExperimentalInput'
 import type { K8SDirectServiceStep } from '../K8sServiceSpecInterface'
 
 interface PrimaryArtifactRefProps {
@@ -173,7 +173,7 @@ function PrimaryArtifactRef({
     <Container width={400}>
       {getMultiTypeFromValue(template?.artifacts?.primary?.primaryArtifactRef as string) ===
         MultiTypeInputType.RUNTIME && (
-        <SelectInputSetView
+        <ExperimentalInput
           tooltipProps={{ dataTooltipId: 'primaryArtifactRef' }}
           label={getString('primaryArtifactText')}
           placeholder={getString('cd.selectArtifactSource')}
@@ -187,13 +187,10 @@ function PrimaryArtifactRef({
               addClearBtn: !readonly,
               items: artifactSources
             },
-            onChange: /* istanbul ignore next */ (value, _typeValue, _type) => {
-              onPrimaryArtifactRefChange(value as SelectOption)
-            }
+            onChange: onPrimaryArtifactRefChange
           }}
-          fieldPath="artifacts.primary.primaryArtifactRef"
-          template={template}
           disabled={readonly}
+          formik={formik}
         />
       )}
     </Container>

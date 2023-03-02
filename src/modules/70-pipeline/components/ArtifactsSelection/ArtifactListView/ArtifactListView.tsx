@@ -63,9 +63,7 @@ function ArtifactListView({
   addNewArtifact,
   isSidecarAllowed,
   isMultiArtifactSource,
-  handleUseArtifactSourceTemplate,
-  primaryArtifactRef,
-  setPrimaryArtifactRef
+  handleUseArtifactSourceTemplate
 }: ArtifactListViewProps): React.ReactElement {
   const { getString } = useStrings()
   const commonArtifactProps = {
@@ -96,8 +94,6 @@ function ArtifactListView({
               <PrimaryArtifactSources
                 artifactSources={primaryArtifact as ArtifactSource[]}
                 removeArtifactSource={removeArtifactSource}
-                primaryArtifactRef={primaryArtifactRef}
-                setPrimaryArtifactRef={setPrimaryArtifactRef}
                 {...commonArtifactProps}
               />
             ) : (

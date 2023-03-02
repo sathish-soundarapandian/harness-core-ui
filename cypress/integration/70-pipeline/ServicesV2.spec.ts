@@ -20,7 +20,7 @@ import {
   afterFinalSaveConnectorsListResponse
 } from '../../support/70-pipeline/constants'
 
-describe('Service V2', { defaultCommandTimeout: 10000 }, () => {
+describe('Service V2', () => {
   const afterSaveServiceEndpointPOST = '/ng/api/servicesV2?routingId=accountId&accountIdentifier=accountId'
   const afterSaveServiceNameEndpoint =
     '/ng/api/servicesV2/testServiceV2?routingId=accountId&accountIdentifier=accountId&orgIdentifier=default&projectIdentifier=project1'
@@ -212,7 +212,7 @@ describe('Service V2', { defaultCommandTimeout: 10000 }, () => {
     cy.contains('p', 'Harness').click()
     cy.clickSubmit()
     cy.get('input[name="identifier"]').type('testConfigFileIdentifier')
-    cy.get('span[data-icon="fixed-input"]').eq(1).click({ force: true })
+    cy.get('span[data-icon="fixed-input"]').eq(0).click()
     cy.contains('span', 'Runtime input').click()
     cy.get('input[value="<+input>"]').should('be.visible')
 
@@ -276,7 +276,7 @@ describe('Service V2', { defaultCommandTimeout: 10000 }, () => {
     cy.contains('p', 'Harness').click()
     cy.clickSubmit()
     cy.get('input[name="identifier"]').type('testConfigFileIdentifier')
-    cy.get('span[data-icon="fixed-input"]').eq(1).click()
+    cy.get('span[data-icon="fixed-input"]').eq(0).click()
     cy.contains('span', 'Runtime input').click()
     cy.get('input[value="<+input>"]').should('be.visible')
 
