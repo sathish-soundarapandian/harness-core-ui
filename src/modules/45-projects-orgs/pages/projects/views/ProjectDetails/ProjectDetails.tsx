@@ -46,6 +46,7 @@ import {
 } from '@common/factories/LandingDashboardContext'
 import TimeRangeSelect from '@projects-orgs/components/TimeRangeSelect/TimeRangeSelect'
 import DeprecatedCallout from '@gitsync/components/DeprecatedCallout/DeprecatedCallout'
+import { isOnPrem } from '@common/utils/utils'
 import useDeleteProjectDialog from '../../DeleteProject'
 import css from './ProjectDetails.module.scss'
 
@@ -59,6 +60,7 @@ const ProjectDetails: React.FC = () => {
   const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
   const { CDNG_ENABLED, CVNG_ENABLED, CING_ENABLED, CENG_ENABLED, CFNG_ENABLED, NEW_LEFT_NAVBAR_SETTINGS } =
     useFeatureFlags()
+  const showProjectOverview = NEW_LEFT_NAVBAR_SETTINGS && !isOnPrem()
   const { licenseInformation } = useLicenseStore()
   const invitePermission = {
     resourceScope: {
@@ -160,7 +162,7 @@ const ProjectDetails: React.FC = () => {
         breadcrumbs={
           <NGBreadcrumbs
             links={
-              !NEW_LEFT_NAVBAR_SETTINGS
+              !showProjectOverview
                 ? [
                     {
                       url: routes.toProjects({ accountId }),
@@ -279,17 +281,14 @@ const ProjectDetails: React.FC = () => {
       />
       <Page.Body>
         <Layout.Horizontal>
-          <Container
-            padding="xxlarge"
-            className={cx(css.enabledModules, { [css.fullWidth]: NEW_LEFT_NAVBAR_SETTINGS })}
-          >
+          <Container padding="xxlarge" className={cx(css.enabledModules, { [css.fullWidth]: showProjectOverview })}>
             <Layout.Vertical padding="small" spacing="large">
-              {!NEW_LEFT_NAVBAR_SETTINGS && (
+              {!showProjectOverview && (
                 <Text font={{ size: 'medium', weight: 'semi-bold' }} color={Color.BLACK}>
                   {getString('modules')}
                 </Text>
               )}
-              {NEW_LEFT_NAVBAR_SETTINGS ? (
+              {showProjectOverview ? (
                 <LandingDashboardContextProvider>
                   <Layout.Horizontal flex={{ justifyContent: 'space-between' }}>
                     <Text font={{ size: 'medium', weight: 'bold' }} color={Color.BLACK}>
