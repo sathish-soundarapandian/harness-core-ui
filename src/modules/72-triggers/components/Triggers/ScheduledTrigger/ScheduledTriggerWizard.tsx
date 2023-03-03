@@ -946,7 +946,7 @@ export default function ScheduledTriggerWizard(
       key={wizardKey} // re-renders with yaml to visual initialValues
       wizardType="scheduled"
       formikInitialProps={{
-        initialValues,
+        initialValues: { ...initialValues, resolvedPipeline: resolvedMergedPipeline },
         onSubmit: onSubmit,
         validationSchema: getValidationSchema(getString),
         validate: validateTriggerPipeline,
