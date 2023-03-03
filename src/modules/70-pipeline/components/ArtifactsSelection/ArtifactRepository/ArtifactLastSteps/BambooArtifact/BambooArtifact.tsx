@@ -143,7 +143,7 @@ function FormComponent({
   }, [planValue])
 
   useEffect(() => {
-    if (artifactPathsResponse?.data) {
+    if (artifactPathsResponse && artifactPathsResponse?.data) {
       const artifactPathResponseFormatted: MultiSelectOption[] = artifactPathsResponse?.data?.map(
         (artifactPathVal: string) => {
           return {
