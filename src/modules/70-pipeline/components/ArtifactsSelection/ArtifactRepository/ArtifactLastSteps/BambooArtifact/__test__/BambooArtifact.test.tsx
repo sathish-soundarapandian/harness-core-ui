@@ -9,6 +9,8 @@ import React from 'react'
 import { act, findByText, fireEvent, render, waitFor } from '@testing-library/react'
 
 import { TestWrapper } from '@common/utils/testUtils'
+import * as hooks from '@common/hooks'
+
 import { BambooArtifact } from '../BambooArtifact'
 import { bambooProps, getEditRunTimeValues, getEditValues, getInitialValues } from './helper'
 import { mockArtifactPathsResponse, mockPlansResponse, mockBuildsResponse } from './mock'
@@ -26,7 +28,23 @@ jest.mock('services/cd-ng', () => ({
     return { data: mockBuildsResponse, refetch, error: null, loading: false }
   })
 }))
+
+jest.mock('@common/hooks', () => ({
+  ...(jest.requireActual('@common/hooks') as any),
+
+  useMutateAsGet: jest.fn().mockImplementation(() => {
+    return { data: mockPlansResponse, refetch, error: null, loading: false }
+  })
+}))
+
 describe('Bamboo Artifact tests', () => {
+  // beforeEach(() => {
+  //   // eslint-disable-next-line
+  //   // @ts-ignore
+  //   useMutateAsGet.mockImplementation(() => {
+  //     return { data: mockPlansResponse, refetch, error: null, loading: false }
+  //   })
+  // })
   test(`renders fine for the NEW artifact`, () => {
     const { container } = render(
       <TestWrapper>
@@ -79,6 +97,7 @@ describe('Bamboo Artifact tests', () => {
   })
 
   test('onfocus of artifactPaths field - makes successful api call', async () => {
+    jest.spyOn(hooks, 'useMutateAsGet').mockReturnValue(mockArtifactPathsResponse as any)
     const { container } = render(
       <TestWrapper>
         <BambooArtifact
@@ -86,7 +105,7 @@ describe('Bamboo Artifact tests', () => {
             identifier: 'test-bamboo-artifact',
             spec: {
               planKey: 'PFP-PT',
-              artifactPaths: '',
+              artifactPaths: [],
               build: ''
             },
             type: 'Bamboo'
@@ -119,7 +138,7 @@ describe('Bamboo Artifact tests', () => {
             identifier: 'test-bamboo-artifact',
             spec: {
               planKey: 'PFP-PT',
-              artifactPaths: 'store/helloworld.war',
+              artifactPaths: ['store/helloworld.war'],
               build: ''
             },
             type: 'Bamboo'
@@ -152,7 +171,7 @@ describe('Bamboo Artifact tests', () => {
             identifier: 'test-bamboo-artifact',
             spec: {
               planKey: 'PFP-PT',
-              artifactPaths: 'store/helloworld.war',
+              artifactPaths: ['store/helloworld.war'],
               build: '14'
             },
             type: 'Bamboo'

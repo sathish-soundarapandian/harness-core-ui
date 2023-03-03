@@ -15,7 +15,7 @@ export const getInitialValues = (): BambooArtifactType => {
     identifier: '',
     spec: {
       planKey: '',
-      artifactPaths: '',
+      artifactPaths: [],
       build: ''
     }
   }
@@ -26,7 +26,7 @@ export const getEditValues = (): BambooArtifactType => {
     identifier: 'test-bamboo-artifact',
     spec: {
       planKey: 'test-plan',
-      artifactPaths: 'test-artifact-path',
+      artifactPaths: ['test-artifact-path'],
       build: 'test-build'
     },
     type: 'Bamboo'
