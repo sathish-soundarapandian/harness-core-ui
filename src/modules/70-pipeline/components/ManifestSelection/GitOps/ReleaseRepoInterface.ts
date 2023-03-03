@@ -51,8 +51,8 @@ export const ReleaseRepoManifestStoreMap: { [key: string]: ReleaseRepoManifestSt
 export const releaseRepoManifestStoreTypes: Array<ReleaseRepoManifestStores> = [
   ReleaseRepoManifestStoreMap.Github,
   ReleaseRepoManifestStoreMap.AzureRepo,
-  ReleaseRepoManifestStoreMap.GitLab,
-  ReleaseRepoManifestStoreMap.Bitbucket
+  ReleaseRepoManifestStoreMap.GitLab
+  // ReleaseRepoManifestStoreMap.Bitbucket
 ]
 
 export const ReleaseRepoManifestToConnectorMap: Record<ReleaseRepoManifestStores | string, ConnectorInfoDTO['type']> = {
