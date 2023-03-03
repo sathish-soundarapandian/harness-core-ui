@@ -14,7 +14,7 @@ import {
   queryByAttribute,
   waitFor
 } from '@testing-library/react'
-
+import mockImport from 'framework/utils/mockImport'
 import { TestWrapper, CurrentLocation } from '@common/utils/testUtils'
 import routes from '@common/RouteDefinitions'
 import { accountPathProps, executionPathProps, pipelineModuleParams } from '@common/utils/routeUtils'
@@ -25,6 +25,11 @@ import type { ExecutionPathProps, PipelineType } from '@common/interfaces/RouteI
 import { PipelineResponse as PipelineDetailsMockResponse } from '@pipeline/pages/pipeline-details/__tests__/PipelineDetailsMocks'
 import ExecutionLandingPage, { POLL_INTERVAL } from '../ExecutionLandingPage'
 import reportSummaryMock from './report-summary-mock.json'
+import {
+  ciPipelineExecutionSummaryWithK8sInfra,
+  cdPipelineExecutionSummary,
+  ciPipelineExecutionSummaryWithHostedVMsInfra
+} from './execution-summary-mock'
 
 jest.mock('services/pipeline-rq', () => ({
   useGetPipelineSummaryQuery: jest.fn(() => PipelineDetailsMockResponse)
@@ -80,6 +85,20 @@ jest.mock('services/ti-service', () => ({
     data: 'some-token'
   })
 }))
+
+const getDeprecatedConfigPromise = jest.fn().mockImplementation(() => {
+  return Promise.resolve({
+    status: 'SUCCESS',
+    data: {
+      addonTag: 'harness/ci-addon:0.16.2',
+      liteEngineTag: 'harness/ci-lite-engine:0.16.2'
+    }
+  })
+})
+
+mockImport('services/ci', {
+  getDeprecatedConfigPromise
+})
 
 jest.mock('@common/components/YAMLBuilder/YamlBuilder')
 jest.mock('@common/utils/YamlUtils', () => ({}))
@@ -255,5 +274,56 @@ describe('<ExecutionLandingPage /> tests for CI', () => {
       </TestWrapper>
     )
     await waitFor(() => expect(routesToExecutionTestsSpy).toHaveBeenCalled())
+  })
+
+  test('does not fetch deprecated config for a pipeline with just a CD stage', () => {
+    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
+      refetch: jest.fn(),
+      loading: false,
+      data: cdPipelineExecutionSummary
+    }))
+
+    render(
+      <TestWrapper path={TEST_EXECUTION_PATH} pathParams={pathParams as unknown as Record<string, string>}>
+        <ExecutionLandingPage>
+          <div data-testid="children">Execution Landing Page</div>
+        </ExecutionLandingPage>
+      </TestWrapper>
+    )
+    expect(getDeprecatedConfigPromise).not.toBeCalled()
+  })
+
+  test('does not fetch deprecated config for a pipeline having no CI stage with K8s infra', () => {
+    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
+      refetch: jest.fn(),
+      loading: false,
+      data: ciPipelineExecutionSummaryWithHostedVMsInfra
+    }))
+
+    render(
+      <TestWrapper path={TEST_EXECUTION_PATH} pathParams={pathParams as unknown as Record<string, string>}>
+        <ExecutionLandingPage>
+          <div data-testid="children">Execution Landing Page</div>
+        </ExecutionLandingPage>
+      </TestWrapper>
+    )
+    expect(getDeprecatedConfigPromise).not.toBeCalled()
+  })
+
+  test('fetches deprecated config for a pipeline with CI stage with K8s infra', () => {
+    ;(useGetExecutionDetailV2 as jest.Mock).mockImplementation(() => ({
+      refetch: jest.fn(),
+      loading: false,
+      data: ciPipelineExecutionSummaryWithK8sInfra
+    }))
+
+    render(
+      <TestWrapper path={TEST_EXECUTION_PATH} pathParams={pathParams as unknown as Record<string, string>}>
+        <ExecutionLandingPage>
+          <div data-testid="children">Execution Landing Page</div>
+        </ExecutionLandingPage>
+      </TestWrapper>
+    )
+    expect(getDeprecatedConfigPromise).toBeCalled()
   })
 })

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Harness Inc. All rights reserved.
+ * Copyright 2023 Harness Inc. All rights reserved.
  * Use of this source code is governed by the PolyForm Shield 1.0.0 license
  * that can be found in the licenses directory at the root of this repository, also available at
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
@@ -28,6 +28,7 @@ export type ACRStepInfo = StepSpecType & {
   repository: string
   resources?: ContainerResource
   runAsUser?: number
+  subscriptionId?: string
   tags: string[]
   target?: string
 }
@@ -36,9 +37,58 @@ export type AbortFailureActionConfig = FailureStrategyActionConfig & {
   type: 'Abort'
 }
 
+export type ActionStepInfo = StepSpecType & {
+  env?: ParameterFieldMapStringString
+  uses: string
+  with?: ParameterFieldMapStringString
+}
+
+export type ActionStepInfoV1 = StepSpecType & {
+  envs?: ParameterFieldMapStringString
+  outputs?: string[]
+  resources?: ContainerResource
+  uses: string
+  with?: ParameterFieldMapStringString
+}
+
+export type AquaTrivyStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  image?: STOYamlImage
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+}
+
+export interface Attestation {
+  privateKey?: string
+}
+
 export interface AuthorInfo {
   name?: string
   url?: string
+}
+
+export type AwsEcrStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
 }
 
 export type BackgroundStepInfo = StepSpecType & {
@@ -57,7 +107,87 @@ export type BackgroundStepInfo = StepSpecType & {
   reports?: UnitTestReport
   resources?: ContainerResource
   runAsUser?: number
-  shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh'
+  shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh' | 'Python'
+}
+
+export type BackgroundStepInfoV1 = StepSpecType & {
+  args?: string[]
+  entrypoint?: string
+  entrypointList?: ParameterFieldListString
+  envs?: {
+    [key: string]: string
+  }
+  image?: string
+  network?: string
+  ports?: string[]
+  privileged?: boolean
+  pull?: 'always' | 'never' | 'if-not-exists'
+  resources?: ContainerResource
+  run: string
+  shell?: 'sh' | 'bash' | 'powershell' | 'pwsh' | 'python'
+  user?: number
+}
+
+export type BanditStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+}
+
+export type BitriseStepInfo = StepSpecType & {
+  env?: ParameterFieldMapStringString
+  uses: string
+  with?: ParameterFieldMapStringString
+}
+
+export type BitriseStepInfoV1 = StepSpecType & {
+  envs?: ParameterFieldMapStringString
+  outputs?: string[]
+  resources?: ContainerResource
+  uses: string
+  with?: ParameterFieldMapStringString
+}
+
+export type BlackDuckStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  auth?: STOYamlAuth
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  image?: STOYamlImage
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+  tool?: STOYamlBlackduckToolData
+}
+
+export type BrakemanStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
 }
 
 export type BranchBuildSpec = BuildSpec & {
@@ -145,6 +275,22 @@ export interface BuildSpec {
   [key: string]: any
 }
 
+export type BurpStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  instance?: STOYamlInstance
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+}
+
 export interface CIBuildAuthor {
   avatar?: string
   email?: string
@@ -210,6 +356,7 @@ export interface CIImageDetails {
 }
 
 export interface CIInfraDetails {
+  infraArchType?: string
   infraHostType?: string
   infraOSType?: string
   infraType?: string
@@ -218,7 +365,10 @@ export interface CIInfraDetails {
 export interface CIPipelineModuleInfo {
   branch?: string
   buildType?: string
+  ciEditionType?: string
   ciExecutionInfoDTO?: CIWebhookInfoDTO
+  ciLicenseType?: string
+  ciPipelineStageModuleInfo?: CIPipelineStageModuleInfo
   imageDetailsList?: CIImageDetails[]
   infraDetailsList?: CIInfraDetails[]
   isPrivateRepo?: boolean
@@ -228,6 +378,19 @@ export interface CIPipelineModuleInfo {
   tag?: string
   tiBuildDetailsList?: TIBuildDetails[]
   triggerRepoName?: string
+}
+
+export interface CIPipelineStageModuleInfo {
+  buildMultiplier?: number
+  cpuTime?: number
+  infraType?: string
+  osArch?: string
+  osType?: string
+  stageBuildTime?: number
+  stageExecutionId?: string
+  stageId?: string
+  stageName?: string
+  startTs?: number
 }
 
 export interface CIScmDetails {
@@ -272,14 +435,76 @@ export interface CIWebhookInfoDTO {
   pullRequest?: CIBuildPRHook
 }
 
+export interface CacheMetadataDetail {
+  cachePath?: string
+  size?: number
+}
+
+export interface CacheMetadataInfo {
+  available?: number
+  details?: CacheMetadataDetail[]
+  total?: number
+  unit?: string
+  used?: number
+}
+
+export interface CacheResponseMetadata {
+  cacheState: 'VALID_CACHE' | 'STALE_CACHE' | 'UNKNOWN'
+  lastUpdatedAt: number
+  ttlLeft: number
+}
+
+export interface Caching {
+  enabled?: boolean
+  key?: string
+  paths?: string[]
+}
+
 export interface Capabilities {
   add?: string[]
   drop?: string[]
 }
 
+export type CheckmarxStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  auth?: STOYamlAuth
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  image?: STOYamlImage
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+  tool?: STOYamlCheckmarxToolData
+}
+
+export type ClairStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+}
+
 export type CleanupStepInfo = StepSpecType & {
   infrastructure: Infrastructure
   podName: string
+}
+
+export interface Clone {
+  disabled?: boolean
 }
 
 export type CloudRuntime = Runtime & {
@@ -289,6 +514,11 @@ export type CloudRuntime = Runtime & {
 
 export interface CloudRuntimeSpec {
   size?: string
+}
+
+export type CloudRuntimeV1 = RuntimeV1 & {
+  spec: CloudRuntimeSpec
+  type: 'cloud'
 }
 
 export interface CodeBase {
@@ -388,6 +618,25 @@ export interface DashboardBuildsHealthInfo {
   builds?: BuildInfo
 }
 
+export type DataTheoremStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+}
+
+export interface DeleteCacheResponse {
+  deleted?: CacheMetadataDetail[]
+}
+
 export interface DependencyElement {
   description?: string
   identifier: string
@@ -403,6 +652,21 @@ export interface DependencySpecType {
 export interface DeprecatedImageInfo {
   tag?: string
   version?: string
+}
+
+export type DockerContentTrustStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
 }
 
 export interface DockerInfraSpec {
@@ -779,6 +1043,7 @@ export interface Error {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -806,6 +1071,7 @@ export interface Error {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -845,6 +1111,16 @@ export interface Error {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -1132,6 +1408,7 @@ export interface ErrorMetadata {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -1159,6 +1436,7 @@ export interface ErrorMetadata {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -1198,6 +1476,16 @@ export interface ErrorMetadata {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   errorMessage?: string
 }
 
@@ -1212,15 +1500,14 @@ export interface ErrorNodeSummary {
   templateResponse?: TemplateResponse
 }
 
-export interface ExcludeConfig {
-  exclude?: {
-    [key: string]: string
-  }
-}
-
 export interface ExecutionElementConfig {
   rollbackSteps?: ExecutionWrapperConfig[]
   steps: ExecutionWrapperConfig[]
+}
+
+export interface ExecutionQueueLimitDTO {
+  macExecutionLimits?: string
+  totalExecutionLimits?: string
 }
 
 export interface ExecutionSource {
@@ -1231,6 +1518,21 @@ export interface ExecutionWrapperConfig {
   parallel?: ParallelStepElementConfig
   step?: StepElementConfig
   stepGroup?: StepGroupElementConfig
+}
+
+export type ExternalStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
 }
 
 export interface Failure {
@@ -1512,6 +1814,7 @@ export interface Failure {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -1539,6 +1842,7 @@ export interface Failure {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -1578,6 +1882,16 @@ export interface Failure {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -1595,6 +1909,7 @@ export interface FailureStrategyActionConfig {
     | 'PipelineRollback'
     | 'ManualIntervention'
     | 'ProceedWithDefaultValues'
+    | 'MarkAsFailure'
 }
 
 export interface FailureStrategyConfig {
@@ -1603,6 +1918,24 @@ export interface FailureStrategyConfig {
 
 export type FilterCreatorErrorResponse = ErrorMetadataDTO & {
   errorMetadataList?: ErrorMetadata[]
+}
+
+export type FortifyOnDemandStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  auth?: STOYamlAuth
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  image?: STOYamlImage
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+  tool?: STOYamlFODToolData
 }
 
 export type GCRStepInfo = StepSpecType & {
@@ -1640,6 +1973,10 @@ export type GitCloneStepInfo = StepSpecType & {
   sslVerify?: boolean
 }
 
+export type GitErrorMetadataDTO = ErrorMetadataDTO & {
+  branch?: string
+}
+
 export interface GitInfo {
   commit?: string
   commitID?: string
@@ -1647,6 +1984,22 @@ export interface GitInfo {
   repoName?: string
   sourceBranch?: string
   targetBranch?: string
+}
+
+export type GrypeStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  image?: STOYamlImage
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
 }
 
 export interface HarnessForConfig {
@@ -1686,6 +2039,25 @@ export type HostedVmInfraYaml = Infrastructure & {
   type: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
 }
 
+export type IACMStageConfigImpl = StageInfoConfig & {
+  cloneCodebase?: boolean
+  infrastructure?: Infrastructure
+  platform?: Platform
+  runtime?: Runtime
+  serviceDependencies?: DependencyElement[]
+  sharedPaths?: string[]
+  stackID: string
+}
+
+export type IACMStepInfo = StepSpecType & { [key: string]: any }
+
+export type IACMTemplateInfo = StepSpecType & { [key: string]: any }
+
+export type IACMTerraformPlanInfo = StepSpecType & {
+  env?: ParameterFieldMapStringString
+  tfVars?: ParameterFieldMapStringString
+}
+
 export type IgnoreFailureActionConfig = FailureStrategyActionConfig & {
   type: 'Ignore'
 }
@@ -1701,6 +2073,15 @@ export interface ImageDetails {
   usernameRef?: string
 }
 
+export type ImageSbomSource = SbomSourceSpec & {
+  connector?: {
+    [key: string]: string
+  }
+  image?: {
+    [key: string]: string
+  }
+}
+
 export interface Infrastructure {
   type?: 'KubernetesDirect' | 'UseFromStage' | 'VM' | 'KubernetesHosted'
 }
@@ -1712,6 +2093,7 @@ export type InitializeStepInfo = StepSpecType & {
   executionElementConfig: ExecutionElementConfig
   executionSource?: ExecutionSource
   infrastructure: Infrastructure
+  pipelineVariables?: NGVariable[]
   skipGitClone: boolean
   stageElementConfig?: IntegrationStageConfig
   stageIdentifier?: string
@@ -1719,6 +2101,15 @@ export type InitializeStepInfo = StepSpecType & {
     [key: string]: StrategyExpansionData
   }
   variables?: NGVariable[]
+}
+
+export interface Input {
+  allowed_values?: string[]
+  default?: string
+  description?: string
+  name?: string
+  required?: boolean
+  secret?: boolean
 }
 
 export interface InputSetError {
@@ -1745,6 +2136,7 @@ export interface InputSetValidator {
 }
 
 export interface IntegrationStageConfig {
+  caching?: Caching
   cloneCodebase?: ParameterFieldBoolean
   execution?: ExecutionElementConfig
   infrastructure?: Infrastructure
@@ -1755,6 +2147,7 @@ export interface IntegrationStageConfig {
 }
 
 export type IntegrationStageConfigImpl = StageInfoConfig & {
+  caching?: Caching
   cloneCodebase?: boolean
   infrastructure?: Infrastructure
   platform?: Platform
@@ -1763,10 +2156,32 @@ export type IntegrationStageConfigImpl = StageInfoConfig & {
   sharedPaths?: string[]
 }
 
+export type IntegrationStageConfigImplV1 = StageInfoConfig & {
+  clone?: Clone
+  platform?: PlatformV1
+  runtime?: RuntimeV1
+  steps: JsonNode[]
+}
+
 export type InvalidFieldsDTO = ErrorMetadataDTO & {}
 
 export type JUnitTestReport = UnitTestReportSpec & {
   paths?: string[]
+}
+
+export type JfrogXrayStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
 }
 
 export interface JsonNode {
@@ -1794,6 +2209,7 @@ export interface K8sDirectInfraYamlSpec {
   connectorRef: string
   containerSecurityContext?: SecurityContext
   harnessImageConnectorRef?: string
+  hostNames?: string[]
   initTimeout?: string
   labels?: {
     [key: string]: string
@@ -1808,7 +2224,6 @@ export interface K8sDirectInfraYamlSpec {
   serviceAccountName?: string
   tolerations?: Toleration[]
   volumes?: CIVolume[]
-  hostNames?: string[]
 }
 
 export type K8sHostedInfraYaml = Infrastructure & {
@@ -1833,6 +2248,15 @@ export interface Limits {
   memory?: string
 }
 
+export interface MachineRuntimeSpec {
+  [key: string]: any
+}
+
+export type MachineRuntimeV1 = RuntimeV1 & {
+  spec: MachineRuntimeSpec
+  type: 'machine'
+}
+
 export type ManualExecutionSource = ExecutionSource & {
   branch?: string
   commitSha?: string
@@ -1850,17 +2274,49 @@ export type ManualInterventionFailureActionConfig = FailureStrategyActionConfig 
   type: 'ManualIntervention'
 }
 
+export type MarkAsFailFailureActionConfig = FailureStrategyActionConfig & {
+  type: 'MarkAsFailure'
+}
+
 export type MarkAsSuccessFailureActionConfig = FailureStrategyActionConfig & {
   type: 'MarkAsSuccess'
 }
 
-export type MatrixConfig = MatrixConfigInterface & {
-  exclude?: ParameterFieldListExcludeConfig
-  maxConcurrency?: number
-}
-
 export interface MatrixConfigInterface {
   [key: string]: any
+}
+
+export type MendStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  auth?: STOYamlAuth
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  image?: STOYamlImage
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+  tool?: STOYamlMendToolData
+}
+
+export type MetasploitStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
 }
 
 export interface NGVariable {
@@ -1869,6 +2325,66 @@ export interface NGVariable {
   name?: string
   required?: boolean
   type?: 'String' | 'Number' | 'Secret'
+}
+
+export type NessusStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+}
+
+export type NexusIQStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+}
+
+export type NiktoStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+}
+
+export type NmapStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
 }
 
 export interface NodeErrorInfo {
@@ -1904,6 +2420,8 @@ export interface OnFailureConfig {
     | 'DelegateProvisioning'
     | 'PolicyEvaluationFailure'
     | 'InputTimeoutError'
+    | 'ApprovalRejection'
+    | 'DelegateRestart'
   )[]
 }
 
@@ -1913,6 +2431,21 @@ export interface OnRetryFailureConfig {
 
 export interface OnTimeoutConfig {
   action?: FailureStrategyActionConfig
+}
+
+export type OpenvasStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
 }
 
 export interface Operation {
@@ -1929,6 +2462,21 @@ export type OverlayInputSetErrorWrapper = ErrorMetadataDTO & {
   invalidReferences?: {
     [key: string]: string
   }
+}
+
+export type OwaspStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
 }
 
 export type PRBuildSpec = BuildSpec & {
@@ -1962,6 +2510,26 @@ export type PVCVolume = PodVolume & {
   mountPath: string
   name: string
   readOnly?: boolean
+}
+
+export interface Page {
+  content?: { [key: string]: any }[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
+}
+
+export interface PagePluginMetadataResponse {
+  content?: PluginMetadataResponse[]
+  empty?: boolean
+  pageIndex?: number
+  pageItemCount?: number
+  pageSize?: number
+  totalItems?: number
+  totalPages?: number
 }
 
 export type ParallelStepElementConfig = ExecutionWrapperConfig[]
@@ -2002,18 +2570,6 @@ export interface ParameterFieldListDependencyElement {
   value?: DependencyElement[]
 }
 
-export interface ParameterFieldListExcludeConfig {
-  defaultValue?: ExcludeConfig[]
-  executionInput?: boolean
-  expression?: boolean
-  expressionValue?: string
-  inputSetValidator?: InputSetValidator
-  jsonResponseField?: boolean
-  responseField?: string
-  typeString?: boolean
-  value?: ExcludeConfig[]
-}
-
 export interface ParameterFieldListString {
   defaultValue?: string[]
   executionInput?: boolean
@@ -2042,6 +2598,34 @@ export interface ParameterFieldMapStringJsonNode {
   }
 }
 
+export interface ParameterFieldMapStringString {
+  defaultValue?: {
+    [key: string]: string
+  }
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: {
+    [key: string]: string
+  }
+}
+
+export interface ParameterFieldMatrixConfigInterface {
+  defaultValue?: MatrixConfigInterface
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: MatrixConfigInterface
+}
+
 export interface ParameterFieldPlatform {
   defaultValue?: Platform
   executionInput?: boolean
@@ -2054,8 +2638,46 @@ export interface ParameterFieldPlatform {
   value?: Platform
 }
 
+export interface ParameterFieldString {
+  defaultValue?: string
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: string
+}
+
+export interface ParameterFieldTILanguage {
+  defaultValue?: 'Java' | 'Kotlin' | 'Scala' | 'Csharp'
+  executionInput?: boolean
+  expression?: boolean
+  expressionValue?: string
+  inputSetValidator?: InputSetValidator
+  jsonResponseField?: boolean
+  responseField?: string
+  typeString?: boolean
+  value?: 'Java' | 'Kotlin' | 'Scala' | 'Csharp'
+}
+
 export interface PartialSchemaDTO {
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'SRM'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+    | 'IACM'
   namespace?: string
   nodeName?: string
   nodeType?: string
@@ -2079,20 +2701,50 @@ export type PipelineRollbackFailureActionConfig = FailureStrategyActionConfig & 
 }
 
 export interface Platform {
-  arch?: 'Amd64'
+  arch?: 'Amd64' | 'Arm64'
   os?: 'Linux' | 'MacOS' | 'Windows'
 }
 
+export interface PlatformV1 {
+  arch?: 'amd64' | 'arm64'
+  os?: 'linux' | 'windows' | 'macos'
+}
+
+export interface PluginMetadataResponse {
+  description?: string
+  image?: string
+  inputs?: Input[]
+  kind?: string
+  logo?: string
+  name?: string
+  repo?: string
+  uses?: string
+}
+
 export type PluginStepInfo = StepSpecType & {
-  connectorRef: string
+  connectorRef?: string
   entrypoint?: string[]
-  image: string
+  image?: string
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
   privileged?: boolean
   reports?: UnitTestReport
   resources?: ContainerResource
   runAsUser?: number
   settings?: ParameterFieldMapStringJsonNode
+  uses?: string
+}
+
+export type PluginStepInfoV1 = StepSpecType & {
+  envs?: {
+    [key: string]: string
+  }
+  image?: string
+  privileged?: boolean
+  pull?: 'always' | 'never' | 'if-not-exists'
+  resources?: ContainerResource
+  user?: number
+  uses?: string
+  with?: ParameterFieldMapStringJsonNode
 }
 
 export interface PodSetupInfo {
@@ -2122,8 +2774,74 @@ export interface PodsSetupInfo {
   podSetupInfoList?: PodSetupInfo[]
 }
 
+export interface PolicyConfig {
+  policySets: string[]
+}
+
+export type PrismaCloudStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  auth?: STOYamlAuth
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  image?: STOYamlImage
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+}
+
 export type ProceedWithDefaultValuesFailureActionConfig = FailureStrategyActionConfig & {
   type: 'ProceedWithDefaultValues'
+}
+
+export type ProwlerStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+}
+
+export type QualysStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+}
+
+export type ReapsawStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
 }
 
 export interface ReferenceDTO {
@@ -2195,6 +2913,13 @@ export interface ResponseCIUsageResult {
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
+export interface ResponseCacheMetadataInfo {
+  correlationId?: string
+  data?: CacheMetadataInfo
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
 export interface ResponseDashboardBuildExecutionInfo {
   correlationId?: string
   data?: DashboardBuildExecutionInfo
@@ -2219,6 +2944,20 @@ export interface ResponseDashboardBuildsActiveAndFailedInfo {
 export interface ResponseDashboardBuildsHealthInfo {
   correlationId?: string
   data?: DashboardBuildsHealthInfo
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseDeleteCacheResponse {
+  correlationId?: string
+  data?: DeleteCacheResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseExecutionQueueLimitDTO {
+  correlationId?: string
+  data?: ExecutionQueueLimitDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -2523,6 +3262,7 @@ export interface ResponseMessage {
     | 'UNRESOLVED_EXPRESSIONS_ERROR'
     | 'KRYO_HANDLER_NOT_FOUND_ERROR'
     | 'DELEGATE_ERROR_HANDLER_EXCEPTION'
+    | 'DELEGATE_INSTALLATION_COMMAND_NOT_SUPPORTED_EXCEPTION'
     | 'UNEXPECTED_TYPE_ERROR'
     | 'EXCEPTION_HANDLER_NOT_FOUND'
     | 'CONNECTOR_NOT_FOUND_EXCEPTION'
@@ -2550,6 +3290,7 @@ export interface ResponseMessage {
     | 'GIT_SYNC_ERROR'
     | 'TEMPLATE_EXCEPTION'
     | 'ENTITY_REFERENCE_EXCEPTION'
+    | 'ACTIVE_SERVICE_INSTANCES_PRESENT_EXCEPTION'
     | 'INVALID_INPUT_SET'
     | 'INVALID_OVERLAY_INPUT_SET'
     | 'RESOURCE_ALREADY_EXISTS'
@@ -2589,6 +3330,16 @@ export interface ResponseMessage {
     | 'AWS_STS_ERROR'
     | 'FREEZE_EXCEPTION'
     | 'DELEGATE_TASK_EXPIRED'
+    | 'DELEGATE_TASK_VALIDATION_FAILED'
+    | 'MONGO_EXECUTION_TIMEOUT_EXCEPTION'
+    | 'DELEGATE_NOT_REGISTERED'
+    | 'TERRAFORM_VAULT_SECRET_CLEANUP_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'TERRAGRUNT_EXECUTION_ERROR'
+    | 'ADFS_ERROR'
+    | 'TERRAFORM_CLOUD_ERROR'
+    | 'CLUSTER_CREDENTIALS_NOT_FOUND'
+    | 'SCM_API_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -2601,9 +3352,18 @@ export interface ResponseMessage {
     | 'TIMEOUT_ERROR'
     | 'POLICY_EVALUATION_FAILURE'
     | 'INPUT_TIMEOUT_FAILURE'
+    | 'APPROVAL_REJECTION'
+    | 'DELEGATE_RESTART'
   )[]
   level?: 'INFO' | 'ERROR'
   message?: string
+}
+
+export interface ResponsePagePluginMetadataResponse {
+  correlationId?: string
+  data?: PagePluginMetadataResponse
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
 
 export interface ResponseStageElementConfig {
@@ -2676,7 +3436,7 @@ export type RunStepInfo = StepSpecType & {
   reports?: UnitTestReport
   resources?: ContainerResource
   runAsUser?: number
-  shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh'
+  shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh' | 'Python'
 }
 
 export type RunTestsStepInfo = StepSpecType & {
@@ -2702,13 +3462,128 @@ export type RunTestsStepInfo = StepSpecType & {
   resources?: ContainerResource
   runAsUser?: number
   runOnlySelectedTests?: boolean
-  shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh'
+  shell?: 'Sh' | 'Bash' | 'Powershell' | 'Pwsh' | 'Python'
   testAnnotations?: string
+  testGlobs?: string
   testSplitStrategy?: 'ClassTiming' | 'TestCount'
 }
 
 export interface Runtime {
   type?: 'Docker' | 'Cloud'
+}
+
+export interface RuntimeV1 {
+  type?: 'machine' | 'cloud' | 'vm' | 'kubernetes'
+}
+
+export interface STOYamlAdvancedSettings {
+  args?: STOYamlArgs
+  fail_on_severity?: 'critical' | 'high' | 'medium' | 'low' | 'none'
+  include_raw?: boolean
+  log?: STOYamlLog
+}
+
+export interface STOYamlArgs {
+  cli?: string
+  passthrough?: string
+}
+
+export interface STOYamlAuth {
+  access_id?: string
+  access_token: string
+  domain?: string
+  ssl?: boolean
+  type?: 'apiKey' | 'usernamePassword'
+  version?: string
+}
+
+export interface STOYamlBlackduckToolData {
+  project_name?: string
+  project_version?: string
+}
+
+export interface STOYamlCheckmarxToolData {
+  project_name?: string
+  team_name?: string
+}
+
+export interface STOYamlFODToolData {
+  app_name?: string
+  audit_type?: string
+  data_center?: string
+  entitlement?: string
+  lookup_type?: string
+  owner_id?: string
+  release_name?: string
+  scan_settings?: string
+  scan_type?: string
+  target_language?: string
+  target_language_version?: string
+}
+
+export interface STOYamlImage {
+  access_id?: string
+  access_token?: string
+  domain?: string
+  name?: string
+  region?: string
+  tag?: string
+  type: 'aws_ecr' | 'docker_v2' | 'jfrog_artifactory' | 'local_image'
+}
+
+export interface STOYamlIngestion {
+  file?: string
+}
+
+export interface STOYamlInstance {
+  access_id?: string
+  access_token?: string
+  domain?: string
+  path?: string
+  port?: number
+  protocol?: string
+}
+
+export interface STOYamlJavaParameters {
+  binaries?: string
+  libraries?: string
+}
+
+export interface STOYamlLog {
+  level?: 'info' | 'debug' | 'warning' | 'error'
+  serializer?: 'simple' | 'basic' | 'bunyan' | 'simple_onprem' | 'onprem'
+}
+
+export interface STOYamlMendToolData {
+  exclude?: string
+  include?: string
+  product_name?: string
+  product_token?: string
+  project_name?: string
+  project_token?: string
+}
+
+export interface STOYamlSonarqubeToolData {
+  exclude?: string
+  include?: string
+  java?: STOYamlJavaParameters
+}
+
+export interface STOYamlTarget {
+  name: string
+  type: 'repository' | 'container' | 'instance' | 'configuration'
+  variant: string
+  workspace?: string
+}
+
+export interface STOYamlVeracodeToolData {
+  app_id?: string
+  project_name?: string
+}
+
+export interface STOYamlZapToolData {
+  context?: string
+  port?: number
 }
 
 export type SampleErrorMetadataDTO = ErrorMetadataDTO & {
@@ -2744,8 +3619,31 @@ export type SaveCacheS3StepInfo = StepSpecType & {
   sourcePaths: string[]
 }
 
+export interface SbomSource {
+  spec?: SbomSourceSpec
+  type: 'image'
+}
+
+export interface SbomSourceSpec {
+  [key: string]: any
+}
+
 export type ScmErrorMetadataDTO = ErrorMetadataDTO & {
   conflictCommitId?: string
+}
+
+export type ScriptStepInfo = StepSpecType & {
+  envs?: {
+    [key: string]: string
+  }
+  image?: string
+  outputs?: string[]
+  privileged?: boolean
+  pull?: 'always' | 'never' | 'if-not-exists'
+  resources?: ContainerResource
+  run: string
+  shell?: 'sh' | 'bash' | 'powershell' | 'pwsh' | 'python'
+  user?: number
 }
 
 export type SecretNGVariable = NGVariable & {
@@ -2766,6 +3664,15 @@ export interface SecurityContext {
   runAsUser?: number
 }
 
+export type SecurityStageConfigImpl = StageInfoConfig & {
+  cloneCodebase?: boolean
+  infrastructure?: Infrastructure
+  platform?: Platform
+  runtime?: Runtime
+  serviceDependencies?: DependencyElement[]
+  sharedPaths?: string[]
+}
+
 export type SecurityStepInfo = StepSpecType & {
   baseImageConnectorRefs?: ParameterFieldListString
   imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
@@ -2781,6 +3688,87 @@ export interface ServiceDeploymentInfo {
   serviceId?: string
   serviceName?: string
   serviceTag?: string
+}
+
+export type ShiftLeftStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+}
+
+export type SniperStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+}
+
+export type SnykStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  auth?: STOYamlAuth
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  image?: STOYamlImage
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+}
+
+export type SonarqubeStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  auth?: STOYamlAuth
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+  tool?: STOYamlSonarqubeToolData
+}
+
+export interface Splitting {
+  concurrency?: number
+  enabled?: boolean
+  strategy?: 'class_timing' | 'test_count'
+}
+
+export type SscaOrchestrationStepInfo = StepSpecType & {
+  attestation?: Attestation
+  format: {
+    [key: string]: string
+  }
+  source: SbomSource
+  tool: {
+    [key: string]: string
+  }
 }
 
 export interface StackTraceElement {
@@ -2827,6 +3815,7 @@ export interface StageWhenCondition {
 
 export interface StepElementConfig {
   description?: string
+  enforce?: PolicyConfig
   failureStrategies?: FailureStrategyConfig[]
   identifier: string
   name: string
@@ -2842,8 +3831,9 @@ export interface StepGroupElementConfig {
   failureStrategies?: FailureStrategyConfig[]
   identifier: string
   name: string
-  steps: ExecutionWrapperConfig[]
+  steps?: ExecutionWrapperConfig[]
   strategy?: StrategyConfig
+  template?: TemplateLinkConfig
   when?: StepWhenCondition
 }
 
@@ -2861,7 +3851,7 @@ export interface StepWhenCondition {
 }
 
 export interface StrategyConfig {
-  matrix?: MatrixConfigInterface
+  matrix?: ParameterFieldMatrixConfigInterface
   parallelism?: number
   repeat?: HarnessForConfig
 }
@@ -2875,6 +3865,21 @@ export type StringNGVariable = NGVariable & {
   name?: string
   type?: 'String'
   value: string
+}
+
+export type SysdigStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
 }
 
 export interface TIBuildDetails {
@@ -2895,6 +3900,7 @@ export interface TemplateInfo {
     | 'MonitoredService'
     | 'SecretManager'
     | 'ArtifactSource'
+    | 'StepGroup'
   templateIdentifier?: string
   versionLabel?: string
 }
@@ -2921,11 +3927,13 @@ export interface TemplateLinkConfig {
 
 export interface TemplateResponse {
   accountId: string
+  cacheResponseMetadata?: CacheResponseMetadata
   childType?: string
   connectorRef?: string
   description?: string
   entityValidityDetails?: EntityValidityDetails
   gitDetails?: EntityGitDetails
+  icon?: string
   identifier: string
   lastUpdatedAt?: number
   name: string
@@ -2944,10 +3952,45 @@ export interface TemplateResponse {
     | 'MonitoredService'
     | 'SecretManager'
     | 'ArtifactSource'
+    | 'StepGroup'
   templateScope?: 'account' | 'org' | 'project' | 'unknown'
   version?: number
   versionLabel?: string
   yaml?: string
+}
+
+export type TenableStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+}
+
+export type TestStepInfo = StepSpecType & {
+  envs?: {
+    [key: string]: string
+  }
+  image?: string
+  language?: ParameterFieldTILanguage
+  outputs?: string[]
+  privileged?: boolean
+  pull?: 'always' | 'never' | 'if-not-exists'
+  resources?: ContainerResource
+  shell?: 'sh' | 'bash' | 'powershell' | 'pwsh' | 'python'
+  splitting?: Splitting
+  user?: number
+  uses?: 'maven' | 'bazel' | 'gradle' | 'dotnet' | 'nunit_console' | 'sbt'
+  with?: {
+    [key: string]: JsonNode
+  }
 }
 
 export interface Throwable {
@@ -3017,6 +4060,15 @@ export type UseFromStageInfraYaml = Infrastructure & {
   useFromStage: string
 }
 
+export interface VMRuntimeSpec {
+  pool: ParameterFieldString
+}
+
+export type VMRuntimeV1 = RuntimeV1 & {
+  spec: VMRuntimeSpec
+  type: 'vm'
+}
+
 export type ValidateTemplateInputsResponseDTO = ErrorMetadataDTO & {
   errorNodeSummary?: ErrorNodeSummary
   validYaml?: boolean
@@ -3025,6 +4077,23 @@ export type ValidateTemplateInputsResponseDTO = ErrorMetadataDTO & {
 export interface ValidationError {
   error?: string
   fieldId?: string
+}
+
+export type VeracodeStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  auth?: STOYamlAuth
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+  tool?: STOYamlVeracodeToolData
 }
 
 export type VmBuildJobInfo = BuildJobEnvInfo & {
@@ -3125,11 +4194,14 @@ export interface YamlSchemaMetadata {
     | 'CF'
     | 'CE'
     | 'STO'
+    | 'CHAOS'
+    | 'SRM'
+    | 'CODE'
     | 'CORE'
     | 'PMS'
     | 'TEMPLATESERVICE'
     | 'GOVERNANCE'
-    | 'CHAOS'
+    | 'IACM'
   )[]
   namespace?: string
   yamlGroup: YamlGroup
@@ -3139,15 +4211,145 @@ export interface YamlSchemaWithDetails {
   availableAtAccountLevel?: boolean
   availableAtOrgLevel?: boolean
   availableAtProjectLevel?: boolean
-  moduleType?: 'CD' | 'CI' | 'CV' | 'CF' | 'CE' | 'STO' | 'CORE' | 'PMS' | 'TEMPLATESERVICE' | 'GOVERNANCE' | 'CHAOS'
+  moduleType?:
+    | 'CD'
+    | 'CI'
+    | 'CV'
+    | 'CF'
+    | 'CE'
+    | 'STO'
+    | 'CHAOS'
+    | 'SRM'
+    | 'CODE'
+    | 'CORE'
+    | 'PMS'
+    | 'TEMPLATESERVICE'
+    | 'GOVERNANCE'
+    | 'IACM'
   schema?: JsonNode
   schemaClassName?: string
   yamlSchemaMetadata?: YamlSchemaMetadata
 }
 
+export type ZapStepInfo = StepSpecType & {
+  advanced?: STOYamlAdvancedSettings
+  baseImageConnectorRefs?: ParameterFieldListString
+  config: 'default' | 'quick' | 'attack' | 'standard'
+  imagePullPolicy?: 'Always' | 'Never' | 'IfNotPresent'
+  ingestion?: STOYamlIngestion
+  instance?: STOYamlInstance
+  mode: 'ingestion' | 'orchestration' | 'extraction'
+  outputVariables?: OutputNGVariable[]
+  privileged?: boolean
+  resources?: ContainerResource
+  runAsUser?: number
+  settings?: ParameterFieldMapStringJsonNode
+  target: STOYamlTarget
+  tool?: STOYamlZapToolData
+}
+
 export type OperationArrayRequestBody = Operation[]
 
 export type YamlSchemaDetailsWrapperRequestBody = YamlSchemaDetailsWrapper
+
+export interface DeleteCacheQueryParams {
+  accountIdentifier: string
+  path?: string
+}
+
+export type DeleteCacheProps = Omit<
+  MutateProps<ResponseDeleteCacheResponse, Failure | Error, DeleteCacheQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete cache for certain account
+ */
+export const DeleteCache = (props: DeleteCacheProps) => (
+  <Mutate<ResponseDeleteCacheResponse, Failure | Error, DeleteCacheQueryParams, void, void>
+    verb="DELETE"
+    path={`/cache`}
+    base={getConfig('ci')}
+    {...props}
+  />
+)
+
+export type UseDeleteCacheProps = Omit<
+  UseMutateProps<ResponseDeleteCacheResponse, Failure | Error, DeleteCacheQueryParams, void, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Delete cache for certain account
+ */
+export const useDeleteCache = (props: UseDeleteCacheProps) =>
+  useMutate<ResponseDeleteCacheResponse, Failure | Error, DeleteCacheQueryParams, void, void>('DELETE', `/cache`, {
+    base: getConfig('ci'),
+    ...props
+  })
+
+/**
+ * Delete cache for certain account
+ */
+export const deleteCachePromise = (
+  props: MutateUsingFetchProps<ResponseDeleteCacheResponse, Failure | Error, DeleteCacheQueryParams, void, void>,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<ResponseDeleteCacheResponse, Failure | Error, DeleteCacheQueryParams, void, void>(
+    'DELETE',
+    getConfig('ci'),
+    `/cache`,
+    props,
+    signal
+  )
+
+export interface GetCacheInfoQueryParams {
+  accountIdentifier: string
+}
+
+export type GetCacheInfoProps = Omit<
+  GetProps<ResponseCacheMetadataInfo, Failure | Error, GetCacheInfoQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Cache Metadata Information
+ */
+export const GetCacheInfo = (props: GetCacheInfoProps) => (
+  <Get<ResponseCacheMetadataInfo, Failure | Error, GetCacheInfoQueryParams, void>
+    path={`/cache/info`}
+    base={getConfig('ci')}
+    {...props}
+  />
+)
+
+export type UseGetCacheInfoProps = Omit<
+  UseGetProps<ResponseCacheMetadataInfo, Failure | Error, GetCacheInfoQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get Cache Metadata Information
+ */
+export const useGetCacheInfo = (props: UseGetCacheInfoProps) =>
+  useGet<ResponseCacheMetadataInfo, Failure | Error, GetCacheInfoQueryParams, void>(`/cache/info`, {
+    base: getConfig('ci'),
+    ...props
+  })
+
+/**
+ * Get Cache Metadata Information
+ */
+export const getCacheInfoPromise = (
+  props: GetUsingFetchProps<ResponseCacheMetadataInfo, Failure | Error, GetCacheInfoQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseCacheMetadataInfo, Failure | Error, GetCacheInfoQueryParams, void>(
+    getConfig('ci'),
+    `/cache/info`,
+    props,
+    signal
+  )
 
 export interface GetBuildExecutionQueryParams {
   accountIdentifier: string
@@ -3502,7 +4704,7 @@ export const getExecutionConfigPromise = (
   )
 
 export interface GetCustomerConfigQueryParams {
-  infra: 'K8' | 'VM' | 'DLITE_VM' | 'DOCKER'
+  infra: 'K8' | 'VM' | 'DLITE_VM'
   overridesOnly: boolean
   accountIdentifier: string
 }
@@ -3552,7 +4754,7 @@ export const getCustomerConfigPromise = (
   )
 
 export interface GetDefaultConfigQueryParams {
-  infra: 'K8' | 'VM' | 'DLITE_VM' | 'DOCKER'
+  infra: 'K8' | 'VM' | 'DLITE_VM'
 }
 
 export type GetDefaultConfigProps = Omit<
@@ -3599,8 +4801,56 @@ export const getDefaultConfigPromise = (
     signal
   )
 
+export interface GetDeprecatedConfigQueryParams {
+  accountIdentifier: string
+}
+
+export type GetDeprecatedConfigProps = Omit<
+  GetProps<ResponseCIExecutionImages, Failure | Error, GetDeprecatedConfigQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get deprecated config
+ */
+export const GetDeprecatedConfig = (props: GetDeprecatedConfigProps) => (
+  <Get<ResponseCIExecutionImages, Failure | Error, GetDeprecatedConfigQueryParams, void>
+    path={`/execution-config/get-deprecated-config`}
+    base={getConfig('ci')}
+    {...props}
+  />
+)
+
+export type UseGetDeprecatedConfigProps = Omit<
+  UseGetProps<ResponseCIExecutionImages, Failure | Error, GetDeprecatedConfigQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get deprecated config
+ */
+export const useGetDeprecatedConfig = (props: UseGetDeprecatedConfigProps) =>
+  useGet<ResponseCIExecutionImages, Failure | Error, GetDeprecatedConfigQueryParams, void>(
+    `/execution-config/get-deprecated-config`,
+    { base: getConfig('ci'), ...props }
+  )
+
+/**
+ * Get deprecated config
+ */
+export const getDeprecatedConfigPromise = (
+  props: GetUsingFetchProps<ResponseCIExecutionImages, Failure | Error, GetDeprecatedConfigQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseCIExecutionImages, Failure | Error, GetDeprecatedConfigQueryParams, void>(
+    getConfig('ci'),
+    `/execution-config/get-deprecated-config`,
+    props,
+    signal
+  )
+
 export interface ResetExecutionConfigQueryParams {
-  infra: 'K8' | 'VM' | 'DLITE_VM' | 'DOCKER'
+  infra: 'K8' | 'VM' | 'DLITE_VM'
   accountIdentifier: string
 }
 
@@ -3658,7 +4908,7 @@ export const resetExecutionConfigPromise = (
   )
 
 export interface UpdateExecutionConfigQueryParams {
-  infra: 'K8' | 'VM' | 'DLITE_VM' | 'DOCKER'
+  infra: 'K8' | 'VM' | 'DLITE_VM'
   accountIdentifier: string
 }
 
@@ -3714,6 +4964,111 @@ export const updateExecutionConfigPromise = (
     props,
     signal
   )
+
+export interface GetExecutionQueueLimitsQueryParams {
+  accountIdentifier: string
+}
+
+export type GetExecutionQueueLimitsProps = Omit<
+  GetProps<ResponseExecutionQueueLimitDTO, Failure | Error, GetExecutionQueueLimitsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get execution queue limits
+ */
+export const GetExecutionQueueLimits = (props: GetExecutionQueueLimitsProps) => (
+  <Get<ResponseExecutionQueueLimitDTO, Failure | Error, GetExecutionQueueLimitsQueryParams, void>
+    path={`/execution-limit`}
+    base={getConfig('ci')}
+    {...props}
+  />
+)
+
+export type UseGetExecutionQueueLimitsProps = Omit<
+  UseGetProps<ResponseExecutionQueueLimitDTO, Failure | Error, GetExecutionQueueLimitsQueryParams, void>,
+  'path'
+>
+
+/**
+ * Get execution queue limits
+ */
+export const useGetExecutionQueueLimits = (props: UseGetExecutionQueueLimitsProps) =>
+  useGet<ResponseExecutionQueueLimitDTO, Failure | Error, GetExecutionQueueLimitsQueryParams, void>(
+    `/execution-limit`,
+    { base: getConfig('ci'), ...props }
+  )
+
+/**
+ * Get execution queue limits
+ */
+export const getExecutionQueueLimitsPromise = (
+  props: GetUsingFetchProps<ResponseExecutionQueueLimitDTO, Failure | Error, GetExecutionQueueLimitsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponseExecutionQueueLimitDTO, Failure | Error, GetExecutionQueueLimitsQueryParams, void>(
+    getConfig('ci'),
+    `/execution-limit`,
+    props,
+    signal
+  )
+
+export interface UpdateExecutionQueueLimitsQueryParams {
+  accountIdentifier: string
+}
+
+export type UpdateExecutionQueueLimitsProps = Omit<
+  MutateProps<ResponseBoolean, Failure | Error, UpdateExecutionQueueLimitsQueryParams, ExecutionQueueLimitDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Update execution queue limits
+ */
+export const UpdateExecutionQueueLimits = (props: UpdateExecutionQueueLimitsProps) => (
+  <Mutate<ResponseBoolean, Failure | Error, UpdateExecutionQueueLimitsQueryParams, ExecutionQueueLimitDTO, void>
+    verb="POST"
+    path={`/execution-limit`}
+    base={getConfig('ci')}
+    {...props}
+  />
+)
+
+export type UseUpdateExecutionQueueLimitsProps = Omit<
+  UseMutateProps<ResponseBoolean, Failure | Error, UpdateExecutionQueueLimitsQueryParams, ExecutionQueueLimitDTO, void>,
+  'path' | 'verb'
+>
+
+/**
+ * Update execution queue limits
+ */
+export const useUpdateExecutionQueueLimits = (props: UseUpdateExecutionQueueLimitsProps) =>
+  useMutate<ResponseBoolean, Failure | Error, UpdateExecutionQueueLimitsQueryParams, ExecutionQueueLimitDTO, void>(
+    'POST',
+    `/execution-limit`,
+    { base: getConfig('ci'), ...props }
+  )
+
+/**
+ * Update execution queue limits
+ */
+export const updateExecutionQueueLimitsPromise = (
+  props: MutateUsingFetchProps<
+    ResponseBoolean,
+    Failure | Error,
+    UpdateExecutionQueueLimitsQueryParams,
+    ExecutionQueueLimitDTO,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseBoolean,
+    Failure | Error,
+    UpdateExecutionQueueLimitsQueryParams,
+    ExecutionQueueLimitDTO,
+    void
+  >('POST', getConfig('ci'), `/execution-limit`, props, signal)
 
 export interface GetPartialYamlSchemaQueryParams {
   accountIdentifier: string
@@ -3846,6 +5201,40 @@ export interface GetStepYamlSchemaQueryParams {
     | 'SaveCacheGCS'
     | 'SaveCacheS3'
     | 'Security'
+    | 'AquaTrivy'
+    | 'AWSECR'
+    | 'Bandit'
+    | 'BlackDuck'
+    | 'Brakeman'
+    | 'Burp'
+    | 'Checkmarx'
+    | 'Clair'
+    | 'DataTheorem'
+    | 'DockerContentTrust'
+    | 'External'
+    | 'FortifyOnDemand'
+    | 'Grype'
+    | 'JfrogXray'
+    | 'Mend'
+    | 'Metasploit'
+    | 'Nessus'
+    | 'NexusIQ'
+    | 'Nikto'
+    | 'Nmap'
+    | 'Openvas'
+    | 'Owasp'
+    | 'PrismaCloud'
+    | 'Prowler'
+    | 'Qualys'
+    | 'Reapsaw'
+    | 'ShiftLeft'
+    | 'Sniper'
+    | 'Snyk'
+    | 'Sonarqube'
+    | 'Sysdig'
+    | 'Tenable'
+    | 'Veracode'
+    | 'Zap'
     | 'GitClone'
     | 'ArtifactoryUpload'
     | 'GCSUpload'
@@ -3883,6 +5272,56 @@ export interface GetStepYamlSchemaQueryParams {
     | 'EcsBlueGreenSwapTargetGroups'
     | 'EcsBlueGreenRollback'
     | 'ShellScriptProvision'
+    | 'Freeze'
+    | 'GitOpsUpdateReleaseRepo'
+    | 'GitOpsFetchLinkedApps'
+    | 'EcsRunTask'
+    | 'Chaos'
+    | 'ElastigroupDeploy'
+    | 'ElastigroupRollback'
+    | 'Action'
+    | 'ElastigroupSetup'
+    | 'Bitrise'
+    | 'TerraformPlan'
+    | 'TerraformApply'
+    | 'TerraformDestroy'
+    | 'TerraformRollback'
+    | 'IACMStage'
+    | 'IACMStep'
+    | 'IACM'
+    | 'Container'
+    | 'IACM'
+    | 'IACM'
+    | 'ElastigroupBGStageSetup'
+    | 'ElastigroupSwapRoute'
+    | 'AsgCanaryDeploy'
+    | 'AsgCanaryDelete'
+    | 'SwapRoutes'
+    | 'SwapRollback'
+    | 'AppResize'
+    | 'AppRollback'
+    | 'CanaryAppSetup'
+    | 'BGAppSetup'
+    | 'BasicAppSetup'
+    | 'TanzuCommand'
+    | 'AsgRollingDeploy'
+    | 'AsgRollingRollback'
+    | 'GovernanceRuleAWS'
+    | 'TasRollingDeploy'
+    | 'TasRollingRollback'
+    | 'K8sDryRun'
+    | 'AsgBlueGreenSwapService'
+    | 'AsgBlueGreenDeploy'
+    | 'AsgBlueGreenRollback'
+    | 'TerraformCloudRun'
+    | 'TerraformCloudRollback'
+    | 'DeployCloudFunction'
+    | 'DeployCloudFunctionWithNoTraffic'
+    | 'CloudFunctionTrafficShift'
+    | 'CloudFunctionRollback'
+    | 'AwsLambdaDeploy'
+    | 'AwsSamDeploy'
+    | 'AwsSamRollback'
   yamlGroup?: string
 }
 
@@ -4222,3 +5661,53 @@ export const getMergedPartialYamlSchemaPromise = (
     YamlSchemaDetailsWrapperRequestBody,
     void
   >('POST', getConfig('ci'), `/partial-yaml-schema/merged`, props, signal)
+
+export interface ListPluginsQueryParams {
+  pageIndex?: number
+  pageSize?: number
+  searchTerm?: string
+}
+
+export type ListPluginsProps = Omit<
+  GetProps<ResponsePagePluginMetadataResponse, Failure | Error, ListPluginsQueryParams, void>,
+  'path'
+>
+
+/**
+ * List plugins
+ */
+export const ListPlugins = (props: ListPluginsProps) => (
+  <Get<ResponsePagePluginMetadataResponse, Failure | Error, ListPluginsQueryParams, void>
+    path={`/v1/plugins`}
+    base={getConfig('ci')}
+    {...props}
+  />
+)
+
+export type UseListPluginsProps = Omit<
+  UseGetProps<ResponsePagePluginMetadataResponse, Failure | Error, ListPluginsQueryParams, void>,
+  'path'
+>
+
+/**
+ * List plugins
+ */
+export const useListPlugins = (props: UseListPluginsProps) =>
+  useGet<ResponsePagePluginMetadataResponse, Failure | Error, ListPluginsQueryParams, void>(`/v1/plugins`, {
+    base: getConfig('ci'),
+    ...props
+  })
+
+/**
+ * List plugins
+ */
+export const listPluginsPromise = (
+  props: GetUsingFetchProps<ResponsePagePluginMetadataResponse, Failure | Error, ListPluginsQueryParams, void>,
+  signal?: RequestInit['signal']
+) =>
+  getUsingFetch<ResponsePagePluginMetadataResponse, Failure | Error, ListPluginsQueryParams, void>(
+    getConfig('ci'),
+    `/v1/plugins`,
+    props,
+    signal
+  )

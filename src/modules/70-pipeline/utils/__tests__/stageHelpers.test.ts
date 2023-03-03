@@ -7,7 +7,11 @@
 
 import { MultiTypeInputType } from '@harness/uicore'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
-import type { StageElementWrapperConfig } from 'services/pipeline-ng'
+import {
+  ciPipelineExecutionSummaryWithK8sInfra,
+  ciPipelineExecutionSummaryWithHostedVMsInfra
+} from '@pipeline/pages/execution/ExecutionLandingPage/__tests__/execution-summary-mock'
+import type { PipelineExecutionSummary, StageElementWrapperConfig } from 'services/pipeline-ng'
 import type { DeploymentStageElementConfig } from '../pipelineTypes'
 import {
   changeEmptyValuesToRunTimeInput,
@@ -47,7 +51,8 @@ import {
   isServiceEntityPresent,
   isEnvironmentGroupPresent,
   isEnvironmentPresent,
-  isExecutionFieldPresent
+  isExecutionFieldPresent,
+  pipelineHasCIStageWithK8sInfra
 } from '../stageHelpers'
 import inputSetPipeline from './inputset-pipeline.json'
 import chainedPipeline from './mockJson/chainedPipeline.json'
@@ -642,4 +647,18 @@ test('isExecutionFieldPresent', () => {
       }
     })
   ).toBe(false)
+})
+
+test('Test pipelineHasCIStageWithK8sInfra method', () => {
+  expect(pipelineHasCIStageWithK8sInfra()).toBe(false)
+  expect(
+    pipelineHasCIStageWithK8sInfra(
+      ciPipelineExecutionSummaryWithHostedVMsInfra.data.pipelineExecutionSummary as PipelineExecutionSummary
+    )
+  ).toBe(false)
+  expect(
+    pipelineHasCIStageWithK8sInfra(
+      ciPipelineExecutionSummaryWithK8sInfra.data.pipelineExecutionSummary as PipelineExecutionSummary
+    )
+  ).toBe(true)
 })

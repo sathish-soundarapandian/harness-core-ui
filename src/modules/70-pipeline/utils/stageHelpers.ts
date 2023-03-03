@@ -24,10 +24,10 @@ import type {
   ServiceDefinition,
   CustomDeploymentServiceSpec
 } from 'services/cd-ng'
-import { connectorTypes } from '@pipeline/utils/constants'
+import { CIBuildInfrastructureType, connectorTypes } from '@pipeline/utils/constants'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { getStageFromPipeline as getStageByPipeline } from '@pipeline/components/PipelineStudio/PipelineContext/helpers'
-import type { DependencyElement } from 'services/ci'
+import type { CIInfraDetails, DependencyElement } from 'services/ci'
 import type { PipelineGraphState } from '@pipeline/components/PipelineDiagram/types'
 import type { ArtifactType } from '@pipeline/components/ArtifactsSelection/ArtifactInterface'
 
@@ -161,6 +161,15 @@ export function hasOverviewDetail(pipelineExecution?: PipelineExecutionSummary):
 
 export function hasCIStage(pipelineExecution?: PipelineExecutionSummary): boolean {
   return pipelineExecution?.modules?.includes('ci') || !isEmpty(pipelineExecution?.moduleInfo?.ci)
+}
+
+export function pipelineHasCIStageWithK8sInfra(pipelineExecution?: PipelineExecutionSummary): boolean {
+  const infras: CIInfraDetails[] = get(pipelineExecution, 'moduleInfo.ci.infraDetailsList', [])
+  return (
+    infras.findIndex(
+      (stageInfra: CIInfraDetails) => stageInfra.infraType === CIBuildInfrastructureType.KubernetesDirect
+    ) !== -1
+  )
 }
 
 export function hasSTOStage(pipelineExecution?: PipelineExecutionSummary): boolean {

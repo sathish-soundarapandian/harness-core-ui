@@ -8,10 +8,10 @@
 import React, { useEffect, useCallback, useState } from 'react'
 import { Intent } from '@blueprintjs/core'
 import { useParams, useLocation, useHistory } from 'react-router-dom'
-import { get, isEmpty, pickBy } from 'lodash-es'
+import { get, pickBy } from 'lodash-es'
 import { Text, Icon, PageError, PageSpinner, Layout, Container } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
-import { CIExecutionImages, getCustomerConfigPromise, ResponseCIExecutionImages } from 'services/ci'
+import { CIExecutionImages, getDeprecatedConfigPromise, ResponseCIExecutionImages } from 'services/ci'
 import type { GovernanceMetadata, GraphLayoutNode, ExecutionNode } from 'services/pipeline-ng'
 import { isExecutionComplete } from '@pipeline/utils/statusHelpers'
 import { getPipelineStagesMap, processForCIData } from '@pipeline/utils/executionUtils'
@@ -25,11 +25,15 @@ import { PipelineExecutionWarning } from '@pipeline/components/PipelineExecution
 import { logsCache } from '@pipeline/components/LogsContent/LogsState/utils'
 import { EvaluationModal } from '@governance/EvaluationModal'
 import ExecutionContext from '@pipeline/context/ExecutionContext'
-import { ModuleName } from 'framework/types/ModuleName'
 import { PreferenceScope, usePreferenceStore } from 'framework/PreferenceStore/PreferenceStoreContext'
 import { usePolling } from '@common/hooks/usePolling'
 import { useReportSummary, useGetToken } from 'services/ti-service'
-import { hasCIStage, hasOverviewDetail, hasServiceDetail } from '@pipeline/utils/stageHelpers'
+import {
+  hasCIStage,
+  hasOverviewDetail,
+  hasServiceDetail,
+  pipelineHasCIStageWithK8sInfra
+} from '@pipeline/utils/stageHelpers'
 import { FeatureFlag } from '@common/featureFlags'
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import routes from '@common/RouteDefinitions'
@@ -39,7 +43,6 @@ import ExecutionMetadata from './ExecutionMetadata/ExecutionMetadata'
 import { ExecutionPipelineVariables } from './ExecutionPipelineVariables'
 import { ExecutionHeader } from './ExecutionHeader/ExecutionHeader'
 import { useExecutionData } from './useExecutionData'
-import { CIBuildInfrastructureType } from '../../../utils/constants'
 
 import css from './ExecutionLandingPage.module.scss'
 
@@ -78,8 +81,8 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   const location = useLocation<{ shouldShowGovernanceEvaluations: boolean; governanceMetadata: GovernanceMetadata }>()
   const locationPathNameArr = location?.pathname?.split('/') || []
   const selectedPageTab = locationPathNameArr[locationPathNameArr.length - 1]
-  const [deprecatedImageUsageMap, setDeprecatedImageUsageMap] =
-    useState<Map<CIBuildInfrastructureType, CIExecutionImages>>()
+  const [deprecatedImagesUsed, setDeprecatedImagesUsed] = useState<CIExecutionImages>()
+  const [showWarningBanner, setShowWarningBanner] = useState<boolean>(false)
 
   const { data: pipeline, isLoading: loadingPipeline } = useGetPipelineSummaryQuery(
     {
@@ -125,84 +128,50 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
   })
 
   useEffect(() => {
-    if (data?.data?.pipelineExecutionSummary?.modules?.includes(ModuleName.CI.toLowerCase())) {
-      Promise.all([
-        getCustomerConfigPromise({
-          queryParams: { accountIdentifier: accountId, infra: CIBuildInfrastructureType.K8, overridesOnly: true }
-        }),
-        getCustomerConfigPromise({
-          queryParams: { accountIdentifier: accountId, infra: CIBuildInfrastructureType.VM, overridesOnly: true }
-        })
-      ]).then((executionConfigs: [ResponseCIExecutionImages, ResponseCIExecutionImages]) => {
-        const deprecatedImageMap = new Map<CIBuildInfrastructureType, CIExecutionImages>()
-        const deprecatedImagesForK8sInfra = executionConfigs[0].data
-        const deprecatedImagesForVMInfra = executionConfigs[1].data
-        if (deprecatedImagesForK8sInfra && !isEmpty(deprecatedImagesForK8sInfra)) {
-          deprecatedImageMap.set(CIBuildInfrastructureType.K8, deprecatedImagesForK8sInfra)
+    if (pipelineHasCIStageWithK8sInfra(data?.data?.pipelineExecutionSummary)) {
+      getDeprecatedConfigPromise({
+        queryParams: { accountIdentifier: accountId }
+      }).then((response: ResponseCIExecutionImages) => {
+        const { data: deprecatedImages } = response
+        if (deprecatedImages) {
+          setShowWarningBanner(true)
+          setDeprecatedImagesUsed(deprecatedImages)
         }
-        if (deprecatedImagesForVMInfra && !isEmpty(deprecatedImagesForVMInfra)) {
-          deprecatedImageMap.set(CIBuildInfrastructureType.VM, deprecatedImagesForVMInfra)
-        }
-        setDeprecatedImageUsageMap(deprecatedImageMap)
       })
     }
-  }, [data?.data?.pipelineExecutionSummary?.modules?.length])
-
-  const getDeprecatedImageUsageSummaryForInfraType = useCallback(
-    (buildInfraType: CIBuildInfrastructureType): React.ReactElement => {
-      if (!deprecatedImageUsageMap) {
-        return <></>
-      }
-      if (isEmpty(deprecatedImageUsageMap.get(buildInfraType))) {
-        return <></>
-      }
-      let buildInraTypeLabel = ''
-      switch (buildInfraType) {
-        case CIBuildInfrastructureType.K8:
-          buildInraTypeLabel = getString('kubernetesText')
-          break
-        case CIBuildInfrastructureType.VM:
-          buildInraTypeLabel = getString('pipeline.vmLabel')
-          break
-      }
-      const el = (
-        <>
-          {`${getString('infrastructureTypeText')} ${buildInraTypeLabel}`}:&nbsp;
-          {joinAsASentence(
-            Object.entries(deprecatedImageUsageMap.get(buildInfraType) || {})
-              .filter(item => !!item[0] && !!item[1])
-              .map((item: [string, string]) => `${item[0]}(${item[1]})`)
-          )}
-        </>
-      )
-      return (
-        <Text
-          font={{ variation: FontVariation.SMALL_SEMI }}
-          lineClamp={1}
-          tooltip={
-            <Text
-              font={{ variation: FontVariation.SMALL_SEMI }}
-              padding={{ left: 'medium', right: 'medium', top: 'small', bottom: 'small' }}
-            >
-              {el}
-            </Text>
-          }
-        >
-          {el}
-        </Text>
-      )
-    },
-    [deprecatedImageUsageMap]
-  )
+  }, [data?.data?.pipelineExecutionSummary])
 
   const getDeprecatedImageUsageSummary = useCallback((): React.ReactElement => {
-    return (
-      <Layout.Vertical padding={{ top: 'xsmall', bottom: 'xsmall', right: 'large' }}>
-        {getDeprecatedImageUsageSummaryForInfraType(CIBuildInfrastructureType.K8)}
-        {getDeprecatedImageUsageSummaryForInfraType(CIBuildInfrastructureType.VM)}
-      </Layout.Vertical>
+    if (!deprecatedImagesUsed) {
+      return <></>
+    }
+    const el = (
+      <>
+        {joinAsASentence(
+          Object.entries(deprecatedImagesUsed)
+            .filter(item => !!item[0] && !!item[1])
+            .map((item: [string, string]) => `${item[0]}(${item[1]})`),
+          getString('and').toLowerCase()
+        )}
+      </>
     )
-  }, [deprecatedImageUsageMap])
+    return (
+      <Text
+        font={{ variation: FontVariation.SMALL_SEMI }}
+        lineClamp={1}
+        tooltip={
+          <Text
+            font={{ variation: FontVariation.SMALL_SEMI }}
+            padding={{ left: 'medium', right: 'medium', top: 'small', bottom: 'small' }}
+          >
+            {el}
+          </Text>
+        }
+      >
+        {el}
+      </Text>
+    )
+  }, [deprecatedImagesUsed])
 
   const graphNodeMap = data?.data?.executionGraph?.nodeMap || {}
   const childGraphNodeMap = data?.data?.childGraph?.executionGraph?.nodeMap || {}
@@ -333,31 +302,31 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
                 <ExecutionMetadata />
               </header>
               <ExecutionTabs savedExecutionView={savedExecutionView} setSavedExecutionView={setSavedExecutionView} />
-              {module === 'ci' && (
-                <>
-                  {deprecatedImageUsageMap && deprecatedImageUsageMap.size > 0 ? (
-                    <PipelineExecutionWarning
-                      warning={
-                        <Layout.Horizontal padding={{ left: 'xxlarge', right: 'xxlarge' }} flex>
-                          <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
-                            <Icon name="warning-sign" intent={Intent.DANGER} />
-                            <Text color={Color.ORANGE_900} font={{ variation: FontVariation.SMALL_BOLD }}>
-                              {getString('pipeline.imageVersionDeprecated')}
-                            </Text>
-                          </Layout.Horizontal>
-                          <Layout.Vertical padding={{ left: 'large', right: 'large', top: 'xsmall', bottom: 'xsmall' }}>
-                            <Text font={{ weight: 'semi-bold', size: 'small' }} color={Color.PRIMARY_10} lineClamp={2}>
-                              {getString('pipeline.unsupportedImagesWarning')}
-                            </Text>
-                            <Container width="90%">{getDeprecatedImageUsageSummary()}</Container>
-                          </Layout.Vertical>
-                          {/* <Link to={'/'}>{getString('learnMore')}</Link> */}
-                        </Layout.Horizontal>
-                      }
-                    />
-                  ) : null}
-                </>
-              )}
+              {module === 'ci' && showWarningBanner ? (
+                <PipelineExecutionWarning
+                  warning={
+                    <Layout.Horizontal padding={{ left: 'xxlarge', right: 'xxlarge' }} flex width="95%">
+                      <Layout.Horizontal spacing="small" flex={{ alignItems: 'center' }}>
+                        <Icon name="warning-sign" intent={Intent.DANGER} />
+                        <Text color={Color.ORANGE_900} font={{ variation: FontVariation.SMALL_BOLD }}>
+                          {getString('pipeline.imageVersionDeprecated')}
+                        </Text>
+                      </Layout.Horizontal>
+                      <Layout.Vertical
+                        padding={{ left: 'large', right: 'large', top: 'xsmall', bottom: 'xsmall' }}
+                        width="95%"
+                      >
+                        <Text font={{ weight: 'semi-bold', size: 'small' }} color={Color.PRIMARY_10} lineClamp={2}>
+                          {getString('pipeline.unsupportedImagesWarning')}
+                        </Text>
+                        <Container>{getDeprecatedImageUsageSummary()}</Container>
+                      </Layout.Vertical>
+                      {/* <Link to={'/'}>{getString('learnMore')}</Link> */}
+                    </Layout.Horizontal>
+                  }
+                  onBannerClose={() => setShowWarningBanner(false)}
+                />
+              ) : null}
               <div
                 className={css.childContainer}
                 data-view={selectedPageTab === PageTabs.PIPELINE && isLogView ? 'log' : 'graph'}

@@ -1016,7 +1016,12 @@ const SelectGitProviderRef = (
                                   ? getString('permissions')
                                   : getString('common.scope').concat('s')
                                 ).toLowerCase()}
-                                :&nbsp;{joinAsASentence(permissionsForSelectedGitProvider.permissions)}.
+                                :&nbsp;
+                                {joinAsASentence(
+                                  permissionsForSelectedGitProvider.permissions,
+                                  getString('and').toLowerCase()
+                                )}
+                                .
                               </Text>
                             ) : null}
                           </Layout.Horizontal>
