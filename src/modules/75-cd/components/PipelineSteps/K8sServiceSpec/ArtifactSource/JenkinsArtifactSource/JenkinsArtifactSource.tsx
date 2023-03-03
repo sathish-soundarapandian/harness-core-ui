@@ -67,6 +67,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     initialValues,
     accountId,
     projectIdentifier,
+    pipelineIdentifier,
     orgIdentifier,
     readonly,
     repoIdentifier,
@@ -95,6 +96,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     projectIdentifier,
     orgIdentifier,
     repoIdentifier,
+    pipelineIdentifier,
     branch
   }
 
@@ -211,7 +213,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     queryParams: {
       ...commonParams,
       connectorRef: connectorRefValue?.toString(),
-      jobName: jobNameValue ? getEncodedValue(jobNameValue) : undefined,
+      jobName: jobNameValue,
       serviceId,
       fqnPath: getFqnPath(
         path as string,
