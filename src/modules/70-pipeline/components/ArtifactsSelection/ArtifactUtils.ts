@@ -320,9 +320,24 @@ export const getArtifactFormData = (
   switch (selectedArtifact) {
     case ENABLED_ARTIFACT_TYPES.CustomArtifact:
     case ENABLED_ARTIFACT_TYPES.Jenkins:
-    case ENABLED_ARTIFACT_TYPES.Bamboo:
       values = initialValues
       break
+    case ENABLED_ARTIFACT_TYPES.Bamboo:
+      values = {
+        ...initialValues,
+        spec: {
+          ...specValues,
+          artifactPaths:
+            specValues.artifactPaths && specValues.artifactPaths.length
+              ? specValues.artifactPaths.map((artifactPath: string) => ({
+                  label: artifactPath,
+                  value: artifactPath
+                }))
+              : specValues.artifactPaths
+        }
+      }
+      break
+
     case ENABLED_ARTIFACT_TYPES.GoogleArtifactRegistry:
     case ENABLED_ARTIFACT_TYPES.GithubPackageRegistry:
     case ENABLED_ARTIFACT_TYPES.AmazonMachineImage:

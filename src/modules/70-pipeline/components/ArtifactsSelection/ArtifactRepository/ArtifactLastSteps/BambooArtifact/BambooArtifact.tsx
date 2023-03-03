@@ -72,7 +72,6 @@ function FormComponent({
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const { repoIdentifier, branch } = useQueryParams<GitQueryParams>()
   const [planDetails, setPlanDetails] = useState<SelectOption[]>([])
-  const [planValue, setPlanValue] = useState<SelectOption>()
   const [artifactPaths, setFilePath] = useState<SelectOption[]>([])
   const [builds, setBambooBuilds] = useState<SelectOption[]>([])
   const commonParams = {
@@ -85,6 +84,8 @@ function FormComponent({
 
   const connectorRefValue = getGenuineValue(prevStepData?.connectorId?.value || prevStepData?.identifier)
   const planNameValue = formik.values?.spec?.planKey
+  const [planValue, setPlanValue] = useState<SelectOption>(planNameValue)
+
   // const artifactValue = getGenuineValue(formik.values?.spec?.artifactPaths)
   const hideHeaderAndNavBtns = shouldHideHeaderAndNavBtns(context)
 
@@ -281,11 +282,7 @@ function FormComponent({
             label={getString('pipeline.artifactPathLabel')}
             name="spec.artifactPaths"
             placeholder={fetchingArtifacts ? getString('loading') : getString('pipeline.selectArtifactPathPlaceholder')}
-            multiSelectTypeInputProps={{
-              onChange: (val: any) => {
-                formik.setFieldValue('artifactPaths', val.value)
-              }
-            }}
+            multiSelectTypeInputProps={{}}
             // multiTypeInputProps={{
             //   onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.artifactPath', type),
             //   expressions,
@@ -439,7 +436,7 @@ export function BambooArtifact(props: StepProps<ConnectorConfigDTO> & BambooArti
       identifier: formData.identifier,
       spec: {
         connectorRef: connectorId,
-        artifactPaths: formData.spec.artifactPaths,
+        artifactPaths: formData.spec?.artifactPaths?.map((artifactPath: any) => artifactPath.value) || [],
         build: formData.spec.build,
         planKey
       }
