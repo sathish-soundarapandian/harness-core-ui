@@ -17,7 +17,6 @@ import type { PipelineStageElementConfig } from '@pipeline/utils/pipelineTypes'
 import { useStrings } from 'framework/strings'
 import type { AccountPathProps, ModulePathParams } from '@common/interfaces/RouteInterfaces'
 import routes from '@common/RouteDefinitions'
-import type { StageSelectionData } from '@pipeline/utils/runPipelineUtils'
 import type { StepViewType } from '../AbstractSteps/Step'
 import css from './PipelineInputSetForm.module.scss'
 
@@ -33,7 +32,6 @@ export interface ChainedPipelineInputSetFormProps {
   executionIdentifier?: string
   maybeContainerClass?: string
   viewTypeMetadata?: Record<string, boolean>
-  selectedStageData?: StageSelectionData
   disableRuntimeInputConfigureOptions?: boolean
 }
 
