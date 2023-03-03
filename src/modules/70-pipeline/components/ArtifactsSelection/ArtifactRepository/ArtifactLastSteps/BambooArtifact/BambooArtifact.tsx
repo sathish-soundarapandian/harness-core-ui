@@ -319,10 +319,10 @@ function FormComponent({
             // }}
             // selectItems={artifactPath || []}
           />
-          {getMultiTypeFromValue(formik.values?.spec?.artifactPath) === MultiTypeInputType.RUNTIME && (
+          {getMultiTypeFromValue(formik.values?.spec?.artifactPaths) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
               <ConfigureOptions
-                value={formik.values?.spec?.artifactPath}
+                value={formik.values?.spec?.artifactPaths}
                 type="String"
                 variableName="spec.artifactPaths"
                 showRequiredField={false}
@@ -436,7 +436,10 @@ export function BambooArtifact(props: StepProps<ConnectorConfigDTO> & BambooArti
       identifier: formData.identifier,
       spec: {
         connectorRef: connectorId,
-        artifactPaths: formData.spec?.artifactPaths?.map((artifactPath: any) => artifactPath.value) || [],
+        artifactPaths:
+          getMultiTypeFromValue(formData.spec?.artifactPaths) === MultiTypeInputType.FIXED
+            ? formData.spec?.artifactPaths?.map((artifactPath: any) => artifactPath.value) || []
+            : formData.spec?.artifactPaths,
         build: formData.spec.build,
         planKey
       }

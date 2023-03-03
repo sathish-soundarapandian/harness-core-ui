@@ -411,6 +411,7 @@ export interface AccessControlCheckError {
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   correlationId?: string
   detailedMessage?: string
   failedPermissionChecks?: PermissionCheck[]
@@ -1186,6 +1187,12 @@ export type AuditFilterProperties = FilterProperties & {
     | 'ADD_MEMBERSHIP'
     | 'REMOVE_MEMBERSHIP'
     | 'ERROR_BUDGET_RESET'
+    | 'START'
+    | 'END'
+    | 'PAUSE'
+    | 'RESUME'
+    | 'ABORT'
+    | 'TIMEOUT'
   )[]
   endTime?: number
   environments?: Environment[]
@@ -1370,6 +1377,23 @@ export type AwsLambdaInfrastructure = Infrastructure & {
 
 export type AwsLambdaInfrastructureDetails = InfrastructureDetails & {
   region?: string
+}
+
+export type AwsLambdaInstanceInfoDTO = InstanceInfoDTO & {
+  aliases?: string[]
+  artifactId?: string
+  description?: string
+  functionArn?: string
+  functionName: string
+  handler?: string
+  infraStructureKey?: string
+  memorySize?: number
+  region: string
+  runTime?: string
+  source?: string
+  tags?: Tag[]
+  updatedTime?: string
+  version?: string
 }
 
 export type AwsLambdaRollbackStepInfo = StepSpecType & {
@@ -3485,6 +3509,21 @@ export type ELKConnectorDTO = ConnectorConfigDTO & {
   username?: string
 }
 
+export interface EOLBannerRequestDTO {
+  entityType?: string
+  orgIdentifier?: string
+  pipelineIdentifier?: string
+  projectIdentifier?: string
+  templateIdentifier?: string
+  versionLabel?: string
+}
+
+export interface EOLBannerResponseDTO {
+  failures?: string[]
+  showBanner?: boolean
+  stageIdentifiers?: string[]
+}
+
 export type EcrArtifactConfig = ArtifactConfig & {
   connectorRef: string
   imagePath: string
@@ -3950,13 +3989,13 @@ export interface EntityDetail {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
 }
 
 export interface EntityDetailProtoDTO {
@@ -4616,6 +4655,7 @@ export interface Error {
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   correlationId?: string
   detailedMessage?: string
   message?: string
@@ -4987,6 +5027,7 @@ export interface ErrorMetadata {
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   errorMessage?: string
 }
 
@@ -5409,6 +5450,7 @@ export interface Failure {
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   correlationId?: string
   errors?: ValidationError[]
   message?: string
@@ -6487,13 +6529,13 @@ export interface GitEntityBranchFilterSummaryProperties {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
   )[]
   moduleType?:
     | 'CD'
@@ -6707,13 +6749,13 @@ export interface GitEntityFilterProperties {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
   )[]
   gitSyncConfigIdentifiers?: string[]
   moduleType?:
@@ -7004,13 +7046,13 @@ export interface GitFullSyncEntityInfoDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
   errorMessage?: string
   filePath?: string
   identifier?: string
@@ -7218,13 +7260,13 @@ export interface GitFullSyncEntityInfoFilterKeys {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
   )[]
   syncStatus?: 'QUEUED' | 'SUCCESS' | 'FAILED' | 'OVERRIDDEN'
 }
@@ -7553,13 +7595,13 @@ export interface GitSyncEntityDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
   entityUrl?: string
   folderPath?: string
   gitConnectorId?: string
@@ -7761,13 +7803,13 @@ export interface GitSyncEntityListDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
   gitSyncEntities?: GitSyncEntityDTO[]
 }
 
@@ -7986,13 +8028,13 @@ export interface GitSyncErrorDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
   errorType?: 'GIT_TO_HARNESS' | 'CONNECTIVITY_ISSUE' | 'FULL_SYNC'
   failureReason?: string
   repoId?: string
@@ -9117,7 +9159,7 @@ export interface JiraAuthCredentialsDTO {
 
 export interface JiraAuthenticationDTO {
   spec: JiraAuthCredentialsDTO
-  type: 'UsernamePassword'
+  type: 'UsernamePassword' | 'PersonalAccessToken'
 }
 
 export type JiraConnector = ConnectorConfigDTO & {
@@ -9172,6 +9214,10 @@ export interface JiraIssueUpdateMetadataNG {
   fields: {
     [key: string]: JiraFieldNG
   }
+}
+
+export type JiraPATDTO = JiraAuthCredentialsDTO & {
+  patRef: string
 }
 
 export interface JiraProjectBasicNG {
@@ -9935,6 +9981,12 @@ export interface NGServiceV2InfoConfig {
 export interface NGTag {
   key: string
   value: string
+}
+
+export type NGTemplateReference = EntityReference & {
+  isDefault?: boolean
+  scope?: 'account' | 'org' | 'project' | 'unknown'
+  versionLabel?: string
 }
 
 export interface NGVariable {
@@ -11458,13 +11510,13 @@ export interface ReferencedByDTO {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
 }
 
 export interface RefreshResponse {
@@ -11571,6 +11623,8 @@ export interface ResourceDTO {
     | 'TARGET_GROUP'
     | 'FEATURE_FLAG'
     | 'NG_ACCOUNT_DETAILS'
+    | 'BUDGET_GROUP'
+    | 'NODE_EXECUTION'
 }
 
 export interface ResourceGroup {
@@ -12002,6 +12056,13 @@ export interface ResponseDockerBuildDetailsDTO {
 export interface ResponseDockerResponseDTO {
   correlationId?: string
   data?: DockerResponseDTO
+  metaData?: { [key: string]: any }
+  status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
+}
+
+export interface ResponseEOLBannerResponseDTO {
+  correlationId?: string
+  data?: EOLBannerResponseDTO
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
 }
@@ -12770,13 +12831,13 @@ export interface ResponseListEntityType {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
   )[]
   metaData?: { [key: string]: any }
   status?: 'SUCCESS' | 'FAILURE' | 'ERROR'
@@ -13453,6 +13514,7 @@ export interface ResponseMessage {
     | 'TERRAFORM_CLOUD_ERROR'
     | 'CLUSTER_CREDENTIALS_NOT_FOUND'
     | 'SCM_API_ERROR'
+    | 'INTERNAL_SERVER_ERROR'
   exception?: Throwable
   failureTypes?: (
     | 'EXPIRED'
@@ -15591,6 +15653,7 @@ export interface ServiceResponseDTO {
   tags?: {
     [key: string]: string
   }
+  v2Service?: boolean
   yaml?: string
 }
 
@@ -16392,6 +16455,11 @@ export type TGTKeyTabFilePathSpecDTO = TGTGenerationSpecDTO & {
 
 export type TGTPasswordSpecDTO = TGTGenerationSpecDTO & {
   password?: string
+}
+
+export interface Tag {
+  key?: string
+  value?: string
 }
 
 export type TagsFilter = FilterSpec & {
@@ -17663,6 +17731,8 @@ export type DelegateProfileDetailsNgRequestBody = DelegateProfileDetailsNg
 
 export type DockerRequestDTORequestBody = DockerRequestDTO
 
+export type EOLBannerRequestDTORequestBody = EOLBannerRequestDTO
+
 export type EcrRequestDTORequestBody = EcrRequestDTO
 
 export type EnvironmentGroupRequestDTORequestBody = EnvironmentGroupRequestDTO
@@ -18569,13 +18639,13 @@ export interface ListActivitiesQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -18769,13 +18839,13 @@ export interface ListActivitiesQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
 }
 
 export type ListActivitiesProps = Omit<GetProps<ResponsePageActivity, unknown, ListActivitiesQueryParams, void>, 'path'>
@@ -19073,13 +19143,13 @@ export interface GetActivitiesSummaryQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
   referredByEntityType?:
     | 'CreatePR'
     | 'GITOPS_MERGE_PR'
@@ -19273,13 +19343,13 @@ export interface GetActivitiesSummaryQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
 }
 
 export type GetActivitiesSummaryProps = Omit<
@@ -35546,13 +35616,13 @@ export interface ListReferredByEntitiesQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
   searchTerm?: string
   branch?: string
   repoIdentifier?: string
@@ -35807,13 +35877,13 @@ export interface ListAllEntityUsageByFqnQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
   searchTerm?: string
 }
 
@@ -39135,13 +39205,13 @@ export interface GetReferencedByQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
   searchTerm?: string
 }
 
@@ -41753,13 +41823,13 @@ export interface ListGitSyncEntitiesByTypePathParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
 }
 
 export type ListGitSyncEntitiesByTypeProps = Omit<
@@ -42021,13 +42091,13 @@ export const listGitSyncEntitiesByTypePromise = (
       | 'DeployCloudFunctionWithNoTraffic'
       | 'CloudFunctionTrafficShift'
       | 'CloudFunctionRollback'
-      | 'BambooBuild'
       | 'AwsLambdaDeploy'
       | 'AwsSamDeploy'
       | 'AwsSamRollback'
       | 'SscaOrchestration'
       | 'AwsLambdaRollback'
       | 'GITOPS_SYNC'
+      | 'BambooBuild'
   },
   signal?: RequestInit['signal']
 ) =>
@@ -48130,13 +48200,13 @@ export interface GetStepYamlSchemaQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
   yamlGroup?: string
 }
 
@@ -48458,13 +48528,13 @@ export interface GetEntityYamlSchemaQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
 }
 
 export type GetEntityYamlSchemaProps = Omit<
@@ -51722,6 +51792,160 @@ export const migrateSvcEnvFromProjectPromise = (
     void
   >('POST', getConfig('ng/api'), `/service-env-migration/project`, props, signal)
 
+export interface CheckIfPipelineUsingV1StageQueryParams {
+  accountIdentifier: string
+}
+
+export type CheckIfPipelineUsingV1StageProps = Omit<
+  MutateProps<
+    ResponseEOLBannerResponseDTO,
+    Failure | Error,
+    CheckIfPipelineUsingV1StageQueryParams,
+    EOLBannerRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Returns list of stage identifiers using v1 stage
+ */
+export const CheckIfPipelineUsingV1Stage = (props: CheckIfPipelineUsingV1StageProps) => (
+  <Mutate<
+    ResponseEOLBannerResponseDTO,
+    Failure | Error,
+    CheckIfPipelineUsingV1StageQueryParams,
+    EOLBannerRequestDTORequestBody,
+    void
+  >
+    verb="POST"
+    path={`/serviceV1-eol-banner/pipeline`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCheckIfPipelineUsingV1StageProps = Omit<
+  UseMutateProps<
+    ResponseEOLBannerResponseDTO,
+    Failure | Error,
+    CheckIfPipelineUsingV1StageQueryParams,
+    EOLBannerRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Returns list of stage identifiers using v1 stage
+ */
+export const useCheckIfPipelineUsingV1Stage = (props: UseCheckIfPipelineUsingV1StageProps) =>
+  useMutate<
+    ResponseEOLBannerResponseDTO,
+    Failure | Error,
+    CheckIfPipelineUsingV1StageQueryParams,
+    EOLBannerRequestDTORequestBody,
+    void
+  >('POST', `/serviceV1-eol-banner/pipeline`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Returns list of stage identifiers using v1 stage
+ */
+export const checkIfPipelineUsingV1StagePromise = (
+  props: MutateUsingFetchProps<
+    ResponseEOLBannerResponseDTO,
+    Failure | Error,
+    CheckIfPipelineUsingV1StageQueryParams,
+    EOLBannerRequestDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseEOLBannerResponseDTO,
+    Failure | Error,
+    CheckIfPipelineUsingV1StageQueryParams,
+    EOLBannerRequestDTORequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/serviceV1-eol-banner/pipeline`, props, signal)
+
+export interface CheckIfTemplateUsingV1StageQueryParams {
+  accountIdentifier: string
+}
+
+export type CheckIfTemplateUsingV1StageProps = Omit<
+  MutateProps<
+    ResponseEOLBannerResponseDTO,
+    Failure | Error,
+    CheckIfTemplateUsingV1StageQueryParams,
+    EOLBannerRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Returns list of stage identifiers using v1 stage
+ */
+export const CheckIfTemplateUsingV1Stage = (props: CheckIfTemplateUsingV1StageProps) => (
+  <Mutate<
+    ResponseEOLBannerResponseDTO,
+    Failure | Error,
+    CheckIfTemplateUsingV1StageQueryParams,
+    EOLBannerRequestDTORequestBody,
+    void
+  >
+    verb="POST"
+    path={`/serviceV1-eol-banner/template`}
+    base={getConfig('ng/api')}
+    {...props}
+  />
+)
+
+export type UseCheckIfTemplateUsingV1StageProps = Omit<
+  UseMutateProps<
+    ResponseEOLBannerResponseDTO,
+    Failure | Error,
+    CheckIfTemplateUsingV1StageQueryParams,
+    EOLBannerRequestDTORequestBody,
+    void
+  >,
+  'path' | 'verb'
+>
+
+/**
+ * Returns list of stage identifiers using v1 stage
+ */
+export const useCheckIfTemplateUsingV1Stage = (props: UseCheckIfTemplateUsingV1StageProps) =>
+  useMutate<
+    ResponseEOLBannerResponseDTO,
+    Failure | Error,
+    CheckIfTemplateUsingV1StageQueryParams,
+    EOLBannerRequestDTORequestBody,
+    void
+  >('POST', `/serviceV1-eol-banner/template`, { base: getConfig('ng/api'), ...props })
+
+/**
+ * Returns list of stage identifiers using v1 stage
+ */
+export const checkIfTemplateUsingV1StagePromise = (
+  props: MutateUsingFetchProps<
+    ResponseEOLBannerResponseDTO,
+    Failure | Error,
+    CheckIfTemplateUsingV1StageQueryParams,
+    EOLBannerRequestDTORequestBody,
+    void
+  >,
+  signal?: RequestInit['signal']
+) =>
+  mutateUsingFetch<
+    ResponseEOLBannerResponseDTO,
+    Failure | Error,
+    CheckIfTemplateUsingV1StageQueryParams,
+    EOLBannerRequestDTORequestBody,
+    void
+  >('POST', getConfig('ng/api'), `/serviceV1-eol-banner/template`, props, signal)
+
 export interface ListServiceAccountQueryParams {
   accountIdentifier?: string
   orgIdentifier?: string
@@ -53087,6 +53311,7 @@ export interface GetServiceListQueryParams {
   deploymentTemplateIdentifier?: string
   versionLabel?: string
   includeAllServicesAccessibleAtScope?: boolean
+  includeVersionInfo?: boolean
 }
 
 export type GetServiceListProps = Omit<
@@ -62242,13 +62467,13 @@ export interface GetYamlSchemaQueryParams {
     | 'DeployCloudFunctionWithNoTraffic'
     | 'CloudFunctionTrafficShift'
     | 'CloudFunctionRollback'
-    | 'BambooBuild'
     | 'AwsLambdaDeploy'
     | 'AwsSamDeploy'
     | 'AwsSamRollback'
     | 'SscaOrchestration'
     | 'AwsLambdaRollback'
     | 'GITOPS_SYNC'
+    | 'BambooBuild'
   subtype?:
     | 'K8sCluster'
     | 'Git'

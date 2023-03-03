@@ -328,7 +328,9 @@ export const getArtifactFormData = (
         spec: {
           ...specValues,
           artifactPaths:
-            specValues.artifactPaths && specValues.artifactPaths.length
+            getMultiTypeFromValue(specValues.artifactPaths) === MultiTypeInputType.FIXED &&
+            specValues.artifactPaths &&
+            specValues.artifactPaths.length
               ? specValues.artifactPaths.map((artifactPath: string) => ({
                   label: artifactPath,
                   value: artifactPath
