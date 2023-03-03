@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
-
 import {
   Button,
   ButtonVariation,
@@ -21,6 +20,8 @@ import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useGetTasksLog, GetTasksLogQueryParams, DelegateStackDriverLog } from 'services/portal'
 import type { ExecutionNode } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
+import { useTrackEvent } from '@common/hooks/useTelemetry'
+import { Category, DelegateActions } from '@common/constants/TrackingConstants'
 
 import css from './DelegateTaskLogs.module.scss'
 
@@ -29,7 +30,6 @@ interface DelegateTaskLogsProps {
 }
 
 export default function DelegateTaskLogs({ step }: DelegateTaskLogsProps): JSX.Element {
-  // TODO: Add segment event
   const { accountId, orgIdentifier, projectIdentifier } = useParams<ProjectPathProps>()
   const [currentPageToken, setCurrentPageToken] = useState<string | undefined>('')
   const { getString } = useStrings()
@@ -42,6 +42,12 @@ export default function DelegateTaskLogs({ step }: DelegateTaskLogsProps): JSX.E
   const startTime = Math.floor((step?.startTs as number) / 1000)
   /* istanbul ignore next */
   const endTime = Math.floor((step?.endTs || Date.now()) / 1000)
+
+  useTrackEvent(DelegateActions.DelegateTaskLogsViewed, {
+    category: Category.DELEGATE,
+    delegateIds: step.delegateInfoList?.map(delegate => delegate.id),
+    taskIds: step.delegateInfoList?.map(delegate => delegate.taskId)
+  })
 
   const queryParams: GetTasksLogQueryParams = {
     accountId,

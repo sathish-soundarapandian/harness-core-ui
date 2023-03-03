@@ -153,7 +153,9 @@ export enum DelegateActions {
   DelegateCommandLineTroubleShootTerraformCopyCommonCommand1 = 'terraform -version copied',
   SwitchedToOldDelegateCreationModal = 'switchedToOldDelegateCreationModal',
   DelegateCommandLineCreationOpened = 'Delegate CommandLine Creation Opened',
-  DelegateCommandLineCreationClosed = 'Delegate CommandLine Creation Closed'
+  DelegateCommandLineCreationClosed = 'Delegate CommandLine Creation Closed',
+
+  DelegateTaskLogsViewed = 'Delegate Task Logs Viewed'
 }
 
 export enum StepActions {
