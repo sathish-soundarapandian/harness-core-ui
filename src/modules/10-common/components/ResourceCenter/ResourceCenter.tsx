@@ -23,7 +23,6 @@ import {
   getReleaseNodeLink,
   openWhatsNew,
   openEarlyAccess,
-  openFileATicket,
   openZendeskSupport,
   HARNESS_SEARCH_LINK,
   HARNESS_UNIVERISITY_LINK,
@@ -36,6 +35,7 @@ import {
 } from './utils'
 import { CommunitySubmitTicket } from './MenuItems'
 import { useReleaseNotesModal } from './ReleaseNotesModal/useReleaseNotesModal'
+import { useSubmitTicketModal } from './SubmitTicketModal/useSubmitTicketModal'
 import css from './ResourceCenter.module.scss'
 
 const refinerProjectId = window.refinerProjectToken
@@ -51,6 +51,8 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
   const [buttonDisabled, setButtonDisabled] = useState(false)
   const [show, setShow] = useState<boolean>(false)
   const { showModal } = useReleaseNotesModal()
+
+  const { showModal: showSubmitTicketModal } = useSubmitTicketModal()
 
   const isCommunity = useGetCommunity()
   const { SPG_MODULE_VERSION_INFO } = useFeatureFlags()
@@ -87,7 +89,7 @@ export const ResourceCenter: React.FC<ResourceCenterProps> = ({ link }) => {
         icon: 'pipeline-deploy',
         iconClassname: css.iconFilled,
         className: css.bottom,
-        onClick: (e: React.MouseEvent<Element, MouseEvent>) => openFileATicket(e, currentUserInfo, setShow),
+        onClick: () => showSubmitTicketModal(),
         testId: 'submit-ticket'
       },
       {
