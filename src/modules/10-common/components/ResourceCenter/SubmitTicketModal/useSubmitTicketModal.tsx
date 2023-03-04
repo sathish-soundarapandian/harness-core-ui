@@ -9,26 +9,27 @@ import { Dialog } from '@blueprintjs/core'
 import { StepWizard } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import React from 'react'
+import { SubmitTicketModalStepOne } from './SubmitTicketModalSteps/SubmitTickerModalStepOne'
+import { SubmitTicketModalStepTwo } from './SubmitTicketModalSteps/SubmitTicketModalStepTwo'
 import css from './SubmitTicketModal.module.scss'
-
-// render step wizard steps in place of div
 
 export const useSubmitTicketModal = () => {
   const onStepChange = () => {
     // handle step change here
   }
+  const changeIssueTypeHandler = (): void => {
+    // will handle something here
+  }
   const [showModal, hideModal] = useModalHook(() => {
     return (
-      <Dialog
-        isOpen
-        enforceFocus={false}
-        title="Submit a ticket"
-        onClose={hideModal}
-        className={css.submitTicketWizard}
-      >
-        <StepWizard subtitle={'Subtitle'} onStepChange={onStepChange} initialStep={1}>
-          <div></div>
-          <div></div>
+      <Dialog isOpen enforceFocus={false} onClose={hideModal} className={css.submitTicketWizard}>
+        <StepWizard onStepChange={onStepChange} initialStep={1}>
+          <SubmitTicketModalStepOne
+            name="Select Issue Type"
+            stepName="Select Issue Type"
+            changeIssueTypeHandler={changeIssueTypeHandler}
+          />
+          <SubmitTicketModalStepTwo />
         </StepWizard>
       </Dialog>
     )
