@@ -31,7 +31,7 @@ export const useSubmitTicketModal = () => {
             changeIssueTypeHandler={changeIssueTypeHandler}
           />
           <SubmitTicketModalStepTwo name="Deflection Step" stepName="Deflection Step" />
-          <SubmitTicketModalStepThree name="Ticket Details" stepName="Ticket Details" />
+          <SubmitTicketModalStepThree name="Ticket Details" stepName="Ticket Details" onCloseHandler={hideModal} />
         </StepWizard>
       </Dialog>
     )

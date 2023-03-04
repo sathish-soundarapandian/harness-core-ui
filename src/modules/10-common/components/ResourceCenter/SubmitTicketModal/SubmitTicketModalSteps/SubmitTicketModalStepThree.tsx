@@ -5,21 +5,26 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Layout, Text, Formik, Button, ButtonVariation } from '@harness/uicore'
+import { Layout, Text, Formik, Button, ButtonVariation, StepProps } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import React from 'react'
 import { Form } from 'formik'
-import { useStrings } from 'framework/strings'
 import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import css from './SubmitTicketModalSteps.module.scss'
 interface SubmitTicketModalStepThreeProps {
   name: string
   stepName: string
+  onCloseHandler: () => void
 }
-export const SubmitTicketModalStepThree = (props: SubmitTicketModalStepThreeProps) => {
-  const { stepName } = props
-  const { getString } = useStrings()
+export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketModalStepThreeProps) => {
+  const { stepName, onCloseHandler, prevStepData } = props
+
+  const [fileData, setFileData] = React.useState()
+
+  const fileUploadHandler = (event: any): void => {
+    setFileData(event.target.files[0])
+  }
 
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
@@ -32,8 +37,9 @@ export const SubmitTicketModalStepThree = (props: SubmitTicketModalStepThreeProp
         validationSchema={Yup.object().shape({
           ticketDetails: Yup.string().required('Ticket Details are required')
         })}
-        onSubmit={val => {
-          console.log(val)
+        onSubmit={() => {
+          //   console.log({ ...prevStepData, val, fileData })
+          onCloseHandler()
         }}
       >
         {() => (
@@ -50,10 +56,13 @@ export const SubmitTicketModalStepThree = (props: SubmitTicketModalStepThreeProp
                   placeholder="Please add relevant information for the ticket"
                 />
               </Layout.Horizontal>
+              <Layout.Horizontal spacing="medium">
+                <input name="fileData" type="file" onChange={fileUploadHandler} />
+              </Layout.Horizontal>
               <Button
                 variation={ButtonVariation.PRIMARY}
                 type="submit"
-                text={getString('continue')}
+                text={'Submit'}
                 rightIcon="chevron-right"
                 className={css.saveBtn}
               />
