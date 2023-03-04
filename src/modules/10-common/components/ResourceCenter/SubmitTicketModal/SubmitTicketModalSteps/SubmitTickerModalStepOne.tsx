@@ -5,21 +5,20 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Layout, Text, Formik, Button, ButtonVariation, FormInput } from '@harness/uicore'
+import { Layout, Text, Formik, Button, ButtonVariation, FormInput, StepProps } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import React from 'react'
 import { Form } from 'formik'
 import { useStrings } from 'framework/strings'
-import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import css from './SubmitTicketModalSteps.module.scss'
 interface SubmitTicketModalStepOneProps {
   name: string
   stepName: string
   changeIssueTypeHandler: (val: any) => void
 }
-export const SubmitTicketModalStepOne = (props: SubmitTicketModalStepOneProps) => {
-  const { stepName, changeIssueTypeHandler } = props
+export const SubmitTicketModalStepOne = (props: StepProps<any> & SubmitTicketModalStepOneProps) => {
+  const { stepName, changeIssueTypeHandler, nextStep } = props
   const { getString } = useStrings()
 
   return (
@@ -33,11 +32,11 @@ export const SubmitTicketModalStepOne = (props: SubmitTicketModalStepOneProps) =
         validationSchema={Yup.object().shape({
           issueType: Yup.string().required('Issue Type is required'),
           priority: Yup.string().required('Priority is required'),
-          subject: Yup.string().required('Subject is required'),
-          ticketDetails: Yup.string().required('Ticket Details are required')
+          subject: Yup.string().required('Subject is required')
         })}
         onSubmit={val => {
           changeIssueTypeHandler(val)
+          nextStep?.({ ...val })
         }}
       >
         {() => (
@@ -88,14 +87,6 @@ export const SubmitTicketModalStepOne = (props: SubmitTicketModalStepOneProps) =
                   className={css.inputWidth}
                 />
               </Layout.Horizontal>
-              <Layout.Horizontal spacing="medium">
-                <FormMultiTypeTextAreaField
-                  name="ticketDetails"
-                  label={'Ticket Details'}
-                  className={css.inputWidth}
-                  placeholder="Please add relevant information for the ticket"
-                />
-              </Layout.Horizontal>
 
               <Button
                 variation={ButtonVariation.PRIMARY}
@@ -115,8 +106,7 @@ export const SubmitTicketModalStepOne = (props: SubmitTicketModalStepOneProps) =
 const defaultInitialValues = {
   issueType: '',
   priority: '',
-  subject: '',
-  ticketDetails: ''
+  subject: ''
 }
 
 const issueTypes = [{ label: 'Bug', value: 'bug' }]

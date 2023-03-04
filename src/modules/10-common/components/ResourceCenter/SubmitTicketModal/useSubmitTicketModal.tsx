@@ -11,6 +11,7 @@ import { useModalHook } from '@harness/use-modal'
 import React from 'react'
 import { SubmitTicketModalStepOne } from './SubmitTicketModalSteps/SubmitTickerModalStepOne'
 import { SubmitTicketModalStepTwo } from './SubmitTicketModalSteps/SubmitTicketModalStepTwo'
+import { SubmitTicketModalStepThree } from './SubmitTicketModalSteps/SubmitTicketModalStepThree'
 import css from './SubmitTicketModal.module.scss'
 
 export const useSubmitTicketModal = () => {
@@ -29,7 +30,8 @@ export const useSubmitTicketModal = () => {
             stepName="Select Issue Type"
             changeIssueTypeHandler={changeIssueTypeHandler}
           />
-          <SubmitTicketModalStepTwo />
+          <SubmitTicketModalStepTwo name="Deflection Step" stepName="Deflection Step" />
+          <SubmitTicketModalStepThree name="Ticket Details" stepName="Ticket Details" />
         </StepWizard>
       </Dialog>
     )

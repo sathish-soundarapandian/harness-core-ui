@@ -5,8 +5,66 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
+import { Layout, Text, Formik, Button, ButtonVariation, StepProps } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
+import * as Yup from 'yup'
 import React from 'react'
+import { Form } from 'formik'
+import { useStrings } from 'framework/strings'
+import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
+import css from './SubmitTicketModalSteps.module.scss'
+interface SubmitTicketModalStepTwoProps {
+  name: string
+  stepName: string
+}
+export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketModalStepTwoProps) => {
+  const { stepName, nextStep, prevStepData } = props
+  const { getString } = useStrings()
 
-export const SubmitTicketModalStepTwo = () => {
-  return <div></div>
+  return (
+    <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
+      <Text font={{ variation: FontVariation.H3 }} margin={{ bottom: 'medium' }}>
+        {stepName}
+      </Text>
+      <Formik
+        initialValues={defaultInitialValues}
+        formName="ticketDetailsForm"
+        validationSchema={Yup.object().shape({
+          ticketDetails: Yup.string().required('Ticket Details are required')
+        })}
+        onSubmit={val => {
+          nextStep?.({ ...prevStepData, val })
+        }}
+      >
+        {() => (
+          <Form>
+            <Layout.Vertical
+              flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
+              className={css.manifestForm}
+            >
+              <Layout.Horizontal spacing="medium">
+                <FormMultiTypeTextAreaField
+                  name="ticketDetails"
+                  label={'Ticket Details'}
+                  className={css.inputWidth}
+                  placeholder="Please add relevant information for the ticket"
+                />
+              </Layout.Horizontal>
+              <Button
+                variation={ButtonVariation.PRIMARY}
+                type="submit"
+                text={getString('continue')}
+                rightIcon="chevron-right"
+                className={css.saveBtn}
+              />
+            </Layout.Vertical>
+          </Form>
+        )}
+      </Formik>
+    </Layout.Vertical>
+  )
+}
+
+const defaultInitialValues = {
+  ticketDetails: ''
 }
