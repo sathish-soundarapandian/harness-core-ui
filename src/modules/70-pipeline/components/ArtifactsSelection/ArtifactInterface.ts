@@ -342,7 +342,7 @@ export interface BambooArtifactType {
   type?: string
   spec: {
     connectorRef?: string
-    artifactPaths?: SelectOption[] | string[] | string
+    artifactPaths?: SelectOption[] | string[] | any
     build?: SelectOption | string
     planKey?: SelectOption | string
   }

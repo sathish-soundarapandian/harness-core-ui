@@ -1678,3 +1678,6 @@ validation:
   pipelineValidated: Pipeline validated
   revalidate: Revalidate
   validationResultApiError: Unable to complete validation due to [{{message}}] error.
+bamboo:
+  planName: Plan Name
+  fetchingPlans: Loading Plans ...
