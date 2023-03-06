@@ -132,6 +132,7 @@ const renderColumnName: Renderer<CellProps<StreamingDestinationDto>> = ({ value 
 
 const RenderColumnConnector: Renderer<CellProps<StreamingDestinationAggregateDto>> = ({ row }) => {
   const { accountId } = useParams<ProjectPathProps>()
+  const { getString } = useStrings()
   const streamingDestinationAggregateDto = row.original
   const sdType = streamingDestinationAggregateDto.streaming_destination.spec.type
   const iconName = getIconByType(CONNECTOR_TYPE[sdType] as ConnectorInfoDTO['type'])
@@ -148,17 +149,28 @@ const RenderColumnConnector: Renderer<CellProps<StreamingDestinationAggregateDto
   }
   return (
     <Layout.Horizontal className={css.alignCenter} padding={{ right: 'xlarge' }}>
-      <Icon name={iconName} size={25} margin={{ right: 'small' }}></Icon>
-      {url ? (
-        <Link className={css.resourceLink} to={url} target="_blank" rel="noopener noreferer">
-          <Text lineClamp={1} margin={{ bottom: 'small' }}>
-            {defaultTo(connector?.name, connector?.identifier)}
-          </Text>
-        </Link>
+      {connector ? (
+        <>
+          <Icon name={iconName} size={25} margin={{ right: 'small' }} />
+          {url ? (
+            <Link className={css.resourceLink} to={url} target="_blank" rel="noopener noreferer">
+              <Text lineClamp={1} margin={{ bottom: 'small' }}>
+                {defaultTo(connector?.name, connector?.identifier)}
+              </Text>
+            </Link>
+          ) : (
+            <Text lineClamp={1} margin={{ bottom: 'small' }}>
+              {defaultTo(connector?.name, connector?.identifier)}
+            </Text>
+          )}
+        </>
       ) : (
-        <Text lineClamp={1} margin={{ bottom: 'small' }}>
-          {defaultTo(connector?.name, connector?.identifier)}
-        </Text>
+        <>
+          <Icon name="danger-icon" size={25} margin={{ right: 'small' }} />
+          <Text lineClamp={1} color={Color.RED_600}>
+            {getString('none')}
+          </Text>
+        </>
       )}
     </Layout.Horizontal>
   )
@@ -404,7 +416,6 @@ const AuditLogStreamingListView: React.FC<AuditLogStreamingListViewProps> = ({
       {
         Header: getString('auditTrail.logStreaming.streamingConnector'),
         id: 'connectorRef',
-        accessor: row => row.connector_info.name,
         width: '25%',
         Cell: RenderColumnConnector
       },
