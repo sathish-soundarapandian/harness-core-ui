@@ -93,7 +93,7 @@ const moduleMap: Record<NavModuleName, useNavModuleInfoReturnType> = {
   },
   SSCA: {
     shouldVisible: true,
-    icon: 'sscs-main',
+    icon: 'ssca-main',
     label: 'common.cdAndGitops',
     hasLicense: false,
     homePageUrl: '',

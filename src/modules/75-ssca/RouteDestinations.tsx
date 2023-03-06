@@ -22,7 +22,7 @@ import { SSCAApp } from './components/SSCAApp'
 const SSCASideNavProps: SidebarContext = {
   navComponent: SSCASideNav,
   title: 'Software Supply Chain Assurance',
-  icon: 'sscs-main'
+  icon: 'ssca-main'
 }
 
 const moduleParams: ModulePathParams = {
