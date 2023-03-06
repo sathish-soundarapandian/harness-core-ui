@@ -43,6 +43,7 @@ export const useSubmitTicketModal = () => {
             stepName="Deflection Step"
             searchBoxController={searchBox}
             resultListController={resultList}
+            pageController={pager}
           />
           <SubmitTicketModalStepThree name="Ticket Details" stepName="Ticket Details" onCloseHandler={hideModal} />
         </StepWizard>
