@@ -11,10 +11,11 @@ import { NavLink as Link, NavLinkProps, useParams } from 'react-router-dom'
 import { Text, Layout, IconName, Icon, Container, TextProps, Popover } from '@harness/uicore'
 import { Color } from '@harness/design-system'
 import { Classes, Position, PopoverInteractionKind } from '@blueprintjs/core'
+import { useGetAccountNG } from 'services/cd-ng'
 import { LaunchButton } from '@common/components/LaunchButton/LaunchButton'
 import { returnLaunchUrl } from '@common/utils/routeUtils'
 import { useStrings } from 'framework/strings'
-import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import type { ProjectPathProps, AccountPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import css from './SideNav.module.scss'
 
@@ -60,11 +61,13 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
   const { getString } = useStrings()
   const { SPG_SIDENAV_COLLAPSE } = useFeatureFlags()
   const params = useParams<ProjectPathProps>()
+  const { accountId } = useParams<AccountPathProps>()
   const [sideNavExpanded, setSideNavExpanded] = useState<boolean>(!collapseByDefault)
   const launchButtonRedirectUrl = props.launchButtonRedirectUrl
     ? props.launchButtonRedirectUrl?.replace('{replaceAccountId}', params.accountId)
     : ''
-
+  const { data } = useGetAccountNG({ accountIdentifier: accountId, queryParams: { accountIdentifier: accountId } })
+  const account = data?.data
   return (
     <div
       className={cx(css.main, {
@@ -73,7 +76,7 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
     >
       <>
         <div>{props.children}</div>
-        {props.launchButtonText && props.launchButtonRedirectUrl ? (
+        {props.launchButtonText && props.launchButtonRedirectUrl && account?.crossGenerationAccessEnabled ? (
           <LaunchButton
             launchButtonText={getString(props.launchButtonText)}
             redirectUrl={returnLaunchUrl(launchButtonRedirectUrl)}

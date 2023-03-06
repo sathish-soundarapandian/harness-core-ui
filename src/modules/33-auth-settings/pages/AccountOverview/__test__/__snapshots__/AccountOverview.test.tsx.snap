@@ -121,6 +121,25 @@ exports[`Account Overview Page Rendering should render properly 1`] = `
         </p>
       </div>
       <div
+        class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start StyledProps--margin-bottom-large"
+      >
+        <p
+          class="StyledProps--font StyledProps--main minWidth"
+        >
+          common.allowFirstGenAccess
+        </p>
+        <label
+          class="bp3-control bp3-switch StyledProps--font Switch--switch switch StyledProps--main"
+        >
+          <input
+            type="checkbox"
+          />
+          <span
+            class="bp3-control-indicator"
+          />
+        </label>
+      </div>
+      <div
         class="Layout--horizontal StyledProps--main StyledProps--flex StyledProps--flex-alignItems-center StyledProps--flex-justifyContent-flex-start"
       >
         <p

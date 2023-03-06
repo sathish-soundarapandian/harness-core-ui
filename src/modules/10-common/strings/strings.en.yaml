@@ -638,6 +638,7 @@ accountDetails: Account Details
 addAccountName: Add Account Name
 accountId: Account Id
 harnessClusterHostingAccount: Harness Cluster Hosting Account
+allowFirstGenAccess: Allow First Gen Access
 defaultExperience: Default Experience
 selectDefaultExperience: Select the default experience to launch after Sign-in
 harnessFirstGeneration: Harness First Generation
