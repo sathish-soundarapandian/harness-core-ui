@@ -347,8 +347,8 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                 loadingPlans
                   ? [
                       {
-                        label: getString('pipeline.artifactsSelection.loadingPlans'),
-                        value: getString('pipeline.artifactsSelection.loadingPlans')
+                        label: getString('pipeline.bamboo.fetchingPlans'),
+                        value: getString('pipeline.bamboo.fetchingPlans')
                       }
                     ]
                   : planDetails
@@ -370,8 +370,8 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                   items: loadingPlans
                     ? [
                         {
-                          label: getString('pipeline.artifactsSelection.loadingPlans'),
-                          value: getString('pipeline.artifactsSelection.loadingPlans')
+                          label: getString('pipeline.bamboo.fetchingPlans'),
+                          value: getString('pipeline.bamboo.fetchingPlans')
                         }
                       ]
                     : planDetails,
@@ -453,7 +453,7 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
               useValue
               placeholder={
                 fetchingBuild
-                  ? getString('pipeline.artifactsSelection.loadingBuilds')
+                  ? getString('pipeline.bamboo.fetchingBuilds')
                   : getString('pipeline.selectBambooBuildsPlaceholder')
               }
               multiTypeInputProps={{
@@ -476,8 +476,8 @@ const Content = (props: BambooRenderContent): React.ReactElement => {
                   addClearBtn: !readonly,
                   items: defaultTo(builds, [
                     {
-                      label: getString('pipeline.artifactsSelection.loadingBuilds'),
-                      value: getString('pipeline.artifactsSelection.loadingBuilds')
+                      label: getString('pipeline.bamboo.fetchingBuilds'),
+                      value: getString('pipeline.bamboo.fetchingBuilds')
                     }
                   ]),
                   noResults: (

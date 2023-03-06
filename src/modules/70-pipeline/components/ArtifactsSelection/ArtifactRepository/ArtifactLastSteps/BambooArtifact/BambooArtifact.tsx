@@ -283,41 +283,6 @@ function FormComponent({
             name="spec.artifactPaths"
             placeholder={fetchingArtifacts ? getString('loading') : getString('pipeline.selectArtifactPathPlaceholder')}
             multiSelectTypeInputProps={{}}
-            // multiTypeInputProps={{
-            //   onTypeChange: (type: MultiTypeInputType) => formik.setFieldValue('spec.artifactPath', type),
-            //   expressions,
-            //   onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
-            //     if (
-            //       e?.target?.type !== 'text' ||
-            //       (e?.target?.type === 'text' && e?.target?.placeholder === EXPRESSION_STRING) ||
-            //       canFetchBuildsOrArtifacts
-            //     ) {
-            //       return
-            //     }
-            //     refetchArtifactPaths()
-            //   },
-            //   selectProps: {
-            //     allowCreatingNewItems: true,
-            //     addClearBtn: !isReadonly,
-            //     items: defaultTo(artifactPath, []),
-            //     noResults: (
-            //       <NoTagResults
-            //         tagError={artifactPathError}
-            //         isServerlessDeploymentTypeSelected={false}
-            //         defaultErrorText={
-            //           fetchingArtifacts
-            //             ? getString('loading')
-            //             : canFetchBuildsOrArtifacts
-            //             ? `${getString('pipeline.artifactsSelection.validation.jobConnectorRequired')} artifactPath`
-            //             : getString('common.filters.noResultsFound')
-            //         }
-            //       />
-            //     ),
-            //     itemRenderer: artifactPathItemRenderer
-            //   },
-            //   allowableTypes
-            // }}
-            // selectItems={artifactPath || []}
           />
           {getMultiTypeFromValue(formik.values?.spec?.artifactPaths) === MultiTypeInputType.RUNTIME && (
             <div className={css.configureOptions}>
