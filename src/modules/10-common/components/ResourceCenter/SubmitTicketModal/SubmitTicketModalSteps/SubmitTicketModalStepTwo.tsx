@@ -5,21 +5,45 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import { Layout, Text, Formik, Button, ButtonVariation, StepProps } from '@harness/uicore'
+import { Layout, Text, Formik, Button, ButtonVariation, StepProps, FormInput } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Form } from 'formik'
 import { useStrings } from 'framework/strings'
-import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import css from './SubmitTicketModalSteps.module.scss'
 interface SubmitTicketModalStepTwoProps {
   name: string
   stepName: string
+  searchBoxController: any
+  resultListController: any
 }
 export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketModalStepTwoProps) => {
-  const { stepName, nextStep, prevStepData } = props
+  const { stepName, nextStep, prevStepData, searchBoxController, resultListController } = props
   const { getString } = useStrings()
+
+  const [state, setState] = useState(searchBoxController.state)
+
+  const [resultsState, setResultsState] = useState(resultListController.state)
+
+  const [suggestionItems, setSuggestionItems] = useState([])
+
+  useEffect(() => searchBoxController.subscribe(() => setState(searchBoxController.state)), [searchBoxController])
+
+  useEffect(
+    () => resultListController.subscribe(() => setResultsState(resultListController.state)),
+    [resultListController]
+  )
+
+  useEffect(() => {
+    setSuggestionItems(
+      state.suggestions?.map((suggestion: any) => {
+        return { label: suggestion.rawValue, value: suggestion.rawValue }
+      })
+    )
+  }, [state.suggestions])
+
+  console.log(state, resultsState)
 
   return (
     <Layout.Vertical height={'inherit'} spacing="medium" className={css.optionsViewContainer}>
@@ -30,7 +54,7 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
         initialValues={defaultInitialValues}
         formName="ticketDetailsForm"
         validationSchema={Yup.object().shape({
-          ticketDetails: Yup.string().required('Ticket Details are required')
+          subject: Yup.string().required('Ticket Details are required')
         })}
         onSubmit={val => {
           nextStep?.({ ...prevStepData, val })
@@ -43,13 +67,34 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
               className={css.manifestForm}
             >
               <Layout.Horizontal spacing="medium">
-                <FormMultiTypeTextAreaField
-                  name="ticketDetails"
-                  label={'Ticket Details'}
+                <FormInput.MultiTypeInput
+                  name="subject"
+                  placeholder={'Enter the Subject'}
+                  label={'Subject'}
                   className={css.inputWidth}
-                  placeholder="Please add relevant information for the ticket"
+                  selectItems={suggestionItems}
+                  useValue
+                  multiTypeInputProps={{
+                    onChange: (val: any) => {
+                      searchBoxController.updateText(val?.value)
+                      searchBoxController.submit()
+                    },
+                    selectProps: {
+                      items: suggestionItems,
+                      addClearBtn: true
+                    }
+                  }}
                 />
               </Layout.Horizontal>
+              <ul>
+                {resultsState.results.map((result: any) => {
+                  return (
+                    <a key={result.uri} href={result.clickUri}>
+                      <li>{result.title}</li>
+                    </a>
+                  )
+                })}
+              </ul>
               <Button
                 variation={ButtonVariation.PRIMARY}
                 type="submit"
@@ -66,5 +111,5 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
 }
 
 const defaultInitialValues = {
-  ticketDetails: ''
+  subject: ''
 }
