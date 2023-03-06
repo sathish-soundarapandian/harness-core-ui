@@ -413,7 +413,7 @@ export const ActiveServiceInstancePopover: React.FC<ActiveServiceInstancePopover
     envId,
     infraIdentifier,
     clusterIdentifier: clusterId,
-    pipelineExecutionId: pipelineExecutionId || '',
+    pipelineExecutionId: pipelineExecutionId,
     buildId: buildId || ''
   }
 

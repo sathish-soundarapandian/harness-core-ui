@@ -30,6 +30,7 @@ import { JobDetails, useGetJobDetailsForJenkins, useGetJobParametersForJenkins }
 import { MultiTypeFieldSelector } from '@common/components/MultiTypeFieldSelector/MultiTypeFieldSelector'
 import { TimeoutFieldInputSetView } from '@pipeline/components/InputSetView/TimeoutFieldInputSetView/TimeoutFieldInputSetView'
 import { isExecutionTimeFieldDisabled } from '@pipeline/utils/runPipelineUtils'
+import { ConnectorRefType, getScopedConnectorValue } from '@pipeline/utils/stepUtils'
 import { MultiSelectWithSubmenuTypeInputField } from '@common/components/MultiSelectWithSubmenuTypeInput/MultiSelectWithSubmenuTypeInput'
 import type { jobParameterInterface } from './types'
 import { resetForm } from './helper'
@@ -238,8 +239,9 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
               isExecutionTimeFieldDisabled: isExecutionTimeFieldDisabled(stepViewType)
             }}
             onChange={(value, _valueType, type) => {
-              if (type === MultiTypeInputType.FIXED && !isEmpty(value)) {
-                setConnectorRef((value as any)?.record?.name)
+              const connectorRefValue = getScopedConnectorValue(value as unknown as ConnectorRefType)
+              if (type === MultiTypeInputType.FIXED && !isEmpty(connectorRefValue)) {
+                setConnectorRef(connectorRefValue)
               }
               resetForm(formik, 'connectorRef', prefix)
             }}

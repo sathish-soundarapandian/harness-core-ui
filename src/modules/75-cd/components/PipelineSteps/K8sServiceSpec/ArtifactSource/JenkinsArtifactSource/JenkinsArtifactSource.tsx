@@ -41,6 +41,7 @@ import { useVariablesExpression } from '@pipeline/components/PipelineStudio/Pipl
 import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/TriggersWizardPageUtils'
 import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
+import { ConnectorRefType, getScopedConnectorValue } from '@pipeline/utils/stepUtils'
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
 import {
   getDefaultQueryParam,
@@ -431,7 +432,8 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 if (value) {
                   const { record } = value as unknown as { record: ConnectorReferenceDTO }
                   if (record) {
-                    setConnectorRefValue(record?.identifier)
+                    const connectorValue = getScopedConnectorValue(value as unknown as ConnectorRefType)
+                    setConnectorRefValue(connectorValue)
                   } else {
                     setConnectorRefValue(value as string)
                   }

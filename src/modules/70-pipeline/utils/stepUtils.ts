@@ -6,7 +6,7 @@
  */
 
 import produce from 'immer'
-import { isEmpty, set, get } from 'lodash-es'
+import { isEmpty, set, get, defaultTo } from 'lodash-es'
 import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import { ServiceDeploymentType, StageType } from '@pipeline/utils/stageHelpers'
 import type {
@@ -23,6 +23,8 @@ import {
 import { sanitize } from '@common/utils/JSONUtils'
 import { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { isValueRuntimeInput } from '@common/utils/utils'
+import type { ConnectorReferenceDTO } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
+import { Scope } from '@common/interfaces/SecretsInterface'
 import type { DeploymentStageElementConfigWrapper } from './pipelineTypes'
 
 export enum StepMode {
@@ -287,4 +289,13 @@ export function isTemplatizedView(
   stepViewType?: StepViewType
 ): stepViewType is StepViewType.DeploymentForm | StepViewType.InputSet | StepViewType.TemplateUsage {
   return !!stepViewType && TEMPLATIZED_VIEWS.includes(stepViewType)
+}
+
+export type ConnectorRefType = { record?: ConnectorReferenceDTO; scope?: Scope }
+
+export const getScopedConnectorValue = (selectedConnector: ConnectorRefType): string => {
+  const { record, scope } = selectedConnector
+  return scope && (scope === Scope.ORG || scope === Scope.ACCOUNT)
+    ? `${scope}.${record?.identifier}`
+    : defaultTo(record?.identifier, '')
 }
