@@ -13,7 +13,7 @@ import routes from '@common/RouteDefinitions'
 import { RouteWithLayout } from '@common/router'
 import { accountPathProps } from '@common/utils/routeUtils'
 import ChildAppMounter from 'microfrontends/ChildAppMounter'
-import { useGetUserGroupAggregate } from 'services/cd-ng'
+import { useGetUserGroupAggregateList } from 'services/cd-ng'
 import { MinimalLayout } from '@common/layouts'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
@@ -87,7 +87,7 @@ export default (
       <ChildAppMounter<IDPCustomMicroFrontendProps>
         ChildApp={IDPAdminMicroFrontend}
         customComponents={{ ConnectorReferenceField }}
-        idpServices={{ useGetUserGroupAggregate }}
+        idpServices={{ useGetUserGroupAggregateList }}
       />
     </RouteWithLayout>
   </>
