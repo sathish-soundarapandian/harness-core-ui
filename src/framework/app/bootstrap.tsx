@@ -45,6 +45,32 @@ export default async function render(): Promise<void> {
       }
     })
   }
+  if (document.getElementById('react-root')) {
+    const ele = document
+    ele?.addEventListener(
+      'mousemove',
+      () => {
+        console.log('mousemove document')
+      },
+      true
+    )
+    ele?.addEventListener(
+      'mousedown',
+      () => {
+        console.log('mousedown document')
+      },
+      true
+    )
+    ele?.addEventListener('keydown', () => {
+      console.log('keydown document')
+    })
+    ele?.addEventListener('keyup', () => {
+      console.log('keyup document')
+    })
+    ele?.addEventListener('keypress', () => {
+      console.log('keypress document')
+    })
+  }
 
   ReactDOM.render(
     <DefaultRouter>
