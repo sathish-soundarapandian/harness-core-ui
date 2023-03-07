@@ -1359,3 +1359,5 @@ tickets:
   tickets: 'Tickets'
   ticketComment: 'Append comment to ticket when Security Issue changes are detected (coming soon)'
   ticketExemption: 'Create a ticket when an Exemption is created (coming soon)'
+single: 'Single'
+combined: 'Combined'
