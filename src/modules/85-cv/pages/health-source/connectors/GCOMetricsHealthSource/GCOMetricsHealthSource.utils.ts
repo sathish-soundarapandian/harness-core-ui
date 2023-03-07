@@ -194,11 +194,8 @@ export function transformGCOMetricSetupSourceToGCOHealthSource(setupSource: GCOM
       higherBaselineDeviation
     })
 
-    const regexExpression = /^\{/
     const spec: StackdriverMetricHealthSourceSpec = healthSource.spec || []
-    const isFixed = getMultiTypeFromValue(metricInfo.query) === MultiTypeInputType.FIXED
-    const startWithCurlyBraces = regexExpression.test(defaultTo(metricInfo.query?.trim(), ''))
-    const shouldParseQuery = startWithCurlyBraces ? true : isFixed
+
     spec.metricDefinitions?.push({
       dashboardName: (metricInfo.dashboardName || '') as string,
       dashboardPath: (metricInfo.dashboardPath || '') as string,
@@ -206,7 +203,7 @@ export function transformGCOMetricSetupSourceToGCOHealthSource(setupSource: GCOM
       metricTags: Object.keys(metricInfo.metricTags || {}),
       identifier: metricInfo.identifier,
       isManualQuery: metricInfo.isManualQuery,
-      jsonMetricDefinitionString: shouldParseQuery ? JSON.parse(metricInfo.query || '') : metricInfo.query,
+      jsonMetricDefinitionString: metricInfo.query,
       riskProfile: {
         ...assignComponentPayload.analysis?.riskProfile
       },
