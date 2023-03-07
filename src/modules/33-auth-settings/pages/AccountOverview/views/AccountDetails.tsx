@@ -21,6 +21,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useSwitchAccountModal from '@common/modals/SwitchAccount/useSwitchAccountModal'
 import { useGetCommunity } from '@common/utils/utils'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { usePermission } from '@rbac/hooks/usePermission'
 import AccountNameForm from './AccountNameForm'
 import css from '../AccountOverview.module.scss'
 
@@ -49,6 +50,15 @@ const AccountDetails: React.FC = () => {
   const isCDActive = licenseInformation?.['CD']?.status === 'ACTIVE'
   const accountData = data?.data
   const [crossAccessVariable, setCrossAccessVariable] = React.useState(false)
+  const [canEdit] = usePermission(
+    {
+      resource: {
+        resourceType: ResourceType.ACCOUNT
+      },
+      permissions: [PermissionIdentifier.EDIT_ACCOUNT]
+    },
+    []
+  )
   useEffect(() => {
     setCrossAccessVariable(accountData?.crossGenerationAccessEnabled || false)
   }, [accountData])
@@ -127,11 +137,11 @@ const AccountDetails: React.FC = () => {
           {accountData?.cluster}
         </Text>
       </Layout.Horizontal>
-      {isCDActive ? (
+      {isCDActive && canEdit ? (
         <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} margin={{ bottom: 'large' }}>
           <Text className={css.minWidth}>{getString('common.allowFirstGenAccess')}</Text>
           <Switch
-            disabled={PermissionIdentifier.EDIT_ACCOUNT ? false : true}
+            disabled={canEdit ? false : true}
             onChange={async () => {
               setCrossAccessVariable(!crossAccessVariable)
               await updateAcctUpdate({ ...accountData2 })
