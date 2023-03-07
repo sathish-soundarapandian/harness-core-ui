@@ -29,3 +29,7 @@ stackWizard:
 permissions:
   iacmStacks: IACM Resource Stacks
   iacmStack: IACM Resource Stack
+pipelineSteps: 
+  initialiseDescription: Initialize prepares the working directory for the Evalute and Execute steps.
+  evaluateDescription: Evaluate lets you preview the actions to modify your infrastructure.
+  executeDescription: Execute command executes the actions proposed in a Evaluate step.

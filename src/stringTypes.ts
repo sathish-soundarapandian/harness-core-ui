@@ -8901,6 +8901,9 @@ export interface StringsMap {
   'iacm.navTitle': string
   'iacm.permissions.iacmStack': string
   'iacm.permissions.iacmStacks': string
+  'iacm.pipelineSteps.evaluateDescription': string
+  'iacm.pipelineSteps.executeDescription': string
+  'iacm.pipelineSteps.initialiseDescription': string
   'iacm.pulumi': string
   'iacm.stackWizard.autoApprove': string
   'iacm.stackWizard.autoApproveRequired': string

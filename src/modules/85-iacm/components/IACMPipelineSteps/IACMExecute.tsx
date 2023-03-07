@@ -9,36 +9,40 @@ import React from 'react'
 import type { IconName } from '@harness/uicore'
 import type { FormikErrors } from 'formik'
 import { PipelineStep } from '@pipeline/components/PipelineSteps/PipelineStep'
-import type { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
+import { StepType } from '@pipeline/components/PipelineSteps/PipelineStepInterface'
 import type { StringsMap } from 'stringTypes'
+import type { StepProps } from '@pipeline/components/AbstractSteps/Step'
+import type { DefaultIACMProps } from './types'
+import { IACMStepSideBarComponent } from './RenderStep'
 
-export class IACMExecute extends PipelineStep<any> {
+export class IACMExecute extends PipelineStep<DefaultIACMProps> {
   constructor() {
     super()
     this._hasStepVariables = true
+    this._hasDelegateSelectionVisible = true
   }
 
-  protected type = 'IACMTerraformPlan' as StepType
+  protected type = StepType.Execute
   protected stepName = 'IACM Execute'
   protected stepIcon: IconName = 'iacm'
-  protected stepDescription = 'IACM Execute' as keyof StringsMap
+  protected stepDescription: keyof StringsMap = 'iacm.pipelineSteps.executeDescription'
   protected stepPaletteVisible = false
   protected isHarnessSpecific = true
   protected isStepNonDeletable = true
-  protected defaultValues = {}
-
-  processFormData() {
-    return {}
+  protected defaultValues: DefaultIACMProps = {
+    name: 'IACM Execute',
+    type: StepType.Execute,
+    spec: {}
   }
-
+  // no validation needed as this is not editable by default
+  // the purpose of this step is to allow the user to
+  // add steps before or after this action
   validateInputSet(): FormikErrors<any> {
     return {}
   }
 
-  renderStep(): JSX.Element {
-    return (
-      <></>
-    )
+  renderStep(props: StepProps<any, unknown>): JSX.Element {
+    const { initialValues } = props
+    return <IACMStepSideBarComponent initialValues={initialValues} />
   }
 }
-
