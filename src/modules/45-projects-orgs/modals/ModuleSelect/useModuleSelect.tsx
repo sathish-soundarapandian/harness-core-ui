@@ -75,7 +75,7 @@ const getModulesWithSubscriptionsRoutesMap = ({
     search: `modal=${freePlanEnabled ? ModuleLicenseType.FREE : ModuleLicenseType.TRIAL}`
   }
   const cdOnboardingPath = {
-    pathname: routes.toGetStartedWithCD({
+    pathname: routes.toCDOnboardingWizard({
       orgIdentifier: projectData.orgIdentifier || '',
       projectIdentifier: projectData.identifier,
       accountId,

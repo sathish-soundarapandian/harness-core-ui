@@ -583,6 +583,7 @@ loadBalancerConfig: Load Balancer Configuration
 skipMatchingLabel: Skip Matching
 k8sDryRunStepDescription: Perform a dry run on the manifests configured for this stage.
 getStartedWithCD:
+  cdWizardEventName: CD Wizard - {{ eventName }}
   creatingApp: Creating Application in progress
   main: main
   installationInstructions: Installation Instructions
@@ -710,7 +711,7 @@ getStartedWithCD:
   delegateSuccess: The delegate is installed. Next you can configure the service.
   connectHarnessEnv: Connect Harness to your environment
   installDelegateToTargetEnv: Install a Harness Delegate in your target environment.
-  delegateDescription: A Delegate is a service that runs on your infrastructure to execute tasks on behalf of the Harness platform.
+  delegateDescription: Run the Harness Delegate in your Kubernetes cluster directly in order to deploy your app. You can install the Harness Delegate with a Helm chart by copying and running the commands below in your Kubernetes cluster.
   helpAndTroubleshoot: Help & Troubleshoot
   hostedAgentExplain: What is it?
   hostedAgentExplainContent: Harness hosts and manages your GitOps agent, making set up easy with zero maintenance

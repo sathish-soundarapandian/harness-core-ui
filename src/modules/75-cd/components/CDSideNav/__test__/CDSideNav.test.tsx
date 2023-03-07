@@ -75,7 +75,7 @@ describe('Sidenav', () => {
       <div
         data-testid="location"
       >
-        /account/dummy/cd/orgs/org/projects/project/get-started?modal=TRIAL
+        /account/dummy/cd/orgs/org/projects/project/cd-onboarding?modal=TRIAL
       </div>
     `)
   })

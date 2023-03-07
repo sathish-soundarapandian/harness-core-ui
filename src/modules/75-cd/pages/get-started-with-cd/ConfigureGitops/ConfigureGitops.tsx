@@ -39,6 +39,8 @@ import { TestStatus } from '@common/components/TestConnectionWidget/TestConnecti
 import type { ResponseMessage } from 'services/cd-ng'
 import { ErrorHandler } from '@common/components/ErrorHandler/ErrorHandler'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
+import { useTelemetry } from '@common/hooks/useTelemetry'
+import { CDOnboardingActions } from '@common/constants/TrackingConstants'
 import {
   RepositoriesRefs,
   RepositoriesRepoAppDetailsResponse,
@@ -155,6 +157,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
   const [isDestinationStepEnabled, setDestinationStepEnabled] = useState<boolean>(true)
 
   const { getString } = useStrings()
+  const { trackEvent } = useTelemetry()
   const formikRef = useRef<FormikContextType<RepositoryInterface>>()
   const { accountId, projectIdentifier, orgIdentifier } = useParams<ProjectPathProps>()
   const repoURL = formikRef.current?.values?.repo
@@ -295,6 +298,10 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
   }, [])
 
   useEffect(() => {
+    trackEvent(CDOnboardingActions.SelectSourceTypeDefault, { selectedSourceType: repositoryTypes[0].value })
+  }, [])
+
+  useEffect(() => {
     if (appsFetchError) {
       toast.showError(`Failed loading paths: ${(appsFetchError as APIError).data.error}`)
     }
@@ -415,13 +422,16 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                     ...defaultQueryParams,
                     identifier: getLastURLPathParam(defaultTo(repoURL, ''))
                   }
+                  trackEvent(CDOnboardingActions.TestConnectionClicked, {})
                   createRepo({ inheritedCreds: false, ...repoPayload }, false)
                     .then((response: Servicev1Repository) => {
                       successRepoCreation(response)
+                      trackEvent(CDOnboardingActions.RepoCreatedSuccessfully, {})
                     })
                     .catch(err => {
                       setTestConnectionStatus(TestStatus.FAILED)
                       setTestConnectionErrors((err?.data as any)?.responseMessages)
+                      trackEvent(CDOnboardingActions.RepoCreateFailure, {})
                     })
                 }
               }}
@@ -582,6 +592,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                   selected={selectedRepoType}
                                   onChange={(item: RepoTypeItem) => {
                                     formikProps.setFieldValue('type', item.value)
+                                    trackEvent(CDOnboardingActions.SelectSourceType, { selectedSourceType: item.value })
                                   }}
                                 />
                               </Container>
@@ -598,6 +609,9 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                   <Button
                                     onClick={() => {
                                       handleSourceCodeTypeChange(SourceCodeType.USE_SAMPLE)
+                                      trackEvent(CDOnboardingActions.SelectSourceRepoType, {
+                                        sourceRepo: SourceCodeType.USE_SAMPLE
+                                      })
                                     }}
                                     className={cx(
                                       css.docker,
@@ -607,7 +621,12 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                     {getString('cd.getStartedWithCD.useSample')}
                                   </Button>
                                   <Button
-                                    onClick={() => handleSourceCodeTypeChange(SourceCodeType.PROVIDE_MY_OWN)}
+                                    onClick={() => {
+                                      handleSourceCodeTypeChange(SourceCodeType.PROVIDE_MY_OWN)
+                                      trackEvent(CDOnboardingActions.SelectSourceRepoType, {
+                                        sourceRepo: SourceCodeType.PROVIDE_MY_OWN
+                                      })
+                                    }}
                                     className={cx(
                                       css.kubernetes,
                                       sourceCodeType === SourceCodeType.PROVIDE_MY_OWN ? css.active : undefined
@@ -1026,6 +1045,7 @@ const ConfigureGitopsRef = (props: any): JSX.Element => {
                                 })
                                 setDestinationStepEnabled(false)
                                 accordionRef.current.open('application-repo-destination-step')
+                                trackEvent(CDOnboardingActions.NextStepClicked, {})
                               }}
                             >
                               {getString('common.nextStep')}
