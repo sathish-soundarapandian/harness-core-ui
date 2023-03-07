@@ -5177,6 +5177,8 @@ export interface StringsMap {
   'cd.cdSwitchToFirstGen.startWith14DayTrial': string
   'cd.cdTrialHomePage.startTrial.description': string
   'cd.cdTrialHomePage.startTrial.startBtn.description': string
+  'cd.changeTaskDefinitionTypeWarning': string
+  'cd.changingTaskDefinitionTypeWarningTitle': string
   'cd.checkCluster': string
   'cd.chooseProvisionerText': string
   'cd.cloudFormation.awsURL': string
@@ -5636,6 +5638,7 @@ export interface StringsMap {
   'cd.pipelineSteps.serviceTab.manifest.scalingPolicy': string
   'cd.pipelineSteps.serviceTab.manifest.serviceDefinition': string
   'cd.pipelineSteps.serviceTab.manifest.taskDefinition': string
+  'cd.pipelineSteps.serviceTab.manifest.taskDefinitionARNPlaceholder': string
   'cd.pipelineSteps.serviceTab.multiServicesConfirmationText': string
   'cd.pipelineSteps.serviceTab.multiServicesParallelDeployLabel': string
   'cd.pipelineSteps.serviceTab.multiServicesText': string

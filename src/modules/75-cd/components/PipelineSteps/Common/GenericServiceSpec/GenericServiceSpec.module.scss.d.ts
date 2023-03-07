@@ -18,6 +18,7 @@ declare const styles: {
   readonly connectorMargin: string
   readonly customVariables: string
   readonly disabled: string
+  readonly fieldContainerWithCog: string
   readonly header: string
   readonly inputFieldLayout: string
   readonly inputWidth: string
@@ -45,6 +46,7 @@ declare const styles: {
   readonly subheading: string
   readonly tabHeading: string
   readonly tabSubHeading: string
+  readonly taskDefinitionTypeCardWrapper: string
   readonly verticalSpacingInput: string
   readonly width25: string
   readonly width400: string

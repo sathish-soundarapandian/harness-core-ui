@@ -5,13 +5,28 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useCallback, useMemo } from 'react'
-import { defaultTo, get, set } from 'lodash-es'
+import React, { useCallback, useMemo, useState } from 'react'
+import { debounce, defaultTo, get, noop, set, unset } from 'lodash-es'
 import cx from 'classnames'
 import produce from 'immer'
-import { Card, HarnessDocTooltip } from '@harness/uicore'
+import {
+  Card,
+  CardSelect,
+  Container,
+  Formik,
+  FormInput,
+  HarnessDocTooltip,
+  Icon,
+  Layout,
+  Text,
+  useConfirmationDialog,
+  FormikForm,
+  getMultiTypeFromValue,
+  MultiTypeInputType
+} from '@harness/uicore'
+import { Color, FontVariation, Intent } from '@harness/design-system'
 
-import { useStrings } from 'framework/strings'
+import { useStrings, UseStringsReturn } from 'framework/strings'
 import type {
   ManifestConfigWrapper,
   ServiceDefinition,
@@ -19,8 +34,10 @@ import type {
   StageElementConfig,
   ManifestConfig
 } from 'services/cd-ng'
-
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
+import type { CardInterface } from '@common/components/InlineRemoteSelect/InlineRemoteSelect'
+import { FeatureFlag } from '@common/featureFlags'
+import { ALLOWED_VALUES_TYPE, ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import WorkflowVariables from '@pipeline/components/WorkflowVariablesSelection/WorkflowVariables'
 import ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ArtifactsSelection'
 import ManifestSelection from '@pipeline/components/ManifestSelection/ManifestSelection'
@@ -37,10 +54,40 @@ import type { AbstractStepFactory } from '@pipeline/components/AbstractSteps/Abs
 import ServiceV2ArtifactsSelection from '@pipeline/components/ArtifactsSelection/ServiceV2ArtifactsSelection'
 import { getConfigFilesHeaderTooltipId } from '@pipeline/components/ConfigFilesSelection/ConfigFilesHelper'
 import ConfigFilesSelection from '@pipeline/components/ConfigFilesSelection/ConfigFilesSelection'
+import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { useServiceContext } from '@cd/context/ServiceContext'
-import { FeatureFlag } from '@common/featureFlags'
 import { isMultiArtifactSourceEnabled, setupMode } from '../PipelineStepsUtil'
 import css from '../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
+
+enum TaskDefinitionType {
+  TASK_DEFINITION = 'TASK_DEFINITION',
+  TASK_DEFINITION_ARN = 'TASK_DEFINITION_ARN'
+}
+
+interface TaskDefinitionARNType {
+  ecsTaskDefinitionArn: string
+}
+
+function getTaskDefinitionTypeCards(getString: UseStringsReturn['getString']): CardInterface[] {
+  return [
+    {
+      type: TaskDefinitionType.TASK_DEFINITION,
+      title: getString('cd.pipelineSteps.serviceTab.manifest.taskDefinition'),
+      info: '',
+      icon: 'harness',
+      size: 16,
+      disabled: false
+    },
+    {
+      type: TaskDefinitionType.TASK_DEFINITION_ARN,
+      title: getString('cd.serviceDashboard.taskDefinitionArn'),
+      info: '',
+      icon: 'remote-setup',
+      size: 20,
+      disabled: false
+    }
+  ]
+}
 
 interface ECSServiceSpecInitialValues extends ServiceSpec {
   stageIndex?: number
@@ -61,22 +108,48 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
   factory,
   readonly
 }) => {
-  const { getString } = useStrings()
-  const isPropagating = stageIndex > 0 && setupModeType === setupMode.PROPAGATE
   const {
     state: {
       templateServiceData,
       selectionState: { selectedStageId }
     },
     updateStage,
-    getStageFromPipeline
+    getStageFromPipeline,
+    allowableTypes
   } = usePipelineContext()
+  const { getString } = useStrings()
   const { isServiceEntityPage } = useServiceContext()
   const isSvcEnvEnabled = useFeatureFlag(FeatureFlag.NG_SVC_ENV_REDESIGN)
+  const { expressions } = useVariablesExpression()
 
+  const isPropagating = stageIndex > 0 && setupModeType === setupMode.PROPAGATE
   const { stage } = getStageFromPipeline<DeploymentStageElementConfig>(defaultTo(selectedStageId, ''))
   const selectedDeploymentType =
     deploymentType ?? getSelectedDeploymentType(stage, getStageFromPipeline, isPropagating, templateServiceData)
+
+  const taskDefinitionArnFieldPath = isPropagating
+    ? 'stage.spec.serviceConfig.stageOverrides.ecsTaskDefinitionArn'
+    : 'stage.spec.serviceConfig.serviceDefinition.spec.ecsTaskDefinitionArn'
+
+  const manifestsFieldPath = isPropagating
+    ? 'stage.spec.serviceConfig.stageOverrides.manifests'
+    : 'stage.spec.serviceConfig.serviceDefinition.spec.manifests'
+
+  const taskDefinitionManifestList = React.useMemo(() => {
+    return (get(stage, manifestsFieldPath, []) as ManifestConfigWrapper[])?.filter(
+      currManifest => currManifest.manifest?.type === ManifestDataType.EcsTaskDefinition
+    )
+  }, [stage, manifestsFieldPath])
+
+  const isTaskDefinitionManifestPresent = taskDefinitionManifestList.length > 0
+
+  const taskDefinitionARNFieldValue = get(stage, taskDefinitionArnFieldPath)
+
+  const [selectedTaskDefinitionType, setSelectedTaskDefinitionType] = useState<TaskDefinitionType>(
+    isTaskDefinitionManifestPresent || !get(stage, taskDefinitionArnFieldPath)
+      ? TaskDefinitionType.TASK_DEFINITION
+      : TaskDefinitionType.TASK_DEFINITION_ARN
+  )
 
   const isPrimaryArtifactSources = isMultiArtifactSourceEnabled(
     !!isSvcEnvEnabled,
@@ -173,29 +246,20 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
           return [...manifestListForManifestType]
       }
     },
-    [
-      taskDefinitionManifests,
-      serviceDefinitionManifests,
-      scallingPolicyManifests,
-      scalableTargetManifests,
-      listOfManifests
-    ]
+    [taskDefinitionManifests, serviceDefinitionManifests, scallingPolicyManifests, scalableTargetManifests]
   )
 
   const updateStageData = useCallback(
     (updatedManifestList: ManifestConfigWrapper[]): void => {
-      const path = isPropagating
-        ? 'stage.spec.serviceConfig.stageOverrides.manifests'
-        : 'stage.spec.serviceConfig.serviceDefinition.spec.manifests'
       if (stage) {
         updateStage(
           produce(stage, draft => {
-            set(draft, path, updatedManifestList)
+            set(draft, manifestsFieldPath, updatedManifestList)
           }).stage as StageElementConfig
         )
       }
     },
-    [isPropagating, stage, updateStage]
+    [manifestsFieldPath, stage, updateStage]
   )
 
   const updateListOfManifests = useCallback(
@@ -245,36 +309,207 @@ export const ECSServiceSpecEditable: React.FC<ECSServiceSpecEditableProps> = ({
     [scalableTargetManifests, updateStageData, getFinalListOfManifest]
   )
 
+  const changeTaskDefinitionType = () => {
+    if (selectedTaskDefinitionType === TaskDefinitionType.TASK_DEFINITION) {
+      if (stage) {
+        let finalManifestList = get(stage, manifestsFieldPath, []) as ManifestConfigWrapper[]
+        const taskDefinitionManifestIds = taskDefinitionManifestList.map(
+          currTaskDefManifest => currTaskDefManifest.manifest?.identifier
+        )
+        if (isTaskDefinitionManifestPresent) {
+          finalManifestList = finalManifestList.flatMap(currTaskDefinitionManifest => {
+            if (taskDefinitionManifestIds.includes(currTaskDefinitionManifest.manifest?.identifier)) {
+              return []
+            }
+            return [currTaskDefinitionManifest]
+          })
+        }
+        updateStage(
+          produce(stage, draft => {
+            set(draft, manifestsFieldPath, finalManifestList)
+          }).stage as StageElementConfig
+        )
+      }
+    } else {
+      if (stage) {
+        updateStage(
+          produce(stage, draft => {
+            unset(draft, taskDefinitionArnFieldPath)
+          }).stage as StageElementConfig
+        )
+      }
+    }
+    setSelectedTaskDefinitionType(
+      selectedTaskDefinitionType === TaskDefinitionType.TASK_DEFINITION
+        ? TaskDefinitionType.TASK_DEFINITION_ARN
+        : TaskDefinitionType.TASK_DEFINITION
+    )
+  }
+
+  const onChangingTaskDefinitionWarningModalClose = (isConfirmed: boolean) => {
+    if (isConfirmed) {
+      changeTaskDefinitionType()
+    }
+  }
+
+  const currentSelectedSectionName =
+    selectedTaskDefinitionType === TaskDefinitionType.TASK_DEFINITION
+      ? getString('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+      : getString('cd.serviceDashboard.taskDefinitionArn')
+  const nextSectionToMoveName =
+    selectedTaskDefinitionType === TaskDefinitionType.TASK_DEFINITION
+      ? getString('cd.serviceDashboard.taskDefinitionArn')
+      : getString('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+
+  const { openDialog: showChangingTaskDefinitionTypeWarning } = useConfirmationDialog({
+    cancelButtonText: getString('cancel'),
+    contentText: (
+      <Container width={360}>
+        {getString('cd.changeTaskDefinitionTypeWarning', {
+          nextSection: nextSectionToMoveName,
+          currentSection: currentSelectedSectionName
+        })}
+      </Container>
+    ),
+    titleText: getString('cd.changingTaskDefinitionTypeWarningTitle'),
+    confirmButtonText: getString('confirm'),
+    intent: Intent.WARNING,
+    showCloseButton: false,
+    onCloseDialog: onChangingTaskDefinitionWarningModalClose
+  })
+
+  const taskDefinitionTypeCards = getTaskDefinitionTypeCards(getString)
+  const selectedTaskDefinitionCard = taskDefinitionTypeCards.find(card => card.type === selectedTaskDefinitionType)
+
+  const onTaskDefinitionTypeChange = () => {
+    if (isTaskDefinitionManifestPresent || taskDefinitionARNFieldValue) {
+      showChangingTaskDefinitionTypeWarning()
+    } else {
+      changeTaskDefinitionType()
+    }
+  }
+
+  const updateTaskDefinitionARNValue = debounce((updatedValue: string) => {
+    if (stage) {
+      updateStage(
+        produce(stage, draft => {
+          set(draft, taskDefinitionArnFieldPath, updatedValue)
+        }).stage as StageElementConfig
+      )
+    }
+  }, 500)
+
+  const taskDefinitionTypeSelection = (
+    <CardSelect
+      data={taskDefinitionTypeCards}
+      cornerSelected
+      className={css.taskDefinitionTypeCardWrapper}
+      renderItem={(item: CardInterface) => (
+        <Layout.Horizontal flex spacing={'small'}>
+          <Icon
+            name={item.icon}
+            size={item.size}
+            color={selectedTaskDefinitionType === item.type ? Color.PRIMARY_7 : Color.GREY_600}
+          />
+          <Container>
+            <Text
+              font={{ variation: FontVariation.FORM_TITLE }}
+              color={selectedTaskDefinitionType === item.type ? Color.PRIMARY_7 : Color.GREY_800}
+            >
+              {item.title}
+            </Text>
+            <Text>{item.info}</Text>
+          </Container>
+        </Layout.Horizontal>
+      )}
+      selected={selectedTaskDefinitionCard}
+      onChange={onTaskDefinitionTypeChange}
+    />
+  )
+
   return (
     <div className={css.serviceDefinition}>
       {!!selectedDeploymentType && (
         <>
           <Card className={css.sectionCard} data-testid={'task-definition-card'}>
-            <div
-              className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
-              data-tooltip-id={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_taskDefinition`}
-            >
-              {getString('cd.pipelineSteps.serviceTab.manifest.taskDefinition')}
-              <HarnessDocTooltip
-                tooltipId={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_taskDefinition`}
-                useStandAlone={true}
-              />
-            </div>
-            <ManifestSelection
-              isPropagating={isPropagating}
-              deploymentType={selectedDeploymentType}
-              isReadonlyServiceMode={isReadonlyServiceMode as boolean}
-              readonly={!!readonly}
-              initialManifestList={taskDefinitionManifests}
-              allowOnlyOneManifest={true}
-              addManifestBtnText={getString('common.addName', {
-                name: getString('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
-              })}
-              updateManifestList={updateListOfManifests}
-              preSelectedManifestType={ManifestDataType.EcsTaskDefinition}
-              availableManifestTypes={[ManifestDataType.EcsTaskDefinition]}
-              deleteManifest={deleteTaskDefinition}
-            />
+            <Container margin={{ bottom: 'medium' }}>{taskDefinitionTypeSelection}</Container>
+            {selectedTaskDefinitionType === TaskDefinitionType.TASK_DEFINITION && (
+              <>
+                <div
+                  className={cx(css.tabSubHeading, css.listHeader, 'ng-tooltip-native')}
+                  data-tooltip-id={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_taskDefinition`}
+                  data-testid={'task-definition-manifest-header-container'}
+                >
+                  {getString('cd.pipelineSteps.serviceTab.manifest.taskDefinition')}
+                  <HarnessDocTooltip
+                    tooltipId={`${getManifestsHeaderTooltipId(selectedDeploymentType)}_taskDefinition`}
+                    useStandAlone={true}
+                  />
+                </div>
+                <ManifestSelection
+                  isPropagating={isPropagating}
+                  deploymentType={selectedDeploymentType}
+                  isReadonlyServiceMode={isReadonlyServiceMode as boolean}
+                  readonly={!!readonly}
+                  initialManifestList={taskDefinitionManifests}
+                  allowOnlyOneManifest={true}
+                  addManifestBtnText={getString('common.addName', {
+                    name: getString('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+                  })}
+                  updateManifestList={updateListOfManifests}
+                  preSelectedManifestType={ManifestDataType.EcsTaskDefinition}
+                  availableManifestTypes={[ManifestDataType.EcsTaskDefinition]}
+                  deleteManifest={deleteTaskDefinition}
+                />
+              </>
+            )}
+
+            {selectedTaskDefinitionType === TaskDefinitionType.TASK_DEFINITION_ARN && (
+              <Container className={css.width50} data-testid={'task-definition-ARN-section'}>
+                <Formik<TaskDefinitionARNType>
+                  onSubmit={noop}
+                  formName={'taskDefinitionArnForm'}
+                  initialValues={{ ecsTaskDefinitionArn: taskDefinitionARNFieldValue }}
+                >
+                  {formik => {
+                    return (
+                      <FormikForm>
+                        <Container className={css.fieldContainerWithCog}>
+                          <FormInput.MultiTextInput
+                            name="ecsTaskDefinitionArn"
+                            label={getString('cd.serviceDashboard.taskDefinitionArn')}
+                            placeholder={getString('cd.pipelineSteps.serviceTab.manifest.taskDefinitionARNPlaceholder')}
+                            disabled={readonly}
+                            onChange={value => {
+                              updateTaskDefinitionARNValue(value as string)
+                            }}
+                            multiTextInputProps={{ expressions, allowableTypes }}
+                          />
+                          {getMultiTypeFromValue(formik.values.ecsTaskDefinitionArn) === MultiTypeInputType.RUNTIME && (
+                            <div className={css.configureOptions}>
+                              <ConfigureOptions
+                                style={{ alignSelf: 'center', marginBottom: 5 }}
+                                value={formik.values.ecsTaskDefinitionArn}
+                                type="String"
+                                variableName="ecsTaskDefinitionArn"
+                                showRequiredField={false}
+                                showDefaultField={false}
+                                onChange={value => {
+                                  formik.setFieldValue('ecsTaskDefinitionArn', value)
+                                  updateTaskDefinitionARNValue(value as string)
+                                }}
+                                isReadonly={readonly}
+                                allowedValuesType={ALLOWED_VALUES_TYPE.TEXT}
+                              />
+                            </div>
+                          )}
+                        </Container>
+                      </FormikForm>
+                    )
+                  }}
+                </Formik>
+              </Container>
+            )}
           </Card>
 
           <Card

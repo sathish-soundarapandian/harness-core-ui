@@ -287,6 +287,7 @@ pipelineSteps:
     aboutYourService: About the Service
     manifest:
       taskDefinition: Task Definition
+      taskDefinitionARNPlaceholder: Enter Task Definition ARN
       serviceDefinition: Service Definition
       scalingPolicy: Scaling Policy
       scalableTarget: Scalable Target
@@ -919,3 +920,5 @@ openTask:
   openTaskStatusMsgAborted: 'deployment aborted'
   openTaskStatusMsgApprovalWaiting: 'deployment waiting for approval'
 since: Since
+changingTaskDefinitionTypeWarningTitle: 'Changing Task Definition Type?'
+changeTaskDefinitionTypeWarning: If you move to {{nextSection}} section, you will loose your {{currentSection}} value. Do you still want to continue?

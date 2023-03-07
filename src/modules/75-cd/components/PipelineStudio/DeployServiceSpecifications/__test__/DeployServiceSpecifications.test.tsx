@@ -7,7 +7,7 @@
 
 /* eslint-disable jest/no-disabled-tests */
 import React from 'react'
-import { act, fireEvent, render, waitFor, getByText as getElementByText } from '@testing-library/react'
+import { act, fireEvent, render, waitFor, getByText as getElementByText, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { noop } from 'lodash-es'
 import { Formik } from '@harness/uicore'
@@ -280,7 +280,7 @@ describe('Deploy service stage specifications', () => {
 
   test('when deploymentType is ECS, ECS related UI should appear', async () => {
     getOverrideContextValue().state.selectionState.selectedStageId = 'st1'
-    const { findAllByText, getByText, getAllByText } = render(
+    const { findAllByText, getByText, getAllByText, getByTestId } = render(
       <TestWrapper defaultFeatureFlagValues={{ NG_SVC_ENV_REDESIGN: true }}>
         <PipelineContext.Provider value={getOverrideContextValue()}>
           <DeployServiceSpecifications setDefaultServiceSchema={setDefaultServiceSchema}>
@@ -299,7 +299,14 @@ describe('Deploy service stage specifications', () => {
     const allPlusAddManifestButtons = await findAllByText(/common.addName/)
     expect(allPlusAddManifestButtons).toHaveLength(4)
     // Check header of each manifest section card
-    expect(getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')).toBeInTheDocument()
+    const taskDefinitionManifestSection = getByTestId('task-definition-card')
+    const taskDefinitionManifestHeaderContainer = getByTestId('task-definition-manifest-header-container')
+    expect(
+      within(taskDefinitionManifestSection).getAllByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toHaveLength(2)
+    expect(
+      within(taskDefinitionManifestHeaderContainer).getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toBeInTheDocument()
     expect(getAllByText('cd.pipelineSteps.serviceTab.manifest.serviceDefinition')).toHaveLength(2)
     expect(getAllByText('common.headerWithOptionalText')).toHaveLength(2)
 

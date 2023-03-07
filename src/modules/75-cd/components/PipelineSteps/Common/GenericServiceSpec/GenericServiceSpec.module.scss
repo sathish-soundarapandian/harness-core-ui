@@ -256,3 +256,26 @@
   }
   background-color: var(--white);
 }
+
+.taskDefinitionTypeCardWrapper {
+  display: flex;
+  gap: 20px;
+
+  & > div {
+    flex: 1;
+    & > div {
+      justify-content: flex-start !important;
+    }
+  }
+}
+
+.fieldContainerWithCog {
+  display: grid !important;
+  grid-template-columns: 1fr 42px !important;
+  align-items: normal !important;
+
+  div.configureOptions {
+    position: relative;
+    top: 22px;
+  }
+}

@@ -7,7 +7,7 @@
  */
 
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RUNTIME_INPUT_VALUE } from '@harness/uicore'
 
@@ -101,9 +101,9 @@ const existingInitialValues = {
   }
 }
 
-describe('ECSInfraSpec tests', () => {
+describe('ECSServiceSpec tests', () => {
   test('check service tab for given pipeline state from context', async () => {
-    const { getByText, findAllByText, getAllByText } = render(
+    const { getByText, findAllByText, getAllByText, getByTestId } = render(
       <PipelineContext.Provider value={pipelineContextECSManifests}>
         <TestStepWidget
           testWrapperProps={{
@@ -126,7 +126,14 @@ describe('ECSInfraSpec tests', () => {
 
     // Check if section is rendered with correct header and list items
     // Task Definition
-    expect(getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')).toBeInTheDocument()
+    const taskDefinitionManifestSection = getByTestId('task-definition-card')
+    const taskDefinitionManifestHeaderContainer = getByTestId('task-definition-manifest-header-container')
+    expect(
+      within(taskDefinitionManifestSection).getAllByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toHaveLength(2)
+    expect(
+      within(taskDefinitionManifestHeaderContainer).getByText('cd.pipelineSteps.serviceTab.manifest.taskDefinition')
+    ).toBeInTheDocument()
     expect(getByText('TaskDefinition_Manifest')).toBeInTheDocument()
     // Service Definition
     expect(getByText('cd.pipelineSteps.serviceTab.manifest.serviceDefinition')).toBeInTheDocument()
