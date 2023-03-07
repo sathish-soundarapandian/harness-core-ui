@@ -17,17 +17,14 @@ interface SubmitTicketModalStepTwoProps {
   stepName: string
   searchBoxController: any
   resultListController: any
-  pageController: any
 }
 export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketModalStepTwoProps) => {
-  const { stepName, nextStep, prevStepData, searchBoxController, resultListController, pageController } = props
+  const { stepName, nextStep, prevStepData, searchBoxController, resultListController } = props
   const { getString } = useStrings()
 
   const [state, setState] = useState(searchBoxController.state)
 
   const [resultsState, setResultsState] = useState(resultListController.state)
-
-  const [pagerState, setPagerState] = useState(pageController.state)
 
   const [suggestionItems, setSuggestionItems] = useState([])
 
@@ -37,8 +34,6 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
     () => resultListController.subscribe(() => setResultsState(resultListController.state)),
     [resultListController]
   )
-
-  useEffect(() => pageController.subscribe(() => setPagerState(pageController.state)), [pageController])
 
   useEffect(() => {
     setSuggestionItems(
@@ -98,17 +93,6 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
                   )
                 })}
               </ul>
-              <nav className="pager">
-                {pagerState.currentPages.map((page: any) => (
-                  <button
-                    key={page}
-                    disabled={pageController.isCurrentPage(page)}
-                    onClick={() => pageController.selectPage(page)}
-                  >
-                    {page}
-                  </button>
-                ))}
-              </nav>
               <Button
                 variation={ButtonVariation.PRIMARY}
                 type="submit"
