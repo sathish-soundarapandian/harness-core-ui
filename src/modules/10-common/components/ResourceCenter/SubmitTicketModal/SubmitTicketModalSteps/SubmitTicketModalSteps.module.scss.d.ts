@@ -7,9 +7,10 @@
  **/
 // this is an auto-generated file, do not update this manually
 declare const styles: {
+  readonly img: string
   readonly inputWidth: string
-  readonly manifestForm: string
   readonly optionsViewContainer: string
+  readonly preview: string
   readonly saveBtn: string
 }
 export default styles

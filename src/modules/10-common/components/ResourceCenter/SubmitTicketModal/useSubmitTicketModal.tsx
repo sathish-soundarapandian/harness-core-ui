@@ -6,10 +6,10 @@
  */
 
 import { Dialog } from '@blueprintjs/core'
-import { StepWizard } from '@harness/uicore'
+import { StepWizard, Button } from '@harness/uicore'
 import { useModalHook } from '@harness/use-modal'
 import React from 'react'
-import { SubmitTicketModalStepOne } from './SubmitTicketModalSteps/SubmitTickerModalStepOne'
+// import { SubmitTicketModalStepOne } from './SubmitTicketModalSteps/SubmitTickerModalStepOne'
 import { SubmitTicketModalStepTwo } from './SubmitTicketModalSteps/SubmitTicketModalStepTwo'
 import { SubmitTicketModalStepThree } from './SubmitTicketModalSteps/SubmitTicketModalStepThree'
 import { resultList, searchBox } from './Controllers/Controllers'
@@ -19,19 +19,19 @@ export const useSubmitTicketModal = () => {
   const onStepChange = () => {
     // handle step change here
   }
-  const changeIssueTypeHandler = (): void => {
-    // will handle something here
-  }
+  // const changeIssueTypeHandler = (): void => {
+  //   // will handle something here
+  // }
 
   const [showModal, hideModal] = useModalHook(() => {
     return (
       <Dialog isOpen enforceFocus={false} onClose={hideModal} className={css.submitTicketWizard}>
         <StepWizard onStepChange={onStepChange} initialStep={1}>
-          <SubmitTicketModalStepOne
+          {/* <SubmitTicketModalStepOne
             name="Select Issue Type"
             stepName="Select Issue Type"
             changeIssueTypeHandler={changeIssueTypeHandler}
-          />
+          /> */}
           <SubmitTicketModalStepTwo
             name="Deflection Step"
             stepName="Deflection Step"
@@ -40,6 +40,15 @@ export const useSubmitTicketModal = () => {
           />
           <SubmitTicketModalStepThree name="Ticket Details" stepName="Ticket Details" onCloseHandler={hideModal} />
         </StepWizard>
+        <Button
+          minimal
+          icon="cross"
+          iconProps={{ size: 18 }}
+          onClick={() => {
+            hideModal()
+          }}
+          className={css.crossIcon}
+        />
       </Dialog>
     )
   })
