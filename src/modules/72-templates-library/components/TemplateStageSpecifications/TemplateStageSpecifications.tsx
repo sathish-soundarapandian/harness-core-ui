@@ -6,7 +6,7 @@
  */
 
 import React, { useContext } from 'react'
-import { debounce, defaultTo, isEmpty, isEqual, noop, set } from 'lodash-es'
+import { debounce, defaultTo, isEmpty, isEqual, isNil, noop, set } from 'lodash-es'
 import { Card, Container, Formik, FormikForm, Heading, Layout, PageError } from '@harness/uicore'
 import * as Yup from 'yup'
 import { Color } from '@harness/design-system'
@@ -178,6 +178,13 @@ export const TemplateStageSpecifications = (): JSX.Element => {
       // istanbul ignore else
       if (isTemplateUpdated) {
         retainInputsAndUpdateFormValues(newTemplateInputs)
+      } else if (isNil(formValues?.template?.templateInputs) && !isNil(newTemplateInputs)) {
+        // The above condition is required when a stage template is first linked
+        const updatedStage = produce(stage?.stage as StageElementConfig, draft => {
+          set(draft, 'template.templateInputs', newTemplateInputs)
+        })
+        setFormValues(updatedStage)
+        updateStage(updatedStage)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

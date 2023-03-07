@@ -28,6 +28,11 @@ export default function ServicesInputSetForm(
   if (!isServiceV2) return null
 
   const isMultiService = !isEmpty(props.deploymentStageTemplate.services)
+  const isSingleService = !isEmpty(props.deploymentStageTemplate.service)
 
-  return isMultiService ? <MultiServiceInputSetForm {...props} /> : <SingleServiceInputSetForm {...props} />
+  return isMultiService ? (
+    <MultiServiceInputSetForm {...props} />
+  ) : isSingleService ? (
+    <SingleServiceInputSetForm {...props} />
+  ) : null
 }
