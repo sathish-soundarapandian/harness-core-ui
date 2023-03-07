@@ -42,7 +42,6 @@ export class IACMInit extends PipelineStep<DefaultIACMProps> {
   }
 
   renderStep(props: StepProps<any, unknown>): JSX.Element {
-    const { initialValues } = props
-    return <IACMStepSideBarComponent initialValues={initialValues} />
+    return <IACMStepSideBarComponent {...props} />
   }
 }
