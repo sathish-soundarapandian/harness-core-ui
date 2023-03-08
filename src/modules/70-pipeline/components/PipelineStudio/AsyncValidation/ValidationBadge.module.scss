@@ -49,15 +49,7 @@
   padding: var(--spacing-medium);
 }
 
-.validationSuccessModal {
-  .title {
-    display: flex;
-    flex-direction: row;
-    gap: var(--spacing-small);
-  }
-}
-
-.validationResultErrorModal {
+.validationErrorModal {
   .container {
     display: flex;
     flex-direction: column;
@@ -74,11 +66,18 @@
   }
 }
 
-.validationFailureModal {
+.validationResultModal {
   width: 900px !important;
   max-height: 600px !important;
 
-  .validationFailureModalBody {
+  .successTitle {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-small);
+  }
+
+  .validationResultModalBody {
     overflow: auto;
   }
 }

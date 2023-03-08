@@ -21,7 +21,7 @@ import {
 } from './mock'
 
 mockImport('@governance/EvaluationView', {
-  EvaluationView: () => <></>
+  EvaluationView: () => <p>Evaluation View</p>
 })
 
 const renderValidationBadge = (): RenderResult => {
@@ -65,7 +65,8 @@ describe('ValidationBadge', () => {
     userEvent.click(validationBadge)
 
     expect(await screen.findByText('pipeline.validation.pipelineValidated')).toBeInTheDocument()
-    expect(await screen.findByText('pipeline.validation.evaluatingPolicySets')).toBeInTheDocument()
+    expect(screen.getByText('Evaluation View')).toBeInTheDocument()
+
     const revalidateButton = screen.getByText('pipeline.validation.revalidate')
     userEvent.click(revalidateButton)
 
@@ -132,6 +133,7 @@ describe('ValidationBadge', () => {
     userEvent.click(validationBadge)
 
     expect(await screen.findByText('common.policiesSets.evaluations')).toBeInTheDocument()
+    expect(screen.getByText('Evaluation View')).toBeInTheDocument()
 
     const revalidateButton = screen.getByText('pipeline.validation.revalidate')
     userEvent.click(revalidateButton)

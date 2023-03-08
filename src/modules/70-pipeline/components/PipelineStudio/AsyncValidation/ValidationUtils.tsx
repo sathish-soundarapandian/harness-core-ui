@@ -37,6 +37,7 @@ export const getIconPropsByStatus = (status: ValidationStatus | undefined): Icon
 }
 
 export const minimalTimeagoFormatter: Formatter = (value, unit, suffix) => {
+  if (suffix === 'from now') return null
   return (
     <Text font={{ size: 'xsmall' }} color={Color.GREY_600}>
       {`(${value}${unit.at(0)} ${suffix})`}

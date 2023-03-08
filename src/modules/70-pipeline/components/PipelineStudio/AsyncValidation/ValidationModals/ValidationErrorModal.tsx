@@ -15,19 +15,14 @@ import type { Error, Failure } from 'services/pipeline-ng'
 import { useStrings } from 'framework/strings'
 import css from '../ValidationBadge.module.scss'
 
-interface ValidationResultErrorModalProps {
+interface ValidationErrorModalProps {
   isOpen: boolean
   error: GetDataError<Failure | Error> | null
   onClose: () => void
   onRevalidate: () => Promise<void>
 }
 
-export function ValidationResultErrorModal({
-  isOpen,
-  onClose,
-  onRevalidate,
-  error
-}: ValidationResultErrorModalProps): JSX.Element {
+export function ValidationErrorModal({ isOpen, onClose, onRevalidate, error }: ValidationErrorModalProps): JSX.Element {
   const { getString } = useStrings()
   const errorMessage = get(error, 'data.message') ?? get(error, 'message') ?? ''
 
@@ -38,7 +33,7 @@ export function ValidationResultErrorModal({
       width={700}
       onClose={onClose}
       title={getString('error')}
-      className={css.validationResultErrorModal}
+      className={css.validationErrorModal}
     >
       <div className={css.container}>
         <Icon name="warning-sign" size={32} color={Color.RED_700} margin={{ bottom: 'medium' }} />

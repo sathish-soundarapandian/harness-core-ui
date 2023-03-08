@@ -14,11 +14,10 @@ declare const styles: {
   readonly retryLink: string
   readonly revalidateFooter: string
   readonly success: string
-  readonly title: string
+  readonly successTitle: string
   readonly validationBadge: string
-  readonly validationFailureModal: string
-  readonly validationFailureModalBody: string
-  readonly validationResultErrorModal: string
-  readonly validationSuccessModal: string
+  readonly validationErrorModal: string
+  readonly validationResultModal: string
+  readonly validationResultModalBody: string
 }
 export default styles

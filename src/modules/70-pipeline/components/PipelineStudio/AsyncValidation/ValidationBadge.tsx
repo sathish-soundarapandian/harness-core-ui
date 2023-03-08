@@ -31,9 +31,8 @@ import {
   ValidationStatus
 } from './ValidationUtils'
 import { ValidationPopoverContent } from './ValidationPopoverContent'
-import { ValidationSuccessModal } from './ValidationModals/ValidationSuccessModal'
-import { ValidationResultErrorModal } from './ValidationModals/ValidationResultErrorModal'
-import { ValidationFailureModal } from './ValidationModals/ValidationFailureModal'
+import { ValidationErrorModal } from './ValidationModals/ValidationErrorModal'
+import { ValidationResultModal } from './ValidationModals/ValidationResultModal'
 import css from './ValidationBadge.module.scss'
 
 export function ValidationBadge(): JSX.Element {
@@ -48,19 +47,14 @@ export function ValidationBadge(): JSX.Element {
     setValidationUuid
   } = usePipelineContext()
   const {
-    open: openValidationSuccessModal,
-    close: closeValidationSuccessModal,
-    state: isValidationSuccessModalOpen
+    open: openValidationResultModal,
+    close: closeValidationResultModal,
+    state: isValidationResultModalOpen
   } = useBooleanStatus(false)
   const {
-    open: openValidationResultErrorModal,
-    close: closeValidationResultErrorModal,
-    state: isValidationResultErrorModalOpen
-  } = useBooleanStatus(false)
-  const {
-    open: openValidationFailureModal,
-    close: closeValidationFailureModal,
-    state: isValidationFailureModalOpen
+    open: openValidationErrorModal,
+    close: closeValidationErrorModal,
+    state: isValidationErrorModalOpen
   } = useBooleanStatus(false)
 
   const {
@@ -127,9 +121,8 @@ export function ValidationBadge(): JSX.Element {
       if (!uuid) return
 
       setValidationUuid(uuid)
-      closeValidationSuccessModal()
-      closeValidationResultErrorModal()
-      closeValidationFailureModal()
+      closeValidationResultModal()
+      closeValidationErrorModal()
     } catch (error) {
       showError(getRBACErrorMessage(error as RBACError))
     }
@@ -141,15 +134,11 @@ export function ValidationBadge(): JSX.Element {
     }
 
     if (validationResultError) {
-      return openValidationResultErrorModal()
+      return openValidationErrorModal()
     }
 
-    if (policyEval?.status === 'error' || policyEval?.status === 'warning') {
-      return openValidationFailureModal()
-    }
-
-    if (isStatusSuccess(status)) {
-      return openValidationSuccessModal()
+    if (policyEval?.status === 'error' || policyEval?.status === 'warning' || isStatusSuccess(status)) {
+      return openValidationResultModal()
     }
   }
 
@@ -198,22 +187,18 @@ export function ValidationBadge(): JSX.Element {
         badge
       )}
 
-      <ValidationSuccessModal
-        isOpen={isValidationSuccessModalOpen}
+      <ValidationResultModal
+        isOpen={isValidationResultModalOpen}
         endTs={endTs}
-        onClose={closeValidationSuccessModal}
-        onRevalidate={onRevalidate}
-      />
-      <ValidationResultErrorModal
-        isOpen={isValidationResultErrorModalOpen}
-        error={validationResultError}
-        onClose={closeValidationResultErrorModal}
-        onRevalidate={onRevalidate}
-      />
-      <ValidationFailureModal
-        isOpen={isValidationFailureModalOpen}
-        onClose={closeValidationFailureModal}
         policyEval={policyEval}
+        status={status}
+        onClose={closeValidationResultModal}
+        onRevalidate={onRevalidate}
+      />
+      <ValidationErrorModal
+        isOpen={isValidationErrorModalOpen}
+        error={validationResultError}
+        onClose={closeValidationErrorModal}
         onRevalidate={onRevalidate}
       />
     </>
