@@ -123,6 +123,7 @@ function WebhookPipelineInputPanelForm({
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
+      pipelineBranch: branch,
       branch: isNewGitSyncRemotePipeline ? inputSetSelectedBranch : branch,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoName

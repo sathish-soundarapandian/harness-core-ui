@@ -119,6 +119,7 @@ function ManifestTriggerInputPanelForm({
       projectIdentifier,
       orgIdentifier,
       pipelineIdentifier,
+      pipelineBranch: branch,
       branch: isNewGitSyncRemotePipeline ? inputSetSelectedBranch : branch,
       parentEntityConnectorRef: connectorRef,
       parentEntityRepoName: repoName
