@@ -3007,7 +3007,7 @@ export interface DelegateGroupDTO {
 
 export interface DelegateGroupDetails {
   activelyConnected?: boolean
-  autoUpgrade?: 'ON' | 'OFF' | 'SYNCHRONIZING'
+  autoUpgrade?: 'ON' | 'OFF' | 'DETECTING'
   connectivityStatus?: string
   delegateConfigurationId?: string
   delegateDescription?: string

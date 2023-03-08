@@ -5382,7 +5382,7 @@ export interface DelegateGroupDeleteResponse {
 
 export interface DelegateGroupDetails {
   activelyConnected?: boolean
-  autoUpgrade?: 'ON' | 'OFF' | 'SYNCHRONIZING'
+  autoUpgrade?: 'ON' | 'OFF' | 'DETECTING'
   connectivityStatus?: string
   delegateConfigurationId?: string
   delegateDescription?: string
@@ -5559,7 +5559,7 @@ export interface DelegateResponseData {
 }
 
 export interface DelegateScalingGroup {
-  autoUpgrade?: 'ON' | 'OFF' | 'SYNCHRONIZING'
+  autoUpgrade?: 'ON' | 'OFF' | 'DETECTING'
   delegateGroupExpirationTime?: number
   delegates?: DelegateInner[]
   groupName?: string

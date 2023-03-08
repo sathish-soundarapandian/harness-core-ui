@@ -257,6 +257,7 @@ export interface StringsMap {
   'common.discard': string
   'common.download': string
   'common.downloadCSV': string
+  'common.downloadYaml': string
   'common.duplicateId': string
   'common.duration.3months': string
   'common.duration.6months': string
@@ -726,6 +727,7 @@ export interface StringsMap {
   'common.policy.policysets': string
   'common.powershell': string
   'common.preProduction': string
+  'common.previewYAML': string
   'common.production': string
   'common.projectSetup': string
   'common.projectViewer': string
@@ -1526,9 +1528,13 @@ export interface StringsMap {
   'governance.permissions.governancePolicySets': string
   'delegates.GBRam': string
   'delegates.commandLineCreation.clickDoneAndCheckLater': string
+  'delegates.commandLineCreation.closePreview': string
   'delegates.commandLineCreation.commandsKubernetesHeading': string
+  'delegates.commandLineCreation.createYourOwnYaml': string
+  'delegates.commandLineCreation.defaultValuesYaml': string
   'delegates.commandLineCreation.delegateFixed': string
   'delegates.commandLineCreation.delegateNotFixed': string
+  'delegates.commandLineCreation.delegateSizing': string
   'delegates.commandLineCreation.didDelegateComeUp': string
   'delegates.commandLineCreation.dockerTroubleShooting1': string
   'delegates.commandLineCreation.dockerTroubleShooting2': string
@@ -1573,7 +1579,9 @@ export interface StringsMap {
   'delegates.commandLineCreation.kubernetesThirdDirectionPartTwo': string
   'delegates.commandLineCreation.lastCommandKubernetesLastLine': string
   'delegates.commandLineCreation.learnWatch': string
+  'delegates.commandLineCreation.numberOfParallel': string
   'delegates.commandLineCreation.oldWayToCreateDelegate': string
+  'delegates.commandLineCreation.replicas': string
   'delegates.commandLineCreation.retryConnections': string
   'delegates.commandLineCreation.secondCommandHeadingHelm': string
   'delegates.commandLineCreation.secondCommandHeadingTerraform': string
@@ -1585,8 +1593,11 @@ export interface StringsMap {
   'delegates.commandLineCreation.terraformTroubleShooting3': string
   'delegates.commandLineCreation.terraformTroubleShooting4': string
   'delegates.commandLineCreation.thirdCommandHeadingTerraform': string
+  'delegates.commandLineCreation.totalMemory': string
   'delegates.commandLineCreation.verifyDelegateConnection': string
   'delegates.commandLineCreation.verifyInfo': string
+  'delegates.commandLineCreation.yamlBasicOptionText': string
+  'delegates.commandLineCreation.yamlFileOptions': string
   'delegates.configNameRequired': string
   'delegates.createDelegate': string
   'delegates.delGroupStatus.DISABLED': string

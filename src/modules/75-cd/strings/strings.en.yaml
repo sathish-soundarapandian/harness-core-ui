@@ -785,7 +785,7 @@ welcomeToHarnessCD: Welcome to Harness Continuous Delivery!
 runDelegate: How do you want to install the Delegate?
 installDelegate: Install Delegate
 instructionsDelegate: Install the Delegate
-previewYAML: Preview Yaml
+previewYAML: '{{ $.common.previewYAML }}'
 installCluster: Install on your Cluster
 checkCluster: Set up and connect to your target cluster.
 delegateInstallCommand: 'Install the Delegate with the following command:'

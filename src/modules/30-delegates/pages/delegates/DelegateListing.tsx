@@ -457,8 +457,10 @@ export const DelegateListing: React.FC<DelegatesListProps> = ({ filtersMockData 
   const newDelegateBtn = (
     <RbacButton
       intent="primary"
-      text={hideHeader ? getString('delegates.createDelegate') : getString('delegates.newDelegate')}
-      icon="plus"
+      text={
+        hideHeader ? getString('delegates.commandLineCreation.installDelegate') : getString('delegates.newDelegate')
+      }
+      icon={hideHeader ? undefined : 'plus'}
       permission={permissionRequestNewDelegate}
       onClick={() => {
         trackEvent(DelegateActions.DelegateCommandLineCreationOpened, {

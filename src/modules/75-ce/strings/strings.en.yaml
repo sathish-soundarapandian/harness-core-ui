@@ -1308,7 +1308,7 @@ cloudIntegration:
     installComponents:
       title: Install Components
       desc: 'In order to get AutoStopping working, you will have to install a few components on the cluster. This is done by applying a YAML file. The YAML file contains:'
-      previewYaml: Preview YAML
+      previewYaml: '{{ $.common.previewYAML }}'
       step1: Download the YAML file
       step2: 'Apply the YAML using the command:'
     testComponents:

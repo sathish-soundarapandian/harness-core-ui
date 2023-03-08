@@ -6,10 +6,11 @@
  */
 
 import React from 'react'
-import { Layout, Text, Icon } from '@harness/uicore'
-import { Color, FontVariation } from '@harness/design-system'
+import { Layout, Text, Button, ButtonVariation } from '@harness/uicore'
+import { FontVariation } from '@harness/design-system'
 import cx from 'classnames'
 import { TelemetryEvent, useTelemetry } from '@common/hooks/useTelemetry'
+import { useStrings } from 'framework/strings'
 import CopyButton from '../utils/CopyButton'
 import css from './CommandBlock.module.scss'
 interface DownloadFileProps {
@@ -28,6 +29,7 @@ interface CommandBlockProps {
   allowDownload?: boolean
   downloadFileProps?: DownloadFileProps
   telemetryProps?: TelemetryProps
+  copySnippet?: string
 }
 enum DownloadFile {
   DEFAULT_NAME = 'commandBlock',
@@ -40,13 +42,16 @@ const CommandBlock: React.FC<CommandBlockProps> = ({
   ignoreWhiteSpaces = true,
   allowDownload = false,
   downloadFileProps,
-  telemetryProps
+  telemetryProps,
+  copySnippet
 }) => {
   const { trackEvent } = useTelemetry()
   const downloadFileDefaultName = downloadFileProps?.downloadFileName || DownloadFile.DEFAULT_NAME
   const downloadeFileDefaultExtension =
     (downloadFileProps && downloadFileProps.downloadFileExtension) || DownloadFile.DEFAULT_TYPE
   const linkRef = React.useRef<HTMLAnchorElement>(null)
+
+  const { getString } = useStrings()
   const onDownload = () => {
     const content = new Blob([commandSnippet as BlobPart], { type: 'data:text/plain;charset=utf-8' })
     if (linkRef?.current) {
@@ -61,9 +66,9 @@ const CommandBlock: React.FC<CommandBlockProps> = ({
         {commandSnippet}
       </Text>
       <Layout.Horizontal flex={{ justifyContent: 'center', alignItems: 'center' }} spacing="medium">
-        {allowCopy && (
+        {(allowCopy || copySnippet) && (
           <CopyButton
-            textToCopy={commandSnippet}
+            textToCopy={copySnippet || commandSnippet}
             onCopySuccess={() => {
               if (telemetryProps?.copyTelemetryProps) {
                 trackEvent(
@@ -76,10 +81,10 @@ const CommandBlock: React.FC<CommandBlockProps> = ({
         )}
         {allowDownload && (
           <>
-            <Icon
+            <Button
               className={css.downloadBtn}
-              color={Color.PRIMARY_7}
-              name="main-download"
+              variation={ButtonVariation.LINK}
+              text={getString('common.download')}
               onClick={event => {
                 event.stopPropagation()
                 if (telemetryProps?.downloadTelemetryProps) {

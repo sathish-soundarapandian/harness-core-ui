@@ -46,6 +46,19 @@ const fetchDelFn = jest.fn().mockImplementation((_sanitizedFilterRequest, { quer
 })
 
 jest.mock('services/portal', () => ({
+  useGenerateKubernetesYaml: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn().mockImplementation(() => {
+        return 'test'
+      }),
+      data: 'test',
+      loading: false,
+      error: null,
+      refetch: jest.fn().mockImplementation(() => {
+        return 'test'
+      })
+    }
+  }),
   useGetInstallationCommand: jest.fn().mockImplementation(() => {
     return {
       mutate: jest.fn(),

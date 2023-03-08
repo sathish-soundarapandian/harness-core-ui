@@ -47,22 +47,17 @@ exports[`CommandBlock test command block 1`] = `
           </button>
         </span>
       </span>
-      <span
-        class="bp3-icon StyledProps--main downloadBtn StyledProps--color StyledProps--color-primary7"
-        data-icon="main-download"
+      <button
+        aria-label="common.download"
+        class="bp3-button Button--button StyledProps--font StyledProps--main downloadBtn Button--with-current-color Button--variation Button--variation-link"
+        type="button"
       >
-        <svg
-          height="16"
-          viewBox="0 0 14 14"
-          width="16"
-          xmlns="http://www.w3.org/2000/svg"
+        <span
+          class="bp3-button-text"
         >
-          <path
-            d="M7 0C3.1 0 0 3.1 0 7s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm3.3 8.2L7.5 11c-.1.1-.3.2-.5.2s-.4-.1-.5-.2L3.7 8.2c-.1-.1-.2-.3-.2-.5 0-.4.3-.7.7-.7.2 0 .4.1.5.2l1.6 1.6V3.5c0-.4.3-.7.7-.7s.7.3.7.7v5.3l1.6-1.6c.1-.1.3-.2.5-.2.4 0 .7.3.7.7 0 .2-.1.4-.2.5z"
-            fill="#4d5969"
-          />
-        </svg>
-      </span>
+          common.download
+        </span>
+      </button>
       <a
         class="hide"
         download="commandBlock.txt"
@@ -121,22 +116,17 @@ exports[`CommandBlock test command block telemetry and other options 1`] = `
           </button>
         </span>
       </span>
-      <span
-        class="bp3-icon StyledProps--main downloadBtn StyledProps--color StyledProps--color-primary7"
-        data-icon="main-download"
+      <button
+        aria-label="common.download"
+        class="bp3-button Button--button StyledProps--font StyledProps--main downloadBtn Button--with-current-color Button--variation Button--variation-link"
+        type="button"
       >
-        <svg
-          height="16"
-          viewBox="0 0 14 14"
-          width="16"
-          xmlns="http://www.w3.org/2000/svg"
+        <span
+          class="bp3-button-text"
         >
-          <path
-            d="M7 0C3.1 0 0 3.1 0 7s3.1 7 7 7 7-3.1 7-7-3.1-7-7-7zm3.3 8.2L7.5 11c-.1.1-.3.2-.5.2s-.4-.1-.5-.2L3.7 8.2c-.1-.1-.2-.3-.2-.5 0-.4.3-.7.7-.7.2 0 .4.1.5.2l1.6 1.6V3.5c0-.4.3-.7.7-.7s.7.3.7.7v5.3l1.6-1.6c.1-.1.3-.2.5-.2.4 0 .7.3.7.7 0 .2-.1.4-.2.5z"
-            fill="#4d5969"
-          />
-        </svg>
-      </span>
+          common.download
+        </span>
+      </button>
       <a
         class="hide"
         download="testname.xdf"

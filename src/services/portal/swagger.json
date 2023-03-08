@@ -56378,7 +56378,7 @@
         },
         "autoUpgrade": {
           "type": "string",
-          "enum": ["ON", "OFF", "SYNCHRONIZING"]
+          "enum": ["ON", "OFF", "DETECTING"]
         },
         "delegateGroupExpirationTime": {
           "type": "integer",
@@ -79747,7 +79747,7 @@
         },
         "autoUpgrade": {
           "type": "string",
-          "enum": ["ON", "OFF", "SYNCHRONIZING"]
+          "enum": ["ON", "OFF", "DETECTING"]
         },
         "upgraderLastUpdated": {
           "type": "integer",

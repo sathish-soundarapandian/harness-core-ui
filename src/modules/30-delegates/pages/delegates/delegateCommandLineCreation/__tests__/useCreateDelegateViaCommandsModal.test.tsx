@@ -26,6 +26,19 @@ jest.mock('services/cd-ng', () => ({
   })
 }))
 jest.mock('services/portal', () => ({
+  useGenerateKubernetesYaml: jest.fn().mockImplementation(() => {
+    return {
+      mutate: jest.fn().mockImplementation(() => {
+        return 'test'
+      }),
+      data: 'test',
+      loading: false,
+      error: null,
+      refetch: jest.fn().mockImplementation(() => {
+        return 'test'
+      })
+    }
+  }),
   useGetInstallationCommand: jest.fn().mockImplementation(() => {
     return {
       mutate: jest.fn(),
