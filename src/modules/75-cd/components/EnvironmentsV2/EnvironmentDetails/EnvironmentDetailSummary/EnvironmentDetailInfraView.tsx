@@ -17,8 +17,8 @@ import { DialogEmptyState } from './EnvironmentDetailsUtils'
 import css from './EnvironmentDetailSummary.module.scss'
 
 interface EnvironmentDetailInfraViewProps {
-  artifactVersion: string
-  artifactPath: string
+  artifactVersion?: string
+  artifactPath?: string
   serviceFilter: string
   envFilter: string
   data: InstanceGroupedByInfrastructureV2[][]

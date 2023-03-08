@@ -290,9 +290,9 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
 
   if (isUndefined(selectedRow) && tableData.length) {
     setRowClickFilter({
-      artifact: defaultTo(tableData[0].artifact, ''),
+      artifact: tableData[0].artifact,
       envId: defaultTo(tableData[0].envId, ''),
-      environmentType: defaultTo(tableData[0].environmentType as 'PreProduction' | 'Production', 'Production'),
+      environmentType: tableData[0].environmentType as 'PreProduction' | 'Production',
       envName: defaultTo(tableData[0].envName, ''),
       clusterIdentifier: tableData[0].clusterId,
       infraIdentifier: tableData[0].infrastructureId,
@@ -337,9 +337,9 @@ export default function ServiceDetailsEnvTable(props: ServiceDetailsEnvTableProp
       className={css.fullViewTableStyle}
       onRowClick={(row, idx) => {
         setRowClickFilter({
-          artifact: defaultTo(row.artifact, ''),
+          artifact: row.artifact,
           envId: defaultTo(row.envId, ''),
-          environmentType: defaultTo(row.environmentType as 'PreProduction' | 'Production', 'Production'),
+          environmentType: row.environmentType as 'PreProduction' | 'Production',
           envName: defaultTo(row.envName, ''),
           clusterIdentifier: row.clusterId,
           infraIdentifier: row.infrastructureId,

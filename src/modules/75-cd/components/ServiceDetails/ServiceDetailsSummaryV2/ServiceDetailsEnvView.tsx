@@ -115,18 +115,22 @@ function EnvCard({
           {!isEmpty(envName) ? envName : '--'}
         </Text>
       </div>
-      {env?.environmentType && (
+      {
         <Text
           className={cx(css.environmentType, {
             [css.production]: env?.environmentType === EnvironmentType.PRODUCTION
           })}
           font={{ size: 'small' }}
         >
-          {getString(
-            env?.environmentType === EnvironmentType.PRODUCTION ? 'cd.serviceDashboard.prod' : 'cd.preProductionType'
-          )}
+          {env?.environmentType
+            ? getString(
+                env?.environmentType === EnvironmentType.PRODUCTION
+                  ? 'cd.serviceDashboard.prod'
+                  : 'cd.preProductionType'
+              )
+            : '-'}
         </Text>
-      )}
+      }
       {env?.artifactDeploymentDetail.lastDeployedAt && (
         <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
           {getString('pipeline.lastDeployed')} <ReactTimeago date={env.artifactDeploymentDetail.lastDeployedAt} />
@@ -167,7 +171,7 @@ interface ArtifactCardProps {
   setSelectedArtifact: React.Dispatch<React.SetStateAction<string | undefined>>
   setIsDetailsDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
   setEnvFilter: React.Dispatch<React.SetStateAction<string>>
-  setArtifactFilter: React.Dispatch<React.SetStateAction<string>>
+  setArtifactFilter: React.Dispatch<React.SetStateAction<string | undefined>>
   artifact?: ArtifactInstanceDetail | null
   selectedArtifact?: string
 }
@@ -211,7 +215,7 @@ function ArtifactCard({
         tooltipProps={{ isDark: true }}
         onClick={e => {
           e.stopPropagation()
-          setArtifactFilter(defaultTo(artifactName, ''))
+          setArtifactFilter(artifactName)
           setEnvFilter('')
           setIsDetailsDialogOpen(true)
         }}
@@ -232,13 +236,13 @@ function ArtifactCard({
                 onClick={e => {
                   e.stopPropagation()
                   setEnvFilter(envInfo.envId)
-                  setArtifactFilter(defaultTo(artifactName, ''))
+                  setArtifactFilter(artifactName)
                   setIsDetailsDialogOpen(true)
                 }}
               >
-                {envInfo.envName}
+                {!isEmpty(envInfo.envName) ? envInfo.envName : '--'}
               </Text>
-              {envInfo?.environmentType && (
+              {
                 <Text
                   className={cx(css.environmentType, {
                     [css.production]: envInfo?.environmentType === EnvironmentType.PRODUCTION
@@ -246,13 +250,15 @@ function ArtifactCard({
                   font={{ size: 'xsmall' }}
                   height={16}
                 >
-                  {getString(
-                    envInfo?.environmentType === EnvironmentType.PRODUCTION
-                      ? 'cd.serviceDashboard.prod'
-                      : 'cd.preProductionType'
-                  )}
+                  {envInfo?.environmentType
+                    ? getString(
+                        envInfo?.environmentType === EnvironmentType.PRODUCTION
+                          ? 'cd.serviceDashboard.prod'
+                          : 'cd.preProductionType'
+                      )
+                    : '-'}
                 </Text>
-              )}
+              }
             </Layout.Horizontal>
             {envInfo?.artifactDeploymentDetail.lastDeployedAt && (
               <Text font={{ variation: FontVariation.SMALL }} color={Color.GREY_800}>
@@ -278,7 +284,7 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
 
   //artifact state
   const [selectedArtifact, setSelectedArtifact] = useState<string>()
-  const [artifactFilter, setArtifactFilter] = useState<string>('')
+  const [artifactFilter, setArtifactFilter] = useState<string | undefined>('')
 
   const queryParams: GetEnvironmentInstanceDetailsQueryParams | GetArtifactInstanceDetailsQueryParams = {
     accountIdentifier: accountId,
@@ -394,7 +400,7 @@ export function ServiceDetailsEnvView(props: ServiceDetailsEnvViewProps): React.
             text={getString('cd.environmentDetailPage.viewInTable')}
             onClick={() => {
               setEnvFilter('')
-              setArtifactFilter('')
+              setArtifactFilter(undefined)
               setIsDetailsDialogOpen(true)
             }}
             disabled={!data || data.length === 0}
