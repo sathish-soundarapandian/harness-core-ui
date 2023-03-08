@@ -29,6 +29,7 @@ export interface HarnessApprovalData extends StepElementConfig {
     }
     approverInputs: string | ApproverInputsSubmitCallInterface[]
   }
+  userGroupExpression?: string
 }
 
 export interface HarnessApprovalDeploymentModeProps {

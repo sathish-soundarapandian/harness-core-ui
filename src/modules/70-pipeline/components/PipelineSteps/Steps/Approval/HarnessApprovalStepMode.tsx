@@ -8,7 +8,7 @@
 import React from 'react'
 import cx from 'classnames'
 import { produce } from 'immer'
-import { isEmpty, compact, isArray } from 'lodash-es'
+import { isEmpty, compact, isArray, has } from 'lodash-es'
 import * as Yup from 'yup'
 import { FieldArray, FormikProps } from 'formik'
 import {
@@ -36,6 +36,7 @@ import { FormMultiTypeUserGroupInput } from '@rbac/components/UserGroupsInput/Fo
 import { regexPositiveNumbers } from '@common/utils/StringUtils'
 import { isMultiTypeRuntime } from '@common/utils/utils'
 import { UserGroupConfigureOptions } from '@rbac/components/UserGroupConfigureOptions/UserGroupConfigureOptions'
+
 import { isApprovalStepFieldDisabled } from '../Common/ApprovalCommons'
 import type {
   ApproverInputsSubmitCallInterface,
@@ -271,6 +272,9 @@ function HarnessApprovalStepMode(
 
         if (isArray(userGroupValues) && userGroupValues.length > 0) {
           draft.spec.approvers.userGroups = compact(userGroupValues as string[])
+        }
+        if (has(draft, 'userGroupExpression')) {
+          delete draft['userGroupExpression']
         }
       })
     )

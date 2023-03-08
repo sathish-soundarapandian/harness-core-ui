@@ -163,6 +163,7 @@ export interface StringsMap {
   'common.clusters': string
   'common.codeErrorsSettings': string
   'common.collapse': string
+  'common.combined': string
   'common.comingSoon': string
   'common.comingSoon2': string
   'common.commentModal.addCommentPlaceholder': string
@@ -970,6 +971,7 @@ export interface StringsMap {
   'common.showMore': string
   'common.showSelected': string
   'common.sidecarArtifactsText': string
+  'common.single': string
   'common.singularLabels.accountSetting': string
   'common.singularLabels.authenticationSetting': string
   'common.singularLabels.autoStoppingRule': string
