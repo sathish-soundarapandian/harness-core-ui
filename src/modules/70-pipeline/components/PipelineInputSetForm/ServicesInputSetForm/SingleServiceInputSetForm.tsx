@@ -148,7 +148,7 @@ export default function SingleServiceInputSetForm({
   }
 
   const shouldShowPropagateFromStage =
-    !isPropagateFromStageEnabled &&
+    isPropagateFromStageEnabled &&
     previousStageList?.length &&
     // using deploymentStage as deploymentStageTemplate is not reliable in case of optional fields
     (isValueRuntimeInput(deploymentStage?.service?.serviceRef) ||

@@ -140,7 +140,8 @@ function SaveTemplatePopover(
   const nextCallback = async (
     latestTemplate: TemplateSummaryResponse,
     updatedGitDetails?: SaveToGitFormInterface,
-    updatedStoreMetadata?: StoreMetadata
+    updatedStoreMetadata?: StoreMetadata,
+    saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
   ) => {
     const isInlineTemplate = isEmpty(updatedGitDetails) && updatedStoreMetadata?.storeType !== StoreType.REMOTE
     if (isInlineTemplate) {
@@ -150,8 +151,15 @@ function SaveTemplatePopover(
         await customDeleteTemplateCache()
         navigateToLocation(latestTemplate, updatedGitDetails)
       } else {
+        // This block handles template update scenario for an inline template
         showSuccess(getString('common.template.updateTemplate.templateUpdated'))
-        navigateToLocation(latestTemplate, updatedGitDetails)
+        if (saveAsType === SaveTemplateAsType.NEW_LABEL_VERSION || saveAsType === SaveTemplateAsType.NEW_TEMPALTE) {
+          // Navigates the user to newly created template or newly created version label of the same template
+          navigateToLocation(latestTemplate, updatedGitDetails)
+        } else {
+          // Reloads the updated template to show latest values
+          await fetchTemplate({ forceFetch: true, forceUpdate: true })
+        }
       }
     } else {
       // If new template creation
@@ -336,7 +344,8 @@ function SaveTemplatePopover(
         title: getString('common.template.saveAsNewTemplateHeading'),
         intent: Intent.SAVE,
         allowScopeChange: true,
-        onFailure: onSaveAsNewFailure
+        onFailure: onSaveAsNewFailure,
+        saveAsType: SaveTemplateAsType.NEW_TEMPALTE
       })
       showConfigModal()
     } catch (error) {

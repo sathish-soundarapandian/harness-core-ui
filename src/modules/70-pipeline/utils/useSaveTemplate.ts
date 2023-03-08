@@ -24,7 +24,7 @@ import { sanitize } from '@common/utils/JSONUtils'
 import type { GitQueryParams, ModulePathParams, TemplateStudioPathProps } from '@common/interfaces/RouteInterfaces'
 import { useQueryParams } from '@common/hooks'
 import type { PromiseExtraArgs } from 'framework/Templates/TemplateConfigModal/TemplateConfigModal'
-import { StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
+import { SaveTemplateAsType, StoreMetadata, StoreType } from '@common/constants/GitSyncTypes'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 
 export interface FetchTemplateUnboundProps {
@@ -61,7 +61,8 @@ export interface TemplateContextMetadata {
   onSuccessCallback: (
     latestTemplate: TemplateSummaryResponse,
     updatedGitDetails?: SaveToGitFormInterface,
-    updatedStoreMetadata?: StoreMetadata
+    updatedStoreMetadata?: StoreMetadata,
+    saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
   ) => Promise<void>
 }
 
@@ -91,7 +92,8 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
     comments?: string,
     updatedGitDetails?: SaveToGitFormInterface,
     lastObject?: LastRemoteObjectId,
-    storeMetadata?: StoreMetadata
+    storeMetadata?: StoreMetadata,
+    saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
   ): Promise<UseSaveSuccessResponse> => {
     const response = await updateExistingTemplateVersionPromise({
       templateIdentifier: latestTemplate.identifier,
@@ -114,12 +116,12 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
     if (response && response.status === 'SUCCESS') {
       const isInlineTemplate = isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE
       if (isInlineTemplate) {
-        onSuccessCallback(latestTemplate, updatedGitDetails, storeMetadata)
+        onSuccessCallback(latestTemplate, updatedGitDetails, storeMetadata, saveAsType)
       }
       return {
         status: response.status,
         nextCallback: () => {
-          onSuccessCallback(latestTemplate, updatedGitDetails, storeMetadata)
+          onSuccessCallback(latestTemplate, updatedGitDetails, storeMetadata, saveAsType)
         }
       }
     } else {
@@ -133,10 +135,11 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
     isEdit = false,
     updatedGitDetails?: SaveToGitFormInterface,
     lastObject?: LastRemoteObjectId,
-    storeMetadata?: StoreMetadata
+    storeMetadata?: StoreMetadata,
+    saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
   ): Promise<UseSaveSuccessResponse> => {
     if (isEdit) {
-      return updateExistingLabel(latestTemplate, comments, updatedGitDetails, lastObject, storeMetadata)
+      return updateExistingLabel(latestTemplate, comments, updatedGitDetails, lastObject, storeMetadata, saveAsType)
     } else {
       const response = await createTemplatePromise({
         body: stringifyTemplate(omit(cloneDeep(latestTemplate), 'repo', 'branch')),
@@ -157,13 +160,13 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
         const createdTemplate = response.data?.templateResponseDTO as TemplateSummaryResponse
         const isInlineTemplate = isEmpty(updatedGitDetails) && storeMetadata?.storeType !== StoreType.REMOTE
         if (isInlineTemplate) {
-          onSuccessCallback(createdTemplate, updatedGitDetails, storeMetadata)
+          onSuccessCallback(createdTemplate, updatedGitDetails, storeMetadata, saveAsType)
         }
 
         return {
           status: response.status,
           nextCallback: () => {
-            onSuccessCallback(createdTemplate, updatedGitDetails, storeMetadata)
+            onSuccessCallback(createdTemplate, updatedGitDetails, storeMetadata, saveAsType)
           }
         }
       } else {
@@ -227,7 +230,7 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
     updatedTemplate: NGTemplateInfoConfig,
     extraInfo: PromiseExtraArgs
   ): Promise<UseSaveSuccessResponse> => {
-    const { isEdit, comment, updatedGitDetails, storeMetadata, disableCreatingNewBranch } = extraInfo
+    const { isEdit, comment, updatedGitDetails, storeMetadata, disableCreatingNewBranch, saveAsType } = extraInfo
 
     // if Git sync enabled then display modal
     if ((isGitSyncEnabled && !isEmpty(updatedGitDetails)) || storeMetadata?.storeType === StoreType.REMOTE) {
@@ -246,7 +249,7 @@ export function useSaveTemplate({ onSuccessCallback }: TemplateContextMetadata):
       return Promise.resolve({ status: 'SUCCESS' })
     }
 
-    return saveAndPublishTemplate(updatedTemplate, comment, isEdit)
+    return saveAndPublishTemplate(updatedTemplate, comment, isEdit, undefined, undefined, undefined, saveAsType)
   }
 
   return {

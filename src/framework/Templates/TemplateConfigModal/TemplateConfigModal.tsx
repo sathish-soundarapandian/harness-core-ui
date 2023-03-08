@@ -82,6 +82,7 @@ export interface PromiseExtraArgs {
   comment?: string
   storeMetadata?: StoreMetadata
   disableCreatingNewBranch?: boolean
+  saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
 }
 
 export enum Intent {
@@ -102,7 +103,7 @@ export interface ModalProps {
   lastPublishedVersion?: string
   disableCreatingNewBranch?: boolean
   onFailure?: (error: any, latestTemplate: NGTemplateInfoConfig) => void
-  saveAsType?: string
+  saveAsType?: SaveTemplateAsType.NEW_LABEL_VERSION | SaveTemplateAsType.NEW_TEMPALTE
 }
 
 export interface TemplateConfigValues extends NGTemplateInfoConfigWithGitDetails {
@@ -281,6 +282,7 @@ const BasicTemplateDetails = (
 
       promise(updateTemplate, {
         isEdit: intent === Intent.EDIT,
+        saveAsType,
         disableCreatingNewBranch,
         ...(!isEmpty(values.repo) && {
           updatedGitDetails: { ...gitDetails, repoIdentifier: values.repo, branch: values.branch }
@@ -301,7 +303,7 @@ const BasicTemplateDetails = (
           onFailure?.(error, updateTemplate)
         })
     },
-    [setLoading, promise, gitDetails, onClose]
+    [setLoading, promise, gitDetails, onClose, saveAsType]
   )
 
   const onScopeChange = ({ value }: SelectOption) => {
