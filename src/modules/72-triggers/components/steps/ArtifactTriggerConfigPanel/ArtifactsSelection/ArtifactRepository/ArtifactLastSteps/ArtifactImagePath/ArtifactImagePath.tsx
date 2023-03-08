@@ -6,22 +6,24 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import { FormInput, MultiSelectOption, MultiTypeInputType, SelectOption } from '@harness/uicore'
+import { FormInput, MultiSelectOption, MultiTypeInputType, SelectOption, Text } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
+import { get } from 'lodash-es'
 
 import { useStrings } from 'framework/strings'
 
 import { useMutateAsGet, useQueryParams } from '@common/hooks'
-import { GetImagesListForEcrQueryParams, useGetImagesListForEcr } from 'services/cd-ng'
+import { ArtifactSource, GetImagesListForEcrQueryParams, useGetImagesListForEcr } from 'services/cd-ng'
 import type { GitQueryParams, ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { EXPRESSION_STRING } from '@pipeline/utils/constants'
+import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
 
 import css from '../../ArtifactConnector.module.scss'
 
 interface ArtifactImagePathProps {
   connectorRef?: string
   region?: string
-  artifactType?: string
+  artifactType?: ArtifactSource['type']
 }
 
 function ArtifactImagePath(props: ArtifactImagePathProps): React.ReactElement {
@@ -36,15 +38,15 @@ function ArtifactImagePath(props: ArtifactImagePathProps): React.ReactElement {
     orgIdentifier,
     projectIdentifier,
     connectorRef,
-    region: region,
+    region,
     repoIdentifier,
     branch
   }
   const {
     data: imagesListData,
     loading: imagesListLoading,
-    refetch: refetchImagesList
-    // error: imagesListError
+    refetch: refetchImagesList,
+    error: imagesListError
   } = useMutateAsGet(useGetImagesListForEcr, {
     requestOptions: {
       headers: {
@@ -75,7 +77,7 @@ function ArtifactImagePath(props: ArtifactImagePathProps): React.ReactElement {
     }
   }, [imagesListData])
 
-  if (artifactType) {
+  if (artifactType === ENABLED_ARTIFACT_TYPES.Ecr) {
     return (
       <div className={css.imagePathContainer}>
         <FormInput.MultiTypeInput
@@ -96,6 +98,14 @@ function ArtifactImagePath(props: ArtifactImagePathProps): React.ReactElement {
               if (!imagesListLoading) {
                 refetchImagesList()
               }
+            },
+            selectProps: {
+              items: images,
+              noResults: (
+                <Text lineClamp={1} width={384} margin="small">
+                  {get(imagesListError, 'data.message', null)}
+                </Text>
+              )
             }
           }}
         />
@@ -104,12 +114,14 @@ function ArtifactImagePath(props: ArtifactImagePathProps): React.ReactElement {
   }
 
   return (
-    <FormInput.MultiTextInput
-      label={getString('pipeline.imagePathLabel')}
-      name="imagePath"
-      placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
-      multiTextInputProps={{ allowableTypes: [MultiTypeInputType.FIXED] }}
-    />
+    <div className={css.imagePathContainer}>
+      <FormInput.MultiTextInput
+        label={getString('pipeline.imagePathLabel')}
+        name="imagePath"
+        placeholder={getString('pipeline.artifactsSelection.existingDocker.imageNamePlaceholder')}
+        multiTextInputProps={{ allowableTypes: [MultiTypeInputType.FIXED] }}
+      />
+    </div>
   )
 }
 

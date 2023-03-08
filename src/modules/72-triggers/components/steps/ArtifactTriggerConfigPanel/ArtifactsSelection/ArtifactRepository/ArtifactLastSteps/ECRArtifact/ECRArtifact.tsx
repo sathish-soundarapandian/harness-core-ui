@@ -28,6 +28,8 @@ import { useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import type { EcrSpec } from 'services/pipeline-ng'
 import { getConnectorIdValue } from '@pipeline/components/ArtifactsSelection/ArtifactUtils'
+import { ENABLED_ARTIFACT_TYPES } from '@pipeline/components/ArtifactsSelection/ArtifactHelper'
+
 import ArtifactImagePath from '../ArtifactImagePath/ArtifactImagePath'
 import type { ImagePathProps } from '../../../ArtifactInterface'
 import css from '../../ArtifactConnector.module.scss'
@@ -97,7 +99,7 @@ export function ECRArtifact({
               <ArtifactImagePath
                 connectorRef={getConnectorIdValue(prevStepData)}
                 region={values?.region}
-                artifactType="ECR"
+                artifactType={ENABLED_ARTIFACT_TYPES.Ecr}
               />
             </div>
 
