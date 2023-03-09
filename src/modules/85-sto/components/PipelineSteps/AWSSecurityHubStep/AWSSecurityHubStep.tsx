@@ -52,7 +52,7 @@ export class AWSSecurityHubStep extends PipelineStep<AWSSecurityHubStepData> {
     identifier: '',
     type: StepType.AWSSecurityHub as string,
     spec: {
-      mode: 'ingestion',
+      mode: 'extraction',
       config: 'default',
       target: {
         type: 'configuration',

@@ -39,7 +39,7 @@ describe('AWSSecurityHub Step', () => {
         spec: {
           privileged: RUNTIME_INPUT_VALUE,
           target: {
-            type: 'configuration',
+            type: 'extraction',
             name: 'target name',
             variant: 'target/variant'
           },
@@ -94,7 +94,7 @@ describe('AWSSecurityHub Step', () => {
         spec: {
           privileged: true,
           target: {
-            type: 'configuration',
+            type: 'extraction',
             name: 'target name',
             variant: 'target/variant'
           },
@@ -159,7 +159,7 @@ describe('AWSSecurityHub Step', () => {
         timeout: RUNTIME_INPUT_VALUE,
         spec: {
           target: {
-            type: 'configuration',
+            type: 'extraction',
             name: 'target name',
             variant: 'target/variant'
           },
@@ -228,7 +228,7 @@ describe('AWSSecurityHub Step', () => {
           privileged: false,
           config: 'default',
           target: {
-            type: 'configuration',
+            type: 'extraction',
             name: 'target name',
             variant: 'target/variant'
           },
@@ -389,7 +389,7 @@ describe('AWSSecurityHub Step', () => {
       timeout: '1h',
       spec: {
         target: {
-          type: 'configuration',
+          type: 'extraction',
           name: 'target name',
           variant: 'target/variant'
         },
@@ -401,7 +401,7 @@ describe('AWSSecurityHub Step', () => {
         privileged: true,
         settings: {
           policy_type: 'orchestratedScan',
-          scan_type: 'configuration',
+          scan_type: 'extraction',
           product_name: 'x',
           product_config_name: 'y'
         },
