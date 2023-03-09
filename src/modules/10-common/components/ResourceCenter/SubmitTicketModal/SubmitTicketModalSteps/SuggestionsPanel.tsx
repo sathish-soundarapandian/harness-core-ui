@@ -8,7 +8,7 @@ interface SuggestionsPanelProps {
 const SuggestionsCard = (suggestionItem: any) => {
   const { suggestionItem: suggestionItemValue } = suggestionItem
   return (
-    <Layout.Vertical margin={{ bottom: '10px' }}>
+    <Layout.Vertical padding={{ bottom: 'medium' }}>
       <a href={suggestionItemValue.clickUri}>
         <li>{suggestionItemValue.title}</li>
       </a>
@@ -21,7 +21,7 @@ const SuggestionsPanel = (props: SuggestionsPanelProps) => {
   const { data } = props
 
   return (
-    <div style={{ padding: '0px 0px 0px 20px', overflowY: 'auto' }}>
+    <div style={{ paddingLeft: '20px', overflowY: 'auto' }}>
       <h3> Some of the suggestions that might help...</h3>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr' }}>
         {data.map((result: any) => (

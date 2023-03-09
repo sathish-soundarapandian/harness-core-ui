@@ -11,7 +11,6 @@ import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import React from 'react'
 import { Form } from 'formik'
-import { FormMultiTypeTextAreaField } from '@common/components/MultiTypeTextArea/MultiTypeTextArea'
 import { useModuleInfo } from '@common/hooks/useModuleInfo'
 import css from './SubmitTicketModalSteps.module.scss'
 
@@ -52,46 +51,27 @@ export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketM
       >
         {formik => (
           <Form>
-            <Layout.Vertical
-              flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
-              className={css.manifestForm}
-            >
+            <Layout.Vertical flex={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <Layout.Horizontal spacing="medium">
-                <FormInput.MultiTypeInput
+                <FormInput.Select
                   name="module"
                   label={'Module'}
                   className={css.inputWidth}
                   placeholder="Select the Module with the issue"
-                  selectItems={moduleOptions}
-                  useValue
-                  multiTypeInputProps={{
-                    selectProps: {
-                      items: moduleOptions,
-                      allowCreatingNewItems: true,
-                      addClearBtn: true
-                    }
-                  }}
+                  items={moduleOptions}
                 />
               </Layout.Horizontal>
               <Layout.Horizontal spacing="medium">
-                <FormInput.MultiTypeInput
+                <FormInput.Select
                   name="component"
                   label={'Component'}
                   className={css.inputWidth}
                   placeholder="Select the Components with the issue"
-                  selectItems={getComponentsFromModule(formik.values.module as string)}
-                  useValue
-                  multiTypeInputProps={{
-                    selectProps: {
-                      items: getComponentsFromModule(formik.values.module as string),
-                      allowCreatingNewItems: true,
-                      addClearBtn: true
-                    }
-                  }}
+                  items={getComponentsFromModule(formik.values.module as string)}
                 />
               </Layout.Horizontal>
               <Layout.Horizontal spacing="medium">
-                <FormMultiTypeTextAreaField
+                <FormInput.TextArea
                   name="ticketDetails"
                   label={'Ticket Details'}
                   className={css.inputWidth}

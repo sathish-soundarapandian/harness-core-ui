@@ -5,17 +5,7 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import {
-  Layout,
-  Text,
-  Formik,
-  Button,
-  ButtonVariation,
-  StepProps,
-  FormInput,
-  Container,
-  MultiTypeInputType
-} from '@harness/uicore'
+import { Layout, Text, Formik, Button, ButtonVariation, StepProps, FormInput } from '@harness/uicore'
 import { FontVariation } from '@harness/design-system'
 import * as Yup from 'yup'
 import React, { useEffect, useState } from 'react'
@@ -84,62 +74,38 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
         {() => (
           <Form>
             <Layout.Horizontal>
-              <Layout.Vertical flex={{ alignItems: 'flex-start' }}>
+              <Layout.Vertical flex={{ alignItems: 'flex-start' }} style={{ width: '40%' }}>
                 <Layout.Horizontal spacing="medium">
-                  <FormInput.MultiTypeInput
+                  <FormInput.Select
                     name="issueType"
                     className={css.inputWidth}
-                    selectItems={issueTypes}
+                    items={issueTypes}
                     placeholder={'Select Issue Type'}
-                    useValue
-                    multiTypeInputProps={{
-                      selectProps: {
-                        items: issueTypes,
-                        allowCreatingNewItems: true,
-                        addClearBtn: true
-                      },
-                      allowableTypes: [MultiTypeInputType.FIXED]
-                    }}
                     label={'Issue Type'}
                   />
                 </Layout.Horizontal>
                 <Layout.Horizontal spacing="medium">
-                  <FormInput.MultiTypeInput
+                  <FormInput.Select
                     name="priority"
                     className={css.inputWidth}
-                    selectItems={priorityItems}
-                    useValue
+                    items={priorityItems}
                     placeholder={'Select Priority'}
-                    multiTypeInputProps={{
-                      selectProps: {
-                        items: priorityItems,
-                        allowCreatingNewItems: true,
-                        addClearBtn: true
-                      }
-                    }}
                     label={'Priority'}
                   />
                 </Layout.Horizontal>
                 <Layout.Horizontal spacing="medium">
-                  <FormInput.MultiTypeInput
+                  <FormInput.Select
                     name="subject"
                     placeholder={'Enter the Subject'}
                     label={'Subject'}
                     className={css.inputWidth}
-                    selectItems={suggestionItems}
-                    useValue
-                    multiTypeInputProps={{
-                      onKeyUp: (val: any) => {
-                        searchBoxController.updateText(val.target.value)
-                      },
-                      onChange: (val: any) => {
-                        searchBoxController.updateText(val.value)
-                        searchBoxController.submit()
-                      },
-                      selectProps: {
-                        items: suggestionItems,
-                        addClearBtn: true
-                      }
+                    items={suggestionItems}
+                    onQueryChange={(val: any) => {
+                      searchBoxController.updateText(val)
+                    }}
+                    onChange={(val: any) => {
+                      searchBoxController.updateText(val)
+                      searchBoxController.submit()
                     }}
                   />
                 </Layout.Horizontal>
@@ -151,7 +117,7 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
                   className={css.saveBtn}
                 />
               </Layout.Vertical>
-              <Container width="100%" flex={{ align: 'center-center' }} className={css.preview}>
+              <Layout.Vertical className={css.preview}>
                 {state.value.length > 0 ? (
                   <SuggestionsPanel data={resultsState.results} />
                 ) : (
@@ -159,7 +125,7 @@ export const SubmitTicketModalStepTwo = (props: StepProps<any> & SubmitTicketMod
                     <img src={ProjectsEmptyState} className={css.img} />
                   </Layout.Vertical>
                 )}
-              </Container>
+              </Layout.Vertical>
             </Layout.Horizontal>
           </Form>
         )}

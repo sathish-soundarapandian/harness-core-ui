@@ -27,11 +27,6 @@ export const useSubmitTicketModal = () => {
     return (
       <Dialog isOpen enforceFocus={false} onClose={hideModal} className={css.submitTicketWizard}>
         <StepWizard onStepChange={onStepChange} initialStep={1}>
-          {/* <SubmitTicketModalStepOne
-            name="Select Issue Type"
-            stepName="Select Issue Type"
-            changeIssueTypeHandler={changeIssueTypeHandler}
-          /> */}
           <SubmitTicketModalStepTwo
             name="Deflection Step"
             stepName="Deflection Step"
