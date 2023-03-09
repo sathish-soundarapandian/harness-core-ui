@@ -24,6 +24,7 @@ interface PropagateFromServiceV2Props {
   selectedPropagatedState: SelectOption | string
   onPropogatedStageSelect: (value: SelectOption) => void
   onStageServiceChange: (value: string) => void
+  subscribeToForm?: boolean
 }
 
 export default function PropagateFromServiceV2({
@@ -32,15 +33,18 @@ export default function PropagateFromServiceV2({
   previousStageList,
   selectedPropagatedState,
   onPropogatedStageSelect,
-  onStageServiceChange
+  onStageServiceChange,
+  subscribeToForm = true
 }: PropagateFromServiceV2Props): JSX.Element {
   const { getString } = useStrings()
   const formikRef = React.useRef<FormikProps<unknown> | null>(null)
   const { subscribeForm, unSubscribeForm } = React.useContext(StageErrorContext)
 
   useEffect(() => {
-    subscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
-    return () => unSubscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
+    if (subscribeToForm) {
+      subscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
+      return () => unSubscribeForm({ tab: DeployTabs.SERVICE, form: formikRef })
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

@@ -5658,6 +5658,7 @@ export interface StringsMap {
   'cd.pipelineSteps.serviceTab.specifyYourService': string
   'cd.pipelineSteps.serviceTab.specifyYourServices': string
   'cd.pipelineSteps.serviceTab.stageOverrides': string
+  'cd.pipelineSteps.serviceTab.useFromStageRequired': string
   'cd.pipelineSteps.serviceTab.viewServiceInputs': string
   'cd.pluginVersion': string
   'cd.preProduction': string

@@ -14,6 +14,7 @@ import { Container, SelectOption } from '@harness/uicore'
 import { useStrings } from 'framework/strings'
 
 import type { DeploymentStageConfig, ServiceSpec } from 'services/cd-ng'
+import type { StageElementWrapperConfig } from 'services/pipeline-ng'
 
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { FeatureFlag } from '@common/featureFlags'
@@ -79,13 +80,18 @@ export default function SingleServiceInputSetForm({
   )
 
   const getStagesAllowedforPropogate = useCallback(
-    (stageItem): boolean => {
-      if (stageItem.stage.template) {
+    (stageItem: StageElementWrapperConfig): boolean => {
+      if (stageItem?.stage?.template) {
         const stageType = get(templateTypes, stageItem.stage.template.templateRef)
-        return !isEmpty(stageItem.stage.template.templateRef) && stageType === StageType.DEPLOY
+        return (
+          stageType === StageType.DEPLOY &&
+          !(stageItem?.stage?.template?.templateInputs?.spec as DeploymentStageConfig)?.service?.useFromStage
+        )
       } else {
-        const isSingleSvcEmpty = isEmpty((stageItem.stage as DeploymentStageElementConfig)?.spec?.service?.serviceRef)
-        return !isSingleSvcEmpty && stageItem?.stage?.type === StageType.DEPLOY
+        const stageType = stageItem?.stage?.type
+        return (
+          stageType === StageType.DEPLOY && !(stageItem?.stage?.spec as DeploymentStageConfig)?.service?.useFromStage
+        )
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,18 +102,15 @@ export default function SingleServiceInputSetForm({
     const { stages } = getFlattenedStages(pipeline)
     if (stages.length && stageIndex > 0) {
       // all stages are allowed
-      const stageswithServiceV2 = stages.slice(0, stageIndex).filter(getStagesAllowedforPropogate)
+      const filteredStages = stages.slice(0, stageIndex).filter(getStagesAllowedforPropogate)
 
-      return stageswithServiceV2.map(stageItem => {
+      return filteredStages.map(stageItem => {
         if (stageItem.stage?.template) {
           return {
-            label: `Stage [${stageItem.stage?.name}] - [Template]`,
+            label: `Stage [${stageItem.stage?.name}] - Template [${stageItem.stage.template.templateRef}]`,
             value: defaultTo(stageItem.stage?.identifier, '')
           }
-        } else if (
-          !get(stageItem.stage, `spec.service.useFromStage`) &&
-          !get(stageItem.stage, `template.templateInputs.spec.service.useFromStage`)
-        ) {
+        } else {
           const singleServiceRef = (stageItem.stage as DeploymentStageElementConfig)?.spec?.service?.serviceRef
           const serviceLabelVal = isEmpty(singleServiceRef) ? getString('services') : `Service [${singleServiceRef}]`
           return {
@@ -149,7 +152,7 @@ export default function SingleServiceInputSetForm({
 
   const shouldShowPropagateFromStage =
     isPropagateFromStageEnabled &&
-    previousStageList?.length &&
+    !isEmpty(previousStageList) &&
     // using deploymentStage as deploymentStageTemplate is not reliable in case of optional fields
     (isValueRuntimeInput(deploymentStage?.service?.serviceRef) ||
       isValueRuntimeInput(deploymentStage?.service?.useFromStage as unknown as string))
@@ -167,6 +170,7 @@ export default function SingleServiceInputSetForm({
             isReadonly={!!readonly}
             onStageServiceChange={onStageServiceChange}
             onPropogatedStageSelect={onPropogatedStageSelect}
+            subscribeToForm={false}
           />
         </Container>
       )}

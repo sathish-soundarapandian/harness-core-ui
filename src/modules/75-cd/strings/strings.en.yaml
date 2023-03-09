@@ -284,6 +284,7 @@ pipelineSteps:
     newService: '{{$.newService}}'
     plusNewService: '+ {{$.newService}}'
     serviceIsRequired: Service is required
+    useFromStageRequired: Service or Propagate From is required
     aboutYourService: About the Service
     manifest:
       taskDefinition: Task Definition

@@ -127,7 +127,7 @@ export default function DeployServiceEntitySpecifications({
       return stagewithServiceV2.map(stageItem => {
         if (stageItem.stage?.template) {
           return {
-            label: `Stage [${stageItem.stage?.name}] - [Template]`,
+            label: `Stage [${stageItem.stage?.name}] - Template [${stageItem.stage.template.templateRef}]`,
             value: stageItem.stage?.identifier || ''
           }
         } else if (!get(stageItem.stage, `spec.serviceConfig.useFromStage`)) {
