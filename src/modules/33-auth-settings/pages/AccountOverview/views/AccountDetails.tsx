@@ -154,25 +154,27 @@ const AccountDetails: React.FC = () => {
         </Layout.Horizontal>
       ) : null}
 
-      {PLG_ENABLE_CROSS_GENERATION_ACCESS && crossAccessVariable ? (
-        <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
-          <Text className={css.minWidth}>{getString('common.defaultExperience')}</Text>
-          <Text color={Color.GREY_800}>{defaultExperienceStr}</Text>
-          {!isCommunity && (
-            <RbacButton
-              variation={ButtonVariation.LINK}
-              padding="none"
-              text={getString('change')}
-              onClick={() => openDefaultExperienceModal(accountData?.defaultExperience as Experiences)}
-              permission={{
-                permission: PermissionIdentifier.EDIT_ACCOUNT,
-                resource: {
-                  resourceType: ResourceType.ACCOUNT
-                }
-              }}
-            />
-          )}
-        </Layout.Horizontal>
+      {PLG_ENABLE_CROSS_GENERATION_ACCESS ? (
+        crossAccessVariable ? (
+          <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+            <Text className={css.minWidth}>{getString('common.defaultExperience')}</Text>
+            <Text color={Color.GREY_800}>{defaultExperienceStr}</Text>
+            {!isCommunity && (
+              <RbacButton
+                variation={ButtonVariation.LINK}
+                padding="none"
+                text={getString('change')}
+                onClick={() => openDefaultExperienceModal(accountData?.defaultExperience as Experiences)}
+                permission={{
+                  permission: PermissionIdentifier.EDIT_ACCOUNT,
+                  resource: {
+                    resourceType: ResourceType.ACCOUNT
+                  }
+                }}
+              />
+            )}
+          </Layout.Horizontal>
+        ) : null
       ) : (
         <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
           <Text className={css.minWidth}>{getString('common.defaultExperience')}</Text>
