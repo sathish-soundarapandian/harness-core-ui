@@ -83,7 +83,7 @@ function GitOpsExecutionSummary({ stageInfo }: { stageInfo: Record<string, any> 
                 <Layout.Vertical spacing="small" padding="medium" style={{ maxWidth: 500 }}>
                   {environments.map((env: Environment, index: number) => {
                     const envName = env.name || env.identifier
-                    const clusters = clustersByEnvId[envName || '']
+                    const clusters = clustersByEnvId[env.identifier || '']
                     return (
                       <div key={index}>
                         <Link
@@ -99,7 +99,7 @@ function GitOpsExecutionSummary({ stageInfo }: { stageInfo: Record<string, any> 
                         >
                           <span>{envName}</span>
                         </Link>
-                        {clusters.length ? (
+                        {clusters?.length ? (
                           <>
                             <span style={{ color: Color.WHITE }}>
                               &nbsp;({clusters.map(cluster => cluster.clusterName || cluster.clusterId).join(', ')})
