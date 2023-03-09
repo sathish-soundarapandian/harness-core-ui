@@ -149,6 +149,7 @@ queueStep:
   queuedByResourceKey: 'Queued by Resource Key:'
   noQueuedExecutions: No queued executions
 jenkinsStep:
+  job: job
   addJobParameters: Add Job Parameter
   validations:
     jobName: Jobname is a required field

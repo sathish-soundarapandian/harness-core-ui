@@ -2777,12 +2777,14 @@ export interface StringsMap {
   'connectors.httpHelm.httpHelmRepoUrl': string
   'connectors.ifReq': string
   'connectors.jenkins.bearerTokenRequired': string
+  'connectors.jenkins.child': string
   'connectors.jenkins.jenkins': string
   'connectors.jenkins.jenkinsConnectorLabel': string
   'connectors.jenkins.jenkinsUrl': string
   'connectors.jenkins.jenkinsUrlRequired': string
   'connectors.jenkins.jobNameLabel': string
   'connectors.jenkins.jobParameterLabel': string
+  'connectors.jenkins.jobs': string
   'connectors.jenkins.passwordAPIToken': string
   'connectors.jenkins.usernamePasswordAPIToken': string
   'connectors.jira.jiraUrl': string
@@ -4054,6 +4056,7 @@ export interface StringsMap {
   'pipeline.jenkinsBuild': string
   'pipeline.jenkinsStep.addJobParameters': string
   'pipeline.jenkinsStep.captureEnvironmentVariable': string
+  'pipeline.jenkinsStep.job': string
   'pipeline.jenkinsStep.jobNamePlaceholder': string
   'pipeline.jenkinsStep.jobParameter': string
   'pipeline.jenkinsStep.unstableStatusAsSuccess': string

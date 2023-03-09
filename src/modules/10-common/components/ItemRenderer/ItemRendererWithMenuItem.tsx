@@ -6,21 +6,24 @@
  */
 
 import React from 'react'
-import { Menu } from '@blueprintjs/core'
+import { IconName, Menu } from '@blueprintjs/core'
 import { Layout, SelectOption, Text, TextProps } from '@harness/uicore'
 import type { IItemRendererProps } from '@blueprintjs/select'
+import type { SelectWithBiLevelOption } from '@harness/uicore/dist/components/Select/BiLevelSelect'
 interface ItemRendererWithMenuItemProps {
-  item: SelectOption
+  item: SelectOption | SelectWithBiLevelOption
   itemProps: IItemRendererProps
   disabled?: boolean
   style?: TextProps
+  icon?: IconName
 }
 
 const ItemRendererWithMenuItem = ({
   item,
   itemProps,
   disabled = false,
-  style
+  style,
+  icon
 }: ItemRendererWithMenuItemProps): React.ReactElement => {
   const { handleClick } = itemProps
   return (
@@ -28,7 +31,7 @@ const ItemRendererWithMenuItem = ({
       <Menu.Item
         text={
           <Layout.Horizontal spacing="small" {...style}>
-            <Text>{item.label}</Text>
+            <Text icon={icon}>{item.label}</Text>
           </Layout.Horizontal>
         }
         disabled={disabled}
