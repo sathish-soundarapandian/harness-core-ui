@@ -13,6 +13,7 @@ import { Color } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { ExitModalActions, Category, FeatureActions } from '@common/constants/TrackingConstants'
+import useJira from '@cf/hooks/useJira'
 import { FlagTypeVariations } from './FlagDialogUtils'
 import FlagWizard from '../CreateFlagWizard/FlagWizard'
 import FlagTypeElement from '../CreateFlagType/FlagTypeElement'
@@ -29,6 +30,7 @@ const FlagModal: React.FC<FlagModalProps> = ({ disabled, environment, isLinkVari
   const { getString } = useStrings()
   const [flagTypeClicked, setFlagTypeClicked] = useState(false)
   const [flagTypeView, setFlagTypeView] = useState('')
+  const { urlJiraIssueKey } = useJira()
 
   const booleanFlagBtn = (typeOfFlag: boolean): void => {
     setFlagTypeClicked(typeOfFlag)
@@ -105,6 +107,7 @@ const FlagModal: React.FC<FlagModalProps> = ({ disabled, environment, isLinkVari
             environmentIdentifier={environment}
             toggleFlagType={toggleFlagType}
             hideModal={hideModal}
+            jiraIssueKey={urlJiraIssueKey}
             goBackToTypeSelections={() => {
               trackEvent(FeatureActions.BackToSelectFeatureFlagType, {
                 category: Category.FEATUREFLAG
@@ -133,6 +136,12 @@ const FlagModal: React.FC<FlagModalProps> = ({ disabled, environment, isLinkVari
       </Dialog>
     )
   }, [flagTypeClicked, flagTypeView])
+
+  useEffect(() => {
+    if (urlJiraIssueKey) {
+      showModal()
+    }
+  }, [urlJiraIssueKey, showModal])
 
   return <CreateFlagButton disabled={disabled} showModal={showModal} isLinkVariation={isLinkVariation} />
 }

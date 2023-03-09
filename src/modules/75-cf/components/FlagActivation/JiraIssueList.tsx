@@ -8,33 +8,39 @@
 import { Heading, Layout, Text } from '@harness/uicore'
 import { Color, FontVariation } from '@harness/design-system'
 import React, { FC } from 'react'
+
 import { useStrings } from 'framework/strings'
 import type { JiraIssue } from 'services/cf'
+import LinkJiraIssueModal from './LinkJiraIssueModal'
 
 export interface JiraIssueListProps {
   jiraIssues?: JiraIssue[]
+  featureIdentifier: string
+  refetchFlag: () => void
 }
 
-const FlagJiraIssues: FC<JiraIssueListProps> = ({ jiraIssues = [] }) => {
+const FlagJiraIssues: FC<JiraIssueListProps> = ({ featureIdentifier, refetchFlag, jiraIssues = [] }) => {
   const { getString } = useStrings()
 
   return (
-    <Layout.Vertical spacing="small">
-      <div>
-        <Heading level={5} font={{ variation: FontVariation.H5 }}>
-          {getString('cf.featureFlagDetail.jiraIssuesTitle')}
-        </Heading>
-        <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_500}>
-          {getString('cf.featureFlagDetail.jiraIssuesDescription')}
-        </Text>
-      </div>
-
-      {jiraIssues.map(issue => (
-        <a key={issue.issueKey} href={issue.issueURL} target="_blank" rel="noreferrer noopener">
-          {issue.issueKey}
-        </a>
-      ))}
-    </Layout.Vertical>
+    <>
+      <Layout.Vertical spacing="small">
+        <div>
+          <Heading level={5} font={{ variation: FontVariation.H5 }}>
+            {getString('cf.featureFlagDetail.jiraIssuesTitle')}
+          </Heading>
+          <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.GREY_500}>
+            {getString('cf.featureFlagDetail.jiraIssuesDescription')}
+          </Text>
+        </div>
+        {jiraIssues.map(issue => (
+          <a key={issue.issueKey} href={issue.issueURL} target="_blank" rel="noreferrer noopener">
+            {issue.issueKey}
+          </a>
+        ))}
+      </Layout.Vertical>
+      <LinkJiraIssueModal featureIdentifier={featureIdentifier} refetchFlag={refetchFlag} />
+    </>
   )
 }
 

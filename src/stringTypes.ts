@@ -7324,6 +7324,14 @@ export interface StringsMap {
   'cf.featureFlags.ifClauseServePercentageRollout': string
   'cf.featureFlags.ifFlagOffServe': string
   'cf.featureFlags.ifFlagOnServe': string
+  'cf.featureFlags.jira.errorMessage': string
+  'cf.featureFlags.jira.inputLabel': string
+  'cf.featureFlags.jira.inputPlaceholder': string
+  'cf.featureFlags.jira.jiraIssueRequiredError': string
+  'cf.featureFlags.jira.jiraModalTitle': string
+  'cf.featureFlags.jira.newJiraIssueButton': string
+  'cf.featureFlags.jira.searchErrorMessage': string
+  'cf.featureFlags.jira.successMessage': string
   'cf.featureFlags.makeSure': string
   'cf.featureFlags.metrics.evaluationStatistics': string
   'cf.featureFlags.metrics.evaluations': string

@@ -179,6 +179,16 @@ featureFlags:
       selectTargetGroup: Please select a Target Group
       valueRequired: Please enter a value
       valueMustAddTo100: Values must add up to 100%
+  jira:
+    newJiraIssueButton: New Jira Issue
+    jiraIssueRequiredError: Jira Issue is Required
+    jiraModalTitle: Add Jira Issue
+    inputLabel: Jira Issue
+    inputPlaceholder: Search for Jira Issue by Issue
+    successMessage: Successfully added Jira Issue
+    errorMessage: Unable to add Jira Issue
+    searchErrorMessage: Unable to fetch Jira Issues
+
   metrics:
     title: 'Metrics '
     noMetrics: No Evaluations

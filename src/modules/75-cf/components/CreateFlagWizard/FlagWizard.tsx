@@ -12,7 +12,8 @@ import {
   useCreateFeatureFlag,
   FeatureFlagRequestRequestBody,
   CreateFeatureFlagQueryParams,
-  GitSyncErrorResponse
+  GitSyncErrorResponse,
+  usePatchFeature
 } from 'services/cf'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
 import routes from '@common/RouteDefinitions'
@@ -29,11 +30,13 @@ import FlagElemBoolean from './FlagElemBoolean'
 import FlagElemMultivariate from './FlagElemMultivariate'
 import { FlagTypeVariations } from '../CreateFlagDialog/FlagDialogUtils'
 import SaveFlagRepoStep from './SaveFlagRepoStep'
+import patch from '../../utils/instructions'
 import css from './FlagWizard.module.scss'
 
 interface FlagWizardProps {
   flagTypeView: string
   environmentIdentifier: string
+  jiraIssueKey?: string
   toggleFlagType: (newFlag: string) => void
   hideModal: () => void
   goBackToTypeSelections: () => void
@@ -70,7 +73,17 @@ const FlagWizard: React.FC<FlagWizardProps> = props => {
     } as CreateFeatureFlagQueryParams
   })
 
-  const onWizardSubmit = (formData: FlagWizardFormValues | undefined): void => {
+  const { mutate } = usePatchFeature({
+    identifier: '',
+    queryParams: {
+      projectIdentifier,
+      environmentIdentifier: activeEnvironment,
+      accountIdentifier,
+      orgIdentifier
+    }
+  })
+
+  const onWizardSubmit = async (formData: FlagWizardFormValues | undefined): Promise<void> => {
     modalErrorHandler?.hide()
 
     if (formData) {
@@ -88,40 +101,77 @@ const FlagWizard: React.FC<FlagWizardProps> = props => {
       }
     }
 
+    const checkJiraIssue = (jiraIssueKey: string): Promise<void> => {
+      return new Promise(resolve => {
+        patch.feature.addInstruction({
+          kind: 'addJiraIssueToFlag',
+          parameters: {
+            issueKey: jiraIssueKey
+          }
+        })
+        patch.feature.onPatchAvailable(async instructions => {
+          try {
+            await mutate(instructions, {
+              pathParams: {
+                identifier: formData?.identifier as string
+              },
+              queryParams: {
+                projectIdentifier,
+                environmentIdentifier: activeEnvironment,
+                accountIdentifier,
+                orgIdentifier
+              }
+            })
+            // We dont want to stop the flow if the Jira Issue wasn't created so show error and resolve regardless
+          } catch (error) {
+            showError(getErrorMessage(error), 0, 'cf.featureFlags.jira.errorMessage')
+          } finally {
+            resolve()
+          }
+        })
+      })
+    }
+
     if (formData) {
-      createFeatureFlag(formData)
-        .then(async response => {
-          if (!isAutoCommitEnabled && formData.autoCommit) {
-            await handleAutoCommit(formData.autoCommit)
+      try {
+        const response = await createFeatureFlag(formData)
+
+        if (!isAutoCommitEnabled && formData.autoCommit) {
+          await handleAutoCommit(formData.autoCommit)
+        }
+
+        // if we have recieve a Jira Issue key in URL, we assume the user came from Jira
+        if (props.jiraIssueKey) {
+          await checkJiraIssue(props.jiraIssueKey)
+        }
+
+        hideModal()
+        history.push({
+          pathname: withActiveEnvironment(
+            routes.toCFFeatureFlagsDetail({
+              orgIdentifier: orgIdentifier as string,
+              projectIdentifier: projectIdentifier as string,
+              featureFlagIdentifier: formData.identifier,
+              accountId: accountIdentifier
+            }),
+            environmentIdentifier
+          ),
+          state: {
+            governanceMetadata: response?.details?.governanceMetadata
           }
-          hideModal()
-          history.push({
-            pathname: withActiveEnvironment(
-              routes.toCFFeatureFlagsDetail({
-                orgIdentifier: orgIdentifier as string,
-                projectIdentifier: projectIdentifier as string,
-                featureFlagIdentifier: formData.identifier,
-                accountId: accountIdentifier
-              }),
-              environmentIdentifier
-            ),
-            state: {
-              governanceMetadata: response?.details?.governanceMetadata
-            }
-          })
-          showToaster(getString('cf.messages.flagCreated'))
         })
-        .catch(error => {
-          if (error.status === GIT_SYNC_ERROR_CODE) {
-            handleError(error.data as GitSyncErrorResponse)
+        showToaster(getString('cf.messages.flagCreated'))
+      } catch (error: any) {
+        if (error.status === GIT_SYNC_ERROR_CODE) {
+          handleError(error.data as GitSyncErrorResponse)
+        } else {
+          if (isGovernanceError(error.data)) {
+            handleGovernanceError(error.data)
           } else {
-            if (isGovernanceError(error.data)) {
-              handleGovernanceError(error.data)
-            } else {
-              showError(getErrorMessage(error), 0, 'cf.savegw.error')
-            }
+            showError(getErrorMessage(error), 0, 'cf.savegw.error')
           }
-        })
+        }
+      }
     } else {
       hideModal()
     }
