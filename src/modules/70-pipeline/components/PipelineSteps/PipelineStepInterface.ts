@@ -186,7 +186,8 @@ export enum StepType {
   TerraformCloudRun = 'TerraformCloudRun',
   TerraformCloudRollback = 'TerraformCloudRollback',
   SscaOrchestration = 'SscaOrchestration',
-  CustomIngestion = 'CustomIngestion'
+  CustomIngestion = 'CustomIngestion',
+  AWSSecurityHub = 'AWSSecurityHub'
 }
 
 export interface PipelineInfrastructureV2 extends PipelineInfrastructure {

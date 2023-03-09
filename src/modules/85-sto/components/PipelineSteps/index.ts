@@ -18,6 +18,7 @@ import { PrismaCloudStep } from './PrismaCloudStep/PrismaCloudStep'
 import { CheckmarxStep } from './CheckmarxStep/CheckmarxStep'
 import { MendStep } from './MendStep/MendStep'
 import { CustomIngestionStep } from './CustomIngestionStep/CustomIngestionStep'
+import { AWSSecurityHubStep } from './AWSSecurityHubStep/AWSSecurityHubStep'
 
 factory.registerStep(new ZeroNorthStep())
 factory.registerStep(new AquatrivyStep())
@@ -31,3 +32,4 @@ factory.registerStep(new PrismaCloudStep())
 factory.registerStep(new CheckmarxStep())
 factory.registerStep(new MendStep())
 factory.registerStep(new CustomIngestionStep())
+factory.registerStep(new AWSSecurityHubStep())
