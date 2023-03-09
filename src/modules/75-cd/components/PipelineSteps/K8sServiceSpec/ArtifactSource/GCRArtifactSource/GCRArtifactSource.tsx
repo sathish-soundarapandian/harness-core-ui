@@ -255,23 +255,6 @@ const Content = (props: GCRRenderContent): JSX.Element => {
                 }}
               />
             )}
-            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.registryHostname`)) ===
-              MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
-                className={css.configureOptions}
-                style={{ alignSelf: 'center' }}
-                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.registryHostname`)}
-                type="String"
-                variableName="registryHostname"
-                showRequiredField={false}
-                isReadonly={readonly}
-                showDefaultField={true}
-                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                onChange={value => {
-                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.registryHostname`, value)
-                }}
-              />
-            )}
           </div>
 
           {isFieldRuntime(`artifacts.${artifactPath}.spec.imagePath`, template) && (
