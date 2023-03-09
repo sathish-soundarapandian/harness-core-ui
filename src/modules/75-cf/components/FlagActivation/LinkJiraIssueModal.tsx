@@ -92,7 +92,7 @@ const LinkJiraIssueModal: FC<LinkJiraIssueModalProps> = ({ featureIdentifier, re
       } catch (e) {
         showError(getErrorMessage(e), undefined, 'cf.featureFlags.jira.errorMessage')
       } finally {
-        patch.feature.reset
+        patch.feature.reset()
       }
     })
   }
@@ -157,7 +157,10 @@ const LinkJiraIssueModal: FC<LinkJiraIssueModalProps> = ({ featureIdentifier, re
                     variation={ButtonVariation.TERTIARY}
                     disabled={patchLoading || jiraIssuesLoading}
                     text={getString('cancel')}
-                    onClick={hideModal}
+                    onClick={() => {
+                      hideModal()
+                      formikProps.resetForm()
+                    }}
                   />
                 </Layout.Horizontal>
               }
@@ -170,9 +173,9 @@ const LinkJiraIssueModal: FC<LinkJiraIssueModalProps> = ({ featureIdentifier, re
                 selectProps={{
                   loadingItems: jiraIssuesLoading
                 }}
-                onQueryChange={async name => {
-                  if (name) {
-                    await refetch({ queryParams: { ...queryParams, searchTerm: name } })
+                onQueryChange={async query => {
+                  if (query) {
+                    await refetch({ queryParams: { ...queryParams, searchTerm: query } })
                   }
                 }}
               />
