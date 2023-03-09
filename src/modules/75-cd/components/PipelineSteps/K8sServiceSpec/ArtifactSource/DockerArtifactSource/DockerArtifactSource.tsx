@@ -24,7 +24,6 @@ import { TriggerDefaultFieldList } from '@triggers/pages/triggers/utils/Triggers
 import { useStrings } from 'framework/strings'
 import { useVariablesExpression } from '@pipeline/components/PipelineStudio/PiplineHooks/useVariablesExpression'
 import { TextFieldInputSetView } from '@pipeline/components/InputSetView/TextFieldInputSetView/TextFieldInputSetView'
-import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 
 import { isFieldRuntime } from '../../K8sServiceSpecHelper'
@@ -38,7 +37,6 @@ import {
   isNewServiceEnvEntity,
   resetTags,
   shouldFetchTagsSource,
-  isExecutionTimeFieldDisabled,
   getValidInitialValuePath
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
@@ -343,24 +341,6 @@ const Content = (props: DockerRenderContent): React.ReactElement => {
                 name={`${path}.artifacts.${artifactPath}.spec.tagRegex`}
                 fieldPath={`artifacts.${artifactPath}.spec.tagRegex`}
                 template={template}
-              />
-            )}
-            {getMultiTypeFromValue(get(formik?.values, `${path}.artifacts.${artifactPath}.spec.tagRegex`)) ===
-              MultiTypeInputType.RUNTIME && (
-              <ConfigureOptions
-                className={css.configureOptions}
-                style={{ alignSelf: 'center' }}
-                value={get(formik?.values, `${path}.artifacts.${artifactPath}.spec.tagRegex`)}
-                type="String"
-                variableName="tagRegex"
-                showRequiredField={false}
-                isReadonly={readonly}
-                showDefaultField={true}
-                isExecutionTimeFieldDisabled={isExecutionTimeFieldDisabled(stepViewType as StepViewType)}
-                onChange={value => {
-                  /* istanbul ignore next */
-                  formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.tagRegex`, value)
-                }}
               />
             )}
           </div>
