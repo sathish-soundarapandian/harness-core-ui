@@ -244,7 +244,12 @@ export function LicenseStoreProvider(props: React.PropsWithChildren<unknown>): R
          * SRM Module's license will be stored under `CV` property name
          */
         const licenseKey = key === ModuleName.SRM ? ModuleName.CV : key
-        licenses[licenseKey] = moduleLicenses[moduleLicenses.length - 1]
+        const activeLicense = moduleLicenses.find(license => license.status === 'ACTIVE')
+        if (activeLicense !== undefined) {
+          licenses[licenseKey] = activeLicense
+        } else {
+          licenses[licenseKey] = moduleLicenses[moduleLicenses.length - 1]
+        }
       }
     })
 
