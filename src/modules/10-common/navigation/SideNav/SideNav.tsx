@@ -59,7 +59,7 @@ const SideNavCollapseButton: React.FC<{ isExpanded: boolean; onClick: () => void
 export default function SideNav(props: React.PropsWithChildren<SideNavProps>): ReactElement {
   const { collapseByDefault = false } = props
   const { getString } = useStrings()
-  const { SPG_SIDENAV_COLLAPSE } = useFeatureFlags()
+  const { SPG_SIDENAV_COLLAPSE, PLG_ENABLE_CROSS_GENERATION_ACCESS } = useFeatureFlags()
   const params = useParams<ProjectPathProps>()
   const { accountId } = useParams<AccountPathProps>()
   const [sideNavExpanded, setSideNavExpanded] = useState<boolean>(!collapseByDefault)
@@ -68,6 +68,10 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
     : ''
   const { data } = useGetAccountNG({ accountIdentifier: accountId, queryParams: { accountIdentifier: accountId } })
   const account = data?.data
+  let newNavFlag = true
+  if (PLG_ENABLE_CROSS_GENERATION_ACCESS) {
+    newNavFlag = account?.crossGenerationAccessEnabled
+  }
   return (
     <div
       className={cx(css.main, {
@@ -76,7 +80,7 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
     >
       <>
         <div>{props.children}</div>
-        {props.launchButtonText && props.launchButtonRedirectUrl && account?.crossGenerationAccessEnabled ? (
+        {props.launchButtonText && props.launchButtonRedirectUrl && newNavFlag ? (
           <LaunchButton
             launchButtonText={getString(props.launchButtonText)}
             redirectUrl={returnLaunchUrl(launchButtonRedirectUrl)}

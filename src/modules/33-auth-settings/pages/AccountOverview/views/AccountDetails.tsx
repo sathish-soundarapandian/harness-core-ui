@@ -21,6 +21,7 @@ import { ResourceType } from '@rbac/interfaces/ResourceType'
 import useSwitchAccountModal from '@common/modals/SwitchAccount/useSwitchAccountModal'
 import { useGetCommunity } from '@common/utils/utils'
 import { useLicenseStore } from 'framework/LicenseStore/LicenseStoreContext'
+import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { usePermission } from '@rbac/hooks/usePermission'
 import AccountNameForm from './AccountNameForm'
 import css from '../AccountOverview.module.scss'
@@ -47,6 +48,7 @@ const AccountDetails: React.FC = () => {
   const { openDefaultExperienceModal } = useDefaultExperienceModal({ refetchAcct })
   const { openSwitchAccountModal } = useSwitchAccountModal({})
   const isCommunity = useGetCommunity()
+  const { PLG_ENABLE_CROSS_GENERATION_ACCESS } = useFeatureFlags()
   const isCDActive = licenseInformation?.['CD']?.status === 'ACTIVE'
   const accountData = data?.data
   const [crossAccessVariable, setCrossAccessVariable] = React.useState(false)
@@ -137,7 +139,7 @@ const AccountDetails: React.FC = () => {
           {accountData?.cluster}
         </Text>
       </Layout.Horizontal>
-      {isCDActive && canEdit ? (
+      {isCDActive && canEdit && PLG_ENABLE_CROSS_GENERATION_ACCESS ? (
         <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} margin={{ bottom: 'large' }}>
           <Text className={css.minWidth}>{getString('common.allowFirstGenAccess')}</Text>
           <Switch
@@ -152,7 +154,7 @@ const AccountDetails: React.FC = () => {
         </Layout.Horizontal>
       ) : null}
 
-      {crossAccessVariable ? (
+      {PLG_ENABLE_CROSS_GENERATION_ACCESS && crossAccessVariable ? (
         <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
           <Text className={css.minWidth}>{getString('common.defaultExperience')}</Text>
           <Text color={Color.GREY_800}>{defaultExperienceStr}</Text>
@@ -171,7 +173,26 @@ const AccountDetails: React.FC = () => {
             />
           )}
         </Layout.Horizontal>
-      ) : null}
+      ) : (
+        <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }}>
+          <Text className={css.minWidth}>{getString('common.defaultExperience')}</Text>
+          <Text color={Color.GREY_800}>{defaultExperienceStr}</Text>
+          {!isCommunity && (
+            <RbacButton
+              variation={ButtonVariation.LINK}
+              padding="none"
+              text={getString('change')}
+              onClick={() => openDefaultExperienceModal(accountData?.defaultExperience as Experiences)}
+              permission={{
+                permission: PermissionIdentifier.EDIT_ACCOUNT,
+                resource: {
+                  resourceType: ResourceType.ACCOUNT
+                }
+              }}
+            />
+          )}
+        </Layout.Horizontal>
+      )}
     </Container>
   )
 }
