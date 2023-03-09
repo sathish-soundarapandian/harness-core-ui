@@ -6,29 +6,42 @@
  */
 
 import { Types as ValidationFieldTypes } from '@pipeline/components/PipelineSteps/Steps/StepsValidateUtils'
+import { Types as TransformValuesTypes } from '@pipeline/components/PipelineSteps/Steps/StepsTransformValuesUtils'
 import {
   commonFieldsValidationConfig,
   ingestionFieldValidationConfig,
   commonFieldsTransformConfig as transformValuesFieldsConfigValues,
   additionalFieldsValidationConfigEitView,
   additionalFieldsValidationConfigInputSet,
-  authFieldsValidationConfig
+  authFieldsValidationConfig,
+  authFieldsTransformConfig
 } from '../constants'
 import type { Field, InputSetViewValidateFieldsConfig } from '../types'
 import type { AWSSecurityHubStepData } from './AWSSecurityHubStep'
 
-export const transformValuesFieldsConfig = (data: AWSSecurityHubStepData): Field[] =>
-  transformValuesFieldsConfigValues(data)
+export const transformValuesFieldsConfig = (data: AWSSecurityHubStepData): Field[] => {
+  const config = [...transformValuesFieldsConfigValues(data), ...authFieldsTransformConfig(data)]
+
+  if (data.spec.mode === 'extraction') {
+    config.push({
+      name: 'spec.auth.access_id',
+      type: TransformValuesTypes.Text
+    })
+  }
+
+  return config
+}
 
 const authAccessIdValidation = (data: AWSSecurityHubStepData): InputSetViewValidateFieldsConfig => ({
   name: 'spec.auth.access_id',
   type: ValidationFieldTypes.Text,
+  label: 'sto.stepField.authAccessId',
   isRequired: data.spec.mode === 'extraction'
 })
 
 export const editViewValidateFieldsConfig = (data: AWSSecurityHubStepData) => {
   const editViewValidationConfig = [
-    ...commonFieldsValidationConfig.filter(field => field.name !== 'spec.target.type'),
+    ...commonFieldsValidationConfig,
     ...ingestionFieldValidationConfig(data),
     ...authFieldsValidationConfig(data),
     ...additionalFieldsValidationConfigEitView,
@@ -40,7 +53,7 @@ export const editViewValidateFieldsConfig = (data: AWSSecurityHubStepData) => {
 
 export function getInputSetViewValidateFieldsConfig(data: AWSSecurityHubStepData): InputSetViewValidateFieldsConfig[] {
   const inputSetViewValidateFieldsConfig: InputSetViewValidateFieldsConfig[] = [
-    ...commonFieldsValidationConfig.filter(field => field.name !== 'spec.target.type'),
+    ...commonFieldsValidationConfig,
     ...ingestionFieldValidationConfig(data),
     ...additionalFieldsValidationConfigInputSet,
     authAccessIdValidation(data)
