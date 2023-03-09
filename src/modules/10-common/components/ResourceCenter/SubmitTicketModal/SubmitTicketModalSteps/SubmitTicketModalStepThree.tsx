@@ -22,11 +22,6 @@ interface SubmitTicketModalStepThreeProps {
 export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketModalStepThreeProps) => {
   const { stepName, onCloseHandler, prevStepData } = props
 
-  const [fileData, setFileData] = React.useState()
-
-  const fileUploadHandler = (event: any): void => {
-    setFileData(event.target.files[0])
-  }
   const { module } = useModuleInfo()
 
   return (
@@ -37,15 +32,14 @@ export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketM
       <Formik
         initialValues={{
           ticketDetails: '',
-          module: module,
+          module: module ? module : 'platform',
           component: ''
         }}
         formName="ticketDetailsForm"
         validationSchema={Yup.object().shape({
           ticketDetails: Yup.string().required('Ticket Details are required')
         })}
-        onSubmit={() => {
-          //   console.log({ ...prevStepData, val, fileData })
+        onSubmit={(val: any) => {
           onCloseHandler()
         }}
       >
@@ -79,7 +73,13 @@ export const SubmitTicketModalStepThree = (props: StepProps<any> & SubmitTicketM
                 />
               </Layout.Horizontal>
               <Layout.Horizontal spacing="medium">
-                <input name="fileData" type="file" onChange={fileUploadHandler} />
+                <FormInput.FileInput
+                  name="fileData"
+                  label={'Upload File'}
+                  buttonText={'Upload'}
+                  placeholder={'Upload Some file here'}
+                  multiple
+                />
               </Layout.Horizontal>
               <Layout.Horizontal spacing="medium">
                 <Button
@@ -110,6 +110,10 @@ const moduleOptions = [
   {
     label: 'CV',
     value: 'cv'
+  },
+  {
+    label: 'PL',
+    value: 'platform'
   }
 ]
 
