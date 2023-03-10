@@ -36,6 +36,8 @@ import { getLocationPathName } from 'framework/utils/WindowLocation'
 import { useEventSourceListener } from '@common/hooks/useEventSourceListener'
 import ChildAppError from './ChildAppError'
 import type { ChildAppProps, Scope } from './index'
+import SideNav from '@common/navigation/SideNav'
+import { SidebarLink } from '@common/navigation/SideNav/SideNav'
 
 const logger = loggerFor(ModuleName.FRAMEWORK)
 
@@ -103,7 +105,9 @@ export class ChildAppMounter<T = never> extends React.Component<
             YAMLBuilder,
             MonacoDiffEditor,
             LevelUpBanner,
-            ParentLink
+            ParentLink,
+            SideNav,
+            SidebarLink
           }}
           hooks={{
             useDocumentTitle,
