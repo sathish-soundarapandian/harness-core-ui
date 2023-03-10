@@ -82,7 +82,8 @@ export default (
     <RouteWithLayout
       path={[routes.toIDPAdmin({ ...accountPathProps })]}
       pageName={PAGE_NAME.IDPAdminPage}
-      sidebarProps={IDPAdminSideNavProps}
+      layout={MinimalLayout}
+      // sidebarProps={IDPAdminSideNavProps}
     >
       <ChildAppMounter<IDPCustomMicroFrontendProps>
         ChildApp={IDPAdminMicroFrontend}
