@@ -8,7 +8,7 @@
 import React, { useEffect, useCallback, useState } from 'react'
 import { Dialog, Intent } from '@blueprintjs/core'
 import { useParams, useLocation, useHistory } from 'react-router-dom'
-import { get, pickBy } from 'lodash-es'
+import { get, pickBy, isEmpty } from 'lodash-es'
 import { Text, Icon, PageError, PageSpinner, Layout, Container, Heading } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import { CIExecutionImages, getDeprecatedConfigPromise, ResponseCIExecutionImages } from 'services/ci'
@@ -140,7 +140,7 @@ export default function ExecutionLandingPage(props: React.PropsWithChildren<unkn
         queryParams: { accountIdentifier: accountId }
       }).then((response: ResponseCIExecutionImages) => {
         const { data: deprecatedImages } = response
-        if (deprecatedImages) {
+        if (!isEmpty(deprecatedImages)) {
           setShowWarningBanner(true)
           setDeprecatedImagesUsed(deprecatedImages)
         }
