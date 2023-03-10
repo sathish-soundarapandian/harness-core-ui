@@ -6,7 +6,6 @@
  */
 
 import React, { FC, ImgHTMLAttributes, useEffect, useState } from 'react'
-import { defaultTo } from 'lodash-es'
 import classNames from 'classnames'
 import { Icon, IconName } from '@harness/icons'
 import css from './ImagePreview.module.scss'
@@ -31,10 +30,8 @@ export const ImagePreview: FC<ImagePreviewProps> = ({ size, className, alt, fall
     setError(true)
   }
 
-  if (error) {
-    return (
-      <Icon data-testid={`fallback-icon-${fallbackIcon}`} name={defaultTo(fallbackIcon, 'danger-icon')} size={size} />
-    )
+  if (error && fallbackIcon) {
+    return <Icon data-testid={`fallback-icon-${fallbackIcon}`} name={fallbackIcon} size={size} />
   }
 
   return (
