@@ -1,6 +1,6 @@
 {
   "name": "@harness/microfrontends",
-  "version": "1.41.idp",
+  "version": "1.41.0-idp",
   "description": "",
   "types": "dist/microfrontends/index.d.ts",
   "main": "dist/microfrontends/index.js",
