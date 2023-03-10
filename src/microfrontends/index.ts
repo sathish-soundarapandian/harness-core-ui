@@ -49,6 +49,8 @@ import type { getLocationPathName } from 'framework/utils/WindowLocation'
 import type { IACMCustomMicroFrontendProps } from '@iacm/interfaces/IACMCustomMicroFrontendProps.types'
 import type { SSCACustomMicroFrontendProps } from '@ssca/interfaces/SSCACustomMicroFrontendProps.types'
 import type { IDPCustomMicroFrontendProps } from '@idp/interfaces/IDPCustomMicroFrontendProps.types'
+import type SideNav from '@common/navigation/SideNav'
+import type { SidebarLink } from '@common/navigation/SideNav/SideNav'
 
 export interface Scope {
   accountId?: string
@@ -66,6 +68,8 @@ export interface CommonComponents {
   RBACTooltip?: typeof RBACTooltip
   LevelUpBanner?: typeof LevelUpBanner
   ParentLink?: typeof ParentLink
+  SideNav?: typeof SideNav
+  SidebarLink?: typeof SidebarLink
 }
 
 export interface Hooks {

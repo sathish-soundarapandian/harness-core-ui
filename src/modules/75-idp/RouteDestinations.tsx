@@ -17,13 +17,11 @@ import { useGetUserGroupAggregateList } from 'services/cd-ng'
 import { MinimalLayout } from '@common/layouts'
 import { PAGE_NAME } from '@common/pages/pageContext/PageName'
 import { ConnectorReferenceField } from '@connectors/components/ConnectorReferenceField/ConnectorReferenceField'
-import type { SidebarContext } from '@common/navigation/SidebarProvider'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
 import { String } from 'framework/strings'
 import RbacFactory from '@rbac/factories/RbacFactory'
 import type { AccountPathProps } from '@common/interfaces/RouteInterfaces'
-import IDPAdminSideNav from './components/IDPAdminSideNav/IDPAdminSideNav'
 import type { IDPCustomMicroFrontendProps } from './interfaces/IDPCustomMicroFrontendProps.types'
 import './idp.module.scss'
 
@@ -40,13 +38,6 @@ const IDPMicroFrontend = React.lazy(() => import('idp/MicroFrontendApp'))
 
 // eslint-disable-next-line import/no-unresolved
 const IDPAdminMicroFrontend = React.lazy(() => import('idpadmin/MicroFrontendApp'))
-
-const IDPAdminSideNavProps: SidebarContext = {
-  navComponent: IDPAdminSideNav,
-  subtitle: 'Internal Developer',
-  title: 'Portal',
-  icon: 'idp'
-}
 
 function RedirectToIDPDefaultPath(): React.ReactElement {
   const params = useParams<AccountPathProps>()
@@ -83,7 +74,6 @@ export default (
       path={[routes.toIDPAdmin({ ...accountPathProps })]}
       pageName={PAGE_NAME.IDPAdminPage}
       layout={MinimalLayout}
-      // sidebarProps={IDPAdminSideNavProps}
     >
       <ChildAppMounter<IDPCustomMicroFrontendProps>
         ChildApp={IDPAdminMicroFrontend}

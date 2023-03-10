@@ -34,10 +34,10 @@ import LevelUpBanner from '@common/components/FeatureWarning/LevelUpBanner'
 import ParentLink from '@common/components/ParentLink/ParentLink'
 import { getLocationPathName } from 'framework/utils/WindowLocation'
 import { useEventSourceListener } from '@common/hooks/useEventSourceListener'
-import ChildAppError from './ChildAppError'
-import type { ChildAppProps, Scope } from './index'
 import SideNav from '@common/navigation/SideNav'
 import { SidebarLink } from '@common/navigation/SideNav/SideNav'
+import ChildAppError from './ChildAppError'
+import type { ChildAppProps, Scope } from './index'
 
 const logger = loggerFor(ModuleName.FRAMEWORK)
 
