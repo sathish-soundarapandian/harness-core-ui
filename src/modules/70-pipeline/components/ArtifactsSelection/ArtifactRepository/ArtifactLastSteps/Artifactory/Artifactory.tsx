@@ -541,10 +541,9 @@ function Artifactory({
                           ...formik.values,
                           repository: value.value as string,
                           artifactPath:
-                            getMultiTypeFromValue(get(formik.values, 'artifactDirectory', '')) ===
-                            MultiTypeInputType.FIXED
+                            getMultiTypeFromValue(get(formik.values, 'artifactPath', '')) === MultiTypeInputType.FIXED
                               ? ''
-                              : get(formik.values, 'tag', ''),
+                              : get(formik.values, 'artifactPath', ''),
                           tag:
                             getMultiTypeFromValue(get(formik.values, 'tag', '')) === MultiTypeInputType.FIXED
                               ? ''
