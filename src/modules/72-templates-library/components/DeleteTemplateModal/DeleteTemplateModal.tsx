@@ -17,11 +17,9 @@ import {
   FormError,
   FormikForm,
   useConfirmationDialog,
-  ButtonSize,
-  SelectOption
+  ButtonSize
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
-import { Spinner } from '@blueprintjs/core'
 
 import { defaultTo, get, isEmpty, pick } from 'lodash-es'
 import { Formik } from 'formik'
