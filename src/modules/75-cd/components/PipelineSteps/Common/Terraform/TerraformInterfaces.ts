@@ -393,8 +393,8 @@ export const onSubmitTerraformData = (values: any): TerraformData => {
       configObject['targets'] = targets
     }
 
-    if (get(values.spec, `${fieldPath}.spec?.varFiles`)?.length) {
-      configObject['varFiles'] = get(values.spec, `${fieldPath}.spec?.varFiles`)
+    if (get(values.spec, `${fieldPath}.spec.varFiles`)?.length) {
+      configObject['varFiles'] = get(values.spec, `${fieldPath}.spec.varFiles`)
     } else {
       unset(get(values.spec, `${fieldPath}.spec`), 'varFiles')
     }

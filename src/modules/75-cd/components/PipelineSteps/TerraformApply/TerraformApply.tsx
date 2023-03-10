@@ -26,8 +26,7 @@ import {
   getTerraformInitialValues,
   onSubmitTerraformData,
   TerraformVariableStepProps,
-  TerraformData,
-  ConfigurationTypes
+  TerraformData
 } from '../Common/Terraform/TerraformInterfaces'
 
 import TerraformEditView from '../Common/Terraform/Editview/TerraformEditView'
