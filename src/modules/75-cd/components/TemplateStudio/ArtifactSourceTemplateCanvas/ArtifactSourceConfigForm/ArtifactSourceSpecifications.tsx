@@ -15,7 +15,9 @@ import {
   MultiTypeInputType,
   AllowedTypesWithRunTime,
   getMultiTypeFromValue,
-  AllowedTypes
+  AllowedTypes,
+  RUNTIME_INPUT_VALUE,
+  Container
 } from '@harness/uicore'
 import { useParams } from 'react-router-dom'
 import { useStrings } from 'framework/strings'
@@ -57,6 +59,9 @@ import type { ArtifactSourceConfigFormData } from '@cd/components/TemplateStudio
 import { FormMultiTypeConnectorField } from '@connectors/components/ConnectorReferenceField/FormMultiTypeConnectorField'
 import { ConfigureOptions } from '@common/components/ConfigureOptions/ConfigureOptions'
 import css from './ArtifactSourceConfigForm.module.scss'
+import { getConnectorValue } from '../ArtifactSourceTemplateCanvas'
+import { usePrevious } from '@common/hooks/usePrevious'
+import { get, isUndefined, mapValues, pick, set, update } from 'lodash-es'
 
 const ALLOWABLE_TYPES = [
   MultiTypeInputType.FIXED,
@@ -205,7 +210,10 @@ export function ArtifactSourceSpecifications(props: {
     state: { template },
     isReadonly
   } = React.useContext(TemplateContext)
-  const { values: formValues, setFieldValue, setValues } = formik
+  const [connectorChange, setConnectorChange] = React.useState(0)
+  const { values: formValues, setFieldValue, setValues, resetForm } = formik
+  const cValue = getConnectorValue(formValues.connectorId, formValues)
+  const prevCValue = usePrevious(cValue) ?? cValue
   const { getString } = useStrings()
   const { expressions } = useVariablesExpression()
   const { templateIdentifier } = useParams<TemplateStudioPathProps>()
@@ -218,7 +226,31 @@ export function ArtifactSourceSpecifications(props: {
     CD_AMI_ARTIFACTS_NG,
     AZURE_WEBAPP_NG_JENKINS_ARTIFACTS
   } = useFeatureFlags()
+  React.useEffect(() => {
+    if (prevCValue !== cValue) {
+      console.log('abcde', cValue, formValues)
+      // const abc = get(formValues.artifactConfig, 'spec')
+      const abc = mapValues(formValues.artifactConfig.spec, item => {
+        if (!isUndefined(item)) return ''
+      })
+      // const def = console.log('formVD', abc, formValues)
+      const rte = {
+        ...formValues,
+        artifactConfig: { ...{ spec: { ...pick(formValues.artifactConfig.spec, ['connectorRef']) } } }
+      }
+      setValues(rte)
+      console.log('rte', rte, template)
 
+      //setConnectorChange(connectorChange + 1)
+      // const rtt = mapValues(abc, key => formik.setFieldValue(`artifactConfig.spec.${key}`, RUNTIME_INPUT_VALUE))
+      // console.log('abcabc', rtt)
+      // setFieldValue(`artifactConfig.spec.subscriptionId`, RUNTIME_INPUT_VALUE)
+      // console.log('formValues', formValues)
+      // set(formValues.artifactConfig, 'spec.subscriptionId', '')
+      //updateTemplate({})
+    }
+  }, [cValue, prevCValue])
+  console.log('connectorChange', connectorChange)
   const enabledArtifactTypesList = useMemo(
     () =>
       getEnabledArtifactTypesList({
@@ -296,7 +328,7 @@ export function ArtifactSourceSpecifications(props: {
   const artifactConnectorType = ArtifactToConnectorMap[selectedArtifactType]
 
   return (
-    <FormikForm>
+    <FormikForm key={connectorChange}>
       <Layout.Vertical className={css.specificationsFormContainer}>
         <CardWithOuterTitle
           title={getString('connectors.artifactRepoType')}
@@ -336,6 +368,7 @@ export function ArtifactSourceSpecifications(props: {
               </CardWithOuterTitle>
             )}
             <CardWithOuterTitle
+              key={formValues.connectorId as string}
               title={getString('pipeline.artifactsSelection.artifactDetails')}
               dataTooltipId="artifactSourceConfig_artifactSourceDetails"
               headerClassName={css.headerText}

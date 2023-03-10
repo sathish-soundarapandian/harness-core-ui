@@ -56,6 +56,7 @@ function ArtifactSourceConfigForm(props: ArtifactSourceConfigFormProps, formikRe
         initialValues={getArtifactSourceConfigInitialValues()}
         validationSchema={getValidationSchema(getString)}
         validate={updateTemplate}
+        enableReinitialize
       >
         {formik => {
           ref.current = formik
