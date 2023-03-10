@@ -960,17 +960,7 @@ export class TerraformPlan extends PipelineStep<TFPlanFormData> {
     name: '',
     type: StepType.TerraformPlan,
     spec: {
-      provisionerIdentifier: '',
-      configuration: {
-        command: 'Apply',
-        configFiles: {
-          store: {
-            type: 'Git',
-            spec: {}
-          }
-        },
-        secretManagerRef: ''
-      }
+      provisionerIdentifier: ''
     }
   }
   protected stepIcon: IconName = 'terraform-plan'
