@@ -8,8 +8,10 @@
 // this is an auto-generated file, do not update this manually
 declare const styles: {
   readonly badge: string
+  readonly dropdown: string
   readonly preview: string
   readonly selectVersions: string
   readonly selected: string
+  readonly versionDropDown: string
 }
 export default styles

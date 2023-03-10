@@ -15,9 +15,14 @@ import {
   ButtonVariation,
   Text,
   FormError,
-  FormikForm
+  FormikForm,
+  useConfirmationDialog,
+  ButtonSize,
+  SelectOption
 } from '@harness/uicore'
 import { Color } from '@harness/design-system'
+import { Spinner } from '@blueprintjs/core'
+
 import { defaultTo, get, isEmpty, pick } from 'lodash-es'
 import { Formik } from 'formik'
 import { useParams } from 'react-router-dom'
@@ -31,7 +36,8 @@ import {
   TemplateSummaryResponse,
   useDeleteTemplateVersionsOfIdentifier,
   useGetTemplateList,
-  useGetTemplateMetadataList
+  useGetTemplateMetadataList,
+  useUpdateStableTemplate
 } from 'services/template-ng'
 import { TemplatePreview } from '@templates-library/components/TemplatePreview/TemplatePreview'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -39,6 +45,8 @@ import useDeleteConfirmationDialog from '@pipeline/pages/utils/DeleteConfirmDial
 import { useFeatureFlag } from '@common/hooks/useFeatureFlag'
 import { ResourceType } from '@rbac/interfaces/ResourceType'
 import { useEntityDeleteErrorHandlerDialog } from '@common/hooks/EntityDeleteErrorHandlerDialog/useEntityDeleteErrorHandlerDialog'
+import { VersionsDropDown } from '@templates-library/components/VersionsDropDown/VersionsDropDown'
+
 import { FeatureFlag } from '@common/featureFlags'
 import css from './DeleteTemplateModal.module.scss'
 
@@ -76,11 +84,14 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
   const { mutate: deleteTemplates, loading: deleteLoading } = useDeleteTemplateVersionsOfIdentifier({})
   const [templateVersionsToDelete, setTemplateVersionsToDelete] = React.useState<string[]>([])
   const isForceDeletedAllowed = useFeatureFlag(FeatureFlag.CDS_FORCE_DELETE_ENTITIES)
+  const [newStableVersion, setNewStableVersion] = React.useState<string>('')
+  const [currentStableVersion, setCurrentStableVersion] = React.useState<string>('')
 
   const {
     data: templateData,
     loading,
-    error: templatesError
+    error: templatesError,
+    refetch
   } = useMutateAsGet(supportingTemplatesGitx ? useGetTemplateMetadataList : useGetTemplateList, {
     body: { filterType: 'Template', templateIdentifiers: [template.identifier] },
     queryParams: {
@@ -94,12 +105,52 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
     },
     queryParamStringifyOptions: { arrayFormat: 'comma' }
   })
+
+  const { mutate: updateStableTemplate, loading: updateStableTemplateLoading } = useUpdateStableTemplate({
+    templateIdentifier: template.identifier as string,
+    versionLabel: newStableVersion,
+    queryParams: {
+      accountIdentifier: accountId,
+      projectIdentifier,
+      orgIdentifier,
+      repoIdentifier: template.gitDetails?.repoIdentifier,
+      branch: template.gitDetails?.branch
+    },
+    requestOptions: { headers: { 'content-type': 'application/json' } }
+  })
+
   React.useEffect(() => {
     if (templatesError) {
       onClose()
       showError(getRBACErrorMessage(templatesError as RBACError), undefined, 'template.fetch.template.error')
     }
   }, [templatesError])
+
+  const updateStableLabel = async (): Promise<void> => {
+    try {
+      await updateStableTemplate()
+      showSuccess(getString('common.template.updateTemplate.templateUpdated'))
+      await refetch()
+    } catch (error) {
+      showError(
+        getRBACErrorMessage(error as RBACError) || getString('common.template.updateTemplate.errorWhileUpdating'),
+        undefined,
+        'template.save.template.error'
+      )
+    }
+  }
+
+  const { openDialog: openConfirmationDialog } = useConfirmationDialog({
+    cancelButtonText: getString('cancel'),
+    contentText: getString('templatesLibrary.setAsStableText', { version: template.versionLabel }),
+    titleText: getString('templatesLibrary.setAsStableTitle'),
+    confirmButtonText: getString('confirm'),
+    onCloseDialog: isConfirmed => {
+      if (isConfirmed) {
+        updateStableLabel()
+      }
+    }
+  })
 
   const commitMessage = `${getString('delete')} ${template.name}`
 
@@ -186,6 +237,11 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
           }
         })
       )
+      const stableTemplateObj = templateData.data.content.find(temp => temp?.stableTemplate)
+      if (!isEmpty(stableTemplateObj)) {
+        setCurrentStableVersion(stableTemplateObj?.versionLabel as string)
+        setNewStableVersion(stableTemplateObj?.versionLabel as string)
+      }
     }
   }, [templateData?.data?.content])
 
@@ -212,7 +268,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
 
   return (
     <Layout.Vertical>
-      {(loading || deleteLoading) && <PageSpinner />}
+      {(loading || deleteLoading || updateStableTemplateLoading) && <PageSpinner />}
       {templateData?.data?.content && !isEmpty(templateData?.data?.content) && (
         <Formik<{ checkboxOptions: CheckboxOptions[] }>
           onSubmit={values => {
@@ -289,6 +345,26 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
                                 }}
                               />
                             </Container>
+                            <Container flex={{ justifyContent: 'flex-start', alignItems: 'center' }}>
+                              <VersionsDropDown
+                                onChange={item => {
+                                  setNewStableVersion(item.value as string)
+                                }}
+                                items={options}
+                                value={newStableVersion}
+                                className={css.versionDropDown}
+                                stableVersion={currentStableVersion}
+                                popoverClassName={css.dropdown}
+                              />
+                              <Button
+                                onClick={openConfirmationDialog}
+                                variation={ButtonVariation.LINK}
+                                size={ButtonSize.SMALL}
+                                disabled={currentStableVersion === newStableVersion}
+                                text={getString('common.setAsStable')}
+                                margin={{ left: 'medium' }}
+                              />
+                            </Container>
                           </Layout.Vertical>
                         </Container>
                       </Layout.Vertical>
@@ -309,7 +385,7 @@ export const DeleteTemplateModal = (props: DeleteTemplateProps) => {
                           text={isGitSyncEnabled ? getString('continue') : 'Delete Selected'}
                           type="submit"
                           variation={ButtonVariation.PRIMARY}
-                          disabled={!options.some(item => item.checked)}
+                          disabled={!options.some(item => item.checked) || updateStableTemplateLoading}
                         />
                         <Button text={getString('cancel')} variation={ButtonVariation.TERTIARY} onClick={onClose} />
                       </Layout.Horizontal>

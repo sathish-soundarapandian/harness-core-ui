@@ -35,6 +35,30 @@
       }
     }
   }
+  .dropdown {
+    :global(.bp3-menu) {
+      max-width: 300px;
+    }
+  }
+
+  .versionDropDown {
+    :global(.DropDown--dropdownButton) {
+      background-color: transparent !important;
+      border-color: var(--primary-6) !important;
+      height: 30px;
+      min-width: var(--spacing-11) !important;
+      max-width: 140px;
+      column-gap: var(--spacing-4) !important;
+    }
+    :global(.DropDown--label) p {
+      color: var(--primary-7) !important;
+    }
+    :global(.DropDown--btnWrapper) {
+      svg {
+        color: var(--primary-7);
+      }
+    }
+  }
 }
 
 .badge {
