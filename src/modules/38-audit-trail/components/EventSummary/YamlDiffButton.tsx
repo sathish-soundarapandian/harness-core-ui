@@ -8,11 +8,11 @@
 import { Text, Layout, Icon, Container } from '@harness/uicore'
 import { FontVariation, Color } from '@harness/design-system'
 import React, { ReactElement, useMemo, useState } from 'react'
-import type { editor } from 'monaco-editor'
 import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import { useStrings } from 'framework/strings'
 import { useGetYamlDiff } from 'services/audit'
 import { ContainerSpinner } from '@common/components/ContainerSpinner/ContainerSpinner'
+
 import css from './EventSummary.module.scss'
 
 interface YamlDiffButtonProps {
@@ -20,7 +20,7 @@ interface YamlDiffButtonProps {
   accountIdentifier: string
 }
 
-const DIFF_VIEWER_OPTIONS: editor.IDiffEditorConstructionOptions = {
+const DIFF_VIEWER_OPTIONS = {
   ignoreTrimWhitespace: true,
   minimap: { enabled: false },
   codeLens: false,
@@ -28,8 +28,8 @@ const DIFF_VIEWER_OPTIONS: editor.IDiffEditorConstructionOptions = {
   renderSideBySide: false,
   lineNumbers: 'off' as const,
   inDiffEditor: true,
-  scrollBeyondLastLine: false
-  // smartSelect: false
+  scrollBeyondLastLine: false,
+  smartSelect: false
 }
 
 const YamlDiffButton: React.FC<YamlDiffButtonProps> = ({ auditId, accountIdentifier }) => {

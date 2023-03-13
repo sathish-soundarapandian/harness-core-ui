@@ -5,17 +5,19 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import React, { useRef } from 'react'
-import MonacoEditor, { EditorDidMount, EditorWillMount, MonacoEditorProps, ChangeHandler } from 'react-monaco-editor'
+import React, { MutableRefObject, useRef } from 'react'
+import ReactMonacoEditor from 'react-monaco-editor'
+import type { MonacoEditorProps } from 'react-monaco-editor'
+//@ts-ignore
+import { StaticServices } from 'monaco-editor/esm/vs/editor/standalone/browser/standaloneServices'
 import { suppressHotJarRecording } from '@common/utils/utils'
 import { setupMonacoEnvironment } from '@common/utils/MonacoEditorUtils'
-import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
+StaticServices.configurationService.get().updateValue('files.eol', '\n')
 
-// TODO: check this import
-// import { StaticServices } from 'monaco-editor/esm/vs/editor/standalone/browser/standaloneServices'
-// StaticServices.configurationService.get().updateValue('files.eol', '\n')
-
-//TODO: add automaticLayout: true to options
+export type ReactMonacoEditorRef =
+  | ((instance: ReactMonacoEditor | null) => void)
+  | MutableRefObject<ReactMonacoEditor | null>
+  | null
 
 export interface ExtendedMonacoEditorProps extends MonacoEditorProps {
   name?: string
@@ -23,59 +25,61 @@ export interface ExtendedMonacoEditorProps extends MonacoEditorProps {
   'data-testid'?: string
 }
 
-export type MonacoEditorRef = editor.IStandaloneCodeEditor
+const MonacoEditor = (props: ExtendedMonacoEditorProps, ref: ReactMonacoEditorRef) => {
+  const customHTMLRef = useRef<any>(null)
+  React.useEffect(() => {
+    const remeasureFonts = () => {
+      //@ts-ignore
+      monaco?.editor?.remeasureFonts()
+    }
 
-const _MonacoEditor = React.forwardRef<MonacoEditorRef, ExtendedMonacoEditorProps>((props, _ref) => {
-  const ref = useRef<editor.IStandaloneCodeEditor>((_ref as any)?.current)
+    // TODO: font name should be a global (for all)
+    const loaded = (document as any).fonts?.check?.('1em Roboto Mono')
 
-  const _editorWillMount: EditorWillMount = monaco => {
+    if (loaded) {
+      remeasureFonts()
+    } else {
+      ;(document as any).fonts?.ready?.then?.(remeasureFonts)
+    }
+  }, [])
+
+  function handleHTMLEditorDidMount(editor: any, monaco: any) {
+    props.setLineCount && props.setLineCount(editor.getModel().getLineCount())
+    customHTMLRef.current = editor
+    props.editorDidMount?.(editor, monaco)
+  }
+
+  const editorWillMount = () => {
     monaco?.editor?.defineTheme('disable-theme', {
       base: 'vs',
       inherit: true,
-      rules: [{ token: 'string.yaml', background: 'f3f3fa' }], //TODO: check what token can be used https://github.com/microsoft/vscode/blob/913e891c34f8b4fe2c0767ec9f8bfd3b9dbe30d9/src/vs/editor/standalone/common/themes.ts#L13
+      rules: [{ background: 'f3f3fa' }],
       colors: {
         'editor.background': '#f3f3fa'
       }
     })
     setupMonacoEnvironment()
+
     // Don't allow HotJar to record content in Yaml/Code editor(s)
     suppressHotJarRecording([...document.querySelectorAll('.react-monaco-editor-container')])
-    props.editorWillMount?.(monaco)
   }
 
-  const _editorDidMount: EditorDidMount = (editor, monaco) => {
-    ref.current = editor
-    props.setLineCount?.(editor.getModel()?.getLineCount()!)
-    // TODO: font name should be a global (for all)
-    const loaded = (document as any).fonts?.check?.('1em Roboto Mono')
-    if (loaded) {
-      monaco?.editor?.remeasureFonts()
-    } else {
-      ;(document as any).fonts?.ready?.then?.(monaco?.editor?.remeasureFonts)
-    }
-
-    props.editorDidMount?.(editor, monaco)
-  }
-
-  const _onChange: ChangeHandler = (value, event) => {
-    if (ref?.current) {
-      props.setLineCount?.(ref.current.getModel()?.getLineCount()!)
-    }
-
-    props.onChange?.(value, event)
-  }
-
+  const theme = props.options?.readOnly ? 'disable-theme' : 'vs'
   return (
-    <MonacoEditor
+    <ReactMonacoEditor
       {...props}
-      theme={props.options?.readOnly ? 'disable-theme' : 'vs'}
-      editorWillMount={_editorWillMount}
-      editorDidMount={_editorDidMount}
-      onChange={_onChange}
+      ref={ref}
+      editorDidMount={handleHTMLEditorDidMount}
+      onChange={(value, e) => {
+        props.onChange && props.onChange(value, e)
+        if (customHTMLRef?.current?.getModel) {
+          props.setLineCount && props.setLineCount(customHTMLRef.current.getModel().getLineCount())
+        }
+      }}
+      theme={theme}
+      editorWillMount={editorWillMount}
     />
   )
-})
+}
 
-_MonacoEditor.displayName = 'ReactMonacoEditor'
-
-export default _MonacoEditor
+export default React.forwardRef(MonacoEditor)

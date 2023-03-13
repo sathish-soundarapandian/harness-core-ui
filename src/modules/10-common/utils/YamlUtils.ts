@@ -9,11 +9,9 @@
 // @ts-nocheck
 import * as yamlLanguageService from '@harness/monaco-yaml/lib/esm/languageservice/yamlLanguageService'
 import { isEmpty } from 'lodash-es'
-import { Diagnostic } from 'vscode-languageserver-types'
-import { TextDocument } from 'vscode-languageserver-textdocument'
+import { TextDocument, Diagnostic } from 'vscode-languageserver-types'
 import { parse } from 'yaml'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
-import type { DiagnosticsOptions } from 'monaco-yaml'
 
 const DEFAULT_YAML_PATH = 'DEFAULT_YAML_PATH'
 
@@ -147,7 +145,7 @@ const setUpLanguageService = (schema: Record<string, any>) => {
   return languageService
 }
 
-const getSchemaWithLanguageSettings = (schema: Record<string, any>): DiagnosticsOptions => {
+const getSchemaWithLanguageSettings = (schema: Record<string, any>): Record<string, any> => {
   return {
     validate: true,
     enableSchemaRequest: true,

@@ -6,7 +6,7 @@
  */
 
 import React from 'react'
-import type { EditorWillMount, MonacoEditorBaseProps, MonacoEditorProps } from 'react-monaco-editor'
+import type { MonacoEditorBaseProps, MonacoEditorProps } from 'react-monaco-editor'
 import { FormikProps, connect } from 'formik'
 import { defaultTo, get } from 'lodash-es'
 import cx from 'classnames'
@@ -66,44 +66,9 @@ export function MonacoText(props: ConnectedMonacoTextFieldProps): React.ReactEle
   const { getString } = useStrings()
   const value = get(formik.values, name) || ''
 
-  // useDeepCompareEffect(() => {
-  //   let disposable: IDisposable | null = null
+  useDeepCompareEffect(() => {
+    let disposable: IDisposable | null = null
 
-  //   if (Array.isArray(expressions) && expressions.length > 0) {
-  //     const suggestions: Array<Partial<languages.CompletionItem>> = expressions
-  //       .filter(label => label)
-  //       .map(label => ({
-  //         label,
-  //         insertText: label + '>',
-  //         kind: 13
-  //       }))
-
-  //     disposable = (monaco?.languages as Languages)?.registerCompletionItemProvider(LANG_ID, {
-  //       triggerCharacters: ['+', '.'],
-  //       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  //       provideCompletionItems(model, position): any {
-  //         const prevText = model.getValueInRange({
-  //           startLineNumber: position.lineNumber,
-  //           startColumn: 0,
-  //           endLineNumber: position.lineNumber,
-  //           endColumn: position.column
-  //         })
-
-  //         if (VAR_REGEX.test(prevText)) {
-  //           return { suggestions }
-  //         }
-
-  //         return { suggestions: [] }
-  //       }
-  //     })
-  //   }
-
-  //   return () => {
-  //     disposable?.dispose()
-  //   }
-  // }, [expressions])
-
-  const editorWillMount: EditorWillMount = monaco => {
     if (Array.isArray(expressions) && expressions.length > 0) {
       const suggestions: Array<Partial<languages.CompletionItem>> = expressions
         .filter(label => label)
@@ -113,7 +78,7 @@ export function MonacoText(props: ConnectedMonacoTextFieldProps): React.ReactEle
           kind: 13
         }))
 
-      ;(monaco?.languages as Languages)?.registerCompletionItemProvider(LANG_ID, {
+      disposable = (monaco?.languages as Languages)?.registerCompletionItemProvider(LANG_ID, {
         triggerCharacters: ['+', '.'],
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         provideCompletionItems(model, position): any {
@@ -132,7 +97,11 @@ export function MonacoText(props: ConnectedMonacoTextFieldProps): React.ReactEle
         }
       })
     }
-  }
+
+    return () => {
+      disposable?.dispose()
+    }
+  }, [expressions])
 
   const editor = (
     <div className={cx(css.main, { [css.disabled]: disabled })}>
@@ -143,7 +112,6 @@ export function MonacoText(props: ConnectedMonacoTextFieldProps): React.ReactEle
         options={getDefaultMonacoConfig(!!disabled)}
         onChange={txt => formik.setFieldValue(name, txt)}
         {...({ name: props.name, 'data-testid': props['data-testid'] } as any)} // this is required for test cases
-        editorWillMount={editorWillMount}
       />
       {fullScreenAllowed && !isFullScreen ? (
         <Button

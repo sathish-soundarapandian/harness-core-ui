@@ -221,17 +221,7 @@ const config = {
     }),
     new MonacoWebpackPlugin({
       // available options are documented at https://github.com/Microsoft/monaco-editor-webpack-plugin#options
-      languages: ['json', 'yaml', 'shell', 'powershell', 'python'],
-      customLanguages: [
-        {
-          label: 'yaml',
-          entry: 'monaco-yaml',
-          worker: {
-            id: 'monaco-yaml/yamlWorker',
-            entry: 'monaco-yaml/yaml.worker'
-          }
-        }
-      ]
+      languages: ['json', 'yaml', 'shell', 'powershell', 'python']
     }),
     new GenerateStringTypesPlugin(),
     new RetryChunkLoadPlugin({

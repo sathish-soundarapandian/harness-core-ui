@@ -6,11 +6,11 @@
  */
 
 import React, { ReactElement } from 'react'
+import type { MonacoEditorProps } from 'react-monaco-editor'
 import { useParams } from 'react-router-dom'
 import { Drawer, Position } from '@blueprintjs/core'
 import { Color } from '@harness/design-system'
 import { Button, Heading, Icon, Layout } from '@harness/uicore'
-import type { editor } from 'monaco-editor'
 import { PageSpinner } from '@common/components'
 import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import { PipelineExecutionSummary, useGetExecutionData } from 'services/pipeline-ng'
@@ -23,7 +23,7 @@ interface ExecutionCompareYamlProps {
   onClose: () => void
 }
 
-const DIFF_EDITOR_OPTIONS: editor.IDiffEditorConstructionOptions = {
+const DIFF_EDITOR_OPTIONS: MonacoEditorProps['options'] = {
   fontFamily: "'Roboto Mono', monospace",
   fontSize: 13,
   minimap: {
