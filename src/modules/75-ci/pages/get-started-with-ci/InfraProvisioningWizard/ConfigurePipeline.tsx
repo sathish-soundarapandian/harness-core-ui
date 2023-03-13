@@ -381,7 +381,7 @@ const ConfigurePipelineRef = (props: ConfigurePipelineProps, forwardRef: Configu
           accountIdentifier: accountId,
           orgIdentifier,
           projectIdentifier,
-          repoName: getValidRepoName(repoName),
+          repoName,
           size: 1
         }
       })

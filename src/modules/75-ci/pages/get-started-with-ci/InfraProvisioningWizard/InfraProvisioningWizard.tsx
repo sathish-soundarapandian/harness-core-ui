@@ -20,15 +20,7 @@ import {
 import { useStrings } from 'framework/strings'
 import { useSideNavContext } from 'framework/SideNavStore/SideNavContext'
 import routes from '@common/RouteDefinitions'
-import {
-  ConnectorInfoDTO,
-  ResponseConnectorResponse,
-  ResponseMessage,
-  ResponseScmConnectorResponse,
-  useCreateDefaultScmConnector,
-  UserRepoResponse,
-  useUpdateConnector
-} from 'services/cd-ng'
+import type { ConnectorInfoDTO, ResponseMessage, UserRepoResponse } from 'services/cd-ng'
 import {
   createPipelineV2Promise,
   NGTriggerConfigV2,
@@ -61,7 +53,6 @@ import {
   WizardStep,
   InfraProvisiongWizardStepId,
   StepStatus,
-  OAUTH2_USER_NAME,
   Hosting,
   GitAuthenticationMethod,
   NonGitOption
@@ -82,7 +73,6 @@ import {
   getFullRepoName,
   getPayloadForPipelineCreation,
   addDetailsToPipeline,
-  updateUrlAndRepoInGitConnector,
   DefaultCIPipelineName,
   getCloudPipelinePayloadWithoutCodebase,
   getCIStarterPipelineV1,
@@ -97,8 +87,7 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
     precursorData,
     enableFieldsForTesting
   } = props
-  const { preSelectedGitConnector, connectorsEligibleForPreSelection, secretForPreSelectedConnector } =
-    precursorData || {}
+  const { preSelectedGitConnector, connectorsEligibleForPreSelection } = precursorData || {}
   const { getString } = useStrings()
   const [disableBtn, setDisableBtn] = useState<boolean>(false)
   const [currentWizardStepId, setCurrentWizardStepId] =
@@ -133,13 +122,6 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
       updateStepStatus([InfraProvisiongWizardStepId.SelectGitProvider], StepStatus.Success)
     }
   }, [preSelectedGitConnector])
-
-  const { mutate: createSCMConnector } = useCreateDefaultScmConnector({
-    queryParams: { accountIdentifier: accountId }
-  })
-  const { mutate: updateConnector } = useUpdateConnector({
-    queryParams: { accountIdentifier: accountId }
-  })
 
   // TODO enable this back once api is merged to develop
   // useEffect(() => {
@@ -694,64 +676,9 @@ export const InfraProvisioningWizard: React.FC<InfraProvisioningWizardProps> = p
             trackEvent(CIOnboardingActions.ConfigurePipelineClicked, {})
             const { repository, enableCloneCodebase } = selectRepositoryRef.current || {}
             if (enableCloneCodebase && repository && configuredGitConnector?.spec) {
-              initiateAPIOperation(getString('ci.getStartedWithCI.updatingGitConnectorWithRepo'))
-              if (selectGitProviderRef.current?.values?.gitAuthenticationMethod !== GitAuthenticationMethod.OAuth) {
-                if (preSelectedGitConnector) {
-                  // The pre-selected connector shouldn't be modified
-                  updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.Success)
-                  setCurrentWizardStepId(InfraProvisiongWizardStepId.ConfigurePipeline)
-                  wrapUpAPIOperation()
-                } else {
-                  createSCMConnector({
-                    connector: set(
-                      // Inline-created git connector url needs to be suffixed with repository name, if not already present,
-                      // otherwise default branch fetch in next step fails
-                      updateUrlAndRepoInGitConnector(configuredGitConnector, selectRepositoryRef?.current?.repository),
-                      'spec.authentication.spec.spec.username',
-                      get(configuredGitConnector, 'spec.authentication.spec.spec.username') ?? OAUTH2_USER_NAME
-                    ),
-                    secret: preSelectedGitConnector
-                      ? secretForPreSelectedConnector
-                      : selectGitProviderRef?.current?.validatedSecret
-                  })
-                    .then((scmConnectorResponse: ResponseScmConnectorResponse) => {
-                      if (scmConnectorResponse.status === Status.SUCCESS) {
-                        updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.Success)
-                        setCurrentWizardStepId(InfraProvisiongWizardStepId.ConfigurePipeline)
-                        wrapUpAPIOperation()
-                      }
-                    })
-                    .catch(scmCtrErr => {
-                      showErrorToaster(scmCtrErr?.data?.message)
-                      wrapUpAPIOperation()
-                    })
-                }
-              } else {
-                if (preSelectedGitConnector) {
-                  // The pre-selected connector shouldn't be modified
-                  updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.Success)
-                  setCurrentWizardStepId(InfraProvisiongWizardStepId.ConfigurePipeline)
-                  setShowError(false)
-                } else {
-                  updateConnector({
-                    // Inline-created git connector url needs to be suffixed with repository name, if not already present,
-                    connector:
-                      // otherwise default branch fetch in next step fails
-                      updateUrlAndRepoInGitConnector(configuredGitConnector, selectRepositoryRef?.current?.repository)
-                  })
-                    .then((oAuthConnectoResponse: ResponseConnectorResponse) => {
-                      if (oAuthConnectoResponse.status === Status.SUCCESS) {
-                        updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.Success)
-                        setCurrentWizardStepId(InfraProvisiongWizardStepId.ConfigurePipeline)
-                        setShowError(false)
-                      }
-                    })
-                    .catch(oAuthCtrErr => {
-                      showErrorToaster(oAuthCtrErr?.data?.message)
-                      wrapUpAPIOperation()
-                    })
-                }
-              }
+              updateStepStatus([InfraProvisiongWizardStepId.SelectRepository], StepStatus.Success)
+              setCurrentWizardStepId(InfraProvisiongWizardStepId.ConfigurePipeline)
+              setShowError(false)
             } else if (!enableCloneCodebase) {
               setShowError(false)
               initiateAPIOperation(getString('ci.getStartedWithCI.settingUpCIPipeline'))
