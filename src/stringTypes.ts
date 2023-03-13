@@ -1945,6 +1945,7 @@ export interface StringsMap {
   'authSettings.addSAMLProvider': string
   'authSettings.allowLoginFromTheseDomains': string
   'authSettings.allowUsersWithEmails': string
+  'authSettings.allowlist': string
   'authSettings.atLeastNChars': string
   'authSettings.authenticationSettings': string
   'authSettings.authorizationEnabled': string

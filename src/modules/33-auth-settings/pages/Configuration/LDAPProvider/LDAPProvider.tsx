@@ -33,7 +33,7 @@ import {
 } from 'services/cd-ng'
 import RbacMenuItem from '@rbac/components/MenuItem/MenuItem'
 import { PermissionIdentifier } from '@rbac/interfaces/PermissionIdentifier'
-import type { PermissionRequest } from '@auth-settings/pages/Configuration/Configuration'
+import type { PermissionRequest } from '@auth-settings/pages/Configuration/Authentication'
 import { useFeature } from '@common/hooks/useFeatures'
 import { FeatureIdentifier } from 'framework/featureStore/FeatureIdentifier'
 import useRBACError from '@rbac/utils/useRBACError/useRBACError'

@@ -10,6 +10,7 @@ declare const styles: {
   readonly callout: string
   readonly collapseClassName: string
   readonly collapseHeaderClassName: string
+  readonly configurationTabs: string
   readonly height60: string
 }
 export default styles

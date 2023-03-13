@@ -33,3 +33,17 @@
   background-color: var(--yellow-100);
   border-bottom: 1px solid var(--grey-200);
 }
+
+.configurationTabs {
+  :global {
+    .bp3-tab-list {
+      background: var(--white) !important;
+      border-bottom: 1px solid var(--grey-200);
+      padding-left: var(--spacing-large);
+      padding-right: var(--spacing-large);
+    }
+    .bp3-tab-panel {
+      margin-top: 0;
+    }
+  }
+}
