@@ -175,7 +175,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       ...commonParams,
       connectorRef: connectorRefValue?.toString(),
       serviceId,
-      parentJobName: lastOpenedJob,
+      parentJobName: recentParentJob?.current,
       fqnPath: getFqnPath(
         path as string,
         !!isPropagatedStage,
@@ -297,12 +297,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
 
   useEffect(() => {
     if (refetchingAllowedTypes?.includes(getMultiTypeFromValue(connectorRefValue))) {
-      refetchJobs({
-        queryParams: {
-          ...commonParams,
-          connectorRef: connectorRefValue?.toString()
-        }
-      })
+      refetchJobs()
     }
   }, [connectorRefValue])
 
@@ -386,15 +381,10 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
       setShowChildJobField(true)
       const parentJobName = jobName?.split('/')[0]
       recentParentJob.current = parentJobName
+      setLastOpenedJob(parentJobName)
       const parentJob = jobDetails?.find(job => job.label === parentJobName)
       if (!parentJob?.submenuItems?.length) {
-        refetchJobs({
-          queryParams: {
-            ...commonParams,
-            connectorRef: connectorRefValue?.toString(),
-            parentJobName
-          }
-        })
+        refetchJobs()
       } else {
         const targetChildJob = parentJob.submenuItems?.find(job => job.label === jobName)
         setChildJob(targetChildJob as SelectWithBiLevelOption)
@@ -493,7 +483,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                 }
                 formik.setFieldValue(`${path}.artifacts.${artifactPath}.spec.jobName`, '')
                 setLastOpenedJob(undefined)
-                recentParentJob.current = false
+                recentParentJob.current = undefined
                 setShowChildJobField(false)
                 setChildJob({} as SelectWithBiLevelOption)
                 setJobDetails([])
@@ -533,13 +523,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                       recentParentJob.current = primaryValue?.label
                       const parentJob = jobDetails?.find(job => job.label === primaryValue?.label)
                       if (!parentJob?.submenuItems?.length) {
-                        refetchJobs({
-                          queryParams: {
-                            ...commonParams,
-                            connectorRef: connectorRefValue?.toString(),
-                            parentJobName: primaryValue?.label
-                          }
-                        })
+                        refetchJobs()
                       }
                     } else {
                       setArtifactPaths([])
@@ -593,13 +577,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                         recentParentJob.current = primaryValue?.label
                         const parentJob = jobDetails?.find(job => job.label === primaryValue?.label)
                         if (!parentJob?.submenuItems?.length) {
-                          refetchJobs({
-                            queryParams: {
-                              ...commonParams,
-                              connectorRef: connectorRefValue?.toString(),
-                              parentJobName: primaryValue?.label
-                            }
-                          })
+                          refetchJobs()
                         }
                       } else {
                         setArtifactPaths([])
