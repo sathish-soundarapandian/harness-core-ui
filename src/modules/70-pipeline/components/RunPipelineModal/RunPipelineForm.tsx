@@ -1007,7 +1007,7 @@ export function RunPipelineForm(props: RunPipelineFormProps & InputSetGitQueryPa
       {props.executionView ? (
         <RunPipelineFormBasic {...props} />
       ) : (
-        <PipelineVariablesContextProvider storeMetadata={props.storeMetadata}>
+        <PipelineVariablesContextProvider storeMetadata={props.storeMetadata} lexicalContext="runPipelineForm">
           <RunPipelineFormBasic {...props} />
         </PipelineVariablesContextProvider>
       )}

@@ -109,9 +109,10 @@ export function PipelineVariablesContextProvider(
     pipeline?: PipelineInfoConfig
     enablePipelineTemplatesResolution?: boolean
     storeMetadata?: StoreMetadata
+    lexicalContext?: string
   }>
 ): React.ReactElement {
-  const { pipeline: pipelineFromProps, enablePipelineTemplatesResolution, storeMetadata = {} } = props
+  const { pipeline: pipelineFromProps, enablePipelineTemplatesResolution, storeMetadata = {}, lexicalContext } = props
   const [originalPipeline, setOriginalPipeline] = React.useState<PipelineInfoConfig>(
     defaultTo(pipelineFromProps, {} as PipelineInfoConfig)
   )
@@ -166,7 +167,8 @@ export function PipelineVariablesContextProvider(
       parentEntityConnectorRef: storeMetadata.connectorRef,
       parentEntityRepoName: storeMetadata.repoName
     },
-    debounce: 1300
+    debounce: 1300,
+    ...(lexicalContext === 'runPipelineForm' && { lazy: isEmpty(originalPipeline) })
   })
 
   const {
