@@ -76,8 +76,8 @@ export interface GetPathToMetaKeyMapParams {
   pipeline: PipelineInfoConfig
 }
 
-export const LexicalScopes = {
-  RunPipelineForm: 'RunPipelineForm'
+export enum LexicalContext {
+  RunPipelineForm = 'RunPipelineForm'
 }
 
 export interface PipelineMeta {
@@ -113,7 +113,7 @@ export function PipelineVariablesContextProvider(
     pipeline?: PipelineInfoConfig
     enablePipelineTemplatesResolution?: boolean
     storeMetadata?: StoreMetadata
-    lexicalContext?: string
+    lexicalContext?: Partial<Record<LexicalContext, string>>
   }>
 ): React.ReactElement {
   const { pipeline: pipelineFromProps, enablePipelineTemplatesResolution, storeMetadata = {}, lexicalContext } = props
@@ -172,7 +172,7 @@ export function PipelineVariablesContextProvider(
       parentEntityRepoName: storeMetadata.repoName
     },
     debounce: 1300,
-    ...(lexicalContext === LexicalScopes.RunPipelineForm && { lazy: isEmpty(originalPipeline) })
+    ...(lexicalContext === LexicalContext.RunPipelineForm && { lazy: isEmpty(originalPipeline) })
   })
 
   const {
