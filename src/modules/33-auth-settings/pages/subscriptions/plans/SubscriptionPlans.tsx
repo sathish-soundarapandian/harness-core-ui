@@ -36,6 +36,15 @@ const PlanTabs: React.FC<PlanTabsProps> = ({ module, plans }) => {
             featureGroup={plans?.ciSaasFeatureGroup}
           />
         )
+      case ModuleName.CV:
+        return (
+          <Plans
+            module={module}
+            plans={plans?.srmPlans}
+            featureCaption={plans?.srmFeatureCaption}
+            featureGroup={plans?.srmFeatureGroup}
+          />
+        )
       case ModuleName.CF:
         return (
           <Plans
