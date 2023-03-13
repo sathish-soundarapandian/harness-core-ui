@@ -20,7 +20,7 @@ const getConfig = (
     plotBackgroundColor: undefined,
     plotBorderWidth: 0,
     plotShadow: false,
-    marginBottom: isExpanded ? 0 : 0,
+    marginBottom: 0,
     marginTop: isExpanded ? 28 : 14,
     marginLeft: 0,
     marginRight: 0,
