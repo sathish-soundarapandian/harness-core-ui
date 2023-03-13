@@ -9,6 +9,7 @@ import CommandBlock from '@common/CommandBlock/CommandBlock'
 import { useStrings } from 'framework/strings'
 import { DelegateActions, Category } from '@common/constants/TrackingConstants'
 import { useTelemetry } from '@common/hooks/useTelemetry'
+import CopyButton from '@common/utils/CopyButton'
 import css from '../DelegateCommandLineCreation.module.scss'
 
 interface KubernetesManifestCommandsProps {
@@ -171,12 +172,41 @@ const KubernetesManifestCommands: React.FC<KubernetesManifestCommandsProps> = ({
           <Text font={{ variation: FontVariation.H6 }} margin={{ bottom: 'medium' }}>
             {getString('delegates.commandLineCreation.commandsKubernetesHeading')}
           </Text>
+
           <ul className={css.ulList}>
-            {command.split('\n').map(line => (
-              <li key={line}>
-                <Text font={{ variation: FontVariation.SMALL_SEMI }}>{line}</Text>
-              </li>
-            ))}
+            {command.split('\n').map(line => {
+              let nonCopySnippetLocal = ''
+              let copySnippetLocal = ''
+              const splitStr = line.split(' with ')
+              if (splitStr.length > 1) {
+                nonCopySnippetLocal = `${splitStr[0]} with `
+                copySnippetLocal = splitStr[1]
+              } else {
+                nonCopySnippetLocal = splitStr[0]
+                copySnippetLocal = splitStr[0]
+              }
+              return (
+                <li key={line}>
+                  <Layout.Horizontal flex={{ alignItems: 'center', justifyContent: 'flex-start' }} spacing="xsmall">
+                    <Text font={{ variation: FontVariation.SMALL_SEMI }}>{nonCopySnippetLocal} </Text>
+                    {splitStr.length > 1 && (
+                      <Text font={{ variation: FontVariation.SMALL_SEMI }} color={Color.PRIMARY_7}>
+                        {copySnippetLocal}
+                      </Text>
+                    )}
+                    <CopyButton
+                      textToCopy={copySnippetLocal}
+                      intent={'primary'}
+                      onCopySuccess={() => {
+                        trackEvent(`${DelegateActions.DelegateCommandLineReplaceCommands} ${line}`, {
+                          category: Category.DELEGATE
+                        })
+                      }}
+                    />
+                  </Layout.Horizontal>
+                </li>
+              )
+            })}
           </ul>
         </>
       )}

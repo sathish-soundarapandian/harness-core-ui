@@ -123,6 +123,7 @@ export enum DelegateActions {
   DelegateCommandLineKubernetesManifestCustom = 'Kubernetes Manifest Custom button clicked',
   DelegateCommandLineKubernetesManifestDownloadYaml = 'Kubernetes Manifest YAML Downloaded',
   DelegateCommandLineKubernetesManifestPreviewYaml = 'Kubernetes Manifest YAML Preview',
+  DelegateCommandLineReplaceCommands = 'Kubernetes Manifest Custom replace command',
 
   DelegateCommandLineKubernetesManifestPreviewYamlClosed = 'Kubernetes Manifest YAML Preview Closed',
   DelegateCommandLineKubernetesManifestCommandCopy2 = 'kubectl apply -f harness-delegate.yaml copy',

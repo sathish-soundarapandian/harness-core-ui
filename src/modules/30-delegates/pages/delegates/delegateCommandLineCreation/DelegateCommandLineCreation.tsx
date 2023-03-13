@@ -437,13 +437,17 @@ const DelegateCommandLineCreation: React.FC<DelegateCommandLineCreationProps> = 
                 className={css.kubernetesButtons}
                 onClick={() => {
                   commonStatesforAllClicks({
-                    commandTypeLocal: undefined,
-                    delegateNameLocal: '',
-                    delegateDefaultNameLocal: DelegateDefaultName.TERRAFORM,
-                    commonProblemsDelegateTypeLocal: undefined
+                    commandTypeLocal: CommandType.HELM,
+                    delegateNameLocal: DelegateDefaultName.HELM,
+                    delegateDefaultNameLocal: DelegateDefaultName.HELM,
+                    commonProblemsDelegateTypeLocal: DelegateCommonProblemTypes.HELM_CHART
                   })
                   setDelegateType(DelegateCommandLineTypes.KUBERNETES)
+                  setkubernetesType(KubernetesType.HELM_CHART)
                   trackEvent(DelegateActions.DelegateCommandLineKubernetes, {
+                    category: Category.DELEGATE
+                  })
+                  trackEvent(DelegateActions.DelegateCommandLineHelm, {
                     category: Category.DELEGATE
                   })
                 }}
