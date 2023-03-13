@@ -12,7 +12,7 @@ module.exports = {
   entry: {
     // Package each language's worker and give these filenames in `getWorker` or `getWorkerUrl`
     editorWorker2: { import: 'monaco-editor/esm/vs/editor/editor.worker.js', filename: '[name].js' },
-    yamlWorker2: { import: '@harness/monaco-yaml/lib/esm/yaml.worker.js', filename: '[name].js' }
+    yamlWorker2: { import: 'monaco-yaml/yaml.worker.js', filename: '[name].js' }
   },
   output: {
     filename: '[name].js',

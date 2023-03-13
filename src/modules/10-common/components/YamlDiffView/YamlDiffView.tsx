@@ -7,10 +7,9 @@
 
 import React, { useRef } from 'react'
 import { Container, Layout, Text, PageError, PageSpinner, Button, ButtonVariation, ButtonSize } from '@harness/uicore'
-import type { MonacoDiffEditor as MonacoDiffEditorType } from 'react-monaco-editor'
 import { FontVariation } from '@harness/design-system'
 import { defaultTo, get } from 'lodash-es'
-import MonacoDiffEditor from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
+import MonacoDiffEditor, { MonacoDiffEditorRef } from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import CopyToClipboard from '@common/components/CopyToClipBoard/CopyToClipBoard'
 import { useStrings } from 'framework/strings'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
@@ -40,7 +39,7 @@ export function YamlDiffView({
   loading,
   templateErrorUtils
 }: YamlDiffViewProps): React.ReactElement {
-  const editorRef = useRef<MonacoDiffEditorType>(null)
+  const editorRef = useRef<MonacoDiffEditorRef>(null)
   const { getString } = useStrings()
 
   const { isTemplateResolved, buttonLabel, onNodeUpdate, isYamlDiffForTemplate } = defaultTo(templateErrorUtils, {})
