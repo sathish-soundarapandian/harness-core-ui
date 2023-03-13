@@ -118,7 +118,6 @@
       }
 
       window.getIDPBaseUrl = str => {
-        window.IDPUrl = 'https://34.71.170.196'
         return window.IDPUrl && accountId
           ? `${window.IDPUrl}/${accountId}/${str}?${addRoutingIdParam()}`
           : window.getApiBaseUrl(str)
@@ -126,7 +125,7 @@
     </script>
     <% if (!__DEV__) { %>
     <script>
-      window.NON_CDN_BASE_PATH = `/${window.harnessNameSpace}/ng/static/`
+      window.NON_CDN_BASE_PATH = `${window.harnessNameSpace ? '/' + window.harnessNameSpace : ''}/ng/static/`
       if (window.deploymentType === 'SAAS') {
         var e = document.createElement('script')
         e.setAttribute('type', 'text/javascript')
