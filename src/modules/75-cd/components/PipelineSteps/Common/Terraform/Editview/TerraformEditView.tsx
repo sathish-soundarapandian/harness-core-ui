@@ -545,7 +545,7 @@ export default function TerraformEditView(
                 />
               </div>
               {CD_TERRAFORM_CLOUD_CLI_NG && (
-                <div className={cx(stepCss.formGroup, css.addMarginTop)}>
+                <div className={cx(stepCss.formGroup, css.addMarginTop, css.addMarginBottom)}>
                   <Checkbox
                     label={getString('pipeline.terraformStep.runOnRemote')}
                     checked={enableCloudCli}

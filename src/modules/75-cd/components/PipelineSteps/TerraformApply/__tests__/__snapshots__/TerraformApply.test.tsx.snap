@@ -2059,7 +2059,7 @@ exports[`Test TerraformApply should render edit view as new step 1`] = `
                   placeholder="- pipelineSteps.configurationType -"
                   style="padding-right: 0px;"
                   type="text"
-                  value="inline"
+                  value=""
                 />
                 <span
                   class="bp3-input-action"
@@ -2159,63 +2159,6 @@ exports[`Test TerraformApply should render edit view as new step 1`] = `
               </span>
             </span>
           </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="Layout--vertical StyledProps--main"
-    >
-      <label
-        class="Label--main configLabel"
-        data-tooltip-id="tfConfigurationFile"
-      >
-        cd.configurationFile
-      </label>
-      <div
-        class="configFile addMarginBottom"
-      >
-        <div
-          class="configField"
-        >
-          <a
-            class="configPlaceHolder"
-            data-name="config-edit"
-            data-testid="editConfigButton"
-          >
-            cd.configFilePlaceHolder
-          </a>
-        </div>
-      </div>
-    </div>
-    <div
-      class="Accordion--accordion accordion"
-    >
-      <div
-        class="Accordion--panel"
-        data-open="false"
-        data-testid="step-1-panel"
-      >
-        <div
-          class="Accordion--summary"
-          data-testid="step-1-summary"
-        >
-          <div
-            class="Accordion--label"
-          >
-            common.optionalConfig
-          </div>
-          <div
-            class="Accordion--chevron"
-          />
-        </div>
-        <div
-          class="bp3-collapse Accordion--collapse"
-        >
-          <div
-            aria-hidden="false"
-            class="bp3-collapse-body"
-            style="transform: translateY(-undefinedpx);"
-          />
         </div>
       </div>
     </div>
