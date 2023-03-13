@@ -32,6 +32,7 @@ import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
 import { SelectInputSetView } from '@pipeline/components/InputSetView/SelectInputSetView/SelectInputSetView'
 import {
   getDefaultQueryParam,
+  getFinalQueryParamValue,
   getFqnPath,
   getImagePath,
   getValidInitialValuePath,
@@ -89,6 +90,8 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
     get(initialValues?.artifacts, `${artifactPath}.spec.connectorRef`, '')
   )
 
+  const connectorRefQueryParamValue = getFinalQueryParamValue(connectorRefValue)
+
   const projectValue = defaultTo(
     get(initialValues?.artifacts, `${artifactPath}.spec.project`),
     getValidInitialValuePath(get(artifacts, `${artifactPath}.spec.project`, ''), artifact?.spec?.project)
@@ -136,7 +139,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
     ...requestBody,
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue,
+      connectorRef: connectorRefQueryParamValue,
       org: 'automation-cdc',
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
       serviceId: isNewServiceEnvEntity(path as string) ? serviceIdentifier : undefined,
@@ -176,7 +179,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
     ...requestBody,
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue,
+      connectorRef: connectorRefQueryParamValue,
       project: projectValue,
       org: '',
       pipelineIdentifier: defaultTo(pipelineIdentifier, formik?.values?.identifier),
@@ -217,7 +220,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
     ...requestBody,
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue,
+      connectorRef: connectorRefQueryParamValue,
       org: '',
       packageType: packageTypeValue,
       project: projectValue,
@@ -274,7 +277,7 @@ const Content = (props: AzureArtifactsRenderContent): React.ReactElement => {
     ...requestBody,
     queryParams: {
       ...commonParams,
-      connectorRef: connectorRefValue,
+      connectorRef: connectorRefQueryParamValue,
       org: '',
       packageType: packageTypeValue,
       feed: feedValue,
