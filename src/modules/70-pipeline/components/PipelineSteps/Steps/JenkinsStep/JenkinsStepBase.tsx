@@ -134,7 +134,11 @@ function FormContent({
           }
         })
       } else {
-        if (formik.values.spec.jobName?.split('/').length > 1 && jobDetails?.length) {
+        if (
+          formik.values.spec.jobName?.split('/').length > 1 &&
+          jobDetails?.length &&
+          getMultiTypeFromValue(formik.values.spec.jobName) === MultiTypeInputType.FIXED
+        ) {
           setShowChildJobField(true)
           const parentJobName = formik.values.spec.jobName?.split('/')[0]
           lastOpenedJob.current = parentJobName

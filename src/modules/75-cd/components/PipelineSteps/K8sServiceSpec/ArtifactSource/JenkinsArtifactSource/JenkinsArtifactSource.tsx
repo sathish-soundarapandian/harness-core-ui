@@ -377,7 +377,12 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
     const jobName =
       get(formik, `values.${path}.artifacts.${artifactPath}.spec.jobName.label`) ||
       get(formik, `values.${path}.artifacts.${artifactPath}.spec.jobName`)
-    if (jobName?.split('/').length > 1 && jobDetails.length) {
+    if (
+      jobName?.split('/').length > 1 &&
+      jobDetails.length &&
+      getMultiTypeFromValue(get(formik, `values.${path}.artifacts.${artifactPath}.spec.jobName`)) ===
+        MultiTypeInputType.FIXED
+    ) {
       setShowChildJobField(true)
       const parentJobName = jobName?.split('/')[0]
       recentParentJob.current = parentJobName
@@ -600,7 +605,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                       addClearBtn: false,
                       itemRenderer: jobNameRenderer
                     },
-                    allowableTypes
+                    allowableTypes: [MultiTypeInputType.FIXED]
                   }}
                   selectItems={childJobDetails() || []}
                 />
