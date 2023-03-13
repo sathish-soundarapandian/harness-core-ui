@@ -6,12 +6,12 @@
  */
 
 import React, { useEffect, useState, useRef, useCallback } from 'react'
-import type { MonacoEditorProps } from 'react-monaco-editor'
+import type { EditorWillMount, MonacoEditorProps } from 'react-monaco-editor'
 //@ts-ignore
-import ReactMonacoEditor from 'react-monaco-editor'
-import MonacoEditor from '@common/components/MonacoEditor/MonacoEditor'
-import '@harness/monaco-yaml/lib/esm/monaco.contribution'
-import { IKeyboardEvent, languages } from 'monaco-editor/esm/vs/editor/editor.api'
+import MonacoEditor, { MonacoEditorRef } from '@common/components/MonacoEditor/MonacoEditor'
+//@ts-ignore
+// import 'monaco-yaml/lib/esm/monaco.contribution'
+import { IKeyboardEvent, languages } from 'monaco-editor'
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
 import { debounce, truncate, throttle, defaultTo, attempt, every, isEqualWith, isNil, get } from 'lodash-es'
 import { useToaster } from '@common/exports'
@@ -64,35 +64,13 @@ import CopyToClipboard from '../CopyToClipBoard/CopyToClipBoard'
 import { yamlStringify } from '@common/utils/YamlHelperMethods'
 import { parseInput } from '../ConfigureOptions/ConfigureOptionsUtils'
 import { CompletionItemKind } from 'vscode-languageserver-types'
+import { DiagnosticsOptions, setDiagnosticsOptions } from 'monaco-yaml'
 
 // Please do not remove this, read this https://eemeli.org/yaml/#scalar-options
 scalarOptions.str.fold.lineWidth = 100000
 defaultOptions.indent = 4
 
 const getTheme = (theme: Theme) => (theme === 'DARK' ? EDITOR_BASE_DARK_THEME : EDITOR_BASE_LIGHT_THEME)
-
-const setUpEditor = (theme: Theme): void => {
-  //@ts-ignore
-  monaco.editor.defineTheme(getTheme(theme), {
-    base: getTheme(theme),
-    inherit: theme === 'DARK',
-    rules: theme === 'DARK' ? EditorTheme.DARK : EditorTheme.LIGHT,
-    colors:
-      theme === 'DARK'
-        ? {
-            'editor.background': `#${EDITOR_DARK_BG}`,
-            'editor.foreground': `#${EDITOR_DARK_FG}`,
-            'editor.selectionBackground': `#${EDITOR_DARK_SELECTION}`,
-
-            'editor.lineHighlightBackground': `#${EDITOR_DARK_SELECTION}`,
-            'editorCursor.foreground': `#${EDITOR_DARK_FG}`,
-            'editorWhitespace.foreground': `#${EDITOR_WHITESPACE}`
-          }
-        : { 'editor.background': `#${EDITOR_LIGHT_BG}` }
-  })
-  //@ts-ignore
-  monaco.editor.setTheme(getTheme(theme))
-}
 
 const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.Element => {
   const {
@@ -122,8 +100,6 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     displayBorder = true
   } = props
   const comparableYamlJson = parse(defaultTo(comparableYaml, ''))
-
-  setUpEditor(theme)
   const params = useParams()
   const [currentYaml, setCurrentYaml] = useState<string>(defaultTo(existingYaml, ''))
   const [initialSelectionRemoved, setInitialSelectionRemoved] = useState<boolean>(
@@ -133,7 +109,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   const { innerWidth } = window
   const [dynamicWidth, setDynamicWidth] = useState<number>(innerWidth - 2 * MIN_SNIPPET_SECTION_WIDTH)
 
-  const editorRef = useRef<ReactMonacoEditor>(null)
+  const editorRef = useRef<MonacoEditorRef>(null)
   const yamlRef = useRef<string | undefined>('')
   const yamlValidationErrorsRef = useRef<Map<number, string>>()
   yamlValidationErrorsRef.current = yamlValidationErrors
@@ -173,7 +149,7 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   }, [width])
 
   const getEditorCurrentVersion = (): number | undefined => {
-    return editorRef.current?.editor?.getModel()?.getAlternativeVersionId()
+    return editorRef.current?.getModel()?.getAlternativeVersionId()
   }
 
   const verifyIncomingJSON = (jsonObj?: Record<string, any>): void => {
@@ -221,15 +197,10 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
   useEffect(() => {
     if (schema) {
       const languageSettings = getSchemaWithLanguageSettings(schema)
-      setUpYAMLBuilderWithLanguageSettings(languageSettings)
+      languages.json.jsonDefaults.setDiagnosticsOptions(languageSettings)
+      setDiagnosticsOptions(languageSettings)
     }
   }, [schema])
-
-  const setUpYAMLBuilderWithLanguageSettings = (languageSettings: string | Record<string, any>): void => {
-    //@ts-ignore
-    const { yaml } = defaultTo(languages, {})
-    yaml?.yamlDefaults.setDiagnosticsOptions(languageSettings)
-  }
 
   /* #endregion */
 
@@ -265,6 +236,26 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     []
   )
 
+  const editorWillMount: EditorWillMount = monaco => {
+    monaco.editor.defineTheme(getTheme(theme), {
+      base: getTheme(theme),
+      inherit: theme === 'DARK',
+      rules: theme === 'DARK' ? EditorTheme.DARK : EditorTheme.LIGHT,
+      colors:
+        theme === 'DARK'
+          ? {
+              'editor.background': `#${EDITOR_DARK_BG}`,
+              'editor.foreground': `#${EDITOR_DARK_FG}`,
+              'editor.selectionBackground': `#${EDITOR_DARK_SELECTION}`,
+
+              'editor.lineHighlightBackground': `#${EDITOR_DARK_SELECTION}`,
+              'editorCursor.foreground': `#${EDITOR_DARK_FG}`,
+              'editorWhitespace.foreground': `#${EDITOR_WHITESPACE}`
+            }
+          : { 'editor.background': `#${EDITOR_LIGHT_BG}` }
+    })
+    monaco.editor.setTheme(getTheme(theme))
+  }
   const editorDidMount = (editor: editor.IStandaloneCodeEditor): void => {
     // editor.addAction({
     //   id: 'Paste',
@@ -570,57 +561,70 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
     )
   }
 
-  const renderHeader = useCallback(
-    (): JSX.Element => (
-      <div className={cx(css.header)}>
-        <div className={css.flexCenter}>
-          <span className={cx(css.filePath, css.flexCenter, { [css.lightBg]: theme === 'DARK' })}>{fileName}</span>
-          {fileName && entityType ? <Tag className={css.entityTag}>{entityType}</Tag> : null}
-          {yamlRef.current ? (
-            <Container padding={{ left: entityType ? 'medium' : undefined }}>
-              {showCopyIcon ? <CopyToClipboard content={defaultTo(yamlRef.current, '')} showFeedback={true} /> : null}
-            </Container>
-          ) : null}
-        </div>
-        <div className={cx(css.flexCenter, css.validationStatus)}>
-          {!isReadOnlyMode && yamlValidationErrors && yamlValidationErrors.size > 0 && (
-            <Popover
-              interactionKind={PopoverInteractionKind.HOVER}
-              position={Position.TOP}
-              content={getErrorSummary(yamlValidationErrors)}
-              popoverClassName={css.summaryPopover}
-            >
-              <div>
-                <Icon name="main-issue-filled" size={14} className={css.validationIcon} />
-                <span className={css.invalidYaml}>{getString('invalidText')}</span>
-              </div>
-            </Popover>
-          )}
-        </div>
-      </div>
-    ),
-    [yamlValidationErrors, fileName, entityType, theme]
-  )
-
   // used to remove initial selection that appears when yaml builder is loaded with an initial value
   useEffect(() => {
-    if (every([!initialSelectionRemoved, editorRef.current?.editor?.getValue()])) {
-      editorRef.current?.editor?.setSelection(new monaco.Range(0, 0, 0, 0))
+    if (every([!initialSelectionRemoved, editorRef.current?.getValue()])) {
+      editorRef.current?.setSelection(new monaco.Range(0, 0, 0, 0))
       setInitialSelectionRemoved(true)
     }
   }, [currentYaml])
 
-  const renderEditor = useCallback(
-    (): JSX.Element => (
-      <MonacoEditor
-        width={dynamicWidth}
-        height={defaultTo(height, DEFAULT_EDITOR_HEIGHT)}
-        language="yaml"
-        value={currentYaml}
-        onChange={onYamlChange}
-        editorDidMount={editorDidMount}
-        options={
-          {
+  // const throttledOnResize = throttle(() => {
+  //   editorRef.current?.layout()
+  // }, 500)
+
+  // useEffect(() => {
+  //   window.addEventListener('resize', throttledOnResize)
+  //   return () => {
+  //     window.removeEventListener('resize', throttledOnResize)
+  //     disposePreviousSuggestions()
+  //   }
+  // }, [])
+
+  return (
+    <div className={cx(displayBorder ? css.main : null, { [css.darkBg]: theme === 'DARK' })}>
+      <div className={css.editor}>
+        {renderCustomHeader ? (
+          renderCustomHeader()
+        ) : (
+          <div className={cx(css.header)}>
+            <div className={css.flexCenter}>
+              <span className={cx(css.filePath, css.flexCenter, { [css.lightBg]: theme === 'DARK' })}>{fileName}</span>
+              {fileName && entityType ? <Tag className={css.entityTag}>{entityType}</Tag> : null}
+              {yamlRef.current ? (
+                <Container padding={{ left: entityType ? 'medium' : undefined }}>
+                  {showCopyIcon ? (
+                    <CopyToClipboard content={defaultTo(yamlRef.current, '')} showFeedback={true} />
+                  ) : null}
+                </Container>
+              ) : null}
+            </div>
+            <div className={cx(css.flexCenter, css.validationStatus)}>
+              {!isReadOnlyMode && yamlValidationErrors && yamlValidationErrors.size > 0 && (
+                <Popover
+                  interactionKind={PopoverInteractionKind.HOVER}
+                  position={Position.TOP}
+                  content={getErrorSummary(yamlValidationErrors)}
+                  popoverClassName={css.summaryPopover}
+                >
+                  <div>
+                    <Icon name="main-issue-filled" size={14} className={css.validationIcon} />
+                    <span className={css.invalidYaml}>{getString('invalidText')}</span>
+                  </div>
+                </Popover>
+              )}
+            </div>
+          </div>
+        )}
+        <MonacoEditor
+          width={dynamicWidth}
+          height={defaultTo(height, DEFAULT_EDITOR_HEIGHT)}
+          language="yaml"
+          value={currentYaml}
+          onChange={onYamlChange}
+          editorDidMount={editorDidMount}
+          editorWillMount={editorWillMount}
+          options={{
             readOnly: defaultTo(isReadOnlyMode, !isEditModeSupported),
             wordBasedSuggestions: false,
             scrollBeyondLastLine: false,
@@ -628,32 +632,11 @@ const YAMLBuilder: React.FC<YamlBuilderProps> = (props: YamlBuilderProps): JSX.E
             fontSize: 13,
             minimap: {
               enabled: false
-            }
-          } as MonacoEditorProps['options']
-        }
-        ref={editorRef}
-      />
-    ),
-    [dynamicWidth, height, currentYaml, onYamlChange]
-  )
-
-  const throttledOnResize = throttle(() => {
-    editorRef.current?.editor?.layout()
-  }, 500)
-
-  useEffect(() => {
-    window.addEventListener('resize', throttledOnResize)
-    return () => {
-      window.removeEventListener('resize', throttledOnResize)
-      disposePreviousSuggestions()
-    }
-  }, [])
-
-  return (
-    <div className={cx(displayBorder ? css.main : null, { [css.darkBg]: theme === 'DARK' })}>
-      <div className={css.editor}>
-        {defaultTo(renderCustomHeader, renderHeader)()}
-        {renderEditor()}
+            },
+            automaticLayout: true
+          }}
+          ref={editorRef}
+        />
       </div>
     </div>
   )

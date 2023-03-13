@@ -6,13 +6,11 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react'
-import { MonacoDiffEditor } from 'react-monaco-editor'
 import type { editor } from 'monaco-editor/esm/vs/editor/editor.api'
-
 import { Button, Container, Icon, Layout, Text, useConfirmationDialog } from '@harness/uicore'
 import { Intent } from '@harness/design-system'
 import { useStrings } from 'framework/strings'
-
+import MonacoDiffEditor, { MonacoDiffEditorRef } from '@common/components/MonacoDiffEditor/MonacoDiffEditor'
 import css from './GitDiffEditor.module.scss'
 
 interface GitInfo {
@@ -38,12 +36,12 @@ export const GitDiffEditor = ({
   onCancel
 }: GitDiffEditorInterface): JSX.Element => {
   const { getString } = useStrings()
-  const editorRef = useRef<MonacoDiffEditor>(null)
+  const editorRef = useRef<MonacoDiffEditorRef>(null)
   const [currentContent, setCurrentContent] = useState<string>(local.content)
   const [totalLinesInModifiedContent, setTotalLinesInModifiedContent] = useState<number>(0)
 
   useEffect(() => {
-    setTotalLinesInModifiedContent(editorRef.current?.editor?.getModifiedEditor()?.getModel()?.getLineCount() || 0)
+    setTotalLinesInModifiedContent(editorRef.current?.getModifiedEditor()?.getModel()?.getLineCount() || 0)
   }, [])
 
   const { openDialog } = useConfirmationDialog({
@@ -113,9 +111,7 @@ export const GitDiffEditor = ({
           }}
           onChange={(value: string, _event: editor.IModelContentChangedEvent) => {
             setCurrentContent(value)
-            setTotalLinesInModifiedContent(
-              editorRef.current?.editor?.getModifiedEditor()?.getModel()?.getLineCount?.() || 0
-            )
+            setTotalLinesInModifiedContent(editorRef.current?.getModifiedEditor()?.getModel()?.getLineCount?.() || 0)
           }}
         />
       </Container>
