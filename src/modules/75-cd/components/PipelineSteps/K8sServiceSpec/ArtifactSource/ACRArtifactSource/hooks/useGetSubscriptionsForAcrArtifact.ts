@@ -5,13 +5,10 @@
  * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
  */
 
-import type { GetDataError } from 'restful-react'
-import {
-  ResponseAzureSubscriptionsDTO,
-  useGetAzureSubscriptions,
-  useGetAzureSubscriptionsForAcrArtifact,
-  Failure
-} from 'services/cd-ng'
+import { useMutateAsGet } from '@common/hooks'
+import type { StepViewType } from '@pipeline/components/AbstractSteps/Step'
+import { useGetAzureSubscriptions, useGetAzureSubscriptionsForAcrArtifact } from 'services/cd-ng'
+import { getYamlData } from '../../artifactSourceUtils'
 
 export interface Params {
   connectorRef?: string
@@ -21,16 +18,10 @@ export interface Params {
   useArtifactV1Data?: boolean
   serviceId?: string
   subscriptionsFqnPath: string
+  pipelineIdentifier?: any
 }
 
-interface ReturnType {
-  subscriptionsData: ResponseAzureSubscriptionsDTO | null
-  refetchSubscriptions: (options?: { queryParams: any }) => Promise<void>
-  loadingSubscriptions: boolean
-  subscriptionsError: GetDataError<Failure | Error> | null
-}
-
-export function useGetSubscriptionsForAcrArtifact(params: Params): ReturnType {
+export function useGetSubscriptionsForAcrArtifact(params: Params) {
   const {
     connectorRef,
     accountId,
@@ -38,7 +29,8 @@ export function useGetSubscriptionsForAcrArtifact(params: Params): ReturnType {
     orgIdentifier,
     useArtifactV1Data,
     serviceId,
-    subscriptionsFqnPath
+    subscriptionsFqnPath,
+    pipelineIdentifier
   } = params
 
   const {
@@ -62,13 +54,22 @@ export function useGetSubscriptionsForAcrArtifact(params: Params): ReturnType {
     refetch: refetchV2Subscriptions,
     loading: loadingV2Subscriptions,
     error: subscriptionsV2Error
-  } = useGetAzureSubscriptionsForAcrArtifact({
+  } = useMutateAsGet(useGetAzureSubscriptionsForAcrArtifact, {
+    body: {
+      runtimeInputYaml: 'test'
+    },
+    requestOptions: {
+      headers: {
+        'content-type': 'application/json'
+      }
+    },
     queryParams: {
       connectorRef,
       accountIdentifier: accountId,
       orgIdentifier,
       projectIdentifier,
       serviceId,
+      pipelineIdentifier,
       fqnPath: subscriptionsFqnPath
     },
     lazy: true,

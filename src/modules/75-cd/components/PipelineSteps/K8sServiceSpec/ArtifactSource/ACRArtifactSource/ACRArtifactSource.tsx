@@ -49,6 +49,7 @@ import {
 } from '../artifactSourceUtils'
 import ArtifactTagRuntimeField from '../ArtifactSourceRuntimeFields/ArtifactTagRuntimeField'
 import css from '../../../Common/GenericServiceSpec/GenericServiceSpec.module.scss'
+import { useMutateAsGet } from '@common/hooks'
 
 interface ACRRenderContent extends ArtifactSourceRenderProps {
   isTagsSelectionDisabled: (data: ArtifactSourceRenderProps) => boolean
@@ -162,7 +163,8 @@ const Content = (props: ACRRenderContent): JSX.Element => {
       projectIdentifier,
       serviceId,
       useArtifactV1Data,
-      subscriptionsFqnPath
+      subscriptionsFqnPath,
+      pipelineIdentifier
     })
 
   useEffect(() => {
@@ -206,7 +208,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     refetch: refetchRegistries,
     loading: loadingRegistries,
     error: registriesError
-  } = useGetACRRegistriesForService({
+  } = useMutateAsGet(useGetACRRegistriesForService, {
     queryParams: {
       connectorRef: artifact?.spec?.connectorRef,
       accountIdentifier: accountId,
@@ -254,7 +256,7 @@ const Content = (props: ACRRenderContent): JSX.Element => {
     refetch: refetchRepositories,
     loading: loadingRepositories,
     error: repositoriesError
-  } = useGetACRRepositoriesForService({
+  } = useMutateAsGet(useGetACRRepositoriesForService, {
     queryParams: {
       connectorRef: artifact?.spec?.connectorRef,
       accountIdentifier: accountId,
