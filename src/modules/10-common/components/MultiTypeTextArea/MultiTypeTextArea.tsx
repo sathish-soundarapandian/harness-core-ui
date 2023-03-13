@@ -76,8 +76,7 @@ export const MultiTypeTextArea: React.FC<MultiTypeTextAreaProps> = props => {
       fixedTypeComponent={MultiTypeTextAreaFixedTypeComponent}
       style={{ flexGrow: 1 }}
       onTypeChange={setMultiType}
-      btnClassName={!isMultiTypeRuntime(multiType) ? css.multiButtonForFixedType : ''}
-      showFixedComponentOnExpressionType
+      btnClassName={multiType === MultiTypeInputType.FIXED ? css.multiButtonForFixedType : ''}
     />
   )
   return (

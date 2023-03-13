@@ -1775,13 +1775,26 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   style="flex-grow: 1;"
                 >
-                  <textarea
-                    class="bp3-input input"
-                    name="spec.approvalMessage"
-                    placeholder="Please add relevant information for this step"
+                  <div
+                    class="bp3-popover-wrapper MultiTypeInput--input"
                   >
-                    &lt;+somemessage&gt;
-                  </textarea>
+                    <div
+                      class="bp3-popover-target"
+                    >
+                      <div
+                        class="bp3-input-group"
+                      >
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          name="spec.approvalMessage"
+                          placeholder="<+expression>"
+                          type="text"
+                          value="<+somemessage>"
+                        />
+                      </div>
+                    </div>
+                  </div>
                   <span
                     class="bp3-popover-wrapper MultiTypeInput--wrapper"
                   >
@@ -1789,7 +1802,7 @@ exports[`Harness Approval tests Edit stage - submit field values as expressions:
                       class="bp3-popover-target"
                     >
                       <button
-                        class="MultiTypeInput--btn MultiTypeInput--EXPRESSION multiButtonForFixedType"
+                        class="MultiTypeInput--btn MultiTypeInput--EXPRESSION"
                         data-testid="multi-type-button"
                       >
                         <span
@@ -2393,13 +2406,26 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   style="flex-grow: 1;"
                 >
-                  <textarea
-                    class="bp3-input input"
-                    name="spec.approvalMessage"
-                    placeholder="Please add relevant information for this step"
+                  <div
+                    class="bp3-popover-wrapper MultiTypeInput--input"
                   >
-                    &lt;+somemessage&gt;
-                  </textarea>
+                    <div
+                      class="bp3-popover-target"
+                    >
+                      <div
+                        class="bp3-input-group"
+                      >
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          name="spec.approvalMessage"
+                          placeholder="<+expression>"
+                          type="text"
+                          value="<+somemessage>"
+                        />
+                      </div>
+                    </div>
+                  </div>
                   <span
                     class="bp3-popover-wrapper MultiTypeInput--wrapper"
                   >
@@ -2407,7 +2433,7 @@ exports[`Harness Approval tests MinimumCount should be greater than 1: minimum c
                       class="bp3-popover-target"
                     >
                       <button
-                        class="MultiTypeInput--btn MultiTypeInput--EXPRESSION multiButtonForFixedType"
+                        class="MultiTypeInput--btn MultiTypeInput--EXPRESSION"
                         data-testid="multi-type-button"
                       >
                         <span
@@ -2982,13 +3008,26 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
                   class="Layout--horizontal StyledProps--main MultiTypeInput--main"
                   style="flex-grow: 1;"
                 >
-                  <textarea
-                    class="bp3-input input"
-                    name="spec.approvalMessage"
-                    placeholder="Please add relevant information for this step"
+                  <div
+                    class="bp3-popover-wrapper MultiTypeInput--input"
                   >
-                    Approving pipeline &lt;+pname&gt;
-                  </textarea>
+                    <div
+                      class="bp3-popover-target"
+                    >
+                      <div
+                        class="bp3-input-group"
+                      >
+                        <input
+                          autocomplete="off"
+                          class="bp3-input"
+                          name="spec.approvalMessage"
+                          placeholder="<+expression>"
+                          type="text"
+                          value="Approving pipeline <+pname>"
+                        />
+                      </div>
+                    </div>
+                  </div>
                   <span
                     class="bp3-popover-wrapper MultiTypeInput--wrapper"
                   >
@@ -2996,7 +3035,7 @@ exports[`Harness Approval tests On submit call: values populating on edit 1`] = 
                       class="bp3-popover-target"
                     >
                       <button
-                        class="MultiTypeInput--btn MultiTypeInput--EXPRESSION multiButtonForFixedType"
+                        class="MultiTypeInput--btn MultiTypeInput--EXPRESSION"
                         data-testid="multi-type-button"
                       >
                         <span
