@@ -227,3 +227,5 @@ commandLineCreation:
   feedBackSaved: Feedback Saved
   feedBackNotSaved: Error in saving feedback
   retryConnections: Retry Connection
+  combinedHelmChartCommandsHeading: To install the Harness Delegate in your Kubernetes cluster directly, copy and run the below command to deploy the Harness Delegate with a Helm chart.
+  copyCommand: Copy command

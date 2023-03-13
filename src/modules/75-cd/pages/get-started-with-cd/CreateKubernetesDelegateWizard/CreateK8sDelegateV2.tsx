@@ -250,7 +250,7 @@ export const CreateK8sDelegateV2 = ({
               {getString('cd.getStartedWithCD.installationInstructions')}
               <HarnessDocTooltip tooltipId="cdOnboardingDelegateInstructions" useStandAlone={true} />
             </Text>
-            <HelmChartCommands command={command} />
+            <HelmChartCommands command={command} combineAllCommands />
           </li>
 
           <li className={`${css.progressItem} ${css.progressItemActive}`}>

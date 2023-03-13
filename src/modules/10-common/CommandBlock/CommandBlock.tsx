@@ -30,6 +30,7 @@ interface CommandBlockProps {
   downloadFileProps?: DownloadFileProps
   telemetryProps?: TelemetryProps
   copySnippet?: string
+  copyButtonText?: string
 }
 enum DownloadFile {
   DEFAULT_NAME = 'commandBlock',
@@ -43,7 +44,8 @@ const CommandBlock: React.FC<CommandBlockProps> = ({
   allowDownload = false,
   downloadFileProps,
   telemetryProps,
-  copySnippet
+  copySnippet,
+  copyButtonText
 }) => {
   const { trackEvent } = useTelemetry()
   const downloadFileDefaultName = downloadFileProps?.downloadFileName || DownloadFile.DEFAULT_NAME
@@ -69,6 +71,7 @@ const CommandBlock: React.FC<CommandBlockProps> = ({
         {(allowCopy || copySnippet) && (
           <CopyButton
             textToCopy={copySnippet || commandSnippet}
+            text={copyButtonText}
             onCopySuccess={() => {
               if (telemetryProps?.copyTelemetryProps) {
                 trackEvent(

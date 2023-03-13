@@ -434,6 +434,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
 
   const getJobnameValue = () => {
     const jobName = get(formik, `values.${path}.artifacts.${artifactPath}.spec.jobName`)
+    if (getMultiTypeFromValue(jobName) !== MultiTypeInputType.FIXED) return jobName
     if (showChildJobField) {
       const parentJob = jobDetails.find(job => job.label === recentParentJob?.current)
       if (parentJob) return parentJob
@@ -524,6 +525,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                     : getString('select')
                 }
                 multiTypeInputProps={{
+                  width: 400,
                   onChange: (primaryValue: any) => {
                     if (primaryValue?.hasSubmenuItems) {
                       setShowChildJobField(true)
@@ -542,10 +544,10 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                     } else {
                       setArtifactPaths([])
                       setJenkinsBuilds([])
-                      setChildJob({} as SelectWithBiLevelOption)
                       setShowChildJobField(false)
                     }
                     setJobNameValue(typeof primaryValue === 'string' ? primaryValue : primaryValue?.label)
+                    setChildJob({} as SelectWithBiLevelOption)
                     formik.setFieldValue(
                       `${path}.artifacts.${artifactPath}.spec.jobName`,
                       getMultiTypeFromValue(primaryValue) === MultiTypeInputType.FIXED
@@ -584,6 +586,7 @@ const Content = (props: JenkinsRenderContent): React.ReactElement => {
                       : getString('select')
                   }
                   multiTypeInputProps={{
+                    width: 400,
                     onChange: (primaryValue: any) => {
                       if (primaryValue?.hasSubmenuItems) {
                         setLastOpenedJob(primaryValue?.label)

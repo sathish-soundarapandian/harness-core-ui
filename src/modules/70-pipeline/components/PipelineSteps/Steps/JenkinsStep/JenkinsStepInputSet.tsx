@@ -205,6 +205,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
 
   const getJobnameValue = () => {
     const jobName = get(formik, `values.${prefix}spec.jobName`)
+    if (getMultiTypeFromValue(jobName) !== MultiTypeInputType.FIXED) return jobName
     if (showChildJobField) {
       const parentJob = jobDetails.find(job => job.label === lastOpenedJob?.current)
       if (parentJob) return parentJob
@@ -258,7 +259,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
             accountIdentifier={accountId}
             projectIdentifier={projectIdentifier}
             orgIdentifier={orgIdentifier}
-            width={385}
+            width={400}
             setRefValue
             multiTypeProps={{
               allowableTypes,
@@ -318,7 +319,6 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                         })
                       }
                     } else {
-                      setChildJob({} as SelectWithBiLevelOption)
                       setShowChildJobField(false)
                       if (
                         getMultiTypeFromValue(primaryValue) === MultiTypeInputType.FIXED &&
@@ -333,6 +333,7 @@ function JenkinsStepInputSet(formContentProps: any): JSX.Element {
                         })
                       }
                     }
+                    setChildJob({} as SelectWithBiLevelOption)
                     formik.setFieldValue(
                       `${prefix}spec.jobName`,
                       getMultiTypeFromValue(primaryValue) === MultiTypeInputType.FIXED

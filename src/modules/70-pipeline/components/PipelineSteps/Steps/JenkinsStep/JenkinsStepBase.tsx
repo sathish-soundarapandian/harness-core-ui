@@ -379,7 +379,6 @@ function FormContent({
                   })
                 }
               } else {
-                setChildJob({} as SelectWithBiLevelOption)
                 setShowChildJobField(false)
                 if (getMultiTypeFromValue(primaryValue) === MultiTypeInputType.FIXED && primaryValue?.label?.length) {
                   refetchJobParameters({
@@ -391,6 +390,7 @@ function FormContent({
                   })
                 }
               }
+              setChildJob({} as SelectWithBiLevelOption)
               formik.setValues({
                 ...formik.values,
                 spec: {

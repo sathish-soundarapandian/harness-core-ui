@@ -336,10 +336,10 @@ function FormComponent({
                     })
                   }
                 } else {
-                  setChildJob({} as SelectWithBiLevelOption)
                   setShowChildJobField(false)
                   setJenkinsBuilds([])
                 }
+                setChildJob({} as SelectWithBiLevelOption)
                 formik.setValues({
                   ...formik.values,
                   spec: {
