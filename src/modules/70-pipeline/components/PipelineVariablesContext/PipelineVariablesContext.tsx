@@ -76,6 +76,10 @@ export interface GetPathToMetaKeyMapParams {
   pipeline: PipelineInfoConfig
 }
 
+export const LexicalScopes = {
+  RunPipelineForm: 'RunPipelineForm'
+}
+
 export interface PipelineMeta {
   value: string
   metaKeyId: string
@@ -168,7 +172,7 @@ export function PipelineVariablesContextProvider(
       parentEntityRepoName: storeMetadata.repoName
     },
     debounce: 1300,
-    ...(lexicalContext === 'runPipelineForm' && { lazy: isEmpty(originalPipeline) })
+    ...(lexicalContext === LexicalScopes.RunPipelineForm && { lazy: isEmpty(originalPipeline) })
   })
 
   const {
