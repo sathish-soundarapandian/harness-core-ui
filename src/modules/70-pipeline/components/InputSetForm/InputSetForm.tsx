@@ -485,8 +485,8 @@ function InputSetForm(props: InputSetFormProps): React.ReactElement {
   const child = React.useCallback(
     () => (
       <PipelineVariablesContextProvider
-        pipeline={parsedPipeline}
-        enablePipelineTemplatesResolution={true}
+        pipeline={resolvedMergedPipeline}
+        enablePipelineTemplatesResolution={false}
         storeMetadata={{ storeType, connectorRef, repoName, branch, filePath }}
       >
         <FormikInputSetForm
