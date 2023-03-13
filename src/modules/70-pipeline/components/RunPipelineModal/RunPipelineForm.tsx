@@ -89,7 +89,7 @@ import SaveAsInputSet from './SaveAsInputSet'
 import ReplacedExpressionInputForm from './ReplacedExpressionInputForm'
 import {
   KVPair,
-  LexicalScopes,
+  LexicalContext,
   PipelineVariablesContextProvider,
   usePipelineVariables
 } from '../PipelineVariablesContext/PipelineVariablesContext'
@@ -1010,7 +1010,7 @@ export function RunPipelineForm(props: RunPipelineFormProps & InputSetGitQueryPa
       ) : (
         <PipelineVariablesContextProvider
           storeMetadata={props.storeMetadata}
-          lexicalContext={LexicalScopes.RunPipelineForm}
+          lexicalContext={LexicalContext.RunPipelineForm}
         >
           <RunPipelineFormBasic {...props} />
         </PipelineVariablesContextProvider>

@@ -113,7 +113,7 @@ export function PipelineVariablesContextProvider(
     pipeline?: PipelineInfoConfig
     enablePipelineTemplatesResolution?: boolean
     storeMetadata?: StoreMetadata
-    lexicalContext?: Partial<Record<LexicalContext, string>>
+    lexicalContext?: LexicalContext
   }>
 ): React.ReactElement {
   const { pipeline: pipelineFromProps, enablePipelineTemplatesResolution, storeMetadata = {}, lexicalContext } = props
