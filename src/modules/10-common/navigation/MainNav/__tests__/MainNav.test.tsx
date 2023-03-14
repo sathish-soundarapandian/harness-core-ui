@@ -120,11 +120,7 @@ describe('main nav tests', () => {
 
   test('when new nav bar is enabled and no modules in preference store', () => {
     const { container } = render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          NEW_LEFT_NAVBAR_SETTINGS: true
-        }}
-      >
+      <TestWrapper>
         <MainNav />
       </TestWrapper>
     )
@@ -148,9 +144,6 @@ describe('main nav tests', () => {
 
     const { queryByText } = render(
       <TestWrapper
-        defaultFeatureFlagValues={{
-          NEW_LEFT_NAVBAR_SETTINGS: true
-        }}
         defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' }, CHAOS: { status: 'ACTIVE' } } }}
       >
         <MainNav />
@@ -178,9 +171,6 @@ describe('main nav tests', () => {
 
     render(
       <TestWrapper
-        defaultFeatureFlagValues={{
-          NEW_LEFT_NAVBAR_SETTINGS: true
-        }}
         defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' }, CHAOS: { status: 'ACTIVE' } } }}
       >
         <MainNav />
@@ -206,11 +196,7 @@ describe('main nav tests', () => {
     })
 
     render(
-      <TestWrapper
-        defaultFeatureFlagValues={{
-          NEW_LEFT_NAVBAR_SETTINGS: true
-        }}
-      >
+      <TestWrapper>
         <MainNav />
       </TestWrapper>
     )
@@ -238,9 +224,6 @@ describe('main nav tests', () => {
 
     render(
       <TestWrapper
-        defaultFeatureFlagValues={{
-          NEW_LEFT_NAVBAR_SETTINGS: true
-        }}
         defaultLicenseStoreValues={{
           licenseInformation: { CD: { status: 'ACTIVE' }, CHAOS: { status: 'ACTIVE' } }
         }}

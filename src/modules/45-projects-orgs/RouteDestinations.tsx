@@ -167,37 +167,21 @@ const RedirectToDelegatesHome = (): React.ReactElement => {
 const ProjectsRedirect = (): React.ReactElement => {
   const { accountId } = useParams<ProjectPathProps>()
   const { search } = useLocation()
-  const { NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
 
-  if (NEW_LEFT_NAVBAR_SETTINGS) {
-    return (
-      <Redirect
-        to={{
-          pathname: routes.toAllProjects({
-            accountId
-          }),
-          search
-        }}
-      />
-    )
-  }
-
-  return <ProjectsPage />
+  return (
+    <Redirect
+      to={{
+        pathname: routes.toAllProjects({
+          accountId
+        }),
+        search
+      }}
+    />
+  )
 }
 
 const MainDashboardRedirect = (): React.ReactElement => {
-  const { NEW_LEFT_NAVBAR_SETTINGS, LANDING_OVERVIEW_PAGE_V2 } = useFeatureFlags()
-  const { accountId } = useParams<ProjectPathProps>()
-
-  if (!NEW_LEFT_NAVBAR_SETTINGS) {
-    return (
-      <Redirect
-        to={routes.toHome({
-          accountId
-        })}
-      />
-    )
-  }
+  const { LANDING_OVERVIEW_PAGE_V2 } = useFeatureFlags()
 
   return LANDING_OVERVIEW_PAGE_V2 ? <LandingDashboardPageV2 /> : <LandingDashboardPage />
 }

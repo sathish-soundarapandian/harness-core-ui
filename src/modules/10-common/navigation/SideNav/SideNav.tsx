@@ -62,7 +62,7 @@ export const SIDE_NAV_EXPAND_TIMER = 500
 export default function SideNav(props: React.PropsWithChildren<SideNavProps>): ReactElement {
   const { collapseByDefault = false } = props
   const { getString } = useStrings()
-  const { SPG_SIDENAV_COLLAPSE, PLG_ENABLE_CROSS_GENERATION_ACCESS, NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
+  const { PLG_ENABLE_CROSS_GENERATION_ACCESS } = useFeatureFlags()
   const params = useParams<ProjectPathProps>()
   const { accountId } = useParams<AccountPathProps>()
   const { setPreference: setSideNavExpandedPrefStore, preference: sideNavExpandedPrefStore = true } =
@@ -101,7 +101,7 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
     <div
       className={cx(css.main, {
         [css.sideNavExpanded]: sideNavExpanded,
-        [css.newNav]: NEW_LEFT_NAVBAR_SETTINGS
+        [css.newNav]: true
       })}
       onMouseEnter={() => {
         /* istanbul ignore next */
@@ -138,17 +138,12 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
           </div>
         </Container>
       </>
-      {SPG_SIDENAV_COLLAPSE && (
-        <SideNavCollapseButton
-          isExpanded={sideNavExpanded}
-          onClick={() => {
-            if (!collapseByDefault) {
-              setSideNavExpandedPrefStore(!sideNavExpanded)
-            }
-            setSideNavExpanded(!sideNavExpanded)
-          }}
-        />
-      )}
+      <SideNavCollapseButton
+        isExpanded={sideNavExpanded}
+        onClick={() => {
+          setSideNavExpanded(!sideNavExpanded)
+        }}
+      />
     </div>
   )
 }

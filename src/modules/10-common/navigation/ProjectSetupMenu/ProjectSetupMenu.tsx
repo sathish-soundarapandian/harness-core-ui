@@ -37,7 +37,6 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
   const {
     CVNG_TEMPLATE_MONITORED_SERVICE,
     SRM_ET_EXPERIMENTAL,
-    NEW_LEFT_NAVBAR_SETTINGS,
     SRM_DOWNTIME,
     STO_JIRA_INTEGRATION,
     USE_OLD_GIT_SYNC
@@ -76,7 +75,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     (isGitSyncEnabled && !gitSyncEnabledOnlyForFF) ||
     (USE_OLD_GIT_SYNC && (isCIorCDorSTO || !module) && !isGitSimplificationEnabled)
 
-  const showTemplates = isCIorCDorSTO || (!module && NEW_LEFT_NAVBAR_SETTINGS)
+  const showTemplates = isCIorCDorSTO || !module
   const showFileStore = isCIorCD || !module
 
   return (

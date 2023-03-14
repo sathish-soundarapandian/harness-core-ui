@@ -60,8 +60,8 @@ const ProjectDetails: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const { selectedTimeRange } = useLandingDashboardContext()
   const [range] = useState([Date.now() - TimeRangeToDays[selectedTimeRange] * 24 * 60 * 60000, Date.now()])
-  const { CVNG_ENABLED, CENG_ENABLED, NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
-  const showProjectOverview = NEW_LEFT_NAVBAR_SETTINGS && !isOnPrem()
+  const { CVNG_ENABLED, CENG_ENABLED } = useFeatureFlags()
+  const showProjectOverview = !isOnPrem()
   const { FF_LICENSE_STATE, licenseInformation } = useLicenseStore()
   const invitePermission = {
     resourceScope: {
