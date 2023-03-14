@@ -113,7 +113,7 @@ const SubscriptionTab = ({
       const buttonClassnames = cx(css.subscriptionTabButton, isSelected && css.selected)
       // adding this until we have plans page for srm page
       if (selectedModule.toLowerCase() === 'cv' && tab.label === 'common.subscriptions.tabs.plans') {
-        return
+        return <></>
       }
       return (
         <Button className={buttonClassnames} key={tab.label} round onClick={handleTabClick}>
