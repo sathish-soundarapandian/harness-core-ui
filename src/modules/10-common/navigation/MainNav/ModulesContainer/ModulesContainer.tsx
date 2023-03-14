@@ -6,8 +6,7 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react'
-import { Container, Icon } from '@harness/uicore'
-import { debounce } from 'lodash-es'
+import { Container } from '@harness/uicore'
 import cx from 'classnames'
 import {
   ModulesPreferenceStoreData,
@@ -20,49 +19,7 @@ import css from '../MainNav.module.scss'
 
 export const MODULES_WINDOW_SIZE = 3
 
-enum ChevronButtonType {
-  UP = 'UP',
-  DOWN = 'DOWN'
-}
-interface ChevronButtonProps {
-  disabled?: boolean
-  type?: ChevronButtonType
-  handleClick: () => void
-}
-
-const ChevronButton: React.FC<ChevronButtonProps> = (props: ChevronButtonProps) => {
-  const { disabled, type, handleClick } = props
-
-  return (
-    <Container
-      className={cx(css.chevron, css.navBtn)}
-      onClick={disabled ? undefined : handleClick}
-      padding={{ top: 'small', bottom: 'small' }}
-    >
-      {disabled ? (
-        <div className={css.disabled} />
-      ) : (
-        <Icon name={type === 'DOWN' ? 'main-caret-down' : 'main-caret-up'} size={15} />
-      )}
-    </Container>
-  )
-}
-
-const isModuleHiddenOnTop = (
-  container: HTMLDivElement,
-  element: HTMLDivElement,
-  moduleVisibilityPercentage = 60
-): boolean => {
-  const { top: containerDistanceFromTop } = container.getBoundingClientRect()
-  const { top: elementDistanceFromTop, height: elementHeight } = element.getBoundingClientRect()
-
-  const differenceFromTop = elementDistanceFromTop + elementHeight - containerDistanceFromTop
-
-  return differenceFromTop < elementHeight / (100 / moduleVisibilityPercentage)
-}
-
 const ModulesContainer = (): React.ReactElement => {
-  const [moduleStartIndex, setModuleStartIndex] = useState<number>(0)
   const itemsRef = useRef<HTMLDivElement[]>([])
 
   const { preference: modulesPreferenceData, setPreference: setModuleConfigPreference } =
@@ -71,7 +28,6 @@ const ModulesContainer = (): React.ReactElement => {
   const [filterModulesExecuted, setFilterModulesExecuted] = useState<boolean>(false)
 
   const { selectedModules = [], orderedModules = [] } = modulesPreferenceData || {}
-  const modulesListHeight = 92 * Math.min(MODULES_WINDOW_SIZE, selectedModules?.length || 0)
 
   useEffect(() => {
     const { orderedModules: filteredOrderedModules, selectedModules: filteredSelectedModules } = filterNavModules(
@@ -86,37 +42,14 @@ const ModulesContainer = (): React.ReactElement => {
     setFilterModulesExecuted(true)
   }, [])
 
-  const scrollModuleToView = (index: number) => {
-    setTimeout(() => itemsRef.current[index].scrollIntoView({ block: 'nearest' }), 0)
-  }
-
-  const handleUpClick = (): void => {
-    const index = moduleStartIndex > 0 ? moduleStartIndex - 1 : moduleStartIndex
-    setModuleStartIndex(index)
-    scrollModuleToView(index)
-  }
-
-  const handleDownClick = (): void => {
-    const index = moduleStartIndex < selectedModules.length - 1 ? moduleStartIndex + 1 : moduleStartIndex
-    setModuleStartIndex(index)
-    scrollModuleToView(index + MODULES_WINDOW_SIZE - 1)
-  }
-
-  const handleOnScroll = debounce(e => {
-    const firstVisibleModule = itemsRef.current.findIndex(item => !isModuleHiddenOnTop(e.target, item))
-    setModuleStartIndex(firstVisibleModule === -1 ? 0 : firstVisibleModule)
-  }, 100)
-
   if (!filterModulesExecuted) {
     return <></>
   }
 
-  const showChevronButtons = selectedModules.length > MODULES_WINDOW_SIZE
   return (
     <>
       <div className={cx(css.border, css.navBtn)} />
-      {showChevronButtons && <ChevronButton handleClick={handleUpClick} disabled={moduleStartIndex === 0} />}
-      <Container onScroll={handleOnScroll} className={css.modules} style={{ height: modulesListHeight }}>
+      <Container className={css.modules}>
         {orderedModules
           .filter(moduleName => moduleMap[moduleName]?.shouldVisible && selectedModules.indexOf(moduleName) > -1)
           .map((moduleName, i) => {
@@ -129,13 +62,6 @@ const ModulesContainer = (): React.ReactElement => {
             )
           })}
       </Container>
-      {showChevronButtons && (
-        <ChevronButton
-          handleClick={handleDownClick}
-          type={ChevronButtonType.DOWN}
-          disabled={moduleStartIndex + MODULES_WINDOW_SIZE >= selectedModules.length}
-        />
-      )}
       <div className={cx(css.border, css.navBtn)} />
     </>
   )

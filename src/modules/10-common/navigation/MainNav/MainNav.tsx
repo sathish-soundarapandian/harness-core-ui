@@ -31,6 +31,16 @@ const commonLinkProps: Partial<NavLinkProps> = {
   className: cx(css.navLink)
 }
 
+const TOP_CONTAINER_HEIGHT = 184
+
+const getBottomContainerHeight = (hasDashboard: boolean) => {
+  if (hasDashboard) {
+    return 300
+  }
+
+  return 220
+}
+
 export default function L1Nav(): React.ReactElement {
   const params = useParams<ProjectPathProps>()
   const { NG_DASHBOARDS } = useFeatureFlags()
@@ -57,24 +67,22 @@ export default function L1Nav(): React.ReactElement {
   return (
     <>
       <nav className={cx(css.main, { [css.recessed]: isModuleListOpen })}>
-        <ul className={css.navList}>
-          {
-            <li className={css.navItem}>
-              <Link {...commonLinkProps} to={paths.toMainDashboard(params)}>
-                <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                  <Icon name={'harness'} size={30} />
-                  <Text
-                    font={{ weight: 'semi-bold', align: 'center' }}
-                    padding={{ bottom: 'xsmall' }}
-                    color={Color.WHITE}
-                    className={css.text}
-                  >
-                    <String stringID={'common.home'} />
-                  </Text>
-                </Layout.Vertical>
-              </Link>
-            </li>
-          }
+        <ul className={css.navList} style={{ height: `${TOP_CONTAINER_HEIGHT}px` }}>
+          <li className={css.navItem}>
+            <Link {...commonLinkProps} to={paths.toMainDashboard(params)}>
+              <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
+                <Icon name={'harness'} size={30} />
+                <Text
+                  font={{ weight: 'semi-bold', align: 'center' }}
+                  padding={{ bottom: 'xsmall' }}
+                  color={Color.WHITE}
+                  className={css.text}
+                >
+                  <String stringID={'common.home'} />
+                </Text>
+              </Layout.Vertical>
+            </Link>
+          </li>
           <li className={css.navItem}>
             <Link {...commonLinkProps} to={paths.toHome(params)}>
               <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
@@ -90,41 +98,49 @@ export default function L1Nav(): React.ReactElement {
               </Layout.Vertical>
             </Link>
           </li>
-          <li className={css.modulesContainerNavItem}>
-            <ModulesContainer />
-          </li>
-          {
-            <li>
-              <Container flex={{ justifyContent: 'center' }}>
-                <Popover
-                  content={
-                    <Text color={Color.WHITE} padding="small">
-                      <String stringID="common.selectModules" />
-                    </Text>
-                  }
-                  popoverClassName={Classes.DARK}
-                  interactionKind={PopoverInteractionKind.HOVER}
-                  position={Position.RIGHT}
-                >
-                  <button
-                    className={cx(css.allModulesButton, {
-                      [css.allModulesOpen]: isModuleListOpen
-                    })}
-                    onClick={toggleModuleList}
-                  >
-                    <Icon name={isModuleConfigOpen ? 'customize' : 'grid'} size={isModuleListOpen ? 26 : 16} />
-                    {isModuleConfigOpen && (
-                      <Text color={Color.WHITE} font={{ variation: FontVariation.TINY }} margin={{ top: 'xsmall' }}>
-                        <String stringID="common.configureModuleList" />
-                      </Text>
-                    )}
-                  </button>
-                </Popover>
-              </Container>
-            </li>
-          }
         </ul>
-        <ul className={css.navList}>
+
+        <ul
+          className={css.navList}
+          style={{
+            overflow: 'hidden',
+            position: 'relative',
+            display: 'flex',
+            flexFlow: 'column',
+            marginBottom: 'auto'
+          }}
+        >
+          <ModulesContainer />
+          <li>
+            <Container flex={{ justifyContent: 'center' }}>
+              <Popover
+                content={
+                  <Text color={Color.WHITE} padding="small">
+                    <String stringID="common.selectModules" />
+                  </Text>
+                }
+                popoverClassName={Classes.DARK}
+                interactionKind={PopoverInteractionKind.HOVER}
+                position={Position.RIGHT}
+              >
+                <button
+                  className={cx(css.allModulesButton, {
+                    [css.allModulesOpen]: isModuleListOpen
+                  })}
+                  onClick={toggleModuleList}
+                >
+                  <Icon name={isModuleConfigOpen ? 'customize' : 'grid'} size={isModuleListOpen ? 26 : 16} />
+                  {isModuleConfigOpen && (
+                    <Text color={Color.WHITE} font={{ variation: FontVariation.TINY }} margin={{ top: 'xsmall' }}>
+                      <String stringID="common.configureModuleList" />
+                    </Text>
+                  )}
+                </button>
+              </Popover>
+            </Container>
+          </li>
+        </ul>
+        <ul className={css.navList} style={{ height: `${getBottomContainerHeight(!!NG_DASHBOARDS)}px` }}>
           <li className={css.navItem}>
             <ResourceCenter />
           </li>
@@ -175,16 +191,15 @@ export default function L1Nav(): React.ReactElement {
           </li>
         </ul>
       </nav>
-      {
-        <ModuleList
-          isOpen={isModuleListOpen}
-          close={() => {
-            closeModuleList()
-            closeModuleConfig()
-          }}
-          onConfigIconClick={toggleModuleConfig}
-        />
-      }
+      <ModuleList
+        isOpen={isModuleListOpen}
+        close={() => {
+          closeModuleList()
+          closeModuleConfig()
+        }}
+        onConfigIconClick={toggleModuleConfig}
+      />
+
       {isModuleConfigOpen ? (
         <ModuleConfigurationScreen
           onClose={() => {
