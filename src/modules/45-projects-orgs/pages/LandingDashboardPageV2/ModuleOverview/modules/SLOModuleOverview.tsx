@@ -55,7 +55,7 @@ const SLOModuleOverview: React.FC<ModuleOverviewBaseProps> = ({ isExpanded, isEm
       return (
         <EmptyStateExpandedView
           title={'common.moduleDetails.slo.expanded.title'}
-          description={'common.moduleDetails.slo.expanded.title'}
+          description={'common.moduleDetails.slo.expanded.description'}
         />
       )
     }

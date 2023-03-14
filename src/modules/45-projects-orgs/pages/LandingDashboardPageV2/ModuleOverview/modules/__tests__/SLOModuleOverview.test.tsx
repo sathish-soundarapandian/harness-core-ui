@@ -11,6 +11,26 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { DEFAULT_TIME_RANGE } from '@common/utils/momentUtils'
 import SLOModuleOverview from '../SLOModuleOverview'
 
+jest.mock('services/cv', () => ({
+  ...jest.requireActual('services/cv'),
+  useGetServiceLevelObjectivesRiskCount: jest.fn().mockImplementation(() => {
+    return {
+      data: {
+        riskCounts: [
+          {
+            count: 10,
+            displayName: 'Healthy',
+            identifier: 'HEALTHY'
+          }
+        ]
+      },
+      refetch: jest.fn(),
+      error: null,
+      loading: false
+    }
+  })
+}))
+
 describe('slo module tests', () => {
   test('slo empty state collapsed', () => {
     const { queryByText } = render(

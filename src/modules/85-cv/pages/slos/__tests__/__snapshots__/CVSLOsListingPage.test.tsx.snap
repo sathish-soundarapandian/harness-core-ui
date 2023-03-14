@@ -415,7 +415,7 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
         >
           <div
             class="Layout--horizontal StyledProps--main sloCardSelectContainer"
-            data-test-id="cv.slos.totalServices_tooltip"
+            data-test-id="projectsOrgs.slos.totalServices_tooltip"
             style="height: 76px;"
           >
             <div
@@ -517,12 +517,12 @@ exports[`CVSLOsListingPage Risk filter select and deselect 1`] = `
             >
               <div
                 class="Text--withDocsTooltip"
-                data-tooltip-id="cv.slos.totalServices_tooltip"
+                data-tooltip-id="projectsOrgs.slos.totalServices_tooltip"
               >
                 <p
                   class="StyledProps--font StyledProps--main StyledProps--font-variation-form-help"
                 >
-                  cv.slos.totalServices
+                  projectsOrgs.slos.totalServices
                 </p>
               </div>
               <p
