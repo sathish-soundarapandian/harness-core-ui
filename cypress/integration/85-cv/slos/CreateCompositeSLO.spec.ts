@@ -251,6 +251,8 @@ describe('Create account level SLO', () => {
     cy.contains('p', 'demo_composite_slo').should('not.exist')
     cy.contains('span', 'Add SLOs').click()
     cy.wait('@sloListPostResponseRolling7Days')
+    cy.wait(1000)
+    cy.findAllByRole('checkbox').eq(1).should('be.checked')
     cy.findAllByRole('checkbox').eq(2).click({ force: true })
     cy.get('[data-testid="addSloButton"]').click({ force: true })
     cy.contains('span', 'Next').click({ force: true })
