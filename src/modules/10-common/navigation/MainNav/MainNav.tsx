@@ -20,12 +20,10 @@ import paths from '@common/RouteDefinitions'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
 import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import { ResourceCenter } from '@common/components/ResourceCenter/ResourceCenter'
-import { DEFAULT_MODULES_ORDER, useNavModuleInfoMap } from '@common/hooks/useNavModuleInfo'
 import ModuleList from '../ModuleList/ModuleList'
 import ModuleConfigurationScreen from '../ModuleConfigurationScreen/ModuleConfigurationScreen'
 
 import ModulesContainer from './ModulesContainer/ModulesContainer'
-import { moduleToNavItemsMap } from './util'
 import css from './MainNav.module.scss'
 
 const commonLinkProps: Partial<NavLinkProps> = {
@@ -35,12 +33,11 @@ const commonLinkProps: Partial<NavLinkProps> = {
 
 export default function L1Nav(): React.ReactElement {
   const params = useParams<ProjectPathProps>()
-  const { NG_DASHBOARDS, NEW_LEFT_NAVBAR_SETTINGS } = useFeatureFlags()
+  const { NG_DASHBOARDS } = useFeatureFlags()
   const { isOpen: isModuleListOpen, toggle: toggleModuleList, close: closeModuleList } = useToggleOpen(false)
   const { isOpen: isModuleConfigOpen, toggle: toggleModuleConfig, close: closeModuleConfig } = useToggleOpen(false)
 
   const { currentUserInfo: user } = useAppStore()
-  const moduleMap = useNavModuleInfoMap()
 
   useLayoutEffect(() => {
     // main nav consists of two UL sections with classname "css.navList"
@@ -54,15 +51,14 @@ export default function L1Nav(): React.ReactElement {
     const root = document.querySelector(':root') as HTMLElement
     root.style.setProperty('--main-nav-height', `${minNavHeight}px`)
 
-    NEW_LEFT_NAVBAR_SETTINGS &&
-      document.getElementsByClassName(css.active)[0]?.scrollIntoView({ inline: 'nearest', block: 'nearest' })
+    document.getElementsByClassName(css.active)[0]?.scrollIntoView({ inline: 'nearest', block: 'nearest' })
   })
 
   return (
     <>
       <nav className={cx(css.main, { [css.recessed]: isModuleListOpen })}>
         <ul className={css.navList}>
-          {NEW_LEFT_NAVBAR_SETTINGS && (
+          {
             <li className={css.navItem}>
               <Link {...commonLinkProps} to={paths.toMainDashboard(params)}>
                 <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
@@ -78,38 +74,26 @@ export default function L1Nav(): React.ReactElement {
                 </Layout.Vertical>
               </Link>
             </li>
-          )}
+          }
           <li className={css.navItem}>
             <Link {...commonLinkProps} to={paths.toHome(params)}>
               <Layout.Vertical flex={{ align: 'center-center' }} spacing="small">
-                {NEW_LEFT_NAVBAR_SETTINGS ? (
-                  <Icon name={'nav-project'} size={30} color={Color.PRIMARY_4} />
-                ) : (
-                  <Icon name={'harness'} size={30} />
-                )}
+                <Icon name={'nav-project'} size={30} color={Color.PRIMARY_4} />
                 <Text
                   font={{ weight: 'semi-bold', align: 'center' }}
                   padding={{ bottom: 'xsmall' }}
                   color={Color.WHITE}
                   className={css.text}
                 >
-                  <String stringID={NEW_LEFT_NAVBAR_SETTINGS ? 'projectsText' : 'common.home'} />
+                  <String stringID={'projectsText'} />
                 </Text>
               </Layout.Vertical>
             </Link>
           </li>
-          {NEW_LEFT_NAVBAR_SETTINGS ? (
-            <li className={css.modulesContainerNavItem}>
-              <ModulesContainer />
-            </li>
-          ) : (
-            DEFAULT_MODULES_ORDER.map(moduleName => {
-              const NavItem = moduleToNavItemsMap[moduleName]
-              const moduleInfo = moduleMap[moduleName]
-              return moduleInfo.shouldVisible ? <NavItem key={moduleName} /> : null
-            })
-          )}
-          {NEW_LEFT_NAVBAR_SETTINGS && (
+          <li className={css.modulesContainerNavItem}>
+            <ModulesContainer />
+          </li>
+          {
             <li>
               <Container flex={{ justifyContent: 'center' }}>
                 <Popover
@@ -138,7 +122,7 @@ export default function L1Nav(): React.ReactElement {
                 </Popover>
               </Container>
             </li>
-          )}
+          }
         </ul>
         <ul className={css.navList}>
           <li className={css.navItem}>
@@ -191,7 +175,7 @@ export default function L1Nav(): React.ReactElement {
           </li>
         </ul>
       </nav>
-      {NEW_LEFT_NAVBAR_SETTINGS ? (
+      {
         <ModuleList
           isOpen={isModuleListOpen}
           close={() => {
@@ -200,7 +184,7 @@ export default function L1Nav(): React.ReactElement {
           }}
           onConfigIconClick={toggleModuleConfig}
         />
-      ) : null}
+      }
       {isModuleConfigOpen ? (
         <ModuleConfigurationScreen
           onClose={() => {

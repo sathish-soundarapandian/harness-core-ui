@@ -58,7 +58,7 @@ const SideNavCollapseButton: React.FC<{ isExpanded: boolean; onClick: () => void
 export default function SideNav(props: React.PropsWithChildren<SideNavProps>): ReactElement {
   const { collapseByDefault = false } = props
   const { getString } = useStrings()
-  const { SPG_SIDENAV_COLLAPSE, PLG_ENABLE_CROSS_GENERATION_ACCESS } = useFeatureFlags()
+  const { PLG_ENABLE_CROSS_GENERATION_ACCESS } = useFeatureFlags()
   const params = useParams<ProjectPathProps>()
   const { accountId } = useParams<AccountPathProps>()
   const [sideNavExpanded, setSideNavExpanded] = useState<boolean>(!collapseByDefault)
@@ -107,14 +107,12 @@ export default function SideNav(props: React.PropsWithChildren<SideNavProps>): R
           </div>
         </Container>
       </>
-      {SPG_SIDENAV_COLLAPSE && (
-        <SideNavCollapseButton
-          isExpanded={sideNavExpanded}
-          onClick={() => {
-            setSideNavExpanded(!sideNavExpanded)
-          }}
-        />
-      )}
+      <SideNavCollapseButton
+        isExpanded={sideNavExpanded}
+        onClick={() => {
+          setSideNavExpanded(!sideNavExpanded)
+        }}
+      />
     </div>
   )
 }

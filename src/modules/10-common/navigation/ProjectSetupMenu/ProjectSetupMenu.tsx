@@ -39,7 +39,6 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     NG_SETTINGS,
     USE_OLD_GIT_SYNC,
     SRM_ET_EXPERIMENTAL,
-    NEW_LEFT_NAVBAR_SETTINGS,
     SRM_DOWNTIME,
     STO_JIRA_INTEGRATION
   } = useFeatureFlags()
@@ -71,7 +70,7 @@ const ProjectSetupMenu: React.FC<ProjectSetupMenuProps> = ({ module, defaultExpa
     (isGitSyncEnabled && !gitSyncEnabledOnlyForFF) ||
     (USE_OLD_GIT_SYNC && (isCIorCDorSTO || !module) && !isGitSimplificationEnabled)
 
-  const showTemplates = isCIorCDorSTO || (!module && NEW_LEFT_NAVBAR_SETTINGS)
+  const showTemplates = isCIorCDorSTO || !module
   const showFileStore = isCIorCD || !module
 
   return (

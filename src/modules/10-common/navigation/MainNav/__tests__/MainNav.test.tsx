@@ -107,8 +107,7 @@ describe('main nav tests', () => {
         defaultFeatureFlagValues={{
           CING_ENABLED: true,
           CFNG_ENABLED: true,
-          CHAOS_ENABLED: true,
-          NEW_LEFT_NAVBAR_SETTINGS: true
+          CHAOS_ENABLED: true
         }}
       >
         <MainNav />
@@ -137,8 +136,7 @@ describe('main nav tests', () => {
         defaultFeatureFlagValues={{
           CING_ENABLED: true,
           CFNG_ENABLED: true,
-          CHAOS_ENABLED: true,
-          NEW_LEFT_NAVBAR_SETTINGS: true
+          CHAOS_ENABLED: true
         }}
         defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >
@@ -170,8 +168,7 @@ describe('main nav tests', () => {
         defaultFeatureFlagValues={{
           CING_ENABLED: true,
           CFNG_ENABLED: false,
-          CHAOS_ENABLED: true,
-          NEW_LEFT_NAVBAR_SETTINGS: true
+          CHAOS_ENABLED: true
         }}
         defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >
@@ -202,8 +199,7 @@ describe('main nav tests', () => {
         defaultFeatureFlagValues={{
           CING_ENABLED: true,
           CFNG_ENABLED: false,
-          CHAOS_ENABLED: true,
-          NEW_LEFT_NAVBAR_SETTINGS: true
+          CHAOS_ENABLED: true
         }}
       >
         <MainNav />
@@ -236,8 +232,7 @@ describe('main nav tests', () => {
         defaultFeatureFlagValues={{
           CING_ENABLED: true,
           CFNG_ENABLED: true,
-          CHAOS_ENABLED: true,
-          NEW_LEFT_NAVBAR_SETTINGS: true
+          CHAOS_ENABLED: true
         }}
         defaultLicenseStoreValues={{ licenseInformation: { CD: { status: 'ACTIVE' } } }}
       >

@@ -17,15 +17,12 @@ import { TrialLicenseBanner } from '@common/layouts/TrialLicenseBanner'
 import { useTelemetry } from '@common/hooks/useTelemetry'
 import { usePage } from '@common/pages/pageContext/PageProvider'
 import { useAppStore } from 'framework/AppStore/AppStoreContext'
-
-import { useFeatureFlags } from '@common/hooks/useFeatureFlag'
 import FeatureBanner from './FeatureBanner'
 
 import css from './layouts.module.scss'
 
 export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.ReactElement {
   const { title, subtitle, icon, navComponent: NavComponent, launchButtonText, launchButtonRedirectUrl } = useSidebar()
-  const { SPG_SIDENAV_COLLAPSE } = useFeatureFlags()
 
   const { pageName } = usePage()
   const { module } = useModuleInfo()
@@ -41,7 +38,7 @@ export function DefaultLayout(props: React.PropsWithChildren<unknown>): React.Re
   }, [pageName])
 
   return (
-    <div className={cx(css.main, { [css.flex]: SPG_SIDENAV_COLLAPSE })} data-layout="default">
+    <div className={cx(css.main, css.flex)} data-layout="default">
       <MainNav />
       {NavComponent && (
         <SideNav
