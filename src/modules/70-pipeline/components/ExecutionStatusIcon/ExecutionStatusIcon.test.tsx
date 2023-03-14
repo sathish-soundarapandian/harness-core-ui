@@ -11,8 +11,7 @@ import { TestWrapper } from '@common/utils/testUtils'
 import { ExecutionStatusEnum, ExecutionStatus } from '@pipeline/utils/statusHelpers'
 import { ExecutionStatusIcon } from './ExecutionStatusIcon'
 
-// eslint-disable-next-line jest/no-disabled-tests
-describe.skip('ExecutionStatusIcon', () => {
+describe('ExecutionStatusIcon', () => {
   test.each(Object.values(ExecutionStatusEnum))('%s', (status: ExecutionStatus) => {
     const { container } = render(
       <TestWrapper>
