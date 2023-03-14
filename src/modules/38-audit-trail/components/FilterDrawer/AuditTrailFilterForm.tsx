@@ -9,6 +9,7 @@ import { FormInput, MultiSelectOption } from '@harness/uicore'
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import type { FormikProps } from 'formik'
+import { orderBy } from 'lodash-es'
 import { useMutateAsGet } from '@common/hooks'
 import { StringKeys, useStrings } from 'framework/strings'
 import type { ProjectPathProps } from '@common/interfaces/RouteInterfaces'
@@ -87,12 +88,13 @@ const AuditTrailFilterForm: React.FC<AuditTrailFormProps> = props => {
   })
 
   const getOptionsForMultiSelect = (map: Record<any, StringKeys>): MultiSelectOption[] => {
-    return Object.keys(map)
-      .sort()
-      .map(key => ({
+    return orderBy(
+      Object.keys(map).map(key => ({
         label: getString(map[key]),
         value: key
-      }))
+      })),
+      'label'
+    )
   }
 
   let auditActions = getOptionsForMultiSelect(actionToLabelMap)
